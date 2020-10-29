@@ -286,13 +286,13 @@ generated quantities {
 }
 
 
-Warning: in 'gp-predict-analytic.stan', line 59, column 23 to column 51: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
-
 Warning: in 'gp-predict-analytic.stan', line 24, column 12 to column 40: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
 
 Warning: in 'gp-predict-analytic.stan', line 29, column 18 to column 50: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
 
 Warning: in 'gp-predict-analytic.stan', line 32, column 17 to column 45: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+
+Warning: in 'gp-predict-analytic.stan', line 59, column 23 to column 51: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
   $ ../../../../../../install/default/bin/stanc --auto-format gp-predict-logit.stan
 data {
   int<lower=1> N1;

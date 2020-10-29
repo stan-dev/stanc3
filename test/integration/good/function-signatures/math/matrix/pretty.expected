@@ -2871,6 +2871,186 @@ model {
 }
 
 
+Warning: in 'binomial_coefficient_log.stan', line 42, column 32 to column 76: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 43, column 32 to column 77: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 44, column 35 to column 82: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 45, column 35 to column 83: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 46, column 35 to column 82: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 47, column 35 to column 83: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 49, column 32 to column 76: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 50, column 32 to column 77: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 51, column 35 to column 82: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 52, column 35 to column 83: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 53, column 35 to column 82: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 54, column 35 to column 83: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 56, column 32 to column 77: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 57, column 32 to column 78: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 58, column 35 to column 83: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 59, column 35 to column 84: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 60, column 35 to column 83: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 61, column 35 to column 84: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 63, column 32 to column 77: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 64, column 32 to column 78: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 65, column 35 to column 83: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 66, column 35 to column 84: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 67, column 35 to column 83: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 68, column 35 to column 84: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 70, column 32 to column 82: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 71, column 32 to column 84: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 72, column 35 to column 91: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 73, column 35 to column 93: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 74, column 35 to column 91: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 75, column 35 to column 93: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 77, column 28 to column 69: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 78, column 28 to column 70: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 79, column 34 to column 81: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 80, column 34 to column 82: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 81, column 37 to column 87: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 82, column 37 to column 88: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 83, column 37 to column 87: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 84, column 37 to column 88: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 86, column 28 to column 69: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 87, column 28 to column 70: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 88, column 34 to column 81: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 89, column 34 to column 82: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 90, column 37 to column 87: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 91, column 37 to column 88: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 92, column 37 to column 87: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 93, column 37 to column 88: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 95, column 28 to column 72: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 96, column 34 to column 90: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 97, column 37 to column 99: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 98, column 37 to column 99: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 100, column 32 to column 77: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 101, column 32 to column 78: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 102, column 38 to column 89: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 103, column 38 to column 90: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 104, column 41 to column 95: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 105, column 41 to column 96: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 106, column 41 to column 95: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 107, column 41 to column 96: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 109, column 32 to column 77: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 110, column 32 to column 78: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 111, column 38 to column 89: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 112, column 38 to column 90: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 113, column 41 to column 95: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 114, column 41 to column 96: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 115, column 41 to column 95: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 116, column 41 to column 96: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 118, column 32 to column 84: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 119, column 38 to column 102: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 120, column 41 to column 111: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 121, column 41 to column 111: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 123, column 28 to column 69: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 124, column 28 to column 70: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 125, column 34 to column 81: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 126, column 34 to column 82: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 127, column 37 to column 87: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 128, column 37 to column 88: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 129, column 37 to column 87: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 130, column 37 to column 88: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 132, column 28 to column 69: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 133, column 28 to column 70: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 134, column 34 to column 81: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 135, column 34 to column 82: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 136, column 37 to column 87: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 137, column 37 to column 88: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 138, column 37 to column 87: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 139, column 37 to column 88: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 141, column 28 to column 72: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 142, column 34 to column 90: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 143, column 37 to column 99: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 144, column 37 to column 99: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
 Warning: in 'binomial_coefficient_log.stan', line 182, column 28 to column 73: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
 
 Warning: in 'binomial_coefficient_log.stan', line 183, column 31 to column 79: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
@@ -3212,186 +3392,6 @@ Warning: in 'binomial_coefficient_log.stan', line 363, column 38 to column 100: 
 Warning: in 'binomial_coefficient_log.stan', line 364, column 38 to column 100: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
 
 Warning: in 'binomial_coefficient_log.stan', line 365, column 38 to column 100: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 42, column 32 to column 76: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 43, column 32 to column 77: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 44, column 35 to column 82: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 45, column 35 to column 83: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 46, column 35 to column 82: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 47, column 35 to column 83: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 49, column 32 to column 76: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 50, column 32 to column 77: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 51, column 35 to column 82: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 52, column 35 to column 83: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 53, column 35 to column 82: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 54, column 35 to column 83: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 56, column 32 to column 77: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 57, column 32 to column 78: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 58, column 35 to column 83: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 59, column 35 to column 84: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 60, column 35 to column 83: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 61, column 35 to column 84: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 63, column 32 to column 77: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 64, column 32 to column 78: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 65, column 35 to column 83: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 66, column 35 to column 84: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 67, column 35 to column 83: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 68, column 35 to column 84: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 70, column 32 to column 82: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 71, column 32 to column 84: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 72, column 35 to column 91: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 73, column 35 to column 93: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 74, column 35 to column 91: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 75, column 35 to column 93: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 77, column 28 to column 69: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 78, column 28 to column 70: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 79, column 34 to column 81: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 80, column 34 to column 82: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 81, column 37 to column 87: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 82, column 37 to column 88: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 83, column 37 to column 87: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 84, column 37 to column 88: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 86, column 28 to column 69: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 87, column 28 to column 70: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 88, column 34 to column 81: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 89, column 34 to column 82: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 90, column 37 to column 87: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 91, column 37 to column 88: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 92, column 37 to column 87: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 93, column 37 to column 88: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 95, column 28 to column 72: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 96, column 34 to column 90: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 97, column 37 to column 99: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 98, column 37 to column 99: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 100, column 32 to column 77: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 101, column 32 to column 78: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 102, column 38 to column 89: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 103, column 38 to column 90: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 104, column 41 to column 95: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 105, column 41 to column 96: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 106, column 41 to column 95: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 107, column 41 to column 96: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 109, column 32 to column 77: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 110, column 32 to column 78: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 111, column 38 to column 89: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 112, column 38 to column 90: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 113, column 41 to column 95: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 114, column 41 to column 96: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 115, column 41 to column 95: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 116, column 41 to column 96: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 118, column 32 to column 84: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 119, column 38 to column 102: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 120, column 41 to column 111: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 121, column 41 to column 111: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 123, column 28 to column 69: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 124, column 28 to column 70: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 125, column 34 to column 81: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 126, column 34 to column 82: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 127, column 37 to column 87: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 128, column 37 to column 88: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 129, column 37 to column 87: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 130, column 37 to column 88: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 132, column 28 to column 69: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 133, column 28 to column 70: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 134, column 34 to column 81: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 135, column 34 to column 82: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 136, column 37 to column 87: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 137, column 37 to column 88: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 138, column 37 to column 87: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 139, column 37 to column 88: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 141, column 28 to column 72: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 142, column 34 to column 90: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 143, column 37 to column 99: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-
-Warning: in 'binomial_coefficient_log.stan', line 144, column 37 to column 99: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format block.stan
 data {
   int d_int;
@@ -4276,6 +4276,18 @@ model {
 }
 
 
+Warning: in 'cov_exp_quad.stan', line 18, column 28 to column 65: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+
+Warning: in 'cov_exp_quad.stan', line 19, column 28 to column 74: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+
+Warning: in 'cov_exp_quad.stan', line 20, column 28 to column 65: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+
+Warning: in 'cov_exp_quad.stan', line 21, column 28 to column 74: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+
+Warning: in 'cov_exp_quad.stan', line 22, column 28 to column 66: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+
+Warning: in 'cov_exp_quad.stan', line 23, column 28 to column 76: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+
 Warning: in 'cov_exp_quad.stan', line 39, column 29 to column 66: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
 
 Warning: in 'cov_exp_quad.stan', line 40, column 29 to column 66: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
@@ -4391,18 +4403,6 @@ Warning: in 'cov_exp_quad.stan', line 108, column 29 to column 77: cov_exp_quad 
 Warning: in 'cov_exp_quad.stan', line 109, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
 
 Warning: in 'cov_exp_quad.stan', line 110, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
-
-Warning: in 'cov_exp_quad.stan', line 18, column 28 to column 65: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
-
-Warning: in 'cov_exp_quad.stan', line 19, column 28 to column 74: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
-
-Warning: in 'cov_exp_quad.stan', line 20, column 28 to column 65: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
-
-Warning: in 'cov_exp_quad.stan', line 21, column 28 to column 74: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
-
-Warning: in 'cov_exp_quad.stan', line 22, column 28 to column 66: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
-
-Warning: in 'cov_exp_quad.stan', line 23, column 28 to column 76: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format crossprod.stan
 data {
   int d_int;
@@ -16327,6 +16327,186 @@ model {
 }
 
 
+Warning: in 'multiply_log.stan', line 42, column 32 to column 64: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 43, column 32 to column 65: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 44, column 35 to column 70: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 45, column 35 to column 71: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 46, column 35 to column 70: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 47, column 35 to column 71: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 49, column 32 to column 64: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 50, column 32 to column 65: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 51, column 35 to column 70: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 52, column 35 to column 71: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 53, column 35 to column 70: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 54, column 35 to column 71: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 56, column 32 to column 65: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 57, column 32 to column 66: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 58, column 35 to column 71: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 59, column 35 to column 72: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 60, column 35 to column 71: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 61, column 35 to column 72: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 63, column 32 to column 65: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 64, column 32 to column 66: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 65, column 35 to column 71: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 66, column 35 to column 72: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 67, column 35 to column 71: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 68, column 35 to column 72: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 70, column 32 to column 70: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 71, column 32 to column 72: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 72, column 35 to column 79: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 73, column 35 to column 81: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 74, column 35 to column 79: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 75, column 35 to column 81: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 77, column 28 to column 57: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 78, column 28 to column 58: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 79, column 34 to column 69: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 80, column 34 to column 70: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 81, column 37 to column 75: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 82, column 37 to column 76: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 83, column 37 to column 75: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 84, column 37 to column 76: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 86, column 28 to column 57: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 87, column 28 to column 58: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 88, column 34 to column 69: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 89, column 34 to column 70: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 90, column 37 to column 75: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 91, column 37 to column 76: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 92, column 37 to column 75: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 93, column 37 to column 76: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 95, column 28 to column 60: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 96, column 34 to column 78: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 97, column 37 to column 87: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 98, column 37 to column 87: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 100, column 32 to column 65: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 101, column 32 to column 66: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 102, column 38 to column 77: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 103, column 38 to column 78: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 104, column 41 to column 83: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 105, column 41 to column 84: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 106, column 41 to column 83: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 107, column 41 to column 84: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 109, column 32 to column 65: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 110, column 32 to column 66: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 111, column 38 to column 77: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 112, column 38 to column 78: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 113, column 41 to column 83: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 114, column 41 to column 84: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 115, column 41 to column 83: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 116, column 41 to column 84: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 118, column 32 to column 72: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 119, column 38 to column 90: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 120, column 41 to column 99: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 121, column 41 to column 99: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 123, column 28 to column 57: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 124, column 28 to column 58: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 125, column 34 to column 69: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 126, column 34 to column 70: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 127, column 37 to column 75: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 128, column 37 to column 76: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 129, column 37 to column 75: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 130, column 37 to column 76: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 132, column 28 to column 57: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 133, column 28 to column 58: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 134, column 34 to column 69: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 135, column 34 to column 70: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 136, column 37 to column 75: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 137, column 37 to column 76: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 138, column 37 to column 75: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 139, column 37 to column 76: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 141, column 28 to column 60: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 142, column 34 to column 78: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 143, column 37 to column 87: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 144, column 37 to column 87: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
 Warning: in 'multiply_log.stan', line 182, column 28 to column 61: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
 
 Warning: in 'multiply_log.stan', line 183, column 31 to column 67: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
@@ -16668,186 +16848,6 @@ Warning: in 'multiply_log.stan', line 363, column 38 to column 88: multiply_log 
 Warning: in 'multiply_log.stan', line 364, column 38 to column 88: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
 
 Warning: in 'multiply_log.stan', line 365, column 38 to column 88: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 42, column 32 to column 64: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 43, column 32 to column 65: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 44, column 35 to column 70: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 45, column 35 to column 71: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 46, column 35 to column 70: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 47, column 35 to column 71: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 49, column 32 to column 64: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 50, column 32 to column 65: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 51, column 35 to column 70: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 52, column 35 to column 71: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 53, column 35 to column 70: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 54, column 35 to column 71: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 56, column 32 to column 65: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 57, column 32 to column 66: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 58, column 35 to column 71: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 59, column 35 to column 72: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 60, column 35 to column 71: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 61, column 35 to column 72: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 63, column 32 to column 65: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 64, column 32 to column 66: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 65, column 35 to column 71: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 66, column 35 to column 72: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 67, column 35 to column 71: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 68, column 35 to column 72: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 70, column 32 to column 70: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 71, column 32 to column 72: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 72, column 35 to column 79: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 73, column 35 to column 81: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 74, column 35 to column 79: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 75, column 35 to column 81: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 77, column 28 to column 57: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 78, column 28 to column 58: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 79, column 34 to column 69: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 80, column 34 to column 70: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 81, column 37 to column 75: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 82, column 37 to column 76: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 83, column 37 to column 75: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 84, column 37 to column 76: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 86, column 28 to column 57: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 87, column 28 to column 58: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 88, column 34 to column 69: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 89, column 34 to column 70: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 90, column 37 to column 75: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 91, column 37 to column 76: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 92, column 37 to column 75: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 93, column 37 to column 76: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 95, column 28 to column 60: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 96, column 34 to column 78: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 97, column 37 to column 87: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 98, column 37 to column 87: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 100, column 32 to column 65: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 101, column 32 to column 66: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 102, column 38 to column 77: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 103, column 38 to column 78: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 104, column 41 to column 83: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 105, column 41 to column 84: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 106, column 41 to column 83: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 107, column 41 to column 84: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 109, column 32 to column 65: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 110, column 32 to column 66: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 111, column 38 to column 77: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 112, column 38 to column 78: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 113, column 41 to column 83: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 114, column 41 to column 84: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 115, column 41 to column 83: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 116, column 41 to column 84: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 118, column 32 to column 72: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 119, column 38 to column 90: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 120, column 41 to column 99: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 121, column 41 to column 99: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 123, column 28 to column 57: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 124, column 28 to column 58: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 125, column 34 to column 69: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 126, column 34 to column 70: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 127, column 37 to column 75: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 128, column 37 to column 76: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 129, column 37 to column 75: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 130, column 37 to column 76: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 132, column 28 to column 57: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 133, column 28 to column 58: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 134, column 34 to column 69: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 135, column 34 to column 70: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 136, column 37 to column 75: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 137, column 37 to column 76: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 138, column 37 to column 75: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 139, column 37 to column 76: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 141, column 28 to column 60: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 142, column 34 to column 78: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 143, column 37 to column 87: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-
-Warning: in 'multiply_log.stan', line 144, column 37 to column 87: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format multiply_lower_tri_self_transpose.stan
 data {
   int d_int;
