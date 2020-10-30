@@ -313,6 +313,7 @@ module IdentifierError = struct
     | IsStanMathName of string
     | InUse of string
     | NotInScope of string
+    | UnnormalizedSuffix of string
 
   let pp ppf = function
     | IsStanMathName name ->
@@ -324,6 +325,11 @@ module IdentifierError = struct
     | IsKeyword name ->
         Fmt.pf ppf "Identifier '%s' clashes with reserved keyword." name
     | NotInScope name -> Fmt.pf ppf "Identifier '%s' not in scope." name
+    | UnnormalizedSuffix name ->
+        Fmt.pf ppf
+          "Identifier '%s' has a _lupdf/_lupmf suffix, which is only allowed \
+           for functions."
+          name
 end
 
 module ExpressionError = struct
@@ -372,7 +378,7 @@ module ExpressionError = struct
            _lcdf, _lccdf can make use of conditional notation."
     | ConditioningRequired ->
         Fmt.pf ppf
-          "Probabilty functions with suffixes _lpdf, _lupdf, _lpmf, _lupmf, \
+          "Probability functions with suffixes _lpdf, _lupdf, _lpmf, _lupmf, \
            _lcdf and _lccdf, require a vertical bar (|) between the first two \
            arguments."
     | NotPrintable -> Fmt.pf ppf "Functions cannot be printed."
@@ -624,6 +630,9 @@ let ident_in_use loc name = IdentifierError (loc, IdentifierError.InUse name)
 
 let ident_not_in_scope loc name =
   IdentifierError (loc, IdentifierError.NotInScope name)
+
+let ident_has_unnormalized_suffix loc name =
+  IdentifierError (loc, IdentifierError.UnnormalizedSuffix name)
 
 let invalid_map_rect_fn loc name =
   ExpressionError (loc, ExpressionError.InvalidMapRectFn name)

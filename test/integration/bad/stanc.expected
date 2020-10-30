@@ -2098,7 +2098,7 @@ Semantic error in 'prob-fun-args-no-bar.stan', line 5, column 12 to column 32:
      6:  }
    -------------------------------------------------
 
-Probabilty functions with suffixes _lpdf, _lupdf, _lpmf, _lupmf, _lcdf and _lccdf, require a vertical bar (|) between the first two arguments.
+Probability functions with suffixes _lpdf, _lupdf, _lpmf, _lupmf, _lcdf and _lccdf, require a vertical bar (|) between the first two arguments.
 
   $ ../../../../install/default/bin/stanc prob-poisson_log-trunc-both.stan
 
