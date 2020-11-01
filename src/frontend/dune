@@ -39,8 +39,3 @@
   (progn
    (run python3 %{dep:add_missing_messages.py} %{dep:parser.mly} %{dep:parser_new.messages} %{dep:parser_updated_trimmed.messages})
    (diff %{dep:parser.messages} %{dep:parser_updated_trimmed.messages}))))
-
-(alias
- (name runtest)
- (action
-  (run menhir parser.mly --compare-errors %{dep:parser_new.messages} --compare-errors %{dep:parser.messages})))
