@@ -7,7 +7,7 @@ RUN apt-get update -qq && apt-get install -y --no-install-recommends \
     rsync git build-essential m4 unzip pkg-config libpcre3-dev \
     python3 python3-pip nodejs
 
-# Install ocaml + init
+# Install and initialize ocaml
 COPY ./scripts/install_ocaml.sh ./
 RUN printf "\n" | bash -x install_ocaml.sh "--disable-sandboxing -y"
 
@@ -21,9 +21,9 @@ RUN opam update; bash -x install_dev_deps.sh
 
 RUN opam update; opam install -y js_of_ocaml-compiler.3.4.0 js_of_ocaml-ppx.3.4.0 js_of_ocaml.3.4.0
 
-# Install javascript dev dependencies
+# Install Javascript dev environment
 COPY ./scripts/install_js_deps.sh ./
 RUN opam update; bash -x install_js_deps.sh
 
-#Specify our entrypoint
+# Specify our entrypoint
 ENTRYPOINT [ "opam", "config", "exec", "--" ]
