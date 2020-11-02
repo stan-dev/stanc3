@@ -290,6 +290,11 @@ decl(type_rule, rhs):
    *)
   (* Note that the array dimensions option must be inlined with ioption, else
      it will conflict with first rule. *)
+  (* It's a bit of a hack that "array[x,y,z]" is matched with a lhs rule and
+     then narrowed down by throwing errors. This is done to avoid reserving
+     "array" as a keyword, while also avoiding the reduce-reduce conflict that
+     would occur if "array[x,y,z]" were its own rule without reserving the
+     keyword. *)
   | dims_opt=ioption(lhs) ty=type_rule
       id_rhs=id_and_optional_assignment(rhs) SEMICOLON
     { (fun ~is_global ->
