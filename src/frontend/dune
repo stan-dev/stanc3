@@ -26,7 +26,7 @@
 
 (rule
  (with-stdout-to parser_updated_trimmed.messages
-  (run python3 %{dep:strip_redundant_parser_state.py} %{dep:parser_updated.messages})))
+  (run %{dep:strip_redundant_parser_state.py} %{dep:parser_updated.messages})))
 
 (rule
  (targets parser_new.messages)
@@ -37,7 +37,7 @@
  (name update_messages)
  (action
   (progn
-   (run python3 %{dep:add_missing_messages.py} %{dep:parser.mly} %{dep:parser_new.messages} %{dep:parser_updated_trimmed.messages})
+   (run %{dep:add_missing_messages.py} %{dep:parser.mly} %{dep:parser_new.messages} %{dep:parser_updated_trimmed.messages})
    (diff %{dep:parser.messages} %{dep:parser_updated_trimmed.messages}))))
 
 (alias
