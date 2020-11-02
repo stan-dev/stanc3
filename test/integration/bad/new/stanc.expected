@@ -160,7 +160,7 @@ Syntax error in 'compound-assign-decl-bad1.stan', line 1, column 14 to column 17
                           ^
    -------------------------------------------------
 
-Expected  ";" or "=" expression ";".
+Expected  ";" or assignment.
 
 
   $ ../../../../../install/default/bin/stanc compound-assign-decl-bad2.stan
@@ -180,7 +180,7 @@ Syntax error in 'compound-assign-decl-bad2.stan', line 1, column 25 to column 28
                                      ^
    -------------------------------------------------
 
-Expected  ";" or "=" expression ";".
+Expected  ";" or assignment.
 
 
   $ ../../../../../install/default/bin/stanc fun-app-bad1.stan
