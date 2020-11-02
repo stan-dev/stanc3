@@ -313,6 +313,7 @@ module IdentifierError = struct
     | IsStanMathName of string
     | InUse of string
     | NotInScope of string
+    | UnnormalizedSuffix of string
 
   let pp ppf = function
     | IsStanMathName name ->
@@ -324,6 +325,11 @@ module IdentifierError = struct
     | IsKeyword name ->
         Fmt.pf ppf "Identifier '%s' clashes with reserved keyword." name
     | NotInScope name -> Fmt.pf ppf "Identifier '%s' not in scope." name
+    | UnnormalizedSuffix name ->
+        Fmt.pf ppf
+          "Identifier '%s' has a _lupdf/_lupmf suffix, which is only allowed \
+           for functions."
+          name
 end
 
 module ExpressionError = struct
@@ -331,6 +337,8 @@ module ExpressionError = struct
     | InvalidMapRectFn of string
     | InvalidSizeDeclRng
     | InvalidRngFunction
+    | InvalidUnnormalizedFunction
+    | InvalidUnnormalizedUDF of string
     | ConditionalNotationNotAllowed
     | ConditioningRequired
     | NotPrintable
@@ -352,14 +360,27 @@ module ExpressionError = struct
           "Random number generators are only allowed in transformed data \
            block, generated quantities block or user-defined functions with \
            names ending in _rng."
+    | InvalidUnnormalizedFunction ->
+        Fmt.pf ppf
+          "Functions with names ending in _lupdf and _lupmf can only be used \
+           in the model block or user-defined functions with names ending in \
+           _lpdf, _lpmf or _lp."
+    | InvalidUnnormalizedUDF fname ->
+        Fmt.pf ppf
+          "%s is an invalid user-defined function name. User-defined \
+           probability mass and density functions must be defined as \
+           normalized (function names should end with _lpdf/_lpmf not \
+           _lupdf/_lupmf)."
+          fname
     | ConditionalNotationNotAllowed ->
         Fmt.pf ppf
-          "Only functions with names ending in _lpdf, _lpmf, _lcdf, _lccdf \
-           can make use of conditional notation."
+          "Only functions with names ending in _lpdf, _lupdf, _lpmf, _lupmf, \
+           _lcdf, _lccdf can make use of conditional notation."
     | ConditioningRequired ->
         Fmt.pf ppf
-          "Probabilty functions with suffixes _lpdf, _lpmf, _lcdf, and \
-           _lccdf, require a vertical bar (|) between the first two arguments."
+          "Probability functions with suffixes _lpdf, _lupdf, _lpmf, _lupmf, \
+           _lcdf and _lccdf, require a vertical bar (|) between the first two \
+           arguments."
     | NotPrintable -> Fmt.pf ppf "Functions cannot be printed."
     | EmptyArray ->
         Fmt.pf ppf "Array expressions must contain at least one element."
@@ -409,7 +430,7 @@ module StatementError = struct
     | InvalidSamplingPDForPMF ->
         Fmt.pf ppf
           {|
-~ statement should refer to a distribution without its "_lpdf" or "_lpmf" suffix.
+~ statement should refer to a distribution without its "_lpdf/_lupdf" or "_lpmf/_lupmf" suffix.
 For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
 |}
     | InvalidSamplingCDForCCDF name ->
@@ -467,7 +488,7 @@ For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
     | NonRealProbFunDef ->
         Fmt.pf ppf
           "Real return type required for probability functions ending in \
-           _log, _lpdf, _lpmf, _lcdf, or _lccdf."
+           _log, _lpdf, _lupdf, _lpmf, _lupmf, _lcdf, or _lccdf."
     | ProbDensityNonRealVariate (Some ut) ->
         Fmt.pf ppf
           "Probability density functions require real variates (first \
@@ -610,6 +631,9 @@ let ident_in_use loc name = IdentifierError (loc, IdentifierError.InUse name)
 let ident_not_in_scope loc name =
   IdentifierError (loc, IdentifierError.NotInScope name)
 
+let ident_has_unnormalized_suffix loc name =
+  IdentifierError (loc, IdentifierError.UnnormalizedSuffix name)
+
 let invalid_map_rect_fn loc name =
   ExpressionError (loc, ExpressionError.InvalidMapRectFn name)
 
@@ -618,6 +642,12 @@ let invalid_decl_rng_fn loc =
 
 let invalid_rng_fn loc =
   ExpressionError (loc, ExpressionError.InvalidRngFunction)
+
+let invalid_unnormalized_fn loc =
+  ExpressionError (loc, ExpressionError.InvalidUnnormalizedFunction)
+
+let udf_is_unnormalized_fn loc name =
+  ExpressionError (loc, ExpressionError.InvalidUnnormalizedUDF name)
 
 let conditional_notation_not_allowed loc =
   ExpressionError (loc, ExpressionError.ConditionalNotationNotAllowed)

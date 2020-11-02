@@ -256,10 +256,13 @@ let pp_methods ppf p =
   pf ppf "@ %a" pp_param_names p
 
 let pp_fundef ppf {Program.fdname; fdargs; fdbody; _} =
+  let no_body_default : Stmt.Located.t =
+    {pattern= Stmt.Fixed.Pattern.Skip; meta= Location_span.empty}
+  in
   pp_method ppf fdname
     (List.map ~f:(fun (_, name, _) -> name) fdargs)
     []
-    (fun ppf -> pp_stmt ppf fdbody)
+    (fun ppf -> pp_stmt ppf (Option.value ~default:no_body_default fdbody))
 
 let imports =
   {|

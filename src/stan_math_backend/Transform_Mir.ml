@@ -6,22 +6,15 @@ let use_opencl = ref false
 let opencl_triggers =
   String.Map.of_alist_exn
     [ ( "normal_id_glm_lpdf"
-      , ( [0; 1]
-        , [ (* Array of conditions under which to move to OpenCL *)
-            ([1], (* Argument 1 is data *)
-                  [(1, UnsizedType.UMatrix)])
-          (* Argument 1 is a matrix *)
-           ] ) )
-    ; ( "bernoulli_logit_glm_lpmf"
-      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
-    ; ( "categorical_logit_glm_lpmf"
-      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
-    ; ( "neg_binomial_2_log_glm_lpmf"
-      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
-    ; ( "ordered_logistic_glm_lpmf"
-      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
-    ; ("poisson_log_glm_lpmf", ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]))
-    ]
+      , [ (* Array of conditions under which to move to OpenCL *)
+          [(1, UnsizedType.UMatrix)]
+        (* Argument 1 is a matrix *)
+         ] )
+    ; ("bernoulli_logit_glm_lpmf", [[(1, UnsizedType.UMatrix)]])
+    ; ("categorical_logit_glm_lpmf", [[(1, UnsizedType.UMatrix)]])
+    ; ("neg_binomial_2_log_glm_lpmf", [[(1, UnsizedType.UMatrix)]])
+    ; ("ordered_logistic_glm_lpmf", [[(1, UnsizedType.UMatrix)]])
+    ; ("poisson_log_glm_lpmf", [[(1, UnsizedType.UMatrix)]]) ]
 
 let opencl_suffix = "_opencl__"
 
@@ -31,28 +24,18 @@ let to_matrix_cl e =
 let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
     =
   let is_avail = List.mem available_cl_vars ~equal:( = ) in
-  let to_cl (Expr.Fixed.({pattern; _}) as e) =
-    match pattern with
-    | Var s when is_avail s ->
+  let to_cl (Expr.Fixed.({pattern; meta= {Expr.Typed.Meta.type_; _}}) as e) =
+    match (pattern, type_) with
+    | Var s, _ when is_avail s ->
         Expr.Fixed.{e with pattern= Var (s ^ opencl_suffix)}
-    | _ -> to_matrix_cl e
-  in
-  let move_cl_args cl_args index arg =
-    if List.mem ~equal:( = ) cl_args index then to_cl arg else arg
+    | _, UnsizedType.(UInt | UReal) -> e
+    | _, _ -> to_matrix_cl e
   in
   let check_type args (i, t) = Expr.Typed.type_of (List.nth_exn args i) = t in
-  let check_if_data args ind =
-    let Expr.Fixed.({pattern; _}) = List.nth_exn args ind in
-    match pattern with Var s when is_avail s -> true | _ -> false
-  in
-  let req_met args (data_arg, type_arg) =
-    List.for_all ~f:(check_if_data args) data_arg
-    && List.for_all ~f:(check_type args) type_arg
-  in
-  let any_req_met args req_args = List.exists ~f:(req_met args) req_args in
-  let maybe_map_args args (cl_args, req_args) =
+  let any_req_met args = List.exists ~f:(List.for_all ~f:(check_type args)) in
+  let maybe_map_args args req_args =
     match any_req_met args req_args with
-    | true -> List.mapi args ~f:(move_cl_args cl_args)
+    | true -> List.map args ~f:to_cl
     | false -> args
   in
   match pattern with
@@ -472,10 +455,8 @@ let trans_prog (p : Program.Typed.t) =
   let get_pname_ust = function
     | ( name
       , { Program.out_block= Parameters
-        ; out_constrained_st
-        ; out_unconstrained_st; _ } )
-      when SizedType.to_unsized out_constrained_st
-           = SizedType.to_unsized out_unconstrained_st ->
+        ; out_unconstrained_st
+        ; out_trans= Identity; _ } ) ->
         Some (name, out_unconstrained_st)
     | name, {Program.out_block= Parameters; out_unconstrained_st; _} ->
         Some (name ^ "_free__", out_unconstrained_st)
@@ -517,7 +498,10 @@ let trans_prog (p : Program.Typed.t) =
   let translate_to_open_cl stmts =
     if !use_opencl then
       let decl Stmt.Fixed.({pattern; _}) =
-        match pattern with Decl d -> Some d.decl_id | _ -> None
+        match pattern with
+        | Decl {decl_type= Sized (SInt | SReal); _} -> None
+        | Decl {decl_id; _} -> Some decl_id
+        | _ -> None
       in
       let data_var_idents = List.filter_map ~f:decl p.prepare_data in
       let switch_expr = switch_expr_to_opencl data_var_idents in

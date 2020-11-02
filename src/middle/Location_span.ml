@@ -30,7 +30,7 @@ let of_positions_opt start_pos end_pos =
     Location.of_position_opt end_pos
     |> map ~f:(fun end_loc -> {begin_loc; end_loc}))
 
-let of_positions_exn start_pos end_pos =
+let of_positions_exn (start_pos, end_pos) =
   Option.value_exn (of_positions_opt start_pos end_pos)
 
 module Comparator = Comparator.Make (struct

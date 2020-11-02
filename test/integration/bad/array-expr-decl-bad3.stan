@@ -1,0 +1,3 @@
+data {
+  asdf real x;
+}

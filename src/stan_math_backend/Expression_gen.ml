@@ -120,9 +120,9 @@ let suffix_args f =
   else if ends_with "_lp" f then ["lp__"; "lp_accum__"]
   else []
 
-let demangle_propto_name udf f =
+let demangle_unnormalized_name udf f =
   if f = "multiply_log" || f = "binomial_coefficient_log" then f
-  else if Utils.is_propto_distribution f then
+  else if Utils.is_unnormalized_distribution f then
     Utils.stdlib_distribution_name f ^ "<propto__>"
   else if
     Utils.is_distribution_name f || (udf && (is_user_dist f || is_user_lp f))
@@ -312,7 +312,22 @@ and gen_fun_app ppf fname es =
           (fname, f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl)
       | true, x, {pattern= FunApp (_, f, _); _} :: grainsize :: container :: tl
         when Stan_math_signatures.is_reduce_sum_fn x ->
-          (strf "%s<%s>" fname f, grainsize :: container :: msgs :: tl)
+          let chop_functor_suffix =
+            String.chop_suffix_exn ~suffix:reduce_sum_functor_suffix
+          in
+          let propto_template =
+            if Utils.is_distribution_name (chop_functor_suffix f) then
+              if Utils.is_unnormalized_distribution (chop_functor_suffix f)
+              then "<propto__>"
+              else "<false>"
+            else ""
+          in
+          let normalized_dist_functor =
+            Utils.stdlib_distribution_name (chop_functor_suffix f)
+            ^ reduce_sum_functor_suffix
+          in
+          ( strf "%s<%s%s>" fname normalized_dist_functor propto_template
+          , grainsize :: container :: msgs :: tl )
       | true, x, f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: tl
         when Stan_math_signatures.is_variadic_ode_fn x
              && String.is_suffix fname
@@ -330,7 +345,9 @@ and gen_fun_app ppf fname es =
       | true, _, args -> (fname, args @ [msgs])
       | false, _, args -> (fname, args)
     in
-    let fname = stan_namespace_qualify fname |> demangle_propto_name false in
+    let fname =
+      stan_namespace_qualify fname |> demangle_unnormalized_name false
+    in
     pp_call ppf (fname, pp_expr, args)
   in
   let pp =
@@ -350,7 +367,7 @@ and pp_user_defined_fun ppf (f, es) =
   let extra_args = suffix_args f @ ["pstream__"] in
   let sep = if List.is_empty es then "" else ", " in
   pf ppf "@[<hov 2>%s(@,%a%s)@]"
-    (demangle_propto_name true f)
+    (demangle_unnormalized_name true f)
     (list ~sep:comma pp_expr) es
     (sep ^ String.concat ~sep:", " extra_args)
 

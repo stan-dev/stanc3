@@ -1,3 +1,39 @@
+  $ ../../../../install/default/bin/stanc array-expr-decl-bad1.stan
+
+Syntax error in 'array-expr-decl-bad1.stan', line 2, column 2 to column 16, parsing error:
+   -------------------------------------------------
+     1:  data {
+     2:    array[1:2,2,:] real x;
+                         ^
+     3:  }
+   -------------------------------------------------
+
+Dimensions should be expressions, not multiple or range indexing.
+
+  $ ../../../../install/default/bin/stanc array-expr-decl-bad2.stan
+
+Syntax error in 'array-expr-decl-bad2.stan', line 2, column 2 to column 15, parsing error:
+   -------------------------------------------------
+     1:  data {
+     2:    blahblah[1,2] real x;
+                        ^
+     3:  }
+   -------------------------------------------------
+
+Found a declaration following an expression.
+
+  $ ../../../../install/default/bin/stanc array-expr-decl-bad3.stan
+
+Syntax error in 'array-expr-decl-bad3.stan', line 2, column 2 to column 6, parsing error:
+   -------------------------------------------------
+     1:  data {
+     2:    asdf real x;
+               ^
+     3:  }
+   -------------------------------------------------
+
+Found a declaration following an expression.
+
   $ ../../../../install/default/bin/stanc array_expr_bad1.stan
 
 Semantic error in 'array_expr_bad1.stan', line 2, column 2 to column 32:
@@ -400,7 +436,8 @@ Syntax error in 'declare-define-param-block.stan', line 6, column 9 to column 10
      8:  model {
    -------------------------------------------------
 
-Assignments are not allowed in this block.
+Cannot assign to variables in the `data` or `parameters` blocks; expected ';'
+after variable declaration.
 
 
   $ ../../../../install/default/bin/stanc declare-define-var-double-1.stan
@@ -443,7 +480,8 @@ Syntax error in 'declare-define-var-double-3.stan', line 3, column 10 to column 
      5:  parameters {
    -------------------------------------------------
 
-Assignments are not allowed in this block.
+Cannot assign to variables in the `data` or `parameters` blocks; expected ';'
+after variable declaration.
 
 
   $ ../../../../install/default/bin/stanc declare-define-var-double-4.stan
@@ -458,7 +496,8 @@ Syntax error in 'declare-define-var-double-4.stan', line 6, column 10 to column 
      8:  model {
    -------------------------------------------------
 
-Assignments are not allowed in this block.
+Cannot assign to variables in the `data` or `parameters` blocks; expected ';'
+after variable declaration.
 
 
   $ ../../../../install/default/bin/stanc declare-define-var-int-1.stan
@@ -602,15 +641,16 @@ Ill-formed phrase. Found L-value. This can be completed in many ways.
 
   $ ../../../../install/default/bin/stanc err-decl-double.stan
 
-Syntax error in 'err-decl-double.stan', line 1, column 5 to column 6, parsing error:
+Syntax error in 'err-decl-double.stan', line 2, column 2 to column 8, parsing error:
    -------------------------------------------------
      1:  data {
-               ^
      2:    double y;
+                 ^
      3:  }
+     4:  model {
    -------------------------------------------------
 
-Expected top-level variable declaration or "}".
+Invalid type in declaration.
 
 
   $ ../../../../install/default/bin/stanc err-decl-matrix-2.stan
@@ -776,7 +816,7 @@ Syntax error in 'err-if-else-double-else.stan', line 3, column 2 to column 8, pa
      5:    else y = 4;
    -------------------------------------------------
 
-Expected top-level variable declaration, statement or "}".
+Ill-formed block. Expected a statement, variable declaration, or just "}".
 
 
   $ ../../../../install/default/bin/stanc err-if-else-no-cond.stan
@@ -947,7 +987,7 @@ Syntax error in 'err-no-statement.stan', line 3, column 7 to column 8, parsing e
      5:  model {
    -------------------------------------------------
 
-Ill-formed statement. Statement expected for true branch of conditional. 
+Ill-formed statement. Statement expected for true branch of conditional.
 
 
   $ ../../../../install/default/bin/stanc err-non-int-dims.stan
@@ -989,7 +1029,7 @@ Syntax error in 'err-second-operand-plus.stan', line 3, column 8 to column 10, p
      5:  model {
    -------------------------------------------------
 
-Ill-formed expression. Found expression "||". Expect an expression next.
+Found an incomplete binary expression - are you missing the right hand side?
 
 
   $ ../../../../install/default/bin/stanc err-transformed-params.stan
@@ -1047,7 +1087,7 @@ Syntax error in 'expect_statement_seq_close_brace_3.stan', line 4, column 2 to l
      8:  parameters {
    -------------------------------------------------
 
-Expected top-level variable declaration, statement or "}".
+Ill-formed block. Expected a statement, variable declaration, or just "}".
 
 
   $ ../../../../install/default/bin/stanc expect_statement_seq_close_brace_4.stan
@@ -1061,7 +1101,7 @@ Syntax error in 'expect_statement_seq_close_brace_4.stan', line 8, column 2 to c
      9:  
    -------------------------------------------------
 
-Expected top-level variable declaration, statement or "}".
+Ill-formed block. Expected a statement, variable declaration, or just "}".
 
 
   $ ../../../../install/default/bin/stanc experiment.stan
@@ -1273,7 +1313,7 @@ Semantic error in 'functions-bad17.stan', line 2, column 2 to line 4, column 3:
      4:    }
    -------------------------------------------------
 
-Real return type required for probability functions ending in _log, _lpdf, _lpmf, _lcdf, or _lccdf.
+Real return type required for probability functions ending in _log, _lpdf, _lupdf, _lpmf, _lupmf, _lcdf, or _lccdf.
 
   $ ../../../../install/default/bin/stanc functions-bad18.stan
 
@@ -1802,6 +1842,8 @@ Semantic error in 'op_elt_divide_bad.stan', line 7, column 6 to column 12:
    -------------------------------------------------
 
 Ill-typed arguments supplied to infix operator ./. Available signatures: 
+(int, int) => int
+(real, real) => real
 (real, vector) => vector
 (vector, real) => vector
 (vector, vector) => vector
@@ -1825,6 +1867,8 @@ Semantic error in 'op_elt_multiply_bad.stan', line 7, column 6 to column 12:
    -------------------------------------------------
 
 Ill-typed arguments supplied to infix operator .*. Available signatures: 
+(int, int) => int
+(real, real) => real
 (vector, vector) => vector
 (row_vector, row_vector) => row_vector
 (matrix, matrix) => matrix
@@ -2053,7 +2097,7 @@ Semantic error in 'prob-fun-args-no-bar.stan', line 5, column 12 to column 32:
      6:  }
    -------------------------------------------------
 
-Probabilty functions with suffixes _lpdf, _lpmf, _lcdf, and _lccdf, require a vertical bar (|) between the first two arguments.
+Probability functions with suffixes _lpdf, _lupdf, _lpmf, _lupmf, _lcdf and _lccdf, require a vertical bar (|) between the first two arguments.
 
   $ ../../../../install/default/bin/stanc prob-poisson_log-trunc-both.stan
 
@@ -2096,15 +2140,15 @@ Truncation is only defined if distribution has _lcdf and _lccdf functions implem
 
   $ ../../../../install/default/bin/stanc propto-bad1.stan
 
-Semantic error in 'propto-bad1.stan', line 2, column 14 to column 43:
+Semantic error in 'propto-bad1.stan', line 2, column 14 to column 37:
    -------------------------------------------------
      1:  model {
-     2:      target += normal_propto_lpdf(1| {0}, 1);
+     2:      target += normal_lupdf(1| {0}, 1);
                        ^
      3:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'normal_propto_lpdf'. Available signatures: 
+Ill-typed arguments supplied to function 'normal_lupdf'. Available signatures: 
 (real, real, real) => real
 (real, real, vector) => real
 (real, real, row_vector) => real
@@ -2581,7 +2625,7 @@ Semantic error in 'tilde-bad.stan', line 8, column 8 to column 19:
    -------------------------------------------------
 
 
-~ statement should refer to a distribution without its "_lpdf" or "_lpmf" suffix.
+~ statement should refer to a distribution without its "_lpdf/_lupdf" or "_lpmf/_lupmf" suffix.
 For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
 
 

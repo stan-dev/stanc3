@@ -57,7 +57,7 @@ let parse parse_fun lexbuf =
               "(Parse error state " ^ string_of_int (Interp.number state) ^ ")"
         in
         Errors.Parsing
-          (message, Location_span.of_positions_exn start_pos end_pos)
+          (message, Location_span.of_positions_exn (start_pos, end_pos))
         |> Result.Error
   in
   Interp.loop_handle success failure input (parse_fun lexbuf.Lexing.lex_curr_p)

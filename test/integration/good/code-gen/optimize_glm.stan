@@ -2,6 +2,7 @@ data {
   int<lower=1> k;
   int<lower=0> n;
   matrix[n, k] X_d;
+  matrix[n, k] X_d_a[2];
   vector[n] y_v_d;
   row_vector[n] X_rv_d;
   int y_vi_d[n];
@@ -281,4 +282,6 @@ model {
   target += categorical_logit_glm_lpmf(y2_vi_d_td| X_rv_p, alpha_v, beta_m);
   y2_vi_d_td ~ categorical_logit_glm(X_rv_p, alpha_v, beta_m);
 
+  target += normal_id_glm_lpdf(y_v_d | X_d_a[1], alpha, beta, sigma);
+  y_v_d ~ normal_id_glm(X_d_a[1], alpha, beta, sigma);
 }
