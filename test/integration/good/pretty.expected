@@ -5242,6 +5242,17 @@ model {
   goo_lp(i1, r1, m1, v1, ai1, rv1);
 }
 
+  $ ../../../../install/default/bin/stanc --auto-format unreserved-array-keyword.stan
+functions {
+  real f(array[,,] real array) {
+    return array[1, 2, 3];
+  }
+}
+model {
+  real array;
+  array[1, 2, 3] real abc;
+}
+
   $ ../../../../install/default/bin/stanc --auto-format user-defined-lpdf-fun.stan
 functions {
   real bar_lpmf(int y, real z) {
