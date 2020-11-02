@@ -2,13 +2,13 @@
 data {
   int<lower=0> N;
   int<lower=0> T;
-  real x[T];
-  real y[N, T];
+  array[T] real x;
+  array[N, T] real y;
   real xbar;
 }
 parameters {
-  real alpha[N];
-  real beta[N];
+  array[N] real alpha;
+  array[N] real beta;
   real mu_alpha;
   real mu_beta;
   real<lower=0> sigmasq_y;
@@ -118,14 +118,14 @@ assignment operator <- is deprecated in the Stan language; use = instead.
 data {
   int<lower=0> N;
   int<lower=0> Npts;
-  int<lower=0> rat[Npts];
-  real x[Npts];
-  real y[Npts];
+  array[Npts] int<lower=0> rat;
+  array[Npts] real x;
+  array[Npts] real y;
   real xbar;
 }
 parameters {
-  real alpha[N];
-  real beta[N];
+  array[N] real alpha;
+  array[N] real beta;
   real mu_alpha;
   real mu_beta;
   real<lower=0> sigma_y;
@@ -252,13 +252,13 @@ assignment operator <- is deprecated in the Stan language; use = instead.
 data {
   int<lower=0> N;
   int<lower=0> T;
-  real x[T];
-  real y[N, T];
+  array[T] real x;
+  array[N, T] real y;
   real xbar;
 }
 transformed data {
-  real x_minus_xbar[T];
-  real y_linear[N * T];
+  array[T] real x_minus_xbar;
+  array[N * T] real y_linear;
   for (t in 1 : T) 
     x_minus_xbar[t] <- x[t] - xbar;
   for (n in 1 : N) 
@@ -266,8 +266,8 @@ transformed data {
       y_linear[(n - 1) * T + t] <- y[n, t];
 }
 parameters {
-  real alpha[N];
-  real beta[N];
+  array[N] real alpha;
+  array[N] real beta;
   real mu_alpha;
   real mu_beta;
   real<lower=0> sigmasq_y;
@@ -283,7 +283,7 @@ transformed parameters {
   sigma_beta <- sqrt(sigmasq_beta);
 }
 model {
-  real pred[N * T];
+  array[N * T] real pred;
   for (n in 1 : N) 
     for (t in 1 : T) 
       pred[(n - 1) * T + t] <- fma(beta[n], x_minus_xbar[t], alpha[n]);

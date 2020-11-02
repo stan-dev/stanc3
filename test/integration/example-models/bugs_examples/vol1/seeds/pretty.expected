@@ -1,8 +1,8 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format seeds.stan
 data {
   int<lower=0> I;
-  int<lower=0> n[I];
-  int<lower=0> N[I];
+  array[I] int<lower=0> n;
+  array[I] int<lower=0> N;
   vector[I] x1;
   vector[I] x2;
 }
@@ -85,8 +85,8 @@ assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format seeds_centered.stan
 data {
   int<lower=0> I;
-  int<lower=0> n[I];
-  int<lower=0> N[I];
+  array[I] int<lower=0> n;
+  array[I] int<lower=0> N;
   vector[I] x1;
   vector[I] x2;
 }
@@ -234,8 +234,8 @@ Comments beginning with # are deprecated. Please use // in place of # for line c
   $ ../../../../../../../install/default/bin/stanc --auto-format seeds_stanified.stan
 data {
   int<lower=0> I;
-  int<lower=0> n[I];
-  int<lower=0> N[I];
+  array[I] int<lower=0> n;
+  array[I] int<lower=0> N;
   vector[I] x1;
   vector[I] x2;
 }

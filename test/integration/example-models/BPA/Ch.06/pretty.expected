@@ -2,10 +2,10 @@
 data {
   int<lower=0> M;
   int<lower=0> T;
-  int<lower=0, upper=1> y[M, T];
+  array[M, T] int<lower=0, upper=1> y;
 }
 transformed data {
-  int<lower=0> s[M];
+  array[M] int<lower=0> s;
   int<lower=0> C;
   C = 0;
   for (i in 1 : M) {
@@ -35,10 +35,10 @@ generated quantities {
 data {
   int<lower=0> M;
   int<lower=0> T;
-  int<lower=0, upper=1> y[M, T];
+  array[M, T] int<lower=0, upper=1> y;
 }
 transformed data {
-  int<lower=0> s[M];
+  array[M] int<lower=0> s;
   int<lower=0> C;
   C = 0;
   for (i in 1 : M) {
@@ -53,7 +53,7 @@ parameters {
   real<lower=0, upper=1> c;
 }
 transformed parameters {
-  vector<lower=0, upper=1>[T] p_eff[M];
+  array[M] vector<lower=0, upper=1>[T] p_eff;
   for (i in 1 : M) {
     p_eff[i, 1] = p;
     for (j in 2 : T) 
@@ -79,7 +79,7 @@ generated quantities {
 data {
   int<lower=0> M;
   int<lower=0> T;
-  int<lower=0, upper=T> y[M];
+  array[M] int<lower=0, upper=T> y;
 }
 transformed data {
   int<lower=0> C;
@@ -110,7 +110,7 @@ model {
                             bernoulli_lpmf(0| omega));
 }
 generated quantities {
-  int<lower=0, upper=1> z[M];
+  array[M] int<lower=0, upper=1> z;
   int<lower=C> N;
   for (i in 1 : M) {
     if (y[i] > 0) {
@@ -129,10 +129,10 @@ generated quantities {
 data {
   int<lower=0> M;
   int<lower=0> T;
-  int<lower=0, upper=1> y[M, T];
+  array[M, T] int<lower=0, upper=1> y;
 }
 transformed data {
-  int<lower=0> s[M];
+  array[M] int<lower=0> s;
   int<lower=0> C;
   C = 0;
   for (i in 1 : M) {
@@ -164,12 +164,12 @@ data {
   int<lower=0> M;
   int<lower=0> T;
   int<lower=0> C;
-  int<lower=0, upper=1> y[M, T];
-  real<lower=-6, upper=6> bsize[C];
+  array[M, T] int<lower=0, upper=1> y;
+  array[C] real<lower=-6, upper=6> bsize;
   real<lower=0> prior_sd_upper;
 }
 transformed data {
-  int<lower=0> s[M];
+  array[M] int<lower=0> s;
   for (i in 1 : M) 
     s[i] = sum(y[i]);
 }
@@ -179,7 +179,7 @@ parameters {
   real beta;
   real mu_size;
   real<lower=0, upper=prior_sd_upper> sd_size;
-  real<lower=-6, upper=6> bsize_mis[M - C];
+  array[M - C] real<lower=-6, upper=6> bsize_mis;
 }
 transformed parameters {
   vector[T] alpha = logit(mean_p);
@@ -207,7 +207,7 @@ model {
 }
 generated quantities {
   matrix<lower=0, upper=1>[M, T] p = inv_logit(logit_p);
-  int<lower=0, upper=1> z[M];
+  array[M] int<lower=0, upper=1> z;
   int<lower=C> N;
   for (i in 1 : M) {
     if (s[i] > 0) {
@@ -225,10 +225,10 @@ generated quantities {
 data {
   int<lower=0> M;
   int<lower=0> T;
-  int<lower=0, upper=1> y[M, T];
+  array[M, T] int<lower=0, upper=1> y;
 }
 transformed data {
-  int<lower=0> s[M];
+  array[M] int<lower=0> s;
   int<lower=0> C;
   C = 0;
   for (i in 1 : M) {
@@ -267,7 +267,7 @@ model {
 }
 generated quantities {
   matrix<lower=0, upper=1>[M, T] p = inv_logit(logit_p);
-  int<lower=0, upper=1> z[M];
+  array[M] int<lower=0, upper=1> z;
   int<lower=C> N;
   for (i in 1 : M) {
     if (s[i] > 0) {
@@ -285,10 +285,10 @@ generated quantities {
 data {
   int<lower=0> M;
   int<lower=0> T;
-  int<lower=0, upper=1> y[M, T];
+  array[M, T] int<lower=0, upper=1> y;
 }
 transformed data {
-  int<lower=0, upper=T> s[M];
+  array[M] int<lower=0, upper=T> s;
   int<lower=0, upper=M> C;
   C = 0;
   for (i in 1 : M) {
@@ -299,13 +299,13 @@ transformed data {
 }
 parameters {
   real<lower=0, upper=1> omega;
-  real<lower=0, upper=1> mean_p[T];
+  array[T] real<lower=0, upper=1> mean_p;
   real<lower=0, upper=5> sigma;
   vector[M] eps_raw;
 }
 transformed parameters {
   vector[M] eps = sigma * eps_raw;
-  real mean_lp[T] = logit(mean_p);
+  array[T] real mean_lp = logit(mean_p);
   matrix[M, T] logit_p;
   for (j in 1 : T) 
     logit_p[ : , j] = mean_lp[j] + eps;
@@ -324,7 +324,7 @@ model {
 }
 generated quantities {
   matrix<lower=0, upper=1>[M, T] p = inv_logit(logit_p);
-  int<lower=0, upper=1> z[M];
+  array[M] int<lower=0, upper=1> z;
   int<lower=C> N;
   for (i in 1 : M) {
     if (s[i] > 0) {

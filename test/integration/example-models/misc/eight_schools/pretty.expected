@@ -1,12 +1,12 @@
   $ ../../../../../../install/default/bin/stanc --auto-format eight_schools.stan
 data {
   int<lower=0> J;
-  real y[J];
-  real<lower=0> sigma[J];
+  array[J] real y;
+  array[J] real<lower=0> sigma;
 }
 parameters {
   real mu;
-  real theta[J];
+  array[J] real theta;
   real<lower=0> tau;
 }
 model {

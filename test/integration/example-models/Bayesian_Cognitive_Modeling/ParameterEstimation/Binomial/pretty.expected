@@ -159,7 +159,7 @@ assignment operator <- is deprecated in the Stan language; use = instead.
 data {
   int<lower=0> nmax;
   int<lower=0> m;
-  int<lower=0, upper=nmax> k[m];
+  array[m] int<lower=0, upper=nmax> k;
 }
 transformed data {
   int<lower=0> nmin;

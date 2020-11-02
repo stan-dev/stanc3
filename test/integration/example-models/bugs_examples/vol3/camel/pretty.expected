@@ -21,7 +21,7 @@ parameters {
   real y121;
 }
 model {
-  vector[2] Y[12];
+  array[12] vector[2] Y;
   Y[1, 1] <- 1;
   Y[1, 2] <- 1;
   Y[2, 1] <- 1;
@@ -472,9 +472,9 @@ assignment operator <- is deprecated in the Stan language; use = instead.
 
   $ ../../../../../../../install/default/bin/stanc --auto-format camel2.stan
 transformed data {
-  vector[2] Y[4];
-  real Y1[4];
-  real Y2[4];
+  array[4] vector[2] Y;
+  array[4] real Y1;
+  array[4] real Y2;
   vector[2] mu;
   matrix[2, 2] S;
   mu[1] <- 0;

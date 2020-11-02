@@ -3,14 +3,14 @@ data {
   int<lower=1> K;
   int<lower=1> V;
   int<lower=0> T;
-  int<lower=1, upper=V> w[T];
-  int<lower=1, upper=K> z[T];
+  array[T] int<lower=1, upper=V> w;
+  array[T] int<lower=1, upper=K> z;
   vector<lower=0>[K] alpha;
   vector<lower=0>[V] beta;
 }
 transformed data {
-  vector<lower=0>[K] alpha_post[K];
-  vector<lower=0>[V] beta_post[K];
+  array[K] vector<lower=0>[K] alpha_post;
+  array[K] vector<lower=0>[V] beta_post;
   for (k in 1 : K) 
     alpha_post[k] <- alpha;
   for (t in 2 : T) 
@@ -21,8 +21,8 @@ transformed data {
     beta_post[z[t], w[t]] <- beta_post[z[t], w[t]] + 1;
 }
 parameters {
-  simplex[K] theta[K];
-  simplex[V] phi[K];
+  array[K] simplex[K] theta;
+  array[K] simplex[V] phi;
 }
 model {
   for (k in 1 : K) 
@@ -89,15 +89,15 @@ data {
   int<lower=1> V;
   int<lower=0> T;
   int<lower=1> T_unsup;
-  int<lower=1, upper=V> w[T];
-  int<lower=1, upper=K> z[T];
-  int<lower=1, upper=V> u[T_unsup];
+  array[T] int<lower=1, upper=V> w;
+  array[T] int<lower=1, upper=K> z;
+  array[T_unsup] int<lower=1, upper=V> u;
   vector<lower=0>[K] alpha;
   vector<lower=0>[V] beta;
 }
 parameters {
-  simplex[K] theta[K];
-  simplex[V] phi[K];
+  array[K] simplex[K] theta;
+  array[K] simplex[V] phi;
 }
 model {
   for (k in 1 : K) 
@@ -109,8 +109,8 @@ model {
   for (t in 2 : T) 
     z[t] ~ categorical(theta[z[t - 1]]);
   {
-    real acc[K];
-    real gamma[T_unsup, K];
+    array[K] real acc;
+    array[T_unsup, K] real gamma;
     for (k in 1 : K) 
       gamma[1, k] <- log(phi[k, u[1]]);
     for (t in 2 : T_unsup) {
@@ -124,11 +124,11 @@ model {
   }
 }
 generated quantities {
-  int<lower=1, upper=K> y_star[T_unsup];
+  array[T_unsup] int<lower=1, upper=K> y_star;
   real log_p_y_star;
   {
-    int back_ptr[T_unsup, K];
-    real best_logp[T_unsup, K];
+    array[T_unsup, K] int back_ptr;
+    array[T_unsup, K] real best_logp;
     real best_total_logp;
     for (k in 1 : K) 
       best_logp[1, K] <- log(phi[k, u[1]]);
@@ -315,14 +315,14 @@ data {
   int<lower=1> K;
   int<lower=1> V;
   int<lower=0> T;
-  int<lower=1, upper=V> w[T];
-  int<lower=1, upper=K> z[T];
+  array[T] int<lower=1, upper=V> w;
+  array[T] int<lower=1, upper=K> z;
   vector<lower=0>[K] alpha;
   vector<lower=0>[V] beta;
 }
 transformed data {
-  int<lower=0> trans[K, K];
-  int<lower=0> emit[K, V];
+  array[K, K] int<lower=0> trans;
+  array[K, V] int<lower=0> emit;
   for (k1 in 1 : K) 
     for (k2 in 1 : K) 
       trans[k1, k2] <- 0;
@@ -335,8 +335,8 @@ transformed data {
     emit[z[t], w[t]] <- 1 + emit[z[t], w[t]];
 }
 parameters {
-  simplex[K] theta[K];
-  simplex[V] phi[K];
+  array[K] simplex[K] theta;
+  array[K] simplex[V] phi;
 }
 model {
   for (k in 1 : K) 
@@ -406,14 +406,14 @@ data {
   int<lower=1> K;
   int<lower=1> V;
   int<lower=0> T;
-  int<lower=1, upper=V> w[T];
-  int<lower=1, upper=K> z[T];
+  array[T] int<lower=1, upper=V> w;
+  array[T] int<lower=1, upper=K> z;
   vector<lower=0>[K] alpha;
   vector<lower=0>[V] beta;
 }
 parameters {
-  simplex[K] theta[K];
-  simplex[V] phi[K];
+  array[K] simplex[K] theta;
+  array[K] simplex[V] phi;
 }
 model {
   for (k in 1 : K) 

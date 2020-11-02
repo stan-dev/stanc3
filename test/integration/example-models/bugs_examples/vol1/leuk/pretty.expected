@@ -2,14 +2,14 @@
 data {
   int<lower=0> N;
   int<lower=0> NT;
-  int<lower=0> obs_t[N];
-  int<lower=0> t[NT + 1];
-  int<lower=0> fail[N];
-  real Z[N];
+  array[N] int<lower=0> obs_t;
+  array[NT + 1] int<lower=0> t;
+  array[N] int<lower=0> fail;
+  array[N] real Z;
 }
 transformed data {
-  int Y[N, NT];
-  int dN[N, NT];
+  array[N, NT] int Y;
+  array[N, NT] int dN;
   real c;
   real r;
   for (i in 1 : N) {
@@ -24,7 +24,7 @@ transformed data {
 }
 parameters {
   real beta;
-  real<lower=0> dL0[NT];
+  array[NT] real<lower=0> dL0;
 }
 model {
   beta ~ normal(0, 1000);
@@ -38,8 +38,8 @@ model {
   }
 }
 generated quantities {
-  real S_placebo[NT];
-  real S_treat[NT];
+  array[NT] real S_placebo;
+  array[NT] real S_treat;
   for (j in 1 : NT) {
     real s;
     s <- 0;

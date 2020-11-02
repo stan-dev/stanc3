@@ -1,10 +1,10 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format oxford.stan
 data {
   int<lower=0> K;
-  int<lower=0> n0[K];
-  int<lower=0> n1[K];
-  int<lower=0> r0[K];
-  int<lower=0> r1[K];
+  array[K] int<lower=0> n0;
+  array[K] int<lower=0> n1;
+  array[K] int<lower=0> r0;
+  array[K] int<lower=0> r1;
   vector[K] year;
 }
 transformed data {

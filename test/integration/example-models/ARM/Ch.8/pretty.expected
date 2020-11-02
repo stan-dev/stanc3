@@ -32,7 +32,7 @@ data {
   vector[N] roach1;
   vector[N] senior;
   vector[N] treatment;
-  int y[N];
+  array[N] int y;
 }
 transformed data {
   vector[N] log_expo;
@@ -53,7 +53,7 @@ data {
   vector[N] roach1;
   vector[N] senior;
   vector[N] treatment;
-  int y[N];
+  array[N] int y;
 }
 transformed data {
   vector[N] log_expo;

@@ -3,15 +3,15 @@ data {
   int<lower=0> N_uncensored;
   int<lower=0> N_censored;
   int<lower=0> M;
-  int<lower=1, upper=M> group_uncensored[N_uncensored];
-  int<lower=1, upper=M> group_censored[N_censored];
-  real<lower=0> censor_time[N_censored];
-  real<lower=0> t_uncensored[N_uncensored];
+  array[N_uncensored] int<lower=1, upper=M> group_uncensored;
+  array[N_censored] int<lower=1, upper=M> group_censored;
+  array[N_censored] real<lower=0> censor_time;
+  array[N_uncensored] real<lower=0> t_uncensored;
 }
 parameters {
   real<lower=0> r;
-  real beta[M];
-  real<lower=1> t2_censored[N_censored];
+  array[M] real beta;
+  array[N_censored] real<lower=1> t2_censored;
 }
 model {
   r ~ exponential(0.001);
@@ -26,7 +26,7 @@ model {
   }
 }
 generated quantities {
-  real median[M];
+  array[M] real median;
   real pos_control;
   real test_sub;
   real veh_control;

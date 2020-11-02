@@ -3,17 +3,17 @@ data {
   int<lower=0> N;
   int<lower=1> D;
   int<lower=1> K;
-  vector[D] y[N];
+  array[N] vector[D] y;
 }
 transformed data {
   real<upper=0> neg_log_K;
   neg_log_K <- -log(K);
 }
 parameters {
-  vector[D] mu[K];
+  array[K] vector[D] mu;
 }
 transformed parameters {
-  real<upper=0> soft_z[N, K];
+  array[N, K] real<upper=0> soft_z;
   for (n in 1 : N) 
     for (k in 1 : K) 
       soft_z[n, k] <- neg_log_K - 0.5 * dot_self(mu[k] - y[n]);

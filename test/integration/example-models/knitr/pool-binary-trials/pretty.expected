@@ -1,8 +1,8 @@
   $ ../../../../../../install/default/bin/stanc --auto-format hier-logit-centered.stan
 data {
   int<lower=0> N;
-  int<lower=0> K[N];
-  int<lower=0> y[N];
+  array[N] int<lower=0> K;
+  array[N] int<lower=0> y;
 }
 parameters {
   real mu;
@@ -36,10 +36,10 @@ assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../install/default/bin/stanc --auto-format hier-logit.stan
 data {
   int<lower=0> N;
-  int<lower=0> K[N];
-  int<lower=0> y[N];
-  int<lower=0> K_new[N];
-  int<lower=0> y_new[N];
+  array[N] int<lower=0> K;
+  array[N] int<lower=0> y;
+  array[N] int<lower=0> K_new;
+  array[N] int<lower=0> y_new;
 }
 transformed data {
   real min_y;
@@ -65,14 +65,14 @@ model {
 generated quantities {
   vector[N] theta;
   real log_p_new;
-  int<lower=0> z[N];
+  array[N] int<lower=0> z;
   int<lower=0, upper=1> some_ability_gt_350;
-  int<lower=0, upper=1> avg_gt_400[N];
-  int<lower=0, upper=1> ability_gt_400[N];
-  int<lower=1, upper=N> rnk[N];
-  int<lower=0, upper=1> is_best[N];
-  int<lower=0> y_rep[N];
-  int<lower=0> y_pop_rep[N];
+  array[N] int<lower=0, upper=1> avg_gt_400;
+  array[N] int<lower=0, upper=1> ability_gt_400;
+  array[N] int<lower=1, upper=N> rnk;
+  array[N] int<lower=0, upper=1> is_best;
+  array[N] int<lower=0> y_rep;
+  array[N] int<lower=0> y_pop_rep;
   real min_y_rep;
   real max_y_rep;
   real mean_y_rep;
@@ -94,7 +94,7 @@ generated quantities {
   for (n in 1 : N) 
     ability_gt_400[n] <- (theta[n] > 0.400);
   {
-    int dsc[N];
+    array[N] int dsc;
     dsc <- sort_indices_desc(theta);
     for (n in 1 : N) 
       rnk[dsc[n]] <- n;
@@ -429,10 +429,10 @@ assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../install/default/bin/stanc --auto-format hier.stan
 data {
   int<lower=0> N;
-  int<lower=0> K[N];
-  int<lower=0> y[N];
-  int<lower=0> K_new[N];
-  int<lower=0> y_new[N];
+  array[N] int<lower=0> K;
+  array[N] int<lower=0> y;
+  array[N] int<lower=0> K_new;
+  array[N] int<lower=0> y_new;
 }
 transformed data {
   real min_y;
@@ -456,14 +456,14 @@ model {
 }
 generated quantities {
   real log_p_new;
-  int<lower=0> z[N];
+  array[N] int<lower=0> z;
   int<lower=0, upper=1> some_ability_gt_350;
-  int<lower=0, upper=1> avg_gt_400[N];
-  int<lower=0, upper=1> ability_gt_400[N];
-  int<lower=1, upper=N> rnk[N];
-  int<lower=0, upper=1> is_best[N];
-  int<lower=0> y_rep[N];
-  int<lower=0> y_pop_rep[N];
+  array[N] int<lower=0, upper=1> avg_gt_400;
+  array[N] int<lower=0, upper=1> ability_gt_400;
+  array[N] int<lower=1, upper=N> rnk;
+  array[N] int<lower=0, upper=1> is_best;
+  array[N] int<lower=0> y_rep;
+  array[N] int<lower=0> y_pop_rep;
   real min_y_rep;
   real max_y_rep;
   real mean_y_rep;
@@ -483,7 +483,7 @@ generated quantities {
   for (n in 1 : N) 
     ability_gt_400[n] <- (theta[n] > 0.400);
   {
-    int dsc[N];
+    array[N] int dsc;
     dsc <- sort_indices_desc(theta);
     for (n in 1 : N) 
       rnk[dsc[n]] <- n;
@@ -806,10 +806,10 @@ assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../install/default/bin/stanc --auto-format no-pool.stan
 data {
   int<lower=0> N;
-  int<lower=0> K[N];
-  int<lower=0> y[N];
-  int<lower=0> K_new[N];
-  int<lower=0> y_new[N];
+  array[N] int<lower=0> K;
+  array[N] int<lower=0> y;
+  array[N] int<lower=0> K_new;
+  array[N] int<lower=0> y_new;
 }
 transformed data {
   real min_y;
@@ -829,13 +829,13 @@ model {
 }
 generated quantities {
   real log_p_new;
-  int<lower=0> z[N];
+  array[N] int<lower=0> z;
   int<lower=0, upper=1> some_ability_gt_350;
-  int<lower=0, upper=1> avg_gt_400[N];
-  int<lower=0, upper=1> ability_gt_400[N];
-  int<lower=1, upper=N> rnk[N];
-  int<lower=0, upper=1> is_best[N];
-  int<lower=0> y_rep[N];
+  array[N] int<lower=0, upper=1> avg_gt_400;
+  array[N] int<lower=0, upper=1> ability_gt_400;
+  array[N] int<lower=1, upper=N> rnk;
+  array[N] int<lower=0, upper=1> is_best;
+  array[N] int<lower=0> y_rep;
   real min_y_rep;
   real max_y_rep;
   real mean_y_rep;
@@ -855,7 +855,7 @@ generated quantities {
   for (n in 1 : N) 
     ability_gt_400[n] <- (theta[n] > 0.400);
   {
-    int dsc[N];
+    array[N] int dsc;
     dsc <- sort_indices_desc(theta);
     for (n in 1 : N) 
       rnk[dsc[n]] <- n;
@@ -1162,10 +1162,10 @@ assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../install/default/bin/stanc --auto-format pool.stan
 data {
   int<lower=0> N;
-  int<lower=0> K[N];
-  int<lower=0> y[N];
-  int<lower=0> K_new[N];
-  int<lower=0> y_new[N];
+  array[N] int<lower=0> K;
+  array[N] int<lower=0> y;
+  array[N] int<lower=0> K_new;
+  array[N] int<lower=0> y_new;
 }
 transformed data {
   real min_y;
@@ -1186,11 +1186,11 @@ model {
 generated quantities {
   vector<lower=0, upper=1>[N] theta;
   real log_p_new;
-  int<lower=0> z[N];
+  array[N] int<lower=0> z;
   int<lower=0, upper=1> some_ability_gt_350;
-  int<lower=0, upper=1> avg_gt_400[N];
-  int<lower=0, upper=1> ability_gt_400[N];
-  int<lower=0> y_rep[N];
+  array[N] int<lower=0, upper=1> avg_gt_400;
+  array[N] int<lower=0, upper=1> ability_gt_400;
+  array[N] int<lower=0> y_rep;
   real<lower=0> min_y_rep;
   real<lower=0> max_y_rep;
   real<lower=0> mean_y_rep;

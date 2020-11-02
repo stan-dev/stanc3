@@ -65,7 +65,7 @@ and pp_unsizedtype ppf = function
   | UArray ut ->
       let ut2, d = unwind_array_type ut in
       let array_str = "[" ^ String.make d ',' ^ "]" in
-      Fmt.(suffix (const string array_str) pp_unsizedtype ppf ut2)
+      Fmt.pf ppf "array%s %a" array_str pp_unsizedtype ut2
   | UFun (argtypes, rt) ->
       Fmt.pf ppf "{|@[<h>(%a) => %a@]|}"
         Fmt.(list ~sep:comma_no_break pp_argtype)
@@ -271,9 +271,9 @@ and pp_transformed_type ppf (pst, trans) =
 and pp_array_dims ppf = function
   | [] -> Fmt.pf ppf ""
   | es ->
-      Fmt.pf ppf "[" ;
+      Fmt.pf ppf "array[" ;
       with_box ppf 0 (fun () ->
-          Fmt.pf ppf "%a]" pp_list_of_expression (List.rev es) )
+          Fmt.pf ppf "%a] " pp_list_of_expression (List.rev es) )
 
 and pp_indent_unless_block ppf s =
   match s.stmt with
@@ -354,8 +354,8 @@ and pp_statement ppf ({stmt= s_content; _} as ss) =
         | Unsized _ -> []
       in
       with_hbox ppf (fun () ->
-          Fmt.pf ppf "%a %a%a%a;" pp_transformed_type (pst, trans)
-            pp_identifier id pp_array_dims es pp_init init )
+          Fmt.pf ppf "%a%a %a%a;" pp_array_dims es pp_transformed_type
+            (pst, trans) pp_identifier id pp_init init )
   | FunDef {returntype= rt; funname= id; arguments= args; body= b} -> (
       Fmt.pf ppf "%a %a(" pp_returntype rt pp_identifier id ;
       with_box ppf 0 (fun () ->

@@ -29,9 +29,9 @@ functions {
     }
     return lp;
   }
-  vector[] marray(int nyears, vector sjuv, vector sad, vector p) {
+  array[] vector marray(int nyears, vector sjuv, vector sad, vector p) {
     int ny_minus_1 = nyears - 1;
-    vector[nyears] pr[2 * ny_minus_1];
+    array[2 * ny_minus_1] vector[nyears] pr;
     vector[ny_minus_1] q = 1 - p;
     real prod_s;
     real prod_q;
@@ -68,9 +68,9 @@ functions {
 data {
   int nyears;
   vector[nyears] y;
-  int J[nyears - 1];
-  int R[nyears - 1];
-  int m[2 * (nyears - 1), nyears];
+  array[nyears - 1] int J;
+  array[nyears - 1] int R;
+  array[2 * (nyears - 1), nyears] int m;
 }
 transformed data {
   int ny_minus_1 = nyears - 1;
@@ -90,7 +90,7 @@ transformed parameters {
   vector<lower=0, upper=1>[ny_minus_1] p;
   vector<lower=0>[ny_minus_1] f;
   vector<lower=0>[nyears] Ntot;
-  simplex[nyears] pr[2 * ny_minus_1];
+  array[2 * ny_minus_1] simplex[nyears] pr;
   vector<lower=0>[ny_minus_1] rho;
   for (t in 1 : ny_minus_1) {
     sjuv[t] = mean_sjuv;
@@ -155,9 +155,10 @@ functions {
     }
     return lp;
   }
-  vector[] marray_juveniles(int nyears, vector phij, vector phia, vector p) {
+  array[] vector marray_juveniles(int nyears, vector phij, vector phia,
+                                  vector p) {
     int ny_minus_1 = nyears - 1;
-    vector[nyears] pr_j[ny_minus_1];
+    array[ny_minus_1] vector[nyears] pr_j;
     vector[ny_minus_1] q = 1 - p;
     real prod_phi;
     real prod_q;
@@ -176,9 +177,9 @@ functions {
     }
     return pr_j;
   }
-  vector[] marray_adults(int nyears, vector phia, vector p) {
+  array[] vector marray_adults(int nyears, vector phia, vector p) {
     int ny_minus_1 = nyears - 1;
-    vector[nyears] pr_a[ny_minus_1];
+    array[ny_minus_1] vector[nyears] pr_a;
     vector[nyears - 1] q = 1 - p;
     real prod_phi;
     real prod_q;
@@ -200,11 +201,11 @@ functions {
 }
 data {
   int nyears;
-  int y[nyears];
-  int J[nyears - 1];
-  int R[nyears - 1];
-  int marray_j[nyears - 1, nyears];
-  int marray_a[nyears - 1, nyears];
+  array[nyears] int y;
+  array[nyears - 1] int J;
+  array[nyears - 1] int R;
+  array[nyears - 1, nyears] int marray_j;
+  array[nyears - 1, nyears] int marray_a;
 }
 transformed data {
   int ny_minus_1 = nyears - 1;
@@ -239,8 +240,8 @@ transformed parameters {
   vector<lower=0, upper=1>[ny_minus_1] p;
   vector<lower=0>[nyears] Ntot;
   vector<lower=0>[ny_minus_1] rho;
-  simplex[nyears] pr_j[ny_minus_1];
-  simplex[nyears] pr_a[ny_minus_1];
+  array[ny_minus_1] simplex[nyears] pr_j;
+  array[ny_minus_1] simplex[nyears] pr_a;
   epsilon_phij = sig_phij * epsilon_phij_raw;
   epsilon_phia = sig_phia * epsilon_phia_raw;
   epsilon_fec = sig_fec * epsilon_fec_raw;
@@ -329,9 +330,9 @@ functions {
     }
     return lp;
   }
-  vector[] marray(int nyears, vector sjuv, vector sad, vector p) {
+  array[] vector marray(int nyears, vector sjuv, vector sad, vector p) {
     int ny_minus_1 = nyears - 1;
-    vector[nyears] pr[2 * ny_minus_1];
+    array[2 * ny_minus_1] vector[nyears] pr;
     vector[nyears] q = 1 - p;
     real prod_s;
     real prod_q;
@@ -368,9 +369,9 @@ functions {
 data {
   int nyears;
   vector[nyears] y;
-  int J[nyears - 1];
-  int R[nyears - 1];
-  int m[2 * (nyears - 1), nyears];
+  array[nyears - 1] int J;
+  array[nyears - 1] int R;
+  array[2 * (nyears - 1), nyears] int m;
   int<lower=1> t_pred;
 }
 transformed data {
@@ -391,7 +392,7 @@ transformed parameters {
   vector<lower=0, upper=1>[nyears] p;
   vector<lower=0>[nyears] f;
   vector<lower=0>[nyears] Ntot;
-  simplex[nyears] pr[2 * (ny_minus_1)];
+  array[2 * (ny_minus_1)] simplex[nyears] pr;
   vector<lower=0>[ny_minus_1] rho;
   for (t in 1 : nyears) {
     sjuv[t] = mean_sjuv;
@@ -424,9 +425,9 @@ generated quantities {
   vector<lower=0, upper=1>[t_pred] sjuv_pred;
   vector<lower=0, upper=1>[t_pred] sad_pred;
   vector<lower=0, upper=20>[t_pred] f_pred;
-  int<lower=0> N1_pred[t_pred];
-  int<lower=0> Nad_pred[t_pred];
-  int<lower=0> Ntot_pred[t_pred];
+  array[t_pred] int<lower=0> N1_pred;
+  array[t_pred] int<lower=0> Nad_pred;
+  array[t_pred] int<lower=0> Ntot_pred;
   int<lower=0> Ntot0;
   lambda[1 : ny_minus_1] = Ntot[2 : nyears] ./ Ntot[1 : ny_minus_1];
   {
@@ -491,9 +492,9 @@ functions {
     }
     return lp;
   }
-  vector[] marray(int nyears, vector sjuv, vector sad, vector p) {
+  array[] vector marray(int nyears, vector sjuv, vector sad, vector p) {
     int ny_minus_1 = nyears - 1;
-    vector[nyears] pr[2 * ny_minus_1];
+    array[2 * ny_minus_1] vector[nyears] pr;
     vector[nyears - 1] q = 1 - p;
     real prod_s;
     real prod_q;
@@ -530,7 +531,7 @@ functions {
 data {
   int nyears;
   vector[nyears] y;
-  int m[2 * (nyears - 1), nyears];
+  array[2 * (nyears - 1), nyears] int m;
 }
 transformed data {
   int ny_minus_1 = nyears - 1;
@@ -550,7 +551,7 @@ transformed parameters {
   vector<lower=0, upper=1>[ny_minus_1] p;
   vector<lower=0>[ny_minus_1] f;
   vector<lower=0>[nyears] Ntot;
-  simplex[nyears] pr[2 * ny_minus_1];
+  array[2 * ny_minus_1] simplex[nyears] pr;
   for (t in 1 : ny_minus_1) {
     sjuv[t] = mean_sjuv;
     sad[t] = mean_sad;

@@ -1,7 +1,7 @@
   $ ../../../../../../install/default/bin/stanc --auto-format earnings1.stan
 data {
   int<lower=0> N;
-  int<lower=0, upper=1> earn_pos[N];
+  array[N] int<lower=0, upper=1> earn_pos;
   vector[N] height;
   vector[N] male;
 }
@@ -38,7 +38,7 @@ model {
 data {
   int<lower=0> N;
   vector[N] dist;
-  int<lower=0, upper=1> switc[N];
+  array[N] int<lower=0, upper=1> switc;
 }
 transformed data {
   vector[N] dist100;
@@ -55,7 +55,7 @@ model {
 data {
   int<lower=0> N;
   vector[N] dist;
-  int<lower=0, upper=1> switc[N];
+  array[N] int<lower=0, upper=1> switc;
 }
 transformed data {
   vector[N] dist100;

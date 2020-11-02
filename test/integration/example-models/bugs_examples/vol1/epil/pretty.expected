@@ -2,9 +2,9 @@
 data {
   int<lower=0> N;
   int<lower=0> T;
-  int<lower=0> y[N, T];
-  int<lower=0> Trt[N];
-  int<lower=0> V4[T];
+  array[N, T] int<lower=0> y;
+  array[N] int<lower=0> Trt;
+  array[T] int<lower=0> V4;
   vector[N] log_Base4;
   vector[N] log_Age;
   vector[N] BT;
@@ -35,8 +35,8 @@ parameters {
   real alpha_BT;
   real alpha_Age;
   real alpha_V4;
-  real b1[N];
-  vector[T] b[N];
+  array[N] real b1;
+  array[N] vector[T] b;
   real<lower=0> sigmasq_b;
   real<lower=0> sigmasq_b1;
 }

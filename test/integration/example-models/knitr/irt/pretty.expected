@@ -4,10 +4,10 @@ data {
   int<lower=1> J;
   int<lower=1> K;
   int<lower=1> N;
-  int<lower=1, upper=I> ii[N];
-  int<lower=1, upper=J> jj[N];
-  int<lower=1, upper=J> kk[N];
-  int<lower=0, upper=1> y[N];
+  array[N] int<lower=1, upper=I> ii;
+  array[N] int<lower=1, upper=J> jj;
+  array[N] int<lower=1, upper=J> kk;
+  array[N] int<lower=0, upper=1> y;
 }
 parameters {
   vector[J] alpha;
@@ -51,7 +51,7 @@ assignment operator <- is deprecated in the Stan language; use = instead.
 data {
   int<lower=1> I;
   int<lower=1> J;
-  int<lower=0, upper=1> y[I, J];
+  array[I, J] int<lower=0, upper=1> y;
 }
 parameters {
   vector[J] alpha;
@@ -70,7 +70,7 @@ model {
 data {
   int<lower=0> I;
   int<lower=0> J;
-  int<lower=0, upper=1> y[I, J];
+  array[I, J] int<lower=0, upper=1> y;
 }
 parameters {
   vector[I] b;
@@ -98,7 +98,7 @@ Comments beginning with # are deprecated. Please use // in place of # for line c
 data {
   int<lower=0> I;
   int<lower=0> J;
-  int<lower=0, upper=1> y[I, J];
+  array[I, J] int<lower=0, upper=1> y;
 }
 parameters {
   vector[I] b_raw;
@@ -173,7 +173,7 @@ assignment operator <- is deprecated in the Stan language; use = instead.
 data {
   int<lower=0> I;
   int<lower=0> J;
-  int<lower=0, upper=1> y[I, J];
+  array[I, J] int<lower=0, upper=1> y;
 }
 parameters {
   vector[I] b;
@@ -186,8 +186,8 @@ model {
     y[i] ~ bernoulli_logit(theta - b[i]);
 }
 generated quantities {
-  int<lower=0, upper=I> z_sim[100];
-  real theta_sim[40];
+  array[100] int<lower=0, upper=I> z_sim;
+  array[40] real theta_sim;
   for (j in 1 : 40) {
     theta_sim[j] <- (j - 20) / 4.0;
     z_sim[j] <- 0;
@@ -252,7 +252,7 @@ assignment operator <- is deprecated in the Stan language; use = instead.
 data {
   int<lower=0> I;
   int<lower=0> J;
-  int<lower=0, upper=1> y[I, J];
+  array[I, J] int<lower=0, upper=1> y;
 }
 parameters {
   vector[I] b;
@@ -286,7 +286,7 @@ Comments beginning with # are deprecated. Please use // in place of # for line c
 data {
   int<lower=0> I;
   int<lower=0> J;
-  int<lower=0, upper=1> y[I, J];
+  array[I, J] int<lower=0, upper=1> y;
 }
 parameters {
   vector[I] b;
@@ -301,7 +301,7 @@ model {
 data {
   int<lower=0> I;
   int<lower=0> J;
-  int<lower=0, upper=1> y[I, J];
+  array[I, J] int<lower=0, upper=1> y;
 }
 parameters {
   vector[I] b;
@@ -331,7 +331,7 @@ Comments beginning with # are deprecated. Please use // in place of # for line c
 data {
   int<lower=0> I;
   int<lower=0> J;
-  int<lower=0, upper=1> y[I, J];
+  array[I, J] int<lower=0, upper=1> y;
 }
 parameters {
   vector[I] b;
@@ -344,8 +344,8 @@ model {
     y[i] ~ bernoulli_logit(theta - b[i]);
 }
 generated quantities {
-  int<lower=0, upper=I> z_sim[100];
-  real theta_sim[40];
+  array[100] int<lower=0, upper=I> z_sim;
+  array[40] real theta_sim;
   for (j in 1 : 40) {
     theta_sim[j] <- (j - 20) / 4.0;
     z_sim[j] <- 0;
@@ -410,7 +410,7 @@ assignment operator <- is deprecated in the Stan language; use = instead.
 data {
   int<lower=0> I;
   int<lower=0> J;
-  int<lower=0, upper=1> y[I, J];
+  array[I, J] int<lower=0, upper=1> y;
 }
 parameters {
   vector[I] b;
@@ -468,7 +468,7 @@ assignment operator <- is deprecated in the Stan language; use = instead.
 data {
   int<lower=0> I;
   int<lower=0> J;
-  int<lower=0, upper=1> y[I, J];
+  array[I, J] int<lower=0, upper=1> y;
   real mu_theta;
   real<lower=0> sigma_theta;
   real mu_b;
@@ -506,7 +506,7 @@ model {
 
 }
 generated quantities {
-  int<lower=0, upper=I> z_sim[100];
+  array[100] int<lower=0, upper=I> z_sim;
   vector[100] theta_sim;
   for (j in 1 : 100) {
     theta_sim[j] <- (j - 50) / 10.0;

@@ -2,8 +2,8 @@
 data {
   int<lower=0> N;
   int<lower=0> M;
-  vector[M] Y[N];
-  real age[M];
+  array[N] vector[M] Y;
+  array[M] real age;
   cov_matrix[M] S;
 }
 transformed data {

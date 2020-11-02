@@ -242,8 +242,8 @@ model {
   $ ../../../../../install/default/bin/stanc --auto-format normal_mixture.stan
 transformed data {
   real<lower=0, upper=1> theta;
-  real mu[2];
-  real<lower=0> sigma[2];
+  array[2] real mu;
+  array[2] real<lower=0> sigma;
   mu[1] <- 0.0;
   sigma[1] <- 0.5;
   mu[2] <- 4.0;

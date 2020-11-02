@@ -1,10 +1,10 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format magnesium.stan
 data {
   int N_studies;
-  int rt[N_studies];
-  int nt[N_studies];
-  int rc[N_studies];
-  int nc[N_studies];
+  array[N_studies] int rt;
+  array[N_studies] int nt;
+  array[N_studies] int rc;
+  array[N_studies] int nc;
 }
 transformed data {
   int N_priors;
@@ -15,9 +15,9 @@ transformed data {
   p0_sigma <- 1 / sqrt(Phi(0.75) / s0_sq);
 }
 parameters {
-  real<lower=-10, upper=10> mu[N_priors];
-  real theta[N_priors, N_studies];
-  real<lower=0, upper=1> pc[N_priors, N_studies];
+  array[N_priors] real<lower=-10, upper=10> mu;
+  array[N_priors, N_studies] real theta;
+  array[N_priors, N_studies] real<lower=0, upper=1> pc;
   real<lower=0> inv_tau_sq_1;
   real<lower=0, upper=50> tau_sq_2;
   real<lower=0, upper=50> tau_3;
@@ -26,7 +26,7 @@ parameters {
   real<lower=0> tau_sq_6;
 }
 transformed parameters {
-  real<lower=0> tau[N_priors];
+  array[N_priors] real<lower=0> tau;
   tau[1] <- 1 / sqrt(inv_tau_sq_1);
   tau[2] <- sqrt(tau_sq_2);
   tau[3] <- tau_3;
@@ -55,7 +55,7 @@ model {
   }
 }
 generated quantities {
-  real OR[N_priors];
+  array[N_priors] real OR;
   for (prior in 1 : N_priors) {
     OR[prior] <- exp(mu[prior]);
   }

@@ -3,7 +3,7 @@ data {
   int I;
   int J;
   int K;
-  int X[I, J, K];
+  array[I, J, K] int X;
 }
 parameters {
   vector[K - 1] alpha0;
@@ -13,8 +13,8 @@ parameters {
 }
 transformed parameters {
   vector[K] alpha;
-  vector[K] beta[I];
-  vector[K] gamma[J];
+  array[I] vector[K] beta;
+  array[J] vector[K] gamma;
   alpha[1] <- 0;
   for (k in 1 : (K - 1)) 
     alpha[k + 1] <- alpha0[k];

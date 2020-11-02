@@ -2,11 +2,11 @@
 data {
   int<lower=0> K;
   int<lower=0> T;
-  real y[T];
+  array[T] real y;
 }
 parameters {
   real alpha;
-  real beta[K];
+  array[K] real beta;
   real<lower=0> sigma;
 }
 model {
@@ -25,7 +25,7 @@ model {
   $ ../../../../../install/default/bin/stanc --auto-format arma.stan
 data {
   int<lower=1> T;
-  real y[T];
+  array[T] real y;
 }
 parameters {
   real mu;
@@ -52,16 +52,16 @@ model {
   $ ../../../../../install/default/bin/stanc --auto-format eight_schools.stan
 data {
   int<lower=0> J;
-  real y[J];
-  real<lower=0> sigma[J];
+  array[J] real y;
+  array[J] real<lower=0> sigma;
 }
 parameters {
   real mu;
   real<lower=0> tau;
-  real theta_tilde[J];
+  array[J] real theta_tilde;
 }
 transformed parameters {
-  real theta[J];
+  array[J] real theta;
   for (j in 1 : J) 
     theta[j] = mu + tau * theta_tilde[j];
 }
@@ -75,7 +75,7 @@ model {
   $ ../../../../../install/default/bin/stanc --auto-format garch.stan
 data {
   int<lower=0> T;
-  real y[T];
+  array[T] real y;
   real<lower=0> sigma1;
 }
 parameters {
@@ -85,7 +85,7 @@ parameters {
   real<lower=0, upper=(1 - alpha1)> beta1;
 }
 model {
-  real sigma[T];
+  array[T] real sigma;
   sigma[1] = sigma1;
   for (t in 2 : T) 
     sigma[t] = sqrt(alpha0 + alpha1 * square(y[t - 1] - mu)
@@ -107,9 +107,9 @@ model {
 }
 generated quantities {
   int<lower=1> N = 11;
-  real x[11] = {-10, -8, -6, -4, -2, 0.0, 2, 4, 6, 8, 10};
+  array[11] real x = {-10, -8, -6, -4, -2, 0.0, 2, 4, 6, 8, 10};
   vector[11] y;
-  int k[11];
+  array[11] int k;
   {
     matrix[N, N] cov = cov_exp_quad(x, alpha, rho)
                        + diag_matrix(rep_vector(1e-10, N));
@@ -125,8 +125,8 @@ generated quantities {
   $ ../../../../../install/default/bin/stanc --auto-format gp_pois_regr.stan
 data {
   int<lower=1> N;
-  real x[N];
-  int k[N];
+  array[N] real x;
+  array[N] int k;
 }
 parameters {
   real<lower=0> rho;
@@ -152,7 +152,7 @@ model {
   $ ../../../../../install/default/bin/stanc --auto-format gp_regr.stan
 data {
   int<lower=1> N;
-  real x[N];
+  array[N] real x;
   vector[N] y;
 }
 parameters {
@@ -174,7 +174,7 @@ model {
 data {
   int<lower=0> I;
   int<lower=0> J;
-  int<lower=0, upper=1> y[I, J];
+  array[I, J] int<lower=0, upper=1> y;
 }
 parameters {
   real<lower=0> sigma_theta;
@@ -236,7 +236,7 @@ data {
 }
 parameters {
   ordered[2] mu;
-  real<lower=0> sigma[2];
+  array[2] real<lower=0> sigma;
   real<lower=0, upper=1> theta;
 }
 model {
@@ -255,7 +255,7 @@ data {
 }
 parameters {
   vector[2] mu;
-  real<lower=0> sigma[2];
+  array[2] real<lower=0> sigma;
   real<lower=0, upper=1> theta;
 }
 model {
@@ -269,9 +269,10 @@ model {
 
   $ ../../../../../install/default/bin/stanc --auto-format one_comp_mm_elim_abs.stan
 functions {
-  real[] one_comp_mm_elim_abs(real t, real[] y, real[] theta, real[] x_r,
-                              int[] x_i) {
-    real dydt[1];
+  array[] real one_comp_mm_elim_abs(real t, array[] real y,
+                                    array[] real theta, array[] real x_r,
+                                    array[] int x_i) {
+    array[1] real dydt;
     real k_a = theta[1];
     real K_m = theta[2];
     real V_m = theta[3];
@@ -287,16 +288,16 @@ functions {
 }
 data {
   real t0;
-  real C0[1];
+  array[1] real C0;
   real D;
   real V;
   int<lower=1> N_t;
-  real times[N_t];
-  real C_hat[N_t];
+  array[N_t] real times;
+  array[N_t] real C_hat;
 }
 transformed data {
-  real x_r[2] = {D, V};
-  int x_i[0];
+  array[2] real x_r = {D, V};
+  array[0] int x_i;
 }
 parameters {
   real<lower=0> k_a;
@@ -305,9 +306,9 @@ parameters {
   real<lower=0> sigma;
 }
 transformed parameters {
-  real C[N_t, 1];
+  array[N_t, 1] real C;
   {
-    real theta[3] = {k_a, K_m, V_m};
+    array[3] real theta = {k_a, K_m, V_m};
     C = integrate_ode_bdf(one_comp_mm_elim_abs, C0, t0, times, theta, x_r,
                           x_i);
   }
@@ -321,16 +322,17 @@ model {
     C_hat[n] ~ lognormal(log(C[n, 1]), sigma);
 }
 generated quantities {
-  real C_ppc[N_t];
+  array[N_t] real C_ppc;
   for (n in 1 : N_t) 
     C_ppc[n] = lognormal_rng(log(C[n, 1]), sigma);
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format sim_one_comp_mm_elim_abs.stan
 functions {
-  real[] one_comp_mm_elim_abs(real t, real[] y, real[] theta, real[] x_r,
-                              int[] x_i) {
-    real dydt[1];
+  array[] real one_comp_mm_elim_abs(real t, array[] real y,
+                                    array[] real theta, array[] real x_r,
+                                    array[] int x_i) {
+    array[1] real dydt;
     real k_a = theta[1];
     real K_m = theta[2];
     real V_m = theta[3];
@@ -346,13 +348,13 @@ functions {
 }
 transformed data {
   int N_t = 20;
-  real times[N_t];
+  array[N_t] real times;
   real t0 = 0;
-  real C0[1] = {0.0};
-  real theta[3] = {0.75, 0.25, 1};
+  array[1] real C0 = {0.0};
+  array[3] real theta = {0.75, 0.25, 1};
   real sigma = 0.1;
-  real x_r[2] = {30.0, 2.0};
-  int x_i[0];
+  array[2] real x_r = {30.0, 2.0};
+  array[0] int x_i;
   for (n in 1 : N_t) 
     times[n] = 0.5 * n;
 }
@@ -361,12 +363,12 @@ model {
 }
 generated quantities {
   real t_init = t0;
-  real C_init[1] = {C0[1]};
+  array[1] real C_init = {C0[1]};
   real D = x_r[1];
   real V = x_r[2];
-  real ts[N_t];
-  real C[N_t, 1];
-  real C_hat[N_t];
+  array[N_t] real ts;
+  array[N_t, 1] real C;
+  array[N_t] real C_hat;
   for (n in 1 : N_t) 
     ts[n] = times[n];
   C = integrate_ode_bdf(one_comp_mm_elim_abs, C0, t0, times, theta, x_r, x_i);
@@ -376,8 +378,9 @@ generated quantities {
 
   $ ../../../../../install/default/bin/stanc --auto-format sir.stan
 functions {
-  real[] simple_SIR(real t, real[] y, real[] theta, real[] x_r, int[] x_i) {
-    real dydt[4];
+  array[] real simple_SIR(real t, array[] real y, array[] real theta,
+                          array[] real x_r, array[] int x_i) {
+    array[4] real dydt;
     dydt[1] = -theta[1] * y[4] / (y[4] + theta[2]) * y[1];
     dydt[2] = theta[1] * y[4] / (y[4] + theta[2]) * y[1] - theta[3] * y[2];
     dydt[3] = theta[3] * y[2];
@@ -387,16 +390,16 @@ functions {
 }
 data {
   int<lower=0> N_t;
-  real t[N_t];
-  real y0[4];
-  int stoi_hat[N_t];
-  real B_hat[N_t];
+  array[N_t] real t;
+  array[4] real y0;
+  array[N_t] int stoi_hat;
+  array[N_t] real B_hat;
 }
 transformed data {
   real t0 = 0;
   real<lower=0> kappa = 1000000;
-  real x_r[0];
-  int x_i[0];
+  array[0] real x_r;
+  array[0] int x_i;
 }
 parameters {
   real<lower=0> beta;
@@ -405,9 +408,9 @@ parameters {
   real<lower=0> delta;
 }
 transformed parameters {
-  real<lower=0> y[N_t, 4];
+  array[N_t, 4] real<lower=0> y;
   {
-    real theta[5] = {beta, kappa, gamma, xi, delta};
+    array[5] real theta = {beta, kappa, gamma, xi, delta};
     y = integrate_ode_rk45(simple_SIR, y0, t0, t, theta, x_r, x_i);
   }
 }
