@@ -3,35 +3,55 @@ open Core_kernel
 let option_or_else ~if_none x = Option.first_some x if_none
 
 (* Name mangling helper functions for distributions *)
-let proportional_to_distribution_infix = "_propto"
-let distribution_suffices = ["_log"; "_lpmf"; "_lpdf"]
+let unnormalized_suffices = ["_lupdf"; "_lupmf"]
+
+(* _log is listed last so that it only gets picked up if no other implementation exists *)
+let distribution_suffices = ["_lpmf"; "_lpdf"; "_log"]
+
+let conditioning_suffices =
+  ["_lpdf"; "_lupdf"; "_lupmf"; "_lpmf"; "_lcdf"; "_lccdf"]
+
+let conditioning_suffices_w_log = conditioning_suffices @ ["_log"]
 let is_user_ident = Fn.non (String.is_suffix ~suffix:"__")
 
-let is_distribution_name ?(infix = "") s =
+let unnormalized_suffix = function
+  | "_lpdf" -> "_lupdf"
+  | "_lpmf" -> "_lupmf"
+  | x -> x
+
+let is_distribution_name s =
   (not
      ( String.is_suffix s ~suffix:"_cdf_log"
      || String.is_suffix s ~suffix:"_ccdf_log" ))
   && List.exists
-       ~f:(fun suffix -> String.is_suffix s ~suffix:(infix ^ suffix))
-       distribution_suffices
+       ~f:(fun suffix -> String.is_suffix s ~suffix)
+       (distribution_suffices @ unnormalized_suffices)
 
-let is_propto_distribution s =
-  is_distribution_name ~infix:proportional_to_distribution_infix s
+let is_unnormalized_distribution s =
+  List.exists
+    ~f:(fun suffix -> String.is_suffix s ~suffix)
+    unnormalized_suffices
 
-let remove_propto_infix suffix ~name =
+let replace_unnormalized_suffix suffix ~name =
   name
-  |> String.chop_suffix ~suffix:(proportional_to_distribution_infix ^ suffix)
+  |> String.chop_suffix ~suffix:(unnormalized_suffix suffix)
   |> Option.map ~f:(fun x -> x ^ suffix)
 
 let stdlib_distribution_name s =
-  List.map ~f:(remove_propto_infix ~name:s) distribution_suffices
+  List.map ~f:(replace_unnormalized_suffix ~name:s) distribution_suffices
   |> List.filter_opt |> List.hd |> Option.value ~default:s
 
-let%expect_test "propto name mangling" =
-  stdlib_distribution_name "normal_propto_lpdf" |> print_string ;
+let normalized_name name =
+  match name with
+  | x when is_distribution_name x -> stdlib_distribution_name x
+  | x -> x
+
+let%expect_test "unnormalized name mangling" =
+  stdlib_distribution_name "bernoulli_logit_lupmf" |> print_string ;
+  stdlib_distribution_name "normal_lupdf" |> ( ^ ) "; " |> print_string ;
   stdlib_distribution_name "normal_lpdf" |> ( ^ ) "; " |> print_string ;
   stdlib_distribution_name "normal" |> ( ^ ) "; " |> print_string ;
-  [%expect {| normal_lpdf; normal_lpdf; normal |}]
+  [%expect {| bernoulli_logit_lpmf; normal_lpdf; normal_lpdf; normal |}]
 
 let all_but_last_n l n =
   List.fold_right l ~init:([], n) ~f:(fun ele (accum, n) ->

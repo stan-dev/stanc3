@@ -9,7 +9,7 @@ let%expect_test "udf" =
     Stmt.Fixed.{pattern= stmt; meta= Locations.no_span_num}
   in
   let w e = Expr.{Fixed.pattern= e; meta= Typed.Meta.empty} in
-  let pp_fun_def_w_rs a b = pp_fun_def a b String.Set.empty in
+  let pp_fun_def_w_rs a b = pp_fun_def a b String.Set.empty String.Set.empty in
   { fdrt= None
   ; fdname= "sars"
   ; fdargs= [(DataOnly, "x", UMatrix); (AutoDiffable, "y", URowVector)]
@@ -18,6 +18,7 @@ let%expect_test "udf" =
         (Some
            (w @@ FunApp (StanLib, "add", [w @@ Var "x"; w @@ Lit (Int, "1")])))
       |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
+      |> Some
   ; fdloc= Location_span.empty }
   |> strf "@[<v>%a" pp_fun_def_w_rs
   |> print_endline ;
@@ -27,7 +28,7 @@ let%expect_test "udf" =
     void
     sars(const Eigen::Matrix<double, -1, -1>& x,
          const Eigen::Matrix<T1__, 1, -1>& y, std::ostream* pstream__) {
-      using local_scalar_t__ = typename boost::math::tools::promote_args<T1__>::type;
+      using local_scalar_t__ = stan::promote_args_t<T1__>;
       const static bool propto__ = true;
       (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());

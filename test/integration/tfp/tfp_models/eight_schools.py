@@ -6,6 +6,7 @@ tfd__ = tfp__.distributions
 tfb__ = tfp__.bijectors
 from tensorflow.python.ops.parallel_for import pfor as pfor__
 
+
 class eight_schools_ncp_model(tfd__.Distribution):
 
   def __init__(self, J, y, sigma):
@@ -50,7 +51,8 @@ class eight_schools_ncp_model(tfd__.Distribution):
     J = self.J
     y = self.y
     sigma = self.sigma
-    return [(nchains__, ), (nchains__, ), (nchains__, J)]
+    return [(nchains__, ), (nchains__, ),
+            (nchains__, tf__.cast(J, tf__.int32))]
      
   def parameter_bijectors(self):
     J = self.J

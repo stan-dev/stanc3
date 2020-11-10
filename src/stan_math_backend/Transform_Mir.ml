@@ -6,22 +6,15 @@ let use_opencl = ref false
 let opencl_triggers =
   String.Map.of_alist_exn
     [ ( "normal_id_glm_lpdf"
-      , ( [0; 1]
-        , [ (* Array of conditions under which to move to OpenCL *)
-            ([1], (* Argument 1 is data *)
-                  [(1, UnsizedType.UMatrix)])
-          (* Argument 1 is a matrix *)
-           ] ) )
-    ; ( "bernoulli_logit_glm_lpmf"
-      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
-    ; ( "categorical_logit_glm_lpmf"
-      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
-    ; ( "neg_binomial_2_log_glm_lpmf"
-      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
-    ; ( "ordered_logistic_glm_lpmf"
-      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
-    ; ("poisson_log_glm_lpmf", ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]))
-    ]
+      , [ (* Array of conditions under which to move to OpenCL *)
+          [(1, UnsizedType.UMatrix)]
+        (* Argument 1 is a matrix *)
+         ] )
+    ; ("bernoulli_logit_glm_lpmf", [[(1, UnsizedType.UMatrix)]])
+    ; ("categorical_logit_glm_lpmf", [[(1, UnsizedType.UMatrix)]])
+    ; ("neg_binomial_2_log_glm_lpmf", [[(1, UnsizedType.UMatrix)]])
+    ; ("ordered_logistic_glm_lpmf", [[(1, UnsizedType.UMatrix)]])
+    ; ("poisson_log_glm_lpmf", [[(1, UnsizedType.UMatrix)]]) ]
 
 let opencl_suffix = "_opencl__"
 
@@ -31,36 +24,26 @@ let to_matrix_cl e =
 let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
     =
   let is_avail = List.mem available_cl_vars ~equal:( = ) in
-  let to_cl (Expr.Fixed.({pattern; _}) as e) =
-    match pattern with
-    | Var s when is_avail s ->
+  let to_cl (Expr.Fixed.({pattern; meta= {Expr.Typed.Meta.type_; _}}) as e) =
+    match (pattern, type_) with
+    | Var s, _ when is_avail s ->
         Expr.Fixed.{e with pattern= Var (s ^ opencl_suffix)}
-    | _ -> to_matrix_cl e
-  in
-  let move_cl_args cl_args index arg =
-    if List.mem ~equal:( = ) cl_args index then to_cl arg else arg
+    | _, UnsizedType.(UInt | UReal) -> e
+    | _, _ -> to_matrix_cl e
   in
   let check_type args (i, t) = Expr.Typed.type_of (List.nth_exn args i) = t in
-  let check_if_data args ind =
-    let Expr.Fixed.({pattern; _}) = List.nth_exn args ind in
-    match pattern with Var s when is_avail s -> true | _ -> false
-  in
-  let req_met args (data_arg, type_arg) =
-    List.for_all ~f:(check_if_data args) data_arg
-    && List.for_all ~f:(check_type args) type_arg
-  in
-  let any_req_met args req_args = List.exists ~f:(req_met args) req_args in
-  let maybe_map_args args (cl_args, req_args) =
+  let any_req_met args = List.exists ~f:(List.for_all ~f:(check_type args)) in
+  let maybe_map_args args req_args =
     match any_req_met args req_args with
-    | true -> List.mapi args ~f:(move_cl_args cl_args)
+    | true -> List.map args ~f:to_cl
     | false -> args
   in
-  let trim_propto f =
-    String.substr_replace_all ~pattern:"_propto_" ~with_:"_" f
-  in
   match pattern with
-  | FunApp (StanLib, f, args) when Map.mem opencl_triggers (trim_propto f) ->
-      let trigger = Map.find_exn opencl_triggers (trim_propto f) in
+  | FunApp (StanLib, f, args)
+    when Map.mem opencl_triggers (Utils.stdlib_distribution_name f) ->
+      let trigger =
+        Map.find_exn opencl_triggers (Utils.stdlib_distribution_name f)
+      in
       {e with pattern= FunApp (StanLib, f, maybe_map_args args trigger)}
   | x ->
       { e with
@@ -178,11 +161,10 @@ let param_read smeta
     let bodyfn var =
       let readfnapp (var : Expr.Typed.t) =
         Expr.(
-          Helpers.internal_funapp FnReadParam
-            ( { Fixed.pattern=
-                  Lit (Str, base_ut_to_string (SizedType.to_unsized ucst))
-              ; meta= Typed.Meta.empty }
-            :: SizedType.dims_of ucst )
+          Helpers.(
+            internal_funapp FnReadParam
+              ( str (base_ut_to_string (SizedType.to_unsized ucst))
+              :: SizedType.dims_of ucst ))
             Typed.Meta.{var.meta with type_= base_type ucst})
       in
       Stmt.Helpers.assign_indexed (SizedType.to_unsized cst) decl_id smeta
@@ -313,6 +295,27 @@ let gen_write (decl_id, sizedtype) =
   let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
   Stmt.Helpers.for_scalar_inv sizedtype bodyfn expr Location_span.empty
 
+let gen_write_unconstrained (decl_id, sizedtype) =
+  let bodyfn var =
+    let var =
+      match var.Expr.Fixed.pattern with
+      | Indexed ({pattern= Indexed (expr, idcs1); _}, idcs2) ->
+          {var with pattern= Indexed (expr, idcs1 @ idcs2)}
+      | _ -> var
+    in
+    Stmt.Helpers.internal_nrfunapp FnWriteParam [var] Location_span.empty
+  in
+  let meta =
+    {Expr.Typed.Meta.empty with type_= SizedType.to_unsized sizedtype}
+  in
+  let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
+  let writefn var =
+    Stmt.Helpers.for_scalar_inv
+      (SizedType.inner_type sizedtype)
+      bodyfn var Location_span.empty
+  in
+  Stmt.Helpers.for_eigen sizedtype writefn expr Location_span.empty
+
 let rec contains_var_expr is_vident accum Expr.Fixed.({pattern; _}) =
   accum
   ||
@@ -428,75 +431,6 @@ let%expect_test "insert before" =
   [%sexp (l : int list)] |> print_s ;
   [%expect {| (1 2 3 4 5 999 6) |}]
 
-let validate_sized decl_id meta transform st =
-  let check fn x =
-    Stmt.Helpers.internal_nrfunapp fn
-      Expr.Helpers.
-        [str decl_id; str (Fmt.strf "%a" Expression_gen.pp_expr x); x]
-      meta
-  in
-  let nrfunapp fname args =
-    Stmt.Fixed.{pattern= NRFunApp (CompilerInternal, fname, args); meta}
-  in
-  let rec dims_check = function
-    | SizedType.SInt | SReal -> []
-    | SArray (st, s) -> check FnValidateSize s :: dims_check st
-    | SVector s | SRowVector s ->
-        let fn =
-          match transform with
-          | Some Program.Simplex -> Internal_fun.FnValidateSizeSimplex
-          | Some UnitVector -> FnValidateSizeUnitVector
-          | _ -> FnValidateSize
-        in
-        [check fn s]
-    | SMatrix (rows, cols) ->
-        let validate_rows =
-          match transform with
-          | Some CholeskyCov ->
-              nrfunapp "check_greater_or_equal"
-                Expr.Helpers.
-                  [ str ("cholesky_factor_cov " ^ decl_id)
-                  ; str "num rows (must be greater or equal to num cols)"
-                  ; rows; cols ]
-          | _ -> check FnValidateSize rows
-        in
-        [validate_rows; check FnValidateSize cols]
-  in
-  dims_check st
-
-let rec add_validate_dims outvars stmts =
-  let transforms =
-    List.filter_map
-      ~f:(function
-        | decl_id, Program.({out_block= Parameters; out_trans; _}) ->
-            Some (decl_id, out_trans)
-        | _ -> None)
-      outvars
-    |> String.Map.of_alist_exn
-  in
-  let with_size_checks = function
-    | Stmt.Fixed.({pattern= Decl {decl_id; decl_type= Sized st; _}; meta}) as
-      decl ->
-        let tr = Map.find transforms decl_id in
-        validate_sized decl_id meta tr st @ [decl]
-    | stmt -> [validate_dims_stmt stmt]
-  in
-  List.concat_map ~f:with_size_checks stmts
-
-and validate_dims_stmt stmt =
-  let pattern =
-    match stmt.pattern with
-    | Stmt.Fixed.Pattern.Block s ->
-        Stmt.Fixed.Pattern.Block (add_validate_dims [] s)
-    | SList s -> SList (add_validate_dims [] s)
-    | While (a, b) -> While (a, validate_dims_stmt b)
-    | For f -> For {f with body= validate_dims_stmt f.body}
-    | IfElse (p, t, e) ->
-        IfElse (p, validate_dims_stmt t, Option.map ~f:validate_dims_stmt e)
-    | s -> s
-  in
-  {stmt with pattern}
-
 let map_prog_stmt_lists f (p : ('a, 'b) Program.t) =
   { p with
     Program.prepare_data= f p.prepare_data
@@ -521,10 +455,8 @@ let trans_prog (p : Program.Typed.t) =
   let get_pname_ust = function
     | ( name
       , { Program.out_block= Parameters
-        ; out_constrained_st
-        ; out_unconstrained_st; _ } )
-      when SizedType.to_unsized out_constrained_st
-           = SizedType.to_unsized out_unconstrained_st ->
+        ; out_unconstrained_st
+        ; out_trans= Identity; _ } ) ->
         Some (name, out_unconstrained_st)
     | name, {Program.out_block= Parameters; out_unconstrained_st; _} ->
         Some (name ^ "_free__", out_unconstrained_st)
@@ -566,7 +498,10 @@ let trans_prog (p : Program.Typed.t) =
   let translate_to_open_cl stmts =
     if !use_opencl then
       let decl Stmt.Fixed.({pattern; _}) =
-        match pattern with Decl d -> Some d.decl_id | _ -> None
+        match pattern with
+        | Decl {decl_type= Sized (SInt | SReal); _} -> None
+        | Decl {decl_id; _} -> Some decl_id
+        | _ -> None
       in
       let data_var_idents = List.filter_map ~f:decl p.prepare_data in
       let switch_expr = switch_expr_to_opencl data_var_idents in
@@ -578,24 +513,31 @@ let trans_prog (p : Program.Typed.t) =
       List.map stmts ~f:trans_stmt_to_opencl
     else stmts
   in
-  let functions_block =
-    List.map
-      ~f:(fun def -> {def with fdbody= validate_dims_stmt def.fdbody})
-      p.functions_block
+  let tparam_writes_cond =
+    match tparam_writes with
+    | [] -> []
+    | _ ->
+        [ Stmt.Fixed.
+            { pattern=
+                IfElse
+                  ( Expr.
+                      { Fixed.pattern= Var "emit_transformed_parameters__"
+                      ; meta= Typed.Meta.empty }
+                  , {pattern= SList tparam_writes; meta= Location_span.empty}
+                  , None )
+            ; meta= Location_span.empty } ]
   in
   let generate_quantities =
     ( p.generate_quantities
-    |> add_validate_dims p.output_vars
     |> add_reads p.output_vars param_read
     |> translate_to_open_cl
     |> constrain_in_params p.output_vars
     |> insert_before tparam_start param_writes
-    |> insert_before gq_start tparam_writes )
+    |> insert_before gq_start tparam_writes_cond )
     @ gq_writes
   in
   let log_prob =
     p.log_prob |> List.map ~f:add_jacobians
-    |> add_validate_dims p.output_vars
     |> add_reads p.output_vars param_read
     |> constrain_in_params p.output_vars
     |> translate_to_open_cl
@@ -636,19 +578,16 @@ let trans_prog (p : Program.Typed.t) =
   in
   let p =
     { p with
-      functions_block
-    ; log_prob
+      log_prob
     ; prog_name= escape_name p.prog_name
     ; prepare_data=
         init_pos
-        @ ( add_validate_dims [] p.prepare_data
-          |> add_reads p.input_vars data_read )
+        @ (p.prepare_data |> add_reads p.input_vars data_read)
         @ to_matrix_cl_stmts
     ; transform_inits=
         init_pos
-        @ ( add_validate_dims p.output_vars p.transform_inits
-          |> add_reads constrained_params data_read )
-        @ List.map ~f:gen_write free_params
+        @ (p.transform_inits |> add_reads constrained_params data_read)
+        @ List.map ~f:gen_write_unconstrained free_params
     ; generate_quantities }
   in
   Program.(

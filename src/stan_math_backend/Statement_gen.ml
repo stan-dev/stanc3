@@ -9,7 +9,7 @@ let pp_block ppf (pp_body, body) = pf ppf "{@;<1 2>@[<v>%a@]@,}" pp_body body
 let rec contains_eigen = function
   | UnsizedType.UArray t -> contains_eigen t
   | UMatrix | URowVector | UVector -> true
-  | UInt |UReal | UMathLibraryFunction | UFun _ -> false
+  | UInt | UReal | UMathLibraryFunction | UFun _ -> false
 
 let pp_set_size ppf (decl_id, st, adtype) =
   (* TODO: generate optimal adtypes for expressions and declarations *)
@@ -34,10 +34,7 @@ let pp_set_size ppf (decl_id, st, adtype) =
     pf ppf "@[<hov 2>stan::math::fill(%s, %s);@]@," decl_id real_nan
 
 let%expect_test "set size mat array" =
-  let int i =
-    { Expr.Fixed.pattern= Lit (Int, string_of_int i)
-    ; meta= Expr.Typed.Meta.empty }
-  in
+  let int = Expr.Helpers.int in
   strf "@[<v>%a@]" pp_set_size
     ("d", SArray (SArray (SMatrix (int 2, int 3), int 4), int 5), DataOnly)
   |> print_endline ;
@@ -49,8 +46,8 @@ let%expect_test "set size mat array" =
 (** [pp_for_loop ppf (loopvar, lower, upper, pp_body, body)] tries to
     pretty print a for-loop from lower to upper given some loopvar.*)
 let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
-  pf ppf "@[<hov>for (@[<hov>size_t %s = %a;@ %s <= %a;@ ++%s@])" loopvar
-    pp_expr lower loopvar pp_expr upper loopvar ;
+  pf ppf "@[<hov>for (@[<hov>int %s = %a;@ %s <= %a;@ ++%s@])" loopvar pp_expr
+    lower loopvar pp_expr upper loopvar ;
   pf ppf " %a@]" pp_body body
 
 let rec integer_el_type = function
@@ -60,11 +57,10 @@ let rec integer_el_type = function
 
 let pp_decl ppf (vident, ut, adtype) =
   let pp_type =
-    if Transform_Mir.is_opencl_var vident then fun ppf _ ->
-      match ut with
-      | UnsizedType.UInt | UArray UInt -> pf ppf "matrix_cl<int>"
-      | _ -> pf ppf "matrix_cl<double>"
-    else pp_unsizedtype_local
+    match (Transform_Mir.is_opencl_var vident, ut) with
+    | _, UnsizedType.(UInt | UReal) | false, _ -> pp_unsizedtype_local
+    | true, UArray UInt -> fun ppf _ -> pf ppf "matrix_cl<int>"
+    | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>"
   in
   pf ppf "%a %s;" pp_type (adtype, ut) vident
 
@@ -149,9 +145,7 @@ let rec pp_statement (ppf : Format.formatter)
   | NRFunApp (CompilerInternal, fname, args)
     when fname = Internal_fun.to_string FnPrint ->
       let pp_arg ppf a = pf ppf "stan_print(pstream__, %a);" pp_expr a in
-      let args =
-        args @ [{pattern= Lit (Str, "\n"); meta= Expr.Typed.Meta.empty}]
-      in
+      let args = args @ [Expr.Helpers.str "\n"] in
       pf ppf "if (pstream__) %a" pp_block (list ~sep:cut pp_arg, args)
   | NRFunApp (CompilerInternal, fname, args)
     when fname = Internal_fun.to_string FnReject ->
@@ -172,7 +166,7 @@ let rec pp_statement (ppf : Format.formatter)
         ; meta= stmt.meta }
   | NRFunApp (CompilerInternal, fname, [var])
     when fname = Internal_fun.to_string FnWriteParam ->
-      pf ppf "@[<hov 2>vars__.push_back(@,%a);@]" pp_expr var
+      pf ppf "@[<hov 2>vars__.emplace_back(@,%a);@]" pp_expr var
   | NRFunApp (CompilerInternal, fname, args) ->
       let fname, extra_args = trans_math_fn fname in
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)

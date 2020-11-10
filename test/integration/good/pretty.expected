@@ -59,6 +59,56 @@ model {
   dummy_parameter ~ normal(0, 1);
 }
 
+  $ ../../../../install/default/bin/stanc --auto-format algebra_solver_newton_good.stan
+functions {
+  real algebra_solverfake(real x) {
+    return 2 * x;
+  }
+  vector algebra_system(vector x, vector y, real[] dat, int[] dat_int) {
+    vector[2] f_x;
+    f_x[1] = x[1] - y[1];
+    f_x[2] = x[2] - y[2];
+    return f_x;
+  }
+}
+data {
+
+}
+transformed data {
+  vector[2] x;
+  vector[2] y;
+  real dat[0];
+  int dat_int[0];
+  vector[2] theta;
+  theta = algebra_solver_newton(algebra_system, x, y, dat, dat_int);
+  theta = algebra_solver_newton(algebra_system, x, y, dat, dat_int, 0.01,
+                                0.01, 10);
+}
+parameters {
+  vector[2] x_p;
+  vector[2] y_p;
+  real dummy_parameter;
+}
+transformed parameters {
+  real abc_tp = algebra_solverfake(2.9);
+  vector[2] theta_p;
+  theta_p = algebra_solver_newton(algebra_system, x, y, dat, dat_int);
+  theta_p = algebra_solver_newton(algebra_system, x, y, dat, dat_int, 0.01,
+                                  0.01, 10);
+  theta_p = algebra_solver_newton(algebra_system, x, y_p, dat, dat_int);
+  theta_p = algebra_solver_newton(algebra_system, x, y_p, dat, dat_int, 0.01,
+                                  0.01, 10);
+  theta_p = algebra_solver_newton(algebra_system, x_p, y, dat, dat_int);
+  theta_p = algebra_solver_newton(algebra_system, x_p, y, dat, dat_int, 0.01,
+                                  0.01, 10);
+  theta_p = algebra_solver_newton(algebra_system, x_p, y_p, dat, dat_int);
+  theta_p = algebra_solver_newton(algebra_system, x_p, y_p, dat, dat_int,
+                                  0.01, 0.01, 10);
+}
+model {
+  dummy_parameter ~ normal(0, 1);
+}
+
   $ ../../../../install/default/bin/stanc --auto-format assignment-deprecated.stan
 transformed data {
   real mu;
@@ -958,7 +1008,10 @@ model {
 
 Info: Found int division at 'bernoulli_logit_glm_old_performance.stan', line 10, column 19 to column 20:
   j / M
-Values will be rounded towards zero.
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  j * 1.0 / M
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format bernoulli_logit_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -989,7 +1042,10 @@ model {
 
 Info: Found int division at 'bernoulli_logit_glm_performance.stan', line 10, column 19 to column 20:
   j / M
-Values will be rounded towards zero.
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  j * 1.0 / M
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format break-continue.stan
 functions {
   int foo(int a) {
@@ -2899,6 +2955,19 @@ model {
   y ~ normal(0, 1);
 }
 
+  $ ../../../../install/default/bin/stanc --auto-format genquant-data-only.stan
+functions {
+  real f(data real x) {
+    return x + 1;
+  }
+}
+parameters {
+  real x;
+}
+generated quantities {
+  real y = f(x);
+}
+
   $ ../../../../install/default/bin/stanc --auto-format get-lp-deprecate.stan
 parameters {
   real<lower=0> y;
@@ -3065,6 +3134,15 @@ parameters {
 }
 model {
   infty ~ normal(0, 1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format identifiers.stan
+data {
+  int array;
+  int upper;
+  int lower;
+  int multiplier;
+  int offset;
 }
 
   $ ../../../../install/default/bin/stanc --auto-format illegal_generated_quantities.stan
@@ -3581,7 +3659,10 @@ model {
 
 Info: Found int division at 'int_div_user.stan', line 7, column 6 to column 10:
   a[1] / b[2]
-Values will be rounded towards zero.
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  a[1] * 1.0 / b[2]
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format int_fun.stan
 functions {
   int foo(int x) {
@@ -4143,7 +4224,10 @@ model {
 
 Info: Found int division at 'neg_binomial_2_log_glm_old_performance.stan', line 11, column 19 to column 20:
   j / M
-Values will be rounded towards zero.
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  j * 1.0 / M
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format neg_binomial_2_log_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -4175,7 +4259,10 @@ model {
 
 Info: Found int division at 'neg_binomial_2_log_glm_performance.stan', line 11, column 19 to column 20:
   j / M
-Values will be rounded towards zero.
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  j * 1.0 / M
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format new-prob-fun-suffixes.stan
 parameters {
   real y;
@@ -4221,7 +4308,10 @@ model {
 
 Info: Found int division at 'normal_id_glm_old_performance.stan', line 11, column 19 to column 20:
   j / M
-Values will be rounded towards zero.
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  j * 1.0 / M
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format normal_id_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -4253,7 +4343,10 @@ model {
 
 Info: Found int division at 'normal_id_glm_performance.stan', line 11, column 19 to column 20:
   j / M
-Values will be rounded towards zero.
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  j * 1.0 / M
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format nullary-unconflicted.stan
 parameters {
   real e;
@@ -4265,12 +4358,19 @@ parameters {
   real positive_infinity;
   real negative_infinity;
   real machine_precision;
+  real inv_logit;
+  real logit;
+  real bernoulli_logit_glm_lpmf;
+  real reduce_sum;
+  real ode_bdf;
+  real ode_bdf_tol;
 }
 transformed parameters {
   real mu;
   mu = e() + pi() + log2() + log10() + sqrt2() + not_a_number()
        + positive_infinity() + negative_infinity() + machine_precision(
        );
+  mu += logit + bernoulli_logit_glm_lpmf + reduce_sum;
 }
 model {
 
@@ -4419,7 +4519,10 @@ model {
 
 Info: Found int division at 'poisson_log_glm_old_performance.stan', line 10, column 19 to column 20:
   j / M
-Values will be rounded towards zero.
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  j * 1.0 / M
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format poisson_log_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -4450,7 +4553,10 @@ model {
 
 Info: Found int division at 'poisson_log_glm_performance.stan', line 10, column 19 to column 20:
   j / M
-Values will be rounded towards zero.
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  j * 1.0 / M
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format pound-comment-deprecated.stan
 data {
   int N;
@@ -4610,7 +4716,7 @@ model {
 
   $ ../../../../install/default/bin/stanc --auto-format propto-good.stan
 model {
-  target += normal_propto_lpdf(1| 0, 1);
+  target += normal_lupdf(1| 0, 1);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format rng_loc.stan
@@ -4654,6 +4760,34 @@ model {
 generated quantities {
   real mean_y = mean(y);
   real sd_y = sd(y);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format single-arg-conddist.stan
+functions {
+  real foo_lpdf(real x) {
+    return -square(x);
+  }
+  real goo_lpmf(int x) {
+    return -square(x);
+  }
+}
+data {
+  int y;
+}
+parameters {
+  real x;
+}
+model {
+  target += std_normal_lpdf(x| );
+  target += std_normal_lpdf(x| );
+  target += std_normal_lupdf(x| );
+  target += std_normal_lupdf(x| );
+  target += foo_lpdf(x| );
+  target += foo_lpdf(x| );
+  target += goo_lpmf(y| );
+  target += goo_lpmf(y| );
+  target += goo_lupmf(y| );
+  target += goo_lupmf(y| );
 }
 
   $ ../../../../install/default/bin/stanc --auto-format stanc_helper.stan
@@ -4723,6 +4857,242 @@ model {
   1 ~ normal(mu, sigma);
   2 ~ normal(mu, sigma);
   3 ~ normal(mu, sigma);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format unnormalized_math_fun_lpdf.stan
+functions {
+  real foo_lpdf(real y1, real y2, vector vy1, vector vy2, matrix my1,
+                matrix my2, real[] ay1) {
+    real r;
+    r += beta_lupdf(y1| y2, y2);
+    r += beta_proportion_lupdf(y1| y2, y2);
+    r += cauchy_lupdf(y1| y2, y2);
+    r += chi_square_lupdf(y1| y2);
+    r += dirichlet_lupdf(vy1| vy2);
+    r += double_exponential_lupdf(y1| y2, y2);
+    r += exp_mod_normal_lupdf(y1| y2, y2, y2);
+    r += exponential_lupdf(y1| y2);
+    r += frechet_lupdf(y1| y2, y2);
+    r += gamma_lupdf(y1| y2, y2);
+    r += gaussian_dlm_obs_lupdf(my1| my2, my2, vy2, my2, vy2, my2);
+    r += gumbel_lupdf(y1| y2, y2);
+    r += inv_chi_square_lupdf(y1| y2);
+    r += inv_gamma_lupdf(y1| y2, y2);
+    r += inv_wishart_lupdf(my1| y2, my2);
+    r += lkj_corr_cholesky_lupdf(my1| y2);
+    r += lkj_corr_lupdf(my1| y2);
+    r += logistic_lupdf(y1| y2, y2);
+    r += lognormal_lupdf(y1| y2, y2);
+    r += multi_gp_cholesky_lupdf(my1| my2, vy2);
+    r += multi_gp_lupdf(my1| my2, vy2);
+    r += multi_normal_cholesky_lupdf(vy1| vy2, my2);
+    r += multi_normal_lupdf(vy1| vy2, my2);
+    r += multi_normal_prec_lupdf(vy1| vy2, my2);
+    r += multi_student_t_lupdf(vy1| y2, vy2, my2);
+    r += normal_id_glm_lupdf(y1| my2, y2, vy2, vy2);
+    r += normal_lupdf(y1| y2, y2);
+    r += normal_lupdf(ay1| y2, y2);
+    r += pareto_lupdf(y1| y2, y2);
+    r += pareto_type_2_lupdf(y1| y2, y2, y2);
+    r += rayleigh_lupdf(y1| y2);
+    r += scaled_inv_chi_square_lupdf(y1| y2, y2);
+    r += skew_normal_lupdf(y1| y2, y2, y2);
+    r += std_normal_lupdf(y1| );
+    r += student_t_lupdf(y1| y2, y2, y2);
+    r += uniform_lupdf(y1| y2, y2);
+    r += von_mises_lupdf(y1| y2, y2);
+    r += weibull_lupdf(y1| y2, y2);
+    r += wiener_lupdf(y1| y2, y2, y2, y2);
+    r += wishart_lupdf(my1| y2, my2);
+    return r;
+  }
+  void goo_lp(real y1, real y2, vector vy1, vector vy2, matrix my1,
+              matrix my2, real[] ay1) {
+    target += beta_lupdf(y1| y2, y2);
+    target += beta_proportion_lupdf(y1| y2, y2);
+    target += cauchy_lupdf(y1| y2, y2);
+    target += chi_square_lupdf(y1| y2);
+    target += dirichlet_lupdf(vy1| vy2);
+    target += double_exponential_lupdf(y1| y2, y2);
+    target += exp_mod_normal_lupdf(y1| y2, y2, y2);
+    target += exponential_lupdf(y1| y2);
+    target += frechet_lupdf(y1| y2, y2);
+    target += gamma_lupdf(y1| y2, y2);
+    target += gaussian_dlm_obs_lupdf(my1| my2, my2, vy2, my2, vy2, my2);
+    target += gumbel_lupdf(y1| y2, y2);
+    target += inv_chi_square_lupdf(y1| y2);
+    target += inv_gamma_lupdf(y1| y2, y2);
+    target += inv_wishart_lupdf(my1| y2, my2);
+    target += lkj_corr_cholesky_lupdf(my1| y2);
+    target += lkj_corr_lupdf(my1| y2);
+    target += logistic_lupdf(y1| y2, y2);
+    target += lognormal_lupdf(y1| y2, y2);
+    target += multi_gp_cholesky_lupdf(my1| my2, vy2);
+    target += multi_gp_lupdf(my1| my2, vy2);
+    target += multi_normal_cholesky_lupdf(vy1| vy2, my2);
+    target += multi_normal_lupdf(vy1| vy2, my2);
+    target += multi_normal_prec_lupdf(vy1| vy2, my2);
+    target += multi_student_t_lupdf(vy1| y2, vy2, my2);
+    target += normal_id_glm_lupdf(y1| my2, y2, vy2, vy2);
+    target += normal_lupdf(y1| y2, y2);
+    target += normal_lupdf(ay1| y2, y2);
+    target += pareto_lupdf(y1| y2, y2);
+    target += pareto_type_2_lupdf(y1| y2, y2, y2);
+    target += rayleigh_lupdf(y1| y2);
+    target += scaled_inv_chi_square_lupdf(y1| y2, y2);
+    target += skew_normal_lupdf(y1| y2, y2, y2);
+    target += std_normal_lupdf(y1| );
+    target += student_t_lupdf(y1| y2, y2, y2);
+    target += uniform_lupdf(y1| y2, y2);
+    target += von_mises_lupdf(y1| y2, y2);
+    target += weibull_lupdf(y1| y2, y2);
+    target += wiener_lupdf(y1| y2, y2, y2, y2);
+    target += wishart_lupdf(my1| y2, my2);
+  }
+}
+parameters {
+  real y1;
+  real y2;
+  real ay1[5];
+  vector[5] vy1;
+  vector[5] vy2;
+  matrix[5, 5] my1;
+  matrix[5, 5] my2;
+}
+model {
+  real r;
+  r += beta_lupdf(y1| y2, y2);
+  r += beta_proportion_lupdf(y1| y2, y2);
+  r += cauchy_lupdf(y1| y2, y2);
+  r += chi_square_lupdf(y1| y2);
+  r += dirichlet_lupdf(vy1| vy2);
+  r += double_exponential_lupdf(y1| y2, y2);
+  r += exp_mod_normal_lupdf(y1| y2, y2, y2);
+  r += exponential_lupdf(y1| y2);
+  r += frechet_lupdf(y1| y2, y2);
+  r += gamma_lupdf(y1| y2, y2);
+  r += gaussian_dlm_obs_lupdf(my1| my2, my2, vy2, my2, vy2, my2);
+  r += gumbel_lupdf(y1| y2, y2);
+  r += inv_chi_square_lupdf(y1| y2);
+  r += inv_gamma_lupdf(y1| y2, y2);
+  r += inv_wishart_lupdf(my1| y2, my2);
+  r += lkj_corr_cholesky_lupdf(my1| y2);
+  r += lkj_corr_lupdf(my1| y2);
+  r += logistic_lupdf(y1| y2, y2);
+  r += lognormal_lupdf(y1| y2, y2);
+  r += multi_gp_cholesky_lupdf(my1| my2, vy2);
+  r += multi_gp_lupdf(my1| my2, vy2);
+  r += multi_normal_cholesky_lupdf(vy1| vy2, my2);
+  r += multi_normal_lupdf(vy1| vy2, my2);
+  r += multi_normal_prec_lupdf(vy1| vy2, my2);
+  r += multi_student_t_lupdf(vy1| y2, vy2, my2);
+  r += normal_id_glm_lupdf(y1| my2, y2, vy2, vy2);
+  r += normal_lupdf(y1| y2, y2);
+  r += normal_lupdf(ay1| y2, y2);
+  r += pareto_lupdf(y1| y2, y2);
+  r += pareto_type_2_lupdf(y1| y2, y2, y2);
+  r += rayleigh_lupdf(y1| y2);
+  r += scaled_inv_chi_square_lupdf(y1| y2, y2);
+  r += skew_normal_lupdf(y1| y2, y2, y2);
+  r += std_normal_lupdf(y1| );
+  r += student_t_lupdf(y1| y2, y2, y2);
+  r += uniform_lupdf(y1| y2, y2);
+  r += von_mises_lupdf(y1| y2, y2);
+  r += weibull_lupdf(y1| y2, y2);
+  r += wiener_lupdf(y1| y2, y2, y2, y2);
+  r += wishart_lupdf(my1| y2, my2);
+  r += foo_lupdf(y1| y2, vy1, vy2, my1, my2, ay1);
+  goo_lp(y1, y2, vy1, vy2, my1, my2, ay1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format unnormalized_math_fun_lpmf.stan
+functions {
+  real foo_lpmf(int i1, real r1, matrix m1, vector v1, int[] ai1,
+                row_vector rv1) {
+    real r;
+    r += bernoulli_logit_glm_lupmf(i1| m1, r1, v1);
+    r += bernoulli_logit_lupmf(i1| r1);
+    r += bernoulli_lupmf(i1| r1);
+    r += beta_binomial_lupmf(i1| i1, r1, r1);
+    r += binomial_logit_lupmf(i1| i1, r1);
+    r += binomial_lupmf(i1| i1, r1);
+    r += categorical_logit_glm_lupmf(i1| rv1, v1, m1);
+    r += categorical_logit_lupmf(i1| v1);
+    r += categorical_lupmf(i1| v1);
+    r += hypergeometric_lupmf(i1| i1, i1, i1);
+    r += multinomial_lupmf(ai1| v1);
+    r += neg_binomial_2_log_glm_lupmf(i1| m1, r1, v1, r1);
+    r += neg_binomial_2_log_lupmf(i1| r1, r1);
+    r += neg_binomial_2_lupmf(i1| r1, r1);
+    r += neg_binomial_lupmf(i1| r1, r1);
+    r += ordered_logistic_glm_lupmf(i1| rv1, v1, v1);
+    r += ordered_logistic_lupmf(i1| r1, v1);
+    r += ordered_probit_lupmf(i1| r1, v1);
+    r += poisson_log_glm_lupmf(i1| m1, r1, v1);
+    r += poisson_log_lupmf(i1| r1);
+    r += poisson_lupmf(i1| r1);
+    return r;
+  }
+  void goo_lp(int i1, real r1, matrix m1, vector v1, int[] ai1,
+              row_vector rv1) {
+    target += bernoulli_logit_glm_lupmf(i1| m1, r1, v1);
+    target += bernoulli_logit_lupmf(i1| r1);
+    target += bernoulli_lupmf(i1| r1);
+    target += beta_binomial_lupmf(i1| i1, r1, r1);
+    target += binomial_logit_lupmf(i1| i1, r1);
+    target += binomial_lupmf(i1| i1, r1);
+    target += categorical_logit_glm_lupmf(i1| rv1, v1, m1);
+    target += categorical_logit_lupmf(i1| v1);
+    target += categorical_lupmf(i1| v1);
+    target += hypergeometric_lupmf(i1| i1, i1, i1);
+    target += multinomial_lupmf(ai1| v1);
+    target += neg_binomial_2_log_glm_lupmf(i1| m1, r1, v1, r1);
+    target += neg_binomial_2_log_lupmf(i1| r1, r1);
+    target += neg_binomial_2_lupmf(i1| r1, r1);
+    target += neg_binomial_lupmf(i1| r1, r1);
+    target += ordered_logistic_glm_lupmf(i1| rv1, v1, v1);
+    target += ordered_logistic_lupmf(i1| r1, v1);
+    target += ordered_probit_lupmf(i1| r1, v1);
+    target += poisson_log_glm_lupmf(i1| m1, r1, v1);
+    target += poisson_log_lupmf(i1| r1);
+    target += poisson_lupmf(i1| r1);
+  }
+}
+data {
+  int i1;
+  int ai1[5];
+}
+parameters {
+  real r1;
+  vector[5] v1;
+  row_vector[5] rv1;
+  matrix[5, 5] m1;
+}
+model {
+  real r;
+  r += bernoulli_logit_glm_lupmf(i1| m1, r1, v1);
+  r += bernoulli_logit_lupmf(i1| r1);
+  r += bernoulli_lupmf(i1| r1);
+  r += beta_binomial_lupmf(i1| i1, r1, r1);
+  r += binomial_logit_lupmf(i1| i1, r1);
+  r += binomial_lupmf(i1| i1, r1);
+  r += categorical_logit_glm_lupmf(i1| rv1, v1, m1);
+  r += categorical_logit_lupmf(i1| v1);
+  r += categorical_lupmf(i1| v1);
+  r += hypergeometric_lupmf(i1| i1, i1, i1);
+  r += multinomial_lupmf(ai1| v1);
+  r += neg_binomial_2_log_glm_lupmf(i1| m1, r1, v1, r1);
+  r += neg_binomial_2_log_lupmf(i1| r1, r1);
+  r += neg_binomial_2_lupmf(i1| r1, r1);
+  r += neg_binomial_lupmf(i1| r1, r1);
+  r += ordered_logistic_glm_lupmf(i1| rv1, v1, v1);
+  r += ordered_logistic_lupmf(i1| r1, v1);
+  r += ordered_probit_lupmf(i1| r1, v1);
+  r += poisson_log_glm_lupmf(i1| m1, r1, v1);
+  r += poisson_log_lupmf(i1| r1);
+  r += poisson_lupmf(i1| r1);
+  r += foo_lupmf(i1| r1, m1, v1, ai1, rv1);
+  goo_lp(i1, r1, m1, v1, ai1, rv1);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format user-defined-lpdf-fun.stan
@@ -5113,7 +5483,10 @@ model {
 
 Info: Found int division at 'validate_division_good.stan', line 19, column 7 to column 8:
   2 / 3
-Values will be rounded towards zero.
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  2.0 / 3
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format validate_division_int_warning.stan
 transformed data {
   real u;
@@ -5132,7 +5505,10 @@ model {
 
 Info: Found int division at 'validate_division_int_warning.stan', line 7, column 6 to column 7:
   j / k
-Values will be rounded towards zero.
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  j * 1.0 / k
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format validate_elt_division_good.stan
 transformed data {
   matrix[3, 3] m;
@@ -5293,6 +5669,32 @@ generated quantities {
   real gq_d1 = my_fun(p_d1);
   real gq_d2 = my_fun(gq_d1);
   gq_d2 = my_fun3(gq_d1);
+}
+
+  $ ../../../../install/default/bin/stanc --auto-format validate_int_divide_good.stan
+data {
+  int i;
+  int j;
+}
+transformed data {
+  int k;
+  k = i %/% j;
+}
+parameters {
+  real y;
+}
+model {
+  int i2;
+  int j2;
+  int k2;
+  k2 = i2 %/% j2;
+  y ~ normal(0, 1);
+}
+generated quantities {
+  int i3;
+  int j3;
+  int k3;
+  k3 = i3 %/% j3;
 }
 
   $ ../../../../install/default/bin/stanc --auto-format validate_int_expr2_good.stan

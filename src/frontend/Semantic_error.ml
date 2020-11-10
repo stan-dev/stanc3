@@ -5,10 +5,12 @@ open Middle
 module TypeError = struct
   type t =
     | MismatchedReturnTypes of UnsizedType.returntype * UnsizedType.returntype
-    | MismatchedArrayTypes
-    | InvalidRowVectorTypes
+    | MismatchedArrayTypes of UnsizedType.t * UnsizedType.t
+    | InvalidRowVectorTypes of UnsizedType.t
+    | InvalidMatrixTypes of UnsizedType.t
     | IntExpected of string * UnsizedType.t
     | IntOrRealExpected of string * UnsizedType.t
+    | TypeExpected of string * UnsizedType.t * UnsizedType.t
     | IntIntArrayOrRangeExpected of UnsizedType.t
     | IntOrRealContainerExpected of UnsizedType.t
     | ArrayVectorRowVectorMatrixExpected of UnsizedType.t
@@ -20,6 +22,10 @@ module TypeError = struct
         * UnsizedType.t list
         * (UnsizedType.autodifftype * UnsizedType.t) list
     | IllTypedReduceSumGeneric of string * UnsizedType.t list
+    | IllTypedVariadicODE of
+        string
+        * UnsizedType.t list
+        * (UnsizedType.autodifftype * UnsizedType.t) list
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
     | ReturningFnExpectedUndeclaredIdentFound of string
@@ -43,18 +49,32 @@ module TypeError = struct
           "Branches of function definition need to have the same return type. \
            Instead, found return types %a and %a."
           UnsizedType.pp_returntype rt1 UnsizedType.pp_returntype rt2
-    | MismatchedArrayTypes ->
-        Fmt.pf ppf "Array expression must have entries of consistent type."
-    | InvalidRowVectorTypes ->
+    | MismatchedArrayTypes (t1, t2) ->
         Fmt.pf ppf
-          "Row_vector expression must have all int and real entries or all \
-           row_vector entries."
+          "Array expression must have entries of consistent type. Expected %a \
+           but found %a."
+          UnsizedType.pp t1 UnsizedType.pp t2
+    | InvalidRowVectorTypes ty ->
+        Fmt.pf ppf
+          "Row_vector expression must have all int or real entries. Found \
+           type %a."
+          UnsizedType.pp ty
+    | InvalidMatrixTypes ty ->
+        Fmt.pf ppf
+          "Matrix expression must have all row_vector entries. Found type %a."
+          UnsizedType.pp ty
     | IntExpected (name, ut) ->
         Fmt.pf ppf "%s must be of type int. Instead found type %a." name
           UnsizedType.pp ut
     | IntOrRealExpected (name, ut) ->
         Fmt.pf ppf "%s must be of type int or real. Instead found type %a."
           name UnsizedType.pp ut
+    | TypeExpected (name, (UInt | UReal), ut) ->
+        Fmt.pf ppf "%s must be a scalar. Instead found type %a." name
+          UnsizedType.pp ut
+    | TypeExpected (name, et, ut) ->
+        Fmt.pf ppf "%s must be a scalar or of type %a. Instead found type %a."
+          name UnsizedType.pp et UnsizedType.pp ut
     | IntOrRealContainerExpected ut ->
         Fmt.pf ppf
           "A (container of) real or int was expected. Instead found type %a."
@@ -136,6 +156,74 @@ module TypeError = struct
           (String.concat ~sep:"" lines)
           Fmt.(list UnsizedType.pp ~sep:comma)
           arg_tys
+    | IllTypedVariadicODE (name, arg_tys, args) ->
+        let types x = List.map ~f:snd x in
+        let optional_tol_args =
+          if Stan_math_signatures.is_variadic_ode_tol_fn name then
+            types Stan_math_signatures.variadic_ode_tol_arg_types
+          else []
+        in
+        let generate_ode_sig =
+          [ UnsizedType.UFun
+              ( Stan_math_signatures.variadic_ode_mandatory_fun_args @ args
+              , ReturnType Stan_math_signatures.variadic_ode_fun_return_type )
+          ]
+          @ types Stan_math_signatures.variadic_ode_mandatory_arg_types
+          @ optional_tol_args @ types args
+        in
+        (* This function is used to generate the generic signature for variadic ODEs,
+           i.e. with ... representing the variadic parts of the signature.
+           This should be removed once a type representing variadic arguments is added.
+           The generic signature is printed when there is a semantic error with one of
+            the non-variadic arguments in the signature. If there is a mismatch in the
+            variadic arguments, we print the non-generic expected signature
+            (with explicit types for variadic args). *)
+        let variadic_ode_generic_signature =
+          let optional_tol_args =
+            if Stan_math_signatures.is_variadic_ode_tol_fn name then
+              types Stan_math_signatures.variadic_ode_tol_arg_types
+            else []
+          in
+          match
+            ( types Stan_math_signatures.variadic_ode_mandatory_arg_types
+            , types Stan_math_signatures.variadic_ode_mandatory_fun_args )
+          with
+          | arg0 :: arg1 :: arg2 :: _, fun_arg0 :: fun_arg1 :: _ ->
+              Fmt.strf "(%a, %a, ...) => %a, %a, %a, %a, %a ...\n"
+                UnsizedType.pp fun_arg0 UnsizedType.pp fun_arg1 UnsizedType.pp
+                Stan_math_signatures.variadic_ode_fun_return_type
+                UnsizedType.pp arg0 UnsizedType.pp arg1 UnsizedType.pp arg2
+                Fmt.(list UnsizedType.pp ~sep:comma)
+                optional_tol_args
+          | _ ->
+              raise_s
+                [%message
+                  "This should not happen. Variadic ODE functions have \
+                   exactly three mandatory arguments and the function \
+                   supplied to the variadic ODE function has exactly two \
+                   mandatory arguments."]
+        in
+        if List.length args = 0 then
+          Fmt.pf ppf
+            "Ill-typed arguments supplied to function '%s'. Expected \
+             arguments:@[<h>%a@]\n\
+             @[<h>Instead supplied arguments of incompatible type:\n\
+             %a@]"
+            name
+            Fmt.(list UnsizedType.pp ~sep:comma)
+            generate_ode_sig
+            Fmt.(list UnsizedType.pp ~sep:comma)
+            arg_tys
+        else
+          Fmt.pf ppf
+            "Ill-typed arguments supplied to function '%s'. @[<h>Available \
+             signatures:\n\
+             %s.@]\n\
+             @[<h>Instead supplied arguments of incompatible type:\n\
+             %a.@]"
+            name variadic_ode_generic_signature
+            Fmt.(list UnsizedType.pp ~sep:comma)
+            arg_tys
     | NotIndexable ut ->
         Fmt.pf ppf
           "Only expressions of array, matrix, row_vector and vector type may \
@@ -225,6 +313,7 @@ module IdentifierError = struct
     | IsStanMathName of string
     | InUse of string
     | NotInScope of string
+    | UnnormalizedSuffix of string
 
   let pp ppf = function
     | IsStanMathName name ->
@@ -236,16 +325,25 @@ module IdentifierError = struct
     | IsKeyword name ->
         Fmt.pf ppf "Identifier '%s' clashes with reserved keyword." name
     | NotInScope name -> Fmt.pf ppf "Identifier '%s' not in scope." name
+    | UnnormalizedSuffix name ->
+        Fmt.pf ppf
+          "Identifier '%s' has a _lupdf/_lupmf suffix, which is only allowed \
+           for functions."
+          name
 end
 
 module ExpressionError = struct
   type t =
     | InvalidMapRectFn of string
+    | InvalidSizeDeclRng
     | InvalidRngFunction
+    | InvalidUnnormalizedFunction
+    | InvalidUnnormalizedUDF of string
     | ConditionalNotationNotAllowed
     | ConditioningRequired
     | NotPrintable
     | EmptyArray
+    | IntTooLarge
 
   let pp ppf = function
     | InvalidMapRectFn fn_name ->
@@ -253,22 +351,41 @@ module ExpressionError = struct
           "Mapped function cannot be an _rng or _lp function, found function \
            name: %s"
           fn_name
+    | InvalidSizeDeclRng ->
+        Fmt.pf ppf
+          "Random number generators are not allowed in top level size \
+           declarations."
     | InvalidRngFunction ->
         Fmt.pf ppf
           "Random number generators are only allowed in transformed data \
            block, generated quantities block or user-defined functions with \
            names ending in _rng."
+    | InvalidUnnormalizedFunction ->
+        Fmt.pf ppf
+          "Functions with names ending in _lupdf and _lupmf can only be used \
+           in the model block or user-defined functions with names ending in \
+           _lpdf, _lpmf or _lp."
+    | InvalidUnnormalizedUDF fname ->
+        Fmt.pf ppf
+          "%s is an invalid user-defined function name. User-defined \
+           probability mass and density functions must be defined as \
+           normalized (function names should end with _lpdf/_lpmf not \
+           _lupdf/_lupmf)."
+          fname
     | ConditionalNotationNotAllowed ->
         Fmt.pf ppf
-          "Only functions with names ending in _lpdf, _lpmf, _lcdf, _lccdf \
-           can make use of conditional notation."
+          "Only functions with names ending in _lpdf, _lupdf, _lpmf, _lupmf, \
+           _lcdf, _lccdf can make use of conditional notation."
     | ConditioningRequired ->
         Fmt.pf ppf
-          "Probabilty functions with suffixes _lpdf, _lpmf, _lcdf, and \
-           _lccdf, require a vertical bar (|) between the first two arguments."
+          "Probability functions with suffixes _lpdf, _lupdf, _lpmf, _lupmf, \
+           _lcdf and _lccdf, require a vertical bar (|) between the first two \
+           arguments."
     | NotPrintable -> Fmt.pf ppf "Functions cannot be printed."
     | EmptyArray ->
         Fmt.pf ppf "Array expressions must contain at least one element."
+    | IntTooLarge ->
+        Fmt.pf ppf "Integer literal cannot be larger than 2_147_483_647."
 end
 
 module StatementError = struct
@@ -313,7 +430,7 @@ module StatementError = struct
     | InvalidSamplingPDForPMF ->
         Fmt.pf ppf
           {|
-~ statement should refer to a distribution without its "_lpdf" or "_lpmf" suffix.
+~ statement should refer to a distribution without its "_lpdf/_lupdf" or "_lpmf/_lupmf" suffix.
 For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
 |}
     | InvalidSamplingCDForCCDF name ->
@@ -371,7 +488,7 @@ For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
     | NonRealProbFunDef ->
         Fmt.pf ppf
           "Real return type required for probability functions ending in \
-           _log, _lpdf, _lpmf, _lcdf, or _lccdf."
+           _log, _lpdf, _lupdf, _lpmf, _lupmf, _lcdf, or _lccdf."
     | ProbDensityNonRealVariate (Some ut) ->
         Fmt.pf ppf
           "Probability density functions require real variates (first \
@@ -421,15 +538,22 @@ let location = function
 let mismatched_return_types loc rt1 rt2 =
   TypeError (loc, TypeError.MismatchedReturnTypes (rt1, rt2))
 
-let mismatched_array_types loc = TypeError (loc, TypeError.MismatchedArrayTypes)
+let mismatched_array_types loc t1 t2 =
+  TypeError (loc, TypeError.MismatchedArrayTypes (t1, t2))
 
-let invalid_row_vector_types loc =
-  TypeError (loc, TypeError.InvalidRowVectorTypes)
+let invalid_row_vector_types loc ty =
+  TypeError (loc, TypeError.InvalidRowVectorTypes ty)
+
+let invalid_matrix_types loc ty =
+  TypeError (loc, TypeError.InvalidMatrixTypes ty)
 
 let int_expected loc name ut = TypeError (loc, TypeError.IntExpected (name, ut))
 
 let int_or_real_expected loc name ut =
   TypeError (loc, TypeError.IntOrRealExpected (name, ut))
+
+let scalar_or_type_expected loc name et ut =
+  TypeError (loc, TypeError.TypeExpected (name, et, ut))
 
 let int_intarray_or_range_expected loc ut =
   TypeError (loc, TypeError.IntIntArrayOrRangeExpected ut)
@@ -454,6 +578,9 @@ let illtyped_reduce_sum loc name arg_tys args =
 
 let illtyped_reduce_sum_generic loc name arg_tys =
   TypeError (loc, TypeError.IllTypedReduceSumGeneric (name, arg_tys))
+
+let illtyped_variadic_ode loc name arg_tys args =
+  TypeError (loc, TypeError.IllTypedVariadicODE (name, arg_tys, args))
 
 let returning_fn_expected_nonfn_found loc name =
   TypeError (loc, TypeError.ReturningFnExpectedNonFnFound name)
@@ -504,11 +631,23 @@ let ident_in_use loc name = IdentifierError (loc, IdentifierError.InUse name)
 let ident_not_in_scope loc name =
   IdentifierError (loc, IdentifierError.NotInScope name)
 
+let ident_has_unnormalized_suffix loc name =
+  IdentifierError (loc, IdentifierError.UnnormalizedSuffix name)
+
 let invalid_map_rect_fn loc name =
   ExpressionError (loc, ExpressionError.InvalidMapRectFn name)
 
+let invalid_decl_rng_fn loc =
+  ExpressionError (loc, ExpressionError.InvalidSizeDeclRng)
+
 let invalid_rng_fn loc =
   ExpressionError (loc, ExpressionError.InvalidRngFunction)
+
+let invalid_unnormalized_fn loc =
+  ExpressionError (loc, ExpressionError.InvalidUnnormalizedFunction)
+
+let udf_is_unnormalized_fn loc name =
+  ExpressionError (loc, ExpressionError.InvalidUnnormalizedUDF name)
 
 let conditional_notation_not_allowed loc =
   ExpressionError (loc, ExpressionError.ConditionalNotationNotAllowed)
@@ -518,6 +657,7 @@ let conditioning_required loc =
 
 let not_printable loc = ExpressionError (loc, ExpressionError.NotPrintable)
 let empty_array loc = ExpressionError (loc, ExpressionError.EmptyArray)
+let bad_int_literal loc = ExpressionError (loc, ExpressionError.IntTooLarge)
 
 let cannot_assign_to_read_only loc name =
   StatementError (loc, StatementError.CannotAssignToReadOnly name)

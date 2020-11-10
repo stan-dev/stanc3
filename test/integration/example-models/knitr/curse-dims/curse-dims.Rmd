@@ -1140,7 +1140,7 @@ illustrate how atypical the all-success draw is.
 
 1.  The smallest set by volume that contains $1 - \epsilon$ of the
 probability mass is called the highest probability set.  In a
-univariate, unimodal density, the highest probabilty set is the
+univariate, unimodal density, the highest probability set is the
 highest density interval (HDI).  Show that the probability of a random
 draw falling in the difference between these sets (typical set and
 highest probability set) quickly converges to zero.

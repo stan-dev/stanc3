@@ -1,3 +1,5 @@
+  $ ../../../../install/default/bin/stanc --name=foo  8start_with_number.stan
+
   $ ../../../../install/default/bin/stanc --name=foo  bad.stan
 
 Semantic error in 'bad.stan', line 3, column 6 to column 9:

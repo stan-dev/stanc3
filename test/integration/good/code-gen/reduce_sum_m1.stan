@@ -32,4 +32,5 @@ model {
   target += reduce_sum(g, y1, 1);
   target += reduce_sum(h, y2, 1, y2);
   target += reduce_sum(foo_lpdf, y3, 1);
+  target += reduce_sum(foo_lupdf, y3, 1);
 }
