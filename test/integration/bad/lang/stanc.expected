@@ -511,19 +511,6 @@ Syntax error in 'bad_cov_exp_quad_vec_rvec_param.stan', line 12, column 0 to lin
 "model {" or "generated quantities {" expected after end of transformed parameters block.
 
 
-  $ ../../../../../install/default/bin/stanc bad_fun_name.stan
-
-Semantic error in 'bad_fun_name.stan', line 2, column 7 to column 12:
-   -------------------------------------------------
-     1:  data {
-     2:    real logit; // causes error because logit is fun name
-                ^
-     3:  }
-     4:  parameters {
-   -------------------------------------------------
-
-Identifier 'logit' clashes with Stan Math library function.
-
   $ ../../../../../install/default/bin/stanc bad_periods_data.stan
 
 Syntax error in 'bad_periods_data.stan', line 2, column 7, lexing error:
@@ -666,4 +653,95 @@ Semantic error in 'good_all.stan', line 25, column 2 to column 8:
    -------------------------------------------------
 
 Cannot assign to global variable 'm' declared in previous blocks.
+
+  $ ../../../../../install/default/bin/stanc incomplete.stan
+
+Syntax error in 'incomplete.stan', line 2, column 15 to column 17, parsing error:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    real x = 2.0 .^ ;
+                          ^
+     3:  }
+   -------------------------------------------------
+
+Found an incomplete binary expression - are you missing the right hand side?
+
+
+  $ ../../../../../install/default/bin/stanc incomplete2.stan
+
+Syntax error in 'incomplete2.stan', line 2, column 9 to column 16, parsing error:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    1.0 .^ upper[] while
+                         ^
+     3:  }
+   -------------------------------------------------
+
+Found a expression where we expected a statement. Is there a missing semi-colon here?
+Or did you mean to use the preceding expression in:
+* a function call
+* a sampling statement
+* the conditional in a for, while, or if statement
+* assignment to a variable?
+
+
+  $ ../../../../../install/default/bin/stanc incomplete3.stan
+
+Syntax error in 'incomplete3.stan', line 2, column 6 to column 9, parsing error:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    2.0 %/% while (1) { print("hi"); }
+                  ^
+     3:  }
+   -------------------------------------------------
+
+Ill-formed expression. Expected expression after expression followed by "%/%".
+
+
+  $ ../../../../../install/default/bin/stanc incomplete4.stan
+
+Syntax error in 'incomplete4.stan', line 2, column 2 to column 13, parsing error:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    2.0 %/% 1.0; while (1) { print("hi"); }
+                      ^
+     3:  }
+   -------------------------------------------------
+
+Found a expression where we expected a statement. Is there a missing semi-colon here?
+Or did you mean to use the preceding expression in:
+* a function call
+* a sampling statement
+* the conditional in a for, while, or if statement
+* assignment to a variable?
+
+
+  $ ../../../../../install/default/bin/stanc incomplete5.stan
+
+Syntax error in 'incomplete5.stan', line 2, column 11 to column 12, parsing error:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    if (2.0) ;
+                     ^
+   -------------------------------------------------
+
+Ill-formed block. Expected a statement, variable declaration, or just "}".
+
+
+  $ ../../../../../install/default/bin/stanc incomplete6.stan
+
+Syntax error in 'incomplete6.stan', line 3, column 15 to column 16, parsing error:
+   -------------------------------------------------
+     1:  transformed data {
+     2:    print(upper[2.0]);
+     3:    real x = sars[while (0)];
+                         ^
+     4:  }
+   -------------------------------------------------
+
+Expected an expression inside "[" and "]" but found a statement. Indexing should look like
+  var[1 + i]
+not
+  var[for (n in 1:N) ...]
+
 

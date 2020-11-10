@@ -1,6 +1,59 @@
 STANC3 RELEASE NOTES
 ======================================================================
 
+v.2.25.0 (26 October 2020)
+======================================================================
+
+- Improved parser error message on missing semicolon in the data or parameters block.
+- Expanded OpenCL (GPU) support for GLMs to now handle parameters for any argument.
+- Fix parameter unconstraining bug when the constraints depend on other constrained parameters.
+- "offset, "multiplier," "lower," and "upper" are no longer reserved keywords and can be used in the names of identifiers.
+- Extended `elt_multiply` (`.*`) and `elt_divide` (`./`) to cases where both inputs are scalars.
+- Added support for unnormalized distributions for the `target +=` sytnax.
+- Changed the MIR to represent function declarations as Options.
+- Variable names are now allowed that shadow math function names.
+- Fixed a bug with not recognizing transformed parameters in pedantic mode
+- Added vectorised binary functions:
+    - bessel_first_kind
+    - beta
+    - binary_log_loss
+    - binomial_coefficient_log
+    - choose
+    - falling_factorial
+    - fdim
+    - fmax
+    - fmin
+    - fmod
+    - gamma_p
+    - gamma_q
+    - hypot
+    - lbeta
+    - ldexp
+    - lmgamma
+    - log_diff_exp
+    - log_falling_factorial
+    - log_inv_logit_diff
+    - log_modified_bessel_first_kind
+    - log_rising_factorial
+    - modified_bessel_first_kind
+    - modified_bessel_second_kind
+    - lmultiply
+    - multiply_log
+    - owens_t
+    - rising_factorial
+
+Code contributions were made by @andrjohns @nhuurre @rok-cesnovar @rybern and @seantalts 
+
+v.2.24.1 (11 August 2020)
+======================================================================
+
+Bugfixes:
+
+- added using std::pow to generated code
+- fixed code generation for pow()
+- added data quantifier to linspaced_* signatures
+- fixed code generation for empty matrices
+
 v.2.24.0 (28 July 2020)
 ======================================================================
 

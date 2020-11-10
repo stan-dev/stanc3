@@ -1,0 +1,157 @@
+  $ ../../../../../install/default/bin/stanc lupdf_ident.stan
+
+Semantic error in 'lupdf_ident.stan', line 2, column 9 to column 16:
+   -------------------------------------------------
+     1:  parameters {
+     2:      real y_lupdf;
+                  ^
+     3:  }
+     4:  model {
+   -------------------------------------------------
+
+Identifier 'y_lupdf' has a _lupdf/_lupmf suffix, which is only allowed for functions.
+
+  $ ../../../../../install/default/bin/stanc lupdf_in_functions.stan
+
+Semantic error in 'lupdf_in_functions.stan', line 3, column 15 to column 34:
+   -------------------------------------------------
+     1:  functions {
+     2:      real test(real y) {
+     3:          return normal_lupdf(y|0,1);
+                        ^
+     4:      }
+     5:  }
+   -------------------------------------------------
+
+Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf, _lpmf or _lp.
+
+  $ ../../../../../install/default/bin/stanc lupdf_in_gq.stan
+
+Semantic error in 'lupdf_in_gq.stan', line 8, column 13 to column 34:
+   -------------------------------------------------
+     6:  }
+     7:  generated quantities {
+     8:      real x = normal_lupdf(y| 0, 1);
+                      ^
+     9:  }
+   -------------------------------------------------
+
+Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf, _lpmf or _lp.
+
+  $ ../../../../../install/default/bin/stanc lupdf_in_gq_rs.stan
+
+Semantic error in 'lupdf_in_gq_rs.stan', line 14, column 24 to column 33:
+   -------------------------------------------------
+    12:  }
+    13:  generated quantities {
+    14:      real x = reduce_sum(foo_lupdf,ya,1);
+                                 ^
+    15:  }
+   -------------------------------------------------
+
+Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf, _lpmf or _lp.
+
+  $ ../../../../../install/default/bin/stanc lupdf_in_trans_data.stan
+
+Semantic error in 'lupdf_in_trans_data.stan', line 3, column 13 to column 34:
+   -------------------------------------------------
+     1:  transformed data {
+     2:      real p;
+     3:      real y = normal_lupdf(p| 0, 1);
+                      ^
+     4:  }
+   -------------------------------------------------
+
+Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf, _lpmf or _lp.
+
+  $ ../../../../../install/default/bin/stanc lupdf_in_trans_params.stan
+
+Semantic error in 'lupdf_in_trans_params.stan', line 3, column 13 to column 34:
+   -------------------------------------------------
+     1:  transformed parameters {
+     2:      real p;
+     3:      real y = normal_lupdf(p| 0, 1);
+                      ^
+     4:  }
+   -------------------------------------------------
+
+Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf, _lpmf or _lp.
+
+  $ ../../../../../install/default/bin/stanc lupdf_in_trans_params_rs.stan
+
+Semantic error in 'lupdf_in_trans_params_rs.stan', line 9, column 24 to column 33:
+   -------------------------------------------------
+     7:      real p;
+     8:      real ya[5];
+     9:      real y = reduce_sum(foo_lupdf,ya,1);
+                                 ^
+    10:  }
+   -------------------------------------------------
+
+Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf, _lpmf or _lp.
+
+  $ ../../../../../install/default/bin/stanc lupmf_in_gq.stan
+
+Semantic error in 'lupmf_in_gq.stan', line 11, column 13 to column 33:
+   -------------------------------------------------
+     9:  }
+    10:  generated quantities {
+    11:      real x = poisson_lupmf(d | y);
+                      ^
+    12:  }
+   -------------------------------------------------
+
+Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf, _lpmf or _lp.
+
+  $ ../../../../../install/default/bin/stanc lupmf_in_trans_data.stan
+
+Semantic error in 'lupmf_in_trans_data.stan', line 7, column 13 to column 33:
+   -------------------------------------------------
+     5:  transformed data {
+     6:      real y;
+     7:      real x = poisson_lupmf(d | y);
+                      ^
+     8:  }
+   -------------------------------------------------
+
+Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf, _lpmf or _lp.
+
+  $ ../../../../../install/default/bin/stanc lupmf_in_trans_params.stan
+
+Semantic error in 'lupmf_in_trans_params.stan', line 6, column 13 to column 33:
+   -------------------------------------------------
+     4:  transformed parameters {
+     5:      real y;
+     6:      real x = poisson_lupmf(d | y);
+                      ^
+     7:  }
+   -------------------------------------------------
+
+Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf, _lpmf or _lp.
+
+  $ ../../../../../install/default/bin/stanc udf_lupdf.stan
+
+Semantic error in 'udf_lupdf.stan', line 2, column 9 to column 18:
+   -------------------------------------------------
+     1:  functions {
+     2:      real foo_lupdf(real y) {
+                  ^
+     3:          return 1.0;
+     4:      }
+   -------------------------------------------------
+
+foo_lupdf is an invalid user-defined function name. User-defined probability mass and density functions must be defined as normalized (function names should end with _lpdf/_lpmf not _lupdf/_lupmf).
+
+  $ ../../../../../install/default/bin/stanc udf_lupmf.stan
+
+Semantic error in 'udf_lupmf.stan', line 2, column 9 to column 18:
+   -------------------------------------------------
+     1:  functions {
+     2:      real foo_lupmf(real y) {
+                  ^
+     3:          return 1.0;
+     4:      }
+   -------------------------------------------------
+
+foo_lupmf is an invalid user-defined function name. User-defined probability mass and density functions must be defined as normalized (function names should end with _lpdf/_lpmf not _lupdf/_lupmf).
+

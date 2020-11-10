@@ -16,7 +16,7 @@ open Pedantic_dist_warnings
 let list_unused_params (factor_graph : factor_graph) (mir : Program.Typed.t) :
     string Set.Poly.t =
   (* Build a factor graph of the program, check for missing parameters *)
-  let params = parameter_names_set ~include_transformed:true mir in
+  let params = parameter_names_set ~include_transformed:false mir in
   let used_params =
     Set.Poly.map
       ~f:(fun (VVar v) -> v)
@@ -123,19 +123,23 @@ let list_arg_dependant_fundef_cf (mir : Program.Typed.t)
     (fun_def : 'a Program.fun_def) :
     (Location_span.t * int * string) Set.Poly.t =
   let args = List.map ~f:(fun (_, name, _) -> name) fun_def.fdargs in
-  (* build dataflow data structure *)
-  let info_map = build_dep_info_map mir fun_def.fdbody in
-  let cf_deps = list_target_dependant_cf info_map (Set.Poly.of_list args) in
-  union_map cf_deps ~f:(fun (loc, names) ->
-      Set.Poly.map names ~f:(fun name ->
-          let ix, _ =
-            Option.value_exn
-              ~message:
-                "INTERNAL ERROR: Pedantic mode found CF dependent on an \
-                 arg,but the arg is mismatched. Please report a bug.\n"
-              (List.findi args ~f:(fun _ arg -> arg = name))
-          in
-          (loc, ix, name) ) )
+  (* Only look for control flow if this function definition has a body *)
+  Option.value_map fun_def.fdbody ~default:Set.Poly.empty ~f:(fun body ->
+      (* build dataflow data structure *)
+      let info_map = build_dep_info_map mir body in
+      let cf_deps =
+        list_target_dependant_cf info_map (Set.Poly.of_list args)
+      in
+      union_map cf_deps ~f:(fun (loc, names) ->
+          Set.Poly.map names ~f:(fun name ->
+              let ix, _ =
+                Option.value_exn
+                  ~message:
+                    "INTERNAL ERROR: Pedantic mode found CF dependent on an \
+                     arg,but the arg is mismatched. Please report a bug.\n"
+                  (List.findi args ~f:(fun _ arg -> arg = name))
+              in
+              (loc, ix, name) ) ) )
 
 let expr_collect_exprs (expr : Expr.Typed.t) ~f : 'a Set.Poly.t =
   let collect_expr s (expr : Expr.Typed.t) =
@@ -269,7 +273,7 @@ let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
   in
   stmts_collect_exprs
     (List.append mir.log_prob
-       (List.map ~f:(fun f -> f.fdbody) mir.functions_block))
+       (List.filter_map ~f:(fun f -> f.fdbody) mir.functions_block))
     ~f:take_dist
 
 (* Our definition of 'unscaled' for constants used in distributions *)
