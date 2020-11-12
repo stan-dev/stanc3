@@ -790,6 +790,7 @@ let () =
     ("append_col", ReturnType URowVector, [URowVector; URowVector]) ;
   add_unqualified ("append_col", ReturnType URowVector, [UReal; URowVector]) ;
   add_unqualified ("append_col", ReturnType URowVector, [URowVector; UReal]) ;
+  add_unqualified ("chol2inv", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified ("cholesky_decompose", ReturnType UMatrix, [UMatrix]) ;
   add_binary_vec_int_int "choose" ;
   add_unqualified ("col", ReturnType UVector, [UMatrix; UInt]) ;
