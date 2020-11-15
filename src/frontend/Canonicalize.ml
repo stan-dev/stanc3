@@ -89,7 +89,7 @@ let rec repair_syntax_stmt user_dists {stmt; smeta} =
       { stmt=
           map_statement repair_syntax_expr
             (repair_syntax_stmt user_dists)
-            repair_syntax_lval ident stmt
+            repair_syntax_lval Fn.id Fn.id stmt
       ; smeta }
 
 let rec replace_deprecated_expr {expr; emeta} =
@@ -140,7 +140,8 @@ let rec replace_deprecated_stmt {stmt; smeta} =
           { assign_lhs= replace_deprecated_lval l
           ; assign_op= Assign
           ; assign_rhs= replace_deprecated_expr e }
-    | FunDef {returntype; funname= {name; id_loc}; arguments; body} ->
+    | FunDef {returntype; funname= {name; id_loc}; captures; arguments; body}
+      ->
         FunDef
           { returntype
           ; funname=
@@ -148,11 +149,12 @@ let rec replace_deprecated_stmt {stmt; smeta} =
                   Option.value ~default:name
                     (String.Table.find deprecated_userdefined name)
               ; id_loc }
+          ; captures
           ; arguments
           ; body= replace_deprecated_stmt body }
     | _ ->
         map_statement replace_deprecated_expr replace_deprecated_stmt
-          replace_deprecated_lval ident stmt
+          replace_deprecated_lval Fn.id Fn.id stmt
   in
   {stmt; smeta}
 
@@ -209,7 +211,7 @@ let rec parens_stmt {stmt; smeta} =
           ; lower_bound= keep_parens lower_bound
           ; upper_bound= keep_parens upper_bound
           ; loop_body= parens_stmt loop_body }
-    | _ -> map_statement no_parens parens_stmt parens_lval ident stmt
+    | _ -> map_statement no_parens parens_stmt parens_lval Fn.id Fn.id stmt
   in
   {stmt; smeta}
 

@@ -8,10 +8,13 @@ type fun_arg_decl = (UnsizedType.autodifftype * string * UnsizedType.t) list
 type 'a fun_def =
   { fdrt: UnsizedType.t option
   ; fdname: string
-  ; fdargs:
-      (UnsizedType.autodifftype * string * UnsizedType.t) list
+  ; fdcaptures:
+      (UnsizedType.autodifftype * string * UnsizedType.t) list option
+      (* If fdcaptures is not None, this is a closure. *)
+  ; fdargs: (UnsizedType.autodifftype * string * UnsizedType.t) list
+  ; fdbody:
+      'a option
       (* If fdbody is None, this is a function declaration without body. *)
-  ; fdbody: 'a option
   ; fdloc: Location_span.t sexp_opaque [@compare.ignore] }
 [@@deriving compare, hash, map, sexp, map, fold]
 

@@ -187,7 +187,7 @@ function_def:
     {
       grammar_logger "function_def" ;
       {stmt=FunDef {returntype = rt; funname = name;
-                           arguments = args; body=b;};
+                    captures = None; arguments = args; body=b;};
        smeta={loc=Location_span.of_positions_exn $loc}
       }
     }

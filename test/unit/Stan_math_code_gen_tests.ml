@@ -12,6 +12,7 @@ let%expect_test "udf" =
   let pp_fun_def_w_rs a b = pp_fun_def a b String.Set.empty in
   { fdrt= None
   ; fdname= "sars"
+  ; fdcaptures= None
   ; fdargs= [(DataOnly, "x", UMatrix); (AutoDiffable, "y", URowVector)]
   ; fdbody=
       Stmt.Fixed.Pattern.Return

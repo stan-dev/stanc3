@@ -264,7 +264,7 @@ let%expect_test "list collapsing" =
   [%expect
     {|
     ((functions_block
-      (((fdrt ()) (fdname f)
+      (((fdrt ()) (fdname f) (fdcaptures ())
         (fdargs ((AutoDiffable x UInt) (AutoDiffable y UMatrix)))
         (fdbody
          (((pattern
@@ -281,7 +281,8 @@ let%expect_test "list collapsing" =
                (meta <opaque>)))))
            (meta <opaque>))))
         (fdloc <opaque>))
-       ((fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
+       ((fdrt (UReal)) (fdname g) (fdcaptures ())
+        (fdargs ((AutoDiffable z UInt)))
         (fdbody
          (((pattern
             (Block

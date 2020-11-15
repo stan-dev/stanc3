@@ -659,7 +659,36 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
           ; meta= smeta }
       in
       Stmt.Helpers.[ensure_var (for_each bodyfn) iteratee' smeta]
-  | Ast.FunDef _ ->
+  | Ast.FunDef
+      {returntype; funname; captures= Some (implname, captures); arguments; _}
+    ->
+      let arguments = List.map ~f:(fun (ad, ut, _) -> (ad, ut)) arguments in
+      let type_ = UnsizedType.UFun (arguments, returntype, true) in
+      let captures =
+        List.map
+          ~f:(fun (adlevel, type_, id) ->
+            Expr.
+              { Fixed.pattern= Var id
+              ; meta= Typed.Meta.{adlevel; type_; loc= mloc} } )
+          captures
+      in
+      [ { pattern=
+            Decl
+              { decl_adtype= AutoDiffable
+              ; decl_id= funname.name
+              ; decl_type= Unsized type_ }
+        ; meta= smeta }
+      ; { pattern=
+            Assignment
+              ( (funname.name, type_, [])
+              , { pattern=
+                    FunApp
+                      ( CompilerInternal
+                      , Internal_fun.to_string FnMakeClosure
+                      , Expr.Helpers.str implname :: captures )
+                ; meta= {type_; adlevel= AutoDiffable; loc= mloc} } )
+        ; meta= smeta } ]
+  | Ast.FunDef {captures= None; _} ->
       raise_s
         [%message
           "Found function definition statement outside of function block"]
@@ -677,11 +706,12 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
 
 let trans_fun_def ud_dists (ts : Ast.typed_statement) =
   match ts.stmt with
-  | Ast.FunDef {returntype; funname; arguments; body} ->
+  | Ast.FunDef {returntype; funname; captures= None; arguments; body} ->
       [ Program.
           { fdrt=
               (match returntype with Void -> None | ReturnType ut -> Some ut)
           ; fdname= funname.name
+          ; fdcaptures= None
           ; fdargs= List.map ~f:trans_arg arguments
           ; fdbody=
               trans_stmt ud_dists

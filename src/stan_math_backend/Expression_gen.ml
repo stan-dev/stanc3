@@ -382,6 +382,13 @@ and pp_compiler_internal_fn ut f ppf es =
         es
   in
   match Internal_fun.of_string_opt f with
+  | Some FnMakeClosure -> (
+    match es with
+    | {Expr.Fixed.pattern= Lit (Str, implname); _} :: args ->
+        gen_fun_app ppf (implname ^ "<local_scalar_t__>") args
+    | _ ->
+        raise_s
+          [%message "Missing closure constructor " (es : Expr.Typed.t list)] )
   | Some FnMakeArray -> pp_array_literal ppf es
   | Some FnMakeRowVec -> (
     match ut with

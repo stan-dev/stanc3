@@ -843,7 +843,9 @@ let pp_prog ppf (p : Program.Typed.t) =
   if !standalone_functions then
     pf ppf "@[<v>%a@ @]"
       (list ~sep:cut (pp_standalone_fun_def (namespace p)))
-      p.functions_block
+      (List.filter
+         ~f:(fun {fdcaptures; _} -> is_none fdcaptures)
+         p.functions_block)
   else (
     pf ppf "@,using stan_model = %s_namespace::%s;@," p.prog_name p.prog_name ;
     pf ppf

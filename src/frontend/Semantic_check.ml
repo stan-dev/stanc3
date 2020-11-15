@@ -1745,7 +1745,12 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
            (* WARNING: SIDE EFFECTING *)
            Symbol_table.end_scope vm ;
            let stmt =
-             FunDef {returntype= urt; funname= id; arguments= uargs; body= ub}
+             FunDef
+               { returntype= urt
+               ; funname= id
+               ; captures= None
+               ; arguments= uargs
+               ; body= ub }
            in
            mk_typed_statement ~return_type:NoReturnType ~loc ~stmt ))
 
@@ -1785,7 +1790,7 @@ and semantic_check_statement cf (s : Ast.untyped_statement) :
       ; is_global } ->
       semantic_check_var_decl ~loc ~cf st transformation identifier
         initial_value is_global
-  | FunDef {returntype; funname; arguments; body} ->
+  | FunDef {returntype; funname; captures= _; arguments; body} ->
       semantic_check_fundef ~loc ~cf returntype funname arguments body
 
 (* == Untyped programs ====================================================== *)
