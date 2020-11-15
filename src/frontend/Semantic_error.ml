@@ -121,7 +121,8 @@ module TypeError = struct
             [ [ UnsizedType.UFun
                   ( List.hd_exn args :: (AutoDiffable, UInt)
                     :: (AutoDiffable, UInt) :: List.tl_exn args
-                  , ReturnType UReal ) ]
+                  , ReturnType UReal
+                  , false ) ]
             ; first; [UInt]; rest ]
         in
         Fmt.pf ppf
@@ -166,8 +167,8 @@ module TypeError = struct
         let generate_ode_sig =
           [ UnsizedType.UFun
               ( Stan_math_signatures.variadic_ode_mandatory_fun_args @ args
-              , ReturnType Stan_math_signatures.variadic_ode_fun_return_type )
-          ]
+              , ReturnType Stan_math_signatures.variadic_ode_fun_return_type
+              , false ) ]
           @ types Stan_math_signatures.variadic_ode_mandatory_arg_types
           @ optional_tol_args @ types args
         in
@@ -274,7 +275,7 @@ module TypeError = struct
            signatures:%a\n\
            @[<h>Instead supplied arguments of incompatible type: %a.@]"
           name UnsizedType.pp
-          (UFun (listed_tys, return_ty))
+          (UFun (listed_tys, return_ty, false))
           Fmt.(list UnsizedType.pp ~sep:comma)
           arg_tys
     | IllTypedBinaryOperator (op, lt, rt) ->

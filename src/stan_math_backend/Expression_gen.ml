@@ -262,8 +262,7 @@ and read_data ut ppf es =
     match ut with
     | UnsizedType.UArray UInt -> "i"
     | UArray UReal -> "r"
-    | UInt | UReal | UVector | URowVector | UMatrix | UArray _
-     |UFun (_, _)
+    | UInt | UReal | UVector | URowVector | UMatrix | UArray _ | UFun _
      |UMathLibraryFunction ->
         raise_s [%message "Can't ReadData of " (ut : UnsizedType.t)]
   in
@@ -273,18 +272,16 @@ and read_data ut ppf es =
 and gen_fun_app ppf fname es =
   let default ppf es =
     let to_var s = Expr.{Fixed.pattern= Var s; meta= Typed.Meta.empty} in
-    let convert_hof_vars = function
-      | {Expr.Fixed.pattern= Var name; meta= {Expr.Typed.Meta.type_= UFun _; _}}
-        as e ->
-          { e with
-            pattern= FunApp (StanLib, name ^ functor_suffix_select fname, [])
-          }
-      | e -> e
-    in
-    let converted_es = List.map ~f:convert_hof_vars es in
     let extra = suffix_args fname |> List.map ~f:to_var in
-    let is_hof_call = not (converted_es = es) in
     let msgs = "pstream__" |> to_var in
+    let wrap_ode f =
+      match Expr.(f.Fixed.meta.Typed.Meta.type_) with
+      | UFun (args, rt, false) ->
+          { Expr.Fixed.meta= {f.meta with type_= UFun (args, rt, true)}
+          ; pattern= FunApp (StanLib, "from_lambda", [f]) }
+          (* ODE solvers have unusual argument order. Convert to a closure to fix it. *)
+      | _ -> f
+    in
     (* Here, because these signatures are written in C++ such that they
        wanted to have optional arguments and piggyback on C++ default
        arguments and not write the necessary overloads, we have to
@@ -294,56 +291,49 @@ and gen_fun_app ppf fname es =
        overloads.
     *)
     let fname, args =
-      match (is_hof_call, fname, converted_es @ extra) with
-      | true, "algebra_solver", f :: x :: y :: dat :: datint :: tl
-       |true, "algebra_solver_newton", f :: x :: y :: dat :: datint :: tl ->
+      match (fname, es @ extra) with
+      | "algebra_solver", f :: x :: y :: dat :: datint :: tl
+       |"algebra_solver_newton", f :: x :: y :: dat :: datint :: tl ->
           (fname, f :: x :: y :: dat :: datint :: msgs :: tl)
-      | true, "integrate_1d", f :: a :: b :: theta :: x_r :: x_i :: tl ->
+      | "integrate_1d", f :: a :: b :: theta :: x_r :: x_i :: tl ->
           (fname, f :: a :: b :: theta :: x_r :: x_i :: msgs :: tl)
-      | ( true
-        , "integrate_ode_bdf"
-        , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl )
-       |( true
-        , "integrate_ode_adams"
-        , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl )
-       |( true
-        , "integrate_ode_rk45"
-        , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl ) ->
+      | "integrate_ode_bdf", f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl
+       |"integrate_ode_adams", f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl
+       |"integrate_ode_rk45", f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl
+        ->
           (fname, f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl)
-      | true, x, {pattern= FunApp (_, f, _); _} :: grainsize :: container :: tl
+      | ( x
+        , {meta= {type_= UFun (_, _, false); _}; pattern= Var f}
+          :: grainsize :: container :: tl )
         when Stan_math_signatures.is_reduce_sum_fn x ->
-          let chop_functor_suffix =
-            String.chop_suffix_exn ~suffix:reduce_sum_functor_suffix
-          in
           let propto_template =
-            if Utils.is_distribution_name (chop_functor_suffix f) then
-              if Utils.is_unnormalized_distribution (chop_functor_suffix f)
-              then "<propto__>"
+            if Utils.is_distribution_name f then
+              if Utils.is_unnormalized_distribution f then "<propto__>"
               else "<false>"
             else ""
           in
           let normalized_dist_functor =
-            Utils.stdlib_distribution_name (chop_functor_suffix f)
-            ^ reduce_sum_functor_suffix
+            Utils.stdlib_distribution_name f ^ reduce_sum_functor_suffix
           in
           ( strf "%s<%s%s>" fname normalized_dist_functor propto_template
           , grainsize :: container :: msgs :: tl )
-      | true, x, f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: tl
+      | x, f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: tl
         when Stan_math_signatures.is_variadic_ode_fn x
              && String.is_suffix fname
                   ~suffix:Stan_math_signatures.ode_tolerances_suffix ->
           ( fname
-          , f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: msgs
-            :: tl )
-      | true, x, f :: y0 :: t0 :: ts :: tl
+          , wrap_ode f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps
+            :: msgs :: tl )
+      | x, f :: y0 :: t0 :: ts :: tl
         when Stan_math_signatures.is_variadic_ode_fn x ->
-          (fname, f :: y0 :: t0 :: ts :: msgs :: tl)
-      | true, "map_rect", {pattern= FunApp (_, f, _); _} :: tl ->
+          (fname, wrap_ode f :: y0 :: t0 :: ts :: msgs :: tl)
+      | ( "map_rect"
+        , {pattern= Var f; meta= {type_= UFun (_, _, false); _}} :: tl ) ->
+          let f = f ^ functor_suffix_select fname in
           let next_map_rect_id = Hashtbl.length map_rect_calls + 1 in
           Hashtbl.add_exn map_rect_calls ~key:next_map_rect_id ~data:f ;
           (strf "%s<%d, %s>" fname next_map_rect_id f, tl @ [msgs])
-      | true, _, args -> (fname, args @ [msgs])
-      | false, _, args -> (fname, args)
+      | _, args -> (fname, args)
     in
     let fname =
       stan_namespace_qualify fname |> demangle_unnormalized_name false
@@ -370,6 +360,12 @@ and pp_user_defined_fun ppf (f, es) =
     (demangle_unnormalized_name true f)
     (list ~sep:comma pp_expr) es
     (sep ^ String.concat ~sep:", " extra_args)
+
+and pp_closure ppf (f, es) =
+  let sep = if List.is_empty es then "" else ", " in
+  pf ppf "@[<hov 2>%s(pstream__%s@,%a)@]"
+    (demangle_unnormalized_name true f)
+    sep (list ~sep:comma pp_expr) es
 
 and pp_compiler_internal_fn ut f ppf es =
   let pp_array_literal ppf es =
@@ -434,13 +430,17 @@ and pp_indexed_simple ppf (obj, idcs) =
 
 and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
   match pattern with
-  | Var s -> pf ppf "%s" s
+  | Var s -> (
+    match meta.type_ with
+    | UFun (_, _, false) -> pf ppf "%s%s()" s functor_suffix
+    | _ -> pf ppf "%s" s )
   | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> pf ppf "%s" s
   | FunApp (StanLib, f, es) -> gen_fun_app ppf f es
   | FunApp (CompilerInternal, f, es) ->
       pp_compiler_internal_fn meta.type_ (stan_namespace_qualify f) ppf es
   | FunApp (UserDefined, f, es) -> pp_user_defined_fun ppf (f, es)
+  | FunApp (Closure, f, es) -> pp_closure ppf (f, es)
   | EAnd (e1, e2) -> pp_logical_op ppf "&&" e1 e2
   | EOr (e1, e2) -> pp_logical_op ppf "||" e1 e2
   | TernaryIf (ec, et, ef) ->

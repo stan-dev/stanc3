@@ -12,6 +12,7 @@ let unwrap_return_exn = function
 let trans_fn_kind = function
   | Ast.StanLib -> Fun_kind.StanLib
   | UserDefined -> UserDefined
+  | Closure -> Closure
 
 let without_underscores = String.filter ~f:(( <> ) '_')
 

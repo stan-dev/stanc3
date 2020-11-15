@@ -18,7 +18,8 @@ type 'e index =
 [@@deriving sexp, hash, compare, map]
 
 (** Front-end function kinds *)
-type fun_kind = StanLib | UserDefined [@@deriving compare, sexp, hash]
+type fun_kind = StanLib | UserDefined | Closure
+[@@deriving compare, sexp, hash]
 
 (** Expression shapes (used for both typed and untyped expressions, where we
     substitute untyped_expression or typed_expression for 'e *)

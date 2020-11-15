@@ -68,7 +68,7 @@ let rec pp_stmt ppf s =
   | Assignment ((lhs, _, indices), rhs) ->
       pf ppf "%s%a = %a" lhs pp_indices indices pp_expr rhs
   | TargetPE rhs -> pf ppf "target += tf__.reduce_sum(%a)" pp_expr rhs
-  | NRFunApp (StanLib, f, args) | NRFunApp (UserDefined, f, args) ->
+  | NRFunApp ((StanLib | UserDefined | Closure), f, args) ->
       pp_call ppf (f, pp_expr, args)
   | Break -> pf ppf "break"
   | Continue -> pf ppf "continue"

@@ -152,7 +152,7 @@ let semantic_check_autodifftype at = Validate.ok at
 (* Probably nothing to do here *)
 let rec semantic_check_unsizedtype : UnsizedType.t -> unit Validate.t =
   function
-  | UFun (l, rt) ->
+  | UFun (l, rt, _) ->
       (* fold over argument types accumulating errors with initial state
        given by validating the return type *)
       List.fold
@@ -272,10 +272,10 @@ let mk_fun_app ~is_cond_dist (x, y, z) =
 let semantic_check_fn_normal ~is_cond_dist ~loc id es =
   Validate.(
     match Symbol_table.look vm (Utils.normalized_name id.name) with
-    | Some (_, UnsizedType.UFun (_, Void)) ->
+    | Some (_, UnsizedType.UFun (_, Void, _)) ->
         Semantic_error.returning_fn_expected_nonreturning_found loc id.name
         |> error
-    | Some (_, UFun (listedtypes, rt))
+    | Some (_, UFun (listedtypes, rt, _))
       when not
              (UnsizedType.check_compatible_arguments_mod_conv id.name
                 listedtypes (get_arg_types es)) ->
@@ -284,7 +284,7 @@ let semantic_check_fn_normal ~is_cond_dist ~loc id es =
         |> Semantic_error.illtyped_userdefined_fn_app loc id.name listedtypes
              rt
         |> error
-    | Some (_, UFun (_, ReturnType ut)) ->
+    | Some (_, UFun (_, ReturnType ut, _)) ->
         mk_typed_expression
           ~expr:(mk_fun_app ~is_cond_dist (UserDefined, id, es))
           ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
@@ -329,7 +329,8 @@ let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
             UnsizedType.UFun
               ( ((_, sliced_arg_fun_type) as sliced_arg_fun)
                 :: (_, UInt) :: (_, UInt) :: fun_args
-              , ReturnType UReal ); _ }; _ }
+              , ReturnType UReal
+              , false ); _ }; _ }
     :: sliced :: {emeta= {type_= UInt; _}; _} :: args
     when arg_match sliced_arg_fun sliced
          && List.mem Stan_math_signatures.reduce_sum_slice_types
@@ -376,7 +377,8 @@ let semantic_check_variadic_ode ~is_cond_dist ~loc id es =
     List.length a = List.length b && List.for_all2_exn ~f:fun_arg_match a b
   in
   match es with
-  | {emeta= {type_= UnsizedType.UFun (fun_args, ReturnType return_type); _}; _}
+  | { emeta= {type_= UnsizedType.UFun (fun_args, ReturnType return_type, _); _}; _
+    }
     :: args ->
       let num_of_mandatory_args =
         if Stan_math_signatures.is_variadic_ode_tol_fn id.name then 6 else 3
@@ -429,7 +431,7 @@ let semantic_check_fn ~is_cond_dist ~loc id es =
   | StanLib when Stan_math_signatures.is_variadic_ode_fn id.name ->
       semantic_check_variadic_ode ~is_cond_dist ~loc id es
   | StanLib -> semantic_check_fn_stan_math ~is_cond_dist ~loc id es
-  | UserDefined -> semantic_check_fn_normal ~is_cond_dist ~loc id es
+  | UserDefined | Closure -> semantic_check_fn_normal ~is_cond_dist ~loc id es
 
 (* -- Ternary If ------------------------------------------------------------ *)
 
@@ -957,20 +959,20 @@ let semantic_check_nrfn_target ~loc ~cf id =
 let semantic_check_nrfn_normal ~loc id es =
   Validate.(
     match Symbol_table.look vm id.name with
-    | Some (_, UFun (listedtypes, Void))
+    | Some (_, UFun (listedtypes, Void, _))
       when UnsizedType.check_compatible_arguments_mod_conv id.name listedtypes
              (get_arg_types es) ->
         mk_typed_statement
           ~stmt:(NRFunApp (UserDefined, id, es))
           ~return_type:NoReturnType ~loc
         |> ok
-    | Some (_, UFun (listedtypes, Void)) ->
+    | Some (_, UFun (listedtypes, Void, _)) ->
         es
         |> List.map ~f:type_of_expr_typed
         |> Semantic_error.illtyped_userdefined_fn_app loc id.name listedtypes
              Void
         |> error
-    | Some (_, UFun (_, ReturnType _)) ->
+    | Some (_, UFun (_, ReturnType _, _)) ->
         Semantic_error.nonreturning_fn_expected_returning_found loc id.name
         |> error
     | Some _ ->
@@ -1003,7 +1005,7 @@ let semantic_check_nrfn_stan_math ~loc id es =
 let semantic_check_nr_fnkind ~loc id es =
   match fn_kind_from_application id es with
   | StanLib -> semantic_check_nrfn_stan_math ~loc id es
-  | UserDefined -> semantic_check_nrfn_normal ~loc id es
+  | UserDefined | Closure -> semantic_check_nrfn_normal ~loc id es
 
 let semantic_check_nr_fn_app ~loc ~cf id es =
   Validate.(
@@ -1166,7 +1168,7 @@ let semantic_check_sampling_distribution ~loc id arguments =
   in
   let is_name_w_suffix_udf_sampling_dist suffix =
     match Symbol_table.look vm (name ^ suffix) with
-    | Some (Functions, UFun (listedtypes, ReturnType UReal)) ->
+    | Some (Functions, UFun (listedtypes, ReturnType UReal, false)) ->
         UnsizedType.check_compatible_arguments_mod_conv name listedtypes
           argumenttypes
     | _ -> false
@@ -1191,7 +1193,7 @@ let cumulative_density_is_defined id arguments =
     |> Option.value_map ~default:false ~f:is_real_rt
   and valid_arg_types_for_suffix suffix =
     match Symbol_table.look vm (name ^ suffix) with
-    | Some (Functions, UFun (listedtypes, ReturnType UReal)) ->
+    | Some (Functions, UFun (listedtypes, ReturnType UReal, false)) ->
         UnsizedType.check_compatible_arguments_mod_conv name listedtypes
           argumenttypes
     | _ -> false
@@ -1574,7 +1576,7 @@ and semantic_check_fundef_overloaded ~loc id arg_tys rt =
     (* User defined functions cannot be overloaded *)
     if Symbol_table.check_is_unassigned vm id.name then
       match Symbol_table.look vm id.name with
-      | Some (Functions, UFun (arg_tys', rt'))
+      | Some (Functions, UFun (arg_tys', rt', _))
         when arg_tys' = arg_tys && rt' = rt ->
           ok ()
       | _ ->
@@ -1690,22 +1692,23 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
     let uarg_names = List.map ~f:(fun x -> x.name) uarg_identifiers in
     semantic_check_fundef_overloaded ~loc id uarg_types urt
     |> apply_const (semantic_check_fundef_decl ~loc id body)
-    >>= fun _ ->
+    >>= fun () ->
     (* WARNING: SIDE EFFECTING *)
-    Symbol_table.enter vm id.name (Functions, UFun (uarg_types, urt)) ;
+    Symbol_table.enter vm id.name (Functions, UFun (uarg_types, urt, false)) ;
     (* Check that function args and loop identifiers are not modified in
        function. (passed by const ref)*)
     List.iter ~f:(Symbol_table.set_read_only vm) uarg_names ;
     semantic_check_fundef_dist_rt ~loc id urt
     |> apply_const (semantic_check_pdf_fundef_first_arg_ty ~loc id uarg_types)
     |> apply_const (semantic_check_pmf_fundef_first_arg_ty ~loc id uarg_types)
-    >>= fun _ ->
+    >>= fun () ->
     (* WARNING: SIDE EFFECTING *)
     Symbol_table.begin_scope vm ;
     List.map ~f:(fun x -> check_fresh_variable x false) uarg_identifiers
     |> sequence
     |> apply_const (semantic_check_fundef_distinct_arg_ids ~loc uarg_names)
-    >>= fun _ ->
+    |> map ~f:(List.iter ~f:Fn.id)
+    >>= fun () ->
     (* TODO: Bob was suggesting that function arguments must be allowed to
         shadow user defined functions but not library functions.
         Should we allow for that?
@@ -1738,7 +1741,7 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
     body'
     >>= fun ub ->
     semantic_check_fundef_return_tys ~loc id urt ub
-    |> map ~f:(fun _ ->
+    |> map ~f:(fun () ->
            (* WARNING: SIDE EFFECTING *)
            Symbol_table.end_scope vm ;
            let stmt =

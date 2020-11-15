@@ -360,7 +360,7 @@ let get_sigs name =
   let name = Utils.stdlib_distribution_name name in
   Hashtbl.find_multi stan_math_signatures name |> List.sort ~compare
 
-let pp_math_sig ppf (rt, args) = UnsizedType.pp ppf (UFun (args, rt))
+let pp_math_sig ppf (rt, args) = UnsizedType.pp ppf (UFun (args, rt, false))
 
 let pp_math_sigs ppf name =
   (Fmt.list ~sep:Fmt.cut pp_math_sig) ppf (get_sigs name)
@@ -624,7 +624,8 @@ let () =
         , UFun
             ( [ (AutoDiffable, UVector); (AutoDiffable, UVector)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType UVector ) )
+            , ReturnType UVector
+            , false ) )
       ; (AutoDiffable, UVector); (AutoDiffable, UVector)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ] ) ;
   add_qualified
@@ -634,7 +635,8 @@ let () =
         , UFun
             ( [ (AutoDiffable, UVector); (AutoDiffable, UVector)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType UVector ) )
+            , ReturnType UVector
+            , false ) )
       ; (AutoDiffable, UVector); (AutoDiffable, UVector)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal)
       ; (DataOnly, UReal); (DataOnly, UReal) ] ) ;
@@ -645,7 +647,8 @@ let () =
         , UFun
             ( [ (AutoDiffable, UVector); (AutoDiffable, UVector)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType UVector ) )
+            , ReturnType UVector
+            , false ) )
       ; (AutoDiffable, UVector); (AutoDiffable, UVector)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ] ) ;
   add_qualified
@@ -655,7 +658,8 @@ let () =
         , UFun
             ( [ (AutoDiffable, UVector); (AutoDiffable, UVector)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType UVector ) )
+            , ReturnType UVector
+            , false ) )
       ; (AutoDiffable, UVector); (AutoDiffable, UVector)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal)
       ; (DataOnly, UReal); (DataOnly, UReal) ] ) ;
@@ -1075,7 +1079,8 @@ let () =
             ( [ (AutoDiffable, UReal); (AutoDiffable, UReal)
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType UReal ) )
+            , ReturnType UReal
+            , false ) )
       ; (AutoDiffable, UReal); (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ] ) ;
@@ -1087,7 +1092,8 @@ let () =
             ( [ (AutoDiffable, UReal); (AutoDiffable, UReal)
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType UReal ) )
+            , ReturnType UReal
+            , false ) )
       ; (AutoDiffable, UReal); (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal) ]
@@ -1101,7 +1107,8 @@ let () =
               ; (AutoDiffable, UArray UReal)
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType (UArray UReal) ) )
+            , ReturnType (UArray UReal)
+            , true ) )
       ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
@@ -1116,7 +1123,8 @@ let () =
               ; (AutoDiffable, UArray UReal)
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType (UArray UReal) ) )
+            , ReturnType (UArray UReal)
+            , true ) )
       ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
@@ -1131,7 +1139,8 @@ let () =
               ; (AutoDiffable, UArray UReal)
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType (UArray UReal) ) )
+            , ReturnType (UArray UReal)
+            , true ) )
       ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
@@ -1147,7 +1156,8 @@ let () =
               ; (AutoDiffable, UArray UReal)
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType (UArray UReal) ) )
+            , ReturnType (UArray UReal)
+            , true ) )
       ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
@@ -1162,7 +1172,8 @@ let () =
               ; (AutoDiffable, UArray UReal)
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType (UArray UReal) ) )
+            , ReturnType (UArray UReal)
+            , true ) )
       ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
@@ -1178,7 +1189,8 @@ let () =
               ; (AutoDiffable, UArray UReal)
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType (UArray UReal) ) )
+            , ReturnType (UArray UReal)
+            , true ) )
       ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
@@ -1193,7 +1205,8 @@ let () =
               ; (AutoDiffable, UArray UReal)
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType (UArray UReal) ) )
+            , ReturnType (UArray UReal)
+            , true ) )
       ; (AutoDiffable, UArray UReal)
       ; (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
@@ -1279,7 +1292,8 @@ let () =
         , UFun
             ( [ (AutoDiffable, UVector); (AutoDiffable, UVector)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType UVector ) )
+            , ReturnType UVector
+            , false ) )
       ; (AutoDiffable, UVector)
       ; (AutoDiffable, UArray UVector)
       ; (DataOnly, UArray (UArray UReal))

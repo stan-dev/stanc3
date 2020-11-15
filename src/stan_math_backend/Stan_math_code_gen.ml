@@ -166,7 +166,7 @@ let mk_extra_args templates args =
    printing user defined distributions vs rngs vs regular functions.
 *)
 let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
-    funs_used_in_reduce_sum funs_used_in_variadic_ode =
+    funs_used_in_reduce_sum =
   let is_lp = is_user_lp fdname in
   let is_dist = is_user_dist fdname in
   let is_rng = String.is_suffix fdname ~suffix:"_rng" in
@@ -219,59 +219,34 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
     in
     pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs
   in
-  let pp_sig_variadic_ode ppf name =
-    if is_dist then pp_template_decorator ppf (List.tl_exn templates)
-    else pp_template_decorator ppf templates ;
-    pp_returntype ppf fdargs fdrt ;
-    let first_two, rest = List.split_n args 2 in
-    let arg_strs =
-      first_two
-      @ ["std::ostream* pstream__"]
-      @ rest
-      @ mk_extra_args extra_templates extra
-    in
-    pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs
-  in
   pp_sig ppf fdname ;
   match fdbody with
   | None -> pf ppf ";@ "
-  | Some fdbody ->
+  | Some fdbody -> (
       pp_block ppf (pp_body, fdbody) ;
       pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
         functor_suffix pp_sig "operator()" pp_call_str
         ( (if is_dist || is_lp then fdname ^ "<propto__>" else fdname)
         , List.map ~f:(fun (_, name, _) -> name) fdargs @ extra @ ["pstream__"]
         ) ;
-      if String.Set.mem funs_used_in_reduce_sum fdname then
-        (* Produces the reduce_sum functors that has the pstream argument
-        as the third and not last argument *)
-        match fdargs with
-        | (_, slice, _) :: (_, start, _) :: (_, end_, _) :: rest ->
-            let pp_template_propto ppf name =
-              if is_user_dist name then pf ppf "template <bool propto__>@ "
-              else pf ppf ""
-            in
-            pf ppf "@,@,%astruct %s%s {@,%a const @,{@,return %a;@,}@,};@,"
-              (* (if is_dist || is_lp then "template <bool propto__>" else "") *)
-              pp_template_propto fdname fdname reduce_sum_functor_suffix
-              pp_sig_rs "operator()" pp_call_str
-              ( (if is_dist || is_lp then fdname ^ "<propto__>" else fdname)
-              , slice :: (start ^ " + 1") :: (end_ ^ " + 1")
-                :: List.map ~f:(fun (_, name, _) -> name) rest
-                @ extra @ ["pstream__"] )
-        | _ ->
-            raise_s
-              [%message
-                "Ill-formed reduce_sum call! This is bug in the compiler."]
-      else if String.Set.mem funs_used_in_variadic_ode fdname then
-        (* Produces the variadic ode functors that has the pstream argument
-        as the third and not last argument *)
-        pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
-          variadic_ode_functor_suffix pp_sig_variadic_ode "operator()"
-          pp_call_str
-          ( fdname
-          , List.map ~f:(fun (_, name, _) -> name) fdargs
-            @ extra @ ["pstream__"] )
+      match fdargs with
+      | (_, slice, _) :: (_, start, _) :: (_, end_, _) :: rest
+        when String.Set.mem funs_used_in_reduce_sum fdname ->
+          (* Produces the reduce_sum functors that has the pstream argument
+             as the third and not last argument *)
+          let pp_template_propto ppf name =
+            if is_user_dist name then pf ppf "template <bool propto__>@ "
+            else pf ppf ""
+          in
+          pf ppf "@,@,%astruct %s%s {@,%a const @,{@,return %a;@,}@,};@,"
+            (* (if is_dist || is_lp then "template <bool propto__>" else "") *)
+            pp_template_propto fdname fdname reduce_sum_functor_suffix
+            pp_sig_rs "operator()" pp_call_str
+            ( (if is_dist || is_lp then fdname ^ "<propto__>" else fdname)
+            , slice :: (start ^ " + 1") :: (end_ ^ " + 1")
+              :: List.map ~f:(fun (_, name, _) -> name) rest
+              @ extra @ ["pstream__"] )
+      | _ -> () )
 
 (* Creates functions outside the model namespaces which only call the ones
    inside the namespaces *)
@@ -847,7 +822,6 @@ let pp_prog ppf (p : Program.Typed.t) =
   let pp_fun_def_with_variadic_fn_list ppf fblock =
     pp_fun_def ppf fblock
       (is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p)
-      (is_fun_used_with_variadic_fn Stan_math_signatures.is_variadic_ode_fn p)
   in
   let reduce_sum_struct_decls =
     String.Set.map
