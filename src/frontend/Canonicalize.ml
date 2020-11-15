@@ -162,12 +162,6 @@ let repair_syntax program : untyped_program =
     program
 
 let canonicalize_program program : typed_program =
-  let deprecated_userdefined =
-    program.functionblock |> Option.value ~default:[]
-    |> List.filter_map ~f:find_suffixes
-    |> List.dedup_and_sort ~compare:(fun (x, _) (y, _) -> String.compare x y)
-    |> String.Map.of_alist_exn
-  in
   program
-  |> map_program (replace_deprecated_stmt deprecated_userdefined)
+  |> map_program (replace_deprecated_stmt (analyze_udfs program))
   |> map_program parens_stmt

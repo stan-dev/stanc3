@@ -173,12 +173,12 @@ let rec warn_deprecated_stmt deprecated_userdefined
         (fun l _ -> l)
         acc stmt
 
+let analyze_udfs program =
+  program.functionblock |> Option.value ~default:[]
+  |> List.filter_map ~f:find_suffixes
+  |> List.dedup_and_sort ~compare:(fun (x, _) (y, _) -> String.compare x y)
+  |> String.Map.of_alist_exn
+
 let emit_warnings (program : typed_program) : unit =
-  let deprecated_userdefined =
-    program.functionblock |> Option.value ~default:[]
-    |> List.filter_map ~f:find_suffixes
-    |> List.dedup_and_sort ~compare:(fun (x, _) (y, _) -> String.compare x y)
-    |> String.Map.of_alist_exn
-  in
-  fold_program (warn_deprecated_stmt deprecated_userdefined) [] program
+  fold_program (warn_deprecated_stmt (analyze_udfs program)) [] program
   |> List.iter ~f:warn_deprecated
