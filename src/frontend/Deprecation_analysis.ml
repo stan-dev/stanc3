@@ -23,8 +23,6 @@ let deprecated_distributions =
            | Ccdf -> Some (name ^ "_ccdf_log", name ^ "_lccdf")
            | Rng | UnaryVectorized -> None ) ))
 
-let deprecated_userdefined : string String.Table.t = String.Table.create ()
-
 let is_distribution name =
   Option.is_some (String.Map.find deprecated_distributions name)
 
@@ -73,24 +71,23 @@ let warn_deprecated (loc_span, message) =
     (Location_span.to_string loc_span)
     message
 
-let replace_suffix = function
+let update_suffix name type_ =
+  let open String in
+  if is_suffix ~suffix:"_cdf_log" name then drop_suffix name 8 ^ "_lcdf"
+  else if is_suffix ~suffix:"_ccdf_log" name then drop_suffix name 9 ^ "_lccdf"
+  else if Middle.UnsizedType.is_real_type type_ then
+    drop_suffix name 4 ^ "_lpdf"
+  else drop_suffix name 4 ^ "_lpmf"
+
+let find_suffixes = function
   | { stmt= FunDef {funname= {name; _}; arguments= (_, type_, _) :: _; _}
     ; smeta= _ }
     when String.is_suffix ~suffix:"_log" name ->
-      let open String in
-      let newname =
-        if is_suffix ~suffix:"_cdf_log" name then drop_suffix name 8 ^ "_lcdf"
-        else if is_suffix ~suffix:"_ccdf_log" name then
-          drop_suffix name 9 ^ "_lccdf"
-        else if Middle.UnsizedType.is_real_type type_ then
-          drop_suffix name 4 ^ "_lpdf"
-        else drop_suffix name 4 ^ "_lpmf"
-      in
-      Table.add deprecated_userdefined ~key:name ~data:newname
-      |> (ignore : [`Ok | `Duplicate] -> unit)
-  | _ -> ()
+      Some (name, type_)
+  | _ -> None
 
-let rec warn_deprecated_expr (acc : (Location_span.t * string) list)
+let rec warn_deprecated_expr deprecated_userdefined
+    (acc : (Location_span.t * string) list)
     ({expr; emeta} : (typed_expr_meta, fun_kind) expr_with) :
     (Location_span.t * string) list =
   match expr with
@@ -101,7 +98,7 @@ let rec warn_deprecated_expr (acc : (Location_span.t * string) list)
              no-argument function `target()` instead." ) ]
   | FunApp (StanLib, {name= "abs"; _}, [e])
     when Middle.UnsizedType.is_real_type e.emeta.type_ ->
-      warn_deprecated_expr
+      warn_deprecated_expr deprecated_userdefined
         ( acc
         @ [ ( emeta.loc
             , "Use of the `abs` function with real-valued arguments is \
@@ -112,7 +109,9 @@ let rec warn_deprecated_expr (acc : (Location_span.t * string) list)
       @ [ ( emeta.loc
           , "The function `if_else` is deprecated. Use the conditional \
              operator (x ? y : z) instead." ) ]
-      @ List.concat (List.map l ~f:(fun e -> warn_deprecated_expr [] e))
+      @ List.concat
+          (List.map l ~f:(fun e ->
+               warn_deprecated_expr deprecated_userdefined [] e ))
   | FunApp (StanLib, {name; _}, l) ->
       let w =
         if Option.is_some (String.Map.find deprecated_distributions name) then
@@ -126,38 +125,60 @@ let rec warn_deprecated_expr (acc : (Location_span.t * string) list)
         else []
       in
       acc @ w
-      @ List.concat (List.map l ~f:(fun e -> warn_deprecated_expr [] e))
+      @ List.concat
+          (List.map l ~f:(fun e ->
+               warn_deprecated_expr deprecated_userdefined [] e ))
   | FunApp (UserDefined, {name; _}, l) ->
       let w =
-        let newname = String.Table.find deprecated_userdefined name in
-        if Option.is_some newname then
+        let type_ = String.Map.find deprecated_userdefined name in
+        if Option.is_some type_ then
           [ ( emeta.loc
             , "Use of the _log suffix in user defined function " ^ name
-              ^ " is deprecated, use " ^ Option.value_exn newname ^ " instead."
-            ) ]
+              ^ " is deprecated, use "
+              ^ update_suffix name (Option.value_exn type_)
+              ^ " instead." ) ]
         else []
       in
       acc @ w
-      @ List.concat (List.map l ~f:(fun e -> warn_deprecated_expr [] e))
-  | _ -> fold_expression warn_deprecated_expr (fun l _ -> l) acc expr
-
-let warn_deprecated_lval acc l =
-  fold_lval_with warn_deprecated_expr (fun x _ -> x) acc l
-
-let rec warn_deprecated_stmt (acc : (Location_span.t * string) list) {stmt; _}
-    : (Location_span.t * string) list =
-  match stmt with
-  | IncrementLogProb e -> warn_deprecated_expr acc e
-  | Assignment {assign_lhs= l; assign_op= ArrowAssign; assign_rhs= e} ->
-      acc @ warn_deprecated_lval [] l @ warn_deprecated_expr [] e
-  | FunDef {body; _} -> warn_deprecated_stmt acc body
+      @ List.concat
+          (List.map l ~f:(fun e ->
+               warn_deprecated_expr deprecated_userdefined [] e ))
   | _ ->
-      fold_statement warn_deprecated_expr warn_deprecated_stmt
-        warn_deprecated_lval
+      fold_expression
+        (warn_deprecated_expr deprecated_userdefined)
+        (fun l _ -> l)
+        acc expr
+
+let warn_deprecated_lval deprecated_userdefined acc l =
+  fold_lval_with
+    (warn_deprecated_expr deprecated_userdefined)
+    (fun x _ -> x)
+    acc l
+
+let rec warn_deprecated_stmt deprecated_userdefined
+    (acc : (Location_span.t * string) list) {stmt; _} :
+    (Location_span.t * string) list =
+  match stmt with
+  | IncrementLogProb e -> warn_deprecated_expr deprecated_userdefined acc e
+  | Assignment {assign_lhs= l; assign_op= ArrowAssign; assign_rhs= e} ->
+      acc
+      @ warn_deprecated_lval deprecated_userdefined [] l
+      @ warn_deprecated_expr deprecated_userdefined [] e
+  | FunDef {body; _} -> warn_deprecated_stmt deprecated_userdefined acc body
+  | _ ->
+      fold_statement
+        (warn_deprecated_expr deprecated_userdefined)
+        (warn_deprecated_stmt deprecated_userdefined)
+        (warn_deprecated_lval deprecated_userdefined)
         (fun l _ -> l)
         acc stmt
 
 let emit_warnings (program : typed_program) : unit =
-  String.Table.clear deprecated_userdefined ;
-  program.functionblock |> Option.iter ~f:(List.iter ~f:replace_suffix) ;
-  fold_program warn_deprecated_stmt [] program |> List.iter ~f:warn_deprecated
+  let deprecated_userdefined =
+    program.functionblock |> Option.value ~default:[]
+    |> List.filter_map ~f:find_suffixes
+    |> List.dedup_and_sort ~compare:(fun (x, _) (y, _) -> String.compare x y)
+    |> String.Map.of_alist_exn
+  in
+  fold_program (warn_deprecated_stmt deprecated_userdefined) [] program
+  |> List.iter ~f:warn_deprecated

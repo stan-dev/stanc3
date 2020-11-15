@@ -17,67 +17,85 @@ let rec repair_syntax_stmt user_dists {stmt; smeta} =
           map_statement ident (repair_syntax_stmt user_dists) ident ident stmt
       ; smeta }
 
-let rec replace_deprecated_expr {expr; emeta} =
+let rec replace_deprecated_expr
+    (deprecated_userdefined : Middle.UnsizedType.t Core_kernel.String.Map.t)
+    {expr; emeta} =
   let expr =
     match expr with
     | GetLP -> GetTarget
     | FunApp (StanLib, {name= "abs"; id_loc}, [e])
       when Middle.UnsizedType.is_real_type e.emeta.type_ ->
-        FunApp (StanLib, {name= "fabs"; id_loc}, [replace_deprecated_expr e])
+        FunApp
+          ( StanLib
+          , {name= "fabs"; id_loc}
+          , [replace_deprecated_expr deprecated_userdefined e] )
     | FunApp (StanLib, {name= "if_else"; _}, [c; t; e]) ->
         Paren
-          (replace_deprecated_expr
+          (replace_deprecated_expr deprecated_userdefined
              {expr= TernaryIf ({expr= Paren c; emeta= c.emeta}, t, e); emeta})
     | FunApp (StanLib, {name; id_loc}, e) ->
         if is_distribution name then
           CondDistApp
             ( StanLib
             , {name= rename_distribution name; id_loc}
-            , List.map ~f:replace_deprecated_expr e )
+            , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e )
         else
           FunApp
             ( StanLib
             , {name= rename_function name; id_loc}
-            , List.map ~f:replace_deprecated_expr e )
+            , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e )
     | FunApp (UserDefined, {name; id_loc}, e) -> (
-      match String.Table.find deprecated_userdefined name with
-      | Some newname ->
+      match String.Map.find deprecated_userdefined name with
+      | Some type_ ->
           CondDistApp
             ( UserDefined
-            , {name= newname; id_loc}
-            , List.map ~f:replace_deprecated_expr e )
+            , {name= update_suffix name type_; id_loc}
+            , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e )
       | None ->
           FunApp
-            (UserDefined, {name; id_loc}, List.map ~f:replace_deprecated_expr e)
+            ( UserDefined
+            , {name; id_loc}
+            , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e )
       )
-    | _ -> map_expression replace_deprecated_expr ident expr
+    | _ ->
+        map_expression
+          (replace_deprecated_expr deprecated_userdefined)
+          ident expr
   in
   {expr; emeta}
 
-let replace_deprecated_lval = map_lval_with replace_deprecated_expr ident
+let replace_deprecated_lval deprecated_userdefined =
+  map_lval_with (replace_deprecated_expr deprecated_userdefined) ident
 
-let rec replace_deprecated_stmt {stmt; smeta} =
+let rec replace_deprecated_stmt
+    (deprecated_userdefined : Middle.UnsizedType.t Core_kernel.String.Map.t)
+    ({stmt; smeta} : typed_statement) =
   let stmt =
     match stmt with
-    | IncrementLogProb e -> TargetPE (replace_deprecated_expr e)
+    | IncrementLogProb e ->
+        TargetPE (replace_deprecated_expr deprecated_userdefined e)
     | Assignment {assign_lhs= l; assign_op= ArrowAssign; assign_rhs= e} ->
         Assignment
-          { assign_lhs= replace_deprecated_lval l
+          { assign_lhs= replace_deprecated_lval deprecated_userdefined l
           ; assign_op= Assign
-          ; assign_rhs= replace_deprecated_expr e }
+          ; assign_rhs= (replace_deprecated_expr deprecated_userdefined) e }
     | FunDef {returntype; funname= {name; id_loc}; arguments; body} ->
+        let newname =
+          match String.Map.find deprecated_userdefined name with
+          | Some type_ -> update_suffix name type_
+          | None -> name
+        in
         FunDef
           { returntype
-          ; funname=
-              { name=
-                  Option.value ~default:name
-                    (String.Table.find deprecated_userdefined name)
-              ; id_loc }
+          ; funname= {name= newname; id_loc}
           ; arguments
-          ; body= replace_deprecated_stmt body }
+          ; body= replace_deprecated_stmt deprecated_userdefined body }
     | _ ->
-        map_statement replace_deprecated_expr replace_deprecated_stmt
-          replace_deprecated_lval ident stmt
+        map_statement
+          (replace_deprecated_expr deprecated_userdefined)
+          (replace_deprecated_stmt deprecated_userdefined)
+          (replace_deprecated_lval deprecated_userdefined)
+          ident stmt
   in
   {stmt; smeta}
 
@@ -144,6 +162,12 @@ let repair_syntax program : untyped_program =
     program
 
 let canonicalize_program program : typed_program =
-  String.Table.clear deprecated_userdefined ;
-  program.functionblock |> Option.iter ~f:(List.iter ~f:replace_suffix) ;
-  program |> map_program replace_deprecated_stmt |> map_program parens_stmt
+  let deprecated_userdefined =
+    program.functionblock |> Option.value ~default:[]
+    |> List.filter_map ~f:find_suffixes
+    |> List.dedup_and_sort ~compare:(fun (x, _) (y, _) -> String.compare x y)
+    |> String.Map.of_alist_exn
+  in
+  program
+  |> map_program (replace_deprecated_stmt deprecated_userdefined)
+  |> map_program parens_stmt
