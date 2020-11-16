@@ -9,7 +9,11 @@ let%expect_test "udf" =
     Stmt.Fixed.{pattern= stmt; meta= Locations.no_span_num}
   in
   let w e = Expr.{Fixed.pattern= e; meta= Typed.Meta.empty} in
-  let pp_fun_def_w_rs a b = pp_fun_def a b String.Set.empty in
+  let pp_fun_def ppf b =
+    pp_forward_decl String.Set.empty ppf b ;
+    cut ppf () ;
+    match get_impl b with Some b -> pp_function_body ppf b | None -> ()
+  in
   { fdrt= None
   ; fdname= "sars"
   ; fdcaptures= None
@@ -21,10 +25,24 @@ let%expect_test "udf" =
       |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
       |> Some
   ; fdloc= Location_span.empty }
-  |> strf "@[<v>%a" pp_fun_def_w_rs
-  |> print_endline ;
+  |> strf "@[<v>%a" pp_fun_def |> print_endline ;
   [%expect
     {|
+    template <typename T1__>
+    void
+    sars(const Eigen::Matrix<double, -1, -1>& x,
+         const Eigen::Matrix<T1__, 1, -1>& y, std::ostream* pstream__) ;
+
+    struct sars_functor__ {
+    template <typename T1__>
+    void
+    operator()(const Eigen::Matrix<double, -1, -1>& x,
+               const Eigen::Matrix<T1__, 1, -1>& y, std::ostream* pstream__)  const
+    {
+    return sars(x, y, pstream__);
+    }
+    };
+
     template <typename T1__>
     void
     sars(const Eigen::Matrix<double, -1, -1>& x,
@@ -43,14 +61,4 @@ let%expect_test "udf" =
           throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
       }
 
-    }
-
-    struct sars_functor__ {
-    template <typename T1__>
-    void
-    operator()(const Eigen::Matrix<double, -1, -1>& x,
-               const Eigen::Matrix<T1__, 1, -1>& y, std::ostream* pstream__)  const
-    {
-    return sars(x, y, pstream__);
-    }
-    }; |}]
+    } |}]

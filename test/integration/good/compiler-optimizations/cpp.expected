@@ -94,6 +94,24 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'ad-level-failing.stan', line 24, column 4 to column 16)",
                                                       " (in 'ad-level-failing.stan', line 15, column 31 to line 25, column 3)"};
 
+template <typename T0__, typename T1__, typename T2__, typename T3__>
+std::vector<stan::promote_args_t<T0__, T1__, T2__,
+T3__>>
+simple_SIR(const T0__& t, const std::vector<T1__>& y,
+           const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
+           const std::vector<int>& x_i, std::ostream* pstream__) ;
+
+struct simple_SIR_functor__ {
+template <typename T0__, typename T1__, typename T2__, typename T3__>
+std::vector<stan::promote_args_t<T0__, T1__, T2__,
+T3__>>
+operator()(const T0__& t, const std::vector<T1__>& y,
+           const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
+           const std::vector<int>& x_i, std::ostream* pstream__)  const 
+{
+return simple_SIR(t, y, theta, x_r, x_i, pstream__);
+}
+};
 
 template <typename T0__, typename T1__, typename T2__, typename T3__>
 std::vector<stan::promote_args_t<T0__, T1__, T2__,
@@ -141,19 +159,6 @@ simple_SIR(const T0__& t, const std::vector<T1__>& y,
   }
   
 }
-
-struct simple_SIR_functor__ {
-template <typename T0__, typename T1__, typename T2__, typename T3__>
-std::vector<stan::promote_args_t<T0__, T1__, T2__,
-T3__>>
-operator()(const T0__& t, const std::vector<T1__>& y,
-           const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
-           const std::vector<int>& x_i, std::ostream* pstream__)  const 
-{
-return simple_SIR(t, y, theta, x_r, x_i, pstream__);
-}
-};
-
 class ad_level_failing_model final : public model_base_crtp<ad_level_failing_model> {
 
  private:
@@ -1006,6 +1011,47 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'copy_fail.stan', line 28, column 4 to line 44, column 5)",
                                                       " (in 'copy_fail.stan', line 45, column 4 to column 15)"};
 
+int
+first_capture(const std::vector<int>& y_i, std::ostream* pstream__) ;
+
+struct first_capture_functor__ {
+int
+operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
+{
+return first_capture(y_i, pstream__);
+}
+};
+
+int
+last_capture(const std::vector<int>& y_i, std::ostream* pstream__) ;
+
+struct last_capture_functor__ {
+int
+operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
+{
+return last_capture(y_i, pstream__);
+}
+};
+
+template <typename T2__, typename T3__>
+Eigen::Matrix<stan::promote_args_t<T2__,
+T3__>, -1, -1>
+prob_uncaptured(const int& nind, const int& n_occasions,
+                const Eigen::Matrix<T2__, -1, -1>& p,
+                const Eigen::Matrix<T3__, -1, -1>& phi,
+                std::ostream* pstream__) ;
+
+struct prob_uncaptured_functor__ {
+template <typename T2__, typename T3__>
+Eigen::Matrix<stan::promote_args_t<T2__,
+T3__>, -1, -1>
+operator()(const int& nind, const int& n_occasions,
+           const Eigen::Matrix<T2__, -1, -1>& p,
+           const Eigen::Matrix<T3__, -1, -1>& phi, std::ostream* pstream__)  const 
+{
+return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
+}
+};
 
 int
 first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
@@ -1045,15 +1091,6 @@ first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   }
   
 }
-
-struct first_capture_functor__ {
-int
-operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
-{
-return first_capture(y_i, pstream__);
-}
-};
-
 int
 last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -1102,15 +1139,6 @@ last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   }
   
 }
-
-struct last_capture_functor__ {
-int
-operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
-{
-return last_capture(y_i, pstream__);
-}
-};
-
 template <typename T2__, typename T3__>
 Eigen::Matrix<stan::promote_args_t<T2__,
 T3__>, -1, -1>
@@ -1299,19 +1327,6 @@ prob_uncaptured(const int& nind, const int& n_occasions,
   }
   
 }
-
-struct prob_uncaptured_functor__ {
-template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<T2__,
-T3__>, -1, -1>
-operator()(const int& nind, const int& n_occasions,
-           const Eigen::Matrix<T2__, -1, -1>& p,
-           const Eigen::Matrix<T3__, -1, -1>& phi, std::ostream* pstream__)  const 
-{
-return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
-}
-};
-
 class copy_fail_model final : public model_base_crtp<copy_fail_model> {
 
  private:
@@ -9678,6 +9693,47 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'expr-prop-fail5.stan', line 28, column 4 to line 46, column 5)",
                                                       " (in 'expr-prop-fail5.stan', line 47, column 4 to column 15)"};
 
+int
+first_capture(const std::vector<int>& y_i, std::ostream* pstream__) ;
+
+struct first_capture_functor__ {
+int
+operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
+{
+return first_capture(y_i, pstream__);
+}
+};
+
+int
+last_capture(const std::vector<int>& y_i, std::ostream* pstream__) ;
+
+struct last_capture_functor__ {
+int
+operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
+{
+return last_capture(y_i, pstream__);
+}
+};
+
+template <typename T2__, typename T3__>
+Eigen::Matrix<stan::promote_args_t<T2__,
+T3__>, -1, -1>
+prob_uncaptured(const int& nind, const int& n_occasions,
+                const Eigen::Matrix<T2__, -1, -1>& p,
+                const Eigen::Matrix<T3__, -1, -1>& phi,
+                std::ostream* pstream__) ;
+
+struct prob_uncaptured_functor__ {
+template <typename T2__, typename T3__>
+Eigen::Matrix<stan::promote_args_t<T2__,
+T3__>, -1, -1>
+operator()(const int& nind, const int& n_occasions,
+           const Eigen::Matrix<T2__, -1, -1>& p,
+           const Eigen::Matrix<T3__, -1, -1>& phi, std::ostream* pstream__)  const 
+{
+return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
+}
+};
 
 int
 first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
@@ -9717,15 +9773,6 @@ first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   }
   
 }
-
-struct first_capture_functor__ {
-int
-operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
-{
-return first_capture(y_i, pstream__);
-}
-};
-
 int
 last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -9774,15 +9821,6 @@ last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   }
   
 }
-
-struct last_capture_functor__ {
-int
-operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
-{
-return last_capture(y_i, pstream__);
-}
-};
-
 template <typename T2__, typename T3__>
 Eigen::Matrix<stan::promote_args_t<T2__,
 T3__>, -1, -1>
@@ -9971,19 +10009,6 @@ prob_uncaptured(const int& nind, const int& n_occasions,
   }
   
 }
-
-struct prob_uncaptured_functor__ {
-template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<T2__,
-T3__>, -1, -1>
-operator()(const int& nind, const int& n_occasions,
-           const Eigen::Matrix<T2__, -1, -1>& p,
-           const Eigen::Matrix<T3__, -1, -1>& phi, std::ostream* pstream__)  const 
-{
-return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
-}
-};
-
 class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model> {
 
  private:
@@ -12282,7 +12307,56 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'expr-prop-fail6.stan', line 86, column 4 to line 142, column 5)",
                                                       " (in 'expr-prop-fail6.stan', line 81, column 42 to line 143, column 3)"};
 
+int
+first_capture(const std::vector<int>& y_i, std::ostream* pstream__) ;
 
+struct first_capture_functor__ {
+int
+operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
+{
+return first_capture(y_i, pstream__);
+}
+};
+
+int
+last_capture(const std::vector<int>& y_i, std::ostream* pstream__) ;
+
+struct last_capture_functor__ {
+int
+operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
+{
+return last_capture(y_i, pstream__);
+}
+};
+
+template <typename T0__, typename T1__>
+Eigen::Matrix<stan::promote_args_t<T0__,
+T1__>, -1, -1>
+prob_uncaptured(const Eigen::Matrix<T0__, -1, -1>& p,
+                const Eigen::Matrix<T1__, -1, -1>& phi,
+                std::ostream* pstream__) ;
+
+struct prob_uncaptured_functor__ {
+template <typename T0__, typename T1__>
+Eigen::Matrix<stan::promote_args_t<T0__,
+T1__>, -1, -1>
+operator()(const Eigen::Matrix<T0__, -1, -1>& p,
+           const Eigen::Matrix<T1__, -1, -1>& phi, std::ostream* pstream__)  const 
+{
+return prob_uncaptured(p, phi, pstream__);
+}
+};
+
+template <bool propto__, typename T3__, typename T4__, typename T5__,
+typename T6__, typename T7__, typename T_lp__, typename T_lp_accum__>
+void
+js_super_lp(const std::vector<std::vector<int>>& y,
+            const std::vector<int>& first, const std::vector<int>& last,
+            const Eigen::Matrix<T3__, -1, -1>& p,
+            const Eigen::Matrix<T4__, -1, -1>& phi, const T5__& psi,
+            const Eigen::Matrix<T6__, -1, 1>& nu,
+            const Eigen::Matrix<T7__, -1, -1>& chi, T_lp__& lp__,
+            T_lp_accum__& lp_accum__, std::ostream* pstream__) ;
 int
 first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -12321,15 +12395,6 @@ first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   }
   
 }
-
-struct first_capture_functor__ {
-int
-operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
-{
-return first_capture(y_i, pstream__);
-}
-};
-
 int
 last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -12378,15 +12443,6 @@ last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   }
   
 }
-
-struct last_capture_functor__ {
-int
-operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
-{
-return last_capture(y_i, pstream__);
-}
-};
-
 template <typename T0__, typename T1__>
 Eigen::Matrix<stan::promote_args_t<T0__,
 T1__>, -1, -1>
@@ -12585,18 +12641,6 @@ prob_uncaptured(const Eigen::Matrix<T0__, -1, -1>& p,
   }
   
 }
-
-struct prob_uncaptured_functor__ {
-template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<T0__,
-T1__>, -1, -1>
-operator()(const Eigen::Matrix<T0__, -1, -1>& p,
-           const Eigen::Matrix<T1__, -1, -1>& phi, std::ostream* pstream__)  const 
-{
-return prob_uncaptured(p, phi, pstream__);
-}
-};
-
 template <bool propto__, typename T3__, typename T4__, typename T5__,
 typename T6__, typename T7__, typename T_lp__, typename T_lp_accum__>
 void
@@ -13147,24 +13191,6 @@ js_super_lp(const std::vector<std::vector<int>>& y,
   }
   
 }
-
-struct js_super_lp_functor__ {
-template <bool propto__, typename T3__, typename T4__, typename T5__,
-typename T6__, typename T7__, typename T_lp__, typename T_lp_accum__>
-void
-operator()(const std::vector<std::vector<int>>& y,
-           const std::vector<int>& first, const std::vector<int>& last,
-           const Eigen::Matrix<T3__, -1, -1>& p,
-           const Eigen::Matrix<T4__, -1, -1>& phi, const T5__& psi,
-           const Eigen::Matrix<T6__, -1, 1>& nu,
-           const Eigen::Matrix<T7__, -1, -1>& chi, T_lp__& lp__,
-           T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
-{
-return js_super_lp<propto__>(y, first, last, p, phi, psi, nu, chi, lp__,
-         lp_accum__, pstream__);
-}
-};
-
 class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model> {
 
  private:
@@ -18847,6 +18873,47 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'fails-test.stan', line 28, column 4 to line 44, column 5)",
                                                       " (in 'fails-test.stan', line 45, column 4 to column 15)"};
 
+int
+first_capture(const std::vector<int>& y_i, std::ostream* pstream__) ;
+
+struct first_capture_functor__ {
+int
+operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
+{
+return first_capture(y_i, pstream__);
+}
+};
+
+int
+last_capture(const std::vector<int>& y_i, std::ostream* pstream__) ;
+
+struct last_capture_functor__ {
+int
+operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
+{
+return last_capture(y_i, pstream__);
+}
+};
+
+template <typename T2__, typename T3__>
+Eigen::Matrix<stan::promote_args_t<T2__,
+T3__>, -1, -1>
+prob_uncaptured(const int& nind, const int& n_occasions,
+                const Eigen::Matrix<T2__, -1, -1>& p,
+                const Eigen::Matrix<T3__, -1, -1>& phi,
+                std::ostream* pstream__) ;
+
+struct prob_uncaptured_functor__ {
+template <typename T2__, typename T3__>
+Eigen::Matrix<stan::promote_args_t<T2__,
+T3__>, -1, -1>
+operator()(const int& nind, const int& n_occasions,
+           const Eigen::Matrix<T2__, -1, -1>& p,
+           const Eigen::Matrix<T3__, -1, -1>& phi, std::ostream* pstream__)  const 
+{
+return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
+}
+};
 
 int
 first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
@@ -18886,15 +18953,6 @@ first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   }
   
 }
-
-struct first_capture_functor__ {
-int
-operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
-{
-return first_capture(y_i, pstream__);
-}
-};
-
 int
 last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -18943,15 +19001,6 @@ last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   }
   
 }
-
-struct last_capture_functor__ {
-int
-operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
-{
-return last_capture(y_i, pstream__);
-}
-};
-
 template <typename T2__, typename T3__>
 Eigen::Matrix<stan::promote_args_t<T2__,
 T3__>, -1, -1>
@@ -19140,19 +19189,6 @@ prob_uncaptured(const int& nind, const int& n_occasions,
   }
   
 }
-
-struct prob_uncaptured_functor__ {
-template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<T2__,
-T3__>, -1, -1>
-operator()(const int& nind, const int& n_occasions,
-           const Eigen::Matrix<T2__, -1, -1>& p,
-           const Eigen::Matrix<T3__, -1, -1>& phi, std::ostream* pstream__)  const 
-{
-return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
-}
-};
-
 class fails_test_model final : public model_base_crtp<fails_test_model> {
 
  private:
@@ -21547,6 +21583,68 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'inlining-fail2.stan', line 152, column 4 to line 155, column 5)",
                                                       " (in 'inlining-fail2.stan', line 156, column 4 to column 26)"};
 
+int
+first_capture(const std::vector<int>& y_i, std::ostream* pstream__) ;
+
+struct first_capture_functor__ {
+int
+operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
+{
+return first_capture(y_i, pstream__);
+}
+};
+
+int
+last_capture(const std::vector<int>& y_i, std::ostream* pstream__) ;
+
+struct last_capture_functor__ {
+int
+operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
+{
+return last_capture(y_i, pstream__);
+}
+};
+
+template <typename T0__, typename T1__>
+Eigen::Matrix<stan::promote_args_t<T0__,
+T1__>, -1, -1>
+prob_uncaptured(const Eigen::Matrix<T0__, -1, -1>& p,
+                const Eigen::Matrix<T1__, -1, -1>& phi,
+                std::ostream* pstream__) ;
+
+struct prob_uncaptured_functor__ {
+template <typename T0__, typename T1__>
+Eigen::Matrix<stan::promote_args_t<T0__,
+T1__>, -1, -1>
+operator()(const Eigen::Matrix<T0__, -1, -1>& p,
+           const Eigen::Matrix<T1__, -1, -1>& phi, std::ostream* pstream__)  const 
+{
+return prob_uncaptured(p, phi, pstream__);
+}
+};
+
+template <bool propto__, typename T3__, typename T4__, typename T5__,
+typename T6__, typename T_lp__, typename T_lp_accum__>
+void
+jolly_seber_lp(const std::vector<std::vector<int>>& y,
+               const std::vector<int>& first, const std::vector<int>& last,
+               const Eigen::Matrix<T3__, -1, -1>& p,
+               const Eigen::Matrix<T4__, -1, -1>& phi,
+               const Eigen::Matrix<T5__, -1, 1>& gamma,
+               const Eigen::Matrix<T6__, -1, -1>& chi, T_lp__& lp__,
+               T_lp_accum__& lp_accum__, std::ostream* pstream__) ;
+template <typename T0__>
+Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
+seq_cprob(const Eigen::Matrix<T0__, -1, 1>& gamma, std::ostream* pstream__) ;
+
+struct seq_cprob_functor__ {
+template <typename T0__>
+Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
+operator()(const Eigen::Matrix<T0__, -1, 1>& gamma, std::ostream* pstream__)  const 
+{
+return seq_cprob(gamma, pstream__);
+}
+};
 
 int
 first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
@@ -21586,15 +21684,6 @@ first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   }
   
 }
-
-struct first_capture_functor__ {
-int
-operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
-{
-return first_capture(y_i, pstream__);
-}
-};
-
 int
 last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -21643,15 +21732,6 @@ last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   }
   
 }
-
-struct last_capture_functor__ {
-int
-operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
-{
-return last_capture(y_i, pstream__);
-}
-};
-
 template <typename T0__, typename T1__>
 Eigen::Matrix<stan::promote_args_t<T0__,
 T1__>, -1, -1>
@@ -21850,18 +21930,6 @@ prob_uncaptured(const Eigen::Matrix<T0__, -1, -1>& p,
   }
   
 }
-
-struct prob_uncaptured_functor__ {
-template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<T0__,
-T1__>, -1, -1>
-operator()(const Eigen::Matrix<T0__, -1, -1>& p,
-           const Eigen::Matrix<T1__, -1, -1>& phi, std::ostream* pstream__)  const 
-{
-return prob_uncaptured(p, phi, pstream__);
-}
-};
-
 template <bool propto__, typename T3__, typename T4__, typename T5__,
 typename T6__, typename T_lp__, typename T_lp_accum__>
 void
@@ -22399,24 +22467,6 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
   }
   
 }
-
-struct jolly_seber_lp_functor__ {
-template <bool propto__, typename T3__, typename T4__, typename T5__,
-typename T6__, typename T_lp__, typename T_lp_accum__>
-void
-operator()(const std::vector<std::vector<int>>& y,
-           const std::vector<int>& first, const std::vector<int>& last,
-           const Eigen::Matrix<T3__, -1, -1>& p,
-           const Eigen::Matrix<T4__, -1, -1>& phi,
-           const Eigen::Matrix<T5__, -1, 1>& gamma,
-           const Eigen::Matrix<T6__, -1, -1>& chi, T_lp__& lp__,
-           T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
-{
-return jolly_seber_lp<propto__>(y, first, last, p, phi, gamma, chi, lp__,
-         lp_accum__, pstream__);
-}
-};
-
 template <typename T0__>
 Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
 seq_cprob(const Eigen::Matrix<T0__, -1, 1>& gamma, std::ostream* pstream__) {
@@ -22475,16 +22525,6 @@ seq_cprob(const Eigen::Matrix<T0__, -1, 1>& gamma, std::ostream* pstream__) {
   }
   
 }
-
-struct seq_cprob_functor__ {
-template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
-operator()(const Eigen::Matrix<T0__, -1, 1>& gamma, std::ostream* pstream__)  const 
-{
-return seq_cprob(gamma, pstream__);
-}
-};
-
 class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> {
 
  private:
@@ -26750,6 +26790,47 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'lcm-fails2.stan', line 28, column 4 to line 44, column 5)",
                                                       " (in 'lcm-fails2.stan', line 45, column 4 to column 15)"};
 
+int
+first_capture(const std::vector<int>& y_i, std::ostream* pstream__) ;
+
+struct first_capture_functor__ {
+int
+operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
+{
+return first_capture(y_i, pstream__);
+}
+};
+
+int
+last_capture(const std::vector<int>& y_i, std::ostream* pstream__) ;
+
+struct last_capture_functor__ {
+int
+operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
+{
+return last_capture(y_i, pstream__);
+}
+};
+
+template <typename T2__, typename T3__>
+Eigen::Matrix<stan::promote_args_t<T2__,
+T3__>, -1, -1>
+prob_uncaptured(const int& nind, const int& n_occasions,
+                const Eigen::Matrix<T2__, -1, -1>& p,
+                const Eigen::Matrix<T3__, -1, -1>& phi,
+                std::ostream* pstream__) ;
+
+struct prob_uncaptured_functor__ {
+template <typename T2__, typename T3__>
+Eigen::Matrix<stan::promote_args_t<T2__,
+T3__>, -1, -1>
+operator()(const int& nind, const int& n_occasions,
+           const Eigen::Matrix<T2__, -1, -1>& p,
+           const Eigen::Matrix<T3__, -1, -1>& phi, std::ostream* pstream__)  const 
+{
+return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
+}
+};
 
 int
 first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
@@ -26789,15 +26870,6 @@ first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   }
   
 }
-
-struct first_capture_functor__ {
-int
-operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
-{
-return first_capture(y_i, pstream__);
-}
-};
-
 int
 last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -26846,15 +26918,6 @@ last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   }
   
 }
-
-struct last_capture_functor__ {
-int
-operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
-{
-return last_capture(y_i, pstream__);
-}
-};
-
 template <typename T2__, typename T3__>
 Eigen::Matrix<stan::promote_args_t<T2__,
 T3__>, -1, -1>
@@ -27043,19 +27106,6 @@ prob_uncaptured(const int& nind, const int& n_occasions,
   }
   
 }
-
-struct prob_uncaptured_functor__ {
-template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<T2__,
-T3__>, -1, -1>
-operator()(const int& nind, const int& n_occasions,
-           const Eigen::Matrix<T2__, -1, -1>& p,
-           const Eigen::Matrix<T3__, -1, -1>& phi, std::ostream* pstream__)  const 
-{
-return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
-}
-};
-
 class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
 
  private:
@@ -31210,7 +31260,25 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'optimizations.stan', line 11, column 8 to column 21)",
                                                       " (in 'optimizations.stan', line 16, column 8 to column 18)"};
 
+template <bool propto__, typename T0__, typename T_lp__,
+typename T_lp_accum__>
+void
+nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
+         std::ostream* pstream__) ;
+int
+rfun(const int& y, std::ostream* pstream__) ;
 
+struct rfun_functor__ {
+int
+operator()(const int& y, std::ostream* pstream__)  const 
+{
+return rfun(y, pstream__);
+}
+};
+
+template <bool propto__, typename T_lp__, typename T_lp_accum__>
+int
+rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) ;
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
 void
@@ -31238,18 +31306,6 @@ nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
   }
   
 }
-
-struct nrfun_lp_functor__ {
-template <bool propto__, typename T0__, typename T_lp__,
-typename T_lp_accum__>
-void
-operator()(const T0__& x, const int& y, T_lp__& lp__,
-           T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
-{
-return nrfun_lp<propto__>(x, y, lp__, lp_accum__, pstream__);
-}
-};
-
 int
 rfun(const int& y, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -31278,15 +31334,6 @@ rfun(const int& y, std::ostream* pstream__) {
   }
   
 }
-
-struct rfun_functor__ {
-int
-operator()(const int& y, std::ostream* pstream__)  const 
-{
-return rfun(y, pstream__);
-}
-};
-
 template <bool propto__, typename T_lp__, typename T_lp_accum__>
 int
 rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
@@ -31308,16 +31355,6 @@ rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   }
   
 }
-
-struct rfun_lp_functor__ {
-template <bool propto__, typename T_lp__, typename T_lp_accum__>
-int
-operator()(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
-{
-return rfun_lp<propto__>(lp__, lp_accum__, pstream__);
-}
-};
-
 class optimizations_model final : public model_base_crtp<optimizations_model> {
 
  private:

@@ -77,7 +77,7 @@ let%expect_test "arg types templated correctly" =
  @param ppf A pretty printer
  @param args A pack of arguments to detect whether they need to use the promotion rules.
  *)
-let pp_promoted_scalar ppf args =
+let pp_promoted_scalar ppf (s, args) =
   match args with
   | [] -> pf ppf "double"
   | _ ->
@@ -93,12 +93,13 @@ let pp_promoted_scalar ppf args =
       in
       promote_args_chunked ppf
         List.(
-          chunks_of ~length:5 (filter_opt (maybe_templated_arg_types args)))
+          chunks_of ~length:5
+            (filter_opt (s :: maybe_templated_arg_types args)))
 
 (** Pretty-prints a function's return-type, taking into account templated argument
     promotion.*)
-let pp_returntype ppf arg_types rt =
-  let scalar = strf "%a" pp_promoted_scalar arg_types in
+let pp_returntype ppf arg_types (rt, s) =
+  let scalar = strf "%a" pp_promoted_scalar (s, arg_types) in
   match rt with
   | Some ut when UnsizedType.contains_int ut ->
       pf ppf "%a@," pp_unsizedtype_custom_scalar ("int", ut)
@@ -160,13 +161,8 @@ let pp_template_decorator ppf = function
 let mk_extra_args templates args =
   List.map ~f:(fun (t, v) -> t ^ "& " ^ v) (List.zip_exn templates args)
 
-(** Print the C++ function definition.
-  @param ppf A pretty printer
-  Refactor this please - one idea might be to have different functions for
-   printing user defined distributions vs rngs vs regular functions.
-*)
-let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
-    funs_used_in_reduce_sum =
+let pp_signature is_closure ppf (fdrt, fdname, fdargs) =
+  let scalar = if is_closure then Some "local_scalar_t__" else None in
   let is_lp = is_user_lp fdname in
   let is_dist = is_user_dist fdname in
   let is_rng = String.is_suffix fdname ~suffix:"_rng" in
@@ -176,14 +172,170 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
     else ([], [])
   in
   let argtypetemplates, args = get_templates_and_args fdargs in
+  let templates =
+    (if is_dist || is_lp then ["bool propto__"] else [])
+    @ List.(map ~f:typename (argtypetemplates @ extra_templates))
+  in
+  pp_template_decorator ppf templates ;
+  pp_returntype ppf fdargs (fdrt, scalar) ;
+  let arg_strs = args @ mk_extra_args extra_templates extra in
+  let arg_strs =
+    if is_closure then "std::ostream* pstream__" :: arg_strs
+    else arg_strs @ ["std::ostream* pstream__"]
+  in
+  pf ppf "%s(@[<hov>%a@]) " fdname (list ~sep:comma string) arg_strs
+
+let pp_rs_functor ppf (fdrt, fdname, fdargs) =
+  match fdargs with
+  | (_, slice, _) :: (_, start, _) :: (_, end_, _) :: rest ->
+      (* Produces the reduce_sum functors that has the pstream argument
+             as the third and not last argument *)
+      let is_dist = is_user_dist fdname in
+      let argtypetemplates, args = get_templates_and_args fdargs in
+      let templates = List.map ~f:typename argtypetemplates in
+      let pp_template_propto ppf maybe =
+        if maybe then pf ppf "template <bool propto__>@ "
+      in
+      let pp_sig_rs ppf name =
+        let first_three, rest = List.split_n args 3 in
+        let arg_strs = first_three @ ["std::ostream* pstream__"] @ rest in
+        pp_template_decorator ppf templates ;
+        pp_returntype ppf fdargs (fdrt, None) ;
+        pf ppf "%s(@[<hov>%a@])" name (list ~sep:comma string) arg_strs
+      in
+      pf ppf "@,@,%astruct %s%s {@,%a const @,{@,return %a;@,}@,};@,"
+        pp_template_propto is_dist fdname reduce_sum_functor_suffix pp_sig_rs
+        "operator()" pp_call_str
+        ( (if is_dist then fdname ^ "<propto__>" else fdname)
+        , slice :: (start ^ " + 1") :: (end_ ^ " + 1")
+          :: List.map ~f:(fun (_, name, _) -> name) rest
+          @ ["pstream__"] )
+  | _ ->
+      raise_s
+        [%message "Ill-formed reduce_sum call! This is bug in the compiler."]
+
+let pp_closure ppf (fdrt, fdname, fdcaptures, fdargs) =
+  let clsname = fdname ^ "_functor__" in
+  let pp_member ppf (adlevel, name, type_) =
+    pf ppf "%a %s;" pp_unsizedtype_local (adlevel, type_) name
+  in
+  let pp_ctor ppf name =
+    let scalar = function
+      | UnsizedType.DataOnly -> None
+      | AutoDiffable -> Some "local_scalar_t__"
+    in
+    let pp ppf = function
+      | (ad, _, _) as arg -> pf ppf "%a__" pp_arg (scalar ad, arg)
+    in
+    let pp_init ppf (_, id, _) = pf ppf "%s(%s__)" id id in
+    let pp_count ppf () =
+      if not (List.is_empty fdargs) then comma ppf () ;
+      pf ppf "vars_count__(count_vars(@[<hov>%a@]))" (list ~sep:comma string)
+        (List.map ~f:(fun (_, id, _) -> id ^ "__") fdcaptures)
+    in
+    pf ppf "explicit %s(@[<hov>%a@])@ : @[<hov>%a%a {}@]" name
+      (list ~sep:comma pp) fdcaptures (list ~sep:comma pp_init) fdcaptures
+      pp_count ()
+  in
+  let pp_op ppf () =
+    pf ppf "%a const @,{@,return %a;@,}@," (pp_signature true)
+      (fdrt, "operator()", fdargs)
+      pp_call_str
+      ( fdname ^ "_impl__"
+      , List.map ~f:(fun (_, name, _) -> name) (fdcaptures @ fdargs)
+        @ ["pstream__"] )
+  in
+  let pp_api ppf () =
+    let using_valueof ppf () =
+      pf ppf
+        "using ValueOf__ = \
+         %s<decltype(value_of(std::declval<local_scalar_t__>()))>;"
+        clsname
+    in
+    let pp f = list ~sep:comma (fun ppf (_, id, _) -> pf ppf "%s(%s)" f id) in
+    let valueof ppf () =
+      pf ppf "auto value_of__() const {@ return ValueOf__(@[<hov>%a@]);@ }"
+        (pp "value_of") fdcaptures
+    in
+    let deepcopy ppf () =
+      pf ppf
+        "auto deep_copy_vars__() const {@ return \
+         %s<local_scalar_t__>(@[<hov>%a@]);@ }"
+        clsname (pp "deep_copy_vars") fdcaptures
+    in
+    let zeros ppf () =
+      pf ppf "void zero_adjoints__() const {@ %a@ }"
+        (list (fun ppf (_, id, _) -> pf ppf "zero_adjoints(%s);" id))
+        fdcaptures
+    in
+    let pp = list ~sep:comma (fun ppf (_, id, _) -> string ppf id) in
+    let accumulate ppf () =
+      pf ppf
+        "double accumulate_adjoints__(double *dest) const {@ return \
+         accumulate_adjoints(@[<hov>dest%a%a@]);@ }"
+        comma () pp fdcaptures
+    in
+    let save ppf () =
+      pf ppf
+        "stan::math::vari** save_varis__(stan::math::vari **dest) const {@ \
+         return save_varis(@[<hov>dest%a%a@]);@ }"
+        comma () pp fdcaptures
+    in
+    pf ppf
+      "@<hov>%s@]@ @[<hov>%a@]@ @[<hov>%a@]@ @[<hov>%a@]@ @[<hov>%a@]@ \
+       @[<hov>%a@]@ @[<hov>%a@]@ "
+      "using captured_scalar_t__ = local_scalar_t__;" using_valueof () valueof
+      () deepcopy () zeros () accumulate () save () ;
+    ()
+  in
+  pf ppf
+    "@,@,template<typename local_scalar_t__>@,class %s {@,%a@,public:@,const \
+     size_t vars_count__;@ %a@ %a@ %a@ };@,"
+    clsname (list pp_member) fdcaptures pp_ctor fdname pp_op () pp_api () ;
+  ()
+
+let pp_forward_decl funs_used_in_reduce_sum ppf
+    Program.({fdrt; fdname; fdcaptures; fdargs; fdbody; _}) =
+  match fdcaptures with
+  | None ->
+      pf ppf "%a;" (pp_signature false) (fdrt, fdname, fdargs) ;
+      if fdbody <> None then (
+        if Set.mem funs_used_in_reduce_sum fdname then
+          pp_rs_functor ppf (fdrt, fdname, fdargs) ;
+        if
+          not
+            ( is_user_lp fdname || is_user_dist fdname
+            || String.is_suffix fdname ~suffix:"_rng" )
+        then
+          pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
+            functor_suffix (pp_signature false)
+            (fdrt, "operator()", fdargs)
+            pp_call_str
+            ( fdname
+            , List.map ~f:(fun (_, name, _) -> name) fdargs @ ["pstream__"] ) )
+  | Some captures ->
+      pf ppf "%a ;" (pp_signature false)
+        (fdrt, fdname ^ "_impl__", captures @ fdargs) ;
+      pp_closure ppf (fdrt, fdname, captures, fdargs)
+
+let get_impl = function
+  | {Program.fdbody= None; _} -> None
+  | {fdrt; fdname; fdcaptures= None; fdargs; fdbody= Some fdbody; _} ->
+      Some (fdrt, fdname, fdargs, fdbody)
+  | {fdrt; fdname; fdcaptures= Some fdcaptures; fdargs; fdbody= Some fdbody; _}
+    ->
+      Some (fdrt, fdname ^ "_impl__", fdcaptures @ fdargs, fdbody)
+
+let pp_function_body ppf (fdrt, fdname, fdargs, fdbody) =
   let pp_body ppf (Stmt.Fixed.({pattern; _}) as fdbody) =
-    let text = pf ppf "%s@;" in
-    pf ppf "@[<hv 8>using local_scalar_t__ = %a;@]@," pp_promoted_scalar fdargs ;
-    if not (is_dist || is_lp) then (
-      text "const static bool propto__ = true;" ;
-      text "(void) propto__;" ) ;
-    text
-      "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
+    pf ppf "@[<hv 8>using local_scalar_t__ = %a;@]@," pp_promoted_scalar
+      (None, fdargs) ;
+    if not (is_user_lp fdname || is_user_dist fdname) then (
+      pf ppf "const static bool propto__ = true;@;" ;
+      pf ppf "(void) propto__;@;" ) ;
+    pf ppf
+      "local_scalar_t__ \
+       DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());@;" ;
     pp_unused ppf "DUMMY_VAR__" ;
     let blocked_fdbody =
       match pattern with
@@ -194,59 +346,8 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
     pp_located_error ppf (pp_statement, blocked_fdbody) ;
     pf ppf "@ "
   in
-  let templates =
-    (if is_dist || is_lp then ["bool propto__"] else [])
-    @ List.(map ~f:typename (argtypetemplates @ extra_templates))
-  in
-  let pp_sig ppf name =
-    pp_template_decorator ppf templates ;
-    pp_returntype ppf fdargs fdrt ;
-    let arg_strs =
-      args @ mk_extra_args extra_templates extra @ ["std::ostream* pstream__"]
-    in
-    pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs
-  in
-  let pp_sig_rs ppf name =
-    if is_dist then pp_template_decorator ppf (List.tl_exn templates)
-    else pp_template_decorator ppf templates ;
-    pp_returntype ppf fdargs fdrt ;
-    let first_three, rest = List.split_n args 3 in
-    let arg_strs =
-      first_three
-      @ ["std::ostream* pstream__"]
-      @ rest
-      @ mk_extra_args extra_templates extra
-    in
-    pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs
-  in
-  pp_sig ppf fdname ;
-  match fdbody with
-  | None -> pf ppf ";@ "
-  | Some fdbody -> (
-      pp_block ppf (pp_body, fdbody) ;
-      pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
-        functor_suffix pp_sig "operator()" pp_call_str
-        ( (if is_dist || is_lp then fdname ^ "<propto__>" else fdname)
-        , List.map ~f:(fun (_, name, _) -> name) fdargs @ extra @ ["pstream__"]
-        ) ;
-      match fdargs with
-      | (_, slice, _) :: (_, start, _) :: (_, end_, _) :: rest
-        when String.Set.mem funs_used_in_reduce_sum fdname ->
-          (* Produces the reduce_sum functors that has the pstream argument
-             as the third and not last argument *)
-          let pp_template_propto ppf name =
-            if is_user_dist name then pf ppf "template <bool propto__>@ "
-            else pf ppf ""
-          in
-          pf ppf "@,@,%astruct %s%s {@,%a const @,{@,return %a;@,}@,};@,"
-            (* (if is_dist || is_lp then "template <bool propto__>" else "") *)
-            pp_template_propto fdname fdname reduce_sum_functor_suffix
-            pp_sig_rs "operator()" pp_call_str
-            ( (if is_dist || is_lp then fdname ^ "<propto__>" else fdname)
-            , slice :: (start ^ " + 1") :: (end_ ^ " + 1")
-              :: List.map ~f:(fun (_, name, _) -> name) rest
-              @ extra @ ["pstream__"] )
-      | _ -> () )
+  pp_signature false ppf (fdrt, fdname, fdargs) ;
+  pp_block ppf (pp_body, fdbody)
 
 (* Creates functions outside the model namespaces which only call the ones
    inside the namespaces *)
@@ -819,25 +920,15 @@ let is_fun_used_with_variadic_fn variadic_fn_test p =
 let pp_prog ppf (p : Program.Typed.t) =
   (* First, do some transformations on the MIR itself before we begin printing it.*)
   let p, s = Locations.prepare_prog p in
-  let pp_fun_def_with_variadic_fn_list ppf fblock =
-    pp_fun_def ppf fblock
-      (is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p)
+  let funs_used_in_reduce_sum =
+    is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p
   in
-  let reduce_sum_struct_decls =
-    String.Set.map
-      ~f:(fun x ->
-        if Utils.is_distribution_name x then
-          "template <bool propto__>\nstruct " ^ x ^ reduce_sum_functor_suffix
-          ^ ";"
-        else "struct " ^ x ^ reduce_sum_functor_suffix ^ ";" )
-      (is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p)
-    |> Set.elements |> String.concat ~sep:"\n"
-  in
-  pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %s@ %a@ %s@ %a@ %a@ }@ @]" version
+  pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %s@ %a@ %a@ %a@ %a@ }@ @]" version
     includes (namespace p) custom_functions usings Locations.pp_globals s
-    reduce_sum_struct_decls
-    (list ~sep:cut pp_fun_def_with_variadic_fn_list)
+    (list (pp_forward_decl funs_used_in_reduce_sum))
     p.functions_block
+    (list ~sep:cut pp_function_body)
+    (List.filter_map ~f:get_impl p.functions_block)
     (if !standalone_functions then fun _ _ -> () else pp_model)
     p ;
   if !standalone_functions then
