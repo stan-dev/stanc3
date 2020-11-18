@@ -117,8 +117,10 @@ val mismatched_fn_def_decl :
 
 val fn_decl_exists : Location_span.t -> string -> t
 val fn_decl_without_def : Location_span.t -> t
+val closure_without_def : Location_span.t -> t
 val fn_decl_needs_block : Location_span.t -> t
 val non_real_prob_fn_def : Location_span.t -> t
+val impure_closure : Location_span.t -> t
 
 val prob_density_non_real_variate :
   Location_span.t -> UnsizedType.t option -> t

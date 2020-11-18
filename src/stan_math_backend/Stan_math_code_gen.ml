@@ -215,7 +215,7 @@ let pp_rs_functor ppf (fdrt, fdname, fdargs) =
         [%message "Ill-formed reduce_sum call! This is bug in the compiler."]
 
 let pp_closure ppf (fdrt, fdname, fdcaptures, fdargs) =
-  let clsname = fdname ^ "_functor__" in
+  let clsname = fdname ^ "_cfunctor__" in
   let pp_member ppf (adlevel, name, type_) =
     pf ppf "%a %s;" pp_unsizedtype_local (adlevel, type_) name
   in
@@ -233,9 +233,9 @@ let pp_closure ppf (fdrt, fdname, fdcaptures, fdargs) =
       pf ppf "vars_count__(count_vars(@[<hov>%a@]))" (list ~sep:comma string)
         (List.map ~f:(fun (_, id, _) -> id ^ "__") fdcaptures)
     in
-    pf ppf "explicit %s(@[<hov>%a@])@ : @[<hov>%a%a {}@]" name
-      (list ~sep:comma pp) fdcaptures (list ~sep:comma pp_init) fdcaptures
-      pp_count ()
+    pf ppf "%s(const %s<local_scalar_t__>&) = default ;@ " name name ;
+    pf ppf "%s(@[<hov>%a@])@ : @[<hov>%a%a {}@]" name (list ~sep:comma pp)
+      fdcaptures (list ~sep:comma pp_init) fdcaptures pp_count ()
   in
   let pp_op ppf () =
     pf ppf "%a const @,{@,return %a;@,}@," (pp_signature true)
@@ -247,10 +247,7 @@ let pp_closure ppf (fdrt, fdname, fdcaptures, fdargs) =
   in
   let pp_api ppf () =
     let using_valueof ppf () =
-      pf ppf
-        "using ValueOf__ = \
-         %s<decltype(value_of(std::declval<local_scalar_t__>()))>;"
-        clsname
+      pf ppf "using ValueOf__ = %s<double>;" clsname
     in
     let pp f = list ~sep:comma (fun ppf (_, id, _) -> pf ppf "%s(%s)" f id) in
     let valueof ppf () =
@@ -264,25 +261,26 @@ let pp_closure ppf (fdrt, fdname, fdcaptures, fdargs) =
         clsname (pp "deep_copy_vars") fdcaptures
     in
     let zeros ppf () =
-      pf ppf "void zero_adjoints__() const {@ %a@ }"
-        (list (fun ppf (_, id, _) -> pf ppf "zero_adjoints(%s);" id))
+      pf ppf "void zero_adjoints__() {@ %a@ }"
+        (list ~sep:cut (fun ppf (_, id, _) ->
+             pf ppf "stan::math::zero_adjoints(%s);" id ))
         fdcaptures
     in
     let pp = list ~sep:comma (fun ppf (_, id, _) -> string ppf id) in
     let accumulate ppf () =
       pf ppf
-        "double accumulate_adjoints__(double *dest) const {@ return \
-         accumulate_adjoints(@[<hov>dest%a%a@]);@ }"
+        "double* accumulate_adjoints__(double *dest) const {@ return \
+         stan::math::accumulate_adjoints(@[<hov>dest%a%a@]);@ }"
         comma () pp fdcaptures
     in
     let save ppf () =
       pf ppf
         "stan::math::vari** save_varis__(stan::math::vari **dest) const {@ \
-         return save_varis(@[<hov>dest%a%a@]);@ }"
+         return stan::math::save_varis(@[<hov>dest%a%a@]);@ }"
         comma () pp fdcaptures
     in
     pf ppf
-      "@<hov>%s@]@ @[<hov>%a@]@ @[<hov>%a@]@ @[<hov>%a@]@ @[<hov>%a@]@ \
+      "@[<hov>%s@]@ @[<hov>%a@]@ @[<hov>%a@]@ @[<hov>%a@]@ @[<hov>%a@]@ \
        @[<hov>%a@]@ @[<hov>%a@]@ "
       "using captured_scalar_t__ = local_scalar_t__;" using_valueof () valueof
       () deepcopy () zeros () accumulate () save () ;
@@ -291,8 +289,7 @@ let pp_closure ppf (fdrt, fdname, fdcaptures, fdargs) =
   pf ppf
     "@,@,template<typename local_scalar_t__>@,class %s {@,%a@,public:@,const \
      size_t vars_count__;@ %a@ %a@ %a@ };@,"
-    clsname (list pp_member) fdcaptures pp_ctor fdname pp_op () pp_api () ;
-  ()
+    clsname (list pp_member) fdcaptures pp_ctor clsname pp_op () pp_api ()
 
 let pp_forward_decl funs_used_in_reduce_sum ppf
     Program.({fdrt; fdname; fdcaptures; fdargs; fdbody; _}) =

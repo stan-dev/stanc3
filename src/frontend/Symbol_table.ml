@@ -10,6 +10,8 @@ type 'a state =
   ; scopedepth: int ref
   ; readonly: (string, unit) Hashtbl.t
   ; isunassigned: (string, unit) Hashtbl.t
+  ; locals: String.Set.t ref
+  ; captures: String.Set.t ref
   ; globals: (string, unit) Hashtbl.t }
 
 let initialize () =
@@ -18,9 +20,12 @@ let initialize () =
   ; scopedepth= ref 0
   ; readonly= String.Table.create ()
   ; isunassigned= String.Table.create ()
+  ; locals= ref String.Set.empty
+  ; captures= ref String.Set.empty
   ; globals= String.Table.create () }
 
 let enter s str ty =
+  s.locals := Set.add !(s.locals) str ;
   let _ : [`Duplicate | `Ok] =
     if !(s.scopedepth) = 0 then Hashtbl.add s.globals ~key:str ~data:()
     else `Ok
@@ -28,7 +33,12 @@ let enter s str ty =
   let _ : [`Duplicate | `Ok] = Hashtbl.add s.table ~key:str ~data:ty in
   Stack.push s.stack str
 
-let look s str = Hashtbl.find s.table str
+let look s str =
+  match Hashtbl.find s.table str with
+  | Some x when not (Set.mem !(s.locals) str) ->
+      s.captures := Set.add !(s.captures) str ;
+      Some x
+  | x -> x
 
 let begin_scope s =
   s.scopedepth := !(s.scopedepth) + 1 ;
@@ -47,6 +57,18 @@ let end_scope s =
   done ;
   let _ : string = Stack.pop_exn s.stack in
   ()
+
+let with_capturing_scope s f =
+  let captures = !(s.captures) in
+  let locals = !(s.locals) in
+  s.locals := String.Set.empty ;
+  let x = f s in
+  s.locals := locals ;
+  let c = !(s.captures) in
+  s.captures := captures ;
+  (x, c)
+
+let check_is_local s str = Set.mem !(s.locals) str
 
 let set_read_only s str =
   let _ : [`Duplicate | `Ok] = Hashtbl.add s.readonly ~key:str ~data:() in
@@ -76,4 +98,6 @@ let unsafe_clear_symbol_table s =
   s.scopedepth := 0 ;
   Hashtbl.clear s.readonly ;
   Hashtbl.clear s.isunassigned ;
-  Hashtbl.clear s.globals
+  Hashtbl.clear s.globals ;
+  s.locals := String.Set.empty ;
+  s.captures := String.Set.empty

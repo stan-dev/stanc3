@@ -35,6 +35,8 @@ let%expect_test "format_number1" =
   format_number ".123_456" |> print_endline ;
   [%expect ".123456"]
 
+let closures = ref []
+
 let rec op_to_funapp op args =
   let argtypes =
     List.map ~f:(fun x -> (x.Ast.emeta.Ast.ad_level, x.emeta.type_)) args
@@ -517,9 +519,9 @@ let%expect_test "dist name suffix" =
 
 let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   let stmt_typed = ts.stmt and smeta = ts.smeta.loc in
-  let trans_stmt = trans_stmt ud_dists {declc with dconstrain= None} in
+  let translate_stmt = trans_stmt ud_dists {declc with dconstrain= None} in
   let trans_single_stmt s =
-    match trans_stmt s with
+    match translate_stmt s with
     | [s] -> s
     | s -> Stmt.Fixed.{pattern= SList s; meta= smeta}
   in
@@ -660,8 +662,26 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       in
       Stmt.Helpers.[ensure_var (for_each bodyfn) iteratee' smeta]
   | Ast.FunDef
-      {returntype; funname; captures= Some (implname, captures); arguments; _}
-    ->
+      { returntype
+      ; funname
+      ; captures= Some (implname, captures)
+      ; arguments
+      ; body } ->
+      closures :=
+        Program.
+          { fdrt=
+              (match returntype with Void -> None | ReturnType ut -> Some ut)
+          ; fdname= implname
+          ; fdcaptures=
+              Some (List.map ~f:(fun (ad, ty, id) -> (ad, id, ty)) captures)
+          ; fdargs= List.map ~f:trans_arg arguments
+          ; fdbody=
+              trans_stmt ud_dists
+                {dconstrain= None; dadlevel= AutoDiffable}
+                body
+              |> unwrap_block_or_skip
+          ; fdloc= ts.smeta.loc }
+        :: !closures ;
       let arguments = List.map ~f:(fun (ad, ut, _) -> (ad, ut)) arguments in
       let type_ = UnsizedType.UFun (arguments, returntype, true) in
       let captures =
@@ -697,7 +717,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       trans_decl declc smeta decl_type
         (Program.map_transformation trans_expr transformation)
         identifier initial_value
-  | Ast.Block stmts -> Block (List.concat_map ~f:trans_stmt stmts) |> swrap
+  | Ast.Block stmts -> Block (List.concat_map ~f:translate_stmt stmts) |> swrap
   | Ast.Return e -> Return (Some (trans_expr e)) |> swrap
   | Ast.ReturnVoid -> Return None |> swrap
   | Ast.Break -> Break |> swrap
@@ -883,6 +903,7 @@ let migrate_checks_to_end_of_block stmts =
   not_checks @ checks
 
 let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
+  closures := [] ;
   let {Ast.functionblock; datablock; transformeddatablock; modelblock; _} =
     p
   in
@@ -988,7 +1009,7 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
       "_" ^ prog_name
     else prog_name
   in
-  { functions_block= map (trans_fun_def ud_dists) functionblock
+  { functions_block= map (trans_fun_def ud_dists) functionblock @ !closures
   ; input_vars
   ; prepare_data
   ; log_prob

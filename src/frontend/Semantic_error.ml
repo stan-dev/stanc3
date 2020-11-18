@@ -409,6 +409,8 @@ module StatementError = struct
     | MismatchFunDefDecl of string * UnsizedType.t option
     | FunDeclExists of string
     | FunDeclNoDefn
+    | ClosureNoDefn
+    | ImpureClosure
     | FunDeclNeedsBlock
     | NonRealProbFunDef
     | ProbDensityNonRealVariate of UnsizedType.t option
@@ -419,7 +421,9 @@ module StatementError = struct
   let pp ppf = function
     | CannotAssignToReadOnly name ->
         Fmt.pf ppf
-          "Cannot assign to function argument or loop identifier '%s'." name
+          "Cannot assign to function argument, captured variable or loop \
+           identifier '%s'."
+          name
     | CannotAssignToGlobal name ->
         Fmt.pf ppf
           "Cannot assign to global variable '%s' declared in previous blocks."
@@ -484,6 +488,13 @@ For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
           name
     | FunDeclNoDefn ->
         Fmt.pf ppf "Some function is declared without specifying a definition."
+    | ClosureNoDefn ->
+        Fmt.pf ppf
+          "Local function is declared without specifying a definition."
+    | ImpureClosure ->
+        Fmt.pf ppf
+          "Local function cannot have suffix _rng, _lpdf, _lpmf, _lcdf, \
+           _lccdf, or _lp."
     | FunDeclNeedsBlock ->
         Fmt.pf ppf "Function definitions must be wrapped in curly braces."
     | NonRealProbFunDef ->
@@ -711,12 +722,15 @@ let fn_decl_exists loc name =
   StatementError (loc, StatementError.FunDeclExists name)
 
 let fn_decl_without_def loc = StatementError (loc, StatementError.FunDeclNoDefn)
+let closure_without_def loc = StatementError (loc, StatementError.ClosureNoDefn)
 
 let fn_decl_needs_block loc =
   StatementError (loc, StatementError.FunDeclNeedsBlock)
 
 let non_real_prob_fn_def loc =
   StatementError (loc, StatementError.NonRealProbFunDef)
+
+let impure_closure loc = StatementError (loc, StatementError.ImpureClosure)
 
 let prob_density_non_real_variate loc ut_opt =
   StatementError (loc, StatementError.ProbDensityNonRealVariate ut_opt)

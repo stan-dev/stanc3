@@ -1235,7 +1235,7 @@ Semantic error in 'functions-bad13.stan', line 3, column 4 to column 10:
      5:    }
    -------------------------------------------------
 
-Cannot assign to function argument or loop identifier 'x'.
+Cannot assign to function argument, captured variable or loop identifier 'x'.
 
   $ ../../../../install/default/bin/stanc functions-bad14.stan
 

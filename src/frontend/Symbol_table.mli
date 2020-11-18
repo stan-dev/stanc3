@@ -18,6 +18,13 @@ val begin_scope : 'a state -> unit
 val end_scope : 'a state -> unit
 (** Used to end a local scope, purging the symbol table of all symbols added in that scope *)
 
+val with_capturing_scope :
+  'a state -> ('a state -> 'b) -> 'b * Core_kernel.String.Set.t
+(** Used to record captures inside a closure *)
+
+val check_is_local : 'a state -> string -> bool
+(** Check whether an identifier is captured or not *)
+
 val set_read_only : 'a state -> string -> unit
 (** Used to add a read only label to an identifier *)
 
