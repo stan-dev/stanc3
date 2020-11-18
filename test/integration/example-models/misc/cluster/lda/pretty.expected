@@ -4,19 +4,19 @@ data {
   int<lower=2> V;
   int<lower=1> M;
   int<lower=1> N;
-  int<lower=1, upper=V> w[N];
-  int<lower=1, upper=M> doc[N];
+  array[N] int<lower=1, upper=V> w;
+  array[N] int<lower=1, upper=M> doc;
   vector<lower=0>[V] beta;
 }
 parameters {
   vector[K] mu;
   corr_matrix[K] Omega;
   vector<lower=0>[K] sigma;
-  vector[K] eta[M];
-  simplex[V] phi[K];
+  array[M] vector[K] eta;
+  array[K] simplex[V] phi;
 }
 transformed parameters {
-  simplex[K] theta[M];
+  array[M] simplex[K] theta;
   cov_matrix[K] Sigma;
   for (m in 1 : M) 
     theta[m] <- softmax(eta[m]);
@@ -37,7 +37,7 @@ model {
   for (m in 1 : M) 
     eta[m] ~ multi_normal(mu, Sigma);
   for (n in 1 : N) {
-    real gamma[K];
+    array[K] real gamma;
     for (k in 1 : K) 
       gamma[k] <- log(theta[doc[n], k]) + log(phi[k, w[n]]);
     increment_log_prob(log_sum_exp(gamma));
@@ -128,14 +128,14 @@ data {
   int<lower=2> V;
   int<lower=1> M;
   int<lower=1> N;
-  int<lower=1, upper=V> w[N];
-  int<lower=1, upper=M> doc[N];
+  array[N] int<lower=1, upper=V> w;
+  array[N] int<lower=1, upper=M> doc;
   vector<lower=0>[K] alpha;
   vector<lower=0>[V] beta;
 }
 parameters {
-  simplex[K] theta[M];
-  simplex[V] phi[K];
+  array[M] simplex[K] theta;
+  array[K] simplex[V] phi;
 }
 model {
   for (m in 1 : M) 
@@ -143,7 +143,7 @@ model {
   for (k in 1 : K) 
     phi[k] ~ dirichlet(beta);
   for (n in 1 : N) {
-    real gamma[K];
+    array[K] real gamma;
     for (k in 1 : K) 
       gamma[k] <- log(theta[doc[n], k]) + log(phi[k, w[n]]);
     increment_log_prob(log_sum_exp(gamma));

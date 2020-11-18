@@ -2,15 +2,15 @@
 data {
   int<lower=0> Ndoses;
   int<lower=0> Nplates;
-  int<lower=0> y[Ndoses, Nplates];
-  real x[Ndoses];
+  array[Ndoses, Nplates] int<lower=0> y;
+  array[Ndoses] real x;
 }
 transformed data {
-  real logx[Ndoses];
+  array[Ndoses] real logx;
   real mean_x;
   real mean_logx;
-  real centered_x[Ndoses];
-  real centered_logx[Ndoses];
+  array[Ndoses] real centered_x;
+  array[Ndoses] real centered_logx;
   mean_x <- mean(x);
   for (dose in 1 : Ndoses) 
     centered_x[dose] <- x[dose] - mean_x;
@@ -25,7 +25,7 @@ parameters {
   real beta;
   real gamma;
   real<lower=0> tau;
-  vector[Nplates] lambda[Ndoses];
+  array[Ndoses] vector[Nplates] lambda;
 }
 transformed parameters {
   real<lower=0> sigma;
@@ -163,15 +163,15 @@ assignment operator <- is deprecated in the Stan language; use = instead.
 data {
   int<lower=0> Ndoses;
   int<lower=0> Nplates;
-  int<lower=0> y[Ndoses, Nplates];
-  real<lower=0> x[Ndoses];
+  array[Ndoses, Nplates] int<lower=0> y;
+  array[Ndoses] real<lower=0> x;
 }
 parameters {
   real alpha;
   real beta;
   real gamma;
   real<lower=0> tau;
-  vector[Nplates] lambda[Ndoses];
+  array[Ndoses] vector[Nplates] lambda;
 }
 transformed parameters {
   real<lower=0> sigma;

@@ -1,9 +1,9 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format hearts.stan
 data {
   int<lower=0> N;
-  int<lower=0> x[N];
-  int<lower=0> y[N];
-  int<lower=0> t[N];
+  array[N] int<lower=0> x;
+  array[N] int<lower=0> y;
+  array[N] int<lower=0> t;
 }
 parameters {
   real alpha;

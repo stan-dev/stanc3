@@ -2,12 +2,12 @@
 data {
   int<lower=0> Ndogs;
   int<lower=0> Ntrials;
-  int Y[Ndogs, Ntrials];
+  array[Ndogs, Ntrials] int Y;
 }
 transformed data {
-  int y[Ndogs, Ntrials];
-  int xa[Ndogs, Ntrials];
-  int xs[Ndogs, Ntrials];
+  array[Ndogs, Ntrials] int y;
+  array[Ndogs, Ntrials] int xa;
+  array[Ndogs, Ntrials] int xs;
   for (dog in 1 : Ndogs) {
     xa[dog, 1] <- 0;
     xs[dog, 1] <- 0;

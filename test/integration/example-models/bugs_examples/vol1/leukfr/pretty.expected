@@ -2,16 +2,16 @@
 data {
   int<lower=0> N;
   int<lower=0> NT;
-  int<lower=0> obs_t[N];
-  int<lower=0> t[NT + 1];
-  int<lower=0> fail[N];
+  array[N] int<lower=0> obs_t;
+  array[NT + 1] int<lower=0> t;
+  array[N] int<lower=0> fail;
   int<lower=0> Npair;
-  int<lower=0> pair[N];
-  real Z[N];
+  array[N] int<lower=0> pair;
+  array[N] real Z;
 }
 transformed data {
-  int Y[N, NT];
-  int dN[N, NT];
+  array[N, NT] int Y;
+  array[N, NT] int dN;
   real c;
   real r;
   for (i in 1 : N) {
@@ -27,8 +27,8 @@ transformed data {
 parameters {
   real beta;
   real<lower=0> tau;
-  real<lower=0> dL0[NT];
-  real b[Npair];
+  array[NT] real<lower=0> dL0;
+  array[Npair] real b;
 }
 transformed parameters {
   real<lower=0> sigma;

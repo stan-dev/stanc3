@@ -4,9 +4,9 @@ data {
   real beta;
   real<lower=0> sigma2;
   int<lower=0> J;
-  int y[J];
+  array[J] int y;
   vector[J] Z;
-  int n[J];
+  array[J] int n;
 }
 transformed data {
   real<lower=0> sigma;
@@ -18,7 +18,7 @@ parameters {
   vector[J] X;
 }
 model {
-  real p[J];
+  array[J] real p;
   theta1 ~ normal(0, 32);
   theta2 ~ normal(0, 32);
   X ~ normal(alpha + beta * Z, sigma);

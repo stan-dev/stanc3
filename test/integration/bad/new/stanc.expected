@@ -1946,6 +1946,7 @@ Expected an expression inside "[" and "]" but found a statement. Indexing should
 not
   var[for (n in 1:N) ...]
 
+
   $ ../../../../../install/default/bin/stanc lexing_error.stan
 
 Syntax error in 'lexing_error.stan', line 1, column 6, lexing error:
@@ -2474,7 +2475,7 @@ Syntax error in 'mystery26.stan', line 1, column 21 to column 22, parsing error:
                                ^
    -------------------------------------------------
 
-Found an ill-formed expression where we expected a statement. Did you forget to close your "["?
+Ill-formed expression. We expect a comma separated list of expressions, followed by "]".
 
 
   $ ../../../../../install/default/bin/stanc mystery27.stan

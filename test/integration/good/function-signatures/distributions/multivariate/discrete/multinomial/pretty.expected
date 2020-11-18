@@ -1,7 +1,7 @@
   $ ../../../../../../../../../install/default/bin/stanc --auto-format multinomial_log.stan
 data {
   int d_int;
-  int d_int_array[d_int];
+  array[d_int] int d_int_array;
   vector[d_int] d_vector;
 }
 transformed data {
@@ -24,7 +24,7 @@ model {
   $ ../../../../../../../../../install/default/bin/stanc --auto-format multinomial_logit_lpmf.stan
 data {
   int d_int;
-  int d_int_array[d_int];
+  array[d_int] int d_int_array;
   vector[d_int] d_vector;
 }
 transformed data {

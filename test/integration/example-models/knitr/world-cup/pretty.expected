@@ -18,8 +18,8 @@ data {
   int N_teams;
   int N_games;
   vector[N_teams] prior_score;
-  int team_1[N_games];
-  int team_2[N_games];
+  array[N_games] int team_1;
+  array[N_games] int team_2;
   vector[N_games] score_1;
   vector[N_games] score_2;
   real df;
@@ -52,8 +52,8 @@ data {
   int N_teams;
   int N_games;
   vector[N_teams] prior_score;
-  int team_1[N_games];
-  int team_2[N_games];
+  array[N_games] int team_1;
+  array[N_games] int team_2;
   vector[N_games] score_1;
   vector[N_games] score_2;
   real df;
@@ -86,8 +86,8 @@ data {
   int N_teams;
   int N_games;
   vector[N_teams] prior_score;
-  int team_1[N_games];
-  int team_2[N_games];
+  array[N_games] int team_1;
+  array[N_games] int team_2;
   vector[N_games] score_1;
   vector[N_games] score_2;
   real df;
@@ -128,8 +128,8 @@ data {
   int N_teams;
   int N_games;
   vector[N_teams] prior_score;
-  int team_1[N_games];
-  int team_2[N_games];
+  array[N_games] int team_1;
+  array[N_games] int team_2;
   vector[N_games] score_1;
   vector[N_games] score_2;
   real df;
@@ -164,8 +164,8 @@ data {
   int N_teams;
   int N_games;
   vector[N_teams] prior_score;
-  int team_1[N_games];
-  int team_2[N_games];
+  array[N_games] int team_1;
+  array[N_games] int team_2;
   vector[N_games] score_1;
   vector[N_games] score_2;
   real df;

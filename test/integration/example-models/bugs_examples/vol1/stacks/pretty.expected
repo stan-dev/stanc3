@@ -2,13 +2,13 @@
 data {
   int<lower=0> N;
   int<lower=0> p;
-  real Y[N];
+  array[N] real Y;
   matrix[N, p] x;
 }
 transformed data {
   matrix[N, p] z;
   row_vector[p] mean_x;
-  real sd_x[p];
+  array[p] real sd_x;
   for (j in 1 : p) {
     mean_x[j] <- mean(col(x, j));
     sd_x[j] <- sd(col(x, j));
@@ -216,13 +216,13 @@ assignment operator <- is deprecated in the Stan language; use = instead.
 data {
   int<lower=0> N;
   int<lower=0> p;
-  real Y[N];
+  array[N] real Y;
   matrix[N, p] x;
 }
 transformed data {
   matrix[N, p] z;
   row_vector[p] mean_x;
-  real sd_x[p];
+  array[p] real sd_x;
   for (j in 1 : p) {
     mean_x[j] <- mean(col(x, j));
     sd_x[j] <- sd(col(x, j));
@@ -445,13 +445,13 @@ assignment operator <- is deprecated in the Stan language; use = instead.
 data {
   int<lower=0> N;
   int<lower=0> p;
-  real Y[N];
+  array[N] real Y;
   matrix[N, p] x;
 }
 transformed data {
   matrix[N, p] z;
   row_vector[p] mean_x;
-  real sd_x[p];
+  array[p] real sd_x;
   real d;
   for (j in 1 : p) {
     mean_x[j] <- mean(col(x, j));
@@ -674,13 +674,13 @@ assignment operator <- is deprecated in the Stan language; use = instead.
 data {
   int<lower=0> N;
   int<lower=0> p;
-  real Y[N];
+  array[N] real Y;
   matrix[N, p] x;
 }
 transformed data {
   matrix[N, p] z;
   row_vector[p] mean_x;
-  real sd_x[p];
+  array[p] real sd_x;
   for (j in 1 : p) {
     mean_x[j] <- mean(col(x, j));
     sd_x[j] <- sd(col(x, j));
@@ -890,13 +890,13 @@ assignment operator <- is deprecated in the Stan language; use = instead.
 data {
   int<lower=0> N;
   int<lower=0> p;
-  real Y[N];
+  array[N] real Y;
   matrix[N, p] x;
 }
 transformed data {
-  real z[N, p];
-  real mean_x[p];
-  real sd_x[p];
+  array[N, p] real z;
+  array[p] real mean_x;
+  array[p] real sd_x;
   for (j in 1 : p) {
     mean_x[j] <- mean(col(x, j));
     sd_x[j] <- sd(col(x, j));
@@ -906,13 +906,13 @@ transformed data {
 }
 parameters {
   real beta0;
-  real beta[p];
+  array[p] real beta;
   real<lower=0> sigmasq;
   real<lower=0> phi;
 }
 transformed parameters {
   real<lower=0> sigma;
-  real mu[N];
+  array[N] real mu;
   sigma <- sqrt(2) * sigmasq;
   for (n in 1 : N) 
     mu[n] <- beta0 + beta[1] * z[n, 1] + beta[2] * z[n, 2]
@@ -928,7 +928,7 @@ model {
 }
 generated quantities {
   real b0;
-  real b[p];
+  array[p] real b;
   real outlier_1;
   real outlier_3;
   real outlier_4;
@@ -1124,13 +1124,13 @@ assignment operator <- is deprecated in the Stan language; use = instead.
 data {
   int<lower=0> N;
   int<lower=0> p;
-  real Y[N];
+  array[N] real Y;
   matrix[N, p] x;
 }
 transformed data {
   matrix[N, p] z;
   row_vector[p] mean_x;
-  real sd_x[p];
+  array[p] real sd_x;
   real d;
   for (j in 1 : p) {
     mean_x[j] <- mean(col(x, j));

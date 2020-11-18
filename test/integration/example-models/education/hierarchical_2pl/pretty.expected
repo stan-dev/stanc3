@@ -3,13 +3,13 @@ data {
   int<lower=1> I;
   int<lower=1> J;
   int<lower=1> N;
-  int<lower=1, upper=I> ii[N];
-  int<lower=1, upper=J> jj[N];
-  int<lower=0, upper=1> y[N];
+  array[N] int<lower=1, upper=I> ii;
+  array[N] int<lower=1, upper=J> jj;
+  array[N] int<lower=0, upper=1> y;
 }
 parameters {
   vector[J] theta;
-  vector[2] xi[I];
+  array[I] vector[2] xi;
   vector[2] mu;
   vector<lower=0>[2] tau;
   cholesky_factor_corr[2] L_Omega;

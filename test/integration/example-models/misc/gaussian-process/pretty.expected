@@ -1,6 +1,7 @@
   $ ../../../../../../install/default/bin/stanc --auto-format gp-fit-ARD.stan
 functions {
-  matrix L_cov_exp_quad_ARD(vector[] x, real alpha, vector rho, real delta) {
+  matrix L_cov_exp_quad_ARD(array[] vector x, real alpha, vector rho,
+                            real delta) {
     int N = size(x);
     matrix[N, N] K;
     real neg_half = -0.5;
@@ -19,7 +20,7 @@ functions {
 data {
   int<lower=1> N;
   int<lower=1> D;
-  vector[D] x[N];
+  array[N] vector[D] x;
   vector[N] y;
 }
 transformed data {
@@ -47,7 +48,7 @@ model {
   $ ../../../../../../install/default/bin/stanc --auto-format gp-fit-latent.stan
 data {
   int<lower=1> N;
-  real x[N];
+  array[N] real x;
   vector[N] y;
 }
 transformed data {
@@ -81,8 +82,8 @@ Warning: in 'gp-fit-latent.stan', line 22, column 21 to column 48: cov_exp_quad 
   $ ../../../../../../install/default/bin/stanc --auto-format gp-fit-logit.stan
 data {
   int<lower=1> N;
-  real x[N];
-  int<lower=0, upper=1> z[N];
+  array[N] real x;
+  array[N] int<lower=0, upper=1> z;
 }
 transformed data {
   real delta = 1e-9;
@@ -116,7 +117,7 @@ Warning: in 'gp-fit-logit.stan', line 22, column 21 to column 48: cov_exp_quad i
 data {
   int<lower=1> N;
   int<lower=1> D;
-  real x[N];
+  array[N] real x;
   matrix[N, D] y;
 }
 transformed data {
@@ -156,8 +157,8 @@ Warning: in 'gp-fit-multi-output.stan', line 22, column 21 to column 46: cov_exp
   $ ../../../../../../install/default/bin/stanc --auto-format gp-fit-pois.stan
 data {
   int<lower=1> N;
-  real x[N];
-  int<lower=0> y[N];
+  array[N] real x;
+  array[N] int<lower=0> y;
 }
 transformed data {
   real delta = 1e-9;
@@ -190,7 +191,7 @@ Warning: in 'gp-fit-pois.stan', line 22, column 21 to column 48: cov_exp_quad is
   $ ../../../../../../install/default/bin/stanc --auto-format gp-fit.stan
 data {
   int<lower=1> N;
-  real x[N];
+  array[N] real x;
   vector[N] y;
 }
 transformed data {
@@ -218,8 +219,8 @@ model {
 Warning: in 'gp-fit.stan', line 19, column 19 to column 46: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
   $ ../../../../../../install/default/bin/stanc --auto-format gp-predict-analytic.stan
 functions {
-  vector gp_pred_rng(real[] x2, vector y1, real[] x1, real alpha, real rho,
-                     real sigma, real delta) {
+  vector gp_pred_rng(array[] real x2, vector y1, array[] real x1, real alpha,
+                     real rho, real sigma, real delta) {
     int N1 = rows(y1);
     int N2 = size(x2);
     vector[N2] f2;
@@ -249,10 +250,10 @@ functions {
 }
 data {
   int<lower=1> N1;
-  real x1[N1];
+  array[N1] real x1;
   vector[N1] y1;
   int<lower=1> N2;
-  real x2[N2];
+  array[N2] real x2;
 }
 transformed data {
   vector[N1] mu = rep_vector(0, N1);
@@ -296,15 +297,15 @@ Warning: in 'gp-predict-analytic.stan', line 59, column 23 to column 51: cov_exp
   $ ../../../../../../install/default/bin/stanc --auto-format gp-predict-logit.stan
 data {
   int<lower=1> N1;
-  real x1[N1];
-  int<lower=0, upper=1> z1[N1];
+  array[N1] real x1;
+  array[N1] int<lower=0, upper=1> z1;
   int<lower=1> N2;
-  real x2[N2];
+  array[N2] real x2;
 }
 transformed data {
   real delta = 1e-9;
   int<lower=1> N = N1 + N2;
-  real x[N];
+  array[N] real x;
   for (n1 in 1 : N1) 
     x[n1] = x1[n1];
   for (n2 in 1 : N2) 
@@ -335,7 +336,7 @@ model {
   z1 ~ bernoulli_logit(a + f[1 : N1]);
 }
 generated quantities {
-  int z2[N2];
+  array[N2] int z2;
   for (n2 in 1 : N2) 
     z2[n2] = bernoulli_logit_rng(a + f[N1 + n2]);
 }
@@ -345,15 +346,15 @@ Warning: in 'gp-predict-logit.stan', line 29, column 21 to column 48: cov_exp_qu
   $ ../../../../../../install/default/bin/stanc --auto-format gp-predict.stan
 data {
   int<lower=1> N1;
-  real x1[N1];
+  array[N1] real x1;
   vector[N1] y1;
   int<lower=1> N2;
-  real x2[N2];
+  array[N2] real x2;
 }
 transformed data {
   real delta = 1e-9;
   int<lower=1> N = N1 + N2;
-  real x[N];
+  array[N] real x;
   for (n1 in 1 : N1) 
     x[n1] = x1[n1];
   for (n2 in 1 : N2) 
@@ -394,7 +395,7 @@ Warning: in 'gp-predict.stan', line 29, column 21 to column 48: cov_exp_quad is 
   $ ../../../../../../install/default/bin/stanc --auto-format gp-sim-cholesky.stan
 data {
   int<lower=1> N;
-  real x[N];
+  array[N] real x;
 }
 transformed data {
   vector[N] mu = rep_vector(0, N);
@@ -423,7 +424,7 @@ Warning: in 'gp-sim-cholesky.stan', line 14, column 21 to column 46: cov_exp_qua
 data {
   int<lower=1> N;
   int<lower=1> D;
-  real x[N];
+  array[N] real x;
 }
 transformed data {
   real delta = 1e-9;
@@ -461,7 +462,7 @@ Warning: in 'gp-sim-multi-output.stan', line 23, column 21 to column 46: cov_exp
 data {
   int<lower=1> N;
   int<lower=1> D;
-  vector[D] x[N];
+  array[N] vector[D] x;
 }
 transformed data {
   matrix[N, N] K = cov_exp_quad(x, 1.0, 1.0);
@@ -481,7 +482,7 @@ Warning: in 'gp-sim-multi.stan', line 11, column 19 to column 44: cov_exp_quad i
   $ ../../../../../../install/default/bin/stanc --auto-format gp-sim-naive.stan
 data {
   int<lower=1> N;
-  real x[N];
+  array[N] real x;
 }
 transformed data {
   matrix[N, N] K;
@@ -505,7 +506,7 @@ model {
   $ ../../../../../../install/default/bin/stanc --auto-format gp-sim.stan
 data {
   int<lower=1> N;
-  real x[N];
+  array[N] real x;
 }
 transformed data {
   matrix[N, N] K = cov_exp_quad(x, 1.0, 1.0);

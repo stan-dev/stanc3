@@ -1,8 +1,8 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format beetles_cloglog.stan
 data {
   int<lower=0> N;
-  int<lower=0> n[N];
-  int<lower=0> r[N];
+  array[N] int<lower=0> n;
+  array[N] int<lower=0> r;
   vector[N] x;
 }
 transformed data {
@@ -16,7 +16,7 @@ parameters {
   real beta;
 }
 transformed parameters {
-  real p[N];
+  array[N] real p;
   for (i in 1 : N) 
     p[i] <- inv_cloglog(alpha_star + beta * centered_x[i]);
 }
@@ -27,8 +27,8 @@ model {
 }
 generated quantities {
   real alpha;
-  real llike[N];
-  real rhat[N];
+  array[N] real llike;
+  array[N] real rhat;
   alpha <- alpha_star - beta * mean_x;
   for (i in 1 : N) {
     llike[i] <- r[i] * log(p[i]) + (n[i] - r[i]) * log(1 - p[i]);
@@ -117,8 +117,8 @@ assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format beetles_logit.stan
 data {
   int<lower=0> N;
-  int<lower=0> n[N];
-  int<lower=0> r[N];
+  array[N] int<lower=0> n;
+  array[N] int<lower=0> r;
   vector[N] x;
 }
 transformed data {
@@ -142,9 +142,9 @@ model {
 }
 generated quantities {
   real alpha;
-  real p[N];
-  real llike[N];
-  real rhat[N];
+  array[N] real p;
+  array[N] real llike;
+  array[N] real rhat;
   for (i in 1 : N) {
     p[i] <- inv_logit(m[i]);
     llike[i] <- r[i] * log(p[i]) + (n[i] - r[i]) * log(1 - p[i]);
@@ -247,8 +247,8 @@ assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format beetles_probit.stan
 data {
   int<lower=0> N;
-  int<lower=0> n[N];
-  int<lower=0> r[N];
+  array[N] int<lower=0> n;
+  array[N] int<lower=0> r;
   vector[N] x;
 }
 transformed data {
@@ -262,7 +262,7 @@ parameters {
   real beta;
 }
 transformed parameters {
-  real p[N];
+  array[N] real p;
   for (i in 1 : N) 
     p[i] <- Phi(alpha_star + beta * centered_x[i]);
 }
@@ -273,8 +273,8 @@ model {
 }
 generated quantities {
   real alpha;
-  real llike[N];
-  real rhat[N];
+  array[N] real llike;
+  array[N] real rhat;
   alpha <- alpha_star - beta * mean_x;
   for (i in 1 : N) {
     llike[i] <- r[i] * log(p[i]) + (n[i] - r[i]) * log(1 - p[i]);

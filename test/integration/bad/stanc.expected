@@ -1,3 +1,39 @@
+  $ ../../../../install/default/bin/stanc array-expr-decl-bad1.stan
+
+Syntax error in 'array-expr-decl-bad1.stan', line 2, column 2 to column 16, parsing error:
+   -------------------------------------------------
+     1:  data {
+     2:    array[1:2,2,:] real x;
+                         ^
+     3:  }
+   -------------------------------------------------
+
+Dimensions should be expressions, not multiple or range indexing.
+
+  $ ../../../../install/default/bin/stanc array-expr-decl-bad2.stan
+
+Syntax error in 'array-expr-decl-bad2.stan', line 2, column 2 to column 15, parsing error:
+   -------------------------------------------------
+     1:  data {
+     2:    blahblah[1,2] real x;
+                        ^
+     3:  }
+   -------------------------------------------------
+
+Found a declaration following an expression.
+
+  $ ../../../../install/default/bin/stanc array-expr-decl-bad3.stan
+
+Syntax error in 'array-expr-decl-bad3.stan', line 2, column 2 to column 6, parsing error:
+   -------------------------------------------------
+     1:  data {
+     2:    asdf real x;
+               ^
+     3:  }
+   -------------------------------------------------
+
+Found a declaration following an expression.
+
   $ ../../../../install/default/bin/stanc array_expr_bad1.stan
 
 Semantic error in 'array_expr_bad1.stan', line 2, column 2 to column 32:
@@ -390,17 +426,18 @@ Continue statements may only be used in loops.
 
   $ ../../../../install/default/bin/stanc declare-define-param-block.stan
 
-Syntax error in 'declare-define-param-block.stan', line 6, column 7 to column 8, parsing error:
+Syntax error in 'declare-define-param-block.stan', line 6, column 9 to column 10, parsing error:
    -------------------------------------------------
      4:  parameters {
      5:    real y;
      6:    real z = d_r;
-                 ^
+                   ^
      7:  }
      8:  model {
    -------------------------------------------------
 
-";" is expected after a top-level variable declaration.
+Cannot assign to variables in the `data` or `parameters` blocks; expected ';'
+after variable declaration.
 
 
   $ ../../../../install/default/bin/stanc declare-define-var-double-1.stan
@@ -433,32 +470,34 @@ Ill-typed arguments supplied to assignment operator =: lhs has type vector and r
 
   $ ../../../../install/default/bin/stanc declare-define-var-double-3.stan
 
-Syntax error in 'declare-define-var-double-3.stan', line 3, column 7 to column 9, parsing error:
+Syntax error in 'declare-define-var-double-3.stan', line 3, column 10 to column 11, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real a1[2];
      3:    real a2 = 1.0; // cannot assign in data block
-                  ^
+                    ^
      4:  }
      5:  parameters {
    -------------------------------------------------
 
-";" is expected after a top-level variable declaration.
+Cannot assign to variables in the `data` or `parameters` blocks; expected ';'
+after variable declaration.
 
 
   $ ../../../../install/default/bin/stanc declare-define-var-double-4.stan
 
-Syntax error in 'declare-define-var-double-4.stan', line 6, column 7 to column 9, parsing error:
+Syntax error in 'declare-define-var-double-4.stan', line 6, column 10 to column 11, parsing error:
    -------------------------------------------------
      4:  parameters {
      5:    real y;
      6:    real a2 = 1.0; // cannot assign in parameters block
-                  ^
+                    ^
      7:  }
      8:  model {
    -------------------------------------------------
 
-";" is expected after a top-level variable declaration.
+Cannot assign to variables in the `data` or `parameters` blocks; expected ';'
+after variable declaration.
 
 
   $ ../../../../install/default/bin/stanc declare-define-var-int-1.stan
@@ -602,15 +641,16 @@ Ill-formed phrase. Found L-value. This can be completed in many ways.
 
   $ ../../../../install/default/bin/stanc err-decl-double.stan
 
-Syntax error in 'err-decl-double.stan', line 1, column 5 to column 6, parsing error:
+Syntax error in 'err-decl-double.stan', line 2, column 2 to column 8, parsing error:
    -------------------------------------------------
      1:  data {
-               ^
      2:    double y;
+                 ^
      3:  }
+     4:  model {
    -------------------------------------------------
 
-Expected top-level variable declaration or "}".
+Invalid type in declaration.
 
 
   $ ../../../../install/default/bin/stanc err-decl-matrix-2.stan

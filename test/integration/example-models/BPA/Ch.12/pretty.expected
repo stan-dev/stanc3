@@ -1,7 +1,7 @@
   $ ../../../../../../install/default/bin/stanc --auto-format Nmix0.stan
 functions {
-  real bivariate_poisson_log_lpmf(int[] n, real log_lambda, real p) {
-    real s[min(n) + 1];
+  real bivariate_poisson_log_lpmf(array[] int n, real log_lambda, real p) {
+    array[min(n) + 1] real s;
     real log_theta_1 = log_lambda + log(p) + log1m(p);
     real log_theta_0 = log_lambda + log(p) * 2;
     if (size(n) != 2) 
@@ -18,13 +18,13 @@ functions {
 data {
   int<lower=1> R;
   int<lower=1> T;
-  int<lower=-1> y[R, 2, 7];
-  int<lower=1, upper=7> first[R];
-  int<lower=1, upper=7> last[R];
+  array[R, 2, 7] int<lower=-1> y;
+  array[R] int<lower=1, upper=7> first;
+  array[R] int<lower=1, upper=7> last;
   int<lower=1> K;
 }
 transformed data {
-  int<lower=0> max_y[R, 7];
+  array[R, 7] int<lower=0> max_y;
   for (i in 1 : R) {
     for (k in 1 : (first[i] - 1)) 
       max_y[i, k] = 0;
@@ -45,16 +45,16 @@ model {
       y[i, 1 : T, k] ~ bivariate_poisson_log(alpha_lam[k], p[k]);
 }
 generated quantities {
-  int totalN[7];
+  array[7] int totalN;
   real fit = 0;
   real fit_new = 0;
   vector[7] mean_abundance;
   {
-    int N[R, 7];
-    real eval[R, 7];
-    int y_new[R, T, 7];
-    matrix[T, 7] E[R];
-    matrix[T, 7] E_new[R];
+    array[R, 7] int N;
+    array[R, 7] real eval;
+    array[R, T, 7] int y_new;
+    array[R] matrix[T, 7] E;
+    array[R] matrix[T, 7] E_new;
     N = rep_array(0, R, 7);
     E[1] = rep_matrix(0, T, 7);
     E_new[1] = rep_matrix(0, T, 7);
@@ -92,8 +92,8 @@ generated quantities {
 
   $ ../../../../../../install/default/bin/stanc --auto-format Nmix1.stan
 functions {
-  real bivariate_poisson_log_lpmf(int[] n, real log_lambda, real p) {
-    real s[min(n) + 1];
+  real bivariate_poisson_log_lpmf(array[] int n, real log_lambda, real p) {
+    array[min(n) + 1] real s;
     real log_theta_1 = log_lambda + log(p) + log1m(p);
     real log_theta_0 = log_lambda + log(p) * 2;
     if (size(n) != 2) 
@@ -106,7 +106,7 @@ functions {
                  + poisson_log_lpmf(u| log_theta_0);
     return log_sum_exp(s);
   }
-  real poisbin_lpmf(int[] y, int n, real log_lambda, real p) {
+  real poisbin_lpmf(array[] int y, int n, real log_lambda, real p) {
     if (max(y) > n) 
       return negative_infinity();
     return poisson_log_lpmf(n| log_lambda) + binomial_lpmf(y| n, p);
@@ -115,14 +115,14 @@ functions {
 data {
   int<lower=1> R;
   int<lower=1> T;
-  int<lower=-1> y[R, 2, 7];
-  int<lower=1, upper=7> first[R];
-  int<lower=1, upper=7> last[R];
+  array[R, 2, 7] int<lower=-1> y;
+  array[R] int<lower=1, upper=7> first;
+  array[R] int<lower=1, upper=7> last;
   int<lower=0> K;
 }
 transformed data {
-  int<lower=0> max_y[R, 7];
-  int<lower=0> max_y_site[R];
+  array[R, 7] int<lower=0> max_y;
+  array[R] int<lower=0> max_y_site;
   for (i in 1 : R) {
     for (k in 1 : (first[i] - 1)) 
       max_y[i, k] = 0;
@@ -149,7 +149,7 @@ model {
       target += lp;
     }
     else {
-      real lp[2];
+      array[2] real lp;
       lp[1] = bernoulli_lpmf(0| omega);
       lp[2] = bernoulli_lpmf(1| omega);
       for (k in first[i] : last[i]) 
@@ -160,16 +160,16 @@ model {
   }
 }
 generated quantities {
-  int totalN[7];
+  array[7] int totalN;
   real fit = 0;
   real fit_new = 0;
   vector[7] mean_abundance;
   {
-    int N[R, 7];
-    real eval[R, 7];
-    int y_new[R, T, 7];
-    matrix[T, 7] E[R];
-    matrix[T, 7] E_new[R];
+    array[R, 7] int N;
+    array[R, 7] real eval;
+    array[R, T, 7] int y_new;
+    array[R] matrix[T, 7] E;
+    array[R] matrix[T, 7] E_new;
     N = rep_array(0, R, 7);
     E[1] = rep_matrix(0, T, 7);
     E_new[1] = rep_matrix(0, T, 7);
@@ -214,8 +214,9 @@ generated quantities {
 
   $ ../../../../../../install/default/bin/stanc --auto-format Nmix2.stan
 functions {
-  real bivariate_poisson_log_lpmf(int[] n, real log_lambda, real[] p) {
-    real s[min(n) + 1];
+  real bivariate_poisson_log_lpmf(array[] int n, real log_lambda,
+                                  array[] real p) {
+    array[min(n) + 1] real s;
     if (size(n) != 2) 
       reject("Size of n must be 2.");
     if (p[1] < 0 || p[1] > 1 || p[2] < 0 || p[2] > 1) 
@@ -232,14 +233,14 @@ functions {
 data {
   int<lower=1> R;
   int<lower=1> T;
-  int<lower=-1> y[R, 2, 7];
-  int<lower=1, upper=7> first[R];
-  int<lower=1, upper=7> last[R];
+  array[R, 2, 7] int<lower=-1> y;
+  array[R] int<lower=1, upper=7> first;
+  array[R] int<lower=1, upper=7> last;
   int<lower=0> K;
 }
 transformed data {
-  int<lower=0> max_y[R, 7];
-  int<lower=0, upper=R> num_obs_site[7];
+  array[R, 7] int<lower=0> max_y;
+  array[7] int<lower=0, upper=R> num_obs_site;
   for (i in 1 : R) {
     for (k in 1 : (first[i] - 1)) 
       max_y[i, k] = 0;
@@ -260,7 +261,7 @@ parameters {
   vector<upper=7>[R] eps_raw;
   real<lower=0> sd_lam;
   real<lower=0> sd_p;
-  vector<lower=-7, upper=7>[7] logit_p[R, T];
+  array[R, T] vector<lower=-7, upper=7>[7] logit_p;
 }
 transformed parameters {
   vector[R] eps;
@@ -285,19 +286,19 @@ model {
                                              inv_logit(logit_p[i, 1 : 2, k]));
 }
 generated quantities {
-  int totalN[7];
+  array[7] int totalN;
   vector[7] mean_abundance;
   vector[7] mean_N;
   vector[7] mean_detection;
   real fit = 0;
   real fit_new = 0;
   {
-    int N[R, 7];
-    real eval[R, T, 7];
-    real y_new[R, T, 7];
-    vector[7] p[R, T];
-    matrix[T, 7] E[R];
-    matrix[T, 7] E_new[R];
+    array[R, 7] int N;
+    array[R, T, 7] real eval;
+    array[R, T, 7] real y_new;
+    array[R, T] vector[7] p;
+    array[R] matrix[T, 7] E;
+    array[R] matrix[T, 7] E_new;
     matrix[R, 7] ik_p;
     N = rep_array(0, R, 7);
     ik_p = rep_matrix(0, R, 7);
@@ -346,11 +347,11 @@ generated quantities {
 data {
   int<lower=0> R;
   int<lower=0> T;
-  int<lower=0> y[R, T];
+  array[R, T] int<lower=0> y;
   int<lower=0> K;
 }
 transformed data {
-  int<lower=0> max_y[R];
+  array[R] int<lower=0> max_y;
   for (i in 1 : R) 
     max_y[i] = max(y[i]);
 }
@@ -373,12 +374,12 @@ model {
 data {
   int<lower=0> R;
   int<lower=0> T;
-  int<lower=0> y[R, T];
+  array[R, T] int<lower=0> y;
   vector[R] X;
   int<lower=0> K;
 }
 transformed data {
-  int<lower=0> max_y[R];
+  array[R] int<lower=0> max_y;
   for (i in 1 : R) 
     max_y[i] = max(y[i]);
 }
@@ -404,7 +405,7 @@ model {
   }
 }
 generated quantities {
-  int N[R];
+  array[R] int N;
   int totalN;
   for (i in 1 : R) 
     N[i] = poisson_log_rng(log_lambda[i]);

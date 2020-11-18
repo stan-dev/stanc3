@@ -1,10 +1,10 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format blocker.stan
 data {
   int<lower=0> N;
-  int<lower=0> nt[N];
-  int<lower=0> rt[N];
-  int<lower=0> nc[N];
-  int<lower=0> rc[N];
+  array[N] int<lower=0> nt;
+  array[N] int<lower=0> rt;
+  array[N] int<lower=0> nc;
+  array[N] int<lower=0> rc;
 }
 parameters {
   real d;

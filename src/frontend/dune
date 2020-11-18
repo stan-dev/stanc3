@@ -22,26 +22,25 @@
 
 (rule
  (with-stdout-to parser_updated.messages
-  (run menhir %{dep:parser.mly} --update-errors %{dep:parser.messages}))
-)
+  (run menhir %{dep:parser.mly} --update-errors %{dep:parser.messages})))
 
-(alias
- (name update_messages)
-  (action (diff parser.messages parser_updated.messages)))
+(rule
+ (with-stdout-to parser_updated_trimmed.messages
+  (run %{dep:strip_redundant_parser_state.py} %{dep:parser_updated.messages})))
 
 (rule
  (targets parser_new.messages)
- (deps parser.mly)
  (action
-   (with-stdout-to %{targets} (run menhir --list-errors %{deps}))))
+   (with-stdout-to %{targets} (run menhir --list-errors %{dep:parser.mly}))))
 
-(rule
- (targets parser_comparison.output)
- (deps parser_new.messages)
+(alias
+ (name update_messages)
  (action
-  (with-stdout-to %{targets}
-   (run menhir parser.mly --compare-errors %{deps} --compare-errors parser.messages))))
+  (progn
+   (run %{dep:add_missing_messages.py} %{dep:parser.mly} %{dep:parser_new.messages} %{dep:parser_updated_trimmed.messages})
+   (diff %{dep:parser.messages} %{dep:parser_updated_trimmed.messages}))))
 
 (alias
  (name runtest)
- (action (diff parser_comparison.expected parser_comparison.output)))
+ (action
+  (run menhir parser.mly --compare-errors %{dep:parser_new.messages} --compare-errors %{dep:parser.messages})))

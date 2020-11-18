@@ -2,15 +2,15 @@
 data {
   int<lower=0> K;
   int<lower=0> N;
-  int x[N];
-  real Y[K, N];
+  array[N] int x;
+  array[K, N] real Y;
   cov_matrix[3] invR;
   cov_matrix[3] mu_var_prior;
   vector[3] mu_m_prior;
 }
 parameters {
   real<lower=0> sigmasq;
-  vector[3] theta[K];
+  array[K] vector[3] theta;
   vector[3] mu;
   cov_matrix[3] sigma2;
 }
@@ -19,7 +19,7 @@ transformed parameters {
   sigma_C <- sqrt(sigmasq);
 }
 model {
-  real phi[K, 3];
+  array[K, 3] real phi;
   for (k in 1 : K) {
     theta[k] ~ multi_normal(mu, sigma2);
     phi[k, 1] <- exp(theta[k, 1]);

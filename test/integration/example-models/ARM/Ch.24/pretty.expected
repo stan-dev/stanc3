@@ -2,7 +2,7 @@
 data {
   int<lower=0> n_dogs;
   int<lower=0> n_trials;
-  int<lower=0, upper=1> y[n_dogs, n_trials];
+  array[n_dogs, n_trials] int<lower=0, upper=1> y;
 }
 parameters {
   vector[3] beta;
@@ -34,7 +34,7 @@ model {
 data {
   int<lower=0> n_dogs;
   int<lower=0> n_trials;
-  int<lower=0, upper=1> y[n_dogs, n_trials];
+  array[n_dogs, n_trials] int<lower=0, upper=1> y;
 }
 parameters {
   real<lower=0, upper=100> sigma_b1;
@@ -80,7 +80,7 @@ model {
 data {
   int<lower=0> n_trials;
   int<lower=0> n_dogs;
-  int<lower=0, upper=1> y[n_dogs, n_trials];
+  array[n_dogs, n_trials] int<lower=0, upper=1> y;
 }
 parameters {
   vector[2] beta;

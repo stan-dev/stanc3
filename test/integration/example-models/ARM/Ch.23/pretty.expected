@@ -7,9 +7,9 @@ data {
   vector[N] male;
   vector[N] poor;
   vector[J] program;
-  int village[N];
+  array[N] int village;
   vector[N] work97;
-  int<lower=0, upper=1> y[N];
+  array[N] int<lower=0, upper=1> y;
 }
 parameters {
   real<lower=0, upper=100> sigma_a;
@@ -41,7 +41,7 @@ model {
 data {
   int<lower=0> N;
   int<lower=0> n_pair;
-  int<lower=1, upper=n_pair> pair[N];
+  array[N] int<lower=1, upper=n_pair> pair;
   vector[N] treatment;
   vector[N] y;
 }
@@ -72,9 +72,9 @@ data {
   int<lower=0> n_pair;
   int<lower=0> n_grade;
   int<lower=0> n_grade_pair;
-  int<lower=1, upper=n_grade> grade[N];
-  int<lower=1, upper=n_grade_pair> grade_pair[n_pair];
-  int<lower=1, upper=n_pair> pair[N];
+  array[N] int<lower=1, upper=n_grade> grade;
+  array[n_pair] int<lower=1, upper=n_grade_pair> grade_pair;
+  array[N] int<lower=1, upper=n_pair> pair;
   vector<lower=0, upper=1>[N] treatment;
   vector[N] y;
 }
@@ -112,9 +112,9 @@ data {
   int<lower=0> n_grade;
   int<lower=0> n_grade_pair;
   int<lower=0> n_pair;
-  int<lower=1, upper=n_grade> grade[N];
-  int<lower=1, upper=n_grade_pair> grade_pair[n_pair];
-  int<lower=1, upper=n_pair> pair[N];
+  array[N] int<lower=1, upper=n_grade> grade;
+  array[n_pair] int<lower=1, upper=n_grade_pair> grade_pair;
+  array[N] int<lower=1, upper=n_pair> pair;
   vector[N] treatment;
   vector[N] y;
 }
@@ -147,7 +147,7 @@ model {
 data {
   int<lower=0> N;
   int<lower=0> n_pair;
-  int<lower=1, upper=n_pair> pair[N];
+  array[N] int<lower=1, upper=n_pair> pair;
   vector[N] pre_test;
   vector<lower=0, upper=1>[N] treatment;
   vector[N] y;
@@ -175,7 +175,7 @@ model {
 data {
   int<lower=0> N;
   int<lower=0> n_pair;
-  int<lower=1, upper=n_pair> pair[N];
+  array[N] int<lower=1, upper=n_pair> pair;
   vector[N] pre_test;
   vector[N] treatment;
   vector[N] y;
@@ -207,9 +207,9 @@ data {
   int<lower=0> n_grade;
   int<lower=0> n_grade_pair;
   int<lower=0> n_pair;
-  int<lower=1, upper=n_grade> grade[N];
-  int<lower=1, upper=n_grade_pair> grade_pair[n_pair];
-  int<lower=1, upper=n_pair> pair[N];
+  array[N] int<lower=1, upper=n_grade> grade;
+  array[n_pair] int<lower=1, upper=n_grade_pair> grade_pair;
+  array[N] int<lower=1, upper=n_pair> pair;
   vector[N] pre_test;
   vector[N] treatment;
   vector[N] y;
@@ -251,9 +251,9 @@ data {
   int<lower=0> n_grade;
   int<lower=0> n_grade_pair;
   int<lower=0> n_pair;
-  int<lower=1, upper=n_grade> grade[N];
-  int<lower=1, upper=n_grade_pair> grade_pair[n_pair];
-  int<lower=1, upper=n_pair> pair[N];
+  array[N] int<lower=1, upper=n_grade> grade;
+  array[n_pair] int<lower=1, upper=n_grade_pair> grade_pair;
+  array[N] int<lower=1, upper=n_pair> pair;
   vector[N] pre_test;
   vector[N] treatment;
   vector[N] y;
@@ -290,7 +290,7 @@ model {
 data {
   int<lower=0> N;
   int<lower=0> n_pair;
-  int<lower=1, upper=n_pair> pair[N];
+  array[N] int<lower=1, upper=n_pair> pair;
   vector[N] treatment;
   vector[N] y;
 }
@@ -349,12 +349,12 @@ model {
 data {
   int<lower=0> J;
   int<lower=0> N;
-  int<lower=1, upper=J> siteset[N];
-  vector[2] yt[N];
+  array[N] int<lower=1, upper=J> siteset;
+  array[N] vector[2] yt;
   vector[N] z;
 }
 parameters {
-  vector[2] ag[J];
+  array[J] vector[2] ag;
   real b;
   real d;
   real<lower=-1, upper=1> rho_ag;
@@ -370,7 +370,7 @@ model {
   vector[J] g;
   matrix[2, 2] Sigma_ag;
   matrix[2, 2] Sigma_yt;
-  vector[2] yt_hat[N];
+  array[N] vector[2] yt_hat;
   Sigma_yt[1, 1] = pow(sigma_y, 2);
   Sigma_yt[2, 2] = pow(sigma_t, 2);
   Sigma_yt[1, 2] = rho_yt * sigma_y * sigma_t;
@@ -407,7 +407,7 @@ data {
   int<lower=0> J;
   int<lower=0> N;
   vector[N] pretest;
-  int<lower=1, upper=J> siteset[N];
+  array[N] int<lower=1, upper=J> siteset;
   matrix[N, 2] yt;
   vector[N] z;
 }

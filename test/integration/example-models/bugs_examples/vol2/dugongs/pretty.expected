@@ -1,8 +1,8 @@
   $ ../../../../../../../install/default/bin/stanc --auto-format dugongs.stan
 data {
   int<lower=0> N;
-  real x[N];
-  real Y[N];
+  array[N] real x;
+  array[N] real Y;
 }
 parameters {
   real alpha;
@@ -17,7 +17,7 @@ transformed parameters {
   U3 <- logit(lambda);
 }
 model {
-  real m[N];
+  array[N] real m;
   for (i in 1 : N) 
     m[i] <- alpha - beta * pow(lambda, x[i]);
   Y ~ normal(m, sigma);

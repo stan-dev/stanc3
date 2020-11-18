@@ -3,11 +3,11 @@ data {
   int<lower=0> N;
   int<lower=0> R;
   int<lower=0> T;
-  int<lower=0> culm[R];
-  int<lower=0> response[R, T];
+  array[R] int<lower=0> culm;
+  array[R, T] int<lower=0> response;
 }
 transformed data {
-  int r[T, N];
+  array[T, N] int r;
   vector[N] ones;
   for (j in 1 : culm[1]) {
     for (k in 1 : T) {
@@ -25,7 +25,7 @@ transformed data {
     ones[i] <- 1.0;
 }
 parameters {
-  real alpha[T];
+  array[T] real alpha;
   vector[N] theta;
   real<lower=0> beta;
 }
@@ -38,7 +38,7 @@ model {
 }
 generated quantities {
   real mean_alpha;
-  real a[T];
+  array[T] real a;
   mean_alpha <- mean(alpha);
   for (t in 1 : T) 
     a[t] <- alpha[t] - mean_alpha;

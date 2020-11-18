@@ -59,7 +59,7 @@ data {
   vector[N] any_charity;
   vector[N] any_ssi;
   vector[N] any_welfare;
-  int<lower=0, upper=1> earnings[N];
+  array[N] int<lower=0, upper=1> earnings;
   vector[N] educ_r;
   vector[N] immig;
   vector[N] male;

@@ -4,16 +4,16 @@ data {
   int<lower=0> T;
   int<lower=0> G;
   int<lower=0> Npattern;
-  int<lower=0> Ncum[16, 2];
-  int<lower=0> pattern[16, 2];
+  array[16, 2] int<lower=0> Ncum;
+  array[16, 2] int<lower=0> pattern;
   int<lower=0> Ncut;
-  int treat[2, 2];
-  int period[2, 2];
-  int carry[2, 2];
+  array[2, 2] int treat;
+  array[2, 2] int period;
+  array[2, 2] int carry;
 }
 transformed data {
-  int group[N];
-  int response[N, T];
+  array[N] int group;
+  array[N, T] int response;
   for (i in 1 : Ncum[1, 1]) {
     group[i] <- 1;
     for (t in 1 : T) 
@@ -43,7 +43,7 @@ parameters {
   real pi;
   real kappa;
   real a0;
-  real b[N];
+  array[N] real b;
   ordered[Ncut] a;
 }
 transformed parameters {
@@ -51,9 +51,9 @@ transformed parameters {
   sigma <- sqrt(sigmasq);
 }
 model {
-  real Q[N, T, Ncut];
-  vector[Ncut + 1] p[N, T];
-  real mu[G, T];
+  array[N, T, Ncut] real Q;
+  array[N, T] vector[Ncut + 1] p;
+  array[G, T] real mu;
   for (g in 1 : G) {
     for (t in 1 : T) {
       mu[g, t] <- beta * treat[g, t] * .5 + pi * period[g, t] * .5

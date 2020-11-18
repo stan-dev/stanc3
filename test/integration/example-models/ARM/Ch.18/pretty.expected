@@ -3,11 +3,11 @@ data {
   int<lower=0> N;
   int<lower=0> J;
   vector[N] y;
-  int<lower=0, upper=1> x[N];
-  int county[N];
+  array[N] int<lower=0, upper=1> x;
+  array[N] int county;
 }
 parameters {
-  real a[J];
+  array[J] real a;
   real b;
   real mu_a;
   real<lower=0> sigma_y;
@@ -24,12 +24,12 @@ data {
   int<lower=0> N;
   int<lower=0> J;
   vector[N] y;
-  int<lower=0, upper=1> x[N];
-  int county[N];
+  array[N] int<lower=0, upper=1> x;
+  array[N] int county;
   vector[J] u;
 }
 parameters {
-  real a[J];
+  array[J] real a;
   real b;
   real g_0;
   real g_1;
@@ -48,11 +48,11 @@ data {
   int<lower=0> N;
   int<lower=0> J;
   vector[N] y;
-  int<lower=0, upper=1> x[N];
-  int county[N];
+  array[N] int<lower=0, upper=1> x;
+  array[N] int county;
 }
 parameters {
-  real a[J];
+  array[J] real a;
   real b;
   real<lower=0> sigma_y;
 }

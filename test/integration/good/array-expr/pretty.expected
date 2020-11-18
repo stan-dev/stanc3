@@ -1,12 +1,13 @@
   $ ../../../../../install/default/bin/stanc --auto-format validate_array_expr_big.stan
 transformed data {
   int i = 5;
-  int td_ar_int_dim1[100] = {1, 2, 3, 5, i, i, 7, 8, i, 10, 1, 2, 3, 5, i, i,
-                             7, 8, i, 10, 1, 2, 3, 5, i, i, 7, 8, i, 10, 1,
-                             2, 3, 5, i, i, 7, 8, i, 10, 1, 2, 3, 5, i, i, 7,
-                             8, i, 10, 1, 2, 3, 5, i, i, 7, 8, i, 10, 1, 2,
-                             3, 5, i, i, 7, 8, i, 10, 1, 2, 3, 5, i, i, 7, 8,
-                             i, 10, 1, 2, 3, 5, i, i, 7, 8, i, 10};
+  array[100] int td_ar_int_dim1 = {1, 2, 3, 5, i, i, 7, 8, i, 10, 1, 2, 3, 5,
+                                   i, i, 7, 8, i, 10, 1, 2, 3, 5, i, i, 7, 8,
+                                   i, 10, 1, 2, 3, 5, i, i, 7, 8, i, 10, 1,
+                                   2, 3, 5, i, i, 7, 8, i, 10, 1, 2, 3, 5, i,
+                                   i, 7, 8, i, 10, 1, 2, 3, 5, i, i, 7, 8, i,
+                                   10, 1, 2, 3, 5, i, i, 7, 8, i, 10, 1, 2,
+                                   3, 5, i, i, 7, 8, i, 10};
 }
 parameters {
   real<lower=0, upper=1> theta;
@@ -22,27 +23,29 @@ data {
   vector[d] d_v2;
   row_vector[d] d_rv1;
   row_vector[d] d_rv2;
-  vector[d] d_v_ar[d];
-  row_vector[d] d_rv_ar[d];
+  array[d] vector[d] d_v_ar;
+  array[d] row_vector[d] d_rv_ar;
   matrix[d, d] d_m;
 }
 transformed data {
-  vector[d] td_v_ar_dim1_1[1] = {d_v1};
-  vector[d] td_v_ar_dim1_2[2] = {d_v1, d_v2};
-  vector[d] td_v_ar_dim1_3[1] = {d_v_ar[3]};
-  vector[d] td_v_ar_dim1_4[1] = {d_m[ : , 3]};
-  vector[d] td_v_ar_dim2_1[1, 1] = {{d_v1}};
-  vector[d] td_v_ar_dim2_2[2, 3] = {{d_v1, d_v1, d_v1}, {d_v2, d_v2, d_v2}};
-  row_vector[d] td_rv_ar_dim1_1[1] = {d_rv1};
-  row_vector[d] td_rv_ar_dim1_2[2] = {d_rv1, d_rv2};
-  row_vector[d] td_rv_ar_dim1_3[1] = {d_rv_ar[3]};
-  row_vector[d] td_rv_ar_dim2_1[1, 1] = {{d_rv1}};
-  row_vector[d] td_rv_ar_dim2_2[2, 3] = {{d_rv1, d_rv1, d_rv1},
-                                         {d_rv2, d_rv2, d_rv2}};
-  matrix[d, d] td_m_ar_dim1_1[1] = {d_m};
-  matrix[d, d] td_m_ar_dim1_2[2] = {d_m, d_m};
-  matrix[d, d] td_m_ar_dim2_1[1, 1] = {{d_m}};
-  matrix[d, d] td_m_ar_dim2_2[2, 3] = {{d_m, d_m, d_m}, {d_m, d_m, d_m}};
+  array[1] vector[d] td_v_ar_dim1_1 = {d_v1};
+  array[2] vector[d] td_v_ar_dim1_2 = {d_v1, d_v2};
+  array[1] vector[d] td_v_ar_dim1_3 = {d_v_ar[3]};
+  array[1] vector[d] td_v_ar_dim1_4 = {d_m[ : , 3]};
+  array[1, 1] vector[d] td_v_ar_dim2_1 = {{d_v1}};
+  array[2, 3] vector[d] td_v_ar_dim2_2 = {{d_v1, d_v1, d_v1},
+                                          {d_v2, d_v2, d_v2}};
+  array[1] row_vector[d] td_rv_ar_dim1_1 = {d_rv1};
+  array[2] row_vector[d] td_rv_ar_dim1_2 = {d_rv1, d_rv2};
+  array[1] row_vector[d] td_rv_ar_dim1_3 = {d_rv_ar[3]};
+  array[1, 1] row_vector[d] td_rv_ar_dim2_1 = {{d_rv1}};
+  array[2, 3] row_vector[d] td_rv_ar_dim2_2 = {{d_rv1, d_rv1, d_rv1},
+                                               {d_rv2, d_rv2, d_rv2}};
+  array[1] matrix[d, d] td_m_ar_dim1_1 = {d_m};
+  array[2] matrix[d, d] td_m_ar_dim1_2 = {d_m, d_m};
+  array[1, 1] matrix[d, d] td_m_ar_dim2_1 = {{d_m}};
+  array[2, 3] matrix[d, d] td_m_ar_dim2_2 = {{d_m, d_m, d_m},
+                                             {d_m, d_m, d_m}};
   print("td_v_ar_dim1_1 = ", td_v_ar_dim1_1);
   print("td_v_ar_dim1_2 = ", td_v_ar_dim1_2);
   print("td_v_ar_dim1_3 = ", td_v_ar_dim1_3);
@@ -63,24 +66,26 @@ parameters {
 
 }
 transformed parameters {
-  vector[d] tp_v_ar_dim1_1[1] = {d_v1};
-  vector[d] tp_v_ar_dim1_2[2] = {d_v1, d_v2};
-  vector[d] tp_v_ar_dim1_3[1] = {d_v_ar[3]};
+  array[1] vector[d] tp_v_ar_dim1_1 = {d_v1};
+  array[2] vector[d] tp_v_ar_dim1_2 = {d_v1, d_v2};
+  array[1] vector[d] tp_v_ar_dim1_3 = {d_v_ar[3]};
   vector[d] tp_v1 = d_m[ : , 4];
-  vector[d] tp_v_ar_dim1_4[1] = {tp_v1};
-  vector[d] tp_v_ar_dim1_5[2] = {d_v1, tp_v1};
-  vector[d] tp_v_ar_dim2_1[1, 1] = {{d_v1}};
-  vector[d] tp_v_ar_dim2_2[2, 3] = {{d_v1, d_v1, d_v1}, {d_v2, d_v2, d_v2}};
-  row_vector[d] tp_rv_ar_dim1_1[1] = {d_rv1};
-  row_vector[d] tp_rv_ar_dim1_2[2] = {d_rv1, d_rv2};
-  row_vector[d] tp_rv_ar_dim1_3[1] = {d_rv_ar[3]};
-  row_vector[d] tp_rv_ar_dim2_1[1, 1] = {{d_rv1}};
-  row_vector[d] tp_rv_ar_dim2_2[2, 3] = {{d_rv1, d_rv1, d_rv1},
-                                         {d_rv2, d_rv2, d_rv2}};
-  matrix[d, d] tp_m_ar_dim1_1[1] = {d_m};
-  matrix[d, d] tp_m_ar_dim1_2[2] = {d_m, d_m};
-  matrix[d, d] tp_m_ar_dim2_1[1, 1] = {{d_m}};
-  matrix[d, d] tp_m_ar_dim2_2[2, 3] = {{d_m, d_m, d_m}, {d_m, d_m, d_m}};
+  array[1] vector[d] tp_v_ar_dim1_4 = {tp_v1};
+  array[2] vector[d] tp_v_ar_dim1_5 = {d_v1, tp_v1};
+  array[1, 1] vector[d] tp_v_ar_dim2_1 = {{d_v1}};
+  array[2, 3] vector[d] tp_v_ar_dim2_2 = {{d_v1, d_v1, d_v1},
+                                          {d_v2, d_v2, d_v2}};
+  array[1] row_vector[d] tp_rv_ar_dim1_1 = {d_rv1};
+  array[2] row_vector[d] tp_rv_ar_dim1_2 = {d_rv1, d_rv2};
+  array[1] row_vector[d] tp_rv_ar_dim1_3 = {d_rv_ar[3]};
+  array[1, 1] row_vector[d] tp_rv_ar_dim2_1 = {{d_rv1}};
+  array[2, 3] row_vector[d] tp_rv_ar_dim2_2 = {{d_rv1, d_rv1, d_rv1},
+                                               {d_rv2, d_rv2, d_rv2}};
+  array[1] matrix[d, d] tp_m_ar_dim1_1 = {d_m};
+  array[2] matrix[d, d] tp_m_ar_dim1_2 = {d_m, d_m};
+  array[1, 1] matrix[d, d] tp_m_ar_dim2_1 = {{d_m}};
+  array[2, 3] matrix[d, d] tp_m_ar_dim2_2 = {{d_m, d_m, d_m},
+                                             {d_m, d_m, d_m}};
   print("tp_v_ar_dim1_1 = ", tp_v_ar_dim1_1);
   print("tp_v_ar_dim1_2 = ", tp_v_ar_dim1_2);
   print("tp_v_ar_dim1_3 = ", tp_v_ar_dim1_3);
@@ -102,22 +107,24 @@ model {
 
 }
 generated quantities {
-  vector[d] gq_v_ar_dim1_1[1] = {d_v1};
-  vector[d] gq_v_ar_dim1_2[2] = {d_v1, d_v2};
-  vector[d] gq_v_ar_dim1_3[1] = {d_v_ar[3]};
-  vector[d] gq_v_ar_dim1_4[1] = {d_m[ : , 3]};
-  vector[d] gq_v_ar_dim2_1[1, 1] = {{d_v1}};
-  vector[d] gq_v_ar_dim2_2[2, 3] = {{d_v1, d_v1, d_v1}, {d_v2, d_v2, d_v2}};
-  row_vector[d] gq_rv_ar_dim1_1[1] = {d_rv1};
-  row_vector[d] gq_rv_ar_dim1_2[2] = {d_rv1, d_rv2};
-  row_vector[d] gq_rv_ar_dim1_3[1] = {d_rv_ar[3]};
-  row_vector[d] gq_rv_ar_dim2_1[1, 1] = {{d_rv1}};
-  row_vector[d] gq_rv_ar_dim2_2[2, 3] = {{d_rv1, d_rv1, d_rv1},
-                                         {d_rv2, d_rv2, d_rv2}};
-  matrix[d, d] gq_m_ar_dim1_1[1] = {d_m};
-  matrix[d, d] gq_m_ar_dim1_2[2] = {d_m, d_m};
-  matrix[d, d] gq_m_ar_dim2_1[1, 1] = {{d_m}};
-  matrix[d, d] gq_m_ar_dim2_2[2, 3] = {{d_m, d_m, d_m}, {d_m, d_m, d_m}};
+  array[1] vector[d] gq_v_ar_dim1_1 = {d_v1};
+  array[2] vector[d] gq_v_ar_dim1_2 = {d_v1, d_v2};
+  array[1] vector[d] gq_v_ar_dim1_3 = {d_v_ar[3]};
+  array[1] vector[d] gq_v_ar_dim1_4 = {d_m[ : , 3]};
+  array[1, 1] vector[d] gq_v_ar_dim2_1 = {{d_v1}};
+  array[2, 3] vector[d] gq_v_ar_dim2_2 = {{d_v1, d_v1, d_v1},
+                                          {d_v2, d_v2, d_v2}};
+  array[1] row_vector[d] gq_rv_ar_dim1_1 = {d_rv1};
+  array[2] row_vector[d] gq_rv_ar_dim1_2 = {d_rv1, d_rv2};
+  array[1] row_vector[d] gq_rv_ar_dim1_3 = {d_rv_ar[3]};
+  array[1, 1] row_vector[d] gq_rv_ar_dim2_1 = {{d_rv1}};
+  array[2, 3] row_vector[d] gq_rv_ar_dim2_2 = {{d_rv1, d_rv1, d_rv1},
+                                               {d_rv2, d_rv2, d_rv2}};
+  array[1] matrix[d, d] gq_m_ar_dim1_1 = {d_m};
+  array[2] matrix[d, d] gq_m_ar_dim1_2 = {d_m, d_m};
+  array[1, 1] matrix[d, d] gq_m_ar_dim2_1 = {{d_m}};
+  array[2, 3] matrix[d, d] gq_m_ar_dim2_2 = {{d_m, d_m, d_m},
+                                             {d_m, d_m, d_m}};
   print("gq_v_ar_dim1_1 = ", gq_v_ar_dim1_1);
   print("gq_v_ar_dim1_2 = ", gq_v_ar_dim1_2);
   print("gq_v_ar_dim1_3 = ", gq_v_ar_dim1_3);
@@ -137,21 +144,21 @@ generated quantities {
 
   $ ../../../../../install/default/bin/stanc --auto-format validate_array_expr_mixed.stan
 transformed parameters {
-  real td_arr33[3, 3] = {{1, 2, 3}, {1, 2., 3}, {1., 2., 3}};
+  array[3, 3] real td_arr33 = {{1, 2, 3}, {1, 2., 3}, {1., 2., 3}};
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format validate_array_expr_primitives.stan
 functions {
-  int[] f1_arr_int() {
+  array[] int f1_arr_int() {
     return {-1, -2};
   }
-  int[] f2_arr_int(int x) {
+  array[] int f2_arr_int(int x) {
     return {-x};
   }
-  real[] f1_arr_real() {
+  array[] real f1_arr_real() {
     return {-1.0, -2.0};
   }
-  real[] f2_arr_real(real y) {
+  array[] real f2_arr_real(real y) {
     return {-y};
   }
 }
@@ -164,20 +171,20 @@ data {
   real d_r3;
 }
 transformed data {
-  int td_arr_int_d1_1[3] = {1, 2, 3};
-  int td_arr_int_d1_2[3] = {d_i1, 2, 3};
-  int td_arr_int_d1_3[2] = f1_arr_int();
-  int td_arr_int_d1_4[1] = f2_arr_int(d_i2);
-  int td_arr_int_d2_1[1, 2] = {{4, 5}};
-  int td_arr_int_d2_2[1, 2] = {{4, d_i3}};
-  int td_arr_int_d2_3[2, 3] = {{1, 2, 3}, {4, 5, 6}};
-  int td_arr_int_d2_4[2, 3] = {td_arr_int_d1_1, td_arr_int_d1_2};
-  real td_arr_real_d1_1[3] = {1.1, 2.2, 3.3};
-  real td_arr_real_d1_2[3] = {d_r1, 2, 3};
-  real td_arr_real_d1_3[2] = f1_arr_real();
-  real td_arr_real_d1_4[1] = f2_arr_real(d_r2);
-  real td_arr_real_d2_1[1, 2] = {{4.4, 5.5}};
-  real td_arr_real_d2_2[1, 2] = {{4.4, d_r2}};
+  array[3] int td_arr_int_d1_1 = {1, 2, 3};
+  array[3] int td_arr_int_d1_2 = {d_i1, 2, 3};
+  array[2] int td_arr_int_d1_3 = f1_arr_int();
+  array[1] int td_arr_int_d1_4 = f2_arr_int(d_i2);
+  array[1, 2] int td_arr_int_d2_1 = {{4, 5}};
+  array[1, 2] int td_arr_int_d2_2 = {{4, d_i3}};
+  array[2, 3] int td_arr_int_d2_3 = {{1, 2, 3}, {4, 5, 6}};
+  array[2, 3] int td_arr_int_d2_4 = {td_arr_int_d1_1, td_arr_int_d1_2};
+  array[3] real td_arr_real_d1_1 = {1.1, 2.2, 3.3};
+  array[3] real td_arr_real_d1_2 = {d_r1, 2, 3};
+  array[2] real td_arr_real_d1_3 = f1_arr_real();
+  array[1] real td_arr_real_d1_4 = f2_arr_real(d_r2);
+  array[1, 2] real td_arr_real_d2_1 = {{4.4, 5.5}};
+  array[1, 2] real td_arr_real_d2_2 = {{4.4, d_r2}};
   print("td_arr_int_d1_1 = ", td_arr_int_d1_1);
   print("td_arr_int_d1_2 = ", td_arr_int_d1_2);
   print("td_arr_int_d1_3 = ", td_arr_int_d1_3);
@@ -195,21 +202,21 @@ transformed data {
   print("td_arr_real_d2_2 = ", td_arr_real_d2_2);
   print("");
   {
-    int loc_td_arr_int_d1_1[3] = {1, 2, 3};
-    int loc_td_arr_int_d1_2[3] = {d_i1, 2, 3};
-    int loc_td_arr_int_d1_3[2] = f1_arr_int();
-    int loc_td_arr_int_d1_4[1] = f2_arr_int(d_i2);
-    int loc_td_arr_int_d2_1[1, 2] = {{4, 5}};
-    int loc_td_arr_int_d2_2[1, 2] = {{4, d_i3}};
-    int loc_td_arr_int_d2_3[2, 3] = {{1, 2, 3}, {4, 5, 6}};
-    int loc_td_arr_int_d2_4[2, 3] = {loc_td_arr_int_d1_1,
-                                     loc_td_arr_int_d1_2};
-    real loc_td_arr_real_d1_1[3] = {1.1, 2.2, 3.3};
-    real loc_td_arr_real_d1_2[3] = {d_r1, 2, 3};
-    real loc_td_arr_real_d1_3[2] = f1_arr_real();
-    real loc_td_arr_real_d1_4[1] = f2_arr_real(d_r2);
-    real loc_td_arr_real_d2_1[1, 2] = {{4.4, 5.5}};
-    real loc_td_arr_real_d2_2[1, 2] = {{4.4, d_r2}};
+    array[3] int loc_td_arr_int_d1_1 = {1, 2, 3};
+    array[3] int loc_td_arr_int_d1_2 = {d_i1, 2, 3};
+    array[2] int loc_td_arr_int_d1_3 = f1_arr_int();
+    array[1] int loc_td_arr_int_d1_4 = f2_arr_int(d_i2);
+    array[1, 2] int loc_td_arr_int_d2_1 = {{4, 5}};
+    array[1, 2] int loc_td_arr_int_d2_2 = {{4, d_i3}};
+    array[2, 3] int loc_td_arr_int_d2_3 = {{1, 2, 3}, {4, 5, 6}};
+    array[2, 3] int loc_td_arr_int_d2_4 = {loc_td_arr_int_d1_1,
+                                           loc_td_arr_int_d1_2};
+    array[3] real loc_td_arr_real_d1_1 = {1.1, 2.2, 3.3};
+    array[3] real loc_td_arr_real_d1_2 = {d_r1, 2, 3};
+    array[2] real loc_td_arr_real_d1_3 = f1_arr_real();
+    array[1] real loc_td_arr_real_d1_4 = f2_arr_real(d_r2);
+    array[1, 2] real loc_td_arr_real_d2_1 = {{4.4, 5.5}};
+    array[1, 2] real loc_td_arr_real_d2_2 = {{4.4, d_r2}};
     print("loc_td_arr_int_d1_1 = ", loc_td_arr_int_d1_1);
     print("loc_td_arr_int_d1_2 = ", loc_td_arr_int_d1_2);
     print("loc_td_arr_int_d1_3 = ", loc_td_arr_int_d1_3);
@@ -234,14 +241,14 @@ parameters {
 transformed parameters {
   real tp1 = 0.1;
   real tp2 = 0.2;
-  real tp_arr_real_d1_1[3] = {1.1, 2.2, 3.3};
-  real tp_arr_real_d1_2[3] = {d_r1, 2, 3};
-  real tp_arr_real_d1_3[2] = f1_arr_real();
-  real tp_arr_real_d1_4[1] = f2_arr_real(d_r2);
-  real tp_arr_real_d1_5[2] = {tp1, tp2};
-  real tp_arr_real_d2_1[1, 2] = {{4.4, 5.5}};
-  real tp_arr_real_d2_2[1, 2] = {{4.4, d_r2}};
-  real tp_arr_real_d2_3[1, 2] = {{tp1, tp2}};
+  array[3] real tp_arr_real_d1_1 = {1.1, 2.2, 3.3};
+  array[3] real tp_arr_real_d1_2 = {d_r1, 2, 3};
+  array[2] real tp_arr_real_d1_3 = f1_arr_real();
+  array[1] real tp_arr_real_d1_4 = f2_arr_real(d_r2);
+  array[2] real tp_arr_real_d1_5 = {tp1, tp2};
+  array[1, 2] real tp_arr_real_d2_1 = {{4.4, 5.5}};
+  array[1, 2] real tp_arr_real_d2_2 = {{4.4, d_r2}};
+  array[1, 2] real tp_arr_real_d2_3 = {{tp1, tp2}};
   print("tp_arr_real_d1_1 = ", tp_arr_real_d1_1);
   print("tp_arr_real_d1_2 = ", tp_arr_real_d1_2);
   print("tp_arr_real_d1_3 = ", tp_arr_real_d1_3);
@@ -256,20 +263,20 @@ model {
 
 }
 generated quantities {
-  int gq_arr_int_d1_1[3] = {1, 2, 3};
-  int gq_arr_int_d1_2[3] = {d_i1, 2, 3};
-  int gq_arr_int_d1_3[2] = f1_arr_int();
-  int gq_arr_int_d1_4[1] = f2_arr_int(d_i2);
-  int gq_arr_int_d2_1[1, 2] = {{4, 5}};
-  int gq_arr_int_d2_2[1, 2] = {{4, d_i3}};
-  int gq_arr_int_d2_3[2, 3] = {{1, 2, 3}, {4, 5, 6}};
-  int gq_arr_int_d2_4[2, 3] = {gq_arr_int_d1_1, gq_arr_int_d1_2};
-  real gq_arr_real_d1_1[3] = {1.1, 2.2, 3.3};
-  real gq_arr_real_d1_2[3] = {d_r1, 2, 3};
-  real gq_arr_real_d1_3[2] = f1_arr_real();
-  real gq_arr_real_d1_4[1] = f2_arr_real(d_r2);
-  real gq_arr_real_d2_1[1, 2] = {{4.4, 5.5}};
-  real gq_arr_real_d2_2[1, 2] = {{4.4, d_r2}};
+  array[3] int gq_arr_int_d1_1 = {1, 2, 3};
+  array[3] int gq_arr_int_d1_2 = {d_i1, 2, 3};
+  array[2] int gq_arr_int_d1_3 = f1_arr_int();
+  array[1] int gq_arr_int_d1_4 = f2_arr_int(d_i2);
+  array[1, 2] int gq_arr_int_d2_1 = {{4, 5}};
+  array[1, 2] int gq_arr_int_d2_2 = {{4, d_i3}};
+  array[2, 3] int gq_arr_int_d2_3 = {{1, 2, 3}, {4, 5, 6}};
+  array[2, 3] int gq_arr_int_d2_4 = {gq_arr_int_d1_1, gq_arr_int_d1_2};
+  array[3] real gq_arr_real_d1_1 = {1.1, 2.2, 3.3};
+  array[3] real gq_arr_real_d1_2 = {d_r1, 2, 3};
+  array[2] real gq_arr_real_d1_3 = f1_arr_real();
+  array[1] real gq_arr_real_d1_4 = f2_arr_real(d_r2);
+  array[1, 2] real gq_arr_real_d2_1 = {{4.4, 5.5}};
+  array[1, 2] real gq_arr_real_d2_2 = {{4.4, d_r2}};
   print("gq_arr_int_d1_1 = ", gq_arr_int_d1_1);
   print("gq_arr_int_d1_2 = ", gq_arr_int_d1_2);
   print("gq_arr_int_d1_3 = ", gq_arr_int_d1_3);
@@ -287,21 +294,21 @@ generated quantities {
   print("gq_arr_real_d2_2 = ", gq_arr_real_d2_2);
   print("");
   {
-    int loc_gq_arr_int_d1_1[3] = {1, 2, 3};
-    int loc_gq_arr_int_d1_2[3] = {d_i1, 2, 3};
-    int loc_gq_arr_int_d1_3[2] = f1_arr_int();
-    int loc_gq_arr_int_d1_4[1] = f2_arr_int(d_i2);
-    int loc_gq_arr_int_d2_1[1, 2] = {{4, 5}};
-    int loc_gq_arr_int_d2_2[1, 2] = {{4, d_i3}};
-    int loc_gq_arr_int_d2_3[2, 3] = {{1, 2, 3}, {4, 5, 6}};
-    int loc_gq_arr_int_d2_4[2, 3] = {loc_gq_arr_int_d1_1,
-                                     loc_gq_arr_int_d1_2};
-    real loc_gq_arr_real_d1_1[3] = {1.1, 2.2, 3.3};
-    real loc_gq_arr_real_d1_2[3] = {d_r1, 2, 3};
-    real loc_gq_arr_real_d1_3[2] = f1_arr_real();
-    real loc_gq_arr_real_d1_4[1] = f2_arr_real(d_r2);
-    real loc_gq_arr_real_d2_1[1, 2] = {{4.4, 5.5}};
-    real loc_gq_arr_real_d2_2[1, 2] = {{4.4, d_r2}};
+    array[3] int loc_gq_arr_int_d1_1 = {1, 2, 3};
+    array[3] int loc_gq_arr_int_d1_2 = {d_i1, 2, 3};
+    array[2] int loc_gq_arr_int_d1_3 = f1_arr_int();
+    array[1] int loc_gq_arr_int_d1_4 = f2_arr_int(d_i2);
+    array[1, 2] int loc_gq_arr_int_d2_1 = {{4, 5}};
+    array[1, 2] int loc_gq_arr_int_d2_2 = {{4, d_i3}};
+    array[2, 3] int loc_gq_arr_int_d2_3 = {{1, 2, 3}, {4, 5, 6}};
+    array[2, 3] int loc_gq_arr_int_d2_4 = {loc_gq_arr_int_d1_1,
+                                           loc_gq_arr_int_d1_2};
+    array[3] real loc_gq_arr_real_d1_1 = {1.1, 2.2, 3.3};
+    array[3] real loc_gq_arr_real_d1_2 = {d_r1, 2, 3};
+    array[2] real loc_gq_arr_real_d1_3 = f1_arr_real();
+    array[1] real loc_gq_arr_real_d1_4 = f2_arr_real(d_r2);
+    array[1, 2] real loc_gq_arr_real_d2_1 = {{4.4, 5.5}};
+    array[1, 2] real loc_gq_arr_real_d2_2 = {{4.4, d_r2}};
     print("loc_gq_arr_int_d1_1 = ", loc_gq_arr_int_d1_1);
     print("loc_gq_arr_int_d1_2 = ", loc_gq_arr_int_d1_2);
     print("loc_gq_arr_int_d1_3 = ", loc_gq_arr_int_d1_3);

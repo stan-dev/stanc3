@@ -2,8 +2,8 @@
 data {
   int<lower=0> G;
   int<lower=0> N;
-  int<lower=0> r[G, N];
-  int<lower=0> n[G, N];
+  array[G, N] int<lower=0> r;
+  array[G, N] int<lower=0> n;
 }
 parameters {
   matrix<lower=0, upper=1>[G, N] p;
@@ -73,8 +73,8 @@ assignment operator <- is deprecated in the Stan language; use = instead.
 data {
   int<lower=0> G;
   int<lower=0> N;
-  int<lower=0> r[G, N];
-  int<lower=0> n[G, N];
+  array[G, N] int<lower=0> r;
+  array[G, N] int<lower=0> n;
 }
 parameters {
   matrix<lower=0, upper=1>[G, N] p;
