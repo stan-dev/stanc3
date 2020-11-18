@@ -6,8 +6,11 @@ let deprecated_functions =
   String.Map.of_alist_exn
     [ ("multiply_log", "lmultiply")
     ; ("binomial_coefficient_log", "lchoose")
-    ; ("cov_exp_quad", "gp_cov_exp_quad")
-    ; ("integrate_ode", "ode_rk45")
+    ; ("cov_exp_quad", "gp_cov_exp_quad") ]
+
+let deprecated_odes =
+  String.Map.of_alist_exn
+    [ ("integrate_ode", "ode_rk45")
     ; ("integrate_ode_rk45", "ode_rk45")
     ; ("integrate_ode_bdf", "ode_bdf")
     ; ("integrate_ode_adams", "ode_adams") ]
@@ -26,11 +29,8 @@ let deprecated_distributions =
 let is_distribution name =
   Option.is_some (String.Map.find deprecated_distributions name)
 
-let rename_distribution name =
-  Option.value ~default:name (String.Map.find deprecated_distributions name)
-
-let rename_function name =
-  Option.value ~default:name (String.Map.find deprecated_functions name)
+let rename_deprecated map name =
+  Option.value ~default:name (String.Map.find map name)
 
 let distribution_suffix name =
   let open String in
@@ -117,11 +117,21 @@ let rec warn_deprecated_expr deprecated_userdefined
         if Option.is_some (String.Map.find deprecated_distributions name) then
           [ ( emeta.loc
             , name ^ " is deprecated and will be removed in the future. Use "
-              ^ rename_distribution name ^ " instead." ) ]
+              ^ rename_deprecated deprecated_distributions name
+              ^ " instead." ) ]
         else if Option.is_some (String.Map.find deprecated_functions name) then
           [ ( emeta.loc
             , name ^ " is deprecated and will be removed in the future. Use "
-              ^ rename_function name ^ " instead." ) ]
+              ^ rename_deprecated deprecated_functions name
+              ^ " instead." ) ]
+        else if Option.is_some (String.Map.find deprecated_odes name) then
+          [ ( emeta.loc
+            , name ^ " is deprecated and will be removed in the future. Use "
+              ^ rename_deprecated deprecated_odes name
+              ^ " instead. \n\
+                 The new interface is slightly different, see: \n\
+                 https://mc-stan.org/users/documentation/case-studies/convert_odes.html"
+            ) ]
         else []
       in
       acc @ w

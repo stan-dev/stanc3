@@ -37,12 +37,12 @@ let rec replace_deprecated_expr
         if is_distribution name then
           CondDistApp
             ( StanLib
-            , {name= rename_distribution name; id_loc}
+            , {name= rename_deprecated deprecated_distributions name; id_loc}
             , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e )
         else
           FunApp
             ( StanLib
-            , {name= rename_function name; id_loc}
+            , {name= rename_deprecated deprecated_functions name; id_loc}
             , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e )
     | FunApp (UserDefined, {name; id_loc}, e) -> (
       match String.Map.find deprecated_userdefined name with

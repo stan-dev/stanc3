@@ -51,7 +51,7 @@ model {
 generated quantities {
   array[2] real y0 = {1.0, 2.0};
   array[3] real ts = {0.5, 1.0, 2.0};
-  array[3, 2] real y_hat = ode_rk45(sho, y0, 0.0, ts, theta, x_r, x_i);
+  array[3, 2] real y_hat = integrate_ode(sho, y0, 0.0, ts, theta, x_r, x_i);
 }
 
 
@@ -75,7 +75,9 @@ Warning: in 'deprecated.stan', line 48, column 6 to column 30: normal_ccdf_log i
 
 Warning: in 'deprecated.stan', line 50, column 20 to column 28: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
 
-Warning: in 'deprecated.stan', line 55, column 20 to column 69: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead.
+Warning: in 'deprecated.stan', line 55, column 20 to column 69: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead. 
+The new interface is slightly different, see: 
+https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../install/default/bin/stanc --print-canonical parenthesize.stan
 transformed data {
   int N = 12;
