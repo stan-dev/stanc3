@@ -26,7 +26,7 @@ let deprecated_distributions =
            | Ccdf -> Some (name ^ "_ccdf_log", name ^ "_lccdf")
            | Rng | UnaryVectorized -> None ) ))
 
-let is_distribution name =
+let is_deprecated_distribution name =
   Option.is_some (String.Map.find deprecated_distributions name)
 
 let rename_deprecated map name =
@@ -61,7 +61,7 @@ let without_suffix user_dists name =
   else if
     is_suffix ~suffix:"_log" name
     && not
-         ( is_distribution (name ^ "_log")
+         ( is_deprecated_distribution (name ^ "_log")
          || List.exists ~f:(( = ) name) user_dists )
   then drop_suffix name 4
   else name
@@ -79,14 +79,14 @@ let update_suffix name type_ =
     drop_suffix name 4 ^ "_lpdf"
   else drop_suffix name 4 ^ "_lpmf"
 
-let find_suffixes = function
+let find_udf_log_suffix = function
   | { stmt= FunDef {funname= {name; _}; arguments= (_, type_, _) :: _; _}
     ; smeta= _ }
     when String.is_suffix ~suffix:"_log" name ->
       Some (name, type_)
   | _ -> None
 
-let rec warn_deprecated_expr deprecated_userdefined
+let rec collect_deprecated_expr deprecated_userdefined
     (acc : (Location_span.t * string) list)
     ({expr; emeta} : (typed_expr_meta, fun_kind) expr_with) :
     (Location_span.t * string) list =
@@ -98,7 +98,7 @@ let rec warn_deprecated_expr deprecated_userdefined
              no-argument function `target()` instead." ) ]
   | FunApp (StanLib, {name= "abs"; _}, [e])
     when Middle.UnsizedType.is_real_type e.emeta.type_ ->
-      warn_deprecated_expr deprecated_userdefined
+      collect_deprecated_expr deprecated_userdefined
         ( acc
         @ [ ( emeta.loc
             , "Use of the `abs` function with real-valued arguments is \
@@ -111,7 +111,7 @@ let rec warn_deprecated_expr deprecated_userdefined
              operator (x ? y : z) instead." ) ]
       @ List.concat
           (List.map l ~f:(fun e ->
-               warn_deprecated_expr deprecated_userdefined [] e ))
+               collect_deprecated_expr deprecated_userdefined [] e ))
   | FunApp (StanLib, {name; _}, l) ->
       let w =
         if Option.is_some (String.Map.find deprecated_distributions name) then
@@ -137,7 +137,7 @@ let rec warn_deprecated_expr deprecated_userdefined
       acc @ w
       @ List.concat
           (List.map l ~f:(fun e ->
-               warn_deprecated_expr deprecated_userdefined [] e ))
+               collect_deprecated_expr deprecated_userdefined [] e ))
   | FunApp (UserDefined, {name; _}, l) ->
       let w =
         let type_ = String.Map.find deprecated_userdefined name in
@@ -152,43 +152,45 @@ let rec warn_deprecated_expr deprecated_userdefined
       acc @ w
       @ List.concat
           (List.map l ~f:(fun e ->
-               warn_deprecated_expr deprecated_userdefined [] e ))
+               collect_deprecated_expr deprecated_userdefined [] e ))
   | _ ->
       fold_expression
-        (warn_deprecated_expr deprecated_userdefined)
+        (collect_deprecated_expr deprecated_userdefined)
         (fun l _ -> l)
         acc expr
 
-let warn_deprecated_lval deprecated_userdefined acc l =
+let collect_deprecated_lval deprecated_userdefined acc l =
   fold_lval_with
-    (warn_deprecated_expr deprecated_userdefined)
+    (collect_deprecated_expr deprecated_userdefined)
     (fun x _ -> x)
     acc l
 
-let rec warn_deprecated_stmt deprecated_userdefined
+let rec collect_deprecated_stmt deprecated_userdefined
     (acc : (Location_span.t * string) list) {stmt; _} :
     (Location_span.t * string) list =
   match stmt with
-  | IncrementLogProb e -> warn_deprecated_expr deprecated_userdefined acc e
+  | IncrementLogProb e -> collect_deprecated_expr deprecated_userdefined acc e
   | Assignment {assign_lhs= l; assign_op= ArrowAssign; assign_rhs= e} ->
       acc
-      @ warn_deprecated_lval deprecated_userdefined [] l
-      @ warn_deprecated_expr deprecated_userdefined [] e
-  | FunDef {body; _} -> warn_deprecated_stmt deprecated_userdefined acc body
+      @ collect_deprecated_lval deprecated_userdefined [] l
+      @ collect_deprecated_expr deprecated_userdefined [] e
+  | FunDef {body; _} -> collect_deprecated_stmt deprecated_userdefined acc body
   | _ ->
       fold_statement
-        (warn_deprecated_expr deprecated_userdefined)
-        (warn_deprecated_stmt deprecated_userdefined)
-        (warn_deprecated_lval deprecated_userdefined)
+        (collect_deprecated_expr deprecated_userdefined)
+        (collect_deprecated_stmt deprecated_userdefined)
+        (collect_deprecated_lval deprecated_userdefined)
         (fun l _ -> l)
         acc stmt
 
-let analyze_udfs program =
+let collect_userdef_distributions program =
   program.functionblock |> Option.value ~default:[]
-  |> List.filter_map ~f:find_suffixes
+  |> List.filter_map ~f:find_udf_log_suffix
   |> List.dedup_and_sort ~compare:(fun (x, _) (y, _) -> String.compare x y)
   |> String.Map.of_alist_exn
 
 let emit_warnings (program : typed_program) : unit =
-  fold_program (warn_deprecated_stmt (analyze_udfs program)) [] program
+  fold_program
+    (collect_deprecated_stmt (collect_userdef_distributions program))
+    [] program
   |> List.iter ~f:warn_deprecated

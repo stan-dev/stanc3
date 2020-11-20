@@ -34,7 +34,7 @@ let rec replace_deprecated_expr
           (replace_deprecated_expr deprecated_userdefined
              {expr= TernaryIf ({expr= Paren c; emeta= c.emeta}, t, e); emeta})
     | FunApp (StanLib, {name; id_loc}, e) ->
-        if is_distribution name then
+        if is_deprecated_distribution name then
           CondDistApp
             ( StanLib
             , {name= rename_deprecated deprecated_distributions name; id_loc}
@@ -163,5 +163,5 @@ let repair_syntax program : untyped_program =
 
 let canonicalize_program program : typed_program =
   program
-  |> map_program (replace_deprecated_stmt (analyze_udfs program))
+  |> map_program (replace_deprecated_stmt (collect_userdef_distributions program))
   |> map_program parens_stmt
