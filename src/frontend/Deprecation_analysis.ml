@@ -189,8 +189,10 @@ let collect_userdef_distributions program =
   |> List.dedup_and_sort ~compare:(fun (x, _) (y, _) -> String.compare x y)
   |> String.Map.of_alist_exn
 
-let emit_warnings (program : typed_program) : unit =
+let collect_warnings (program : typed_program) =
   fold_program
     (collect_deprecated_stmt (collect_userdef_distributions program))
     [] program
-  |> List.iter ~f:warn_deprecated
+
+let emit_warnings (program : typed_program) : unit =
+  program |> collect_warnings |> List.iter ~f:warn_deprecated

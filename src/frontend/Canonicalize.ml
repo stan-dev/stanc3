@@ -163,5 +163,6 @@ let repair_syntax program : untyped_program =
 
 let canonicalize_program program : typed_program =
   program
-  |> map_program (replace_deprecated_stmt (collect_userdef_distributions program))
+  |> map_program
+       (replace_deprecated_stmt (collect_userdef_distributions program))
   |> map_program parens_stmt
