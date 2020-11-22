@@ -1,8 +1,12 @@
-name: Building binaries
+name: Build binaries
 
-on:
-  pull_request:
-    branches: [ master ]
+on: 
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to use for building binaries'
+        required: true
+        default: 'master'
 
 jobs:
   linux:
@@ -13,6 +17,8 @@ jobs:
     steps:    
       - name: Checkout stanc3
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.branch }}
 
       - name: opam caching
         id: opam-cache
@@ -60,6 +66,8 @@ jobs:
     steps:    
       - name: Checkout stanc3
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.branch }}
 
       - name: opam caching
         id: opam-cache
@@ -121,6 +129,8 @@ jobs:
     steps:    
       - name: Checkout stanc3
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.branch }}
 
       - name: opam caching
         id: opam-cache
