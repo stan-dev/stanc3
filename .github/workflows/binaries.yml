@@ -40,12 +40,17 @@ jobs:
           mv _build/default/src/stanc/stanc.exe linux-stanc
           mv _build/default/src/stan2tfp/stan2tfp.exe linux-stan2tfp
       
-      - name: Upload Linux binaries
+      - name: Upload Linux stanc
         uses: actions/upload-artifact@v2
         with:
-          path: |
-            linux-stanc
-            linux-stan2tfp
+          name: linux-stanc
+          path: linux-stanc            
+
+      - name: Upload Linux stan2tfp
+        uses: actions/upload-artifact@v2
+        with:
+          name: linux-stan2tfp
+          path: linux-stan2tfp
 
   windows:
     runs-on: ubuntu-latest
@@ -66,8 +71,8 @@ jobs:
       - name: Install dependencies
         run: |
           apt-get update -qq
-          apt-get install -y --no-install-recommends ca-certificates rsync git build-essential m4 sudo
-          apt-get install -y --no-install-recommends unzip pkg-config libpcre3-dev mingw-w64 gcc wget gawk bubblewrap
+          apt-get install -y --no-install-recommends ca-certificates rsync git build-essential m4 sudo \
+          unzip pkg-config libpcre3-dev mingw-w64 gcc wget gawk bubblewrap
           wget https://github.com/ocaml/opam/releases/download/2.0.4/opam-2.0.4-x86_64-linux
           sudo install opam-2.0.4-x86_64-linux /usr/local/bin/opam
           opam init --comp 4.02.3 --disable-sandboxing -y
@@ -94,13 +99,23 @@ jobs:
           dune build --profile release src/stancjs
           mv _build/default/src/stancjs/stancjs.bc.js stanc.js
 
-      - name: Upload Windows binaries & stanc.js
+      - name: Upload Windows stanc
         uses: actions/upload-artifact@v2
         with:
-          path: |
-            windows-stanc
-            windows-stan2tfp
-            stanc.js
+          name: windows-stanc
+          path: windows-stanc
+
+      - name: Upload Windows stan2tfp
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows-stan2tfp
+          path: windows-stan2tfp
+
+      - name: Upload stanc.js
+        uses: actions/upload-artifact@v2
+        with:
+          name: stanc.js
+          path: stanc.js
   mac:
     runs-on: macOS-latest
     steps:    
@@ -135,6 +150,11 @@ jobs:
       - name: Upload MacOS binaries
         uses: actions/upload-artifact@v2
         with:
-          path: |
-            mac-stanc
-            mac-stan2tfp
+          name: mac-stanc
+          path: mac-stanc
+
+      - name: Upload MacOS binaries
+        uses: actions/upload-artifact@v2
+        with:
+          name: mac-stan2tfp
+          path: mac-stan2tfp
