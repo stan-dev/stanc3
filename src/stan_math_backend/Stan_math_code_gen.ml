@@ -139,21 +139,7 @@ let pp_located_error ppf (pp_body_block, body) =
  @param name The name of the object
  @param ut The unsized type of the object
  *)
-let _pp_arg ppf (custom_scalar_opt, (_, name, ut)) =
-  let scalar =
-    match custom_scalar_opt with
-    | Some scalar -> scalar
-    | None -> stantype_prim_str ut
-  in
-  pf ppf "const %a& %s" pp_unsizedtype_custom_scalar (scalar, ut) name
-
-(** Print the type of an object.
- @param ppf A pretty printer
- @param custom_scalar_opt A string representing a types inner scalar value.
- @param name The name of the object
- @param ut The unsized type of the object
- *)
-let pp_arg_udf2 ppf (custom_scalar_opt, (_, name, ut)) =
+let pp_arg ppf (custom_scalar_opt, (_, name, ut)) =
   let scalar =
     match custom_scalar_opt with
     | Some scalar -> scalar
@@ -162,7 +148,7 @@ let pp_arg_udf2 ppf (custom_scalar_opt, (_, name, ut)) =
   (* we add the _arg suffix for any Eigen types *)
   pf ppf "const %a& %s" pp_unsizedtype_custom_scalar_udf (scalar, ut) name
 
-let pp_arg_udf1 ppf (custom_scalar_opt, (_, name, ut)) =
+let pp_arg_eigen_suffix ppf (custom_scalar_opt, (_, name, ut)) =
   let scalar =
     match custom_scalar_opt with
     | Some scalar -> scalar
@@ -192,10 +178,10 @@ let get_templates_and_args fdargs =
   let argtypetemplates = maybe_templated_arg_types fdargs in
   ( List.filter_opt argtypetemplates
   , List.map
-      ~f:(fun a -> strf "%a" pp_arg_udf2 a)
+      ~f:(fun a -> strf "%a" pp_arg a)
       (List.zip_exn argtypetemplates fdargs)
   , List.map
-      ~f:(fun a -> strf "%a" pp_arg_udf1 a)
+      ~f:(fun a -> strf "%a" pp_arg_eigen_suffix a)
       (List.zip_exn argtypetemplates fdargs) )
 
 (** Print the C++ template parameter decleration before a function.
