@@ -97,12 +97,12 @@ let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" scalar
   | x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
 
-let pp_unsizedtype_custom_scalar_udf ppf (scalar, ut) =
+let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
   match ut with
   | UnsizedType.UInt | UReal | UMatrix | URowVector | UVector ->
       string ppf scalar
   | UArray t ->
-      (* No expressions if an array of Eigen::Matrix *)
+      (* Expressions are not accepted for arrays of Eigen::Matrix *)
       pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar (scalar, t)
   | x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
 

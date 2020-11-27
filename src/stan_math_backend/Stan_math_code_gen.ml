@@ -146,7 +146,7 @@ let pp_arg ppf (custom_scalar_opt, (_, name, ut)) =
     | None -> stantype_prim_str ut
   in
   (* we add the _arg suffix for any Eigen types *)
-  pf ppf "const %a& %s" pp_unsizedtype_custom_scalar_udf (scalar, ut) name
+  pf ppf "const %a& %s" pp_unsizedtype_custom_scalar_eigen_exprs (scalar, ut) name
 
 let pp_arg_eigen_suffix ppf (custom_scalar_opt, (_, name, ut)) =
   let scalar =
@@ -160,7 +160,7 @@ let pp_arg_eigen_suffix ppf (custom_scalar_opt, (_, name, ut)) =
     | UMatrix | URowVector | UVector -> name ^ "_arg__"
     | _ -> name
   in
-  pf ppf "const %a& %s" pp_unsizedtype_custom_scalar_udf (scalar, ut)
+  pf ppf "const %a& %s" pp_unsizedtype_custom_scalar_eigen_exprs (scalar, ut)
     opt_arg_suffix
 
 (** [pp_located_error_b] automatically adds a Block wrapper *)
@@ -301,7 +301,6 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
               else pf ppf ""
             in
             pf ppf "@,@,%astruct %s%s {@,%a const @,{@,return %a;@,}@,};@,"
-              (* (if is_dist || is_lp then "template <bool propto__>" else "") *)
               pp_template_propto fdname fdname reduce_sum_functor_suffix
               pp_sig_rs "operator()" pp_call_str
               ( (if is_dist || is_lp then fdname ^ "<propto__>" else fdname)
