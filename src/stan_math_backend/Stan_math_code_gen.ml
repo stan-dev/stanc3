@@ -53,7 +53,7 @@ let pp_located ppf _ =
 
 (** Detect if argument requires C++ template *)
 let arg_needs_template = function
-  | UnsizedType.DataOnly, _, t when not (UnsizedType.is_eigen_type t) -> false
+  | UnsizedType.DataOnly, _, t -> UnsizedType.is_eigen_type t
   | _, _, t when UnsizedType.contains_int t -> false
   | _ -> true
 
@@ -157,9 +157,7 @@ let pp_arg_eigen_suffix ppf (custom_scalar_opt, (_, name, ut)) =
   in
   (* we add the _arg suffix for any Eigen types *)
   let opt_arg_suffix =
-    match ut with
-    | UMatrix | URowVector | UVector -> name ^ "_arg__"
-    | _ -> name
+    if UnsizedType.is_eigen_type ut then name ^ "_arg__" else name
   in
   pf ppf "const %a& %s" pp_unsizedtype_custom_scalar_eigen_exprs (scalar, ut)
     opt_arg_suffix
@@ -243,17 +241,16 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
       pp_template_decorator ppf (List.tl_exn templates)
     else pp_template_decorator ppf templates ;
     pp_returntype ppf fdargs fdrt ;
-    let first_args, rest_args =
-      if is_reduce_sum_fn then List.split_n args 3 else List.split_n args 2
+    let args, variadic_args =
+      if is_reduce_sum_fn then List.split_n args 3
+      else if is_variadic_ode_fn then List.split_n args 2
+      else (args, [])
     in
     let arg_strs =
-      if is_reduce_sum_fn || is_variadic_ode_fn then
-        first_args
-        @ ["std::ostream* pstream__"]
-        @ rest_args
-        @ mk_extra_args extra_templates extra
-      else
-        args @ mk_extra_args extra_templates extra @ ["std::ostream* pstream__"]
+      args
+      @ mk_extra_args extra_templates extra
+      @ ["std::ostream* pstream__"]
+      @ variadic_args
     in
     pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs
   in
