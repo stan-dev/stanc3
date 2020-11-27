@@ -1112,12 +1112,12 @@ return last_capture(y_i, pstream__);
 };
 
 template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<value_type_t<T2__>,
-value_type_t<T3__>>, -1, -1>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
+stan::value_type_t<T3__>>, -1, -1>
 prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
                 const T3__& phi_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<value_type_t<T2__>,
-          value_type_t<T3__>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
+          stan::value_type_t<T3__>>;
   const auto& p = to_ref(p_arg__);const auto& phi = to_ref(phi_arg__);
   const static bool propto__ = true;
   (void) propto__;
@@ -1302,8 +1302,8 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
 
 struct prob_uncaptured_functor__ {
 template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<value_type_t<T2__>,
-value_type_t<T3__>>, -1, -1>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
+stan::value_type_t<T3__>>, -1, -1>
 operator()(const int& nind, const int& n_occasions, const T2__& p,
            const T3__& phi, std::ostream* pstream__)  const 
 {
@@ -9783,12 +9783,12 @@ return last_capture(y_i, pstream__);
 };
 
 template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<value_type_t<T2__>,
-value_type_t<T3__>>, -1, -1>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
+stan::value_type_t<T3__>>, -1, -1>
 prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
                 const T3__& phi_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<value_type_t<T2__>,
-          value_type_t<T3__>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
+          stan::value_type_t<T3__>>;
   const auto& p = to_ref(p_arg__);const auto& phi = to_ref(phi_arg__);
   const static bool propto__ = true;
   (void) propto__;
@@ -9973,8 +9973,8 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
 
 struct prob_uncaptured_functor__ {
 template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<value_type_t<T2__>,
-value_type_t<T3__>>, -1, -1>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
+stan::value_type_t<T3__>>, -1, -1>
 operator()(const int& nind, const int& n_occasions, const T2__& p,
            const T3__& phi, std::ostream* pstream__)  const 
 {
@@ -12386,12 +12386,12 @@ return last_capture(y_i, pstream__);
 };
 
 template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<value_type_t<T0__>,
-value_type_t<T1__>>, -1, -1>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
+stan::value_type_t<T1__>>, -1, -1>
 prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
                 std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<value_type_t<T0__>,
-          value_type_t<T1__>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
+          stan::value_type_t<T1__>>;
   const auto& p = to_ref(p_arg__);const auto& phi = to_ref(phi_arg__);
   const static bool propto__ = true;
   (void) propto__;
@@ -12587,8 +12587,8 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
 
 struct prob_uncaptured_functor__ {
 template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<value_type_t<T0__>,
-value_type_t<T1__>>, -1, -1>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
+stan::value_type_t<T1__>>, -1, -1>
 operator()(const T0__& p, const T1__& phi, std::ostream* pstream__)  const 
 {
 return prob_uncaptured(p, phi, pstream__);
@@ -12603,11 +12603,11 @@ js_super_lp(const std::vector<std::vector<int>>& y,
             const T3__& p_arg__, const T4__& phi_arg__, const T5__& psi,
             const T6__& nu_arg__, const T7__& chi_arg__, T_lp__& lp__,
             T_lp_accum__& lp_accum__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<value_type_t<T3__>,
-          value_type_t<T4__>,
+  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T3__>,
+          stan::value_type_t<T4__>,
           T5__,
-          value_type_t<T6__>,
-          value_type_t<T7__>>;
+          stan::value_type_t<T6__>,
+          stan::value_type_t<T7__>>;
   const auto& p = to_ref(p_arg__);const auto& phi = to_ref(phi_arg__);
   const auto& nu = to_ref(nu_arg__);const auto& chi = to_ref(chi_arg__);
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -18949,12 +18949,12 @@ return last_capture(y_i, pstream__);
 };
 
 template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<value_type_t<T2__>,
-value_type_t<T3__>>, -1, -1>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
+stan::value_type_t<T3__>>, -1, -1>
 prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
                 const T3__& phi_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<value_type_t<T2__>,
-          value_type_t<T3__>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
+          stan::value_type_t<T3__>>;
   const auto& p = to_ref(p_arg__);const auto& phi = to_ref(phi_arg__);
   const static bool propto__ = true;
   (void) propto__;
@@ -19139,8 +19139,8 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
 
 struct prob_uncaptured_functor__ {
 template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<value_type_t<T2__>,
-value_type_t<T3__>>, -1, -1>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
+stan::value_type_t<T3__>>, -1, -1>
 operator()(const int& nind, const int& n_occasions, const T2__& p,
            const T3__& phi, std::ostream* pstream__)  const 
 {
@@ -21648,12 +21648,12 @@ return last_capture(y_i, pstream__);
 };
 
 template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<value_type_t<T0__>,
-value_type_t<T1__>>, -1, -1>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
+stan::value_type_t<T1__>>, -1, -1>
 prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
                 std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<value_type_t<T0__>,
-          value_type_t<T1__>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
+          stan::value_type_t<T1__>>;
   const auto& p = to_ref(p_arg__);const auto& phi = to_ref(phi_arg__);
   const static bool propto__ = true;
   (void) propto__;
@@ -21849,8 +21849,8 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
 
 struct prob_uncaptured_functor__ {
 template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<value_type_t<T0__>,
-value_type_t<T1__>>, -1, -1>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
+stan::value_type_t<T1__>>, -1, -1>
 operator()(const T0__& p, const T1__& phi, std::ostream* pstream__)  const 
 {
 return prob_uncaptured(p, phi, pstream__);
@@ -21865,10 +21865,10 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
                const T3__& p_arg__, const T4__& phi_arg__,
                const T5__& gamma_arg__, const T6__& chi_arg__, T_lp__& lp__,
                T_lp_accum__& lp_accum__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<value_type_t<T3__>,
-          value_type_t<T4__>,
-          value_type_t<T5__>,
-          value_type_t<T6__>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T3__>,
+          stan::value_type_t<T4__>,
+          stan::value_type_t<T5__>,
+          stan::value_type_t<T6__>>;
   const auto& p = to_ref(p_arg__);const auto& phi = to_ref(phi_arg__);
   const auto& gamma = to_ref(gamma_arg__);
   const auto& chi = to_ref(chi_arg__);
@@ -22415,9 +22415,9 @@ return jolly_seber_lp<propto__>(y, first, last, p, phi, gamma, chi, lp__,
 };
 
 template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<value_type_t<T0__>>, -1, 1>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
 seq_cprob(const T0__& gamma_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<value_type_t<T0__>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
   const auto& gamma = to_ref(gamma_arg__);
   const static bool propto__ = true;
   (void) propto__;
@@ -22476,7 +22476,7 @@ seq_cprob(const T0__& gamma_arg__, std::ostream* pstream__) {
 
 struct seq_cprob_functor__ {
 template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<value_type_t<T0__>>, -1, 1>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
 operator()(const T0__& gamma, std::ostream* pstream__)  const 
 {
 return seq_cprob(gamma, pstream__);
@@ -26854,12 +26854,12 @@ return last_capture(y_i, pstream__);
 };
 
 template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<value_type_t<T2__>,
-value_type_t<T3__>>, -1, -1>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
+stan::value_type_t<T3__>>, -1, -1>
 prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
                 const T3__& phi_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<value_type_t<T2__>,
-          value_type_t<T3__>>;
+  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
+          stan::value_type_t<T3__>>;
   const auto& p = to_ref(p_arg__);const auto& phi = to_ref(phi_arg__);
   const static bool propto__ = true;
   (void) propto__;
@@ -27044,8 +27044,8 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
 
 struct prob_uncaptured_functor__ {
 template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<value_type_t<T2__>,
-value_type_t<T3__>>, -1, -1>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
+stan::value_type_t<T3__>>, -1, -1>
 operator()(const int& nind, const int& n_occasions, const T2__& p,
            const T3__& phi, std::ostream* pstream__)  const 
 {
