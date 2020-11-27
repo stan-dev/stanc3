@@ -238,57 +238,34 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
     (if is_dist || is_lp then ["bool propto__"] else [])
     @ List.(map ~f:typename (argtypetemplates @ extra_templates))
   in
-  let pp_sig ppf name =
-    pp_template_decorator ppf templates ;
-    pp_returntype ppf fdargs fdrt ;
-    let arg_strs =
-      args @ mk_extra_args extra_templates extra @ ["std::ostream* pstream__"]
-    in
-    pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs
-  in
-  let pp_sig_expressions ppf name =
-    pp_template_decorator ppf templates ;
-    pp_returntype ppf fdargs fdrt ;
-    let arg_strs =
-      args_expressions
-      @ mk_extra_args extra_templates extra
-      @ ["std::ostream* pstream__"]
-    in
-    pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs
-  in
-  let pp_sig_rs ppf name =
-    if is_dist then pp_template_decorator ppf (List.tl_exn templates)
+  let pp_sig ppf (name, args, is_reduce_sum_fn, is_variadic_ode_fn) =
+    if (is_reduce_sum_fn || is_variadic_ode_fn) && is_dist then
+      pp_template_decorator ppf (List.tl_exn templates)
     else pp_template_decorator ppf templates ;
     pp_returntype ppf fdargs fdrt ;
-    let first_three, rest = List.split_n args 3 in
+    let first_args, rest_args =
+      if is_reduce_sum_fn then List.split_n args 3 else List.split_n args 2
+    in
     let arg_strs =
-      first_three
-      @ ["std::ostream* pstream__"]
-      @ rest
-      @ mk_extra_args extra_templates extra
+      if is_reduce_sum_fn || is_variadic_ode_fn then
+        first_args
+        @ ["std::ostream* pstream__"]
+        @ rest_args
+        @ mk_extra_args extra_templates extra
+      else
+        args @ mk_extra_args extra_templates extra @ ["std::ostream* pstream__"]
     in
     pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs
   in
-  let pp_sig_variadic_ode ppf name =
-    if is_dist then pp_template_decorator ppf (List.tl_exn templates)
-    else pp_template_decorator ppf templates ;
-    pp_returntype ppf fdargs fdrt ;
-    let first_two, rest = List.split_n args 2 in
-    let arg_strs =
-      first_two
-      @ ["std::ostream* pstream__"]
-      @ rest
-      @ mk_extra_args extra_templates extra
-    in
-    pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs
-  in
-  pp_sig_expressions ppf fdname ;
+  pp_sig ppf (fdname, args_expressions, false, false) ;
   match fdbody with
   | None -> pf ppf ";@ "
   | Some fdbody ->
       pp_block ppf (pp_body, fdbody) ;
       pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
-        functor_suffix pp_sig "operator()" pp_call_str
+        functor_suffix pp_sig
+        ("operator()", args, false, false)
+        pp_call_str
         ( (if is_dist || is_lp then fdname ^ "<propto__>" else fdname)
         , List.map ~f:(fun (_, name, _) -> name) fdargs @ extra @ ["pstream__"]
         ) ;
@@ -302,8 +279,9 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
               else pf ppf ""
             in
             pf ppf "@,@,%astruct %s%s {@,%a const @,{@,return %a;@,}@,};@,"
-              pp_template_propto fdname fdname reduce_sum_functor_suffix
-              pp_sig_rs "operator()" pp_call_str
+              pp_template_propto fdname fdname reduce_sum_functor_suffix pp_sig
+              ("operator()", args, true, false)
+              pp_call_str
               ( (if is_dist || is_lp then fdname ^ "<propto__>" else fdname)
               , slice :: (start ^ " + 1") :: (end_ ^ " + 1")
                 :: List.map ~f:(fun (_, name, _) -> name) rest
@@ -316,7 +294,8 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
         (* Produces the variadic ode functors that has the pstream argument
         as the third and not last argument *)
         pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
-          variadic_ode_functor_suffix pp_sig_variadic_ode "operator()"
+          variadic_ode_functor_suffix pp_sig
+          ("operator()", args, false, true)
           pp_call_str
           ( fdname
           , List.map ~f:(fun (_, name, _) -> name) fdargs
