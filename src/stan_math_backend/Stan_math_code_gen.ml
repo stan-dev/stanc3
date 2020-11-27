@@ -112,14 +112,14 @@ let pp_returntype ppf arg_types rt =
   | None -> pf ppf "void@,"
 
 let pp_eigen_arg_to_ref ppf arg_types =
-  pf ppf "@[<hov>%a@]@ " (list ~sep:cut string)
-    (List.map
-       ~f:(fun (_, name, _) ->
-         strf "@[<hv 8>const auto& %s = to_ref(%s);@]" name (name ^ "_arg__")
-         )
-       (List.filter
-          ~f:(fun (_, _, ut) -> UnsizedType.is_eigen_type ut)
-          arg_types))
+  let pp_ref ppf name =
+    pf ppf "@[<hv 8>const auto& %s = to_ref(%s);@]" name (name ^ "_arg__")
+  in
+  pf ppf "@[<hov>%a@]@ " (list ~sep:cut pp_ref)
+    (List.filter_map
+       ~f:(fun (_, name, ut) ->
+         if UnsizedType.is_eigen_type ut then Some name else None )
+       arg_types)
 
 (** [pp_located_error ppf (pp_body_block, body_block, err_msg)] surrounds [body_block]
     with a C++ try-catch that will rethrow the error with the proper source location
