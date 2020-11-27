@@ -1118,7 +1118,8 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
                 const T3__& phi_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
           stan::value_type_t<T3__>>;
-  const auto& p = to_ref(p_arg__);const auto& phi = to_ref(phi_arg__);
+  const auto& p = to_ref(p_arg__);
+  const auto& phi = to_ref(phi_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -9789,7 +9790,8 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
                 const T3__& phi_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
           stan::value_type_t<T3__>>;
-  const auto& p = to_ref(p_arg__);const auto& phi = to_ref(phi_arg__);
+  const auto& p = to_ref(p_arg__);
+  const auto& phi = to_ref(phi_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -12392,7 +12394,8 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
                 std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
           stan::value_type_t<T1__>>;
-  const auto& p = to_ref(p_arg__);const auto& phi = to_ref(phi_arg__);
+  const auto& p = to_ref(p_arg__);
+  const auto& phi = to_ref(phi_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -12608,8 +12611,10 @@ js_super_lp(const std::vector<std::vector<int>>& y,
           T5__,
           stan::value_type_t<T6__>,
           stan::value_type_t<T7__>>;
-  const auto& p = to_ref(p_arg__);const auto& phi = to_ref(phi_arg__);
-  const auto& nu = to_ref(nu_arg__);const auto& chi = to_ref(chi_arg__);
+  const auto& p = to_ref(p_arg__);
+  const auto& phi = to_ref(phi_arg__);
+  const auto& nu = to_ref(nu_arg__);
+  const auto& chi = to_ref(chi_arg__);
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   
@@ -18955,7 +18960,8 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
                 const T3__& phi_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
           stan::value_type_t<T3__>>;
-  const auto& p = to_ref(p_arg__);const auto& phi = to_ref(phi_arg__);
+  const auto& p = to_ref(p_arg__);
+  const auto& phi = to_ref(phi_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -21654,7 +21660,8 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
                 std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
           stan::value_type_t<T1__>>;
-  const auto& p = to_ref(p_arg__);const auto& phi = to_ref(phi_arg__);
+  const auto& p = to_ref(p_arg__);
+  const auto& phi = to_ref(phi_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -21869,7 +21876,8 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
           stan::value_type_t<T4__>,
           stan::value_type_t<T5__>,
           stan::value_type_t<T6__>>;
-  const auto& p = to_ref(p_arg__);const auto& phi = to_ref(phi_arg__);
+  const auto& p = to_ref(p_arg__);
+  const auto& phi = to_ref(phi_arg__);
   const auto& gamma = to_ref(gamma_arg__);
   const auto& chi = to_ref(chi_arg__);
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -26860,7 +26868,8 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
                 const T3__& phi_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
           stan::value_type_t<T3__>>;
-  const auto& p = to_ref(p_arg__);const auto& phi = to_ref(phi_arg__);
+  const auto& p = to_ref(p_arg__);
+  const auto& phi = to_ref(phi_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());

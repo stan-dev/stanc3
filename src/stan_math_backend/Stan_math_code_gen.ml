@@ -115,7 +115,7 @@ let pp_eigen_arg_to_ref ppf arg_types =
   let pp_ref ppf name =
     pf ppf "@[<hv 8>const auto& %s = to_ref(%s);@]" name (name ^ "_arg__")
   in
-  pf ppf "@[<hov>%a@]@ " (list ~sep:cut pp_ref)
+  pf ppf "@[<v>%a@]@ " (list ~sep:cut pp_ref)
     (List.filter_map
        ~f:(fun (_, name, ut) ->
          if UnsizedType.is_eigen_type ut then Some name else None )

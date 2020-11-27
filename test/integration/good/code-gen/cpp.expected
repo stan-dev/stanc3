@@ -3177,7 +3177,8 @@ f0(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
-  const auto& a7 = to_ref(a7_arg__);const auto& a10 = to_ref(a10_arg__);
+  const auto& a7 = to_ref(a7_arg__);
+  const auto& a10 = to_ref(a10_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -3236,7 +3237,8 @@ f1(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
-  const auto& a7 = to_ref(a7_arg__);const auto& a10 = to_ref(a10_arg__);
+  const auto& a7 = to_ref(a7_arg__);
+  const auto& a10 = to_ref(a10_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -3292,7 +3294,8 @@ f2(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
-  const auto& a7 = to_ref(a7_arg__);const auto& a10 = to_ref(a10_arg__);
+  const auto& a7 = to_ref(a7_arg__);
+  const auto& a10 = to_ref(a10_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -3348,7 +3351,8 @@ f3(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
-  const auto& a7 = to_ref(a7_arg__);const auto& a10 = to_ref(a10_arg__);
+  const auto& a7 = to_ref(a7_arg__);
+  const auto& a10 = to_ref(a10_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -3406,7 +3410,8 @@ f4(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
-  const auto& a7 = to_ref(a7_arg__);const auto& a10 = to_ref(a10_arg__);
+  const auto& a7 = to_ref(a7_arg__);
+  const auto& a10 = to_ref(a10_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -3466,7 +3471,8 @@ f5(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
-  const auto& a7 = to_ref(a7_arg__);const auto& a10 = to_ref(a10_arg__);
+  const auto& a7 = to_ref(a7_arg__);
+  const auto& a10 = to_ref(a10_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -3526,7 +3532,8 @@ f6(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
-  const auto& a7 = to_ref(a7_arg__);const auto& a10 = to_ref(a10_arg__);
+  const auto& a7 = to_ref(a7_arg__);
+  const auto& a10 = to_ref(a10_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -3586,7 +3593,8 @@ f7(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
-  const auto& a7 = to_ref(a7_arg__);const auto& a10 = to_ref(a10_arg__);
+  const auto& a7 = to_ref(a7_arg__);
+  const auto& a10 = to_ref(a10_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -3646,7 +3654,8 @@ f8(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
-  const auto& a7 = to_ref(a7_arg__);const auto& a10 = to_ref(a10_arg__);
+  const auto& a7 = to_ref(a7_arg__);
+  const auto& a10 = to_ref(a10_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -3706,7 +3715,8 @@ f9(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
-  const auto& a7 = to_ref(a7_arg__);const auto& a10 = to_ref(a10_arg__);
+  const auto& a7 = to_ref(a7_arg__);
+  const auto& a10 = to_ref(a10_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -3766,7 +3776,8 @@ f10(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
-  const auto& a7 = to_ref(a7_arg__);const auto& a10 = to_ref(a10_arg__);
+  const auto& a7 = to_ref(a7_arg__);
+  const auto& a10 = to_ref(a10_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -3826,7 +3837,8 @@ f11(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
-  const auto& a7 = to_ref(a7_arg__);const auto& a10 = to_ref(a10_arg__);
+  const auto& a7 = to_ref(a7_arg__);
+  const auto& a10 = to_ref(a10_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -3886,7 +3898,8 @@ f12(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
-  const auto& a7 = to_ref(a7_arg__);const auto& a10 = to_ref(a10_arg__);
+  const auto& a7 = to_ref(a7_arg__);
+  const auto& a10 = to_ref(a10_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -4119,7 +4132,8 @@ algebra_system(const T0__& x_arg__, const T1__& y_arg__,
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
           stan::value_type_t<T1__>,
           T2__>;
-  const auto& x = to_ref(x_arg__);const auto& y = to_ref(y_arg__);
+  const auto& x = to_ref(x_arg__);
+  const auto& y = to_ref(y_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -11258,7 +11272,8 @@ algebra_system(const T0__& x_arg__, const T1__& y_arg__,
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
           stan::value_type_t<T1__>,
           T2__>;
-  const auto& x = to_ref(x_arg__);const auto& y = to_ref(y_arg__);
+  const auto& x = to_ref(x_arg__);
+  const auto& y = to_ref(y_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -13518,7 +13533,8 @@ f(const T0__& t, const T1__& z_arg__, const T2__& a, const T3__& b_arg__,
           stan::value_type_t<T1__>,
           T2__,
           stan::value_type_t<T3__>>;
-  const auto& z = to_ref(z_arg__);const auto& b = to_ref(b_arg__);
+  const auto& z = to_ref(z_arg__);
+  const auto& b = to_ref(b_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -24756,7 +24772,8 @@ s(const std::vector<T0__>& y_slice, const int& start, const int& end,
           T16__,
           T17__,
           T19__>>>;
-  const auto& c = to_ref(c_arg__);const auto& d = to_ref(d_arg__);
+  const auto& c = to_ref(c_arg__);
+  const auto& d = to_ref(d_arg__);
   const auto& e = to_ref(e_arg__);
   const static bool propto__ = true;
   (void) propto__;
