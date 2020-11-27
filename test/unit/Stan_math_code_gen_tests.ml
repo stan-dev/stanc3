@@ -24,11 +24,12 @@ let%expect_test "udf" =
   |> print_endline ;
   [%expect
     {|
-    template <typename T1__>
+    template <typename T0__, typename T1__>
     void
-    sars(const Eigen::Matrix<double, -1, -1>& x,
-         const Eigen::Matrix<T1__, 1, -1>& y, std::ostream* pstream__) {
-      using local_scalar_t__ = stan::promote_args_t<T1__>;
+    sars(const T0__& x_arg__, const T1__& y_arg__, std::ostream* pstream__) {
+      using local_scalar_t__ = stan::promote_args_t<value_type_t<T0__>,
+              value_type_t<T1__>>;
+      const auto& x = to_ref(x_arg__);const auto& y = to_ref(y_arg__);
       const static bool propto__ = true;
       (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -45,10 +46,9 @@ let%expect_test "udf" =
     }
 
     struct sars_functor__ {
-    template <typename T1__>
+    template <typename T0__, typename T1__>
     void
-    operator()(const Eigen::Matrix<double, -1, -1>& x,
-               const Eigen::Matrix<T1__, 1, -1>& y, std::ostream* pstream__)  const
+    operator()(const T0__& x, const T1__& y, std::ostream* pstream__)  const
     {
     return sars(x, y, pstream__);
     }
