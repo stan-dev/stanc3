@@ -68,10 +68,11 @@ let maybe_templated_arg_types (args : Program.fun_arg_decl) =
       | false -> None )
 
 let return_arg_types (args : Program.fun_arg_decl) =
-  List.mapi args ~f:(fun i ((_,_,ut ) as a) ->
-      if (UnsizedType.is_eigen_type ut) && arg_needs_template a then Some (sprintf "value_type_t<T%d__>" i)
+  List.mapi args ~f:(fun i ((_, _, ut) as a) ->
+      if UnsizedType.is_eigen_type ut && arg_needs_template a then
+        Some (sprintf "value_type_t<T%d__>" i)
       else if arg_needs_template a then Some (sprintf "T%d__" i)
-      else None)
+      else None )
 
 let%expect_test "arg types templated correctly" =
   [(AutoDiffable, "xreal", UReal); (DataOnly, "yint", UInt)]
@@ -98,8 +99,7 @@ let pp_promoted_scalar ppf args =
               tl
       in
       promote_args_chunked ppf
-        List.(
-          chunks_of ~length:5 (filter_opt (return_arg_types args)))
+        List.(chunks_of ~length:5 (filter_opt (return_arg_types args)))
 
 (** Pretty-prints a function's return-type, taking into account templated argument
     promotion.*)
@@ -115,7 +115,8 @@ let pp_eigen_arg_to_ref ppf arg_types =
   pf ppf "@[<hov>%a@]@ " (list ~sep:cut string)
     (List.map
        ~f:(fun (_, name, _) ->
-         strf "@[<hv 8>const auto& %s = to_ref(%s);@]" name (name ^ "_arg__") )
+         strf "@[<hv 8>const auto& %s = to_ref(%s);@]" name (name ^ "_arg__")
+         )
        (List.filter
           ~f:(fun (_, _, ut) -> UnsizedType.is_eigen_type ut)
           arg_types))
@@ -169,7 +170,9 @@ let pp_arg_udf1 ppf (custom_scalar_opt, (_, name, ut)) =
   in
   (* we add the _arg suffix for any Eigen types *)
   let opt_arg_suffix =
-    match ut with UMatrix | URowVector | UVector -> name ^ "_arg__" | _ -> name
+    match ut with
+    | UMatrix | URowVector | UVector -> name ^ "_arg__"
+    | _ -> name
   in
   pf ppf "const %a& %s" pp_unsizedtype_custom_scalar_udf (scalar, ut)
     opt_arg_suffix
