@@ -1156,11 +1156,11 @@ Function bodies must contain a return statement of correct type in every branch.
 
   $ ../../../../install/default/bin/stanc functions-bad0.stan
 
-Syntax error in 'functions-bad0.stan', line 2, column 10 to column 11, parsing error:
+Syntax error in 'functions-bad0.stan', line 2, column 11 to column 15, parsing error:
    -------------------------------------------------
      1:  functions {
      2:    real foo(void x) {
-                    ^
+                        ^
      3:      return 1.0;
      4:    }
    -------------------------------------------------

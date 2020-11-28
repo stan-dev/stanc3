@@ -1009,7 +1009,8 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
       "_" ^ prog_name
     else prog_name
   in
-  { functions_block= map (trans_fun_def ud_dists) functionblock @ !closures
+  let functions = map (trans_fun_def ud_dists) functionblock in
+  { functions_block= functions @ !closures
   ; input_vars
   ; prepare_data
   ; log_prob

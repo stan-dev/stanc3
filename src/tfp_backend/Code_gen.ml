@@ -3,6 +3,7 @@ open Middle
 open Fmt
 
 let is_multi_index = function Index.MultiIndex _ -> true | _ -> false
+let closures = ref String.Map.empty
 
 let pp_call ppf (name, pp_arg, args) =
   pf ppf "%s(@[<hov>%a@])" name (list ~sep:comma pp_arg) args
@@ -65,6 +66,13 @@ and pp_paren ppf expr =
 
 let rec pp_stmt ppf s =
   match s.Stmt.Fixed.pattern with
+  | Assignment
+      ( (lhs, _, [])
+      , { pattern=
+            FunApp (CompilerInternal, fn, {pattern= Lit (Str, impl); _} :: _); _
+        } )
+    when fn = Internal_fun.to_string FnMakeClosure ->
+      pp_fundef ppf {(Map.find_exn !closures impl) with Program.fdname= lhs}
   | Assignment ((lhs, _, indices), rhs) ->
       pf ppf "%s%a = %a" lhs pp_indices indices pp_expr rhs
   | TargetPE rhs -> pf ppf "target += tf__.reduce_sum(%a)" pp_expr rhs
@@ -87,12 +95,21 @@ let rec pp_stmt ppf s =
     ->
       raise_s [%message "Not implemented" (s : Stmt.Located.t)]
 
-let pp_method ppf name params intro ?(outro = []) ppbody =
+and pp_method ppf name params intro ?(outro = []) ppbody =
   pf ppf "@[<v 2>def %a:@," pp_call_str (name, params) ;
   (list ~sep:cut string) ppf (intro @ [""]) ;
   ppbody ppf ;
   if not (List.is_empty outro) then pf ppf "@ %a" (list ~sep:cut string) outro ;
   pf ppf "@, @]"
+
+and pp_fundef ppf {Program.fdname; fdargs; fdbody; _} =
+  let no_body_default : Stmt.Located.t =
+    {pattern= Stmt.Fixed.Pattern.Skip; meta= Location_span.empty}
+  in
+  pp_method ppf fdname
+    (List.map ~f:(fun (_, name, _) -> name) fdargs)
+    []
+    (fun ppf -> pp_stmt ppf (Option.value ~default:no_body_default fdbody))
 
 let rec pp_cast prefix ppf (name, st) =
   match st with
@@ -255,15 +272,6 @@ let pp_methods ppf p =
   pf ppf "@ %a" pp_bijectors p ;
   pf ppf "@ %a" pp_param_names p
 
-let pp_fundef ppf {Program.fdname; fdargs; fdbody; _} =
-  let no_body_default : Stmt.Located.t =
-    {pattern= Stmt.Fixed.Pattern.Skip; meta= Location_span.empty}
-  in
-  pp_method ppf fdname
-    (List.map ~f:(fun (_, name, _) -> name) fdargs)
-    []
-    (fun ppf -> pp_stmt ppf (Option.value ~default:no_body_default fdbody))
-
 let imports =
   {|
 import numpy as np__
@@ -275,8 +283,17 @@ from tensorflow.python.ops.parallel_for import pfor as pfor__
 |}
 
 let pp_prog ppf (p : Program.Typed.t) =
+  let functions =
+    List.filter
+      ~f:(fun data ->
+        if Option.is_some data.Program.fdcaptures then (
+          closures := Map.add_exn !closures ~key:data.fdname ~data ;
+          false )
+        else true )
+      p.functions_block
+  in
   pf ppf "@[<v>%s@,%a@,class %s(tfd__.Distribution):@,@[<v 2>%a@]@]" imports
-    (list ~sep:cut pp_fundef) p.functions_block p.prog_name pp_methods p ;
+    (list ~sep:cut pp_fundef) functions p.prog_name pp_methods p ;
   pf ppf "@ model = %s" p.prog_name
 
 (* Major work to do:

@@ -284,9 +284,10 @@ let semantic_check_fn_normal ~is_cond_dist ~loc id es =
         |> Semantic_error.illtyped_userdefined_fn_app loc id.name listedtypes
              rt
         |> error
-    | Some (_, UFun (_, ReturnType ut, _)) ->
+    | Some (_, UFun (_, ReturnType ut, is_closure)) ->
+        let kind = if is_closure then Closure else UserDefined in
         mk_typed_expression
-          ~expr:(mk_fun_app ~is_cond_dist (UserDefined, id, es))
+          ~expr:(mk_fun_app ~is_cond_dist (kind, id, es))
           ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
         |> ok
     | Some _ ->
@@ -959,11 +960,12 @@ let semantic_check_nrfn_target ~loc ~cf id =
 let semantic_check_nrfn_normal ~loc id es =
   Validate.(
     match Symbol_table.look vm id.name with
-    | Some (_, UFun (listedtypes, Void, _))
+    | Some (_, UFun (listedtypes, Void, is_closure))
       when UnsizedType.check_compatible_arguments_mod_conv id.name listedtypes
              (get_arg_types es) ->
+        let kind = if is_closure then Closure else UserDefined in
         mk_typed_statement
-          ~stmt:(NRFunApp (UserDefined, id, es))
+          ~stmt:(NRFunApp (kind, id, es))
           ~return_type:NoReturnType ~loc
         |> ok
     | Some (_, UFun (listedtypes, Void, _)) ->
@@ -1603,13 +1605,13 @@ and semantic_check_fundef_decl ~loc ~is_closure id body =
         Symbol_table.set_is_assigned vm id.name ;
         ok ())
 
-and semantic_check_closure_id ~loc ~is_closure id =
+and semantic_check_closure_id ~is_closure id =
   if not is_closure then Validate.ok ()
   else
-    let f suffix = not (String.is_suffix ~suffix id) in
+    let f suffix = not (String.is_suffix ~suffix id.name) in
     if List.for_all ~f ["_rng"; "_lpdf"; "_lpmf"; "_lcdf"; "_lccdf"; "_lp"]
     then Validate.ok ()
-    else Validate.error @@ Semantic_error.impure_closure loc
+    else Validate.error @@ Semantic_error.impure_closure id.id_loc
 
 and semantic_check_fundef_dist_rt ~loc id return_ty =
   Validate.(
@@ -1703,13 +1705,13 @@ and semantic_check_fundef ~loc ~cf ~is_closure return_ty id args body =
     let uarg_names = List.map ~f:(fun x -> x.name) uarg_identifiers in
     semantic_check_fundef_overloaded ~loc id uarg_types urt
     |> apply_const (semantic_check_fundef_decl ~loc ~is_closure id body)
-    |> apply_const (semantic_check_closure_id ~loc ~is_closure id.name)
+    |> apply_const (semantic_check_closure_id ~is_closure id)
     >>= fun () ->
+    (* WARNING: SIDE EFFECTING *)
+    Symbol_table.enter vm id.name
+      (Functions, UFun (uarg_types, urt, is_closure)) ;
     let body', captures =
-      Symbol_table.with_capturing_scope vm (fun vm ->
-          (* WARNING: SIDE EFFECTING *)
-          Symbol_table.enter vm id.name
-            (Functions, UFun (uarg_types, urt, is_closure)) ;
+      Symbol_table.with_capturing_scope vm (fun () ->
           (* Check that function args and loop identifiers are not modified in
              function. (passed by const ref)*)
           List.iter ~f:(Symbol_table.set_read_only vm) uarg_names ;
@@ -1719,13 +1721,18 @@ and semantic_check_fundef ~loc ~cf ~is_closure return_ty id args body =
           |> apply_const
                (semantic_check_pmf_fundef_first_arg_ty ~loc id uarg_types)
           >>= fun () ->
-          (* WARNING: SIDE EFFECTING *)
-          Symbol_table.begin_scope vm ;
-          List.map ~f:(fun x -> check_fresh_variable x false) uarg_identifiers
+          List.map
+            ~f:(fun (_, ut, x) ->
+              check_fresh_variable x false
+              |> apply_const
+                   (semantic_check_closure_id
+                      ~is_closure:(UnsizedType.is_fun_type ut)
+                      x) )
+            uargs
           |> sequence
+          |> map ~f:(List.iter ~f:Fn.id)
           |> apply_const
                (semantic_check_fundef_distinct_arg_ids ~loc uarg_names)
-          |> map ~f:(List.iter ~f:Fn.id)
           >>= fun () ->
           (* We treat DataOnly arguments as if they are data and AutoDiffable arguments
              as if they are parameters, for the purposes of type checking. *)
@@ -1755,8 +1762,6 @@ and semantic_check_fundef ~loc ~cf ~is_closure return_ty id args body =
     >>= fun ub ->
     semantic_check_fundef_return_tys ~loc id urt ub
     |> map ~f:(fun () ->
-           (* WARNING: SIDE EFFECTING *)
-           Symbol_table.end_scope vm ;
            let closure_info =
              if is_closure then
                let loc = id.id_loc.begin_loc in

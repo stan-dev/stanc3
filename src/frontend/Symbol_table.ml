@@ -62,7 +62,9 @@ let with_capturing_scope s f =
   let captures = !(s.captures) in
   let locals = !(s.locals) in
   s.locals := String.Set.empty ;
-  let x = f s in
+  begin_scope s ;
+  let x = f () in
+  end_scope s ;
   s.locals := locals ;
   let c = !(s.captures) in
   s.captures := captures ;

@@ -210,9 +210,19 @@ return_type:
     {  grammar_logger "return_type unsized_type" ; ReturnType ut }
 
 arg_decl:
-  | od=option(DATABLOCK) ut=unsized_type id=decl_identifier
+  | tp=arg_type id=decl_identifier
     {  grammar_logger "arg_decl" ;
-       match od with None -> (UnsizedType.AutoDiffable, ut, id) | _ -> (DataOnly, ut, id)  }
+       match tp with (ad, ut) -> (ad, ut, id)  }
+
+arg_type:
+  | od=option(DATABLOCK) ut=unsized_type
+    { match od with None -> (UnsizedType.AutoDiffable, ut) | _ -> (DataOnly, ut) }
+  | od=option(DATABLOCK) ut=function_type
+    { match od with None -> (UnsizedType.AutoDiffable, ut) | _ -> (DataOnly, ut) }
+
+function_type:
+  | rt=return_type LPAREN args=separated_list(COMMA, arg_type) RPAREN
+    { grammar_logger "function_type" ; UnsizedType.UFun (args, rt, true) }
 
 always(x):
   | x=x

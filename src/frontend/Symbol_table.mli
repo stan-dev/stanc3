@@ -19,7 +19,7 @@ val end_scope : 'a state -> unit
 (** Used to end a local scope, purging the symbol table of all symbols added in that scope *)
 
 val with_capturing_scope :
-  'a state -> ('a state -> 'b) -> 'b * Core_kernel.String.Set.t
+  'a state -> (unit -> 'b) -> 'b * Core_kernel.String.Set.t
 (** Used to record captures inside a closure *)
 
 val check_is_local : 'a state -> string -> bool

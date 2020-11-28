@@ -432,6 +432,7 @@ let pp_ctor ppf p =
   let data_idents = List.map ~f:fst p.input_vars |> String.Set.of_list in
   let pp_stmt_topdecl_size_only ppf (Stmt.Fixed.({pattern; meta}) as s) =
     match pattern with
+    | Decl {decl_type= Unsized ut; _} when UnsizedType.is_fun_type ut -> ()
     | Decl {decl_id; decl_type; _} when decl_id <> "pos__" -> (
       match decl_type with
       | Sized st ->
@@ -464,6 +465,7 @@ let pp_ctor ppf p =
 
 let rec top_level_decls Stmt.Fixed.({pattern; _}) =
   match pattern with
+  | Decl {decl_type= Unsized ut; _} when UnsizedType.is_fun_type ut -> []
   | Decl d when d.decl_id <> "pos__" ->
       [(d.decl_id, Type.to_unsized d.decl_type, UnsizedType.DataOnly)]
   | SList stmts -> List.concat_map ~f:top_level_decls stmts
