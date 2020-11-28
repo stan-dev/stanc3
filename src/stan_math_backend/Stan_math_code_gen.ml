@@ -61,23 +61,30 @@ let arg_needs_template = function
   @param args A pack of `Program.fun_arg_decl` containing functions to detect templates.
   @return A list of arguments with template parameter names added.
  *)
-let maybe_templated_arg_types (args : Program.fun_arg_decl) =
+let maybe_templated_arg_types prefix (args : Program.fun_arg_decl) =
   List.mapi args ~f:(fun i a ->
       match arg_needs_template a with
-      | true -> Some (sprintf "T%d__" i)
+      | true -> Some (sprintf "%s%d__" prefix i)
       | false -> None )
+
+let maybe_templated_arg_scalars prefix (args : Program.fun_arg_decl) =
+  List.mapi args ~f:(fun i (ad, id, ty) ->
+      if not (arg_needs_template (ad, id, ty)) then None
+      else if UnsizedType.is_fun_type ty then
+        Some (sprintf "typename %s%d__::captured_scalar_t__" prefix i)
+      else Some (sprintf "%s%d__" prefix i) )
 
 let%expect_test "arg types templated correctly" =
   [(AutoDiffable, "xreal", UReal); (DataOnly, "yint", UInt)]
-  |> maybe_templated_arg_types |> List.filter_opt |> String.concat ~sep:","
-  |> print_endline ;
+  |> maybe_templated_arg_types "T"
+  |> List.filter_opt |> String.concat ~sep:"," |> print_endline ;
   [%expect {| T0__ |}]
 
 (** Print the code for promoting stan real types
  @param ppf A pretty printer
  @param args A pack of arguments to detect whether they need to use the promotion rules.
  *)
-let pp_promoted_scalar ppf (s, args) =
+let pp_promoted_scalar ppf args =
   match args with
   | [] -> pf ppf "double"
   | _ ->
@@ -91,15 +98,12 @@ let pp_promoted_scalar ppf (s, args) =
             pf ppf "stan::promote_args_t<%a%a>" (list ~sep:comma string) hd go
               tl
       in
-      promote_args_chunked ppf
-        List.(
-          chunks_of ~length:5
-            (filter_opt (s :: maybe_templated_arg_types args)))
+      promote_args_chunked ppf List.(chunks_of ~length:5 (filter_opt args))
 
 (** Pretty-prints a function's return-type, taking into account templated argument
     promotion.*)
-let pp_returntype ppf arg_types (rt, s) =
-  let scalar = strf "%a" pp_promoted_scalar (s, arg_types) in
+let pp_returntype ppf arg_types rt =
+  let scalar = strf "%a" pp_promoted_scalar arg_types in
   match rt with
   | Some ut when UnsizedType.contains_int ut ->
       pf ppf "%a@," pp_unsizedtype_custom_scalar ("int", ut)
@@ -143,8 +147,8 @@ let typename = ( ^ ) "typename "
 (** Construct an object with it's needed templates for function signatures.
  @param fdargs A sexp list of strings representing C++ types.
   *)
-let get_templates_and_args fdargs =
-  let argtypetemplates = maybe_templated_arg_types fdargs in
+let get_templates_and_args prefix fdargs =
+  let argtypetemplates = maybe_templated_arg_types prefix fdargs in
   ( List.filter_opt argtypetemplates
   , List.map
       ~f:(fun a -> strf "%a" pp_arg a)
@@ -161,8 +165,7 @@ let pp_template_decorator ppf = function
 let mk_extra_args templates args =
   List.map ~f:(fun (t, v) -> t ^ "& " ^ v) (List.zip_exn templates args)
 
-let pp_signature is_closure ppf (fdrt, fdname, fdargs) =
-  let scalar = if is_closure then Some "local_scalar_t__" else None in
+let pp_signature captures ppf (fdrt, fdname, fdargs) =
   let is_lp = is_user_lp fdname in
   let is_dist = is_user_dist fdname in
   let is_rng = String.is_suffix fdname ~suffix:"_rng" in
@@ -171,16 +174,21 @@ let pp_signature is_closure ppf (fdrt, fdname, fdargs) =
     else if is_rng then (["base_rng__"], ["RNG"])
     else ([], [])
   in
-  let argtypetemplates, args = get_templates_and_args fdargs in
+  let argtypetemplates, args = get_templates_and_args "T" fdargs in
   let templates =
     (if is_dist || is_lp then ["bool propto__"] else [])
     @ List.(map ~f:typename (argtypetemplates @ extra_templates))
   in
   pp_template_decorator ppf templates ;
-  pp_returntype ppf fdargs (fdrt, scalar) ;
+  let rt_templates =
+    match captures with
+    | Some c -> c @ maybe_templated_arg_scalars "T" fdargs
+    | None -> maybe_templated_arg_scalars "T" fdargs
+  in
+  pp_returntype ppf rt_templates fdrt ;
   let arg_strs = args @ mk_extra_args extra_templates extra in
   let arg_strs =
-    if is_closure then "std::ostream* pstream__" :: arg_strs
+    if captures <> None then "std::ostream* pstream__" :: arg_strs
     else arg_strs @ ["std::ostream* pstream__"]
   in
   pf ppf "%s(@[<hov>%a@]) " fdname (list ~sep:comma string) arg_strs
@@ -191,7 +199,7 @@ let pp_rs_functor ppf (fdrt, fdname, fdargs) =
       (* Produces the reduce_sum functors that has the pstream argument
              as the third and not last argument *)
       let is_dist = is_user_dist fdname in
-      let argtypetemplates, args = get_templates_and_args fdargs in
+      let argtypetemplates, args = get_templates_and_args "T" fdargs in
       let templates = List.map ~f:typename argtypetemplates in
       let pp_template_propto ppf maybe =
         if maybe then pf ppf "template <bool propto__>@ "
@@ -200,7 +208,7 @@ let pp_rs_functor ppf (fdrt, fdname, fdargs) =
         let first_three, rest = List.split_n args 3 in
         let arg_strs = first_three @ ["std::ostream* pstream__"] @ rest in
         pp_template_decorator ppf templates ;
-        pp_returntype ppf fdargs (fdrt, None) ;
+        pp_returntype ppf (maybe_templated_arg_scalars "T" fdargs) fdrt ;
         pf ppf "%s(@[<hov>%a@])" name (list ~sep:comma string) arg_strs
       in
       pf ppf "@,@,%astruct %s%s {@,%a const @,{@,return %a;@,}@,};@,"
@@ -216,29 +224,37 @@ let pp_rs_functor ppf (fdrt, fdname, fdargs) =
 
 let pp_closure ppf (fdrt, fdname, fdcaptures, fdargs) =
   let clsname = fdname ^ "_cfunctor__" in
-  let pp_member ppf (adlevel, name, type_) =
-    pf ppf "%a %s;" pp_unsizedtype_local (adlevel, type_) name
+  let pp_member ppf (i, (adlevel, name, type_)) =
+    let scalar =
+      if arg_needs_template (adlevel, name, type_) then sprintf "F%d__" i
+      else "double"
+    in
+    pf ppf "%a %s;" pp_unsizedtype_custom_scalar (scalar, type_) name
+  in
+  let templates, ctor_args = get_templates_and_args "F" fdcaptures in
+  let pp_template ppf b =
+    if not (List.is_empty templates) then (
+      if b then pf ppf "template" ;
+      pf ppf "<@[%a@]>" (list ~sep:comma string)
+        (if b then List.map ~f:typename templates else templates) ;
+      if b then pf ppf "@," )
   in
   let pp_ctor ppf name =
-    let scalar = function
-      | UnsizedType.DataOnly -> None
-      | AutoDiffable -> Some "local_scalar_t__"
-    in
-    let pp ppf = function
-      | (ad, _, _) as arg -> pf ppf "%a__" pp_arg (scalar ad, arg)
-    in
     let pp_init ppf (_, id, _) = pf ppf "%s(%s__)" id id in
     let pp_count ppf () =
-      if not (List.is_empty fdargs) then comma ppf () ;
+      if not (List.is_empty fdcaptures) then comma ppf () ;
       pf ppf "vars_count__(count_vars(@[<hov>%a@]))" (list ~sep:comma string)
         (List.map ~f:(fun (_, id, _) -> id ^ "__") fdcaptures)
     in
-    pf ppf "%s(const %s<local_scalar_t__>&) = default ;@ " name name ;
-    pf ppf "%s(@[<hov>%a@])@ : @[<hov>%a%a {}@]" name (list ~sep:comma pp)
-      fdcaptures (list ~sep:comma pp_init) fdcaptures pp_count ()
+    pf ppf "%s(const %s%a&) = default ;@ " name name pp_template false ;
+    pf ppf "%s(%s%a&&) = default ;@ " name name pp_template false ;
+    pf ppf "%s(@[<hov>%a@])@ : @[<hov>%a%a {}@]" name
+      (list ~sep:comma (fun ppf s -> pf ppf "%s__" s))
+      ctor_args (list ~sep:comma pp_init) fdcaptures pp_count ()
   in
   let pp_op ppf () =
-    pf ppf "%a const @,{@,return %a;@,}@," (pp_signature true)
+    pf ppf "%a const @,{@,return %a;@,}"
+      (pp_signature (Some (maybe_templated_arg_scalars "F" fdcaptures)))
       (fdrt, "operator()", fdargs)
       pp_call_str
       ( fdname ^ "_impl__"
@@ -246,56 +262,74 @@ let pp_closure ppf (fdrt, fdname, fdcaptures, fdargs) =
         @ ["pstream__"] )
   in
   let pp_api ppf () =
-    let using_valueof ppf () =
-      pf ppf "using ValueOf__ = %s<double>;" clsname
+    let pp_using ppf () =
+      if List.is_empty templates then (
+        pf ppf "using captured_scalar_t__ = double;@," ;
+        pf ppf "using ValueOf__ = %s;" clsname )
+      else (
+        pf ppf "using captured_scalar_t__ = stan::return_type_t%a;@,"
+          pp_template false ;
+        let templates =
+          List.filter_mapi fdcaptures ~f:(fun i (ad, id, ty) ->
+              if not (arg_needs_template (ad, id, ty)) then None
+              else if UnsizedType.is_fun_type ty then
+                Some (sprintf "typename F%d__::ValueOf__" i)
+              else Some "double" )
+        in
+        pf ppf "using ValueOf__ = %s<@[%a@]>;" clsname (list ~sep:comma string)
+          templates )
     in
     let pp f = list ~sep:comma (fun ppf (_, id, _) -> pf ppf "%s(%s)" f id) in
     let valueof ppf () =
-      pf ppf "auto value_of__() const {@ return ValueOf__(@[<hov>%a@]);@ }"
+      pf ppf "auto value_of__() const {@ return ValueOf__(%a);@ }"
         (pp "value_of") fdcaptures
     in
     let deepcopy ppf () =
-      pf ppf
-        "auto deep_copy_vars__() const {@ return \
-         %s<local_scalar_t__>(@[<hov>%a@]);@ }"
-        clsname (pp "deep_copy_vars") fdcaptures
+      pf ppf "auto deep_copy_vars__() const {@ return %s%a(%a);@ }" clsname
+        pp_template false (pp "deep_copy_vars") fdcaptures
     in
     let zeros ppf () =
-      pf ppf "void zero_adjoints__() {@ %a@ }"
+      pf ppf "void zero_adjoints__() {@ @[<v>%a@]@ }"
         (list ~sep:cut (fun ppf (_, id, _) ->
              pf ppf "stan::math::zero_adjoints(%s);" id ))
         fdcaptures
     in
     let pp = list ~sep:comma (fun ppf (_, id, _) -> string ppf id) in
+    let comma ppf () = if not (List.is_empty fdcaptures) then comma ppf () in
     let accumulate ppf () =
       pf ppf
         "double* accumulate_adjoints__(double *dest) const {@ return \
-         stan::math::accumulate_adjoints(@[<hov>dest%a%a@]);@ }"
+         stan::math::accumulate_adjoints(dest%a%a);@ }"
         comma () pp fdcaptures
     in
     let save ppf () =
       pf ppf
         "stan::math::vari** save_varis__(stan::math::vari **dest) const {@ \
-         return stan::math::save_varis(@[<hov>dest%a%a@]);@ }"
+         return stan::math::save_varis(dest%a%a);@ }"
         comma () pp fdcaptures
     in
     pf ppf
-      "@[<hov>%s@]@ @[<hov>%a@]@ @[<hov>%a@]@ @[<hov>%a@]@ @[<hov>%a@]@ \
-       @[<hov>%a@]@ @[<hov>%a@]@ "
-      "using captured_scalar_t__ = local_scalar_t__;" using_valueof () valueof
-      () deepcopy () zeros () accumulate () save () ;
+      "@ @[<hov>%a@]@ @[<hov>%a@]@ @[<hov>%a@]@ @[<hov>%a@]@ @[<hov>%a@]@ \
+       @[<hov>%a@]@ "
+      pp_using () valueof () deepcopy () zeros () accumulate () save () ;
     ()
   in
   pf ppf
-    "@,@,template<typename local_scalar_t__>@,class %s {@,%a@,public:@,const \
-     size_t vars_count__;@ %a@ %a@ %a@ };@,"
-    clsname (list pp_member) fdcaptures pp_ctor clsname pp_op () pp_api ()
+    "@,@,%a@[<v 2>class %s {@,@[<v>%a@]@,public:@,const size_t vars_count__;@ \
+     %a@ %a@ %a@ @]};@,"
+    pp_template true clsname (list ~sep:cut pp_member)
+    (List.mapi ~f:(fun i a -> (i, a)) fdcaptures)
+    pp_ctor clsname pp_op () pp_api () ;
+  pf ppf "%aauto %s_make__(@[%a@]) {@ return %s%a(@[%a@]);@ }@," pp_template
+    true fdname (list ~sep:comma string) ctor_args clsname pp_template false
+    (list ~sep:comma string)
+    (List.map ~f:(fun (_, id, _) -> id) fdcaptures)
 
 let pp_forward_decl funs_used_in_reduce_sum ppf
     Program.({fdrt; fdname; fdcaptures; fdargs; fdbody; _}) =
   match fdcaptures with
   | None ->
-      pf ppf "%a;" (pp_signature false) (fdrt, fdname, fdargs) ;
+      pf ppf "%a;" (pp_signature None) (fdrt, fdname, fdargs) ;
       if fdbody <> None then (
         if Set.mem funs_used_in_reduce_sum fdname then
           pp_rs_functor ppf (fdrt, fdname, fdargs) ;
@@ -305,13 +339,13 @@ let pp_forward_decl funs_used_in_reduce_sum ppf
             || String.is_suffix fdname ~suffix:"_rng" )
         then
           pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
-            functor_suffix (pp_signature false)
+            functor_suffix (pp_signature None)
             (fdrt, "operator()", fdargs)
             pp_call_str
             ( fdname
             , List.map ~f:(fun (_, name, _) -> name) fdargs @ ["pstream__"] ) )
   | Some captures ->
-      pf ppf "%a ;" (pp_signature false)
+      pf ppf "%a ;" (pp_signature None)
         (fdrt, fdname ^ "_impl__", captures @ fdargs) ;
       pp_closure ppf (fdrt, fdname, captures, fdargs)
 
@@ -326,7 +360,7 @@ let get_impl = function
 let pp_function_body ppf (fdrt, fdname, fdargs, fdbody) =
   let pp_body ppf (Stmt.Fixed.({pattern; _}) as fdbody) =
     pf ppf "@[<hv 8>using local_scalar_t__ = %a;@]@," pp_promoted_scalar
-      (None, fdargs) ;
+      (maybe_templated_arg_scalars "T" fdargs) ;
     if not (is_user_lp fdname || is_user_dist fdname) then (
       pf ppf "const static bool propto__ = true;@;" ;
       pf ppf "(void) propto__;@;" ) ;
@@ -343,7 +377,7 @@ let pp_function_body ppf (fdrt, fdname, fdargs, fdbody) =
     pp_located_error ppf (pp_statement, blocked_fdbody) ;
     pf ppf "@ "
   in
-  pp_signature false ppf (fdrt, fdname, fdargs) ;
+  pp_signature None ppf (fdrt, fdname, fdargs) ;
   pp_block ppf (pp_body, fdbody)
 
 (* Creates functions outside the model namespaces which only call the ones

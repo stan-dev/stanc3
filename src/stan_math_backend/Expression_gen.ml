@@ -385,7 +385,7 @@ and pp_compiler_internal_fn ut f ppf es =
   | Some FnMakeClosure -> (
     match es with
     | {Expr.Fixed.pattern= Lit (Str, implname); _} :: args ->
-        gen_fun_app ppf (implname ^ "_cfunctor__<local_scalar_t__>") args
+        gen_fun_app ppf (implname ^ "_make__") args
     | _ ->
         raise_s
           [%message "Missing closure constructor " (es : Expr.Typed.t list)] )

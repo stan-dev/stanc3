@@ -35,7 +35,7 @@ let%expect_test "format_number1" =
   format_number ".123_456" |> print_endline ;
   [%expect ".123456"]
 
-let closures = ref []
+let closures = ref String.Map.empty
 
 let rec op_to_funapp op args =
   let argtypes =
@@ -667,21 +667,25 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       ; captures= Some (implname, captures)
       ; arguments
       ; body } ->
-      closures :=
-        Program.
-          { fdrt=
-              (match returntype with Void -> None | ReturnType ut -> Some ut)
-          ; fdname= implname
-          ; fdcaptures=
-              Some (List.map ~f:(fun (ad, ty, id) -> (ad, id, ty)) captures)
-          ; fdargs= List.map ~f:trans_arg arguments
-          ; fdbody=
-              trans_stmt ud_dists
-                {dconstrain= None; dadlevel= AutoDiffable}
-                body
-              |> unwrap_block_or_skip
-          ; fdloc= ts.smeta.loc }
-        :: !closures ;
+      if Map.find !closures implname = None then
+        closures :=
+          String.Map.add_exn !closures ~key:implname
+            ~data:
+              { Program.fdrt=
+                  ( match returntype with
+                  | Void -> None
+                  | ReturnType ut -> Some ut )
+              ; fdname= implname
+              ; fdcaptures=
+                  Some
+                    (List.map ~f:(fun (ad, ty, id) -> (ad, id, ty)) captures)
+              ; fdargs= List.map ~f:trans_arg arguments
+              ; fdbody=
+                  trans_stmt ud_dists
+                    {dconstrain= None; dadlevel= AutoDiffable}
+                    body
+                  |> unwrap_block_or_skip
+              ; fdloc= ts.smeta.loc } ;
       let arguments = List.map ~f:(fun (ad, ut, _) -> (ad, ut)) arguments in
       let type_ = UnsizedType.UFun (arguments, returntype, true) in
       let captures =
@@ -903,7 +907,7 @@ let migrate_checks_to_end_of_block stmts =
   not_checks @ checks
 
 let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
-  closures := [] ;
+  closures := String.Map.empty ;
   let {Ast.functionblock; datablock; transformeddatablock; modelblock; _} =
     p
   in
@@ -1010,7 +1014,7 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
     else prog_name
   in
   let functions = map (trans_fun_def ud_dists) functionblock in
-  { functions_block= functions @ !closures
+  { functions_block= functions @ List.map ~f:snd (Map.to_alist !closures)
   ; input_vars
   ; prepare_data
   ; log_prob

@@ -959,55 +959,61 @@ bar_L23C9_impl__(const T0__& p, const std::vector<T1__>& pa,
                  const std::vector<double>& y, const T6__& z,
                  const Eigen::Matrix<T7__, 1, -1>& r, std::ostream* pstream__)  ;
 
-template<typename local_scalar_t__>
+template<typename F0__, typename F1__, typename F2__>
 class bar_L23C9_cfunctor__ {
-local_scalar_t__ p;
-std::vector<local_scalar_t__> pa;
-Eigen::Matrix<local_scalar_t__, -1, 1> pv;
-Eigen::Matrix<double, -1, 1> v;
-double x;
-std::vector<double> y;
-public:
-const size_t vars_count__;
-bar_L23C9_cfunctor__(const bar_L23C9_cfunctor__<local_scalar_t__>&) = default ;
-bar_L23C9_cfunctor__(const local_scalar_t__& p__,
-                     const std::vector<local_scalar_t__>& pa__,
-                     const Eigen::Matrix<local_scalar_t__, -1, 1>& pv__,
-                     const Eigen::Matrix<double, -1, 1>& v__,
-                     const double& x__, const std::vector<double>& y__)
-: p(p__), pa(pa__), pv(pv__), v(v__), x(x__), y(y__),
-  vars_count__(count_vars(p__, pa__, pv__, v__, x__, y__)) {}
-template <typename T0__, typename T1__>
-stan::promote_args_t<local_scalar_t__, T0__,
+  F0__ p;
+  std::vector<F1__> pa;
+  Eigen::Matrix<F2__, -1, 1> pv;
+  Eigen::Matrix<double, -1, 1> v;
+  double x;
+  std::vector<double> y;
+  public:
+  const size_t vars_count__;
+  bar_L23C9_cfunctor__(const bar_L23C9_cfunctor__<F0__, F1__, F2__>&) = default ;
+  bar_L23C9_cfunctor__(bar_L23C9_cfunctor__<F0__, F1__, F2__>&&) = default ;
+  bar_L23C9_cfunctor__(const F0__& p__, const std::vector<F1__>& pa__,
+                       const Eigen::Matrix<F2__, -1, 1>& pv__,
+                       const Eigen::Matrix<double, -1, 1>& v__,
+                       const double& x__, const std::vector<double>& y__)
+  : p(p__), pa(pa__), pv(pv__), v(v__), x(x__), y(y__),
+    vars_count__(count_vars(p__, pa__, pv__, v__, x__, y__)) {}
+  template <typename T0__, typename T1__>
+  stan::promote_args_t<F0__, F1__, F2__, T0__,
 T1__>
-operator()(std::ostream* pstream__, const T0__& z,
-           const Eigen::Matrix<T1__, 1, -1>& r)  const 
-{
-return bar_L23C9_impl__(p, pa, pv, v, x, y, z, r, pstream__);
+  operator()(std::ostream* pstream__, const T0__& z,
+             const Eigen::Matrix<T1__, 1, -1>& r)  const 
+  {
+  return bar_L23C9_impl__(p, pa, pv, v, x, y, z, r, pstream__);
+  }
+  
+  using captured_scalar_t__ = stan::return_type_t<F0__, F1__, F2__>;
+  using ValueOf__ = bar_L23C9_cfunctor__<double, double, double>;
+  auto value_of__() const { return ValueOf__(value_of(p), value_of(pa),
+  value_of(pv), value_of(v), value_of(x), value_of(y)); }
+  auto deep_copy_vars__() const {
+  return bar_L23C9_cfunctor__<F0__, F1__, F2__>(deep_copy_vars(p),
+  deep_copy_vars(pa), deep_copy_vars(pv), deep_copy_vars(v),
+  deep_copy_vars(x), deep_copy_vars(y)); }
+  void zero_adjoints__() {
+  stan::math::zero_adjoints(p);
+  stan::math::zero_adjoints(pa);
+  stan::math::zero_adjoints(pv);
+  stan::math::zero_adjoints(v);
+  stan::math::zero_adjoints(x);
+  stan::math::zero_adjoints(y); }
+  double* accumulate_adjoints__(double *dest) const {
+  return stan::math::accumulate_adjoints(dest, p, pa, pv, v, x, y); }
+  stan::math::vari** save_varis__(stan::math::vari **dest) const {
+  return stan::math::save_varis(dest, p, pa, pv, v, x, y); }
+  
+  };
+template<typename F0__, typename F1__, typename F2__>
+auto bar_L23C9_make__(const F0__& p, const std::vector<F1__>& pa,
+                      const Eigen::Matrix<F2__, -1, 1>& pv,
+                      const Eigen::Matrix<double, -1, 1>& v, const double& x,
+                      const std::vector<double>& y) {
+return bar_L23C9_cfunctor__<F0__, F1__, F2__>(p, pa, pv, v, x, y);
 }
-
-using captured_scalar_t__ = local_scalar_t__;
-using ValueOf__ = bar_L23C9_cfunctor__<double>;
-auto value_of__() const {
-return ValueOf__(value_of(p), value_of(pa), value_of(pv), value_of(v),
-                 value_of(x), value_of(y)); }
-auto deep_copy_vars__() const {
-return bar_L23C9_cfunctor__<local_scalar_t__>(deep_copy_vars(p),
-                                              deep_copy_vars(pa),
-                                              deep_copy_vars(pv),
-                                              deep_copy_vars(v),
-                                              deep_copy_vars(x),
-                                              deep_copy_vars(y)); }
-void zero_adjoints__() { stan::math::zero_adjoints(p);
-stan::math::zero_adjoints(pa);stan::math::zero_adjoints(pv);
-stan::math::zero_adjoints(v);stan::math::zero_adjoints(x);
-stan::math::zero_adjoints(y); }
-double* accumulate_adjoints__(double *dest) const {
-return stan::math::accumulate_adjoints(dest, p, pa, pv, v, x, y); }
-stan::math::vari** save_varis__(stan::math::vari **dest) const {
-return stan::math::save_varis(dest, p, pa, pv, v, x, y); }
-
-};
 
 template <typename T3__, typename T4__>
 stan::promote_args_t<T3__,
@@ -1016,42 +1022,46 @@ foo_L9C9_impl__(const Eigen::Matrix<double, -1, 1>& v, const double& x,
                 const std::vector<double>& y, const T3__& z,
                 const Eigen::Matrix<T4__, 1, -1>& r, std::ostream* pstream__)  ;
 
-template<typename local_scalar_t__>
 class foo_L9C9_cfunctor__ {
-Eigen::Matrix<double, -1, 1> v;
-double x;
-std::vector<double> y;
-public:
-const size_t vars_count__;
-foo_L9C9_cfunctor__(const foo_L9C9_cfunctor__<local_scalar_t__>&) = default ;
-foo_L9C9_cfunctor__(const Eigen::Matrix<double, -1, 1>& v__,
-                    const double& x__, const std::vector<double>& y__)
-: v(v__), x(x__), y(y__), vars_count__(count_vars(v__, x__, y__)) {}
-template <typename T0__, typename T1__>
-stan::promote_args_t<local_scalar_t__, T0__,
+  Eigen::Matrix<double, -1, 1> v;
+  double x;
+  std::vector<double> y;
+  public:
+  const size_t vars_count__;
+  foo_L9C9_cfunctor__(const foo_L9C9_cfunctor__&) = default ;
+  foo_L9C9_cfunctor__(foo_L9C9_cfunctor__&&) = default ;
+  foo_L9C9_cfunctor__(const Eigen::Matrix<double, -1, 1>& v__,
+                      const double& x__, const std::vector<double>& y__)
+  : v(v__), x(x__), y(y__), vars_count__(count_vars(v__, x__, y__)) {}
+  template <typename T0__, typename T1__>
+  stan::promote_args_t<T0__,
 T1__>
-operator()(std::ostream* pstream__, const T0__& z,
-           const Eigen::Matrix<T1__, 1, -1>& r)  const 
-{
-return foo_L9C9_impl__(v, x, y, z, r, pstream__);
+  operator()(std::ostream* pstream__, const T0__& z,
+             const Eigen::Matrix<T1__, 1, -1>& r)  const 
+  {
+  return foo_L9C9_impl__(v, x, y, z, r, pstream__);
+  }
+  
+  using captured_scalar_t__ = double;using ValueOf__ = foo_L9C9_cfunctor__;
+  auto value_of__() const { return ValueOf__(value_of(v), value_of(x),
+  value_of(y)); }
+  auto deep_copy_vars__() const {
+  return foo_L9C9_cfunctor__(deep_copy_vars(v), deep_copy_vars(x),
+  deep_copy_vars(y)); }
+  void zero_adjoints__() {
+  stan::math::zero_adjoints(v);
+  stan::math::zero_adjoints(x);
+  stan::math::zero_adjoints(y); }
+  double* accumulate_adjoints__(double *dest) const {
+  return stan::math::accumulate_adjoints(dest, v, x, y); }
+  stan::math::vari** save_varis__(stan::math::vari **dest) const {
+  return stan::math::save_varis(dest, v, x, y); }
+  
+  };
+auto foo_L9C9_make__(const Eigen::Matrix<double, -1, 1>& v, const double& x,
+                     const std::vector<double>& y) {
+return foo_L9C9_cfunctor__(v, x, y);
 }
-
-using captured_scalar_t__ = local_scalar_t__;
-using ValueOf__ = foo_L9C9_cfunctor__<double>;
-auto value_of__() const {
-return ValueOf__(value_of(v), value_of(x), value_of(y)); }
-auto deep_copy_vars__() const {
-return foo_L9C9_cfunctor__<local_scalar_t__>(deep_copy_vars(v),
-                                             deep_copy_vars(x),
-                                             deep_copy_vars(y)); }
-void zero_adjoints__() { stan::math::zero_adjoints(v);
-stan::math::zero_adjoints(x);stan::math::zero_adjoints(y); }
-double* accumulate_adjoints__(double *dest) const {
-return stan::math::accumulate_adjoints(dest, v, x, y); }
-stan::math::vari** save_varis__(stan::math::vari **dest) const {
-return stan::math::save_varis(dest, v, x, y); }
-
-};
 
 template <typename T0__, typename T1__, typename T2__, typename T6__,
 typename T7__>
@@ -1231,7 +1241,7 @@ class closures1_model final : public model_base_crtp<closures1_model> {
       }
       
       current_statement__ = 1;
-      auto foo = foo_L9C9_cfunctor__<local_scalar_t__>(v, x, y);
+      auto foo = foo_L9C9_make__(v, x, y);
       current_statement__ = 16;
       validate_non_negative_index("pa", "N", N);
       current_statement__ = 17;
@@ -1271,7 +1281,7 @@ class closures1_model final : public model_base_crtp<closures1_model> {
     try {
       
       current_statement__ = 1;
-      auto foo = foo_L9C9_cfunctor__<local_scalar_t__>(v, x, y);
+      auto foo = foo_L9C9_make__(v, x, y);
       local_scalar_t__ p;
       p = DUMMY_VAR__;
       
@@ -1294,7 +1304,7 @@ class closures1_model final : public model_base_crtp<closures1_model> {
       {
         
         current_statement__ = 5;
-        auto bar = bar_L23C9_cfunctor__<local_scalar_t__>(p, pa, pv, v, x, y);
+        auto bar = bar_L23C9_make__(p, pa, pv, v, x, y);
         current_statement__ = 6;
         lp_accum__.add(
           foo(pstream__, 0.0, stan::math::to_row_vector(
@@ -1346,7 +1356,7 @@ class closures1_model final : public model_base_crtp<closures1_model> {
     try {
       
       current_statement__ = 1;
-      auto foo = foo_L9C9_cfunctor__<local_scalar_t__>(v, x, y);
+      auto foo = foo_L9C9_make__(v, x, y);
       double p;
       p = std::numeric_limits<double>::quiet_NaN();
       
@@ -1397,7 +1407,7 @@ class closures1_model final : public model_base_crtp<closures1_model> {
     try {
       
       current_statement__ = 1;
-      auto foo = foo_L9C9_cfunctor__<local_scalar_t__>(v, x, y);
+      auto foo = foo_L9C9_make__(v, x, y);
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
@@ -1658,220 +1668,199 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'closures2.stan', line 29, column 4 to column 23)",
                                                       " (in 'closures2.stan', line 8, column 8 to column 22)",
                                                       " (in 'closures2.stan', line 7, column 21 to line 9, column 5)",
-                                                      " (in 'closures2.stan', line 4, column 8 to column 17)",
-                                                      " (in 'closures2.stan', line 3, column 21 to line 5, column 5)",
                                                       " (in 'closures2.stan', line 17, column 8 to column 22)",
                                                       " (in 'closures2.stan', line 16, column 21 to line 18, column 5)",
+                                                      " (in 'closures2.stan', line 4, column 8 to column 17)",
+                                                      " (in 'closures2.stan', line 3, column 21 to line 5, column 5)",
+                                                      " (in 'closures2.stan', line 23, column 12 to column 21)",
+                                                      " (in 'closures2.stan', line 22, column 25 to line 24, column 9)",
                                                       " (in 'closures2.stan', line 21, column 8 to line 24, column 9)",
                                                       " (in 'closures2.stan', line 25, column 8 to column 22)",
                                                       " (in 'closures2.stan', line 20, column 21 to line 26, column 5)"};
 
 template <typename T0__, typename T1__>
-stan::promote_args_t<T0__,
+stan::promote_args_t<typename T0__::captured_scalar_t__,
 T1__>
 bar_L7C9_impl__(const T0__& foo, const T1__& y, std::ostream* pstream__)  ;
 
-template<typename local_scalar_t__>
+template<typename F0__>
 class bar_L7C9_cfunctor__ {
-local_scalar_t__ foo;
-public:
-const size_t vars_count__;
-bar_L7C9_cfunctor__(const bar_L7C9_cfunctor__<local_scalar_t__>&) = default ;
-bar_L7C9_cfunctor__(const local_scalar_t__& foo__)
-: foo(foo__), vars_count__(count_vars(foo__)) {}
-template <typename T0__>
-stan::promote_args_t<local_scalar_t__,
+  F0__ foo;
+  public:
+  const size_t vars_count__;
+  bar_L7C9_cfunctor__(const bar_L7C9_cfunctor__<F0__>&) = default ;
+  bar_L7C9_cfunctor__(bar_L7C9_cfunctor__<F0__>&&) = default ;
+  bar_L7C9_cfunctor__(const F0__& foo__)
+  : foo(foo__), vars_count__(count_vars(foo__)) {}
+  template <typename T0__>
+  stan::promote_args_t<typename F0__::captured_scalar_t__,
 T0__>
-operator()(std::ostream* pstream__, const T0__& y)  const 
-{
-return bar_L7C9_impl__(foo, y, pstream__);
+  operator()(std::ostream* pstream__, const T0__& y)  const 
+  {
+  return bar_L7C9_impl__(foo, y, pstream__);
+  }
+  
+  using captured_scalar_t__ = stan::return_type_t<F0__>;
+  using ValueOf__ = bar_L7C9_cfunctor__<typename F0__::ValueOf__>;
+  auto value_of__() const { return ValueOf__(value_of(foo)); }
+  auto deep_copy_vars__() const {
+  return bar_L7C9_cfunctor__<F0__>(deep_copy_vars(foo)); }
+  void zero_adjoints__() { stan::math::zero_adjoints(foo); }
+  double* accumulate_adjoints__(double *dest) const {
+  return stan::math::accumulate_adjoints(dest, foo); }
+  stan::math::vari** save_varis__(stan::math::vari **dest) const {
+  return stan::math::save_varis(dest, foo); }
+  
+  };
+template<typename F0__>
+auto bar_L7C9_make__(const F0__& foo) {
+return bar_L7C9_cfunctor__<F0__>(foo);
 }
 
-using captured_scalar_t__ = local_scalar_t__;
-using ValueOf__ = bar_L7C9_cfunctor__<double>;
-auto value_of__() const { return ValueOf__(value_of(foo)); }
-auto deep_copy_vars__() const {
-return bar_L7C9_cfunctor__<local_scalar_t__>(deep_copy_vars(foo)); }
-void zero_adjoints__() { stan::math::zero_adjoints(foo); }
-double* accumulate_adjoints__(double *dest) const {
-return stan::math::accumulate_adjoints(dest, foo); }
-stan::math::vari** save_varis__(stan::math::vari **dest) const {
-return stan::math::save_varis(dest, foo); }
+template <typename T0__, typename T1__>
+stan::promote_args_t<typename T0__::captured_scalar_t__,
+T1__>
+baz_L16C9_impl__(const T0__& foo, const T1__& y, std::ostream* pstream__)  ;
 
-};
+template<typename F0__>
+class baz_L16C9_cfunctor__ {
+  F0__ foo;
+  public:
+  const size_t vars_count__;
+  baz_L16C9_cfunctor__(const baz_L16C9_cfunctor__<F0__>&) = default ;
+  baz_L16C9_cfunctor__(baz_L16C9_cfunctor__<F0__>&&) = default ;
+  baz_L16C9_cfunctor__(const F0__& foo__)
+  : foo(foo__), vars_count__(count_vars(foo__)) {}
+  template <typename T0__>
+  stan::promote_args_t<typename F0__::captured_scalar_t__,
+T0__>
+  operator()(std::ostream* pstream__, const T0__& y)  const 
+  {
+  return baz_L16C9_impl__(foo, y, pstream__);
+  }
+  
+  using captured_scalar_t__ = stan::return_type_t<F0__>;
+  using ValueOf__ = baz_L16C9_cfunctor__<typename F0__::ValueOf__>;
+  auto value_of__() const { return ValueOf__(value_of(foo)); }
+  auto deep_copy_vars__() const {
+  return baz_L16C9_cfunctor__<F0__>(deep_copy_vars(foo)); }
+  void zero_adjoints__() { stan::math::zero_adjoints(foo); }
+  double* accumulate_adjoints__(double *dest) const {
+  return stan::math::accumulate_adjoints(dest, foo); }
+  stan::math::vari** save_varis__(stan::math::vari **dest) const {
+  return stan::math::save_varis(dest, foo); }
+  
+  };
+template<typename F0__>
+auto baz_L16C9_make__(const F0__& foo) {
+return baz_L16C9_cfunctor__<F0__>(foo);
+}
 
 template <typename T0__>
 stan::promote_args_t<T0__>
 foo_L3C9_impl__(const T0__& x, std::ostream* pstream__)  ;
 
-template<typename local_scalar_t__>
 class foo_L3C9_cfunctor__ {
-
-public:
-const size_t vars_count__;
-foo_L3C9_cfunctor__(const foo_L3C9_cfunctor__<local_scalar_t__>&) = default ;
-foo_L3C9_cfunctor__()
-: , vars_count__(count_vars()) {}
-template <typename T0__>
-stan::promote_args_t<local_scalar_t__,
-T0__>
-operator()(std::ostream* pstream__, const T0__& x)  const 
-{
-return foo_L3C9_impl__(x, pstream__);
+  
+  public:
+  const size_t vars_count__;
+  foo_L3C9_cfunctor__(const foo_L3C9_cfunctor__&) = default ;
+  foo_L3C9_cfunctor__(foo_L3C9_cfunctor__&&) = default ;
+  foo_L3C9_cfunctor__()
+  : vars_count__(count_vars()) {}
+  template <typename T0__>
+  stan::promote_args_t<T0__>
+  operator()(std::ostream* pstream__, const T0__& x)  const 
+  {
+  return foo_L3C9_impl__(x, pstream__);
+  }
+  
+  using captured_scalar_t__ = double;using ValueOf__ = foo_L3C9_cfunctor__;
+  auto value_of__() const { return ValueOf__(); }
+  auto deep_copy_vars__() const { return foo_L3C9_cfunctor__(); }
+  void zero_adjoints__() {  }
+  double* accumulate_adjoints__(double *dest) const {
+  return stan::math::accumulate_adjoints(dest); }
+  stan::math::vari** save_varis__(stan::math::vari **dest) const {
+  return stan::math::save_varis(dest); }
+  
+  };
+auto foo_L3C9_make__() {
+return foo_L3C9_cfunctor__();
 }
 
-using captured_scalar_t__ = local_scalar_t__;
-using ValueOf__ = foo_L3C9_cfunctor__<double>;
-auto value_of__() const { return ValueOf__(); }
-auto deep_copy_vars__() const {
-return foo_L3C9_cfunctor__<local_scalar_t__>(); }
-void zero_adjoints__() {  }
-double* accumulate_adjoints__(double *dest) const {
-return stan::math::accumulate_adjoints(dest, ); }
-stan::math::vari** save_varis__(stan::math::vari **dest) const {
-return stan::math::save_varis(dest, ); }
-
-};
-
-template <typename T0__, typename T1__>
-stan::promote_args_t<T0__,
-T1__>
-baz_L16C9_impl__(const T0__& foo, const T1__& y, std::ostream* pstream__)  ;
-
-template<typename local_scalar_t__>
-class baz_L16C9_cfunctor__ {
-local_scalar_t__ foo;
-public:
-const size_t vars_count__;
-baz_L16C9_cfunctor__(const baz_L16C9_cfunctor__<local_scalar_t__>&) = default ;
-baz_L16C9_cfunctor__(const local_scalar_t__& foo__)
-: foo(foo__), vars_count__(count_vars(foo__)) {}
 template <typename T0__>
-stan::promote_args_t<local_scalar_t__,
-T0__>
-operator()(std::ostream* pstream__, const T0__& y)  const 
-{
-return baz_L16C9_impl__(foo, y, pstream__);
+stan::promote_args_t<T0__>
+gar_L22C13_impl__(const T0__& b, std::ostream* pstream__)  ;
+
+class gar_L22C13_cfunctor__ {
+  
+  public:
+  const size_t vars_count__;
+  gar_L22C13_cfunctor__(const gar_L22C13_cfunctor__&) = default ;
+  gar_L22C13_cfunctor__(gar_L22C13_cfunctor__&&) = default ;
+  gar_L22C13_cfunctor__()
+  : vars_count__(count_vars()) {}
+  template <typename T0__>
+  stan::promote_args_t<T0__>
+  operator()(std::ostream* pstream__, const T0__& b)  const 
+  {
+  return gar_L22C13_impl__(b, pstream__);
+  }
+  
+  using captured_scalar_t__ = double;using ValueOf__ = gar_L22C13_cfunctor__;
+  auto value_of__() const { return ValueOf__(); }
+  auto deep_copy_vars__() const { return gar_L22C13_cfunctor__(); }
+  void zero_adjoints__() {  }
+  double* accumulate_adjoints__(double *dest) const {
+  return stan::math::accumulate_adjoints(dest); }
+  stan::math::vari** save_varis__(stan::math::vari **dest) const {
+  return stan::math::save_varis(dest); }
+  
+  };
+auto gar_L22C13_make__() {
+return gar_L22C13_cfunctor__();
 }
-
-using captured_scalar_t__ = local_scalar_t__;
-using ValueOf__ = baz_L16C9_cfunctor__<double>;
-auto value_of__() const { return ValueOf__(value_of(foo)); }
-auto deep_copy_vars__() const {
-return baz_L16C9_cfunctor__<local_scalar_t__>(deep_copy_vars(foo)); }
-void zero_adjoints__() { stan::math::zero_adjoints(foo); }
-double* accumulate_adjoints__(double *dest) const {
-return stan::math::accumulate_adjoints(dest, foo); }
-stan::math::vari** save_varis__(stan::math::vari **dest) const {
-return stan::math::save_varis(dest, foo); }
-
-};
 
 template <typename T0__>
 stan::promote_args_t<T0__>
 goo_L20C9_impl__(const T0__& s, std::ostream* pstream__)  ;
 
-template<typename local_scalar_t__>
 class goo_L20C9_cfunctor__ {
-
-public:
-const size_t vars_count__;
-goo_L20C9_cfunctor__(const goo_L20C9_cfunctor__<local_scalar_t__>&) = default ;
-goo_L20C9_cfunctor__()
-: , vars_count__(count_vars()) {}
-template <typename T0__>
-stan::promote_args_t<local_scalar_t__,
-T0__>
-operator()(std::ostream* pstream__, const T0__& s)  const 
-{
-return goo_L20C9_impl__(s, pstream__);
+  
+  public:
+  const size_t vars_count__;
+  goo_L20C9_cfunctor__(const goo_L20C9_cfunctor__&) = default ;
+  goo_L20C9_cfunctor__(goo_L20C9_cfunctor__&&) = default ;
+  goo_L20C9_cfunctor__()
+  : vars_count__(count_vars()) {}
+  template <typename T0__>
+  stan::promote_args_t<T0__>
+  operator()(std::ostream* pstream__, const T0__& s)  const 
+  {
+  return goo_L20C9_impl__(s, pstream__);
+  }
+  
+  using captured_scalar_t__ = double;using ValueOf__ = goo_L20C9_cfunctor__;
+  auto value_of__() const { return ValueOf__(); }
+  auto deep_copy_vars__() const { return goo_L20C9_cfunctor__(); }
+  void zero_adjoints__() {  }
+  double* accumulate_adjoints__(double *dest) const {
+  return stan::math::accumulate_adjoints(dest); }
+  stan::math::vari** save_varis__(stan::math::vari **dest) const {
+  return stan::math::save_varis(dest); }
+  
+  };
+auto goo_L20C9_make__() {
+return goo_L20C9_cfunctor__();
 }
-
-using captured_scalar_t__ = local_scalar_t__;
-using ValueOf__ = goo_L20C9_cfunctor__<double>;
-auto value_of__() const { return ValueOf__(); }
-auto deep_copy_vars__() const {
-return goo_L20C9_cfunctor__<local_scalar_t__>(); }
-void zero_adjoints__() {  }
-double* accumulate_adjoints__(double *dest) const {
-return stan::math::accumulate_adjoints(dest, ); }
-stan::math::vari** save_varis__(stan::math::vari **dest) const {
-return stan::math::save_varis(dest, ); }
-
-};
 
 template <typename T0__, typename T1__>
-stan::promote_args_t<T0__,
-T1__>
-baz_L16C9_impl__(const T0__& foo, const T1__& y, std::ostream* pstream__)  ;
-
-template<typename local_scalar_t__>
-class baz_L16C9_cfunctor__ {
-local_scalar_t__ foo;
-public:
-const size_t vars_count__;
-baz_L16C9_cfunctor__(const baz_L16C9_cfunctor__<local_scalar_t__>&) = default ;
-baz_L16C9_cfunctor__(const local_scalar_t__& foo__)
-: foo(foo__), vars_count__(count_vars(foo__)) {}
-template <typename T0__>
-stan::promote_args_t<local_scalar_t__,
-T0__>
-operator()(std::ostream* pstream__, const T0__& y)  const 
-{
-return baz_L16C9_impl__(foo, y, pstream__);
-}
-
-using captured_scalar_t__ = local_scalar_t__;
-using ValueOf__ = baz_L16C9_cfunctor__<double>;
-auto value_of__() const { return ValueOf__(value_of(foo)); }
-auto deep_copy_vars__() const {
-return baz_L16C9_cfunctor__<local_scalar_t__>(deep_copy_vars(foo)); }
-void zero_adjoints__() { stan::math::zero_adjoints(foo); }
-double* accumulate_adjoints__(double *dest) const {
-return stan::math::accumulate_adjoints(dest, foo); }
-stan::math::vari** save_varis__(stan::math::vari **dest) const {
-return stan::math::save_varis(dest, foo); }
-
-};
-
-template <typename T0__>
-stan::promote_args_t<T0__>
-goo_L20C9_impl__(const T0__& s, std::ostream* pstream__)  ;
-
-template<typename local_scalar_t__>
-class goo_L20C9_cfunctor__ {
-
-public:
-const size_t vars_count__;
-goo_L20C9_cfunctor__(const goo_L20C9_cfunctor__<local_scalar_t__>&) = default ;
-goo_L20C9_cfunctor__()
-: , vars_count__(count_vars()) {}
-template <typename T0__>
-stan::promote_args_t<local_scalar_t__,
-T0__>
-operator()(std::ostream* pstream__, const T0__& s)  const 
-{
-return goo_L20C9_impl__(s, pstream__);
-}
-
-using captured_scalar_t__ = local_scalar_t__;
-using ValueOf__ = goo_L20C9_cfunctor__<double>;
-auto value_of__() const { return ValueOf__(); }
-auto deep_copy_vars__() const {
-return goo_L20C9_cfunctor__<local_scalar_t__>(); }
-void zero_adjoints__() {  }
-double* accumulate_adjoints__(double *dest) const {
-return stan::math::accumulate_adjoints(dest, ); }
-stan::math::vari** save_varis__(stan::math::vari **dest) const {
-return stan::math::save_varis(dest, ); }
-
-};
-
-template <typename T0__, typename T1__>
-stan::promote_args_t<T0__,
+stan::promote_args_t<typename T0__::captured_scalar_t__,
 T1__>
 bar_L7C9_impl__(const T0__& foo, const T1__& y, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
+  using local_scalar_t__ = stan::promote_args_t<typename T0__::captured_scalar_t__,
+          T1__>;
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -1879,6 +1868,27 @@ bar_L7C9_impl__(const T0__& foo, const T1__& y, std::ostream* pstream__) {
   
   try {
     current_statement__ = 9;
+    return foo(pstream__, y);
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+template <typename T0__, typename T1__>
+stan::promote_args_t<typename T0__::captured_scalar_t__,
+T1__>
+baz_L16C9_impl__(const T0__& foo, const T1__& y, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<typename T0__::captured_scalar_t__,
+          T1__>;
+  const static bool propto__ = true;
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
+  
+  try {
+    current_statement__ = 11;
     return foo(pstream__, y);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1897,7 +1907,7 @@ foo_L3C9_impl__(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 11;
+    current_statement__ = 13;
     return x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1906,19 +1916,18 @@ foo_L3C9_impl__(const T0__& x, std::ostream* pstream__) {
   }
   
 }
-template <typename T0__, typename T1__>
-stan::promote_args_t<T0__,
-T1__>
-baz_L16C9_impl__(const T0__& foo, const T1__& y, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
+template <typename T0__>
+stan::promote_args_t<T0__>
+gar_L22C13_impl__(const T0__& b, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 13;
-    return foo(pstream__, y);
+    current_statement__ = 15;
+    return b;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -1937,51 +1946,9 @@ goo_L20C9_impl__(const T0__& s, std::ostream* pstream__) {
   
   try {
     
-    current_statement__ = 15;
-    auto gar = gar_L22C13_cfunctor__<local_scalar_t__>();
-    current_statement__ = 16;
-    return gar(pstream__, s);
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-  }
-  
-}
-template <typename T0__, typename T1__>
-stan::promote_args_t<T0__,
-T1__>
-baz_L16C9_impl__(const T0__& foo, const T1__& y, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
-  const static bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
-  try {
-    current_statement__ = 13;
-    return foo(pstream__, y);
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-  }
-  
-}
-template <typename T0__>
-stan::promote_args_t<T0__>
-goo_L20C9_impl__(const T0__& s, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
-  const static bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
-  try {
-    
-    current_statement__ = 15;
-    auto gar = gar_L22C13_cfunctor__<local_scalar_t__>();
-    current_statement__ = 16;
+    current_statement__ = 17;
+    auto gar = gar_L22C13_make__();
+    current_statement__ = 18;
     return gar(pstream__, s);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2027,10 +1994,10 @@ class closures2_model final : public model_base_crtp<closures2_model> {
       pos__ = 1;
       
       current_statement__ = 1;
-      auto foo = foo_L3C9_cfunctor__<local_scalar_t__>();
+      auto foo = foo_L3C9_make__();
       
       current_statement__ = 2;
-      auto bar = bar_L7C9_cfunctor__<local_scalar_t__>(foo);
+      auto bar = bar_L7C9_make__(foo);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -2064,10 +2031,10 @@ class closures2_model final : public model_base_crtp<closures2_model> {
     try {
       
       current_statement__ = 1;
-      auto foo = foo_L3C9_cfunctor__<local_scalar_t__>();
+      auto foo = foo_L3C9_make__();
       
       current_statement__ = 2;
-      auto bar = bar_L7C9_cfunctor__<local_scalar_t__>(foo);
+      auto bar = bar_L7C9_make__(foo);
       local_scalar_t__ alpha;
       alpha = DUMMY_VAR__;
       
@@ -2075,10 +2042,10 @@ class closures2_model final : public model_base_crtp<closures2_model> {
       alpha = in__.scalar();
       
       current_statement__ = 4;
-      auto baz = baz_L16C9_cfunctor__<local_scalar_t__>(foo);
+      auto baz = baz_L16C9_make__(foo);
       
       current_statement__ = 5;
-      auto goo = goo_L20C9_cfunctor__<local_scalar_t__>();
+      auto goo = goo_L20C9_make__();
       local_scalar_t__ s1;
       s1 = DUMMY_VAR__;
       
@@ -2128,10 +2095,10 @@ class closures2_model final : public model_base_crtp<closures2_model> {
     try {
       
       current_statement__ = 1;
-      auto foo = foo_L3C9_cfunctor__<local_scalar_t__>();
+      auto foo = foo_L3C9_make__();
       
       current_statement__ = 2;
-      auto bar = bar_L7C9_cfunctor__<local_scalar_t__>(foo);
+      auto bar = bar_L7C9_make__(foo);
       double alpha;
       alpha = std::numeric_limits<double>::quiet_NaN();
       
@@ -2154,9 +2121,9 @@ class closures2_model final : public model_base_crtp<closures2_model> {
         return ;
       } 
       current_statement__ = 4;
-      auto baz = baz_L16C9_cfunctor__<local_scalar_t__>(foo);
+      auto baz = baz_L16C9_make__(foo);
       current_statement__ = 5;
-      auto goo = goo_L20C9_cfunctor__<local_scalar_t__>();
+      auto goo = goo_L20C9_make__();
       current_statement__ = 6;
       s1 = bar(pstream__, 1.0);
       current_statement__ = 7;
@@ -2190,10 +2157,10 @@ class closures2_model final : public model_base_crtp<closures2_model> {
     try {
       
       current_statement__ = 1;
-      auto foo = foo_L3C9_cfunctor__<local_scalar_t__>();
+      auto foo = foo_L3C9_make__();
       
       current_statement__ = 2;
-      auto bar = bar_L7C9_cfunctor__<local_scalar_t__>(foo);
+      auto bar = bar_L7C9_make__(foo);
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
@@ -2415,21 +2382,21 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'closures3.stan', line 3, column 8 to line 6, column 9)",
                                                       " (in 'closures3.stan', line 7, column 8 to column 23)",
                                                       " (in 'closures3.stan', line 2, column 35 to line 8, column 5)",
-                                                      " (in 'closures3.stan', line 5, column 12 to column 28)",
-                                                      " (in 'closures3.stan', line 4, column 24 to line 6, column 9)",
                                                       " (in 'closures3.stan', line 14, column 8 to column 19)",
                                                       " (in 'closures3.stan', line 13, column 21 to line 15, column 5)",
                                                       " (in 'closures3.stan', line 24, column 8 to column 19)",
-                                                      " (in 'closures3.stan', line 23, column 21 to line 25, column 5)"};
+                                                      " (in 'closures3.stan', line 23, column 21 to line 25, column 5)",
+                                                      " (in 'closures3.stan', line 5, column 12 to column 28)",
+                                                      " (in 'closures3.stan', line 4, column 24 to line 6, column 9)"};
 
 template <typename T0__, typename T1__>
-stan::promote_args_t<T0__,
+stan::promote_args_t<typename T0__::captured_scalar_t__,
 T1__>
 foo(const T0__& g, const T1__& x, std::ostream* pstream__) ;
 
 struct foo_functor__ {
 template <typename T0__, typename T1__>
-stan::promote_args_t<T0__,
+stan::promote_args_t<typename T0__::captured_scalar_t__,
 T1__>
 operator()(const T0__& g, const T1__& x, std::ostream* pstream__)  const 
 {
@@ -2437,150 +2404,129 @@ return foo(g, x, pstream__);
 }
 };
 
-template <typename T0__, typename T1__, typename T2__>
-stan::promote_args_t<T0__, T1__,
-T2__>
-g2_L4C13_impl__(const T0__& g, const T1__& x, const T2__& y,
-                std::ostream* pstream__)  ;
-
-template<typename local_scalar_t__>
-class g2_L4C13_cfunctor__ {
-local_scalar_t__ g;
-local_scalar_t__ x;
-public:
-const size_t vars_count__;
-g2_L4C13_cfunctor__(const g2_L4C13_cfunctor__<local_scalar_t__>&) = default ;
-g2_L4C13_cfunctor__(const local_scalar_t__& g__, const local_scalar_t__& x__)
-: g(g__), x(x__), vars_count__(count_vars(g__, x__)) {}
-template <typename T0__>
-stan::promote_args_t<local_scalar_t__,
-T0__>
-operator()(std::ostream* pstream__, const T0__& y)  const 
-{
-return g2_L4C13_impl__(g, x, y, pstream__);
-}
-
-using captured_scalar_t__ = local_scalar_t__;
-using ValueOf__ = g2_L4C13_cfunctor__<double>;
-auto value_of__() const { return ValueOf__(value_of(g), value_of(x)); }
-auto deep_copy_vars__() const {
-return g2_L4C13_cfunctor__<local_scalar_t__>(deep_copy_vars(g),
-                                             deep_copy_vars(x)); }
-void zero_adjoints__() { stan::math::zero_adjoints(g);
-stan::math::zero_adjoints(x); }
-double* accumulate_adjoints__(double *dest) const {
-return stan::math::accumulate_adjoints(dest, g, x); }
-stan::math::vari** save_varis__(stan::math::vari **dest) const {
-return stan::math::save_varis(dest, g, x); }
-
-};
-
 template <typename T1__>
 stan::promote_args_t<T1__>
 bar_L13C9_impl__(const double& x, const T1__& y, std::ostream* pstream__)  ;
 
-template<typename local_scalar_t__>
 class bar_L13C9_cfunctor__ {
-double x;
-public:
-const size_t vars_count__;
-bar_L13C9_cfunctor__(const bar_L13C9_cfunctor__<local_scalar_t__>&) = default ;
-bar_L13C9_cfunctor__(const double& x__)
-: x(x__), vars_count__(count_vars(x__)) {}
-template <typename T0__>
-stan::promote_args_t<local_scalar_t__,
-T0__>
-operator()(std::ostream* pstream__, const T0__& y)  const 
-{
-return bar_L13C9_impl__(x, y, pstream__);
+  double x;
+  public:
+  const size_t vars_count__;
+  bar_L13C9_cfunctor__(const bar_L13C9_cfunctor__&) = default ;
+  bar_L13C9_cfunctor__(bar_L13C9_cfunctor__&&) = default ;
+  bar_L13C9_cfunctor__(const double& x__)
+  : x(x__), vars_count__(count_vars(x__)) {}
+  template <typename T0__>
+  stan::promote_args_t<T0__>
+  operator()(std::ostream* pstream__, const T0__& y)  const 
+  {
+  return bar_L13C9_impl__(x, y, pstream__);
+  }
+  
+  using captured_scalar_t__ = double;using ValueOf__ = bar_L13C9_cfunctor__;
+  auto value_of__() const { return ValueOf__(value_of(x)); }
+  auto deep_copy_vars__() const {
+  return bar_L13C9_cfunctor__(deep_copy_vars(x)); }
+  void zero_adjoints__() { stan::math::zero_adjoints(x); }
+  double* accumulate_adjoints__(double *dest) const {
+  return stan::math::accumulate_adjoints(dest, x); }
+  stan::math::vari** save_varis__(stan::math::vari **dest) const {
+  return stan::math::save_varis(dest, x); }
+  
+  };
+auto bar_L13C9_make__(const double& x) {
+return bar_L13C9_cfunctor__(x);
 }
-
-using captured_scalar_t__ = local_scalar_t__;
-using ValueOf__ = bar_L13C9_cfunctor__<double>;
-auto value_of__() const { return ValueOf__(value_of(x)); }
-auto deep_copy_vars__() const {
-return bar_L13C9_cfunctor__<local_scalar_t__>(deep_copy_vars(x)); }
-void zero_adjoints__() { stan::math::zero_adjoints(x); }
-double* accumulate_adjoints__(double *dest) const {
-return stan::math::accumulate_adjoints(dest, x); }
-stan::math::vari** save_varis__(stan::math::vari **dest) const {
-return stan::math::save_varis(dest, x); }
-
-};
 
 template <typename T0__, typename T1__>
 stan::promote_args_t<T0__,
 T1__>
 baz_L23C9_impl__(const T0__& p, const T1__& y, std::ostream* pstream__)  ;
 
-template<typename local_scalar_t__>
+template<typename F0__>
 class baz_L23C9_cfunctor__ {
-local_scalar_t__ p;
-public:
-const size_t vars_count__;
-baz_L23C9_cfunctor__(const baz_L23C9_cfunctor__<local_scalar_t__>&) = default ;
-baz_L23C9_cfunctor__(const local_scalar_t__& p__)
-: p(p__), vars_count__(count_vars(p__)) {}
-template <typename T0__>
-stan::promote_args_t<local_scalar_t__,
+  F0__ p;
+  public:
+  const size_t vars_count__;
+  baz_L23C9_cfunctor__(const baz_L23C9_cfunctor__<F0__>&) = default ;
+  baz_L23C9_cfunctor__(baz_L23C9_cfunctor__<F0__>&&) = default ;
+  baz_L23C9_cfunctor__(const F0__& p__)
+  : p(p__), vars_count__(count_vars(p__)) {}
+  template <typename T0__>
+  stan::promote_args_t<F0__,
 T0__>
-operator()(std::ostream* pstream__, const T0__& y)  const 
-{
-return baz_L23C9_impl__(p, y, pstream__);
+  operator()(std::ostream* pstream__, const T0__& y)  const 
+  {
+  return baz_L23C9_impl__(p, y, pstream__);
+  }
+  
+  using captured_scalar_t__ = stan::return_type_t<F0__>;
+  using ValueOf__ = baz_L23C9_cfunctor__<double>;
+  auto value_of__() const { return ValueOf__(value_of(p)); }
+  auto deep_copy_vars__() const {
+  return baz_L23C9_cfunctor__<F0__>(deep_copy_vars(p)); }
+  void zero_adjoints__() { stan::math::zero_adjoints(p); }
+  double* accumulate_adjoints__(double *dest) const {
+  return stan::math::accumulate_adjoints(dest, p); }
+  stan::math::vari** save_varis__(stan::math::vari **dest) const {
+  return stan::math::save_varis(dest, p); }
+  
+  };
+template<typename F0__>
+auto baz_L23C9_make__(const F0__& p) {
+return baz_L23C9_cfunctor__<F0__>(p);
 }
 
-using captured_scalar_t__ = local_scalar_t__;
-using ValueOf__ = baz_L23C9_cfunctor__<double>;
-auto value_of__() const { return ValueOf__(value_of(p)); }
-auto deep_copy_vars__() const {
-return baz_L23C9_cfunctor__<local_scalar_t__>(deep_copy_vars(p)); }
-void zero_adjoints__() { stan::math::zero_adjoints(p); }
-double* accumulate_adjoints__(double *dest) const {
-return stan::math::accumulate_adjoints(dest, p); }
-stan::math::vari** save_varis__(stan::math::vari **dest) const {
-return stan::math::save_varis(dest, p); }
+template <typename T0__, typename T1__, typename T2__>
+stan::promote_args_t<typename T0__::captured_scalar_t__, T1__,
+T2__>
+g2_L4C13_impl__(const T0__& g, const T1__& x, const T2__& y,
+                std::ostream* pstream__)  ;
 
-};
-
-template <typename T0__, typename T1__>
-stan::promote_args_t<T0__,
-T1__>
-baz_L23C9_impl__(const T0__& p, const T1__& y, std::ostream* pstream__)  ;
-
-template<typename local_scalar_t__>
-class baz_L23C9_cfunctor__ {
-local_scalar_t__ p;
-public:
-const size_t vars_count__;
-baz_L23C9_cfunctor__(const baz_L23C9_cfunctor__<local_scalar_t__>&) = default ;
-baz_L23C9_cfunctor__(const local_scalar_t__& p__)
-: p(p__), vars_count__(count_vars(p__)) {}
-template <typename T0__>
-stan::promote_args_t<local_scalar_t__,
+template<typename F0__, typename F1__>
+class g2_L4C13_cfunctor__ {
+  F0__ g;
+  F1__ x;
+  public:
+  const size_t vars_count__;
+  g2_L4C13_cfunctor__(const g2_L4C13_cfunctor__<F0__, F1__>&) = default ;
+  g2_L4C13_cfunctor__(g2_L4C13_cfunctor__<F0__, F1__>&&) = default ;
+  g2_L4C13_cfunctor__(const F0__& g__, const F1__& x__)
+  : g(g__), x(x__), vars_count__(count_vars(g__, x__)) {}
+  template <typename T0__>
+  stan::promote_args_t<typename F0__::captured_scalar_t__, F1__,
 T0__>
-operator()(std::ostream* pstream__, const T0__& y)  const 
-{
-return baz_L23C9_impl__(p, y, pstream__);
+  operator()(std::ostream* pstream__, const T0__& y)  const 
+  {
+  return g2_L4C13_impl__(g, x, y, pstream__);
+  }
+  
+  using captured_scalar_t__ = stan::return_type_t<F0__, F1__>;
+  using ValueOf__ = g2_L4C13_cfunctor__<typename F0__::ValueOf__, double>;
+  auto value_of__() const { return ValueOf__(value_of(g), value_of(x)); }
+  auto deep_copy_vars__() const {
+  return g2_L4C13_cfunctor__<F0__, F1__>(deep_copy_vars(g),
+  deep_copy_vars(x)); }
+  void zero_adjoints__() {
+  stan::math::zero_adjoints(g);
+  stan::math::zero_adjoints(x); }
+  double* accumulate_adjoints__(double *dest) const {
+  return stan::math::accumulate_adjoints(dest, g, x); }
+  stan::math::vari** save_varis__(stan::math::vari **dest) const {
+  return stan::math::save_varis(dest, g, x); }
+  
+  };
+template<typename F0__, typename F1__>
+auto g2_L4C13_make__(const F0__& g, const F1__& x) {
+return g2_L4C13_cfunctor__<F0__, F1__>(g, x);
 }
 
-using captured_scalar_t__ = local_scalar_t__;
-using ValueOf__ = baz_L23C9_cfunctor__<double>;
-auto value_of__() const { return ValueOf__(value_of(p)); }
-auto deep_copy_vars__() const {
-return baz_L23C9_cfunctor__<local_scalar_t__>(deep_copy_vars(p)); }
-void zero_adjoints__() { stan::math::zero_adjoints(p); }
-double* accumulate_adjoints__(double *dest) const {
-return stan::math::accumulate_adjoints(dest, p); }
-stan::math::vari** save_varis__(stan::math::vari **dest) const {
-return stan::math::save_varis(dest, p); }
-
-};
-
 template <typename T0__, typename T1__>
-stan::promote_args_t<T0__,
+stan::promote_args_t<typename T0__::captured_scalar_t__,
 T1__>
 foo(const T0__& g, const T1__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
+  using local_scalar_t__ = stan::promote_args_t<typename T0__::captured_scalar_t__,
+          T1__>;
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -2589,30 +2535,9 @@ foo(const T0__& g, const T1__& x, std::ostream* pstream__) {
   try {
     
     current_statement__ = 7;
-    auto g2 = g2_L4C13_cfunctor__<local_scalar_t__>(g, x);
+    auto g2 = g2_L4C13_make__(g, x);
     current_statement__ = 8;
     return g2(pstream__, 1.0);
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-  }
-  
-}
-template <typename T0__, typename T1__, typename T2__>
-stan::promote_args_t<T0__, T1__,
-T2__>
-g2_L4C13_impl__(const T0__& g, const T1__& x, const T2__& y,
-                std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__>;
-  const static bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
-  try {
-    current_statement__ = 10;
-    return (g(pstream__, y) * x);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -2630,7 +2555,7 @@ bar_L13C9_impl__(const double& x, const T1__& y, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 12;
+    current_statement__ = 10;
     return (x * y);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2650,7 +2575,7 @@ baz_L23C9_impl__(const T0__& p, const T1__& y, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    current_statement__ = 14;
+    current_statement__ = 12;
     return (p * y);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2659,11 +2584,14 @@ baz_L23C9_impl__(const T0__& p, const T1__& y, std::ostream* pstream__) {
   }
   
 }
-template <typename T0__, typename T1__>
-stan::promote_args_t<T0__,
-T1__>
-baz_L23C9_impl__(const T0__& p, const T1__& y, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
+template <typename T0__, typename T1__, typename T2__>
+stan::promote_args_t<typename T0__::captured_scalar_t__, T1__,
+T2__>
+g2_L4C13_impl__(const T0__& g, const T1__& x, const T2__& y,
+                std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<typename T0__::captured_scalar_t__,
+          T1__,
+          T2__>;
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -2671,7 +2599,7 @@ baz_L23C9_impl__(const T0__& p, const T1__& y, std::ostream* pstream__) {
   
   try {
     current_statement__ = 14;
-    return (p * y);
+    return (g(pstream__, y) * x);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -2722,7 +2650,7 @@ class closures3_model final : public model_base_crtp<closures3_model> {
       x = 2.0;
       
       current_statement__ = 1;
-      auto bar = bar_L13C9_cfunctor__<local_scalar_t__>(x);
+      auto bar = bar_L13C9_make__(x);
       current_statement__ = 6;
       z = std::numeric_limits<double>::quiet_NaN();
       
@@ -2761,7 +2689,7 @@ class closures3_model final : public model_base_crtp<closures3_model> {
     try {
       
       current_statement__ = 1;
-      auto bar = bar_L13C9_cfunctor__<local_scalar_t__>(x);
+      auto bar = bar_L13C9_make__(x);
       local_scalar_t__ p;
       p = DUMMY_VAR__;
       
@@ -2769,7 +2697,7 @@ class closures3_model final : public model_base_crtp<closures3_model> {
       p = in__.scalar();
       
       current_statement__ = 3;
-      auto baz = baz_L23C9_cfunctor__<local_scalar_t__>(p);
+      auto baz = baz_L23C9_make__(p);
       local_scalar_t__ w;
       w = DUMMY_VAR__;
       
@@ -2809,7 +2737,7 @@ class closures3_model final : public model_base_crtp<closures3_model> {
     try {
       
       current_statement__ = 1;
-      auto bar = bar_L13C9_cfunctor__<local_scalar_t__>(x);
+      auto bar = bar_L13C9_make__(x);
       double p;
       p = std::numeric_limits<double>::quiet_NaN();
       
@@ -2825,7 +2753,7 @@ class closures3_model final : public model_base_crtp<closures3_model> {
         return ;
       } 
       current_statement__ = 3;
-      auto baz = baz_L23C9_cfunctor__<local_scalar_t__>(p);
+      auto baz = baz_L23C9_make__(p);
       current_statement__ = 4;
       w = foo(baz, 1.0, pstream__);
       if (emit_transformed_parameters__) {
@@ -2853,7 +2781,7 @@ class closures3_model final : public model_base_crtp<closures3_model> {
     try {
       
       current_statement__ = 1;
-      auto bar = bar_L13C9_cfunctor__<local_scalar_t__>(x);
+      auto bar = bar_L13C9_make__(x);
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
@@ -3092,35 +3020,40 @@ harmonic_L4C15_impl__(const std::vector<Eigen::Matrix<T0__, -1, 1>>& k,
                       const T1__& t, const Eigen::Matrix<T2__, -1, 1>& y,
                       std::ostream* pstream__)  ;
 
-template<typename local_scalar_t__>
+template<typename F0__>
 class harmonic_L4C15_cfunctor__ {
-std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> k;
-public:
-const size_t vars_count__;
-harmonic_L4C15_cfunctor__(const harmonic_L4C15_cfunctor__<local_scalar_t__>&) = default ;
-harmonic_L4C15_cfunctor__(const std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>& k__)
-: k(k__), vars_count__(count_vars(k__)) {}
-template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<local_scalar_t__, T0__,
+  std::vector<Eigen::Matrix<F0__, -1, 1>> k;
+  public:
+  const size_t vars_count__;
+  harmonic_L4C15_cfunctor__(const harmonic_L4C15_cfunctor__<F0__>&) = default ;
+  harmonic_L4C15_cfunctor__(harmonic_L4C15_cfunctor__<F0__>&&) = default ;
+  harmonic_L4C15_cfunctor__(const std::vector<Eigen::Matrix<F0__, -1, 1>>& k__)
+  : k(k__), vars_count__(count_vars(k__)) {}
+  template <typename T0__, typename T1__>
+  Eigen::Matrix<stan::promote_args_t<F0__, T0__,
 T1__>, -1, 1>
-operator()(std::ostream* pstream__, const T0__& t,
-           const Eigen::Matrix<T1__, -1, 1>& y)  const 
-{
-return harmonic_L4C15_impl__(k, t, y, pstream__);
+  operator()(std::ostream* pstream__, const T0__& t,
+             const Eigen::Matrix<T1__, -1, 1>& y)  const 
+  {
+  return harmonic_L4C15_impl__(k, t, y, pstream__);
+  }
+  
+  using captured_scalar_t__ = stan::return_type_t<F0__>;
+  using ValueOf__ = harmonic_L4C15_cfunctor__<double>;
+  auto value_of__() const { return ValueOf__(value_of(k)); }
+  auto deep_copy_vars__() const {
+  return harmonic_L4C15_cfunctor__<F0__>(deep_copy_vars(k)); }
+  void zero_adjoints__() { stan::math::zero_adjoints(k); }
+  double* accumulate_adjoints__(double *dest) const {
+  return stan::math::accumulate_adjoints(dest, k); }
+  stan::math::vari** save_varis__(stan::math::vari **dest) const {
+  return stan::math::save_varis(dest, k); }
+  
+  };
+template<typename F0__>
+auto harmonic_L4C15_make__(const std::vector<Eigen::Matrix<F0__, -1, 1>>& k) {
+return harmonic_L4C15_cfunctor__<F0__>(k);
 }
-
-using captured_scalar_t__ = local_scalar_t__;
-using ValueOf__ = harmonic_L4C15_cfunctor__<double>;
-auto value_of__() const { return ValueOf__(value_of(k)); }
-auto deep_copy_vars__() const {
-return harmonic_L4C15_cfunctor__<local_scalar_t__>(deep_copy_vars(k)); }
-void zero_adjoints__() { stan::math::zero_adjoints(k); }
-double* accumulate_adjoints__(double *dest) const {
-return stan::math::accumulate_adjoints(dest, k); }
-stan::math::vari** save_varis__(stan::math::vari **dest) const {
-return stan::math::save_varis(dest, k); }
-
-};
 
 template <typename T0__, typename T1__, typename T2__>
 std::vector<Eigen::Matrix<stan::promote_args_t<T0__, T1__,
@@ -3137,7 +3070,7 @@ integrate(const std::vector<Eigen::Matrix<T0__, -1, 1>>& k,
   try {
     
     current_statement__ = 5;
-    auto harmonic = harmonic_L4C15_cfunctor__<local_scalar_t__>(k);
+    auto harmonic = harmonic_L4C15_make__(k);
     current_statement__ = 6;
     return ode_rk45(harmonic, init, 0, ts, pstream__);
   } catch (const std::exception& e) {
