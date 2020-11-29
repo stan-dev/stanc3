@@ -118,6 +118,11 @@ let rec is_autodiffable = function
 
 let is_scalar_type = function UReal | UInt -> true | _ -> false
 let is_int_type = function UInt | UArray UInt -> true | _ -> false
+
+let is_eigen_type = function
+  | UVector | URowVector | UMatrix -> true
+  | _ -> false
+
 let is_fun_type = function UFun _ -> true | _ -> false
 
 (** Detect if type contains an integer *)

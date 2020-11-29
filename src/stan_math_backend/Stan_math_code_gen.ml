@@ -53,7 +53,7 @@ let pp_located ppf _ =
 
 (** Detect if argument requires C++ template *)
 let arg_needs_template = function
-  | UnsizedType.DataOnly, _, _ -> false
+  | UnsizedType.DataOnly, _, t -> UnsizedType.is_eigen_type t
   | _, _, t when UnsizedType.contains_int t -> false
   | _ -> true
 
@@ -66,6 +66,13 @@ let maybe_templated_arg_types (args : Program.fun_arg_decl) =
       match arg_needs_template a with
       | true -> Some (sprintf "T%d__" i)
       | false -> None )
+
+let return_arg_types (args : Program.fun_arg_decl) =
+  List.mapi args ~f:(fun i ((_, _, ut) as a) ->
+      if UnsizedType.is_eigen_type ut && arg_needs_template a then
+        Some (sprintf "stan::value_type_t<T%d__>" i)
+      else if arg_needs_template a then Some (sprintf "T%d__" i)
+      else None )
 
 let%expect_test "arg types templated correctly" =
   [(AutoDiffable, "xreal", UReal); (DataOnly, "yint", UInt)]
@@ -92,8 +99,7 @@ let pp_promoted_scalar ppf args =
               tl
       in
       promote_args_chunked ppf
-        List.(
-          chunks_of ~length:5 (filter_opt (maybe_templated_arg_types args)))
+        List.(chunks_of ~length:5 (filter_opt (return_arg_types args)))
 
 (** Pretty-prints a function's return-type, taking into account templated argument
     promotion.*)
@@ -104,6 +110,16 @@ let pp_returntype ppf arg_types rt =
       pf ppf "%a@," pp_unsizedtype_custom_scalar ("int", ut)
   | Some ut -> pf ppf "%a@," pp_unsizedtype_custom_scalar (scalar, ut)
   | None -> pf ppf "void@,"
+
+let pp_eigen_arg_to_ref ppf arg_types =
+  let pp_ref ppf name =
+    pf ppf "@[<hv 8>const auto& %s = to_ref(%s);@]" name (name ^ "_arg__")
+  in
+  pf ppf "@[<v>%a@]@ " (list ~sep:cut pp_ref)
+    (List.filter_map
+       ~f:(fun (_, name, ut) ->
+         if UnsizedType.is_eigen_type ut then Some name else None )
+       arg_types)
 
 (** [pp_located_error ppf (pp_body_block, body_block, err_msg)] surrounds [body_block]
     with a C++ try-catch that will rethrow the error with the proper source location
@@ -129,7 +145,22 @@ let pp_arg ppf (custom_scalar_opt, (_, name, ut)) =
     | Some scalar -> scalar
     | None -> stantype_prim_str ut
   in
-  pf ppf "const %a& %s" pp_unsizedtype_custom_scalar (scalar, ut) name
+  (* we add the _arg suffix for any Eigen types *)
+  pf ppf "const %a& %s" pp_unsizedtype_custom_scalar_eigen_exprs (scalar, ut)
+    name
+
+let pp_arg_eigen_suffix ppf (custom_scalar_opt, (_, name, ut)) =
+  let scalar =
+    match custom_scalar_opt with
+    | Some scalar -> scalar
+    | None -> stantype_prim_str ut
+  in
+  (* we add the _arg suffix for any Eigen types *)
+  let opt_arg_suffix =
+    if UnsizedType.is_eigen_type ut then name ^ "_arg__" else name
+  in
+  pf ppf "const %a& %s" pp_unsizedtype_custom_scalar_eigen_exprs (scalar, ut)
+    opt_arg_suffix
 
 (** [pp_located_error_b] automatically adds a Block wrapper *)
 let pp_located_error_b ppf body_stmts =
@@ -147,6 +178,9 @@ let get_templates_and_args fdargs =
   ( List.filter_opt argtypetemplates
   , List.map
       ~f:(fun a -> strf "%a" pp_arg a)
+      (List.zip_exn argtypetemplates fdargs)
+  , List.map
+      ~f:(fun a -> strf "%a" pp_arg_eigen_suffix a)
       (List.zip_exn argtypetemplates fdargs) )
 
 (** Print the C++ template parameter decleration before a function.
@@ -175,10 +209,14 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
     else if is_rng then (["base_rng__"], ["RNG"])
     else ([], [])
   in
-  let argtypetemplates, args = get_templates_and_args fdargs in
+  let argtypetemplates, args, args_expressions =
+    get_templates_and_args fdargs
+  in
   let pp_body ppf (Stmt.Fixed.({pattern; _}) as fdbody) =
     let text = pf ppf "%s@;" in
     pf ppf "@[<hv 8>using local_scalar_t__ = %a;@]@," pp_promoted_scalar fdargs ;
+    if List.exists ~f:(fun (_, _, t) -> UnsizedType.is_eigen_type t) fdargs
+    then pp_eigen_arg_to_ref ppf fdargs ;
     if not (is_dist || is_lp) then (
       text "const static bool propto__ = true;" ;
       text "(void) propto__;" ) ;
@@ -198,47 +236,33 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
     (if is_dist || is_lp then ["bool propto__"] else [])
     @ List.(map ~f:typename (argtypetemplates @ extra_templates))
   in
-  let pp_sig ppf name =
-    pp_template_decorator ppf templates ;
-    pp_returntype ppf fdargs fdrt ;
-    let arg_strs =
-      args @ mk_extra_args extra_templates extra @ ["std::ostream* pstream__"]
-    in
-    pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs
-  in
-  let pp_sig_rs ppf name =
-    if is_dist then pp_template_decorator ppf (List.tl_exn templates)
+  let pp_sig ppf (name, args, is_reduce_sum_fn, is_variadic_ode_fn) =
+    if (is_reduce_sum_fn || is_variadic_ode_fn) && is_dist then
+      pp_template_decorator ppf (List.tl_exn templates)
     else pp_template_decorator ppf templates ;
     pp_returntype ppf fdargs fdrt ;
-    let first_three, rest = List.split_n args 3 in
+    let args, variadic_args =
+      if is_reduce_sum_fn then List.split_n args 3
+      else if is_variadic_ode_fn then List.split_n args 2
+      else (args, [])
+    in
     let arg_strs =
-      first_three
-      @ ["std::ostream* pstream__"]
-      @ rest
+      args
       @ mk_extra_args extra_templates extra
+      @ ["std::ostream* pstream__"]
+      @ variadic_args
     in
     pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs
   in
-  let pp_sig_variadic_ode ppf name =
-    if is_dist then pp_template_decorator ppf (List.tl_exn templates)
-    else pp_template_decorator ppf templates ;
-    pp_returntype ppf fdargs fdrt ;
-    let first_two, rest = List.split_n args 2 in
-    let arg_strs =
-      first_two
-      @ ["std::ostream* pstream__"]
-      @ rest
-      @ mk_extra_args extra_templates extra
-    in
-    pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs
-  in
-  pp_sig ppf fdname ;
+  pp_sig ppf (fdname, args_expressions, false, false) ;
   match fdbody with
   | None -> pf ppf ";@ "
   | Some fdbody ->
       pp_block ppf (pp_body, fdbody) ;
       pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
-        functor_suffix pp_sig "operator()" pp_call_str
+        functor_suffix pp_sig
+        ("operator()", args, false, false)
+        pp_call_str
         ( (if is_dist || is_lp then fdname ^ "<propto__>" else fdname)
         , List.map ~f:(fun (_, name, _) -> name) fdargs @ extra @ ["pstream__"]
         ) ;
@@ -252,9 +276,9 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
               else pf ppf ""
             in
             pf ppf "@,@,%astruct %s%s {@,%a const @,{@,return %a;@,}@,};@,"
-              (* (if is_dist || is_lp then "template <bool propto__>" else "") *)
-              pp_template_propto fdname fdname reduce_sum_functor_suffix
-              pp_sig_rs "operator()" pp_call_str
+              pp_template_propto fdname fdname reduce_sum_functor_suffix pp_sig
+              ("operator()", args, true, false)
+              pp_call_str
               ( (if is_dist || is_lp then fdname ^ "<propto__>" else fdname)
               , slice :: (start ^ " + 1") :: (end_ ^ " + 1")
                 :: List.map ~f:(fun (_, name, _) -> name) rest
@@ -267,7 +291,8 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
         (* Produces the variadic ode functors that has the pstream argument
         as the third and not last argument *)
         pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
-          variadic_ode_functor_suffix pp_sig_variadic_ode "operator()"
+          variadic_ode_functor_suffix pp_sig
+          ("operator()", args, false, true)
           pp_call_str
           ( fdname
           , List.map ~f:(fun (_, name, _) -> name) fdargs

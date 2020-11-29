@@ -167,10 +167,10 @@ return int_array_fun(a, pstream__);
 };
 
 template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
-my_vector_mul_by_5(const Eigen::Matrix<T0__, -1, 1>& x,
-                   std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
+my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
+  const auto& x = to_ref(x_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -198,8 +198,8 @@ my_vector_mul_by_5(const Eigen::Matrix<T0__, -1, 1>& x,
 
 struct my_vector_mul_by_5_functor__ {
 template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
-operator()(const Eigen::Matrix<T0__, -1, 1>& x, std::ostream* pstream__)  const 
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
+operator()(const T0__& x, std::ostream* pstream__)  const 
 {
 return my_vector_mul_by_5(x, pstream__);
 }
@@ -498,9 +498,10 @@ static const std::vector<string> locations_array__ = {" (found before start of p
 
 
 template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
-integrand(const Eigen::Matrix<T0__, -1, 1>& x, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
+integrand(const T0__& x_arg__, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
+  const auto& x = to_ref(x_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -519,8 +520,8 @@ integrand(const Eigen::Matrix<T0__, -1, 1>& x, std::ostream* pstream__) {
 
 struct integrand_functor__ {
 template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
-operator()(const Eigen::Matrix<T0__, -1, 1>& x, std::ostream* pstream__)  const 
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
+operator()(const T0__& x, std::ostream* pstream__)  const 
 {
 return integrand(x, pstream__);
 }
