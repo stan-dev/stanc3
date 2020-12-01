@@ -326,6 +326,11 @@ and gen_fun_app ppf fname es =
           in
           ( strf "%s<%s%s>" fname normalized_dist_functor propto_template
           , grainsize :: container :: msgs :: tl )
+      | ( x
+        , ({meta= {type_= UFun (_, _, true); _}; _} as f)
+          :: grainsize :: container :: tl )
+        when Stan_math_signatures.is_reduce_sum_fn x ->
+          (fname, grainsize :: container :: msgs :: f :: tl)
       | x, f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: tl
         when Stan_math_signatures.is_variadic_ode_fn x
              && String.is_suffix fname
