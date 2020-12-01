@@ -10,9 +10,10 @@ Semantic error in 'bad_gamma_var.stan', line 19, column 9 to column 55:
     21:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'hmm_hidden_state_prob'. Available signatures: 
+Ill-typed arguments supplied to function 'hmm_hidden_state_prob'. Available signatures:
 (data matrix, data matrix, data vector) => matrix
-Instead supplied arguments of incompatible type: matrix, matrix, vector.
+Instead supplied arguments of incompatible type:
+(matrix, matrix, vector)
 
   $ ../../../../../install/default/bin/stanc bad_log_omega_var.stan
 
@@ -26,9 +27,10 @@ Semantic error in 'bad_log_omega_var.stan', line 19, column 9 to column 55:
     21:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'hmm_hidden_state_prob'. Available signatures: 
+Ill-typed arguments supplied to function 'hmm_hidden_state_prob'. Available signatures:
 (data matrix, data matrix, data vector) => matrix
-Instead supplied arguments of incompatible type: matrix, matrix, vector.
+Instead supplied arguments of incompatible type:
+(matrix, matrix, vector)
 
   $ ../../../../../install/default/bin/stanc bad_rho_var.stan
 
@@ -42,7 +44,8 @@ Semantic error in 'bad_rho_var.stan', line 19, column 9 to column 55:
     21:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'hmm_hidden_state_prob'. Available signatures: 
+Ill-typed arguments supplied to function 'hmm_hidden_state_prob'. Available signatures:
 (data matrix, data matrix, data vector) => matrix
-Instead supplied arguments of incompatible type: matrix, matrix, vector.
+Instead supplied arguments of incompatible type:
+(matrix, matrix, vector)
 

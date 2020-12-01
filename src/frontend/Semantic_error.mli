@@ -34,6 +34,7 @@ val illtyped_assignment :
 val illtyped_ternary_if :
   Location_span.t -> UnsizedType.t -> UnsizedType.t -> UnsizedType.t -> t
 
+val ternary_if_fn_type : Location_span.t -> UnsizedType.t -> t
 val returning_fn_expected_nonreturning_found : Location_span.t -> string -> t
 val returning_fn_expected_nonfn_found : Location_span.t -> string -> t
 
@@ -65,6 +66,8 @@ val nonreturning_fn_expected_undeclaredident_found :
 
 val illtyped_stanlib_fn_app :
   Location_span.t -> string -> UnsizedType.t list -> t
+
+val illtyped_stanlib_hof_app : Location_span.t -> string -> t
 
 val illtyped_userdefined_fn_app :
      Location_span.t
@@ -121,6 +124,7 @@ val closure_without_def : Location_span.t -> t
 val fn_decl_needs_block : Location_span.t -> t
 val non_real_prob_fn_def : Location_span.t -> t
 val impure_closure : Location_span.t -> t
+val recursive_closure : Location_span.t -> t
 
 val prob_density_non_real_variate :
   Location_span.t -> UnsizedType.t option -> t

@@ -10,7 +10,7 @@ Semantic error in 'falling_factorial.stan', line 7, column 26 to column 59:
      9:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'falling_factorial'. Available signatures: 
+Ill-typed arguments supplied to function 'falling_factorial'. Available signatures:
 (int, int) => int
 (real, int) => real
 (vector, int) => vector
@@ -105,7 +105,8 @@ Ill-typed arguments supplied to function 'falling_factorial'. Available signatur
 (matrix[,,,,,,], int[,,,,,,,,]) => matrix[,,,,,,]
 (real[,,,,,,,], int) => real[,,,,,,,]
 (real[,,,,,,,], int[,,,,,,,]) => real[,,,,,,,]
-Instead supplied arguments of incompatible type: real, real.
+Instead supplied arguments of incompatible type:
+(real, real)
 
   $ ../../../../../install/default/bin/stanc rising_factorial.stan
 
@@ -118,7 +119,7 @@ Semantic error in 'rising_factorial.stan', line 7, column 28 to column 60:
      8:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'rising_factorial'. Available signatures: 
+Ill-typed arguments supplied to function 'rising_factorial'. Available signatures:
 (int, int) => int
 (real, int) => real
 (vector, int) => vector
@@ -213,5 +214,6 @@ Ill-typed arguments supplied to function 'rising_factorial'. Available signature
 (matrix[,,,,,,], int[,,,,,,,,]) => matrix[,,,,,,]
 (real[,,,,,,,], int) => real[,,,,,,,]
 (real[,,,,,,,], int[,,,,,,,]) => real[,,,,,,,]
-Instead supplied arguments of incompatible type: real, real.
+Instead supplied arguments of incompatible type:
+(real, real)
 

@@ -310,11 +310,18 @@ let semantic_check_fn_stan_math ~is_cond_dist ~loc id es =
         ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
         ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
       |> Validate.ok
-  | _ ->
-      es
-      |> List.map ~f:(fun e -> e.emeta.type_)
-      |> Semantic_error.illtyped_stanlib_fn_app loc id.name
-      |> Validate.error
+  | None -> (
+    match get_arg_types es with
+    | (_, UFun (arg_tys, rt, true)) :: args
+      when Stan_math_signatures.stan_math_returntype id.name
+             ((UnsizedType.DataOnly, UFun (arg_tys, rt, false)) :: args)
+           <> None ->
+        Semantic_error.illtyped_stanlib_hof_app loc id.name |> Validate.error
+    | _ ->
+        es
+        |> List.map ~f:(fun e -> e.emeta.type_)
+        |> Semantic_error.illtyped_stanlib_fn_app loc id.name
+        |> Validate.error )
 
 let arg_match (x_ad, x_t) y =
   UnsizedType.check_of_same_type_mod_conv "" x_t y.emeta.type_
@@ -445,11 +452,14 @@ let semantic_check_ternary_if loc (pe, te, fe) =
     if pe.emeta.type_ = UInt then
       match UnsizedType.common_type (te.emeta.type_, fe.emeta.type_) with
       | Some type_ ->
-          mk_typed_expression
-            ~expr:(TernaryIf (pe, te, fe))
-            ~ad_level:(expr_ad_lub [pe; te; fe])
-            ~type_ ~loc
-          |> ok
+          if UnsizedType.is_fun_type type_ then
+            error (Semantic_error.ternary_if_fn_type loc type_)
+          else
+            mk_typed_expression
+              ~expr:(TernaryIf (pe, te, fe))
+              ~ad_level:(expr_ad_lub [pe; te; fe])
+              ~type_ ~loc
+            |> ok
       | None -> error err
     else error err)
 
@@ -1758,7 +1768,9 @@ and semantic_check_fundef ~loc ~cf ~is_closure return_ty id args body =
           in
           semantic_check_statement context body )
     in
-    body'
+    ( if is_closure && Set.mem captures id.name then
+      error (Semantic_error.recursive_closure id.id_loc)
+    else body' )
     >>= fun ub ->
     semantic_check_fundef_return_tys ~loc id urt ub
     |> map ~f:(fun () ->

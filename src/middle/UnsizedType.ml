@@ -157,3 +157,109 @@ include Comparable.Make_using_comparator (struct
 
   include Comparator
 end)
+
+module TypeMap = Core_kernel.Map.Make_using_comparator (struct
+  type nonrec t = t
+
+  let sexp_of_t = sexp_of_t
+  let t_of_sexp = t_of_sexp
+
+  include Comparator
+end)
+
+let pp_sigs ppf tys =
+  let ctx = ref TypeMap.empty in
+  let rec pp ppf = function
+    | UInt -> pp_keyword ppf "int"
+    | UReal -> pp_keyword ppf "real"
+    | UVector -> pp_keyword ppf "vector"
+    | URowVector -> pp_keyword ppf "row_vector"
+    | UMatrix -> pp_keyword ppf "matrix"
+    | UArray ut ->
+        let ty, depth = unsized_array_depth ut in
+        let commas = String.make depth ',' in
+        Fmt.pf ppf "@[<hov>%a[%s]@]" pp ty commas
+    | UFun (tys, rt, _) as t -> (
+      match Map.find !ctx t with
+      | Some (id, _) -> Fmt.pf ppf "%s" id
+      | None ->
+          let id = Fmt.strf "<F%d>" (Map.length !ctx + 1) in
+          ctx := Map.add_exn !ctx ~key:t ~data:(id, (rt, tys)) ;
+          Fmt.pf ppf "%s" id )
+    | UMathLibraryFunction ->
+        (pp_angle_brackets Fmt.string) ppf "Stan Math function"
+  and pp_fun_arg ppf (ad_ty, unsized_ty) =
+    match ad_ty with
+    | DataOnly -> Fmt.pf ppf {|data %a|} pp unsized_ty
+    | _ -> pp ppf unsized_ty
+  and pp_returntype ppf = function
+    | Void -> Fmt.string ppf "void"
+    | ReturnType ut -> pp ppf ut
+  and pp_fn ppf (rt, argtypes) =
+    Fmt.pf ppf {|(@[<h>%a@]) => %a|}
+      Fmt.(list pp_fun_arg ~sep:comma)
+      argtypes pp_returntype rt
+  and pp_fun ppf (id, tys) = Fmt.pf ppf {|@[<h>%s = @[<h>%a@]@]|} id pp_fn tys
+  and pp_where ppf fns =
+    let old = !ctx in
+    let new_ = Map.filter_keys !ctx ~f:(fun ty -> not (Map.mem fns ty)) in
+    if not (Map.is_empty new_) then (
+      Fmt.cut ppf () ;
+      let compare (_, (id1, _)) (_, (id2, _)) = String.compare id1 id2 in
+      Fmt.list pp_fun ppf
+        (List.map ~f:snd (List.sort ~compare (Map.to_alist new_))) ;
+      pp_where ppf old )
+  in
+  Fmt.pf ppf "@[<v>%a" Fmt.(list pp_fn) tys ;
+  if not (Map.is_empty !ctx) then
+    Fmt.pf ppf "@,  where%a" pp_where TypeMap.empty ;
+  Fmt.pf ppf "@]" ;
+  !ctx
+
+let pp_args ppf (fns, tys) =
+  let ctx = ref fns in
+  let rec pp ppf = function
+    | UInt -> pp_keyword ppf "int"
+    | UReal -> pp_keyword ppf "real"
+    | UVector -> pp_keyword ppf "vector"
+    | URowVector -> pp_keyword ppf "row_vector"
+    | UMatrix -> pp_keyword ppf "matrix"
+    | UArray ut ->
+        let ty, depth = unsized_array_depth ut in
+        let commas = String.make depth ',' in
+        Fmt.pf ppf "@[<hov>%a[%s]@]" pp ty commas
+    | UFun (tys, rt, _) as t -> (
+      match Map.find !ctx t with
+      | Some (id, _) -> Fmt.pf ppf "%s" id
+      | None ->
+          let id = Fmt.strf "<F%d>" (Map.length !ctx + 1) in
+          ctx := Map.add_exn !ctx ~key:t ~data:(id, (rt, tys)) ;
+          Fmt.pf ppf "%s" id )
+    | UMathLibraryFunction ->
+        (pp_angle_brackets Fmt.string) ppf "Stan Math function"
+  and pp_fun_arg ppf (ad_ty, unsized_ty) =
+    match ad_ty with
+    | DataOnly -> Fmt.pf ppf {|data %a|} pp unsized_ty
+    | _ -> pp ppf unsized_ty
+  and pp_returntype ppf = function
+    | Void -> Fmt.string ppf "void"
+    | ReturnType ut -> pp ppf ut
+  and pp_fn ppf (rt, argtypes) =
+    Fmt.pf ppf {|(@[<h>%a@]) => %a|}
+      Fmt.(list pp_fun_arg ~sep:comma)
+      argtypes pp_returntype rt
+  and pp_fun ppf (id, tys) = Fmt.pf ppf {|@[<h>%s = @[<h>%a@]@]|} id pp_fn tys
+  and pp_where ppf fns =
+    let old = !ctx in
+    let new_ = Map.filter_keys !ctx ~f:(fun ty -> not (Map.mem fns ty)) in
+    if not (Map.is_empty new_) then (
+      Fmt.cut ppf () ;
+      let compare (_, (id1, _)) (_, (id2, _)) = String.compare id1 id2 in
+      Fmt.list pp_fun ppf
+        (List.map ~f:snd (List.sort ~compare (Map.to_alist new_))) ;
+      pp_where ppf old )
+  in
+  Fmt.pf ppf "@[<v>(@[<hov>%a@])" Fmt.(list ~sep:comma pp) tys ;
+  if Int.( > ) (Map.length !ctx) (Map.length fns) then
+    Fmt.pf ppf "@,  where%a" pp_where fns ;
+  Fmt.pf ppf "@]"

@@ -1384,7 +1384,8 @@ Semantic error in 'functions-bad21.stan', line 13, column 11 to column 21:
 
 Ill-typed arguments supplied to function 'my_fun3'. Available signatures:
 (data real) => real
-Instead supplied arguments of incompatible type: real.
+Instead supplied arguments of incompatible type:
+(real)
 
   $ ../../../../install/default/bin/stanc functions-bad22-ode.stan
 
@@ -1398,10 +1399,16 @@ Semantic error in 'functions-bad22-ode.stan', line 15, column 11 to column 82:
     17:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
-((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
-((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
-Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
+Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures:
+(<F1>, real[], real, real[], real[], data real[], data int[]) => real[,]
+(<F1>, real[], real, real[], real[], data real[], data int[], data real, data real, data real) => 
+real[,]
+  where
+<F1> = (real, real[], real[], data real[], data int[]) => real[]
+Instead supplied arguments of incompatible type:
+(<F2>, real[], real, real[], real[], real[], int[])
+  where
+<F2> = (real, real[], real[], real[], int[]) => real[]
 
   $ ../../../../install/default/bin/stanc functions-bad23.stan
 
@@ -1801,7 +1808,6 @@ Semantic error in 'op_divide_bad.stan', line 7, column 6 to column 11:
 Ill-typed arguments supplied to infix operator /. Available signatures: 
 (row_vector, matrix) => row_vector
 (matrix, matrix) => matrix
-
 (int, int) => int
 (real, real) => real
 (vector, real) => vector
@@ -1823,7 +1829,6 @@ Semantic error in 'op_divide_right_bad.stan', line 7, column 6 to column 11:
 Ill-typed arguments supplied to infix operator /. Available signatures: 
 (row_vector, matrix) => row_vector
 (matrix, matrix) => matrix
-
 (int, int) => int
 (real, real) => real
 (vector, real) => vector
@@ -2149,7 +2154,7 @@ Semantic error in 'propto-bad1.stan', line 2, column 14 to column 37:
      3:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'normal_lupdf'. Available signatures: 
+Ill-typed arguments supplied to function 'normal_lupdf'. Available signatures:
 (real, real, real) => real
 (real, real, vector) => real
 (real, real, row_vector) => real
@@ -2214,7 +2219,8 @@ Ill-typed arguments supplied to function 'normal_lupdf'. Available signatures:
 (real[], real[], vector) => real
 (real[], real[], row_vector) => real
 (real[], real[], real[]) => real
-Instead supplied arguments of incompatible type: int, int[], int.
+Instead supplied arguments of incompatible type:
+(int, int[], int)
 
   $ ../../../../install/default/bin/stanc real-pdf.stan
 
@@ -2511,7 +2517,7 @@ Semantic error in 'signature_function_known.stan', line 8, column 21 to column 5
      9:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'bernoulli_logit_log'. Available signatures: 
+Ill-typed arguments supplied to function 'bernoulli_logit_log'. Available signatures:
 (int, real) => real
 (int, vector) => real
 (int, row_vector) => real
@@ -2520,7 +2526,8 @@ Ill-typed arguments supplied to function 'bernoulli_logit_log'. Available signat
 (int[], vector) => real
 (int[], row_vector) => real
 (int[], real[]) => real
-Instead supplied arguments of incompatible type: vector, vector.
+Instead supplied arguments of incompatible type:
+(vector, vector)
 
   $ ../../../../install/default/bin/stanc signature_function_unknown.stan
 

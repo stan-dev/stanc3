@@ -17,6 +17,7 @@ module TypeError = struct
     | IllTypedAssignment of
         Ast.assignmentoperator * UnsizedType.t * UnsizedType.t
     | IllTypedTernaryIf of UnsizedType.t * UnsizedType.t * UnsizedType.t
+    | TernaryIfFnType of UnsizedType.t
     | IllTypedReduceSum of
         string
         * UnsizedType.t list
@@ -33,6 +34,7 @@ module TypeError = struct
     | NonReturningFnExpectedNonFnFound of string
     | NonReturningFnExpectedUndeclaredIdentFound of string
     | IllTypedStanLibFunctionApp of string * UnsizedType.t list
+    | IllTypedStanLibHOFunctionApp of string
     | IllTypedUserDefinedFunctionApp of
         string
         * (UnsizedType.autodifftype * UnsizedType.t) list
@@ -92,12 +94,10 @@ module TypeError = struct
     | IllTypedAssignment ((OperatorAssign op as assignop), lt, rt) ->
         Fmt.pf ppf
           "@[<h>Ill-typed arguments supplied to assignment operator %s: lhs \
-           has type %a and rhs has type %a. Available signatures:@]%s"
+           has type %a and rhs has type %a. Available signatures:@]%a"
           (Pretty_printing.pretty_print_assignmentoperator assignop)
           UnsizedType.pp lt UnsizedType.pp rt
-          ( Stan_math_signatures.pretty_print_math_lib_assignmentoperator_sigs
-              op
-          |> Option.value ~default:"no matching signatures" )
+          Stan_math_signatures.pp_math_lib_assignmentoperator_sigs op
     | IllTypedAssignment (assignop, lt, rt) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to assignment operator %s: lhs has \
@@ -113,6 +113,9 @@ module TypeError = struct
         Fmt.pf ppf
           "Condition in ternary expression must be primitive int; found type=%a"
           UnsizedType.pp ut1
+    | TernaryIfFnType type_ ->
+        Fmt.pf ppf "Ternary expression cannot be a function; found type=%a"
+          UnsizedType.pp type_
     | IllTypedReduceSum (name, arg_tys, args) ->
         let arg_types = List.map ~f:(fun (_, t) -> t) args in
         let first, rest = List.split_n arg_types 1 in
@@ -260,50 +263,48 @@ module TypeError = struct
           "A non-returning function was expected but an undeclared identifier \
            '%s' was supplied."
           fn_name
+    | IllTypedStanLibHOFunctionApp name ->
+        Fmt.pf ppf "Function '%s' does not support closures yet." name
     | IllTypedStanLibFunctionApp (name, arg_tys) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to function '%s'. Available \
-           signatures: %s@[<h>Instead supplied arguments of incompatible \
-           type: %a.@]"
-          name
-          (Stan_math_signatures.pretty_print_math_sigs name)
-          Fmt.(list UnsizedType.pp ~sep:comma)
-          arg_tys
+           signatures:@[<v>"
+          name ;
+        let fns =
+          UnsizedType.pp_sigs ppf (Stan_math_signatures.get_sigs name)
+        in
+        Fmt.pf ppf
+          "@,@]@[<h>Instead supplied arguments of incompatible type:@]@,%a"
+          UnsizedType.pp_args (fns, arg_tys)
     | IllTypedUserDefinedFunctionApp (name, listed_tys, return_ty, arg_tys) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to function '%s'. Available \
-           signatures:%a\n\
-           @[<h>Instead supplied arguments of incompatible type: %a.@]"
-          name UnsizedType.pp
-          (UFun (listed_tys, return_ty, false))
-          Fmt.(list UnsizedType.pp ~sep:comma)
-          arg_tys
+           signatures:@[<v>"
+          name ;
+        let fns = UnsizedType.pp_sigs ppf [(return_ty, listed_tys)] in
+        Fmt.pf ppf
+          "@,@]@[<h>Instead supplied arguments of incompatible type:@]@,%a"
+          UnsizedType.pp_args (fns, arg_tys)
     | IllTypedBinaryOperator (op, lt, rt) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to infix operator %a. Available \
-           signatures: %s@[<h>Instead supplied arguments of incompatible \
+           signatures: @,%a@,@[<h>Instead supplied arguments of incompatible \
            type: %a, %a.@]"
-          Operator.pp op
-          ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
-          |> String.concat ~sep:"\n" )
+          Operator.pp op Stan_math_signatures.pp_math_lib_operator_sigs op
           UnsizedType.pp lt UnsizedType.pp rt
     | IllTypedPrefixOperator (op, ut) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to prefix operator %a. Available \
-           signatures: %s@[<h>Instead supplied argument of incompatible type: \
-           %a.@]"
-          Operator.pp op
-          ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
-          |> String.concat ~sep:"\n" )
+           signatures: @,%a@,@[<h>Instead supplied argument of incompatible \
+           type: %a.@]"
+          Operator.pp op Stan_math_signatures.pp_math_lib_operator_sigs op
           UnsizedType.pp ut
     | IllTypedPostfixOperator (op, ut) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to postfix operator %a. Available \
-           signatures: %s\n\
-           Instead supplied argument of incompatible type: %a."
-          Operator.pp op
-          ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
-          |> String.concat ~sep:"\n" )
+           signatures: @,%a@,Instead supplied argument of incompatible type: \
+           %a."
+          Operator.pp op Stan_math_signatures.pp_math_lib_operator_sigs op
           UnsizedType.pp ut
 end
 
@@ -411,6 +412,7 @@ module StatementError = struct
     | FunDeclNoDefn
     | ClosureNoDefn
     | ImpureClosure
+    | RecursiveClosure
     | FunDeclNeedsBlock
     | NonRealProbFunDef
     | ProbDensityNonRealVariate of UnsizedType.t option
@@ -495,6 +497,7 @@ For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
         Fmt.pf ppf
           "Local function cannot have suffix _rng, _lpdf, _lpmf, _lcdf, \
            _lccdf, or _lp."
+    | RecursiveClosure -> Fmt.pf ppf "Local function cannot be recursive."
     | FunDeclNeedsBlock ->
         Fmt.pf ppf "Function definitions must be wrapped in curly braces."
     | NonRealProbFunDef ->
@@ -582,6 +585,9 @@ let illtyped_assignment loc assignop lt rt =
 let illtyped_ternary_if loc predt lt rt =
   TypeError (loc, TypeError.IllTypedTernaryIf (predt, lt, rt))
 
+let ternary_if_fn_type loc type_ =
+  TypeError (loc, TypeError.TernaryIfFnType type_)
+
 let returning_fn_expected_nonreturning_found loc name =
   TypeError (loc, TypeError.ReturningFnExpectedNonReturningFound name)
 
@@ -611,6 +617,9 @@ let nonreturning_fn_expected_undeclaredident_found loc name =
 
 let illtyped_stanlib_fn_app loc name arg_tys =
   TypeError (loc, TypeError.IllTypedStanLibFunctionApp (name, arg_tys))
+
+let illtyped_stanlib_hof_app loc name =
+  TypeError (loc, TypeError.IllTypedStanLibHOFunctionApp name)
 
 let illtyped_userdefined_fn_app loc name decl_arg_tys decl_return_ty arg_tys =
   TypeError
@@ -731,6 +740,9 @@ let non_real_prob_fn_def loc =
   StatementError (loc, StatementError.NonRealProbFunDef)
 
 let impure_closure loc = StatementError (loc, StatementError.ImpureClosure)
+
+let recursive_closure loc =
+  StatementError (loc, StatementError.RecursiveClosure)
 
 let prob_density_non_real_variate loc ut_opt =
   StatementError (loc, StatementError.ProbDensityNonRealVariate ut_opt)

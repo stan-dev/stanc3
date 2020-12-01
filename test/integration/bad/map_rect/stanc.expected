@@ -9,9 +9,14 @@ Semantic error in 'bad_data_i_type.stan', line 19, column 8 to column 68:
     20:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[,], data int[,]) => vector
-Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, vector[], real[,], int[,,].
+Ill-typed arguments supplied to function 'map_rect'. Available signatures:
+(<F1>, vector, vector[], data real[,], data int[,]) => vector
+  where
+<F1> = (vector, vector, data real[], data int[]) => vector
+Instead supplied arguments of incompatible type:
+(<F2>, vector, vector[], real[,], int[,,])
+  where
+<F2> = (vector, vector, real[], int[]) => vector
 
   $ ../../../../../install/default/bin/stanc bad_data_int_const.stan
 
@@ -25,9 +30,14 @@ Semantic error in 'bad_data_int_const.stan', line 21, column 8 to line 22, colum
     23:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[,], data int[,]) => vector
-Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, vector[], real[,], int[,].
+Ill-typed arguments supplied to function 'map_rect'. Available signatures:
+(<F1>, vector, vector[], data real[,], data int[,]) => vector
+  where
+<F1> = (vector, vector, data real[], data int[]) => vector
+Instead supplied arguments of incompatible type:
+(<F2>, vector, vector[], real[,], int[,])
+  where
+<F2> = (vector, vector, real[], int[]) => vector
 
   $ ../../../../../install/default/bin/stanc bad_data_r_type.stan
 
@@ -40,9 +50,14 @@ Semantic error in 'bad_data_r_type.stan', line 19, column 8 to column 68:
     20:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[,], data int[,]) => vector
-Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, vector[], real, int[,].
+Ill-typed arguments supplied to function 'map_rect'. Available signatures:
+(<F1>, vector, vector[], data real[,], data int[,]) => vector
+  where
+<F1> = (vector, vector, data real[], data int[]) => vector
+Instead supplied arguments of incompatible type:
+(<F2>, vector, vector[], real, int[,])
+  where
+<F2> = (vector, vector, real[], int[]) => vector
 
   $ ../../../../../install/default/bin/stanc bad_data_real_const.stan
 
@@ -55,9 +70,14 @@ Semantic error in 'bad_data_real_const.stan', line 20, column 8 to column 70:
     21:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[,], data int[,]) => vector
-Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, vector[], real[,], int[,].
+Ill-typed arguments supplied to function 'map_rect'. Available signatures:
+(<F1>, vector, vector[], data real[,], data int[,]) => vector
+  where
+<F1> = (vector, vector, data real[], data int[]) => vector
+Instead supplied arguments of incompatible type:
+(<F2>, vector, vector[], real[,], int[,])
+  where
+<F2> = (vector, vector, real[], int[]) => vector
 
   $ ../../../../../install/default/bin/stanc bad_fun_type.stan
 
@@ -70,9 +90,14 @@ Semantic error in 'bad_fun_type.stan', line 19, column 8 to column 68:
     20:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[,], data int[,]) => vector
-Instead supplied arguments of incompatible type: (vector, vector[], real[], int[]) => vector, vector, vector[], real[,], int[,].
+Ill-typed arguments supplied to function 'map_rect'. Available signatures:
+(<F1>, vector, vector[], data real[,], data int[,]) => vector
+  where
+<F1> = (vector, vector, data real[], data int[]) => vector
+Instead supplied arguments of incompatible type:
+(<F2>, vector, vector[], real[,], int[,])
+  where
+<F2> = (vector, vector[], real[], int[]) => vector
 
   $ ../../../../../install/default/bin/stanc bad_job_params_type.stan
 
@@ -85,9 +110,14 @@ Semantic error in 'bad_job_params_type.stan', line 19, column 8 to column 68:
     20:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[,], data int[,]) => vector
-Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, matrix[], real[,], int[,].
+Ill-typed arguments supplied to function 'map_rect'. Available signatures:
+(<F1>, vector, vector[], data real[,], data int[,]) => vector
+  where
+<F1> = (vector, vector, data real[], data int[]) => vector
+Instead supplied arguments of incompatible type:
+(<F2>, vector, matrix[], real[,], int[,])
+  where
+<F2> = (vector, vector, real[], int[]) => vector
 
   $ ../../../../../install/default/bin/stanc bad_lp_fn.stan
 
@@ -126,7 +156,12 @@ Semantic error in 'bad_shared_params_type.stan', line 19, column 8 to column 68:
     20:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[,], data int[,]) => vector
-Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector[], vector[], real[,], int[,].
+Ill-typed arguments supplied to function 'map_rect'. Available signatures:
+(<F1>, vector, vector[], data real[,], data int[,]) => vector
+  where
+<F1> = (vector, vector, data real[], data int[]) => vector
+Instead supplied arguments of incompatible type:
+(<F2>, vector[], vector[], real[,], int[,])
+  where
+<F2> = (vector, vector, real[], int[]) => vector
 
