@@ -20,10 +20,9 @@ let pp_set_size ppf (decl_id, st, adtype) =
   in
   let rec pp_size_ctor ppf st =
     let pp_st ppf st =
-       if String.is_suffix ~suffix:"_varmat" decl_id then
-       pf ppf "%a" pp_unsizedtype_local (DataOnly, SizedType.to_unsized st)
-    else 
-      pf ppf "%a" pp_unsizedtype_local (adtype, SizedType.to_unsized st)
+      if String.is_suffix ~suffix:"_varmat" decl_id then
+        pf ppf "%a" pp_unsizedtype_local (DataOnly, SizedType.to_unsized st)
+      else pf ppf "%a" pp_unsizedtype_local (adtype, SizedType.to_unsized st)
     in
     match st with
     | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
