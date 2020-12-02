@@ -97,6 +97,16 @@ let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" scalar
   | x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
 
+let rec pp_unsizedtype_custom_scalar_varmat ppf (scalar, ut) =
+  match ut with
+  | UnsizedType.UInt | UReal -> string ppf scalar
+  | UArray t ->
+      pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar_varmat (scalar, t)
+  | UMatrix -> pf ppf "var_value_matrix<%s>" scalar
+  | URowVector -> pf ppf "var_value_row_vector<%s>" scalar
+  | UVector -> pf ppf "var_value_vector<%s>" scalar
+  | x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
+
 let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
   match ut with
   | UnsizedType.UInt | UReal | UMatrix | URowVector | UVector ->
@@ -109,6 +119,10 @@ let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
 let pp_unsizedtype_local ppf (adtype, ut) =
   let s = local_scalar ut adtype in
   pp_unsizedtype_custom_scalar ppf (s, ut)
+
+let pp_unsizedtype_local_varmat ppf (adtype, ut) =
+  let s = local_scalar ut adtype in
+  pp_unsizedtype_custom_scalar_varmat ppf (s, ut)
 
 let pp_expr_type ppf e =
   pp_unsizedtype_local ppf Expr.Typed.(adlevel_of e, type_of e)
@@ -413,6 +427,12 @@ and pp_compiler_internal_fn ut f ppf es =
     | {Expr.Fixed.pattern= Lit (Str, base_type); _} :: dims ->
         pf ppf "@[<hov 2>in__.%s(@,%a)@]" base_type (list ~sep:comma pp_expr)
           dims
+    | _ -> raise_s [%message "emit ReadParam with " (es : Expr.Typed.t list)] )
+  | Some FnReadVarMatParam -> (
+    match es with
+    | {Expr.Fixed.pattern= Lit (Str, base_type); _} :: dims ->
+        pf ppf "@[<hov 2>in__.var_%s(@,%a)@]" base_type
+          (list ~sep:comma pp_expr) dims
     | _ -> raise_s [%message "emit ReadParam with " (es : Expr.Typed.t list)] )
   | _ -> gen_fun_app ppf f es
 

@@ -20,6 +20,9 @@ let pp_set_size ppf (decl_id, st, adtype) =
   in
   let rec pp_size_ctor ppf st =
     let pp_st ppf st =
+       if String.is_suffix ~suffix:"_varmat" decl_id then
+       pf ppf "%a" pp_unsizedtype_local (DataOnly, SizedType.to_unsized st)
+    else 
       pf ppf "%a" pp_unsizedtype_local (adtype, SizedType.to_unsized st)
     in
     match st with
@@ -29,9 +32,13 @@ let pp_set_size ppf (decl_id, st, adtype) =
     | SMatrix (d1, d2) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d1 pp_expr d2
     | SArray (t, d) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d pp_size_ctor t
   in
+  let fill =
+    if String.is_suffix ~suffix:"_varmat" decl_id then "initialize_fill"
+    else "fill"
+  in
   pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_size_ctor st ;
   if contains_eigen (SizedType.to_unsized st) then
-    pf ppf "@[<hov 2>stan::math::fill(%s, %s);@]@," decl_id real_nan
+    pf ppf "@[<hov 2>stan::math::%s(%s, %s);@]@," fill decl_id real_nan
 
 let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in
@@ -57,10 +64,16 @@ let rec integer_el_type = function
 
 let pp_decl ppf (vident, ut, adtype) =
   let pp_type =
-    match (Transform_Mir.is_opencl_var vident, ut) with
-    | _, UnsizedType.(UInt | UReal) | false, _ -> pp_unsizedtype_local
-    | true, UArray UInt -> fun ppf _ -> pf ppf "matrix_cl<int>"
-    | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>"
+    if String.is_suffix ~suffix:"_varmat" vident then
+      match (Transform_Mir.is_opencl_var vident, ut) with
+      | _, UnsizedType.(UInt | UReal) | false, _ -> pp_unsizedtype_local_varmat
+      | true, UArray UInt -> fun ppf _ -> pf ppf "matrix_cl<int>"
+      | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>"
+    else
+      match (Transform_Mir.is_opencl_var vident, ut) with
+      | _, UnsizedType.(UInt | UReal) | false, _ -> pp_unsizedtype_local
+      | true, UArray UInt -> fun ppf _ -> pf ppf "matrix_cl<int>"
+      | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>"
   in
   pf ppf "%a %s;" pp_type (adtype, ut) vident
 

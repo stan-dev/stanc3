@@ -8,6 +8,7 @@ type t =
   | FnReadData
   (* XXX move these to a backend specific file?*)
   | FnReadParam
+  | FnReadVarMatParam
   | FnWriteParam
   | FnValidateSize
   | FnValidateSizeSimplex

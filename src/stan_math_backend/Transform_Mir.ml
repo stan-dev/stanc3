@@ -160,12 +160,20 @@ let param_read smeta
     in
     let bodyfn var =
       let readfnapp (var : Expr.Typed.t) =
-        Expr.(
-          Helpers.(
-            internal_funapp FnReadParam
-              ( str (base_ut_to_string (SizedType.to_unsized ucst))
-              :: SizedType.dims_of ucst ))
-            Typed.Meta.{var.meta with type_= base_type ucst})
+        if String.is_suffix ~suffix:"_varmat" decl_id then
+          Expr.(
+            Helpers.(
+              internal_funapp FnReadVarMatParam
+                ( str (base_ut_to_string (SizedType.to_unsized ucst))
+                :: SizedType.dims_of ucst ))
+              Typed.Meta.{var.meta with type_= base_type ucst})
+        else
+          Expr.(
+            Helpers.(
+              internal_funapp FnReadParam
+                ( str (base_ut_to_string (SizedType.to_unsized ucst))
+                :: SizedType.dims_of ucst ))
+              Typed.Meta.{var.meta with type_= base_type ucst})
       in
       Stmt.Helpers.assign_indexed (SizedType.to_unsized cst) decl_id smeta
         readfnapp var

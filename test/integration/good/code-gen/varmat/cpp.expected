@@ -37,6 +37,12 @@ inline void validate_unit_vector_index(const char* var_name, const char* expr,
 }
 
 
+template <typename T__>
+using var_value_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::VectorXd>, Eigen::VectorXd>;
+template <typename T__>
+using var_value_row_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::RowVectorXd>, Eigen::RowVectorXd>;
+template <typename T__>
+using var_value_matrix = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::MatrixXd>, Eigen::MatrixXd>;
 using std::istream;
 using std::string;
 using std::stringstream;
@@ -160,9 +166,7 @@ class basic_model final : public model_base_crtp<basic_model> {
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
                       std::ostream* pstream__ = nullptr) const {
-    using var_value_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::VectorXd>, Eigen::VectorXd>;
-    using var_value_row_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::RowVectorXd>, Eigen::RowVectorXd>;
-    using var_value_row_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::MatrixXd>, Eigen::MatrixXd>;
+    using var_value_matrix = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::MatrixXd>, Eigen::MatrixXd>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -175,18 +179,18 @@ class basic_model final : public model_base_crtp<basic_model> {
 
     
     try {
-      Eigen::Matrix<local_scalar_t__, -1, 1> p1_vector_varmat;
+      var_value_vector<local_scalar_t__> p1_vector_varmat;
       p1_vector_varmat = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-      stan::math::fill(p1_vector_varmat, DUMMY_VAR__);
+      stan::math::initialize_fill(p1_vector_varmat, DUMMY_VAR__);
       
       current_statement__ = 1;
-      p1_vector_varmat = in__.vector(N);
-      Eigen::Matrix<local_scalar_t__, -1, 1> p2_vector_varmat;
+      p1_vector_varmat = in__.var_vector(N);
+      var_value_vector<local_scalar_t__> p2_vector_varmat;
       p2_vector_varmat = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-      stan::math::fill(p2_vector_varmat, DUMMY_VAR__);
+      stan::math::initialize_fill(p2_vector_varmat, DUMMY_VAR__);
       
       current_statement__ = 2;
-      p2_vector_varmat = in__.vector(N);
+      p2_vector_varmat = in__.var_vector(N);
       {
         current_statement__ = 3;
         lp_accum__.add(
@@ -224,18 +228,18 @@ class basic_model final : public model_base_crtp<basic_model> {
 
     
     try {
-      Eigen::Matrix<double, -1, 1> p1_vector_varmat;
+      var_value_vector<double> p1_vector_varmat;
       p1_vector_varmat = Eigen::Matrix<double, -1, 1>(N);
-      stan::math::fill(p1_vector_varmat, std::numeric_limits<double>::quiet_NaN());
+      stan::math::initialize_fill(p1_vector_varmat, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 1;
-      p1_vector_varmat = in__.vector(N);
-      Eigen::Matrix<double, -1, 1> p2_vector_varmat;
+      p1_vector_varmat = in__.var_vector(N);
+      var_value_vector<double> p2_vector_varmat;
       p2_vector_varmat = Eigen::Matrix<double, -1, 1>(N);
-      stan::math::fill(p2_vector_varmat, std::numeric_limits<double>::quiet_NaN());
+      stan::math::initialize_fill(p2_vector_varmat, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
-      p2_vector_varmat = in__.vector(N);
+      p2_vector_varmat = in__.var_vector(N);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         vars__.emplace_back(p1_vector_varmat[(sym1__ - 1)]);}
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -268,9 +272,9 @@ class basic_model final : public model_base_crtp<basic_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      Eigen::Matrix<double, -1, 1> p1_vector_varmat;
+      var_value_vector<double> p1_vector_varmat;
       p1_vector_varmat = Eigen::Matrix<double, -1, 1>(N);
-      stan::math::fill(p1_vector_varmat, std::numeric_limits<double>::quiet_NaN());
+      stan::math::initialize_fill(p1_vector_varmat, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> p1_vector_varmat_flat__;
@@ -290,9 +294,9 @@ class basic_model final : public model_base_crtp<basic_model> {
           current_statement__ = 1;
           pos__ = (pos__ + 1);}
       }
-      Eigen::Matrix<double, -1, 1> p2_vector_varmat;
+      var_value_vector<double> p2_vector_varmat;
       p2_vector_varmat = Eigen::Matrix<double, -1, 1>(N);
-      stan::math::fill(p2_vector_varmat, std::numeric_limits<double>::quiet_NaN());
+      stan::math::initialize_fill(p2_vector_varmat, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> p2_vector_varmat_flat__;
