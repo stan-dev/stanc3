@@ -37,6 +37,12 @@ inline void validate_unit_vector_index(const char* var_name, const char* expr,
 }
 
 
+template <typename T__>
+using var_value_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::VectorXd>, Eigen::VectorXd>;
+template <typename T__>
+using var_value_row_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::RowVectorXd>, Eigen::RowVectorXd>;
+template <typename T__>
+using var_value_matrix = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::MatrixXd>, Eigen::MatrixXd>;
 using std::istream;
 using std::string;
 using std::stringstream;
@@ -552,6 +558,12 @@ inline void validate_unit_vector_index(const char* var_name, const char* expr,
 }
 
 
+template <typename T__>
+using var_value_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::VectorXd>, Eigen::VectorXd>;
+template <typename T__>
+using var_value_row_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::RowVectorXd>, Eigen::RowVectorXd>;
+template <typename T__>
+using var_value_matrix = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::MatrixXd>, Eigen::MatrixXd>;
 using std::istream;
 using std::string;
 using std::stringstream;
@@ -897,6 +909,12 @@ inline void validate_unit_vector_index(const char* var_name, const char* expr,
 }
 
 
+template <typename T__>
+using var_value_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::VectorXd>, Eigen::VectorXd>;
+template <typename T__>
+using var_value_row_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::RowVectorXd>, Eigen::RowVectorXd>;
+template <typename T__>
+using var_value_matrix = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::MatrixXd>, Eigen::MatrixXd>;
 using std::istream;
 using std::string;
 using std::stringstream;
@@ -1413,6 +1431,12 @@ inline void validate_unit_vector_index(const char* var_name, const char* expr,
 }
 
 
+template <typename T__>
+using var_value_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::VectorXd>, Eigen::VectorXd>;
+template <typename T__>
+using var_value_row_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::RowVectorXd>, Eigen::RowVectorXd>;
+template <typename T__>
+using var_value_matrix = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::MatrixXd>, Eigen::MatrixXd>;
 using std::istream;
 using std::string;
 using std::stringstream;
@@ -10893,6 +10917,12 @@ inline void validate_unit_vector_index(const char* var_name, const char* expr,
 }
 
 
+template <typename T__>
+using var_value_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::VectorXd>, Eigen::VectorXd>;
+template <typename T__>
+using var_value_row_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::RowVectorXd>, Eigen::RowVectorXd>;
+template <typename T__>
+using var_value_matrix = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::MatrixXd>, Eigen::MatrixXd>;
 using std::istream;
 using std::string;
 using std::stringstream;
@@ -12871,6 +12901,12 @@ inline void validate_unit_vector_index(const char* var_name, const char* expr,
 }
 
 
+template <typename T__>
+using var_value_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::VectorXd>, Eigen::VectorXd>;
+template <typename T__>
+using var_value_row_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::RowVectorXd>, Eigen::RowVectorXd>;
+template <typename T__>
+using var_value_matrix = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::MatrixXd>, Eigen::MatrixXd>;
 using std::istream;
 using std::string;
 using std::stringstream;
@@ -17329,6 +17365,12 @@ inline void validate_unit_vector_index(const char* var_name, const char* expr,
 }
 
 
+template <typename T__>
+using var_value_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::VectorXd>, Eigen::VectorXd>;
+template <typename T__>
+using var_value_row_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::RowVectorXd>, Eigen::RowVectorXd>;
+template <typename T__>
+using var_value_matrix = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::MatrixXd>, Eigen::MatrixXd>;
 using std::istream;
 using std::string;
 using std::stringstream;
@@ -18175,6 +18217,12 @@ inline void validate_unit_vector_index(const char* var_name, const char* expr,
 }
 
 
+template <typename T__>
+using var_value_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::VectorXd>, Eigen::VectorXd>;
+template <typename T__>
+using var_value_row_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::RowVectorXd>, Eigen::RowVectorXd>;
+template <typename T__>
+using var_value_matrix = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::MatrixXd>, Eigen::MatrixXd>;
 using std::istream;
 using std::string;
 using std::stringstream;
@@ -19890,6 +19938,12 @@ inline void validate_unit_vector_index(const char* var_name, const char* expr,
 }
 
 
+template <typename T__>
+using var_value_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::VectorXd>, Eigen::VectorXd>;
+template <typename T__>
+using var_value_row_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::RowVectorXd>, Eigen::RowVectorXd>;
+template <typename T__>
+using var_value_matrix = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::MatrixXd>, Eigen::MatrixXd>;
 using std::istream;
 using std::string;
 using std::stringstream;
@@ -20510,6 +20564,12 @@ inline void validate_unit_vector_index(const char* var_name, const char* expr,
 }
 
 
+template <typename T__>
+using var_value_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::VectorXd>, Eigen::VectorXd>;
+template <typename T__>
+using var_value_row_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::RowVectorXd>, Eigen::RowVectorXd>;
+template <typename T__>
+using var_value_matrix = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::MatrixXd>, Eigen::MatrixXd>;
 using std::istream;
 using std::string;
 using std::stringstream;
@@ -23242,6 +23302,12 @@ inline void validate_unit_vector_index(const char* var_name, const char* expr,
 }
 
 
+template <typename T__>
+using var_value_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::VectorXd>, Eigen::VectorXd>;
+template <typename T__>
+using var_value_row_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::RowVectorXd>, Eigen::RowVectorXd>;
+template <typename T__>
+using var_value_matrix = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::MatrixXd>, Eigen::MatrixXd>;
 using std::istream;
 using std::string;
 using std::stringstream;
@@ -27513,6 +27579,12 @@ inline void validate_unit_vector_index(const char* var_name, const char* expr,
 }
 
 
+template <typename T__>
+using var_value_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::VectorXd>, Eigen::VectorXd>;
+template <typename T__>
+using var_value_row_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::RowVectorXd>, Eigen::RowVectorXd>;
+template <typename T__>
+using var_value_matrix = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::MatrixXd>, Eigen::MatrixXd>;
 using std::istream;
 using std::string;
 using std::stringstream;
@@ -28011,6 +28083,12 @@ inline void validate_unit_vector_index(const char* var_name, const char* expr,
 }
 
 
+template <typename T__>
+using var_value_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::VectorXd>, Eigen::VectorXd>;
+template <typename T__>
+using var_value_row_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::RowVectorXd>, Eigen::RowVectorXd>;
+template <typename T__>
+using var_value_matrix = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::MatrixXd>, Eigen::MatrixXd>;
 using std::istream;
 using std::string;
 using std::stringstream;
@@ -28401,6 +28479,12 @@ inline void validate_unit_vector_index(const char* var_name, const char* expr,
 }
 
 
+template <typename T__>
+using var_value_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::VectorXd>, Eigen::VectorXd>;
+template <typename T__>
+using var_value_row_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::RowVectorXd>, Eigen::RowVectorXd>;
+template <typename T__>
+using var_value_matrix = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::MatrixXd>, Eigen::MatrixXd>;
 using std::istream;
 using std::string;
 using std::stringstream;
@@ -32182,6 +32266,12 @@ inline void validate_unit_vector_index(const char* var_name, const char* expr,
 }
 
 
+template <typename T__>
+using var_value_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::VectorXd>, Eigen::VectorXd>;
+template <typename T__>
+using var_value_row_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::RowVectorXd>, Eigen::RowVectorXd>;
+template <typename T__>
+using var_value_matrix = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::MatrixXd>, Eigen::MatrixXd>;
 using std::istream;
 using std::string;
 using std::stringstream;
@@ -32672,6 +32762,12 @@ inline void validate_unit_vector_index(const char* var_name, const char* expr,
 }
 
 
+template <typename T__>
+using var_value_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::VectorXd>, Eigen::VectorXd>;
+template <typename T__>
+using var_value_row_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::RowVectorXd>, Eigen::RowVectorXd>;
+template <typename T__>
+using var_value_matrix = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::MatrixXd>, Eigen::MatrixXd>;
 using std::istream;
 using std::string;
 using std::stringstream;
@@ -33044,6 +33140,12 @@ inline void validate_unit_vector_index(const char* var_name, const char* expr,
 }
 
 
+template <typename T__>
+using var_value_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::VectorXd>, Eigen::VectorXd>;
+template <typename T__>
+using var_value_row_vector = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::RowVectorXd>, Eigen::RowVectorXd>;
+template <typename T__>
+using var_value_matrix = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::MatrixXd>, Eigen::MatrixXd>;
 using std::istream;
 using std::string;
 using std::stringstream;

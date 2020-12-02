@@ -651,9 +651,7 @@ let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
     ; "std::ostream* pstream__ = nullptr" ]
   in
   let intro =
-    [ "using var_value_matrix = std::conditional_t<stan::is_var<T__>::value, \
-       stan::math::var_value<Eigen::MatrixXd>, Eigen::MatrixXd>;"
-    ; "using local_scalar_t__ = T__;"; "T__ lp__(0.0);"
+    [ "using local_scalar_t__ = T__;"; "T__ lp__(0.0);"
     ; "stan::math::accumulator<T__> lp_accum__;"
     ; strf "%a" pp_function__ (prog_name, "log_prob")
     ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"

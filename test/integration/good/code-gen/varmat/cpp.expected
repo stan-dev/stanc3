@@ -166,7 +166,6 @@ class basic_model final : public model_base_crtp<basic_model> {
   inline T__ log_prob(std::vector<T__>& params_r__,
                       std::vector<int>& params_i__,
                       std::ostream* pstream__ = nullptr) const {
-    using var_value_matrix = std::conditional_t<stan::is_var<T__>::value, stan::math::var_value<Eigen::MatrixXd>, Eigen::MatrixXd>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -180,13 +179,13 @@ class basic_model final : public model_base_crtp<basic_model> {
     
     try {
       var_value_vector<local_scalar_t__> p1_vector_varmat;
-      p1_vector_varmat = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
+      p1_vector_varmat = Eigen::Matrix<double, -1, 1>(N);
       stan::math::initialize_fill(p1_vector_varmat, DUMMY_VAR__);
       
       current_statement__ = 1;
       p1_vector_varmat = in__.var_vector(N);
       var_value_vector<local_scalar_t__> p2_vector_varmat;
-      p2_vector_varmat = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
+      p2_vector_varmat = Eigen::Matrix<double, -1, 1>(N);
       stan::math::initialize_fill(p2_vector_varmat, DUMMY_VAR__);
       
       current_statement__ = 2;
