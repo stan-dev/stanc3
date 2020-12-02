@@ -5,16 +5,43 @@ let use_opencl = ref false
 
 let opencl_triggers =
   String.Map.of_alist_exn
-    [ ( "normal_id_glm_lpdf"
+    [ ("bernoulli_lpmf", [[]])
+    ; ("bernoulli_logit_lpmf", [[]])
+    ; ( "bernoulli_logit_glm_lpmf"
       , [ (* Array of conditions under which to move to OpenCL *)
           [(1, UnsizedType.UMatrix)]
         (* Argument 1 is a matrix *)
          ] )
-    ; ("bernoulli_logit_glm_lpmf", [[(1, UnsizedType.UMatrix)]])
+    ; ("beta_lpdf", [[]])
+    ; ("beta_proportion_lpdf", [[]])
     ; ("categorical_logit_glm_lpmf", [[(1, UnsizedType.UMatrix)]])
+    ; ("cauchy_lpdf", [[]])
+    ; ("chi_square_lpdf", [[]])
+    ; ("double_exponential_lpdf", [[]])
+    ; ("exp_mod_normal_lpdf", [[]])
+    ; ("exponential_lpdf", [[]])
+    ; ("frechet_lpdf", [[]])
+    ; ("gamma_lpdf", [[]])
+    ; ("gumbel_lpdf", [[]])
+    ; ("inv_chi_square_lpdf", [[]])
+    ; ("inv_gamma_lpdf", [[]])
+    ; ("logistic_lpdf", [[]])
+    ; ("lognormal_lpdf", [[]])
     ; ("neg_binomial_2_log_glm_lpmf", [[(1, UnsizedType.UMatrix)]])
+    ; ("normal_lpdf", [[]])
+    ; ("normal_id_glm_lpdf", [[(1, UnsizedType.UMatrix)]])
     ; ("ordered_logistic_glm_lpmf", [[(1, UnsizedType.UMatrix)]])
-    ; ("poisson_log_glm_lpmf", [[(1, UnsizedType.UMatrix)]]) ]
+    ; ("pareto_lpdf", [[]])
+    ; ("pareto_type_2_lpdf", [[]])
+    ; ("poisson_lpmf", [[]])
+    ; ("poisson_log_lpmf", [[]])
+    ; ("poisson_log_glm_lpmf", [[(1, UnsizedType.UMatrix)]])
+    ; ("rayleigh_lpdf", [[]])
+    ; ("scaled_inv_chi_square_lpdf", [[]])
+    ; ("skew_normal_lpdf", [[]])
+    ; ("std_normal_lpdf", [[]])
+    ; ("student_t_lpdf", [[]])
+    ; ("uniform_lpdf", [[]]) ]
 
 let opencl_suffix = "_opencl__"
 
