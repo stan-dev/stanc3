@@ -295,7 +295,7 @@ let pp_closure ppf (fdrt, fdname, fdcaptures, fdargs) =
   let pp_member ppf (i, (adlevel, name, type_)) =
     let scalar =
       if arg_needs_template (adlevel, name, type_) then sprintf "F%d__" i
-      else "double"
+      else stantype_prim_str type_
     in
     pf ppf "%a %s;" pp_unsizedtype_custom_scalar (scalar, type_) name
   in
@@ -321,9 +321,14 @@ let pp_closure ppf (fdrt, fdname, fdcaptures, fdargs) =
       ctor_args (list ~sep:comma pp_init) fdcaptures pp_count ()
   in
   let pp_op ppf () =
-    let pp_sig =
-      pp_signature false (Some (return_arg_types false fdcaptures))
+    let scalar_types =
+      List.mapi fdcaptures ~f:(fun i ((_, _, ut) as a) ->
+          if not (arg_needs_template a) then None
+          else if UnsizedType.is_fun_type ut then
+            Some (sprintf "typename F%d__::captured_scalar_t__" i)
+          else Some (sprintf "F%d__" i) )
     in
+    let pp_sig = pp_signature false (Some scalar_types) in
     pf ppf "%a const @,{@,return %a;@,}" pp_sig
       (fdrt, "operator()", fdargs)
       pp_call_str

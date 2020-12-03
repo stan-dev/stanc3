@@ -978,7 +978,7 @@ class bar_L23C9_cfunctor__ {
   : p(p__), pa(pa__), pv(pv__), v(v__), x(x__), y(y__),
     vars_count__(count_vars(p__, pa__, pv__, v__, x__, y__)) {}
   template <typename T0__, typename T1__>
-  stan::promote_args_t<F0__, F1__, stan::value_type_t<F2__>, T0__,
+  stan::promote_args_t<F0__, F1__, F2__, T0__,
 stan::value_type_t<T1__>>
   operator()(std::ostream* pstream__, const T0__& z, const T1__& r)  const 
   {
