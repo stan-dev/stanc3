@@ -52,20 +52,23 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
     | true -> List.map args ~f:to_cl
     | false -> args
   in
-  let is_fn_opencl_supported f = 
-    List.mem opencl_supported_functions (Utils.stdlib_distribution_name f) ~equal:String.equal
+  let is_fn_opencl_supported f =
+    List.mem opencl_supported_functions
+      (Utils.stdlib_distribution_name f)
+      ~equal:String.equal
   in
-  let is_opencl_support_conditioned f = 
+  let is_opencl_support_conditioned f =
     Map.mem opencl_trigger_conditions (Utils.stdlib_distribution_name f)
   in
   match pattern with
   | FunApp (StanLib, f, args)
-    when (is_fn_opencl_supported f)  && not (is_opencl_support_conditioned f)  ->
+    when is_fn_opencl_supported f && not (is_opencl_support_conditioned f) ->
       {e with pattern= FunApp (StanLib, f, List.map args ~f:to_cl)}
   | FunApp (StanLib, f, args)
-    when (is_fn_opencl_supported f) && is_opencl_support_conditioned f  ->
-      let trigger =        
-        Map.find_exn opencl_trigger_conditions (Utils.stdlib_distribution_name f)
+    when is_fn_opencl_supported f && is_opencl_support_conditioned f ->
+      let trigger =
+        Map.find_exn opencl_trigger_conditions
+          (Utils.stdlib_distribution_name f)
       in
       {e with pattern= FunApp (StanLib, f, maybe_map_args args trigger)}
   | x ->
