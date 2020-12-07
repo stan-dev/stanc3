@@ -14,6 +14,7 @@ let opencl_triggers =
          ] )
     ; ("beta_lpdf", [[]])
     ; ("beta_proportion_lpdf", [[]])
+    ; ("binomial_lpmf", [[]])    
     ; ("categorical_logit_glm_lpmf", [[(1, UnsizedType.UMatrix)]])
     ; ("cauchy_lpdf", [[]])
     ; ("chi_square_lpdf", [[]])
@@ -27,6 +28,9 @@ let opencl_triggers =
     ; ("inv_gamma_lpdf", [[]])
     ; ("logistic_lpdf", [[]])
     ; ("lognormal_lpdf", [[]])
+    ; ("neg_binomial_lpmf", [[]])
+    ; ("neg_binomial_2_lpmf", [[]])
+    ; ("neg_binomial_2_log_lpmf", [[]])
     ; ("neg_binomial_2_log_glm_lpmf", [[(1, UnsizedType.UMatrix)]])
     ; ("normal_lpdf", [[]])
     ; ("normal_id_glm_lpdf", [[(1, UnsizedType.UMatrix)]])
@@ -41,7 +45,8 @@ let opencl_triggers =
     ; ("skew_normal_lpdf", [[]])
     ; ("std_normal_lpdf", [[]])
     ; ("student_t_lpdf", [[]])
-    ; ("uniform_lpdf", [[]]) ]
+    ; ("uniform_lpdf", [[]])    
+    ; ("weibull_lpdf", [[]]) ]
 
 let opencl_suffix = "_opencl__"
 
