@@ -16915,3 +16915,7 @@ Warning: deprecated language construct used in 'mother.stan', line 187, column 2
 
 get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 
+
+Warning: in 'mother.stan', line 63, column 23 to column 40: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'mother.stan', line 187, column 15 to column 23: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.

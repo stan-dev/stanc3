@@ -141,6 +141,22 @@ Warning: deprecated language construct used in 'pines-2.stan', line 43, column 1
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
+
+Warning: in 'pines-2.stan', line 27, column 7 to column 29: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'pines-2.stan', line 28, column 6 to column 26: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'pines-2.stan', line 29, column 6 to column 30: cauchy_log is deprecated and will be removed in the future. Use cauchy_lpdf instead.
+
+Warning: in 'pines-2.stan', line 30, column 6 to column 55: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'pines-2.stan', line 32, column 7 to column 29: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'pines-2.stan', line 33, column 6 to column 27: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'pines-2.stan', line 34, column 6 to column 30: cauchy_log is deprecated and will be removed in the future. Use cauchy_lpdf instead.
+
+Warning: in 'pines-2.stan', line 35, column 6 to column 56: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format pines-3.stan
 data {
   int<lower=0> N;
@@ -314,6 +330,22 @@ Warning: deprecated language construct used in 'pines-4.stan', line 44, column 5
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
+
+Warning: in 'pines-4.stan', line 35, column 6 to column 55: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'pines-4.stan', line 36, column 6 to column 35: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'pines-4.stan', line 37, column 6 to column 34: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'pines-4.stan', line 38, column 6 to column 37: gamma_log is deprecated and will be removed in the future. Use gamma_lpdf instead.
+
+Warning: in 'pines-4.stan', line 45, column 6 to column 56: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'pines-4.stan', line 46, column 6 to column 35: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'pines-4.stan', line 47, column 6 to column 35: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'pines-4.stan', line 48, column 6 to column 37: gamma_log is deprecated and will be removed in the future. Use gamma_lpdf instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format pines-independent.stan
 data {
   int<lower=0> N;
@@ -572,3 +604,31 @@ Warning: deprecated language construct used in 'pines.stan', line 58, column 7:
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
+
+Warning: in 'pines.stan', line 32, column 6 to column 55: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'pines.stan', line 33, column 6 to column 37: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'pines.stan', line 34, column 6 to column 36: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'pines.stan', line 35, column 6 to column 39: gamma_log is deprecated and will be removed in the future. Use gamma_lpdf instead.
+
+Warning: in 'pines.stan', line 37, column 6 to column 43: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'pines.stan', line 38, column 6 to column 43: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'pines.stan', line 39, column 6 to column 32: gamma_log is deprecated and will be removed in the future. Use gamma_lpdf instead.
+
+Warning: in 'pines.stan', line 43, column 6 to column 55: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'pines.stan', line 44, column 6 to column 37: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'pines.stan', line 45, column 6 to column 37: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'pines.stan', line 46, column 6 to column 39: gamma_log is deprecated and will be removed in the future. Use gamma_lpdf instead.
+
+Warning: in 'pines.stan', line 48, column 6 to column 43: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'pines.stan', line 49, column 6 to column 42: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'pines.stan', line 50, column 6 to column 32: gamma_log is deprecated and will be removed in the future. Use gamma_lpdf instead.

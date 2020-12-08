@@ -15,7 +15,7 @@ type 'e index =
   | Upfrom of 'e
   | Downfrom of 'e
   | Between of 'e * 'e
-[@@deriving sexp, hash, compare, map]
+[@@deriving sexp, hash, compare, map, fold]
 
 (** Front-end function kinds *)
 type fun_kind = StanLib | UserDefined [@@deriving compare, sexp, hash]
@@ -39,17 +39,17 @@ type ('e, 'f) expression =
   | RowVectorExpr of 'e list
   | Paren of 'e
   | Indexed of 'e * 'e index list
-[@@deriving sexp, hash, compare, map]
+[@@deriving sexp, hash, compare, map, fold]
 
 type ('m, 'f) expr_with = {expr: (('m, 'f) expr_with, 'f) expression; emeta: 'm}
-[@@deriving sexp, compare, map, hash]
+[@@deriving sexp, compare, map, hash, fold]
 
 (** Untyped expressions, which have location_spans as meta-data *)
 type located_meta = {loc: Location_span.t sexp_opaque [@compare.ignore]}
-[@@deriving sexp, compare, map, hash]
+[@@deriving sexp, compare, map, hash, fold]
 
 type untyped_expression = (located_meta, unit) expr_with
-[@@deriving sexp, compare, map, hash]
+[@@deriving sexp, compare, map, hash, fold]
 
 (** Typed expressions also have meta-data after type checking: a location_span, as well as a type
     and an origin block (lub of the origin blocks of the identifiers in it) *)
@@ -57,10 +57,10 @@ type typed_expr_meta =
   { loc: Location_span.t sexp_opaque [@compare.ignore]
   ; ad_level: UnsizedType.autodifftype
   ; type_: UnsizedType.t }
-[@@deriving sexp, compare, map, hash]
+[@@deriving sexp, compare, map, hash, fold]
 
 type typed_expression = (typed_expr_meta, fun_kind) expr_with
-[@@deriving sexp, compare, map, hash]
+[@@deriving sexp, compare, map, hash, fold]
 
 let mk_untyped_expression ~expr ~loc = {expr; emeta= {loc}}
 
@@ -91,25 +91,25 @@ type 'e truncation =
   | TruncateUpFrom of 'e
   | TruncateDownFrom of 'e
   | TruncateBetween of 'e * 'e
-[@@deriving sexp, hash, compare, map]
+[@@deriving sexp, hash, compare, map, fold]
 
 (** Things that can be printed *)
 type 'e printable = PString of string | PExpr of 'e
-[@@deriving sexp, compare, map, hash]
+[@@deriving sexp, compare, map, hash, fold]
 
 type ('l, 'e) lvalue =
   | LVariable of identifier
   | LIndexed of 'l * 'e index list
-[@@deriving sexp, hash, compare, map]
+[@@deriving sexp, hash, compare, map, fold]
 
 type ('e, 'm) lval_with = {lval: (('e, 'm) lval_with, 'e) lvalue; lmeta: 'm}
-[@@deriving sexp, hash, compare, map]
+[@@deriving sexp, hash, compare, map, fold]
 
 type untyped_lval = (untyped_expression, located_meta) lval_with
-[@@deriving sexp, hash, compare, map]
+[@@deriving sexp, hash, compare, map, fold]
 
 type typed_lval = (typed_expression, typed_expr_meta) lval_with
-[@@deriving sexp, hash, compare, map]
+[@@deriving sexp, hash, compare, map, fold]
 
 (** Statement shapes, where we substitute untyped_expression and untyped_statement
     for 'e and 's respectively to get untyped_statement and typed_expression and
@@ -157,7 +157,7 @@ type ('e, 's, 'l, 'f) statement =
           (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t * identifier)
           list
       ; body: 's }
-[@@deriving sexp, hash, compare, map]
+[@@deriving sexp, hash, compare, map, fold]
 
 (** Statement return types which we will decorate statements with during type
     checking: the purpose is to check that function bodies have the correct
@@ -176,7 +176,7 @@ type statement_returntype =
 
 type ('e, 'm, 'l, 'f) statement_with =
   {stmt: ('e, ('e, 'm, 'l, 'f) statement_with, 'l, 'f) statement; smeta: 'm}
-[@@deriving sexp, compare, map, hash]
+[@@deriving sexp, compare, map, hash, fold]
 
 (** Untyped statements, which have location_spans as meta-data *)
 type untyped_statement =
@@ -213,7 +213,7 @@ type 's program =
   ; transformedparametersblock: 's list option
   ; modelblock: 's list option
   ; generatedquantitiesblock: 's list option }
-[@@deriving sexp, hash, compare, map]
+[@@deriving sexp, hash, compare, map, fold]
 
 (** Untyped programs (before type checking) *)
 type untyped_program = untyped_statement program
