@@ -45,7 +45,7 @@ let stan2cpp model_name model_string flags =
           "Semantic check failed but reported no errors. This should never \
            happen."
   in
-  if is_flag_set "version" then Result.Ok (Fmt.strf "%s" version, [])
+  if is_flag_set "version" then Result.Ok (Fmt.strf "%s" version)
   else
     Result.bind ast
       ~f:
@@ -53,13 +53,12 @@ let stan2cpp model_name model_string flags =
            Semantic_check.semantic_check_program)
     |> Result.map ~f:(fun typed_ast ->
            if is_flag_set "print-canonical" then
-             ( Pretty_printing.pretty_print_typed_program
+             Pretty_printing.pretty_print_typed_program
                  (Canonicalize.canonicalize_program typed_ast)
-             , [] )
            else if is_flag_set "auto-format" then
              match ast with
-             | Result.Ok f -> (Pretty_printing.pretty_print_program f, [])
-             | _ -> ("Error: This should not happend!", [])
+             | Result.Ok f -> Pretty_printing.pretty_print_program f
+             | _ -> "Error: This should not happend!"
            else
              let mir = Ast_to_Mir.trans_prog model_name typed_ast in
              let tx_mir = Transform_Mir.trans_prog mir in
@@ -72,21 +71,28 @@ let stan2cpp model_name model_string flags =
                Pedantic_analysis.print_warn_uninitialized mir ;
              if is_flag_set "warn-pedantic" then
                Pedantic_analysis.print_warn_pedantic mir ;
-             (cpp, []) )
+             cpp)
+
+let stanc_stdout = ref ""
+let stanc_stderr = ref ""
 
 let wrap_result = function
-  | Result.Ok (s, k) ->
+  | Result.Ok s ->
       Js.Unsafe.obj
         [| ("result", Js.Unsafe.inject (Js.string s))
          ; ( "warnings"
-           , Js.Unsafe.inject
-               (Js.array (List.to_array (List.map ~f:Js.string k))) ) |]
+           , Js.Unsafe.inject (Js.string !stanc_stderr)
+               ) |]
   | Error e ->
       Js.Unsafe.obj
         [| ("errors", Js.Unsafe.inject (Array.map ~f:Js.string [|e|]))
-         ; ("warnings", Js.Unsafe.inject Js.array_empty) |]
+         ; ("warnings", Js.Unsafe.inject (Js.string !stanc_stderr)) |]
 
 let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) =
+  stanc_stdout := "";
+  stanc_stderr := "";
+  Sys_js.set_channel_flusher stdout (fun s -> (stanc_stdout := !stanc_stdout ^ s));
+  Sys_js.set_channel_flusher stderr (fun s -> (stanc_stderr := !stanc_stderr ^ s));
   stan2cpp (Js.to_string name) (Js.to_string code)
     Js.(
       Opt.map flags (fun a ->
