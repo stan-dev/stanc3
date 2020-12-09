@@ -491,10 +491,12 @@ let pp_method_b ppf rt name params intro ?(outro = []) ?(cv_attr = ["const"])
 (** Print the write_array method of the model class *)
 let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
   pf ppf
-    "template <typename RNG, typename VecR, typename VecI, typename VecVar, \n\
-     stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, \n\
-     stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, \n\
-     stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>@ " ;
+    "template <typename RNG, typename VecR, typename VecI, typename VecVar,\n\
+    \     stan::require_vector_like_vt<std::is_floating_point, VecR>* = \
+     nullptr,\n\
+    \     stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr,\n\
+    \     stan::require_std_vector_vt<std::is_floating_point, VecVar>* = \
+     nullptr>@" ;
   let params =
     [ "RNG& base_rng__"; "VecR& params_r__"; "VecI& params_i__"
     ; "VecVar& vars__"; "const bool emit_transformed_parameters__ = true"
@@ -635,9 +637,9 @@ let pp_unconstrained_param_names ppf {Program.output_vars; _} =
 (** Print the `transform_inits` method of the model class *)
 let pp_transform_inits ppf {Program.transform_inits; _} =
   pf ppf
-    "template <typename VecVar, typename VecI, \n\
-     stan::require_std_vector_t<VecVar>* = nullptr, \n\
-     stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>@ " ;
+    "template <typename VecVar, typename VecI,\n\
+    \     stan::require_std_vector_t<VecVar>* = nullptr,\n\
+    \     stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>@ " ;
   let params =
     [ "const stan::io::var_context& context__"; "VecI& params_i__"
     ; "VecVar& vars__"; "std::ostream* pstream__ = nullptr" ]
@@ -653,9 +655,9 @@ let pp_transform_inits ppf {Program.transform_inits; _} =
 (** Print the `log_prob` method of the model class *)
 let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
   pf ppf
-    "template <bool propto__, bool jacobian__, typename VecR, typename VecI, \n\
-    \ stan::require_vector_like_t<VecR>* = nullptr, \n\
-    \ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>@ " ;
+    "template <bool propto__, bool jacobian__, typename VecR, typename VecI,\n\
+    \     stan::require_vector_like_t<VecR>* = nullptr,\n\
+    \     stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>@ " ;
   let params =
     [ "VecR& params_r__"; "VecI& params_i__"
     ; "std::ostream* pstream__ = nullptr" ]
