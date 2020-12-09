@@ -54,7 +54,6 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using stan::scalar_type_t;
 using namespace stan::math;
 using stan::math::pow; 
 
@@ -598,10 +597,10 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   template <bool propto__, bool jacobian__, typename VecR, typename VecI, 
  stan::require_vector_like_t<VecR>* = nullptr, 
  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
-  inline scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
-                                           VecI& params_i__,
-                                           std::ostream* pstream__ = nullptr) const {
-    using T__ = scalar_type_t<VecR>;
+  inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
+                                                 VecI& params_i__,
+                                                 std::ostream* pstream__ = nullptr) const {
+    using T__ = stan::scalar_type_t<VecR>;
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
@@ -1768,16 +1767,16 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
   
     // Begin method overload boilerplate
     template <typename RNG>
-    inline void write_array(RNG& base_rng__,
+    inline void write_array(RNG& base_rng,
                             Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
                             Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
-                            const bool emit_transformed_parameters__ = true,
-                            const bool emit_generated_quantities__ = true,
+                            const bool emit_transformed_parameters = true,
+                            const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       std::vector<double> vars_vec(vars.size());
       std::vector<int> params_i;
-      write_array_impl(base_rng__, params_r, params_i, vars_vec,
-          emit_transformed_parameters__, emit_generated_quantities__, pstream);
+      write_array_impl(base_rng, params_r, params_i, vars_vec,
+          emit_transformed_parameters, emit_generated_quantities, pstream);
       vars.resize(vars_vec.size());
       for (int i = 0; i < vars.size(); ++i) {
         vars.coeffRef(i) = vars_vec[i];
@@ -1785,13 +1784,13 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     }
 
     template <typename RNG>
-    inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                            std::vector<int>& params_i__,
-                            std::vector<double>& vars__,
-                            bool emit_transformed_parameters__ = true,
-                            bool emit_generated_quantities__ = true,
-                            std::ostream* pstream__ = nullptr) const {
-      write_array_impl(base_rng__, params_r__, params_i__, vars__, emit_transformed_parameters__, emit_generated_quantities__, pstream__);
+    inline void write_array(RNG& base_rng, std::vector<double>& params_r,
+                            std::vector<int>& params_i,
+                            std::vector<double>& vars,
+                            bool emit_transformed_parameters = true,
+                            bool emit_generated_quantities = true,
+                            std::ostream* pstream = nullptr) const {
+      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -1802,29 +1801,29 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     }
 
     template <bool propto__, bool jacobian__, typename T__>
-    inline T__ log_prob(std::vector<T__>& params_r__,
-                        std::vector<int>& params_i__,
-                        std::ostream* pstream__ = nullptr) const {
-      return log_prob_impl<propto__, jacobian__>(params_r__, params_i__, pstream__);
+    inline T__ log_prob(std::vector<T__>& params_r,
+                        std::vector<int>& params_i,
+                        std::ostream* pstream = nullptr) const  {
+      return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
     }
   
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream = nullptr) const {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream__);
+      transform_inits_impl(context, params_i, params_r_vec, pstream);
       params_r.resize(params_r_vec.size());
       for (int i = 0; i < params_r.size(); ++i) {
         params_r.coeffRef(i) = params_r_vec[i];
       }
     }
-    inline void transform_inits(const stan::io::var_context& context__,
-                                std::vector<int>& params_i__,
-                                std::vector<double>& vars__,
-                                std::ostream* pstream__) const final {
-      transform_inits_impl(context__, params_i__, vars__, pstream__);
+    inline void transform_inits(const stan::io::var_context& context,
+                                std::vector<int>& params_i,
+                                std::vector<double>& vars,
+                                std::ostream* pstream = nullptr) const {
+      transform_inits_impl(context, params_i, vars, pstream);
     }        
 
 };

@@ -708,16 +708,16 @@ let pp_overloads ppf () =
     {|
     // Begin method overload boilerplate
     template <typename RNG>
-    inline void write_array(RNG& base_rng__,
+    inline void write_array(RNG& base_rng,
                             Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
                             Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
-                            const bool emit_transformed_parameters__ = true,
-                            const bool emit_generated_quantities__ = true,
+                            const bool emit_transformed_parameters = true,
+                            const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
       std::vector<double> vars_vec(vars.size());
       std::vector<int> params_i;
-      write_array_impl(base_rng__, params_r, params_i, vars_vec,
-          emit_transformed_parameters__, emit_generated_quantities__, pstream);
+      write_array_impl(base_rng, params_r, params_i, vars_vec,
+          emit_transformed_parameters, emit_generated_quantities, pstream);
       vars.resize(vars_vec.size());
       for (int i = 0; i < vars.size(); ++i) {
         vars.coeffRef(i) = vars_vec[i];
@@ -725,46 +725,46 @@ let pp_overloads ppf () =
     }
 
     template <typename RNG>
-    inline void write_array(RNG& base_rng__, std::vector<double>& params_r__,
-                            std::vector<int>& params_i__,
-                            std::vector<double>& vars__,
-                            bool emit_transformed_parameters__ = true,
-                            bool emit_generated_quantities__ = true,
-                            std::ostream* pstream__ = nullptr) const final  {
-      write_array_impl(base_rng__, params_r__, params_i__, vars__, emit_transformed_parameters__, emit_generated_quantities__, pstream__);
+    inline void write_array(RNG& base_rng, std::vector<double>& params_r,
+                            std::vector<int>& params_i,
+                            std::vector<double>& vars,
+                            bool emit_transformed_parameters = true,
+                            bool emit_generated_quantities = true,
+                            std::ostream* pstream = nullptr) const {
+      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-                       std::ostream* pstream = nullptr) const final {
+                       std::ostream* pstream = nullptr) const {
       Eigen::Matrix<int, -1, 1> params_i;
       return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
     }
 
     template <bool propto__, bool jacobian__, typename T__>
-    inline T__ log_prob(std::vector<T__>& params_r__,
-                        std::vector<int>& params_i__,
-                        std::ostream* pstream__ = nullptr) const final  {
-      return log_prob_impl<propto__, jacobian__>(params_r__, params_i__, pstream__);
+    inline T__ log_prob(std::vector<T__>& params_r,
+                        std::vector<int>& params_i,
+                        std::ostream* pstream = nullptr) const {
+      return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
     }
   
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const final {
+                         std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream__);
+      transform_inits_impl(context, params_i, params_r_vec, pstream);
       params_r.resize(params_r_vec.size());
       for (int i = 0; i < params_r.size(); ++i) {
         params_r.coeffRef(i) = params_r_vec[i];
       }
     }
-    inline void transform_inits(const stan::io::var_context& context__,
-                                std::vector<int>& params_i__,
-                                std::vector<double>& vars__,
-                                std::ostream* pstream__) const final {
-      transform_inits_impl(context__, params_i__, vars__, pstream__);
+    inline void transform_inits(const stan::io::var_context& context,
+                                std::vector<int>& params_i,
+                                std::vector<double>& vars,
+                                std::ostream* pstream = nullptr) const final {
+      transform_inits_impl(context, params_i, vars, pstream);
     }        
 |}
 
