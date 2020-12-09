@@ -492,14 +492,14 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     template <bool propto__, bool jacobian__, typename T__>
     inline T__ log_prob(std::vector<T__>& params_r,
                         std::vector<int>& params_i,
-                        std::ostream* pstream = nullptr) const  {
+                        std::ostream* pstream = nullptr) const {
       return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
     }
   
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream = nullptr) const {
+                         std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
       transform_inits_impl(context, params_i, params_r_vec, pstream);
@@ -511,7 +511,7 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     inline void transform_inits(const stan::io::var_context& context,
                                 std::vector<int>& params_i,
                                 std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const {
+                                std::ostream* pstream = nullptr) const final {
       transform_inits_impl(context, params_i, vars, pstream);
     }        
 
@@ -857,14 +857,14 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     template <bool propto__, bool jacobian__, typename T__>
     inline T__ log_prob(std::vector<T__>& params_r,
                         std::vector<int>& params_i,
-                        std::ostream* pstream = nullptr) const  {
+                        std::ostream* pstream = nullptr) const {
       return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
     }
   
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream = nullptr) const {
+                         std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
       transform_inits_impl(context, params_i, params_r_vec, pstream);
@@ -876,7 +876,7 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     inline void transform_inits(const stan::io::var_context& context,
                                 std::vector<int>& params_i,
                                 std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const {
+                                std::ostream* pstream = nullptr) const final {
       transform_inits_impl(context, params_i, vars, pstream);
     }        
 
@@ -1394,14 +1394,14 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     template <bool propto__, bool jacobian__, typename T__>
     inline T__ log_prob(std::vector<T__>& params_r,
                         std::vector<int>& params_i,
-                        std::ostream* pstream = nullptr) const  {
+                        std::ostream* pstream = nullptr) const {
       return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
     }
   
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream = nullptr) const {
+                         std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
       transform_inits_impl(context, params_i, params_r_vec, pstream);
@@ -1413,7 +1413,7 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     inline void transform_inits(const stan::io::var_context& context,
                                 std::vector<int>& params_i,
                                 std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const {
+                                std::ostream* pstream = nullptr) const final {
       transform_inits_impl(context, params_i, vars, pstream);
     }        
 
@@ -10870,14 +10870,14 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     template <bool propto__, bool jacobian__, typename T__>
     inline T__ log_prob(std::vector<T__>& params_r,
                         std::vector<int>& params_i,
-                        std::ostream* pstream = nullptr) const  {
+                        std::ostream* pstream = nullptr) const {
       return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
     }
   
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream = nullptr) const {
+                         std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
       transform_inits_impl(context, params_i, params_r_vec, pstream);
@@ -10889,7 +10889,7 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     inline void transform_inits(const stan::io::var_context& context,
                                 std::vector<int>& params_i,
                                 std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const {
+                                std::ostream* pstream = nullptr) const final {
       transform_inits_impl(context, params_i, vars, pstream);
     }        
 
@@ -12891,14 +12891,14 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     template <bool propto__, bool jacobian__, typename T__>
     inline T__ log_prob(std::vector<T__>& params_r,
                         std::vector<int>& params_i,
-                        std::ostream* pstream = nullptr) const  {
+                        std::ostream* pstream = nullptr) const {
       return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
     }
   
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream = nullptr) const {
+                         std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
       transform_inits_impl(context, params_i, params_r_vec, pstream);
@@ -12910,7 +12910,7 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     inline void transform_inits(const stan::io::var_context& context,
                                 std::vector<int>& params_i,
                                 std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const {
+                                std::ostream* pstream = nullptr) const final {
       transform_inits_impl(context, params_i, vars, pstream);
     }        
 
@@ -17529,14 +17529,14 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     template <bool propto__, bool jacobian__, typename T__>
     inline T__ log_prob(std::vector<T__>& params_r,
                         std::vector<int>& params_i,
-                        std::ostream* pstream = nullptr) const  {
+                        std::ostream* pstream = nullptr) const {
       return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
     }
   
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream = nullptr) const {
+                         std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
       transform_inits_impl(context, params_i, params_r_vec, pstream);
@@ -17548,7 +17548,7 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     inline void transform_inits(const stan::io::var_context& context,
                                 std::vector<int>& params_i,
                                 std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const {
+                                std::ostream* pstream = nullptr) const final {
       transform_inits_impl(context, params_i, vars, pstream);
     }        
 
@@ -18396,14 +18396,14 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     template <bool propto__, bool jacobian__, typename T__>
     inline T__ log_prob(std::vector<T__>& params_r,
                         std::vector<int>& params_i,
-                        std::ostream* pstream = nullptr) const  {
+                        std::ostream* pstream = nullptr) const {
       return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
     }
   
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream = nullptr) const {
+                         std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
       transform_inits_impl(context, params_i, params_r_vec, pstream);
@@ -18415,7 +18415,7 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     inline void transform_inits(const stan::io::var_context& context,
                                 std::vector<int>& params_i,
                                 std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const {
+                                std::ostream* pstream = nullptr) const final {
       transform_inits_impl(context, params_i, vars, pstream);
     }        
 
@@ -20137,14 +20137,14 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     template <bool propto__, bool jacobian__, typename T__>
     inline T__ log_prob(std::vector<T__>& params_r,
                         std::vector<int>& params_i,
-                        std::ostream* pstream = nullptr) const  {
+                        std::ostream* pstream = nullptr) const {
       return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
     }
   
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream = nullptr) const {
+                         std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
       transform_inits_impl(context, params_i, params_r_vec, pstream);
@@ -20156,7 +20156,7 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     inline void transform_inits(const stan::io::var_context& context,
                                 std::vector<int>& params_i,
                                 std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const {
+                                std::ostream* pstream = nullptr) const final {
       transform_inits_impl(context, params_i, vars, pstream);
     }        
 
@@ -20778,14 +20778,14 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     template <bool propto__, bool jacobian__, typename T__>
     inline T__ log_prob(std::vector<T__>& params_r,
                         std::vector<int>& params_i,
-                        std::ostream* pstream = nullptr) const  {
+                        std::ostream* pstream = nullptr) const {
       return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
     }
   
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream = nullptr) const {
+                         std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
       transform_inits_impl(context, params_i, params_r_vec, pstream);
@@ -20797,7 +20797,7 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     inline void transform_inits(const stan::io::var_context& context,
                                 std::vector<int>& params_i,
                                 std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const {
+                                std::ostream* pstream = nullptr) const final {
       transform_inits_impl(context, params_i, vars, pstream);
     }        
 
@@ -23531,14 +23531,14 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     template <bool propto__, bool jacobian__, typename T__>
     inline T__ log_prob(std::vector<T__>& params_r,
                         std::vector<int>& params_i,
-                        std::ostream* pstream = nullptr) const  {
+                        std::ostream* pstream = nullptr) const {
       return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
     }
   
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream = nullptr) const {
+                         std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
       transform_inits_impl(context, params_i, params_r_vec, pstream);
@@ -23550,7 +23550,7 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     inline void transform_inits(const stan::io::var_context& context,
                                 std::vector<int>& params_i,
                                 std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const {
+                                std::ostream* pstream = nullptr) const final {
       transform_inits_impl(context, params_i, vars, pstream);
     }        
 
@@ -27823,14 +27823,14 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     template <bool propto__, bool jacobian__, typename T__>
     inline T__ log_prob(std::vector<T__>& params_r,
                         std::vector<int>& params_i,
-                        std::ostream* pstream = nullptr) const  {
+                        std::ostream* pstream = nullptr) const {
       return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
     }
   
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream = nullptr) const {
+                         std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
       transform_inits_impl(context, params_i, params_r_vec, pstream);
@@ -27842,7 +27842,7 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     inline void transform_inits(const stan::io::var_context& context,
                                 std::vector<int>& params_i,
                                 std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const {
+                                std::ostream* pstream = nullptr) const final {
       transform_inits_impl(context, params_i, vars, pstream);
     }        
 
@@ -28341,14 +28341,14 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     template <bool propto__, bool jacobian__, typename T__>
     inline T__ log_prob(std::vector<T__>& params_r,
                         std::vector<int>& params_i,
-                        std::ostream* pstream = nullptr) const  {
+                        std::ostream* pstream = nullptr) const {
       return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
     }
   
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream = nullptr) const {
+                         std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
       transform_inits_impl(context, params_i, params_r_vec, pstream);
@@ -28360,7 +28360,7 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     inline void transform_inits(const stan::io::var_context& context,
                                 std::vector<int>& params_i,
                                 std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const {
+                                std::ostream* pstream = nullptr) const final {
       transform_inits_impl(context, params_i, vars, pstream);
     }        
 
@@ -28753,14 +28753,14 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     template <bool propto__, bool jacobian__, typename T__>
     inline T__ log_prob(std::vector<T__>& params_r,
                         std::vector<int>& params_i,
-                        std::ostream* pstream = nullptr) const  {
+                        std::ostream* pstream = nullptr) const {
       return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
     }
   
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream = nullptr) const {
+                         std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
       transform_inits_impl(context, params_i, params_r_vec, pstream);
@@ -28772,7 +28772,7 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     inline void transform_inits(const stan::io::var_context& context,
                                 std::vector<int>& params_i,
                                 std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const {
+                                std::ostream* pstream = nullptr) const final {
       transform_inits_impl(context, params_i, vars, pstream);
     }        
 
@@ -32555,14 +32555,14 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     template <bool propto__, bool jacobian__, typename T__>
     inline T__ log_prob(std::vector<T__>& params_r,
                         std::vector<int>& params_i,
-                        std::ostream* pstream = nullptr) const  {
+                        std::ostream* pstream = nullptr) const {
       return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
     }
   
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream = nullptr) const {
+                         std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
       transform_inits_impl(context, params_i, params_r_vec, pstream);
@@ -32574,7 +32574,7 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     inline void transform_inits(const stan::io::var_context& context,
                                 std::vector<int>& params_i,
                                 std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const {
+                                std::ostream* pstream = nullptr) const final {
       transform_inits_impl(context, params_i, vars, pstream);
     }        
 
@@ -33066,14 +33066,14 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     template <bool propto__, bool jacobian__, typename T__>
     inline T__ log_prob(std::vector<T__>& params_r,
                         std::vector<int>& params_i,
-                        std::ostream* pstream = nullptr) const  {
+                        std::ostream* pstream = nullptr) const {
       return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
     }
   
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream = nullptr) const {
+                         std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
       transform_inits_impl(context, params_i, params_r_vec, pstream);
@@ -33085,7 +33085,7 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     inline void transform_inits(const stan::io::var_context& context,
                                 std::vector<int>& params_i,
                                 std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const {
+                                std::ostream* pstream = nullptr) const final {
       transform_inits_impl(context, params_i, vars, pstream);
     }        
 
@@ -33458,14 +33458,14 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     template <bool propto__, bool jacobian__, typename T__>
     inline T__ log_prob(std::vector<T__>& params_r,
                         std::vector<int>& params_i,
-                        std::ostream* pstream = nullptr) const  {
+                        std::ostream* pstream = nullptr) const {
       return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
     }
   
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream = nullptr) const {
+                         std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
       transform_inits_impl(context, params_i, params_r_vec, pstream);
@@ -33477,7 +33477,7 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     inline void transform_inits(const stan::io::var_context& context,
                                 std::vector<int>& params_i,
                                 std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const {
+                                std::ostream* pstream = nullptr) const final {
       transform_inits_impl(context, params_i, vars, pstream);
     }        
 
@@ -33868,14 +33868,14 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     template <bool propto__, bool jacobian__, typename T__>
     inline T__ log_prob(std::vector<T__>& params_r,
                         std::vector<int>& params_i,
-                        std::ostream* pstream = nullptr) const  {
+                        std::ostream* pstream = nullptr) const {
       return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
     }
   
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream = nullptr) const {
+                         std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
       transform_inits_impl(context, params_i, params_r_vec, pstream);
@@ -33887,7 +33887,7 @@ stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
     inline void transform_inits(const stan::io::var_context& context,
                                 std::vector<int>& params_i,
                                 std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const {
+                                std::ostream* pstream = nullptr) const final {
       transform_inits_impl(context, params_i, vars, pstream);
     }        
 
