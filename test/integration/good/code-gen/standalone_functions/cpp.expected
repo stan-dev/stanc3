@@ -54,6 +54,7 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
+using stan::scalar_type_t;
 using namespace stan::math;
 using stan::math::pow; 
 
@@ -480,6 +481,7 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
+using stan::scalar_type_t;
 using namespace stan::math;
 using stan::math::pow; 
 
