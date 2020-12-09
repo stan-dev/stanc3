@@ -670,8 +670,8 @@ let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
   in
   let outro = ["lp_accum__.add(lp__);"; "return lp_accum__.sum();"] in
   let cv_attr = ["const"] in
-  pp_method_b ppf "stan::scalar_type_t<VecR>" "log_prob_impl" params intro log_prob
-    ~outro ~cv_attr
+  pp_method_b ppf "stan::scalar_type_t<VecR>" "log_prob_impl" params intro
+    log_prob ~outro ~cv_attr
 
 (** Print the body of the constrained and unconstrained sizedtype methods
  in the model class
