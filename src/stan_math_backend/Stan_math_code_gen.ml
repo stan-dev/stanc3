@@ -661,7 +661,7 @@ let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
     ; "std::ostream* pstream__ = nullptr" ]
   in
   let intro =
-    [ "using T__ = scalar_type_t<VecR>;"; "using local_scalar_t__ = T__;"
+    [ "using T__ = stan::scalar_type_t<VecR>;"; "using local_scalar_t__ = T__;"
     ; "T__ lp__(0.0);"; "stan::math::accumulator<T__> lp_accum__;"
     ; strf "%a" pp_function__ (prog_name, "log_prob")
     ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
@@ -670,7 +670,7 @@ let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
   in
   let outro = ["lp_accum__.add(lp__);"; "return lp_accum__.sum();"] in
   let cv_attr = ["const"] in
-  pp_method_b ppf "scalar_type_t<VecR>" "log_prob_impl" params intro log_prob
+  pp_method_b ppf "stan::scalar_type_t<VecR>" "log_prob_impl" params intro log_prob
     ~outro ~cv_attr
 
 (** Print the body of the constrained and unconstrained sizedtype methods
@@ -730,13 +730,13 @@ let pp_overloads ppf () =
                             std::vector<double>& vars__,
                             bool emit_transformed_parameters__ = true,
                             bool emit_generated_quantities__ = true,
-                            std::ostream* pstream__ = nullptr) const {
+                            std::ostream* pstream__ = nullptr) const final  {
       write_array_impl(base_rng__, params_r__, params_i__, vars__, emit_transformed_parameters__, emit_generated_quantities__, pstream__);
     }
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-                       std::ostream* pstream = nullptr) const {
+                       std::ostream* pstream = nullptr) const final {
       Eigen::Matrix<int, -1, 1> params_i;
       return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
     }
@@ -744,14 +744,14 @@ let pp_overloads ppf () =
     template <bool propto__, bool jacobian__, typename T__>
     inline T__ log_prob(std::vector<T__>& params_r__,
                         std::vector<int>& params_i__,
-                        std::ostream* pstream__ = nullptr) const {
+                        std::ostream* pstream__ = nullptr) const final  {
       return log_prob_impl<propto__, jacobian__>(params_r__, params_i__, pstream__);
     }
   
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
+                         std::ostream* pstream__ = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
       transform_inits_impl(context, params_i, params_r_vec, pstream__);
@@ -824,7 +824,6 @@ using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
-using stan::scalar_type_t;
 using namespace stan::math;
 using stan::math::pow; |}
 
