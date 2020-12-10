@@ -185,6 +185,7 @@ let distributions =
   ; (full_lpdf, "cauchy", [DVReal; DVReal; DVReal])
   ; (full_lpdf, "chi_square", [DVReal; DVReal])
   ; ([Lpdf], "dirichlet", [DVectors; DVectors])
+  ; (full_lpmf, "discrete_range", [DVInt; DVInt; DVInt])
   ; (full_lpdf, "double_exponential", [DVReal; DVReal; DVReal])
   ; (full_lpdf, "exp_mod_normal", [DVReal; DVReal; DVReal; DVReal])
   ; (full_lpdf, "exponential", [DVReal; DVReal])
