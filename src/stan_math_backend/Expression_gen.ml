@@ -382,24 +382,20 @@ and pp_user_defined_fun ppf (f, es) =
 
 and pp_compiler_internal_fn ut f ppf es =
   let pp_array_literal ppf es =
-    let pp_add_method ppf () = pf ppf ")@,.add(" in
-    if List.length es = 0 then
-      pf ppf "stan::math::array_builder<%a>()@,.add(0)@,.array()"
-        pp_unsizedtype_local
-        (promote_adtype es, promote_unsizedtype es)
-    else
-      pf ppf "stan::math::array_builder<%a>()@,.add(%a)@,.array()"
-        pp_unsizedtype_local
-        (promote_adtype es, promote_unsizedtype es)
-        (list ~sep:pp_add_method pp_expr)
-        es
+    pf ppf "std::vector<%a>{@,%a}" pp_unsizedtype_local
+      (promote_adtype es, promote_unsizedtype es)
+      (list ~sep:comma pp_expr) es
   in
   match Internal_fun.of_string_opt f with
   | Some FnMakeArray -> pp_array_literal ppf es
   | Some FnMakeRowVec -> (
     match ut with
     | UnsizedType.URowVector ->
-        pf ppf "stan::math::to_row_vector(@,%a)" pp_array_literal es
+        let st = local_scalar ut (promote_adtype es) in
+        if List.is_empty es then pf ppf "Eigen::Matrix<%s,1,-1>(0)" st
+        else
+          pf ppf "(Eigen::Matrix<%s,1,-1>(%d) <<@ %a).finished()" st
+            (List.length es) (list ~sep:comma pp_expr) es
     | UMatrix -> pf ppf "stan::math::to_matrix(@,%a)" pp_array_literal es
     | _ ->
         raise_s
@@ -446,6 +442,18 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
   | Var s -> pf ppf "%s" s
   | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> pf ppf "%s" s
+  | FunApp
+      ( StanLib
+      , op
+      , [ { meta= {type_= URowVector; _}
+          ; pattern= FunApp (CompilerInternal, f, es) } ] )
+    when Operator.(Some Transpose = of_string_opt op)
+         && Internal_fun.(Some FnMakeRowVec = of_string_opt f) ->
+      let st = local_scalar UVector (promote_adtype es) in
+      if List.is_empty es then pf ppf "Eigen::Matrix<%s,-1,1>(0)" st
+      else
+        pf ppf "(Eigen::Matrix<%s,-1,1>(%d) <<@ %a).finished()" st
+          (List.length es) (list ~sep:comma pp_expr) es
   | FunApp (StanLib, f, es) -> gen_fun_app ppf f es
   | FunApp (CompilerInternal, f, es) ->
       pp_compiler_internal_fn meta.type_ (stan_namespace_qualify f) ppf es

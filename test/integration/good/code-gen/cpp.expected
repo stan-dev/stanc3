@@ -3002,8 +3002,7 @@ foo_5(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   
   try {
     current_statement__ = 711;
-    return transpose(stan::math::to_row_vector(
-             stan::math::array_builder<int>().add(1).add(2).add(3).array()));
+    return (Eigen::Matrix<double,-1,1>(3) << 1, 2, 3).finished();
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -3991,16 +3990,11 @@ matfoo(std::ostream* pstream__) {
   
   try {
     current_statement__ = 757;
-    return stan::math::to_matrix(
-        stan::math::array_builder<Eigen::Matrix<double, 1, -1>>()
-        .add(stan::math::to_row_vector(stan::math::array_builder<int>()
-        .add(1).add(2).add(3).add(4).add(5).add(6).add(7).add(8).add(9)
-        .add(10).array())).add(stan::math::to_row_vector(
-        stan::math::array_builder<int>().add(1).add(2).add(3).add(4).add(5)
-        .add(6).add(7).add(8).add(9).add(10).array()))
-        .add(stan::math::to_row_vector(stan::math::array_builder<int>()
-        .add(1).add(2).add(3).add(4).add(5).add(6).add(7).add(8).add(9)
-        .add(10).array())).array());
+    return stan::math::to_matrix(std::vector<Eigen::Matrix<double, 1, -1>>{
+        (Eigen::Matrix<double,1,-1>(10) << 1, 2, 3, 4, 5, 6, 7, 8, 9,
+        10).finished(), (Eigen::Matrix<double,1,-1>(10) << 1, 2, 3, 4, 5, 6,
+        7, 8, 9, 10).finished(), (Eigen::Matrix<double,1,-1>(10) << 1, 2, 3,
+        4, 5, 6, 7, 8, 9, 10).finished()});
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -4027,9 +4021,8 @@ vecfoo(std::ostream* pstream__) {
   
   try {
     current_statement__ = 759;
-    return transpose(stan::math::to_row_vector(
-             stan::math::array_builder<int>().add(1).add(2).add(3).add(4)
-             .add(5).add(6).add(7).add(8).add(9).add(10).array()));
+    return (Eigen::Matrix<double,-1,1>(10) << 1, 2, 3, 4, 5, 6, 7, 8, 9,
+        10).finished();
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -4098,14 +4091,12 @@ vecmubar(const T0__& mu, std::ostream* pstream__) {
     
     current_statement__ = 764;
     assign(l, nil_index_list(),
-      multiply(mu,
-        transpose(stan::math::to_row_vector(stan::math::array_builder<int>()
-          .add(1).add(2).add(3).add(4).add(5).add(6).add(7).add(8).add(9)
-          .add(10).array()))), "assigning variable l");
+      multiply(mu, (Eigen::Matrix<double,-1,1>(10) << 1, 2, 3, 4, 5, 6, 7, 8,
+        9, 10).finished()), "assigning variable l");
     current_statement__ = 765;
     return rvalue(l,
-             cons_list(index_multi(stan::math::array_builder<int>().add(1)
-               .add(2).add(3).add(4).add(5).array()), nil_index_list()), "l");
+             cons_list(index_multi(std::vector<int>{1, 2, 3, 4, 5}),
+               nil_index_list()), "l");
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -5682,8 +5673,8 @@ class mother_model final : public model_base_crtp<mother_model> {
         indices = std::vector<int>(4, std::numeric_limits<int>::min());
         
         current_statement__ = 349;
-        assign(indices, nil_index_list(), stan::math::array_builder<int>()
-          .add(1).add(2).add(3).add(4).array(), "assigning variable indices");
+        assign(indices, nil_index_list(), std::vector<int>{1, 2, 3, 4},
+          "assigning variable indices");
         {
           std::vector<int> sym1__;
           current_statement__ = 350;
@@ -5729,14 +5720,13 @@ class mother_model final : public model_base_crtp<mother_model> {
       assign(arr_mul_ind,
         cons_list(index_uni(1),
           cons_list(index_min_max(1, 2), nil_index_list())),
-        stan::math::array_builder<int>().add(1).add(1).array(),
-        "assigning variable arr_mul_ind");
+        std::vector<int>{1, 1}, "assigning variable arr_mul_ind");
       current_statement__ = 359;
       x_mul_ind = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 359;
-      assign(x_mul_ind, nil_index_list(), stan::math::array_builder<int>()
-        .add(1).add(2).array(), "assigning variable x_mul_ind");
+      assign(x_mul_ind, nil_index_list(), std::vector<int>{1, 2},
+        "assigning variable x_mul_ind");
       current_statement__ = 360;
       transformed_data_real = std::numeric_limits<double>::quiet_NaN();
       
@@ -8270,8 +8260,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       indices = std::vector<int>(3, std::numeric_limits<int>::min());
       
       current_statement__ = 91;
-      assign(indices, nil_index_list(), stan::math::array_builder<int>()
-        .add(2).add(3).add(1).array(), "assigning variable indices");
+      assign(indices, nil_index_list(), std::vector<int>{2, 3, 1},
+        "assigning variable indices");
       std::vector<Eigen::Matrix<double, -1, -1>> indexing_mat;
       indexing_mat = std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(3, 4));
       stan::math::fill(indexing_mat, std::numeric_limits<double>::quiet_NaN());
@@ -11176,8 +11166,7 @@ foo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   
   try {
     current_statement__ = 147;
-    return transpose(stan::math::to_row_vector(
-             stan::math::array_builder<int>().add(1).add(2).add(3).array()));
+    return (Eigen::Matrix<double,-1,1>(3) << 1, 2, 3).finished();
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -11216,8 +11205,7 @@ goo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   
   try {
     current_statement__ = 149;
-    return transpose(stan::math::to_row_vector(
-             stan::math::array_builder<int>().add(4).add(5).add(6).array()));
+    return (Eigen::Matrix<double,-1,1>(3) << 4, 5, 6).finished();
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -17597,8 +17585,7 @@ dz_dt(const T0__& t, const std::vector<T1__>& z,
     current_statement__ = 32;
     dv_dt = ((-gamma + (delta * u)) * v);
     current_statement__ = 33;
-    return stan::math::array_builder<local_scalar_t__>().add(du_dt)
-        .add(dv_dt).array();
+    return std::vector<local_scalar_t__>{du_dt, dv_dt};
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -17859,9 +17846,9 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       current_statement__ = 7;
       assign(z, nil_index_list(),
         integrate_ode_bdf(dz_dt_functor__(), z_init, 0, ts,
-          stan::math::array_builder<local_scalar_t__>().add(alpha).add(beta)
-          .add(gamma).add(delta).array(), rep_array(0.0, 0), rep_array(0, 0),
-          pstream__, 1e-5, 1e-3, 5e2), "assigning variable z");
+          std::vector<local_scalar_t__>{alpha, beta, gamma, delta},
+          rep_array(0.0, 0), rep_array(0, 0), pstream__, 1e-5, 1e-3, 5e2),
+        "assigning variable z");
       {
         current_statement__ = 8;
         lp_accum__.add(normal_lpdf<propto__>(alpha, 1, 0.5));
@@ -18000,9 +17987,9 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       current_statement__ = 7;
       assign(z, nil_index_list(),
         integrate_ode_bdf(dz_dt_functor__(), z_init, 0, ts,
-          stan::math::array_builder<local_scalar_t__>().add(alpha).add(beta)
-          .add(gamma).add(delta).array(), rep_array(0.0, 0), rep_array(0, 0),
-          pstream__, 1e-5, 1e-3, 5e2), "assigning variable z");
+          std::vector<local_scalar_t__>{alpha, beta, gamma, delta},
+          rep_array(0.0, 0), rep_array(0, 0), pstream__, 1e-5, 1e-3, 5e2),
+        "assigning variable z");
       if (emit_transformed_parameters__) {
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
