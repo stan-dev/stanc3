@@ -234,7 +234,9 @@ let semantic_check_fn_target_plus_equals cf ~loc id =
   Validate.(
     if
       String.is_suffix id.name ~suffix:"_lp"
-      && not (cf.in_lp_fun_def || cf.current_block = Model)
+      && not
+           ( cf.in_lp_fun_def || cf.current_block = Model
+           || cf.current_block = TParam )
     then Semantic_error.target_plusequals_outisde_model_or_logprob loc |> error
     else ok ())
 

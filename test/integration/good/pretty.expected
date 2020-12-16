@@ -4499,6 +4499,23 @@ get_lp() function is deprecated. It will be removed in a future release. Use tar
 
 
 Warning: in 'lp_in_fun.stan', line 3, column 21 to column 29: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
+  $ ../../../../install/default/bin/stanc --auto-format lp_transformed_param.stan
+functions {
+  real test_lp(real r) {
+    target += normal_lpdf(r| 0, 1);
+    return r;
+  }
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  real alpha = test_lp(5.0);
+}
+model {
+  y ~ normal(0, 1);
+}
+
   $ ../../../../install/default/bin/stanc --auto-format map_rect.stan
 functions {
   vector foo(vector shared_params, vector job_params, array[] real data_r,
