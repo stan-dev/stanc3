@@ -602,40 +602,32 @@ let semantic_check_rowvector ~loc es =
 let tuple2 a b = (a, b)
 let tuple3 a b c = (a, b, c)
 
-let index_with_type idx =
+let indexing_type idx =
   match idx with
-  | Single e -> (idx, e.emeta.type_)
-  | _ -> (idx, UnsizedType.UInt)
+  | Single {emeta= {type_= UnsizedType.UInt; _}; _} -> `Single
+  | _ -> `Multi
 
 let inferred_unsizedtype_of_indexed ~loc ut indices =
-  let rec aux k ut xs =
-    match (ut, xs) with
-    | UnsizedType.UMatrix, [(All, _); (Single _, UnsizedType.UInt)]
-     |UMatrix, [(Upfrom _, _); (Single _, UInt)]
-     |UMatrix, [(Downfrom _, _); (Single _, UInt)]
-     |UMatrix, [(Between _, _); (Single _, UInt)]
-     |UMatrix, [(Single _, UArray UInt); (Single _, UInt)] ->
-        k @@ Validate.ok UnsizedType.UVector
-    | _, [] -> k @@ Validate.ok ut
-    | _, next :: rest -> (
-      match next with
-      | Single _, UInt -> (
-        match ut with
-        | UArray inner_ty -> aux k inner_ty rest
-        | UVector | URowVector -> aux k UReal rest
-        | UMatrix -> aux k URowVector rest
-        | _ -> Semantic_error.not_indexable loc ut |> Validate.error )
-      | _ -> (
-        match ut with
-        | UArray inner_ty ->
-            let k' =
-              Fn.compose k (Validate.map ~f:(fun t -> UnsizedType.UArray t))
-            in
-            aux k' inner_ty rest
-        | UVector | URowVector | UMatrix -> aux k ut rest
-        | _ -> Semantic_error.not_indexable loc ut |> Validate.error ) )
+  let rec aux type_ idcs =
+    match (type_, idcs) with
+    | _, [] -> Validate.ok type_
+    | UnsizedType.UArray type_, `Single :: tl -> aux type_ tl
+    | UArray type_, `Multi :: tl ->
+        aux type_ tl |> Validate.map ~f:(fun t -> UnsizedType.UArray t)
+    | (UVector | URowVector), [`Single] | UMatrix, [`Single; `Single] ->
+        Validate.ok UnsizedType.UReal
+    | (UVector | URowVector | UMatrix), [`Multi] | UMatrix, [`Multi; `Multi] ->
+        Validate.ok type_
+    | UMatrix, ([`Single] | [`Single; `Multi]) ->
+        Validate.ok UnsizedType.URowVector
+    | UMatrix, [`Multi; `Single] -> Validate.ok UnsizedType.UVector
+    | UMatrix, _ :: _ :: _ :: _
+     |(UVector | URowVector), _ :: _ :: _
+     |(UInt | UReal | UFun _ | UMathLibraryFunction), _ :: _ ->
+        Semantic_error.not_indexable loc ut (List.length indices)
+        |> Validate.error
   in
-  aux Fn.id ut (List.map ~f:index_with_type indices)
+  aux ut (List.map ~f:indexing_type indices)
 
 let inferred_unsizedtype_of_indexed_exn ~loc ut indices =
   inferred_unsizedtype_of_indexed ~loc ut indices |> to_exn
