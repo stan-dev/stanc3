@@ -364,7 +364,7 @@ module ExpressionError = struct
         Fmt.pf ppf
           "Functions with names ending in _lupdf and _lupmf can only be used \
            in the model block or user-defined functions with names ending in \
-           _lpdf, _lpmf or _lp."
+           _lpdf or _lpmf."
     | InvalidUnnormalizedUDF fname ->
         Fmt.pf ppf
           "%s is an invalid user-defined function name. User-defined \

@@ -261,9 +261,7 @@ let semantic_check_unnormalized cf ~loc id =
   Validate.(
     if
       Utils.is_unnormalized_distribution id.name
-      && not
-           ( (cf.in_fun_def && (cf.in_udf_dist_def || cf.in_lp_fun_def))
-           || cf.current_block = Model )
+      && not ((cf.in_fun_def && cf.in_udf_dist_def) || cf.current_block = Model)
     then Semantic_error.invalid_unnormalized_fn loc |> error
     else ok ())
 

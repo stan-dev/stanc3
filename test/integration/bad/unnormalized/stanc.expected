@@ -23,7 +23,7 @@ Semantic error in 'lupdf_in_functions.stan', line 3, column 15 to column 34:
      5:  }
    -------------------------------------------------
 
-Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf, _lpmf or _lp.
+Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf or _lpmf.
 
   $ ../../../../../install/default/bin/stanc lupdf_in_gq.stan
 
@@ -36,7 +36,7 @@ Semantic error in 'lupdf_in_gq.stan', line 8, column 13 to column 34:
      9:  }
    -------------------------------------------------
 
-Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf, _lpmf or _lp.
+Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf or _lpmf.
 
   $ ../../../../../install/default/bin/stanc lupdf_in_gq_rs.stan
 
@@ -49,7 +49,21 @@ Semantic error in 'lupdf_in_gq_rs.stan', line 14, column 24 to column 33:
     15:  }
    -------------------------------------------------
 
-Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf, _lpmf or _lp.
+Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf or _lpmf.
+
+  $ ../../../../../install/default/bin/stanc lupdf_in_lp.stan
+
+Semantic error in 'lupdf_in_lp.stan', line 3, column 18 to column 42:
+   -------------------------------------------------
+     1:  functions {
+     2:      void foo_lp(real y1, real y2) {
+     3:          target += normal_lupdf(y1| y2, y2);
+                           ^
+     4:      }
+     5:  }
+   -------------------------------------------------
+
+Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf or _lpmf.
 
   $ ../../../../../install/default/bin/stanc lupdf_in_trans_data.stan
 
@@ -62,7 +76,7 @@ Semantic error in 'lupdf_in_trans_data.stan', line 3, column 13 to column 34:
      4:  }
    -------------------------------------------------
 
-Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf, _lpmf or _lp.
+Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf or _lpmf.
 
   $ ../../../../../install/default/bin/stanc lupdf_in_trans_params.stan
 
@@ -75,7 +89,7 @@ Semantic error in 'lupdf_in_trans_params.stan', line 3, column 13 to column 34:
      4:  }
    -------------------------------------------------
 
-Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf, _lpmf or _lp.
+Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf or _lpmf.
 
   $ ../../../../../install/default/bin/stanc lupdf_in_trans_params_rs.stan
 
@@ -88,7 +102,7 @@ Semantic error in 'lupdf_in_trans_params_rs.stan', line 9, column 24 to column 3
     10:  }
    -------------------------------------------------
 
-Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf, _lpmf or _lp.
+Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf or _lpmf.
 
   $ ../../../../../install/default/bin/stanc lupmf_in_gq.stan
 
@@ -101,7 +115,21 @@ Semantic error in 'lupmf_in_gq.stan', line 11, column 13 to column 33:
     12:  }
    -------------------------------------------------
 
-Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf, _lpmf or _lp.
+Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf or _lpmf.
+
+  $ ../../../../../install/default/bin/stanc lupmf_in_lp.stan
+
+Semantic error in 'lupmf_in_lp.stan', line 3, column 18 to column 39:
+   -------------------------------------------------
+     1:  functions {
+     2:      void foo_lp(int i1, real r1) {
+     3:          target += poisson_lupmf(i1| r1);
+                           ^
+     4:      }
+     5:  }
+   -------------------------------------------------
+
+Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf or _lpmf.
 
   $ ../../../../../install/default/bin/stanc lupmf_in_trans_data.stan
 
@@ -114,7 +142,7 @@ Semantic error in 'lupmf_in_trans_data.stan', line 7, column 13 to column 33:
      8:  }
    -------------------------------------------------
 
-Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf, _lpmf or _lp.
+Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf or _lpmf.
 
   $ ../../../../../install/default/bin/stanc lupmf_in_trans_params.stan
 
@@ -127,7 +155,7 @@ Semantic error in 'lupmf_in_trans_params.stan', line 6, column 13 to column 33:
      7:  }
    -------------------------------------------------
 
-Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf, _lpmf or _lp.
+Functions with names ending in _lupdf and _lupmf can only be used in the model block or user-defined functions with names ending in _lpdf or _lpmf.
 
   $ ../../../../../install/default/bin/stanc udf_lupdf.stan
 
