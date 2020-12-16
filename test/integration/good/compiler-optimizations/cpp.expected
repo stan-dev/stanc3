@@ -375,10 +375,8 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
         std::vector<double> theta;
         theta = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
         
-        assign(lcm_sym28__, nil_index_list(),
-          stan::math::array_builder<local_scalar_t__>().add(beta)
-          .add(1000000).add(gamma).add(xi).add(delta).array(),
-          "assigning variable lcm_sym28__");
+        assign(lcm_sym28__, nil_index_list(), std::vector<local_scalar_t__>{
+          beta, 1000000, gamma, xi, delta}, "assigning variable lcm_sym28__");
         assign(lcm_sym23__, nil_index_list(),
           integrate_ode_rk45(simple_SIR_functor__(), y0, 0, t, lcm_sym28__,
             x_r, x_i, pstream__), "assigning variable lcm_sym23__");
@@ -559,10 +557,8 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
         std::vector<double> theta;
         theta = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
         
-        assign(lcm_sym9__, nil_index_list(),
-          stan::math::array_builder<double>().add(beta).add(1000000)
-          .add(gamma).add(xi).add(delta).array(),
-          "assigning variable lcm_sym9__");
+        assign(lcm_sym9__, nil_index_list(), std::vector<double>{beta,
+          1000000, gamma, xi, delta}, "assigning variable lcm_sym9__");
         assign(lcm_sym8__, nil_index_list(),
           integrate_ode_rk45(simple_SIR_functor__(), y0, 0, t, lcm_sym9__,
             x_r, x_i, pstream__), "assigning variable lcm_sym8__");
