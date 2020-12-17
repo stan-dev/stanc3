@@ -49,3 +49,7 @@ generated quantities {
   }
 }
 
+
+Warning: in 'lotka-volterra.stan', line 33, column 6 to line 35, column 41: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
+The new interface is slightly different, see: 
+https://mc-stan.org/users/documentation/case-studies/convert_odes.html

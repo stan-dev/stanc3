@@ -26,6 +26,15 @@ let unsized_array_depth unsized_ty =
   in
   aux 0 unsized_ty
 
+let count_dims unsized_ty =
+  let rec aux dims = function
+    | UArray t -> aux (dims + 1) t
+    | UMatrix -> dims + 2
+    | UVector | URowVector -> dims + 1
+    | _ -> dims
+  in
+  aux 0 unsized_ty
+
 let rec pp ppf = function
   | UInt -> pp_keyword ppf "int"
   | UReal -> pp_keyword ppf "real"

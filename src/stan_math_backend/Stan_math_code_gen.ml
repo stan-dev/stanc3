@@ -477,7 +477,7 @@ let pp_get_dims ppf {Program.output_vars; _} =
              output_vars))
   in
   let params = ["std::vector<std::vector<size_t>>& dimss__"] in
-  let cv_attr = ["const"; "final"] in
+  let cv_attr = ["const"] in
   pp_method ppf "void" "get_dims" params ["dimss__.clear();"]
     (fun ppf -> pp_output_var ppf)
     ~cv_attr
@@ -490,12 +490,15 @@ let pp_method_b ppf rt name params intro ?(outro = []) ?(cv_attr = ["const"])
 
 (** Print the write_array method of the model class *)
 let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
-  pf ppf "template <typename RNG>@ " ;
+  pf ppf
+    "template <typename RNG, typename VecR, typename VecI, typename VecVar, \
+     stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, \
+     stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, \
+     stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>" ;
   let params =
-    [ "RNG& base_rng__"; "std::vector<double>& params_r__"
-    ; "std::vector<int>& params_i__"; "std::vector<double>& vars__"
-    ; "bool emit_transformed_parameters__ = true"
-    ; "bool emit_generated_quantities__ = true"
+    [ "RNG& base_rng__"; "VecR& params_r__"; "VecI& params_i__"
+    ; "VecVar& vars__"; "const bool emit_transformed_parameters__ = true"
+    ; "const bool emit_generated_quantities__ = true"
     ; "std::ostream* pstream__ = nullptr" ]
   in
   let intro =
@@ -509,7 +512,7 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
     ; "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());"
     ; strf "%a" pp_unused "DUMMY_VAR__" ]
   in
-  pp_method_b ppf "void" "write_array" params intro generate_quantities
+  pp_method_b ppf "void" "write_array_impl" params intro generate_quantities
 
 (** Prints the for loop for `constrained_param_names`
     and `unconstrained_param_names`
@@ -631,28 +634,35 @@ let pp_unconstrained_param_names ppf {Program.output_vars; _} =
 
 (** Print the `transform_inits` method of the model class *)
 let pp_transform_inits ppf {Program.transform_inits; _} =
+  pf ppf
+    "template <typename VecVar, typename VecI, \
+     stan::require_std_vector_t<VecVar>* = nullptr, \
+     stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>" ;
   let params =
-    [ "const stan::io::var_context& context__"; "std::vector<int>& params_i__"
-    ; "std::vector<double>& vars__"; "std::ostream* pstream__" ]
+    [ "const stan::io::var_context& context__"; "VecI& params_i__"
+    ; "VecVar& vars__"; "std::ostream* pstream__ = nullptr" ]
   in
   let intro =
     [ "using local_scalar_t__ = double;"; "vars__.clear();"
     ; "vars__.reserve(num_params_r__);" ]
   in
-  let cv_attr = ["const"; "final"] in
-  pp_method_b ppf "void" "transform_inits" params intro transform_inits
+  let cv_attr = ["const"] in
+  pp_method_b ppf "void" "transform_inits_impl" params intro transform_inits
     ~cv_attr
 
 (** Print the `log_prob` method of the model class *)
 let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
-  pf ppf "template <bool propto__, bool jacobian__, typename T__>@ " ;
+  pf ppf
+    "template <bool propto__, bool jacobian__, typename VecR, typename VecI, \
+     stan::require_vector_like_t<VecR>* = nullptr, \
+     stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>" ;
   let params =
-    [ "std::vector<T__>& params_r__"; "std::vector<int>& params_i__"
+    [ "VecR& params_r__"; "VecI& params_i__"
     ; "std::ostream* pstream__ = nullptr" ]
   in
   let intro =
-    [ "using local_scalar_t__ = T__;"; "T__ lp__(0.0);"
-    ; "stan::math::accumulator<T__> lp_accum__;"
+    [ "using T__ = stan::scalar_type_t<VecR>;"; "using local_scalar_t__ = T__;"
+    ; "T__ lp__(0.0);"; "stan::math::accumulator<T__> lp_accum__;"
     ; strf "%a" pp_function__ (prog_name, "log_prob")
     ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
     ; "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());"
@@ -660,7 +670,8 @@ let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
   in
   let outro = ["lp_accum__.add(lp__);"; "return lp_accum__.sum();"] in
   let cv_attr = ["const"] in
-  pp_method_b ppf "T__" "log_prob" params intro log_prob ~outro ~cv_attr
+  pp_method_b ppf "stan::scalar_type_t<VecR>" "log_prob_impl" params intro
+    log_prob ~outro ~cv_attr
 
 (** Print the body of the constrained and unconstrained sizedtype methods
  in the model class
@@ -697,45 +708,64 @@ let pp_overloads ppf () =
     {|
     // Begin method overload boilerplate
     template <typename RNG>
-    inline void write_array(RNG& base_rng__,
-                     Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
-                     Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
-                     bool emit_transformed_parameters__ = true,
-                     bool emit_generated_quantities__ = true,
-                     std::ostream* pstream = nullptr) const {
-      std::vector<double> params_r_vec(params_r.size());
-      for (int i = 0; i < params_r.size(); ++i)
-        params_r_vec[i] = params_r(i);
-      std::vector<double> vars_vec;
-      std::vector<int> params_i_vec;
-      write_array(base_rng__, params_r_vec, params_i_vec, vars_vec,
-          emit_transformed_parameters__, emit_generated_quantities__, pstream);
+    inline void write_array(RNG& base_rng,
+                            Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
+                            Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
+                            const bool emit_transformed_parameters = true,
+                            const bool emit_generated_quantities = true,
+                            std::ostream* pstream = nullptr) const {
+      std::vector<double> vars_vec(vars.size());
+      std::vector<int> params_i;
+      write_array_impl(base_rng, params_r, params_i, vars_vec,
+          emit_transformed_parameters, emit_generated_quantities, pstream);
       vars.resize(vars_vec.size());
-      for (int i = 0; i < vars.size(); ++i)
-        vars(i) = vars_vec[i];
+      for (int i = 0; i < vars.size(); ++i) {
+        vars.coeffRef(i) = vars_vec[i];
+      }
+    }
+
+    template <typename RNG>
+    inline void write_array(RNG& base_rng, std::vector<double>& params_r,
+                            std::vector<int>& params_i,
+                            std::vector<double>& vars,
+                            bool emit_transformed_parameters = true,
+                            bool emit_generated_quantities = true,
+                            std::ostream* pstream = nullptr) const {
+      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
     template <bool propto__, bool jacobian__, typename T_>
     inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
-               std::ostream* pstream = nullptr) const {
-      std::vector<T_> vec_params_r;
-      vec_params_r.reserve(params_r.size());
-      for (int i = 0; i < params_r.size(); ++i)
-        vec_params_r.push_back(params_r(i));
-      std::vector<int> vec_params_i;
-      return log_prob<propto__,jacobian__,T_>(vec_params_r, vec_params_i, pstream);
+                       std::ostream* pstream = nullptr) const {
+      Eigen::Matrix<int, -1, 1> params_i;
+      return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
     }
+
+    template <bool propto__, bool jacobian__, typename T__>
+    inline T__ log_prob(std::vector<T__>& params_r,
+                        std::vector<int>& params_i,
+                        std::ostream* pstream = nullptr) const {
+      return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+    }
+  
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
-                         std::ostream* pstream__ = nullptr) const {
-      std::vector<double> params_r_vec;
-      std::vector<int> params_i_vec;
-      transform_inits(context, params_i_vec, params_r_vec, pstream__);
+                         std::ostream* pstream = nullptr) const final {
+      std::vector<double> params_r_vec(params_r.size());
+      std::vector<int> params_i;
+      transform_inits_impl(context, params_i, params_r_vec, pstream);
       params_r.resize(params_r_vec.size());
-      for (int i = 0; i < params_r.size(); ++i)
-        params_r(i) = params_r_vec[i];
+      for (int i = 0; i < params_r.size(); ++i) {
+        params_r.coeffRef(i) = params_r_vec[i];
+      }
     }
+    inline void transform_inits(const stan::io::var_context& context,
+                                std::vector<int>& params_i,
+                                std::vector<double>& vars,
+                                std::ostream* pstream = nullptr) const final {
+      transform_inits_impl(context, params_i, vars, pstream);
+    }        
 |}
 
 (** Print the public parts of the model class *)
@@ -761,17 +791,14 @@ let model_prefix = "model_"
 let pp_model ppf ({Program.prog_name; _} as p) =
   pf ppf "class %s final : public model_base_crtp<%s> {" prog_name prog_name ;
   pf ppf "@ @[<v 1>@ private:@ @[<v 1> %a@]@ " pp_model_private p ;
-  pf ppf "@ public:@ @[<v 1> ~%s() final { }" prog_name ;
-  pf ppf "@ @ std::string model_name() const final { return \"%s\"; }"
+  pf ppf "@ public:@ @[<v 1> ~%s() { }" prog_name ;
+  pf ppf "@ @ inline std::string model_name() const final { return \"%s\"; }"
     prog_name ;
   pf ppf
     {|
 
-  std::vector<std::string> model_compile_info() const {
-    std::vector<std::string> stanc_info;
-    stanc_info.push_back("stanc_version = %s");
-    stanc_info.push_back("stancflags = %s");
-    return stanc_info;
+  inline std::vector<std::string> model_compile_info() const noexcept {
+    return std::vector<std::string>{"stanc_version = %s", "stancflags = %s"};
   }
   |}
     "%%NAME%%3 %%VERSION%%" stanc_args_to_print ;

@@ -317,6 +317,8 @@ generated quantities {
                                            phi);
 }
 
+
+Warning: in 'hier_NB_regression_ncp_slopes_mod_mos_gp.stan', line 54, column 21 to column 62: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format hier_NB_regression_ncp_slopes_mod_mos_predict.stan
 functions {
   int neg_binomial_2_log_safe_rng(real eta, real phi) {

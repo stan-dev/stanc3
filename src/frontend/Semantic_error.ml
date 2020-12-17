@@ -41,7 +41,7 @@ module TypeError = struct
     | IllTypedBinaryOperator of Operator.t * UnsizedType.t * UnsizedType.t
     | IllTypedPrefixOperator of Operator.t * UnsizedType.t
     | IllTypedPostfixOperator of Operator.t * UnsizedType.t
-    | NotIndexable of UnsizedType.t
+    | NotIndexable of UnsizedType.t * int
 
   let pp ppf = function
     | MismatchedReturnTypes (rt1, rt2) ->
@@ -224,11 +224,11 @@ module TypeError = struct
             name variadic_ode_generic_signature
             Fmt.(list UnsizedType.pp ~sep:comma)
             arg_tys
-    | NotIndexable ut ->
+    | NotIndexable (ut, nidcs) ->
         Fmt.pf ppf
-          "Only expressions of array, matrix, row_vector and vector type may \
-           be indexed. Instead, found type %a."
-          UnsizedType.pp ut
+          "Too many indexes, expression dimensions=%d, indexes found=%d."
+          (UnsizedType.count_dims ut)
+          nidcs
     | ReturningFnExpectedNonReturningFound fn_name ->
         Fmt.pf ppf
           "A returning function was expected but a non-returning function \
@@ -364,7 +364,7 @@ module ExpressionError = struct
         Fmt.pf ppf
           "Functions with names ending in _lupdf and _lupmf can only be used \
            in the model block or user-defined functions with names ending in \
-           _lpdf, _lpmf or _lp."
+           _lpdf or _lpmf."
     | InvalidUnnormalizedUDF fname ->
         Fmt.pf ppf
           "%s is an invalid user-defined function name. User-defined \
@@ -615,7 +615,8 @@ let illtyped_prefix_op loc op ut =
 let illtyped_postfix_op loc op ut =
   TypeError (loc, TypeError.IllTypedPostfixOperator (op, ut))
 
-let not_indexable loc ut = TypeError (loc, TypeError.NotIndexable ut)
+let not_indexable loc ut nidcs =
+  TypeError (loc, TypeError.NotIndexable (ut, nidcs))
 
 let ident_is_keyword loc name =
   IdentifierError (loc, IdentifierError.IsKeyword name)

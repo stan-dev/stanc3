@@ -109,3 +109,5 @@ Warning: deprecated language construct used in 'hearts.stan', line 45, column 8:
 
 assignment operator <- is deprecated in the Stan language; use = instead.
 
+
+Warning: in 'hearts.stan', line 40, column 27 to column 54: binomial_log is deprecated and will be removed in the future. Use binomial_lpmf instead.

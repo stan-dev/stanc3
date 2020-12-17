@@ -23,6 +23,12 @@ model {
   y_p ~ normal(0, 1);
 }
 
+
+Warning: in 'abs.stan', line 10, column 26 to column 37: Use of the `abs` function with real-valued arguments is deprecated; use functions `fabs` instead.
+
+Warning: in 'abs.stan', line 20, column 27 to column 38: Use of the `abs` function with real-valued arguments is deprecated; use functions `fabs` instead.
+
+Warning: in 'abs.stan', line 21, column 27 to column 38: Use of the `abs` function with real-valued arguments is deprecated; use functions `fabs` instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format acos.stan
 data {
   int d_int;
@@ -321,6 +327,32 @@ model {
   y_p ~ normal(0, 1);
 }
 
+
+Warning: in 'binomial_coefficient_log.stan', line 12, column 26 to column 66: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 13, column 26 to column 65: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 14, column 26 to column 65: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 15, column 26 to column 64: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 24, column 28 to column 68: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 25, column 28 to column 68: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 26, column 28 to column 67: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 27, column 28 to column 66: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 29, column 28 to column 67: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 30, column 28 to column 67: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 31, column 28 to column 67: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 32, column 28 to column 66: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'binomial_coefficient_log.stan', line 33, column 28 to column 67: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format cbrt.stan
 data {
   int d_int;
@@ -1064,6 +1096,32 @@ model {
   y_p ~ normal(0, 1);
 }
 
+
+Warning: in 'if_else.stan', line 9, column 26 to column 54: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'if_else.stan', line 10, column 26 to column 55: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'if_else.stan', line 11, column 26 to column 56: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'if_else.stan', line 12, column 26 to column 55: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'if_else.stan', line 21, column 28 to column 56: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'if_else.stan', line 22, column 28 to column 57: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'if_else.stan', line 23, column 28 to column 58: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'if_else.stan', line 24, column 28 to column 57: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'if_else.stan', line 26, column 28 to column 57: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'if_else.stan', line 27, column 28 to column 57: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'if_else.stan', line 28, column 28 to column 58: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'if_else.stan', line 29, column 28 to column 58: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'if_else.stan', line 30, column 28 to column 58: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format inc_beta.stan
 transformed data {
   real a;
@@ -1332,6 +1390,32 @@ model {
   y_p ~ normal(0, 1);
 }
 
+
+Warning: in 'is_inf.stan', line 8, column 26 to column 63: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'is_inf.stan', line 9, column 26 to column 64: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'is_inf.stan', line 10, column 26 to column 65: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'is_inf.stan', line 11, column 26 to column 64: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'is_inf.stan', line 20, column 28 to column 65: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'is_inf.stan', line 21, column 28 to column 66: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'is_inf.stan', line 22, column 28 to column 67: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'is_inf.stan', line 23, column 28 to column 66: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'is_inf.stan', line 25, column 28 to column 66: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'is_inf.stan', line 26, column 28 to column 66: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'is_inf.stan', line 27, column 28 to column 67: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'is_inf.stan', line 28, column 28 to column 67: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'is_inf.stan', line 29, column 28 to column 67: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format is_nan.stan
 data {
   int d_int;
@@ -1365,6 +1449,32 @@ model {
   y_p ~ normal(0, 1);
 }
 
+
+Warning: in 'is_nan.stan', line 8, column 26 to column 63: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'is_nan.stan', line 9, column 26 to column 64: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'is_nan.stan', line 10, column 26 to column 65: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'is_nan.stan', line 11, column 26 to column 64: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'is_nan.stan', line 20, column 28 to column 65: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'is_nan.stan', line 21, column 28 to column 66: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'is_nan.stan', line 22, column 28 to column 67: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'is_nan.stan', line 23, column 28 to column 66: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'is_nan.stan', line 25, column 28 to column 66: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'is_nan.stan', line 26, column 28 to column 66: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'is_nan.stan', line 27, column 28 to column 67: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'is_nan.stan', line 28, column 28 to column 67: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'is_nan.stan', line 29, column 28 to column 67: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format lambert.stan
 data {
   int d_int;
@@ -2110,6 +2220,32 @@ model {
   y_p ~ normal(0, 1);
 }
 
+
+Warning: in 'multiply_log.stan', line 11, column 26 to column 54: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 12, column 26 to column 53: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 13, column 26 to column 53: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 14, column 26 to column 52: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 23, column 28 to column 56: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 24, column 28 to column 56: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 25, column 28 to column 55: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 26, column 28 to column 54: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 28, column 28 to column 55: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 29, column 28 to column 55: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 30, column 28 to column 55: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 31, column 28 to column 54: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'multiply_log.stan', line 32, column 28 to column 55: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format operators_int.stan
 data {
   int d_int;

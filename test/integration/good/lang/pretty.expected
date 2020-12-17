@@ -50,6 +50,10 @@ model {
 
 }
 
+
+Warning: in 'good_funs.stan', line 7, column 6 to column 20: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'good_funs.stan', line 9, column 6 to column 35: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
   $ ../../../../../install/default/bin/stanc --auto-format good_intercept_var.stan
 data {
   int<lower=0> m1;

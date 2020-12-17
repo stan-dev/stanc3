@@ -168,6 +168,7 @@ let use_file filename =
   if !pretty_print_program then
     print_endline (Pretty_printing.pretty_print_program ast) ;
   let typed_ast = Frontend_utils.type_ast_or_exit ast in
+  Deprecation_analysis.emit_warnings typed_ast ;
   if !canonicalize_program then
     print_endline
       (Pretty_printing.pretty_print_typed_program

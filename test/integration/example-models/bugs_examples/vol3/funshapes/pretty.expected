@@ -348,3 +348,7 @@ Warning: deprecated language construct used in 'squaremc.stan', line 23, column 
 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
+
+Warning: in 'squaremc.stan', line 19, column 7 to column 32: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'squaremc.stan', line 20, column 7 to column 32: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.

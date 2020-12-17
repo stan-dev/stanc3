@@ -11,8 +11,16 @@ functions {
     return (a - b) / c;
   }
   real foo_lcdf(real x, real y) {
-    return x / y;
+    real s = 0;
+    for (i in 1 : 10) {
+      s += (x < 0) ? lmultiply(1, y) : 0;
+    }
+    return s;
   }
+}
+data {
+  int<lower=1> N;
+  array[N] real x_quad;
 }
 transformed data {
   int a = -12;
@@ -21,6 +29,7 @@ transformed data {
   real d = fabs(b);
   array[0] int x_i;
   array[0] real x_r;
+  matrix[N, N] K = gp_cov_exp_quad(x_quad, 1.0, 1.0);
 }
 parameters {
   real x;
@@ -46,15 +55,63 @@ model {
   }
   target += normal_lpdf(x| 0, 1) + normal_lcdf(2| 0, 1)
             + normal_lccdf(3| 0, 1);
+  target += sum(K);
   print("target: ", target());
 }
 generated quantities {
   array[2] real y0 = {1.0, 2.0};
   array[3] real ts = {0.5, 1.0, 2.0};
-  array[3, 2] real y_hat = integrate_ode_rk45(sho, y0, 0.0, ts, theta, x_r,
-                                              x_i);
+  array[3, 2] real y_hat = integrate_ode(sho, y0, 0.0, ts, theta, x_r, x_i);
+  array[3, 2] real y_hat_45 = integrate_ode_rk45(sho, y0, 0.0, ts, theta,
+                                                 x_r, x_i);
+  array[3, 2] real y_hat_bdf = integrate_ode_bdf(sho, y0, 0.0, ts, theta,
+                                                 x_r, x_i);
+  array[3, 2] real y_hat_adams = integrate_ode_adams(sho, y0, 0.0, ts, theta,
+                                                     x_r, x_i);
 }
 
+
+Warning: in 'deprecated.stan', line 14, column 11 to column 46: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'deprecated.stan', line 14, column 24 to column 42: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'deprecated.stan', line 27, column 11 to column 17: Use of the `abs` function with real-valued arguments is deprecated; use functions `fabs` instead.
+
+Warning: in 'deprecated.stan', line 30, column 19 to column 49: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+
+Warning: in 'deprecated.stan', line 37, column 11 to column 46: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+
+Warning: in 'deprecated.stan', line 37, column 24 to column 42: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+
+Warning: in 'deprecated.stan', line 38, column 12 to column 44: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+
+Warning: in 'deprecated.stan', line 47, column 14 to column 35: Use of the _log suffix in user defined function normal_log_log is deprecated, use normal_log_lpdf instead.
+
+Warning: in 'deprecated.stan', line 52, column 23 to column 40: Use of the _log suffix in user defined function foo_cdf_log is deprecated, use foo_lcdf instead.
+
+Warning: in 'deprecated.stan', line 55, column 12 to column 31: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'deprecated.stan', line 56, column 6 to column 29: normal_cdf_log is deprecated and will be removed in the future. Use normal_lcdf instead.
+
+Warning: in 'deprecated.stan', line 57, column 6 to column 30: normal_ccdf_log is deprecated and will be removed in the future. Use normal_lccdf instead.
+
+Warning: in 'deprecated.stan', line 60, column 20 to column 28: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
+
+Warning: in 'deprecated.stan', line 65, column 20 to column 69: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead. 
+The new interface is slightly different, see: 
+https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+
+Warning: in 'deprecated.stan', line 66, column 23 to column 77: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
+The new interface is slightly different, see: 
+https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+
+Warning: in 'deprecated.stan', line 67, column 24 to column 77: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
+The new interface is slightly different, see: 
+https://mc-stan.org/users/documentation/case-studies/convert_odes.html
+
+Warning: in 'deprecated.stan', line 68, column 26 to column 81: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
+The new interface is slightly different, see: 
+https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../install/default/bin/stanc --print-canonical parenthesize.stan
 transformed data {
   int N = 12;
@@ -74,3 +131,5 @@ model {
     x + 4 ~ normal(0, 1 + 1) T[0, 8];
 }
 
+
+Warning: in 'parenthesize.stan', line 6, column 13 to column 37: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.

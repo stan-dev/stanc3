@@ -337,6 +337,10 @@ Warning: deprecated language construct used in 'normal_mixture.stan', line 14, c
 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
+
+Warning: in 'normal_mixture.stan', line 15, column 37 to column 65: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'normal_mixture.stan', line 17, column 35 to column 63: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
   $ ../../../../../install/default/bin/stanc --auto-format ordered_pair.stan
 transformed data {
   real L;

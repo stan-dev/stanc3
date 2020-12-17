@@ -234,6 +234,10 @@ Warning: deprecated language construct used in 'normal_mixture.stan', line 24, c
 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
+
+Warning: in 'normal_mixture.stan', line 25, column 39 to column 65: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'normal_mixture.stan', line 27, column 39 to column 65: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
   $ ../../../../../install/default/bin/stanc --auto-format normal_mixture_k.stan
 data {
   int<lower=1> K;
@@ -281,6 +285,8 @@ Warning: deprecated language construct used in 'normal_mixture_k.stan', line 18,
 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
+
+Warning: in 'normal_mixture_k.stan', line 17, column 17 to column 48: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
   $ ../../../../../install/default/bin/stanc --auto-format normal_mixture_k_prop.stan
 data {
   int<lower=1> K;
@@ -367,6 +373,8 @@ Warning: deprecated language construct used in 'normal_mixture_k_prop.stan', lin
 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
+
+Warning: in 'normal_mixture_k_prop.stan', line 32, column 19 to column 50: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
   $ ../../../../../install/default/bin/stanc --auto-format normal_multi.stan
 data {
   int<lower=0> N;

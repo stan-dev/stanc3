@@ -637,3 +637,7 @@ auto ode_integrate(std::ostream* pstream__ = nullptr)
 }
 
 
+
+Warning: in 'integrate.stan', line 21, column 11 to column 135: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
+The new interface is slightly different, see: 
+https://mc-stan.org/users/documentation/case-studies/convert_odes.html
