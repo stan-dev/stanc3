@@ -4499,6 +4499,23 @@ get_lp() function is deprecated. It will be removed in a future release. Use tar
 
 
 Warning: in 'lp_in_fun.stan', line 3, column 21 to column 29: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
+  $ ../../../../install/default/bin/stanc --auto-format lp_transformed_param.stan
+functions {
+  real test_lp(real r) {
+    target += normal_lpdf(r| 0, 1);
+    return r;
+  }
+}
+parameters {
+  real y;
+}
+transformed parameters {
+  real alpha = test_lp(5.0);
+}
+model {
+  y ~ normal(0, 1);
+}
+
   $ ../../../../install/default/bin/stanc --auto-format map_rect.stan
 functions {
   vector foo(vector shared_params, vector job_params, array[] real data_r,
@@ -5371,49 +5388,6 @@ functions {
     r += wishart_lupdf(my1| y2, my2);
     return r;
   }
-  void goo_lp(real y1, real y2, vector vy1, vector vy2, matrix my1,
-              matrix my2, array[] real ay1) {
-    target += beta_lupdf(y1| y2, y2);
-    target += beta_proportion_lupdf(y1| y2, y2);
-    target += cauchy_lupdf(y1| y2, y2);
-    target += chi_square_lupdf(y1| y2);
-    target += dirichlet_lupdf(vy1| vy2);
-    target += double_exponential_lupdf(y1| y2, y2);
-    target += exp_mod_normal_lupdf(y1| y2, y2, y2);
-    target += exponential_lupdf(y1| y2);
-    target += frechet_lupdf(y1| y2, y2);
-    target += gamma_lupdf(y1| y2, y2);
-    target += gaussian_dlm_obs_lupdf(my1| my2, my2, vy2, my2, vy2, my2);
-    target += gumbel_lupdf(y1| y2, y2);
-    target += inv_chi_square_lupdf(y1| y2);
-    target += inv_gamma_lupdf(y1| y2, y2);
-    target += inv_wishart_lupdf(my1| y2, my2);
-    target += lkj_corr_cholesky_lupdf(my1| y2);
-    target += lkj_corr_lupdf(my1| y2);
-    target += logistic_lupdf(y1| y2, y2);
-    target += lognormal_lupdf(y1| y2, y2);
-    target += multi_gp_cholesky_lupdf(my1| my2, vy2);
-    target += multi_gp_lupdf(my1| my2, vy2);
-    target += multi_normal_cholesky_lupdf(vy1| vy2, my2);
-    target += multi_normal_lupdf(vy1| vy2, my2);
-    target += multi_normal_prec_lupdf(vy1| vy2, my2);
-    target += multi_student_t_lupdf(vy1| y2, vy2, my2);
-    target += normal_id_glm_lupdf(y1| my2, y2, vy2, vy2);
-    target += normal_lupdf(y1| y2, y2);
-    target += normal_lupdf(ay1| y2, y2);
-    target += pareto_lupdf(y1| y2, y2);
-    target += pareto_type_2_lupdf(y1| y2, y2, y2);
-    target += rayleigh_lupdf(y1| y2);
-    target += scaled_inv_chi_square_lupdf(y1| y2, y2);
-    target += skew_normal_lupdf(y1| y2, y2, y2);
-    target += std_normal_lupdf(y1| );
-    target += student_t_lupdf(y1| y2, y2, y2);
-    target += uniform_lupdf(y1| y2, y2);
-    target += von_mises_lupdf(y1| y2, y2);
-    target += weibull_lupdf(y1| y2, y2);
-    target += wiener_lupdf(y1| y2, y2, y2, y2);
-    target += wishart_lupdf(my1| y2, my2);
-  }
 }
 parameters {
   real y1;
@@ -5467,7 +5441,6 @@ model {
   r += wiener_lupdf(y1| y2, y2, y2, y2);
   r += wishart_lupdf(my1| y2, my2);
   r += foo_lupdf(y1| y2, vy1, vy2, my1, my2, ay1);
-  goo_lp(y1, y2, vy1, vy2, my1, my2, ay1);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format unnormalized_math_fun_lpmf.stan
@@ -5497,30 +5470,6 @@ functions {
     r += poisson_log_lupmf(i1| r1);
     r += poisson_lupmf(i1| r1);
     return r;
-  }
-  void goo_lp(int i1, real r1, matrix m1, vector v1, array[] int ai1,
-              row_vector rv1) {
-    target += bernoulli_logit_glm_lupmf(i1| m1, r1, v1);
-    target += bernoulli_logit_lupmf(i1| r1);
-    target += bernoulli_lupmf(i1| r1);
-    target += beta_binomial_lupmf(i1| i1, r1, r1);
-    target += binomial_logit_lupmf(i1| i1, r1);
-    target += binomial_lupmf(i1| i1, r1);
-    target += categorical_logit_glm_lupmf(i1| rv1, v1, m1);
-    target += categorical_logit_lupmf(i1| v1);
-    target += categorical_lupmf(i1| v1);
-    target += hypergeometric_lupmf(i1| i1, i1, i1);
-    target += multinomial_lupmf(ai1| v1);
-    target += neg_binomial_2_log_glm_lupmf(i1| m1, r1, v1, r1);
-    target += neg_binomial_2_log_lupmf(i1| r1, r1);
-    target += neg_binomial_2_lupmf(i1| r1, r1);
-    target += neg_binomial_lupmf(i1| r1, r1);
-    target += ordered_logistic_glm_lupmf(i1| rv1, v1, v1);
-    target += ordered_logistic_lupmf(i1| r1, v1);
-    target += ordered_probit_lupmf(i1| r1, v1);
-    target += poisson_log_glm_lupmf(i1| m1, r1, v1);
-    target += poisson_log_lupmf(i1| r1);
-    target += poisson_lupmf(i1| r1);
   }
 }
 data {
@@ -5557,7 +5506,6 @@ model {
   r += poisson_log_lupmf(i1| r1);
   r += poisson_lupmf(i1| r1);
   r += foo_lupmf(i1| r1, m1, v1, ai1, rv1);
-  goo_lp(i1, r1, m1, v1, ai1, rv1);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format unreserved-array-keyword.stan

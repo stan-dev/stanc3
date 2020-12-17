@@ -664,7 +664,7 @@ Semantic error in 'err-decl-matrix-2.stan', line 2, column 13 to column 17:
      4:  model {
    -------------------------------------------------
 
-Only expressions of array, matrix, row_vector and vector type may be indexed. Instead, found type int.
+Too many indexes, expression dimensions=0, indexes found=1.
 
   $ ../../../../install/default/bin/stanc err-decl-matrix.stan
 
@@ -2630,6 +2630,19 @@ Semantic error in 'tilde-bad.stan', line 8, column 8 to column 19:
 For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
 
 
+  $ ../../../../install/default/bin/stanc too-many-indices.stan
+
+Semantic error in 'too-many-indices.stan', line 4, column 16 to column 31:
+   -------------------------------------------------
+     2:    matrix[2,3] a[2] = { [ [1,2,3], [4,5,6] ],
+     3:  		       [ [2,2,3], [2,5,6] ] };
+     4:    vector[2] b = a[1, 1, 1:2, 1];
+                         ^
+     5:  }
+   -------------------------------------------------
+
+Too many indexes, expression dimensions=3, indexes found=4.
+
   $ ../../../../install/default/bin/stanc truncation-bad-type1.stan
 
 Semantic error in 'truncation-bad-type1.stan', line 1, column 8 to column 37:
@@ -2682,7 +2695,7 @@ Semantic error in 'validate_add_expression_dimss_bad.stan', line 4, column 6 to 
      6:  parameters {
    -------------------------------------------------
 
-Only expressions of array, matrix, row_vector and vector type may be indexed. Instead, found type real.
+Too many indexes, expression dimensions=0, indexes found=1.
 
   $ ../../../../install/default/bin/stanc validate_add_var_bad1.stan
 
