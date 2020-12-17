@@ -49,7 +49,7 @@ let nest_unsized_array basic_type n =
    "a thing that will never parse". This is useful in a few places. For example,
    when we the parser to differentiate between different failing states for
    error message purposes, we can partially accept one of them and then fail by
-   requiring an UNREACHABLE token. That's the approach taken in decl_identifier.
+   requiring an UNREACHABLE token.
  *)
 %token UNREACHABLE
 
@@ -140,46 +140,38 @@ identifier:
 
 decl_identifier:
   | id=identifier { id }
-  (* The only purpose of the UNREACHABLE rules is to improve the syntax
-     error messages when a user tries to use a keyword as a variable name.
-     The rule can never actually be built, but it provides a parser state
-     that's distinct from the use of other non-identifiers, so we can assign
-     it a different message in the .messages file.
-   *)
-  | FUNCTIONBLOCK UNREACHABLE
-  | DATABLOCK UNREACHABLE
-  | PARAMETERSBLOCK UNREACHABLE
-  | MODELBLOCK UNREACHABLE
-  | RETURN UNREACHABLE
-  | IF UNREACHABLE
-  | ELSE UNREACHABLE
-  | WHILE UNREACHABLE
-  | FOR UNREACHABLE
-  | IN UNREACHABLE
-  | BREAK UNREACHABLE
-  | CONTINUE UNREACHABLE
-  | VOID UNREACHABLE
-  | INT UNREACHABLE
-  | REAL UNREACHABLE
-  | VECTOR UNREACHABLE
-  | ROWVECTOR UNREACHABLE
-  | MATRIX UNREACHABLE
-  | ORDERED UNREACHABLE
-  | POSITIVEORDERED UNREACHABLE
-  | SIMPLEX UNREACHABLE
-  | UNITVECTOR UNREACHABLE
-  | CHOLESKYFACTORCORR UNREACHABLE
-  | CHOLESKYFACTORCOV UNREACHABLE
-  | CORRMATRIX UNREACHABLE
-  | COVMATRIX UNREACHABLE
-  | PRINT UNREACHABLE
-  | REJECT UNREACHABLE
-  | TARGET UNREACHABLE
-  | GETLP UNREACHABLE
-    {
-      raise (Failure "This should be unreachable; the UNREACHABLE token should \
-                      never be produced")
-    }
+  (* Keywords cannot be identifiers but
+     semantic check produces a better error message. *)
+  | FUNCTIONBLOCK { build_id "functions" $loc }
+  | DATABLOCK { build_id "data" $loc }
+  | PARAMETERSBLOCK { build_id "parameters" $loc }
+  | MODELBLOCK { build_id "model" $loc }
+  | RETURN { build_id "return" $loc }
+  | IF { build_id "if" $loc }
+  | ELSE { build_id "else" $loc }
+  | WHILE { build_id "while" $loc }
+  | FOR { build_id "for" $loc }
+  | IN { build_id "in" $loc }
+  | BREAK { build_id "break" $loc }
+  | CONTINUE { build_id "continue" $loc }
+  | VOID { build_id "void" $loc }
+  | INT { build_id "int" $loc }
+  | REAL { build_id "real" $loc }
+  | VECTOR { build_id "vector" $loc }
+  | ROWVECTOR { build_id "row_vector" $loc }
+  | MATRIX { build_id "matrix" $loc }
+  | ORDERED { build_id "ordered" $loc }
+  | POSITIVEORDERED { build_id "positive_ordered" $loc }
+  | SIMPLEX { build_id "simplex" $loc }
+  | UNITVECTOR { build_id "unit_vector" $loc }
+  | CHOLESKYFACTORCORR { build_id "cholesky_factor_corr" $loc }
+  | CHOLESKYFACTORCOV { build_id "cholesky_factor_cov" $loc }
+  | CORRMATRIX { build_id "corr_matrix" $loc }
+  | COVMATRIX { build_id "cov_matrix" $loc }
+  | PRINT { build_id "print" $loc }
+  | REJECT { build_id "reject" $loc }
+  | TARGET { build_id "target" $loc }
+  | GETLP { build_id "get_lp" $loc }
 
 function_def:
   | rt=return_type name=decl_identifier LPAREN args=separated_list(COMMA, arg_decl)

@@ -44,7 +44,7 @@ let pp_syntax_error ppf = function
       Fmt.pf ppf "@[<v>@,Syntax error in %s, parsing error:@,%a@]@."
         (Location_span.to_string loc_span)
         pp_context_and_message
-        (message, loc_span.end_loc)
+        (message, loc_span.begin_loc)
   | Lexing (_, loc) ->
       Fmt.pf ppf "@[<v>@,Syntax error in %s, lexing error:@,%a@]@."
         (Location.to_string {loc with col_num= loc.col_num - 1})
