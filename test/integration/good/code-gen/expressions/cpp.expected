@@ -57,6 +57,9 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
+profile_map profiles;
+
+
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'simple_function.stan', line 13, column 4 to column 10)",
@@ -194,11 +197,15 @@ class simple_function_model final : public model_base_crtp<simple_function_model
  private:
   int N;
   Eigen::Matrix<double, -1, -1> m;
-  profile_map profiles;
+  
  public:
   ~simple_function_model() { }
   
   inline std::string model_name() const final { return "simple_function_model"; }
+  inline profile_map get_profile() {
+    return profiles;
+  }
+    
 
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};

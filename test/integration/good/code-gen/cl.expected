@@ -57,6 +57,9 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
+profile_map profiles;
+
+
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'optimize_glm.stan', line 27, column 2 to column 20)",
@@ -306,11 +309,15 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   matrix_cl<double> y_v_d_td_opencl__;
   matrix_cl<int> y_vi_d_opencl__;
   matrix_cl<double> y_vi_d_td_opencl__;
-  profile_map profiles;
+  
  public:
   ~optimize_glm_model() { }
   
   inline std::string model_name() const final { return "optimize_glm_model"; }
+  inline profile_map get_profile() {
+    return profiles;
+  }
+    
 
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp --use-opencl"};

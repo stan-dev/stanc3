@@ -791,10 +791,15 @@ let model_prefix = "model_"
 let pp_model ppf ({Program.prog_name; _} as p) =
   pf ppf "class %s final : public model_base_crtp<%s> {" prog_name prog_name ;
   pf ppf "@ @[<v 1>@ private:@ @[<v 1> %a@]@  " pp_model_private p ;
-  pf ppf "profile_map profiles;"  ;
   pf ppf "@ public:@ @[<v 1> ~%s() { }" prog_name ;
   pf ppf "@ @ inline std::string model_name() const final { return \"%s\"; }"
     prog_name ;
+  pf ppf 
+    {|
+  inline profile_map get_profile() {
+    return profiles;
+  }
+    |};
   pf ppf
     {|
 
@@ -826,7 +831,10 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
-using stan::math::pow; |}
+using stan::math::pow; 
+
+profile_map profiles;
+|}
 
 (** Functions needed in the model class not defined yet in stan math.
  FIXME: Move these to the Stan repo when these repos are joined.
