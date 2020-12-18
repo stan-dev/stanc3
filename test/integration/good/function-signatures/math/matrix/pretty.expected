@@ -4296,133 +4296,133 @@ model {
 }
 
 
-Warning: in 'cov_exp_quad.stan', line 18, column 28 to column 65: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 18, column 28 to column 65: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 19, column 28 to column 74: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 19, column 28 to column 74: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 20, column 28 to column 65: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 20, column 28 to column 65: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 21, column 28 to column 74: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 21, column 28 to column 74: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 22, column 28 to column 66: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 22, column 28 to column 66: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 23, column 28 to column 76: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 23, column 28 to column 76: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 39, column 29 to column 66: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 39, column 29 to column 66: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 40, column 29 to column 66: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 40, column 29 to column 66: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 41, column 29 to column 66: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 41, column 29 to column 66: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 42, column 29 to column 66: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 42, column 29 to column 66: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 44, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 44, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 45, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 45, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 46, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 46, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 47, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 47, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 49, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 49, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 50, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 50, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 51, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 51, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 52, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 52, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 54, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 54, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 55, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 55, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 56, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 56, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 57, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 57, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 59, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 59, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 60, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 60, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 61, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 61, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 62, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 62, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 64, column 29 to column 66: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 64, column 29 to column 66: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 65, column 29 to column 66: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 65, column 29 to column 66: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 66, column 29 to column 66: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 66, column 29 to column 66: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 67, column 29 to column 66: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 67, column 29 to column 66: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 69, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 69, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 70, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 70, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 71, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 71, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 72, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 72, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 74, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 74, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 75, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 75, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 76, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 76, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 77, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 77, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 79, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 79, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 80, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 80, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 81, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 81, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 83, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 83, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 84, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 84, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 85, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 85, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 86, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 86, column 29 to column 75: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 88, column 29 to column 67: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 88, column 29 to column 67: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 89, column 29 to column 67: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 89, column 29 to column 67: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 90, column 29 to column 67: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 90, column 29 to column 67: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 91, column 29 to column 67: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 91, column 29 to column 67: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 93, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 93, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 94, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 94, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 95, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 95, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 96, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 96, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 98, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 98, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 99, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 99, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 100, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 100, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 101, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 101, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 103, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 103, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 104, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 104, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 105, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 105, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 107, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 107, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 108, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 108, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 109, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 109, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 
-Warning: in 'cov_exp_quad.stan', line 110, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning: in 'cov_exp_quad.stan', line 110, column 29 to column 77: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format crossprod.stan
 data {
   int d_int;

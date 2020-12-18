@@ -6,7 +6,7 @@ let deprecated_functions =
   String.Map.of_alist_exn
     [ ("multiply_log", "lmultiply")
     ; ("binomial_coefficient_log", "lchoose")
-    ; ("cov_exp_quad", "gp_cov_exp_quad") ]
+    ; ("cov_exp_quad", "gp_exp_quad_cov") ]
 
 let deprecated_odes =
   String.Map.of_alist_exn
