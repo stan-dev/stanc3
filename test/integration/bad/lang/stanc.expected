@@ -1,9 +1,9 @@
   $ ../../../../../install/default/bin/stanc bad1.stan
 
-Syntax error in 'bad1.stan', line 1, column 6 to column 7, parsing error:
+Syntax error in 'bad1.stan', line 1, column 8 to column 8, parsing error:
    -------------------------------------------------
      1:  model { 
-                ^
+                 ^
    -------------------------------------------------
 
 Variable declaration, statement or "}" expected.
@@ -47,7 +47,7 @@ Cannot assign to global variable 'a' declared in previous blocks.
 
   $ ../../../../../install/default/bin/stanc bad3.stan
 
-Syntax error in 'bad3.stan', line 1, column 15 to column 21, parsing error:
+Syntax error in 'bad3.stan', line 1, column 21 to column 22, parsing error:
    -------------------------------------------------
      1:  data { real a; matrix(2,3) b; } model { a = b; }
                               ^
@@ -137,11 +137,11 @@ Semantic error in 'bad9.stan', line 5, column 3 to column 9:
 
   $ ../../../../../install/default/bin/stanc bad_bounds1.stan
 
-Syntax error in 'bad_bounds1.stan', line 2, column 13 to column 14, parsing error:
+Syntax error in 'bad_bounds1.stan', line 2, column 15 to column 17, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real<lower=1 && 2> x;
-                       ^
+                        ^
      3:  }
      4:  parameters {
    -------------------------------------------------
@@ -165,14 +165,14 @@ Identifier 'd_arr_2' not in scope.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_arr_rvec_param.stan
 
-Syntax error in 'bad_cov_exp_quad_arr_rvec_param.stan', line 12, column 0 to line 16, column 1, parsing error:
+Syntax error in 'bad_cov_exp_quad_arr_rvec_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
-    14:  
     15:    transformed_param_matrix = cov_exp_quad(d_arr_2, d_vec_1, d_sigma, d_len);
     16:  }
-          ^
     17:  parameters {
+         ^
     18:    real y;
+    19:  }
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
@@ -194,14 +194,14 @@ Identifier 'd_arr_2' not in scope.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_arr_vec_param.stan
 
-Syntax error in 'bad_cov_exp_quad_arr_vec_param.stan', line 12, column 0 to line 16, column 1, parsing error:
+Syntax error in 'bad_cov_exp_quad_arr_vec_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
-    14:  
     15:    transformed_params_matrix = cov_exp_quad(d_arr_2, d_vec_1, d_sigma, d_len);
     16:  }
-          ^
     17:  parameters {
+         ^
     18:    real y;
+    19:  }
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
@@ -230,14 +230,14 @@ Instead supplied arguments of incompatible type: vector[], vector[], real, real[
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_len_param.stan
 
-Syntax error in 'bad_cov_exp_quad_len_param.stan', line 12, column 0 to line 16, column 1, parsing error:
+Syntax error in 'bad_cov_exp_quad_len_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
-    14:  
     15:    transformed_param_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
     16:  }
-          ^
     17:  parameters {
+         ^
     18:    real y;
+    19:  }
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
@@ -245,14 +245,14 @@ Syntax error in 'bad_cov_exp_quad_len_param.stan', line 12, column 0 to line 16,
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_len_rvec_param.stan
 
-Syntax error in 'bad_cov_exp_quad_len_rvec_param.stan', line 12, column 0 to line 16, column 1, parsing error:
+Syntax error in 'bad_cov_exp_quad_len_rvec_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
-    14:  
     15:    transformed_param_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
     16:  }
-          ^
     17:  parameters {
+         ^
     18:    real y;
+    19:  }
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
@@ -260,14 +260,14 @@ Syntax error in 'bad_cov_exp_quad_len_rvec_param.stan', line 12, column 0 to lin
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_len_vec_param.stan
 
-Syntax error in 'bad_cov_exp_quad_len_vec_param.stan', line 12, column 0 to line 16, column 1, parsing error:
+Syntax error in 'bad_cov_exp_quad_len_vec_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
-    14:  
     15:    transformed_param_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
     16:  }
-          ^
     17:  parameters {
+         ^
     18:    real y;
+    19:  }
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
@@ -289,14 +289,14 @@ Identifier 'd_arr_2' not in scope.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_arr_param.stan
 
-Syntax error in 'bad_cov_exp_quad_rvec_arr_param.stan', line 12, column 0 to line 16, column 1, parsing error:
+Syntax error in 'bad_cov_exp_quad_rvec_arr_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
-    14:  
     15:    transformed_params_matrix = cov_exp_quad(d_vec_1, d_arr_2, d_sigma, d_len);
     16:  }
-          ^
     17:  parameters {
+         ^
     18:    real y;
+    19:  }
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
@@ -346,14 +346,14 @@ Instead supplied arguments of incompatible type: row_vector[], vector[], real, r
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_vec_param.stan
 
-Syntax error in 'bad_cov_exp_quad_rvec_vec_param.stan', line 12, column 0 to line 16, column 1, parsing error:
+Syntax error in 'bad_cov_exp_quad_rvec_vec_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
-    14:  
     15:    transformed_params_matrix = cov_exp_quad(d_rvec_1, d_vec_1, d_sigma, d_len);
     16:  }
-          ^
     17:  parameters {
+         ^
     18:    real y;
+    19:  }
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
@@ -382,14 +382,14 @@ Instead supplied arguments of incompatible type: vector[], vector[], real[], rea
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_sigma_param.stan
 
-Syntax error in 'bad_cov_exp_quad_sigma_param.stan', line 12, column 0 to line 16, column 1, parsing error:
+Syntax error in 'bad_cov_exp_quad_sigma_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
-    14:  
     15:    transformed_param_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
     16:  }
-          ^
     17:  parameters {
+         ^
     18:    real y;
+    19:  }
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
@@ -397,14 +397,14 @@ Syntax error in 'bad_cov_exp_quad_sigma_param.stan', line 12, column 0 to line 1
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_sigma_rvec_param.stan
 
-Syntax error in 'bad_cov_exp_quad_sigma_rvec_param.stan', line 12, column 0 to line 16, column 1, parsing error:
+Syntax error in 'bad_cov_exp_quad_sigma_rvec_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
-    14:  
     15:    transformed_param_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
     16:  }
-          ^
     17:  parameters {
+         ^
     18:    real y;
+    19:  }
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
@@ -412,14 +412,14 @@ Syntax error in 'bad_cov_exp_quad_sigma_rvec_param.stan', line 12, column 0 to l
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_sigma_vec_param.stan
 
-Syntax error in 'bad_cov_exp_quad_sigma_vec_param.stan', line 12, column 0 to line 16, column 1, parsing error:
+Syntax error in 'bad_cov_exp_quad_sigma_vec_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
-    14:  
     15:    transformed_param_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
     16:  }
-          ^
     17:  parameters {
+         ^
     18:    real y;
+    19:  }
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
@@ -441,14 +441,14 @@ Identifier 'd_arr_2' not in scope.
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_arr_param.stan
 
-Syntax error in 'bad_cov_exp_quad_vec_arr_param.stan', line 12, column 0 to line 16, column 1, parsing error:
+Syntax error in 'bad_cov_exp_quad_vec_arr_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
-    14:  
     15:    transformed_params_matrix = cov_exp_quad(d_vec_1, d_arr_2, d_sigma, d_len);
     16:  }
-          ^
     17:  parameters {
+         ^
     18:    real y;
+    19:  }
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
@@ -498,14 +498,14 @@ Instead supplied arguments of incompatible type: vector[], row_vector[], real, r
 
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_rvec_param.stan
 
-Syntax error in 'bad_cov_exp_quad_vec_rvec_param.stan', line 12, column 0 to line 16, column 1, parsing error:
+Syntax error in 'bad_cov_exp_quad_vec_rvec_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
-    14:  
     15:    transformed_params_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
     16:  }
-          ^
     17:  parameters {
+         ^
     18:    real y;
+    19:  }
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
@@ -656,11 +656,11 @@ Cannot assign to global variable 'm' declared in previous blocks.
 
   $ ../../../../../install/default/bin/stanc incomplete.stan
 
-Syntax error in 'incomplete.stan', line 2, column 15 to column 17, parsing error:
+Syntax error in 'incomplete.stan', line 2, column 18 to column 19, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:    real x = 2.0 .^ ;
-                          ^
+                           ^
      3:  }
    -------------------------------------------------
 
@@ -669,11 +669,11 @@ Found an incomplete binary expression - are you missing the right hand side?
 
   $ ../../../../../install/default/bin/stanc incomplete2.stan
 
-Syntax error in 'incomplete2.stan', line 2, column 9 to column 16, parsing error:
+Syntax error in 'incomplete2.stan', line 2, column 17 to column 22, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:    1.0 .^ upper[] while
-                         ^
+                          ^
      3:  }
    -------------------------------------------------
 
@@ -687,11 +687,11 @@ Or did you mean to use the preceding expression in:
 
   $ ../../../../../install/default/bin/stanc incomplete3.stan
 
-Syntax error in 'incomplete3.stan', line 2, column 6 to column 9, parsing error:
+Syntax error in 'incomplete3.stan', line 2, column 10 to column 15, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:    2.0 %/% while (1) { print("hi"); }
-                  ^
+                   ^
      3:  }
    -------------------------------------------------
 
@@ -700,7 +700,7 @@ Ill-formed expression. Expected expression after expression followed by "%/%".
 
   $ ../../../../../install/default/bin/stanc incomplete4.stan
 
-Syntax error in 'incomplete4.stan', line 2, column 2 to column 13, parsing error:
+Syntax error in 'incomplete4.stan', line 2, column 13 to column 14, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:    2.0 %/% 1.0; while (1) { print("hi"); }
@@ -718,11 +718,11 @@ Or did you mean to use the preceding expression in:
 
   $ ../../../../../install/default/bin/stanc incomplete5.stan
 
-Syntax error in 'incomplete5.stan', line 2, column 11 to column 12, parsing error:
+Syntax error in 'incomplete5.stan', line 3, column 0 to column 0, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:    if (2.0) ;
-                     ^
+         ^
    -------------------------------------------------
 
 Ill-formed block. Expected a statement, variable declaration, or just "}".
@@ -730,7 +730,7 @@ Ill-formed block. Expected a statement, variable declaration, or just "}".
 
   $ ../../../../../install/default/bin/stanc incomplete6.stan
 
-Syntax error in 'incomplete6.stan', line 3, column 15 to column 16, parsing error:
+Syntax error in 'incomplete6.stan', line 3, column 16 to column 21, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:    print(upper[2.0]);

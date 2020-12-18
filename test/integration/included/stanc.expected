@@ -44,7 +44,7 @@ File badrecurse3.stan recursively included itself.
 Syntax error in 'dep-warning.stan', line 1, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:    real z;
-               ^
+           ^
      2:    # I am a deprecated comment.
    -------------------------------------------------
 
@@ -56,7 +56,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 Syntax error in 'error_spread_over_files.stan', line 1, column 2 to column 3, parsing error:
    -------------------------------------------------
      1:    w;
-            ^
+           ^
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
@@ -67,7 +67,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 Syntax error in 'incl-err.stan', line 1, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:    real z;
-               ^
+           ^
      2:    #include "I'm not here.stan"
    -------------------------------------------------
 
@@ -79,7 +79,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 Syntax error in 'incl_stanc_helper.stan', line 1, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:    real y;
-               ^
+           ^
      2:    #include incl_stanc_helper2.stan
    -------------------------------------------------
 
@@ -91,7 +91,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 Syntax error in 'incl_stanc_helper2.stan', line 1, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:    real w;
-               ^
+           ^
      2:    real x;
    -------------------------------------------------
 
@@ -103,7 +103,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 Syntax error in 'incl_stanc_helper_deprecated_warning.stan', line 1, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:    real y;
-               ^
+           ^
      2:    #include dep-warning.stan
    -------------------------------------------------
 
@@ -115,7 +115,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 Syntax error in 'incl_stanc_helper_error_spread_over_files.stan', line 1, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:    real y;
-               ^
+           ^
      2:    int #include error_spread_over_files.stan
    -------------------------------------------------
 
@@ -127,7 +127,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 Syntax error in 'incl_stanc_helper_include_error.stan', line 1, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:    real y;
-               ^
+           ^
      2:    #include incl-err.stan
    -------------------------------------------------
 
@@ -139,7 +139,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 Syntax error in 'incl_stanc_helper_lex_error.stan', line 1, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:    real y;
-               ^
+           ^
      2:    #include lex-err.stan
    -------------------------------------------------
 
@@ -151,7 +151,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 Syntax error in 'incl_stanc_helper_parse_error.stan', line 1, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:    real y;
-               ^
+           ^
      2:    #include parse-err.stan
    -------------------------------------------------
 
@@ -163,7 +163,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 Syntax error in 'incl_stanc_helper_semantic_error.stan', line 1, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:    real y;
-               ^
+           ^
      2:    #include sem-err.stan
    -------------------------------------------------
 
@@ -179,7 +179,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 Syntax error in 'lex-err.stan', line 1, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:    real z;
-               ^
+           ^
      2:    real w;$
    -------------------------------------------------
 
@@ -191,7 +191,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 Syntax error in 'parse-err.stan', line 1, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:    real z;
-               ^
+           ^
      2:    real w;=;
    -------------------------------------------------
 
@@ -203,7 +203,7 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 Syntax error in 'sem-err.stan', line 1, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:    real z;
-               ^
+           ^
      2:    int w;
    -------------------------------------------------
 
@@ -264,7 +264,7 @@ Invalid character found.
 
   $ ../../../../install/default/bin/stanc --include-paths="../included"  stanc_helper_with_bad_include_parse_error.stan
 
-Syntax error in '../included/parse-err.stan', line 2, column 2, included from
+Syntax error in '../included/parse-err.stan', line 2, column 9, included from
 '../included/incl_stanc_helper_parse_error.stan', line 2, column 2, included from
 'stanc_helper_with_bad_include_parse_error.stan', line 2, column 0, parsing error:
    -------------------------------------------------
