@@ -41,7 +41,7 @@ let nest_unsized_array basic_type n =
 %token ASSIGN PLUSASSIGN MINUSASSIGN TIMESASSIGN DIVIDEASSIGN
    ELTDIVIDEASSIGN ELTTIMESASSIGN
 %token ARROWASSIGN INCREMENTLOGPROB GETLP (* all of these are deprecated *)
-%token PRINT REJECT
+%token PRINT REJECT PROFILE
 %token TRUNCATE
 %token EOF
 
@@ -174,6 +174,7 @@ decl_identifier:
   | COVMATRIX UNREACHABLE
   | PRINT UNREACHABLE
   | REJECT UNREACHABLE
+  | PROFILE UNREACHABLE
   | TARGET UNREACHABLE
   | GETLP UNREACHABLE
     {
@@ -698,6 +699,8 @@ atomic_statement:
     {  grammar_logger "print_statement" ; Print l }
   | REJECT LPAREN l=printables RPAREN SEMICOLON
     {  grammar_logger "reject_statement" ; Reject l  }
+  | PROFILE LPAREN l=printables RPAREN SEMICOLON
+    {  grammar_logger "profile_statement" ; Profile l }
   | RETURN e=expression SEMICOLON
     {  grammar_logger "return_statement" ; Return e }
   | RETURN SEMICOLON

@@ -166,7 +166,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
   double kappa;
   std::vector<double> x_r;
   std::vector<int> x_i;
- 
+  profile_map profiles;
  public:
   ~ad_level_failing_model() { }
   
@@ -1368,7 +1368,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
   int n_occ_minus_1;
   std::vector<int> first;
   std::vector<int> last;
- 
+  profile_map profiles;
  public:
   ~copy_fail_model() { }
   
@@ -3692,7 +3692,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
   std::vector<int> state;
   std::vector<int> y;
   Eigen::Matrix<double, -1, 1> v_prev;
- 
+  profile_map profiles;
  public:
   ~dce_fail_model() { }
   
@@ -5285,7 +5285,7 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
   double x;
   double y;
   double i;
- 
+  profile_map profiles;
  public:
   ~expr_prop_experiment_model() { }
   
@@ -5660,7 +5660,7 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
   int j;
   double z;
   double y;
- 
+  profile_map profiles;
  public:
   ~expr_prop_experiment2_model() { }
   
@@ -6040,7 +6040,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
   int lcm_sym28__;
   int N;
   Eigen::Matrix<double, -1, 1> y;
- 
+  profile_map profiles;
  public:
   ~expr_prop_fail_model() { }
   
@@ -6703,7 +6703,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
   int J;
   std::vector<double> y;
   std::vector<double> sigma;
- 
+  profile_map profiles;
  public:
   ~expr_prop_fail2_model() { }
   
@@ -7296,7 +7296,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
   std::vector<int> state;
   Eigen::Matrix<double, -1, 1> v_prev_full;
   std::vector<int> y;
- 
+  profile_map profiles;
  public:
   ~expr_prop_fail3_model() { }
   
@@ -8863,7 +8863,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
   Eigen::Matrix<double, -1, 1> E;
   Eigen::Matrix<double, -1, 1> log_E;
   int phi_std_raw_1dim__;
- 
+  profile_map profiles;
  public:
   ~expr_prop_fail4_model() { }
   
@@ -10143,7 +10143,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
   int n_occ_minus_1;
   std::vector<int> first;
   std::vector<int> last;
- 
+  profile_map profiles;
  public:
   ~expr_prop_fail5_model() { }
   
@@ -13339,7 +13339,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
   std::vector<int> first;
   std::vector<int> last;
   int phi_2dim__;
- 
+  profile_map profiles;
  public:
   ~expr_prop_fail6_model() { }
   
@@ -16640,7 +16640,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
   std::vector<std::vector<int>> y;
   Eigen::Matrix<double, -1, 1> alpha;
   std::vector<Eigen::Matrix<double, -1, 1>> beta;
- 
+  profile_map profiles;
  public:
   ~expr_prop_fail7_model() { }
   
@@ -18153,7 +18153,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
   std::vector<int> node2;
   std::vector<int> y;
   Eigen::Matrix<double, -1, 1> x;
- 
+  profile_map profiles;
  public:
   ~expr_prop_fail8_model() { }
   
@@ -19378,7 +19378,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
   int n_occ_minus_1;
   std::vector<int> first;
   std::vector<int> last;
- 
+  profile_map profiles;
  public:
   ~fails_test_model() { }
   
@@ -22721,7 +22721,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
   std::vector<int> last;
   int epsilon_1dim__;
   int phi_2dim__;
- 
+  profile_map profiles;
  public:
   ~inlining_fail2_model() { }
   
@@ -25790,7 +25790,7 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
   double z;
   double x;
   double i;
- 
+  profile_map profiles;
  public:
   ~lcm_experiment_model() { }
   
@@ -26158,7 +26158,7 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
 
  private:
   
- 
+  profile_map profiles;
  public:
   ~lcm_experiment2_model() { }
   
@@ -26535,7 +26535,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
  private:
   int J;
   std::vector<double> y;
- 
+  profile_map profiles;
  public:
   ~lcm_fails_model() { }
   
@@ -27347,7 +27347,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
   int n_occ_minus_1;
   std::vector<int> first;
   std::vector<int> last;
- 
+  profile_map profiles;
  public:
   ~lcm_fails2_model() { }
   
@@ -29412,7 +29412,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
   Eigen::Matrix<double, -1, 1> X;
   std::vector<int> sum_y;
   int occ_obs;
- 
+  profile_map profiles;
  public:
   ~off_dce_model() { }
   
@@ -30454,7 +30454,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
   Eigen::Matrix<double, -1, 1> time;
   Eigen::Matrix<double, -1, 1> treatment;
   Eigen::Matrix<double, -1, 1> y;
- 
+  profile_map profiles;
  public:
   ~off_small_model() { }
   
@@ -31622,7 +31622,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
 
  private:
   
- 
+  profile_map profiles;
  public:
   ~optimizations_model() { }
   
@@ -32961,7 +32961,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
   Eigen::Matrix<double, -1, 1> pre_test;
   Eigen::Matrix<double, -1, 1> treatment;
   Eigen::Matrix<double, -1, 1> y;
- 
+  profile_map profiles;
  public:
   ~partial_eval_model() { }
   
@@ -33831,7 +33831,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
   Eigen::Matrix<double, -1, 1> x2;
   int K;
   Eigen::Matrix<double, -1, 1> x1x2;
- 
+  profile_map profiles;
  public:
   ~stalled1_failure_model() { }
   
@@ -35015,7 +35015,7 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
 
  private:
   
- 
+  profile_map profiles;
  public:
   ~unroll_limit_model() { }
   

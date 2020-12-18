@@ -306,7 +306,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   matrix_cl<double> y_v_d_td_opencl__;
   matrix_cl<int> y_vi_d_opencl__;
   matrix_cl<double> y_vi_d_td_opencl__;
- 
+  profile_map profiles;
  public:
   ~optimize_glm_model() { }
   

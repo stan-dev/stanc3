@@ -91,6 +91,8 @@ let pp_bool_expr ppf expr =
   | UReal -> pp_call ppf ("as_bool", pp_expr, [expr])
   | _ -> pp_expr ppf expr
 
+let profile_counter = ref (-1)
+
 let rec pp_statement (ppf : Format.formatter)
     (Stmt.Fixed.({pattern; meta}) as stmt) =
   (* ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) = *)
@@ -154,6 +156,14 @@ let rec pp_statement (ppf : Format.formatter)
       pf ppf "std::stringstream %s;@," err_strm ;
       pf ppf "%a@," (list ~sep:cut add_to_string) args ;
       pf ppf "throw std::domain_error(%s.str());" err_strm
+  | NRFunApp (CompilerInternal, fname, args)
+    when fname = Internal_fun.to_string FnProfile ->
+      profile_counter := !profile_counter + 1;
+      pf ppf "@[<hov 4>%a = %a;@]" pp_indexed_simple ("profile profile_"^(string_of_int !profile_counter)^"__", []) pp_expr
+        ({ pattern= FunApp (CompilerInternal, "profile", args)
+        ; meta= Expr.Typed.Meta.empty });
+      
+      
   | NRFunApp
       (CompilerInternal, fname, {pattern= Lit (Str, check_name); _} :: args)
     when fname = Internal_fun.to_string FnCheck ->

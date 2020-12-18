@@ -194,7 +194,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
  private:
   int N;
   Eigen::Matrix<double, -1, -1> m;
- 
+  profile_map profiles;
  public:
   ~simple_function_model() { }
   

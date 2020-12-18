@@ -83,7 +83,7 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
   int J;
   std::vector<double> y;
   std::vector<double> sigma;
- 
+  profile_map profiles;
  public:
   ~_8_schools_ncp_model() { }
   
@@ -597,7 +597,7 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
 
  private:
   int good_model;
- 
+  profile_map profiles;
  public:
   ~_8start_with_number_model() { }
   
@@ -971,7 +971,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
   int J;
   std::vector<double> y;
   std::vector<double> sigma;
- 
+  profile_map profiles;
  public:
   ~eight_schools_ncp_model() { }
   
@@ -4329,7 +4329,7 @@ class mother_model final : public model_base_crtp<mother_model> {
   std::vector<Eigen::Matrix<double, 1, -1>> transformed_data_row_vector_array;
   std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> transformed_data_row_vector_array_2d;
   std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> transformed_data_row_vector_array_3d;
- 
+  profile_map profiles;
  public:
   ~mother_model() { }
   
@@ -11375,7 +11375,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
   std::vector<Eigen::Matrix<double, -1, 1>> job_params_d;
   std::vector<std::vector<double>> data_r;
   std::vector<std::vector<int>> data_i;
- 
+  profile_map profiles;
  public:
   ~motherHOF_model() { }
   
@@ -13797,7 +13797,7 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
   std::vector<double> rad;
   Eigen::Matrix<double, -1, 1> vd;
   std::vector<Eigen::Matrix<double, -1, 1>> zd;
- 
+  profile_map profiles;
  public:
   ~new_integrate_interface_model() { }
   
@@ -17697,7 +17697,7 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
   std::vector<double> ts;
   std::vector<double> y_init;
   std::vector<std::vector<double>> y;
- 
+  profile_map profiles;
  public:
   ~old_integrate_interface_model() { }
   
@@ -18683,7 +18683,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   std::vector<int> y2_vi_d_td;
   int y_s_d_td;
   double y_r_d_td;
- 
+  profile_map profiles;
  public:
   ~optimize_glm_model() { }
   
@@ -20349,7 +20349,7 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
 
  private:
   int N;
- 
+  profile_map profiles;
  public:
   ~reduce_sum_m1_model() { }
   
@@ -21878,7 +21878,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
  private:
   int N;
   std::vector<double> x;
- 
+  profile_map profiles;
  public:
   ~reduce_sum_m2_model() { }
   
@@ -25578,7 +25578,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
   double tgd11;
   double tgd12;
   double tsd;
- 
+  profile_map profiles;
  public:
   ~reduce_sum_m3_model() { }
   
@@ -28022,7 +28022,7 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
 
  private:
   
- 
+  profile_map profiles;
  public:
   ~single_argument_lpmf_model() { }
   
@@ -28362,7 +28362,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
 
  private:
   int t;
- 
+  profile_map profiles;
  public:
   ~tilde_block_model() { }
   
@@ -28880,7 +28880,7 @@ class transform_model final : public model_base_crtp<transform_model> {
   std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> dv;
   std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> dr;
   std::vector<Eigen::Matrix<double, -1, -1>> dm;
- 
+  profile_map profiles;
  public:
   ~transform_model() { }
   
@@ -32575,7 +32575,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
  private:
   int n;
   double x;
- 
+  profile_map profiles;
  public:
   ~truncate_model() { }
   
@@ -33090,7 +33090,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
 
  private:
   
- 
+  profile_map profiles;
  public:
   ~udf_tilde_stmt_conflict_model() { }
   
@@ -33478,7 +33478,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
 
  private:
   
- 
+  profile_map profiles;
  public:
   ~user_constrain_model() { }
   

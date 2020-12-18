@@ -791,6 +791,7 @@ let model_prefix = "model_"
 let pp_model ppf ({Program.prog_name; _} as p) =
   pf ppf "class %s final : public model_base_crtp<%s> {" prog_name prog_name ;
   pf ppf "@ @[<v 1>@ private:@ @[<v 1> %a@]@  " pp_model_private p ;
+  pf ppf "profile_map profiles;"  ;
   pf ppf "@ public:@ @[<v 1> ~%s() { }" prog_name ;
   pf ppf "@ @ inline std::string model_name() const final { return \"%s\"; }"
     prog_name ;

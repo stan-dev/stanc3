@@ -320,6 +320,7 @@ and pp_statement ppf ({stmt= s_content; _} as ss) =
   | ReturnVoid -> Fmt.pf ppf "return;"
   | Print ps -> Fmt.pf ppf "print(%a);" pp_list_of_printables ps
   | Reject ps -> Fmt.pf ppf "reject(%a);" pp_list_of_printables ps
+  | Profile ps -> Fmt.pf ppf "profile(%a);" pp_list_of_printables ps
   | Skip -> Fmt.pf ppf ";"
   | IfThenElse (_, _, _) ->
       with_vbox ppf 0 (fun () -> pp_recursive_ifthenelse ppf ss)
