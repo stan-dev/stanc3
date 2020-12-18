@@ -38,12 +38,12 @@ Ill-typed arguments supplied to assignment operator .*=: lhs has type real and r
 
   $ ../../../../../install/default/bin/stanc plus_equals_bad_init.stan
 
-Syntax error in 'plus_equals_bad_init.stan', line 3, column 12 to column 19, parsing error:
+Syntax error in 'plus_equals_bad_init.stan', line 3, column 20 to column 22, parsing error:
    -------------------------------------------------
      1:  generated quantities {
      2:    vector[3] gq_v3_a = [1, 2, 3]';
      3:    vector[3] gq_v3_b += gq_v3_a;
-                            ^
+                             ^
      4:  }
    -------------------------------------------------
 
@@ -168,7 +168,7 @@ Ill-typed arguments supplied to assignment operator +=: lhs has type matrix and 
 
   $ ../../../../../install/default/bin/stanc plus_equals_matrix_shape_mismatch.stan
 
-Syntax error in 'plus_equals_matrix_shape_mismatch.stan', line 4, column 9 to column 10, parsing error:
+Syntax error in 'plus_equals_matrix_shape_mismatch.stan', line 4, column 10 to column 11, parsing error:
    -------------------------------------------------
      2:  generated quantities {
      3:    matrix[2,3] z = [[1, 2, 3], [4, 5, 6]];

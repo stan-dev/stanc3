@@ -4,7 +4,7 @@ Syntax error in 'array-expr-decl-bad1.stan', line 2, column 2 to column 16, pars
    -------------------------------------------------
      1:  data {
      2:    array[1:2,2,:] real x;
-                         ^
+           ^
      3:  }
    -------------------------------------------------
 
@@ -16,7 +16,7 @@ Syntax error in 'array-expr-decl-bad2.stan', line 2, column 2 to column 15, pars
    -------------------------------------------------
      1:  data {
      2:    blahblah[1,2] real x;
-                        ^
+           ^
      3:  }
    -------------------------------------------------
 
@@ -28,7 +28,7 @@ Syntax error in 'array-expr-decl-bad3.stan', line 2, column 2 to column 6, parsi
    -------------------------------------------------
      1:  data {
      2:    asdf real x;
-               ^
+           ^
      3:  }
    -------------------------------------------------
 
@@ -170,7 +170,7 @@ Ill-typed arguments supplied to assignment operator =: lhs has type real[] and r
 
   $ ../../../../install/default/bin/stanc bad_while.stan
 
-Syntax error in 'bad_while.stan', line 3, column 23 to column 24, parsing error:
+Syntax error in 'bad_while.stan', line 3, column 24 to column 25, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real x;
@@ -426,12 +426,12 @@ Continue statements may only be used in loops.
 
   $ ../../../../install/default/bin/stanc declare-define-param-block.stan
 
-Syntax error in 'declare-define-param-block.stan', line 6, column 9 to column 10, parsing error:
+Syntax error in 'declare-define-param-block.stan', line 6, column 11 to column 14, parsing error:
    -------------------------------------------------
      4:  parameters {
      5:    real y;
      6:    real z = d_r;
-                   ^
+                    ^
      7:  }
      8:  model {
    -------------------------------------------------
@@ -470,12 +470,12 @@ Ill-typed arguments supplied to assignment operator =: lhs has type vector and r
 
   $ ../../../../install/default/bin/stanc declare-define-var-double-3.stan
 
-Syntax error in 'declare-define-var-double-3.stan', line 3, column 10 to column 11, parsing error:
+Syntax error in 'declare-define-var-double-3.stan', line 3, column 12 to column 15, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real a1[2];
      3:    real a2 = 1.0; // cannot assign in data block
-                    ^
+                     ^
      4:  }
      5:  parameters {
    -------------------------------------------------
@@ -486,12 +486,12 @@ after variable declaration.
 
   $ ../../../../install/default/bin/stanc declare-define-var-double-4.stan
 
-Syntax error in 'declare-define-var-double-4.stan', line 6, column 10 to column 11, parsing error:
+Syntax error in 'declare-define-var-double-4.stan', line 6, column 12 to column 15, parsing error:
    -------------------------------------------------
      4:  parameters {
      5:    real y;
      6:    real a2 = 1.0; // cannot assign in parameters block
-                    ^
+                     ^
      7:  }
      8:  model {
    -------------------------------------------------
@@ -585,11 +585,11 @@ Ill-typed arguments supplied to assignment operator =: lhs has type vector and r
 
   $ ../../../../install/default/bin/stanc err-bare-type-close-square.stan
 
-Syntax error in 'err-bare-type-close-square.stan', line 2, column 6 to column 7, parsing error:
+Syntax error in 'err-bare-type-close-square.stan', line 2, column 8 to column 11, parsing error:
    -------------------------------------------------
      1:  functions {
      2:    real[ foo(int n) { return n; }
-                ^
+                 ^
      3:  }
      4:  model {
    -------------------------------------------------
@@ -599,12 +599,13 @@ Syntax error in 'err-bare-type-close-square.stan', line 2, column 6 to column 7,
 
   $ ../../../../install/default/bin/stanc err-close-block.stan
 
-Syntax error in 'err-close-block.stan', line 1, column 10 to column 11, parsing error:
+Syntax error in 'err-close-block.stan', line 3, column 0 to column 5, parsing error:
    -------------------------------------------------
      1:  functions {
-                    ^
      2:  
      3:  model {
+         ^
+     4:  }
    -------------------------------------------------
 
 Function forward declaration, definition or "}" expected after "functions {".
@@ -612,11 +613,11 @@ Function forward declaration, definition or "}" expected after "functions {".
 
   $ ../../../../install/default/bin/stanc err-close-function-args.stan
 
-Syntax error in 'err-close-function-args.stan', line 2, column 11 to column 17, parsing error:
+Syntax error in 'err-close-function-args.stan', line 2, column 18 to column 19, parsing error:
    -------------------------------------------------
      1:  functions {
      2:    real foo(real x {
-                          ^
+                           ^
      3:      return 1.0;
      4:    }
    -------------------------------------------------
@@ -626,14 +627,14 @@ Syntax error in 'err-close-function-args.stan', line 2, column 11 to column 17, 
 
   $ ../../../../install/default/bin/stanc err-decl-double-params.stan
 
-Syntax error in 'err-decl-double-params.stan', line 3, column 2 to column 9, parsing error:
+Syntax error in 'err-decl-double-params.stan', line 4, column 0 to column 1, parsing error:
    -------------------------------------------------
-     1:  transformed data {
      2:    real y;
      3:    lijaflj
-                  ^
      4:  }
+         ^
      5:  model {
+     6:  }
    -------------------------------------------------
 
 Ill-formed phrase. Found L-value. This can be completed in many ways.
@@ -641,16 +642,20 @@ Ill-formed phrase. Found L-value. This can be completed in many ways.
 
   $ ../../../../install/default/bin/stanc err-decl-double.stan
 
-Syntax error in 'err-decl-double.stan', line 2, column 2 to column 8, parsing error:
+Syntax error in 'err-decl-double.stan', line 2, column 9 to column 10, parsing error:
    -------------------------------------------------
      1:  data {
      2:    double y;
-                 ^
+                  ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Invalid type in declaration.
+Invalid type in declaration. Valid types:
+  int, real, vector, row_vector, matrix,
+  unit_vector, simplex, ordered, positive_ordered,
+  corr_matrix, cov_matrix, cholesky_factor_corr, cholesky_factor_cov
+optionally preceded by a single array[...]
 
 
   $ ../../../../install/default/bin/stanc err-decl-matrix-2.stan
@@ -668,7 +673,7 @@ Too many indexes, expression dimensions=0, indexes found=1.
 
   $ ../../../../install/default/bin/stanc err-decl-matrix.stan
 
-Syntax error in 'err-decl-matrix.stan', line 2, column 9 to column 10, parsing error:
+Syntax error in 'err-decl-matrix.stan', line 2, column 10 to column 11, parsing error:
    -------------------------------------------------
      1:  data {
      2:    matrix[3] y;
@@ -682,7 +687,7 @@ Expected "[" expression "," expression "]" for sizes of matrix.
 
   $ ../../../../install/default/bin/stanc err-decl-no-expression.stan
 
-Syntax error in 'err-decl-no-expression.stan', line 2, column 12 to column 13, parsing error:
+Syntax error in 'err-decl-no-expression.stan', line 2, column 13 to column 14, parsing error:
    -------------------------------------------------
      1:  data {
      2:    real<lower=> y;
@@ -696,7 +701,7 @@ An expression (not containing binary logical operators) is expected for type low
 
   $ ../../../../install/default/bin/stanc err-decl-vector-2.stan
 
-Syntax error in 'err-decl-vector-2.stan', line 2, column 9 to column 10, parsing error:
+Syntax error in 'err-decl-vector-2.stan', line 2, column 10 to column 11, parsing error:
    -------------------------------------------------
      1:  data {
      2:    vector[3,4] y;
@@ -710,11 +715,11 @@ Syntax error in 'err-decl-vector-2.stan', line 2, column 9 to column 10, parsing
 
   $ ../../../../install/default/bin/stanc err-decl-vector.stan
 
-Syntax error in 'err-decl-vector.stan', line 2, column 2 to column 8, parsing error:
+Syntax error in 'err-decl-vector.stan', line 2, column 9 to column 10, parsing error:
    -------------------------------------------------
      1:  data {
      2:    vector a[3];
-                 ^
+                  ^
      3:  }
      4:  model {
    -------------------------------------------------
@@ -737,12 +742,11 @@ Array sizes must be of type int. Instead found type real.
 
   $ ../../../../install/default/bin/stanc err-expected-bracket.stan
 
-Syntax error in 'err-expected-bracket.stan', line 3, column 0 to column 20, parsing error:
+Syntax error in 'err-expected-bracket.stan', line 4, column 0 to column 0, parsing error:
    -------------------------------------------------
-     1:  model {
      2:  }
      3:  generated quantities 
-                             ^
+         ^
    -------------------------------------------------
 
 Expected "{" after block keyword.
@@ -750,12 +754,12 @@ Expected "{" after block keyword.
 
   $ ../../../../install/default/bin/stanc err-expected-end-of-model.stan
 
-Syntax error in 'err-expected-end-of-model.stan', line 1, column 0 to line 2, column 1, parsing error:
+Syntax error in 'err-expected-end-of-model.stan', line 3, column 0 to column 3, parsing error:
    -------------------------------------------------
      1:  model {
      2:  }
-          ^
      3:  foo
+         ^
    -------------------------------------------------
 
 Expected "generated quantities {" or end of file after end of model block.
@@ -763,12 +767,12 @@ Expected "generated quantities {" or end of file after end of model block.
 
   $ ../../../../install/default/bin/stanc err-expected-generated.stan
 
-Syntax error in 'err-expected-generated.stan', line 1, column 0 to line 2, column 1, parsing error:
+Syntax error in 'err-expected-generated.stan', line 3, column 0 to column 9, parsing error:
    -------------------------------------------------
      1:  model {
      2:  }
-          ^
      3:  generated {
+         ^
      4:  }
    -------------------------------------------------
 
@@ -777,13 +781,12 @@ Expected "generated quantities {" or end of file after end of model block.
 
   $ ../../../../install/default/bin/stanc err-expected-model.stan
 
-Syntax error in 'err-expected-model.stan', line 4, column 0 to line 7, column 1, parsing error:
+Syntax error in 'err-expected-model.stan', line 8, column 0 to column 5, parsing error:
    -------------------------------------------------
-     5:    int n;
      6:    n = 2;
      7:  }
-          ^
      8:  model {
+         ^
      9:  }
    -------------------------------------------------
 
@@ -792,7 +795,7 @@ Expected end of file after end of generated quantities block.
 
   $ ../../../../install/default/bin/stanc err-fun-bare-types-int.stan
 
-Syntax error in 'err-fun-bare-types-int.stan', line 2, column 6 to column 7, parsing error:
+Syntax error in 'err-fun-bare-types-int.stan', line 2, column 7 to column 8, parsing error:
    -------------------------------------------------
      1:  functions {
      2:    real[3] foo() { 
@@ -806,14 +809,14 @@ Syntax error in 'err-fun-bare-types-int.stan', line 2, column 6 to column 7, par
 
   $ ../../../../install/default/bin/stanc err-if-else-double-else.stan
 
-Syntax error in 'err-if-else-double-else.stan', line 3, column 2 to column 8, parsing error:
+Syntax error in 'err-if-else-double-else.stan', line 4, column 2 to column 6, parsing error:
    -------------------------------------------------
-     1:  transformed data {
      2:    real y;
      3:    y = 3;
-                 ^
      4:    else y = 3;
+           ^
      5:    else y = 4;
+     6:  }
    -------------------------------------------------
 
 Ill-formed block. Expected a statement, variable declaration, or just "}".
@@ -821,7 +824,7 @@ Ill-formed block. Expected a statement, variable declaration, or just "}".
 
   $ ../../../../install/default/bin/stanc err-if-else-no-cond.stan
 
-Syntax error in 'err-if-else-no-cond.stan', line 3, column 5 to column 6, parsing error:
+Syntax error in 'err-if-else-no-cond.stan', line 3, column 6 to column 7, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:    real y;
@@ -836,12 +839,12 @@ Expected expression for test of conditional control flow construct.
 
   $ ../../../../install/default/bin/stanc err-if-else.stan
 
-Syntax error in 'err-if-else.stan', line 3, column 6 to column 7, parsing error:
+Syntax error in 'err-if-else.stan', line 3, column 8 to column 9, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:    real y;
      3:    if (1 y = 2;
-                ^
+                 ^
      4:  }
      5:  model {
    -------------------------------------------------
@@ -878,12 +881,12 @@ Target can only be accessed in the model block or in definitions of functions wi
 
   $ ../../../../install/default/bin/stanc err-integrate-ode-comma.stan
 
-Syntax error in 'err-integrate-ode-comma.stan', line 9, column 44 to column 45, parsing error:
+Syntax error in 'err-integrate-ode-comma.stan', line 9, column 46 to column 51, parsing error:
    -------------------------------------------------
      7:    real x[2];
      8:    int x_int[4];
      9:    y = integrate_ode_rk45(foo,y0,t0,ts,theta,x x_int);
-                                                      ^
+                                                       ^
     10:  }
     11:  model {
    -------------------------------------------------
@@ -919,7 +922,7 @@ Instead supplied arguments of incompatible type: vector, matrix.
 
   $ ../../../../install/default/bin/stanc err-nested-parens-close.stan
 
-Syntax error in 'err-nested-parens-close.stan', line 3, column 7 to column 12, parsing error:
+Syntax error in 'err-nested-parens-close.stan', line 3, column 12 to column 13, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:    real x;
@@ -933,7 +936,7 @@ Expression or range of expressions followed by ")" expected after "(".
 
   $ ../../../../install/default/bin/stanc err-nested-parens.stan
 
-Syntax error in 'err-nested-parens.stan', line 3, column 11 to column 12, parsing error:
+Syntax error in 'err-nested-parens.stan', line 3, column 12 to column 13, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:    real x;
@@ -947,12 +950,12 @@ Expression expected after "(".
 
   $ ../../../../install/default/bin/stanc err-no-cond-else-if.stan
 
-Syntax error in 'err-no-cond-else-if.stan', line 5, column 9 to column 11, parsing error:
+Syntax error in 'err-no-cond-else-if.stan', line 5, column 12 to column 13, parsing error:
    -------------------------------------------------
      3:    if (1) {
      4:      x = 2;
      5:    } else if {
-                    ^
+                     ^
      6:      x = 3;
      7:    }
    -------------------------------------------------
@@ -962,7 +965,7 @@ Syntax error in 'err-no-cond-else-if.stan', line 5, column 9 to column 11, parsi
 
   $ ../../../../install/default/bin/stanc err-no-cond.stan
 
-Syntax error in 'err-no-cond.stan', line 3, column 5 to column 6, parsing error:
+Syntax error in 'err-no-cond.stan', line 3, column 6 to column 7, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:    real x;
@@ -977,14 +980,14 @@ Expected expression for test of conditional control flow construct.
 
   $ ../../../../install/default/bin/stanc err-no-statement.stan
 
-Syntax error in 'err-no-statement.stan', line 3, column 7 to column 8, parsing error:
+Syntax error in 'err-no-statement.stan', line 4, column 0 to column 1, parsing error:
    -------------------------------------------------
-     1:  transformed data {
      2:    real x;
      3:    if (1) 
-                 ^
      4:  }
+         ^
      5:  model {
+     6:  }
    -------------------------------------------------
 
 Ill-formed statement. Statement expected for true branch of conditional.
@@ -1006,10 +1009,10 @@ Index must be of type int or int[] or must be a range. Instead found type real.
 
   $ ../../../../install/default/bin/stanc err-open-block.stan
 
-Syntax error in 'err-open-block.stan', line 1, column 0 to column 9, parsing error:
+Syntax error in 'err-open-block.stan', line 1, column 10 to column 13, parsing error:
    -------------------------------------------------
      1:  functions foo {
-                  ^
+                   ^
      2:  }
      3:  model {
    -------------------------------------------------
@@ -1019,14 +1022,14 @@ Syntax error in 'err-open-block.stan', line 1, column 0 to column 9, parsing err
 
   $ ../../../../install/default/bin/stanc err-second-operand-plus.stan
 
-Syntax error in 'err-second-operand-plus.stan', line 3, column 8 to column 10, parsing error:
+Syntax error in 'err-second-operand-plus.stan', line 4, column 0 to column 1, parsing error:
    -------------------------------------------------
-     1:  transformed data {
      2:    int n;
      3:    n = 3 ||
-                   ^
      4:  }
+         ^
      5:  model {
+     6:  }
    -------------------------------------------------
 
 Found an incomplete binary expression - are you missing the right hand side?
@@ -1034,14 +1037,14 @@ Found an incomplete binary expression - are you missing the right hand side?
 
   $ ../../../../install/default/bin/stanc err-transformed-params.stan
 
-Syntax error in 'err-transformed-params.stan', line 1, column 0 to line 3, column 1, parsing error:
+Syntax error in 'err-transformed-params.stan', line 4, column 0 to column 11, parsing error:
    -------------------------------------------------
-     1:  parameters {
      2:    real y;
      3:  }
-          ^
      4:  transformed {
+         ^
      5:  }
+     6:  model {
    -------------------------------------------------
 
 "transformed parameters {", "model {" or "generated quantities {" expected after end of parameters block.
@@ -1049,12 +1052,11 @@ Syntax error in 'err-transformed-params.stan', line 1, column 0 to line 3, colum
 
   $ ../../../../install/default/bin/stanc expect_statement_seq_close_brace.stan
 
-Syntax error in 'expect_statement_seq_close_brace.stan', line 5, column 2 to column 18, parsing error:
+Syntax error in 'expect_statement_seq_close_brace.stan', line 6, column 0 to column 0, parsing error:
    -------------------------------------------------
-     3:  }
      4:  model {
      5:    y ~ normal(0,1);
-                           ^
+         ^
    -------------------------------------------------
 
 Variable declaration, statement or "}" expected.
@@ -1062,14 +1064,11 @@ Variable declaration, statement or "}" expected.
 
   $ ../../../../install/default/bin/stanc expect_statement_seq_close_brace_2.stan
 
-Syntax error in 'expect_statement_seq_close_brace_2.stan', line 12, column 6 to column 12, parsing error:
+Syntax error in 'expect_statement_seq_close_brace_2.stan', line 17, column 0 to column 0, parsing error:
    -------------------------------------------------
-    10:    for (v in vs[1]) {
-    11:      if (1 == 1) {
-    12:        z = 3;
-                     ^
-    13:  
-    14:  
+    15:  
+    16:  
+         ^
    -------------------------------------------------
 
 Variable declaration, statement or "}" expected.
@@ -1077,14 +1076,14 @@ Variable declaration, statement or "}" expected.
 
   $ ../../../../install/default/bin/stanc expect_statement_seq_close_brace_3.stan
 
-Syntax error in 'expect_statement_seq_close_brace_3.stan', line 4, column 2 to line 6, column 3, parsing error:
+Syntax error in 'expect_statement_seq_close_brace_3.stan', line 8, column 0 to column 10, parsing error:
    -------------------------------------------------
-     4:    for (v in vs[1]) {
-     5:      z = 3;
      6:    }
-            ^
      7:    
      8:  parameters {
+         ^
+     9:    real y;
+    10:  }
    -------------------------------------------------
 
 Ill-formed block. Expected a statement, variable declaration, or just "}".
@@ -1092,13 +1091,11 @@ Ill-formed block. Expected a statement, variable declaration, or just "}".
 
   $ ../../../../install/default/bin/stanc expect_statement_seq_close_brace_4.stan
 
-Syntax error in 'expect_statement_seq_close_brace_4.stan', line 8, column 2 to column 14, parsing error:
+Syntax error in 'expect_statement_seq_close_brace_4.stan', line 10, column 0 to column 0, parsing error:
    -------------------------------------------------
-     6:  }
-     7:  generated quantities {
      8:    int vs[2,3];
-                       ^
      9:  
+         ^
    -------------------------------------------------
 
 Ill-formed block. Expected a statement, variable declaration, or just "}".
@@ -1156,7 +1153,7 @@ Function bodies must contain a return statement of correct type in every branch.
 
   $ ../../../../install/default/bin/stanc functions-bad0.stan
 
-Syntax error in 'functions-bad0.stan', line 2, column 10 to column 11, parsing error:
+Syntax error in 'functions-bad0.stan', line 2, column 11 to column 15, parsing error:
    -------------------------------------------------
      1:  functions {
      2:    real foo(void x) {
@@ -1433,13 +1430,12 @@ Expression return statements may only be used inside returning function definiti
 
   $ ../../../../install/default/bin/stanc functions-bad25.stan
 
-Syntax error in 'functions-bad25.stan', line 4, column 4 to column 10, parsing error:
+Syntax error in 'functions-bad25.stan', line 5, column 2 to column 3, parsing error:
    -------------------------------------------------
-     2:    real bar(real x) {
      3:      real y = x + 2.0;
      4:      return
-                   ^
      5:    }
+           ^
      6:  }
    -------------------------------------------------
 
@@ -1448,13 +1444,12 @@ Syntax error in 'functions-bad25.stan', line 4, column 4 to column 10, parsing e
 
   $ ../../../../install/default/bin/stanc functions-bad26.stan
 
-Syntax error in 'functions-bad26.stan', line 4, column 11 to column 12, parsing error:
+Syntax error in 'functions-bad26.stan', line 5, column 2 to column 3, parsing error:
    -------------------------------------------------
-     2:    real bar(real x) {
      3:      real y = x + 2.0;
      4:      return y
-                     ^
      5:    }
+           ^
      6:  }
    -------------------------------------------------
 
@@ -1463,7 +1458,7 @@ Ill-formed return statement. ";" or expression followed by ";" expected after "r
 
   $ ../../../../install/default/bin/stanc functions-bad3.stan
 
-Syntax error in 'functions-bad3.stan', line 2, column 7 to column 10, parsing error:
+Syntax error in 'functions-bad3.stan', line 2, column 10 to column 11, parsing error:
    -------------------------------------------------
      1:  functions {
      2:    real foo^3(real x) {
@@ -1599,7 +1594,7 @@ Target can only be accessed in the model block or in definitions of functions wi
 
   $ ../../../../install/default/bin/stanc local_var_constraint.stan
 
-Syntax error in 'local_var_constraint.stan', line 5, column 2 to column 12, parsing error:
+Syntax error in 'local_var_constraint.stan', line 5, column 12 to column 13, parsing error:
    -------------------------------------------------
      3:  }
      4:  model {
@@ -1614,7 +1609,7 @@ Syntax error in 'local_var_constraint.stan', line 5, column 2 to column 12, pars
 
   $ ../../../../install/default/bin/stanc local_var_constraint2.stan
 
-Syntax error in 'local_var_constraint2.stan', line 5, column 2 to column 8, parsing error:
+Syntax error in 'local_var_constraint2.stan', line 5, column 8 to column 9, parsing error:
    -------------------------------------------------
      3:  }
      4:  model {
@@ -1629,7 +1624,7 @@ Syntax error in 'local_var_constraint2.stan', line 5, column 2 to column 8, pars
 
   $ ../../../../install/default/bin/stanc local_var_constraint3.stan
 
-Syntax error in 'local_var_constraint3.stan', line 5, column 2 to column 8, parsing error:
+Syntax error in 'local_var_constraint3.stan', line 5, column 8 to column 9, parsing error:
    -------------------------------------------------
      3:  }
      4:  model {
@@ -1644,7 +1639,7 @@ Syntax error in 'local_var_constraint3.stan', line 5, column 2 to column 8, pars
 
   $ ../../../../install/default/bin/stanc local_var_constraint4.stan
 
-Syntax error in 'local_var_constraint4.stan', line 5, column 2 to column 6, parsing error:
+Syntax error in 'local_var_constraint4.stan', line 5, column 6 to column 7, parsing error:
    -------------------------------------------------
      3:  }
      4:  model {
@@ -1698,7 +1693,7 @@ Matrix expression must have all row_vector entries. Found type int.
 
   $ ../../../../install/default/bin/stanc matrix_expr_bad3.stan
 
-Syntax error in 'matrix_expr_bad3.stan', line 2, column 25 to column 38, parsing error:
+Syntax error in 'matrix_expr_bad3.stan', line 2, column 38 to column 39, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:    matrix[3,2] td_mat32 = [ [ [ 1 ] ] ], [ [ 2 ] ] ];
@@ -1712,7 +1707,7 @@ Ill-formed expression. Expression followed by ";" expected after "=".
 
   $ ../../../../install/default/bin/stanc matrix_expr_bad4.stan
 
-Syntax error in 'matrix_expr_bad4.stan', line 2, column 27 to column 44, parsing error:
+Syntax error in 'matrix_expr_bad4.stan', line 2, column 44 to column 45, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:    matrix[3,2] td_mat32 = [ [ 1 , [ [ 2 ] ] ];
@@ -1753,10 +1748,10 @@ Ill-typed arguments to '~' statement. No distribution 'multiply' was found with 
 
   $ ../../../../install/default/bin/stanc oneline-error.stan
 
-Syntax error in 'oneline-error.stan', line 1, column 13 to column 19, parsing error:
+Syntax error in 'oneline-error.stan', line 1, column 20 to column 21, parsing error:
    -------------------------------------------------
      1:  parameters { vector y[10]; } model { }
-                            ^
+                             ^
    -------------------------------------------------
 
 "[" expression "]" expected for vector size.
@@ -2602,17 +2597,16 @@ Invalid character found.
 
   $ ../../../../install/default/bin/stanc target-reserved.stan
 
-Syntax error in 'target-reserved.stan', line 2, column 7 to column 13, parsing error:
+Semantic error in 'target-reserved.stan', line 2, column 7 to column 13:
    -------------------------------------------------
      1:  data {
      2:    real target;
-                      ^
+                ^
      3:  }
      4:  parameters {
    -------------------------------------------------
 
-Expected identifier, but found reserved keyword 'target'
-
+Identifier 'target' clashes with reserved keyword.
 
   $ ../../../../install/default/bin/stanc tilde-bad.stan
 
@@ -2795,12 +2789,12 @@ Ill-typed arguments supplied to assignment operator =: lhs has type int[] and rh
 
   $ ../../../../install/default/bin/stanc validate_array_expr_bad3.stan
 
-Syntax error in 'validate_array_expr_bad3.stan', line 6, column 12 to column 13, parsing error:
+Syntax error in 'validate_array_expr_bad3.stan', line 6, column 14 to column 15, parsing error:
    -------------------------------------------------
      4:  model {
      5:    int int_1_a[3];
      6:    int_1_a = { };  // cannot be empty
-                      ^
+                       ^
      7:    y ~ normal(0,1);
      8:  }
    -------------------------------------------------
@@ -2810,7 +2804,7 @@ Expression expected after "{" in array expression.
 
   $ ../../../../install/default/bin/stanc validate_array_expr_bad3a.stan
 
-Syntax error in 'validate_array_expr_bad3a.stan', line 5, column 29 to column 30, parsing error:
+Syntax error in 'validate_array_expr_bad3a.stan', line 5, column 30 to column 31, parsing error:
    -------------------------------------------------
      3:  }
      4:  model {
@@ -2983,7 +2977,7 @@ Multiplier must be a scalar. Instead found type vector.
 
   $ ../../../../install/default/bin/stanc validate_set_double_offset_multiplier_bad3.stan
 
-Syntax error in 'validate_set_double_offset_multiplier_bad3.stan', line 2, column 14 to column 15, parsing error:
+Syntax error in 'validate_set_double_offset_multiplier_bad3.stan', line 2, column 15 to column 25, parsing error:
    -------------------------------------------------
      1:  parameters {
      2:    real<lower=1,multiplier=-31> a;
