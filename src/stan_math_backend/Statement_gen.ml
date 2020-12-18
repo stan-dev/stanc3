@@ -158,18 +158,23 @@ let rec pp_statement (ppf : Format.formatter)
       pf ppf "throw std::domain_error(%s.str());" err_strm
   | NRFunApp (CompilerInternal, fname, args)
     when fname = Internal_fun.to_string FnProfile ->
-      profile_counter := !profile_counter + 1;
-      pf ppf "@[<hov 4>%a = %a;@]" pp_indexed_simple ("profile profile_"^(string_of_int !profile_counter)^"__", []) pp_expr
-        ({ pattern= FunApp (CompilerInternal, "profile", args @ [Expr.Fixed.
-                          { pattern= Lit (Int, "profiles")
-                          ; meta=
-                              Expr.Typed.Meta.
-                                { type_= UInt
-                                ; adlevel= DataOnly
-                                ; loc= Location_span.empty } }] )
-        ; meta= Expr.Typed.Meta.empty });
-      
-      
+      profile_counter := !profile_counter + 1 ;
+      pf ppf "@[<hov 4>%a = %a;@]" pp_indexed_simple
+        ("profile profile_" ^ string_of_int !profile_counter ^ "__", [])
+        pp_expr
+        { pattern=
+            FunApp
+              ( CompilerInternal
+              , "profile"
+              , args
+                @ [ Expr.Fixed.
+                      { pattern= Lit (Int, "profiles")
+                      ; meta=
+                          Expr.Typed.Meta.
+                            { type_= UInt
+                            ; adlevel= DataOnly
+                            ; loc= Location_span.empty } } ] )
+        ; meta= Expr.Typed.Meta.empty }
   | NRFunApp
       (CompilerInternal, fname, {pattern= Lit (Str, check_name); _} :: args)
     when fname = Internal_fun.to_string FnCheck ->

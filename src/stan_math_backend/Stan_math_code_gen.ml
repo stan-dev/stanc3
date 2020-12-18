@@ -794,12 +794,12 @@ let pp_model ppf ({Program.prog_name; _} as p) =
   pf ppf "@ public:@ @[<v 1> ~%s() { }" prog_name ;
   pf ppf "@ @ inline std::string model_name() const final { return \"%s\"; }"
     prog_name ;
-  pf ppf 
+  pf ppf
     {|
   inline profile_map get_profile() {
     return profiles;
   }
-    |};
+    |} ;
   pf ppf
     {|
 
