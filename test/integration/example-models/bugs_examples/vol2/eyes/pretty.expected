@@ -111,3 +111,7 @@ Warning: deprecated language construct used in 'eyes.stan', line 37, column 23:
 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
+
+Warning: in 'eyes.stan', line 38, column 41 to column 75: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+
+Warning: in 'eyes.stan', line 40, column 41 to column 75: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.

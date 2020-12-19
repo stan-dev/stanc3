@@ -67,6 +67,10 @@ Warning: deprecated language construct used in 'naive-bayes-unsup.stan', line 30
 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
+
+Warning: in 'naive-bayes-unsup.stan', line 24, column 21 to column 45: categorical_log is deprecated and will be removed in the future. Use categorical_lpmf instead.
+
+Warning: in 'naive-bayes-unsup.stan', line 28, column 28 to column 56: categorical_log is deprecated and will be removed in the future. Use categorical_lpmf instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format naive-bayes.stan
 data {
   int<lower=1> K;

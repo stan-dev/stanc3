@@ -128,3 +128,5 @@ Warning: deprecated language construct used in 'leukfr.stan', line 56, column 25
 
 increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
+
+Warning: in 'leukfr.stan', line 56, column 27 to line 58, column 48: poisson_log is deprecated and will be removed in the future. Use poisson_lpmf instead.

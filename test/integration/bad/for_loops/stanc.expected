@@ -94,7 +94,7 @@ Semantic error in 'assign_to_loop_var7.stan', line 4, column 4 to column 8:
      6:  }
    -------------------------------------------------
 
-Only expressions of array, matrix, row_vector and vector type may be indexed. Instead, found type real.
+Too many indexes, expression dimensions=0, indexes found=1.
 
   $ ../../../../../install/default/bin/stanc for_statements_bad_indices0.stan
 
@@ -122,7 +122,7 @@ Semantic error in 'for_statements_bad_indices1.stan', line 5, column 20 to colum
      7:      return 0;
    -------------------------------------------------
 
-Only expressions of array, matrix, row_vector and vector type may be indexed. Instead, found type int.
+Too many indexes, expression dimensions=0, indexes found=1.
 
   $ ../../../../../install/default/bin/stanc for_statements_bad_indices2.stan
 
