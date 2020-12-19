@@ -13,10 +13,10 @@ parameters {
   matrix[d_row,d_col] p_matrix;
 }
 transformed parameters {
-  matrix[d_col,d_int] transformed_param_matrix;
+  matrix[d_col,d_row] transformed_param_matrix;
 
   transformed_param_matrix = generalized_inverse(d_matrix);
-  transformed_param_matrix = generalized_matrix(p_matrix);
+  transformed_param_matrix = generalized_inverse(p_matrix);
 }
 model {  
   y_p ~ normal(0,1);
