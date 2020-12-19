@@ -176,7 +176,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
           pos__ = (pos__ + 1);}
       }
       current_statement__ = 27;
-      profile profile_0__ = profile("tdata", profiles);
+      profile<local_scalar_t__> profile_0__ = profile<local_scalar_t__>(
+                                                "tdata", profiles);
       current_statement__ = 28;
       sum_y = std::numeric_limits<double>::quiet_NaN();
       
@@ -274,7 +275,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         
         {
           current_statement__ = 10;
-          profile profile_1__ = profile("cov_exp_quad", profiles);
+          profile<local_scalar_t__> profile_1__ = profile<local_scalar_t__>(
+                                                    "cov_exp_quad", profiles);
           current_statement__ = 11;
           assign(cov, nil_index_list(),
             add(gp_exp_quad_cov(x, alpha, rho),
@@ -282,14 +284,18 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         }
         {
           current_statement__ = 13;
-          profile profile_2__ = profile("cholesky_decompose", profiles);
+          profile<local_scalar_t__> profile_2__ = profile<local_scalar_t__>(
+                                                    "cholesky_decompose",
+                                                    profiles);
           current_statement__ = 14;
           assign(L_cov, nil_index_list(), cholesky_decompose(cov),
             "assigning variable L_cov");
         }
         {
           current_statement__ = 16;
-          profile profile_3__ = profile("multi_normal_cholesky", profiles);
+          profile<local_scalar_t__> profile_3__ = profile<local_scalar_t__>(
+                                                    "multi_normal_cholesky",
+                                                    profiles);
           current_statement__ = 17;
           lp_accum__.add(gamma_lpdf<propto__>(rho, 25, 4));
           current_statement__ = 18;

@@ -160,12 +160,12 @@ let rec pp_statement (ppf : Format.formatter)
     when fname = Internal_fun.to_string FnProfile ->
       profile_counter := !profile_counter + 1 ;
       pf ppf "@[<hov 4>%a = %a;@]" pp_indexed_simple
-        ("profile " ^ "profile_" ^ string_of_int !profile_counter ^ "__", [])
+        ("profile<local_scalar_t__> profile_" ^ string_of_int !profile_counter ^ "__", [])
         pp_expr
         { pattern=
             FunApp
               ( CompilerInternal
-              , "profile"
+              , "profile<local_scalar_t__>"
               , args
                 @ [ Expr.Fixed.
                       { pattern= Lit (Int, "profiles")
