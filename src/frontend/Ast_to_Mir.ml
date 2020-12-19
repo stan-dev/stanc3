@@ -678,7 +678,9 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
               ; fdname= implname
               ; fdcaptures=
                   Some
-                    (List.map ~f:(fun (ad, ty, id) -> (ad, id, ty)) captures)
+                    (List.map
+                       ~f:(fun (ref, ad, ty, id) -> (ref, ad, id, ty))
+                       captures)
               ; fdargs= List.map ~f:trans_arg arguments
               ; fdbody=
                   trans_stmt ud_dists
@@ -690,7 +692,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       let type_ = UnsizedType.UFun (arguments, returntype, true) in
       let captures =
         List.map
-          ~f:(fun (adlevel, type_, id) ->
+          ~f:(fun (_, adlevel, type_, id) ->
             Expr.
               { Fixed.pattern= Var id
               ; meta= Typed.Meta.{adlevel; type_; loc= mloc} } )

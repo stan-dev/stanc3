@@ -74,6 +74,15 @@ let calculate_autodifftype cf at ut =
       UnsizedType.AutoDiffable
   | _ -> DataOnly
 
+let calculate_capturetype cf at ut =
+  if UnsizedType.is_scalar_type ut || UnsizedType.is_fun_type ut then
+    UnsizedType.Copy
+  else
+    match at with
+    | (Data | TData) when cf.current_block <> Functions -> Ref
+    | GQuant -> Ref
+    | _ -> Copy
+
 let has_int_type ue = ue.emeta.type_ = UInt
 let has_int_array_type ue = ue.emeta.type_ = UArray UInt
 
@@ -1786,7 +1795,8 @@ and semantic_check_fundef ~loc ~cf ~is_closure return_ty id args body =
                           | Some (block, type_) ->
                               Symbol_table.set_read_only vm name ;
                               Some
-                                ( calculate_autodifftype cf block type_
+                                ( calculate_capturetype cf block type_
+                                , calculate_autodifftype cf block type_
                                 , type_
                                 , name ) ) )
              else None

@@ -13,6 +13,8 @@ type t =
 
 and autodifftype = DataOnly | AutoDiffable
 
+and capturetype = Ref | Copy
+
 and returntype = Void | ReturnType of t [@@deriving compare, hash, sexp]
 
 let pp_autodifftype ppf = function

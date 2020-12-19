@@ -23,7 +23,11 @@ type fun_kind = StanLib | UserDefined | Closure
 
 type capture_info =
   string
-  * (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t * string) list
+  * ( Middle.UnsizedType.capturetype
+    * Middle.UnsizedType.autodifftype
+    * Middle.UnsizedType.t
+    * string )
+    list
 [@@deriving compare, sexp, hash]
 
 (** Expression shapes (used for both typed and untyped expressions, where we

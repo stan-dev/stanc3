@@ -964,9 +964,9 @@ class bar_L23C9_cfunctor__ {
   F0__ p;
   std::vector<F1__> pa;
   Eigen::Matrix<F2__, -1, 1> pv;
-  Eigen::Matrix<double, -1, 1> v;
+  const Eigen::Matrix<double, -1, 1>& v;
   double x;
-  std::vector<double> y;
+  const std::vector<double>& y;
   public:
   const size_t vars_count__;
   bar_L23C9_cfunctor__(const bar_L23C9_cfunctor__<F0__, F1__, F2__>&) = default ;
@@ -1021,9 +1021,9 @@ foo_L9C9_impl__(const T0__& v, const double& x, const std::vector<double>& y,
                 const T3__& z, const T4__& r, std::ostream* pstream__)  ;
 
 class foo_L9C9_cfunctor__ {
-  Eigen::Matrix<double, -1, 1> v;
+  const Eigen::Matrix<double, -1, 1>& v;
   double x;
-  std::vector<double> y;
+  const std::vector<double>& y;
   public:
   const size_t vars_count__;
   foo_L9C9_cfunctor__(const foo_L9C9_cfunctor__&) = default ;
