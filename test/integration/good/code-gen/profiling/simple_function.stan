@@ -3,7 +3,10 @@ data {
   real x[N];
   vector[N] y;
 }
-
+transformed data {
+   profile("tdata");
+   real sum_y = sum(y);
+}
 parameters {
   real<lower=0> rho;
   real<lower=0> alpha;

@@ -62,32 +62,34 @@ profile_map profiles;
 
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'simple_function.stan', line 8, column 2 to column 20)",
-                                                      " (in 'simple_function.stan', line 9, column 2 to column 22)",
-                                                      " (in 'simple_function.stan', line 10, column 2 to column 22)",
-                                                      " (in 'simple_function.stan', line 14, column 10 to column 11)",
-                                                      " (in 'simple_function.stan', line 14, column 13 to column 14)",
-                                                      " (in 'simple_function.stan', line 14, column 3 to column 20)",
-                                                      " (in 'simple_function.stan', line 15, column 10 to column 11)",
-                                                      " (in 'simple_function.stan', line 15, column 13 to column 14)",
-                                                      " (in 'simple_function.stan', line 15, column 3 to column 22)",
-                                                      " (in 'simple_function.stan', line 17, column 6 to column 30)",
-                                                      " (in 'simple_function.stan', line 18, column 6 to line 19, column 60)",
-                                                      " (in 'simple_function.stan', line 16, column 3 to line 20, column 4)",
-                                                      " (in 'simple_function.stan', line 22, column 6 to column 36)",
-                                                      " (in 'simple_function.stan', line 23, column 6 to column 38)",
-                                                      " (in 'simple_function.stan', line 21, column 3 to line 24, column 4)",
-                                                      " (in 'simple_function.stan', line 26, column 6 to column 39)",
-                                                      " (in 'simple_function.stan', line 27, column 6 to column 25)",
-                                                      " (in 'simple_function.stan', line 28, column 6 to column 27)",
-                                                      " (in 'simple_function.stan', line 29, column 6 to column 27)",
-                                                      " (in 'simple_function.stan', line 31, column 6 to column 57)",
-                                                      " (in 'simple_function.stan', line 25, column 3 to line 32, column 4)",
+                                                      " (in 'simple_function.stan', line 11, column 2 to column 20)",
+                                                      " (in 'simple_function.stan', line 12, column 2 to column 22)",
+                                                      " (in 'simple_function.stan', line 13, column 2 to column 22)",
+                                                      " (in 'simple_function.stan', line 17, column 10 to column 11)",
+                                                      " (in 'simple_function.stan', line 17, column 13 to column 14)",
+                                                      " (in 'simple_function.stan', line 17, column 3 to column 20)",
+                                                      " (in 'simple_function.stan', line 18, column 10 to column 11)",
+                                                      " (in 'simple_function.stan', line 18, column 13 to column 14)",
+                                                      " (in 'simple_function.stan', line 18, column 3 to column 22)",
+                                                      " (in 'simple_function.stan', line 20, column 6 to column 30)",
+                                                      " (in 'simple_function.stan', line 21, column 6 to line 22, column 60)",
+                                                      " (in 'simple_function.stan', line 19, column 3 to line 23, column 4)",
+                                                      " (in 'simple_function.stan', line 25, column 6 to column 36)",
+                                                      " (in 'simple_function.stan', line 26, column 6 to column 38)",
+                                                      " (in 'simple_function.stan', line 24, column 3 to line 27, column 4)",
+                                                      " (in 'simple_function.stan', line 29, column 6 to column 39)",
+                                                      " (in 'simple_function.stan', line 30, column 6 to column 25)",
+                                                      " (in 'simple_function.stan', line 31, column 6 to column 27)",
+                                                      " (in 'simple_function.stan', line 32, column 6 to column 27)",
+                                                      " (in 'simple_function.stan', line 34, column 6 to column 57)",
+                                                      " (in 'simple_function.stan', line 28, column 3 to line 35, column 4)",
                                                       " (in 'simple_function.stan', line 2, column 2 to column 17)",
                                                       " (in 'simple_function.stan', line 3, column 9 to column 10)",
                                                       " (in 'simple_function.stan', line 3, column 2 to column 12)",
                                                       " (in 'simple_function.stan', line 4, column 9 to column 10)",
-                                                      " (in 'simple_function.stan', line 4, column 2 to column 14)"};
+                                                      " (in 'simple_function.stan', line 4, column 2 to column 14)",
+                                                      " (in 'simple_function.stan', line 7, column 3 to column 20)",
+                                                      " (in 'simple_function.stan', line 8, column 3 to column 23)"};
 
 
 
@@ -97,6 +99,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
   int N;
   std::vector<double> x;
   Eigen::Matrix<double, -1, 1> y;
+  double sum_y;
   
  public:
   ~simple_function_model() { }
@@ -172,6 +175,13 @@ class simple_function_model final : public model_base_crtp<simple_function_model
           current_statement__ = 26;
           pos__ = (pos__ + 1);}
       }
+      current_statement__ = 27;
+      profile profile_0__ = profile("tdata", profiles);
+      current_statement__ = 28;
+      sum_y = std::numeric_limits<double>::quiet_NaN();
+      
+      current_statement__ = 28;
+      sum_y = sum(y);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -264,7 +274,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         
         {
           current_statement__ = 10;
-          profile profile_0__ = profile("cov_exp_quad", profiles);
+          profile profile_1__ = profile("cov_exp_quad", profiles);
           current_statement__ = 11;
           assign(cov, nil_index_list(),
             add(gp_exp_quad_cov(x, alpha, rho),
@@ -272,14 +282,14 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         }
         {
           current_statement__ = 13;
-          profile profile_1__ = profile("cholesky_decompose", profiles);
+          profile profile_2__ = profile("cholesky_decompose", profiles);
           current_statement__ = 14;
           assign(L_cov, nil_index_list(), cholesky_decompose(cov),
             "assigning variable L_cov");
         }
         {
           current_statement__ = 16;
-          profile profile_2__ = profile("multi_normal_cholesky", profiles);
+          profile profile_3__ = profile("multi_normal_cholesky", profiles);
           current_statement__ = 17;
           lp_accum__.add(gamma_lpdf<propto__>(rho, 25, 4));
           current_statement__ = 18;
