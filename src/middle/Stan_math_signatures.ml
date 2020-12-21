@@ -882,6 +882,7 @@ let () =
   add_nullary "e" ;
   add_unqualified ("eigenvalues_sym", ReturnType UVector, [UMatrix]) ;
   add_unqualified ("eigenvectors_sym", ReturnType UMatrix, [UMatrix]) ;
+  add_unqualified ("generalized_inverse", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified ("qr_Q", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified ("qr_R", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified ("qr_thin_Q", ReturnType UMatrix, [UMatrix]) ;
