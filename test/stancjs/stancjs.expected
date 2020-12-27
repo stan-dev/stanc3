@@ -66,4 +66,4 @@ $ node warnings.js
     'Comments beginning with # are deprecated. Please use // in place of # for line comments.\n' +
     '\n'
 ]
-5  warnings not printed.
+5  warnings ignored.
