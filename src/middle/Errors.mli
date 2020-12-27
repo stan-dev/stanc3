@@ -5,7 +5,6 @@ type syntax_error =
   | Lexing of string * Location.t
   | Include of string * Location.t
   | Parsing of string * Location_span.t
-[@@deriving map]
 
 (** Exception for Syntax Errors *)
 exception SyntaxError of syntax_error
@@ -17,6 +16,7 @@ exception SemanticError of Semantic_error.t
 type t = Syntax_error of syntax_error | Semantic_error of Semantic_error.t
 
 val pp : ?printed_filename:string -> t Fmt.t
+val to_string : t -> string
 
 (** Exception for Fatal Errors. These should perhaps be left unhandled,
     so we can trace their origin. *)

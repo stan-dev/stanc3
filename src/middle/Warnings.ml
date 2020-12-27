@@ -19,8 +19,11 @@ let deprecated token (pos, message) =
   warnings := (span, message) :: !warnings
 
 let pp ?printed_filename ppf (span, message) =
-  Fmt.pf ppf "@[<hov 2>Warning in %s: %s@]"
-    (Location.to_string ?printed_filename span.Location_span.begin_loc)
-    message
+  let loc_str =
+    if span = Location_span.empty then ""
+    else " in " ^ Location.to_string ?printed_filename span.begin_loc
+  in
+  Fmt.pf ppf "@[<hov>Warning%s: %s@]" loc_str message
 
-let pp_warnings ?printed_filename = Fmt.(list ~sep:cut (pp ?printed_filename))
+let pp_warnings ?printed_filename ppf =
+  Fmt.(pf ppf "@[<v>%a@]" (list ~sep:cut (pp ?printed_filename)))

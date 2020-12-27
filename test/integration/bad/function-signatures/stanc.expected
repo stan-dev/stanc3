@@ -1,5 +1,4 @@
   $ ../../../../../install/default/bin/stanc falling_factorial.stan
-
 Semantic error in 'falling_factorial.stan', line 7, column 26 to column 59:
    -------------------------------------------------
      5:  transformed data {
@@ -106,9 +105,7 @@ Ill-typed arguments supplied to function 'falling_factorial'. Available signatur
 (real[,,,,,,,], int) => real[,,,,,,,]
 (real[,,,,,,,], int[,,,,,,,]) => real[,,,,,,,]
 Instead supplied arguments of incompatible type: real, real.
-
   $ ../../../../../install/default/bin/stanc rising_factorial.stan
-
 Semantic error in 'rising_factorial.stan', line 7, column 28 to column 60:
    -------------------------------------------------
      5:  transformed parameters {
@@ -214,4 +211,3 @@ Ill-typed arguments supplied to function 'rising_factorial'. Available signature
 (real[,,,,,,,], int) => real[,,,,,,,]
 (real[,,,,,,,], int[,,,,,,,]) => real[,,,,,,,]
 Instead supplied arguments of incompatible type: real, real.
-

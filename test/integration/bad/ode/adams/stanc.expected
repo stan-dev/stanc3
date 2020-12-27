@@ -1,5 +1,4 @@
   $ ../../../../../../install/default/bin/stanc bad_adams_control_function_return.stan
-
 Semantic error in 'bad_adams_control_function_return.stan', line 13, column 6 to line 15, column 35:
    -------------------------------------------------
     11:  model {
@@ -14,9 +13,7 @@ Ill-typed arguments supplied to function 'integrate_ode_adams'. Available signat
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real, real[], real, real[], real[], real[], int[], int, int, int.
-
   $ ../../../../../../install/default/bin/stanc bad_control_function_return.stan
-
 Semantic error in 'bad_control_function_return.stan', line 13, column 6 to line 15, column 35:
    -------------------------------------------------
     11:  model {
@@ -31,9 +28,7 @@ Ill-typed arguments supplied to function 'integrate_ode_adams'. Available signat
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real, real[], real, real[], real[], real[], int[], int, int, int.
-
   $ ../../../../../../install/default/bin/stanc bad_fun_type.stan
-
 Semantic error in 'bad_fun_type.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
     25:  transformed parameters {
@@ -48,9 +43,7 @@ Ill-typed arguments supplied to function 'integrate_ode_adams'. Available signat
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
 Instead supplied arguments of incompatible type: (real[], real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
-
   $ ../../../../../../install/default/bin/stanc bad_fun_type_control.stan
-
 Semantic error in 'bad_fun_type_control.stan', line 27, column 10 to line 33, column 43:
    -------------------------------------------------
     25:  transformed parameters {
@@ -65,9 +58,7 @@ Ill-typed arguments supplied to function 'integrate_ode_adams'. Available signat
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
 Instead supplied arguments of incompatible type: (real[], real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[], real, real, int.
-
   $ ../../../../../../install/default/bin/stanc bad_t_type.stan
-
 Semantic error in 'bad_t_type.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
     24:  transformed parameters {
@@ -82,9 +73,7 @@ Ill-typed arguments supplied to function 'integrate_ode_adams'. Available signat
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], matrix, real[], real[], real[], int[].
-
   $ ../../../../../../install/default/bin/stanc bad_t_type_control.stan
-
 Semantic error in 'bad_t_type_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
     24:  transformed parameters {
@@ -99,9 +88,7 @@ Ill-typed arguments supplied to function 'integrate_ode_adams'. Available signat
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], matrix, real[], real[], real[], int[], real, real, int.
-
   $ ../../../../../../install/default/bin/stanc bad_theta_type.stan
-
 Semantic error in 'bad_theta_type.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
     25:  transformed parameters {
@@ -116,9 +103,7 @@ Ill-typed arguments supplied to function 'integrate_ode_adams'. Available signat
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[,], real[], int[].
-
   $ ../../../../../../install/default/bin/stanc bad_theta_type_control.stan
-
 Semantic error in 'bad_theta_type_control.stan', line 27, column 10 to line 33, column 43:
    -------------------------------------------------
     25:  transformed parameters {
@@ -133,9 +118,7 @@ Ill-typed arguments supplied to function 'integrate_ode_adams'. Available signat
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[,], real[], int[], real, real, int.
-
   $ ../../../../../../install/default/bin/stanc bad_ts_type.stan
-
 Semantic error in 'bad_ts_type.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
     24:  transformed parameters {
@@ -150,9 +133,7 @@ Ill-typed arguments supplied to function 'integrate_ode_adams'. Available signat
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[,], real[], real[], int[].
-
   $ ../../../../../../install/default/bin/stanc bad_ts_type_control.stan
-
 Semantic error in 'bad_ts_type_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
     24:  transformed parameters {
@@ -167,9 +148,7 @@ Ill-typed arguments supplied to function 'integrate_ode_adams'. Available signat
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[,], real[], real[], int[], real, real, int.
-
   $ ../../../../../../install/default/bin/stanc bad_x_int_type.stan
-
 Semantic error in 'bad_x_int_type.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
     24:  transformed parameters {
@@ -184,9 +163,7 @@ Ill-typed arguments supplied to function 'integrate_ode_adams'. Available signat
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[,].
-
   $ ../../../../../../install/default/bin/stanc bad_x_int_type_control.stan
-
 Semantic error in 'bad_x_int_type_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
     24:  transformed parameters {
@@ -201,9 +178,7 @@ Ill-typed arguments supplied to function 'integrate_ode_adams'. Available signat
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[,], real, real, int.
-
   $ ../../../../../../install/default/bin/stanc bad_x_type.stan
-
 Semantic error in 'bad_x_type.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
     25:  transformed parameters {
@@ -218,9 +193,7 @@ Ill-typed arguments supplied to function 'integrate_ode_adams'. Available signat
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], vector[], int[].
-
   $ ../../../../../../install/default/bin/stanc bad_x_type_control.stan
-
 Semantic error in 'bad_x_type_control.stan', line 27, column 10 to line 33, column 43:
    -------------------------------------------------
     25:  transformed parameters {
@@ -235,9 +208,7 @@ Ill-typed arguments supplied to function 'integrate_ode_adams'. Available signat
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], vector[], int[], real, real, int.
-
   $ ../../../../../../install/default/bin/stanc bad_x_var_type.stan
-
 Semantic error in 'bad_x_var_type.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
     24:  transformed parameters {
@@ -252,9 +223,7 @@ Ill-typed arguments supplied to function 'integrate_ode_adams'. Available signat
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
-
   $ ../../../../../../install/default/bin/stanc bad_x_var_type_adams_control.stan
-
 Semantic error in 'bad_x_var_type_adams_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
     24:  transformed parameters {
@@ -269,9 +238,7 @@ Ill-typed arguments supplied to function 'integrate_ode_adams'. Available signat
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[], real, real, int.
-
   $ ../../../../../../install/default/bin/stanc bad_x_var_type_control.stan
-
 Semantic error in 'bad_x_var_type_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
     24:  transformed parameters {
@@ -286,9 +253,7 @@ Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatur
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[], real, real, int.
-
   $ ../../../../../../install/default/bin/stanc bad_y_type.stan
-
 Semantic error in 'bad_y_type.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
     24:  transformed parameters {
@@ -303,9 +268,7 @@ Ill-typed arguments supplied to function 'integrate_ode_adams'. Available signat
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[,], real, real[], real[], real[], int[].
-
   $ ../../../../../../install/default/bin/stanc bad_y_type_control.stan
-
 Semantic error in 'bad_y_type_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
     24:  transformed parameters {
@@ -320,4 +283,3 @@ Ill-typed arguments supplied to function 'integrate_ode_adams'. Available signat
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
 ((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
 Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[,], real, real[], real[], real[], int[], real, real, int.
-

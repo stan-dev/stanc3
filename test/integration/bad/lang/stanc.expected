@@ -1,5 +1,4 @@
   $ ../../../../../install/default/bin/stanc bad1.stan
-
 Syntax error in 'bad1.stan', line 1, column 8 to column 8, parsing error:
    -------------------------------------------------
      1:  model { 
@@ -7,10 +6,7 @@ Syntax error in 'bad1.stan', line 1, column 8 to column 8, parsing error:
    -------------------------------------------------
 
 Variable declaration, statement or "}" expected.
-
-
   $ ../../../../../install/default/bin/stanc bad10.stan
-
 Semantic error in 'bad10.stan', line 2, column 8 to column 11:
    -------------------------------------------------
      1:  data {
@@ -21,9 +17,7 @@ Semantic error in 'bad10.stan', line 2, column 8 to column 11:
    -------------------------------------------------
 
 Identifier 'y__' clashes with reserved keyword.
-
   $ ../../../../../install/default/bin/stanc bad11.stan
-
 Semantic error in 'bad11.stan', line 2, column 2 to column 12:
    -------------------------------------------------
      1:  parameters {
@@ -34,9 +28,7 @@ Semantic error in 'bad11.stan', line 2, column 2 to column 12:
    -------------------------------------------------
 
 (Transformed) Parameters cannot be integers.
-
   $ ../../../../../install/default/bin/stanc bad2.stan
-
 Semantic error in 'bad2.stan', line 1, column 28 to column 36:
    -------------------------------------------------
      1:  data { real a[3]; } model { a = 2.0; }
@@ -44,9 +36,7 @@ Semantic error in 'bad2.stan', line 1, column 28 to column 36:
    -------------------------------------------------
 
 Cannot assign to global variable 'a' declared in previous blocks.
-
   $ ../../../../../install/default/bin/stanc bad3.stan
-
 Syntax error in 'bad3.stan', line 1, column 21 to column 22, parsing error:
    -------------------------------------------------
      1:  data { real a; matrix(2,3) b; } model { a = b; }
@@ -54,10 +44,7 @@ Syntax error in 'bad3.stan', line 1, column 21 to column 22, parsing error:
    -------------------------------------------------
 
 Expected "[" expression "," expression "]" for sizes of matrix.
-
-
   $ ../../../../../install/default/bin/stanc bad4.stan
-
 Semantic error in 'bad4.stan', line 1, column 38 to column 42:
    -------------------------------------------------
      1:  data { real a[5]; } model { for (n in a[1]:5) a[n] = n; }
@@ -65,9 +52,7 @@ Semantic error in 'bad4.stan', line 1, column 38 to column 42:
    -------------------------------------------------
 
 Lower bound of for-loop must be of type int. Instead found type real.
-
   $ ../../../../../install/default/bin/stanc bad5.stan
-
 Semantic error in 'bad5.stan', line 3, column 6 to column 10:
    -------------------------------------------------
      1:  transformed data {
@@ -79,9 +64,7 @@ Semantic error in 'bad5.stan', line 3, column 6 to column 10:
    -------------------------------------------------
 
 Identifier 'lp__' clashes with reserved keyword.
-
   $ ../../../../../install/default/bin/stanc bad6.stan
-
 Semantic error in 'bad6.stan', line 7, column 3 to column 12:
    -------------------------------------------------
      5:     real z;
@@ -93,9 +76,7 @@ Semantic error in 'bad6.stan', line 7, column 3 to column 12:
    -------------------------------------------------
 
 Cannot assign to global variable 'y' declared in previous blocks.
-
   $ ../../../../../install/default/bin/stanc bad7.stan
-
 Semantic error in 'bad7.stan', line 7, column 2 to column 11:
    -------------------------------------------------
      5:    real z;
@@ -107,9 +88,7 @@ Semantic error in 'bad7.stan', line 7, column 2 to column 11:
    -------------------------------------------------
 
 Cannot assign to global variable 'y' declared in previous blocks.
-
   $ ../../../../../install/default/bin/stanc bad8.stan
-
 Semantic error in 'bad8.stan', line 5, column 4 to column 13:
    -------------------------------------------------
      3:  }
@@ -120,9 +99,7 @@ Semantic error in 'bad8.stan', line 5, column 4 to column 13:
    -------------------------------------------------
 
 Cannot assign to global variable 'y' declared in previous blocks.
-
   $ ../../../../../install/default/bin/stanc bad9.stan
-
 Semantic error in 'bad9.stan', line 5, column 3 to column 9:
    -------------------------------------------------
      3:  }
@@ -134,9 +111,7 @@ Semantic error in 'bad9.stan', line 5, column 3 to column 9:
    -------------------------------------------------
 
 (Transformed) Parameters cannot be integers.
-
   $ ../../../../../install/default/bin/stanc bad_bounds1.stan
-
 Syntax error in 'bad_bounds1.stan', line 2, column 15 to column 17, parsing error:
    -------------------------------------------------
      1:  data {
@@ -147,10 +122,7 @@ Syntax error in 'bad_bounds1.stan', line 2, column 15 to column 17, parsing erro
    -------------------------------------------------
 
 ">" or ", upper = expression (not containing binary logical operators) ">" expected after specifying lower bound for type.
-
-
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_arr_rvec_data.stan
-
 Semantic error in 'bad_cov_exp_quad_arr_rvec_data.stan', line 13, column 41 to column 48:
    -------------------------------------------------
     11:    matrix[N_2, N_1] transformed_data_matrix;
@@ -162,9 +134,7 @@ Semantic error in 'bad_cov_exp_quad_arr_rvec_data.stan', line 13, column 41 to c
    -------------------------------------------------
 
 Identifier 'd_arr_2' not in scope.
-
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_arr_rvec_param.stan
-
 Syntax error in 'bad_cov_exp_quad_arr_rvec_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
     15:    transformed_param_matrix = cov_exp_quad(d_arr_2, d_vec_1, d_sigma, d_len);
@@ -176,10 +146,7 @@ Syntax error in 'bad_cov_exp_quad_arr_rvec_param.stan', line 17, column 0 to col
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
-
-
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_arr_vec_data.stan
-
 Semantic error in 'bad_cov_exp_quad_arr_vec_data.stan', line 13, column 41 to column 48:
    -------------------------------------------------
     11:    matrix[N_2, N_1] transformed_data_matrix;
@@ -191,9 +158,7 @@ Semantic error in 'bad_cov_exp_quad_arr_vec_data.stan', line 13, column 41 to co
    -------------------------------------------------
 
 Identifier 'd_arr_2' not in scope.
-
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_arr_vec_param.stan
-
 Syntax error in 'bad_cov_exp_quad_arr_vec_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
     15:    transformed_params_matrix = cov_exp_quad(d_arr_2, d_vec_1, d_sigma, d_len);
@@ -205,10 +170,7 @@ Syntax error in 'bad_cov_exp_quad_arr_vec_param.stan', line 17, column 0 to colu
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
-
-
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_len_data.stan
-
 Semantic error in 'bad_cov_exp_quad_len_data.stan', line 13, column 28 to column 75:
    -------------------------------------------------
     11:    matrix[N_1, N_2] transformed_data_matrix;
@@ -227,9 +189,7 @@ Ill-typed arguments supplied to function 'cov_exp_quad'. Available signatures:
 (row_vector[], real, real) => matrix
 (row_vector[], row_vector[], real, real) => matrix
 Instead supplied arguments of incompatible type: vector[], vector[], real, real[].
-
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_len_param.stan
-
 Syntax error in 'bad_cov_exp_quad_len_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
     15:    transformed_param_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
@@ -241,10 +201,7 @@ Syntax error in 'bad_cov_exp_quad_len_param.stan', line 17, column 0 to column 1
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
-
-
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_len_rvec_param.stan
-
 Syntax error in 'bad_cov_exp_quad_len_rvec_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
     15:    transformed_param_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
@@ -256,10 +213,7 @@ Syntax error in 'bad_cov_exp_quad_len_rvec_param.stan', line 17, column 0 to col
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
-
-
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_len_vec_param.stan
-
 Syntax error in 'bad_cov_exp_quad_len_vec_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
     15:    transformed_param_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
@@ -271,10 +225,7 @@ Syntax error in 'bad_cov_exp_quad_len_vec_param.stan', line 17, column 0 to colu
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
-
-
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_arr_data.stan
-
 Semantic error in 'bad_cov_exp_quad_rvec_arr_data.stan', line 13, column 50 to column 57:
    -------------------------------------------------
     11:    matrix[N_1, N_2] transformed_data_matrix;
@@ -286,9 +237,7 @@ Semantic error in 'bad_cov_exp_quad_rvec_arr_data.stan', line 13, column 50 to c
    -------------------------------------------------
 
 Identifier 'd_arr_2' not in scope.
-
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_arr_param.stan
-
 Syntax error in 'bad_cov_exp_quad_rvec_arr_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
     15:    transformed_params_matrix = cov_exp_quad(d_vec_1, d_arr_2, d_sigma, d_len);
@@ -300,10 +249,7 @@ Syntax error in 'bad_cov_exp_quad_rvec_arr_param.stan', line 17, column 0 to col
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
-
-
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_data.stan
-
 Semantic error in 'bad_cov_exp_quad_rvec_data.stan', line 12, column 28 to column 65:
    -------------------------------------------------
     10:    matrix[N_2, N_1] transformed_data_matrix;
@@ -322,9 +268,7 @@ Ill-typed arguments supplied to function 'cov_exp_quad'. Available signatures:
 (row_vector[], real, real) => matrix
 (row_vector[], row_vector[], real, real) => matrix
 Instead supplied arguments of incompatible type: row_vector, real, real.
-
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_vec_data.stan
-
 Semantic error in 'bad_cov_exp_quad_rvec_vec_data.stan', line 13, column 28 to column 75:
    -------------------------------------------------
     11:    matrix[N_2, N_1] transformed_data_matrix;
@@ -343,9 +287,7 @@ Ill-typed arguments supplied to function 'cov_exp_quad'. Available signatures:
 (row_vector[], real, real) => matrix
 (row_vector[], row_vector[], real, real) => matrix
 Instead supplied arguments of incompatible type: row_vector[], vector[], real, real.
-
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_vec_param.stan
-
 Syntax error in 'bad_cov_exp_quad_rvec_vec_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
     15:    transformed_params_matrix = cov_exp_quad(d_rvec_1, d_vec_1, d_sigma, d_len);
@@ -357,10 +299,7 @@ Syntax error in 'bad_cov_exp_quad_rvec_vec_param.stan', line 17, column 0 to col
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
-
-
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_sigma_data.stan
-
 Semantic error in 'bad_cov_exp_quad_sigma_data.stan', line 13, column 28 to column 75:
    -------------------------------------------------
     11:    matrix[N_1, N_2] transformed_data_matrix;
@@ -379,9 +318,7 @@ Ill-typed arguments supplied to function 'cov_exp_quad'. Available signatures:
 (row_vector[], real, real) => matrix
 (row_vector[], row_vector[], real, real) => matrix
 Instead supplied arguments of incompatible type: vector[], vector[], real[], real.
-
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_sigma_param.stan
-
 Syntax error in 'bad_cov_exp_quad_sigma_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
     15:    transformed_param_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
@@ -393,10 +330,7 @@ Syntax error in 'bad_cov_exp_quad_sigma_param.stan', line 17, column 0 to column
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
-
-
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_sigma_rvec_param.stan
-
 Syntax error in 'bad_cov_exp_quad_sigma_rvec_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
     15:    transformed_param_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
@@ -408,10 +342,7 @@ Syntax error in 'bad_cov_exp_quad_sigma_rvec_param.stan', line 17, column 0 to c
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
-
-
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_sigma_vec_param.stan
-
 Syntax error in 'bad_cov_exp_quad_sigma_vec_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
     15:    transformed_param_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
@@ -423,10 +354,7 @@ Syntax error in 'bad_cov_exp_quad_sigma_vec_param.stan', line 17, column 0 to co
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
-
-
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_arr_data.stan
-
 Semantic error in 'bad_cov_exp_quad_vec_arr_data.stan', line 13, column 50 to column 57:
    -------------------------------------------------
     11:    matrix[N_1, N_2] transformed_data_matrix;
@@ -438,9 +366,7 @@ Semantic error in 'bad_cov_exp_quad_vec_arr_data.stan', line 13, column 50 to co
    -------------------------------------------------
 
 Identifier 'd_arr_2' not in scope.
-
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_arr_param.stan
-
 Syntax error in 'bad_cov_exp_quad_vec_arr_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
     15:    transformed_params_matrix = cov_exp_quad(d_vec_1, d_arr_2, d_sigma, d_len);
@@ -452,10 +378,7 @@ Syntax error in 'bad_cov_exp_quad_vec_arr_param.stan', line 17, column 0 to colu
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
-
-
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_data.stan
-
 Semantic error in 'bad_cov_exp_quad_vec_data.stan', line 12, column 28 to column 65:
    -------------------------------------------------
     10:    matrix[N_2, N_1] transformed_data_matrix;
@@ -474,9 +397,7 @@ Ill-typed arguments supplied to function 'cov_exp_quad'. Available signatures:
 (row_vector[], real, real) => matrix
 (row_vector[], row_vector[], real, real) => matrix
 Instead supplied arguments of incompatible type: vector, real, real.
-
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_rvec_data.stan
-
 Semantic error in 'bad_cov_exp_quad_vec_rvec_data.stan', line 13, column 28 to column 75:
    -------------------------------------------------
     11:    matrix[N_1, N_2] transformed_data_matrix;
@@ -495,9 +416,7 @@ Ill-typed arguments supplied to function 'cov_exp_quad'. Available signatures:
 (row_vector[], real, real) => matrix
 (row_vector[], row_vector[], real, real) => matrix
 Instead supplied arguments of incompatible type: vector[], row_vector[], real, real.
-
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_rvec_param.stan
-
 Syntax error in 'bad_cov_exp_quad_vec_rvec_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
     15:    transformed_params_matrix = cov_exp_quad(d_vec_1, d_rvec_1, d_sigma, d_len);
@@ -509,10 +428,7 @@ Syntax error in 'bad_cov_exp_quad_vec_rvec_param.stan', line 17, column 0 to col
    -------------------------------------------------
 
 "model {" or "generated quantities {" expected after end of transformed parameters block.
-
-
   $ ../../../../../install/default/bin/stanc bad_periods_data.stan
-
 Syntax error in 'bad_periods_data.stan', line 2, column 7, lexing error:
    -------------------------------------------------
      1:  data {
@@ -523,9 +439,7 @@ Syntax error in 'bad_periods_data.stan', line 2, column 7, lexing error:
    -------------------------------------------------
 
 Invalid character found.
-
   $ ../../../../../install/default/bin/stanc bad_periods_gqs.stan
-
 Syntax error in 'bad_periods_gqs.stan', line 8, column 7, lexing error:
    -------------------------------------------------
      6:  }
@@ -537,9 +451,7 @@ Syntax error in 'bad_periods_gqs.stan', line 8, column 7, lexing error:
    -------------------------------------------------
 
 Invalid character found.
-
   $ ../../../../../install/default/bin/stanc bad_periods_local.stan
-
 Syntax error in 'bad_periods_local.stan', line 5, column 7, lexing error:
    -------------------------------------------------
      3:  }
@@ -551,9 +463,7 @@ Syntax error in 'bad_periods_local.stan', line 5, column 7, lexing error:
    -------------------------------------------------
 
 Invalid character found.
-
   $ ../../../../../install/default/bin/stanc bad_periods_params.stan
-
 Syntax error in 'bad_periods_params.stan', line 2, column 7, lexing error:
    -------------------------------------------------
      1:  parameters {
@@ -564,9 +474,7 @@ Syntax error in 'bad_periods_params.stan', line 2, column 7, lexing error:
    -------------------------------------------------
 
 Invalid character found.
-
   $ ../../../../../install/default/bin/stanc bad_periods_tdata.stan
-
 Syntax error in 'bad_periods_tdata.stan', line 2, column 7, lexing error:
    -------------------------------------------------
      1:  transformed data {
@@ -577,9 +485,7 @@ Syntax error in 'bad_periods_tdata.stan', line 2, column 7, lexing error:
    -------------------------------------------------
 
 Invalid character found.
-
   $ ../../../../../install/default/bin/stanc bad_periods_tparams.stan
-
 Syntax error in 'bad_periods_tparams.stan', line 2, column 7, lexing error:
    -------------------------------------------------
      1:  transformed parameters {
@@ -590,14 +496,11 @@ Syntax error in 'bad_periods_tparams.stan', line 2, column 7, lexing error:
    -------------------------------------------------
 
 Invalid character found.
-
   $ ../../../../../install/default/bin/stanc good_all.stan
 Warning in 'good_all.stan', line 1, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
 Warning in 'good_all.stan', line 2, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
 Warning in 'good_all.stan', line 3, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
-Warning in 'good_all.stan', line 4, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
-Semantic error in 'good_all.stan', line 25, column 2 to column 8:
+Warning in 'good_all.stan', line 4, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.Semantic error in 'good_all.stan', line 25, column 2 to column 8:
    -------------------------------------------------
     23:  
     24:  model {
@@ -608,9 +511,7 @@ Semantic error in 'good_all.stan', line 25, column 2 to column 8:
    -------------------------------------------------
 
 Cannot assign to global variable 'm' declared in previous blocks.
-
   $ ../../../../../install/default/bin/stanc incomplete.stan
-
 Syntax error in 'incomplete.stan', line 2, column 18 to column 19, parsing error:
    -------------------------------------------------
      1:  transformed data {
@@ -620,10 +521,7 @@ Syntax error in 'incomplete.stan', line 2, column 18 to column 19, parsing error
    -------------------------------------------------
 
 Found an incomplete binary expression - are you missing the right hand side?
-
-
   $ ../../../../../install/default/bin/stanc incomplete2.stan
-
 Syntax error in 'incomplete2.stan', line 2, column 17 to column 22, parsing error:
    -------------------------------------------------
      1:  transformed data {
@@ -638,10 +536,7 @@ Or did you mean to use the preceding expression in:
 * a sampling statement
 * the conditional in a for, while, or if statement
 * assignment to a variable?
-
-
   $ ../../../../../install/default/bin/stanc incomplete3.stan
-
 Syntax error in 'incomplete3.stan', line 2, column 10 to column 15, parsing error:
    -------------------------------------------------
      1:  transformed data {
@@ -651,10 +546,7 @@ Syntax error in 'incomplete3.stan', line 2, column 10 to column 15, parsing erro
    -------------------------------------------------
 
 Ill-formed expression. Expected expression after expression followed by "%/%".
-
-
   $ ../../../../../install/default/bin/stanc incomplete4.stan
-
 Syntax error in 'incomplete4.stan', line 2, column 13 to column 14, parsing error:
    -------------------------------------------------
      1:  transformed data {
@@ -669,10 +561,7 @@ Or did you mean to use the preceding expression in:
 * a sampling statement
 * the conditional in a for, while, or if statement
 * assignment to a variable?
-
-
   $ ../../../../../install/default/bin/stanc incomplete5.stan
-
 Syntax error in 'incomplete5.stan', line 3, column 0 to column 0, parsing error:
    -------------------------------------------------
      1:  transformed data {
@@ -681,10 +570,7 @@ Syntax error in 'incomplete5.stan', line 3, column 0 to column 0, parsing error:
    -------------------------------------------------
 
 Ill-formed block. Expected a statement, variable declaration, or just "}".
-
-
   $ ../../../../../install/default/bin/stanc incomplete6.stan
-
 Syntax error in 'incomplete6.stan', line 3, column 16 to column 21, parsing error:
    -------------------------------------------------
      1:  transformed data {
@@ -698,5 +584,3 @@ Expected an expression inside "[" and "]" but found a statement. Indexing should
   var[1 + i]
 not
   var[for (n in 1:N) ...]
-
-

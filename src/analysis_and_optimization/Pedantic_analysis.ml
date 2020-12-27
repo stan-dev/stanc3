@@ -302,18 +302,6 @@ let list_unscaled_constants (distributions_list : dist_info Set.Poly.t) :
    Printing functions
  ********************)
 
-(* Fmt format for warnings, where the warning body comes after the
-   "Warning at <location>:" line and is indented by 2 spaces. *)
-let pp_warning_span ?printed_filename ppf (loc, msg) =
-  let loc_str =
-    if loc = Location_span.empty then ""
-    else " at " ^ Location.to_string ?printed_filename loc.begin_loc
-  in
-  Fmt.pf ppf "@[<hov 2>Warning%s: %a@]" loc_str Fmt.text msg
-
-let pp_warnings ?printed_filename ppf =
-  Fmt.(pf ppf "%a" (list ~sep:cut (pp_warning_span ?printed_filename)))
-
 let unscaled_constants_message (name : string) : string =
   Printf.sprintf
     "Argument %s suggests there may be parameters that are not unit scale; \

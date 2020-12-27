@@ -29,13 +29,7 @@ let stan2cpp model_name model_string is_flag_set =
       if is_flag_set "version" then
         r.return (Result.Ok (Fmt.strf "%s" version), [], []) ;
       let ast, warnings =
-        try
-          let res, warnings =
-            Parse.parse_string Parser.Incremental.program model_string
-          in
-          (Result.map_error res ~f:(fun e -> Errors.Syntax_error e), warnings)
-        with Errors.SyntaxError err ->
-          (Result.Error (Errors.Syntax_error err), [])
+        Parse.parse_string Parser.Incremental.program model_string
       in
       let open Result.Monad_infix in
       if is_flag_set "auto-format" then
@@ -130,7 +124,7 @@ let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) =
   in
   let pedantic_mode_warnings =
     List.map
-      ~f:(Fmt.strf "%a" (Pedantic_analysis.pp_warning_span ?printed_filename))
+      ~f:(Fmt.strf "%a" (Warnings.pp ?printed_filename))
       pedantic_mode_warnings
   in
   wrap_result result ~warnings:(warnings @ pedantic_mode_warnings)

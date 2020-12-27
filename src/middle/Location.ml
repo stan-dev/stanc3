@@ -34,11 +34,6 @@ let pp_context_exn ppf {filename; line_num; col_num; _} =
 let context_to_string file =
   try Some (Fmt.to_to_string pp_context_exn file) with _ -> None
 
-(** Return two lines before and after the specified location
-    and print a message *)
-let pp_with_message_exn ppf (message, loc) =
-  Fmt.pf ppf "%a\n%s\n\n" pp_context_exn loc message
-
 let empty = {filename= ""; line_num= 0; col_num= 0; included_from= None}
 
 (* If printed_filename is passed, it will replace the filename printed for

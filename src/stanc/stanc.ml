@@ -202,12 +202,12 @@ let use_file filename =
     if !dump_mir then
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.Program.Typed.t)] ;
     if !dump_mir_pretty then Program.Typed.pp Format.std_formatter mir ;
-    ( if !warn_pedantic then
-      Pedantic_analysis.(
-        warn_pedantic mir |> pp_stderr (pp_warnings ?printed_filename))
+    if !warn_pedantic then
+      Pedantic_analysis.warn_pedantic mir
+      |> pp_stderr (Warnings.pp_warnings ?printed_filename)
     else if !warn_uninitialized then
-      Pedantic_analysis.(
-        warn_uninitialized mir |> pp_stderr (pp_warnings ?printed_filename)) ) ;
+      Pedantic_analysis.warn_uninitialized mir
+      |> pp_stderr (Warnings.pp_warnings ?printed_filename) ;
     let tx_mir = Transform_Mir.trans_prog mir in
     if !dump_tx_mir then
       Sexp.pp_hum Format.std_formatter

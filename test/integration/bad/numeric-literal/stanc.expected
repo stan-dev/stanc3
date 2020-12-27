@@ -1,5 +1,4 @@
   $ ../../../../../install/default/bin/stanc int-bad1.stan
-
 Syntax error in 'int-bad1.stan', line 2, column 18 to column 19, parsing error:
    -------------------------------------------------
      1:  transformed data {
@@ -9,10 +8,7 @@ Syntax error in 'int-bad1.stan', line 2, column 18 to column 19, parsing error:
    -------------------------------------------------
 
 Ill-formed expression. Expression followed by ";" expected after "=".
-
-
   $ ../../../../../install/default/bin/stanc int-bad2.stan
-
 Syntax error in 'int-bad2.stan', line 2, column 14 to column 19, parsing error:
    -------------------------------------------------
      1:  transformed data {
@@ -22,10 +18,7 @@ Syntax error in 'int-bad2.stan', line 2, column 14 to column 19, parsing error:
    -------------------------------------------------
 
 Ill-formed expression. Expression followed by ";" expected after "=".
-
-
   $ ../../../../../install/default/bin/stanc int-bad3.stan
-
 Semantic error in 'int-bad3.stan', line 2, column 12 to column 26:
    -------------------------------------------------
      1:  transformed data {
@@ -35,9 +28,7 @@ Semantic error in 'int-bad3.stan', line 2, column 12 to column 26:
    -------------------------------------------------
 
 Integer literal cannot be larger than 2_147_483_647.
-
   $ ../../../../../install/default/bin/stanc int-bad4.stan
-
 Semantic error in 'int-bad4.stan', line 2, column 12 to column 25:
    -------------------------------------------------
      1:  transformed data {
@@ -47,9 +38,7 @@ Semantic error in 'int-bad4.stan', line 2, column 12 to column 25:
    -------------------------------------------------
 
 Integer literal cannot be larger than 2_147_483_647.
-
   $ ../../../../../install/default/bin/stanc int-bad6.stan
-
 Semantic error in 'int-bad6.stan', line 2, column 13 to column 23:
    -------------------------------------------------
      1:  transformed data {
@@ -59,9 +48,7 @@ Semantic error in 'int-bad6.stan', line 2, column 13 to column 23:
    -------------------------------------------------
 
 Integer literal cannot be larger than 2_147_483_647.
-
   $ ../../../../../install/default/bin/stanc real-bad1.stan
-
 Syntax error in 'real-bad1.stan', line 2, column 12, lexing error:
    -------------------------------------------------
      1:  transformed data {
@@ -71,9 +58,7 @@ Syntax error in 'real-bad1.stan', line 2, column 12, lexing error:
    -------------------------------------------------
 
 Invalid character found.
-
   $ ../../../../../install/default/bin/stanc real-bad2.stan
-
 Syntax error in 'real-bad2.stan', line 2, column 15 to column 16, parsing error:
    -------------------------------------------------
      1:  transformed data {
@@ -83,10 +68,7 @@ Syntax error in 'real-bad2.stan', line 2, column 15 to column 16, parsing error:
    -------------------------------------------------
 
 Ill-formed expression. Expression followed by ";" expected after "=".
-
-
   $ ../../../../../install/default/bin/stanc real-bad3.stan
-
 Syntax error in 'real-bad3.stan', line 2, column 16 to column 20, parsing error:
    -------------------------------------------------
      1:  transformed data {
@@ -96,10 +78,7 @@ Syntax error in 'real-bad3.stan', line 2, column 16 to column 20, parsing error:
    -------------------------------------------------
 
 Ill-formed expression. Expression followed by ";" expected after "=".
-
-
   $ ../../../../../install/default/bin/stanc real-bad4.stan
-
 Syntax error in 'real-bad4.stan', line 2, column 19 to column 20, parsing error:
    -------------------------------------------------
      1:  transformed data {
@@ -109,10 +88,7 @@ Syntax error in 'real-bad4.stan', line 2, column 19 to column 20, parsing error:
    -------------------------------------------------
 
 Ill-formed expression. Expression followed by ";" expected after "=".
-
-
   $ ../../../../../install/default/bin/stanc real-bad5.stan
-
 Syntax error in 'real-bad5.stan', line 2, column 17 to column 19, parsing error:
    -------------------------------------------------
      1:  transformed data {
@@ -122,10 +98,7 @@ Syntax error in 'real-bad5.stan', line 2, column 17 to column 19, parsing error:
    -------------------------------------------------
 
 Ill-formed expression. Expression followed by ";" expected after "=".
-
-
   $ ../../../../../install/default/bin/stanc real-bad6.stan
-
 Syntax error in 'real-bad6.stan', line 2, column 21 to column 22, parsing error:
    -------------------------------------------------
      1:  transformed data {
@@ -135,5 +108,3 @@ Syntax error in 'real-bad6.stan', line 2, column 21 to column 22, parsing error:
    -------------------------------------------------
 
 Ill-formed expression. Expression followed by ";" expected after "=".
-
-

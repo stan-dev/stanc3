@@ -6,30 +6,30 @@ module Semantic_error = Middle.Semantic_error
 let untyped_ast_of_string s =
   let res, warnings = Parse.parse_string Parser.Incremental.program s in
   Fmt.epr "%a" (Fmt.list ~sep:Fmt.nop Warnings.pp) warnings ;
-  Result.map_error res ~f:(Fmt.to_to_string Errors.pp_syntax_error)
+  res
 
 let typed_ast_of_string_exn s =
-  untyped_ast_of_string s |> Result.ok_or_failwith
-  |> Semantic_check.semantic_check_program
-  |> Result.map_error
-       ~f:(Fmt.to_to_string (Fmt.list ~sep:Fmt.cut Semantic_error.pp))
+  Result.(
+    untyped_ast_of_string s
+    >>= fun ast ->
+    Semantic_check.semantic_check_program ast
+    |> map_error ~f:(function
+         | err :: _ -> Errors.Semantic_error err
+         | _ ->
+             failwith
+               "Internal compiler error: no message from Semantic_check." ))
+  |> Result.map_error ~f:Errors.to_string
   |> Result.ok_or_failwith
 
 let get_ast_or_exit ?printed_filename ?(print_warnings = true) filename =
-  try
-    let res, warnings = Parse.parse_file Parser.Incremental.program filename in
-    if print_warnings then
-      Fmt.epr "%a"
-        (Fmt.list ~sep:Fmt.nop (Warnings.pp ?printed_filename))
-        warnings ;
-    match res with
-    | Result.Ok ast -> ast
-    | Result.Error err ->
-        Errors.pp_syntax_error Fmt.stderr err ;
-        exit 1
-  with Errors.SyntaxError err ->
-    Errors.pp_syntax_error Fmt.stderr err ;
-    exit 1
+  let res, warnings = Parse.parse_file Parser.Incremental.program filename in
+  if print_warnings then
+    Fmt.epr "%a"
+      (Fmt.list ~sep:Fmt.nop (Warnings.pp ?printed_filename))
+      warnings ;
+  match res with
+  | Result.Ok ast -> ast
+  | Result.Error err -> Errors.pp Fmt.stderr err ; exit 1
 
 let type_ast_or_exit ast =
   try
