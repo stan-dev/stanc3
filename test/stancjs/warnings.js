@@ -30,4 +30,3 @@ model {
 }
 `
 var test_no_stderr = stanc.stanc("no_stderr", test_no_stderr_model, ["warn-uninitialized"]);
-console.log(test_no_stderr.warnings.length, " warnings ignored.")
