@@ -11,7 +11,7 @@ model {
 }
 `
 var deprecated_test = stanc.stanc("deprecated", deprecated_model);
-console.log(deprecated_test.warnings)
+console.log(JSON.stringify(deprecated_test.warnings))
 
 var test_no_stderr_model = `
 transformed data {

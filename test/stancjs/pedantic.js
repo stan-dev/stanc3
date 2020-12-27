@@ -27,10 +27,10 @@ transformed data {
 `
 var warn_uninit_test = stanc.stanc("uninit", warn_uninit_model, ["warn-uninitialized"]);
 if (warn_uninit_test.warnings) {
-    console.log(warn_uninit_test.warnings)
+    console.log(JSON.stringify(warn_uninit_test.warnings))
 }
 
 var warn_uninit_test = stanc.stanc("uninit", warn_uninit_model);
 if (warn_uninit_test.warnings) {
-    console.log(warn_uninit_test.warnings)
+    console.log(JSON.stringify(warn_uninit_test.warnings))
 }
