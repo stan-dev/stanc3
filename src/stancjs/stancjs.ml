@@ -79,15 +79,15 @@ let stan2cpp model_name model_string flags =
         let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir in
         let uninit_warnings =
           if is_flag_set "warn-uninitialized" then
-            Pedantic_analysis.sprint_warn_uninitialized mir
-          else ""
+            [Pedantic_analysis.sprint_warn_uninitialized mir]
+          else []
         in
         let pedantic_warnings =
           if is_flag_set "warn-pedantic" then
-            Pedantic_analysis.sprint_warn_pedantic mir
-          else ""
+            [Pedantic_analysis.sprint_warn_pedantic mir]
+          else []
         in
-        (cpp, warnings @ [uninit_warnings; pedantic_warnings])
+        (cpp, warnings @ uninit_warnings @ pedantic_warnings )
       in
       match result with
       | Result.Ok (cpp, warnings) -> (Result.Ok cpp, warnings)
