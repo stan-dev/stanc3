@@ -32,82 +32,10 @@ generated quantities {
   beta <- exp(alpha);
 }
 
-
-Warning: deprecated language construct used in 'hearts.stan', line 19, column 9:
-   -------------------------------------------------
-    17:  transformed parameters {
-    18:    real<lower=0,upper=1> theta;
-    19:    theta <- inv_logit(delta); 
-                  ^
-    20:  } 
-    21:  model {
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'hearts.stan', line 24, column 5:
-   -------------------------------------------------
-    22:    real p; 
-    23:    real log1m_theta;
-    24:    p <- inv_logit(alpha); 
-              ^
-    25:    log1m_theta <- log1m(theta);
-    26:  
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'hearts.stan', line 25, column 15:
-   -------------------------------------------------
-    23:    real log1m_theta;
-    24:    p <- inv_logit(alpha); 
-    25:    log1m_theta <- log1m(theta);
-                        ^
-    26:  
-    27:    alpha ~ normal(0, 100);
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'hearts.stan', line 36, column 23:
-   -------------------------------------------------
-    34:  
-    35:      if (y[i] == 0)
-    36:        increment_log_prob(log(theta 
-                                ^
-    37:                               + (1 - theta) * pow(1 - p, t[i])));  
-    38:      else
-   -------------------------------------------------
-
-increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-
-
-Warning: deprecated language construct used in 'hearts.stan', line 39, column 23:
-   -------------------------------------------------
-    37:                               + (1 - theta) * pow(1 - p, t[i])));  
-    38:      else
-    39:        increment_log_prob(log1m_theta
-                                ^
-    40:                           + binomial_log(y[i], t[i], p));
-    41:    }
-   -------------------------------------------------
-
-increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-
-
-Warning: deprecated language construct used in 'hearts.stan', line 45, column 8:
-   -------------------------------------------------
-    43:  generated quantities {
-    44:    real beta;
-    45:    beta <- exp(alpha);
-                 ^
-    46:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: in 'hearts.stan', line 40, column 27 to column 54: binomial_log is deprecated and will be removed in the future. Use binomial_lpmf instead.
+Warning in 'hearts.stan', line 19, column 8: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'hearts.stan', line 24, column 4: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'hearts.stan', line 25, column 14: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'hearts.stan', line 36, column 6: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Warning in 'hearts.stan', line 39, column 6: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Warning in 'hearts.stan', line 45, column 7: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'hearts.stan', line 40, column 27: binomial_log is deprecated and will be removed in the future. Use binomial_lpmf instead.

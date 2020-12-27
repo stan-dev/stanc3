@@ -51,7 +51,7 @@ rule token = parse
                                   try_get_new_lexbuf fname lexbuf.lex_curr_p in
                                 token new_lexbuf }
   | "#"                       { lexer_logger "#comment" ;
-                                Warnings.deprecated
+                                Warnings.deprecated "#"
                                   (lexbuf.lex_curr_p, "Comments beginning with \
                                                        # are deprecated. \
                                                        Please use // in place \
@@ -154,14 +154,14 @@ rule token = parse
   | ".*="                     { lexer_logger ".*=" ; Parser.ELTTIMESASSIGN }
   | "./="                     { lexer_logger "./=" ; Parser.ELTDIVIDEASSIGN }
   | "<-"                      { lexer_logger "<-" ;
-                                Warnings.deprecated
+                                Warnings.deprecated "<-"
                                   (lexbuf.lex_curr_p, "assignment operator <- \
                                                        is deprecated in the \
                                                        Stan language; use = \
                                                        instead.") ;
                                 Parser.ARROWASSIGN } (* deprecated *)
   | "increment_log_prob"      { lexer_logger "increment_log_prob" ;
-                                Warnings.deprecated
+                                Warnings.deprecated "increment_log_prob"
                                   (lexbuf.lex_curr_p, "increment_log_prob(...)\
                                                        ; is deprecated and \
                                                        will be removed in the \
@@ -179,7 +179,7 @@ rule token = parse
                                 Parser.REALNUMERAL (lexeme lexbuf) }
   | "target"                  { lexer_logger "target" ; Parser.TARGET } (* NB: the stanc2 parser allows variables to be named target. I think it's a bad idea and have disallowed it. *)
   | "get_lp"                  { lexer_logger "get_lp" ;
-                                Warnings.deprecated
+                                Warnings.deprecated "get_lp"
                                   (lexbuf.lex_curr_p, "get_lp() function is \
                                                        deprecated. It will be \
                                                        removed in a future \

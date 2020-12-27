@@ -76,8 +76,7 @@ model {
   y ~ normal(f, sigma);
 }
 
-
-Warning: in 'gp-fit-latent.stan', line 22, column 21 to column 48: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning in 'gp-fit-latent.stan', line 22, column 21: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
   $ ../../../../../../install/default/bin/stanc --auto-format gp-fit-logit.stan
 data {
   int<lower=1> N;
@@ -110,8 +109,7 @@ model {
   z ~ bernoulli_logit(a + f);
 }
 
-
-Warning: in 'gp-fit-logit.stan', line 22, column 21 to column 48: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning in 'gp-fit-logit.stan', line 22, column 21: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
   $ ../../../../../../install/default/bin/stanc --auto-format gp-fit-multi-output.stan
 data {
   int<lower=1> N;
@@ -151,8 +149,7 @@ generated quantities {
   Omega = L_Omega * L_Omega';
 }
 
-
-Warning: in 'gp-fit-multi-output.stan', line 22, column 21 to column 46: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning in 'gp-fit-multi-output.stan', line 22, column 21: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
   $ ../../../../../../install/default/bin/stanc --auto-format gp-fit-pois.stan
 data {
   int<lower=1> N;
@@ -185,8 +182,7 @@ model {
   y ~ poisson_log(a + f);
 }
 
-
-Warning: in 'gp-fit-pois.stan', line 22, column 21 to column 48: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning in 'gp-fit-pois.stan', line 22, column 21: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
   $ ../../../../../../install/default/bin/stanc --auto-format gp-fit.stan
 data {
   int<lower=1> N;
@@ -214,8 +210,7 @@ model {
   y ~ multi_normal_cholesky(mu, L_K);
 }
 
-
-Warning: in 'gp-fit.stan', line 19, column 19 to column 46: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning in 'gp-fit.stan', line 19, column 19: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
   $ ../../../../../../install/default/bin/stanc --auto-format gp-predict-analytic.stan
 functions {
   vector gp_pred_rng(real[] x2, vector y1, real[] x1, real alpha, real rho,
@@ -285,14 +280,10 @@ generated quantities {
     y2[n2] = normal_rng(f2[n2], sigma);
 }
 
-
-Warning: in 'gp-predict-analytic.stan', line 24, column 12 to column 40: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
-
-Warning: in 'gp-predict-analytic.stan', line 29, column 18 to column 50: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
-
-Warning: in 'gp-predict-analytic.stan', line 32, column 17 to column 45: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
-
-Warning: in 'gp-predict-analytic.stan', line 59, column 23 to column 51: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning in 'gp-predict-analytic.stan', line 24, column 12: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning in 'gp-predict-analytic.stan', line 29, column 18: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning in 'gp-predict-analytic.stan', line 32, column 17: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning in 'gp-predict-analytic.stan', line 59, column 23: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
   $ ../../../../../../install/default/bin/stanc --auto-format gp-predict-logit.stan
 data {
   int<lower=1> N1;
@@ -340,8 +331,7 @@ generated quantities {
     z2[n2] = bernoulli_logit_rng(a + f[N1 + n2]);
 }
 
-
-Warning: in 'gp-predict-logit.stan', line 29, column 21 to column 48: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning in 'gp-predict-logit.stan', line 29, column 21: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
   $ ../../../../../../install/default/bin/stanc --auto-format gp-predict.stan
 data {
   int<lower=1> N1;
@@ -389,8 +379,7 @@ generated quantities {
     y2[n2] = normal_rng(f[N1 + n2], sigma);
 }
 
-
-Warning: in 'gp-predict.stan', line 29, column 21 to column 48: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning in 'gp-predict.stan', line 29, column 21: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
   $ ../../../../../../install/default/bin/stanc --auto-format gp-sim-cholesky.stan
 data {
   int<lower=1> N;
@@ -417,8 +406,7 @@ generated quantities {
   y = mu + L * eta;
 }
 
-
-Warning: in 'gp-sim-cholesky.stan', line 14, column 21 to column 46: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning in 'gp-sim-cholesky.stan', line 14, column 21: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
   $ ../../../../../../install/default/bin/stanc --auto-format gp-sim-multi-output.stan
 data {
   int<lower=1> N;
@@ -455,8 +443,7 @@ generated quantities {
   Omega = L_Omega * L_Omega';
 }
 
-
-Warning: in 'gp-sim-multi-output.stan', line 23, column 21 to column 46: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning in 'gp-sim-multi-output.stan', line 23, column 21: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
   $ ../../../../../../install/default/bin/stanc --auto-format gp-sim-multi.stan
 data {
   int<lower=1> N;
@@ -476,8 +463,7 @@ model {
   y ~ multi_normal(mu, K);
 }
 
-
-Warning: in 'gp-sim-multi.stan', line 11, column 19 to column 44: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning in 'gp-sim-multi.stan', line 11, column 19: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
   $ ../../../../../../install/default/bin/stanc --auto-format gp-sim-naive.stan
 data {
   int<lower=1> N;
@@ -520,5 +506,4 @@ model {
   y ~ multi_normal(mu, K);
 }
 
-
-Warning: in 'gp-sim.stan', line 10, column 19 to column 44: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning in 'gp-sim.stan', line 10, column 19: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.

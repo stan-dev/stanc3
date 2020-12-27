@@ -188,8 +188,7 @@ let use_file filename =
   let printed_filename =
     match !filename_for_msg with "" -> None | s -> Some s
   in
-  Fmt.(list ~sep:cut (Deprecation_analysis.pp ?printed_filename))
-    Fmt.stderr
+  Warnings.pp_warnings Fmt.stderr ?printed_filename
     (Deprecation_analysis.collect_warnings typed_ast) ;
   if !canonicalize_program then
     print_endline

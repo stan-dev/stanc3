@@ -211,18 +211,9 @@ Expected "functions {" or "data {" or "transformed data {" or "parameters {" or 
 
 
   $ ../../../../install/default/bin/stanc --include-paths="../included"  stanc_helper_with_bad_include_deprecated_warning.stan
-
-Warning: deprecated language construct used in '../included/dep-warning.stan', line 2, column 2, included from
+Warning in '../included/dep-warning.stan', line 2, column 2, included from
 '../included/incl_stanc_helper_deprecated_warning.stan', line 2, column 2, included from
-'stanc_helper_with_bad_include_deprecated_warning.stan', line 2, column 0:
-   -------------------------------------------------
-     1:    real z;
-     2:    # I am a deprecated comment.
-           ^
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
+'stanc_helper_with_bad_include_deprecated_warning.stan', line 2, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
   $ ../../../../install/default/bin/stanc --include-paths="../included"  stanc_helper_with_bad_include_error_spread_over_files.stan
 
 Semantic error in '../included/incl_stanc_helper_error_spread_over_files.stan', line 2, column 2, included from

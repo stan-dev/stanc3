@@ -33,19 +33,7 @@ model {
   k2 ~ binomial(n2, theta2);
 }
 
-
-Warning: deprecated language construct used in 'Rate_2.stan', line 14, column 9:
-   -------------------------------------------------
-    12:  transformed parameters {
-    13:    real<lower=-1,upper=1> delta;
-    14:    delta <- theta1 - theta2;
-                  ^
-    15:  }
-    16:  model {
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'Rate_2.stan', line 14, column 8: assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format Rate_3.stan
 data {
   int<lower=1> n1;
@@ -83,31 +71,8 @@ generated quantities {
   priorpredk <- binomial_rng(n, thetaprior);
 }
 
-
-Warning: deprecated language construct used in 'Rate_4.stan', line 22, column 13:
-   -------------------------------------------------
-    20:      
-    21:    // Posterior Predictive
-    22:    postpredk <- binomial_rng(n, theta);
-                      ^
-    23:    // Prior Predictive
-    24:    priorpredk <- binomial_rng(n, thetaprior);
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'Rate_4.stan', line 24, column 14:
-   -------------------------------------------------
-    22:    postpredk <- binomial_rng(n, theta);
-    23:    // Prior Predictive
-    24:    priorpredk <- binomial_rng(n, thetaprior);
-                       ^
-    25:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'Rate_4.stan', line 22, column 12: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'Rate_4.stan', line 24, column 13: assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format Rate_5.stan
 data {
   int<lower=1> n1;
@@ -130,31 +95,8 @@ generated quantities {
   postpredk2 <- binomial_rng(n2, theta);
 }
 
-
-Warning: deprecated language construct used in 'Rate_5.stan', line 24, column 14:
-   -------------------------------------------------
-    22:      
-    23:    // Posterior Predictive
-    24:    postpredk1 <- binomial_rng(n1, theta);
-                       ^
-    25:    postpredk2 <- binomial_rng(n2, theta);
-    26:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'Rate_5.stan', line 25, column 14:
-   -------------------------------------------------
-    23:    // Posterior Predictive
-    24:    postpredk1 <- binomial_rng(n1, theta);
-    25:    postpredk2 <- binomial_rng(n2, theta);
-                       ^
-    26:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'Rate_5.stan', line 24, column 13: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'Rate_5.stan', line 25, column 13: assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format Survey.stan
 data {
   int<lower=0> nmax;
@@ -186,82 +128,10 @@ generated quantities {
   n <- categorical_rng(prob_n);
 }
 
-
-Warning: deprecated language construct used in 'Survey.stan', line 19, column 8:
-   -------------------------------------------------
-    17:    int<lower=0> nmin;  // Minimal possible n
-    18:    
-    19:    nmin <- max(k);
-                 ^
-    20:  }
-    21:  parameters {
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'Survey.stan', line 30, column 19:
-   -------------------------------------------------
-    28:    for (n in 1:nmax)
-    29:      if (n < nmin)
-    30:        lp_parts[n] <- log(1.0 / nmax) + negative_infinity();  // Zero probability
-                            ^
-    31:      else
-    32:        lp_parts[n] <- log(1.0 / nmax) + binomial_log(k, n, theta); 
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'Survey.stan', line 32, column 19:
-   -------------------------------------------------
-    30:        lp_parts[n] <- log(1.0 / nmax) + negative_infinity();  // Zero probability
-    31:      else
-    32:        lp_parts[n] <- log(1.0 / nmax) + binomial_log(k, n, theta); 
-                            ^
-    33:  }
-    34:  model {
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'Survey.stan', line 36, column 19:
-   -------------------------------------------------
-    34:  model {
-    35:    // Second part of the trick for mixture model
-    36:    increment_log_prob(log_sum_exp(lp_parts));
-                            ^
-    37:  }
-    38:  generated quantities {
-   -------------------------------------------------
-
-increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-
-
-Warning: deprecated language construct used in 'Survey.stan', line 43, column 10:
-   -------------------------------------------------
-    41:    
-    42:    // Transforming lp_parts to probabilities of each n
-    43:    prob_n <- softmax(lp_parts);
-                   ^
-    44:    n <- categorical_rng(prob_n);
-    45:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'Survey.stan', line 44, column 5:
-   -------------------------------------------------
-    42:    // Transforming lp_parts to probabilities of each n
-    43:    prob_n <- softmax(lp_parts);
-    44:    n <- categorical_rng(prob_n);
-              ^
-    45:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: in 'Survey.stan', line 32, column 39 to column 64: binomial_log is deprecated and will be removed in the future. Use binomial_lpmf instead.
+Warning in 'Survey.stan', line 19, column 7: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'Survey.stan', line 30, column 18: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'Survey.stan', line 32, column 18: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'Survey.stan', line 36, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Warning in 'Survey.stan', line 43, column 9: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'Survey.stan', line 44, column 4: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'Survey.stan', line 32, column 39: binomial_log is deprecated and will be removed in the future. Use binomial_lpmf instead.

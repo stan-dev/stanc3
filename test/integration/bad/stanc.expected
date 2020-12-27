@@ -853,19 +853,7 @@ Expected ")" after test expression of conditional control flow construct.
 
 
   $ ../../../../install/default/bin/stanc err-incr-log-prob-scope.stan
-
-Warning: deprecated language construct used in 'err-incr-log-prob-scope.stan', line 4, column 19:
-   -------------------------------------------------
-     2:    real x;
-     3:    x = 2.0;
-     4:    increment_log_prob(x);
-                            ^
-     5:  }
-     6:  model {
-   -------------------------------------------------
-
-increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-
+Warning in 'err-incr-log-prob-scope.stan', line 4, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 Semantic error in 'err-incr-log-prob-scope.stan', line 4, column 2 to column 24:
    -------------------------------------------------
@@ -1194,19 +1182,7 @@ Semantic error in 'functions-bad11.stan', line 3, column 4 to column 20:
 Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
 
   $ ../../../../install/default/bin/stanc functions-bad12.stan
-
-Warning: deprecated language construct used in 'functions-bad12.stan', line 3, column 21:
-   -------------------------------------------------
-     1:  functions {
-     2:    void badlp(real x) {
-     3:      increment_log_prob(normal_log(x,0,1));
-                              ^
-     4:      return;
-     5:    }
-   -------------------------------------------------
-
-increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-
+Warning in 'functions-bad12.stan', line 3, column 4: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 Semantic error in 'functions-bad12.stan', line 3, column 4 to column 42:
    -------------------------------------------------
@@ -1249,31 +1225,8 @@ Semantic error in 'functions-bad14.stan', line 5, column 6 to column 9:
 Identifier 'abc' is already in use.
 
   $ ../../../../install/default/bin/stanc functions-bad15.stan
-
-Warning: deprecated language construct used in 'functions-bad15.stan', line 3, column 21:
-   -------------------------------------------------
-     1:  functions {
-     2:    void unit_normal_lp(real u) {
-     3:      increment_log_prob(normal_log(u,0,1));
-                              ^
-     4:    }
-     5:  }
-   -------------------------------------------------
-
-increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-
-
-Warning: deprecated language construct used in 'functions-bad15.stan', line 10, column 19:
-   -------------------------------------------------
-     8:  }
-     9:  model {
-    10:    increment_log_prob(unit_normal_lp(y));
-                            ^
-    11:  }
-   -------------------------------------------------
-
-increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-
+Warning in 'functions-bad15.stan', line 3, column 4: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Warning in 'functions-bad15.stan', line 10, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 Semantic error in 'functions-bad15.stan', line 10, column 21 to column 38:
    -------------------------------------------------
@@ -1539,19 +1492,7 @@ Semantic error in 'get-lp-target-data.stan', line 2, column 19 to column 27:
 Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
 
   $ ../../../../install/default/bin/stanc get_lp_bad_scope1.stan
-
-Warning: deprecated language construct used in 'get_lp_bad_scope1.stan', line 3, column 11:
-   -------------------------------------------------
-     1:  transformed data {
-     2:    real y;
-     3:    y = get_lp();
-                    ^
-     4:  }
-     5:  parameters {
-   -------------------------------------------------
-
-get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
-
+Warning in 'get_lp_bad_scope1.stan', line 3, column 6: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 
 Semantic error in 'get_lp_bad_scope1.stan', line 3, column 6 to column 14:
    -------------------------------------------------
@@ -1566,19 +1507,7 @@ Semantic error in 'get_lp_bad_scope1.stan', line 3, column 6 to column 14:
 Target can only be accessed in the model block or in definitions of functions with the suffix _lp.
 
   $ ../../../../install/default/bin/stanc get_lp_bad_scope2.stan
-
-Warning: deprecated language construct used in 'get_lp_bad_scope2.stan', line 3, column 20:
-   -------------------------------------------------
-     1:  functions {
-     2:    real foo(real x) {
-     3:      return x + get_lp();
-                             ^
-     4:    }
-     5:  }
-   -------------------------------------------------
-
-get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
-
+Warning in 'get_lp_bad_scope2.stan', line 3, column 15: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 
 Semantic error in 'get_lp_bad_scope2.stan', line 3, column 15 to column 23:
    -------------------------------------------------
@@ -2484,18 +2413,7 @@ Semantic error in 'row_vector_expr_bad2.stan', line 5, column 25 to column 26:
 Row_vector expression must have all int or real entries. Found type row_vector.
 
   $ ../../../../install/default/bin/stanc signature_function_known.stan
-
-Warning: deprecated language construct used in 'signature_function_known.stan', line 8, column 19:
-   -------------------------------------------------
-     6:  }
-     7:  model {
-     8:    increment_log_prob(bernoulli_logit_log(x, theta));
-                            ^
-     9:  }
-   -------------------------------------------------
-
-increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-
+Warning in 'signature_function_known.stan', line 8, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 Semantic error in 'signature_function_known.stan', line 8, column 21 to column 50:
    -------------------------------------------------
@@ -2518,18 +2436,7 @@ Ill-typed arguments supplied to function 'bernoulli_logit_log'. Available signat
 Instead supplied arguments of incompatible type: vector, vector.
 
   $ ../../../../install/default/bin/stanc signature_function_unknown.stan
-
-Warning: deprecated language construct used in 'signature_function_unknown.stan', line 8, column 19:
-   -------------------------------------------------
-     6:  }
-     7:  model {
-     8:    increment_log_prob(foo_whatev_log(x, theta));
-                            ^
-     9:  }
-   -------------------------------------------------
-
-increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-
+Warning in 'signature_function_unknown.stan', line 8, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 
 Semantic error in 'signature_function_unknown.stan', line 8, column 21 to column 45:
    -------------------------------------------------

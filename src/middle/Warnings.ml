@@ -1,29 +1,26 @@
 open! Core_kernel
 
-type t = Location.t * string
+type t = Location_span.t * string
 
 let warnings = ref []
 let init () = warnings := []
 let collect () = List.rev !warnings
 
-let deprecated (pos, message) =
-  let loc =
-    Location.of_position_opt {pos with Lexing.pos_cnum= pos.Lexing.pos_cnum - 1}
-    |> Option.value ~default:Location.empty
+let deprecated token (pos, message) =
+  (* TODO(seantalts): should we only print deprecation warnings once per token? *)
+  let begin_pos =
+    {pos with Lexing.pos_cnum= pos.Lexing.pos_cnum - String.length token}
   in
-  warnings := (loc, message) :: !warnings
+  let end_pos = {begin_pos with Lexing.pos_cnum= pos.pos_cnum - 1} in
+  let span =
+    Location_span.of_positions_opt begin_pos end_pos
+    |> Option.value ~default:Location_span.empty
+  in
+  warnings := (span, message) :: !warnings
 
-(** Return two lines before and after the specified location
-    and print a message *)
-let pp_context_and_message ppf (message, loc) =
-  Fmt.pf ppf "@[<v>%a@,%s@,@]" (Fmt.option Fmt.string)
-    (Location.context_to_string loc)
+let pp ?printed_filename ppf (span, message) =
+  Fmt.pf ppf "@[<hov 2>Warning in %s: %s@]"
+    (Location.to_string ?printed_filename span.Location_span.begin_loc)
     message
 
-let pp ?printed_filename ppf (loc, message) =
-  Fmt.pf ppf
-    "@[<v>@,Warning: deprecated language construct used in %s:@,%a@]@."
-    (Location.to_string ?printed_filename loc)
-    pp_context_and_message (message, loc)
-
-let pp_warnings ?printed_filename = Fmt.(list ~sep:nop (pp ?printed_filename))
+let pp_warnings ?printed_filename = Fmt.(list ~sep:cut (pp ?printed_filename))

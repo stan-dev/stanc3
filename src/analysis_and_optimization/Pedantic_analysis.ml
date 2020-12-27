@@ -307,9 +307,9 @@ let list_unscaled_constants (distributions_list : dist_info Set.Poly.t) :
 let pp_warning_span ?printed_filename ppf (loc, msg) =
   let loc_str =
     if loc = Location_span.empty then ""
-    else " at " ^ Location_span.to_string ?printed_filename loc
+    else " at " ^ Location.to_string ?printed_filename loc.begin_loc
   in
-  Fmt.pf ppf "Warning%s:@.@[<hov 2>  %a@]" loc_str Fmt.text msg
+  Fmt.pf ppf "@[<hov 2>Warning%s: %a@]" loc_str Fmt.text msg
 
 let pp_warnings ?printed_filename ppf =
   Fmt.(pf ppf "%a" (list ~sep:cut (pp_warning_span ?printed_filename)))
@@ -433,7 +433,9 @@ let uninitialized_warnings (mir : Program.Typed.t) =
     uninit_vars
 
 let to_list warning_set =
-  Set.Poly.to_list warning_set |> List.sort ~compare:compare_warning_span
+  Set.Poly.to_list warning_set
+  |> List.sort ~compare:compare_warning_span
+  |> List.rev
 
 (* String-print uninitialized warnings
    In case a user wants only this warning *)

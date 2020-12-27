@@ -17,16 +17,4 @@ model {
     y[n] ~ categorical_logit(gamma[n]');
 }
 
-
-Warning: deprecated language construct used in 'multi_logit.stan', line 13, column 9:
-   -------------------------------------------------
-    11:  model {
-    12:    matrix[N, K] gamma;
-    13:    gamma <- x * beta';
-                  ^
-    14:  
-    15:    // prior
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'multi_logit.stan', line 13, column 8: assignment operator <- is deprecated in the Stan language; use = instead.

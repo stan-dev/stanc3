@@ -4,11 +4,6 @@ open Middle
 
 type t = Location_span.t * string
 
-let pp ?printed_filename ppf (loc_span, message) =
-  Fmt.pf ppf "@[<v>@,Warning: in %s: %s@]"
-    (Location_span.to_string ?printed_filename loc_span)
-    message
-
 let deprecated_functions =
   String.Map.of_alist_exn
     [ ("multiply_log", "lmultiply")
