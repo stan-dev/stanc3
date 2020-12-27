@@ -26,7 +26,10 @@ let sigma_example =
         }
       |}
 
-let print_warn_pedantic = Fn.compose print_endline sprint_warn_pedantic
+let print_warn_pedantic p =
+  p |> warn_pedantic
+  |> Fmt.strf "%a" (pp_warnings ?printed_filename:None)
+  |> print_endline
 
 let%expect_test "Unbounded sigma warning" =
   print_warn_pedantic (build_program sigma_example) ;

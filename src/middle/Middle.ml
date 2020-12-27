@@ -1,3 +1,4 @@
+module Errors = Errors
 module Location = Location
 module Location_span = Location_span
 module Operator = Operator
@@ -13,3 +14,4 @@ module Stmt = Stmt
 module Program = Program
 module Stan_math_signatures = Stan_math_signatures
 module Utils = Utils
+module Warnings = Warnings

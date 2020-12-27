@@ -9,6 +9,8 @@ open Factor_graph
 open Mir_utils
 open Pedantic_dist_warnings
 
+type warning_span = Location_span.t * string [@@deriving compare]
+
 (*********************
    Pattern collection functions
  ********************)
@@ -302,25 +304,15 @@ let list_unscaled_constants (distributions_list : dist_info Set.Poly.t) :
 
 (* Fmt format for warnings, where the warning body comes after the
    "Warning at <location>:" line and is indented by 2 spaces. *)
-let pp_warning ppf (loc, msg) =
+let pp_warning_span ?printed_filename ppf (loc, msg) =
   let loc_str =
     if loc = Location_span.empty then ""
-    else " at " ^ Location_span.to_string loc
+    else " at " ^ Location_span.to_string ?printed_filename loc
   in
-  Fmt.pf ppf "Warning%s:@\n@[<hov 2>  %a@]\n" loc_str Fmt.text msg
+  Fmt.pf ppf "Warning%s:@.@[<hov 2>  %a@]" loc_str Fmt.text msg
 
-(* Print a set of 'warnings', where each warning comes with its location.
-   By tupling with location and using a set, we're also sorting the warning
-   messages by increasing location.
-
-   I am not using Fmt to print to stderr here because there was a pretty awful
-   bug where it would unpredictably fail to flush. It would flush when using
-   stdout or when trying to print some strings and not others. I tried using
-   Fmt.flush and various other hacks to no avail. So now I use Fmt to build a
-   string, and Out_channel to write it.
-*)
-let sprint_warning_set (warnings : (Location_span.t * string) Set.Poly.t) =
-  Fmt.strf "%a" (Fmt.list ~sep:Fmt.nop pp_warning) (Set.Poly.to_list warnings)
+let pp_warnings ?printed_filename ppf =
+  Fmt.(pf ppf "%a" (list ~sep:cut (pp_warning_span ?printed_filename)))
 
 let unscaled_constants_message (name : string) : string =
   Printf.sprintf
@@ -440,10 +432,12 @@ let uninitialized_warnings (mir : Program.Typed.t) =
     ~f:(fun (loc, vname) -> (loc, uninitialized_message vname))
     uninit_vars
 
+let to_list warning_set =
+  Set.Poly.to_list warning_set |> List.sort ~compare:compare_warning_span
+
 (* String-print uninitialized warnings
    In case a user wants only this warning *)
-let sprint_warn_uninitialized mir =
-  sprint_warning_set (uninitialized_warnings mir)
+let warn_uninitialized mir = uninitialized_warnings mir |> to_list
 
 (* Optimization settings for constant propagation and partial evaluation *)
 let settings_constant_prop =
@@ -452,8 +446,8 @@ let settings_constant_prop =
   ; copy_propagation= true
   ; partial_evaluation= true }
 
-(* String-print all pedantic mode warnings, sorted, to stderr *)
-let sprint_warn_pedantic (mir_unopt : Program.Typed.t) =
+(* Collect all pedantic mode warnings, sorted, to stderr *)
+let warn_pedantic (mir_unopt : Program.Typed.t) =
   (* Some warnings will be stronger when constants are propagated *)
   let mir =
     Optimize.optimization_suite ~settings:settings_constant_prop mir_unopt
@@ -461,16 +455,14 @@ let sprint_warn_pedantic (mir_unopt : Program.Typed.t) =
   (* Try to avoid recomputation by pre-building structures *)
   let distributions_info = list_distributions mir in
   let factor_graph = prog_factor_graph mir in
-  let warning_set =
-    Set.Poly.union_list
-      [ uninitialized_warnings mir
-      ; unscaled_constants_warnings distributions_info
-      ; multi_twiddles_warnings mir
-      ; hard_constrained_warnings mir
-      ; unused_params_warnings factor_graph mir
-      ; param_dependant_cf_warnings mir
-      ; param_dependant_fundef_cf_warnings mir
-      ; non_one_priors_warnings factor_graph mir
-      ; distribution_warnings distributions_info ]
-  in
-  sprint_warning_set warning_set
+  Set.Poly.union_list
+    [ uninitialized_warnings mir
+    ; unscaled_constants_warnings distributions_info
+    ; multi_twiddles_warnings mir
+    ; hard_constrained_warnings mir
+    ; unused_params_warnings factor_graph mir
+    ; param_dependant_cf_warnings mir
+    ; param_dependant_fundef_cf_warnings mir
+    ; non_one_priors_warnings factor_graph mir
+    ; distribution_warnings distributions_info ]
+  |> to_list

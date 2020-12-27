@@ -41,13 +41,25 @@ let pp_with_message_exn ppf (message, loc) =
 
 let empty = {filename= ""; line_num= 0; col_num= 0; included_from= None}
 
-let rec to_string ?(print_file = true) ?(print_line = true) loc =
+let rec set_base_filename t ~filename =
+  if t = empty then t
+  else
+    match t.included_from with
+    | None -> {t with filename}
+    | Some t' -> set_base_filename t' ~filename
+
+let rec to_string ?printed_filename ?(print_file = true) ?(print_line = true)
+    loc =
   let open Format in
-  let file = if print_file then sprintf "'%s', " loc.filename else "" in
+  let filename =
+    match printed_filename with None -> loc.filename | Some f -> f
+  in
+  let file = if print_file then sprintf "'%s', " filename else "" in
   let line = if print_line then sprintf "line %d, " loc.line_num else "" in
   let incl =
     match loc.included_from with
-    | Some loc2 -> sprintf ", included from\n%s" (to_string loc2)
+    | Some loc2 ->
+        sprintf ", included from\n%s" (to_string ?printed_filename loc2)
     | None -> ""
   in
   sprintf "%s%scolumn %d%s" file line loc.col_num incl

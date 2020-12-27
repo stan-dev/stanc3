@@ -2,6 +2,8 @@
 
 {
   module Stack = Core_kernel.Stack
+  module Warnings = Middle.Warnings
+  module Errors = Middle.Errors
   open Lexing
   open Debugging
   open Preprocessor

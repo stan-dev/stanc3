@@ -1,7 +1,6 @@
 (** Setup of our compiler errors *)
 
 open Core_kernel
-open Middle
 module Str = Re.Str
 
 (** Our type of syntax error information *)
@@ -9,6 +8,7 @@ type syntax_error =
   | Lexing of string * Location.t
   | Include of string * Location.t
   | Parsing of string * Location_span.t
+[@@deriving map]
 
 (** Exception for Syntax Errors *)
 exception SyntaxError of syntax_error

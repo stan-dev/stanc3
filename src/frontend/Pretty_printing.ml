@@ -141,7 +141,7 @@ and pp_expression ppf {expr= e_content; _} =
       with_box ppf 0 (fun () -> Fmt.pf ppf "%a)" pp_list_of_expression es)
   | CondDistApp (_, id, es) -> (
     match es with
-    | [] -> Errors.fatal_error ()
+    | [] -> Middle.Errors.fatal_error ()
     | e :: es' ->
         with_hbox ppf (fun () ->
             Fmt.pf ppf "%a(%a| %a)" pp_identifier id pp_expression e
@@ -193,7 +193,7 @@ and pp_sizedtype ppf = function
   | SRowVector e -> Fmt.pf ppf "row_vector[%a]" pp_expression e
   | SMatrix (e1, e2) ->
       Fmt.pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
-  | SArray _ -> raise (Errors.FatalError "This should never happen.")
+  | SArray _ -> raise (Middle.Errors.FatalError "This should never happen.")
 
 and pp_transformation ppf = function
   | Middle.Program.Identity -> Fmt.pf ppf ""
@@ -404,7 +404,7 @@ let pp_program ppf
   Format.pp_close_box ppf ()
 
 let check_correctness prog pretty =
-  let result_ast, (_ : Warnings.t list) =
+  let result_ast, (_ : Middle.Warnings.t list) =
     Parse.parse_string Parser.Incremental.program pretty
   in
   if
