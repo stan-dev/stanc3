@@ -87,7 +87,7 @@ let stan2cpp model_name model_string flags =
             [Pedantic_analysis.sprint_warn_pedantic mir]
           else []
         in
-        (cpp, warnings @ uninit_warnings @ pedantic_warnings )
+        (cpp, warnings @ uninit_warnings @ pedantic_warnings)
       in
       match result with
       | Result.Ok (cpp, warnings) -> (Result.Ok cpp, warnings)
