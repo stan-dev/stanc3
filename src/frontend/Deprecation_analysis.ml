@@ -2,6 +2,13 @@ open Core_kernel
 open Ast
 open Middle
 
+type t = Location_span.t * string
+
+let pp ppf (loc_span, message) =
+  Fmt.pf ppf "@[<v>@,Warning: in %s: %s@]@."
+    (Location_span.to_string loc_span)
+    message
+
 let deprecated_functions =
   String.Map.of_alist_exn
     [ ("multiply_log", "lmultiply")
@@ -65,11 +72,6 @@ let without_suffix user_dists name =
          || List.exists ~f:(( = ) name) user_dists )
   then drop_suffix name 4
   else name
-
-let warn_deprecated (loc_span, message) =
-  Fmt.pf Fmt.stderr "@[<v>@,Warning: in %s: %s@]@."
-    (Location_span.to_string loc_span)
-    message
 
 let update_suffix name type_ =
   let open String in
@@ -193,6 +195,3 @@ let collect_warnings (program : typed_program) =
   fold_program
     (collect_deprecated_stmt (collect_userdef_distributions program))
     [] program
-
-let emit_warnings (program : typed_program) : unit =
-  program |> collect_warnings |> List.iter ~f:warn_deprecated
