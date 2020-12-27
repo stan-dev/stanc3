@@ -1,7 +1,7 @@
   $ ../../../../../../install/default/bin/stanc --auto-format soil_incubation.stan
 functions {
-  array[] real two_pool_feedback(real t, array[] real C, array[] real theta,
-                                 array[] real x_r, array[] int x_i) {
+  real[] two_pool_feedback(real t, real[] C, real[] theta, real[] x_r,
+                           int[] x_i) {
     real k1;
     real k2;
     real alpha21;
@@ -15,10 +15,9 @@ functions {
     dC_dt[2] <- -k2 * C[2] + alpha21 * k1 * C[1];
     return dC_dt;
   }
-  array[] real evolved_CO2(int N_t, data real t0, data array[] real ts,
-                           real gamma, real totalC_t0, real k1, real k2,
-                           real alpha21, real alpha12, data array[] real x_r,
-                           data array[] int x_i) {
+  real[] evolved_CO2(int N_t, data real t0, data real[] ts, real gamma,
+                     real totalC_t0, real k1, real k2, real alpha21,
+                     real alpha12, data real[] x_r, data int[] x_i) {
     array[2] real C_t0;
     array[4] real theta;
     array[N_t, 2] real C_hat;
@@ -271,8 +270,8 @@ The new interface is slightly different, see:
 https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../../../install/default/bin/stanc --auto-format soil_incubation_measurement_err.stan
 functions {
-  array[] real two_pool_feedback(real t, array[] real C, array[] real theta,
-                                 array[] real x_r, array[] int x_i) {
+  real[] two_pool_feedback(real t, real[] C, real[] theta, real[] x_r,
+                           int[] x_i) {
     real k1;
     real k2;
     real alpha21;
@@ -286,10 +285,9 @@ functions {
     dC_dt[2] <- alpha21 * k1 * C[1] - k2 * C[2];
     return dC_dt;
   }
-  array[] real evolved_CO2(int N_t, data real t0, data array[] real ts,
-                           real gamma, real totalC_t0, real k1, real k2,
-                           real alpha21, real alpha12, data array[] real x_r,
-                           data array[] int x_i) {
+  real[] evolved_CO2(int N_t, data real t0, data real[] ts, real gamma,
+                     real totalC_t0, real k1, real k2, real alpha21,
+                     real alpha12, data real[] x_r, data int[] x_i) {
     array[2] real C_t0;
     array[4] real theta;
     array[N_t, 2] real C_hat;

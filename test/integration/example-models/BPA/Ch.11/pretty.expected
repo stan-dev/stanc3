@@ -29,7 +29,7 @@ functions {
     }
     return lp;
   }
-  array[] vector marray(int nyears, vector sjuv, vector sad, vector p) {
+  vector[] marray(int nyears, vector sjuv, vector sad, vector p) {
     int ny_minus_1 = nyears - 1;
     array[2 * ny_minus_1] vector[nyears] pr;
     vector[ny_minus_1] q = 1 - p;
@@ -155,8 +155,7 @@ functions {
     }
     return lp;
   }
-  array[] vector marray_juveniles(int nyears, vector phij, vector phia,
-                                  vector p) {
+  vector[] marray_juveniles(int nyears, vector phij, vector phia, vector p) {
     int ny_minus_1 = nyears - 1;
     array[ny_minus_1] vector[nyears] pr_j;
     vector[ny_minus_1] q = 1 - p;
@@ -177,7 +176,7 @@ functions {
     }
     return pr_j;
   }
-  array[] vector marray_adults(int nyears, vector phia, vector p) {
+  vector[] marray_adults(int nyears, vector phia, vector p) {
     int ny_minus_1 = nyears - 1;
     array[ny_minus_1] vector[nyears] pr_a;
     vector[nyears - 1] q = 1 - p;
@@ -330,7 +329,7 @@ functions {
     }
     return lp;
   }
-  array[] vector marray(int nyears, vector sjuv, vector sad, vector p) {
+  vector[] marray(int nyears, vector sjuv, vector sad, vector p) {
     int ny_minus_1 = nyears - 1;
     array[2 * ny_minus_1] vector[nyears] pr;
     vector[nyears] q = 1 - p;
@@ -492,7 +491,7 @@ functions {
     }
     return lp;
   }
-  array[] vector marray(int nyears, vector sjuv, vector sad, vector p) {
+  vector[] marray(int nyears, vector sjuv, vector sad, vector p) {
     int ny_minus_1 = nyears - 1;
     array[2 * ny_minus_1] vector[nyears] pr;
     vector[nyears - 1] q = 1 - p;

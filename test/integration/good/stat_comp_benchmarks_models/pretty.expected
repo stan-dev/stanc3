@@ -275,9 +275,8 @@ model {
 
   $ ../../../../../install/default/bin/stanc --auto-format one_comp_mm_elim_abs.stan
 functions {
-  array[] real one_comp_mm_elim_abs(real t, array[] real y,
-                                    array[] real theta, array[] real x_r,
-                                    array[] int x_i) {
+  real[] one_comp_mm_elim_abs(real t, real[] y, real[] theta, real[] x_r,
+                              int[] x_i) {
     array[1] real dydt;
     real k_a = theta[1];
     real K_m = theta[2];
@@ -339,9 +338,8 @@ The new interface is slightly different, see:
 https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../../install/default/bin/stanc --auto-format sim_one_comp_mm_elim_abs.stan
 functions {
-  array[] real one_comp_mm_elim_abs(real t, array[] real y,
-                                    array[] real theta, array[] real x_r,
-                                    array[] int x_i) {
+  real[] one_comp_mm_elim_abs(real t, real[] y, real[] theta, real[] x_r,
+                              int[] x_i) {
     array[1] real dydt;
     real k_a = theta[1];
     real K_m = theta[2];
@@ -392,8 +390,7 @@ The new interface is slightly different, see:
 https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../../install/default/bin/stanc --auto-format sir.stan
 functions {
-  array[] real simple_SIR(real t, array[] real y, array[] real theta,
-                          array[] real x_r, array[] int x_i) {
+  real[] simple_SIR(real t, real[] y, real[] theta, real[] x_r, int[] x_i) {
     array[4] real dydt;
     dydt[1] = -theta[1] * y[4] / (y[4] + theta[2]) * y[1];
     dydt[2] = theta[1] * y[4] / (y[4] + theta[2]) * y[1] - theta[3] * y[2];

@@ -49,7 +49,7 @@ generated quantities {
 
   $ ../../../../../../install/default/bin/stanc --auto-format probit-multi.stan
 functions {
-  int sum_(array[,] int a) {
+  int sum_(int[,] a) {
     int s;
     s <- 0;
     for (i in 1 : size(a)) 

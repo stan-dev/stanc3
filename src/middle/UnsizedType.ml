@@ -45,10 +45,16 @@ let rec pp ppf = function
   | UVector -> pp_keyword ppf "vector"
   | URowVector -> pp_keyword ppf "row_vector"
   | UMatrix -> pp_keyword ppf "matrix"
+  (* TODO(seantalts): When we're ready to switch canonical array syntax to
+     the array[] version, uncomment this and replace the existing.
+ | UArray ut ->
+   *     let ut2, d = unwind_array_type ut in
+   *     let array_str = "[" ^ String.make d ',' ^ "]" in
+   *     Fmt.pf ppf "array%s %a" array_str pp ut2 *)
   | UArray ut ->
-      let ut2, d = unwind_array_type ut in
-      let array_str = "[" ^ String.make d ',' ^ "]" in
-      Fmt.pf ppf "array%s %a" array_str pp ut2
+      let ty, depth = unsized_array_depth ut in
+      let commas = String.make depth ',' in
+      Fmt.pf ppf "%a[%s]" pp ty commas
   | UFun (argtypes, rt) ->
       Fmt.pf ppf {|@[<h>(%a) => %a@]|}
         Fmt.(list pp_fun_arg ~sep:comma)
