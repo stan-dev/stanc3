@@ -29333,12 +29333,13 @@ using stan::math::pow;
 static int current_statement__ = 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'lupdf-inlining.stan', line 16, column 4 to column 12)",
-                                                      " (in 'lupdf-inlining.stan', line 23, column 4 to column 30)",
+                                                      " (in 'lupdf-inlining.stan', line 19, column 4 to column 32)",
                                                       " (in 'lupdf-inlining.stan', line 2, column 35 to line 4, column 5)",
+                                                      " (in 'lupdf-inlining.stan', line 26, column 4 to column 30)",
                                                       " (in 'lupdf-inlining.stan', line 8, column 26 to line 10, column 5)",
-                                                      " (in 'lupdf-inlining.stan', line 24, column 4 to column 31)",
+                                                      " (in 'lupdf-inlining.stan', line 27, column 4 to column 31)",
                                                       " (in 'lupdf-inlining.stan', line 5, column 34 to line 7, column 5)",
-                                                      " (in 'lupdf-inlining.stan', line 19, column 4 to column 29)",
+                                                      " (in 'lupdf-inlining.stan', line 22, column 4 to column 29)",
                                                       " (in 'lupdf-inlining.stan', line 13, column 4 to column 10)",
                                                       " (in 'lupdf-inlining.stan', line 3, column 8 to column 36)",
                                                       " (in 'lupdf-inlining.stan', line 6, column 8 to column 35)",
@@ -29354,9 +29355,9 @@ foo_lpdf(const T0__& x, const T1__& mu, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    double lcm_sym31__;
+    double lcm_sym37__;
     {
-      current_statement__ = 9;
+      current_statement__ = 10;
       return normal_lpdf<propto__>(x, mu, 1);
     }
   } catch (const std::exception& e) {
@@ -29385,9 +29386,9 @@ bar_lpmf(const int& n, const T1__& mu, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    double lcm_sym32__;
+    double lcm_sym38__;
     {
-      current_statement__ = 10;
+      current_statement__ = 11;
       return poisson_lpmf<propto__>(n, mu);
     }
   } catch (const std::exception& e) {
@@ -29415,9 +29416,9 @@ baz_lpdf(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   
   try {
-    double lcm_sym33__;
+    double lcm_sym39__;
     {
-      current_statement__ = 11;
+      current_statement__ = 12;
       return foo_lpdf<propto__>(x, 0.5, pstream__);
     }
   } catch (const std::exception& e) {
@@ -29469,12 +29470,12 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      current_statement__ = 8;
+      current_statement__ = 9;
       context__.validate_dims("data initialization","n","int",
           context__.to_vec());
       n = std::numeric_limits<int>::min();
       
-      current_statement__ = 8;
+      current_statement__ = 9;
       n = context__.vals_i("n")[(1 - 1)];
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -29508,42 +29509,54 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
 
     
     try {
-      double lcm_sym39__;
-      double lcm_sym38__;
+      double lcm_sym47__;
+      double lcm_sym46__;
+      double lcm_sym45__;
       local_scalar_t__ mu;
       mu = DUMMY_VAR__;
       
       current_statement__ = 1;
       mu = in__.scalar();
+      local_scalar_t__ tp;
+      tp = DUMMY_VAR__;
+      
+      local_scalar_t__ inline_sym25__;
+      int inline_sym26__;
+      inline_sym26__ = std::numeric_limits<int>::min();
+      
+      for (int inline_sym27__ = 1; inline_sym27__ <= 1; ++inline_sym27__) {
+        inline_sym25__ = normal_lpdf<false>(mu, 1.0, 1);
+        break;}
+      tp = inline_sym25__;
       {
-        local_scalar_t__ inline_sym22__;
-        int inline_sym26__;
-        inline_sym26__ = std::numeric_limits<int>::min();
+        local_scalar_t__ inline_sym28__;
+        int inline_sym32__;
+        inline_sym32__ = std::numeric_limits<int>::min();
         
-        inline_sym26__ = 0;
-        for (int inline_sym27__ = 1; inline_sym27__ <= 1; ++inline_sym27__) {
-          local_scalar_t__ inline_sym23__;
-          int inline_sym24__;
-          inline_sym24__ = std::numeric_limits<int>::min();
+        inline_sym32__ = 0;
+        for (int inline_sym33__ = 1; inline_sym33__ <= 1; ++inline_sym33__) {
+          local_scalar_t__ inline_sym29__;
+          int inline_sym30__;
+          inline_sym30__ = std::numeric_limits<int>::min();
           
-          for (int inline_sym25__ = 1; inline_sym25__ <= 1; ++inline_sym25__) {
-            inline_sym23__ = normal_lpdf<propto__>(mu, 0.5, 1);
+          for (int inline_sym31__ = 1; inline_sym31__ <= 1; ++inline_sym31__) {
+            inline_sym29__ = normal_lpdf<propto__>(mu, 0.5, 1);
             break;}
-          if (inline_sym26__) {
+          if (inline_sym32__) {
             break;
           } 
-          inline_sym26__ = 1;
-          inline_sym22__ = inline_sym23__;
-          break;}
-        lp_accum__.add(inline_sym22__);
-        local_scalar_t__ inline_sym28__;
-        int inline_sym29__;
-        inline_sym29__ = std::numeric_limits<int>::min();
-        
-        for (int inline_sym30__ = 1; inline_sym30__ <= 1; ++inline_sym30__) {
-          inline_sym28__ = poisson_lpmf<propto__>(n, mu);
+          inline_sym32__ = 1;
+          inline_sym28__ = inline_sym29__;
           break;}
         lp_accum__.add(inline_sym28__);
+        local_scalar_t__ inline_sym34__;
+        int inline_sym35__;
+        inline_sym35__ = std::numeric_limits<int>::min();
+        
+        for (int inline_sym36__ = 1; inline_sym36__ <= 1; ++inline_sym36__) {
+          inline_sym34__ = poisson_lpmf<propto__>(n, mu);
+          break;}
+        lp_accum__.add(inline_sym34__);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -29576,19 +29589,34 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
 
     
     try {
-      double lcm_sym37__;
-      double lcm_sym36__;
-      int lcm_sym35__;
-      int lcm_sym34__;
+      double lcm_sym44__;
+      double lcm_sym43__;
+      double lcm_sym42__;
+      int lcm_sym41__;
+      int lcm_sym40__;
       double mu;
       mu = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
       mu = in__.scalar();
+      double tp;
+      tp = std::numeric_limits<double>::quiet_NaN();
+      
       vars__.emplace_back(mu);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
+      } 
+      double inline_sym13__;
+      int inline_sym14__;
+      inline_sym14__ = std::numeric_limits<int>::min();
+      
+      for (int inline_sym15__ = 1; inline_sym15__ <= 1; ++inline_sym15__) {
+        inline_sym13__ = normal_lpdf<false>(mu, 1.0, 1);
+        break;}
+      tp = inline_sym13__;
+      if (emit_transformed_parameters__) {
+        vars__.emplace_back(inline_sym13__);
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -29596,39 +29624,39 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       double lbaz;
       lbaz = std::numeric_limits<double>::quiet_NaN();
       
-      double inline_sym13__;
-      int inline_sym17__;
-      inline_sym17__ = std::numeric_limits<int>::min();
-      
-      inline_sym17__ = 0;
-      for (int inline_sym18__ = 1; inline_sym18__ <= 1; ++inline_sym18__) {
-        double inline_sym14__;
-        int inline_sym15__;
-        inline_sym15__ = std::numeric_limits<int>::min();
-        
-        for (int inline_sym16__ = 1; inline_sym16__ <= 1; ++inline_sym16__) {
-          inline_sym14__ = normal_lpdf<false>(mu, 0.5, 1);
-          break;}
-        if (inline_sym17__) {
-          break;
-        } 
-        inline_sym17__ = 1;
-        inline_sym13__ = inline_sym14__;
-        break;}
-      lbaz = inline_sym13__;
-      double lbar;
-      lbar = std::numeric_limits<double>::quiet_NaN();
-      
-      double inline_sym19__;
+      double inline_sym16__;
       int inline_sym20__;
       inline_sym20__ = std::numeric_limits<int>::min();
       
+      inline_sym20__ = 0;
       for (int inline_sym21__ = 1; inline_sym21__ <= 1; ++inline_sym21__) {
-        inline_sym19__ = poisson_lpmf<false>(n, mu);
+        double inline_sym17__;
+        int inline_sym18__;
+        inline_sym18__ = std::numeric_limits<int>::min();
+        
+        for (int inline_sym19__ = 1; inline_sym19__ <= 1; ++inline_sym19__) {
+          inline_sym17__ = normal_lpdf<false>(mu, 0.5, 1);
+          break;}
+        if (inline_sym20__) {
+          break;
+        } 
+        inline_sym20__ = 1;
+        inline_sym16__ = inline_sym17__;
         break;}
-      lbar = inline_sym19__;
-      vars__.emplace_back(inline_sym13__);
-      vars__.emplace_back(inline_sym19__);
+      lbaz = inline_sym16__;
+      double lbar;
+      lbar = std::numeric_limits<double>::quiet_NaN();
+      
+      double inline_sym22__;
+      int inline_sym23__;
+      inline_sym23__ = std::numeric_limits<int>::min();
+      
+      for (int inline_sym24__ = 1; inline_sym24__ <= 1; ++inline_sym24__) {
+        inline_sym22__ = poisson_lpmf<false>(n, mu);
+        break;}
+      lbar = inline_sym22__;
+      vars__.emplace_back(inline_sym16__);
+      vars__.emplace_back(inline_sym22__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -29666,12 +29694,15 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     
     names__.clear();
     names__.emplace_back("mu");
+    names__.emplace_back("tp");
     names__.emplace_back("lbaz");
     names__.emplace_back("lbar");
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.clear();
+    dimss__.emplace_back(std::vector<size_t>{});
+    
     dimss__.emplace_back(std::vector<size_t>{});
     
     dimss__.emplace_back(std::vector<size_t>{});
@@ -29688,7 +29719,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     
     param_names__.emplace_back(std::string() + "mu");
     if (emit_transformed_parameters__) {
-      
+      param_names__.emplace_back(std::string() + "tp");
     }
     
     if (emit_generated_quantities__) {
@@ -29706,7 +29737,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     
     param_names__.emplace_back(std::string() + "mu");
     if (emit_transformed_parameters__) {
-      
+      param_names__.emplace_back(std::string() + "tp");
     }
     
     if (emit_generated_quantities__) {
@@ -29718,13 +29749,13 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     
   inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
-    s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"lbaz\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"lbar\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]";
+    s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tp\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"lbaz\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"lbar\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
-    s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"lbaz\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"lbar\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]";
+    s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tp\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"lbaz\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"lbar\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
     

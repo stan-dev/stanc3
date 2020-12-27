@@ -15,6 +15,9 @@ data {
 parameters {
     real mu;
 }
+transformed parameters {
+    real tp = foo_lpdf(mu| 1.0);
+}
 model {
     target += baz_lupdf(mu|);
     target += bar_lupmf(n| mu);
