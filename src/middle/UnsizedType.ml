@@ -35,6 +35,10 @@ let count_dims unsized_ty =
   in
   aux 0 unsized_ty
 
+let rec unwind_array_type = function
+  | UArray ut -> ( match unwind_array_type ut with ut2, d -> (ut2, d + 1) )
+  | ut -> (ut, 0)
+
 let rec pp ppf = function
   | UInt -> pp_keyword ppf "int"
   | UReal -> pp_keyword ppf "real"
@@ -42,9 +46,9 @@ let rec pp ppf = function
   | URowVector -> pp_keyword ppf "row_vector"
   | UMatrix -> pp_keyword ppf "matrix"
   | UArray ut ->
-      let ty, depth = unsized_array_depth ut in
-      let commas = String.make depth ',' in
-      Fmt.pf ppf "%a[%s]" pp ty commas
+      let ut2, d = unwind_array_type ut in
+      let array_str = "[" ^ String.make d ',' ^ "]" in
+      Fmt.pf ppf "array%s %a" array_str pp ut2
   | UFun (argtypes, rt) ->
       Fmt.pf ppf {|@[<h>(%a) => %a@]|}
         Fmt.(list pp_fun_arg ~sep:comma)

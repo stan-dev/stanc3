@@ -40,50 +40,26 @@ let with_indented_box ppf indentation offset f =
       with_box ppf offset f ) ;
   ()
 
+let pp_unsizedtype = Middle.UnsizedType.pp
+let pp_autodifftype = Middle.UnsizedType.pp_autodifftype
+
 let rec unwind_sized_array_type = function
   | Middle.SizedType.SArray (st, e) -> (
     match unwind_sized_array_type st with st2, es -> (st2, es @ [e]) )
   | st -> (st, [])
 
-let rec unwind_array_type = function
-  | Middle.UnsizedType.UArray ut -> (
-    match unwind_array_type ut with ut2, d -> (ut2, d + 1) )
-  | ut -> (ut, 0)
+let pp_unsizedtypes ppf l = Fmt.(list ~sep:comma_no_break pp_unsizedtype) ppf l
 
-(** XXX this should use the MIR pretty printers after AST pretty printers
-    are updated to use `Fmt`. *)
-let rec pp_autodifftype ppf = function
-  | Middle.UnsizedType.DataOnly -> Fmt.pf ppf "data "
-  | AutoDiffable -> Fmt.pf ppf ""
-
-and pp_unsizedtype ppf = function
-  | Middle.UnsizedType.UInt -> Fmt.pf ppf "int"
-  | UReal -> Fmt.pf ppf "real"
-  | UVector -> Fmt.pf ppf "vector"
-  | URowVector -> Fmt.pf ppf "row_vector"
-  | UMatrix -> Fmt.pf ppf "matrix"
-  | UArray ut ->
-      let ut2, d = unwind_array_type ut in
-      let array_str = "[" ^ String.make d ',' ^ "]" in
-      Fmt.pf ppf "array%s %a" array_str pp_unsizedtype ut2
-  | UFun (argtypes, rt) ->
-      Fmt.pf ppf "{|@[<h>(%a) => %a@]|}"
-        Fmt.(list ~sep:comma_no_break pp_argtype)
-        argtypes pp_returntype rt
-  | UMathLibraryFunction -> Fmt.pf ppf "Stan Math function"
-
-and pp_unsizedtypes ppf l = Fmt.(list ~sep:comma_no_break pp_unsizedtype) ppf l
-
-and pp_argtype ppf = function
+let pp_argtype ppf = function
   | at, ut -> Fmt.pair ~sep:Fmt.nop pp_autodifftype pp_unsizedtype ppf (at, ut)
 
-and pp_returntype ppf = function
-  | ReturnType x -> pp_unsizedtype ppf x
+let pp_returntype ppf = function
+  | Middle.UnsizedType.ReturnType x -> pp_unsizedtype ppf x
   | Void -> Fmt.pf ppf "void"
 
-and pp_identifier ppf id = Fmt.pf ppf "%s" id.name
+let pp_identifier ppf id = Fmt.pf ppf "%s" id.name
 
-and pp_operator ppf = function
+let pp_operator ppf = function
   | Middle.Operator.Plus | PPlus -> Fmt.pf ppf "+"
   | Minus | PMinus -> Fmt.pf ppf "-"
   | Times -> Fmt.pf ppf "*"
@@ -106,7 +82,7 @@ and pp_operator ppf = function
   | PNot -> Fmt.pf ppf "!"
   | Transpose -> Fmt.pf ppf "'"
 
-and pp_index ppf = function
+let rec pp_index ppf = function
   | All -> Fmt.pf ppf " : "
   | Single e -> pp_expression ppf e
   | Upfrom e -> Fmt.pf ppf "%a : " pp_expression e

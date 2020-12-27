@@ -3,7 +3,7 @@ open Ast
 
 type t = Middle.Location_span.t * string
 
-val pp : t Fmt.t
+val pp : ?printed_filename:string -> t Fmt.t
 
 val find_udf_log_suffix :
   typed_statement -> (string * Middle.UnsizedType.t) option

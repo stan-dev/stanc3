@@ -14,7 +14,7 @@
  (deps (package stanc) filename_good.stan)
  (action
   (with-stdout-to %{targets}
-   (run %{bin:run_bin_on_args} "%{bin:stanc} --filename-in-msg=foo.stan --print-cpp" filename_good.stan))))
+   (run %{bin:run_bin_on_args} "%{bin:stanc} --filename-in-msg=foo.stan --print-cpp " filename_good.stan))))
 
 (alias
  (name runtest)

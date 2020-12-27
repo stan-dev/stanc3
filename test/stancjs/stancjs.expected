@@ -33,7 +33,7 @@ model {
 
 $ node filename.js
 
-Semantic error in 'foo', line 6, column 4 to column 5:
+Semantic error in 'string', line 6, column 4 to column 5:
 
 Identifier 'z' not in scope.
 
@@ -52,10 +52,9 @@ Some function is declared without specifying a definition.
 
 
 $ node pedantic.js
-[ 'Warning:\n  The parameter k was declared but was not used in the density calculation.',
-  'Warning at \'string\', line 7, column 17 to column 22:\n  Argument 10000 suggests there may be parameters that are not unit scale;\n  consider rescaling with a multiplier (see manual section 22.12).' ]
+["Warning:\n  The parameter k was declared but was not used in the density calculation.","Warning at 'string', line 7, column 17 to column 22:\n  Argument 10000 suggests there may be parameters that are not unit scale;\n  consider rescaling with a multiplier (see manual section 22.12)."]
 []
-[ 'Warning at \'string\', line 4, column 9 to column 11:\n  The variable tt may not have been assigned a value before its use.' ]
+["Warning at 'string', line 4, column 9 to column 11:\n  The variable tt may not have been assigned a value before its use."]
 []
 $ node standalone-functions.js
 
@@ -64,5 +63,4 @@ $ node version.js
 %%NAME%% %%VERSION%%
 %%NAME%% %%VERSION%%
 $ node warnings.js
-[ '\nWarning: deprecated language construct used in \'string\', line 4, column 4:\n\nComments beginning with # are deprecated. Please use // in place of # for line comments.\n\n' ]
-5 ' warnings ignored.'
+["\nWarning: deprecated language construct used in 'string', line 4, column 4:\n\nComments beginning with # are deprecated. Please use // in place of # for line comments.\n\n"]

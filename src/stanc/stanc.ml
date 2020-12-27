@@ -16,6 +16,7 @@ let usage = "Usage: " ^ name ^ " [option] ... <model_file.stan>"
 
 let model_file = ref ""
 let pretty_print_program = ref false
+let filename_for_msg = ref ""
 let canonicalize_program = ref false
 let print_model_cpp = ref false
 let dump_mir = ref false
@@ -139,7 +140,7 @@ let options =
       , " If set, the generated C++ will be the standalone functions C++ code."
       )
     ; ( "--filename-in-msg"
-      , Arg.Set_string Location.filename_for_msg
+      , Arg.Set_string filename_for_msg
       , " Sets the filename used in compiler errors. Uses actual filename by \
          default." ) ]
 
@@ -184,7 +185,10 @@ let use_file filename =
   if !pretty_print_program then
     print_endline (Pretty_printing.pretty_print_program ast) ;
   let typed_ast = Frontend_utils.type_ast_or_exit ast in
-  Fmt.(list ~sep:cut Deprecation_analysis.pp)
+  let printed_filename =
+    match !filename_for_msg with "" -> None | s -> Some s
+  in
+  Fmt.(list ~sep:cut (Deprecation_analysis.pp ?printed_filename))
     Fmt.stderr
     (Deprecation_analysis.collect_warnings typed_ast) ;
   if !canonicalize_program then
@@ -200,9 +204,11 @@ let use_file filename =
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.Program.Typed.t)] ;
     if !dump_mir_pretty then Program.Typed.pp Format.std_formatter mir ;
     ( if !warn_pedantic then
-      Pedantic_analysis.(warn_pedantic mir |> pp_stderr pp_warnings)
+      Pedantic_analysis.(
+        warn_pedantic mir |> pp_stderr (pp_warnings ?printed_filename))
     else if !warn_uninitialized then
-      Pedantic_analysis.(warn_uninitialized mir |> pp_stderr pp_warnings) ) ;
+      Pedantic_analysis.(
+        warn_uninitialized mir |> pp_stderr (pp_warnings ?printed_filename)) ) ;
     let tx_mir = Transform_Mir.trans_prog mir in
     if !dump_tx_mir then
       Sexp.pp_hum Format.std_formatter

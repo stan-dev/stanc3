@@ -1,6 +1,7 @@
 open Core_kernel
 module Warnings = Middle.Warnings
 module Errors = Middle.Errors
+module Semantic_error = Middle.Semantic_error
 
 let untyped_ast_of_string s =
   let res, warnings = Parse.parse_string Parser.Incremental.program s in
@@ -14,11 +15,13 @@ let typed_ast_of_string_exn s =
        ~f:(Fmt.to_to_string (Fmt.list ~sep:Fmt.cut Semantic_error.pp))
   |> Result.ok_or_failwith
 
-let get_ast_or_exit ?(print_warnings = true) filename =
+let get_ast_or_exit ?printed_filename ?(print_warnings = true) filename =
   try
     let res, warnings = Parse.parse_file Parser.Incremental.program filename in
     if print_warnings then
-      Fmt.epr "%a" (Fmt.list ~sep:Fmt.nop Warnings.pp) warnings ;
+      Fmt.epr "%a"
+        (Fmt.list ~sep:Fmt.nop (Warnings.pp ?printed_filename))
+        warnings ;
     match res with
     | Result.Ok ast -> ast
     | Result.Error err ->
@@ -33,9 +36,7 @@ let type_ast_or_exit ast =
     match Semantic_check.semantic_check_program ast with
     | Result.Ok prog -> prog
     | Result.Error (error :: _) ->
-        let loc = Semantic_error.location error
-        and msg = Fmt.strf "%a" Semantic_error.pp error in
-        Errors.pp_semantic_error Fmt.stderr (msg, loc) ;
+        Errors.pp_semantic_error Fmt.stderr error ;
         exit 1
     | Result.Error [] ->
         Printf.eprintf

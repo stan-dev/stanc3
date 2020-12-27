@@ -4,9 +4,9 @@ open Middle
 
 type t = Location_span.t * string
 
-let pp ppf (loc_span, message) =
+let pp ?printed_filename ppf (loc_span, message) =
   Fmt.pf ppf "@[<v>@,Warning: in %s: %s@]"
-    (Location_span.to_string loc_span)
+    (Location_span.to_string ?printed_filename loc_span)
     message
 
 let deprecated_functions =

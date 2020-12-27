@@ -29,11 +29,13 @@ let stan2cpp model_name model_string is_flag_set =
       if is_flag_set "version" then
         r.return (Result.Ok (Fmt.strf "%s" version), [], []) ;
       let ast, warnings =
-        try Parse.parse_string Parser.Incremental.program model_string
-        with Errors.SyntaxError err -> (Result.Error err, [])
-      in
-      let ast =
-        Result.map_error ast ~f:(Fmt.to_to_string Errors.pp_syntax_error)
+        try
+          let res, warnings =
+            Parse.parse_string Parser.Incremental.program model_string
+          in
+          (Result.map_error res ~f:(fun e -> Errors.Syntax_error e), warnings)
+        with Errors.SyntaxError err ->
+          (Result.Error (Errors.Syntax_error err), [])
       in
       let open Result.Monad_infix in
       if is_flag_set "auto-format" then
@@ -41,21 +43,13 @@ let stan2cpp model_name model_string is_flag_set =
           ( (ast >>| fun ast -> Pretty_printing.pretty_print_program ast)
           , warnings
           , [] ) ;
-      let semantic_err_to_string = function
-        | error :: _ ->
-            let loc = Semantic_error.location error
-            and msg = (Fmt.to_to_string Semantic_error.pp) error in
-            Fmt.strf "%a" Errors.pp_semantic_error (msg, loc)
-        | [] ->
-            "Semantic check failed but reported no errors. This should never \
-             happen."
-      in
       let result =
         ast
         >>= fun ast ->
         let typed_ast =
           Semantic_check.semantic_check_program ast
-          |> Result.map_error ~f:semantic_err_to_string
+          |> Result.map_error ~f:(fun errs ->
+                 Errors.Semantic_error (List.hd_exn errs) )
         in
         typed_ast
         >>| fun typed_ast ->
@@ -88,9 +82,9 @@ let stan2cpp model_name model_string is_flag_set =
       match result with
       | Result.Ok (cpp, warnings, pedantic_mode_warnings) ->
           (Result.Ok cpp, warnings, pedantic_mode_warnings)
-      | Result.Error e -> (Result.Error e, warnings, []) )
+      | Result.Error _ as e -> (e, warnings, []) )
 
-let wrap_result ~warnings = function
+let wrap_result ?printed_filename ~warnings = function
   | Result.Ok s ->
       Js.Unsafe.obj
         [| ("result", Js.Unsafe.inject (Js.string s))
@@ -99,6 +93,7 @@ let wrap_result ~warnings = function
                (Js.array (List.to_array (List.map ~f:Js.string warnings))) )
         |]
   | Error e ->
+      let e = Fmt.strf "%a" (Errors.pp ?printed_filename) e in
       Js.Unsafe.obj
         [| ("errors", Js.Unsafe.inject (Array.map ~f:Js.string [|e|]))
          ; ("warnings", Js.Unsafe.inject Js.array_empty) |]
@@ -123,11 +118,13 @@ let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) =
       Array.find flags ~f:(String.is_prefix ~prefix)
       >>= String.chop_prefix ~prefix)
   in
+  let printed_filename = flag_val "filename-in-msg" in
   let result, warnings, pedantic_mode_warnings =
     stan2cpp (Js.to_string name) (Js.to_string code) is_flag_set
   in
-  (* TODO(seantalts): obviously we should eventually try to unify the printing of warnings *)
-  let printed_filename = flag_val "filename-in-msg" in
+  (* TODO(seantalts): obviously we should eventually try to unify the printing of
+     warnings between the various sources.
+  *)
   let warnings =
     List.map ~f:(Fmt.strf "%a" (Warnings.pp ?printed_filename)) warnings
   in
