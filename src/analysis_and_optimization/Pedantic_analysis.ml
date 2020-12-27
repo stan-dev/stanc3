@@ -320,9 +320,7 @@ let pp_warning ppf (loc, msg) =
    string, and Out_channel to write it.
 *)
 let sprint_warning_set (warnings : (Location_span.t * string) Set.Poly.t) =
-    Fmt.strf "%a"
-      (Fmt.list ~sep:Fmt.nop pp_warning)
-      (Set.Poly.to_list warnings)
+  Fmt.strf "%a" (Fmt.list ~sep:Fmt.nop pp_warning) (Set.Poly.to_list warnings)
 
 let unscaled_constants_message (name : string) : string =
   Printf.sprintf

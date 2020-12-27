@@ -4,14 +4,16 @@ open Analysis_and_optimization.Dataflow_utils
 open Core_kernel
 open Analysis_and_optimization.Dataflow_types
 
-let mir_of_string s = Frontend_utils.typed_ast_of_string_exn s |> Ast_to_Mir.trans_prog ""
+let mir_of_string s =
+  Frontend_utils.typed_ast_of_string_exn s |> Ast_to_Mir.trans_prog ""
 
 (***********************************)
 (* Tests                           *)
 (***********************************)
 
 let%expect_test "Loop test" =
-  let mir = mir_of_string
+  let mir =
+    mir_of_string
       {|
       model {
         for (i in 1:2)
@@ -85,7 +87,8 @@ let%expect_test "Loop test" =
     |}]
 
 let%expect_test "Loop passthrough" =
-  let mir = mir_of_string
+  let mir =
+    mir_of_string
       {|
         model {
           if (1) {
@@ -127,7 +130,8 @@ let%expect_test "Loop passthrough" =
     |}]
 
 let example1_program =
-  let mir = mir_of_string
+  let mir =
+    mir_of_string
       {|
         model
         {                                // 1
@@ -307,7 +311,8 @@ let%test "Reconstructed recursive statement" =
   stmt = example1_program
 
 let example3_program =
-  let mir = mir_of_string
+  let mir =
+    mir_of_string
       {|
       model {
         while (42);
@@ -398,7 +403,8 @@ let%expect_test "Predecessor graph example 3" =
     |}]
 
 let example4_program =
-  let mir = mir_of_string
+  let mir =
+    mir_of_string
       {|
       model {
         for (i in 1:6) {
@@ -498,7 +504,8 @@ let%expect_test "Predecessor graph example 4" =
     |}]
 
 let example5_program =
-  let mir = mir_of_string
+  let mir =
+    mir_of_string
       {|
       model {
         for (i in 1:6) {

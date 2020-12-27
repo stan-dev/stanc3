@@ -55,40 +55,43 @@ let stan2cpp model_name model_string flags =
             "Semantic check failed but reported no errors. This should never \
              happen."
       in
-      let result = ast
-      >>= fun ast ->
-      let typed_ast =
-        Semantic_check.semantic_check_program ast
-        |> Result.map_error ~f:semantic_err_to_string
-      in
-      typed_ast
-      >>| fun typed_ast ->
-      if is_flag_set "print-canonical" then
-        r.return (Result.Ok (Pretty_printing.pretty_print_typed_program
-          (Canonicalize.canonicalize_program typed_ast)), warnings);
-      let mir = Ast_to_Mir.trans_prog model_name typed_ast in
-      let tx_mir = Transform_Mir.trans_prog mir in
-      let opt_mir =
-        if is_flag_set "O" then Optimize.optimization_suite tx_mir
-        else tx_mir
-      in
-      let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir in
-      let uninit_warnings =
-        if is_flag_set "warn-uninitialized" then
-          Pedantic_analysis.sprint_warn_uninitialized mir
-        else ""
-      in
-      let pedantic_warnings =
-        if is_flag_set "warn-pedantic" then
-          Pedantic_analysis.sprint_warn_pedantic mir
-        else ""
-      in
-      (cpp, warnings @ [uninit_warnings; pedantic_warnings])
+      let result =
+        ast
+        >>= fun ast ->
+        let typed_ast =
+          Semantic_check.semantic_check_program ast
+          |> Result.map_error ~f:semantic_err_to_string
+        in
+        typed_ast
+        >>| fun typed_ast ->
+        if is_flag_set "print-canonical" then
+          r.return
+            ( Result.Ok
+                (Pretty_printing.pretty_print_typed_program
+                   (Canonicalize.canonicalize_program typed_ast))
+            , warnings ) ;
+        let mir = Ast_to_Mir.trans_prog model_name typed_ast in
+        let tx_mir = Transform_Mir.trans_prog mir in
+        let opt_mir =
+          if is_flag_set "O" then Optimize.optimization_suite tx_mir
+          else tx_mir
+        in
+        let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir in
+        let uninit_warnings =
+          if is_flag_set "warn-uninitialized" then
+            Pedantic_analysis.sprint_warn_uninitialized mir
+          else ""
+        in
+        let pedantic_warnings =
+          if is_flag_set "warn-pedantic" then
+            Pedantic_analysis.sprint_warn_pedantic mir
+          else ""
+        in
+        (cpp, warnings @ [uninit_warnings; pedantic_warnings])
       in
       match result with
-      | Result.Ok (cpp, warnings) -> Result.Ok cpp, warnings
-      | Result.Error e -> Result.Error e, warnings
-    )
+      | Result.Ok (cpp, warnings) -> (Result.Ok cpp, warnings)
+      | Result.Error e -> (Result.Error e, warnings) )
 
 let wrap_result ~warnings = function
   | Result.Ok s ->

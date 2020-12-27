@@ -184,10 +184,12 @@ let use_file filename =
     if !dump_mir then
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.Program.Typed.t)] ;
     if !dump_mir_pretty then Program.Typed.pp Format.std_formatter mir ;
-    if !warn_pedantic then Pedantic_analysis.sprint_warn_pedantic mir
-                           |> Out_channel.(output_string stderr) ;
-    if !warn_uninitialized then Pedantic_analysis.sprint_warn_uninitialized mir
-                                |> Out_channel.(output_string stderr);
+    ( if !warn_pedantic then
+      Pedantic_analysis.sprint_warn_pedantic mir
+      |> Out_channel.(output_string stderr) ) ;
+    ( if !warn_uninitialized then
+      Pedantic_analysis.sprint_warn_uninitialized mir
+      |> Out_channel.(output_string stderr) ) ;
     let tx_mir = Transform_Mir.trans_prog mir in
     if !dump_tx_mir then
       Sexp.pp_hum Format.std_formatter
