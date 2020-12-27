@@ -39,9 +39,10 @@ Some function is declared without specifying a definition.
 
 
 $ node pedantic.js
-[ 'Warning:\n  The parameter k was declared but was not used in the density calculation.\nWarning at \'string\', line 7, column 17 to column 22:\n  Argument 10000 suggests there may be parameters that are not unit scale;\n  consider rescaling with a multiplier (see manual section 22.12).\n' ]
+[ 'Warning:\n  The parameter k was declared but was not used in the density calculation.',
+  'Warning at \'string\', line 7, column 17 to column 22:\n  Argument 10000 suggests there may be parameters that are not unit scale;\n  consider rescaling with a multiplier (see manual section 22.12).' ]
 []
-[ 'Warning at \'string\', line 4, column 9 to column 11:\n  The variable tt may not have been assigned a value before its use.\n' ]
+[ 'Warning at \'string\', line 4, column 9 to column 11:\n  The variable tt may not have been assigned a value before its use.' ]
 []
 $ node standalone-functions.js
 
