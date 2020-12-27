@@ -31,8 +31,11 @@ let stan2cpp model_name model_string flags =
   Transform_Mir.use_opencl := is_flag_set "use-opencl" ;
   Stan_math_code_gen.standalone_functions := is_flag_set "standalone-functions" ;
   let ast =
+    try
     Parse.parse_string Parser.Incremental.program model_string
     |> Result.map_error ~f:(Fmt.to_to_string Errors.pp_syntax_error)
+    with Errors.SyntaxError err ->
+      Result.Error (Fmt.to_to_string Errors.pp_syntax_error err)
   in
   let semantic_err_to_string = function
     | Result.Error (error :: _) ->
