@@ -27,6 +27,7 @@ val pp_syntax_error : Format.formatter -> syntax_error -> unit
 val pp_semantic_error : Format.formatter -> string * Location_span.t -> unit
 (** A semantic error message used when handling a SemanticError *)
 
+val pp_context_and_message :
+  Format.formatter -> string * Middle.Location.t -> unit
 (** Return two lines before and after the specified location
     and print a message *)
-val pp_context_and_message : Format.formatter -> string * Middle.Location.t -> unit
