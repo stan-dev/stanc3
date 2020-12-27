@@ -404,10 +404,8 @@ let pp_program ppf
   Format.pp_close_box ppf ()
 
 let check_correctness prog pretty =
-  let result_ast =
-    Errors.without_warnings
-      (Parse.parse_string Parser.Incremental.program)
-      pretty
+  let result_ast, (_ : Warnings.t list) =
+    Parse.parse_string Parser.Incremental.program pretty
   in
   if
     compare_untyped_program prog (Option.value_exn (Result.ok result_ast)) <> 0
