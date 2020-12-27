@@ -24,7 +24,7 @@ model {
 }
 
 $ node filename.js
-Semantic error in 'string', line 6, column 4 to column 5: 
+Semantic error in 'good_filename', line 6, column 4 to column 5: 
 Identifier 'z' not in scope.
 Semantic error in 'string', line 6, column 4 to column 5: 
 Identifier 'z' not in scope.

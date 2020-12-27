@@ -10,7 +10,7 @@ model {
 }
 `
 
-let basic = stanc.stanc("basic", basic_model, ["filename-in-msg=foo"]);
+let basic = stanc.stanc("basic", basic_model, ["filename-in-msg=good_filename"]);
 utils.print_error(basic)
 
 let basic_no_args = stanc.stanc("basic", basic_model);

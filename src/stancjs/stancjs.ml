@@ -116,17 +116,11 @@ let stan2cpp_wrapped name code (flags : Js.string_array Js.t Js.opt) =
   let result, warnings, pedantic_mode_warnings =
     stan2cpp (Js.to_string name) (Js.to_string code) is_flag_set
   in
-  (* TODO(seantalts): obviously we should eventually try to unify the printing of
-     warnings between the various sources.
-  *)
   let warnings =
-    List.map ~f:(Fmt.strf "%a" (Warnings.pp ?printed_filename)) warnings
-  in
-  let pedantic_mode_warnings =
     List.map
       ~f:(Fmt.strf "%a" (Warnings.pp ?printed_filename))
-      pedantic_mode_warnings
+      (warnings @ pedantic_mode_warnings)
   in
-  wrap_result result ~warnings:(warnings @ pedantic_mode_warnings)
+  wrap_result ?printed_filename result ~warnings
 
 let () = Js.export "stanc" stan2cpp_wrapped
