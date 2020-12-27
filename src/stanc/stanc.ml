@@ -161,14 +161,15 @@ let use_file filename =
   let ast =
     if !canonicalize_program then
       Canonicalize.repair_syntax
-        (Errors.without_warnings Frontend_utils.get_ast_or_exit filename)
+        (Warnings.without_warnings Frontend_utils.get_ast_or_exit filename)
     else Frontend_utils.get_ast_or_exit filename
   in
   Debugging.ast_logger ast ;
   if !pretty_print_program then
     print_endline (Pretty_printing.pretty_print_program ast) ;
   let typed_ast = Frontend_utils.type_ast_or_exit ast in
-  Deprecation_analysis.emit_warnings typed_ast ;
+  Fmt.(list ~sep:cut Deprecation_analysis.pp) Fmt.stderr
+    (Deprecation_analysis.collect_warnings typed_ast);
   if !canonicalize_program then
     print_endline
       (Pretty_printing.pretty_print_typed_program

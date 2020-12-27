@@ -405,7 +405,7 @@ let pp_program ppf
 
 let check_correctness prog pretty =
   let result_ast =
-    Errors.without_warnings
+    Warnings.without_warnings
       (Parse.parse_string Parser.Incremental.program)
       pretty
   in
