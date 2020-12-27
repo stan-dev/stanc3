@@ -111,7 +111,7 @@ Semantic error in 'plus_equals_matrix_array.stan', line 7, column 2 to column 9:
      8:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator +=: lhs has type matrix[] and rhs has type matrix[]. Available signatures:
+Ill-typed arguments supplied to assignment operator +=: lhs has type array[] matrix and rhs has type array[] matrix. Available signatures:
 (int, int) => void
 (real, int) => void
 (real, real) => void
@@ -169,7 +169,7 @@ Semantic error in 'plus_equals_prim_array.stan', line 5, column 2 to column 9:
      6:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator +=: lhs has type real[] and rhs has type real[]. Available signatures:
+Ill-typed arguments supplied to assignment operator +=: lhs has type array[] real and rhs has type array[] real. Available signatures:
 (int, int) => void
 (real, int) => void
 (real, real) => void
@@ -192,7 +192,7 @@ Semantic error in 'plus_equals_row_vec_array.stan', line 5, column 2 to column 9
      6:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator +=: lhs has type row_vector[] and rhs has type row_vector[]. Available signatures:
+Ill-typed arguments supplied to assignment operator +=: lhs has type array[] row_vector and rhs has type array[] row_vector. Available signatures:
 (int, int) => void
 (real, int) => void
 (real, real) => void
@@ -285,7 +285,7 @@ Semantic error in 'plus_equals_vector_array.stan', line 5, column 2 to column 9:
      6:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator +=: lhs has type vector[] and rhs has type vector[]. Available signatures:
+Ill-typed arguments supplied to assignment operator +=: lhs has type array[] vector and rhs has type array[] vector. Available signatures:
 (int, int) => void
 (real, int) => void
 (real, real) => void

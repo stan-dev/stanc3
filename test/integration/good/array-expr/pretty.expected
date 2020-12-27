@@ -149,16 +149,16 @@ transformed parameters {
 
   $ ../../../../../install/default/bin/stanc --auto-format validate_array_expr_primitives.stan
 functions {
-  int[] f1_arr_int() {
+  array[] int f1_arr_int() {
     return {-1, -2};
   }
-  int[] f2_arr_int(int x) {
+  array[] int f2_arr_int(int x) {
     return {-x};
   }
-  real[] f1_arr_real() {
+  array[] real f1_arr_real() {
     return {-1.0, -2.0};
   }
-  real[] f2_arr_real(real y) {
+  array[] real f2_arr_real(real y) {
     return {-y};
   }
 }

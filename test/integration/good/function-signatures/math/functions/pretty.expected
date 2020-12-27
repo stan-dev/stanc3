@@ -1160,7 +1160,8 @@ model {
 
   $ ../../../../../../../install/default/bin/stanc --auto-format integrate_1d.stan
 functions {
-  real integrand(real x, real xc, real[] theta, real[] x_r, int[] x_i) {
+  real integrand(real x, real xc, array[] real theta, array[] real x_r,
+                 array[] int x_i) {
     return 0.0;
   }
 }

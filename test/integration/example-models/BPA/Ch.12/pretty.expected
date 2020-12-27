@@ -1,6 +1,6 @@
   $ ../../../../../../install/default/bin/stanc --auto-format Nmix0.stan
 functions {
-  real bivariate_poisson_log_lpmf(int[] n, real log_lambda, real p) {
+  real bivariate_poisson_log_lpmf(array[] int n, real log_lambda, real p) {
     array[min(n) + 1] real s;
     real log_theta_1 = log_lambda + log(p) + log1m(p);
     real log_theta_0 = log_lambda + log(p) * 2;
@@ -92,7 +92,7 @@ generated quantities {
 
   $ ../../../../../../install/default/bin/stanc --auto-format Nmix1.stan
 functions {
-  real bivariate_poisson_log_lpmf(int[] n, real log_lambda, real p) {
+  real bivariate_poisson_log_lpmf(array[] int n, real log_lambda, real p) {
     array[min(n) + 1] real s;
     real log_theta_1 = log_lambda + log(p) + log1m(p);
     real log_theta_0 = log_lambda + log(p) * 2;
@@ -106,7 +106,7 @@ functions {
                  + poisson_log_lpmf(u| log_theta_0);
     return log_sum_exp(s);
   }
-  real poisbin_lpmf(int[] y, int n, real log_lambda, real p) {
+  real poisbin_lpmf(array[] int y, int n, real log_lambda, real p) {
     if (max(y) > n) 
       return negative_infinity();
     return poisson_log_lpmf(n| log_lambda) + binomial_lpmf(y| n, p);
@@ -214,7 +214,8 @@ generated quantities {
 
   $ ../../../../../../install/default/bin/stanc --auto-format Nmix2.stan
 functions {
-  real bivariate_poisson_log_lpmf(int[] n, real log_lambda, real[] p) {
+  real bivariate_poisson_log_lpmf(array[] int n, real log_lambda,
+                                  array[] real p) {
     array[min(n) + 1] real s;
     if (size(n) != 2) 
       reject("Size of n must be 2.");

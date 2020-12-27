@@ -10,9 +10,10 @@ Semantic error in 'bad_abs_tol.stan', line 30, column 4 to line 32, column 24:
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'ode_bdf_tol'. Expected arguments:
-(real, vector) => vector, vector, real, real[], real, real, int
+(real, vector) => vector, vector, real, array[] real, real, real, int
+
 Instead supplied arguments of incompatible type:
-(real, real[], real, real) => real[], real[], real, real[], real[], real, int, real, real
+(real, array[] real, real, real) => array[] real, array[] real, real, array[] real, array[] real, real, int, real, real
   $ ../../../../../install/default/bin/stanc bad_initial_state.stan
 Semantic error in 'bad_initial_state.stan', line 29, column 4 to line 31, column 24:
    -------------------------------------------------
@@ -25,9 +26,10 @@ Semantic error in 'bad_initial_state.stan', line 29, column 4 to line 31, column
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'ode_bdf_tol'. Expected arguments:
-(real, vector) => vector, vector, real, real[], real, real, int
+(real, vector) => vector, vector, real, array[] real, real, real, int
+
 Instead supplied arguments of incompatible type:
-(real, real[], real, real) => real[], real, real, real[], real, real, int, real, real
+(real, array[] real, real, real) => array[] real, real, real, array[] real, real, real, int, real, real
   $ ../../../../../install/default/bin/stanc bad_initial_time.stan
 Semantic error in 'bad_initial_time.stan', line 30, column 4 to line 32, column 24:
    -------------------------------------------------
@@ -40,9 +42,10 @@ Semantic error in 'bad_initial_time.stan', line 30, column 4 to line 32, column 
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'ode_bdf_tol'. Expected arguments:
-(real, vector) => vector, vector, real, real[], real, real, int
+(real, vector) => vector, vector, real, array[] real, real, real, int
+
 Instead supplied arguments of incompatible type:
-(real, real[], real, real) => real[], real[], vector, real[], real, real, int, real, real
+(real, array[] real, real, real) => array[] real, array[] real, vector, array[] real, real, real, int, real, real
   $ ../../../../../install/default/bin/stanc bad_max_num_steps.stan
 Semantic error in 'bad_max_num_steps.stan', line 30, column 4 to line 32, column 24:
    -------------------------------------------------
@@ -55,9 +58,10 @@ Semantic error in 'bad_max_num_steps.stan', line 30, column 4 to line 32, column
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'ode_bdf_tol'. Expected arguments:
-(real, vector) => vector, vector, real, real[], real, real, int
+(real, vector) => vector, vector, real, array[] real, real, real, int
+
 Instead supplied arguments of incompatible type:
-(real, real[], real, real) => real[], real[], real, real[], real, real, real[], real, real
+(real, array[] real, real, real) => array[] real, array[] real, real, array[] real, real, real, array[] real, real, real
   $ ../../../../../install/default/bin/stanc bad_no_args.stan
 Semantic error in 'bad_no_args.stan', line 25, column 4 to line 26, column 28:
    -------------------------------------------------
@@ -70,9 +74,10 @@ Semantic error in 'bad_no_args.stan', line 25, column 4 to line 26, column 28:
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'ode_bdf_tol'. Expected arguments:
-(real, vector) => vector, vector, real, real[], real, real, int
+(real, vector) => vector, vector, real, array[] real, real, real, int
+
 Instead supplied arguments of incompatible type:
-(real, real[]) => real[], real[], real, real[], real, real, int
+(real, array[] real) => array[] real, array[] real, real, array[] real, real, real, int
   $ ../../../../../install/default/bin/stanc bad_non_matching_args.stan
 Semantic error in 'bad_non_matching_args.stan', line 29, column 4 to line 31, column 24:
    -------------------------------------------------
@@ -85,9 +90,10 @@ Semantic error in 'bad_non_matching_args.stan', line 29, column 4 to line 31, co
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'ode_bdf_tol'. Expected arguments:
-(real, vector) => vector, vector, real, real[], real, real, int
+(real, vector) => vector, vector, real, array[] real, real, real, int
+
 Instead supplied arguments of incompatible type:
-(real, real[], real, real[]) => real[], real[], real, real[], real, real, int, real, real
+(real, array[] real, real, array[] real) => array[] real, array[] real, real, array[] real, real, real, int, real, real
   $ ../../../../../install/default/bin/stanc bad_one_arg.stan
 Semantic error in 'bad_one_arg.stan', line 27, column 4 to line 29, column 18:
    -------------------------------------------------
@@ -100,9 +106,10 @@ Semantic error in 'bad_one_arg.stan', line 27, column 4 to line 29, column 18:
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'ode_bdf_tol'. Expected arguments:
-(real, vector) => vector, vector, real, real[], real, real, int
+(real, vector) => vector, vector, real, array[] real, real, real, int
+
 Instead supplied arguments of incompatible type:
-(real, real[], real) => real[], real[], real, real[], real, real, int, real
+(real, array[] real, real) => array[] real, array[] real, real, array[] real, real, real, int, real
   $ ../../../../../install/default/bin/stanc bad_rel_tol.stan
 Semantic error in 'bad_rel_tol.stan', line 30, column 4 to line 32, column 24:
    -------------------------------------------------
@@ -115,9 +122,10 @@ Semantic error in 'bad_rel_tol.stan', line 30, column 4 to line 32, column 24:
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'ode_bdf_tol'. Expected arguments:
-(real, vector) => vector, vector, real, real[], real, real, int
+(real, vector) => vector, vector, real, array[] real, real, real, int
+
 Instead supplied arguments of incompatible type:
-(real, real[], real, real) => real[], real[], real, real[], real, real[], int, real, real
+(real, array[] real, real, real) => array[] real, array[] real, real, array[] real, real, array[] real, int, real, real
   $ ../../../../../install/default/bin/stanc bad_times.stan
 Semantic error in 'bad_times.stan', line 30, column 4 to line 31, column 24:
    -------------------------------------------------
@@ -130,9 +138,9 @@ Semantic error in 'bad_times.stan', line 30, column 4 to line 31, column 24:
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'ode_bdf'. Expected arguments:
-(real, vector) => vector, vector, real, real[]
+(real, vector) => vector, vector, real, array[] real
 Instead supplied arguments of incompatible type:
-(real, real[], real, real) => real[], real[], real, vector[], real, real
+(real, array[] real, real, real) => array[] real, array[] real, real, array[] vector, real, real
   $ ../../../../../install/default/bin/stanc bad_times_tol.stan
 Semantic error in 'bad_times_tol.stan', line 30, column 4 to line 32, column 24:
    -------------------------------------------------
@@ -145,6 +153,7 @@ Semantic error in 'bad_times_tol.stan', line 30, column 4 to line 32, column 24:
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'ode_bdf_tol'. Expected arguments:
-(real, vector) => vector, vector, real, real[], real, real, int
+(real, vector) => vector, vector, real, array[] real, real, real, int
+
 Instead supplied arguments of incompatible type:
-(real, real[], real, real) => real[], real[], real, vector[], real, real, int, real, real
+(real, array[] real, real, real) => array[] real, array[] real, real, array[] vector, real, real, int, real, real

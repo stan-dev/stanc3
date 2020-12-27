@@ -1,6 +1,7 @@
   $ ../../../../install/default/bin/stanc --print-canonical deprecated.stan
 functions {
-  real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
+  array[] real sho(real t, array[] real y, array[] real theta,
+                   array[] real x, array[] int x_int) {
     array[2] real dydt;
     dydt[1] = y[2];
     dydt[2] = -y[1] - theta[1] * y[2];

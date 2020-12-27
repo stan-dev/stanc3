@@ -1,6 +1,7 @@
   $ ../../../../../../install/default/bin/stanc --auto-format gp-fit-ARD.stan
 functions {
-  matrix L_cov_exp_quad_ARD(vector[] x, real alpha, vector rho, real delta) {
+  matrix L_cov_exp_quad_ARD(array[] vector x, real alpha, vector rho,
+                            real delta) {
     int N = size(x);
     matrix[N, N] K;
     real neg_half = -0.5;
@@ -213,8 +214,8 @@ model {
 Warning in 'gp-fit.stan', line 19, column 19: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
   $ ../../../../../../install/default/bin/stanc --auto-format gp-predict-analytic.stan
 functions {
-  vector gp_pred_rng(real[] x2, vector y1, real[] x1, real alpha, real rho,
-                     real sigma, real delta) {
+  vector gp_pred_rng(array[] real x2, vector y1, array[] real x1, real alpha,
+                     real rho, real sigma, real delta) {
     int N1 = rows(y1);
     int N2 = size(x2);
     vector[N2] f2;

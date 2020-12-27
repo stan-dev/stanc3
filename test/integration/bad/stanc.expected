@@ -38,7 +38,7 @@ Semantic error in 'array_expr_bad1.stan', line 2, column 2 to column 32:
      4:  model {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type real[,] and rhs has type int[]
+Ill-typed arguments supplied to assignment operator =: lhs has type array[,] real and rhs has type array[] int
   $ ../../../../install/default/bin/stanc array_expr_bad2.stan
 Semantic error in 'array_expr_bad2.stan', line 2, column 34 to column 35:
    -------------------------------------------------
@@ -49,7 +49,7 @@ Semantic error in 'array_expr_bad2.stan', line 2, column 34 to column 35:
      4:  model {
    -------------------------------------------------
 
-Array expression must have entries of consistent type. Expected int[] but found int.
+Array expression must have entries of consistent type. Expected array[] int but found int.
   $ ../../../../install/default/bin/stanc assign_real_to_int.stan
 Semantic error in 'assign_real_to_int.stan', line 11, column 2 to column 8:
    -------------------------------------------------
@@ -71,7 +71,7 @@ Semantic error in 'bad_fundef_returntypes1.stan', line 2, column 13 to line 6, c
      4:      real x  = 54;
    -------------------------------------------------
 
-Branches of function definition need to have the same return type. Instead, found return types int[] and int.
+Branches of function definition need to have the same return type. Instead, found return types array[] int and int.
   $ ../../../../install/default/bin/stanc bad_fundef_returntypes2.stan
 Semantic error in 'bad_fundef_returntypes2.stan', line 3, column 4 to line 6, column 18:
    -------------------------------------------------
@@ -83,7 +83,7 @@ Semantic error in 'bad_fundef_returntypes2.stan', line 3, column 4 to line 6, co
      5:      else
    -------------------------------------------------
 
-Branches of function definition need to have the same return type. Instead, found return types int and int[].
+Branches of function definition need to have the same return type. Instead, found return types int and array[] int.
   $ ../../../../install/default/bin/stanc bad_fundef_returntypes3.stan
 Semantic error in 'bad_fundef_returntypes3.stan', line 2, column 13 to line 6, column 3:
    -------------------------------------------------
@@ -94,7 +94,7 @@ Semantic error in 'bad_fundef_returntypes3.stan', line 2, column 13 to line 6, c
      4:        return 24;
    -------------------------------------------------
 
-Branches of function definition need to have the same return type. Instead, found return types int and int[].
+Branches of function definition need to have the same return type. Instead, found return types int and array[] int.
   $ ../../../../install/default/bin/stanc bad_prob_fun_suffix.stan
 Semantic error in 'bad_prob_fun_suffix.stan', line 10, column 2 to column 19:
    -------------------------------------------------
@@ -117,7 +117,7 @@ Semantic error in 'bad_var_assignment_type1.stan', line 4, column 2 to column 8:
      6:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type real[] and rhs has type vector
+Ill-typed arguments supplied to assignment operator =: lhs has type array[] real and rhs has type vector
   $ ../../../../install/default/bin/stanc bad_var_assignment_type2.stan
 Semantic error in 'bad_var_assignment_type2.stan', line 6, column 2 to column 8:
    -------------------------------------------------
@@ -129,7 +129,7 @@ Semantic error in 'bad_var_assignment_type2.stan', line 6, column 2 to column 8:
      8:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type real[] and rhs has type real[,]
+Ill-typed arguments supplied to assignment operator =: lhs has type array[] real and rhs has type array[,] real
   $ ../../../../install/default/bin/stanc bad_var_assignment_vec_arr.stan
 Semantic error in 'bad_var_assignment_vec_arr.stan', line 10, column 2 to column 35:
    -------------------------------------------------
@@ -141,7 +141,7 @@ Semantic error in 'bad_var_assignment_vec_arr.stan', line 10, column 2 to column
     12:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type real[] and rhs has type vector
+Ill-typed arguments supplied to assignment operator =: lhs has type array[] real and rhs has type vector
   $ ../../../../install/default/bin/stanc bad_while.stan
 Syntax error in 'bad_while.stan', line 3, column 24 to column 25, parsing error:
    -------------------------------------------------
@@ -383,7 +383,7 @@ Semantic error in 'declare-define-var-double-1.stan', line 5, column 2 to column
      7:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type real and rhs has type real[]
+Ill-typed arguments supplied to assignment operator =: lhs has type real and rhs has type array[] real
   $ ../../../../install/default/bin/stanc declare-define-var-double-2.stan
 Semantic error in 'declare-define-var-double-2.stan', line 5, column 2 to column 23:
    -------------------------------------------------
@@ -395,7 +395,7 @@ Semantic error in 'declare-define-var-double-2.stan', line 5, column 2 to column
      7:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type vector and rhs has type real[]
+Ill-typed arguments supplied to assignment operator =: lhs has type vector and rhs has type array[] real
   $ ../../../../install/default/bin/stanc declare-define-var-double-3.stan
 Syntax error in 'declare-define-var-double-3.stan', line 3, column 12 to column 15, parsing error:
    -------------------------------------------------
@@ -456,7 +456,7 @@ Semantic error in 'declare-define-var-int-3.stan', line 2, column 2 to column 19
      4:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type int[] and rhs has type int
+Ill-typed arguments supplied to assignment operator =: lhs has type array[] int and rhs has type int
   $ ../../../../install/default/bin/stanc declare-define-var-int-4.stan
 Semantic error in 'declare-define-var-int-4.stan', line 5, column 2 to column 17:
    -------------------------------------------------
@@ -468,7 +468,7 @@ Semantic error in 'declare-define-var-int-4.stan', line 5, column 2 to column 17
      7:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type int and rhs has type int[]
+Ill-typed arguments supplied to assignment operator =: lhs has type int and rhs has type array[] int
   $ ../../../../install/default/bin/stanc declare-define-var-matrix-1.stan
 Semantic error in 'declare-define-var-matrix-1.stan', line 5, column 2 to column 23:
    -------------------------------------------------
@@ -1118,9 +1118,9 @@ Semantic error in 'functions-bad22-ode.stan', line 15, column 11 to column 82:
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
-((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[]) => real[,]
-((real, real[], real[], data real[], data int[]) => real[], real[], real, real[], real[], data real[], data int[], data real, data real, data real) => real[,]
-Instead supplied arguments of incompatible type: (real, real[], real[], real[], int[]) => real[], real[], real, real[], real[], real[], int[].
+((real, array[] real, array[] real, data array[] real, data array[] int) => array[] real, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
+((real, array[] real, array[] real, data array[] real, data array[] int) => array[] real, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
+Instead supplied arguments of incompatible type: (real, array[] real, array[] real, array[] real, array[] int) => array[] real, array[] real, real, array[] real, array[] real, array[] real, array[] int.
   $ ../../../../install/default/bin/stanc functions-bad23.stan
 Semantic error in 'functions-bad23.stan', line 3, column 4 to column 11:
    -------------------------------------------------
@@ -1436,7 +1436,7 @@ Ill-typed arguments supplied to infix operator /. Available signatures:
 (vector, real) => vector
 (row_vector, real) => row_vector
 (matrix, real) => matrix
-Instead supplied arguments of incompatible type: int[], matrix.
+Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_divide_right_bad.stan
 Semantic error in 'op_divide_right_bad.stan', line 7, column 6 to column 11:
    -------------------------------------------------
@@ -1456,7 +1456,7 @@ Ill-typed arguments supplied to infix operator /. Available signatures:
 (vector, real) => vector
 (row_vector, real) => row_vector
 (matrix, real) => matrix
-Instead supplied arguments of incompatible type: int[], matrix.
+Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_elt_divide_bad.stan
 Semantic error in 'op_elt_divide_bad.stan', line 7, column 6 to column 12:
    -------------------------------------------------
@@ -1479,7 +1479,7 @@ Ill-typed arguments supplied to infix operator ./. Available signatures:
 (real, matrix) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
-Instead supplied arguments of incompatible type: int[], matrix.
+Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_elt_multiply_bad.stan
 Semantic error in 'op_elt_multiply_bad.stan', line 7, column 6 to column 12:
    -------------------------------------------------
@@ -1496,7 +1496,7 @@ Ill-typed arguments supplied to infix operator .*. Available signatures:
 (vector, vector) => vector
 (row_vector, row_vector) => row_vector
 (matrix, matrix) => matrix
-Instead supplied arguments of incompatible type: int[], matrix.
+Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_intdivide_bad.stan
 Semantic error in 'op_intdivide_bad.stan', line 7, column 6 to column 13:
    -------------------------------------------------
@@ -1509,7 +1509,7 @@ Semantic error in 'op_intdivide_bad.stan', line 7, column 6 to column 13:
 
 Ill-typed arguments supplied to infix operator %/%. Available signatures: 
 (int, int) => int
-Instead supplied arguments of incompatible type: int[], matrix.
+Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_intdivide_bad_1.stan
 Semantic error in 'op_intdivide_bad_1.stan', line 6, column 11 to column 18:
    -------------------------------------------------
@@ -1565,7 +1565,7 @@ Semantic error in 'op_logical_negation_bad.stan', line 7, column 6 to column 8:
 Ill-typed arguments supplied to prefix operator !. Available signatures: 
 (int) => int
 (real) => int
-Instead supplied argument of incompatible type: int[].
+Instead supplied argument of incompatible type: array[] int.
   $ ../../../../install/default/bin/stanc op_mdivide_left_bad.stan
 Semantic error in 'op_mdivide_left_bad.stan', line 7, column 6 to column 11:
    -------------------------------------------------
@@ -1579,7 +1579,7 @@ Semantic error in 'op_mdivide_left_bad.stan', line 7, column 6 to column 11:
 Ill-typed arguments supplied to infix operator \. Available signatures: 
 (matrix, vector) => vector
 (matrix, matrix) => matrix
-Instead supplied arguments of incompatible type: int[], matrix.
+Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_minus_bad.stan
 Semantic error in 'op_minus_bad.stan', line 7, column 6 to column 8:
    -------------------------------------------------
@@ -1596,7 +1596,7 @@ Ill-typed arguments supplied to prefix operator -. Available signatures:
 (vector) => vector
 (row_vector) => row_vector
 (matrix) => matrix
-Instead supplied argument of incompatible type: int[].
+Instead supplied argument of incompatible type: array[] int.
   $ ../../../../install/default/bin/stanc op_modulus_bad.stan
 Semantic error in 'op_modulus_bad.stan', line 7, column 6 to column 11:
    -------------------------------------------------
@@ -1609,7 +1609,7 @@ Semantic error in 'op_modulus_bad.stan', line 7, column 6 to column 11:
 
 Ill-typed arguments supplied to infix operator %. Available signatures: 
 (int, int) => int
-Instead supplied arguments of incompatible type: int[], matrix.
+Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_multiplication_bad.stan
 Semantic error in 'op_multiplication_bad.stan', line 7, column 6 to column 11:
    -------------------------------------------------
@@ -1634,7 +1634,7 @@ Ill-typed arguments supplied to infix operator *. Available signatures:
 (vector, row_vector) => matrix
 (matrix, real) => matrix
 (matrix, matrix) => matrix
-Instead supplied arguments of incompatible type: int[], matrix.
+Instead supplied arguments of incompatible type: array[] int, matrix.
   $ ../../../../install/default/bin/stanc op_subtraction_bad.stan
 Semantic error in 'op_subtraction_bad.stan', line 7, column 6 to column 11:
    -------------------------------------------------
@@ -1672,7 +1672,7 @@ Ill-typed arguments supplied to postfix operator '. Available signatures:
 (row_vector) => vector
 (vector) => row_vector
 (matrix) => matrix
-Instead supplied argument of incompatible type: int[].
+Instead supplied argument of incompatible type: array[] int.
   $ ../../../../install/default/bin/stanc print-void.stan
 Semantic error in 'print-void.stan', line 8, column 8 to column 14:
    -------------------------------------------------
@@ -1742,68 +1742,68 @@ Ill-typed arguments supplied to function 'normal_lupdf'. Available signatures:
 (real, real, real) => real
 (real, real, vector) => real
 (real, real, row_vector) => real
-(real, real, real[]) => real
+(real, real, array[] real) => real
 (real, vector, real) => real
 (real, vector, vector) => real
 (real, vector, row_vector) => real
-(real, vector, real[]) => real
+(real, vector, array[] real) => real
 (real, row_vector, real) => real
 (real, row_vector, vector) => real
 (real, row_vector, row_vector) => real
-(real, row_vector, real[]) => real
-(real, real[], real) => real
-(real, real[], vector) => real
-(real, real[], row_vector) => real
-(real, real[], real[]) => real
+(real, row_vector, array[] real) => real
+(real, array[] real, real) => real
+(real, array[] real, vector) => real
+(real, array[] real, row_vector) => real
+(real, array[] real, array[] real) => real
 (vector, real, real) => real
 (vector, real, vector) => real
 (vector, real, row_vector) => real
-(vector, real, real[]) => real
+(vector, real, array[] real) => real
 (vector, vector, real) => real
 (vector, vector, vector) => real
 (vector, vector, row_vector) => real
-(vector, vector, real[]) => real
+(vector, vector, array[] real) => real
 (vector, row_vector, real) => real
 (vector, row_vector, vector) => real
 (vector, row_vector, row_vector) => real
-(vector, row_vector, real[]) => real
-(vector, real[], real) => real
-(vector, real[], vector) => real
-(vector, real[], row_vector) => real
-(vector, real[], real[]) => real
+(vector, row_vector, array[] real) => real
+(vector, array[] real, real) => real
+(vector, array[] real, vector) => real
+(vector, array[] real, row_vector) => real
+(vector, array[] real, array[] real) => real
 (row_vector, real, real) => real
 (row_vector, real, vector) => real
 (row_vector, real, row_vector) => real
-(row_vector, real, real[]) => real
+(row_vector, real, array[] real) => real
 (row_vector, vector, real) => real
 (row_vector, vector, vector) => real
 (row_vector, vector, row_vector) => real
-(row_vector, vector, real[]) => real
+(row_vector, vector, array[] real) => real
 (row_vector, row_vector, real) => real
 (row_vector, row_vector, vector) => real
 (row_vector, row_vector, row_vector) => real
-(row_vector, row_vector, real[]) => real
-(row_vector, real[], real) => real
-(row_vector, real[], vector) => real
-(row_vector, real[], row_vector) => real
-(row_vector, real[], real[]) => real
-(real[], real, real) => real
-(real[], real, vector) => real
-(real[], real, row_vector) => real
-(real[], real, real[]) => real
-(real[], vector, real) => real
-(real[], vector, vector) => real
-(real[], vector, row_vector) => real
-(real[], vector, real[]) => real
-(real[], row_vector, real) => real
-(real[], row_vector, vector) => real
-(real[], row_vector, row_vector) => real
-(real[], row_vector, real[]) => real
-(real[], real[], real) => real
-(real[], real[], vector) => real
-(real[], real[], row_vector) => real
-(real[], real[], real[]) => real
-Instead supplied arguments of incompatible type: int, int[], int.
+(row_vector, row_vector, array[] real) => real
+(row_vector, array[] real, real) => real
+(row_vector, array[] real, vector) => real
+(row_vector, array[] real, row_vector) => real
+(row_vector, array[] real, array[] real) => real
+(array[] real, real, real) => real
+(array[] real, real, vector) => real
+(array[] real, real, row_vector) => real
+(array[] real, real, array[] real) => real
+(array[] real, vector, real) => real
+(array[] real, vector, vector) => real
+(array[] real, vector, row_vector) => real
+(array[] real, vector, array[] real) => real
+(array[] real, row_vector, real) => real
+(array[] real, row_vector, vector) => real
+(array[] real, row_vector, row_vector) => real
+(array[] real, row_vector, array[] real) => real
+(array[] real, array[] real, real) => real
+(array[] real, array[] real, vector) => real
+(array[] real, array[] real, row_vector) => real
+(array[] real, array[] real, array[] real) => real
+Instead supplied arguments of incompatible type: int, array[] int, int.
   $ ../../../../install/default/bin/stanc real-pdf.stan
 Semantic error in 'real-pdf.stan', line 2, column 2 to line 4, column 3:
    -------------------------------------------------
@@ -2050,11 +2050,11 @@ Ill-typed arguments supplied to function 'bernoulli_logit_log'. Available signat
 (int, real) => real
 (int, vector) => real
 (int, row_vector) => real
-(int, real[]) => real
-(int[], real) => real
-(int[], vector) => real
-(int[], row_vector) => real
-(int[], real[]) => real
+(int, array[] real) => real
+(array[] int, real) => real
+(array[] int, vector) => real
+(array[] int, row_vector) => real
+(array[] int, array[] real) => real
 Instead supplied arguments of incompatible type: vector, vector.
   $ ../../../../install/default/bin/stanc signature_function_unknown.stan
 Warning in 'signature_function_unknown.stan', line 8, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.Semantic error in 'signature_function_unknown.stan', line 8, column 21 to column 45:
@@ -2260,7 +2260,7 @@ Semantic error in 'validate_array_expr_bad1.stan', line 6, column 2 to column 41
      8:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type int[] and rhs has type real[]
+Ill-typed arguments supplied to assignment operator =: lhs has type array[] int and rhs has type array[] real
   $ ../../../../install/default/bin/stanc validate_array_expr_bad2.stan
 Semantic error in 'validate_array_expr_bad2.stan', line 6, column 2 to column 24:
    -------------------------------------------------
@@ -2272,7 +2272,7 @@ Semantic error in 'validate_array_expr_bad2.stan', line 6, column 2 to column 24
      8:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to assignment operator =: lhs has type int[] and rhs has type int[,]
+Ill-typed arguments supplied to assignment operator =: lhs has type array[] int and rhs has type array[,] int
   $ ../../../../install/default/bin/stanc validate_array_expr_bad3.stan
 Syntax error in 'validate_array_expr_bad3.stan', line 6, column 14 to column 15, parsing error:
    -------------------------------------------------
@@ -2308,7 +2308,7 @@ Semantic error in 'validate_conditional_op_bad-1.stan', line 5, column 7 to colu
      7:  parameters {
    -------------------------------------------------
 
-Condition in ternary expression must be primitive int; found type=row_vector[,]
+Condition in ternary expression must be primitive int; found type=array[,] row_vector
   $ ../../../../install/default/bin/stanc validate_conditional_op_bad-2.stan
 Semantic error in 'validate_conditional_op_bad-2.stan', line 5, column 7 to column 20:
    -------------------------------------------------
@@ -2320,7 +2320,7 @@ Semantic error in 'validate_conditional_op_bad-2.stan', line 5, column 7 to colu
      7:  parameters {
    -------------------------------------------------
 
-Type mismatch in ternary expression, expression when true is: real; expression when false is: row_vector[,]
+Type mismatch in ternary expression, expression when true is: real; expression when false is: array[,] row_vector
   $ ../../../../install/default/bin/stanc validate_exponentiation_bad.stan
 Semantic error in 'validate_exponentiation_bad.stan', line 7, column 2 to column 12:
    -------------------------------------------------

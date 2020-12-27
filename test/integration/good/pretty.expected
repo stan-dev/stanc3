@@ -16,7 +16,8 @@ functions {
   real algebra_solverfake(real x) {
     return 2 * x;
   }
-  vector algebra_system(vector x, vector y, real[] dat, int[] dat_int) {
+  vector algebra_system(vector x, vector y, array[] real dat,
+                        array[] int dat_int) {
     vector[2] f_x;
     f_x[1] = x[1] - y[1];
     f_x[2] = x[2] - y[2];
@@ -65,7 +66,8 @@ functions {
   real algebra_solverfake(real x) {
     return 2 * x;
   }
-  vector algebra_system(vector x, vector y, real[] dat, int[] dat_int) {
+  vector algebra_system(vector x, vector y, array[] real dat,
+                        array[] int dat_int) {
     vector[2] f_x;
     f_x[1] = x[1] - y[1];
     f_x[2] = x[2] - y[2];
@@ -3265,7 +3267,8 @@ model {
 
   $ ../../../../install/default/bin/stanc --auto-format integrate_ode_adams.stan
 functions {
-  real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
+  array[] real sho(real t, array[] real y, array[] real theta,
+                   array[] real x, array[] int x_int) {
     array[2] real dydt;
     dydt[1] = y[2];
     dydt[2] = -y[1] - theta[1] * y[2];
@@ -3357,7 +3360,8 @@ The new interface is slightly different, see:
 https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../install/default/bin/stanc --auto-format integrate_ode_bdf.stan
 functions {
-  real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
+  array[] real sho(real t, array[] real y, array[] real theta,
+                   array[] real x, array[] int x_int) {
     array[2] real dydt;
     dydt[1] = y[2];
     dydt[2] = -y[1] - theta[1] * y[2];
@@ -3458,7 +3462,8 @@ The new interface is slightly different, see:
 https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../install/default/bin/stanc --auto-format integrate_ode_deprecation.stan
 functions {
-  real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
+  array[] real sho(real t, array[] real y, array[] real theta,
+                   array[] real x, array[] int x_int) {
     array[2] real dydt;
     dydt[1] = y[2];
     dydt[2] = -y[1] - theta[1] * y[2];
@@ -3493,7 +3498,8 @@ The new interface is slightly different, see:
 https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../install/default/bin/stanc --auto-format integrate_ode_rk45.stan
 functions {
-  real[] sho(real t, real[] y, real[] theta, real[] x, int[] x_int) {
+  array[] real sho(real t, array[] real y, array[] real theta,
+                   array[] real x, array[] int x_int) {
     array[2] real dydt;
     dydt[1] = y[2];
     dydt[2] = -y[1] - theta[1] * y[2];
@@ -3779,8 +3785,8 @@ model {
 
   $ ../../../../install/default/bin/stanc --auto-format map_rect.stan
 functions {
-  vector foo(vector shared_params, vector job_params, real[] data_r,
-             int[] data_i) {
+  vector foo(vector shared_params, vector job_params, array[] real data_r,
+             array[] int data_i) {
     return [1, 2, 3]';
   }
   real map_rectfake(real x) {
@@ -4084,7 +4090,8 @@ transformed data {
 
   $ ../../../../install/default/bin/stanc --auto-format ode-int-segments.stan
 functions {
-  real[] ode(real t, real[] y, real[] theta, real[] x, int[] x_int) {
+  array[] real ode(real t, array[] real y, array[] real theta,
+                   array[] real x, array[] int x_int) {
     array[0] real dydt;
     return dydt;
   }
@@ -4119,7 +4126,8 @@ The new interface is slightly different, see:
 https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../install/default/bin/stanc --auto-format ode-nested-quotes.stan
 functions {
-  real[] foo(real t, real[] y, real[] theta, real[] x_r, int[] x_i) {
+  array[] real foo(real t, array[] real y, array[] real theta,
+                   array[] real x_r, array[] int x_i) {
     return rep_array(1.0, 1);
   }
 }
@@ -4138,7 +4146,8 @@ The new interface is slightly different, see:
 https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../install/default/bin/stanc --auto-format ode_good.stan
 functions {
-  real[] harm_osc_ode(real t, real[] y, real[] theta, real[] x, int[] x_int) {
+  array[] real harm_osc_ode(real t, array[] real y, array[] real theta,
+                            array[] real x, array[] int x_int) {
     array[2] real dydt;
     dydt[1] = x[1] * y[2];
     dydt[2] = -y[1] - theta[1] * y[2];
@@ -4314,7 +4323,8 @@ model {
 
   $ ../../../../install/default/bin/stanc --auto-format prophet.stan
 functions {
-  real[,] get_changepoint_matrix(real[] t, real[] t_change, int T, int S) {
+  array[,] real get_changepoint_matrix(array[] real t, array[] real t_change,
+                                       int T, int S) {
     array[T, S] real A;
     array[S] real a_row;
     int cp_idx;
@@ -4330,7 +4340,8 @@ functions {
     }
     return A;
   }
-  real[] logistic_gamma(real k, real m, real[] delta, real[] t_change, int S) {
+  array[] real logistic_gamma(real k, real m, array[] real delta,
+                              array[] real t_change, int S) {
     array[S] real gamma;
     array[S + 1] real k_s;
     real m_pr;
@@ -4345,8 +4356,10 @@ functions {
     }
     return gamma;
   }
-  real[] logistic_trend(real k, real m, real[] delta, real[] t, real[] cap,
-                        real[,] A, real[] t_change, int S, int T) {
+  array[] real logistic_trend(real k, real m, array[] real delta,
+                              array[] real t, array[] real cap,
+                              array[,] real A, array[] real t_change, int S,
+                              int T) {
     array[S] real gamma;
     array[T] real Y;
     gamma = logistic_gamma(k, m, delta, t_change, S);
@@ -4358,8 +4371,9 @@ functions {
     }
     return Y;
   }
-  real[] linear_trend(real k, real m, real[] delta, real[] t, real[,] A,
-                      real[] t_change, int S, int T) {
+  array[] real linear_trend(real k, real m, array[] real delta,
+                            array[] real t, array[,] real A,
+                            array[] real t_change, int S, int T) {
     array[S] real gamma;
     array[T] real Y;
     for (i in 1 : S) {
@@ -4575,7 +4589,7 @@ model {
   $ ../../../../install/default/bin/stanc --auto-format unnormalized_math_fun_lpdf.stan
 functions {
   real foo_lpdf(real y1, real y2, vector vy1, vector vy2, matrix my1,
-                matrix my2, real[] ay1) {
+                matrix my2, array[] real ay1) {
     real r;
     r += beta_lupdf(y1| y2, y2);
     r += beta_proportion_lupdf(y1| y2, y2);
@@ -4676,7 +4690,7 @@ model {
 
   $ ../../../../install/default/bin/stanc --auto-format unnormalized_math_fun_lpmf.stan
 functions {
-  real foo_lpmf(int i1, real r1, matrix m1, vector v1, int[] ai1,
+  real foo_lpmf(int i1, real r1, matrix m1, vector v1, array[] int ai1,
                 row_vector rv1) {
     real r;
     r += bernoulli_logit_glm_lupmf(i1| m1, r1, v1);
@@ -4741,7 +4755,7 @@ model {
 
   $ ../../../../install/default/bin/stanc --auto-format unreserved-array-keyword.stan
 functions {
-  real f(real[,,] array) {
+  real f(array[,,] real array) {
     return array[1, 2, 3];
   }
 }
@@ -5706,7 +5720,8 @@ model {
 
   $ ../../../../install/default/bin/stanc --auto-format var-decls-in-functions.stan
 functions {
-  real[] harm_osc_ode(real t, real[] y, real[] theta, real[] x, int[] x_int) {
+  array[] real harm_osc_ode(real t, array[] real y, array[] real theta,
+                            array[] real x, array[] int x_int) {
     array[size(y)] real dydt;
     return dydt;
   }

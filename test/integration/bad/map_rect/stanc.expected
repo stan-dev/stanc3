@@ -9,8 +9,8 @@ Semantic error in 'bad_data_i_type.stan', line 19, column 8 to column 68:
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[,], data int[,]) => vector
-Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, vector[], real[,], int[,,].
+((vector, vector, data array[] real, data array[] int) => vector, vector, array[] vector, data array[,] real, data array[,] int) => vector
+Instead supplied arguments of incompatible type: (vector, vector, array[] real, array[] int) => vector, vector, array[] vector, array[,] real, array[,,] int.
   $ ../../../../../install/default/bin/stanc bad_data_int_const.stan
 Semantic error in 'bad_data_int_const.stan', line 21, column 8 to line 22, column 43:
    -------------------------------------------------
@@ -23,8 +23,8 @@ Semantic error in 'bad_data_int_const.stan', line 21, column 8 to line 22, colum
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[,], data int[,]) => vector
-Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, vector[], real[,], int[,].
+((vector, vector, data array[] real, data array[] int) => vector, vector, array[] vector, data array[,] real, data array[,] int) => vector
+Instead supplied arguments of incompatible type: (vector, vector, array[] real, array[] int) => vector, vector, array[] vector, array[,] real, array[,] int.
   $ ../../../../../install/default/bin/stanc bad_data_r_type.stan
 Semantic error in 'bad_data_r_type.stan', line 19, column 8 to column 68:
    -------------------------------------------------
@@ -36,8 +36,8 @@ Semantic error in 'bad_data_r_type.stan', line 19, column 8 to column 68:
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[,], data int[,]) => vector
-Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, vector[], real, int[,].
+((vector, vector, data array[] real, data array[] int) => vector, vector, array[] vector, data array[,] real, data array[,] int) => vector
+Instead supplied arguments of incompatible type: (vector, vector, array[] real, array[] int) => vector, vector, array[] vector, real, array[,] int.
   $ ../../../../../install/default/bin/stanc bad_data_real_const.stan
 Semantic error in 'bad_data_real_const.stan', line 20, column 8 to column 70:
    -------------------------------------------------
@@ -49,8 +49,8 @@ Semantic error in 'bad_data_real_const.stan', line 20, column 8 to column 70:
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[,], data int[,]) => vector
-Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, vector[], real[,], int[,].
+((vector, vector, data array[] real, data array[] int) => vector, vector, array[] vector, data array[,] real, data array[,] int) => vector
+Instead supplied arguments of incompatible type: (vector, vector, array[] real, array[] int) => vector, vector, array[] vector, array[,] real, array[,] int.
   $ ../../../../../install/default/bin/stanc bad_fun_type.stan
 Semantic error in 'bad_fun_type.stan', line 19, column 8 to column 68:
    -------------------------------------------------
@@ -62,8 +62,8 @@ Semantic error in 'bad_fun_type.stan', line 19, column 8 to column 68:
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[,], data int[,]) => vector
-Instead supplied arguments of incompatible type: (vector, vector[], real[], int[]) => vector, vector, vector[], real[,], int[,].
+((vector, vector, data array[] real, data array[] int) => vector, vector, array[] vector, data array[,] real, data array[,] int) => vector
+Instead supplied arguments of incompatible type: (vector, array[] vector, array[] real, array[] int) => vector, vector, array[] vector, array[,] real, array[,] int.
   $ ../../../../../install/default/bin/stanc bad_job_params_type.stan
 Semantic error in 'bad_job_params_type.stan', line 19, column 8 to column 68:
    -------------------------------------------------
@@ -75,8 +75,8 @@ Semantic error in 'bad_job_params_type.stan', line 19, column 8 to column 68:
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[,], data int[,]) => vector
-Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector, matrix[], real[,], int[,].
+((vector, vector, data array[] real, data array[] int) => vector, vector, array[] vector, data array[,] real, data array[,] int) => vector
+Instead supplied arguments of incompatible type: (vector, vector, array[] real, array[] int) => vector, vector, array[] matrix, array[,] real, array[,] int.
   $ ../../../../../install/default/bin/stanc bad_lp_fn.stan
 Semantic error in 'bad_lp_fn.stan', line 22, column 16 to column 52:
    -------------------------------------------------
@@ -110,5 +110,5 @@ Semantic error in 'bad_shared_params_type.stan', line 19, column 8 to column 68:
    -------------------------------------------------
 
 Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data real[], data int[]) => vector, vector, vector[], data real[,], data int[,]) => vector
-Instead supplied arguments of incompatible type: (vector, vector, real[], int[]) => vector, vector[], vector[], real[,], int[,].
+((vector, vector, data array[] real, data array[] int) => vector, vector, array[] vector, data array[,] real, data array[,] int) => vector
+Instead supplied arguments of incompatible type: (vector, vector, array[] real, array[] int) => vector, array[] vector, array[] vector, array[,] real, array[,] int.

@@ -1555,13 +1555,13 @@ functions {
     array[3] int d;
     c[2 : 10] = d;
   }
-  real bar_baz_lp(real[] a, real b) {
+  real bar_baz_lp(array[] real a, real b) {
     array[4] real c;
     array[3] real d;
     c[2 : 10] = a;
     return b;
   }
-  real[] foo1_rng(real[] x) {
+  array[] real foo1_rng(array[] real x) {
     array[4] real c;
     array[3] real d;
     array[5, 6] vector[4] u;
