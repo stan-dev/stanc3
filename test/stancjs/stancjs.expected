@@ -51,3 +51,4 @@ $ node version.js
 %%NAME%% %%VERSION%%
 $ node warnings.js
 [ '\nWarning: deprecated language construct used in \'string\', line 4, column 4:\n\nComments beginning with # are deprecated. Please use // in place of # for line comments.\n\n' ]
+5 ' warnings ignored.'
