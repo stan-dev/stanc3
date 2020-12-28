@@ -69,4 +69,4 @@ jobs:
       
       - name: Run expressions tests
         run: |
-          ./runTests.py -j${env.PARALLEL} test/expressions
+          ./runTests.py -j4 test/expressions
