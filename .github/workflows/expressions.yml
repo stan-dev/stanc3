@@ -72,4 +72,4 @@ jobs:
       - name: Run expressions tests
         run: |
           chmod +x bin/stanc
-          ./runTests.py -j4 test/expressions
+          ./runTests.py -e16 test/expressions
