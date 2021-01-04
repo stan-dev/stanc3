@@ -5,17 +5,23 @@ let use_opencl = ref false
 
 let opencl_trigger_restriction =
   String.Map.of_alist_exn
-    [ ( "bernoulli_logit_glm_lpmf"
-      , [ (* Array of conditions under which we do not want to move to OpenCL,
-             except if the argument are already on the device *)
+    [ 
+    ("bernoulli_lpmf", [[(0, UnsizedType.UArray UnsizedType.UInt); (1, UnsizedType.UReal)]])
+    ;( "bernoulli_logit_glm_lpmf"
+      , [ (* Array of conditions under which we do not want to move to OpenCL *)
           [(1, UnsizedType.URowVector)]
         (* Argument 1 (0-based indexing) is a row vector *)
          ] )
+      
     ; ("categorical_logit_glm_lpmf", [[(1, UnsizedType.URowVector)]])
+    ; ("exponential_lpdf", [[(0, UnsizedType.UVector); (1, UnsizedType.UReal)]])
     ; ("neg_binomial_2_log_glm_lpmf", [[(1, UnsizedType.URowVector)]])
     ; ("normal_id_glm_lpdf", [[(1, UnsizedType.URowVector)]])
     ; ("ordered_logistic_glm_lpmf", [[(1, UnsizedType.URowVector)]])
-    ; ("poisson_log_glm_lpmf", [[(1, UnsizedType.URowVector)]]) ]
+    ; ("poisson_log_glm_lpmf", [[(1, UnsizedType.URowVector)]])
+    ; ("std_normal_lpdf", [[(0, UnsizedType.UVector)]])
+    ; ("uniform_lpdf", [[(0, UnsizedType.UVector); (1, UnsizedType.UReal); (1, UnsizedType.UReal)]])
+     ]
 
 let opencl_supported_functions =
   [ "bernoulli_lpmf"; "bernoulli_logit_lpmf"; "bernoulli_logit_glm_lpmf"
