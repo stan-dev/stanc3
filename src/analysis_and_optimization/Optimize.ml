@@ -214,12 +214,15 @@ let handle_early_returns opt_var b =
         ; meta= Location_span.empty } ]
 
 (* Triple is (declaration list, statement list, return expression) *)
-let rec inline_function_expression adt fim (Expr.Fixed.({pattern; _}) as e) =
+let rec inline_function_expression propto adt fim
+    (Expr.Fixed.({pattern; _}) as e) =
   match pattern with
   | Var _ -> ([], [], e)
   | Lit (_, _) -> ([], [], e)
   | FunApp (t, s, es) -> (
-      let dse_list = List.map ~f:(inline_function_expression adt fim) es in
+      let dse_list =
+        List.map ~f:(inline_function_expression propto adt fim) es
+      in
       (* function arguments are evaluated from right to left in C++, so we need to reverse *)
       let d_list =
         List.concat (List.rev (List.map ~f:(function x, _, _ -> x) dse_list))
@@ -228,6 +231,7 @@ let rec inline_function_expression adt fim (Expr.Fixed.({pattern; _}) as e) =
         List.concat (List.rev (List.map ~f:(function _, x, _ -> x) dse_list))
       in
       let es = List.map ~f:(function _, _, x -> x) dse_list in
+      let s = if propto then s else Middle.Utils.stdlib_distribution_name s in
       match Map.find fim s with
       | None -> (d_list, s_list, {e with pattern= FunApp (t, s, es)})
       | Some (rt, args, b) ->
@@ -252,9 +256,9 @@ let rec inline_function_expression adt fim (Expr.Fixed.({pattern; _}) as e) =
           let s_list = s_list @ s_list2 in
           (d_list, s_list, e) )
   | TernaryIf (e1, e2, e3) ->
-      let dl1, sl1, e1 = inline_function_expression adt fim e1 in
-      let dl2, sl2, e2 = inline_function_expression adt fim e2 in
-      let dl3, sl3, e3 = inline_function_expression adt fim e3 in
+      let dl1, sl1, e1 = inline_function_expression propto adt fim e1 in
+      let dl2, sl2, e2 = inline_function_expression propto adt fim e2 in
+      let dl3, sl3, e3 = inline_function_expression propto adt fim e3 in
       ( dl1 @ dl2 @ dl3
       , sl1
         @ [ Stmt.Fixed.(
@@ -265,8 +269,10 @@ let rec inline_function_expression adt fim (Expr.Fixed.({pattern; _}) as e) =
                 )) ]
       , {e with pattern= TernaryIf (e1, e2, e3)} )
   | Indexed (e', i_list) ->
-      let dl, sl, e' = inline_function_expression adt fim e' in
-      let dsi_list = List.map ~f:(inline_function_index adt fim) i_list in
+      let dl, sl, e' = inline_function_expression propto adt fim e' in
+      let dsi_list =
+        List.map ~f:(inline_function_index propto adt fim) i_list
+      in
       let d_list =
         List.concat (List.rev (List.map ~f:(function x, _, _ -> x) dsi_list))
       in
@@ -276,8 +282,8 @@ let rec inline_function_expression adt fim (Expr.Fixed.({pattern; _}) as e) =
       let i_list = List.map ~f:(function _, _, x -> x) dsi_list in
       (d_list @ dl, s_list @ sl, {e with pattern= Indexed (e', i_list)})
   | EAnd (e1, e2) ->
-      let dl1, sl1, e1 = inline_function_expression adt fim e1 in
-      let dl2, sl2, e2 = inline_function_expression adt fim e2 in
+      let dl1, sl1, e1 = inline_function_expression propto adt fim e1 in
+      let dl2, sl2, e2 = inline_function_expression propto adt fim e2 in
       let sl2 =
         [ Stmt.Fixed.(
             Pattern.IfElse
@@ -287,8 +293,8 @@ let rec inline_function_expression adt fim (Expr.Fixed.({pattern; _}) as e) =
       in
       (dl1 @ dl2, sl1 @ sl2, {e with pattern= EAnd (e1, e2)})
   | EOr (e1, e2) ->
-      let dl1, sl1, e1 = inline_function_expression adt fim e1 in
-      let dl2, sl2, e2 = inline_function_expression adt fim e2 in
+      let dl1, sl1, e1 = inline_function_expression propto adt fim e1 in
+      let dl2, sl2, e2 = inline_function_expression propto adt fim e2 in
       let sl2 =
         [ Stmt.Fixed.(
             Pattern.IfElse
@@ -300,24 +306,24 @@ let rec inline_function_expression adt fim (Expr.Fixed.({pattern; _}) as e) =
       in
       (dl1 @ dl2, sl1 @ sl2, {e with pattern= EOr (e1, e2)})
 
-and inline_function_index adt fim i =
+and inline_function_index propto adt fim i =
   match i with
   | All -> ([], [], All)
   | Single e ->
-      let dl, sl, e = inline_function_expression adt fim e in
+      let dl, sl, e = inline_function_expression propto adt fim e in
       (dl, sl, Single e)
   | Upfrom e ->
-      let dl, sl, e = inline_function_expression adt fim e in
+      let dl, sl, e = inline_function_expression propto adt fim e in
       (dl, sl, Upfrom e)
   | Between (e1, e2) ->
-      let dl1, sl1, e1 = inline_function_expression adt fim e1 in
-      let dl2, sl2, e2 = inline_function_expression adt fim e2 in
+      let dl1, sl1, e1 = inline_function_expression propto adt fim e1 in
+      let dl2, sl2, e2 = inline_function_expression propto adt fim e2 in
       (dl1 @ dl2, sl1 @ sl2, Between (e1, e2))
   | MultiIndex e ->
-      let dl, sl, e = inline_function_expression adt fim e in
+      let dl, sl, e = inline_function_expression propto adt fim e in
       (dl, sl, MultiIndex e)
 
-let rec inline_function_statement adt fim Stmt.Fixed.({pattern; meta}) =
+let rec inline_function_statement propto adt fim Stmt.Fixed.({pattern; meta}) =
   Stmt.Fixed.
     { pattern=
         ( match pattern with
@@ -326,8 +332,8 @@ let rec inline_function_statement adt fim Stmt.Fixed.({pattern; meta}) =
               {e2 with pattern= Indexed ({e2 with pattern= Var x}, l)}
             in
             (* This inner e2 is wrong. We are giving the wrong type to Var x. But it doens't really matter as we discard it later. *)
-            let dl1, sl1, e1 = inline_function_expression adt fim e1 in
-            let dl2, sl2, e2 = inline_function_expression adt fim e2 in
+            let dl1, sl1, e1 = inline_function_expression propto adt fim e1 in
+            let dl2, sl2, e2 = inline_function_expression propto adt fim e2 in
             let x, l =
               match e1.pattern with
               | Var x -> (x, [])
@@ -339,11 +345,11 @@ let rec inline_function_statement adt fim Stmt.Fixed.({pattern; meta}) =
               (dl2 @ dl1 @ sl2 @ sl1)
               (Assignment ((x, ut, l), e2))
         | TargetPE e ->
-            let d, s, e = inline_function_expression adt fim e in
+            let d, s, e = inline_function_expression propto adt fim e in
             slist_concat_no_loc (d @ s) (TargetPE e)
         | NRFunApp (t, s, es) ->
             let dse_list =
-              List.map ~f:(inline_function_expression adt fim) es
+              List.map ~f:(inline_function_expression propto adt fim) es
             in
             (* function arguments are evaluated from right to left in C++, so we need to reverse *)
             let d_list =
@@ -368,34 +374,35 @@ let rec inline_function_statement adt fim Stmt.Fixed.({pattern; meta}) =
           match e with
           | None -> Return None
           | Some e ->
-              let d, s, e = inline_function_expression adt fim e in
+              let d, s, e = inline_function_expression propto adt fim e in
               slist_concat_no_loc (d @ s) (Return (Some e)) )
         | IfElse (e, s1, s2) ->
-            let d, s, e = inline_function_expression adt fim e in
+            let d, s, e = inline_function_expression propto adt fim e in
             slist_concat_no_loc (d @ s)
               (IfElse
                  ( e
-                 , inline_function_statement adt fim s1
-                 , Option.map ~f:(inline_function_statement adt fim) s2 ))
+                 , inline_function_statement propto adt fim s1
+                 , Option.map ~f:(inline_function_statement propto adt fim) s2
+                 ))
         | While (e, s) ->
-            let d', s', e = inline_function_expression adt fim e in
+            let d', s', e = inline_function_expression propto adt fim e in
             slist_concat_no_loc (d' @ s')
               (While
                  ( e
                  , match s' with
-                   | [] -> inline_function_statement adt fim s
+                   | [] -> inline_function_statement propto adt fim s
                    | _ ->
                        { pattern=
                            Block
-                             ( [inline_function_statement adt fim s]
+                             ( [inline_function_statement propto adt fim s]
                              @ map_no_loc s' )
                        ; meta= Location_span.empty } ))
         | For {loopvar; lower; upper; body} ->
             let d_lower, s_lower, lower =
-              inline_function_expression adt fim lower
+              inline_function_expression propto adt fim lower
             in
             let d_upper, s_upper, upper =
-              inline_function_expression adt fim upper
+              inline_function_expression propto adt fim upper
             in
             slist_concat_no_loc
               (d_lower @ d_upper @ s_lower @ s_upper)
@@ -405,15 +412,17 @@ let rec inline_function_statement adt fim Stmt.Fixed.({pattern; meta}) =
                  ; upper
                  ; body=
                      ( match s_upper with
-                     | [] -> inline_function_statement adt fim body
+                     | [] -> inline_function_statement propto adt fim body
                      | _ ->
                          { pattern=
                              Block
-                               ( [inline_function_statement adt fim body]
+                               ( [inline_function_statement propto adt fim body]
                                @ map_no_loc s_upper )
                          ; meta= Location_span.empty } ) })
-        | Block l -> Block (List.map l ~f:(inline_function_statement adt fim))
-        | SList l -> SList (List.map l ~f:(inline_function_statement adt fim))
+        | Block l ->
+            Block (List.map l ~f:(inline_function_statement propto adt fim))
+        | SList l ->
+            SList (List.map l ~f:(inline_function_statement propto adt fim))
         | Decl r -> Decl r
         | Skip -> Skip
         | Break -> Break
@@ -433,14 +442,24 @@ let create_function_inline_map adt l =
         match fdbody with
         | None -> accum
         | Some fdbody -> (
-            let data =
+            let create_data propto =
               ( Option.map ~f:(fun x -> Type.Unsized x) fdrt
               , List.map ~f:(fun (_, name, _) -> name) fdargs
-              , inline_function_statement adt accum fdbody )
+              , inline_function_statement propto adt accum fdbody )
             in
-            match Map.add accum ~key:fdname ~data with
-            | `Ok m -> m
-            | `Duplicate -> accum )
+            match Middle.Utils.with_unnormalized_suffix fdname with
+            | None -> (
+                let data = create_data true in
+                match Map.add accum ~key:fdname ~data with
+                | `Ok m -> m
+                | `Duplicate -> accum )
+            | Some fdname' ->
+                let data = create_data false in
+                let data' = create_data true in
+                let m =
+                  Map.Poly.of_alist_exn [(fdname, data); (fdname', data')]
+                in
+                Map.merge_skewed accum m ~combine:(fun ~key:_ f _ -> f) )
       in
       let visited' = Set.add visited fdname in
       (accum', visited')
@@ -457,12 +476,15 @@ let function_inlining (mir : Program.Typed.t) =
   in
   let dataonly_inline_function_statements =
     List.map
-      ~f:(inline_function_statement UnsizedType.DataOnly dataonly_inline_map)
+      ~f:
+        (inline_function_statement true UnsizedType.DataOnly
+           dataonly_inline_map)
   in
   let autodiffable_inline_function_statements =
     List.map
       ~f:
-        (inline_function_statement UnsizedType.AutoDiffable autodiff_inline_map)
+        (inline_function_statement true UnsizedType.AutoDiffable
+           autodiff_inline_map)
   in
   { mir with
     prepare_data= dataonly_inline_function_statements mir.prepare_data
