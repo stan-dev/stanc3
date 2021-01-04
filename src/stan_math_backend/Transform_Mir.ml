@@ -3,25 +3,35 @@ open Middle
 
 let use_opencl = ref false
 
-let opencl_trigger_restriction =
+let opencl_trigger_restrictions =
   String.Map.of_alist_exn
-    [ 
-    ("bernoulli_lpmf", [[(0, UnsizedType.UArray UnsizedType.UInt); (1, UnsizedType.UReal)]])
-    ;( "bernoulli_logit_glm_lpmf"
+    [ ( "bernoulli_lpmf"
+      , [ [ (0, UnsizedType.DataOnly, UnsizedType.UArray UnsizedType.UInt)
+          ; (1, UnsizedType.DataOnly, UnsizedType.UReal) ] ] )
+    ; ( "bernoulli_logit_glm_lpmf"
       , [ (* Array of conditions under which we do not want to move to OpenCL *)
-          [(1, UnsizedType.URowVector)]
+          [(1, UnsizedType.DataOnly, UnsizedType.URowVector)]
         (* Argument 1 (0-based indexing) is a row vector *)
          ] )
-      
-    ; ("categorical_logit_glm_lpmf", [[(1, UnsizedType.URowVector)]])
-    ; ("exponential_lpdf", [[(0, UnsizedType.UVector); (1, UnsizedType.UReal)]])
-    ; ("neg_binomial_2_log_glm_lpmf", [[(1, UnsizedType.URowVector)]])
-    ; ("normal_id_glm_lpdf", [[(1, UnsizedType.URowVector)]])
-    ; ("ordered_logistic_glm_lpmf", [[(1, UnsizedType.URowVector)]])
-    ; ("poisson_log_glm_lpmf", [[(1, UnsizedType.URowVector)]])
-    ; ("std_normal_lpdf", [[(0, UnsizedType.UVector)]])
-    ; ("uniform_lpdf", [[(0, UnsizedType.UVector); (1, UnsizedType.UReal); (1, UnsizedType.UReal)]])
-     ]
+    ; ( "categorical_logit_glm_lpmf"
+      , [[(1, UnsizedType.DataOnly, UnsizedType.URowVector)]] )
+    ; ( "exponential_lpdf"
+      , [ [ (0, UnsizedType.AutoDiffable, UnsizedType.UVector)
+          ; (1, UnsizedType.DataOnly, UnsizedType.UReal) ] ] )
+    ; ( "neg_binomial_2_log_glm_lpmf"
+      , [[(1, UnsizedType.DataOnly, UnsizedType.URowVector)]] )
+    ; ( "normal_id_glm_lpdf"
+      , [[(1, UnsizedType.DataOnly, UnsizedType.URowVector)]] )
+    ; ( "ordered_logistic_glm_lpmf"
+      , [[(1, UnsizedType.DataOnly, UnsizedType.URowVector)]] )
+    ; ( "poisson_log_glm_lpmf"
+      , [[(1, UnsizedType.DataOnly, UnsizedType.URowVector)]] )
+    ; ( "std_normal_lpdf"
+      , [[(0, UnsizedType.AutoDiffable, UnsizedType.UVector)]] )
+    ; ( "uniform_lpdf"
+      , [ [ (0, UnsizedType.AutoDiffable, UnsizedType.UVector)
+          ; (1, UnsizedType.DataOnly, UnsizedType.UReal)
+          ; (1, UnsizedType.DataOnly, UnsizedType.UReal) ] ] ) ]
 
 let opencl_supported_functions =
   [ "bernoulli_lpmf"; "bernoulli_logit_lpmf"; "bernoulli_logit_glm_lpmf"
@@ -52,8 +62,15 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
     | _, UnsizedType.(UInt | UReal) -> e
     | _, _ -> to_matrix_cl e
   in
-  let check_type args (i, t) = Expr.Typed.type_of (List.nth_exn args i) = t in
-  let any_rest_met args = List.exists ~f:(List.for_all ~f:(check_type args)) in
+  let check_type args (i, ad, t) =
+    Expr.Typed.type_of (List.nth_exn args i) = t
+    && UnsizedType.autodifftype_can_convert
+         (Expr.Typed.adlevel_of (List.nth_exn args i))
+         ad
+  in
+  let any_rest_met args =
+    List.exists ~f:(List.for_all ~f:(fun t -> check_type args t))
+  in
   let maybe_map_args args req_args =
     match any_rest_met args req_args with
     | true -> args
@@ -64,17 +81,17 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
       (Utils.stdlib_distribution_name f)
       ~equal:String.equal
   in
-  let is_opencl_support_conditioned f =
-    Map.mem opencl_trigger_restriction (Utils.stdlib_distribution_name f)
+  let is_fn_opencl_support_restricted f =
+    Map.mem opencl_trigger_restrictions (Utils.stdlib_distribution_name f)
   in
   match pattern with
   | FunApp (StanLib, f, args)
-    when is_fn_opencl_supported f && not (is_opencl_support_conditioned f) ->
+    when is_fn_opencl_supported f && not (is_fn_opencl_support_restricted f) ->
       {e with pattern= FunApp (StanLib, f, List.map args ~f:to_cl)}
   | FunApp (StanLib, f, args)
-    when is_fn_opencl_supported f && is_opencl_support_conditioned f ->
+    when is_fn_opencl_supported f && is_fn_opencl_support_restricted f ->
       let trigger =
-        Map.find_exn opencl_trigger_restriction
+        Map.find_exn opencl_trigger_restrictions
           (Utils.stdlib_distribution_name f)
       in
       {e with pattern= FunApp (StanLib, f, maybe_map_args args trigger)}

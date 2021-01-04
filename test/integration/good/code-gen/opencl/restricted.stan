@@ -16,26 +16,28 @@ parameters {
 }
 transformed parameters {
   real transformed_param_real;
-  // a signature that should be moved to OpenCL - just a a sanity check
-  transformed_param_real = bernoulli_logit_lpmf(d_int_array| d_real);
-
+  
   // signatures that should not move to OpenCL
   transformed_param_real = bernoulli_lpmf(d_int_array| d_real);
   transformed_param_real = bernoulli_lpmf(d_int_array| p_real);
-  transformed_param_real = exponential_lpdf(d_vector| d_real);
-  transformed_param_real = exponential_lpdf(d_vector| p_real);
   transformed_param_real = exponential_lpdf(p_vector| d_real);
   transformed_param_real = exponential_lpdf(p_vector| p_real);
-  transformed_param_real = std_normal_lpdf(d_vector);
   transformed_param_real = std_normal_lpdf(p_vector);
-  transformed_param_real = uniform_lpdf(d_vector| d_real, d_real);
-  transformed_param_real = uniform_lpdf(d_vector| d_real, p_real);
-  transformed_param_real = uniform_lpdf(d_vector| p_real, d_real);
-  transformed_param_real = uniform_lpdf(d_vector| p_real, p_real);
   transformed_param_real = uniform_lpdf(p_vector| d_real, d_real);
   transformed_param_real = uniform_lpdf(p_vector| d_real, p_real);
   transformed_param_real = uniform_lpdf(p_vector| p_real, d_real);
   transformed_param_real = uniform_lpdf(p_vector| p_real, p_real);
+
+  // signature of the same functions that can be moved to OpenCL - sanity check
+  transformed_param_real = exponential_lpdf(d_vector| d_real);
+  transformed_param_real = exponential_lpdf(d_vector| p_real);
+  transformed_param_real = std_normal_lpdf(d_vector);
+  transformed_param_real = uniform_lpdf(d_vector| d_real, d_real);
+  transformed_param_real = uniform_lpdf(d_vector| d_real, p_real);
+  transformed_param_real = uniform_lpdf(d_vector| p_real, d_real);
+  transformed_param_real = uniform_lpdf(d_vector| p_real, p_real);
+
+
 }
 model {
   y_p ~ normal(0, 1);

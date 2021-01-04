@@ -6475,24 +6475,23 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'restricted.stan', line 14, column 2 to column 33)",
                                                       " (in 'restricted.stan', line 15, column 2 to column 11)",
                                                       " (in 'restricted.stan', line 18, column 2 to column 30)",
-                                                      " (in 'restricted.stan', line 20, column 2 to column 69)",
-                                                      " (in 'restricted.stan', line 23, column 2 to column 63)",
-                                                      " (in 'restricted.stan', line 24, column 2 to column 63)",
-                                                      " (in 'restricted.stan', line 25, column 2 to column 62)",
-                                                      " (in 'restricted.stan', line 26, column 2 to column 62)",
-                                                      " (in 'restricted.stan', line 27, column 2 to column 62)",
-                                                      " (in 'restricted.stan', line 28, column 2 to column 62)",
-                                                      " (in 'restricted.stan', line 29, column 2 to column 53)",
-                                                      " (in 'restricted.stan', line 30, column 2 to column 53)",
-                                                      " (in 'restricted.stan', line 31, column 2 to column 66)",
-                                                      " (in 'restricted.stan', line 32, column 2 to column 66)",
-                                                      " (in 'restricted.stan', line 33, column 2 to column 66)",
-                                                      " (in 'restricted.stan', line 34, column 2 to column 66)",
+                                                      " (in 'restricted.stan', line 21, column 2 to column 63)",
+                                                      " (in 'restricted.stan', line 22, column 2 to column 63)",
+                                                      " (in 'restricted.stan', line 23, column 2 to column 62)",
+                                                      " (in 'restricted.stan', line 24, column 2 to column 62)",
+                                                      " (in 'restricted.stan', line 25, column 2 to column 53)",
+                                                      " (in 'restricted.stan', line 26, column 2 to column 66)",
+                                                      " (in 'restricted.stan', line 27, column 2 to column 66)",
+                                                      " (in 'restricted.stan', line 28, column 2 to column 66)",
+                                                      " (in 'restricted.stan', line 29, column 2 to column 66)",
+                                                      " (in 'restricted.stan', line 32, column 2 to column 62)",
+                                                      " (in 'restricted.stan', line 33, column 2 to column 62)",
+                                                      " (in 'restricted.stan', line 34, column 2 to column 53)",
                                                       " (in 'restricted.stan', line 35, column 2 to column 66)",
                                                       " (in 'restricted.stan', line 36, column 2 to column 66)",
                                                       " (in 'restricted.stan', line 37, column 2 to column 66)",
                                                       " (in 'restricted.stan', line 38, column 2 to column 66)",
-                                                      " (in 'restricted.stan', line 41, column 2 to column 21)",
+                                                      " (in 'restricted.stan', line 43, column 2 to column 21)",
                                                       " (in 'restricted.stan', line 2, column 2 to column 12)",
                                                       " (in 'restricted.stan', line 3, column 18 to column 23)",
                                                       " (in 'restricted.stan', line 3, column 2 to column 25)",
@@ -6520,7 +6519,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
   std::vector<double> d_real_array;
   Eigen::Matrix<double, -1, 1> d_vector;
   Eigen::Matrix<double, 1, -1> d_row_vector;
-  matrix_cl<int> d_int_array_opencl__;
+  matrix_cl<double> d_vector_opencl__;
  
  public:
   ~restricted_model() { }
@@ -6549,43 +6548,43 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      current_statement__ = 26;
+      current_statement__ = 25;
       context__.validate_dims("data initialization","d_int","int",
           context__.to_vec());
       d_int = std::numeric_limits<int>::min();
       
-      current_statement__ = 26;
+      current_statement__ = 25;
       d_int = context__.vals_i("d_int")[(1 - 1)];
-      current_statement__ = 27;
+      current_statement__ = 26;
       validate_non_negative_index("d_int_array", "d_int", d_int);
-      current_statement__ = 28;
+      current_statement__ = 27;
       context__.validate_dims("data initialization","d_int_array","int",
           context__.to_vec(d_int));
       d_int_array = std::vector<int>(d_int, std::numeric_limits<int>::min());
       
-      current_statement__ = 28;
+      current_statement__ = 27;
       assign(d_int_array, nil_index_list(), context__.vals_i("d_int_array"),
         "assigning variable d_int_array");
-      current_statement__ = 29;
+      current_statement__ = 28;
       context__.validate_dims("data initialization","d_real","double",
           context__.to_vec());
       d_real = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 29;
+      current_statement__ = 28;
       d_real = context__.vals_r("d_real")[(1 - 1)];
-      current_statement__ = 30;
+      current_statement__ = 29;
       validate_non_negative_index("d_real_array", "d_int", d_int);
-      current_statement__ = 31;
+      current_statement__ = 30;
       context__.validate_dims("data initialization","d_real_array","double",
           context__.to_vec(d_int));
       d_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 31;
+      current_statement__ = 30;
       assign(d_real_array, nil_index_list(),
         context__.vals_r("d_real_array"), "assigning variable d_real_array");
-      current_statement__ = 32;
+      current_statement__ = 31;
       validate_non_negative_index("d_vector", "d_int", d_int);
-      current_statement__ = 33;
+      current_statement__ = 32;
       context__.validate_dims("data initialization","d_vector","double",
           context__.to_vec(d_int));
       d_vector = Eigen::Matrix<double, -1, 1>(d_int);
@@ -6593,22 +6592,22 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       
       {
         std::vector<local_scalar_t__> d_vector_flat__;
-        current_statement__ = 33;
+        current_statement__ = 32;
         assign(d_vector_flat__, nil_index_list(),
           context__.vals_r("d_vector"), "assigning variable d_vector_flat__");
-        current_statement__ = 33;
+        current_statement__ = 32;
         pos__ = 1;
-        current_statement__ = 33;
+        current_statement__ = 32;
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-          current_statement__ = 33;
+          current_statement__ = 32;
           assign(d_vector, cons_list(index_uni(sym1__), nil_index_list()),
             d_vector_flat__[(pos__ - 1)], "assigning variable d_vector");
-          current_statement__ = 33;
+          current_statement__ = 32;
           pos__ = (pos__ + 1);}
       }
-      current_statement__ = 34;
+      current_statement__ = 33;
       validate_non_negative_index("d_row_vector", "d_int", d_int);
-      current_statement__ = 35;
+      current_statement__ = 34;
       context__.validate_dims("data initialization","d_row_vector","double",
           context__.to_vec(d_int));
       d_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
@@ -6616,34 +6615,34 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       
       {
         std::vector<local_scalar_t__> d_row_vector_flat__;
-        current_statement__ = 35;
+        current_statement__ = 34;
         assign(d_row_vector_flat__, nil_index_list(),
           context__.vals_r("d_row_vector"),
           "assigning variable d_row_vector_flat__");
-        current_statement__ = 35;
+        current_statement__ = 34;
         pos__ = 1;
-        current_statement__ = 35;
+        current_statement__ = 34;
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-          current_statement__ = 35;
+          current_statement__ = 34;
           assign(d_row_vector,
             cons_list(index_uni(sym1__), nil_index_list()),
             d_row_vector_flat__[(pos__ - 1)],
             "assigning variable d_row_vector");
-          current_statement__ = 35;
+          current_statement__ = 34;
           pos__ = (pos__ + 1);}
       }
-      current_statement__ = 36;
+      current_statement__ = 35;
       validate_non_negative_index("p_real_array", "d_int", d_int);
+      current_statement__ = 36;
+      validate_non_negative_index("p_matrix", "d_int", d_int);
       current_statement__ = 37;
       validate_non_negative_index("p_matrix", "d_int", d_int);
       current_statement__ = 38;
-      validate_non_negative_index("p_matrix", "d_int", d_int);
-      current_statement__ = 39;
       validate_non_negative_index("p_vector", "d_int", d_int);
-      current_statement__ = 40;
+      current_statement__ = 39;
       validate_non_negative_index("p_row_vector", "d_int", d_int);
       
-      d_int_array_opencl__ = to_matrix_cl(d_int_array);
+      d_vector_opencl__ = to_matrix_cl(d_vector);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -6721,42 +6720,45 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       transformed_param_real = DUMMY_VAR__;
       
       current_statement__ = 8;
-      transformed_param_real = bernoulli_logit_lpmf<false>(
-                                 d_int_array_opencl__, d_real);
-      current_statement__ = 9;
       transformed_param_real = bernoulli_lpmf<false>(d_int_array, d_real);
-      current_statement__ = 10;
+      current_statement__ = 9;
       transformed_param_real = bernoulli_lpmf<false>(d_int_array, p_real);
-      current_statement__ = 11;
-      transformed_param_real = exponential_lpdf<false>(d_vector, d_real);
-      current_statement__ = 12;
-      transformed_param_real = exponential_lpdf<false>(d_vector, p_real);
-      current_statement__ = 13;
+      current_statement__ = 10;
       transformed_param_real = exponential_lpdf<false>(p_vector, d_real);
-      current_statement__ = 14;
+      current_statement__ = 11;
       transformed_param_real = exponential_lpdf<false>(p_vector, p_real);
-      current_statement__ = 15;
-      transformed_param_real = std_normal_lpdf<false>(d_vector);
-      current_statement__ = 16;
+      current_statement__ = 12;
       transformed_param_real = std_normal_lpdf<false>(p_vector);
-      current_statement__ = 17;
-      transformed_param_real = uniform_lpdf<false>(d_vector, d_real, d_real);
-      current_statement__ = 18;
-      transformed_param_real = uniform_lpdf<false>(d_vector, d_real, p_real);
-      current_statement__ = 19;
-      transformed_param_real = uniform_lpdf<false>(d_vector, p_real, d_real);
-      current_statement__ = 20;
-      transformed_param_real = uniform_lpdf<false>(d_vector, p_real, p_real);
-      current_statement__ = 21;
+      current_statement__ = 13;
       transformed_param_real = uniform_lpdf<false>(p_vector, d_real, d_real);
-      current_statement__ = 22;
+      current_statement__ = 14;
       transformed_param_real = uniform_lpdf<false>(p_vector, d_real, p_real);
-      current_statement__ = 23;
+      current_statement__ = 15;
       transformed_param_real = uniform_lpdf<false>(p_vector, p_real, d_real);
-      current_statement__ = 24;
+      current_statement__ = 16;
       transformed_param_real = uniform_lpdf<false>(p_vector, p_real, p_real);
+      current_statement__ = 17;
+      transformed_param_real = exponential_lpdf<false>(d_vector_opencl__,
+                                 d_real);
+      current_statement__ = 18;
+      transformed_param_real = exponential_lpdf<false>(d_vector_opencl__,
+                                 p_real);
+      current_statement__ = 19;
+      transformed_param_real = std_normal_lpdf<false>(d_vector_opencl__);
+      current_statement__ = 20;
+      transformed_param_real = uniform_lpdf<false>(d_vector_opencl__, d_real,
+                                 d_real);
+      current_statement__ = 21;
+      transformed_param_real = uniform_lpdf<false>(d_vector_opencl__, d_real,
+                                 p_real);
+      current_statement__ = 22;
+      transformed_param_real = uniform_lpdf<false>(d_vector_opencl__, p_real,
+                                 d_real);
+      current_statement__ = 23;
+      transformed_param_real = uniform_lpdf<false>(d_vector_opencl__, p_real,
+                                 p_real);
       {
-        current_statement__ = 25;
+        current_statement__ = 24;
         lp_accum__.add(normal_lpdf<propto__>(y_p, 0, 1));
       }
     } catch (const std::exception& e) {
@@ -6849,40 +6851,43 @@ class restricted_model final : public model_base_crtp<restricted_model> {
         return ;
       } 
       current_statement__ = 8;
-      transformed_param_real = bernoulli_logit_lpmf<false>(
-                                 d_int_array_opencl__, d_real);
-      current_statement__ = 9;
       transformed_param_real = bernoulli_lpmf<false>(d_int_array, d_real);
-      current_statement__ = 10;
+      current_statement__ = 9;
       transformed_param_real = bernoulli_lpmf<false>(d_int_array, p_real);
-      current_statement__ = 11;
-      transformed_param_real = exponential_lpdf<false>(d_vector, d_real);
-      current_statement__ = 12;
-      transformed_param_real = exponential_lpdf<false>(d_vector, p_real);
-      current_statement__ = 13;
+      current_statement__ = 10;
       transformed_param_real = exponential_lpdf<false>(p_vector, d_real);
-      current_statement__ = 14;
+      current_statement__ = 11;
       transformed_param_real = exponential_lpdf<false>(p_vector, p_real);
-      current_statement__ = 15;
-      transformed_param_real = std_normal_lpdf<false>(d_vector);
-      current_statement__ = 16;
+      current_statement__ = 12;
       transformed_param_real = std_normal_lpdf<false>(p_vector);
-      current_statement__ = 17;
-      transformed_param_real = uniform_lpdf<false>(d_vector, d_real, d_real);
-      current_statement__ = 18;
-      transformed_param_real = uniform_lpdf<false>(d_vector, d_real, p_real);
-      current_statement__ = 19;
-      transformed_param_real = uniform_lpdf<false>(d_vector, p_real, d_real);
-      current_statement__ = 20;
-      transformed_param_real = uniform_lpdf<false>(d_vector, p_real, p_real);
-      current_statement__ = 21;
+      current_statement__ = 13;
       transformed_param_real = uniform_lpdf<false>(p_vector, d_real, d_real);
-      current_statement__ = 22;
+      current_statement__ = 14;
       transformed_param_real = uniform_lpdf<false>(p_vector, d_real, p_real);
-      current_statement__ = 23;
+      current_statement__ = 15;
       transformed_param_real = uniform_lpdf<false>(p_vector, p_real, d_real);
-      current_statement__ = 24;
+      current_statement__ = 16;
       transformed_param_real = uniform_lpdf<false>(p_vector, p_real, p_real);
+      current_statement__ = 17;
+      transformed_param_real = exponential_lpdf<false>(d_vector_opencl__,
+                                 d_real);
+      current_statement__ = 18;
+      transformed_param_real = exponential_lpdf<false>(d_vector_opencl__,
+                                 p_real);
+      current_statement__ = 19;
+      transformed_param_real = std_normal_lpdf<false>(d_vector_opencl__);
+      current_statement__ = 20;
+      transformed_param_real = uniform_lpdf<false>(d_vector_opencl__, d_real,
+                                 d_real);
+      current_statement__ = 21;
+      transformed_param_real = uniform_lpdf<false>(d_vector_opencl__, d_real,
+                                 p_real);
+      current_statement__ = 22;
+      transformed_param_real = uniform_lpdf<false>(d_vector_opencl__, p_real,
+                                 d_real);
+      current_statement__ = 23;
+      transformed_param_real = uniform_lpdf<false>(d_vector_opencl__, p_real,
+                                 p_real);
       if (emit_transformed_parameters__) {
         vars__.emplace_back(transformed_param_real);
       } 
