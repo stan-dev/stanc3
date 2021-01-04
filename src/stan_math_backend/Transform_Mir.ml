@@ -3,18 +3,19 @@ open Middle
 
 let use_opencl = ref false
 
-let opencl_trigger_conditions =
+let opencl_trigger_restriction =
   String.Map.of_alist_exn
     [ ( "bernoulli_logit_glm_lpmf"
-      , [ (* Array of conditions under which to move to OpenCL *)
-          [(1, UnsizedType.UMatrix)]
-        (* Argument 1 is a matrix *)
+      , [ (* Array of conditions under which we do not want to move to OpenCL,
+             except if the argument are already on the device *)
+          [(1, UnsizedType.URowVector)]
+        (* Argument 1 (0-based indexing) is a row vector *)
          ] )
-    ; ("categorical_logit_glm_lpmf", [[(1, UnsizedType.UMatrix)]])
-    ; ("neg_binomial_2_log_glm_lpmf", [[(1, UnsizedType.UMatrix)]])
-    ; ("normal_id_glm_lpdf", [[(1, UnsizedType.UMatrix)]])
-    ; ("ordered_logistic_glm_lpmf", [[(1, UnsizedType.UMatrix)]])
-    ; ("poisson_log_glm_lpmf", [[(1, UnsizedType.UMatrix)]]) ]
+    ; ("categorical_logit_glm_lpmf", [[(1, UnsizedType.URowVector)]])
+    ; ("neg_binomial_2_log_glm_lpmf", [[(1, UnsizedType.URowVector)]])
+    ; ("normal_id_glm_lpdf", [[(1, UnsizedType.URowVector)]])
+    ; ("ordered_logistic_glm_lpmf", [[(1, UnsizedType.URowVector)]])
+    ; ("poisson_log_glm_lpmf", [[(1, UnsizedType.URowVector)]]) ]
 
 let opencl_supported_functions =
   [ "bernoulli_lpmf"; "bernoulli_logit_lpmf"; "bernoulli_logit_glm_lpmf"
@@ -46,11 +47,11 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
     | _, _ -> to_matrix_cl e
   in
   let check_type args (i, t) = Expr.Typed.type_of (List.nth_exn args i) = t in
-  let any_req_met args = List.exists ~f:(List.for_all ~f:(check_type args)) in
+  let any_rest_met args = List.exists ~f:(List.for_all ~f:(check_type args)) in
   let maybe_map_args args req_args =
-    match any_req_met args req_args with
-    | true -> List.map args ~f:to_cl
-    | false -> args
+    match any_rest_met args req_args with
+    | true -> args
+    | false -> List.map args ~f:to_cl
   in
   let is_fn_opencl_supported f =
     List.mem opencl_supported_functions
@@ -58,7 +59,7 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
       ~equal:String.equal
   in
   let is_opencl_support_conditioned f =
-    Map.mem opencl_trigger_conditions (Utils.stdlib_distribution_name f)
+    Map.mem opencl_trigger_restriction (Utils.stdlib_distribution_name f)
   in
   match pattern with
   | FunApp (StanLib, f, args)
@@ -67,7 +68,7 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
   | FunApp (StanLib, f, args)
     when is_fn_opencl_supported f && is_opencl_support_conditioned f ->
       let trigger =
-        Map.find_exn opencl_trigger_conditions
+        Map.find_exn opencl_trigger_restriction
           (Utils.stdlib_distribution_name f)
       in
       {e with pattern= FunApp (StanLib, f, maybe_map_args args trigger)}
