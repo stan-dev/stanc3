@@ -1,6 +1,10 @@
 open Core_kernel
 open Ast
 
+type t = Middle.Location_span.t * string
+
+val pp : t Fmt.t
+
 val find_udf_log_suffix :
   typed_statement -> (string * Middle.UnsizedType.t) option
 
@@ -16,4 +20,4 @@ val deprecated_distributions : string String.Map.t
 val deprecated_functions : string String.Map.t
 val rename_deprecated : string String.Map.t -> string -> string
 val userdef_distributions : untyped_statement list option -> string list
-val emit_warnings : typed_program -> unit
+val collect_warnings : typed_program -> t list

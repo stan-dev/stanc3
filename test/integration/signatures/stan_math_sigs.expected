@@ -8882,6 +8882,7 @@ real gaussian_dlm_obs_lpdf(matrix, matrix, matrix, vector, matrix, vector,
                              matrix)
 real gaussian_dlm_obs_lpdf(matrix, matrix, matrix, matrix, matrix, vector,
                              matrix)
+matrix generalized_inverse(matrix)
 matrix gp_dot_prod_cov(real[], real)
 matrix gp_dot_prod_cov(real[], real[], real)
 matrix gp_dot_prod_cov(real[], real[], real)

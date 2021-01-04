@@ -3,7 +3,7 @@
 Syntax error in 'gen_quantities_mvmer.stan', line 1, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:    real mean_PPD[M];
-               ^
+           ^
      2:    real yAlpha1[intercept_type[1] > 0];
      3:    real yAlpha2[intercept_type[2] > 0];
    -------------------------------------------------

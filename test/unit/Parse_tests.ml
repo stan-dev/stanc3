@@ -1,18 +1,13 @@
 open Core_kernel
 open Frontend
-open Frontend.Parse
 
-let render_syntax_error = Fmt.to_to_string Errors.pp_syntax_error
+let print_ast_of_string s =
+  let ast = Frontend_utils.untyped_ast_of_string s |> Result.ok_or_failwith in
+  print_s [%sexp (ast : Ast.untyped_program)]
 
 (* TESTS *)
 let%expect_test "parse conditional" =
-  let ast =
-    parse_string Parser.Incremental.program
-      "model { if (1 < 2) { print(\"hi\");}}"
-    |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
-  in
-  print_s [%sexp (ast : Ast.untyped_program)] ;
+  print_ast_of_string "model { if (1 < 2) { print(\"hi\");}}" ;
   [%expect
     {|
     ((functionblock ()) (datablock ()) (transformeddatablock ())
@@ -33,14 +28,9 @@ let%expect_test "parse conditional" =
      (generatedquantitiesblock ())) |}]
 
 let%expect_test "parse dangling else problem" =
-  let ast =
-    parse_string Parser.Incremental.program
-      "model { if (1 < 2) print(\"I'm sorry\"); if (2 < 3) print(\", Dave, \
-       \"); else print(\"I'm afraid I can't do that.\");}"
-    |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
-  in
-  print_s [%sexp (ast : Ast.untyped_program)] ;
+  print_ast_of_string
+    "model { if (1 < 2) print(\"I'm sorry\"); if (2 < 3) print(\", Dave, \"); \
+     else print(\"I'm afraid I can't do that.\");}" ;
   [%expect
     {|
       ((functionblock ()) (datablock ()) (transformeddatablock ())
@@ -68,12 +58,7 @@ let%expect_test "parse dangling else problem" =
        (generatedquantitiesblock ())) |}]
 
 let%expect_test "parse minus unary" =
-  let ast =
-    parse_string Parser.Incremental.program "model { real x; x = -x;}"
-    |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
-  in
-  print_s [%sexp (ast : Ast.untyped_program)] ;
+  print_ast_of_string "model { real x; x = -x;}" ;
   [%expect
     {|
       ((functionblock ()) (datablock ()) (transformeddatablock ())
@@ -100,12 +85,7 @@ let%expect_test "parse minus unary" =
        (generatedquantitiesblock ())) |}]
 
 let%expect_test "parse unary over binary" =
-  let ast =
-    parse_string Parser.Incremental.program "model { real x = x - - x - - x; }"
-    |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
-  in
-  print_s [%sexp (ast : Ast.untyped_program)] ;
+  print_ast_of_string "model { real x = x - - x - - x; }" ;
   [%expect
     {|
     ((functionblock ()) (datablock ()) (transformeddatablock ())
@@ -140,13 +120,7 @@ let%expect_test "parse unary over binary" =
      (generatedquantitiesblock ())) |}]
 
 let%expect_test "parse indices, two different colons" =
-  let ast =
-    parse_string Parser.Incremental.program
-      "model { matrix[5, 5] x; print(x[2 - 3 ? 3 : 4 : 2]); }"
-    |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
-  in
-  print_s [%sexp (ast : Ast.untyped_program)] ;
+  print_ast_of_string "model { matrix[5, 5] x; print(x[2 - 3 ? 3 : 4 : 2]); }" ;
   [%expect
     {|
       ((functionblock ()) (datablock ()) (transformeddatablock ())
@@ -184,14 +158,9 @@ let%expect_test "parse indices, two different colons" =
        (generatedquantitiesblock ())) |}]
 
 let%expect_test "parse operator precedence" =
-  let ast =
-    parse_string Parser.Incremental.program
-      "model {  \
-       print({a,b?c:d||e&&f==g!=h<=i<j>=k>l+m-n*o/p%q.*s./t\\r^u[v]'}); }"
-    |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
-  in
-  print_s [%sexp (ast : Ast.untyped_program)] ;
+  print_ast_of_string
+    "model {  \
+     print({a,b?c:d||e&&f==g!=h<=i<j>=k>l+m-n*o/p%q.*s./t\\r^u[v]'}); }" ;
   [%expect
     {|
       ((functionblock ()) (datablock ()) (transformeddatablock ())
@@ -357,19 +326,14 @@ let%expect_test "parse operator precedence" =
        (generatedquantitiesblock ())) |}]
 
 let%expect_test "parse crazy truncation example" =
-  let ast =
-    parse_string Parser.Incremental.program
-      "\n\
-      \      model {\n\
-      \        real T[1,1] = {{42.0}};\n\
-      \        1 ~ normal(0, 1) T[1, T[1,1]];\n\
-      \        print(T[1,1]);\n\
-      \      }\n\
-      \      "
-    |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
-  in
-  print_s [%sexp (ast : Ast.untyped_program)] ;
+  print_ast_of_string
+    "\n\
+    \      model {\n\
+    \        real T[1,1] = {{42.0}};\n\
+    \        1 ~ normal(0, 1) T[1, T[1,1]];\n\
+    \        print(T[1,1]);\n\
+    \      }\n\
+    \      " ;
   [%expect
     {|
       ((functionblock ()) (datablock ()) (transformeddatablock ())
@@ -423,18 +387,13 @@ let%expect_test "parse crazy truncation example" =
        (generatedquantitiesblock ())) |}]
 
 let%expect_test "parse nested loop" =
-  let ast =
-    parse_string Parser.Incremental.program
-      "      model {\n\
-      \              for (i in 1:2)\n\
-      \                for (j in 3:4)\n\
-      \                  print(\"Badger\");\n\
-      \            }\n\
-      \            "
-    |> Result.map_error ~f:render_syntax_error
-    |> Result.ok_or_failwith
-  in
-  print_s [%sexp (ast : Ast.untyped_program)] ;
+  print_ast_of_string
+    "      model {\n\
+    \              for (i in 1:2)\n\
+    \                for (j in 3:4)\n\
+    \                  print(\"Badger\");\n\
+    \            }\n\
+    \            " ;
   [%expect
     {|
     ((functionblock ()) (datablock ()) (transformeddatablock ())

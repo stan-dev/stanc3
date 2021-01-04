@@ -3,15 +3,9 @@ open Analysis_and_optimization.Factor_graph
 open Core_kernel
 open Analysis_and_optimization.Dataflow_types
 
-let semantic_check_program ast =
-  Option.value_exn
-    (Result.ok
-       (Semantic_check.semantic_check_program
-          (Option.value_exn (Result.ok ast))))
-
 let reject_example =
   let ast =
-    Parse.parse_string Parser.Incremental.program
+    Frontend_utils.typed_ast_of_string_exn
       {|
         parameters {
           real x;
@@ -48,7 +42,7 @@ let reject_example =
         }
       |}
   in
-  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
+  Ast_to_Mir.trans_prog "" ast
 
 let%expect_test "Factor graph reject example" =
   (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
@@ -73,7 +67,7 @@ let%expect_test "Factor graph reject example" =
 
 let complex_example =
   let ast =
-    Parse.parse_string Parser.Incremental.program
+    Frontend_utils.typed_ast_of_string_exn
       {|
         parameters {
           real a;
@@ -100,7 +94,7 @@ let complex_example =
         }
       |}
   in
-  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
+  Ast_to_Mir.trans_prog "" ast
 
 let%expect_test "Factor graph complex example" =
   let deps = prog_factor_graph complex_example in
@@ -329,7 +323,7 @@ let%expect_test "Factor graph complex example" =
 
 let complex_example =
   let ast =
-    Parse.parse_string Parser.Incremental.program
+    Frontend_utils.typed_ast_of_string_exn
       {|
         data {
           real x;
@@ -356,7 +350,7 @@ let complex_example =
         }
       |}
   in
-  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
+  Ast_to_Mir.trans_prog "" ast
 
 let%expect_test "Priors complex example" =
   let priors = list_priors complex_example in
