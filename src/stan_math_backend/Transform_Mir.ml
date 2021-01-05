@@ -46,6 +46,7 @@ let opencl_supported_functions =
   ; "poisson_lpmf"; "poisson_log_lpmf"; "poisson_log_glm_lpmf"; "rayleigh_lpdf"
   ; "scaled_inv_chi_square_lpdf"; "skew_normal_lpdf"; "std_normal_lpdf"
   ; "student_t_lpdf"; "uniform_lpdf"; "weibull_lpdf" ]
+  |> String.Set.of_list
 
 let opencl_suffix = "_opencl__"
 
@@ -68,31 +69,22 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
          (Expr.Typed.adlevel_of (List.nth_exn args i))
          ad
   in
-  let any_rest_met args =
-    List.exists ~f:(List.for_all ~f:(fun t -> check_type args t))
+  let is_restricted args =
+    List.exists ~f:(List.for_all ~f:(check_type args))
   in
   let maybe_map_args args req_args =
-    match any_rest_met args req_args with
-    | true -> args
-    | false -> List.map args ~f:to_cl
+    match req_args with
+    | None -> List.map args ~f:to_cl
+    | Some x when is_restricted args x -> args
+    | Some _ -> List.map args ~f:to_cl
   in
   let is_fn_opencl_supported f =
-    List.mem opencl_supported_functions
-      (Utils.stdlib_distribution_name f)
-      ~equal:String.equal
-  in
-  let is_fn_opencl_support_restricted f =
-    Map.mem opencl_trigger_restrictions (Utils.stdlib_distribution_name f)
+    Set.mem opencl_supported_functions (Utils.stdlib_distribution_name f)
   in
   match pattern with
-  | FunApp (StanLib, f, args)
-    when is_fn_opencl_supported f && not (is_fn_opencl_support_restricted f) ->
-      {e with pattern= FunApp (StanLib, f, List.map args ~f:to_cl)}
-  | FunApp (StanLib, f, args)
-    when is_fn_opencl_supported f && is_fn_opencl_support_restricted f ->
+  | FunApp (StanLib, f, args) when is_fn_opencl_supported f ->
       let trigger =
-        Map.find_exn opencl_trigger_restrictions
-          (Utils.stdlib_distribution_name f)
+        Map.find opencl_trigger_restrictions (Utils.stdlib_distribution_name f)
       in
       {e with pattern= FunApp (StanLib, f, maybe_map_args args trigger)}
   | x ->
