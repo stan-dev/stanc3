@@ -64,19 +64,17 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
     | _, _ -> to_matrix_cl e
   in
   let check_type args (i, ad, t) =
-    Expr.Typed.type_of (List.nth_exn args i) = t
-    && UnsizedType.autodifftype_can_convert
-         (Expr.Typed.adlevel_of (List.nth_exn args i))
-         ad
+    let arg = List.nth_exn args i in
+    Expr.Typed.type_of arg = t
+    && UnsizedType.autodifftype_can_convert (Expr.Typed.adlevel_of arg) ad
   in
   let is_restricted args =
     List.exists ~f:(List.for_all ~f:(check_type args))
   in
   let maybe_map_args args req_args =
     match req_args with
-    | None -> List.map args ~f:to_cl
     | Some x when is_restricted args x -> args
-    | Some _ -> List.map args ~f:to_cl
+    | None | Some _ -> List.map args ~f:to_cl
   in
   let is_fn_opencl_supported f =
     Set.mem opencl_supported_functions (Utils.stdlib_distribution_name f)
