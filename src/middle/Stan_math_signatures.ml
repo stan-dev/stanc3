@@ -1700,6 +1700,8 @@ let () =
   add_unqualified ("sum", ReturnType UReal, [UVector]) ;
   add_unqualified ("sum", ReturnType UReal, [URowVector]) ;
   add_unqualified ("sum", ReturnType UReal, [UMatrix]) ;
+  add_unqualified ("svd_U", ReturnType UMatrix, [UMatrix]) ;
+  add_unqualified ("svd_V", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified ("tail", ReturnType URowVector, [URowVector; UInt]) ;
   add_unqualified ("tail", ReturnType UVector, [UVector; UInt]) ;
   List.iter
