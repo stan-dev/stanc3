@@ -39,16 +39,15 @@ Some function is declared without specifying a definition.
 
 
 $ node pedantic.js
-Warning:
-  The parameter k was declared but was not used in the density calculation.
-Warning at 'string', line 7, column 17 to column 22:
-  Argument 10000 suggests there may be parameters that are not unit scale;
-  consider rescaling with a multiplier (see manual section 22.12).
-Warning at 'string', line 4, column 9 to column 11:
-  The variable tt may not have been assigned a value before its use.
+["Warning:\n  The parameter k was declared but was not used in the density calculation.\nWarning at 'string', line 7, column 17 to column 22:\n  Argument 10000 suggests there may be parameters that are not unit scale;\n  consider rescaling with a multiplier (see manual section 22.12).\n"]
+[]
+["Warning at 'string', line 4, column 9 to column 11:\n  The variable tt may not have been assigned a value before its use.\n"]
+[]
 $ node standalone-functions.js
 
 $ node version.js
 %%NAME%% %%VERSION%%
 %%NAME%% %%VERSION%%
 %%NAME%% %%VERSION%%
+$ node warnings.js
+["\nWarning: deprecated language construct used in 'string', line 4, column 4:\n\nComments beginning with # are deprecated. Please use // in place of # for line comments.\n\n"]

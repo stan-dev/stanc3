@@ -1,11 +1,11 @@
 open Middle
 
-val print_warn_pedantic : Program.Typed.t -> unit
+val sprint_warn_pedantic : Program.Typed.t -> string
 (**
-   Print all pedantic mode warnings to stderr.
+   Collect all pedantic mode warnings and print to a string.
 *)
 
-val print_warn_uninitialized : Program.Typed.t -> unit
+val sprint_warn_uninitialized : Program.Typed.t -> string
 (**
-   Print warnings about each variable which is used before being initialized
+   Collect warnings about each variable which is used before being initialized and print to a string.
 *)

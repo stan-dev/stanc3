@@ -44,7 +44,7 @@ let pp_syntax_error ppf = function
       Fmt.pf ppf "@[<v>@,Syntax error in %s, parsing error:@,%a@]@."
         (Location_span.to_string loc_span)
         pp_context_and_message
-        (message, loc_span.end_loc)
+        (message, loc_span.begin_loc)
   | Lexing (_, loc) ->
       Fmt.pf ppf "@[<v>@,Syntax error in %s, lexing error:@,%a@]@."
         (Location.to_string {loc with col_num= loc.col_num - 1})
@@ -53,23 +53,3 @@ let pp_syntax_error ppf = function
   | Include (message, loc) ->
       Fmt.pf ppf "@[<v>@,Syntax error in %s, include error:@,%a@]@."
         (Location.to_string loc) pp_context_and_message (message, loc)
-
-(** Switch to control whether warning messages should be printed to stderr (or discarded in case set to false) *)
-let print_warnings = ref true
-
-let without_warnings function_name args =
-  print_warnings := false ;
-  let out = function_name args in
-  print_warnings := true ;
-  out
-
-(* Warn that a language feature is deprecated *)
-let warn_deprecated (pos, message) =
-  let loc =
-    Location.of_position_opt {pos with Lexing.pos_cnum= pos.Lexing.pos_cnum - 1}
-    |> Option.value ~default:Location.empty
-  in
-  if !print_warnings then
-    Fmt.pf Fmt.stderr
-      "@[<v>@,Warning: deprecated language construct used in %s:@,%a@]@."
-      (Location.to_string loc) pp_context_and_message (message, loc)

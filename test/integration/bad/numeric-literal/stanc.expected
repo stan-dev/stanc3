@@ -1,6 +1,6 @@
   $ ../../../../../install/default/bin/stanc int-bad1.stan
 
-Syntax error in 'int-bad1.stan', line 2, column 12 to column 18, parsing error:
+Syntax error in 'int-bad1.stan', line 2, column 18 to column 19, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:      int n = 10_000_;
@@ -13,7 +13,7 @@ Ill-formed expression. Expression followed by ";" expected after "=".
 
   $ ../../../../../install/default/bin/stanc int-bad2.stan
 
-Syntax error in 'int-bad2.stan', line 2, column 12 to column 14, parsing error:
+Syntax error in 'int-bad2.stan', line 2, column 14 to column 19, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:      int n = 10__000;
@@ -74,7 +74,7 @@ Invalid character found.
 
   $ ../../../../../install/default/bin/stanc real-bad2.stan
 
-Syntax error in 'real-bad2.stan', line 2, column 13 to column 15, parsing error:
+Syntax error in 'real-bad2.stan', line 2, column 15 to column 16, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:      real x = 12_.345;
@@ -87,7 +87,7 @@ Ill-formed expression. Expression followed by ";" expected after "=".
 
   $ ../../../../../install/default/bin/stanc real-bad3.stan
 
-Syntax error in 'real-bad3.stan', line 2, column 13 to column 16, parsing error:
+Syntax error in 'real-bad3.stan', line 2, column 16 to column 20, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:      real x = 12._345;
@@ -100,7 +100,7 @@ Ill-formed expression. Expression followed by ";" expected after "=".
 
   $ ../../../../../install/default/bin/stanc real-bad4.stan
 
-Syntax error in 'real-bad4.stan', line 2, column 13 to column 19, parsing error:
+Syntax error in 'real-bad4.stan', line 2, column 19 to column 20, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:      real x = 12.345_;
@@ -113,7 +113,7 @@ Ill-formed expression. Expression followed by ";" expected after "=".
 
   $ ../../../../../install/default/bin/stanc real-bad5.stan
 
-Syntax error in 'real-bad5.stan', line 2, column 13 to column 17, parsing error:
+Syntax error in 'real-bad5.stan', line 2, column 17 to column 19, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:      real x = 12.3_e+10;
@@ -126,7 +126,7 @@ Ill-formed expression. Expression followed by ";" expected after "=".
 
   $ ../../../../../install/default/bin/stanc real-bad6.stan
 
-Syntax error in 'real-bad6.stan', line 2, column 13 to column 21, parsing error:
+Syntax error in 'real-bad6.stan', line 2, column 21 to column 22, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:      real x = 12.3e+10_;
