@@ -871,6 +871,7 @@ let () =
   add_unqualified ("divide", ReturnType UVector, [UVector; UReal]) ;
   add_unqualified ("divide", ReturnType URowVector, [URowVector; UReal]) ;
   add_unqualified ("divide", ReturnType UMatrix, [UMatrix; UReal]) ;
+  add_unqualified ("divide", ReturnType UMatrix, [UReal; UMatrix]) ;
   add_unqualified ("dot_product", ReturnType UReal, [UVector; UVector]) ;
   add_unqualified ("dot_product", ReturnType UReal, [URowVector; URowVector]) ;
   add_unqualified ("dot_product", ReturnType UReal, [UVector; URowVector]) ;
@@ -905,6 +906,8 @@ let () =
   add_unqualified
     ("elt_multiply", ReturnType URowVector, [URowVector; URowVector]) ;
   add_unqualified ("elt_multiply", ReturnType UMatrix, [UMatrix; UMatrix]) ;
+  add_unqualified ("elt_multiply", ReturnType UMatrix, [UMatrix; UReal]) ;
+  add_unqualified ("elt_multiply", ReturnType UMatrix, [UReal; UMatrix]) ;
   add_binary_vec_int_int "falling_factorial" ;
   add_binary_vec_real_int "falling_factorial" ;
   add_binary_vec "fdim" ;

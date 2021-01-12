@@ -1801,6 +1801,7 @@ Ill-typed arguments supplied to infix operator /. Available signatures:
 (real, real) => real
 (vector, real) => vector
 (row_vector, real) => row_vector
+(real, matrix) => matrix
 (matrix, real) => matrix
 Instead supplied arguments of incompatible type: int[], matrix.
 
@@ -1823,6 +1824,7 @@ Ill-typed arguments supplied to infix operator /. Available signatures:
 (real, real) => real
 (vector, real) => vector
 (row_vector, real) => row_vector
+(real, matrix) => matrix
 (matrix, real) => matrix
 Instead supplied arguments of incompatible type: int[], matrix.
 
@@ -1867,6 +1869,8 @@ Ill-typed arguments supplied to infix operator .*. Available signatures:
 (real, real) => real
 (vector, vector) => vector
 (row_vector, row_vector) => row_vector
+(real, matrix) => matrix
+(matrix, real) => matrix
 (matrix, matrix) => matrix
 Instead supplied arguments of incompatible type: int[], matrix.
 
