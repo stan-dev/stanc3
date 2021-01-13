@@ -185,6 +185,7 @@ let distributions =
   ; (full_lpdf, "cauchy", [DVReal; DVReal; DVReal])
   ; (full_lpdf, "chi_square", [DVReal; DVReal])
   ; ([Lpdf], "dirichlet", [DVectors; DVectors])
+  ; (full_lpmf, "discrete_range", [DVInt; DVInt; DVInt])
   ; (full_lpdf, "double_exponential", [DVReal; DVReal; DVReal])
   ; (full_lpdf, "exp_mod_normal", [DVReal; DVReal; DVReal; DVReal])
   ; (full_lpdf, "exponential", [DVReal; DVReal])
@@ -1699,6 +1700,8 @@ let () =
   add_unqualified ("sum", ReturnType UReal, [UVector]) ;
   add_unqualified ("sum", ReturnType UReal, [URowVector]) ;
   add_unqualified ("sum", ReturnType UReal, [UMatrix]) ;
+  add_unqualified ("svd_U", ReturnType UMatrix, [UMatrix]) ;
+  add_unqualified ("svd_V", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified ("tail", ReturnType URowVector, [URowVector; UInt]) ;
   add_unqualified ("tail", ReturnType UVector, [UVector; UInt]) ;
   List.iter
