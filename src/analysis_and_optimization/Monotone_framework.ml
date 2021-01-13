@@ -63,7 +63,7 @@ let rec free_vars_stmt
   | For {lower= e1; upper= e2; body= b; _} ->
       Set.Poly.union_list
         [free_vars_expr e1; free_vars_expr e2; free_vars_stmt b.pattern]
-  | Block l | SList l ->
+  | Profile l | Block l | SList l ->
       Set.Poly.union_list (List.map ~f:(fun s -> free_vars_stmt s.pattern) l)
   | Decl _ | Break | Continue | Return None | Skip -> Set.Poly.empty
 
@@ -80,7 +80,7 @@ let top_free_vars_stmt
   | While (e, _) | IfElse (e, _, _) -> free_vars_expr e
   | For {lower= e1; upper= e2; _} ->
       Set.Poly.union_list [free_vars_expr e1; free_vars_expr e2]
-  | Block _ | SList _ -> Set.Poly.empty
+  | Profile _| Block _ | SList _ -> Set.Poly.empty
 
 (** Compute the inverse flowgraph of a Stan statement (for reverse analyses) *)
 let inverse_flowgraph_of_stmt ?(flatten_loops = false)
@@ -318,7 +318,7 @@ let constant_propagation_transfer
              |Break | Continue | Return _ | Skip
              |IfElse (_, _, _)
              |While (_, _)
-             |For _ | Block _ | SList _ ->
+             |For _ | Profile _| Block _ | SList _ ->
                 m )
   end
   : TRANSFER_FUNCTION
@@ -366,7 +366,7 @@ let expression_propagation_transfer
                 else Map.set m ~key:s ~data:(subst_expr m e)
             | Decl {decl_id= s; _} | Assignment ((s, _, _ :: _), _) ->
                 kill_var m s
-            | Block b ->
+            | Profile b | Block b ->
                 let kills =
                   Set.Poly.union_list
                     (List.map ~f:(label_top_decls flowgraph_to_mir) b)
@@ -407,7 +407,7 @@ let copy_propagation_transfer (globals : string Set.Poly.t)
                 if Set.Poly.mem globals s then m'
                 else Map.set m' ~key:s ~data:Expr.Fixed.{pattern= Var t; meta}
             | Decl {decl_id= s; _} | Assignment ((s, _, _), _) -> kill_var m s
-            | Block b ->
+            | Profile b | Block b ->
                 let kills =
                   Set.Poly.union_list
                     (List.map ~f:(label_top_decls flowgraph_to_mir) b)
@@ -443,7 +443,7 @@ let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Fixed.Pattern.t) =
    |Break | Continue | Return _ | Skip
    |IfElse (_, _, _)
    |While (_, _)
-   |Block _ | SList _ ->
+   | Profile _|Block _ | SList _ ->
       Set.Poly.empty
 
 (** Calculate the set of variables that a statement can declare *)
@@ -484,7 +484,7 @@ let reaching_definitions_transfer
          |Break | Continue | Return _ | Skip
          |IfElse (_, _, _)
          |While (_, _)
-         |Block _ | SList _ | Assignment _ ->
+         | Profile _|Block _ | SList _ | Assignment _ ->
             Set.Poly.empty
       in
       transfer_gen_kill p gen kill
@@ -527,7 +527,7 @@ let live_variables_transfer (never_kill : string Set.Poly.t)
          |Break | Continue | Return _ | Skip
          |IfElse (_, _, _)
          |While (_, _)
-         |For _ | Block _ | SList _
+         |For _ | Profile _ | Block _ | SList _
          |Assignment ((_, _, _ :: _), _) ->
             Set.Poly.empty
       in
@@ -594,7 +594,7 @@ let rec used_expressions_stmt_help f
                 Expr.Typed.Meta.
                   {type_= UInt; adlevel= DataOnly; loc= Location_span.empty} }
         ]
-  | Block l | SList l ->
+  | Profile l | Block l | SList l ->
       Expr.Typed.Set.union_list
         (List.map ~f:(fun s -> used_expressions_stmt_help f s.pattern) l)
 
@@ -615,7 +615,7 @@ let top_used_expressions_stmt_help f
            (List.map ~f:(used_expressions_idx_help f) l))
   | While (e, _) | IfElse (e, _, _) -> f e
   | NRFunApp (_, _, l) -> Expr.Typed.Set.union_list (List.map ~f l)
-  | Block _ | SList _ | Decl _ | Return None | Break | Continue | Skip ->
+  | Profile _ | Block _ | SList _ | Decl _ | Return None | Break | Continue | Skip ->
       Expr.Typed.Set.empty
   | For {lower= e1; upper= e2; _} -> Expr.Typed.Set.union_list [f e1; f e2]
 
@@ -907,7 +907,7 @@ let rec declared_variables_stmt
   | While (_, b) | IfElse (_, b, None) -> declared_variables_stmt b.pattern
   | For {loopvar= s; body= b; _} ->
       Set.Poly.add (declared_variables_stmt b.pattern) s
-  | Block l | SList l ->
+  | Profile l | Block l | SList l ->
       Set.Poly.union_list
         (List.map ~f:(fun x -> declared_variables_stmt x.pattern) l)
 

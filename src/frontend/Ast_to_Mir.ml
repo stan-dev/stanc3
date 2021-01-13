@@ -668,6 +668,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
         (Program.map_transformation trans_expr transformation)
         identifier initial_value
   | Ast.Block stmts -> Block (List.concat_map ~f:trans_stmt stmts) |> swrap
+  | Ast.Profile stmts -> Profile (List.concat_map ~f:trans_stmt stmts) |> swrap
   | Ast.Return e -> Return (Some (trans_expr e)) |> swrap
   | Ast.ReturnVoid -> Return None |> swrap
   | Ast.Break -> Break |> swrap

@@ -337,6 +337,12 @@ and pp_statement ppf ({stmt= s_content; _} as ss) =
       with_indented_box ppf 2 0 (fun () -> pp_list_of_statements ppf vdsl) ;
       Format.pp_print_cut ppf () ;
       Fmt.pf ppf "}"
+  | Profile vdsl ->
+      Fmt.pf ppf "{" ;
+      Format.pp_print_cut ppf () ;
+      with_indented_box ppf 2 0 (fun () -> pp_list_of_statements ppf vdsl) ;
+      Format.pp_print_cut ppf () ;
+      Fmt.pf ppf "}"
   | VarDecl
       { decl_type= pst
       ; transformation= trans

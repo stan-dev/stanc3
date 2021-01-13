@@ -419,7 +419,7 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.({pattern; meta}) =
                                ( [inline_function_statement propto adt fim body]
                                @ map_no_loc s_upper )
                          ; meta= Location_span.empty } ) })
-        | Block l ->
+        | Profile l | Block l ->
             Block (List.map l ~f:(inline_function_statement propto adt fim))
         | SList l ->
             SList (List.map l ~f:(inline_function_statement propto adt fim))
@@ -504,7 +504,7 @@ let rec contains_top_break_or_continue Stmt.Fixed.({pattern; _}) =
    |While (_, _)
    |For _ | Skip ->
       false
-  | Block l | SList l -> List.exists l ~f:contains_top_break_or_continue
+  | Profile l | Block l | SList l -> List.exists l ~f:contains_top_break_or_continue
   | IfElse (_, b1, b2) -> (
       contains_top_break_or_continue b1
       ||
@@ -777,7 +777,7 @@ let dead_code_elimination (mir : Program.Typed.t) =
             && is_skip_break_continue body.pattern
           then Skip
           else For {loopvar; lower; upper; body}
-      | Block l ->
+      | Profile l | Block l ->
           let l' = List.filter ~f:(fun x -> x.pattern <> Skip) l in
           if List.length l' = 0 then Skip else Block l'
       | SList l ->
