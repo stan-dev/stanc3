@@ -1,0 +1,15 @@
+  $ ../../../../../../install/default/bin/stanc --print-cpp simple_function.stan
+
+Syntax error in 'simple_function.stan', line 9, column 11 to column 17, parsing error:
+   -------------------------------------------------
+     7:     
+     8:     real sum_y;
+     9:     profile("dada") {
+                    ^
+    10:        sum_y = sum(y);
+    11:     }   
+   -------------------------------------------------
+
+Ill-formed function application. Expect comma-separated list of expressions followed by ")" after "(".
+
+
