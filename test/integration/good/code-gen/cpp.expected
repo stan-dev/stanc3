@@ -80,6 +80,7 @@ static const std::vector<string> locations_array__ = {" (found before start of p
 class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> {
 
  private:
+  profile_map profiles__;
   int J;
   std::vector<double> y;
   std::vector<double> sigma;
@@ -88,7 +89,10 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
   ~_8_schools_ncp_model() { }
   
   inline std::string model_name() const final { return "_8_schools_ncp_model"; }
-
+  inline stan::math::profile_map get_profile_data() {
+    return profiles__;
+  }
+  
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
   }
@@ -596,13 +600,17 @@ static const std::vector<string> locations_array__ = {" (found before start of p
 class _8start_with_number_model final : public model_base_crtp<_8start_with_number_model> {
 
  private:
+  profile_map profiles__;
   int good_model;
  
  public:
   ~_8start_with_number_model() { }
   
   inline std::string model_name() const final { return "_8start_with_number_model"; }
-
+  inline stan::math::profile_map get_profile_data() {
+    return profiles__;
+  }
+  
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
   }
@@ -968,6 +976,7 @@ static const std::vector<string> locations_array__ = {" (found before start of p
 class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_model> {
 
  private:
+  profile_map profiles__;
   int J;
   std::vector<double> y;
   std::vector<double> sigma;
@@ -976,7 +985,10 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
   ~eight_schools_ncp_model() { }
   
   inline std::string model_name() const final { return "eight_schools_ncp_model"; }
-
+  inline stan::math::profile_map get_profile_data() {
+    return profiles__;
+  }
+  
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
   }
@@ -4252,6 +4264,7 @@ return binomialf(phi, theta, x_r, x_i, pstream__);
 class mother_model final : public model_base_crtp<mother_model> {
 
  private:
+  profile_map profiles__;
   int N;
   int M;
   int K;
@@ -4334,7 +4347,10 @@ class mother_model final : public model_base_crtp<mother_model> {
   ~mother_model() { }
   
   inline std::string model_name() const final { return "mother_model"; }
-
+  inline stan::math::profile_map get_profile_data() {
+    return profiles__;
+  }
+  
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
   }
@@ -11362,6 +11378,7 @@ return algebra_system(x, y, dat, dat_int, pstream__);
 class motherHOF_model final : public model_base_crtp<motherHOF_model> {
 
  private:
+  profile_map profiles__;
   int T;
   std::vector<double> y0_d;
   double t0;
@@ -11380,7 +11397,10 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
   ~motherHOF_model() { }
   
   inline std::string model_name() const final { return "motherHOF_model"; }
-
+  inline stan::math::profile_map get_profile_data() {
+    return profiles__;
+  }
+  
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
   }
@@ -13791,6 +13811,7 @@ return f(t, z, a, b, pstream__);
 class new_integrate_interface_model final : public model_base_crtp<new_integrate_interface_model> {
 
  private:
+  profile_map profiles__;
   int N;
   int id;
   double rd;
@@ -13802,7 +13823,10 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
   ~new_integrate_interface_model() { }
   
   inline std::string model_name() const final { return "new_integrate_interface_model"; }
-
+  inline stan::math::profile_map get_profile_data() {
+    return profiles__;
+  }
+  
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
   }
@@ -17693,6 +17717,7 @@ return dz_dt(t, z, theta, x_r, x_i, pstream__);
 class old_integrate_interface_model final : public model_base_crtp<old_integrate_interface_model> {
 
  private:
+  profile_map profiles__;
   int N;
   std::vector<double> ts;
   std::vector<double> y_init;
@@ -17702,7 +17727,10 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
   ~old_integrate_interface_model() { }
   
   inline std::string model_name() const final { return "old_integrate_interface_model"; }
-
+  inline stan::math::profile_map get_profile_data() {
+    return profiles__;
+  }
+  
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
   }
@@ -18664,6 +18692,7 @@ static const std::vector<string> locations_array__ = {" (found before start of p
 class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
 
  private:
+  profile_map profiles__;
   int k;
   int n;
   Eigen::Matrix<double, -1, -1> X_d;
@@ -18688,7 +18717,10 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   ~optimize_glm_model() { }
   
   inline std::string model_name() const final { return "optimize_glm_model"; }
-
+  inline stan::math::profile_map get_profile_data() {
+    return profiles__;
+  }
+  
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
   }
@@ -20348,13 +20380,17 @@ return foo_lpdf<propto__>(y_slice, start + 1, end + 1, pstream__);
 class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
 
  private:
+  profile_map profiles__;
   int N;
  
  public:
   ~reduce_sum_m1_model() { }
   
   inline std::string model_name() const final { return "reduce_sum_m1_model"; }
-
+  inline stan::math::profile_map get_profile_data() {
+    return profiles__;
+  }
+  
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
   }
@@ -21876,6 +21912,7 @@ return h8(y, start + 1, end + 1, a, pstream__);
 class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
 
  private:
+  profile_map profiles__;
   int N;
   std::vector<double> x;
  
@@ -21883,7 +21920,10 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
   ~reduce_sum_m2_model() { }
   
   inline std::string model_name() const final { return "reduce_sum_m2_model"; }
-
+  inline stan::math::profile_map get_profile_data() {
+    return profiles__;
+  }
+  
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
   }
@@ -25534,6 +25574,7 @@ return r(pstream__);
 class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
 
  private:
+  profile_map profiles__;
   int N;
   std::vector<double> y1d;
   std::vector<Eigen::Matrix<double, -1, 1>> y2d;
@@ -25583,7 +25624,10 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
   ~reduce_sum_m3_model() { }
   
   inline std::string model_name() const final { return "reduce_sum_m3_model"; }
-
+  inline stan::math::profile_map get_profile_data() {
+    return profiles__;
+  }
+  
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
   }
@@ -28021,13 +28065,17 @@ return foo5_lp<propto__>(y, lp__, lp_accum__, pstream__);
 class single_argument_lpmf_model final : public model_base_crtp<single_argument_lpmf_model> {
 
  private:
+  profile_map profiles__;
   
  
  public:
   ~single_argument_lpmf_model() { }
   
   inline std::string model_name() const final { return "single_argument_lpmf_model"; }
-
+  inline stan::math::profile_map get_profile_data() {
+    return profiles__;
+  }
+  
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
   }
@@ -28361,13 +28409,17 @@ static const std::vector<string> locations_array__ = {" (found before start of p
 class tilde_block_model final : public model_base_crtp<tilde_block_model> {
 
  private:
+  profile_map profiles__;
   int t;
  
  public:
   ~tilde_block_model() { }
   
   inline std::string model_name() const final { return "tilde_block_model"; }
-
+  inline stan::math::profile_map get_profile_data() {
+    return profiles__;
+  }
+  
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
   }
@@ -28873,6 +28925,7 @@ static const std::vector<string> locations_array__ = {" (found before start of p
 class transform_model final : public model_base_crtp<transform_model> {
 
  private:
+  profile_map profiles__;
   int n;
   int m;
   int k;
@@ -28885,7 +28938,10 @@ class transform_model final : public model_base_crtp<transform_model> {
   ~transform_model() { }
   
   inline std::string model_name() const final { return "transform_model"; }
-
+  inline stan::math::profile_map get_profile_data() {
+    return profiles__;
+  }
+  
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
   }
@@ -32573,6 +32629,7 @@ static const std::vector<string> locations_array__ = {" (found before start of p
 class truncate_model final : public model_base_crtp<truncate_model> {
 
  private:
+  profile_map profiles__;
   int n;
   double x;
  
@@ -32580,7 +32637,10 @@ class truncate_model final : public model_base_crtp<truncate_model> {
   ~truncate_model() { }
   
   inline std::string model_name() const final { return "truncate_model"; }
-
+  inline stan::math::profile_map get_profile_data() {
+    return profiles__;
+  }
+  
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
   }
@@ -33089,13 +33149,17 @@ return normal(a, pstream__);
 class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stmt_conflict_model> {
 
  private:
+  profile_map profiles__;
   
  
  public:
   ~udf_tilde_stmt_conflict_model() { }
   
   inline std::string model_name() const final { return "udf_tilde_stmt_conflict_model"; }
-
+  inline stan::math::profile_map get_profile_data() {
+    return profiles__;
+  }
+  
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
   }
@@ -33477,13 +33541,17 @@ return lb_constrain(x, y, pstream__);
 class user_constrain_model final : public model_base_crtp<user_constrain_model> {
 
  private:
+  profile_map profiles__;
   
  
  public:
   ~user_constrain_model() { }
   
   inline std::string model_name() const final { return "user_constrain_model"; }
-
+  inline stan::math::profile_map get_profile_data() {
+    return profiles__;
+  }
+  
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
   }

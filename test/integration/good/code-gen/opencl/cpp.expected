@@ -835,6 +835,7 @@ static const std::vector<string> locations_array__ = {" (found before start of p
 class distributions_model final : public model_base_crtp<distributions_model> {
 
  private:
+  profile_map profiles__;
   int d_int;
   std::vector<int> d_int_array;
   double d_real;
@@ -850,7 +851,10 @@ class distributions_model final : public model_base_crtp<distributions_model> {
   ~distributions_model() { }
   
   inline std::string model_name() const final { return "distributions_model"; }
-
+  inline stan::math::profile_map get_profile_data() {
+    return profiles__;
+  }
+  
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp --use-opencl"};
   }
@@ -6513,6 +6517,7 @@ static const std::vector<string> locations_array__ = {" (found before start of p
 class restricted_model final : public model_base_crtp<restricted_model> {
 
  private:
+  profile_map profiles__;
   int d_int;
   std::vector<int> d_int_array;
   double d_real;
@@ -6525,7 +6530,10 @@ class restricted_model final : public model_base_crtp<restricted_model> {
   ~restricted_model() { }
   
   inline std::string model_name() const final { return "restricted_model"; }
-
+  inline stan::math::profile_map get_profile_data() {
+    return profiles__;
+  }
+  
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp --use-opencl"};
   }

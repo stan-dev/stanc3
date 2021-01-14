@@ -281,6 +281,7 @@ static const std::vector<string> locations_array__ = {" (found before start of p
 class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
 
  private:
+  profile_map profiles__;
   int k;
   int n;
   Eigen::Matrix<double, -1, -1> X_d;
@@ -311,7 +312,10 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   ~optimize_glm_model() { }
   
   inline std::string model_name() const final { return "optimize_glm_model"; }
-
+  inline stan::math::profile_map get_profile_data() {
+    return profiles__;
+  }
+  
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp --use-opencl"};
   }

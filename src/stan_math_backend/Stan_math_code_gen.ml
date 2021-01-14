@@ -424,6 +424,8 @@ let rec top_level_decls Stmt.Fixed.({pattern; _}) =
 (** Print the private data members of the model class *)
 let pp_model_private ppf {Program.prepare_data; _} =
   let data_decls = List.concat_map ~f:top_level_decls prepare_data in
+  pf ppf "%s" "profile_map profiles__;";
+  pf ppf "@ " ;
   pf ppf "%a" (list ~sep:cut pp_decl) data_decls
 
 (** Print the signature and blocks of the model class methods.
@@ -796,7 +798,10 @@ let pp_model ppf ({Program.prog_name; _} as p) =
     prog_name ;
   pf ppf
     {|
-
+  inline stan::math::profile_map get_profile_data() {
+    return profiles__;
+  }
+  
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %s", "stancflags = %s"};
   }

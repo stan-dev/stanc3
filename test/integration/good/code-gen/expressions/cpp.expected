@@ -192,6 +192,7 @@ return foo3(a, b, pstream__);
 class simple_function_model final : public model_base_crtp<simple_function_model> {
 
  private:
+  profile_map profiles__;
   int N;
   Eigen::Matrix<double, -1, -1> m;
  
@@ -199,7 +200,10 @@ class simple_function_model final : public model_base_crtp<simple_function_model
   ~simple_function_model() { }
   
   inline std::string model_name() const final { return "simple_function_model"; }
-
+  inline stan::math::profile_map get_profile_data() {
+    return profiles__;
+  }
+  
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
   }

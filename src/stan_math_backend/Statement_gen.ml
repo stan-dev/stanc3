@@ -3,8 +3,14 @@ open Middle
 open Fmt
 open Expression_gen
 
+let n_profiles = ref 0
+
 let pp_call_str ppf (name, args) = pp_call ppf (name, string, args)
 let pp_block ppf (pp_body, body) = pf ppf "{@;<1 2>@[<v>%a@]@,}" pp_body body
+let pp_profile ppf (pp_body, body) = 
+  let profile1 = Fmt.strf "profile<local_scalar_t__> profile_%d__(\"%s\", const_cast<profile_map&>(profiles__));" !n_profiles "test" in
+  n_profiles := !n_profiles + 1;
+  pf ppf "{@;<1 2>@[<v>%s@;@;%a@]@,}" profile1 pp_body body
 
 let rec contains_eigen = function
   | UnsizedType.UArray t -> contains_eigen t
@@ -195,7 +201,7 @@ let rec pp_statement (ppf : Format.formatter)
       (* Skip For loop part, just emit body due to the way FnReadParam emits *)
   | For {loopvar; lower; upper; body} ->
       pp_for_loop ppf (loopvar, lower, upper, pp_statement, body)
-  | Profile ls -> pp_block ppf (pp_stmt_list, ls)
+  | Profile ls -> pp_profile ppf (pp_stmt_list, ls)
   | Block ls -> pp_block ppf (pp_stmt_list, ls)
   | SList ls -> pp_stmt_list ppf ls
   | Decl {decl_adtype; decl_id; decl_type} ->
