@@ -338,7 +338,7 @@ and pp_statement ppf ({stmt= s_content; _} as ss) =
       Format.pp_print_cut ppf () ;
       Fmt.pf ppf "}"
   | Profile (name, vdsl) ->
-      Fmt.pf ppf "profile(%s) {" name;
+      Fmt.pf ppf "profile(%s) {" name ;
       Format.pp_print_cut ppf () ;
       with_indented_box ppf 2 0 (fun () -> pp_list_of_statements ppf vdsl) ;
       Format.pp_print_cut ppf () ;
