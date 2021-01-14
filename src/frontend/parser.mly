@@ -747,8 +747,8 @@ nested_statement:
     }
   | FOR LPAREN id=identifier IN e=expression RPAREN s=statement
     {  grammar_logger "foreach_statement" ; ForEach (id, e, s) }
-  | PROFILE LBRACE l=list(vardecl_or_statement)  RBRACE
-    {  grammar_logger "profile_statement" ; Profile l }
+  | PROFILE LPAREN st=string_literal RPAREN LBRACE l=list(vardecl_or_statement) RBRACE
+    {  grammar_logger "profile_statement" ; Profile (st, l) }
   | LBRACE l=list(vardecl_or_statement)  RBRACE
     {  grammar_logger "block_statement" ; Block l } (* NOTE: I am choosing to allow mixing of statements and var_decls *)
 

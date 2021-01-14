@@ -1491,7 +1491,7 @@ and semantic_check_block ~loc ~cf stmts =
     map return_ty ~f:(fun return_type ->
         mk_typed_statement ~stmt:(Block xs) ~return_type ~loc ))
 
-and semantic_check_profile ~loc ~cf stmts =
+and semantic_check_profile ~loc ~cf name stmts =
   Symbol_table.begin_scope vm ;
   (* Any statements after a break or continue or return or reject
      do not count for the return type.
@@ -1511,7 +1511,7 @@ and semantic_check_profile ~loc ~cf stmts =
          )
     in
     map return_ty ~f:(fun return_type ->
-        mk_typed_statement ~stmt:(Profile xs) ~return_type ~loc ))
+        mk_typed_statement ~stmt:(Profile (name, xs)) ~return_type ~loc ))
 
 (* -- Variable Declarations ------------------------------------------------- *)
 and semantic_check_var_decl_bounds ~loc is_global sized_ty trans =
@@ -1791,7 +1791,7 @@ and semantic_check_statement cf (s : Ast.untyped_statement) :
         loop_body
   | ForEach (id, e, s) -> semantic_check_foreach ~loc ~cf id e s
   | Block vdsl -> semantic_check_block ~loc ~cf vdsl
-  | Profile vdsl -> semantic_check_profile ~loc ~cf vdsl
+  | Profile (name, vdsl) -> semantic_check_profile ~loc ~cf name vdsl
   | VarDecl {decl_type= Unsized _; _} ->
       raise_s [%message "Don't support unsized declarations yet."]
   | VarDecl

@@ -18,7 +18,7 @@ module Fixed = struct
       | IfElse of 'a * 'b * 'b option
       | While of 'a * 'b
       | For of {loopvar: string; lower: 'a; upper: 'a; body: 'b}
-      | Profile of 'b list
+      | Profile of string * 'b list
       | Block of 'b list      
       | SList of 'b list
       | Decl of
@@ -57,7 +57,7 @@ module Fixed = struct
       | For {loopvar; lower; upper; body} ->
           Fmt.pf ppf {|%a(%s in %a:%a) %a|} pp_builtin_syntax "for" loopvar
             pp_e lower pp_e upper pp_s body
-      | Profile stmts ->
+      | Profile (_, stmts) ->
           Fmt.pf ppf {|{@;<1 2>@[<v>%a@]@;}|}
             Fmt.(list pp_s ~sep:Fmt.cut)
             stmts
@@ -204,7 +204,7 @@ module Labelled = struct
         in
         let assocs' = {assocs with exprs} in
         associate ~init:assocs' body
-    | Profile xs | Block xs | SList xs ->
+    | Profile (_, xs) | Block xs | SList xs ->
         List.fold ~f:(fun accu x -> associate ~init:accu x) ~init:assocs xs
 
   and associate_possibly_sized_type assocs = function

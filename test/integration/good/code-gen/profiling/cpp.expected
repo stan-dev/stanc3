@@ -166,7 +166,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       
       current_statement__ = 17;
       {
-        profile<local_scalar_t__> profile_0__("test", const_cast<profile_map&>(profiles__));
+        profile<local_scalar_t__> profile_0__("sum", const_cast<profile_map&>(profiles__));
         
         current_statement__ = 16;
         sum_y = sum(y);

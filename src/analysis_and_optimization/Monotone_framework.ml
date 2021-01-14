@@ -63,7 +63,7 @@ let rec free_vars_stmt
   | For {lower= e1; upper= e2; body= b; _} ->
       Set.Poly.union_list
         [free_vars_expr e1; free_vars_expr e2; free_vars_stmt b.pattern]
-  | Profile l | Block l | SList l ->
+  | Profile (_, l) | Block l | SList l ->
       Set.Poly.union_list (List.map ~f:(fun s -> free_vars_stmt s.pattern) l)
   | Decl _ | Break | Continue | Return None | Skip -> Set.Poly.empty
 
@@ -366,7 +366,7 @@ let expression_propagation_transfer
                 else Map.set m ~key:s ~data:(subst_expr m e)
             | Decl {decl_id= s; _} | Assignment ((s, _, _ :: _), _) ->
                 kill_var m s
-            | Profile b | Block b ->
+            | Profile (_, b) | Block b ->
                 let kills =
                   Set.Poly.union_list
                     (List.map ~f:(label_top_decls flowgraph_to_mir) b)
@@ -407,7 +407,7 @@ let copy_propagation_transfer (globals : string Set.Poly.t)
                 if Set.Poly.mem globals s then m'
                 else Map.set m' ~key:s ~data:Expr.Fixed.{pattern= Var t; meta}
             | Decl {decl_id= s; _} | Assignment ((s, _, _), _) -> kill_var m s
-            | Profile b | Block b ->
+            | Profile (_, b) | Block b ->
                 let kills =
                   Set.Poly.union_list
                     (List.map ~f:(label_top_decls flowgraph_to_mir) b)
@@ -594,7 +594,7 @@ let rec used_expressions_stmt_help f
                 Expr.Typed.Meta.
                   {type_= UInt; adlevel= DataOnly; loc= Location_span.empty} }
         ]
-  | Profile l | Block l | SList l ->
+  | Profile (_, l) | Block l | SList l ->
       Expr.Typed.Set.union_list
         (List.map ~f:(fun s -> used_expressions_stmt_help f s.pattern) l)
 
@@ -907,7 +907,7 @@ let rec declared_variables_stmt
   | While (_, b) | IfElse (_, b, None) -> declared_variables_stmt b.pattern
   | For {loopvar= s; body= b; _} ->
       Set.Poly.add (declared_variables_stmt b.pattern) s
-  | Profile l | Block l | SList l ->
+  | Profile (_, l) | Block l | SList l ->
       Set.Poly.union_list
         (List.map ~f:(fun x -> declared_variables_stmt x.pattern) l)
 

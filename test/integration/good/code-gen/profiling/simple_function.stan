@@ -6,7 +6,7 @@ data {
 transformed data {
    
    real sum_y;
-   profile {
+   profile("sum") {
       sum_y = sum(y);
    }   
 }
