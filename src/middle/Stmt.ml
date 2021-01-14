@@ -19,7 +19,7 @@ module Fixed = struct
       | While of 'a * 'b
       | For of {loopvar: string; lower: 'a; upper: 'a; body: 'b}
       | Profile of string * 'b list
-      | Block of 'b list      
+      | Block of 'b list
       | SList of 'b list
       | Decl of
           { decl_adtype: UnsizedType.autodifftype

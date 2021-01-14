@@ -424,7 +424,7 @@ let rec top_level_decls Stmt.Fixed.({pattern; _}) =
 (** Print the private data members of the model class *)
 let pp_model_private ppf {Program.prepare_data; _} =
   let data_decls = List.concat_map ~f:top_level_decls prepare_data in
-  pf ppf "%s" "profile_map profiles__;";
+  pf ppf "%s" "profile_map profiles__;" ;
   pf ppf "@ " ;
   pf ppf "%a" (list ~sep:cut pp_decl) data_decls
 

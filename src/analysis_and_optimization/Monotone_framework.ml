@@ -80,7 +80,7 @@ let top_free_vars_stmt
   | While (e, _) | IfElse (e, _, _) -> free_vars_expr e
   | For {lower= e1; upper= e2; _} ->
       Set.Poly.union_list [free_vars_expr e1; free_vars_expr e2]
-  | Profile _| Block _ | SList _ -> Set.Poly.empty
+  | Profile _ | Block _ | SList _ -> Set.Poly.empty
 
 (** Compute the inverse flowgraph of a Stan statement (for reverse analyses) *)
 let inverse_flowgraph_of_stmt ?(flatten_loops = false)
@@ -318,7 +318,7 @@ let constant_propagation_transfer
              |Break | Continue | Return _ | Skip
              |IfElse (_, _, _)
              |While (_, _)
-             |For _ | Profile _| Block _ | SList _ ->
+             |For _ | Profile _ | Block _ | SList _ ->
                 m )
   end
   : TRANSFER_FUNCTION
@@ -443,7 +443,7 @@ let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Fixed.Pattern.t) =
    |Break | Continue | Return _ | Skip
    |IfElse (_, _, _)
    |While (_, _)
-   | Profile _|Block _ | SList _ ->
+   |Profile _ | Block _ | SList _ ->
       Set.Poly.empty
 
 (** Calculate the set of variables that a statement can declare *)
@@ -484,7 +484,7 @@ let reaching_definitions_transfer
          |Break | Continue | Return _ | Skip
          |IfElse (_, _, _)
          |While (_, _)
-         | Profile _|Block _ | SList _ | Assignment _ ->
+         |Profile _ | Block _ | SList _ | Assignment _ ->
             Set.Poly.empty
       in
       transfer_gen_kill p gen kill
@@ -615,7 +615,9 @@ let top_used_expressions_stmt_help f
            (List.map ~f:(used_expressions_idx_help f) l))
   | While (e, _) | IfElse (e, _, _) -> f e
   | NRFunApp (_, _, l) -> Expr.Typed.Set.union_list (List.map ~f l)
-  | Profile _ | Block _ | SList _ | Decl _ | Return None | Break | Continue | Skip ->
+  | Profile _ | Block _ | SList _ | Decl _
+   |Return None
+   |Break | Continue | Skip ->
       Expr.Typed.Set.empty
   | For {lower= e1; upper= e2; _} -> Expr.Typed.Set.union_list [f e1; f e2]
 

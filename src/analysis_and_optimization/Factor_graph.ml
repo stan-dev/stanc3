@@ -31,7 +31,7 @@ let extract_factors_statement stmt =
    |Break | Continue | Return _ | Skip
    |IfElse (_, _, _)
    |While (_, _)
-   |For _ | Profile _  | Block _ | SList _
+   |For _ | Profile _ | Block _ | SList _
    |Decl {decl_id= _; _} ->
       []
 

@@ -1922,4 +1922,3 @@ let semantic_check_program
     |> get_with
          ~with_ok:(fun ok -> Result.Ok ok)
          ~with_errors:(fun errs -> Result.Error errs))
-

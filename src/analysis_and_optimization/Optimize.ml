@@ -504,7 +504,8 @@ let rec contains_top_break_or_continue Stmt.Fixed.({pattern; _}) =
    |While (_, _)
    |For _ | Skip ->
       false
-  | Profile (_, l) | Block l | SList l -> List.exists l ~f:contains_top_break_or_continue
+  | Profile (_, l) | Block l | SList l ->
+      List.exists l ~f:contains_top_break_or_continue
   | IfElse (_, b1, b2) -> (
       contains_top_break_or_continue b1
       ||
