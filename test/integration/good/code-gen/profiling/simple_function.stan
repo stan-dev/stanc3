@@ -19,22 +19,19 @@ parameters {
 model {
    matrix[N, N] cov;
    matrix[N, N] L_cov;
-   // {
-   //    profile("cov_exp_quad");
-   //    cov =   gp_exp_quad_cov(x, alpha, rho)
-   //                      + diag_matrix(rep_vector(sigma, N));
-   // }
-   // {
-   //    profile("cholesky_decompose");
-   //    L_cov = cholesky_decompose(cov);
-   // }   
-   // {
-   //    profile("multi_normal_cholesky");
-   //    rho ~ gamma(25, 4);
-   //    alpha ~ normal(0, 2);
-   //    sigma ~ normal(0, 1);
+   profile("cov_exp_quad") {
+      cov =   gp_exp_quad_cov(x, alpha, rho)
+                        + diag_matrix(rep_vector(sigma, N));
+   }
+   profile("cholesky_decompose"){
+      L_cov = cholesky_decompose(cov);
+   }   
+   profile("multi_normal_cholesky"){
+      rho ~ gamma(25, 4);
+      alpha ~ normal(0, 2);
+      sigma ~ normal(0, 1);
 
-   //    y ~ multi_normal_cholesky(rep_vector(0, N), L_cov);
-   // }
+      y ~ multi_normal_cholesky(rep_vector(0, N), L_cov);
+   }
    
 }

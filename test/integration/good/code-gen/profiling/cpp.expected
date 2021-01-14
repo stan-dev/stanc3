@@ -68,6 +68,15 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'simple_function.stan', line 21, column 10 to column 11)",
                                                       " (in 'simple_function.stan', line 21, column 13 to column 14)",
                                                       " (in 'simple_function.stan', line 21, column 3 to column 22)",
+                                                      " (in 'simple_function.stan', line 23, column 6 to line 24, column 60)",
+                                                      " (in 'simple_function.stan', line 22, column 3 to line 25, column 4)",
+                                                      " (in 'simple_function.stan', line 27, column 6 to column 38)",
+                                                      " (in 'simple_function.stan', line 26, column 3 to line 28, column 4)",
+                                                      " (in 'simple_function.stan', line 30, column 6 to column 25)",
+                                                      " (in 'simple_function.stan', line 31, column 6 to column 27)",
+                                                      " (in 'simple_function.stan', line 32, column 6 to column 27)",
+                                                      " (in 'simple_function.stan', line 34, column 6 to column 57)",
+                                                      " (in 'simple_function.stan', line 29, column 3 to line 35, column 4)",
                                                       " (in 'simple_function.stan', line 2, column 2 to column 17)",
                                                       " (in 'simple_function.stan', line 3, column 9 to column 10)",
                                                       " (in 'simple_function.stan', line 3, column 2 to column 12)",
@@ -118,29 +127,29 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      current_statement__ = 10;
+      current_statement__ = 19;
       context__.validate_dims("data initialization","N","int",
           context__.to_vec());
       N = std::numeric_limits<int>::min();
       
-      current_statement__ = 10;
+      current_statement__ = 19;
       N = context__.vals_i("N")[(1 - 1)];
-      current_statement__ = 10;
-      current_statement__ = 10;
+      current_statement__ = 19;
+      current_statement__ = 19;
       check_greater_or_equal(function__, "N", N, 1);
-      current_statement__ = 11;
+      current_statement__ = 20;
       validate_non_negative_index("x", "N", N);
-      current_statement__ = 12;
+      current_statement__ = 21;
       context__.validate_dims("data initialization","x","double",
           context__.to_vec(N));
       x = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 12;
+      current_statement__ = 21;
       assign(x, nil_index_list(), context__.vals_r("x"),
         "assigning variable x");
-      current_statement__ = 13;
+      current_statement__ = 22;
       validate_non_negative_index("y", "N", N);
-      current_statement__ = 14;
+      current_statement__ = 23;
       context__.validate_dims("data initialization","y","double",
           context__.to_vec(N));
       y = Eigen::Matrix<double, -1, 1>(N);
@@ -148,27 +157,27 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       
       {
         std::vector<local_scalar_t__> y_flat__;
-        current_statement__ = 14;
+        current_statement__ = 23;
         assign(y_flat__, nil_index_list(), context__.vals_r("y"),
           "assigning variable y_flat__");
-        current_statement__ = 14;
+        current_statement__ = 23;
         pos__ = 1;
-        current_statement__ = 14;
+        current_statement__ = 23;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 14;
+          current_statement__ = 23;
           assign(y, cons_list(index_uni(sym1__), nil_index_list()),
             y_flat__[(pos__ - 1)], "assigning variable y");
-          current_statement__ = 14;
+          current_statement__ = 23;
           pos__ = (pos__ + 1);}
       }
-      current_statement__ = 15;
+      current_statement__ = 24;
       sum_y = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 17;
+      current_statement__ = 26;
       {
         profile<local_scalar_t__> profile_0__("sum", const_cast<profile_map&>(profiles__));
         
-        current_statement__ = 16;
+        current_statement__ = 25;
         sum_y = sum(y);
       }
     } catch (const std::exception& e) {
@@ -261,6 +270,37 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         L_cov = Eigen::Matrix<local_scalar_t__, -1, -1>(N, N);
         stan::math::fill(L_cov, DUMMY_VAR__);
         
+        current_statement__ = 11;
+        {
+          profile<local_scalar_t__> profile_1__("cov_exp_quad", const_cast<profile_map&>(profiles__));
+          
+          current_statement__ = 10;
+          assign(cov, nil_index_list(),
+            add(gp_exp_quad_cov(x, alpha, rho),
+              diag_matrix(rep_vector(sigma, N))), "assigning variable cov");
+        }
+        current_statement__ = 13;
+        {
+          profile<local_scalar_t__> profile_2__("cholesky_decompose", const_cast<profile_map&>(profiles__));
+          
+          current_statement__ = 12;
+          assign(L_cov, nil_index_list(), cholesky_decompose(cov),
+            "assigning variable L_cov");
+        }
+        current_statement__ = 18;
+        {
+          profile<local_scalar_t__> profile_3__("multi_normal_cholesky", const_cast<profile_map&>(profiles__));
+          
+          current_statement__ = 14;
+          lp_accum__.add(gamma_lpdf<propto__>(rho, 25, 4));
+          current_statement__ = 15;
+          lp_accum__.add(normal_lpdf<propto__>(alpha, 0, 2));
+          current_statement__ = 16;
+          lp_accum__.add(normal_lpdf<propto__>(sigma, 0, 1));
+          current_statement__ = 17;
+          lp_accum__.add(
+            multi_normal_cholesky_lpdf<propto__>(y, rep_vector(0, N), L_cov));
+        }
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
