@@ -191,7 +191,7 @@ let reserved_keywords =
   ; "for"; "in"; "break"; "continue"; "void"; "int"; "real"; "vector"
   ; "row_vector"; "matrix"; "ordered"; "positive_ordered"; "simplex"
   ; "unit_vector"; "cholesky_factor_corr"; "cholesky_factor_cov"; "corr_matrix"
-  ; "cov_matrix"; "print"; "reject"; "target"; "get_lp" ]
+  ; "cov_matrix"; "print"; "reject"; "target"; "get_lp"; "profile" ]
 
 let semantic_check_identifier id =
   Validate.(
