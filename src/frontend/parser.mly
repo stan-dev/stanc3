@@ -172,6 +172,7 @@ decl_identifier:
   | REJECT { build_id "reject" $loc }
   | TARGET { build_id "target" $loc }
   | GETLP { build_id "get_lp" $loc }
+  | PROFILE { build_id "profile" $loc }
 
 function_def:
   | rt=return_type name=decl_identifier LPAREN args=separated_list(COMMA, arg_decl)

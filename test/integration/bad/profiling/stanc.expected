@@ -56,7 +56,7 @@ Expected profile name in paranthesis.
 
   $ ../../../../../install/default/bin/stanc profile-bad5.stan
 
-Syntax error in 'profile-bad5.stan', line 2, column 9 to column 16, parsing error:
+Semantic error in 'profile-bad5.stan', line 2, column 9 to column 16:
    -------------------------------------------------
      1:  transformed data {
      2:      real profile;
@@ -64,12 +64,11 @@ Syntax error in 'profile-bad5.stan', line 2, column 9 to column 16, parsing erro
      3:  }
    -------------------------------------------------
 
-Identifier expected after type in top-level variable declaration.
-
+Identifier 'profile' clashes with reserved keyword.
 
   $ ../../../../../install/default/bin/stanc profile-bad6.stan
 
-Syntax error in 'profile-bad6.stan', line 2, column 9 to column 16, parsing error:
+Semantic error in 'profile-bad6.stan', line 2, column 9 to column 16:
    -------------------------------------------------
      1:  functions {
      2:      real profile(int i) {
@@ -78,6 +77,5 @@ Syntax error in 'profile-bad6.stan', line 2, column 9 to column 16, parsing erro
      4:      }
    -------------------------------------------------
 
-Either a number of unsized dimensions is expected as part of a function return type or an identifier is expected as a function name.
-
+Identifier 'profile' clashes with reserved keyword.
 
