@@ -26,12 +26,15 @@ model {
    profile("cholesky_decompose"){
       L_cov = cholesky_decompose(cov);
    }   
-   profile("multi_normal_cholesky"){
-      rho ~ gamma(25, 4);
-      alpha ~ normal(0, 2);
-      sigma ~ normal(0, 1);
-
-      y ~ multi_normal_cholesky(rep_vector(0, N), L_cov);
+   profile("likelihood"){
+      profile("priors") {
+         rho ~ gamma(25, 4);
+         alpha ~ normal(0, 2);
+         sigma ~ normal(0, 1);
+      }  
+      profile("multi_normal_cholesky") {
+         y ~ multi_normal_cholesky(rep_vector(0, N), L_cov);
+      }
    }
    
 }

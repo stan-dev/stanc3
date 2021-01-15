@@ -3,18 +3,16 @@ open Middle
 open Fmt
 open Expression_gen
 
-let n_profiles = ref 0
 let pp_call_str ppf (name, args) = pp_call ppf (name, string, args)
 let pp_block ppf (pp_body, body) = pf ppf "{@;<1 2>@[<v>%a@]@,}" pp_body body
 
 let pp_profile ppf (pp_body, name, body) =
   let profile1 =
     Fmt.strf
-      "profile<local_scalar_t__> profile_%d__(%s, \
+      "profile<local_scalar_t__> profile__(%s, \
        const_cast<profile_map&>(profiles__));"
-      !n_profiles name
+      name
   in
-  n_profiles := !n_profiles + 1 ;
   pf ppf "{@;<1 2>@[<v>%s@;@;%a@]@,}" profile1 pp_body body
 
 let rec contains_eigen = function
