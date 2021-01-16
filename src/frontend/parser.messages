@@ -9444,7 +9444,7 @@ program: TRANSFORMEDDATABLOCK LBRACE PROFILE LPAREN WHILE
 ## PROFILE LPAREN
 ##
 
-Expected profile name as string literal in parenthesis
+Expected profile name as string in parenthesis
 
 
 program: TRANSFORMEDDATABLOCK LBRACE PROFILE LPAREN STRINGLITERAL WHILE
