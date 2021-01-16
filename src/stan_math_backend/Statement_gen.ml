@@ -7,13 +7,13 @@ let pp_call_str ppf (name, args) = pp_call ppf (name, string, args)
 let pp_block ppf (pp_body, body) = pf ppf "{@;<1 2>@[<v>%a@]@,}" pp_body body
 
 let pp_profile ppf (pp_body, name, body) =
-  let profile1 =
+  let profile =
     Fmt.strf
       "profile<local_scalar_t__> profile__(%s, \
        const_cast<profile_map&>(profiles__));"
       name
   in
-  pf ppf "{@;<1 2>@[<v>%s@;@;%a@]@,}" profile1 pp_body body
+  pf ppf "{@;<1 2>@[<v>%s@;@;%a@]@,}" profile pp_body body
 
 let rec contains_eigen = function
   | UnsizedType.UArray t -> contains_eigen t

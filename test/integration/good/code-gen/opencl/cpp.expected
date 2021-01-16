@@ -57,7 +57,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'distributions.stan', line 10, column 2 to column 14)",
                                                       " (in 'distributions.stan', line 11, column 2 to column 27)",
@@ -835,7 +836,6 @@ static const std::vector<string> locations_array__ = {" (found before start of p
 class distributions_model final : public model_base_crtp<distributions_model> {
 
  private:
-  profile_map profiles__;
   int d_int;
   std::vector<int> d_int_array;
   double d_real;
@@ -851,10 +851,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
   ~distributions_model() { }
   
   inline std::string model_name() const final { return "distributions_model"; }
-  inline stan::math::profile_map get_profile_data() {
-    return profiles__;
-  }
-  
+
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp --use-opencl"};
   }
@@ -6407,6 +6404,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+profile_map& get_stan_profile_data() {
+  return distributions_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -6470,7 +6471,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'restricted.stan', line 10, column 2 to column 14)",
                                                       " (in 'restricted.stan', line 11, column 2 to column 27)",
@@ -6517,7 +6519,6 @@ static const std::vector<string> locations_array__ = {" (found before start of p
 class restricted_model final : public model_base_crtp<restricted_model> {
 
  private:
-  profile_map profiles__;
   int d_int;
   std::vector<int> d_int_array;
   double d_real;
@@ -6530,10 +6531,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
   ~restricted_model() { }
   
   inline std::string model_name() const final { return "restricted_model"; }
-  inline stan::math::profile_map get_profile_data() {
-    return profiles__;
-  }
-  
+
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp --use-opencl"};
   }
@@ -7216,6 +7214,10 @@ stan::model::model_base& new_model(
         std::ostream* msg_stream) {
   stan_model* m = new stan_model(data_context, seed, msg_stream);
   return *m;
+}
+
+profile_map& get_stan_profile_data() {
+  return restricted_model_namespace::profiles__;
 }
 
 #endif

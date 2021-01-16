@@ -57,7 +57,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'simple_function.stan', line 14, column 2 to column 20)",
                                                       " (in 'simple_function.stan', line 15, column 2 to column 22)",
@@ -93,7 +94,6 @@ static const std::vector<string> locations_array__ = {" (found before start of p
 class simple_function_model final : public model_base_crtp<simple_function_model> {
 
  private:
-  profile_map profiles__;
   int N;
   std::vector<double> x;
   Eigen::Matrix<double, -1, 1> y;
@@ -103,10 +103,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
   ~simple_function_model() { }
   
   inline std::string model_name() const final { return "simple_function_model"; }
-  inline stan::math::profile_map get_profile_data() {
-    return profiles__;
-  }
-  
+
   inline std::vector<std::string> model_compile_info() const noexcept {
     return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
   }
@@ -580,6 +577,10 @@ stan::model::model_base& new_model(
         std::ostream* msg_stream) {
   stan_model* m = new stan_model(data_context, seed, msg_stream);
   return *m;
+}
+
+profile_map& get_stan_profile_data() {
+  return simple_function_model_namespace::profiles__;
 }
 
 #endif
