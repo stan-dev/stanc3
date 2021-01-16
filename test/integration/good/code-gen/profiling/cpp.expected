@@ -57,7 +57,7 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-profile_map profiles__;
+stan::math::profile_map profiles__;
 static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'simple_function.stan', line 14, column 2 to column 20)",
@@ -579,7 +579,7 @@ stan::model::model_base& new_model(
   return *m;
 }
 
-profile_map& get_stan_profile_data() {
+stan::math::profile_map& get_stan_profile_data() {
   return simple_function_model_namespace::profiles__;
 }
 

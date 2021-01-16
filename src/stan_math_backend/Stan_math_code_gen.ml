@@ -937,7 +937,7 @@ stan::model::model_base& new_model(
   return *m;
 }
 
-profile_map& get_stan_profile_data() {
+stan::math::profile_map& get_stan_profile_data() {
   return %s_namespace::profiles__;
 }
 

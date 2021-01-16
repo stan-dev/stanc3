@@ -57,7 +57,7 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-profile_map profiles__;
+stan::math::profile_map profiles__;
 static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'basic.stan', line 3, column 8 to column 28)",
@@ -484,7 +484,7 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-profile_map profiles__;
+stan::math::profile_map profiles__;
 static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'integrate.stan', line 4, column 4 to column 27)",

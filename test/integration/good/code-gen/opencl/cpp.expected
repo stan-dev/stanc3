@@ -57,7 +57,7 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-profile_map profiles__;
+stan::math::profile_map profiles__;
 static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'distributions.stan', line 10, column 2 to column 14)",
@@ -6404,7 +6404,7 @@ stan::model::model_base& new_model(
   return *m;
 }
 
-profile_map& get_stan_profile_data() {
+stan::math::profile_map& get_stan_profile_data() {
   return distributions_model_namespace::profiles__;
 }
 
@@ -6471,7 +6471,7 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-profile_map profiles__;
+stan::math::profile_map profiles__;
 static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'restricted.stan', line 10, column 2 to column 14)",
@@ -7216,7 +7216,7 @@ stan::model::model_base& new_model(
   return *m;
 }
 
-profile_map& get_stan_profile_data() {
+stan::math::profile_map& get_stan_profile_data() {
   return restricted_model_namespace::profiles__;
 }
 
