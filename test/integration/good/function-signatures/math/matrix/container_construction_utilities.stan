@@ -16,6 +16,8 @@ transformed data {
 
   transformed_data_matrix = identity_matrix(d_int);
 
+  transformed_int_array = linspaced_int_array(d_int, d_int, d_int);
+
   transformed_data_real_array = linspaced_array(d_int, d_real, d_real);
   transformed_data_row_vector = linspaced_row_vector(d_int, d_real, d_real);
   transformed_data_vector = linspaced_vector(d_int, d_real, d_real);

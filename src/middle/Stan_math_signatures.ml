@@ -1214,6 +1214,10 @@ let () =
   add_binary_vec "lbeta" ;
   add_binary "lchoose" ;
   add_binary_vec_real_int "ldexp" ;
+   add_qualified
+    ( "linspaced_int_array"
+    , ReturnType (UArray UInt)
+    , [(DataOnly, UInt); (DataOnly, UInt); (DataOnly, UInt)] ) ;
   add_qualified
     ( "linspaced_array"
     , ReturnType (UArray UReal)
