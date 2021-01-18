@@ -122,7 +122,7 @@ generated quantities {
   }
 }
 
-Warning in 'gen_gp_data.stan', line 16, column 25: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning in 'gen_gp_data.stan', line 16, column 25: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
   $ ../../../../../install/default/bin/stanc --auto-format gp_pois_regr.stan
 data {
   int<lower=1> N;
@@ -150,7 +150,7 @@ model {
   k ~ poisson_log(f);
 }
 
-Warning in 'gp_pois_regr.stan', line 16, column 25: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning in 'gp_pois_regr.stan', line 16, column 25: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
   $ ../../../../../install/default/bin/stanc --auto-format gp_regr.stan
 data {
   int<lower=1> N;
@@ -172,7 +172,7 @@ model {
   y ~ multi_normal_cholesky(rep_vector(0, N), L_cov);
 }
 
-Warning in 'gp_regr.stan', line 14, column 23: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning in 'gp_regr.stan', line 14, column 23: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
   $ ../../../../../install/default/bin/stanc --auto-format irt_2pl.stan
 data {
   int<lower=0> I;

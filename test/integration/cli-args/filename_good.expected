@@ -57,7 +57,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'filename_good.stan', line 2, column 4 to column 11)",
                                                       " (in 'filename_good.stan', line 3, column 4 to column 19)"};
@@ -335,6 +336,10 @@ stan::model::model_base& new_model(
         std::ostream* msg_stream) {
   stan_model* m = new stan_model(data_context, seed, msg_stream);
   return *m;
+}
+
+stan::math::profile_map& get_stan_profile_data() {
+  return filename_good_model_namespace::profiles__;
 }
 
 #endif

@@ -6,6 +6,15 @@ open Expression_gen
 let pp_call_str ppf (name, args) = pp_call ppf (name, string, args)
 let pp_block ppf (pp_body, body) = pf ppf "{@;<1 2>@[<v>%a@]@,}" pp_body body
 
+let pp_profile ppf (pp_body, name, body) =
+  let profile =
+    Fmt.strf
+      "profile<local_scalar_t__> profile__(%s, \
+       const_cast<profile_map&>(profiles__));"
+      name
+  in
+  pf ppf "{@;<1 2>@[<v>%s@;@;%a@]@,}" profile pp_body body
+
 let rec contains_eigen = function
   | UnsizedType.UArray t -> contains_eigen t
   | UMatrix | URowVector | UVector -> true
@@ -195,6 +204,7 @@ let rec pp_statement (ppf : Format.formatter)
       (* Skip For loop part, just emit body due to the way FnReadParam emits *)
   | For {loopvar; lower; upper; body} ->
       pp_for_loop ppf (loopvar, lower, upper, pp_statement, body)
+  | Profile (name, ls) -> pp_profile ppf (pp_stmt_list, name, ls)
   | Block ls -> pp_block ppf (pp_stmt_list, ls)
   | SList ls -> pp_stmt_list ppf ls
   | Decl {decl_adtype; decl_id; decl_type} ->

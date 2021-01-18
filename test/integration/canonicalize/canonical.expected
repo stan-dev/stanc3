@@ -29,7 +29,7 @@ transformed data {
   real d = fabs(b);
   array[0] int x_i;
   array[0] real x_r;
-  matrix[N, N] K = gp_cov_exp_quad(x_quad, 1.0, 1.0);
+  matrix[N, N] K = gp_exp_quad_cov(x_quad, 1.0, 1.0);
 }
 parameters {
   real x;
@@ -73,7 +73,7 @@ generated quantities {
 Warning in 'deprecated.stan', line 14, column 11: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
 Warning in 'deprecated.stan', line 14, column 24: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
 Warning in 'deprecated.stan', line 27, column 11: Use of the `abs` function with real-valued arguments is deprecated; use functions `fabs` instead.
-Warning in 'deprecated.stan', line 30, column 19: cov_exp_quad is deprecated and will be removed in the future. Use gp_cov_exp_quad instead.
+Warning in 'deprecated.stan', line 30, column 19: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 Warning in 'deprecated.stan', line 37, column 11: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
 Warning in 'deprecated.stan', line 37, column 24: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
 Warning in 'deprecated.stan', line 38, column 12: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.

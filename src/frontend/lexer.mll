@@ -94,6 +94,7 @@ rule token = parse
   | "if"                      { lexer_logger "if" ; Parser.IF }
   | "else"                    { lexer_logger "else" ; Parser.ELSE }
   | "while"                   { lexer_logger "while" ; Parser.WHILE }
+  | "profile"                 { lexer_logger "profile" ; Parser.PROFILE }
   | "for"                     { lexer_logger "for" ; Parser.FOR }
   | "in"                      { lexer_logger "in" ; Parser.IN }
   | "break"                   { lexer_logger "break" ; Parser.BREAK }

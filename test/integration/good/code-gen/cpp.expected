@@ -57,7 +57,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in '8_schools_ncp.stan', line 8, column 2 to column 10)",
                                                       " (in '8_schools_ncp.stan', line 9, column 2 to column 20)",
@@ -523,6 +524,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return _8_schools_ncp_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -586,7 +591,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in '8start_with_number.stan', line 6, column 3 to column 12)",
                                                       " (in '8start_with_number.stan', line 3, column 2 to column 17)"};
@@ -882,6 +888,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return _8start_with_number_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -945,7 +955,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'eight_schools_ncp.stan', line 8, column 2 to column 10)",
                                                       " (in 'eight_schools_ncp.stan', line 9, column 2 to column 20)",
@@ -1412,6 +1423,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return eight_schools_ncp_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -1475,7 +1490,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'mother.stan', line 549, column 2 to column 14)",
                                                       " (in 'mother.stan', line 550, column 2 to column 29)",
@@ -10870,6 +10886,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return mother_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -10937,7 +10957,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'motherHOF.stan', line 52, column 2 to column 15)",
                                                       " (in 'motherHOF.stan', line 53, column 2 to column 18)",
@@ -12856,6 +12877,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return motherHOF_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -13041,7 +13066,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'new_integrate_interface.stan', line 31, column 2 to column 9)",
                                                       " (in 'new_integrate_interface.stan', line 32, column 2 to column 13)",
@@ -17450,6 +17476,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return new_integrate_interface_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -17513,7 +17543,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'old_integrate_interface.stan', line 27, column 2 to column 24)",
                                                       " (in 'old_integrate_interface.stan', line 28, column 2 to column 23)",
@@ -18309,6 +18340,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return old_integrate_interface_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -18375,7 +18410,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'optimize_glm.stan', line 27, column 2 to column 20)",
                                                       " (in 'optimize_glm.stan', line 28, column 2 to column 17)",
@@ -20041,6 +20077,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return optimize_glm_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -20104,7 +20144,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'reduce_sum_m1.stan', line 26, column 2 to column 13)",
                                                       " (in 'reduce_sum_m1.stan', line 27, column 2 to column 13)",
@@ -20675,6 +20716,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return reduce_sum_m1_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -20738,7 +20783,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'reduce_sum_m2.stan', line 130, column 2 to column 24)",
                                                       " (in 'reduce_sum_m2.stan', line 131, column 2 to column 25)",
@@ -23421,6 +23467,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return reduce_sum_m2_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -23484,7 +23534,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'reduce_sum_m3.stan', line 210, column 2 to column 13)",
                                                       " (in 'reduce_sum_m3.stan', line 211, column 2 to column 18)",
@@ -27706,6 +27757,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return reduce_sum_m3_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -27769,7 +27824,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'single-argument-lpmf.stan', line 3, column 4 to column 14)",
                                                       " (in 'single-argument-lpmf.stan', line 2, column 23 to line 4, column 3)",
@@ -28218,6 +28274,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return single_argument_lpmf_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -28281,7 +28341,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'tilde-block.stan', line 5, column 4 to column 20)",
                                                       " (in 'tilde-block.stan', line 11, column 27 to column 28)",
@@ -28622,6 +28683,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return tilde_block_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -28685,7 +28750,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'transform.stan', line 11, column 2 to column 29)",
                                                       " (in 'transform.stan', line 12, column 2 to column 29)",
@@ -32417,6 +32483,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return transform_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -32480,7 +32550,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'truncate.stan', line 6, column 4 to column 11)",
                                                       " (in 'truncate.stan', line 7, column 4 to column 20)",
@@ -32921,6 +32992,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return truncate_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -32984,7 +33059,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'udf_tilde_stmt_conflict.stan', line 7, column 4 to column 11)",
                                                       " (in 'udf_tilde_stmt_conflict.stan', line 10, column 4 to column 20)",
@@ -33307,6 +33383,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return udf_tilde_stmt_conflict_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -33370,7 +33450,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'user_constrain.stan', line 7, column 2 to column 18)",
                                                       " (in 'user_constrain.stan', line 10, column 2 to column 19)",
@@ -33707,6 +33788,10 @@ stan::model::model_base& new_model(
         std::ostream* msg_stream) {
   stan_model* m = new stan_model(data_context, seed, msg_stream);
   return *m;
+}
+
+stan::math::profile_map& get_stan_profile_data() {
+  return user_constrain_model_namespace::profiles__;
 }
 
 #endif
