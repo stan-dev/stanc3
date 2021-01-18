@@ -92,17 +92,20 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
       let trigger =
         Map.find opencl_trigger_restrictions (Utils.stdlib_distribution_name f)
       in
-      let arg_type x  = (Expr.Typed.adlevel_of x, Expr.Typed.type_of x) in
+      let arg_type x = (Expr.Typed.adlevel_of x, Expr.Typed.type_of x) in
       let get_arg_types = List.map ~f:arg_type in
-      let return_type = 
-        match Stan_math_signatures.stan_math_returntype f (get_arg_types args) with
+      let return_type =
+        match
+          Stan_math_signatures.stan_math_returntype f (get_arg_types args)
+        with
         | Some (ReturnType x) -> x
         | _ -> UnsizedType.UReal
-        in
-        if UnsizedType.UReal = return_type || UnsizedType.UInt = return_type then
+      in
+      if UnsizedType.UReal = return_type || UnsizedType.UInt = return_type then
         {e with pattern= FunApp (StanLib, f, maybe_map_args args trigger)}
-        else 
-        from_matrix_cl {e with pattern= FunApp (StanLib, f, maybe_map_args args trigger)}
+      else
+        from_matrix_cl
+          {e with pattern= FunApp (StanLib, f, maybe_map_args args trigger)}
   | x ->
       { e with
         pattern=
