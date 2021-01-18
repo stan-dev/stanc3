@@ -384,11 +384,10 @@ let constrain_in_params outvars stmts =
   in
   let rec change_constrain_target (Stmt.Fixed.({pattern; _}) as s) =
     match pattern with
-    | Assignment (_, {pattern= FunApp (CompilerInternal, f, args); _})
-      when ( Internal_fun.of_string_opt f = Some FnConstrain
-           || Internal_fun.of_string_opt f = Some FnUnconstrain )
-           && List.exists args
-                ~f:(contains_var_expr (Set.mem target_vars) false) ->
+    | Assignment
+        (lval, {pattern= FunApp (CompilerInternal, f, var :: args); meta})
+      when Internal_fun.of_string_opt f = Some FnConstrain
+           && contains_var_expr (Set.mem target_vars) false var ->
         let rec change_var_expr (Expr.Fixed.({pattern; _}) as e) =
           match pattern with
           | Var vident when Set.mem target_vars vident ->
@@ -396,12 +395,14 @@ let constrain_in_params outvars stmts =
           | pattern ->
               {e with pattern= Expr.Fixed.Pattern.map change_var_expr pattern}
         in
-        let rec change_var_stmt s =
-          Stmt.Fixed.
-            { s with
-              pattern= Pattern.map change_var_expr change_var_stmt s.pattern }
-        in
-        change_var_stmt s
+        Stmt.Fixed.
+          { s with
+            pattern=
+              Assignment
+                ( lval
+                , { pattern=
+                      FunApp (CompilerInternal, f, change_var_expr var :: args)
+                  ; meta } ) }
     | pattern ->
         Stmt.Fixed.
           {s with pattern= Pattern.map Fn.id change_constrain_target pattern}
