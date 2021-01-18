@@ -23496,6 +23496,7 @@ sum(matrix) => real
 sum(array[] real) => real
 svd_U(matrix) => matrix
 svd_V(matrix) => matrix
+symmetrize_from_lower_tri(matrix) => matrix
 tail(vector, int) => vector
 tail(row_vector, int) => row_vector
 tail(array[] int, int) => array[] int
