@@ -211,7 +211,7 @@ let fwd_traverse_statement stmt ~init ~f =
     | For vars ->
         let s', c = f init vars.body in
         (s', For {vars with body= c})
-    | Block stmts ->
+    | Profile (_, stmts) | Block stmts ->
         let s', ls =
           List.fold_left stmts
             ~f:(fun (s, l) stmt ->
@@ -277,7 +277,8 @@ let stmt_rhs stmt =
    |TargetPE rhs
    |Return (Some rhs) ->
       Set.Poly.singleton rhs
-  | Return None | Break | Continue | Skip | Decl _ | Block _ | SList _ ->
+  | Return None
+   |Break | Continue | Skip | Decl _ | Profile _ | Block _ | SList _ ->
       Set.Poly.empty
 
 let union_map (set : ('a, 'c) Set_intf.Set.t) ~(f : 'a -> 'b Set.Poly.t) =

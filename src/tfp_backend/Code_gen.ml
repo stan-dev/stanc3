@@ -74,7 +74,7 @@ let rec pp_stmt ppf s =
   | Continue -> pf ppf "continue"
   | Return rhs ->
       pf ppf "return %a" (option ~none:(const string "None") pp_expr) rhs
-  | Block ls | SList ls -> (list ~sep:cut pp_stmt) ppf ls
+  | Profile (_, ls) | Block ls | SList ls -> (list ~sep:cut pp_stmt) ppf ls
   | Skip -> ()
   (* | Decl {decl_adtype= AutoDiffable; decl_id; _} ->
    *     pf ppf "%s = tf.Variable(0, name=%S, dtype=np.float64)" decl_id decl_id *)

@@ -60,141 +60,44 @@ using stan::math::pow;
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'simple_function.stan', line 13, column 4 to column 10)",
-                                                      " (in 'simple_function.stan', line 14, column 11 to column 12)",
-                                                      " (in 'simple_function.stan', line 14, column 13 to column 14)",
-                                                      " (in 'simple_function.stan', line 14, column 4 to column 18)",
-                                                      " (in 'simple_function.stan', line 3, column 7 to column 18)",
-                                                      " (in 'simple_function.stan', line 2, column 73 to line 4, column 5)",
-                                                      " (in 'simple_function.stan', line 6, column 7 to column 16)",
-                                                      " (in 'simple_function.stan', line 5, column 54 to line 7, column 5)",
-                                                      " (in 'simple_function.stan', line 9, column 7 to column 16)",
-                                                      " (in 'simple_function.stan', line 8, column 36 to line 10, column 5)"};
+                                                      " (in 'simple_function.stan', line 14, column 2 to column 20)",
+                                                      " (in 'simple_function.stan', line 15, column 2 to column 22)",
+                                                      " (in 'simple_function.stan', line 16, column 2 to column 22)",
+                                                      " (in 'simple_function.stan', line 20, column 10 to column 11)",
+                                                      " (in 'simple_function.stan', line 20, column 13 to column 14)",
+                                                      " (in 'simple_function.stan', line 20, column 3 to column 20)",
+                                                      " (in 'simple_function.stan', line 21, column 10 to column 11)",
+                                                      " (in 'simple_function.stan', line 21, column 13 to column 14)",
+                                                      " (in 'simple_function.stan', line 21, column 3 to column 22)",
+                                                      " (in 'simple_function.stan', line 23, column 6 to line 24, column 60)",
+                                                      " (in 'simple_function.stan', line 22, column 3 to line 25, column 4)",
+                                                      " (in 'simple_function.stan', line 27, column 6 to column 38)",
+                                                      " (in 'simple_function.stan', line 26, column 3 to line 28, column 4)",
+                                                      " (in 'simple_function.stan', line 31, column 9 to column 28)",
+                                                      " (in 'simple_function.stan', line 32, column 9 to column 30)",
+                                                      " (in 'simple_function.stan', line 33, column 9 to column 30)",
+                                                      " (in 'simple_function.stan', line 30, column 6 to line 34, column 7)",
+                                                      " (in 'simple_function.stan', line 36, column 9 to column 60)",
+                                                      " (in 'simple_function.stan', line 35, column 6 to line 37, column 7)",
+                                                      " (in 'simple_function.stan', line 29, column 3 to line 38, column 4)",
+                                                      " (in 'simple_function.stan', line 2, column 2 to column 17)",
+                                                      " (in 'simple_function.stan', line 3, column 9 to column 10)",
+                                                      " (in 'simple_function.stan', line 3, column 2 to column 12)",
+                                                      " (in 'simple_function.stan', line 4, column 9 to column 10)",
+                                                      " (in 'simple_function.stan', line 4, column 2 to column 14)",
+                                                      " (in 'simple_function.stan', line 8, column 3 to column 14)",
+                                                      " (in 'simple_function.stan', line 10, column 6 to column 21)",
+                                                      " (in 'simple_function.stan', line 9, column 3 to line 11, column 4)"};
 
 
-template <typename T0__, typename T2__, typename T3__, typename T4__,
-typename T5__>
-stan::promote_args_t<T0__, T2__, stan::value_type_t<T3__>,
-stan::value_type_t<T4__>,
-stan::value_type_t<T5__>>
-foo1(const T0__& a, const int& b, const std::vector<T2__>& c,
-     const T3__& d_arg__, const T4__& e_arg__, const T5__& f_arg__,
-     std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__,
-          T2__,
-          stan::value_type_t<T3__>,
-          stan::value_type_t<T4__>,
-          stan::value_type_t<T5__>>;
-  const auto& d = to_ref(d_arg__);
-  const auto& e = to_ref(e_arg__);
-  const auto& f = to_ref(f_arg__);
-  const static bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
-  try {
-    current_statement__ = 5;
-    return 5.0;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-  }
-  
-}
-
-struct foo1_functor__ {
-template <typename T0__, typename T2__, typename T3__, typename T4__,
-typename T5__>
-stan::promote_args_t<T0__, T2__, stan::value_type_t<T3__>,
-stan::value_type_t<T4__>,
-stan::value_type_t<T5__>>
-operator()(const T0__& a, const int& b, const std::vector<T2__>& c,
-           const T3__& d, const T4__& e, const T5__& f,
-           std::ostream* pstream__)  const 
-{
-return foo1(a, b, c, d, e, f, pstream__);
-}
-};
-
-template <typename T0__, typename T1__, typename T2__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, T1__,
-T2__>, -1, 1>
-foo2(const T0__& a_arg__, const std::vector<Eigen::Matrix<T1__, -1, -1>>& b,
-     const std::vector<Eigen::Matrix<T2__, 1, -1>>& c,
-     std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-          T1__,
-          T2__>;
-  const auto& a = to_ref(a_arg__);
-  const static bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
-  try {
-    current_statement__ = 7;
-    return a;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-  }
-  
-}
-
-struct foo2_functor__ {
-template <typename T0__, typename T1__, typename T2__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, T1__,
-T2__>, -1, 1>
-operator()(const T0__& a, const std::vector<Eigen::Matrix<T1__, -1, -1>>& b,
-           const std::vector<Eigen::Matrix<T2__, 1, -1>>& c,
-           std::ostream* pstream__)  const 
-{
-return foo2(a, b, c, pstream__);
-}
-};
-
-template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-stan::value_type_t<T1__>>, -1, -1>
-foo3(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-          stan::value_type_t<T1__>>;
-  const auto& a = to_ref(a_arg__);
-  const auto& b = to_ref(b_arg__);
-  const static bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
-  try {
-    current_statement__ = 9;
-    return b;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-  }
-  
-}
-
-struct foo3_functor__ {
-template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-stan::value_type_t<T1__>>, -1, -1>
-operator()(const T0__& a, const T1__& b, std::ostream* pstream__)  const 
-{
-return foo3(a, b, pstream__);
-}
-};
 
 class simple_function_model final : public model_base_crtp<simple_function_model> {
 
  private:
   int N;
-  Eigen::Matrix<double, -1, -1> m;
+  std::vector<double> x;
+  Eigen::Matrix<double, -1, 1> y;
+  double sum_y;
  
  public:
   ~simple_function_model() { }
@@ -223,41 +126,58 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      current_statement__ = 1;
+      current_statement__ = 21;
       context__.validate_dims("data initialization","N","int",
           context__.to_vec());
       N = std::numeric_limits<int>::min();
       
-      current_statement__ = 1;
+      current_statement__ = 21;
       N = context__.vals_i("N")[(1 - 1)];
-      current_statement__ = 2;
-      validate_non_negative_index("m", "N", N);
-      current_statement__ = 3;
-      validate_non_negative_index("m", "N", N);
-      current_statement__ = 4;
-      context__.validate_dims("data initialization","m","double",
-          context__.to_vec(N, N));
-      m = Eigen::Matrix<double, -1, -1>(N, N);
-      stan::math::fill(m, std::numeric_limits<double>::quiet_NaN());
+      current_statement__ = 21;
+      current_statement__ = 21;
+      check_greater_or_equal(function__, "N", N, 1);
+      current_statement__ = 22;
+      validate_non_negative_index("x", "N", N);
+      current_statement__ = 23;
+      context__.validate_dims("data initialization","x","double",
+          context__.to_vec(N));
+      x = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      
+      current_statement__ = 23;
+      assign(x, nil_index_list(), context__.vals_r("x"),
+        "assigning variable x");
+      current_statement__ = 24;
+      validate_non_negative_index("y", "N", N);
+      current_statement__ = 25;
+      context__.validate_dims("data initialization","y","double",
+          context__.to_vec(N));
+      y = Eigen::Matrix<double, -1, 1>(N);
+      stan::math::fill(y, std::numeric_limits<double>::quiet_NaN());
       
       {
-        std::vector<local_scalar_t__> m_flat__;
-        current_statement__ = 4;
-        assign(m_flat__, nil_index_list(), context__.vals_r("m"),
-          "assigning variable m_flat__");
-        current_statement__ = 4;
+        std::vector<local_scalar_t__> y_flat__;
+        current_statement__ = 25;
+        assign(y_flat__, nil_index_list(), context__.vals_r("y"),
+          "assigning variable y_flat__");
+        current_statement__ = 25;
         pos__ = 1;
-        current_statement__ = 4;
+        current_statement__ = 25;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 4;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 4;
-            assign(m,
-              cons_list(index_uni(sym2__),
-                cons_list(index_uni(sym1__), nil_index_list())),
-              m_flat__[(pos__ - 1)], "assigning variable m");
-            current_statement__ = 4;
-            pos__ = (pos__ + 1);}}
+          current_statement__ = 25;
+          assign(y, cons_list(index_uni(sym1__), nil_index_list()),
+            y_flat__[(pos__ - 1)], "assigning variable y");
+          current_statement__ = 25;
+          pos__ = (pos__ + 1);}
+      }
+      current_statement__ = 26;
+      sum_y = std::numeric_limits<double>::quiet_NaN();
+      
+      current_statement__ = 28;
+      {
+        profile<local_scalar_t__> profile__("sum", const_cast<profile_map&>(profiles__));
+        
+        current_statement__ = 27;
+        sum_y = sum(y);
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -267,7 +187,9 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     num_params_r__ = 0U;
     
     try {
-      
+      num_params_r__ += 1;
+      num_params_r__ += 1;
+      num_params_r__ += 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -291,7 +213,105 @@ class simple_function_model final : public model_base_crtp<simple_function_model
 
     
     try {
+      local_scalar_t__ rho;
+      rho = DUMMY_VAR__;
       
+      current_statement__ = 1;
+      rho = in__.scalar();
+      current_statement__ = 1;
+      if (jacobian__) {
+        current_statement__ = 1;
+        rho = stan::math::lb_constrain(rho, 0, lp__);
+      } else {
+        current_statement__ = 1;
+        rho = stan::math::lb_constrain(rho, 0);
+      }
+      local_scalar_t__ alpha;
+      alpha = DUMMY_VAR__;
+      
+      current_statement__ = 2;
+      alpha = in__.scalar();
+      current_statement__ = 2;
+      if (jacobian__) {
+        current_statement__ = 2;
+        alpha = stan::math::lb_constrain(alpha, 0, lp__);
+      } else {
+        current_statement__ = 2;
+        alpha = stan::math::lb_constrain(alpha, 0);
+      }
+      local_scalar_t__ sigma;
+      sigma = DUMMY_VAR__;
+      
+      current_statement__ = 3;
+      sigma = in__.scalar();
+      current_statement__ = 3;
+      if (jacobian__) {
+        current_statement__ = 3;
+        sigma = stan::math::lb_constrain(sigma, 0, lp__);
+      } else {
+        current_statement__ = 3;
+        sigma = stan::math::lb_constrain(sigma, 0);
+      }
+      {
+        current_statement__ = 4;
+        validate_non_negative_index("cov", "N", N);
+        current_statement__ = 5;
+        validate_non_negative_index("cov", "N", N);
+        Eigen::Matrix<local_scalar_t__, -1, -1> cov;
+        cov = Eigen::Matrix<local_scalar_t__, -1, -1>(N, N);
+        stan::math::fill(cov, DUMMY_VAR__);
+        
+        current_statement__ = 7;
+        validate_non_negative_index("L_cov", "N", N);
+        current_statement__ = 8;
+        validate_non_negative_index("L_cov", "N", N);
+        Eigen::Matrix<local_scalar_t__, -1, -1> L_cov;
+        L_cov = Eigen::Matrix<local_scalar_t__, -1, -1>(N, N);
+        stan::math::fill(L_cov, DUMMY_VAR__);
+        
+        current_statement__ = 11;
+        {
+          profile<local_scalar_t__> profile__("cov_exp_quad", const_cast<profile_map&>(profiles__));
+          
+          current_statement__ = 10;
+          assign(cov, nil_index_list(),
+            add(gp_exp_quad_cov(x, alpha, rho),
+              diag_matrix(rep_vector(sigma, N))), "assigning variable cov");
+        }
+        current_statement__ = 13;
+        {
+          profile<local_scalar_t__> profile__("cholesky_decompose", const_cast<profile_map&>(profiles__));
+          
+          current_statement__ = 12;
+          assign(L_cov, nil_index_list(), cholesky_decompose(cov),
+            "assigning variable L_cov");
+        }
+        current_statement__ = 20;
+        {
+          profile<local_scalar_t__> profile__("likelihood", const_cast<profile_map&>(profiles__));
+          
+          current_statement__ = 17;
+          {
+            profile<local_scalar_t__> profile__("priors", const_cast<profile_map&>(profiles__));
+            
+            current_statement__ = 14;
+            lp_accum__.add(gamma_lpdf<propto__>(rho, 25, 4));
+            current_statement__ = 15;
+            lp_accum__.add(normal_lpdf<propto__>(alpha, 0, 2));
+            current_statement__ = 16;
+            lp_accum__.add(normal_lpdf<propto__>(sigma, 0, 1));
+          }
+          current_statement__ = 19;
+          {
+            profile<local_scalar_t__> profile__("multi_normal_cholesky", const_cast<profile_map&>(profiles__));
+            
+            current_statement__ = 18;
+            lp_accum__.add(
+              multi_normal_cholesky_lpdf<propto__>(y, rep_vector(0, N),
+                L_cov));
+          }
+        }
+      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -323,6 +343,30 @@ class simple_function_model final : public model_base_crtp<simple_function_model
 
     
     try {
+      double rho;
+      rho = std::numeric_limits<double>::quiet_NaN();
+      
+      current_statement__ = 1;
+      rho = in__.scalar();
+      current_statement__ = 1;
+      rho = stan::math::lb_constrain(rho, 0);
+      double alpha;
+      alpha = std::numeric_limits<double>::quiet_NaN();
+      
+      current_statement__ = 2;
+      alpha = in__.scalar();
+      current_statement__ = 2;
+      alpha = stan::math::lb_constrain(alpha, 0);
+      double sigma;
+      sigma = std::numeric_limits<double>::quiet_NaN();
+      
+      current_statement__ = 3;
+      sigma = in__.scalar();
+      current_statement__ = 3;
+      sigma = stan::math::lb_constrain(sigma, 0);
+      vars__.emplace_back(rho);
+      vars__.emplace_back(alpha);
+      vars__.emplace_back(sigma);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -350,6 +394,39 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      double rho;
+      rho = std::numeric_limits<double>::quiet_NaN();
+      
+      current_statement__ = 1;
+      rho = context__.vals_r("rho")[(1 - 1)];
+      double rho_free__;
+      rho_free__ = std::numeric_limits<double>::quiet_NaN();
+      
+      current_statement__ = 1;
+      rho_free__ = stan::math::lb_free(rho, 0);
+      double alpha;
+      alpha = std::numeric_limits<double>::quiet_NaN();
+      
+      current_statement__ = 2;
+      alpha = context__.vals_r("alpha")[(1 - 1)];
+      double alpha_free__;
+      alpha_free__ = std::numeric_limits<double>::quiet_NaN();
+      
+      current_statement__ = 2;
+      alpha_free__ = stan::math::lb_free(alpha, 0);
+      double sigma;
+      sigma = std::numeric_limits<double>::quiet_NaN();
+      
+      current_statement__ = 3;
+      sigma = context__.vals_r("sigma")[(1 - 1)];
+      double sigma_free__;
+      sigma_free__ = std::numeric_limits<double>::quiet_NaN();
+      
+      current_statement__ = 3;
+      sigma_free__ = stan::math::lb_free(sigma, 0);
+      vars__.emplace_back(rho_free__);
+      vars__.emplace_back(alpha_free__);
+      vars__.emplace_back(sigma_free__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -360,11 +437,18 @@ class simple_function_model final : public model_base_crtp<simple_function_model
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
-    
+    names__.emplace_back("rho");
+    names__.emplace_back("alpha");
+    names__.emplace_back("sigma");
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     dimss__.clear();
+    dimss__.emplace_back(std::vector<size_t>{});
+    
+    dimss__.emplace_back(std::vector<size_t>{});
+    
+    dimss__.emplace_back(std::vector<size_t>{});
     
     } // get_dims() 
     
@@ -374,7 +458,9 @@ class simple_function_model final : public model_base_crtp<simple_function_model
                                       bool emit_generated_quantities__ = true) const
     final {
     
-    
+    param_names__.emplace_back(std::string() + "rho");
+    param_names__.emplace_back(std::string() + "alpha");
+    param_names__.emplace_back(std::string() + "sigma");
     if (emit_transformed_parameters__) {
       
     }
@@ -391,7 +477,9 @@ class simple_function_model final : public model_base_crtp<simple_function_model
                                         bool emit_generated_quantities__ = true) const
     final {
     
-    
+    param_names__.emplace_back(std::string() + "rho");
+    param_names__.emplace_back(std::string() + "alpha");
+    param_names__.emplace_back(std::string() + "sigma");
     if (emit_transformed_parameters__) {
       
     }
@@ -404,13 +492,13 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     
   inline std::string get_constrained_sizedtypes() const {
     stringstream s__;
-    s__ << "[]";
+    s__ << "[{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
     stringstream s__;
-    s__ << "[]";
+    s__ << "[{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
     
