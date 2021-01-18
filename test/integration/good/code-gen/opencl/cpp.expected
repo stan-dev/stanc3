@@ -6486,11 +6486,13 @@ static const std::vector<string> locations_array__ = {" (found before start of p
                                                       " (in 'functions.stan', line 22, column 2 to column 15)",
                                                       " (in 'functions.stan', line 23, column 2 to column 43)",
                                                       " (in 'functions.stan', line 24, column 2 to column 43)",
-                                                      " (in 'functions.stan', line 25, column 2 to column 33)",
-                                                      " (in 'functions.stan', line 26, column 2 to column 39)",
+                                                      " (in 'functions.stan', line 25, column 2 to column 43)",
+                                                      " (in 'functions.stan', line 26, column 2 to column 33)",
                                                       " (in 'functions.stan', line 27, column 2 to column 39)",
-                                                      " (in 'functions.stan', line 28, column 2 to column 51)",
-                                                      " (in 'functions.stan', line 32, column 2 to column 21)",
+                                                      " (in 'functions.stan', line 28, column 2 to column 39)",
+                                                      " (in 'functions.stan', line 29, column 2 to column 47)",
+                                                      " (in 'functions.stan', line 30, column 2 to column 51)",
+                                                      " (in 'functions.stan', line 34, column 2 to column 21)",
                                                       " (in 'functions.stan', line 2, column 2 to column 12)",
                                                       " (in 'functions.stan', line 3, column 18 to column 23)",
                                                       " (in 'functions.stan', line 3, column 2 to column 25)",
@@ -6555,43 +6557,43 @@ class functions_model final : public model_base_crtp<functions_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      current_statement__ = 18;
+      current_statement__ = 20;
       context__.validate_dims("data initialization","d_int","int",
           context__.to_vec());
       d_int = std::numeric_limits<int>::min();
       
-      current_statement__ = 18;
-      d_int = context__.vals_i("d_int")[(1 - 1)];
-      current_statement__ = 19;
-      validate_non_negative_index("d_int_array", "d_int", d_int);
       current_statement__ = 20;
+      d_int = context__.vals_i("d_int")[(1 - 1)];
+      current_statement__ = 21;
+      validate_non_negative_index("d_int_array", "d_int", d_int);
+      current_statement__ = 22;
       context__.validate_dims("data initialization","d_int_array","int",
           context__.to_vec(d_int));
       d_int_array = std::vector<int>(d_int, std::numeric_limits<int>::min());
       
-      current_statement__ = 20;
+      current_statement__ = 22;
       assign(d_int_array, nil_index_list(), context__.vals_i("d_int_array"),
         "assigning variable d_int_array");
-      current_statement__ = 21;
+      current_statement__ = 23;
       context__.validate_dims("data initialization","d_real","double",
           context__.to_vec());
       d_real = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 21;
-      d_real = context__.vals_r("d_real")[(1 - 1)];
-      current_statement__ = 22;
-      validate_non_negative_index("d_real_array", "d_int", d_int);
       current_statement__ = 23;
+      d_real = context__.vals_r("d_real")[(1 - 1)];
+      current_statement__ = 24;
+      validate_non_negative_index("d_real_array", "d_int", d_int);
+      current_statement__ = 25;
       context__.validate_dims("data initialization","d_real_array","double",
           context__.to_vec(d_int));
       d_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 23;
+      current_statement__ = 25;
       assign(d_real_array, nil_index_list(),
         context__.vals_r("d_real_array"), "assigning variable d_real_array");
-      current_statement__ = 24;
+      current_statement__ = 26;
       validate_non_negative_index("d_vector", "d_int", d_int);
-      current_statement__ = 25;
+      current_statement__ = 27;
       context__.validate_dims("data initialization","d_vector","double",
           context__.to_vec(d_int));
       d_vector = Eigen::Matrix<double, -1, 1>(d_int);
@@ -6599,22 +6601,22 @@ class functions_model final : public model_base_crtp<functions_model> {
       
       {
         std::vector<local_scalar_t__> d_vector_flat__;
-        current_statement__ = 25;
+        current_statement__ = 27;
         assign(d_vector_flat__, nil_index_list(),
           context__.vals_r("d_vector"), "assigning variable d_vector_flat__");
-        current_statement__ = 25;
+        current_statement__ = 27;
         pos__ = 1;
-        current_statement__ = 25;
+        current_statement__ = 27;
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-          current_statement__ = 25;
+          current_statement__ = 27;
           assign(d_vector, cons_list(index_uni(sym1__), nil_index_list()),
             d_vector_flat__[(pos__ - 1)], "assigning variable d_vector");
-          current_statement__ = 25;
+          current_statement__ = 27;
           pos__ = (pos__ + 1);}
       }
-      current_statement__ = 26;
+      current_statement__ = 28;
       validate_non_negative_index("d_row_vector", "d_int", d_int);
-      current_statement__ = 27;
+      current_statement__ = 29;
       context__.validate_dims("data initialization","d_row_vector","double",
           context__.to_vec(d_int));
       d_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
@@ -6622,27 +6624,27 @@ class functions_model final : public model_base_crtp<functions_model> {
       
       {
         std::vector<local_scalar_t__> d_row_vector_flat__;
-        current_statement__ = 27;
+        current_statement__ = 29;
         assign(d_row_vector_flat__, nil_index_list(),
           context__.vals_r("d_row_vector"),
           "assigning variable d_row_vector_flat__");
-        current_statement__ = 27;
+        current_statement__ = 29;
         pos__ = 1;
-        current_statement__ = 27;
+        current_statement__ = 29;
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-          current_statement__ = 27;
+          current_statement__ = 29;
           assign(d_row_vector,
             cons_list(index_uni(sym1__), nil_index_list()),
             d_row_vector_flat__[(pos__ - 1)],
             "assigning variable d_row_vector");
-          current_statement__ = 27;
+          current_statement__ = 29;
           pos__ = (pos__ + 1);}
       }
-      current_statement__ = 28;
-      validate_non_negative_index("d_matrix", "d_int", d_int);
-      current_statement__ = 29;
-      validate_non_negative_index("d_matrix", "d_int", d_int);
       current_statement__ = 30;
+      validate_non_negative_index("d_matrix", "d_int", d_int);
+      current_statement__ = 31;
+      validate_non_negative_index("d_matrix", "d_int", d_int);
+      current_statement__ = 32;
       context__.validate_dims("data initialization","d_matrix","double",
           context__.to_vec(d_int, d_int));
       d_matrix = Eigen::Matrix<double, -1, -1>(d_int, d_int);
@@ -6650,40 +6652,40 @@ class functions_model final : public model_base_crtp<functions_model> {
       
       {
         std::vector<local_scalar_t__> d_matrix_flat__;
-        current_statement__ = 30;
+        current_statement__ = 32;
         assign(d_matrix_flat__, nil_index_list(),
           context__.vals_r("d_matrix"), "assigning variable d_matrix_flat__");
-        current_statement__ = 30;
+        current_statement__ = 32;
         pos__ = 1;
-        current_statement__ = 30;
+        current_statement__ = 32;
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-          current_statement__ = 30;
+          current_statement__ = 32;
           for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
-            current_statement__ = 30;
+            current_statement__ = 32;
             assign(d_matrix,
               cons_list(index_uni(sym2__),
                 cons_list(index_uni(sym1__), nil_index_list())),
               d_matrix_flat__[(pos__ - 1)], "assigning variable d_matrix");
-            current_statement__ = 30;
+            current_statement__ = 32;
             pos__ = (pos__ + 1);}}
       }
-      current_statement__ = 31;
-      validate_non_negative_index("p_real_array", "d_int", d_int);
-      current_statement__ = 32;
-      validate_non_negative_index("p_matrix", "d_int", d_int);
       current_statement__ = 33;
-      validate_non_negative_index("p_matrix", "d_int", d_int);
+      validate_non_negative_index("p_real_array", "d_int", d_int);
       current_statement__ = 34;
-      validate_non_negative_index("p_vector", "d_int", d_int);
+      validate_non_negative_index("p_matrix", "d_int", d_int);
       current_statement__ = 35;
-      validate_non_negative_index("p_row_vector", "d_int", d_int);
+      validate_non_negative_index("p_matrix", "d_int", d_int);
       current_statement__ = 36;
-      validate_non_negative_index("tp_matrix", "d_int", d_int);
+      validate_non_negative_index("p_vector", "d_int", d_int);
       current_statement__ = 37;
-      validate_non_negative_index("tp_matrix", "d_int", d_int);
+      validate_non_negative_index("p_row_vector", "d_int", d_int);
       current_statement__ = 38;
-      validate_non_negative_index("tp_vector", "d_int", d_int);
+      validate_non_negative_index("tp_matrix", "d_int", d_int);
       current_statement__ = 39;
+      validate_non_negative_index("tp_matrix", "d_int", d_int);
+      current_statement__ = 40;
+      validate_non_negative_index("tp_vector", "d_int", d_int);
+      current_statement__ = 41;
       validate_non_negative_index("tp_row_vector", "d_int", d_int);
       
       d_matrix_opencl__ = to_matrix_cl(d_matrix);
@@ -6784,22 +6786,32 @@ class functions_model final : public model_base_crtp<functions_model> {
         from_matrix_cl(cholesky_decompose(to_matrix_cl(p_matrix))),
         "assigning variable tp_matrix");
       current_statement__ = 13;
-      tp_real = beta(p_real, p_real);
+      assign(tp_matrix, nil_index_list(),
+        from_matrix_cl(cholesky_decompose(to_matrix_cl(p_matrix))),
+        "assigning variable tp_matrix");
       current_statement__ = 14;
+      tp_real = beta(p_real, p_real);
+      current_statement__ = 15;
       assign(tp_matrix, nil_index_list(),
         from_matrix_cl(beta(to_matrix_cl(p_matrix), to_matrix_cl(p_matrix))),
         "assigning variable tp_matrix");
-      current_statement__ = 15;
+      current_statement__ = 16;
       assign(tp_vector, nil_index_list(),
         from_matrix_cl(beta(to_matrix_cl(p_vector), to_matrix_cl(p_vector))),
         "assigning variable tp_vector");
-      current_statement__ = 16;
+      current_statement__ = 17;
+      assign(tp_vector, nil_index_list(),
+        from_matrix_cl(
+          beta(to_matrix_cl(multiply(2, p_vector)),
+            to_matrix_cl(multiply(3, p_vector)))),
+        "assigning variable tp_vector");
+      current_statement__ = 18;
       assign(tp_row_vector, nil_index_list(),
         from_matrix_cl(
           beta(to_matrix_cl(p_row_vector), to_matrix_cl(p_row_vector))),
         "assigning variable tp_row_vector");
       {
-        current_statement__ = 17;
+        current_statement__ = 19;
         lp_accum__.add(normal_lpdf<propto__>(y_p, 0, 1));
       }
     } catch (const std::exception& e) {
@@ -6912,16 +6924,26 @@ class functions_model final : public model_base_crtp<functions_model> {
         from_matrix_cl(cholesky_decompose(to_matrix_cl(p_matrix))),
         "assigning variable tp_matrix");
       current_statement__ = 13;
-      tp_real = beta(p_real, p_real);
+      assign(tp_matrix, nil_index_list(),
+        from_matrix_cl(cholesky_decompose(to_matrix_cl(p_matrix))),
+        "assigning variable tp_matrix");
       current_statement__ = 14;
+      tp_real = beta(p_real, p_real);
+      current_statement__ = 15;
       assign(tp_matrix, nil_index_list(),
         from_matrix_cl(beta(to_matrix_cl(p_matrix), to_matrix_cl(p_matrix))),
         "assigning variable tp_matrix");
-      current_statement__ = 15;
+      current_statement__ = 16;
       assign(tp_vector, nil_index_list(),
         from_matrix_cl(beta(to_matrix_cl(p_vector), to_matrix_cl(p_vector))),
         "assigning variable tp_vector");
-      current_statement__ = 16;
+      current_statement__ = 17;
+      assign(tp_vector, nil_index_list(),
+        from_matrix_cl(
+          beta(to_matrix_cl(multiply(2, p_vector)),
+            to_matrix_cl(multiply(3, p_vector)))),
+        "assigning variable tp_vector");
+      current_statement__ = 18;
       assign(tp_row_vector, nil_index_list(),
         from_matrix_cl(
           beta(to_matrix_cl(p_row_vector), to_matrix_cl(p_row_vector))),

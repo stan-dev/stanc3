@@ -22,9 +22,11 @@ transformed parameters {
   real tp_real;
   tp_matrix = cholesky_decompose(d_matrix);
   tp_matrix = cholesky_decompose(p_matrix);
+  tp_matrix = cholesky_decompose(p_matrix);
   tp_real = beta(p_real, p_real);
   tp_matrix = beta(p_matrix, p_matrix);
   tp_vector = beta(p_vector, p_vector);
+  tp_vector = beta(2 * p_vector, 3 * p_vector);
   tp_row_vector = beta(p_row_vector, p_row_vector);
 
 }
