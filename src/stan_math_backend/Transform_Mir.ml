@@ -46,9 +46,17 @@ let opencl_supported_functions =
   ; "poisson_lpmf"; "poisson_log_lpmf"; "poisson_log_glm_lpmf"; "rayleigh_lpdf"
   ; "scaled_inv_chi_square_lpdf"; "skew_normal_lpdf"; "std_normal_lpdf"
   ; "student_t_lpdf"; "uniform_lpdf"; "weibull_lpdf" ]
+  @ [ "beta"; "crossprod"; "cholesky_decompose"; "digamma"; "inv_cloglog"
+    ; "inv_Phi"; "lbeta"; "lgamma"; "log1m_exp"; "log1m_inv_logit"; "log1p_exp"
+    ; "log_diff_exp"; "log_inv_logit"; "log_inv_logit_diff"
+    ; "mdivide_left_tri_low"; "mdivide_right_tri_low"; "multiply"
+    ; "rows_dot_product"; "rows_dot_self"; "tcrossprod"; "tgamma" ]
   |> String.Set.of_list
 
 let opencl_suffix = "_opencl__"
+
+let from_matrix_cl e =
+  Expr.Fixed.{e with pattern= FunApp (StanLib, "from_matrix_cl", [e])}
 
 let to_matrix_cl e =
   Expr.Fixed.{e with pattern= FunApp (StanLib, "to_matrix_cl", [e])}
@@ -84,7 +92,17 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
       let trigger =
         Map.find opencl_trigger_restrictions (Utils.stdlib_distribution_name f)
       in
-      {e with pattern= FunApp (StanLib, f, maybe_map_args args trigger)}
+      let arg_type x  = (Expr.Typed.adlevel_of x, Expr.Typed.type_of x) in
+      let get_arg_types = List.map ~f:arg_type in
+      let return_type = 
+        match Stan_math_signatures.stan_math_returntype f (get_arg_types args) with
+        | Some (ReturnType x) -> x
+        | _ -> UnsizedType.UReal
+        in
+        if UnsizedType.UReal = return_type || UnsizedType.UInt = return_type then
+        {e with pattern= FunApp (StanLib, f, maybe_map_args args trigger)}
+        else 
+        from_matrix_cl {e with pattern= FunApp (StanLib, f, maybe_map_args args trigger)}
   | x ->
       { e with
         pattern=
