@@ -371,9 +371,9 @@ let pretty_print_math_sigs = Fmt.strf "@[<v>@,%a@]" pp_math_sigs
 let pretty_print_all_math_sigs ppf () =
   let open Fmt in
   let pp_sig ppf (name, (rt, args)) =
-    pf ppf "%a %s(@[<hov 2>%a@])" UnsizedType.pp_returntype rt name
+    pf ppf "%s(@[<hov 2>%a@]) => %a" name
       (list ~sep:comma UnsizedType.pp)
-      (List.map ~f:snd args)
+      (List.map ~f:snd args) UnsizedType.pp_returntype rt
   in
   let pp_sigs_for_name ppf name =
     (list ~sep:cut pp_sig) ppf
