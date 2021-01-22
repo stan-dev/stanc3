@@ -1,6 +1,6 @@
 This repo is a fork of the Stan 3 compiler: https://github.com/stan-dev/stanc3
 
-This version adds a `--info` option which outputs on the standard output a JSON object containing information about the model. It currently generates an object a field `inputs` containing a dictionary where each entry corresponds to a variable in the `data` block. To each variable is associated an object with two fields:
+This version adds a `--info` option which outputs on the standard output a JSON object containing information about the model. It currently generates an object a field `inputs` and `parameters` containing a dictionary where each entry corresponds to a variable in respectively the `data` and `parameters` blocks. To each variable is associated an object with two fields:
 - `type`: the base type of the variable (`"int"` or `"real"`).
 - `dimensions`: the number of dimensions (`0` for a scalar, `1` for a vector or row vector, etc.).
 

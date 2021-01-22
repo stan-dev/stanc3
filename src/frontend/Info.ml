@@ -29,7 +29,7 @@ let basetype_dims t =
   | Type.Sized t -> sized_basetype_dims t
   | Type.Unsized t -> unsized_basetype_dims t
 
-let inputs_info ff datablock =
+let block_info name ff block =
   let var_info ff s =
     match s.Ast.stmt with
     | Ast.VarDecl decl ->
@@ -44,11 +44,12 @@ let inputs_info ff datablock =
           Format.pp_print_list ~pp_sep:(fun ff () -> Format.fprintf ff ",@,")
             var_info ff stmts)
   in
-  Format.fprintf ff "\"inputs\": { @[<v 0>%a @]}"
-    vars_info datablock
+  Format.fprintf ff "\"%s\": { @[<v 0>%a @]}"
+    name vars_info block
 
 let info ast =
   let ff = Format.std_formatter in
-    Format.fprintf ff "{ @[<v 0>%a @]}@."
-      inputs_info ast.datablock;
+    Format.fprintf ff "{ @[<v 0>%a,@,%a @]}@."
+      (block_info "inputs") ast.datablock
+      (block_info "parameters") ast.parametersblock;
     exit 0
