@@ -32,6 +32,14 @@ let is_unnormalized_distribution s =
     ~f:(fun suffix -> String.is_suffix s ~suffix)
     unnormalized_suffices
 
+let with_unnormalized_suffix (name : string) =
+  Option.merge
+    ~f:(fun x _ -> x)
+    ( String.chop_suffix ~suffix:"_lpdf" name
+    |> Option.map ~f:(fun n -> n ^ "_lupdf") )
+    ( String.chop_suffix ~suffix:"_lpmf" name
+    |> Option.map ~f:(fun n -> n ^ "_lupmf") )
+
 let replace_unnormalized_suffix suffix ~name =
   name
   |> String.chop_suffix ~suffix:(unnormalized_suffix suffix)

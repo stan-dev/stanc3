@@ -1,6 +1,25 @@
 STANC3 RELEASE NOTES
 ======================================================================
 
+v.2.26.0 (26 January 2021)
+======================================================================
+
+ - Added deprecated functions warnings to regular use, and replace in canonicalizer.(#726)
+ - Added a small readme for dockerfiles usage locally.(#738)
+ - Added `matrix chol2inv(matrix)`.(#740)
+ - Added a Github Actions job to build binaries.(#747)
+ - Modified code-generation for user-defined functions to accept Eigen expressions.(#752)
+ - Added OpenCL support for: bernoulli_lpmf, bernoulli_logit_lpmf, beta_lpdf, beta_proportion_lpdf, binomial_lpmf, cauchy_lpdf, chi_square_lpdf, double_exponential_lpdf, exp_mod_normal_lpdf, exponential_lpdf, frechet_lpdf, gamma_lpdf, gumbel_lpdf, inv_chi_square_lpdf, inv_gamma_lpdf, logistic_lpdf, lognormal_lpdf, neg_binomial_lpmf, neg_binomial_2_lpmf, neg_binomial_2_log_lpmf, normal_lpdf, pareto_lpdf, pareto_type_2_lpdf, poisson_lpmf, poisson_log_lpmf, rayleigh_lpdf, scaled_inv_chi_square_lpdf, skew_normal_lpdf, std_normal_lpdf, student_t_lpdf, uniform_lpdf, weibull_lpdf
+ - Allowed `write_array()`, `log_prob()`, and `transform_inits()` to avoid a vector copy and read/write(#761)
+ - Added the discrete_range distribution.(#763)
+ - Use Eigen comma initializer to avoid copy in vector construction.(#766)
+ - Allowed calling lp functions in transformed parameters block.(#767)
+ - Fixed multi-dim indexing bug.(#768)
+ - Moved the reported location of parsing errors closer to the problematic section.(#771)
+ - Fixed a optimization bug in handling of unnormalized distributions.(#778)
+ - Added profiling to the Stan language.(#794)
+ - Added `linspaced_int_array()`(#796)
+
 v.2.25.0 (26 October 2020)
 ======================================================================
 

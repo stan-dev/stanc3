@@ -337,6 +337,12 @@ and pp_statement ppf ({stmt= s_content; _} as ss) =
       with_indented_box ppf 2 0 (fun () -> pp_list_of_statements ppf vdsl) ;
       Format.pp_print_cut ppf () ;
       Fmt.pf ppf "}"
+  | Profile (name, vdsl) ->
+      Fmt.pf ppf "profile(%s) {" name ;
+      Format.pp_print_cut ppf () ;
+      with_indented_box ppf 2 0 (fun () -> pp_list_of_statements ppf vdsl) ;
+      Format.pp_print_cut ppf () ;
+      Fmt.pf ppf "}"
   | VarDecl
       { decl_type= pst
       ; transformation= trans
@@ -405,10 +411,8 @@ let pp_program ppf
   Format.pp_close_box ppf ()
 
 let check_correctness prog pretty =
-  let result_ast =
-    Errors.without_warnings
-      (Parse.parse_string Parser.Incremental.program)
-      pretty
+  let result_ast, (_ : Warnings.t list) =
+    Parse.parse_string Parser.Incremental.program pretty
   in
   if
     compare_untyped_program prog (Option.value_exn (Result.ok result_ast)) <> 0

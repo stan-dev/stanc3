@@ -57,7 +57,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in '8_schools_ncp.stan', line 8, column 2 to column 10)",
                                                       " (in '8_schools_ncp.stan', line 9, column 2 to column 20)",
@@ -523,6 +524,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return _8_schools_ncp_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -586,7 +591,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in '8start_with_number.stan', line 6, column 3 to column 12)",
                                                       " (in '8start_with_number.stan', line 3, column 2 to column 17)"};
@@ -882,6 +888,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return _8start_with_number_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -945,7 +955,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'closures1.stan', line 8, column 4 to line 14, column 5)",
                                                       " (in 'closures1.stan', line 17, column 4 to column 11)",
@@ -1639,6 +1650,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return closures1_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -1702,7 +1717,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'closures2.stan', line 2, column 4 to line 5, column 5)",
                                                       " (in 'closures2.stan', line 6, column 4 to line 9, column 5)",
@@ -2368,6 +2384,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return closures2_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -2431,7 +2451,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'closures3.stan', line 12, column 4 to line 15, column 5)",
                                                       " (in 'closures3.stan', line 19, column 4 to column 11)",
@@ -2993,6 +3014,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return closures3_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -3056,7 +3081,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'closures4.stan', line 15, column 4 to column 19)",
                                                       " (in 'closures4.stan', line 18, column 4 to column 44)",
@@ -3553,6 +3579,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return closures4_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -3616,7 +3646,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'eight_schools_ncp.stan', line 8, column 2 to column 10)",
                                                       " (in 'eight_schools_ncp.stan', line 9, column 2 to column 20)",
@@ -4083,6 +4114,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return eight_schools_ncp_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -4146,7 +4181,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'mother.stan', line 549, column 2 to column 14)",
                                                       " (in 'mother.stan', line 550, column 2 to column 29)",
@@ -13739,6 +13775,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return mother_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -13832,7 +13872,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'motherHOF.stan', line 52, column 2 to column 15)",
                                                       " (in 'motherHOF.stan', line 53, column 2 to column 18)",
@@ -15782,6 +15823,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return motherHOF_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -16005,7 +16050,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'new_integrate_interface.stan', line 31, column 2 to column 9)",
                                                       " (in 'new_integrate_interface.stan', line 32, column 2 to column 13)",
@@ -20406,6 +20452,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return new_integrate_interface_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -20469,7 +20519,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'old_integrate_interface.stan', line 27, column 2 to column 24)",
                                                       " (in 'old_integrate_interface.stan', line 28, column 2 to column 23)",
@@ -21270,6 +21321,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return old_integrate_interface_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -21337,7 +21392,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'optimize_glm.stan', line 27, column 2 to column 20)",
                                                       " (in 'optimize_glm.stan', line 28, column 2 to column 17)",
@@ -23003,6 +23059,582 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return optimize_glm_model_namespace::profiles__;
+}
+
+#endif
+
+
+
+  $ ../../../../../install/default/bin/stanc --print-cpp param-constraint.stan
+
+// Code generated by %%NAME%% %%VERSION%%
+#include <stan/model/model_header.hpp>
+namespace param_constraint_model_namespace {
+
+
+inline void validate_positive_index(const char* var_name, const char* expr,
+                                    int val) {
+  if (val < 1) {
+    std::stringstream msg;
+    msg << "Found dimension size less than one in simplex declaration"
+        << "; variable=" << var_name << "; dimension size expression=" << expr
+        << "; expression value=" << val;
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+}
+
+inline void validate_unit_vector_index(const char* var_name, const char* expr,
+                                       int val) {
+  if (val <= 1) {
+    std::stringstream msg;
+    if (val == 1) {
+      msg << "Found dimension size one in unit vector declaration."
+          << " One-dimensional unit vector is discrete"
+          << " but the target distribution must be continuous."
+          << " variable=" << var_name << "; dimension size expression=" << expr;
+    } else {
+      msg << "Found dimension size less than one in unit vector declaration"
+          << "; variable=" << var_name << "; dimension size expression=" << expr
+          << "; expression value=" << val;
+    }
+    std::string msg_str(msg.str());
+    throw std::invalid_argument(msg_str.c_str());
+  }
+}
+
+
+using std::istream;
+using std::string;
+using std::stringstream;
+using std::vector;
+using std::pow;
+using stan::io::dump;
+using stan::math::lgamma;
+using stan::model::model_base_crtp;
+using stan::model::rvalue;
+using stan::model::cons_list;
+using stan::model::index_uni;
+using stan::model::index_max;
+using stan::model::index_min;
+using stan::model::index_min_max;
+using stan::model::index_multi;
+using stan::model::index_omni;
+using stan::model::nil_index_list;
+using namespace stan::math;
+using stan::math::pow; 
+
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
+static const std::vector<string> locations_array__ = {" (found before start of program)",
+                                                      " (in 'param-constraint.stan', line 7, column 2 to column 38)",
+                                                      " (in 'param-constraint.stan', line 8, column 2 to column 38)",
+                                                      " (in 'param-constraint.stan', line 2, column 2 to column 9)",
+                                                      " (in 'param-constraint.stan', line 3, column 2 to column 9)",
+                                                      " (in 'param-constraint.stan', line 7, column 34 to column 36)",
+                                                      " (in 'param-constraint.stan', line 8, column 31 to column 33)"};
+
+
+
+class param_constraint_model final : public model_base_crtp<param_constraint_model> {
+
+ private:
+  int nt;
+  int NS;
+ 
+ public:
+  ~param_constraint_model() { }
+  
+  inline std::string model_name() const final { return "param_constraint_model"; }
+
+  inline std::vector<std::string> model_compile_info() const noexcept {
+    return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
+  }
+  
+  
+  param_constraint_model(stan::io::var_context& context__,
+                         unsigned int random_seed__ = 0,
+                         std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    using local_scalar_t__ = double ;
+    boost::ecuyer1988 base_rng__ = 
+        stan::services::util::create_rng(random_seed__, 0);
+    (void) base_rng__;  // suppress unused var warning
+    static const char* function__ = "param_constraint_model_namespace::param_constraint_model";
+    (void) function__;  // suppress unused var warning
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    
+    try {
+      int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
+      pos__ = 1;
+      current_statement__ = 3;
+      context__.validate_dims("data initialization","nt","int",
+          context__.to_vec());
+      nt = std::numeric_limits<int>::min();
+      
+      current_statement__ = 3;
+      nt = context__.vals_i("nt")[(1 - 1)];
+      current_statement__ = 4;
+      context__.validate_dims("data initialization","NS","int",
+          context__.to_vec());
+      NS = std::numeric_limits<int>::min();
+      
+      current_statement__ = 4;
+      NS = context__.vals_i("NS")[(1 - 1)];
+      current_statement__ = 5;
+      validate_non_negative_index("L_Omega", "nt", nt);
+      current_statement__ = 6;
+      validate_non_negative_index("z1", "NS", NS);
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    num_params_r__ = 0U;
+    
+    try {
+      num_params_r__ += nt * ((2 * (2 - 1)) / 2);
+      num_params_r__ += NS;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+  }
+  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
+                                                 VecI& params_i__,
+                                                 std::ostream* pstream__ = nullptr) const {
+    using T__ = stan::scalar_type_t<VecR>;
+    using local_scalar_t__ = T__;
+    T__ lp__(0.0);
+    stan::math::accumulator<T__> lp_accum__;
+    static const char* function__ = "param_constraint_model_namespace::log_prob";
+(void) function__;  // suppress unused var warning
+
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+
+    
+    try {
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> L_Omega;
+      L_Omega = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(nt, Eigen::Matrix<local_scalar_t__, -1, -1>(2, 2));
+      stan::math::fill(L_Omega, DUMMY_VAR__);
+      
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> L_Omega_in__;
+      L_Omega_in__ = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(nt, Eigen::Matrix<local_scalar_t__, -1, 1>(
+        ((2 * (2 - 1)) / 2)));
+      stan::math::fill(L_Omega_in__, DUMMY_VAR__);
+      
+      current_statement__ = 1;
+      for (int sym1__ = 1; sym1__ <= nt; ++sym1__) {
+        current_statement__ = 1;
+        assign(L_Omega_in__, cons_list(index_uni(sym1__), nil_index_list()),
+          in__.vector(((2 * (2 - 1)) / 2)), "assigning variable L_Omega_in__");
+      }
+      current_statement__ = 1;
+      for (int sym1__ = 1; sym1__ <= nt; ++sym1__) {
+        current_statement__ = 1;
+        if (jacobian__) {
+          current_statement__ = 1;
+          assign(L_Omega, cons_list(index_uni(sym1__), nil_index_list()),
+            stan::math::cholesky_corr_constrain(L_Omega_in__[(sym1__ - 1)],
+              2, lp__), "assigning variable L_Omega");
+        } else {
+          current_statement__ = 1;
+          assign(L_Omega, cons_list(index_uni(sym1__), nil_index_list()),
+            stan::math::cholesky_corr_constrain(L_Omega_in__[(sym1__ - 1)], 2),
+            "assigning variable L_Omega");
+        }}
+      Eigen::Matrix<local_scalar_t__, -1, 1> z1;
+      z1 = Eigen::Matrix<local_scalar_t__, -1, 1>(NS);
+      stan::math::fill(z1, DUMMY_VAR__);
+      
+      current_statement__ = 2;
+      z1 = in__.vector(NS);
+      current_statement__ = 2;
+      for (int sym1__ = 1; sym1__ <= NS; ++sym1__) {
+        current_statement__ = 2;
+        if (jacobian__) {
+          current_statement__ = 2;
+          assign(z1, cons_list(index_uni(sym1__), nil_index_list()),
+            stan::math::lb_constrain(z1[(sym1__ - 1)],
+              rvalue(L_Omega,
+                cons_list(index_uni(1),
+                  cons_list(index_uni(1),
+                    cons_list(index_uni(2), nil_index_list()))), "L_Omega"),
+              lp__), "assigning variable z1");
+        } else {
+          current_statement__ = 2;
+          assign(z1, cons_list(index_uni(sym1__), nil_index_list()),
+            stan::math::lb_constrain(z1[(sym1__ - 1)],
+              rvalue(L_Omega,
+                cons_list(index_uni(1),
+                  cons_list(index_uni(1),
+                    cons_list(index_uni(2), nil_index_list()))), "L_Omega")),
+            "assigning variable z1");
+        }}
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
+    } // log_prob_impl() 
+    
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
+                               VecI& params_i__, VecVar& vars__,
+                               const bool emit_transformed_parameters__ = true,
+                               const bool emit_generated_quantities__ = true,
+                               std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    vars__.resize(0);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    static const char* function__ = "param_constraint_model_namespace::write_array";
+(void) function__;  // suppress unused var warning
+
+    (void) function__;  // suppress unused var warning
+
+    double lp__ = 0.0;
+    (void) lp__;  // dummy to suppress unused var warning
+    stan::math::accumulator<double> lp_accum__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+
+    
+    try {
+      std::vector<Eigen::Matrix<double, -1, -1>> L_Omega;
+      L_Omega = std::vector<Eigen::Matrix<double, -1, -1>>(nt, Eigen::Matrix<double, -1, -1>(2, 2));
+      stan::math::fill(L_Omega, std::numeric_limits<double>::quiet_NaN());
+      
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> L_Omega_in__;
+      L_Omega_in__ = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(nt, Eigen::Matrix<local_scalar_t__, -1, 1>(
+        ((2 * (2 - 1)) / 2)));
+      stan::math::fill(L_Omega_in__, DUMMY_VAR__);
+      
+      current_statement__ = 1;
+      for (int sym1__ = 1; sym1__ <= nt; ++sym1__) {
+        current_statement__ = 1;
+        assign(L_Omega_in__, cons_list(index_uni(sym1__), nil_index_list()),
+          in__.vector(((2 * (2 - 1)) / 2)), "assigning variable L_Omega_in__");
+      }
+      current_statement__ = 1;
+      for (int sym1__ = 1; sym1__ <= nt; ++sym1__) {
+        current_statement__ = 1;
+        assign(L_Omega, cons_list(index_uni(sym1__), nil_index_list()),
+          stan::math::cholesky_corr_constrain(L_Omega_in__[(sym1__ - 1)], 2),
+          "assigning variable L_Omega");}
+      Eigen::Matrix<double, -1, 1> z1;
+      z1 = Eigen::Matrix<double, -1, 1>(NS);
+      stan::math::fill(z1, std::numeric_limits<double>::quiet_NaN());
+      
+      current_statement__ = 2;
+      z1 = in__.vector(NS);
+      current_statement__ = 2;
+      for (int sym1__ = 1; sym1__ <= NS; ++sym1__) {
+        current_statement__ = 2;
+        assign(z1, cons_list(index_uni(sym1__), nil_index_list()),
+          stan::math::lb_constrain(z1[(sym1__ - 1)],
+            rvalue(L_Omega,
+              cons_list(index_uni(1),
+                cons_list(index_uni(1),
+                  cons_list(index_uni(2), nil_index_list()))), "L_Omega")),
+          "assigning variable z1");}
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= nt; ++sym3__) {
+            vars__.emplace_back(
+              rvalue(L_Omega,
+                cons_list(index_uni(sym3__),
+                  cons_list(index_uni(sym2__),
+                    cons_list(index_uni(sym1__), nil_index_list()))),
+                "L_Omega"));}}}
+      for (int sym1__ = 1; sym1__ <= NS; ++sym1__) {
+        vars__.emplace_back(z1[(sym1__ - 1)]);}
+      if (logical_negation((primitive_value(emit_transformed_parameters__) ||
+            primitive_value(emit_generated_quantities__)))) {
+        return ;
+      } 
+      if (logical_negation(emit_generated_quantities__)) {
+        return ;
+      } 
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    } // write_array_impl() 
+    
+  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  inline void transform_inits_impl(const stan::io::var_context& context__,
+                                   VecI& params_i__, VecVar& vars__,
+                                   std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    vars__.clear();
+    vars__.reserve(num_params_r__);
+    
+    try {
+      int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
+      pos__ = 1;
+      std::vector<Eigen::Matrix<double, -1, -1>> L_Omega;
+      L_Omega = std::vector<Eigen::Matrix<double, -1, -1>>(nt, Eigen::Matrix<double, -1, -1>(2, 2));
+      stan::math::fill(L_Omega, std::numeric_limits<double>::quiet_NaN());
+      
+      {
+        std::vector<local_scalar_t__> L_Omega_flat__;
+        current_statement__ = 1;
+        assign(L_Omega_flat__, nil_index_list(), context__.vals_r("L_Omega"),
+          "assigning variable L_Omega_flat__");
+        current_statement__ = 1;
+        pos__ = 1;
+        current_statement__ = 1;
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          current_statement__ = 1;
+          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+            current_statement__ = 1;
+            for (int sym3__ = 1; sym3__ <= nt; ++sym3__) {
+              current_statement__ = 1;
+              assign(L_Omega,
+                cons_list(index_uni(sym3__),
+                  cons_list(index_uni(sym2__),
+                    cons_list(index_uni(sym1__), nil_index_list()))),
+                L_Omega_flat__[(pos__ - 1)], "assigning variable L_Omega");
+              current_statement__ = 1;
+              pos__ = (pos__ + 1);}}}
+      }
+      std::vector<Eigen::Matrix<double, -1, 1>> L_Omega_free__;
+      L_Omega_free__ = std::vector<Eigen::Matrix<double, -1, 1>>(nt, Eigen::Matrix<double, -1, 1>(
+        ((2 * (2 - 1)) / 2)));
+      stan::math::fill(L_Omega_free__, std::numeric_limits<double>::quiet_NaN());
+      
+      current_statement__ = 1;
+      for (int sym1__ = 1; sym1__ <= nt; ++sym1__) {
+        current_statement__ = 1;
+        assign(L_Omega_free__,
+          cons_list(index_uni(sym1__), nil_index_list()),
+          stan::math::cholesky_corr_free(L_Omega[(sym1__ - 1)]),
+          "assigning variable L_Omega_free__");}
+      Eigen::Matrix<double, -1, 1> z1;
+      z1 = Eigen::Matrix<double, -1, 1>(NS);
+      stan::math::fill(z1, std::numeric_limits<double>::quiet_NaN());
+      
+      {
+        std::vector<local_scalar_t__> z1_flat__;
+        current_statement__ = 2;
+        assign(z1_flat__, nil_index_list(), context__.vals_r("z1"),
+          "assigning variable z1_flat__");
+        current_statement__ = 2;
+        pos__ = 1;
+        current_statement__ = 2;
+        for (int sym1__ = 1; sym1__ <= NS; ++sym1__) {
+          current_statement__ = 2;
+          assign(z1, cons_list(index_uni(sym1__), nil_index_list()),
+            z1_flat__[(pos__ - 1)], "assigning variable z1");
+          current_statement__ = 2;
+          pos__ = (pos__ + 1);}
+      }
+      Eigen::Matrix<double, -1, 1> z1_free__;
+      z1_free__ = Eigen::Matrix<double, -1, 1>(NS);
+      stan::math::fill(z1_free__, std::numeric_limits<double>::quiet_NaN());
+      
+      current_statement__ = 2;
+      for (int sym1__ = 1; sym1__ <= NS; ++sym1__) {
+        current_statement__ = 2;
+        assign(z1_free__, cons_list(index_uni(sym1__), nil_index_list()),
+          stan::math::lb_free(z1[(sym1__ - 1)],
+            rvalue(L_Omega,
+              cons_list(index_uni(1),
+                cons_list(index_uni(1),
+                  cons_list(index_uni(2), nil_index_list()))), "L_Omega")),
+          "assigning variable z1_free__");}
+      for (int sym1__ = 1; sym1__ <= nt; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= ((2 * (2 - 1)) / 2); ++sym2__) {
+          vars__.emplace_back(L_Omega_free__[(sym1__ - 1)][(sym2__ - 1)]);}}
+      for (int sym1__ = 1; sym1__ <= NS; ++sym1__) {
+        vars__.emplace_back(z1_free__[(sym1__ - 1)]);}
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    } // transform_inits_impl() 
+    
+  inline void get_param_names(std::vector<std::string>& names__) const {
+    
+    names__.clear();
+    names__.emplace_back("L_Omega");
+    names__.emplace_back("z1");
+    } // get_param_names() 
+    
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+    dimss__.clear();
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(nt),
+                                             static_cast<size_t>(2),
+                                             static_cast<size_t>(2)});
+    
+    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(NS)});
+    
+    } // get_dims() 
+    
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const
+    final {
+    
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      {
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          {
+            for (int sym3__ = 1; sym3__ <= nt; ++sym3__) {
+              {
+                param_names__.emplace_back(std::string() + "L_Omega" + '.' + std::to_string(sym3__) + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+              }}
+          }}
+      }}
+    for (int sym1__ = 1; sym1__ <= NS; ++sym1__) {
+      {
+        param_names__.emplace_back(std::string() + "z1" + '.' + std::to_string(sym1__));
+      }}
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // constrained_param_names() 
+    
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const
+    final {
+    
+    for (int sym1__ = 1; sym1__ <= ((2 * (2 - 1)) / 2); ++sym1__) {
+      {
+        for (int sym2__ = 1; sym2__ <= nt; ++sym2__) {
+          {
+            param_names__.emplace_back(std::string() + "L_Omega" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          }}
+      }}
+    for (int sym1__ = 1; sym1__ <= NS; ++sym1__) {
+      {
+        param_names__.emplace_back(std::string() + "z1" + '.' + std::to_string(sym1__));
+      }}
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // unconstrained_param_names() 
+    
+  inline std::string get_constrained_sizedtypes() const {
+    stringstream s__;
+    s__ << "[{\"name\":\"L_Omega\",\"type\":{\"name\":\"array\",\"length\":" << nt << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 2 << "}},\"block\":\"parameters\"},{\"name\":\"z1\",\"type\":{\"name\":\"vector\",\"length\":" << NS << "},\"block\":\"parameters\"}]";
+    return s__.str();
+    } // get_constrained_sizedtypes() 
+    
+  inline std::string get_unconstrained_sizedtypes() const {
+    stringstream s__;
+    s__ << "[{\"name\":\"L_Omega\",\"type\":{\"name\":\"array\",\"length\":" << nt << ",\"element_type\":{\"name\":\"vector\",\"length\":" << ((2 * (2 - 1)) / 2) << "}},\"block\":\"parameters\"},{\"name\":\"z1\",\"type\":{\"name\":\"vector\",\"length\":" << NS << "},\"block\":\"parameters\"}]";
+    return s__.str();
+    } // get_unconstrained_sizedtypes() 
+    
+  
+    // Begin method overload boilerplate
+    template <typename RNG>
+    inline void write_array(RNG& base_rng,
+                            Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
+                            Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
+                            const bool emit_transformed_parameters = true,
+                            const bool emit_generated_quantities = true,
+                            std::ostream* pstream = nullptr) const {
+      std::vector<double> vars_vec(vars.size());
+      std::vector<int> params_i;
+      write_array_impl(base_rng, params_r, params_i, vars_vec,
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      vars.resize(vars_vec.size());
+      for (int i = 0; i < vars.size(); ++i) {
+        vars.coeffRef(i) = vars_vec[i];
+      }
+    }
+
+    template <typename RNG>
+    inline void write_array(RNG& base_rng, std::vector<double>& params_r,
+                            std::vector<int>& params_i,
+                            std::vector<double>& vars,
+                            bool emit_transformed_parameters = true,
+                            bool emit_generated_quantities = true,
+                            std::ostream* pstream = nullptr) const {
+      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+    }
+
+    template <bool propto__, bool jacobian__, typename T_>
+    inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
+                       std::ostream* pstream = nullptr) const {
+      Eigen::Matrix<int, -1, 1> params_i;
+      return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+    }
+
+    template <bool propto__, bool jacobian__, typename T__>
+    inline T__ log_prob(std::vector<T__>& params_r,
+                        std::vector<int>& params_i,
+                        std::ostream* pstream = nullptr) const {
+      return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+    }
+  
+
+    inline void transform_inits(const stan::io::var_context& context,
+                         Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
+                         std::ostream* pstream = nullptr) const final {
+      std::vector<double> params_r_vec(params_r.size());
+      std::vector<int> params_i;
+      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      params_r.resize(params_r_vec.size());
+      for (int i = 0; i < params_r.size(); ++i) {
+        params_r.coeffRef(i) = params_r_vec[i];
+      }
+    }
+    inline void transform_inits(const stan::io::var_context& context,
+                                std::vector<int>& params_i,
+                                std::vector<double>& vars,
+                                std::ostream* pstream = nullptr) const final {
+      transform_inits_impl(context, params_i, vars, pstream);
+    }        
+
+};
+}
+using stan_model = param_constraint_model_namespace::param_constraint_model;
+
+#ifndef USING_R
+
+// Boilerplate
+stan::model::model_base& new_model(
+        stan::io::var_context& data_context,
+        unsigned int seed,
+        std::ostream* msg_stream) {
+  stan_model* m = new stan_model(data_context, seed, msg_stream);
+  return *m;
+}
+
+stan::math::profile_map& get_stan_profile_data() {
+  return param_constraint_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -23066,7 +23698,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'reduce_sum_m1.stan', line 26, column 2 to column 13)",
                                                       " (in 'reduce_sum_m1.stan', line 27, column 2 to column 13)",
@@ -23635,6 +24268,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return reduce_sum_m1_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -23698,7 +24335,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'reduce_sum_m2.stan', line 130, column 2 to column 24)",
                                                       " (in 'reduce_sum_m2.stan', line 131, column 2 to column 25)",
@@ -26440,6 +27078,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return reduce_sum_m2_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -26503,7 +27145,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'reduce_sum_m3.stan', line 210, column 2 to column 13)",
                                                       " (in 'reduce_sum_m3.stan', line 211, column 2 to column 18)",
@@ -30836,6 +31479,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return reduce_sum_m3_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -30899,7 +31546,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'single-argument-lpmf.stan', line 3, column 4 to column 14)",
                                                       " (in 'single-argument-lpmf.stan', line 2, column 23 to line 4, column 3)",
@@ -31305,6 +31953,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return single_argument_lpmf_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -31368,7 +32020,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'tilde-block.stan', line 5, column 4 to column 20)",
                                                       " (in 'tilde-block.stan', line 11, column 27 to column 28)",
@@ -31709,6 +32362,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return tilde_block_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -31772,7 +32429,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'transform.stan', line 11, column 2 to column 29)",
                                                       " (in 'transform.stan', line 12, column 2 to column 29)",
@@ -35504,6 +36162,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return transform_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -35567,7 +36229,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'truncate.stan', line 6, column 4 to column 11)",
                                                       " (in 'truncate.stan', line 7, column 4 to column 20)",
@@ -36008,6 +36671,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return truncate_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -36071,7 +36738,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'udf_tilde_stmt_conflict.stan', line 7, column 4 to column 11)",
                                                       " (in 'udf_tilde_stmt_conflict.stan', line 10, column 4 to column 20)",
@@ -36396,6 +37064,10 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return udf_tilde_stmt_conflict_model_namespace::profiles__;
+}
+
 #endif
 
 
@@ -36459,7 +37131,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'user_constrain.stan', line 7, column 2 to column 18)",
                                                       " (in 'user_constrain.stan', line 10, column 2 to column 19)",
@@ -36799,6 +37472,10 @@ stan::model::model_base& new_model(
         std::ostream* msg_stream) {
   stan_model* m = new stan_model(data_context, seed, msg_stream);
   return *m;
+}
+
+stan::math::profile_map& get_stan_profile_data() {
+  return user_constrain_model_namespace::profiles__;
 }
 
 #endif

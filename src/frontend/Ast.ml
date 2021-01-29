@@ -153,6 +153,7 @@ type ('e, 's, 'l, 'f, 'c) statement =
       ; upper_bound: 'e
       ; loop_body: 's }
   | ForEach of identifier * 'e * 's
+  | Profile of string * 's list
   | Block of 's list
   | VarDecl of
       { decl_type: 'e Middle.Type.t

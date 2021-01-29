@@ -1081,6 +1081,11 @@ stan::model::model_base& new_model(
   return *m;
 }
 
+stan::math::profile_map& get_stan_profile_data() {
+  return %s_namespace::profiles__;
+}
+
 #endif
-|} ;
+|}
+      p.prog_name ;
     pf ppf "@[<v>%a@]" pp_register_map_rect_functors p )

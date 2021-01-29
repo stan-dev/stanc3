@@ -4,16 +4,12 @@ open Analysis_and_optimization.Dependence_analysis
 open Middle
 open Analysis_and_optimization.Dataflow_types
 
-let semantic_check_program ast =
-  Option.value_exn
-    (Result.ok
-       (Semantic_check.semantic_check_program
-          (Option.value_exn (Result.ok ast))))
+let mir_of_string =
+  Fn.compose (Ast_to_Mir.trans_prog "") Frontend_utils.typed_ast_of_string_exn
 
 let example1_program =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
-      {|
+  mir_of_string
+    {|
         model
         {                                // 1
           int i                          // 2: 3
@@ -45,8 +41,6 @@ let example1_program =
           }
         }
       |}
-  in
-  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
 
 let%expect_test "Dependency graph example" =
   (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
@@ -130,9 +124,8 @@ let%expect_test "Variable dependency example" =
     |}]
 
 let uninitialized_var_example =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
-      {|
+  mir_of_string
+    {|
         functions {
           int f(int y) {
             int x;
@@ -176,8 +169,6 @@ let uninitialized_var_example =
           print(k);
         }
       |}
-  in
-  Ast_to_Mir.trans_prog "" (semantic_check_program ast)
 
 let%expect_test "Uninitialized variables example" =
   (*let deps = snd (build_predecessor_graph example1_statement_map) in*)

@@ -159,16 +159,19 @@ let add_file filename =
 (** ad directives from the given file. *)
 let use_file filename =
   let ast =
-    if !canonicalize_program then
-      Canonicalize.repair_syntax
-        (Errors.without_warnings Frontend_utils.get_ast_or_exit filename)
-    else Frontend_utils.get_ast_or_exit filename
+    Frontend_utils.get_ast_or_exit filename
+      ~print_warnings:(not !canonicalize_program)
+  in
+  let ast =
+    if !canonicalize_program then Canonicalize.repair_syntax ast else ast
   in
   Debugging.ast_logger ast ;
   if !pretty_print_program then
     print_endline (Pretty_printing.pretty_print_program ast) ;
   let typed_ast = Frontend_utils.type_ast_or_exit ast in
-  Deprecation_analysis.emit_warnings typed_ast ;
+  Fmt.(list ~sep:cut Deprecation_analysis.pp)
+    Fmt.stderr
+    (Deprecation_analysis.collect_warnings typed_ast) ;
   if !canonicalize_program then
     print_endline
       (Pretty_printing.pretty_print_typed_program
@@ -181,8 +184,12 @@ let use_file filename =
     if !dump_mir then
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.Program.Typed.t)] ;
     if !dump_mir_pretty then Program.Typed.pp Format.std_formatter mir ;
-    if !warn_pedantic then Pedantic_analysis.print_warn_pedantic mir ;
-    if !warn_uninitialized then Pedantic_analysis.print_warn_uninitialized mir ;
+    ( if !warn_pedantic then
+      Pedantic_analysis.sprint_warn_pedantic mir
+      |> Out_channel.(output_string stderr) ) ;
+    ( if !warn_uninitialized then
+      Pedantic_analysis.sprint_warn_uninitialized mir
+      |> Out_channel.(output_string stderr) ) ;
     let tx_mir = Transform_Mir.trans_prog mir in
     if !dump_tx_mir then
       Sexp.pp_hum Format.std_formatter

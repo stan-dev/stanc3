@@ -27,7 +27,7 @@ let nest_unsized_array basic_type n =
        TRANSFORMEDPARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK
 %token LBRACE RBRACE LPAREN RPAREN LBRACK RBRACK LABRACK RABRACK COMMA SEMICOLON
        BAR
-%token RETURN IF ELSE WHILE FOR IN BREAK CONTINUE
+%token RETURN IF ELSE WHILE FOR IN BREAK CONTINUE PROFILE
 %token VOID INT REAL VECTOR ROWVECTOR ARRAY MATRIX ORDERED POSITIVEORDERED SIMPLEX
        UNITVECTOR CHOLESKYFACTORCORR CHOLESKYFACTORCOV CORRMATRIX COVMATRIX
 %token LOWER UPPER OFFSET MULTIPLIER
@@ -172,6 +172,7 @@ decl_identifier:
   | REJECT { build_id "reject" $loc }
   | TARGET { build_id "target" $loc }
   | GETLP { build_id "get_lp" $loc }
+  | PROFILE { build_id "profile" $loc }
 
 function_def:
   | rt=return_type name=decl_identifier LPAREN args=separated_list(COMMA, arg_decl)
@@ -768,6 +769,8 @@ nested_statement:
     }
   | FOR LPAREN id=identifier IN e=expression RPAREN s=statement
     {  grammar_logger "foreach_statement" ; ForEach (id, e, s) }
+  | PROFILE LPAREN st=string_literal RPAREN LBRACE l=list(vardecl_or_statement) RBRACE
+    {  grammar_logger "profile_statement" ; Profile (st, l) }
   | LBRACE l=list(vardecl_or_statement)  RBRACE
     {  grammar_logger "block_statement" ; Block l } (* NOTE: I am choosing to allow mixing of statements and var_decls *)
 

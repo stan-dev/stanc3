@@ -81,7 +81,8 @@ let rec replace_deprecated_stmt
           { assign_lhs= replace_deprecated_lval deprecated_userdefined l
           ; assign_op= Assign
           ; assign_rhs= (replace_deprecated_expr deprecated_userdefined) e }
-    | FunDef {returntype; funname= {name; id_loc}; captures; arguments; body} ->
+    | FunDef {returntype; funname= {name; id_loc}; captures; arguments; body}
+      ->
         let newname =
           match String.Map.find deprecated_userdefined name with
           | Some type_ -> update_suffix name type_
