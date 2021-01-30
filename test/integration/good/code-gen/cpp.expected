@@ -4,42 +4,8 @@
 #include <stan/model/model_header.hpp>
 namespace _8_schools_ncp_model_namespace {
 
-
-inline void validate_positive_index(const char* var_name, const char* expr,
-                                    int val) {
-  if (val < 1) {
-    std::stringstream msg;
-    msg << "Found dimension size less than one in simplex declaration"
-        << "; variable=" << var_name << "; dimension size expression=" << expr
-        << "; expression value=" << val;
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-inline void validate_unit_vector_index(const char* var_name, const char* expr,
-                                       int val) {
-  if (val <= 1) {
-    std::stringstream msg;
-    if (val == 1) {
-      msg << "Found dimension size one in unit vector declaration."
-          << " One-dimensional unit vector is discrete"
-          << " but the target distribution must be continuous."
-          << " variable=" << var_name << "; dimension size expression=" << expr;
-    } else {
-      msg << "Found dimension size less than one in unit vector declaration"
-          << "; variable=" << var_name << "; dimension size expression=" << expr
-          << "; expression value=" << val;
-    }
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-
 using std::istream;
 using std::string;
-using std::stringstream;
 using std::vector;
 using std::pow;
 using stan::io::dump;
@@ -436,13 +402,13 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta_tilde\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta_tilde\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
@@ -538,42 +504,8 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace _8start_with_number_model_namespace {
 
-
-inline void validate_positive_index(const char* var_name, const char* expr,
-                                    int val) {
-  if (val < 1) {
-    std::stringstream msg;
-    msg << "Found dimension size less than one in simplex declaration"
-        << "; variable=" << var_name << "; dimension size expression=" << expr
-        << "; expression value=" << val;
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-inline void validate_unit_vector_index(const char* var_name, const char* expr,
-                                       int val) {
-  if (val <= 1) {
-    std::stringstream msg;
-    if (val == 1) {
-      msg << "Found dimension size one in unit vector declaration."
-          << " One-dimensional unit vector is discrete"
-          << " but the target distribution must be continuous."
-          << " variable=" << var_name << "; dimension size expression=" << expr;
-    } else {
-      msg << "Found dimension size less than one in unit vector declaration"
-          << "; variable=" << var_name << "; dimension size expression=" << expr
-          << "; expression value=" << val;
-    }
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-
 using std::istream;
 using std::string;
-using std::stringstream;
 using std::vector;
 using std::pow;
 using stan::io::dump;
@@ -799,13 +731,13 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"bar\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"bar\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
@@ -902,42 +834,8 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace eight_schools_ncp_model_namespace {
 
-
-inline void validate_positive_index(const char* var_name, const char* expr,
-                                    int val) {
-  if (val < 1) {
-    std::stringstream msg;
-    msg << "Found dimension size less than one in simplex declaration"
-        << "; variable=" << var_name << "; dimension size expression=" << expr
-        << "; expression value=" << val;
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-inline void validate_unit_vector_index(const char* var_name, const char* expr,
-                                       int val) {
-  if (val <= 1) {
-    std::stringstream msg;
-    if (val == 1) {
-      msg << "Found dimension size one in unit vector declaration."
-          << " One-dimensional unit vector is discrete"
-          << " but the target distribution must be continuous."
-          << " variable=" << var_name << "; dimension size expression=" << expr;
-    } else {
-      msg << "Found dimension size less than one in unit vector declaration"
-          << "; variable=" << var_name << "; dimension size expression=" << expr
-          << "; expression value=" << val;
-    }
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-
 using std::istream;
 using std::string;
-using std::stringstream;
 using std::vector;
 using std::pow;
 using stan::io::dump;
@@ -1334,13 +1232,13 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta_tilde\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta_tilde\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
@@ -1437,42 +1335,8 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace mother_model_namespace {
 
-
-inline void validate_positive_index(const char* var_name, const char* expr,
-                                    int val) {
-  if (val < 1) {
-    std::stringstream msg;
-    msg << "Found dimension size less than one in simplex declaration"
-        << "; variable=" << var_name << "; dimension size expression=" << expr
-        << "; expression value=" << val;
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-inline void validate_unit_vector_index(const char* var_name, const char* expr,
-                                       int val) {
-  if (val <= 1) {
-    std::stringstream msg;
-    if (val == 1) {
-      msg << "Found dimension size one in unit vector declaration."
-          << " One-dimensional unit vector is discrete"
-          << " but the target distribution must be continuous."
-          << " variable=" << var_name << "; dimension size expression=" << expr;
-    } else {
-      msg << "Found dimension size less than one in unit vector declaration"
-          << "; variable=" << var_name << "; dimension size expression=" << expr
-          << "; expression value=" << val;
-    }
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-
 using std::istream;
 using std::string;
-using std::stringstream;
 using std::vector;
 using std::pow;
 using stan::io::dump;
@@ -10798,13 +10662,13 @@ class mother_model final : public model_base_crtp<mother_model> {
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_upper\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_lower\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"offset_multiplier\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"no_offset_multiplier\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"offset_no_multiplier\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"parameters\"},{\"name\":\"p_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"p_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"p_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"parameters\"},{\"name\":\"p_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"p_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"p_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"parameters\"},{\"name\":\"p_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 3 << "}}},\"block\":\"parameters\"},{\"name\":\"p_simplex\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"p_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"p_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"parameters\"},{\"name\":\"p_cfcov_54\",\"type\":{\"name\":\"matrix\",\"rows\":" << 5 << ",\"cols\":" << 4 << "},\"block\":\"parameters\"},{\"name\":\"p_cfcov_33\",\"type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "},\"block\":\"parameters\"},{\"name\":\"p_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"tp_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 3 << "}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_simplex\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_54\",\"type\":{\"name\":\"matrix\",\"rows\":" << 5 << ",\"cols\":" << 4 << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_33\",\"type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "}},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_real\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"gq_r1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_r2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"generated_quantities\"},{\"name\":\"gq_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 3 << "}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_simplex\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_54\",\"type\":{\"name\":\"matrix\",\"rows\":" << 5 << ",\"cols\":" << 4 << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_33\",\"type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "}},\"block\":\"generated_quantities\"},{\"name\":\"indices\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"indexing_mat\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res1\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res2\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res3\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res11\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res21\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res31\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res4\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res5\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 2 << "}},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_upper\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_lower\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"offset_multiplier\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"no_offset_multiplier\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"offset_no_multiplier\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"parameters\"},{\"name\":\"p_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"p_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"p_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"parameters\"},{\"name\":\"p_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"p_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"p_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"parameters\"},{\"name\":\"p_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 3 << "}}},\"block\":\"parameters\"},{\"name\":\"p_simplex\",\"type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "},\"block\":\"parameters\"},{\"name\":\"p_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "}},\"block\":\"parameters\"},{\"name\":\"p_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "}}}},\"block\":\"parameters\"},{\"name\":\"p_cfcov_54\",\"type\":{\"name\":\"vector\",\"length\":" << ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)) << "},\"block\":\"parameters\"},{\"name\":\"p_cfcov_33\",\"type\":{\"name\":\"vector\",\"length\":" << ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)) << "},\"block\":\"parameters\"},{\"name\":\"p_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)) << "}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"tp_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 3 << "}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_simplex\",\"type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_54\",\"type\":{\"name\":\"vector\",\"length\":" << ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)) << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_33\",\"type\":{\"name\":\"vector\",\"length\":" << ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)) << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)) << "}},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_real\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"gq_r1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_r2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_real_1d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"generated_quantities\"},{\"name\":\"gq_real_3d_ar\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_row_vec\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_row_vec\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_ar_mat\",\"type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 3 << "}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_simplex\",\"type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_1d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "}},\"block\":\"generated_quantities\"},{\"name\":\"gq_3d_simplex\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (N - 1) << "}}}},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_54\",\"type\":{\"name\":\"vector\",\"length\":" << ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)) << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_33\",\"type\":{\"name\":\"vector\",\"length\":" << ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)) << "},\"block\":\"generated_quantities\"},{\"name\":\"gq_cfcov_33_ar\",\"type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)) << "}},\"block\":\"generated_quantities\"},{\"name\":\"indices\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"indexing_mat\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res1\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res2\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res3\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res11\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res21\",\"type\":{\"name\":\"array\",\"length\":" << 5 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res31\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 3 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res4\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 4 << "}},\"block\":\"generated_quantities\"},{\"name\":\"idx_res5\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 2 << "}},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
@@ -10930,42 +10794,8 @@ Warning: in 'mother.stan', line 187, column 15 to column 23: The no-argument fun
 #include <stan/model/model_header.hpp>
 namespace motherHOF_model_namespace {
 
-
-inline void validate_positive_index(const char* var_name, const char* expr,
-                                    int val) {
-  if (val < 1) {
-    std::stringstream msg;
-    msg << "Found dimension size less than one in simplex declaration"
-        << "; variable=" << var_name << "; dimension size expression=" << expr
-        << "; expression value=" << val;
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-inline void validate_unit_vector_index(const char* var_name, const char* expr,
-                                       int val) {
-  if (val <= 1) {
-    std::stringstream msg;
-    if (val == 1) {
-      msg << "Found dimension size one in unit vector declaration."
-          << " One-dimensional unit vector is discrete"
-          << " but the target distribution must be continuous."
-          << " variable=" << var_name << "; dimension size expression=" << expr;
-    } else {
-      msg << "Found dimension size less than one in unit vector declaration"
-          << "; variable=" << var_name << "; dimension size expression=" << expr
-          << "; expression value=" << val;
-    }
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-
 using std::istream;
 using std::string;
-using std::stringstream;
 using std::vector;
 using std::pow;
 using stan::io::dump;
@@ -12815,13 +12645,13 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"y0_p\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"shared_params_p\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"},{\"name\":\"job_params_p\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 3 << "}},\"block\":\"parameters\"},{\"name\":\"x_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"abc1_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc2_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc3_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp1\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp2\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp3\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p_as\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"x_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"array\",\"length\":" << T << ",\"element_type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"generated_quantities\"},{\"name\":\"y_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"z_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc1_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc2_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"y_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"},{\"name\":\"yy_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"},{\"name\":\"theta_dbl\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"y0_p\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p\",\"type\":{\"name\":\"array\",\"length\":" << 1 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"x_p_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"shared_params_p\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"},{\"name\":\"job_params_p\",\"type\":{\"name\":\"array\",\"length\":" << 3 << ",\"element_type\":{\"name\":\"vector\",\"length\":" << 3 << "}},\"block\":\"parameters\"},{\"name\":\"x_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"abc1_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc2_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"abc3_p\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp1\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp2\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat_tp3\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"transformed_parameters\"},{\"name\":\"theta_p_as\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"x_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_v\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"array\",\"length\":" << T << ",\"element_type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"generated_quantities\"},{\"name\":\"y_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"z_1d\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc1_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"abc2_gq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"y_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"},{\"name\":\"yy_hat_gq\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"generated_quantities\"},{\"name\":\"theta_dbl\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
@@ -13077,42 +12907,8 @@ https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 #include <stan/model/model_header.hpp>
 namespace new_integrate_interface_model_namespace {
 
-
-inline void validate_positive_index(const char* var_name, const char* expr,
-                                    int val) {
-  if (val < 1) {
-    std::stringstream msg;
-    msg << "Found dimension size less than one in simplex declaration"
-        << "; variable=" << var_name << "; dimension size expression=" << expr
-        << "; expression value=" << val;
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-inline void validate_unit_vector_index(const char* var_name, const char* expr,
-                                       int val) {
-  if (val <= 1) {
-    std::stringstream msg;
-    if (val == 1) {
-      msg << "Found dimension size one in unit vector declaration."
-          << " One-dimensional unit vector is discrete"
-          << " but the target distribution must be continuous."
-          << " variable=" << var_name << "; dimension size expression=" << expr;
-    } else {
-      msg << "Found dimension size less than one in unit vector declaration"
-          << "; variable=" << var_name << "; dimension size expression=" << expr
-          << "; expression value=" << val;
-    }
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-
 using std::istream;
 using std::string;
-using std::stringstream;
 using std::vector;
 using std::pow;
 using stan::io::dump;
@@ -17451,13 +17247,13 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"ra\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"v\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"transformed_parameters\"},{\"name\":\"zg\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"ra\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"v\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"transformed_parameters\"},{\"name\":\"zg\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
@@ -17554,42 +17350,8 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace old_integrate_interface_model_namespace {
 
-
-inline void validate_positive_index(const char* var_name, const char* expr,
-                                    int val) {
-  if (val < 1) {
-    std::stringstream msg;
-    msg << "Found dimension size less than one in simplex declaration"
-        << "; variable=" << var_name << "; dimension size expression=" << expr
-        << "; expression value=" << val;
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-inline void validate_unit_vector_index(const char* var_name, const char* expr,
-                                       int val) {
-  if (val <= 1) {
-    std::stringstream msg;
-    if (val == 1) {
-      msg << "Found dimension size one in unit vector declaration."
-          << " One-dimensional unit vector is discrete"
-          << " but the target distribution must be continuous."
-          << " variable=" << var_name << "; dimension size expression=" << expr;
-    } else {
-      msg << "Found dimension size less than one in unit vector declaration"
-          << "; variable=" << var_name << "; dimension size expression=" << expr
-          << "; expression value=" << val;
-    }
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-
 using std::istream;
 using std::string;
-using std::stringstream;
 using std::vector;
 using std::pow;
 using stan::io::dump;
@@ -18315,13 +18077,13 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"delta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"z_init\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"delta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"z_init\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
@@ -18422,42 +18184,8 @@ https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 #include <stan/model/model_header.hpp>
 namespace optimize_glm_model_namespace {
 
-
-inline void validate_positive_index(const char* var_name, const char* expr,
-                                    int val) {
-  if (val < 1) {
-    std::stringstream msg;
-    msg << "Found dimension size less than one in simplex declaration"
-        << "; variable=" << var_name << "; dimension size expression=" << expr
-        << "; expression value=" << val;
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-inline void validate_unit_vector_index(const char* var_name, const char* expr,
-                                       int val) {
-  if (val <= 1) {
-    std::stringstream msg;
-    if (val == 1) {
-      msg << "Found dimension size one in unit vector declaration."
-          << " One-dimensional unit vector is discrete"
-          << " but the target distribution must be continuous."
-          << " variable=" << var_name << "; dimension size expression=" << expr;
-    } else {
-      msg << "Found dimension size less than one in unit vector declaration"
-          << "; variable=" << var_name << "; dimension size expression=" << expr
-          << "; expression value=" << val;
-    }
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-
 using std::istream;
 using std::string;
-using std::stringstream;
 using std::vector;
 using std::pow;
 using stan::io::dump;
@@ -20054,13 +19782,13 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"alpha_v\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"cuts\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"beta_m\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"X_rv_p\",\"type\":{\"name\":\"vector\",\"length\":" << n << "},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"alpha_v\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"cuts\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"X_p\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"beta_m\",\"type\":{\"name\":\"matrix\",\"rows\":" << n << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"X_rv_p\",\"type\":{\"name\":\"vector\",\"length\":" << n << "},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
@@ -20156,42 +19884,8 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace param_constraint_model_namespace {
 
-
-inline void validate_positive_index(const char* var_name, const char* expr,
-                                    int val) {
-  if (val < 1) {
-    std::stringstream msg;
-    msg << "Found dimension size less than one in simplex declaration"
-        << "; variable=" << var_name << "; dimension size expression=" << expr
-        << "; expression value=" << val;
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-inline void validate_unit_vector_index(const char* var_name, const char* expr,
-                                       int val) {
-  if (val <= 1) {
-    std::stringstream msg;
-    if (val == 1) {
-      msg << "Found dimension size one in unit vector declaration."
-          << " One-dimensional unit vector is discrete"
-          << " but the target distribution must be continuous."
-          << " variable=" << var_name << "; dimension size expression=" << expr;
-    } else {
-      msg << "Found dimension size less than one in unit vector declaration"
-          << "; variable=" << var_name << "; dimension size expression=" << expr
-          << "; expression value=" << val;
-    }
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-
 using std::istream;
 using std::string;
-using std::stringstream;
 using std::vector;
 using std::pow;
 using stan::io::dump;
@@ -20626,13 +20320,13 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"L_Omega\",\"type\":{\"name\":\"array\",\"length\":" << nt << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 2 << "}},\"block\":\"parameters\"},{\"name\":\"z1\",\"type\":{\"name\":\"vector\",\"length\":" << NS << "},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"L_Omega\",\"type\":{\"name\":\"array\",\"length\":" << nt << ",\"element_type\":{\"name\":\"vector\",\"length\":" << ((2 * (2 - 1)) / 2) << "}},\"block\":\"parameters\"},{\"name\":\"z1\",\"type\":{\"name\":\"vector\",\"length\":" << NS << "},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
@@ -20728,42 +20422,8 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace reduce_sum_m1_model_namespace {
 
-
-inline void validate_positive_index(const char* var_name, const char* expr,
-                                    int val) {
-  if (val < 1) {
-    std::stringstream msg;
-    msg << "Found dimension size less than one in simplex declaration"
-        << "; variable=" << var_name << "; dimension size expression=" << expr
-        << "; expression value=" << val;
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-inline void validate_unit_vector_index(const char* var_name, const char* expr,
-                                       int val) {
-  if (val <= 1) {
-    std::stringstream msg;
-    if (val == 1) {
-      msg << "Found dimension size one in unit vector declaration."
-          << " One-dimensional unit vector is discrete"
-          << " but the target distribution must be continuous."
-          << " variable=" << var_name << "; dimension size expression=" << expr;
-    } else {
-      msg << "Found dimension size less than one in unit vector declaration"
-          << "; variable=" << var_name << "; dimension size expression=" << expr
-          << "; expression value=" << val;
-    }
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-
 using std::istream;
 using std::string;
-using std::stringstream;
 using std::vector;
 using std::pow;
 using stan::io::dump;
@@ -21265,13 +20925,13 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"y1\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y3\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"y1\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y3\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
@@ -21367,42 +21027,8 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace reduce_sum_m2_model_namespace {
 
-
-inline void validate_positive_index(const char* var_name, const char* expr,
-                                    int val) {
-  if (val < 1) {
-    std::stringstream msg;
-    msg << "Found dimension size less than one in simplex declaration"
-        << "; variable=" << var_name << "; dimension size expression=" << expr
-        << "; expression value=" << val;
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-inline void validate_unit_vector_index(const char* var_name, const char* expr,
-                                       int val) {
-  if (val <= 1) {
-    std::stringstream msg;
-    if (val == 1) {
-      msg << "Found dimension size one in unit vector declaration."
-          << " One-dimensional unit vector is discrete"
-          << " but the target distribution must be continuous."
-          << " variable=" << var_name << "; dimension size expression=" << expr;
-    } else {
-      msg << "Found dimension size less than one in unit vector declaration"
-          << "; variable=" << var_name << "; dimension size expression=" << expr
-          << "; expression value=" << val;
-    }
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-
 using std::istream;
 using std::string;
-using std::stringstream;
 using std::vector;
 using std::pow;
 using stan::io::dump;
@@ -24016,13 +23642,13 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"a8\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"a7\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"a6\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"a5\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"a4\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"a3\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"a2\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"a1\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y8\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"y7\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"y6\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"y5\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"y4\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"y3\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"y1\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"a8\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"a7\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"a6\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"a5\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"a4\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"a3\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"a2\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"a1\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y8\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"y7\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"y6\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"y5\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"y4\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"y3\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"y1\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
@@ -24118,42 +23744,8 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace reduce_sum_m3_model_namespace {
 
-
-inline void validate_positive_index(const char* var_name, const char* expr,
-                                    int val) {
-  if (val < 1) {
-    std::stringstream msg;
-    msg << "Found dimension size less than one in simplex declaration"
-        << "; variable=" << var_name << "; dimension size expression=" << expr
-        << "; expression value=" << val;
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-inline void validate_unit_vector_index(const char* var_name, const char* expr,
-                                       int val) {
-  if (val <= 1) {
-    std::stringstream msg;
-    if (val == 1) {
-      msg << "Found dimension size one in unit vector declaration."
-          << " One-dimensional unit vector is discrete"
-          << " but the target distribution must be continuous."
-          << " variable=" << var_name << "; dimension size expression=" << expr;
-    } else {
-      msg << "Found dimension size less than one in unit vector declaration"
-          << "; variable=" << var_name << "; dimension size expression=" << expr
-          << "; expression value=" << val;
-    }
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-
 using std::istream;
 using std::string;
-using std::stringstream;
 using std::vector;
 using std::pow;
 using stan::io::dump;
@@ -28306,13 +27898,13 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"y1\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"y3\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"y4\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"y5\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"y6\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"y7\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"y8\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"y9\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y10\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"y11\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"y12\",\"type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "},\"block\":\"parameters\"},{\"name\":\"y17\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"parameters\"},{\"name\":\"t1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t1a\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t3\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t4\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t5\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t6\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t7\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t8\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t9\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t10\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t11\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t12\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg3\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg4\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg5\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg6\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg7\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg8\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg9\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg10\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg11\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg12\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tgs\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"y1\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"y2\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"y3\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"y4\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "}},\"block\":\"parameters\"},{\"name\":\"y5\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"y6\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"y7\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"y8\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "}}},\"block\":\"parameters\"},{\"name\":\"y9\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y10\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"y11\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"y12\",\"type\":{\"name\":\"matrix\",\"rows\":" << N << ",\"cols\":" << N << "},\"block\":\"parameters\"},{\"name\":\"y17\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"parameters\"},{\"name\":\"t1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t1a\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t3\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t4\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t5\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t6\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t7\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t8\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t9\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t10\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t11\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"t12\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg3\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg4\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg5\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg6\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg7\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg8\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg9\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg10\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg11\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tg12\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tgs\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
@@ -28408,42 +28000,8 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace single_argument_lpmf_model_namespace {
 
-
-inline void validate_positive_index(const char* var_name, const char* expr,
-                                    int val) {
-  if (val < 1) {
-    std::stringstream msg;
-    msg << "Found dimension size less than one in simplex declaration"
-        << "; variable=" << var_name << "; dimension size expression=" << expr
-        << "; expression value=" << val;
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-inline void validate_unit_vector_index(const char* var_name, const char* expr,
-                                       int val) {
-  if (val <= 1) {
-    std::stringstream msg;
-    if (val == 1) {
-      msg << "Found dimension size one in unit vector declaration."
-          << " One-dimensional unit vector is discrete"
-          << " but the target distribution must be continuous."
-          << " variable=" << var_name << "; dimension size expression=" << expr;
-    } else {
-      msg << "Found dimension size less than one in unit vector declaration"
-          << "; variable=" << var_name << "; dimension size expression=" << expr
-          << "; expression value=" << val;
-    }
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-
 using std::istream;
 using std::string;
-using std::stringstream;
 using std::vector;
 using std::pow;
 using stan::io::dump;
@@ -28822,13 +28380,13 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
@@ -28925,42 +28483,8 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace tilde_block_model_namespace {
 
-
-inline void validate_positive_index(const char* var_name, const char* expr,
-                                    int val) {
-  if (val < 1) {
-    std::stringstream msg;
-    msg << "Found dimension size less than one in simplex declaration"
-        << "; variable=" << var_name << "; dimension size expression=" << expr
-        << "; expression value=" << val;
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-inline void validate_unit_vector_index(const char* var_name, const char* expr,
-                                       int val) {
-  if (val <= 1) {
-    std::stringstream msg;
-    if (val == 1) {
-      msg << "Found dimension size one in unit vector declaration."
-          << " One-dimensional unit vector is discrete"
-          << " but the target distribution must be continuous."
-          << " variable=" << var_name << "; dimension size expression=" << expr;
-    } else {
-      msg << "Found dimension size less than one in unit vector declaration"
-          << "; variable=" << var_name << "; dimension size expression=" << expr
-          << "; expression value=" << val;
-    }
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-
 using std::istream;
 using std::string;
-using std::stringstream;
 using std::vector;
 using std::pow;
 using stan::io::dump;
@@ -29232,13 +28756,13 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
@@ -29334,42 +28858,8 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace transform_model_namespace {
 
-
-inline void validate_positive_index(const char* var_name, const char* expr,
-                                    int val) {
-  if (val < 1) {
-    std::stringstream msg;
-    msg << "Found dimension size less than one in simplex declaration"
-        << "; variable=" << var_name << "; dimension size expression=" << expr
-        << "; expression value=" << val;
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-inline void validate_unit_vector_index(const char* var_name, const char* expr,
-                                       int val) {
-  if (val <= 1) {
-    std::stringstream msg;
-    if (val == 1) {
-      msg << "Found dimension size one in unit vector declaration."
-          << " One-dimensional unit vector is discrete"
-          << " but the target distribution must be continuous."
-          << " variable=" << var_name << "; dimension size expression=" << expr;
-    } else {
-      msg << "Found dimension size less than one in unit vector declaration"
-          << "; variable=" << var_name << "; dimension size expression=" << expr
-          << "; expression value=" << val;
-    }
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-
 using std::istream;
 using std::string;
-using std::stringstream;
 using std::vector;
 using std::pow;
 using stan::io::dump;
@@ -33032,13 +32522,13 @@ class transform_model final : public model_base_crtp<transform_model> {
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"p_1\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_2\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_3\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_4\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_5\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_6\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_7\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_8\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_9\",\"type\":{\"name\":\"array\",\"length\":" << m << ",\"element_type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"p_10\",\"type\":{\"name\":\"array\",\"length\":" << n << ",\"element_type\":{\"name\":\"array\",\"length\":" << m << ",\"element_type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"parameters\"},{\"name\":\"pv_1\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"pv_2\",\"type\":{\"name\":\"array\",\"length\":" << m << ",\"element_type\":{\"name\":\"vector\",\"length\":" << k << "}},\"block\":\"parameters\"},{\"name\":\"pv_3\",\"type\":{\"name\":\"array\",\"length\":" << n << ",\"element_type\":{\"name\":\"array\",\"length\":" << m << ",\"element_type\":{\"name\":\"vector\",\"length\":" << k << "}}},\"block\":\"parameters\"},{\"name\":\"pr_1\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"pr_2\",\"type\":{\"name\":\"array\",\"length\":" << m << ",\"element_type\":{\"name\":\"vector\",\"length\":" << k << "}},\"block\":\"parameters\"},{\"name\":\"pr_3\",\"type\":{\"name\":\"array\",\"length\":" << n << ",\"element_type\":{\"name\":\"array\",\"length\":" << m << ",\"element_type\":{\"name\":\"vector\",\"length\":" << k << "}}},\"block\":\"parameters\"},{\"name\":\"pm_1\",\"type\":{\"name\":\"matrix\",\"rows\":" << m << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"pm_2\",\"type\":{\"name\":\"array\",\"length\":" << n << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << m << ",\"cols\":" << k << "}},\"block\":\"parameters\"},{\"name\":\"tp_1\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_2\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_4\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_5\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_6\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_7\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_8\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_9\",\"type\":{\"name\":\"array\",\"length\":" << m << ",\"element_type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_10\",\"type\":{\"name\":\"array\",\"length\":" << n << ",\"element_type\":{\"name\":\"array\",\"length\":" << m << ",\"element_type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tpv_1\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"transformed_parameters\"},{\"name\":\"tpv_2\",\"type\":{\"name\":\"array\",\"length\":" << m << ",\"element_type\":{\"name\":\"vector\",\"length\":" << k << "}},\"block\":\"transformed_parameters\"},{\"name\":\"tpv_3\",\"type\":{\"name\":\"array\",\"length\":" << n << ",\"element_type\":{\"name\":\"array\",\"length\":" << m << ",\"element_type\":{\"name\":\"vector\",\"length\":" << k << "}}},\"block\":\"transformed_parameters\"},{\"name\":\"tpr_1\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"transformed_parameters\"},{\"name\":\"tpr_2\",\"type\":{\"name\":\"array\",\"length\":" << m << ",\"element_type\":{\"name\":\"vector\",\"length\":" << k << "}},\"block\":\"transformed_parameters\"},{\"name\":\"tpr_3\",\"type\":{\"name\":\"array\",\"length\":" << n << ",\"element_type\":{\"name\":\"array\",\"length\":" << m << ",\"element_type\":{\"name\":\"vector\",\"length\":" << k << "}}},\"block\":\"transformed_parameters\"},{\"name\":\"tpm_1\",\"type\":{\"name\":\"matrix\",\"rows\":" << m << ",\"cols\":" << k << "},\"block\":\"transformed_parameters\"},{\"name\":\"tpm_2\",\"type\":{\"name\":\"array\",\"length\":" << n << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << m << ",\"cols\":" << k << "}},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"p_1\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_2\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_3\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_4\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_5\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_6\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_7\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_8\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_9\",\"type\":{\"name\":\"array\",\"length\":" << m << ",\"element_type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"parameters\"},{\"name\":\"p_10\",\"type\":{\"name\":\"array\",\"length\":" << n << ",\"element_type\":{\"name\":\"array\",\"length\":" << m << ",\"element_type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"parameters\"},{\"name\":\"pv_1\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"pv_2\",\"type\":{\"name\":\"array\",\"length\":" << m << ",\"element_type\":{\"name\":\"vector\",\"length\":" << k << "}},\"block\":\"parameters\"},{\"name\":\"pv_3\",\"type\":{\"name\":\"array\",\"length\":" << n << ",\"element_type\":{\"name\":\"array\",\"length\":" << m << ",\"element_type\":{\"name\":\"vector\",\"length\":" << k << "}}},\"block\":\"parameters\"},{\"name\":\"pr_1\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"parameters\"},{\"name\":\"pr_2\",\"type\":{\"name\":\"array\",\"length\":" << m << ",\"element_type\":{\"name\":\"vector\",\"length\":" << k << "}},\"block\":\"parameters\"},{\"name\":\"pr_3\",\"type\":{\"name\":\"array\",\"length\":" << n << ",\"element_type\":{\"name\":\"array\",\"length\":" << m << ",\"element_type\":{\"name\":\"vector\",\"length\":" << k << "}}},\"block\":\"parameters\"},{\"name\":\"pm_1\",\"type\":{\"name\":\"matrix\",\"rows\":" << m << ",\"cols\":" << k << "},\"block\":\"parameters\"},{\"name\":\"pm_2\",\"type\":{\"name\":\"array\",\"length\":" << n << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << m << ",\"cols\":" << k << "}},\"block\":\"parameters\"},{\"name\":\"tp_1\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_2\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_3\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_4\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_5\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_6\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_7\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_8\",\"type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_9\",\"type\":{\"name\":\"array\",\"length\":" << m << ",\"element_type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_10\",\"type\":{\"name\":\"array\",\"length\":" << n << ",\"element_type\":{\"name\":\"array\",\"length\":" << m << ",\"element_type\":{\"name\":\"array\",\"length\":" << k << ",\"element_type\":{\"name\":\"real\"}}}},\"block\":\"transformed_parameters\"},{\"name\":\"tpv_1\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"transformed_parameters\"},{\"name\":\"tpv_2\",\"type\":{\"name\":\"array\",\"length\":" << m << ",\"element_type\":{\"name\":\"vector\",\"length\":" << k << "}},\"block\":\"transformed_parameters\"},{\"name\":\"tpv_3\",\"type\":{\"name\":\"array\",\"length\":" << n << ",\"element_type\":{\"name\":\"array\",\"length\":" << m << ",\"element_type\":{\"name\":\"vector\",\"length\":" << k << "}}},\"block\":\"transformed_parameters\"},{\"name\":\"tpr_1\",\"type\":{\"name\":\"vector\",\"length\":" << k << "},\"block\":\"transformed_parameters\"},{\"name\":\"tpr_2\",\"type\":{\"name\":\"array\",\"length\":" << m << ",\"element_type\":{\"name\":\"vector\",\"length\":" << k << "}},\"block\":\"transformed_parameters\"},{\"name\":\"tpr_3\",\"type\":{\"name\":\"array\",\"length\":" << n << ",\"element_type\":{\"name\":\"array\",\"length\":" << m << ",\"element_type\":{\"name\":\"vector\",\"length\":" << k << "}}},\"block\":\"transformed_parameters\"},{\"name\":\"tpm_1\",\"type\":{\"name\":\"matrix\",\"rows\":" << m << ",\"cols\":" << k << "},\"block\":\"transformed_parameters\"},{\"name\":\"tpm_2\",\"type\":{\"name\":\"array\",\"length\":" << n << ",\"element_type\":{\"name\":\"matrix\",\"rows\":" << m << ",\"cols\":" << k << "}},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
@@ -33134,42 +32624,8 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace truncate_model_namespace {
 
-
-inline void validate_positive_index(const char* var_name, const char* expr,
-                                    int val) {
-  if (val < 1) {
-    std::stringstream msg;
-    msg << "Found dimension size less than one in simplex declaration"
-        << "; variable=" << var_name << "; dimension size expression=" << expr
-        << "; expression value=" << val;
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-inline void validate_unit_vector_index(const char* var_name, const char* expr,
-                                       int val) {
-  if (val <= 1) {
-    std::stringstream msg;
-    if (val == 1) {
-      msg << "Found dimension size one in unit vector declaration."
-          << " One-dimensional unit vector is discrete"
-          << " but the target distribution must be continuous."
-          << " variable=" << var_name << "; dimension size expression=" << expr;
-    } else {
-      msg << "Found dimension size less than one in unit vector declaration"
-          << "; variable=" << var_name << "; dimension size expression=" << expr
-          << "; expression value=" << val;
-    }
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-
 using std::istream;
 using std::string;
-using std::stringstream;
 using std::vector;
 using std::pow;
 using stan::io::dump;
@@ -33541,13 +32997,13 @@ class truncate_model final : public model_base_crtp<truncate_model> {
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"m\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"m\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
@@ -33643,42 +33099,8 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace udf_tilde_stmt_conflict_model_namespace {
 
-
-inline void validate_positive_index(const char* var_name, const char* expr,
-                                    int val) {
-  if (val < 1) {
-    std::stringstream msg;
-    msg << "Found dimension size less than one in simplex declaration"
-        << "; variable=" << var_name << "; dimension size expression=" << expr
-        << "; expression value=" << val;
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-inline void validate_unit_vector_index(const char* var_name, const char* expr,
-                                       int val) {
-  if (val <= 1) {
-    std::stringstream msg;
-    if (val == 1) {
-      msg << "Found dimension size one in unit vector declaration."
-          << " One-dimensional unit vector is discrete"
-          << " but the target distribution must be continuous."
-          << " variable=" << var_name << "; dimension size expression=" << expr;
-    } else {
-      msg << "Found dimension size less than one in unit vector declaration"
-          << "; variable=" << var_name << "; dimension size expression=" << expr
-          << "; expression value=" << val;
-    }
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-
 using std::istream;
 using std::string;
-using std::stringstream;
 using std::vector;
 using std::pow;
 using stan::io::dump;
@@ -33931,13 +33353,13 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
@@ -34034,42 +33456,8 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace user_constrain_model_namespace {
 
-
-inline void validate_positive_index(const char* var_name, const char* expr,
-                                    int val) {
-  if (val < 1) {
-    std::stringstream msg;
-    msg << "Found dimension size less than one in simplex declaration"
-        << "; variable=" << var_name << "; dimension size expression=" << expr
-        << "; expression value=" << val;
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-inline void validate_unit_vector_index(const char* var_name, const char* expr,
-                                       int val) {
-  if (val <= 1) {
-    std::stringstream msg;
-    if (val == 1) {
-      msg << "Found dimension size one in unit vector declaration."
-          << " One-dimensional unit vector is discrete"
-          << " but the target distribution must be continuous."
-          << " variable=" << var_name << "; dimension size expression=" << expr;
-    } else {
-      msg << "Found dimension size less than one in unit vector declaration"
-          << "; variable=" << var_name << "; dimension size expression=" << expr
-          << "; expression value=" << val;
-    }
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-
 using std::istream;
 using std::string;
-using std::stringstream;
 using std::vector;
 using std::pow;
 using stan::io::dump;
@@ -34339,13 +33727,13 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 

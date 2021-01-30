@@ -4,42 +4,8 @@
 #include <stan/model/model_header.hpp>
 namespace distributions_model_namespace {
 
-
-inline void validate_positive_index(const char* var_name, const char* expr,
-                                    int val) {
-  if (val < 1) {
-    std::stringstream msg;
-    msg << "Found dimension size less than one in simplex declaration"
-        << "; variable=" << var_name << "; dimension size expression=" << expr
-        << "; expression value=" << val;
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-inline void validate_unit_vector_index(const char* var_name, const char* expr,
-                                       int val) {
-  if (val <= 1) {
-    std::stringstream msg;
-    if (val == 1) {
-      msg << "Found dimension size one in unit vector declaration."
-          << " One-dimensional unit vector is discrete"
-          << " but the target distribution must be continuous."
-          << " variable=" << var_name << "; dimension size expression=" << expr;
-    } else {
-      msg << "Found dimension size less than one in unit vector declaration"
-          << "; variable=" << var_name << "; dimension size expression=" << expr
-          << "; expression value=" << val;
-    }
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-
 using std::istream;
 using std::string;
-using std::stringstream;
 using std::vector;
 using std::pow;
 using stan::io::dump;
@@ -6316,13 +6282,13 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_real_array\",\"type\":{\"name\":\"array\",\"length\":" << d_int << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << d_int << ",\"cols\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_row_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"transformed_param_real\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_real_array\",\"type\":{\"name\":\"array\",\"length\":" << d_int << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << d_int << ",\"cols\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_row_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"transformed_param_real\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
@@ -6418,42 +6384,8 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace restricted_model_namespace {
 
-
-inline void validate_positive_index(const char* var_name, const char* expr,
-                                    int val) {
-  if (val < 1) {
-    std::stringstream msg;
-    msg << "Found dimension size less than one in simplex declaration"
-        << "; variable=" << var_name << "; dimension size expression=" << expr
-        << "; expression value=" << val;
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-inline void validate_unit_vector_index(const char* var_name, const char* expr,
-                                       int val) {
-  if (val <= 1) {
-    std::stringstream msg;
-    if (val == 1) {
-      msg << "Found dimension size one in unit vector declaration."
-          << " One-dimensional unit vector is discrete"
-          << " but the target distribution must be continuous."
-          << " variable=" << var_name << "; dimension size expression=" << expr;
-    } else {
-      msg << "Found dimension size less than one in unit vector declaration"
-          << "; variable=" << var_name << "; dimension size expression=" << expr
-          << "; expression value=" << val;
-    }
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-
 using std::istream;
 using std::string;
-using std::stringstream;
 using std::vector;
 using std::pow;
 using stan::io::dump;
@@ -7128,13 +7060,13 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_real_array\",\"type\":{\"name\":\"array\",\"length\":" << d_int << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << d_int << ",\"cols\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_row_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"transformed_param_real\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_real_array\",\"type\":{\"name\":\"array\",\"length\":" << d_int << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << d_int << ",\"cols\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_row_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"transformed_param_real\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 

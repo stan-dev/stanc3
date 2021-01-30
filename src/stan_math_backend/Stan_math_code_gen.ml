@@ -680,7 +680,7 @@ let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
  @param outvars The parameters to gather the sizes for.
  *)
 let pp_outvar_metadata ppf (method_name, outvars) =
-  let intro = ["stringstream s__;"] in
+  let intro = ["std::stringstream s__;"] in
   let outro = ["return s__.str();"] in
   let json_str = Cpp_Json.out_var_interpolated_json_str outvars in
   let ppbody ppf = pf ppf "s__ << %s;" json_str in
@@ -809,7 +809,6 @@ let usings =
   {|
 using std::istream;
 using std::string;
-using std::stringstream;
 using std::vector;
 using std::pow;
 using stan::io::dump;
@@ -826,44 +825,6 @@ using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; |}
-
-(** Functions needed in the model class not defined yet in stan math.
- FIXME: Move these to the Stan repo when these repos are joined.
-*)
-let custom_functions =
-  {|
-
-inline void validate_positive_index(const char* var_name, const char* expr,
-                                    int val) {
-  if (val < 1) {
-    std::stringstream msg;
-    msg << "Found dimension size less than one in simplex declaration"
-        << "; variable=" << var_name << "; dimension size expression=" << expr
-        << "; expression value=" << val;
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-inline void validate_unit_vector_index(const char* var_name, const char* expr,
-                                       int val) {
-  if (val <= 1) {
-    std::stringstream msg;
-    if (val == 1) {
-      msg << "Found dimension size one in unit vector declaration."
-          << " One-dimensional unit vector is discrete"
-          << " but the target distribution must be continuous."
-          << " variable=" << var_name << "; dimension size expression=" << expr;
-    } else {
-      msg << "Found dimension size less than one in unit vector declaration"
-          << "; variable=" << var_name << "; dimension size expression=" << expr
-          << "; expression value=" << val;
-    }
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-|}
 
 (** Create the model's namespace. *)
 let namespace Program.({prog_name; _}) = prog_name ^ "_namespace"
@@ -911,8 +872,8 @@ let pp_prog ppf (p : Program.Typed.t) =
       (is_fun_used_with_variadic_fn Stan_math_signatures.is_reduce_sum_fn p)
     |> Set.elements |> String.concat ~sep:"\n"
   in
-  pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %s@ %a@ %s@ %a@ %a@ }@ @]" version
-    includes (namespace p) custom_functions usings Locations.pp_globals s
+  pf ppf "@[<v>@ %s@ %s@ namespace %s {@ %s@ %a@ %s@ %a@ %a@ }@ @]" version
+    includes (namespace p) usings Locations.pp_globals s
     reduce_sum_struct_decls
     (list ~sep:cut pp_fun_def_with_variadic_fn_list)
     p.functions_block
