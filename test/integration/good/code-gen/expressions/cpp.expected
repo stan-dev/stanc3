@@ -20,17 +20,18 @@ using namespace stan::math;
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'simple_function.stan', line 13, column 4 to column 10)",
-                                                      " (in 'simple_function.stan', line 14, column 11 to column 12)",
-                                                      " (in 'simple_function.stan', line 14, column 13 to column 14)",
-                                                      " (in 'simple_function.stan', line 14, column 4 to column 18)",
-                                                      " (in 'simple_function.stan', line 3, column 7 to column 18)",
-                                                      " (in 'simple_function.stan', line 2, column 73 to line 4, column 5)",
-                                                      " (in 'simple_function.stan', line 6, column 7 to column 16)",
-                                                      " (in 'simple_function.stan', line 5, column 54 to line 7, column 5)",
-                                                      " (in 'simple_function.stan', line 9, column 7 to column 16)",
-                                                      " (in 'simple_function.stan', line 8, column 36 to line 10, column 5)"};
+static const std::vector<string> locations_array__ = ;
+{" (found before start of program)",
+ " (in 'simple_function.stan', line 13, column 4 to column 10)",
+ " (in 'simple_function.stan', line 14, column 11 to column 12)",
+ " (in 'simple_function.stan', line 14, column 13 to column 14)",
+ " (in 'simple_function.stan', line 14, column 4 to column 18)",
+ " (in 'simple_function.stan', line 3, column 7 to column 18)",
+ " (in 'simple_function.stan', line 2, column 73 to line 4, column 5)",
+ " (in 'simple_function.stan', line 6, column 7 to column 16)",
+ " (in 'simple_function.stan', line 5, column 54 to line 7, column 5)",
+ " (in 'simple_function.stan', line 9, column 7 to column 16)",
+ " (in 'simple_function.stan', line 8, column 36 to line 10, column 5)"};
 
 
 template <typename T0__, typename T2__, typename T3__, typename T4__,

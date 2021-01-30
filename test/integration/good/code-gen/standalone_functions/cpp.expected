@@ -20,27 +20,28 @@ using namespace stan::math;
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'basic.stan', line 3, column 8 to column 28)",
-                                                      " (in 'basic.stan', line 2, column 30 to line 4, column 5)",
-                                                      " (in 'basic.stan', line 8, column 2 to column 16)",
-                                                      " (in 'basic.stan', line 7, column 1 to line 9, column 2)",
-                                                      " (in 'basic.stan', line 13, column 2 to column 16)",
-                                                      " (in 'basic.stan', line 12, column 1 to line 14, column 2)",
-                                                      " (in 'basic.stan', line 18, column 9 to column 24)",
-                                                      " (in 'basic.stan', line 18, column 2 to column 43)",
-                                                      " (in 'basic.stan', line 19, column 2 to column 16)",
-                                                      " (in 'basic.stan', line 17, column 1 to line 20, column 2)",
-                                                      " (in 'basic.stan', line 23, column 2 to column 13)",
-                                                      " (in 'basic.stan', line 22, column 43 to line 24, column 2)",
-                                                      " (in 'basic.stan', line 27, column 8 to column 25)",
-                                                      " (in 'basic.stan', line 26, column 26 to line 28, column 5)",
-                                                      " (in 'basic.stan', line 32, column 5 to column 22)",
-                                                      " (in 'basic.stan', line 31, column 22 to line 33, column 2)",
-                                                      " (in 'basic.stan', line 36, column 2 to column 26)",
-                                                      " (in 'basic.stan', line 35, column 23 to line 37, column 2)",
-                                                      " (in 'basic.stan', line 40, column 2 to column 31)",
-                                                      " (in 'basic.stan', line 39, column 32 to line 41, column 2)"};
+static const std::vector<string> locations_array__ = ;
+{" (found before start of program)",
+ " (in 'basic.stan', line 3, column 8 to column 28)",
+ " (in 'basic.stan', line 2, column 30 to line 4, column 5)",
+ " (in 'basic.stan', line 8, column 2 to column 16)",
+ " (in 'basic.stan', line 7, column 1 to line 9, column 2)",
+ " (in 'basic.stan', line 13, column 2 to column 16)",
+ " (in 'basic.stan', line 12, column 1 to line 14, column 2)",
+ " (in 'basic.stan', line 18, column 9 to column 24)",
+ " (in 'basic.stan', line 18, column 2 to column 43)",
+ " (in 'basic.stan', line 19, column 2 to column 16)",
+ " (in 'basic.stan', line 17, column 1 to line 20, column 2)",
+ " (in 'basic.stan', line 23, column 2 to column 13)",
+ " (in 'basic.stan', line 22, column 43 to line 24, column 2)",
+ " (in 'basic.stan', line 27, column 8 to column 25)",
+ " (in 'basic.stan', line 26, column 26 to line 28, column 5)",
+ " (in 'basic.stan', line 32, column 5 to column 22)",
+ " (in 'basic.stan', line 31, column 22 to line 33, column 2)",
+ " (in 'basic.stan', line 36, column 2 to column 26)",
+ " (in 'basic.stan', line 35, column 23 to line 37, column 2)",
+ " (in 'basic.stan', line 40, column 2 to column 31)",
+ " (in 'basic.stan', line 39, column 32 to line 41, column 2)"};
 
 
 template <typename T0__>
@@ -408,17 +409,18 @@ using namespace stan::math;
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'integrate.stan', line 4, column 4 to column 27)",
-                                                      " (in 'integrate.stan', line 3, column 29 to line 5, column 3)",
-                                                      " (in 'integrate.stan', line 8, column 4 to column 18)",
-                                                      " (in 'integrate.stan', line 9, column 4 to column 22)",
-                                                      " (in 'integrate.stan', line 10, column 4 to column 47)",
-                                                      " (in 'integrate.stan', line 11, column 4 to column 18)",
-                                                      " (in 'integrate.stan', line 7, column 78 to line 12, column 3)",
-                                                      " (in 'integrate.stan', line 15, column 4 to column 15)",
-                                                      " (in 'integrate.stan', line 21, column 4 to column 142)",
-                                                      " (in 'integrate.stan', line 14, column 23 to line 22, column 3)"};
+static const std::vector<string> locations_array__ = ;
+{" (found before start of program)",
+ " (in 'integrate.stan', line 4, column 4 to column 27)",
+ " (in 'integrate.stan', line 3, column 29 to line 5, column 3)",
+ " (in 'integrate.stan', line 8, column 4 to column 18)",
+ " (in 'integrate.stan', line 9, column 4 to column 22)",
+ " (in 'integrate.stan', line 10, column 4 to column 47)",
+ " (in 'integrate.stan', line 11, column 4 to column 18)",
+ " (in 'integrate.stan', line 7, column 78 to line 12, column 3)",
+ " (in 'integrate.stan', line 15, column 4 to column 15)",
+ " (in 'integrate.stan', line 21, column 4 to column 142)",
+ " (in 'integrate.stan', line 14, column 23 to line 22, column 3)"};
 
 
 template <typename T0__>
