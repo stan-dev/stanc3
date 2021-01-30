@@ -4,12 +4,7 @@
 #include <stan/model/model_header.hpp>
 namespace _8_schools_ncp_model_namespace {
 
-using std::istream;
-using std::string;
-using std::vector;
-using std::pow;
 using stan::io::dump;
-using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
 using stan::model::cons_list;
@@ -21,7 +16,7 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
-using stan::math::pow; 
+
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
@@ -504,12 +499,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace _8start_with_number_model_namespace {
 
-using std::istream;
-using std::string;
-using std::vector;
-using std::pow;
 using stan::io::dump;
-using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
 using stan::model::cons_list;
@@ -521,7 +511,7 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
-using stan::math::pow; 
+
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
@@ -834,12 +824,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace eight_schools_ncp_model_namespace {
 
-using std::istream;
-using std::string;
-using std::vector;
-using std::pow;
 using stan::io::dump;
-using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
 using stan::model::cons_list;
@@ -851,7 +836,7 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
-using stan::math::pow; 
+
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
@@ -1335,12 +1320,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace mother_model_namespace {
 
-using std::istream;
-using std::string;
-using std::vector;
-using std::pow;
 using stan::io::dump;
-using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
 using stan::model::cons_list;
@@ -1352,7 +1332,7 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
-using stan::math::pow; 
+
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
@@ -10794,12 +10774,7 @@ Warning: in 'mother.stan', line 187, column 15 to column 23: The no-argument fun
 #include <stan/model/model_header.hpp>
 namespace motherHOF_model_namespace {
 
-using std::istream;
-using std::string;
-using std::vector;
-using std::pow;
 using stan::io::dump;
-using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
 using stan::model::cons_list;
@@ -10811,7 +10786,7 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
-using stan::math::pow; 
+
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
@@ -12907,12 +12882,7 @@ https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 #include <stan/model/model_header.hpp>
 namespace new_integrate_interface_model_namespace {
 
-using std::istream;
-using std::string;
-using std::vector;
-using std::pow;
 using stan::io::dump;
-using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
 using stan::model::cons_list;
@@ -12924,7 +12894,7 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
-using stan::math::pow; 
+
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
@@ -17350,12 +17320,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace old_integrate_interface_model_namespace {
 
-using std::istream;
-using std::string;
-using std::vector;
-using std::pow;
 using stan::io::dump;
-using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
 using stan::model::cons_list;
@@ -17367,7 +17332,7 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
-using stan::math::pow; 
+
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
@@ -18184,12 +18149,7 @@ https://mc-stan.org/users/documentation/case-studies/convert_odes.html
 #include <stan/model/model_header.hpp>
 namespace optimize_glm_model_namespace {
 
-using std::istream;
-using std::string;
-using std::vector;
-using std::pow;
 using stan::io::dump;
-using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
 using stan::model::cons_list;
@@ -18201,7 +18161,7 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
-using stan::math::pow; 
+
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
@@ -19884,12 +19844,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace param_constraint_model_namespace {
 
-using std::istream;
-using std::string;
-using std::vector;
-using std::pow;
 using stan::io::dump;
-using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
 using stan::model::cons_list;
@@ -19901,7 +19856,7 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
-using stan::math::pow; 
+
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
@@ -20422,12 +20377,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace reduce_sum_m1_model_namespace {
 
-using std::istream;
-using std::string;
-using std::vector;
-using std::pow;
 using stan::io::dump;
-using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
 using stan::model::cons_list;
@@ -20439,7 +20389,7 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
-using stan::math::pow; 
+
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
@@ -21027,12 +20977,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace reduce_sum_m2_model_namespace {
 
-using std::istream;
-using std::string;
-using std::vector;
-using std::pow;
 using stan::io::dump;
-using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
 using stan::model::cons_list;
@@ -21044,7 +20989,7 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
-using stan::math::pow; 
+
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
@@ -23744,12 +23689,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace reduce_sum_m3_model_namespace {
 
-using std::istream;
-using std::string;
-using std::vector;
-using std::pow;
 using stan::io::dump;
-using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
 using stan::model::cons_list;
@@ -23761,7 +23701,7 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
-using stan::math::pow; 
+
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
@@ -28000,12 +27940,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace single_argument_lpmf_model_namespace {
 
-using std::istream;
-using std::string;
-using std::vector;
-using std::pow;
 using stan::io::dump;
-using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
 using stan::model::cons_list;
@@ -28017,7 +27952,7 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
-using stan::math::pow; 
+
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
@@ -28483,12 +28418,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace tilde_block_model_namespace {
 
-using std::istream;
-using std::string;
-using std::vector;
-using std::pow;
 using stan::io::dump;
-using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
 using stan::model::cons_list;
@@ -28500,7 +28430,7 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
-using stan::math::pow; 
+
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
@@ -28858,12 +28788,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace transform_model_namespace {
 
-using std::istream;
-using std::string;
-using std::vector;
-using std::pow;
 using stan::io::dump;
-using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
 using stan::model::cons_list;
@@ -28875,7 +28800,7 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
-using stan::math::pow; 
+
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
@@ -32624,12 +32549,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace truncate_model_namespace {
 
-using std::istream;
-using std::string;
-using std::vector;
-using std::pow;
 using stan::io::dump;
-using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
 using stan::model::cons_list;
@@ -32641,7 +32561,7 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
-using stan::math::pow; 
+
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
@@ -33099,12 +33019,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace udf_tilde_stmt_conflict_model_namespace {
 
-using std::istream;
-using std::string;
-using std::vector;
-using std::pow;
 using stan::io::dump;
-using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
 using stan::model::cons_list;
@@ -33116,7 +33031,7 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
-using stan::math::pow; 
+
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
@@ -33456,12 +33371,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace user_constrain_model_namespace {
 
-using std::istream;
-using std::string;
-using std::vector;
-using std::pow;
 using stan::io::dump;
-using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
 using stan::model::cons_list;
@@ -33473,7 +33383,7 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
-using stan::math::pow; 
+
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;

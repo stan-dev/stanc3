@@ -807,12 +807,7 @@ let pp_model ppf ({Program.prog_name; _} as p) =
 (** The C++ aliases needed for the model class*)
 let usings =
   {|
-using std::istream;
-using std::string;
-using std::vector;
-using std::pow;
 using stan::io::dump;
-using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
 using stan::model::cons_list;
@@ -824,7 +819,7 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
-using stan::math::pow; |}
+|}
 
 (** Create the model's namespace. *)
 let namespace Program.({prog_name; _}) = prog_name ^ "_namespace"

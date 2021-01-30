@@ -4,12 +4,7 @@
 #include <stan/model/model_header.hpp>
 namespace distributions_model_namespace {
 
-using std::istream;
-using std::string;
-using std::vector;
-using std::pow;
 using stan::io::dump;
-using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
 using stan::model::cons_list;
@@ -21,7 +16,7 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
-using stan::math::pow; 
+
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
@@ -6384,12 +6379,7 @@ stan::math::profile_map& get_stan_profile_data() {
 #include <stan/model/model_header.hpp>
 namespace restricted_model_namespace {
 
-using std::istream;
-using std::string;
-using std::vector;
-using std::pow;
 using stan::io::dump;
-using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
 using stan::model::cons_list;
@@ -6401,7 +6391,7 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
-using stan::math::pow; 
+
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
