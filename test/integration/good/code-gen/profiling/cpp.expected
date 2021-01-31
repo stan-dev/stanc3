@@ -20,7 +20,7 @@ using namespace stan::math;
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = ;
+static const std::vector<std::string> locations_array__ = 
 {" (found before start of program)",
  " (in 'simple_function.stan', line 14, column 2 to column 20)",
  " (in 'simple_function.stan', line 15, column 2 to column 22)",
@@ -77,12 +77,11 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
-    (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "simple_function_model_namespace::simple_function_model";
-    (void) function__;  // suppress unused var warning
+    (void) base_rng__;  // suppress unused var warning 
+    static const char* function__ = simple_function_model_namespace::simple_function_model;
+    (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-    
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
@@ -166,13 +165,13 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    static const char* function__ = "simple_function_model_namespace::log_prob";
-(void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = simple_function_model_namespace::log_prob;
+    (void) function__;  // suppress unused var warning 
+    
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       local_scalar_t__ rho;
@@ -292,17 +291,15 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    static const char* function__ = "simple_function_model_namespace::write_array";
-(void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = simple_function_model_namespace::write_array;
+    (void) function__;  // suppress unused var warning 
+    
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       double rho;

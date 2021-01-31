@@ -33,16 +33,20 @@ let stanc_args_to_print =
   |> List.filter ~f:sans_model_and_hpp_paths
   |> String.concat ~sep:" "
 
-let pp_unused = fmt "(void) %s;  // suppress unused var warning@ "
+let pp_unused = fmt "(void) %s;  // suppress unused var warning "
 
 (** Print name of model function.
   @param prog_name Name of the Stan program.
   @param fname Name of the function.
  *)
 let pp_function__ ppf (prog_name, fname) =
-  pf ppf "static const char* function__ = %S;@ "
-    (strf "%s_namespace::%s" prog_name fname) ;
-  pp_unused ppf "function__"
+  pf ppf
+    {|
+    static const char* function__ = %S;
+    %s
+    |}
+    (strf "%s_namespace::%s" prog_name fname)
+    (strf "%a" pp_unused "function__")
 
 (** Print the body of exception handling for functions *)
 let pp_located ppf _ =
@@ -505,7 +509,6 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
     [ "using local_scalar_t__ = double;"; "vars__.resize(0);"
     ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
     ; strf "%a" pp_function__ (prog_name, "write_array")
-    ; strf "%a" pp_unused "function__"
     ; "double lp__ = 0.0;"
     ; "(void) lp__;  // dummy to suppress unused var warning"
     ; "stan::math::accumulator<double> lp_accum__;"

@@ -452,8 +452,6 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     static const char* function__ = "ad_level_failing_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
 
-    (void) function__;  // suppress unused var warning
-
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
@@ -2516,8 +2514,6 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
     static const char* function__ = "copy_fail_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
 
-    (void) function__;  // suppress unused var warning
-
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
@@ -4303,8 +4299,6 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     static const char* function__ = "dce_fail_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
 
-    (void) function__;  // suppress unused var warning
-
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
@@ -5261,8 +5255,6 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
     static const char* function__ = "expr_prop_experiment_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
 
-    (void) function__;  // suppress unused var warning
-
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
@@ -5601,8 +5593,6 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "expr_prop_experiment2_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
 
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
@@ -6065,8 +6055,6 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "expr_prop_fail_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
 
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
@@ -6636,8 +6624,6 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "expr_prop_fail2_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
 
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
@@ -7705,8 +7691,6 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "expr_prop_fail3_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
 
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
@@ -8867,8 +8851,6 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "expr_prop_fail4_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
 
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
@@ -10898,8 +10880,6 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "expr_prop_fail5_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
 
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
@@ -14594,8 +14574,6 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     static const char* function__ = "expr_prop_fail6_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
 
-    (void) function__;  // suppress unused var warning
-
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
@@ -16901,8 +16879,6 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     static const char* function__ = "expr_prop_fail7_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
 
-    (void) function__;  // suppress unused var warning
-
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
@@ -18034,8 +18010,6 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "expr_prop_fail8_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
 
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
@@ -20129,8 +20103,6 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "fails_test_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
 
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
@@ -23770,8 +23742,6 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     static const char* function__ = "inlining_fail2_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
 
-    (void) function__;  // suppress unused var warning
-
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
@@ -25367,8 +25337,6 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
     static const char* function__ = "lcm_experiment_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
 
-    (void) function__;  // suppress unused var warning
-
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
@@ -25697,8 +25665,6 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "lcm_experiment2_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
 
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
@@ -26058,8 +26024,6 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "lcm_fails_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
 
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
@@ -27772,8 +27736,6 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
     static const char* function__ = "lcm_fails2_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
 
-    (void) function__;  // suppress unused var warning
-
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
@@ -28915,8 +28877,6 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     static const char* function__ = "lupdf_inlining_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
 
-    (void) function__;  // suppress unused var warning
-
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
@@ -29716,8 +29676,6 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "off_dce_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
 
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
@@ -30672,8 +30630,6 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "off_small_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
 
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
@@ -32065,8 +32021,6 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     static const char* function__ = "optimizations_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
 
-    (void) function__;  // suppress unused var warning
-
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
@@ -33080,8 +33034,6 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     static const char* function__ = "partial_eval_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
 
-    (void) function__;  // suppress unused var warning
-
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
@@ -33897,8 +33849,6 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "stalled1_failure_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
 
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
@@ -34803,8 +34753,6 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     static const char* function__ = "unroll_limit_model_namespace::write_array";
 (void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
 
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning

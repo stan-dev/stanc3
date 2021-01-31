@@ -20,7 +20,7 @@ using namespace stan::math;
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = ;
+static const std::vector<std::string> locations_array__ = 
 {" (found before start of program)",
  " (in '8_schools_ncp.stan', line 8, column 2 to column 10)",
  " (in '8_schools_ncp.stan', line 9, column 2 to column 20)",
@@ -63,12 +63,11 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
-    (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "_8_schools_ncp_model_namespace::_8_schools_ncp_model";
-    (void) function__;  // suppress unused var warning
+    (void) base_rng__;  // suppress unused var warning 
+    static const char* function__ = _8_schools_ncp_model_namespace::_8_schools_ncp_model;
+    (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-    
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
@@ -139,13 +138,13 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    static const char* function__ = "_8_schools_ncp_model_namespace::log_prob";
-(void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = _8_schools_ncp_model_namespace::log_prob;
+    (void) function__;  // suppress unused var warning 
+    
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       local_scalar_t__ mu;
@@ -207,17 +206,15 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    static const char* function__ = "_8_schools_ncp_model_namespace::write_array";
-(void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = _8_schools_ncp_model_namespace::write_array;
+    (void) function__;  // suppress unused var warning 
+    
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       double mu;
@@ -516,7 +513,7 @@ using namespace stan::math;
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = ;
+static const std::vector<std::string> locations_array__ = 
 {" (found before start of program)",
  " (in '8start_with_number.stan', line 6, column 3 to column 12)",
  " (in '8start_with_number.stan', line 3, column 2 to column 17)"};
@@ -544,12 +541,11 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
-    (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "_8start_with_number_model_namespace::_8start_with_number_model";
-    (void) function__;  // suppress unused var warning
+    (void) base_rng__;  // suppress unused var warning 
+    static const char* function__ = _8start_with_number_model_namespace::_8start_with_number_model;
+    (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-    
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
@@ -585,13 +581,13 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    static const char* function__ = "_8start_with_number_model_namespace::log_prob";
-(void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = _8start_with_number_model_namespace::log_prob;
+    (void) function__;  // suppress unused var warning 
+    
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       local_scalar_t__ bar;
@@ -617,17 +613,15 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    static const char* function__ = "_8start_with_number_model_namespace::write_array";
-(void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = _8start_with_number_model_namespace::write_array;
+    (void) function__;  // suppress unused var warning 
+    
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       double bar;
@@ -842,7 +836,7 @@ using namespace stan::math;
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = ;
+static const std::vector<std::string> locations_array__ = 
 {" (found before start of program)",
  " (in 'eight_schools_ncp.stan', line 8, column 2 to column 10)",
  " (in 'eight_schools_ncp.stan', line 9, column 2 to column 20)",
@@ -885,12 +879,11 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
-    (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "eight_schools_ncp_model_namespace::eight_schools_ncp_model";
-    (void) function__;  // suppress unused var warning
+    (void) base_rng__;  // suppress unused var warning 
+    static const char* function__ = eight_schools_ncp_model_namespace::eight_schools_ncp_model;
+    (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-    
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
@@ -961,13 +954,13 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    static const char* function__ = "eight_schools_ncp_model_namespace::log_prob";
-(void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = eight_schools_ncp_model_namespace::log_prob;
+    (void) function__;  // suppress unused var warning 
+    
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       local_scalar_t__ mu;
@@ -1029,17 +1022,15 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    static const char* function__ = "eight_schools_ncp_model_namespace::write_array";
-(void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = eight_schools_ncp_model_namespace::write_array;
+    (void) function__;  // suppress unused var warning 
+    
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       double mu;
@@ -1339,7 +1330,7 @@ using namespace stan::math;
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = ;
+static const std::vector<std::string> locations_array__ = 
 {" (found before start of program)",
  " (in 'mother.stan', line 549, column 2 to column 14)",
  " (in 'mother.stan', line 550, column 2 to column 29)",
@@ -2127,8 +2118,7 @@ foo(const int& n, std::ostream* pstream__) {
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 582;
     if (logical_eq(n, 0)) {
@@ -2170,8 +2160,7 @@ sho(const T0__& t, const std::vector<T1__>& y,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     std::vector<local_scalar_t__> dydt;
     dydt = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
@@ -2211,8 +2200,7 @@ foo_bar0(std::ostream* pstream__) {
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 590;
     return 0.0;
@@ -2239,8 +2227,7 @@ foo_bar1(const T0__& x, std::ostream* pstream__) {
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 592;
     return 1.0;
@@ -2269,8 +2256,7 @@ foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) {
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 594;
     return 2.0;
@@ -2297,8 +2283,7 @@ stan::promote_args_t<T1__>
 foo_lpmf(const int& y, const T1__& lambda, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T1__>;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 596;
     return 1.0;
@@ -2326,8 +2311,7 @@ foo_lcdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 598;
     return 1.0;
@@ -2355,8 +2339,7 @@ foo_lccdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 600;
     return 1.0;
@@ -2386,8 +2369,7 @@ foo_rng(const T0__& mu, const T1__& sigma, RNG& base_rng__,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 602;
     return normal_rng(mu, sigma, base_rng__);
@@ -2417,8 +2399,7 @@ unit_normal_lp(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
                std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 604;
     lp_accum__.add(normal_log<false>(u, 0, 1));
@@ -2449,8 +2430,7 @@ foo_1(const int& a, std::ostream* pstream__) {
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 608;
     while (1) {
@@ -2696,8 +2676,7 @@ foo_2(const int& a, std::ostream* pstream__) {
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     std::vector<int> vs;
     vs = std::vector<int>(2, std::numeric_limits<int>::min());
@@ -2739,8 +2718,7 @@ foo_3(const T0__& t, const int& n, std::ostream* pstream__) {
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 695;
     return rep_array(t, n);
@@ -2768,8 +2746,7 @@ foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
        std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 697;
     return (x + get_lp(lp__, lp_accum__));
@@ -2799,8 +2776,7 @@ foo_4(const T0__& x, std::ostream* pstream__) {
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 699;
     std::stringstream errmsg_stream__;
@@ -2833,8 +2809,7 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     local_scalar_t__ abs_diff;
     abs_diff = DUMMY_VAR__;
@@ -2904,8 +2879,7 @@ foo_5(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 711;
     return (Eigen::Matrix<double,-1,1>(3) << 1, 2, 3).finished();
@@ -2943,8 +2917,7 @@ foo_five_args(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 713;
     return x1;
@@ -2983,8 +2956,7 @@ foo_five_args_lp(const T0__& x1, const T1__& x2, const T2__& x3,
           T3__,
           T4__, stan::promote_args_t<T5__>>;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 715;
     return x1;
@@ -3020,8 +2992,7 @@ covsqrt2corsqrt(const T0__& mat_arg__, const int& invert,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 717;
     validate_non_negative_index("o", "rows(mat)", rows(mat));
@@ -3087,8 +3058,7 @@ f0(const int& a1, const std::vector<int>& a2,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 725;
     if (pstream__) {
@@ -3147,8 +3117,7 @@ f1(const int& a1, const std::vector<int>& a2,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 727;
     return a1;
@@ -3204,8 +3173,7 @@ f2(const int& a1, const std::vector<int>& a2,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 729;
     return a2;
@@ -3261,8 +3229,7 @@ f3(const int& a1, const std::vector<int>& a2,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 731;
     return a3;
@@ -3320,8 +3287,7 @@ f4(const int& a1, const std::vector<int>& a2,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 733;
     return a4;
@@ -3381,8 +3347,7 @@ f5(const int& a1, const std::vector<int>& a2,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 735;
     return a5;
@@ -3442,8 +3407,7 @@ f6(const int& a1, const std::vector<int>& a2,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 737;
     return a6;
@@ -3503,8 +3467,7 @@ f7(const int& a1, const std::vector<int>& a2,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 739;
     return a7;
@@ -3564,8 +3527,7 @@ f8(const int& a1, const std::vector<int>& a2,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 741;
     return a8;
@@ -3625,8 +3587,7 @@ f9(const int& a1, const std::vector<int>& a2,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 743;
     return a9;
@@ -3686,8 +3647,7 @@ f10(const int& a1, const std::vector<int>& a2,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 745;
     return a10;
@@ -3747,8 +3707,7 @@ f11(const int& a1, const std::vector<int>& a2,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 747;
     return a11;
@@ -3808,8 +3767,7 @@ f12(const int& a1, const std::vector<int>& a2,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 749;
     return a12;
@@ -3848,8 +3806,7 @@ foo_6(std::ostream* pstream__) {
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     int a;
     a = std::numeric_limits<int>::min();
@@ -3892,8 +3849,7 @@ matfoo(std::ostream* pstream__) {
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 757;
     return stan::math::to_matrix(std::vector<Eigen::Matrix<double, 1, -1>>{
@@ -3923,8 +3879,7 @@ vecfoo(std::ostream* pstream__) {
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 759;
     return (Eigen::Matrix<double,-1,1>(10) << 1, 2, 3, 4, 5, 6, 7, 8, 9,
@@ -3952,8 +3907,7 @@ vecmufoo(const T0__& mu, std::ostream* pstream__) {
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     Eigen::Matrix<local_scalar_t__, -1, 1> l;
     l = Eigen::Matrix<local_scalar_t__, -1, 1>(10);
@@ -3988,8 +3942,7 @@ vecmubar(const T0__& mu, std::ostream* pstream__) {
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     Eigen::Matrix<local_scalar_t__, -1, 1> l;
     l = Eigen::Matrix<local_scalar_t__, -1, 1>(10);
@@ -4034,8 +3987,7 @@ algebra_system(const T0__& x_arg__, const T1__& y_arg__,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     Eigen::Matrix<local_scalar_t__, -1, 1> f_x;
     f_x = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
@@ -4081,8 +4033,7 @@ binomialf(const T0__& phi_arg__, const T1__& theta_arg__,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     Eigen::Matrix<local_scalar_t__, -1, 1> lpmf;
     lpmf = Eigen::Matrix<local_scalar_t__, -1, 1>(1);
@@ -4210,12 +4161,11 @@ class mother_model final : public model_base_crtp<mother_model> {
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
-    (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "mother_model_namespace::mother_model";
-    (void) function__;  // suppress unused var warning
+    (void) base_rng__;  // suppress unused var warning 
+    static const char* function__ = mother_model_namespace::mother_model;
+    (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-    
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
@@ -6411,13 +6361,13 @@ class mother_model final : public model_base_crtp<mother_model> {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    static const char* function__ = "mother_model_namespace::log_prob";
-(void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = mother_model_namespace::log_prob;
+    (void) function__;  // suppress unused var warning 
+    
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       local_scalar_t__ p_real;
@@ -7287,17 +7237,15 @@ class mother_model final : public model_base_crtp<mother_model> {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    static const char* function__ = "mother_model_namespace::write_array";
-(void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = mother_model_namespace::write_array;
+    (void) function__;  // suppress unused var warning 
+    
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       double p_real;
@@ -10794,7 +10742,7 @@ using namespace stan::math;
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = ;
+static const std::vector<std::string> locations_array__ = 
 {" (found before start of program)",
  " (in 'motherHOF.stan', line 52, column 2 to column 15)",
  " (in 'motherHOF.stan', line 53, column 2 to column 18)",
@@ -10965,8 +10913,7 @@ sho(const T0__& t, const std::vector<T1__>& y,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     std::vector<local_scalar_t__> dydt;
     dydt = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
@@ -11010,8 +10957,7 @@ integrand(const T0__& x, const T1__& xc, const std::vector<T2__>& theta,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 145;
     return 0.0;
@@ -11049,8 +10995,7 @@ foo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 147;
     return (Eigen::Matrix<double,-1,1>(3) << 1, 2, 3).finished();
@@ -11088,8 +11033,7 @@ goo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 149;
     return (Eigen::Matrix<double,-1,1>(3) << 4, 5, 6).finished();
@@ -11120,8 +11064,7 @@ map_rectfake(const T0__& x, std::ostream* pstream__) {
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 151;
     return (2 * x);
@@ -11156,8 +11099,7 @@ algebra_system(const T0__& x_arg__, const T1__& y_arg__,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     Eigen::Matrix<local_scalar_t__, -1, 1> f_x;
     f_x = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
@@ -11223,12 +11165,11 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
-    (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "motherHOF_model_namespace::motherHOF_model";
-    (void) function__;  // suppress unused var warning
+    (void) base_rng__;  // suppress unused var warning 
+    static const char* function__ = motherHOF_model_namespace::motherHOF_model;
+    (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-    
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
@@ -11443,13 +11384,13 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    static const char* function__ = "motherHOF_model_namespace::log_prob";
-(void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = motherHOF_model_namespace::log_prob;
+    (void) function__;  // suppress unused var warning 
+    
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       std::vector<local_scalar_t__> y0_p;
@@ -11787,17 +11728,15 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    static const char* function__ = "motherHOF_model_namespace::write_array";
-(void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = motherHOF_model_namespace::write_array;
+    (void) function__;  // suppress unused var warning 
+    
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       std::vector<double> y0_p;
@@ -12903,7 +12842,7 @@ using namespace stan::math;
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = ;
+static const std::vector<std::string> locations_array__ = 
 {" (found before start of program)",
  " (in 'new_integrate_interface.stan', line 31, column 2 to column 9)",
  " (in 'new_integrate_interface.stan', line 32, column 2 to column 13)",
@@ -13550,8 +13489,7 @@ f(const T0__& t, const T1__& z_arg__, const T2__& a, const T3__& b_arg__,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 628;
     return z;
@@ -13612,12 +13550,11 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
-    (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "new_integrate_interface_model_namespace::new_integrate_interface_model";
-    (void) function__;  // suppress unused var warning
+    (void) base_rng__;  // suppress unused var warning 
+    static const char* function__ = new_integrate_interface_model_namespace::new_integrate_interface_model;
+    (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-    
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
@@ -13770,13 +13707,13 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    static const char* function__ = "new_integrate_interface_model_namespace::log_prob";
-(void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = new_integrate_interface_model_namespace::log_prob;
+    (void) function__;  // suppress unused var warning 
+    
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       local_scalar_t__ r;
@@ -15416,17 +15353,15 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    static const char* function__ = "new_integrate_interface_model_namespace::write_array";
-(void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = new_integrate_interface_model_namespace::write_array;
+    (void) function__;  // suppress unused var warning 
+    
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       double r;
@@ -17342,7 +17277,7 @@ using namespace stan::math;
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = ;
+static const std::vector<std::string> locations_array__ = 
 {" (found before start of program)",
  " (in 'old_integrate_interface.stan', line 27, column 2 to column 24)",
  " (in 'old_integrate_interface.stan', line 28, column 2 to column 23)",
@@ -17390,8 +17325,7 @@ dz_dt(const T0__& t, const std::vector<T1__>& z,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     local_scalar_t__ u;
     u = DUMMY_VAR__;
@@ -17479,12 +17413,11 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
-    (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "old_integrate_interface_model_namespace::old_integrate_interface_model";
-    (void) function__;  // suppress unused var warning
+    (void) base_rng__;  // suppress unused var warning 
+    static const char* function__ = old_integrate_interface_model_namespace::old_integrate_interface_model;
+    (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-    
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
@@ -17582,13 +17515,13 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    static const char* function__ = "old_integrate_interface_model_namespace::log_prob";
-(void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = old_integrate_interface_model_namespace::log_prob;
+    (void) function__;  // suppress unused var warning 
+    
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       local_scalar_t__ alpha;
@@ -17746,17 +17679,15 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    static const char* function__ = "old_integrate_interface_model_namespace::write_array";
-(void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = old_integrate_interface_model_namespace::write_array;
+    (void) function__;  // suppress unused var warning 
+    
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       double alpha;
@@ -18172,7 +18103,7 @@ using namespace stan::math;
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = ;
+static const std::vector<std::string> locations_array__ = 
 {" (found before start of program)",
  " (in 'optimize_glm.stan', line 27, column 2 to column 20)",
  " (in 'optimize_glm.stan', line 28, column 2 to column 17)",
@@ -18432,12 +18363,11 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
-    (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "optimize_glm_model_namespace::optimize_glm_model";
-    (void) function__;  // suppress unused var warning
+    (void) base_rng__;  // suppress unused var warning 
+    static const char* function__ = optimize_glm_model_namespace::optimize_glm_model;
+    (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-    
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
@@ -18699,13 +18629,13 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    static const char* function__ = "optimize_glm_model_namespace::log_prob";
-(void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = optimize_glm_model_namespace::log_prob;
+    (void) function__;  // suppress unused var warning 
+    
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       Eigen::Matrix<local_scalar_t__, -1, 1> alpha_v;
@@ -19323,17 +19253,15 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    static const char* function__ = "optimize_glm_model_namespace::write_array";
-(void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = optimize_glm_model_namespace::write_array;
+    (void) function__;  // suppress unused var warning 
+    
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       Eigen::Matrix<double, -1, 1> alpha_v;
@@ -19868,7 +19796,7 @@ using namespace stan::math;
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = ;
+static const std::vector<std::string> locations_array__ = 
 {" (found before start of program)",
  " (in 'param-constraint.stan', line 7, column 2 to column 38)",
  " (in 'param-constraint.stan', line 8, column 2 to column 38)",
@@ -19901,12 +19829,11 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
-    (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "param_constraint_model_namespace::param_constraint_model";
-    (void) function__;  // suppress unused var warning
+    (void) base_rng__;  // suppress unused var warning 
+    static const char* function__ = param_constraint_model_namespace::param_constraint_model;
+    (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-    
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
@@ -19954,13 +19881,13 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    static const char* function__ = "param_constraint_model_namespace::log_prob";
-(void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = param_constraint_model_namespace::log_prob;
+    (void) function__;  // suppress unused var warning 
+    
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> L_Omega;
@@ -20038,17 +19965,15 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    static const char* function__ = "param_constraint_model_namespace::write_array";
-(void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = param_constraint_model_namespace::write_array;
+    (void) function__;  // suppress unused var warning 
+    
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       std::vector<Eigen::Matrix<double, -1, -1>> L_Omega;
@@ -20402,7 +20327,7 @@ using namespace stan::math;
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = ;
+static const std::vector<std::string> locations_array__ = 
 {" (found before start of program)",
  " (in 'reduce_sum_m1.stan', line 26, column 2 to column 13)",
  " (in 'reduce_sum_m1.stan', line 27, column 2 to column 13)",
@@ -20442,8 +20367,7 @@ g(const std::vector<T0__>& y_slice, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 16;
     if (logical_gt(size(y_slice), 1)) {
@@ -20491,8 +20415,7 @@ h(const std::vector<T0__>& y_slice, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 22;
     if (logical_gt(size(a), 1)) {
@@ -20543,8 +20466,7 @@ foo_lpdf(const std::vector<T0__>& y_slice, const int& start, const int& end,
          std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 24;
     return normal_lpdf<false>(y_slice, 0, 1);
@@ -20599,12 +20521,11 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
-    (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "reduce_sum_m1_model_namespace::reduce_sum_m1_model";
-    (void) function__;  // suppress unused var warning
+    (void) base_rng__;  // suppress unused var warning 
+    static const char* function__ = reduce_sum_m1_model_namespace::reduce_sum_m1_model;
+    (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-    
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
@@ -20646,13 +20567,13 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    static const char* function__ = "reduce_sum_m1_model_namespace::log_prob";
-(void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = reduce_sum_m1_model_namespace::log_prob;
+    (void) function__;  // suppress unused var warning 
+    
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       std::vector<local_scalar_t__> y1;
@@ -20709,17 +20630,15 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    static const char* function__ = "reduce_sum_m1_model_namespace::write_array";
-(void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = reduce_sum_m1_model_namespace::write_array;
+    (void) function__;  // suppress unused var warning 
+    
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       std::vector<double> y1;
@@ -21003,7 +20922,7 @@ using namespace stan::math;
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = ;
+static const std::vector<std::string> locations_array__ = 
 {" (found before start of program)",
  " (in 'reduce_sum_m2.stan', line 130, column 2 to column 24)",
  " (in 'reduce_sum_m2.stan', line 131, column 2 to column 25)",
@@ -21209,8 +21128,7 @@ g1(const std::vector<T0__>& y_slice, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 76;
     return normal_lpdf<false>(y_slice, 0, 1);
@@ -21251,8 +21169,7 @@ g2(const std::vector<Eigen::Matrix<T0__, -1, 1>>& y_slice, const int& start,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     local_scalar_t__ sum_lpdf;
     sum_lpdf = DUMMY_VAR__;
@@ -21302,8 +21219,7 @@ g3(const std::vector<Eigen::Matrix<T0__, 1, -1>>& y_slice, const int& start,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     local_scalar_t__ sum_lpdf;
     sum_lpdf = DUMMY_VAR__;
@@ -21353,8 +21269,7 @@ g4(const std::vector<Eigen::Matrix<T0__, -1, -1>>& y_slice, const int& start,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     local_scalar_t__ sum_lpdf;
     sum_lpdf = DUMMY_VAR__;
@@ -21405,8 +21320,7 @@ g5(const std::vector<std::vector<T0__>>& y_slice, const int& start,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     local_scalar_t__ sum_lpdf;
     sum_lpdf = DUMMY_VAR__;
@@ -21459,8 +21373,7 @@ g6(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>& y_slice,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     local_scalar_t__ sum_lpdf;
     sum_lpdf = DUMMY_VAR__;
@@ -21514,8 +21427,7 @@ g7(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>& y_slice,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     local_scalar_t__ sum_lpdf;
     sum_lpdf = DUMMY_VAR__;
@@ -21569,8 +21481,7 @@ g8(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>& y_slice,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     local_scalar_t__ sum_lpdf;
     sum_lpdf = DUMMY_VAR__;
@@ -21625,8 +21536,7 @@ h1(const std::vector<T0__>& y, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 128;
     return normal_lpdf<false>(
@@ -21673,8 +21583,7 @@ h2(const std::vector<T0__>& y, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     local_scalar_t__ sum_lpdf;
     sum_lpdf = DUMMY_VAR__;
@@ -21729,8 +21638,7 @@ h3(const std::vector<T0__>& y, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     local_scalar_t__ sum_lpdf;
     sum_lpdf = DUMMY_VAR__;
@@ -21785,8 +21693,7 @@ h4(const std::vector<T0__>& y, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     local_scalar_t__ sum_lpdf;
     sum_lpdf = DUMMY_VAR__;
@@ -21842,8 +21749,7 @@ h5(const std::vector<T0__>& y, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     local_scalar_t__ sum_lpdf;
     sum_lpdf = DUMMY_VAR__;
@@ -21900,8 +21806,7 @@ h6(const std::vector<T0__>& y, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     local_scalar_t__ sum_lpdf;
     sum_lpdf = DUMMY_VAR__;
@@ -21961,8 +21866,7 @@ h7(const std::vector<T0__>& y, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     local_scalar_t__ sum_lpdf;
     sum_lpdf = DUMMY_VAR__;
@@ -22022,8 +21926,7 @@ h8(const std::vector<T0__>& y, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     local_scalar_t__ sum_lpdf;
     sum_lpdf = DUMMY_VAR__;
@@ -22095,12 +21998,11 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
-    (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "reduce_sum_m2_model_namespace::reduce_sum_m2_model";
-    (void) function__;  // suppress unused var warning
+    (void) base_rng__;  // suppress unused var warning 
+    static const char* function__ = reduce_sum_m2_model_namespace::reduce_sum_m2_model;
+    (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-    
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
@@ -22234,13 +22136,13 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    static const char* function__ = "reduce_sum_m2_model_namespace::log_prob";
-(void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = reduce_sum_m2_model_namespace::log_prob;
+    (void) function__;  // suppress unused var warning 
+    
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> a8;
@@ -22467,17 +22369,15 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    static const char* function__ = "reduce_sum_m2_model_namespace::write_array";
-(void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = reduce_sum_m2_model_namespace::write_array;
+    (void) function__;  // suppress unused var warning 
+    
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> a8;
@@ -23716,7 +23616,7 @@ using namespace stan::math;
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = ;
+static const std::vector<std::string> locations_array__ = 
 {" (found before start of program)",
  " (in 'reduce_sum_m3.stan', line 210, column 2 to column 13)",
  " (in 'reduce_sum_m3.stan', line 211, column 2 to column 18)",
@@ -24094,8 +23994,7 @@ f1(const std::vector<T0__>& y_slice, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 171;
     return 0.0;
@@ -24136,8 +24035,7 @@ f1a(const std::vector<T0__>& y_slice, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 173;
     return 0.0;
@@ -24178,8 +24076,7 @@ f2(const std::vector<Eigen::Matrix<T0__, -1, 1>>& y_slice, const int& start,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 175;
     return 0.0;
@@ -24220,8 +24117,7 @@ f3(const std::vector<Eigen::Matrix<T0__, 1, -1>>& y_slice, const int& start,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 177;
     return 0.0;
@@ -24262,8 +24158,7 @@ f4(const std::vector<Eigen::Matrix<T0__, -1, -1>>& y_slice, const int& start,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 179;
     return 0.0;
@@ -24304,8 +24199,7 @@ f5(const std::vector<std::vector<T0__>>& y_slice, const int& start,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 181;
     return 0.0;
@@ -24346,8 +24240,7 @@ f6(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>& y_slice,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 183;
     return 0.0;
@@ -24388,8 +24281,7 @@ f7(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>& y_slice,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 185;
     return 0.0;
@@ -24430,8 +24322,7 @@ f8(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>& y_slice,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 187;
     return 0.0;
@@ -24471,8 +24362,7 @@ f9(const std::vector<int>& y_slice, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 189;
     return 0.0;
@@ -24510,8 +24400,7 @@ f10(const std::vector<std::vector<int>>& y_slice, const int& start,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 191;
     return 0.0;
@@ -24549,8 +24438,7 @@ f11(const std::vector<std::vector<std::vector<int>>>& y_slice,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 193;
     return 0.0;
@@ -24589,8 +24477,7 @@ f12(const std::vector<std::vector<std::vector<T0__>>>& y_slice,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 195;
     return 0.0;
@@ -24632,8 +24519,7 @@ g1(const std::vector<T0__>& y_slice, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 197;
     return 0.0;
@@ -24679,8 +24565,7 @@ g2(const std::vector<T0__>& y_slice, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 199;
     return 0.0;
@@ -24726,8 +24611,7 @@ g3(const std::vector<T0__>& y_slice, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 201;
     return 0.0;
@@ -24773,8 +24657,7 @@ g4(const std::vector<T0__>& y_slice, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 203;
     return 0.0;
@@ -24818,8 +24701,7 @@ g5(const std::vector<T0__>& y_slice, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 205;
     return 0.0;
@@ -24865,8 +24747,7 @@ g6(const std::vector<T0__>& y_slice, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 207;
     return 0.0;
@@ -24912,8 +24793,7 @@ g7(const std::vector<T0__>& y_slice, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 209;
     return 0.0;
@@ -24959,8 +24839,7 @@ g8(const std::vector<T0__>& y_slice, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 211;
     return 0.0;
@@ -25006,8 +24885,7 @@ g9(const std::vector<T0__>& y_slice, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 213;
     return 0.0;
@@ -25054,8 +24932,7 @@ g10(const std::vector<T0__>& y_slice, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 215;
     return 0.0;
@@ -25103,8 +24980,7 @@ g11(const std::vector<T0__>& y_slice, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 217;
     return 0.0;
@@ -25152,8 +25028,7 @@ g12(const std::vector<T0__>& y_slice, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 219;
     return 0.0;
@@ -25232,8 +25107,7 @@ s(const std::vector<T0__>& y_slice, const int& start, const int& end,
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 221;
     return reduce_sum<s_rsfunctor__>(y_slice, 1, pstream__, a, b, c, d, e, f,
@@ -25314,8 +25188,7 @@ r(std::ostream* pstream__) {
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     int N;
     N = std::numeric_limits<int>::min();
@@ -25762,12 +25635,11 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
-    (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "reduce_sum_m3_model_namespace::reduce_sum_m3_model";
-    (void) function__;  // suppress unused var warning
+    (void) base_rng__;  // suppress unused var warning 
+    static const char* function__ = reduce_sum_m3_model_namespace::reduce_sum_m3_model;
+    (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-    
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
@@ -26432,13 +26304,13 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    static const char* function__ = "reduce_sum_m3_model_namespace::log_prob";
-(void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = reduce_sum_m3_model_namespace::log_prob;
+    (void) function__;  // suppress unused var warning 
+    
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       std::vector<local_scalar_t__> y1;
@@ -26722,17 +26594,15 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    static const char* function__ = "reduce_sum_m3_model_namespace::write_array";
-(void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = reduce_sum_m3_model_namespace::write_array;
+    (void) function__;  // suppress unused var warning 
+    
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       std::vector<double> y1;
@@ -27968,7 +27838,7 @@ using namespace stan::math;
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = ;
+static const std::vector<std::string> locations_array__ = 
 {" (found before start of program)",
  " (in 'single-argument-lpmf.stan', line 3, column 4 to column 14)",
  " (in 'single-argument-lpmf.stan', line 2, column 23 to line 4, column 3)",
@@ -27989,8 +27859,7 @@ double
 foo0_log(const int& y, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 1;
     return -5;
@@ -28016,8 +27885,7 @@ double
 foo1_lpmf(const int& y, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 3;
     return -5;
@@ -28044,8 +27912,7 @@ foo4_lp(const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
         std::ostream* pstream__) {
   using local_scalar_t__ = double;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 5;
     return -5;
@@ -28072,8 +27939,7 @@ stan::promote_args_t<T0__>
 foo2_log(const T0__& y, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 7;
     return -5;
@@ -28099,8 +27965,7 @@ stan::promote_args_t<T0__>
 foo3_lpdf(const T0__& y, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 9;
     return -5;
@@ -28128,8 +27993,7 @@ foo5_lp(const T0__& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
         std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 11;
     return -5;
@@ -28173,12 +28037,11 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
-    (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "single_argument_lpmf_model_namespace::single_argument_lpmf_model";
-    (void) function__;  // suppress unused var warning
+    (void) base_rng__;  // suppress unused var warning 
+    static const char* function__ = single_argument_lpmf_model_namespace::single_argument_lpmf_model;
+    (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-    
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
@@ -28207,13 +28070,13 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    static const char* function__ = "single_argument_lpmf_model_namespace::log_prob";
-(void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = single_argument_lpmf_model_namespace::log_prob;
+    (void) function__;  // suppress unused var warning 
+    
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       
@@ -28235,17 +28098,15 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    static const char* function__ = "single_argument_lpmf_model_namespace::write_array";
-(void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = single_argument_lpmf_model_namespace::write_array;
+    (void) function__;  // suppress unused var warning 
+    
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
@@ -28447,7 +28308,7 @@ using namespace stan::math;
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = ;
+static const std::vector<std::string> locations_array__ = 
 {" (found before start of program)",
  " (in 'tilde-block.stan', line 5, column 4 to column 20)",
  " (in 'tilde-block.stan', line 11, column 27 to column 28)",
@@ -28480,12 +28341,11 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
-    (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "tilde_block_model_namespace::tilde_block_model";
-    (void) function__;  // suppress unused var warning
+    (void) base_rng__;  // suppress unused var warning 
+    static const char* function__ = tilde_block_model_namespace::tilde_block_model;
+    (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-    
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
@@ -28521,13 +28381,13 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    static const char* function__ = "tilde_block_model_namespace::log_prob";
-(void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = tilde_block_model_namespace::log_prob;
+    (void) function__;  // suppress unused var warning 
+    
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       local_scalar_t__ x;
@@ -28587,17 +28447,15 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    static const char* function__ = "tilde_block_model_namespace::write_array";
-(void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = tilde_block_model_namespace::write_array;
+    (void) function__;  // suppress unused var warning 
+    
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       double x;
@@ -28818,7 +28676,7 @@ using namespace stan::math;
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = ;
+static const std::vector<std::string> locations_array__ = 
 {" (found before start of program)",
  " (in 'transform.stan', line 11, column 2 to column 29)",
  " (in 'transform.stan', line 12, column 2 to column 29)",
@@ -28965,12 +28823,11 @@ class transform_model final : public model_base_crtp<transform_model> {
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
-    (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "transform_model_namespace::transform_model";
-    (void) function__;  // suppress unused var warning
+    (void) base_rng__;  // suppress unused var warning 
+    static const char* function__ = transform_model_namespace::transform_model;
+    (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-    
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
@@ -29301,13 +29158,13 @@ class transform_model final : public model_base_crtp<transform_model> {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    static const char* function__ = "transform_model_namespace::log_prob";
-(void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = transform_model_namespace::log_prob;
+    (void) function__;  // suppress unused var warning 
+    
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       std::vector<local_scalar_t__> p_1;
@@ -30285,17 +30142,15 @@ class transform_model final : public model_base_crtp<transform_model> {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    static const char* function__ = "transform_model_namespace::write_array";
-(void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = transform_model_namespace::write_array;
+    (void) function__;  // suppress unused var warning 
+    
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       std::vector<double> p_1;
@@ -32580,7 +32435,7 @@ using namespace stan::math;
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = ;
+static const std::vector<std::string> locations_array__ = 
 {" (found before start of program)",
  " (in 'truncate.stan', line 6, column 4 to column 11)",
  " (in 'truncate.stan', line 7, column 4 to column 20)",
@@ -32627,12 +32482,11 @@ class truncate_model final : public model_base_crtp<truncate_model> {
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
-    (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "truncate_model_namespace::truncate_model";
-    (void) function__;  // suppress unused var warning
+    (void) base_rng__;  // suppress unused var warning 
+    static const char* function__ = truncate_model_namespace::truncate_model;
+    (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-    
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
@@ -32676,13 +32530,13 @@ class truncate_model final : public model_base_crtp<truncate_model> {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    static const char* function__ = "truncate_model_namespace::log_prob";
-(void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = truncate_model_namespace::log_prob;
+    (void) function__;  // suppress unused var warning 
+    
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       local_scalar_t__ m;
@@ -32803,17 +32657,15 @@ class truncate_model final : public model_base_crtp<truncate_model> {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    static const char* function__ = "truncate_model_namespace::write_array";
-(void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = truncate_model_namespace::write_array;
+    (void) function__;  // suppress unused var warning 
+    
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       double m;
@@ -33051,7 +32903,7 @@ using namespace stan::math;
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = ;
+static const std::vector<std::string> locations_array__ = 
 {" (found before start of program)",
  " (in 'udf_tilde_stmt_conflict.stan', line 7, column 4 to column 11)",
  " (in 'udf_tilde_stmt_conflict.stan', line 10, column 4 to column 20)",
@@ -33066,8 +32918,7 @@ normal(const T0__& a, std::ostream* pstream__) {
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 3;
     return square(a);
@@ -33109,12 +32960,11 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
-    (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "udf_tilde_stmt_conflict_model_namespace::udf_tilde_stmt_conflict_model";
-    (void) function__;  // suppress unused var warning
+    (void) base_rng__;  // suppress unused var warning 
+    static const char* function__ = udf_tilde_stmt_conflict_model_namespace::udf_tilde_stmt_conflict_model;
+    (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-    
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
@@ -33143,13 +32993,13 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    static const char* function__ = "udf_tilde_stmt_conflict_model_namespace::log_prob";
-(void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = udf_tilde_stmt_conflict_model_namespace::log_prob;
+    (void) function__;  // suppress unused var warning 
+    
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       local_scalar_t__ x;
@@ -33179,17 +33029,15 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    static const char* function__ = "udf_tilde_stmt_conflict_model_namespace::write_array";
-(void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = udf_tilde_stmt_conflict_model_namespace::write_array;
+    (void) function__;  // suppress unused var warning 
+    
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       double x;
@@ -33404,7 +33252,7 @@ using namespace stan::math;
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = ;
+static const std::vector<std::string> locations_array__ = 
 {" (found before start of program)",
  " (in 'user_constrain.stan', line 7, column 2 to column 18)",
  " (in 'user_constrain.stan', line 10, column 2 to column 19)",
@@ -33420,8 +33268,7 @@ lb_constrain(const T0__& x, const T1__& y, std::ostream* pstream__) {
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  
+  (void) DUMMY_VAR__;  // suppress unused var warning 
   try {
     current_statement__ = 3;
     return x;
@@ -33464,12 +33311,11 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
-    (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "user_constrain_model_namespace::user_constrain_model";
-    (void) function__;  // suppress unused var warning
+    (void) base_rng__;  // suppress unused var warning 
+    static const char* function__ = user_constrain_model_namespace::user_constrain_model;
+    (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-    
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
@@ -33498,13 +33344,13 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    static const char* function__ = "user_constrain_model_namespace::log_prob";
-(void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = user_constrain_model_namespace::log_prob;
+    (void) function__;  // suppress unused var warning 
+    
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       local_scalar_t__ x;
@@ -33542,17 +33388,15 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    static const char* function__ = "user_constrain_model_namespace::write_array";
-(void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = user_constrain_model_namespace::write_array;
+    (void) function__;  // suppress unused var warning 
+    
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       double x;

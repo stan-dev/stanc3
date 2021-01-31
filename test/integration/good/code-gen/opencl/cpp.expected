@@ -20,7 +20,7 @@ using namespace stan::math;
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = ;
+static const std::vector<std::string> locations_array__ = 
 {" (found before start of program)",
  " (in 'distributions.stan', line 10, column 2 to column 14)",
  " (in 'distributions.stan', line 11, column 2 to column 27)",
@@ -825,12 +825,11 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
-    (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "distributions_model_namespace::distributions_model";
-    (void) function__;  // suppress unused var warning
+    (void) base_rng__;  // suppress unused var warning 
+    static const char* function__ = distributions_model_namespace::distributions_model;
+    (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-    
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
@@ -965,13 +964,13 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    static const char* function__ = "distributions_model_namespace::log_prob";
-(void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = distributions_model_namespace::log_prob;
+    (void) function__;  // suppress unused var warning 
+    
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       local_scalar_t__ p_real;
@@ -3504,17 +3503,15 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    static const char* function__ = "distributions_model_namespace::write_array";
-(void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = distributions_model_namespace::write_array;
+    (void) function__;  // suppress unused var warning 
+    
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       double p_real;
@@ -6396,7 +6393,7 @@ using namespace stan::math;
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = ;
+static const std::vector<std::string> locations_array__ = 
 {" (found before start of program)",
  " (in 'restricted.stan', line 10, column 2 to column 14)",
  " (in 'restricted.stan', line 11, column 2 to column 27)",
@@ -6467,12 +6464,11 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
-    (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "restricted_model_namespace::restricted_model";
-    (void) function__;  // suppress unused var warning
+    (void) base_rng__;  // suppress unused var warning 
+    static const char* function__ = restricted_model_namespace::restricted_model;
+    (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-    
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
@@ -6601,13 +6597,13 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    static const char* function__ = "restricted_model_namespace::log_prob";
-(void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = restricted_model_namespace::log_prob;
+    (void) function__;  // suppress unused var warning 
+    
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       local_scalar_t__ p_real;
@@ -6709,17 +6705,15 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    static const char* function__ = "restricted_model_namespace::write_array";
-(void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
-
+    
+    static const char* function__ = restricted_model_namespace::write_array;
+    (void) function__;  // suppress unused var warning 
+    
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    (void) DUMMY_VAR__;  // suppress unused var warning
-
+    (void) DUMMY_VAR__;  // suppress unused var warning 
     
     try {
       double p_real;
