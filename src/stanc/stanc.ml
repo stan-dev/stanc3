@@ -16,6 +16,7 @@ let usage = "Usage: " ^ name ^ " [option] ... <model_file.stan>"
 
 let model_file = ref ""
 let pretty_print_program = ref false
+let filename_for_msg = ref ""
 let canonicalize_program = ref false
 let print_model_cpp = ref false
 let dump_mir = ref false
@@ -137,7 +138,11 @@ let options =
     ; ( "--standalone-functions"
       , Arg.Set Stan_math_code_gen.standalone_functions
       , " If set, the generated C++ will be the standalone functions C++ code."
-      ) ]
+      )
+    ; ( "--filename-in-msg"
+      , Arg.Set_string filename_for_msg
+      , " Sets the filename used in compiler errors. Uses actual filename by \
+         default." ) ]
 
 let print_deprecated_arg_warning =
   (* is_prefix is used to also cover the --include-paths=... *)
@@ -156,6 +161,17 @@ let model_file_err () =
 let add_file filename =
   if !model_file = "" then model_file := filename else model_file_err ()
 
+(*
+      I am not using Fmt to print to stderr here because there was a pretty awful
+      bug where it would unpredictably fail to flush. It would flush when using
+      stdout or when trying to print some strings and not others. I tried using
+      Fmt.flush and various other hacks to no avail. So now I use Fmt to build a
+      string, and Out_channel to write it.
+ *)
+
+let pp_stderr formatter formatee =
+  Fmt.strf "%a" formatter formatee |> Out_channel.(output_string stderr)
+
 (** ad directives from the given file. *)
 let use_file filename =
   let ast =
@@ -169,8 +185,10 @@ let use_file filename =
   if !pretty_print_program then
     print_endline (Pretty_printing.pretty_print_program ast) ;
   let typed_ast = Frontend_utils.type_ast_or_exit ast in
-  Fmt.(list ~sep:cut Deprecation_analysis.pp)
-    Fmt.stderr
+  let printed_filename =
+    match !filename_for_msg with "" -> None | s -> Some s
+  in
+  Warnings.pp_warnings Fmt.stderr ?printed_filename
     (Deprecation_analysis.collect_warnings typed_ast) ;
   if !canonicalize_program then
     print_endline
@@ -184,12 +202,12 @@ let use_file filename =
     if !dump_mir then
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.Program.Typed.t)] ;
     if !dump_mir_pretty then Program.Typed.pp Format.std_formatter mir ;
-    ( if !warn_pedantic then
-      Pedantic_analysis.sprint_warn_pedantic mir
-      |> Out_channel.(output_string stderr) ) ;
-    ( if !warn_uninitialized then
-      Pedantic_analysis.sprint_warn_uninitialized mir
-      |> Out_channel.(output_string stderr) ) ;
+    if !warn_pedantic then
+      Pedantic_analysis.warn_pedantic mir
+      |> pp_stderr (Warnings.pp_warnings ?printed_filename)
+    else if !warn_uninitialized then
+      Pedantic_analysis.warn_uninitialized mir
+      |> pp_stderr (Warnings.pp_warnings ?printed_filename) ;
     let tx_mir = Transform_Mir.trans_prog mir in
     if !dump_tx_mir then
       Sexp.pp_hum Format.std_formatter

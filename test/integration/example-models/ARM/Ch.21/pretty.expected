@@ -31,7 +31,6 @@ generated quantities {
   s_g2 = sd(e_g);
 }
 
-
 Semantic error in 'finite_populations.stan', line 15, column 10 to column 13:
    -------------------------------------------------
     13:  
@@ -43,7 +42,6 @@ Semantic error in 'finite_populations.stan', line 15, column 10 to column 13:
    -------------------------------------------------
 
 Identifier 'a_0' not in scope.
-
   $ ../../../../../../install/default/bin/stanc --auto-format multiple_comparison.stan
 data {
   int<lower=0> N;
@@ -104,7 +102,6 @@ model {
   }
 }
 
-
 Semantic error in 'r_sqr.stan', line 11, column 9 to column 10:
    -------------------------------------------------
      9:    vector[n_county] a;
@@ -116,7 +113,6 @@ Semantic error in 'r_sqr.stan', line 11, column 9 to column 10:
    -------------------------------------------------
 
 Identifier 'j' not in scope.
-
   $ ../../../../../../install/default/bin/stanc --auto-format radon_vary_intercept_a.stan
 data {
   int<lower=0> J;

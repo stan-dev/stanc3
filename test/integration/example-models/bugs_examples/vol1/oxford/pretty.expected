@@ -36,52 +36,7 @@ model {
   sigma_sq ~ inv_gamma(0.001, 0.001);
 }
 
-
-Warning: deprecated language construct used in 'oxford.stan', line 1, column 0:
-   -------------------------------------------------
-     1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol1.pdf
-         ^
-     2:  # Page 34: Oxford: smooth fit to log-odds ratios
-     3:  
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
-
-Warning: deprecated language construct used in 'oxford.stan', line 2, column 0:
-   -------------------------------------------------
-     1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol1.pdf
-     2:  # Page 34: Oxford: smooth fit to log-odds ratios
-         ^
-     3:  
-     4:  data {
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
-
-Warning: deprecated language construct used in 'oxford.stan', line 14, column 10:
-   -------------------------------------------------
-    12:  transformed data {
-    13:    vector[K] yearsq;
-    14:    yearsq <- year .* year;
-                   ^
-    15:  } 
-    16:  parameters {
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'oxford.stan', line 26, column 9:
-   -------------------------------------------------
-    24:  transformed parameters {
-    25:    real<lower=0> sigma;
-    26:    sigma <- sqrt(sigma_sq);
-                  ^
-    27:  }
-    28:  model {
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'oxford.stan', line 1, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
+Warning in 'oxford.stan', line 2, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
+Warning in 'oxford.stan', line 14, column 9: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'oxford.stan', line 26, column 8: assignment operator <- is deprecated in the Stan language; use = instead.
