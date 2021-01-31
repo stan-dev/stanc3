@@ -82,6 +82,7 @@ let check_of_same_type_mod_conv name t1 t2 =
     | UReal, UInt -> true
     | UFun (l1, rt1), UFun (l2, rt2) ->
         rt1 = rt2
+        && List.length l1 = List.length l2
         && List.for_all
              ~f:(fun x -> x = true)
              (List.map2_exn
