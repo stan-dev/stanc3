@@ -64,7 +64,7 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning 
-    static const char* function__ = _8_schools_ncp_model_namespace::_8_schools_ncp_model;
+    static const char* function__ = "_8_schools_ncp_model_namespace::_8_schools_ncp_model";
     (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning 
@@ -139,7 +139,7 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     
-    static const char* function__ = _8_schools_ncp_model_namespace::log_prob;
+    static const char* function__ = "_8_schools_ncp_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning 
     
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -207,7 +207,7 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
-    static const char* function__ = _8_schools_ncp_model_namespace::write_array;
+    static const char* function__ = "_8_schools_ncp_model_namespace::write_array";
     (void) function__;  // suppress unused var warning 
     
     double lp__ = 0.0;
@@ -542,7 +542,7 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning 
-    static const char* function__ = _8start_with_number_model_namespace::_8start_with_number_model;
+    static const char* function__ = "_8start_with_number_model_namespace::_8start_with_number_model";
     (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning 
@@ -582,7 +582,7 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     
-    static const char* function__ = _8start_with_number_model_namespace::log_prob;
+    static const char* function__ = "_8start_with_number_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning 
     
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -614,7 +614,7 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
-    static const char* function__ = _8start_with_number_model_namespace::write_array;
+    static const char* function__ = "_8start_with_number_model_namespace::write_array";
     (void) function__;  // suppress unused var warning 
     
     double lp__ = 0.0;
@@ -880,7 +880,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning 
-    static const char* function__ = eight_schools_ncp_model_namespace::eight_schools_ncp_model;
+    static const char* function__ = "eight_schools_ncp_model_namespace::eight_schools_ncp_model";
     (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning 
@@ -955,7 +955,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     
-    static const char* function__ = eight_schools_ncp_model_namespace::log_prob;
+    static const char* function__ = "eight_schools_ncp_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning 
     
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -1023,7 +1023,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
-    static const char* function__ = eight_schools_ncp_model_namespace::write_array;
+    static const char* function__ = "eight_schools_ncp_model_namespace::write_array";
     (void) function__;  // suppress unused var warning 
     
     double lp__ = 0.0;
@@ -4162,7 +4162,7 @@ class mother_model final : public model_base_crtp<mother_model> {
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning 
-    static const char* function__ = mother_model_namespace::mother_model;
+    static const char* function__ = "mother_model_namespace::mother_model";
     (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning 
@@ -6362,7 +6362,7 @@ class mother_model final : public model_base_crtp<mother_model> {
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     
-    static const char* function__ = mother_model_namespace::log_prob;
+    static const char* function__ = "mother_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning 
     
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -7238,7 +7238,7 @@ class mother_model final : public model_base_crtp<mother_model> {
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
-    static const char* function__ = mother_model_namespace::write_array;
+    static const char* function__ = "mother_model_namespace::write_array";
     (void) function__;  // suppress unused var warning 
     
     double lp__ = 0.0;
@@ -11140,7 +11140,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning 
-    static const char* function__ = motherHOF_model_namespace::motherHOF_model;
+    static const char* function__ = "motherHOF_model_namespace::motherHOF_model";
     (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning 
@@ -11359,7 +11359,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     
-    static const char* function__ = motherHOF_model_namespace::log_prob;
+    static const char* function__ = "motherHOF_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning 
     
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -11703,7 +11703,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
-    static const char* function__ = motherHOF_model_namespace::write_array;
+    static const char* function__ = "motherHOF_model_namespace::write_array";
     (void) function__;  // suppress unused var warning 
     
     double lp__ = 0.0;
@@ -13487,7 +13487,7 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning 
-    static const char* function__ = new_integrate_interface_model_namespace::new_integrate_interface_model;
+    static const char* function__ = "new_integrate_interface_model_namespace::new_integrate_interface_model";
     (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning 
@@ -13644,7 +13644,7 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     
-    static const char* function__ = new_integrate_interface_model_namespace::log_prob;
+    static const char* function__ = "new_integrate_interface_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning 
     
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -15290,7 +15290,7 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
-    static const char* function__ = new_integrate_interface_model_namespace::write_array;
+    static const char* function__ = "new_integrate_interface_model_namespace::write_array";
     (void) function__;  // suppress unused var warning 
     
     double lp__ = 0.0;
@@ -17350,7 +17350,7 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning 
-    static const char* function__ = old_integrate_interface_model_namespace::old_integrate_interface_model;
+    static const char* function__ = "old_integrate_interface_model_namespace::old_integrate_interface_model";
     (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning 
@@ -17452,7 +17452,7 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     
-    static const char* function__ = old_integrate_interface_model_namespace::log_prob;
+    static const char* function__ = "old_integrate_interface_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning 
     
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -17616,7 +17616,7 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
-    static const char* function__ = old_integrate_interface_model_namespace::write_array;
+    static const char* function__ = "old_integrate_interface_model_namespace::write_array";
     (void) function__;  // suppress unused var warning 
     
     double lp__ = 0.0;
@@ -18299,7 +18299,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning 
-    static const char* function__ = optimize_glm_model_namespace::optimize_glm_model;
+    static const char* function__ = "optimize_glm_model_namespace::optimize_glm_model";
     (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning 
@@ -18565,7 +18565,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     
-    static const char* function__ = optimize_glm_model_namespace::log_prob;
+    static const char* function__ = "optimize_glm_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning 
     
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -19189,7 +19189,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
-    static const char* function__ = optimize_glm_model_namespace::write_array;
+    static const char* function__ = "optimize_glm_model_namespace::write_array";
     (void) function__;  // suppress unused var warning 
     
     double lp__ = 0.0;
@@ -19765,7 +19765,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning 
-    static const char* function__ = param_constraint_model_namespace::param_constraint_model;
+    static const char* function__ = "param_constraint_model_namespace::param_constraint_model";
     (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning 
@@ -19817,7 +19817,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     
-    static const char* function__ = param_constraint_model_namespace::log_prob;
+    static const char* function__ = "param_constraint_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning 
     
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -19901,7 +19901,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
-    static const char* function__ = param_constraint_model_namespace::write_array;
+    static const char* function__ = "param_constraint_model_namespace::write_array";
     (void) function__;  // suppress unused var warning 
     
     double lp__ = 0.0;
@@ -20457,7 +20457,7 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning 
-    static const char* function__ = reduce_sum_m1_model_namespace::reduce_sum_m1_model;
+    static const char* function__ = "reduce_sum_m1_model_namespace::reduce_sum_m1_model";
     (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning 
@@ -20503,7 +20503,7 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     
-    static const char* function__ = reduce_sum_m1_model_namespace::log_prob;
+    static const char* function__ = "reduce_sum_m1_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning 
     
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -20566,7 +20566,7 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
-    static const char* function__ = reduce_sum_m1_model_namespace::write_array;
+    static const char* function__ = "reduce_sum_m1_model_namespace::write_array";
     (void) function__;  // suppress unused var warning 
     
     double lp__ = 0.0;
@@ -21934,7 +21934,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning 
-    static const char* function__ = reduce_sum_m2_model_namespace::reduce_sum_m2_model;
+    static const char* function__ = "reduce_sum_m2_model_namespace::reduce_sum_m2_model";
     (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning 
@@ -22072,7 +22072,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     
-    static const char* function__ = reduce_sum_m2_model_namespace::log_prob;
+    static const char* function__ = "reduce_sum_m2_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning 
     
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -22305,7 +22305,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
-    static const char* function__ = reduce_sum_m2_model_namespace::write_array;
+    static const char* function__ = "reduce_sum_m2_model_namespace::write_array";
     (void) function__;  // suppress unused var warning 
     
     double lp__ = 0.0;
@@ -25571,7 +25571,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning 
-    static const char* function__ = reduce_sum_m3_model_namespace::reduce_sum_m3_model;
+    static const char* function__ = "reduce_sum_m3_model_namespace::reduce_sum_m3_model";
     (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning 
@@ -26240,7 +26240,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     
-    static const char* function__ = reduce_sum_m3_model_namespace::log_prob;
+    static const char* function__ = "reduce_sum_m3_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning 
     
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -26530,7 +26530,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
-    static const char* function__ = reduce_sum_m3_model_namespace::write_array;
+    static const char* function__ = "reduce_sum_m3_model_namespace::write_array";
     (void) function__;  // suppress unused var warning 
     
     double lp__ = 0.0;
@@ -27973,7 +27973,7 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning 
-    static const char* function__ = single_argument_lpmf_model_namespace::single_argument_lpmf_model;
+    static const char* function__ = "single_argument_lpmf_model_namespace::single_argument_lpmf_model";
     (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning 
@@ -28006,7 +28006,7 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     
-    static const char* function__ = single_argument_lpmf_model_namespace::log_prob;
+    static const char* function__ = "single_argument_lpmf_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning 
     
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -28034,7 +28034,7 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
-    static const char* function__ = single_argument_lpmf_model_namespace::write_array;
+    static const char* function__ = "single_argument_lpmf_model_namespace::write_array";
     (void) function__;  // suppress unused var warning 
     
     double lp__ = 0.0;
@@ -28277,7 +28277,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning 
-    static const char* function__ = tilde_block_model_namespace::tilde_block_model;
+    static const char* function__ = "tilde_block_model_namespace::tilde_block_model";
     (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning 
@@ -28317,7 +28317,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     
-    static const char* function__ = tilde_block_model_namespace::log_prob;
+    static const char* function__ = "tilde_block_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning 
     
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -28383,7 +28383,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
-    static const char* function__ = tilde_block_model_namespace::write_array;
+    static const char* function__ = "tilde_block_model_namespace::write_array";
     (void) function__;  // suppress unused var warning 
     
     double lp__ = 0.0;
@@ -28759,7 +28759,7 @@ class transform_model final : public model_base_crtp<transform_model> {
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning 
-    static const char* function__ = transform_model_namespace::transform_model;
+    static const char* function__ = "transform_model_namespace::transform_model";
     (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning 
@@ -29094,7 +29094,7 @@ class transform_model final : public model_base_crtp<transform_model> {
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     
-    static const char* function__ = transform_model_namespace::log_prob;
+    static const char* function__ = "transform_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning 
     
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -30078,7 +30078,7 @@ class transform_model final : public model_base_crtp<transform_model> {
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
-    static const char* function__ = transform_model_namespace::write_array;
+    static const char* function__ = "transform_model_namespace::write_array";
     (void) function__;  // suppress unused var warning 
     
     double lp__ = 0.0;
@@ -32418,7 +32418,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning 
-    static const char* function__ = truncate_model_namespace::truncate_model;
+    static const char* function__ = "truncate_model_namespace::truncate_model";
     (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning 
@@ -32466,7 +32466,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     
-    static const char* function__ = truncate_model_namespace::log_prob;
+    static const char* function__ = "truncate_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning 
     
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -32593,7 +32593,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
-    static const char* function__ = truncate_model_namespace::write_array;
+    static const char* function__ = "truncate_model_namespace::write_array";
     (void) function__;  // suppress unused var warning 
     
     double lp__ = 0.0;
@@ -32896,7 +32896,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning 
-    static const char* function__ = udf_tilde_stmt_conflict_model_namespace::udf_tilde_stmt_conflict_model;
+    static const char* function__ = "udf_tilde_stmt_conflict_model_namespace::udf_tilde_stmt_conflict_model";
     (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning 
@@ -32929,7 +32929,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     
-    static const char* function__ = udf_tilde_stmt_conflict_model_namespace::log_prob;
+    static const char* function__ = "udf_tilde_stmt_conflict_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning 
     
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -32965,7 +32965,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
-    static const char* function__ = udf_tilde_stmt_conflict_model_namespace::write_array;
+    static const char* function__ = "udf_tilde_stmt_conflict_model_namespace::write_array";
     (void) function__;  // suppress unused var warning 
     
     double lp__ = 0.0;
@@ -33247,7 +33247,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning 
-    static const char* function__ = user_constrain_model_namespace::user_constrain_model;
+    static const char* function__ = "user_constrain_model_namespace::user_constrain_model";
     (void) function__;  // suppress unused var warning 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning 
@@ -33280,7 +33280,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     
-    static const char* function__ = user_constrain_model_namespace::log_prob;
+    static const char* function__ = "user_constrain_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning 
     
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
@@ -33324,7 +33324,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     
-    static const char* function__ = user_constrain_model_namespace::write_array;
+    static const char* function__ = "user_constrain_model_namespace::write_array";
     (void) function__;  // suppress unused var warning 
     
     double lp__ = 0.0;
