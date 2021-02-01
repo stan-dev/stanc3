@@ -40,8 +40,7 @@ let pp_unused = fmt "(void) %s;  // suppress unused var warning "
   @param fname Name of the function.
  *)
 let pp_function__ ppf (prog_name, fname) =
-  pf ppf
-    {|
+  pf ppf {|
     static const char* function__ = %S;
     %s
     |}
