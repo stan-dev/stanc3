@@ -29,16 +29,4 @@ model {
     y[n] ~ normal(x[n] * beta[jj[n]], sigma);
 }
 
-
-Warning: deprecated language construct used in 'hier_multivariate.stan', line 20, column 14:
-   -------------------------------------------------
-    18:  model {
-    19:    matrix[K,K] Sigma_beta;
-    20:    Sigma_beta <- diag_matrix(tau) * Omega * diag_matrix(tau);
-                       ^
-    21:  
-    22:    tau ~ cauchy(0,2.5);
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'hier_multivariate.stan', line 20, column 13: assignment operator <- is deprecated in the Stan language; use = instead.

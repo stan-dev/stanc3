@@ -51,8 +51,11 @@ let parse parse_fun lexbuf =
     |> Result.Error
   in
   let result =
-    parse_fun lexbuf.Lexing.lex_curr_p
-    |> Interp.loop_handle success failure input
+    try
+      parse_fun lexbuf.Lexing.lex_curr_p
+      |> Interp.loop_handle success failure input
+      |> Result.map_error ~f:(fun e -> Errors.Syntax_error e)
+    with Errors.SyntaxError err -> Result.Error (Errors.Syntax_error err)
   in
   (result, Warnings.collect ())
 

@@ -28,78 +28,9 @@ model {
       y[n, t] ~ normal(beta[n, 1] + beta[n, 2] * x[t], sigma_y);
 }
 
-
-Warning: deprecated language construct used in 'birats.stan', line 1, column 0:
-   -------------------------------------------------
-     1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol2.pdf
-         ^
-     2:  # Page 23: Birats
-     3:  ## 
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
-
-Warning: deprecated language construct used in 'birats.stan', line 2, column 0:
-   -------------------------------------------------
-     1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol2.pdf
-     2:  # Page 23: Birats
-         ^
-     3:  ## 
-     4:  
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
-
-Warning: deprecated language construct used in 'birats.stan', line 3, column 0:
-   -------------------------------------------------
-     1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol2.pdf
-     2:  # Page 23: Birats
-     3:  ## 
-         ^
-     4:  
-     5:  data {
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
-
-Warning: deprecated language construct used in 'birats.stan', line 27, column 11:
-   -------------------------------------------------
-    25:  transformed parameters {
-    26:    real<lower=0> sigma_y; 
-    27:    sigma_y <- sqrt(sigmasq_y); 
-                    ^
-    28:  } 
-    29:  model {
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'birats.stan', line 37, column 6:
-   -------------------------------------------------
-    35:    for (n in 1:N)
-    36:      for (t in 1:T) 
-    37:        # centeralize x[] 
-               ^
-    38:        // y[n,t] ~ normal(beta[n, 1] + beta[n, 2] * (x[t] - xbar), sqrt(sigmasq_y));
-    39:   
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
-
-Warning: deprecated language construct used in 'birats.stan', line 40, column 6:
-   -------------------------------------------------
-    38:        // y[n,t] ~ normal(beta[n, 1] + beta[n, 2] * (x[t] - xbar), sqrt(sigmasq_y));
-    39:   
-    40:        # NOT-centeralize x[] 
-               ^
-    41:        y[n, t] ~ normal(beta[n, 1] + beta[n, 2] * x[t],  sigma_y); 
-    42:  }
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
+Warning in 'birats.stan', line 1, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
+Warning in 'birats.stan', line 2, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
+Warning in 'birats.stan', line 3, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
+Warning in 'birats.stan', line 27, column 10: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'birats.stan', line 37, column 6: Comments beginning with # are deprecated. Please use // in place of # for line comments.
+Warning in 'birats.stan', line 40, column 6: Comments beginning with # are deprecated. Please use // in place of # for line comments.

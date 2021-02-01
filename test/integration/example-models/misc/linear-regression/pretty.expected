@@ -49,67 +49,8 @@ generated quantities {
   sigma <- sd(y) * sigma_std;
 }
 
-
-Warning: deprecated language construct used in 'regression_std.stan', line 9, column 9:
-   -------------------------------------------------
-     7:    vector[N] x_std;
-     8:    vector[N] y_std;
-     9:    x_std <- (x - mean(x)) / sd(x);
-                  ^
-    10:    y_std <- (y - mean(y)) / sd(y);
-    11:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'regression_std.stan', line 10, column 9:
-   -------------------------------------------------
-     8:    vector[N] y_std;
-     9:    x_std <- (x - mean(x)) / sd(x);
-    10:    y_std <- (y - mean(y)) / sd(y);
-                  ^
-    11:  }
-    12:  parameters {
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'regression_std.stan', line 27, column 9:
-   -------------------------------------------------
-    25:    real beta;
-    26:    real<lower=0> sigma;
-    27:    alpha <- sd(y) * (alpha_std + beta_std * mean(x) / sd(x)) + mean(y);
-                  ^
-    28:    beta <- beta_std * sd(y) / sd(x);
-    29:    sigma <- sd(y) * sigma_std;
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'regression_std.stan', line 28, column 8:
-   -------------------------------------------------
-    26:    real<lower=0> sigma;
-    27:    alpha <- sd(y) * (alpha_std + beta_std * mean(x) / sd(x)) + mean(y);
-    28:    beta <- beta_std * sd(y) / sd(x);
-                 ^
-    29:    sigma <- sd(y) * sigma_std;
-    30:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'regression_std.stan', line 29, column 9:
-   -------------------------------------------------
-    27:    alpha <- sd(y) * (alpha_std + beta_std * mean(x) / sd(x)) + mean(y);
-    28:    beta <- beta_std * sd(y) / sd(x);
-    29:    sigma <- sd(y) * sigma_std;
-                  ^
-    30:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'regression_std.stan', line 9, column 8: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'regression_std.stan', line 10, column 8: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'regression_std.stan', line 27, column 8: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'regression_std.stan', line 28, column 7: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'regression_std.stan', line 29, column 8: assignment operator <- is deprecated in the Stan language; use = instead.
