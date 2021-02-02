@@ -1,9 +1,3 @@
-This repo is a fork of the Stan 3 compiler: https://github.com/stan-dev/stanc3
-
-This version adds a `--info` option which outputs on the standard output a JSON object containing information about the model. It currently generates an object a field `inputs` and `parameters` containing a dictionary where each entry corresponds to a variable in respectively the `data` and `parameters` blocks. To each variable is associated an object with two fields:
-- `type`: the base type of the variable (`"int"` or `"real"`).
-- `dimensions`: the number of dimensions (`0` for a scalar, `1` for a vector or row vector, etc.).
-
 # A New Stan-to-C++ Compiler, stanc3
 This repo contains a new compiler for Stan, stanc3, written in OCaml. To read more about why we built this, see this [introductory blog post](https://statmodeling.stat.columbia.edu/2019/03/13/stanc3-rewriting-the-stan-compiler/). For some discussion as to how we chose OCaml, see [this accidental flamewar](https://discourse.mc-stan.org/t/choosing-the-new-stan-compilers-implementation-language/6203).
 We're testing [these models](https://jenkins.mc-stan.org/job/stanc3/job/master/)(listed under Test Results) on every pull request and think we are currently up to par and mostly backwards compatible with the previous Stan compiler (see [this wiki](https://github.com/stan-dev/stanc3/wiki/changes-from-stanc2) for a list of minor differences).
