@@ -184,8 +184,7 @@ let use_file filename =
   let ast =
     if !canonicalize_program then Canonicalize.repair_syntax ast else ast
   in
-  if !Info.with_info then
-    Info.info ast;
+  if !Info.with_info then Info.info ast ;
   Debugging.ast_logger ast ;
   if !pretty_print_program then
     print_endline (Pretty_printing.pretty_print_program ast) ;
