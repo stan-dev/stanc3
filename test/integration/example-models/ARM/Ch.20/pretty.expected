@@ -2,7 +2,7 @@
 data {
   int<lower=0> J;
   int<lower=0> N;
-  int<lower=1, upper=J> person[N];
+  array[N] int<lower=1, upper=J> person;
   vector[N] time;
   vector[N] y;
 }
@@ -32,7 +32,7 @@ model {
 data {
   int<lower=0> J;
   int<lower=0> N;
-  int<lower=1, upper=J> person[N];
+  array[N] int<lower=1, upper=J> person;
   vector[N] time;
   vector[N] y;
 }
@@ -66,7 +66,7 @@ model {
 data {
   int<lower=0> J;
   int<lower=0> N;
-  int<lower=1, upper=J> person[N];
+  array[N] int<lower=1, upper=J> person;
   vector[N] time;
   vector[N] treatment;
   vector[N] y;
@@ -100,7 +100,7 @@ model {
 data {
   int<lower=0> J;
   int<lower=0> N;
-  int<lower=1, upper=J> person[N];
+  array[N] int<lower=1, upper=J> person;
   vector[N] time;
   vector[N] treatment;
   vector[N] y;

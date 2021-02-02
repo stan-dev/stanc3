@@ -4,11 +4,11 @@ data {
   int<lower=0> nmis;
   int<lower=0> nyear;
   int<lower=0> nsite;
-  int<lower=0> obs[nobs];
-  int<lower=0> obsyear[nobs];
-  int<lower=0> obssite[nobs];
-  int<lower=0> misyear[nmis];
-  int<lower=0> missite[nmis];
+  array[nobs] int<lower=0> obs;
+  array[nobs] int<lower=0> obsyear;
+  array[nobs] int<lower=0> obssite;
+  array[nmis] int<lower=0> misyear;
+  array[nmis] int<lower=0> missite;
 }
 parameters {
   real alpha;
@@ -23,7 +23,7 @@ model {
     obs[i] ~ poisson_log(log_lambda[obsyear[i], obssite[i]]);
 }
 generated quantities {
-  int<lower=0> mis[nmis];
+  array[nmis] int<lower=0> mis;
   for (i in 1 : nmis) 
     mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
 }
@@ -34,11 +34,11 @@ data {
   int<lower=0> nmis;
   int<lower=0> nyear;
   int<lower=0> nsite;
-  int<lower=0> obs[nobs];
-  int<lower=0> obsyear[nobs];
-  int<lower=0> obssite[nobs];
-  int<lower=0> misyear[nmis];
-  int<lower=0> missite[nmis];
+  array[nobs] int<lower=0> obs;
+  array[nobs] int<lower=0> obsyear;
+  array[nobs] int<lower=0> obssite;
+  array[nmis] int<lower=0> misyear;
+  array[nmis] int<lower=0> missite;
 }
 parameters {
   vector[nsite] alpha;
@@ -53,7 +53,7 @@ model {
     obs[i] ~ poisson_log(log_lambda[obsyear[i], obssite[i]]);
 }
 generated quantities {
-  int<lower=0> mis[nmis];
+  array[nmis] int<lower=0> mis;
   for (i in 1 : nmis) 
     mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
 }
@@ -64,11 +64,11 @@ data {
   int<lower=0> nmis;
   int<lower=0> nyear;
   int<lower=0> nsite;
-  int<lower=0> obs[nobs];
-  int<lower=0> obsyear[nobs];
-  int<lower=0> obssite[nobs];
-  int<lower=0> misyear[nmis];
-  int<lower=0> missite[nmis];
+  array[nobs] int<lower=0> obs;
+  array[nobs] int<lower=0> obsyear;
+  array[nobs] int<lower=0> obssite;
+  array[nmis] int<lower=0> misyear;
+  array[nmis] int<lower=0> missite;
 }
 parameters {
   vector[nsite] alpha;
@@ -88,7 +88,7 @@ model {
     obs[i] ~ poisson_log(log_lambda[obsyear[i], obssite[i]]);
 }
 generated quantities {
-  int<lower=0> mis[nmis];
+  array[nmis] int<lower=0> mis;
   for (i in 1 : nmis) 
     mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
 }
@@ -99,11 +99,11 @@ data {
   int<lower=0> nmis;
   int<lower=0> nyear;
   int<lower=0> nsite;
-  int<lower=0> obs[nobs];
-  int<lower=0> obsyear[nobs];
-  int<lower=0> obssite[nobs];
-  int<lower=0> misyear[nmis];
-  int<lower=0> missite[nmis];
+  array[nobs] int<lower=0> obs;
+  array[nobs] int<lower=0> obsyear;
+  array[nobs] int<lower=0> obssite;
+  array[nmis] int<lower=0> misyear;
+  array[nmis] int<lower=0> missite;
 }
 parameters {
   vector[nsite] alpha;
@@ -121,7 +121,7 @@ model {
     obs[i] ~ poisson_log(log_lambda[obsyear[i], obssite[i]]);
 }
 generated quantities {
-  int<lower=0> mis[nmis];
+  array[nmis] int<lower=0> mis;
   for (i in 1 : nmis) 
     mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
 }
@@ -132,11 +132,11 @@ data {
   int<lower=0> nmis;
   int<lower=0> nyear;
   int<lower=0> nsite;
-  int<lower=0> obs[nobs];
-  int<lower=0> obsyear[nobs];
-  int<lower=0> obssite[nobs];
-  int<lower=0> misyear[nmis];
-  int<lower=0> missite[nmis];
+  array[nobs] int<lower=0> obs;
+  array[nobs] int<lower=0> obsyear;
+  array[nobs] int<lower=0> obssite;
+  array[nmis] int<lower=0> misyear;
+  array[nmis] int<lower=0> missite;
 }
 parameters {
   real mu;
@@ -157,7 +157,7 @@ model {
     obs[i] ~ poisson_log(log_lambda[obsyear[i], obssite[i]]);
 }
 generated quantities {
-  int<lower=0> mis[nmis];
+  array[nmis] int<lower=0> mis;
   for (i in 1 : nmis) 
     mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
 }
@@ -168,12 +168,12 @@ data {
   int<lower=0> nmis;
   int<lower=0> nyear;
   int<lower=0> nsite;
-  int<lower=0> obs[nobs];
-  int<lower=0> obsyear[nobs];
-  int<lower=0> obssite[nobs];
-  int<lower=0> misyear[nmis];
-  int<lower=0> missite[nmis];
-  int<lower=0, upper=1> first[nyear, nsite];
+  array[nobs] int<lower=0> obs;
+  array[nobs] int<lower=0> obsyear;
+  array[nobs] int<lower=0> obssite;
+  array[nmis] int<lower=0> misyear;
+  array[nmis] int<lower=0> missite;
+  array[nyear, nsite] int<lower=0, upper=1> first;
 }
 parameters {
   real mu;
@@ -198,7 +198,7 @@ model {
     obs[i] ~ poisson_log(log_lambda[obsyear[i], obssite[i]]);
 }
 generated quantities {
-  int<lower=0> mis[nmis];
+  array[nmis] int<lower=0> mis;
   for (i in 1 : nmis) 
     mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
 }
@@ -209,13 +209,13 @@ data {
   int<lower=0> nmis;
   int<lower=0> nyear;
   int<lower=0> nsite;
-  int<lower=0> obs[nobs];
-  int<lower=0> obsyear[nobs];
-  int<lower=0> obssite[nobs];
-  int<lower=0> misyear[nmis];
-  int<lower=0> missite[nmis];
-  int<lower=0, upper=1> first[nyear, nsite];
-  real year[nyear];
+  array[nobs] int<lower=0> obs;
+  array[nobs] int<lower=0> obsyear;
+  array[nobs] int<lower=0> obssite;
+  array[nmis] int<lower=0> misyear;
+  array[nmis] int<lower=0> missite;
+  array[nyear, nsite] int<lower=0, upper=1> first;
+  array[nyear] real year;
 }
 parameters {
   real mu;
@@ -243,7 +243,7 @@ model {
     obs[i] ~ poisson_log(log_lambda[obsyear[i], obssite[i]]);
 }
 generated quantities {
-  int<lower=0> mis[nmis];
+  array[nmis] int<lower=0> mis;
   for (i in 1 : nmis) 
     mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
 }
@@ -254,14 +254,14 @@ data {
   int<lower=0> nmis;
   int<lower=0> nyear;
   int<lower=0> nsite;
-  int<lower=0> obs[nobs];
-  int<lower=0> obsyear[nobs];
-  int<lower=0> obssite[nobs];
-  int<lower=0> misyear[nmis];
-  int<lower=0> missite[nmis];
-  int<lower=0, upper=1> first[nyear, nsite];
-  real year[nyear];
-  int<lower=0> newobs[nyear, nsite];
+  array[nobs] int<lower=0> obs;
+  array[nobs] int<lower=0> obsyear;
+  array[nobs] int<lower=0> obssite;
+  array[nmis] int<lower=0> misyear;
+  array[nmis] int<lower=0> missite;
+  array[nyear, nsite] int<lower=0, upper=1> first;
+  array[nyear] real year;
+  array[nyear, nsite] int<lower=0> newobs;
   int<lower=0> nnewobs;
 }
 parameters {
@@ -293,7 +293,7 @@ model {
     obs[i] ~ poisson_log(log_lambda[obsyear[i], obssite[i]]);
 }
 generated quantities {
-  int<lower=0> mis[nmis];
+  array[nmis] int<lower=0> mis;
   for (i in 1 : nmis) 
     mis[i] = poisson_log_rng(log_lambda[misyear[i], missite[i]]);
 }
@@ -301,7 +301,7 @@ generated quantities {
   $ ../../../../../../install/default/bin/stanc --auto-format GLMM_Poisson.stan
 data {
   int<lower=0> n;
-  int<lower=0> C[n];
+  array[n] int<lower=0> C;
   vector[n] year;
 }
 transformed data {
@@ -341,7 +341,7 @@ generated quantities {
 data {
   int<lower=0> nsite;
   int<lower=0> nyear;
-  int<lower=0> C[nyear, nsite];
+  array[nyear, nsite] int<lower=0> C;
   vector[nyear] year;
 }
 transformed data {
@@ -353,13 +353,13 @@ transformed data {
 parameters {
   real mu;
   vector[nsite] alpha;
-  real eps[nyear];
-  real beta[3];
+  array[nyear] real eps;
+  array[3] real beta;
   real<lower=0, upper=2> sd_alpha;
   real<lower=0, upper=1> sd_year;
 }
 transformed parameters {
-  vector[nsite] log_lambda[nyear];
+  array[nyear] vector[nsite] log_lambda;
   for (i in 1 : nyear) 
     log_lambda[i] = alpha + beta[1] * year[i] + beta[2] * year_squared[i]
                     + beta[3] * year_cubed[i] + eps[i];

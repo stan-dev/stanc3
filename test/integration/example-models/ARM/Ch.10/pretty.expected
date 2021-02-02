@@ -55,7 +55,7 @@ data {
   int<lower=0> N;
   vector[N] encouraged;
   vector[N] setting;
-  int site[N];
+  array[N] int site;
   vector[N] pretest;
   vector[N] watched;
 }
@@ -86,7 +86,7 @@ data {
   int<lower=0> N;
   vector[N] pretest;
   vector[N] setting;
-  int site[N];
+  array[N] int site;
   vector[N] watched_hat;
   vector[N] y;
 }

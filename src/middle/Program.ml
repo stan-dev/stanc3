@@ -8,8 +8,10 @@ type fun_arg_decl = (UnsizedType.autodifftype * string * UnsizedType.t) list
 type 'a fun_def =
   { fdrt: UnsizedType.t option
   ; fdname: string
-  ; fdargs: (UnsizedType.autodifftype * string * UnsizedType.t) list
-  ; fdbody: 'a
+  ; fdargs:
+      (UnsizedType.autodifftype * string * UnsizedType.t) list
+      (* If fdbody is None, this is a function declaration without body. *)
+  ; fdbody: 'a option
   ; fdloc: Location_span.t sexp_opaque [@compare.ignore] }
 [@@deriving compare, hash, map, sexp, map, fold]
 
@@ -68,15 +70,19 @@ let pp_fun_arg_decl ppf (autodifftype, name, unsizedtype) =
 
 let pp_fun_def pp_s ppf = function
   | {fdrt; fdname; fdargs; fdbody; _} -> (
-    match fdrt with
-    | Some rt ->
-        Fmt.pf ppf {|@[<v2>%a %s%a {@ %a@]@ }|} UnsizedType.pp rt fdname
-          Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
-          fdargs pp_s fdbody
-    | None ->
-        Fmt.pf ppf {|@[<v2>%s %s%a {@ %a@]@ }|} "void" fdname
-          Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
-          fdargs pp_s fdbody )
+      let pp_body_opt ppf = function
+        | None -> Fmt.pf ppf ";"
+        | Some body -> pp_s ppf body
+      in
+      match fdrt with
+      | Some rt ->
+          Fmt.pf ppf {|@[<v2>%a %s%a {@ %a@]@ }|} UnsizedType.pp rt fdname
+            Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
+            fdargs pp_body_opt fdbody
+      | None ->
+          Fmt.pf ppf {|@[<v2>%s %s%a {@ %a@]@ }|} "void" fdname
+            Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
+            fdargs pp_body_opt fdbody )
 
 let pp_io_block ppf = function
   | Parameters -> Fmt.string ppf "parameters"
@@ -203,7 +209,9 @@ module Labelled = struct
       ~f:associate_outvar
 
   and associate_fun_def assocs {fdbody; _} =
-    Stmt.Labelled.associate ~init:assocs fdbody
+    match fdbody with
+    | None -> assocs
+    | Some fdbody -> Stmt.Labelled.associate ~init:assocs fdbody
 
   and associate_outvar assocs (_, {out_constrained_st; out_unconstrained_st; _})
       =

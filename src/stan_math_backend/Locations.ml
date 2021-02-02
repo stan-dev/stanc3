@@ -39,8 +39,8 @@ let pp_globals ppf location_list =
        |> List.map ~f:(fun x -> " (in " ^ Location_span.to_string x ^ ")") )
   in
   Fmt.pf ppf
-    "@ static int current_statement__ = 0;@ static const std::vector<string> \
-     locations_array__ = {@[<hov>%a@]};@ "
+    "@ stan::math::profile_map profiles__;@ static int current_statement__= \
+     0;@ static const std::vector<string> locations_array__ = {@[<hov>%a@]};@ "
     Fmt.(list ~sep:comma (fmt "%S"))
     location_list
 

@@ -2,9 +2,9 @@
 data {
   int<lower=0> N;
   int<lower=0> N_edges;
-  int<lower=1, upper=N> node1[N_edges];
-  int<lower=1, upper=N> node2[N_edges];
-  int<lower=0> y[N];
+  array[N_edges] int<lower=1, upper=N> node1;
+  array[N_edges] int<lower=1, upper=N> node2;
+  array[N] int<lower=0> y;
   vector[N] x;
 }
 parameters {
@@ -42,9 +42,9 @@ generated quantities {
 data {
   int<lower=0> N;
   int<lower=0> N_edges;
-  int<lower=1, upper=N> node1[N_edges];
-  int<lower=1, upper=N> node2[N_edges];
-  int<lower=0> y[N];
+  array[N_edges] int<lower=1, upper=N> node1;
+  array[N_edges] int<lower=1, upper=N> node2;
+  array[N] int<lower=0> y;
   vector[N] x;
   vector<lower=0>[N] E;
 }
@@ -82,8 +82,8 @@ model {
 data {
   int<lower=0> N;
   int<lower=0> N_edges;
-  int<lower=1, upper=N> node1[N_edges];
-  int<lower=1, upper=N> node2[N_edges];
+  array[N_edges] int<lower=1, upper=N> node1;
+  array[N_edges] int<lower=1, upper=N> node2;
   vector<lower=0>[N] E;
 }
 transformed data {
@@ -112,7 +112,7 @@ generated quantities {
   vector[N] theta;
   vector[N] theta_std;
   vector[N] x;
-  int y[N];
+  array[N] int y;
   beta0 = normal_rng(0, 1);
   beta1 = normal_rng(0, 1);
   for (i in 1 : N) {

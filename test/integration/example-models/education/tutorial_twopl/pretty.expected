@@ -3,10 +3,10 @@ data {
   int<lower=1> I;
   int<lower=1> J;
   int<lower=1> N;
-  int<lower=1, upper=I> ii[N];
-  int<lower=1, upper=J> jj[N];
-  int<lower=0, upper=1> y[N];
-  real x[J];
+  array[N] int<lower=1, upper=I> ii;
+  array[N] int<lower=1, upper=J> jj;
+  array[N] int<lower=0, upper=1> y;
+  array[J] real x;
 }
 parameters {
   vector<lower=0>[I] alpha;
@@ -25,29 +25,17 @@ model {
   y ~ bernoulli_logit(eta);
 }
 
-
-Warning: deprecated language construct used in 'reg_centered.stan', line 23, column 12:
-   -------------------------------------------------
-    21:      theta[j] ~ normal(gamma * x[j],1);
-    22:    for (n in 1:N)
-    23:      eta[n] <- alpha[ii[n]] * (theta[jj[n]] - beta[ii[n]]);
-                     ^
-    24:    y ~ bernoulli_logit(eta);
-    25:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'reg_centered.stan', line 23, column 11: assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../install/default/bin/stanc --auto-format reg_dif.stan
 data {
   int<lower=1> I;
   int<lower=1> J;
   int<lower=1> N;
-  int<lower=1, upper=I> ii[N];
-  int<lower=1, upper=J> jj[N];
-  int<lower=0, upper=1> y[N];
-  real x[J];
-  int<lower=0, upper=1> Ik[N];
+  array[N] int<lower=1, upper=I> ii;
+  array[N] int<lower=1, upper=J> jj;
+  array[N] int<lower=0, upper=1> y;
+  array[J] real x;
+  array[N] int<lower=0, upper=1> Ik;
 }
 parameters {
   vector<lower=0>[I] alpha;
@@ -70,41 +58,17 @@ model {
   y ~ bernoulli_logit(eta);
 }
 
-
-Warning: deprecated language construct used in 'reg_dif.stan', line 25, column 14:
-   -------------------------------------------------
-    23:    epsilon ~ normal(0,1);
-    24:    for (j in 1:J)
-    25:      theta[j] <- (gamma * x[j]) + epsilon[j];
-                       ^
-    26:    for (n in 1:N)
-    27:      eta[n] <- alpha[ii[n]] * (theta[jj[n]] - (beta[ii[n]] + delta * Ik[n] * x[jj[n]]));
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'reg_dif.stan', line 27, column 12:
-   -------------------------------------------------
-    25:      theta[j] <- (gamma * x[j]) + epsilon[j];
-    26:    for (n in 1:N)
-    27:      eta[n] <- alpha[ii[n]] * (theta[jj[n]] - (beta[ii[n]] + delta * Ik[n] * x[jj[n]]));
-                     ^
-    28:    y ~ bernoulli_logit(eta);
-    29:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'reg_dif.stan', line 25, column 13: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'reg_dif.stan', line 27, column 11: assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../install/default/bin/stanc --auto-format reg_noncentered.stan
 data {
   int<lower=1> I;
   int<lower=1> J;
   int<lower=1> N;
-  int<lower=1, upper=I> ii[N];
-  int<lower=1, upper=J> jj[N];
-  int<lower=0, upper=1> y[N];
-  real x[J];
+  array[N] int<lower=1, upper=I> ii;
+  array[N] int<lower=1, upper=J> jj;
+  array[N] int<lower=0, upper=1> y;
+  array[J] real x;
 }
 parameters {
   vector<lower=0>[I] alpha;
@@ -125,40 +89,16 @@ model {
   y ~ bernoulli_logit(eta);
 }
 
-
-Warning: deprecated language construct used in 'reg_noncentered.stan', line 23, column 14:
-   -------------------------------------------------
-    21:    epsilon ~ normal(0,1);
-    22:    for (j in 1:J)
-    23:      theta[j] <- (gamma * x[j]) + epsilon[j];
-                       ^
-    24:    for (n in 1:N)
-    25:      eta[n] <- alpha[ii[n]] * (theta[jj[n]] - beta[ii[n]]);
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'reg_noncentered.stan', line 25, column 12:
-   -------------------------------------------------
-    23:      theta[j] <- (gamma * x[j]) + epsilon[j];
-    24:    for (n in 1:N)
-    25:      eta[n] <- alpha[ii[n]] * (theta[jj[n]] - beta[ii[n]]);
-                     ^
-    26:    y ~ bernoulli_logit(eta);
-    27:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'reg_noncentered.stan', line 23, column 13: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'reg_noncentered.stan', line 25, column 11: assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../install/default/bin/stanc --auto-format twopl.stan
 data {
   int<lower=1> I;
   int<lower=1> J;
   int<lower=1> N;
-  int<lower=1, upper=I> ii[N];
-  int<lower=1, upper=J> jj[N];
-  int<lower=0, upper=1> y[N];
+  array[N] int<lower=1, upper=I> ii;
+  array[N] int<lower=1, upper=J> jj;
+  array[N] int<lower=0, upper=1> y;
 }
 parameters {
   vector<lower=0>[I] alpha;
@@ -175,16 +115,4 @@ model {
   y ~ bernoulli_logit(eta);
 }
 
-
-Warning: deprecated language construct used in 'twopl.stan', line 20, column 12:
-   -------------------------------------------------
-    18:    theta ~ normal(0,1);
-    19:    for (n in 1:N)
-    20:      eta[n] <- alpha[ii[n]] * (theta[jj[n]] - beta[ii[n]]);
-                     ^
-    21:    y ~ bernoulli_logit(eta);
-    22:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'twopl.stan', line 20, column 11: assignment operator <- is deprecated in the Stan language; use = instead.

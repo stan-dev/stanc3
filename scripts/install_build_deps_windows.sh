@@ -4,6 +4,7 @@
 
 # Pin dune to 1.11.3 as newer and 2+ do not work for ocaml-windows64 !
 opam pin -y dune 1.11.3
+opam pin -y opam-file-format 2.1.0
 
 # Add windows repository
 opam repository add windows git://github.com/ocaml-cross/opam-cross-windows

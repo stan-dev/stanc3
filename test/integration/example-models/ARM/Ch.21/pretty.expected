@@ -31,7 +31,6 @@ generated quantities {
   s_g2 = sd(e_g);
 }
 
-
 Semantic error in 'finite_populations.stan', line 15, column 10 to column 13:
    -------------------------------------------------
     13:  
@@ -43,7 +42,6 @@ Semantic error in 'finite_populations.stan', line 15, column 10 to column 13:
    -------------------------------------------------
 
 Identifier 'a_0' not in scope.
-
   $ ../../../../../../install/default/bin/stanc --auto-format multiple_comparison.stan
 data {
   int<lower=0> N;
@@ -69,7 +67,7 @@ generated quantities {
 data {
   int<lower=0> N;
   int<lower=0> n_county;
-  int<lower=1, upper=n_county> county[N];
+  array[N] int<lower=1, upper=n_county> county;
   vector[N] u;
   vector[N] y;
 }
@@ -104,7 +102,6 @@ model {
   }
 }
 
-
 Semantic error in 'r_sqr.stan', line 11, column 9 to column 10:
    -------------------------------------------------
      9:    vector[n_county] a;
@@ -116,12 +113,11 @@ Semantic error in 'r_sqr.stan', line 11, column 9 to column 10:
    -------------------------------------------------
 
 Identifier 'j' not in scope.
-
   $ ../../../../../../install/default/bin/stanc --auto-format radon_vary_intercept_a.stan
 data {
   int<lower=0> J;
   int<lower=0> N;
-  int<lower=1, upper=J> county[N];
+  array[N] int<lower=1, upper=J> county;
   vector[J] u;
   vector[N] x;
   vector[N] y;
@@ -159,7 +155,7 @@ model {
 data {
   int<lower=0> J;
   int<lower=0> N;
-  int<lower=1, upper=J> county[N];
+  array[N] int<lower=1, upper=J> county;
   vector[J] u;
   vector[N] x;
   vector[N] y;
@@ -199,7 +195,7 @@ model {
 data {
   int<lower=0> J;
   int<lower=0> N;
-  int<lower=1, upper=J> county[N];
+  array[N] int<lower=1, upper=J> county;
   vector[N] u;
   vector[N] x;
   vector[N] y;
@@ -227,7 +223,7 @@ model {
 data {
   int<lower=0> J;
   int<lower=0> N;
-  int<lower=1, upper=J> county[N];
+  array[N] int<lower=1, upper=J> county;
   vector[N] u;
   vector[N] x;
   vector[N] x_mean;
@@ -256,7 +252,7 @@ model {
 data {
   int<lower=0> J;
   int<lower=0> N;
-  int<lower=1, upper=J> county[N];
+  array[N] int<lower=1, upper=J> county;
   vector[N] u;
   vector[N] x;
   vector[N] x_mean;
@@ -287,7 +283,7 @@ model {
 data {
   int<lower=0> J;
   int<lower=0> N;
-  int<lower=1, upper=J> county[N];
+  array[N] int<lower=1, upper=J> county;
   vector[N] u;
   vector[N] x;
   vector[N] y;
@@ -317,7 +313,7 @@ model {
 data {
   int<lower=0> J;
   int<lower=0> N;
-  int<lower=1, upper=J> county[N];
+  array[N] int<lower=1, upper=J> county;
   vector[N] u;
   vector[N] y;
 }
@@ -344,7 +340,7 @@ model {
 data {
   int<lower=0> J;
   int<lower=0> N;
-  int<lower=1, upper=J> county[N];
+  array[N] int<lower=1, upper=J> county;
   vector[N] u;
   vector[N] y;
 }

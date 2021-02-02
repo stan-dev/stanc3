@@ -2,6 +2,8 @@
 
 {
   module Stack = Core_kernel.Stack
+  module Warnings = Middle.Warnings
+  module Errors = Middle.Errors
   open Lexing
   open Debugging
   open Preprocessor
@@ -49,7 +51,7 @@ rule token = parse
                                   try_get_new_lexbuf fname lexbuf.lex_curr_p in
                                 token new_lexbuf }
   | "#"                       { lexer_logger "#comment" ;
-                                Errors.warn_deprecated
+                                Warnings.deprecated "#"
                                   (lexbuf.lex_curr_p, "Comments beginning with \
                                                        # are deprecated. \
                                                        Please use // in place \
@@ -92,6 +94,7 @@ rule token = parse
   | "if"                      { lexer_logger "if" ; Parser.IF }
   | "else"                    { lexer_logger "else" ; Parser.ELSE }
   | "while"                   { lexer_logger "while" ; Parser.WHILE }
+  | "profile"                 { lexer_logger "profile" ; Parser.PROFILE }
   | "for"                     { lexer_logger "for" ; Parser.FOR }
   | "in"                      { lexer_logger "in" ; Parser.IN }
   | "break"                   { lexer_logger "break" ; Parser.BREAK }
@@ -102,6 +105,7 @@ rule token = parse
   | "real"                    { lexer_logger "real" ; Parser.REAL }
   | "vector"                  { lexer_logger "vector" ; Parser.VECTOR }
   | "row_vector"              { lexer_logger "row_vector" ; Parser.ROWVECTOR }
+  | "array"                   { lexer_logger "array" ; Parser.ARRAY }
   | "matrix"                  { lexer_logger "matrix" ; Parser.MATRIX }
   | "ordered"                 { lexer_logger "ordered" ; Parser.ORDERED }
   | "positive_ordered"        { lexer_logger "positive_ordered" ;
@@ -151,14 +155,14 @@ rule token = parse
   | ".*="                     { lexer_logger ".*=" ; Parser.ELTTIMESASSIGN }
   | "./="                     { lexer_logger "./=" ; Parser.ELTDIVIDEASSIGN }
   | "<-"                      { lexer_logger "<-" ;
-                                Errors.warn_deprecated
+                                Warnings.deprecated "<-"
                                   (lexbuf.lex_curr_p, "assignment operator <- \
                                                        is deprecated in the \
                                                        Stan language; use = \
                                                        instead.") ;
                                 Parser.ARROWASSIGN } (* deprecated *)
   | "increment_log_prob"      { lexer_logger "increment_log_prob" ;
-                                Errors.warn_deprecated
+                                Warnings.deprecated "increment_log_prob"
                                   (lexbuf.lex_curr_p, "increment_log_prob(...)\
                                                        ; is deprecated and \
                                                        will be removed in the \
@@ -176,7 +180,7 @@ rule token = parse
                                 Parser.REALNUMERAL (lexeme lexbuf) }
   | "target"                  { lexer_logger "target" ; Parser.TARGET } (* NB: the stanc2 parser allows variables to be named target. I think it's a bad idea and have disallowed it. *)
   | "get_lp"                  { lexer_logger "get_lp" ;
-                                Errors.warn_deprecated
+                                Warnings.deprecated "get_lp"
                                   (lexbuf.lex_curr_p, "get_lp() function is \
                                                        deprecated. It will be \
                                                        removed in a future \

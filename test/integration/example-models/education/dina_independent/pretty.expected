@@ -10,8 +10,8 @@ data {
 }
 parameters {
   row_vector<lower=0, upper=1>[K] eta;
-  real<lower=0, upper=1> slip[I];
-  real<lower=0, upper=1> guess[I];
+  array[I] real<lower=0, upper=1> slip;
+  array[I] real<lower=0, upper=1> guess;
 }
 transformed parameters {
   simplex[C] nu;
@@ -25,9 +25,9 @@ transformed parameters {
   log_nu = log(nu);
 }
 model {
-  real ps[C];
+  array[C] real ps;
   matrix[I, C] pi;
-  real log_items[I];
+  array[I] real log_items;
   slip ~ beta(5, 25);
   guess ~ beta(5, 25);
   for (c in 1 : C) {
@@ -50,9 +50,9 @@ generated quantities {
   matrix[J, C] prob_resp_class;
   matrix[J, K] prob_resp_attr;
   matrix[I, C] pi;
-  real log_items[I];
+  array[I] real log_items;
   row_vector[C] prob_joint;
-  real prob_attr_class[C];
+  array[C] real prob_attr_class;
   for (c in 1 : C) {
     for (i in 1 : I) {
       pi[i, c] = (1 - slip[i]) ^ xi[i, c] * guess[i] ^ (1 - xi[i, c]);
@@ -90,16 +90,16 @@ data {
 }
 parameters {
   simplex[C] nu;
-  real<lower=0, upper=1> slip[I];
-  real<lower=0, upper=1> guess[I];
+  array[I] real<lower=0, upper=1> slip;
+  array[I] real<lower=0, upper=1> guess;
 }
 transformed parameters {
   vector[C] log_nu = log(nu);
 }
 model {
-  real ps[C];
+  array[C] real ps;
   matrix[I, C] pi;
-  real log_items[I];
+  array[I] real log_items;
   slip ~ beta(5, 25);
   guess ~ beta(5, 25);
   for (c in 1 : C) {
@@ -122,9 +122,9 @@ generated quantities {
   matrix[J, C] prob_resp_class;
   matrix[J, K] prob_resp_attr;
   matrix[I, C] pi;
-  real log_items[I];
+  array[I] real log_items;
   row_vector[C] prob_joint;
-  real prob_attr_class[C];
+  array[C] real prob_attr_class;
   for (c in 1 : C) {
     for (i in 1 : I) {
       pi[i, c] = (1 - slip[i]) ^ xi[i, c] * guess[i] ^ (1 - xi[i, c]);

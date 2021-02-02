@@ -135,8 +135,8 @@ data {
 transformed data {
   int x = 10;
   real y = 20;
-  int ax[3] = {1, 2, 3};
-  real ay[3] = {1.0, 2.0, 3.0};
+  array[3] int ax = {1, 2, 3};
+  array[3] real ay = {1.0, 2.0, 3.0};
   x /= 1;
   x /= c;
   x /= ax[1];
@@ -242,7 +242,7 @@ generated quantities {
   $ ../../../../../install/default/bin/stanc --auto-format divide_equals_sliced.stan
 functions {
   void foo_vec(real a1) {
-    int J[2];
+    array[2] int J;
     matrix[2, 2] aa;
     matrix[3, 4] bb;
     bb[1 : 2, 1 : 2] /= a1;
@@ -310,7 +310,7 @@ generated quantities {
   $ ../../../../../install/default/bin/stanc --auto-format elt_divide_equals_sliced.stan
 functions {
   void foo_vec(real a1) {
-    int J[2];
+    array[2] int J;
     matrix[2, 2] aa;
     matrix[3, 4] bb;
     row_vector[2] cc;
@@ -363,7 +363,7 @@ generated quantities {
   $ ../../../../../install/default/bin/stanc --auto-format elt_multiply_equals_sliced.stan
 functions {
   void foo_vec(real a1) {
-    int J[2];
+    array[2] int J;
     matrix[2, 2] aa;
     matrix[3, 4] bb;
     row_vector[2] cc;
@@ -601,8 +601,8 @@ data {
 transformed data {
   int x = 10;
   real y = 20;
-  int ax[3] = {1, 2, 3};
-  real ay[3] = {1.0, 2.0, 3.0};
+  array[3] int ax = {1, 2, 3};
+  array[3] real ay = {1.0, 2.0, 3.0};
   x -= 1;
   x -= c;
   x -= ax[1];
@@ -659,7 +659,7 @@ functions {
 }
 data {
   int N;
-  int J[N];
+  array[N] int J;
 }
 parameters {
   vector[N] p_v1;
@@ -690,7 +690,7 @@ functions {
 }
 data {
   int<lower=0> N;
-  int<lower=0, upper=1> y[N];
+  array[N] int<lower=0, upper=1> y;
 }
 transformed data {
   int x1 = 1;
@@ -879,8 +879,8 @@ data {
 transformed data {
   int x = 10;
   real y = 20;
-  int ax[3] = {1, 2, 3};
-  real ay[3] = {1.0, 2.0, 3.0};
+  array[3] int ax = {1, 2, 3};
+  array[3] real ay = {1.0, 2.0, 3.0};
   x *= 1;
   x *= c;
   x *= ax[1];
@@ -930,7 +930,7 @@ generated quantities {
   $ ../../../../../install/default/bin/stanc --auto-format multiply_equals_sliced.stan
 functions {
   void foo_vec(real a1) {
-    int J[2];
+    array[2] int J;
     matrix[2, 2] aa;
     matrix[3, 4] bb;
     bb[1 : 2, 1 : 2] *= aa;
@@ -1123,8 +1123,8 @@ data {
 transformed data {
   int x = 10;
   real y = 20;
-  int ax[3] = {1, 2, 3};
-  real ay[3] = {1.0, 2.0, 3.0};
+  array[3] int ax = {1, 2, 3};
+  array[3] real ay = {1.0, 2.0, 3.0};
   x += 1;
   x += c;
   x += ax[1];
@@ -1260,7 +1260,7 @@ functions {
 }
 data {
   int N;
-  int J[N];
+  array[N] int J;
 }
 parameters {
   vector[N] p_v1;
@@ -1313,7 +1313,7 @@ functions {
 }
 data {
   int N;
-  int J[N];
+  array[N] int J;
 }
 parameters {
   vector[N] b;

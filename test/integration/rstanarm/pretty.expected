@@ -1,7 +1,8 @@
   $ ../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined bernoulli.stan
 functions {
-  vector make_theta_L(int len_theta_L, int[] p, real dispersion, vector tau,
-                      vector scale, vector zeta, vector rho, vector z_T) {
+  vector make_theta_L(int len_theta_L, array[] int p, real dispersion,
+                      vector tau, vector scale, vector zeta, vector rho,
+                      vector z_T) {
     vector[len_theta_L] theta_L;
     int zeta_mark = 1;
     int rho_mark = 1;
@@ -48,7 +49,7 @@ functions {
     }
     return theta_L;
   }
-  vector make_b(vector z_b, vector theta_L, int[] p, int[] l) {
+  vector make_b(vector z_b, vector theta_L, array[] int p, array[] int l) {
     vector[rows(z_b)] b;
     int b_mark = 1;
     int theta_L_mark = 1;
@@ -83,8 +84,8 @@ functions {
     return b;
   }
   real decov_lp(vector z_b, vector z_T, vector rho, vector zeta, vector tau,
-                real[] regularization, real[] delta, vector shape, int t,
-                int[] p) {
+                array[] real regularization, array[] real delta,
+                vector shape, int t, array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
     target += normal_lpdf(z_b| 0, 1);
@@ -109,7 +110,7 @@ functions {
     target += gamma_lpdf(tau| shape, 1);
     return target();
   }
-  vector hs_prior(vector z_beta, real[] global, vector[] local,
+  vector hs_prior(vector z_beta, array[] real global, array[] vector local,
                   real global_prior_scale, real error_scale, real c2) {
     int K = rows(z_beta);
     vector[K] lambda = local[1] .* sqrt(local[2]);
@@ -119,8 +120,9 @@ functions {
                                   ./ (c2 + square(tau) * lambda2));
     return z_beta .* lambda_tilde * tau;
   }
-  vector hsplus_prior(vector z_beta, real[] global, vector[] local,
-                      real global_prior_scale, real error_scale, real c2) {
+  vector hsplus_prior(vector z_beta, array[] real global,
+                      array[] vector local, real global_prior_scale,
+                      real error_scale, real c2) {
     int K = rows(z_beta);
     vector[K] lambda = local[1] .* sqrt(local[2]);
     vector[K] eta = local[3] .* sqrt(local[4]);
@@ -144,8 +146,8 @@ functions {
            + (79 * z9 + 776 * z7 + 1482 * z5 - 1920 * z3 - 945 * z)
              / (92160 * df4);
   }
-  int[,] make_V(int N, int t, int[] v) {
-    int V[t, N];
+  array[,] int make_V(int N, int t, array[] int v) {
+    array[t, N] int V;
     int pos = 1;
     if (t > 0) 
       for (j in 1 : N) 
@@ -155,8 +157,8 @@ functions {
         }
     return V;
   }
-  vector csr_matrix_times_vector2(int m, int n, vector w, int[] v, int[] u,
-                                  vector b);
+  vector csr_matrix_times_vector2(int m, int n, vector w, array[] int v,
+                                  array[] int u, vector b);
   real make_lower(int family, int link) {
     if (family == 1) 
       return negative_infinity();
@@ -187,7 +189,7 @@ functions {
       reject("Invalid link");
     return eta;
   }
-  real ll_bern_lp(vector eta0, vector eta1, int link, int[] N) {
+  real ll_bern_lp(vector eta0, vector eta1, int link, array[] int N) {
     if (link == 1) {
       target += logistic_lccdf(eta0| 0, 1);
       target += logistic_lcdf(eta1| 0, 1);
@@ -246,8 +248,8 @@ functions {
     }
     return not_a_number();
   }
-  real ll_clogit_lp(vector eta0, vector eta1, int[] successes,
-                    int[] failures, int[] observations) {
+  real ll_clogit_lp(vector eta0, vector eta1, array[] int successes,
+                    array[] int failures, array[] int observations) {
     int J = num_elements(observations);
     int pos0 = 1;
     int pos1 = 1;
@@ -268,22 +270,22 @@ functions {
 }
 data {
   int<lower=0> K;
-  int<lower=1> N[2];
+  array[2] int<lower=1> N;
   vector[K] xbar;
   int<lower=0, upper=1> dense_X;
-  matrix[N[1], K] X0[dense_X];
-  matrix[N[2], K] X1[dense_X];
+  array[dense_X] matrix[N[1], K] X0;
+  array[dense_X] matrix[N[2], K] X1;
   int<lower=0, upper=1> clogit;
   int<lower=0> J;
-  int<lower=1, upper=J> strata[clogit == 1 ? N[1] + N[2] : 0];
+  array[clogit == 1 ? N[1] + N[2] : 0] int<lower=1, upper=J> strata;
   int<lower=0> nnz_X0;
   vector[nnz_X0] w_X0;
-  int<lower=0, upper=K - 1> v_X0[nnz_X0];
-  int<lower=0, upper=rows(w_X0) + 1> u_X0[dense_X ? 0 : N[1] + 1];
+  array[nnz_X0] int<lower=0, upper=K - 1> v_X0;
+  array[dense_X ? 0 : N[1] + 1] int<lower=0, upper=rows(w_X0) + 1> u_X0;
   int<lower=0> nnz_X1;
   vector[nnz_X1] w_X1;
-  int<lower=0, upper=K - 1> v_X1[nnz_X1];
-  int<lower=0, upper=rows(w_X1) + 1> u_X1[dense_X ? 0 : N[2] + 1];
+  array[nnz_X1] int<lower=0, upper=K - 1> v_X1;
+  array[dense_X ? 0 : N[2] + 1] int<lower=0, upper=rows(w_X1) + 1> u_X1;
   int<lower=0, upper=1> prior_PD;
   int<lower=0, upper=1> compute_mean_PPD;
   int<lower=0, upper=1> has_intercept;
@@ -295,7 +297,7 @@ data {
   int<lower=0> K_smooth;
   matrix[N[1], K_smooth] S0;
   matrix[N[2], K_smooth] S1;
-  int<lower=1> smooth_map[K_smooth];
+  array[K_smooth] int<lower=1> smooth_map;
   int<lower=5, upper=5> family;
   int<lower=0, upper=1> has_weights;
   vector[has_weights ? N[1] : 0] weights0;
@@ -319,45 +321,45 @@ data {
   real<lower=0> global_prior_scale;
   real<lower=0> slab_df;
   real<lower=0> slab_scale;
-  int<lower=2> num_normals[prior_dist == 7 ? K : 0];
+  array[prior_dist == 7 ? K : 0] int<lower=2> num_normals;
   int<lower=0> t;
-  int<lower=1> p[t];
-  int<lower=1> l[t];
+  array[t] int<lower=1> p;
+  array[t] int<lower=1> l;
   int<lower=0> q;
   int<lower=0> len_theta_L;
   vector<lower=0>[t] shape;
   vector<lower=0>[t] scale;
   int<lower=0> len_concentration;
-  real<lower=0> concentration[len_concentration];
+  array[len_concentration] real<lower=0> concentration;
   int<lower=0> len_regularization;
-  real<lower=0> regularization[len_regularization];
-  int<lower=0> num_non_zero[2];
+  array[len_regularization] real<lower=0> regularization;
+  array[2] int<lower=0> num_non_zero;
   vector[num_non_zero[1]] w0;
   vector[num_non_zero[2]] w1;
-  int<lower=0, upper=q - 1> v0[num_non_zero[1]];
-  int<lower=0, upper=q - 1> v1[num_non_zero[2]];
-  int<lower=0, upper=rows(w0) + 1> u0[t > 0 ? N[1] + 1 : 0];
-  int<lower=0, upper=rows(w1) + 1> u1[t > 0 ? N[2] + 1 : 0];
+  array[num_non_zero[1]] int<lower=0, upper=q - 1> v0;
+  array[num_non_zero[2]] int<lower=0, upper=q - 1> v1;
+  array[t > 0 ? N[1] + 1 : 0] int<lower=0, upper=rows(w0) + 1> u0;
+  array[t > 0 ? N[2] + 1 : 0] int<lower=0, upper=rows(w1) + 1> u1;
   int<lower=0, upper=1> special_case;
 }
 transformed data {
   int NN = N[1] + N[2];
   real aux = not_a_number();
-  int<lower=1> V0[special_case ? t : 0, N[1]] = make_V(N[1],
-                                                       special_case ? t : 0,
-                                                       v0);
-  int<lower=1> V1[special_case ? t : 0, N[2]] = make_V(N[2],
-                                                       special_case ? t : 0,
-                                                       v1);
-  int<lower=0> successes[clogit ? J : 0];
-  int<lower=0> failures[clogit ? J : 0];
-  int<lower=0> observations[clogit ? J : 0];
+  array[special_case ? t : 0, N[1]] int<lower=1> V0 = make_V(N[1],
+                                                             special_case ? t
+                                                             : 0, v0);
+  array[special_case ? t : 0, N[2]] int<lower=1> V1 = make_V(N[2],
+                                                             special_case ? t
+                                                             : 0, v1);
+  array[clogit ? J : 0] int<lower=0> successes;
+  array[clogit ? J : 0] int<lower=0> failures;
+  array[clogit ? J : 0] int<lower=0> observations;
   int<lower=0> len_z_T = 0;
   int<lower=0> len_var_group = sum(p) * (t > 0);
   int<lower=0> len_rho = sum(p) - t;
   int<lower=0, upper=1> is_continuous = 0;
   int<lower=1> pos = 1;
-  real<lower=0> delta[len_concentration];
+  array[len_concentration] real<lower=0> delta;
   int<lower=0> hs;
   if (prior_dist <= 2) 
     hs = 0;
@@ -391,15 +393,15 @@ transformed data {
     observations[j] = failures[j] + successes[j];
 }
 parameters {
-  real<upper=(link == 4 ? 0.0 : positive_infinity())> gamma[has_intercept];
+  array[has_intercept] real<upper=(link == 4 ? 0.0 : positive_infinity())> gamma;
   vector[prior_dist == 7 ? sum(num_normals) : K] z_beta;
   vector[K_smooth] z_beta_smooth;
   vector<lower=0>[K_smooth > 0 ? smooth_map[K_smooth] : 0] smooth_sd_raw;
-  real<lower=0> global[hs];
-  vector<lower=0>[K] local[hs];
-  real<lower=0> caux[hs > 0];
-  vector<lower=0>[K] mix[prior_dist == 5 || prior_dist == 6];
-  real<lower=0> one_over_lambda[prior_dist == 6];
+  array[hs] real<lower=0> global;
+  array[hs] vector<lower=0>[K] local;
+  array[hs > 0] real<lower=0> caux;
+  array[prior_dist == 5 || prior_dist == 6] vector<lower=0>[K] mix;
+  array[prior_dist == 6] real<lower=0> one_over_lambda;
   vector[q] z_b;
   vector[len_z_T] z_T;
   vector<lower=0, upper=1>[len_rho] rho;
@@ -602,7 +604,7 @@ model {
 }
 generated quantities {
   real mean_PPD = compute_mean_PPD ? 0 : negative_infinity();
-  real alpha[has_intercept];
+  array[has_intercept] real alpha;
   if (has_intercept == 1) {
     if (dense_X) 
       alpha[1] = gamma[1] - dot_product(xbar, beta);
@@ -680,8 +682,9 @@ generated quantities {
 
   $ ../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined binomial.stan
 functions {
-  vector make_theta_L(int len_theta_L, int[] p, real dispersion, vector tau,
-                      vector scale, vector zeta, vector rho, vector z_T) {
+  vector make_theta_L(int len_theta_L, array[] int p, real dispersion,
+                      vector tau, vector scale, vector zeta, vector rho,
+                      vector z_T) {
     vector[len_theta_L] theta_L;
     int zeta_mark = 1;
     int rho_mark = 1;
@@ -728,7 +731,7 @@ functions {
     }
     return theta_L;
   }
-  vector make_b(vector z_b, vector theta_L, int[] p, int[] l) {
+  vector make_b(vector z_b, vector theta_L, array[] int p, array[] int l) {
     vector[rows(z_b)] b;
     int b_mark = 1;
     int theta_L_mark = 1;
@@ -763,8 +766,8 @@ functions {
     return b;
   }
   real decov_lp(vector z_b, vector z_T, vector rho, vector zeta, vector tau,
-                real[] regularization, real[] delta, vector shape, int t,
-                int[] p) {
+                array[] real regularization, array[] real delta,
+                vector shape, int t, array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
     target += normal_lpdf(z_b| 0, 1);
@@ -789,7 +792,7 @@ functions {
     target += gamma_lpdf(tau| shape, 1);
     return target();
   }
-  vector hs_prior(vector z_beta, real[] global, vector[] local,
+  vector hs_prior(vector z_beta, array[] real global, array[] vector local,
                   real global_prior_scale, real error_scale, real c2) {
     int K = rows(z_beta);
     vector[K] lambda = local[1] .* sqrt(local[2]);
@@ -799,8 +802,9 @@ functions {
                                   ./ (c2 + square(tau) * lambda2));
     return z_beta .* lambda_tilde * tau;
   }
-  vector hsplus_prior(vector z_beta, real[] global, vector[] local,
-                      real global_prior_scale, real error_scale, real c2) {
+  vector hsplus_prior(vector z_beta, array[] real global,
+                      array[] vector local, real global_prior_scale,
+                      real error_scale, real c2) {
     int K = rows(z_beta);
     vector[K] lambda = local[1] .* sqrt(local[2]);
     vector[K] eta = local[3] .* sqrt(local[4]);
@@ -824,8 +828,8 @@ functions {
            + (79 * z9 + 776 * z7 + 1482 * z5 - 1920 * z3 - 945 * z)
              / (92160 * df4);
   }
-  int[,] make_V(int N, int t, int[] v) {
-    int V[t, N];
+  array[,] int make_V(int N, int t, array[] int v) {
+    array[t, N] int V;
     int pos = 1;
     if (t > 0) 
       for (j in 1 : N) 
@@ -835,8 +839,8 @@ functions {
         }
     return V;
   }
-  vector csr_matrix_times_vector2(int m, int n, vector w, int[] v, int[] u,
-                                  vector b);
+  vector csr_matrix_times_vector2(int m, int n, vector w, array[] int v,
+                                  array[] int u, vector b);
   real make_lower(int family, int link) {
     if (family == 1) 
       return negative_infinity();
@@ -867,7 +871,7 @@ functions {
       reject("Invalid link");
     return eta;
   }
-  real ll_binom_lp(int[] y, int[] trials, vector eta, int link) {
+  real ll_binom_lp(array[] int y, array[] int trials, vector eta, int link) {
     if (link == 1) 
       target += binomial_logit_lpmf(y| trials, eta);
     else if (link < 4) 
@@ -891,7 +895,7 @@ functions {
       reject("Invalid link");
     return target();
   }
-  vector pw_binom(int[] y, int[] trials, vector eta, int link) {
+  vector pw_binom(array[] int y, array[] int trials, vector eta, int link) {
     int N = rows(eta);
     vector[N] ll;
     if (link == 1) {
@@ -913,16 +917,16 @@ data {
   int<lower=0> K;
   vector[K] xbar;
   int<lower=0, upper=1> dense_X;
-  matrix[N, K] X[dense_X];
+  array[dense_X] matrix[N, K] X;
   int<lower=0> nnz_X;
   vector[nnz_X] w_X;
-  int<lower=0, upper=K - 1> v_X[nnz_X];
-  int<lower=0, upper=rows(w_X) + 1> u_X[dense_X ? 0 : N + 1];
+  array[nnz_X] int<lower=0, upper=K - 1> v_X;
+  array[dense_X ? 0 : N + 1] int<lower=0, upper=rows(w_X) + 1> u_X;
   int<lower=0> K_smooth;
   matrix[N, K_smooth] S;
-  int<lower=1> smooth_map[K_smooth];
-  int<lower=0> y[N];
-  int<lower=0> trials[N];
+  array[K_smooth] int<lower=1> smooth_map;
+  array[N] int<lower=0> y;
+  array[N] int<lower=0> trials;
   int<lower=0, upper=1> prior_PD;
   int<lower=0, upper=1> compute_mean_PPD;
   int<lower=0, upper=1> has_intercept;
@@ -952,34 +956,35 @@ data {
   real<lower=0> global_prior_scale;
   real<lower=0> slab_df;
   real<lower=0> slab_scale;
-  int<lower=2> num_normals[prior_dist == 7 ? K : 0];
+  array[prior_dist == 7 ? K : 0] int<lower=2> num_normals;
   int<lower=0> t;
-  int<lower=1> p[t];
-  int<lower=1> l[t];
+  array[t] int<lower=1> p;
+  array[t] int<lower=1> l;
   int<lower=0> q;
   int<lower=0> len_theta_L;
   vector<lower=0>[t] shape;
   vector<lower=0>[t] scale;
   int<lower=0> len_concentration;
-  real<lower=0> concentration[len_concentration];
+  array[len_concentration] real<lower=0> concentration;
   int<lower=0> len_regularization;
-  real<lower=0> regularization[len_regularization];
+  array[len_regularization] real<lower=0> regularization;
   int<lower=0> num_non_zero;
   vector[num_non_zero] w;
-  int<lower=0, upper=q - 1> v[num_non_zero];
-  int<lower=0, upper=rows(w) + 1> u[t > 0 ? N + 1 : 0];
+  array[num_non_zero] int<lower=0, upper=q - 1> v;
+  array[t > 0 ? N + 1 : 0] int<lower=0, upper=rows(w) + 1> u;
   int<lower=0, upper=1> special_case;
 }
 transformed data {
   real aux = not_a_number();
-  int<lower=1> V[special_case ? t : 0, N] = make_V(N, special_case ? t : 0,
-                                                   v);
+  array[special_case ? t : 0, N] int<lower=1> V = make_V(N,
+                                                         special_case ? t : 0,
+                                                         v);
   int<lower=0> len_z_T = 0;
   int<lower=0> len_var_group = sum(p) * (t > 0);
   int<lower=0> len_rho = sum(p) - t;
   int<lower=0, upper=1> is_continuous = 0;
   int<lower=1> pos = 1;
-  real<lower=0> delta[len_concentration];
+  array[len_concentration] real<lower=0> delta;
   int<lower=0> hs;
   if (prior_dist <= 2) 
     hs = 0;
@@ -1001,15 +1006,15 @@ transformed data {
   }
 }
 parameters {
-  real<upper=(link == 4 ? 0.0 : positive_infinity())> gamma[has_intercept];
+  array[has_intercept] real<upper=(link == 4 ? 0.0 : positive_infinity())> gamma;
   vector[prior_dist == 7 ? sum(num_normals) : K] z_beta;
   vector[K_smooth] z_beta_smooth;
   vector<lower=0>[K_smooth > 0 ? smooth_map[K_smooth] : 0] smooth_sd_raw;
-  real<lower=0> global[hs];
-  vector<lower=0>[K] local[hs];
-  real<lower=0> caux[hs > 0];
-  vector<lower=0>[K] mix[prior_dist == 5 || prior_dist == 6];
-  real<lower=0> one_over_lambda[prior_dist == 6];
+  array[hs] real<lower=0> global;
+  array[hs] vector<lower=0>[K] local;
+  array[hs > 0] real<lower=0> caux;
+  array[prior_dist == 5 || prior_dist == 6] vector<lower=0>[K] mix;
+  array[prior_dist == 6] real<lower=0> one_over_lambda;
   vector[q] z_b;
   vector[len_z_T] z_T;
   vector<lower=0, upper=1>[len_rho] rho;
@@ -1187,7 +1192,7 @@ model {
 }
 generated quantities {
   real mean_PPD = compute_mean_PPD ? 0 : negative_infinity();
-  real alpha[has_intercept];
+  array[has_intercept] real alpha;
   if (has_intercept == 1) {
     if (dense_X) 
       alpha[1] = gamma[1] - dot_product(xbar, beta);
@@ -1237,8 +1242,9 @@ generated quantities {
 
   $ ../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined continuous.stan
 functions {
-  vector make_theta_L(int len_theta_L, int[] p, real dispersion, vector tau,
-                      vector scale, vector zeta, vector rho, vector z_T) {
+  vector make_theta_L(int len_theta_L, array[] int p, real dispersion,
+                      vector tau, vector scale, vector zeta, vector rho,
+                      vector z_T) {
     vector[len_theta_L] theta_L;
     int zeta_mark = 1;
     int rho_mark = 1;
@@ -1285,7 +1291,7 @@ functions {
     }
     return theta_L;
   }
-  vector make_b(vector z_b, vector theta_L, int[] p, int[] l) {
+  vector make_b(vector z_b, vector theta_L, array[] int p, array[] int l) {
     vector[rows(z_b)] b;
     int b_mark = 1;
     int theta_L_mark = 1;
@@ -1320,8 +1326,8 @@ functions {
     return b;
   }
   real decov_lp(vector z_b, vector z_T, vector rho, vector zeta, vector tau,
-                real[] regularization, real[] delta, vector shape, int t,
-                int[] p) {
+                array[] real regularization, array[] real delta,
+                vector shape, int t, array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
     target += normal_lpdf(z_b| 0, 1);
@@ -1346,7 +1352,7 @@ functions {
     target += gamma_lpdf(tau| shape, 1);
     return target();
   }
-  vector hs_prior(vector z_beta, real[] global, vector[] local,
+  vector hs_prior(vector z_beta, array[] real global, array[] vector local,
                   real global_prior_scale, real error_scale, real c2) {
     int K = rows(z_beta);
     vector[K] lambda = local[1] .* sqrt(local[2]);
@@ -1356,8 +1362,9 @@ functions {
                                   ./ (c2 + square(tau) * lambda2));
     return z_beta .* lambda_tilde * tau;
   }
-  vector hsplus_prior(vector z_beta, real[] global, vector[] local,
-                      real global_prior_scale, real error_scale, real c2) {
+  vector hsplus_prior(vector z_beta, array[] real global,
+                      array[] vector local, real global_prior_scale,
+                      real error_scale, real c2) {
     int K = rows(z_beta);
     vector[K] lambda = local[1] .* sqrt(local[2]);
     vector[K] eta = local[3] .* sqrt(local[4]);
@@ -1381,8 +1388,8 @@ functions {
            + (79 * z9 + 776 * z7 + 1482 * z5 - 1920 * z3 - 945 * z)
              / (92160 * df4);
   }
-  int[,] make_V(int N, int t, int[] v) {
-    int V[t, N];
+  array[,] int make_V(int N, int t, array[] int v) {
+    array[t, N] int V;
     int pos = 1;
     if (t > 0) 
       for (j in 1 : N) 
@@ -1392,8 +1399,8 @@ functions {
         }
     return V;
   }
-  vector csr_matrix_times_vector2(int m, int n, vector w, int[] v, int[] u,
-                                  vector b);
+  vector csr_matrix_times_vector2(int m, int n, vector w, array[] int v,
+                                  array[] int u, vector b);
   real make_lower(int family, int link) {
     if (family == 1) 
       return negative_infinity();
@@ -1684,8 +1691,8 @@ functions {
       }
     return out;
   }
-  vector test_csr_matrix_times_vector(int m, int n, vector w, int[] v,
-                                      int[] u, vector b) {
+  vector test_csr_matrix_times_vector(int m, int n, vector w, array[] int v,
+                                      array[] int u, vector b) {
     return csr_matrix_times_vector(m, n, w, v, u, b);
   }
 }
@@ -1694,14 +1701,14 @@ data {
   int<lower=0> K;
   vector[K] xbar;
   int<lower=0, upper=1> dense_X;
-  matrix[N, K] X[dense_X];
+  array[dense_X] matrix[N, K] X;
   int<lower=0> nnz_X;
   vector[nnz_X] w_X;
-  int<lower=0, upper=K - 1> v_X[nnz_X];
-  int<lower=0, upper=rows(w_X) + 1> u_X[dense_X ? 0 : N + 1];
+  array[nnz_X] int<lower=0, upper=K - 1> v_X;
+  array[dense_X ? 0 : N + 1] int<lower=0, upper=rows(w_X) + 1> u_X;
   int<lower=0> K_smooth;
   matrix[N, K_smooth] S;
-  int<lower=1> smooth_map[K_smooth];
+  array[K_smooth] int<lower=1> smooth_map;
   int<lower=0> len_y;
   real lb_y;
   real<lower=lb_y> ub_y;
@@ -1735,22 +1742,22 @@ data {
   real<lower=0> global_prior_scale;
   real<lower=0> slab_df;
   real<lower=0> slab_scale;
-  int<lower=2> num_normals[prior_dist == 7 ? K : 0];
+  array[prior_dist == 7 ? K : 0] int<lower=2> num_normals;
   int<lower=0> t;
-  int<lower=1> p[t];
-  int<lower=1> l[t];
+  array[t] int<lower=1> p;
+  array[t] int<lower=1> l;
   int<lower=0> q;
   int<lower=0> len_theta_L;
   vector<lower=0>[t] shape;
   vector<lower=0>[t] scale;
   int<lower=0> len_concentration;
-  real<lower=0> concentration[len_concentration];
+  array[len_concentration] real<lower=0> concentration;
   int<lower=0> len_regularization;
-  real<lower=0> regularization[len_regularization];
+  array[len_regularization] real<lower=0> regularization;
   int<lower=0> num_non_zero;
   vector[num_non_zero] w;
-  int<lower=0, upper=q - 1> v[num_non_zero];
-  int<lower=0, upper=rows(w) + 1> u[t > 0 ? N + 1 : 0];
+  array[num_non_zero] int<lower=0, upper=q - 1> v;
+  array[t > 0 ? N + 1 : 0] int<lower=0, upper=rows(w) + 1> u;
   int<lower=0, upper=1> special_case;
   int<lower=0, upper=1> has_intercept_z;
   int<lower=0> link_phi;
@@ -1769,7 +1776,7 @@ data {
   real<lower=0> global_prior_df_z;
   real<lower=0> slab_df_z;
   real<lower=0> slab_scale_z;
-  int<lower=2> num_normals_z[prior_dist_z == 7 ? z_dim : 0];
+  array[prior_dist_z == 7 ? z_dim : 0] int<lower=2> num_normals_z;
   int<lower=0, upper=10> SSfun;
   vector[SSfun > 0 ? len_y : 0] input;
   vector[SSfun == 5 ? len_y : 0] Dose;
@@ -1778,16 +1785,16 @@ transformed data {
   vector[family == 3 ? len_y : 0] sqrt_y;
   vector[family == 3 ? len_y : 0] log_y;
   real sum_log_y = family == 1 ? not_a_number() : sum(log(y));
-  int<lower=1> V[special_case ? t : 0, len_y] = make_V(len_y,
-                                                       special_case ? t : 0,
-                                                       v);
+  array[special_case ? t : 0, len_y] int<lower=1> V = make_V(len_y,
+                                                             special_case ? t
+                                                             : 0, v);
   int<lower=0> hs_z;
   int<lower=0> len_z_T = 0;
   int<lower=0> len_var_group = sum(p) * (t > 0);
   int<lower=0> len_rho = sum(p) - t;
   int<lower=0, upper=1> is_continuous = 0;
   int<lower=1> pos = 1;
-  real<lower=0> delta[len_concentration];
+  array[len_concentration] real<lower=0> delta;
   int<lower=0> hs;
   if (prior_dist <= 2) 
     hs = 0;
@@ -1822,15 +1829,16 @@ transformed data {
   }
 }
 parameters {
-  real<lower=make_lower(family, link), upper=make_upper(family, link)> gamma[has_intercept];
+  array[has_intercept] real<lower=make_lower(family, link), upper=make_upper(family,
+                                                                    link)> gamma;
   vector[prior_dist == 7 ? sum(num_normals) : K] z_beta;
   vector[K_smooth] z_beta_smooth;
   vector<lower=0>[K_smooth > 0 ? smooth_map[K_smooth] : 0] smooth_sd_raw;
-  real<lower=0> global[hs];
-  vector<lower=0>[K] local[hs];
-  real<lower=0> caux[hs > 0];
-  vector<lower=0>[K] mix[prior_dist == 5 || prior_dist == 6];
-  real<lower=0> one_over_lambda[prior_dist == 6];
+  array[hs] real<lower=0> global;
+  array[hs] vector<lower=0>[K] local;
+  array[hs > 0] real<lower=0> caux;
+  array[prior_dist == 5 || prior_dist == 6] vector<lower=0>[K] mix;
+  array[prior_dist == 6] real<lower=0> one_over_lambda;
   vector[q] z_b;
   vector[len_z_T] z_T;
   vector<lower=0, upper=1>[len_rho] rho;
@@ -1838,12 +1846,12 @@ parameters {
   vector<lower=0>[t] tau;
   real<lower=0> aux_unscaled;
   vector[prior_dist_z == 7 ? sum(num_normals_z) : z_dim] z_omega;
-  real<lower=(link_phi <= 1 ? negative_infinity() : 0)> gamma_z[has_intercept_z];
-  real<lower=0> global_z[hs_z];
-  vector<lower=0>[z_dim] local_z[hs_z];
-  real<lower=0> caux_z[hs_z > 0];
-  vector<lower=0>[z_dim] S_z[prior_dist_z == 5 || prior_dist_z == 6];
-  real<lower=0> one_over_lambda_z[prior_dist_z == 6];
+  array[has_intercept_z] real<lower=(link_phi <= 1 ? negative_infinity() : 0)> gamma_z;
+  array[hs_z] real<lower=0> global_z;
+  array[hs_z] vector<lower=0>[z_dim] local_z;
+  array[hs_z > 0] real<lower=0> caux_z;
+  array[prior_dist_z == 5 || prior_dist_z == 6] vector<lower=0>[z_dim] S_z;
+  array[prior_dist_z == 6] real<lower=0> one_over_lambda_z;
 }
 transformed parameters {
   real aux = prior_dist_for_aux == 0 ? aux_unscaled
@@ -2217,8 +2225,8 @@ model {
 }
 generated quantities {
   real mean_PPD = compute_mean_PPD ? 0 : negative_infinity();
-  real alpha[has_intercept];
-  real omega_int[has_intercept_z];
+  array[has_intercept] real alpha;
+  array[has_intercept_z] real omega_int;
   if (has_intercept == 1) {
     if (dense_X) 
       alpha[1] = gamma[1] - dot_product(xbar, beta);
@@ -2375,8 +2383,9 @@ generated quantities {
 
   $ ../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined count.stan
 functions {
-  vector make_theta_L(int len_theta_L, int[] p, real dispersion, vector tau,
-                      vector scale, vector zeta, vector rho, vector z_T) {
+  vector make_theta_L(int len_theta_L, array[] int p, real dispersion,
+                      vector tau, vector scale, vector zeta, vector rho,
+                      vector z_T) {
     vector[len_theta_L] theta_L;
     int zeta_mark = 1;
     int rho_mark = 1;
@@ -2423,7 +2432,7 @@ functions {
     }
     return theta_L;
   }
-  vector make_b(vector z_b, vector theta_L, int[] p, int[] l) {
+  vector make_b(vector z_b, vector theta_L, array[] int p, array[] int l) {
     vector[rows(z_b)] b;
     int b_mark = 1;
     int theta_L_mark = 1;
@@ -2458,8 +2467,8 @@ functions {
     return b;
   }
   real decov_lp(vector z_b, vector z_T, vector rho, vector zeta, vector tau,
-                real[] regularization, real[] delta, vector shape, int t,
-                int[] p) {
+                array[] real regularization, array[] real delta,
+                vector shape, int t, array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
     target += normal_lpdf(z_b| 0, 1);
@@ -2484,7 +2493,7 @@ functions {
     target += gamma_lpdf(tau| shape, 1);
     return target();
   }
-  vector hs_prior(vector z_beta, real[] global, vector[] local,
+  vector hs_prior(vector z_beta, array[] real global, array[] vector local,
                   real global_prior_scale, real error_scale, real c2) {
     int K = rows(z_beta);
     vector[K] lambda = local[1] .* sqrt(local[2]);
@@ -2494,8 +2503,9 @@ functions {
                                   ./ (c2 + square(tau) * lambda2));
     return z_beta .* lambda_tilde * tau;
   }
-  vector hsplus_prior(vector z_beta, real[] global, vector[] local,
-                      real global_prior_scale, real error_scale, real c2) {
+  vector hsplus_prior(vector z_beta, array[] real global,
+                      array[] vector local, real global_prior_scale,
+                      real error_scale, real c2) {
     int K = rows(z_beta);
     vector[K] lambda = local[1] .* sqrt(local[2]);
     vector[K] eta = local[3] .* sqrt(local[4]);
@@ -2519,8 +2529,8 @@ functions {
            + (79 * z9 + 776 * z7 + 1482 * z5 - 1920 * z3 - 945 * z)
              / (92160 * df4);
   }
-  int[,] make_V(int N, int t, int[] v) {
-    int V[t, N];
+  array[,] int make_V(int N, int t, array[] int v) {
+    array[t, N] int V;
     int pos = 1;
     if (t > 0) 
       for (j in 1 : N) 
@@ -2530,8 +2540,8 @@ functions {
         }
     return V;
   }
-  vector csr_matrix_times_vector2(int m, int n, vector w, int[] v, int[] u,
-                                  vector b);
+  vector csr_matrix_times_vector2(int m, int n, vector w, array[] int v,
+                                  array[] int u, vector b);
   real make_lower(int family, int link) {
     if (family == 1) 
       return negative_infinity();
@@ -2558,7 +2568,7 @@ functions {
       reject("Invalid link");
     return eta;
   }
-  vector pw_pois(int[] y, vector eta, int link) {
+  vector pw_pois(array[] int y, vector eta, int link) {
     int N = rows(eta);
     vector[N] ll;
     if (link == 1) 
@@ -2573,7 +2583,7 @@ functions {
       reject("Invalid link");
     return ll;
   }
-  vector pw_nb(int[] y, vector eta, real theta, int link) {
+  vector pw_nb(array[] int y, vector eta, real theta, int link) {
     int N = rows(eta);
     vector[N] rho = linkinv_count(eta, link);
     vector[N] ll;
@@ -2587,15 +2597,15 @@ data {
   int<lower=0> K;
   vector[K] xbar;
   int<lower=0, upper=1> dense_X;
-  matrix[N, K] X[dense_X];
+  array[dense_X] matrix[N, K] X;
   int<lower=0> nnz_X;
   vector[nnz_X] w_X;
-  int<lower=0, upper=K - 1> v_X[nnz_X];
-  int<lower=0, upper=rows(w_X) + 1> u_X[dense_X ? 0 : N + 1];
+  array[nnz_X] int<lower=0, upper=K - 1> v_X;
+  array[dense_X ? 0 : N + 1] int<lower=0, upper=rows(w_X) + 1> u_X;
   int<lower=0> K_smooth;
   matrix[N, K_smooth] S;
-  int<lower=1> smooth_map[K_smooth];
-  int<lower=0> y[N];
+  array[K_smooth] int<lower=1> smooth_map;
+  array[N] int<lower=0> y;
   int<lower=0, upper=1> prior_PD;
   int<lower=0, upper=1> compute_mean_PPD;
   int<lower=0, upper=1> has_intercept;
@@ -2625,34 +2635,35 @@ data {
   real<lower=0> global_prior_scale;
   real<lower=0> slab_df;
   real<lower=0> slab_scale;
-  int<lower=2> num_normals[prior_dist == 7 ? K : 0];
+  array[prior_dist == 7 ? K : 0] int<lower=2> num_normals;
   int<lower=0> t;
-  int<lower=1> p[t];
-  int<lower=1> l[t];
+  array[t] int<lower=1> p;
+  array[t] int<lower=1> l;
   int<lower=0> q;
   int<lower=0> len_theta_L;
   vector<lower=0>[t] shape;
   vector<lower=0>[t] scale;
   int<lower=0> len_concentration;
-  real<lower=0> concentration[len_concentration];
+  array[len_concentration] real<lower=0> concentration;
   int<lower=0> len_regularization;
-  real<lower=0> regularization[len_regularization];
+  array[len_regularization] real<lower=0> regularization;
   int<lower=0> num_non_zero;
   vector[num_non_zero] w;
-  int<lower=0, upper=q - 1> v[num_non_zero];
-  int<lower=0, upper=rows(w) + 1> u[t > 0 ? N + 1 : 0];
+  array[num_non_zero] int<lower=0, upper=q - 1> v;
+  array[t > 0 ? N + 1 : 0] int<lower=0, upper=rows(w) + 1> u;
   int<lower=0, upper=1> special_case;
 }
 transformed data {
   real poisson_max = pow(2.0, 30.0);
-  int<lower=1> V[special_case ? t : 0, N] = make_V(N, special_case ? t : 0,
-                                                   v);
+  array[special_case ? t : 0, N] int<lower=1> V = make_V(N,
+                                                         special_case ? t : 0,
+                                                         v);
   int<lower=0> len_z_T = 0;
   int<lower=0> len_var_group = sum(p) * (t > 0);
   int<lower=0> len_rho = sum(p) - t;
   int<lower=0, upper=1> is_continuous = 0;
   int<lower=1> pos = 1;
-  real<lower=0> delta[len_concentration];
+  array[len_concentration] real<lower=0> delta;
   int<lower=0> hs;
   if (prior_dist <= 2) 
     hs = 0;
@@ -2674,22 +2685,22 @@ transformed data {
   }
 }
 parameters {
-  real<lower=(link == 1 ? negative_infinity() : 0.0)> gamma[has_intercept];
+  array[has_intercept] real<lower=(link == 1 ? negative_infinity() : 0.0)> gamma;
   vector[prior_dist == 7 ? sum(num_normals) : K] z_beta;
   vector[K_smooth] z_beta_smooth;
   vector<lower=0>[K_smooth > 0 ? smooth_map[K_smooth] : 0] smooth_sd_raw;
-  real<lower=0> global[hs];
-  vector<lower=0>[K] local[hs];
-  real<lower=0> caux[hs > 0];
-  vector<lower=0>[K] mix[prior_dist == 5 || prior_dist == 6];
-  real<lower=0> one_over_lambda[prior_dist == 6];
+  array[hs] real<lower=0> global;
+  array[hs] vector<lower=0>[K] local;
+  array[hs > 0] real<lower=0> caux;
+  array[prior_dist == 5 || prior_dist == 6] vector<lower=0>[K] mix;
+  array[prior_dist == 6] real<lower=0> one_over_lambda;
   vector[q] z_b;
   vector[len_z_T] z_T;
   vector<lower=0, upper=1>[len_rho] rho;
   vector<lower=0>[len_concentration] zeta;
   vector<lower=0>[t] tau;
-  real<lower=0> aux_unscaled[family > 6];
-  vector<lower=0>[N] noise[family == 8];
+  array[family > 6] real<lower=0> aux_unscaled;
+  array[family == 8] vector<lower=0>[N] noise;
 }
 transformed parameters {
   real aux = negative_infinity();
@@ -2910,7 +2921,7 @@ model {
 }
 generated quantities {
   real mean_PPD = compute_mean_PPD ? 0 : negative_infinity();
-  real alpha[has_intercept];
+  array[has_intercept] real alpha;
   if (has_intercept == 1) {
     if (dense_X) 
       alpha[1] = gamma[1] - dot_product(xbar, beta);
@@ -2987,8 +2998,9 @@ generated quantities {
 
   $ ../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined jm.stan
 functions {
-  vector make_theta_L(int len_theta_L, int[] p, real dispersion, vector tau,
-                      vector scale, vector zeta, vector rho, vector z_T) {
+  vector make_theta_L(int len_theta_L, array[] int p, real dispersion,
+                      vector tau, vector scale, vector zeta, vector rho,
+                      vector z_T) {
     vector[len_theta_L] theta_L;
     int zeta_mark = 1;
     int rho_mark = 1;
@@ -3035,7 +3047,7 @@ functions {
     }
     return theta_L;
   }
-  vector make_b(vector z_b, vector theta_L, int[] p, int[] l) {
+  vector make_b(vector z_b, vector theta_L, array[] int p, array[] int l) {
     vector[rows(z_b)] b;
     int b_mark = 1;
     int theta_L_mark = 1;
@@ -3070,8 +3082,8 @@ functions {
     return b;
   }
   real decov_lp(vector z_b, vector z_T, vector rho, vector zeta, vector tau,
-                real[] regularization, real[] delta, vector shape, int t,
-                int[] p) {
+                array[] real regularization, array[] real delta,
+                vector shape, int t, array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
     target += normal_lpdf(z_b| 0, 1);
@@ -3096,7 +3108,7 @@ functions {
     target += gamma_lpdf(tau| shape, 1);
     return target();
   }
-  vector hs_prior(vector z_beta, real[] global, vector[] local,
+  vector hs_prior(vector z_beta, array[] real global, array[] vector local,
                   real global_prior_scale, real error_scale, real c2) {
     int K = rows(z_beta);
     vector[K] lambda = local[1] .* sqrt(local[2]);
@@ -3106,8 +3118,9 @@ functions {
                                   ./ (c2 + square(tau) * lambda2));
     return z_beta .* lambda_tilde * tau;
   }
-  vector hsplus_prior(vector z_beta, real[] global, vector[] local,
-                      real global_prior_scale, real error_scale, real c2) {
+  vector hsplus_prior(vector z_beta, array[] real global,
+                      array[] vector local, real global_prior_scale,
+                      real error_scale, real c2) {
     int K = rows(z_beta);
     vector[K] lambda = local[1] .* sqrt(local[2]);
     vector[K] eta = local[3] .* sqrt(local[4]);
@@ -3131,8 +3144,8 @@ functions {
            + (79 * z9 + 776 * z7 + 1482 * z5 - 1920 * z3 - 945 * z)
              / (92160 * df4);
   }
-  int[,] make_V(int N, int t, int[] v) {
-    int V[t, N];
+  array[,] int make_V(int N, int t, array[] int v) {
+    array[t, N] int V;
     int pos = 1;
     if (t > 0) 
       for (j in 1 : N) 
@@ -3142,8 +3155,8 @@ functions {
         }
     return V;
   }
-  vector csr_matrix_times_vector2(int m, int n, vector w, int[] v, int[] u,
-                                  vector b);
+  vector csr_matrix_times_vector2(int m, int n, vector w, array[] int v,
+                                  array[] int u, vector b);
   real make_lower(int family, int link) {
     if (family == 1) 
       return negative_infinity();
@@ -3174,7 +3187,7 @@ functions {
       reject("Invalid link");
     return eta;
   }
-  real ll_bern_lp(vector eta0, vector eta1, int link, int[] N) {
+  real ll_bern_lp(vector eta0, vector eta1, int link, array[] int N) {
     if (link == 1) {
       target += logistic_lccdf(eta0| 0, 1);
       target += logistic_lcdf(eta1| 0, 1);
@@ -3233,8 +3246,8 @@ functions {
     }
     return not_a_number();
   }
-  real ll_clogit_lp(vector eta0, vector eta1, int[] successes,
-                    int[] failures, int[] observations) {
+  real ll_clogit_lp(vector eta0, vector eta1, array[] int successes,
+                    array[] int failures, array[] int observations) {
     int J = num_elements(observations);
     int pos0 = 1;
     int pos1 = 1;
@@ -3267,7 +3280,7 @@ functions {
       reject("Invalid link");
     return eta;
   }
-  real ll_binom_lp(int[] y, int[] trials, vector eta, int link) {
+  real ll_binom_lp(array[] int y, array[] int trials, vector eta, int link) {
     if (link == 1) 
       target += binomial_logit_lpmf(y| trials, eta);
     else if (link < 4) 
@@ -3291,7 +3304,7 @@ functions {
       reject("Invalid link");
     return target();
   }
-  vector pw_binom(int[] y, int[] trials, vector eta, int link) {
+  vector pw_binom(array[] int y, array[] int trials, vector eta, int link) {
     int N = rows(eta);
     vector[N] ll;
     if (link == 1) {
@@ -3461,7 +3474,7 @@ functions {
       reject("Invalid link");
     return eta;
   }
-  vector pw_pois(int[] y, vector eta, int link) {
+  vector pw_pois(array[] int y, vector eta, int link) {
     int N = rows(eta);
     vector[N] ll;
     if (link == 1) 
@@ -3476,7 +3489,7 @@ functions {
       reject("Invalid link");
     return ll;
   }
-  vector pw_nb(int[] y, vector eta, real theta, int link) {
+  vector pw_nb(array[] int y, vector eta, real theta, int link) {
     int N = rows(eta);
     vector[N] rho = linkinv_count(eta, link);
     vector[N] ll;
@@ -3508,8 +3521,8 @@ functions {
       ub_ = positive_infinity();
     return ub_;
   }
-  int[] lower_tri_indices(int dim) {
-    int indices[dim + choose(dim, 2)];
+  array[] int lower_tri_indices(int dim) {
+    array[dim + choose(dim, 2)] int indices;
     int mark = 1;
     for (r in 1 : dim) {
       for (c in r : dim) {
@@ -3533,9 +3546,10 @@ functions {
   }
   vector make_beta(vector z_beta, int prior_dist, vector prior_mean,
                    vector prior_scale, vector prior_df,
-                   real global_prior_scale, real[] global, vector[] local,
-                   real[] ool, vector[] mix, real[] aux, int family,
-                   real slab_scale, real[] caux) {
+                   real global_prior_scale, array[] real global,
+                   array[] vector local, array[] real ool,
+                   array[] vector mix, array[] real aux, int family,
+                   real slab_scale, array[] real caux) {
     vector[rows(z_beta)] beta;
     if (prior_dist == 0) 
       beta = z_beta;
@@ -3568,7 +3582,8 @@ functions {
       beta = prior_mean + ool[1] * prior_scale .* sqrt(2 * mix[1]) .* z_beta;
     return beta;
   }
-  matrix make_b_matrix(vector z_b, vector theta_L, int[] p, int[] l, int i) {
+  matrix make_b_matrix(vector z_b, vector theta_L, array[] int p,
+                       array[] int l, int i) {
     matrix[p[i], l[i]] b_matrix;
     int nc = p[i];
     int b_mark = 1;
@@ -3602,8 +3617,9 @@ functions {
     }
     return b_matrix';
   }
-  vector evaluate_eta(matrix X, vector[] Z1, vector[] Z2, int[] Z1_id,
-                      int[] Z2_id, real[] gamma, vector beta, matrix b1Mat,
+  vector evaluate_eta(matrix X, array[] vector Z1, array[] vector Z2,
+                      array[] int Z1_id, array[] int Z2_id,
+                      array[] real gamma, vector beta, matrix b1Mat,
                       matrix b2Mat, int b1Mat_colshift, int b2Mat_colshift,
                       int intercept_type) {
     int N = rows(X);
@@ -3651,9 +3667,9 @@ functions {
       mu = linkinv_count(eta, link);
     return mu;
   }
-  void glm_lp(vector y_real, int[] y_integer, vector eta, real[] aux,
-              int family, int link, real sum_log_y, vector sqrt_y,
-              vector log_y) {
+  void glm_lp(vector y_real, array[] int y_integer, vector eta,
+              array[] real aux, int family, int link, real sum_log_y,
+              vector sqrt_y, vector log_y) {
     if (family == 1) {
       if (link == 1) 
         target += normal_lpdf(y_real| eta, aux[1]);
@@ -3694,9 +3710,9 @@ functions {
       reject("Invalid family.");
   }
   void beta_lp(vector z_beta, int prior_dist, vector prior_scale,
-               vector prior_df, real global_prior_df, vector[] local,
-               real[] global, vector[] mix, real[] one_over_lambda,
-               real slab_df, real[] caux) {
+               vector prior_df, real global_prior_df, array[] vector local,
+               array[] real global, array[] vector mix,
+               array[] real one_over_lambda, real slab_df, array[] real caux) {
     if (prior_dist == 1) 
       target += normal_lpdf(z_beta| 0, 1);
     else if (prior_dist == 2) 
@@ -3750,7 +3766,7 @@ functions {
         target += exponential_lpdf(aux_unscaled| 1);
     }
   }
-  real mean_PPD_rng(vector mu, real[] aux, int family) {
+  real mean_PPD_rng(vector mu, array[] real aux, int family) {
     int N = rows(mu);
     real mean_PPD = 0;
     if (family == 1) {
@@ -3819,7 +3835,8 @@ functions {
         target += exponential_lpdf(aux_unscaled| 1);
     }
   }
-  vector collapse_within_groups(vector eta, int[,] grp_idx, int grp_assoc) {
+  vector collapse_within_groups(vector eta, array[,] int grp_idx,
+                                int grp_assoc) {
     int N = size(grp_idx);
     vector[N] val;
     if (grp_assoc == 1) {
@@ -3840,10 +3857,10 @@ functions {
     }
     return val;
   }
-  matrix make_x_assoc_shared_b(vector b, int[] l, int[] p, int[,] pmat,
-                               int Npat, int qnodes, int[] which_b,
-                               int sum_size_which_b, int[] size_which_b,
-                               int t_i, int M) {
+  matrix make_x_assoc_shared_b(vector b, array[] int l, array[] int p,
+                               array[,] int pmat, int Npat, int qnodes,
+                               array[] int which_b, int sum_size_which_b,
+                               array[] int size_which_b, int t_i, int M) {
     int prior_shift;
     int start_store;
     int end_store;
@@ -3886,18 +3903,20 @@ functions {
     }
     return x_assoc_shared_b;
   }
-  matrix make_x_assoc_shared_coef(vector b, vector beta, int[] KM, int M,
-                                  int t_i, int[] l, int[] p, int[,] pmat,
-                                  int Npat, int qnodes,
-                                  int sum_size_which_coef,
-                                  int[] size_which_coef,
-                                  int[] which_coef_zindex,
-                                  int[] which_coef_xindex,
-                                  int[] has_intercept,
-                                  int[] has_intercept_nob,
-                                  int[] has_intercept_lob,
-                                  int[] has_intercept_upb, real[] gamma_nob,
-                                  real[] gamma_lob, real[] gamma_upb) {
+  matrix make_x_assoc_shared_coef(vector b, vector beta, array[] int KM,
+                                  int M, int t_i, array[] int l,
+                                  array[] int p, array[,] int pmat, int Npat,
+                                  int qnodes, int sum_size_which_coef,
+                                  array[] int size_which_coef,
+                                  array[] int which_coef_zindex,
+                                  array[] int which_coef_xindex,
+                                  array[] int has_intercept,
+                                  array[] int has_intercept_nob,
+                                  array[] int has_intercept_lob,
+                                  array[] int has_intercept_upb,
+                                  array[] real gamma_nob,
+                                  array[] real gamma_lob,
+                                  array[] real gamma_upb) {
     int t_shift;
     int start_store;
     int end_store;
@@ -3975,29 +3994,29 @@ functions {
 }
 data {
   int<lower=1, upper=3> M;
-  int<lower=0, upper=1> has_aux[3];
+  array[3] int<lower=0, upper=1> has_aux;
   int<lower=0, upper=1> has_weights;
-  int<lower=0, upper=2> resp_type[3];
-  int<lower=0, upper=3> intercept_type[3];
-  int<lower=0> yNobs[3];
-  int<lower=0> yNeta[3];
-  int<lower=0> yK[3];
+  array[3] int<lower=0, upper=2> resp_type;
+  array[3] int<lower=0, upper=3> intercept_type;
+  array[3] int<lower=0> yNobs;
+  array[3] int<lower=0> yNeta;
+  array[3] int<lower=0> yK;
   int<lower=0> t;
-  int<lower=1> p[t];
-  int<lower=1> l[t];
+  array[t] int<lower=1> p;
+  array[t] int<lower=1> l;
   int<lower=0> q;
   int<lower=0> len_theta_L;
   int<lower=0> bN1;
   int<lower=0> bK1;
-  int<lower=0> bK1_len[3];
-  int<lower=0> bK1_idx[3, 2];
+  array[3] int<lower=0> bK1_len;
+  array[3, 2] int<lower=0> bK1_idx;
   int<lower=0> bN2;
   int<lower=0> bK2;
-  int<lower=0> bK2_len[3];
-  int<lower=0> bK2_idx[3, 2];
-  int<lower=0> yInt1[resp_type[1] == 2 ? yNobs[1] : 0];
-  int<lower=0> yInt2[resp_type[2] == 2 ? yNobs[2] : 0];
-  int<lower=0> yInt3[resp_type[3] == 2 ? yNobs[3] : 0];
+  array[3] int<lower=0> bK2_len;
+  array[3, 2] int<lower=0> bK2_idx;
+  array[resp_type[1] == 2 ? yNobs[1] : 0] int<lower=0> yInt1;
+  array[resp_type[2] == 2 ? yNobs[2] : 0] int<lower=0> yInt2;
+  array[resp_type[3] == 2 ? yNobs[3] : 0] int<lower=0> yInt3;
   vector[resp_type[1] == 1 ? yNobs[1] : 0] yReal1;
   vector[resp_type[2] == 1 ? yNobs[2] : 0] yReal2;
   vector[resp_type[3] == 1 ? yNobs[3] : 0] yReal3;
@@ -4007,23 +4026,23 @@ data {
   vector[yK[1]] yXbar1;
   vector[yK[2]] yXbar2;
   vector[yK[3]] yXbar3;
-  int<lower=0> family[M];
-  int<lower=0> link[M];
-  vector[bK1_len[1] > 0 ? yNeta[1] : 0] y1_Z1[bK1_len[1]];
-  vector[bK1_len[2] > 0 ? yNeta[2] : 0] y2_Z1[bK1_len[2]];
-  vector[bK1_len[3] > 0 ? yNeta[3] : 0] y3_Z1[bK1_len[3]];
-  int<lower=0> y1_Z1_id[bK1_len[1] > 0 ? yNeta[1] : 0];
-  int<lower=0> y2_Z1_id[bK1_len[2] > 0 ? yNeta[2] : 0];
-  int<lower=0> y3_Z1_id[bK1_len[3] > 0 ? yNeta[3] : 0];
-  vector[bK2_len[1] > 0 ? yNeta[1] : 0] y1_Z2[bK2_len[1]];
-  vector[bK2_len[2] > 0 ? yNeta[2] : 0] y2_Z2[bK2_len[2]];
-  vector[bK2_len[3] > 0 ? yNeta[3] : 0] y3_Z2[bK2_len[3]];
-  int<lower=0> y1_Z2_id[bK2_len[1] > 0 ? yNeta[1] : 0];
-  int<lower=0> y2_Z2_id[bK2_len[2] > 0 ? yNeta[2] : 0];
-  int<lower=0> y3_Z2_id[bK2_len[3] > 0 ? yNeta[3] : 0];
-  int<lower=0, upper=7> y_prior_dist[3];
-  int<lower=0, upper=2> y_prior_dist_for_intercept[M];
-  int<lower=0, upper=3> y_prior_dist_for_aux[M];
+  array[M] int<lower=0> family;
+  array[M] int<lower=0> link;
+  array[bK1_len[1]] vector[bK1_len[1] > 0 ? yNeta[1] : 0] y1_Z1;
+  array[bK1_len[2]] vector[bK1_len[2] > 0 ? yNeta[2] : 0] y2_Z1;
+  array[bK1_len[3]] vector[bK1_len[3] > 0 ? yNeta[3] : 0] y3_Z1;
+  array[bK1_len[1] > 0 ? yNeta[1] : 0] int<lower=0> y1_Z1_id;
+  array[bK1_len[2] > 0 ? yNeta[2] : 0] int<lower=0> y2_Z1_id;
+  array[bK1_len[3] > 0 ? yNeta[3] : 0] int<lower=0> y3_Z1_id;
+  array[bK2_len[1]] vector[bK2_len[1] > 0 ? yNeta[1] : 0] y1_Z2;
+  array[bK2_len[2]] vector[bK2_len[2] > 0 ? yNeta[2] : 0] y2_Z2;
+  array[bK2_len[3]] vector[bK2_len[3] > 0 ? yNeta[3] : 0] y3_Z2;
+  array[bK2_len[1] > 0 ? yNeta[1] : 0] int<lower=0> y1_Z2_id;
+  array[bK2_len[2] > 0 ? yNeta[2] : 0] int<lower=0> y2_Z2_id;
+  array[bK2_len[3] > 0 ? yNeta[3] : 0] int<lower=0> y3_Z2_id;
+  array[3] int<lower=0, upper=7> y_prior_dist;
+  array[M] int<lower=0, upper=2> y_prior_dist_for_intercept;
+  array[M] int<lower=0, upper=3> y_prior_dist_for_aux;
   int<lower=1, upper=2> prior_dist_for_cov;
   int<lower=0, upper=1> prior_PD;
   int<lower=0, upper=6> e_prior_dist;
@@ -4050,92 +4069,91 @@ data {
   int<lower=0> a_K;
   vector[a_K] a_xbar;
   int<lower=0, upper=1> assoc;
-  int<lower=0, upper=1> assoc_uses[6, 3];
-  int<lower=0, upper=1> has_assoc[16, M];
+  array[6, 3] int<lower=0, upper=1> assoc_uses;
+  array[16, M] int<lower=0, upper=1> has_assoc;
   int<lower=0> sum_size_which_b;
-  int<lower=0> size_which_b[M];
-  int<lower=1> which_b_zindex[sum_size_which_b];
+  array[M] int<lower=0> size_which_b;
+  array[sum_size_which_b] int<lower=1> which_b_zindex;
   int<lower=0> sum_size_which_coef;
-  int<lower=0> size_which_coef[M];
-  int<lower=1> which_coef_zindex[sum_size_which_coef];
-  int<lower=1> which_coef_xindex[sum_size_which_coef];
+  array[M] int<lower=0> size_which_coef;
+  array[sum_size_which_coef] int<lower=1> which_coef_zindex;
+  array[sum_size_which_coef] int<lower=1> which_coef_xindex;
   int<lower=0> sum_size_which_interactions;
-  int<lower=0, upper=sum_size_which_interactions> size_which_interactions[M
-                                                                    * 4];
-  int<lower=1> which_interactions[sum_size_which_interactions];
-  int<lower=0> nrow_y_Xq[3];
+  array[M * 4] int<lower=0, upper=sum_size_which_interactions> size_which_interactions;
+  array[sum_size_which_interactions] int<lower=1> which_interactions;
+  array[3] int<lower=0> nrow_y_Xq;
   matrix[assoc_uses[1, 1] == 1 ? nrow_y_Xq[1] : 0, yK[1]] y1_xq_eta;
   matrix[assoc_uses[1, 2] == 1 ? nrow_y_Xq[2] : 0, yK[2]] y2_xq_eta;
   matrix[assoc_uses[1, 3] == 1 ? nrow_y_Xq[3] : 0, yK[3]] y3_xq_eta;
-  vector[assoc_uses[1, 1] == 1 && bK1_len[1] > 0 ? nrow_y_Xq[1] : 0] y1_z1q_eta[bK1_len[1]];
-  vector[assoc_uses[1, 2] == 1 && bK1_len[2] > 0 ? nrow_y_Xq[2] : 0] y2_z1q_eta[bK1_len[2]];
-  vector[assoc_uses[1, 3] == 1 && bK1_len[3] > 0 ? nrow_y_Xq[3] : 0] y3_z1q_eta[bK1_len[3]];
-  int<lower=0> y1_z1q_id_eta[assoc_uses[1, 1] == 1 && bK1_len[1] > 0
-                             ? nrow_y_Xq[1] : 0];
-  int<lower=0> y2_z1q_id_eta[assoc_uses[1, 2] == 1 && bK1_len[2] > 0
-                             ? nrow_y_Xq[2] : 0];
-  int<lower=0> y3_z1q_id_eta[assoc_uses[1, 3] == 1 && bK1_len[3] > 0
-                             ? nrow_y_Xq[3] : 0];
-  vector[assoc_uses[1, 1] == 1 && bK2_len[1] > 0 ? nrow_y_Xq[1] : 0] y1_z2q_eta[bK2_len[1]];
-  vector[assoc_uses[1, 2] == 1 && bK2_len[2] > 0 ? nrow_y_Xq[2] : 0] y2_z2q_eta[bK2_len[2]];
-  vector[assoc_uses[1, 3] == 1 && bK2_len[3] > 0 ? nrow_y_Xq[3] : 0] y3_z2q_eta[bK2_len[3]];
-  int<lower=0> y1_z2q_id_eta[assoc_uses[1, 1] == 1 && bK2_len[1] > 0
-                             ? nrow_y_Xq[1] : 0];
-  int<lower=0> y2_z2q_id_eta[assoc_uses[1, 2] == 1 && bK2_len[2] > 0
-                             ? nrow_y_Xq[2] : 0];
-  int<lower=0> y3_z2q_id_eta[assoc_uses[1, 3] == 1 && bK2_len[3] > 0
-                             ? nrow_y_Xq[3] : 0];
+  array[bK1_len[1]] vector[assoc_uses[1, 1] == 1 && bK1_len[1] > 0
+                           ? nrow_y_Xq[1] : 0] y1_z1q_eta;
+  array[bK1_len[2]] vector[assoc_uses[1, 2] == 1 && bK1_len[2] > 0
+                           ? nrow_y_Xq[2] : 0] y2_z1q_eta;
+  array[bK1_len[3]] vector[assoc_uses[1, 3] == 1 && bK1_len[3] > 0
+                           ? nrow_y_Xq[3] : 0] y3_z1q_eta;
+  array[assoc_uses[1, 1] == 1 && bK1_len[1] > 0 ? nrow_y_Xq[1] : 0] int<lower=0> y1_z1q_id_eta;
+  array[assoc_uses[1, 2] == 1 && bK1_len[2] > 0 ? nrow_y_Xq[2] : 0] int<lower=0> y2_z1q_id_eta;
+  array[assoc_uses[1, 3] == 1 && bK1_len[3] > 0 ? nrow_y_Xq[3] : 0] int<lower=0> y3_z1q_id_eta;
+  array[bK2_len[1]] vector[assoc_uses[1, 1] == 1 && bK2_len[1] > 0
+                           ? nrow_y_Xq[1] : 0] y1_z2q_eta;
+  array[bK2_len[2]] vector[assoc_uses[1, 2] == 1 && bK2_len[2] > 0
+                           ? nrow_y_Xq[2] : 0] y2_z2q_eta;
+  array[bK2_len[3]] vector[assoc_uses[1, 3] == 1 && bK2_len[3] > 0
+                           ? nrow_y_Xq[3] : 0] y3_z2q_eta;
+  array[assoc_uses[1, 1] == 1 && bK2_len[1] > 0 ? nrow_y_Xq[1] : 0] int<lower=0> y1_z2q_id_eta;
+  array[assoc_uses[1, 2] == 1 && bK2_len[2] > 0 ? nrow_y_Xq[2] : 0] int<lower=0> y2_z2q_id_eta;
+  array[assoc_uses[1, 3] == 1 && bK2_len[3] > 0 ? nrow_y_Xq[3] : 0] int<lower=0> y3_z2q_id_eta;
   matrix[assoc_uses[2, 1] == 1 ? nrow_y_Xq[1] : 0, yK[1]] y1_xq_eps;
   matrix[assoc_uses[2, 2] == 1 ? nrow_y_Xq[2] : 0, yK[2]] y2_xq_eps;
   matrix[assoc_uses[2, 3] == 1 ? nrow_y_Xq[3] : 0, yK[3]] y3_xq_eps;
-  vector[assoc_uses[2, 1] == 1 && bK1_len[1] > 0 ? nrow_y_Xq[1] : 0] y1_z1q_eps[bK1_len[1]];
-  vector[assoc_uses[2, 2] == 1 && bK1_len[2] > 0 ? nrow_y_Xq[2] : 0] y2_z1q_eps[bK1_len[2]];
-  vector[assoc_uses[2, 3] == 1 && bK1_len[3] > 0 ? nrow_y_Xq[3] : 0] y3_z1q_eps[bK1_len[3]];
-  int<lower=0> y1_z1q_id_eps[assoc_uses[2, 1] == 1 && bK1_len[1] > 0
-                             ? nrow_y_Xq[1] : 0];
-  int<lower=0> y2_z1q_id_eps[assoc_uses[2, 2] == 1 && bK1_len[2] > 0
-                             ? nrow_y_Xq[2] : 0];
-  int<lower=0> y3_z1q_id_eps[assoc_uses[2, 3] == 1 && bK1_len[3] > 0
-                             ? nrow_y_Xq[3] : 0];
-  vector[assoc_uses[2, 1] == 1 && bK2_len[1] > 0 ? nrow_y_Xq[1] : 0] y1_z2q_eps[bK2_len[1]];
-  vector[assoc_uses[2, 2] == 1 && bK2_len[2] > 0 ? nrow_y_Xq[2] : 0] y2_z2q_eps[bK2_len[2]];
-  vector[assoc_uses[2, 3] == 1 && bK2_len[3] > 0 ? nrow_y_Xq[3] : 0] y3_z2q_eps[bK2_len[3]];
-  int<lower=0> y1_z2q_id_eps[assoc_uses[2, 1] == 1 && bK2_len[1] > 0
-                             ? nrow_y_Xq[1] : 0];
-  int<lower=0> y2_z2q_id_eps[assoc_uses[2, 2] == 1 && bK2_len[2] > 0
-                             ? nrow_y_Xq[2] : 0];
-  int<lower=0> y3_z2q_id_eps[assoc_uses[2, 3] == 1 && bK2_len[3] > 0
-                             ? nrow_y_Xq[3] : 0];
+  array[bK1_len[1]] vector[assoc_uses[2, 1] == 1 && bK1_len[1] > 0
+                           ? nrow_y_Xq[1] : 0] y1_z1q_eps;
+  array[bK1_len[2]] vector[assoc_uses[2, 2] == 1 && bK1_len[2] > 0
+                           ? nrow_y_Xq[2] : 0] y2_z1q_eps;
+  array[bK1_len[3]] vector[assoc_uses[2, 3] == 1 && bK1_len[3] > 0
+                           ? nrow_y_Xq[3] : 0] y3_z1q_eps;
+  array[assoc_uses[2, 1] == 1 && bK1_len[1] > 0 ? nrow_y_Xq[1] : 0] int<lower=0> y1_z1q_id_eps;
+  array[assoc_uses[2, 2] == 1 && bK1_len[2] > 0 ? nrow_y_Xq[2] : 0] int<lower=0> y2_z1q_id_eps;
+  array[assoc_uses[2, 3] == 1 && bK1_len[3] > 0 ? nrow_y_Xq[3] : 0] int<lower=0> y3_z1q_id_eps;
+  array[bK2_len[1]] vector[assoc_uses[2, 1] == 1 && bK2_len[1] > 0
+                           ? nrow_y_Xq[1] : 0] y1_z2q_eps;
+  array[bK2_len[2]] vector[assoc_uses[2, 2] == 1 && bK2_len[2] > 0
+                           ? nrow_y_Xq[2] : 0] y2_z2q_eps;
+  array[bK2_len[3]] vector[assoc_uses[2, 3] == 1 && bK2_len[3] > 0
+                           ? nrow_y_Xq[3] : 0] y3_z2q_eps;
+  array[assoc_uses[2, 1] == 1 && bK2_len[1] > 0 ? nrow_y_Xq[1] : 0] int<lower=0> y1_z2q_id_eps;
+  array[assoc_uses[2, 2] == 1 && bK2_len[2] > 0 ? nrow_y_Xq[2] : 0] int<lower=0> y2_z2q_id_eps;
+  array[assoc_uses[2, 3] == 1 && bK2_len[3] > 0 ? nrow_y_Xq[3] : 0] int<lower=0> y3_z2q_id_eps;
   int<lower=0> auc_qnodes;
   int<lower=0> nrow_y_Xq_auc;
   vector[sum(assoc_uses[3,  : ]) > 0 ? nrow_y_Xq_auc : 0] auc_qwts;
   matrix[assoc_uses[3, 1] == 1 ? nrow_y_Xq_auc : 0, yK[1]] y1_xq_auc;
   matrix[assoc_uses[3, 2] == 1 ? nrow_y_Xq_auc : 0, yK[2]] y2_xq_auc;
   matrix[assoc_uses[3, 3] == 1 ? nrow_y_Xq_auc : 0, yK[3]] y3_xq_auc;
-  vector[assoc_uses[3, 1] == 1 && bK1_len[1] > 0 ? nrow_y_Xq_auc : 0] y1_z1q_auc[bK1_len[1]];
-  vector[assoc_uses[3, 2] == 1 && bK1_len[2] > 0 ? nrow_y_Xq_auc : 0] y2_z1q_auc[bK1_len[2]];
-  vector[assoc_uses[3, 3] == 1 && bK1_len[3] > 0 ? nrow_y_Xq_auc : 0] y3_z1q_auc[bK1_len[3]];
-  int<lower=0> y1_z1q_id_auc[assoc_uses[3, 1] == 1 && bK1_len[1] > 0
-                             ? nrow_y_Xq_auc : 0];
-  int<lower=0> y2_z1q_id_auc[assoc_uses[3, 2] == 1 && bK1_len[2] > 0
-                             ? nrow_y_Xq_auc : 0];
-  int<lower=0> y3_z1q_id_auc[assoc_uses[3, 3] == 1 && bK1_len[3] > 0
-                             ? nrow_y_Xq_auc : 0];
-  vector[assoc_uses[3, 1] == 1 && bK2_len[1] > 0 ? nrow_y_Xq_auc : 0] y1_z2q_auc[bK2_len[1]];
-  vector[assoc_uses[3, 2] == 1 && bK2_len[2] > 0 ? nrow_y_Xq_auc : 0] y2_z2q_auc[bK2_len[2]];
-  vector[assoc_uses[3, 3] == 1 && bK2_len[3] > 0 ? nrow_y_Xq_auc : 0] y3_z2q_auc[bK2_len[3]];
-  int<lower=0> y1_z2q_id_auc[assoc_uses[3, 1] == 1 && bK2_len[1] > 0
-                             ? nrow_y_Xq_auc : 0];
-  int<lower=0> y2_z2q_id_auc[assoc_uses[3, 2] == 1 && bK2_len[2] > 0
-                             ? nrow_y_Xq_auc : 0];
-  int<lower=0> y3_z2q_id_auc[assoc_uses[3, 3] == 1 && bK2_len[3] > 0
-                             ? nrow_y_Xq_auc : 0];
-  int<lower=0, upper=a_K> a_K_data[M * 4];
+  array[bK1_len[1]] vector[assoc_uses[3, 1] == 1 && bK1_len[1] > 0
+                           ? nrow_y_Xq_auc : 0] y1_z1q_auc;
+  array[bK1_len[2]] vector[assoc_uses[3, 2] == 1 && bK1_len[2] > 0
+                           ? nrow_y_Xq_auc : 0] y2_z1q_auc;
+  array[bK1_len[3]] vector[assoc_uses[3, 3] == 1 && bK1_len[3] > 0
+                           ? nrow_y_Xq_auc : 0] y3_z1q_auc;
+  array[assoc_uses[3, 1] == 1 && bK1_len[1] > 0 ? nrow_y_Xq_auc : 0] int<lower=0> y1_z1q_id_auc;
+  array[assoc_uses[3, 2] == 1 && bK1_len[2] > 0 ? nrow_y_Xq_auc : 0] int<lower=0> y2_z1q_id_auc;
+  array[assoc_uses[3, 3] == 1 && bK1_len[3] > 0 ? nrow_y_Xq_auc : 0] int<lower=0> y3_z1q_id_auc;
+  array[bK2_len[1]] vector[assoc_uses[3, 1] == 1 && bK2_len[1] > 0
+                           ? nrow_y_Xq_auc : 0] y1_z2q_auc;
+  array[bK2_len[2]] vector[assoc_uses[3, 2] == 1 && bK2_len[2] > 0
+                           ? nrow_y_Xq_auc : 0] y2_z2q_auc;
+  array[bK2_len[3]] vector[assoc_uses[3, 3] == 1 && bK2_len[3] > 0
+                           ? nrow_y_Xq_auc : 0] y3_z2q_auc;
+  array[assoc_uses[3, 1] == 1 && bK2_len[1] > 0 ? nrow_y_Xq_auc : 0] int<lower=0> y1_z2q_id_auc;
+  array[assoc_uses[3, 2] == 1 && bK2_len[2] > 0 ? nrow_y_Xq_auc : 0] int<lower=0> y2_z2q_id_auc;
+  array[assoc_uses[3, 3] == 1 && bK2_len[3] > 0 ? nrow_y_Xq_auc : 0] int<lower=0> y3_z2q_id_auc;
+  array[M * 4] int<lower=0, upper=a_K> a_K_data;
   matrix[sum(nrow_y_Xq[1 : M]), sum(a_K_data)] y_Xq_data;
-  int<lower=0> idx_q[3, 2];
-  int<lower=0, upper=1> has_grp[M];
+  array[3, 2] int<lower=0> idx_q;
+  array[M] int<lower=0, upper=1> has_grp;
   int<lower=0, upper=4> grp_assoc;
-  int<lower=0> grp_idx[nrow_e_Xq, 2];
+  array[nrow_e_Xq, 2] int<lower=0> grp_idx;
   vector[yK[1]] y_prior_mean1;
   vector[yK[2]] y_prior_mean2;
   vector[yK[3]] y_prior_mean3;
@@ -4159,8 +4177,8 @@ data {
   int<lower=0> len_regularization;
   vector<lower=0>[t] b_prior_shape;
   vector<lower=0>[t] b_prior_scale;
-  real<lower=0> b_prior_concentration[len_concentration];
-  real<lower=0> b_prior_regularization[len_regularization];
+  array[len_concentration] real<lower=0> b_prior_concentration;
+  array[len_regularization] real<lower=0> b_prior_regularization;
   vector<lower=0>[bK1] b1_prior_scale;
   vector<lower=0>[bK2] b2_prior_scale;
   vector<lower=0>[bK1] b1_prior_df;
@@ -4198,9 +4216,9 @@ transformed data {
   int<lower=0> len_var_group = sum(p) * (t > 0);
   int<lower=0> len_rho = sum(p) - t;
   int<lower=1> pos = 1;
-  real<lower=0> delta[len_concentration];
-  int bCov1_idx[prior_dist_for_cov == 2 ? (bK1 + choose(bK1, 2)) : 0];
-  int bCov2_idx[prior_dist_for_cov == 2 ? (bK2 + choose(bK2, 2)) : 0];
+  array[len_concentration] real<lower=0> delta;
+  array[prior_dist_for_cov == 2 ? (bK1 + choose(bK1, 2)) : 0] int bCov1_idx;
+  array[prior_dist_for_cov == 2 ? (bK2 + choose(bK2, 2)) : 0] int bCov2_idx;
   real sum_log_y1 = M > 0 && (family[1] == 2 || family[1] == 3)
                     ? sum(log(yReal1)) : not_a_number();
   real sum_log_y2 = M > 1 && (family[2] == 2 || family[2] == 3)
@@ -4245,12 +4263,9 @@ transformed data {
   }
 }
 parameters {
-  real<lower=lb(intercept_type[1]), upper=ub(intercept_type[1])> yGamma1[intercept_type[1]
-                                                                    > 0];
-  real<lower=lb(intercept_type[2]), upper=ub(intercept_type[2])> yGamma2[intercept_type[2]
-                                                                    > 0];
-  real<lower=lb(intercept_type[3]), upper=ub(intercept_type[3])> yGamma3[intercept_type[3]
-                                                                    > 0];
+  array[intercept_type[1] > 0] real<lower=lb(intercept_type[1]), upper=ub(intercept_type[1])> yGamma1;
+  array[intercept_type[2] > 0] real<lower=lb(intercept_type[2]), upper=ub(intercept_type[2])> yGamma2;
+  array[intercept_type[3] > 0] real<lower=lb(intercept_type[3]), upper=ub(intercept_type[3])> yGamma3;
   vector[yK[1]] z_yBeta1;
   vector[yK[2]] z_yBeta2;
   vector[yK[3]] z_yBeta3;
@@ -4265,38 +4280,38 @@ parameters {
   vector<lower=0>[prior_dist_for_cov == 2 ? bK2 : 0] bSd2;
   matrix[prior_dist_for_cov == 2 && bK2 > 0 ? bK2 : 0, bK2 > 0 ? bN2 : 0] z_bMat2;
   cholesky_factor_corr[prior_dist_for_cov == 2 && bK2 > 1 ? bK2 : 0] bCholesky2;
-  real<lower=0> yAux1_unscaled[has_aux[1]];
-  real<lower=0> yAux2_unscaled[has_aux[2]];
-  real<lower=0> yAux3_unscaled[has_aux[3]];
-  real<lower=0> yGlobal1[yHs1];
-  real<lower=0> yGlobal2[yHs2];
-  real<lower=0> yGlobal3[yHs3];
-  vector<lower=0>[yK[1]] yLocal1[yHs1];
-  vector<lower=0>[yK[2]] yLocal2[yHs2];
-  vector<lower=0>[yK[3]] yLocal3[yHs3];
-  real<lower=0> y_caux1[yHs1 > 0];
-  real<lower=0> y_caux2[yHs2 > 0];
-  real<lower=0> y_caux3[yHs3 > 0];
-  real<lower=0> yOol1[y_prior_dist[1] == 6];
-  real<lower=0> yOol2[y_prior_dist[2] == 6];
-  real<lower=0> yOol3[y_prior_dist[3] == 6];
-  vector<lower=0>[yK[1]] yMix1[y_prior_dist[1] == 5 || y_prior_dist[1] == 6];
-  vector<lower=0>[yK[2]] yMix2[y_prior_dist[2] == 5 || y_prior_dist[2] == 6];
-  vector<lower=0>[yK[3]] yMix3[y_prior_dist[3] == 5 || y_prior_dist[3] == 6];
-  real e_gamma[e_has_intercept];
+  array[has_aux[1]] real<lower=0> yAux1_unscaled;
+  array[has_aux[2]] real<lower=0> yAux2_unscaled;
+  array[has_aux[3]] real<lower=0> yAux3_unscaled;
+  array[yHs1] real<lower=0> yGlobal1;
+  array[yHs2] real<lower=0> yGlobal2;
+  array[yHs3] real<lower=0> yGlobal3;
+  array[yHs1] vector<lower=0>[yK[1]] yLocal1;
+  array[yHs2] vector<lower=0>[yK[2]] yLocal2;
+  array[yHs3] vector<lower=0>[yK[3]] yLocal3;
+  array[yHs1 > 0] real<lower=0> y_caux1;
+  array[yHs2 > 0] real<lower=0> y_caux2;
+  array[yHs3 > 0] real<lower=0> y_caux3;
+  array[y_prior_dist[1] == 6] real<lower=0> yOol1;
+  array[y_prior_dist[2] == 6] real<lower=0> yOol2;
+  array[y_prior_dist[3] == 6] real<lower=0> yOol3;
+  array[y_prior_dist[1] == 5 || y_prior_dist[1] == 6] vector<lower=0>[yK[1]] yMix1;
+  array[y_prior_dist[2] == 5 || y_prior_dist[2] == 6] vector<lower=0>[yK[2]] yMix2;
+  array[y_prior_dist[3] == 5 || y_prior_dist[3] == 6] vector<lower=0>[yK[3]] yMix3;
+  array[e_has_intercept] real e_gamma;
   vector[e_K] e_z_beta;
   vector<lower=(basehaz_type == 1 ? 0 : negative_infinity())>[basehaz_df] e_aux_unscaled;
-  real<lower=0> e_global[e_hs];
-  vector<lower=0>[(e_hs > 0) * e_K] e_local[e_hs];
-  real<lower=0> e_caux[e_hs > 0];
-  vector<lower=0>[e_K] e_mix[e_prior_dist == 5 || e_prior_dist == 6];
-  real<lower=0> e_ool[e_prior_dist == 6];
+  array[e_hs] real<lower=0> e_global;
+  array[e_hs] vector<lower=0>[(e_hs > 0) * e_K] e_local;
+  array[e_hs > 0] real<lower=0> e_caux;
+  array[e_prior_dist == 5 || e_prior_dist == 6] vector<lower=0>[e_K] e_mix;
+  array[e_prior_dist == 6] real<lower=0> e_ool;
   vector[a_K] a_z_beta;
-  real<lower=0> a_global[a_hs];
-  vector<lower=0>[(a_hs > 0) * a_K] a_local[a_hs];
-  real<lower=0> a_caux[a_hs > 0];
-  vector<lower=0>[a_K] a_mix[a_prior_dist == 5 || a_prior_dist == 6];
-  real<lower=0> a_ool[a_prior_dist == 6];
+  array[a_hs] real<lower=0> a_global;
+  array[a_hs] vector<lower=0>[(a_hs > 0) * a_K] a_local;
+  array[a_hs > 0] real<lower=0> a_caux;
+  array[a_prior_dist == 5 || a_prior_dist == 6] vector<lower=0>[a_K] a_mix;
+  array[a_prior_dist == 6] real<lower=0> a_ool;
 }
 transformed parameters {
   vector[e_K] e_beta;
@@ -4305,9 +4320,9 @@ transformed parameters {
   vector[yK[1]] yBeta1;
   vector[yK[2]] yBeta2;
   vector[yK[3]] yBeta3;
-  real yAux1[has_aux[1]];
-  real yAux2[has_aux[2]];
-  real yAux3[has_aux[3]];
+  array[has_aux[1]] real yAux1;
+  array[has_aux[2]] real yAux2;
+  array[has_aux[3]] real yAux3;
   vector[len_theta_L] theta_L;
   real yAuxMaximum = 1.0;
   matrix[bK1 > 0 ? bN1 : 0, bK1] bMat1;
@@ -4949,10 +4964,10 @@ model {
 }
 generated quantities {
   real e_alpha;
-  real mean_PPD[M];
-  real yAlpha1[intercept_type[1] > 0];
-  real yAlpha2[intercept_type[2] > 0];
-  real yAlpha3[intercept_type[3] > 0];
+  array[M] real mean_PPD;
+  array[intercept_type[1] > 0] real yAlpha1;
+  array[intercept_type[2] > 0] real yAlpha2;
+  array[intercept_type[3] > 0] real yAlpha3;
   vector[prior_dist_for_cov == 2 && bK1 > 0 ? size(bCov1_idx) : 0] bCov1;
   vector[prior_dist_for_cov == 2 && bK2 > 0 ? size(bCov2_idx) : 0] bCov2;
   vector[bN1 * bK1] b1 = to_vector(bMat1');
@@ -5041,35 +5056,35 @@ data {
   int<lower=0, upper=1> prior_PD;
   real<lower=0> eta;
   int<lower=1> J;
-  int<lower=1> N[J];
+  array[J] int<lower=1> N;
   int<lower=1, upper=min(N)> K;
-  vector[K] xbarR_inv[J];
-  real ybar[J];
+  array[J] vector[K] xbarR_inv;
+  array[J] real ybar;
   real center_y;
-  real<lower=0> s_Y[J];
-  vector[K] Rb[J];
-  real<lower=0> SSR[J];
-  matrix[K, K] R_inv[J];
+  array[J] real<lower=0> s_Y;
+  array[J] vector[K] Rb;
+  array[J] real<lower=0> SSR;
+  array[J] matrix[K, K] R_inv;
 }
 transformed data {
   real half_K = 0.5 * K;
-  real sqrt_inv_N[J];
-  real sqrt_Nm1[J];
+  array[J] real sqrt_inv_N;
+  array[J] real sqrt_Nm1;
   for (j in 1 : J) {
     sqrt_inv_N[j] = sqrt(1.0 / N[j]);
     sqrt_Nm1[j] = sqrt(N[j] - 1.0);
   }
 }
 parameters {
-  unit_vector[K] u[K > 1 ? J : 0];
-  real z_alpha[J * has_intercept];
-  real<lower=(K > 1 ? 0 : -1), upper=1> R2[J];
+  array[K > 1 ? J : 0] unit_vector[K] u;
+  array[J * has_intercept] real z_alpha;
+  array[J] real<lower=(K > 1 ? 0 : -1), upper=1> R2;
   vector[J * (1 - prior_PD)] log_omega;
 }
 transformed parameters {
-  real alpha[J * has_intercept];
-  vector[K] theta[J];
-  real<lower=0> sigma[J];
+  array[J * has_intercept] real alpha;
+  array[J] vector[K] theta;
+  array[J] real<lower=0> sigma;
   for (j in 1 : J) {
     real Delta_y = prior_PD == 0 ? s_Y[j] * exp(log_omega[j]) : 1;
     if (K > 1) 
@@ -5110,8 +5125,8 @@ model {
   }
 }
 generated quantities {
-  real mean_PPD[J];
-  vector[K] beta[J];
+  array[J] real mean_PPD;
+  array[J] vector[K] beta;
   for (j in 1 : J) {
     real shift;
     shift = dot_product(xbarR_inv[j], theta[j]);
@@ -5123,8 +5138,9 @@ generated quantities {
 
   $ ../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined mvmer.stan
 functions {
-  vector make_theta_L(int len_theta_L, int[] p, real dispersion, vector tau,
-                      vector scale, vector zeta, vector rho, vector z_T) {
+  vector make_theta_L(int len_theta_L, array[] int p, real dispersion,
+                      vector tau, vector scale, vector zeta, vector rho,
+                      vector z_T) {
     vector[len_theta_L] theta_L;
     int zeta_mark = 1;
     int rho_mark = 1;
@@ -5171,7 +5187,7 @@ functions {
     }
     return theta_L;
   }
-  vector make_b(vector z_b, vector theta_L, int[] p, int[] l) {
+  vector make_b(vector z_b, vector theta_L, array[] int p, array[] int l) {
     vector[rows(z_b)] b;
     int b_mark = 1;
     int theta_L_mark = 1;
@@ -5206,8 +5222,8 @@ functions {
     return b;
   }
   real decov_lp(vector z_b, vector z_T, vector rho, vector zeta, vector tau,
-                real[] regularization, real[] delta, vector shape, int t,
-                int[] p) {
+                array[] real regularization, array[] real delta,
+                vector shape, int t, array[] int p) {
     int pos_reg = 1;
     int pos_rho = 1;
     target += normal_lpdf(z_b| 0, 1);
@@ -5232,7 +5248,7 @@ functions {
     target += gamma_lpdf(tau| shape, 1);
     return target();
   }
-  vector hs_prior(vector z_beta, real[] global, vector[] local,
+  vector hs_prior(vector z_beta, array[] real global, array[] vector local,
                   real global_prior_scale, real error_scale, real c2) {
     int K = rows(z_beta);
     vector[K] lambda = local[1] .* sqrt(local[2]);
@@ -5242,8 +5258,9 @@ functions {
                                   ./ (c2 + square(tau) * lambda2));
     return z_beta .* lambda_tilde * tau;
   }
-  vector hsplus_prior(vector z_beta, real[] global, vector[] local,
-                      real global_prior_scale, real error_scale, real c2) {
+  vector hsplus_prior(vector z_beta, array[] real global,
+                      array[] vector local, real global_prior_scale,
+                      real error_scale, real c2) {
     int K = rows(z_beta);
     vector[K] lambda = local[1] .* sqrt(local[2]);
     vector[K] eta = local[3] .* sqrt(local[4]);
@@ -5267,8 +5284,8 @@ functions {
            + (79 * z9 + 776 * z7 + 1482 * z5 - 1920 * z3 - 945 * z)
              / (92160 * df4);
   }
-  int[,] make_V(int N, int t, int[] v) {
-    int V[t, N];
+  array[,] int make_V(int N, int t, array[] int v) {
+    array[t, N] int V;
     int pos = 1;
     if (t > 0) 
       for (j in 1 : N) 
@@ -5278,8 +5295,8 @@ functions {
         }
     return V;
   }
-  vector csr_matrix_times_vector2(int m, int n, vector w, int[] v, int[] u,
-                                  vector b);
+  vector csr_matrix_times_vector2(int m, int n, vector w, array[] int v,
+                                  array[] int u, vector b);
   real make_lower(int family, int link) {
     if (family == 1) 
       return negative_infinity();
@@ -5310,7 +5327,7 @@ functions {
       reject("Invalid link");
     return eta;
   }
-  real ll_bern_lp(vector eta0, vector eta1, int link, int[] N) {
+  real ll_bern_lp(vector eta0, vector eta1, int link, array[] int N) {
     if (link == 1) {
       target += logistic_lccdf(eta0| 0, 1);
       target += logistic_lcdf(eta1| 0, 1);
@@ -5369,8 +5386,8 @@ functions {
     }
     return not_a_number();
   }
-  real ll_clogit_lp(vector eta0, vector eta1, int[] successes,
-                    int[] failures, int[] observations) {
+  real ll_clogit_lp(vector eta0, vector eta1, array[] int successes,
+                    array[] int failures, array[] int observations) {
     int J = num_elements(observations);
     int pos0 = 1;
     int pos1 = 1;
@@ -5403,7 +5420,7 @@ functions {
       reject("Invalid link");
     return eta;
   }
-  real ll_binom_lp(int[] y, int[] trials, vector eta, int link) {
+  real ll_binom_lp(array[] int y, array[] int trials, vector eta, int link) {
     if (link == 1) 
       target += binomial_logit_lpmf(y| trials, eta);
     else if (link < 4) 
@@ -5427,7 +5444,7 @@ functions {
       reject("Invalid link");
     return target();
   }
-  vector pw_binom(int[] y, int[] trials, vector eta, int link) {
+  vector pw_binom(array[] int y, array[] int trials, vector eta, int link) {
     int N = rows(eta);
     vector[N] ll;
     if (link == 1) {
@@ -5597,7 +5614,7 @@ functions {
       reject("Invalid link");
     return eta;
   }
-  vector pw_pois(int[] y, vector eta, int link) {
+  vector pw_pois(array[] int y, vector eta, int link) {
     int N = rows(eta);
     vector[N] ll;
     if (link == 1) 
@@ -5612,7 +5629,7 @@ functions {
       reject("Invalid link");
     return ll;
   }
-  vector pw_nb(int[] y, vector eta, real theta, int link) {
+  vector pw_nb(array[] int y, vector eta, real theta, int link) {
     int N = rows(eta);
     vector[N] rho = linkinv_count(eta, link);
     vector[N] ll;
@@ -5644,8 +5661,8 @@ functions {
       ub_ = positive_infinity();
     return ub_;
   }
-  int[] lower_tri_indices(int dim) {
-    int indices[dim + choose(dim, 2)];
+  array[] int lower_tri_indices(int dim) {
+    array[dim + choose(dim, 2)] int indices;
     int mark = 1;
     for (r in 1 : dim) {
       for (c in r : dim) {
@@ -5669,9 +5686,10 @@ functions {
   }
   vector make_beta(vector z_beta, int prior_dist, vector prior_mean,
                    vector prior_scale, vector prior_df,
-                   real global_prior_scale, real[] global, vector[] local,
-                   real[] ool, vector[] mix, real[] aux, int family,
-                   real slab_scale, real[] caux) {
+                   real global_prior_scale, array[] real global,
+                   array[] vector local, array[] real ool,
+                   array[] vector mix, array[] real aux, int family,
+                   real slab_scale, array[] real caux) {
     vector[rows(z_beta)] beta;
     if (prior_dist == 0) 
       beta = z_beta;
@@ -5704,7 +5722,8 @@ functions {
       beta = prior_mean + ool[1] * prior_scale .* sqrt(2 * mix[1]) .* z_beta;
     return beta;
   }
-  matrix make_b_matrix(vector z_b, vector theta_L, int[] p, int[] l, int i) {
+  matrix make_b_matrix(vector z_b, vector theta_L, array[] int p,
+                       array[] int l, int i) {
     matrix[p[i], l[i]] b_matrix;
     int nc = p[i];
     int b_mark = 1;
@@ -5738,8 +5757,9 @@ functions {
     }
     return b_matrix';
   }
-  vector evaluate_eta(matrix X, vector[] Z1, vector[] Z2, int[] Z1_id,
-                      int[] Z2_id, real[] gamma, vector beta, matrix b1Mat,
+  vector evaluate_eta(matrix X, array[] vector Z1, array[] vector Z2,
+                      array[] int Z1_id, array[] int Z2_id,
+                      array[] real gamma, vector beta, matrix b1Mat,
                       matrix b2Mat, int b1Mat_colshift, int b2Mat_colshift,
                       int intercept_type) {
     int N = rows(X);
@@ -5787,9 +5807,9 @@ functions {
       mu = linkinv_count(eta, link);
     return mu;
   }
-  void glm_lp(vector y_real, int[] y_integer, vector eta, real[] aux,
-              int family, int link, real sum_log_y, vector sqrt_y,
-              vector log_y) {
+  void glm_lp(vector y_real, array[] int y_integer, vector eta,
+              array[] real aux, int family, int link, real sum_log_y,
+              vector sqrt_y, vector log_y) {
     if (family == 1) {
       if (link == 1) 
         target += normal_lpdf(y_real| eta, aux[1]);
@@ -5830,9 +5850,9 @@ functions {
       reject("Invalid family.");
   }
   void beta_lp(vector z_beta, int prior_dist, vector prior_scale,
-               vector prior_df, real global_prior_df, vector[] local,
-               real[] global, vector[] mix, real[] one_over_lambda,
-               real slab_df, real[] caux) {
+               vector prior_df, real global_prior_df, array[] vector local,
+               array[] real global, array[] vector mix,
+               array[] real one_over_lambda, real slab_df, array[] real caux) {
     if (prior_dist == 1) 
       target += normal_lpdf(z_beta| 0, 1);
     else if (prior_dist == 2) 
@@ -5886,7 +5906,7 @@ functions {
         target += exponential_lpdf(aux_unscaled| 1);
     }
   }
-  real mean_PPD_rng(vector mu, real[] aux, int family) {
+  real mean_PPD_rng(vector mu, array[] real aux, int family) {
     int N = rows(mu);
     real mean_PPD = 0;
     if (family == 1) {
@@ -5936,29 +5956,29 @@ functions {
 }
 data {
   int<lower=1, upper=3> M;
-  int<lower=0, upper=1> has_aux[3];
+  array[3] int<lower=0, upper=1> has_aux;
   int<lower=0, upper=1> has_weights;
-  int<lower=0, upper=2> resp_type[3];
-  int<lower=0, upper=3> intercept_type[3];
-  int<lower=0> yNobs[3];
-  int<lower=0> yNeta[3];
-  int<lower=0> yK[3];
+  array[3] int<lower=0, upper=2> resp_type;
+  array[3] int<lower=0, upper=3> intercept_type;
+  array[3] int<lower=0> yNobs;
+  array[3] int<lower=0> yNeta;
+  array[3] int<lower=0> yK;
   int<lower=0> t;
-  int<lower=1> p[t];
-  int<lower=1> l[t];
+  array[t] int<lower=1> p;
+  array[t] int<lower=1> l;
   int<lower=0> q;
   int<lower=0> len_theta_L;
   int<lower=0> bN1;
   int<lower=0> bK1;
-  int<lower=0> bK1_len[3];
-  int<lower=0> bK1_idx[3, 2];
+  array[3] int<lower=0> bK1_len;
+  array[3, 2] int<lower=0> bK1_idx;
   int<lower=0> bN2;
   int<lower=0> bK2;
-  int<lower=0> bK2_len[3];
-  int<lower=0> bK2_idx[3, 2];
-  int<lower=0> yInt1[resp_type[1] == 2 ? yNobs[1] : 0];
-  int<lower=0> yInt2[resp_type[2] == 2 ? yNobs[2] : 0];
-  int<lower=0> yInt3[resp_type[3] == 2 ? yNobs[3] : 0];
+  array[3] int<lower=0> bK2_len;
+  array[3, 2] int<lower=0> bK2_idx;
+  array[resp_type[1] == 2 ? yNobs[1] : 0] int<lower=0> yInt1;
+  array[resp_type[2] == 2 ? yNobs[2] : 0] int<lower=0> yInt2;
+  array[resp_type[3] == 2 ? yNobs[3] : 0] int<lower=0> yInt3;
   vector[resp_type[1] == 1 ? yNobs[1] : 0] yReal1;
   vector[resp_type[2] == 1 ? yNobs[2] : 0] yReal2;
   vector[resp_type[3] == 1 ? yNobs[3] : 0] yReal3;
@@ -5968,23 +5988,23 @@ data {
   vector[yK[1]] yXbar1;
   vector[yK[2]] yXbar2;
   vector[yK[3]] yXbar3;
-  int<lower=0> family[M];
-  int<lower=0> link[M];
-  vector[bK1_len[1] > 0 ? yNeta[1] : 0] y1_Z1[bK1_len[1]];
-  vector[bK1_len[2] > 0 ? yNeta[2] : 0] y2_Z1[bK1_len[2]];
-  vector[bK1_len[3] > 0 ? yNeta[3] : 0] y3_Z1[bK1_len[3]];
-  int<lower=0> y1_Z1_id[bK1_len[1] > 0 ? yNeta[1] : 0];
-  int<lower=0> y2_Z1_id[bK1_len[2] > 0 ? yNeta[2] : 0];
-  int<lower=0> y3_Z1_id[bK1_len[3] > 0 ? yNeta[3] : 0];
-  vector[bK2_len[1] > 0 ? yNeta[1] : 0] y1_Z2[bK2_len[1]];
-  vector[bK2_len[2] > 0 ? yNeta[2] : 0] y2_Z2[bK2_len[2]];
-  vector[bK2_len[3] > 0 ? yNeta[3] : 0] y3_Z2[bK2_len[3]];
-  int<lower=0> y1_Z2_id[bK2_len[1] > 0 ? yNeta[1] : 0];
-  int<lower=0> y2_Z2_id[bK2_len[2] > 0 ? yNeta[2] : 0];
-  int<lower=0> y3_Z2_id[bK2_len[3] > 0 ? yNeta[3] : 0];
-  int<lower=0, upper=7> y_prior_dist[3];
-  int<lower=0, upper=2> y_prior_dist_for_intercept[M];
-  int<lower=0, upper=3> y_prior_dist_for_aux[M];
+  array[M] int<lower=0> family;
+  array[M] int<lower=0> link;
+  array[bK1_len[1]] vector[bK1_len[1] > 0 ? yNeta[1] : 0] y1_Z1;
+  array[bK1_len[2]] vector[bK1_len[2] > 0 ? yNeta[2] : 0] y2_Z1;
+  array[bK1_len[3]] vector[bK1_len[3] > 0 ? yNeta[3] : 0] y3_Z1;
+  array[bK1_len[1] > 0 ? yNeta[1] : 0] int<lower=0> y1_Z1_id;
+  array[bK1_len[2] > 0 ? yNeta[2] : 0] int<lower=0> y2_Z1_id;
+  array[bK1_len[3] > 0 ? yNeta[3] : 0] int<lower=0> y3_Z1_id;
+  array[bK2_len[1]] vector[bK2_len[1] > 0 ? yNeta[1] : 0] y1_Z2;
+  array[bK2_len[2]] vector[bK2_len[2] > 0 ? yNeta[2] : 0] y2_Z2;
+  array[bK2_len[3]] vector[bK2_len[3] > 0 ? yNeta[3] : 0] y3_Z2;
+  array[bK2_len[1] > 0 ? yNeta[1] : 0] int<lower=0> y1_Z2_id;
+  array[bK2_len[2] > 0 ? yNeta[2] : 0] int<lower=0> y2_Z2_id;
+  array[bK2_len[3] > 0 ? yNeta[3] : 0] int<lower=0> y3_Z2_id;
+  array[3] int<lower=0, upper=7> y_prior_dist;
+  array[M] int<lower=0, upper=2> y_prior_dist_for_intercept;
+  array[M] int<lower=0, upper=3> y_prior_dist_for_aux;
   int<lower=1, upper=2> prior_dist_for_cov;
   int<lower=0, upper=1> prior_PD;
   vector[yK[1]] y_prior_mean1;
@@ -6010,8 +6030,8 @@ data {
   int<lower=0> len_regularization;
   vector<lower=0>[t] b_prior_shape;
   vector<lower=0>[t] b_prior_scale;
-  real<lower=0> b_prior_concentration[len_concentration];
-  real<lower=0> b_prior_regularization[len_regularization];
+  array[len_concentration] real<lower=0> b_prior_concentration;
+  array[len_regularization] real<lower=0> b_prior_regularization;
   vector<lower=0>[bK1] b1_prior_scale;
   vector<lower=0>[bK2] b2_prior_scale;
   vector<lower=0>[bK1] b1_prior_df;
@@ -6027,9 +6047,9 @@ transformed data {
   int<lower=0> len_var_group = sum(p) * (t > 0);
   int<lower=0> len_rho = sum(p) - t;
   int<lower=1> pos = 1;
-  real<lower=0> delta[len_concentration];
-  int bCov1_idx[prior_dist_for_cov == 2 ? (bK1 + choose(bK1, 2)) : 0];
-  int bCov2_idx[prior_dist_for_cov == 2 ? (bK2 + choose(bK2, 2)) : 0];
+  array[len_concentration] real<lower=0> delta;
+  array[prior_dist_for_cov == 2 ? (bK1 + choose(bK1, 2)) : 0] int bCov1_idx;
+  array[prior_dist_for_cov == 2 ? (bK2 + choose(bK2, 2)) : 0] int bCov2_idx;
   real sum_log_y1 = M > 0 && (family[1] == 2 || family[1] == 3)
                     ? sum(log(yReal1)) : not_a_number();
   real sum_log_y2 = M > 1 && (family[2] == 2 || family[2] == 3)
@@ -6074,12 +6094,9 @@ transformed data {
   }
 }
 parameters {
-  real<lower=lb(intercept_type[1]), upper=ub(intercept_type[1])> yGamma1[intercept_type[1]
-                                                                    > 0];
-  real<lower=lb(intercept_type[2]), upper=ub(intercept_type[2])> yGamma2[intercept_type[2]
-                                                                    > 0];
-  real<lower=lb(intercept_type[3]), upper=ub(intercept_type[3])> yGamma3[intercept_type[3]
-                                                                    > 0];
+  array[intercept_type[1] > 0] real<lower=lb(intercept_type[1]), upper=ub(intercept_type[1])> yGamma1;
+  array[intercept_type[2] > 0] real<lower=lb(intercept_type[2]), upper=ub(intercept_type[2])> yGamma2;
+  array[intercept_type[3] > 0] real<lower=lb(intercept_type[3]), upper=ub(intercept_type[3])> yGamma3;
   vector[yK[1]] z_yBeta1;
   vector[yK[2]] z_yBeta2;
   vector[yK[3]] z_yBeta3;
@@ -6094,32 +6111,32 @@ parameters {
   vector<lower=0>[prior_dist_for_cov == 2 ? bK2 : 0] bSd2;
   matrix[prior_dist_for_cov == 2 && bK2 > 0 ? bK2 : 0, bK2 > 0 ? bN2 : 0] z_bMat2;
   cholesky_factor_corr[prior_dist_for_cov == 2 && bK2 > 1 ? bK2 : 0] bCholesky2;
-  real<lower=0> yAux1_unscaled[has_aux[1]];
-  real<lower=0> yAux2_unscaled[has_aux[2]];
-  real<lower=0> yAux3_unscaled[has_aux[3]];
-  real<lower=0> yGlobal1[yHs1];
-  real<lower=0> yGlobal2[yHs2];
-  real<lower=0> yGlobal3[yHs3];
-  vector<lower=0>[yK[1]] yLocal1[yHs1];
-  vector<lower=0>[yK[2]] yLocal2[yHs2];
-  vector<lower=0>[yK[3]] yLocal3[yHs3];
-  real<lower=0> y_caux1[yHs1 > 0];
-  real<lower=0> y_caux2[yHs2 > 0];
-  real<lower=0> y_caux3[yHs3 > 0];
-  real<lower=0> yOol1[y_prior_dist[1] == 6];
-  real<lower=0> yOol2[y_prior_dist[2] == 6];
-  real<lower=0> yOol3[y_prior_dist[3] == 6];
-  vector<lower=0>[yK[1]] yMix1[y_prior_dist[1] == 5 || y_prior_dist[1] == 6];
-  vector<lower=0>[yK[2]] yMix2[y_prior_dist[2] == 5 || y_prior_dist[2] == 6];
-  vector<lower=0>[yK[3]] yMix3[y_prior_dist[3] == 5 || y_prior_dist[3] == 6];
+  array[has_aux[1]] real<lower=0> yAux1_unscaled;
+  array[has_aux[2]] real<lower=0> yAux2_unscaled;
+  array[has_aux[3]] real<lower=0> yAux3_unscaled;
+  array[yHs1] real<lower=0> yGlobal1;
+  array[yHs2] real<lower=0> yGlobal2;
+  array[yHs3] real<lower=0> yGlobal3;
+  array[yHs1] vector<lower=0>[yK[1]] yLocal1;
+  array[yHs2] vector<lower=0>[yK[2]] yLocal2;
+  array[yHs3] vector<lower=0>[yK[3]] yLocal3;
+  array[yHs1 > 0] real<lower=0> y_caux1;
+  array[yHs2 > 0] real<lower=0> y_caux2;
+  array[yHs3 > 0] real<lower=0> y_caux3;
+  array[y_prior_dist[1] == 6] real<lower=0> yOol1;
+  array[y_prior_dist[2] == 6] real<lower=0> yOol2;
+  array[y_prior_dist[3] == 6] real<lower=0> yOol3;
+  array[y_prior_dist[1] == 5 || y_prior_dist[1] == 6] vector<lower=0>[yK[1]] yMix1;
+  array[y_prior_dist[2] == 5 || y_prior_dist[2] == 6] vector<lower=0>[yK[2]] yMix2;
+  array[y_prior_dist[3] == 5 || y_prior_dist[3] == 6] vector<lower=0>[yK[3]] yMix3;
 }
 transformed parameters {
   vector[yK[1]] yBeta1;
   vector[yK[2]] yBeta2;
   vector[yK[3]] yBeta3;
-  real yAux1[has_aux[1]];
-  real yAux2[has_aux[2]];
-  real yAux3[has_aux[3]];
+  array[has_aux[1]] real yAux1;
+  array[has_aux[2]] real yAux2;
+  array[has_aux[3]] real yAux3;
   vector[len_theta_L] theta_L;
   real yAuxMaximum = 1.0;
   matrix[bK1 > 0 ? bN1 : 0, bK1] bMat1;
@@ -6269,10 +6286,10 @@ model {
   }
 }
 generated quantities {
-  real mean_PPD[M];
-  real yAlpha1[intercept_type[1] > 0];
-  real yAlpha2[intercept_type[2] > 0];
-  real yAlpha3[intercept_type[3] > 0];
+  array[M] real mean_PPD;
+  array[intercept_type[1] > 0] real yAlpha1;
+  array[intercept_type[2] > 0] real yAlpha2;
+  array[intercept_type[3] > 0] real yAlpha3;
   vector[prior_dist_for_cov == 2 && bK1 > 0 ? size(bCov1_idx) : 0] bCov1;
   vector[prior_dist_for_cov == 2 && bK2 > 0 ? size(bCov2_idx) : 0] bCov2;
   vector[bN1 * bK1] b1 = to_vector(bMat1');
@@ -6353,7 +6370,8 @@ functions {
       reject("Invalid link");
     return x;
   }
-  vector pw_polr(int[] y, vector eta, vector cutpoints, int link, real alpha) {
+  vector pw_polr(array[] int y, vector eta, vector cutpoints, int link,
+                 real alpha) {
     int N = rows(eta);
     int J = rows(cutpoints) + 1;
     vector[N] ll;
@@ -6435,24 +6453,24 @@ functions {
       reject("invalid link");
     return ystar;
   }
-  vector csr_matrix_times_vector2(int m, int n, vector w, int[] v, int[] u,
-                                  vector b);
+  vector csr_matrix_times_vector2(int m, int n, vector w, array[] int v,
+                                  array[] int u, vector b);
 }
 data {
   int<lower=0> N;
   int<lower=0> K;
   vector[K] xbar;
   int<lower=0, upper=1> dense_X;
-  matrix[N, K] X[dense_X];
+  array[dense_X] matrix[N, K] X;
   int<lower=0> nnz_X;
   vector[nnz_X] w_X;
-  int<lower=0, upper=K - 1> v_X[nnz_X];
-  int<lower=0, upper=rows(w_X) + 1> u_X[dense_X ? 0 : N + 1];
+  array[nnz_X] int<lower=0, upper=K - 1> v_X;
+  array[dense_X ? 0 : N + 1] int<lower=0, upper=rows(w_X) + 1> u_X;
   int<lower=0> K_smooth;
   matrix[N, K_smooth] S;
-  int<lower=1> smooth_map[K_smooth];
+  array[K_smooth] int<lower=1> smooth_map;
   int<lower=2> J;
-  int<lower=1, upper=J> y[N];
+  array[N] int<lower=1, upper=J> y;
   int<lower=0, upper=1> prior_PD;
   int<lower=0, upper=1> compute_mean_PPD;
   int<lower=0, upper=1> has_intercept;
@@ -6483,9 +6501,9 @@ transformed data {
 }
 parameters {
   simplex[J] pi;
-  unit_vector[K] u[K > 1];
+  array[K > 1] unit_vector[K] u;
   real<lower=(K > 1 ? 0 : -1), upper=1> R2;
-  real<lower=0> alpha[is_skewed];
+  array[is_skewed] real<lower=0> alpha;
 }
 transformed parameters {
   vector[K] beta;

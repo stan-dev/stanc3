@@ -3,13 +3,13 @@ data {
   int<lower=1> I;
   int<lower=1> J;
   int<lower=1> N;
-  int<lower=1, upper=I> ii[N];
-  int<lower=1, upper=J> jj[N];
-  int<lower=0, upper=1> y[N];
+  array[N] int<lower=1, upper=I> ii;
+  array[N] int<lower=1, upper=J> jj;
+  array[N] int<lower=0, upper=1> y;
 }
 parameters {
   vector[J] theta;
-  vector[2] xi[I];
+  array[I] vector[2] xi;
   vector[2] mu;
   vector<lower=0>[2] tau;
   cholesky_factor_corr[2] L_Omega;
@@ -40,54 +40,7 @@ generated quantities {
   Omega <- multiply_lower_tri_self_transpose(L_Omega);
 }
 
-
-Warning: deprecated language construct used in 'hierarchical_2pl.stan', line 20, column 14:
-   -------------------------------------------------
-    18:    vector[I] beta;
-    19:    for (i in 1:I) {
-    20:      alpha[i] <- exp(xi[i,1]);
-                       ^
-    21:      beta[i] <- xi[i,2];
-    22:    }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'hierarchical_2pl.stan', line 21, column 13:
-   -------------------------------------------------
-    19:    for (i in 1:I) {
-    20:      alpha[i] <- exp(xi[i,1]);
-    21:      beta[i] <- xi[i,2];
-                      ^
-    22:    }
-    23:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'hierarchical_2pl.stan', line 26, column 11:
-   -------------------------------------------------
-    24:  model {
-    25:    matrix[2,2] L_Sigma;
-    26:    L_Sigma <- diag_pre_multiply(tau, L_Omega);
-                    ^
-    27:    for (i in 1:I)
-    28:      xi[i] ~ multi_normal_cholesky(mu, L_Sigma);
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'hierarchical_2pl.stan', line 39, column 9:
-   -------------------------------------------------
-    37:  generated quantities {
-    38:    corr_matrix[2] Omega;
-    39:    Omega <- multiply_lower_tri_self_transpose(L_Omega);
-                  ^
-    40:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'hierarchical_2pl.stan', line 20, column 13: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'hierarchical_2pl.stan', line 21, column 12: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'hierarchical_2pl.stan', line 26, column 10: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'hierarchical_2pl.stan', line 39, column 8: assignment operator <- is deprecated in the Stan language; use = instead.

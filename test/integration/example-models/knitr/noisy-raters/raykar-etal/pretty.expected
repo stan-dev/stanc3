@@ -4,7 +4,7 @@ data {
   int<lower=0> R;
   int<lower=0> D;
   matrix[N, D] x;
-  int<lower=0, upper=1> y[N, R];
+  array[N, R] int<lower=0, upper=1> y;
 }
 parameters {
   vector[D] w;

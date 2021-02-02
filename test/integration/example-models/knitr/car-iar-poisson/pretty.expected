@@ -2,9 +2,9 @@
 data {
   int<lower=0> N;
   int<lower=0> N_edges;
-  int<lower=1, upper=N> node1[N_edges];
-  int<lower=1, upper=N> node2[N_edges];
-  int<lower=0> y[N];
+  array[N_edges] int<lower=1, upper=N> node1;
+  array[N_edges] int<lower=1, upper=N> node2;
+  array[N] int<lower=0> y;
   vector<lower=0>[N] E;
   int<lower=1> K;
   matrix[N, K] x;
@@ -45,13 +45,13 @@ generated quantities {
 data {
   int<lower=0> N;
   int<lower=0> N_edges;
-  int<lower=1, upper=N> node1[N_edges];
-  int<lower=1, upper=N> node2[N_edges];
-  int<lower=0> y[N];
+  array[N_edges] int<lower=1, upper=N> node1;
+  array[N_edges] int<lower=1, upper=N> node2;
+  array[N] int<lower=0> y;
   vector<lower=0>[N] E;
   int<lower=0, upper=N> N_singletons;
   int<lower=0, upper=N> N_components;
-  int<lower=1, upper=N> nodes_per_component[N_components];
+  array[N_components] int<lower=1, upper=N> nodes_per_component;
   vector[N_components] scales;
 }
 transformed data {
@@ -59,8 +59,8 @@ transformed data {
   int N_connected = N - N_singletons;
   int N_con_comp = N_components - N_singletons;
   vector<lower=0>[N_connected] scaling_factor;
-  int component_starts[N_components];
-  int component_ends[N_components];
+  array[N_components] int component_starts;
+  array[N_components] int component_ends;
   int c_offset = 1;
   for (i in 1 : N_components) {
     component_starts[i] = c_offset;
@@ -112,9 +112,9 @@ generated quantities {
 data {
   int<lower=0> N;
   int<lower=0> N_edges;
-  int<lower=1, upper=N> node1[N_edges];
-  int<lower=1, upper=N> node2[N_edges];
-  int<lower=0> y[N];
+  array[N_edges] int<lower=1, upper=N> node1;
+  array[N_edges] int<lower=1, upper=N> node2;
+  array[N] int<lower=0> y;
   vector<lower=0>[N] E;
   real<lower=0> scaling_factor;
 }
@@ -152,9 +152,9 @@ generated quantities {
 data {
   int<lower=0> N;
   int<lower=0> N_edges;
-  int<lower=1, upper=N> node1[N_edges];
-  int<lower=1, upper=N> node2[N_edges];
-  int<lower=0> y[N];
+  array[N_edges] int<lower=1, upper=N> node1;
+  array[N_edges] int<lower=1, upper=N> node2;
+  array[N] int<lower=0> y;
   vector[N] x;
   vector<lower=0>[N] E;
   real<lower=0> scaling_factor;
@@ -195,9 +195,9 @@ generated quantities {
 data {
   int<lower=0> N;
   int<lower=0> N_edges;
-  int<lower=1, upper=N> node1[N_edges];
-  int<lower=1, upper=N> node2[N_edges];
-  int<lower=0> y[N];
+  array[N_edges] int<lower=1, upper=N> node1;
+  array[N_edges] int<lower=1, upper=N> node2;
+  array[N] int<lower=0> y;
   vector[N] x;
   vector<lower=0>[N] E;
 }
@@ -235,7 +235,7 @@ generated quantities {
   $ ../../../../../../install/default/bin/stanc --auto-format pois.stan
 data {
   int<lower=0> N;
-  int<lower=0> y[N];
+  array[N] int<lower=0> y;
   vector<lower=0>[N] E;
 }
 transformed data {
@@ -257,9 +257,9 @@ generated quantities {
 data {
   int<lower=0> N;
   int<lower=0> N_edges;
-  int<lower=1, upper=N> node1[N_edges];
-  int<lower=1, upper=N> node2[N_edges];
-  int<lower=0> y[N];
+  array[N_edges] int<lower=1, upper=N> node1;
+  array[N_edges] int<lower=1, upper=N> node2;
+  array[N] int<lower=0> y;
   vector<lower=0>[N] E;
 }
 transformed data {
@@ -285,7 +285,7 @@ generated quantities {
   $ ../../../../../../install/default/bin/stanc --auto-format pois_re.stan
 data {
   int<lower=0> N;
-  int<lower=0> y[N];
+  array[N] int<lower=0> y;
   vector<lower=0>[N] E;
 }
 transformed data {
@@ -311,8 +311,8 @@ generated quantities {
 data {
   int<lower=0> N;
   int<lower=0> N_edges;
-  int<lower=1, upper=N> node1[N_edges];
-  int<lower=1, upper=N> node2[N_edges];
+  array[N_edges] int<lower=1, upper=N> node1;
+  array[N_edges] int<lower=1, upper=N> node2;
 }
 parameters {
   vector[N] phi;

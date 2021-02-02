@@ -34,20 +34,23 @@ let pp_context_exn ppf {filename; line_num; col_num; _} =
 let context_to_string file =
   try Some (Fmt.to_to_string pp_context_exn file) with _ -> None
 
-(** Return two lines before and after the specified location
-    and print a message *)
-let pp_with_message_exn ppf (message, loc) =
-  Fmt.pf ppf "%a\n%s\n\n" pp_context_exn loc message
-
 let empty = {filename= ""; line_num= 0; col_num= 0; included_from= None}
 
-let rec to_string ?(print_file = true) ?(print_line = true) loc =
+(* If printed_filename is passed, it will replace the filename printed for
+   this Location.t and all recursively included ones.
+*)
+let rec to_string ?printed_filename ?(print_file = true) ?(print_line = true)
+    loc =
   let open Format in
-  let file = if print_file then sprintf "'%s', " loc.filename else "" in
+  let filename =
+    match printed_filename with None -> loc.filename | Some f -> f
+  in
+  let file = if print_file then sprintf "'%s', " filename else "" in
   let line = if print_line then sprintf "line %d, " loc.line_num else "" in
   let incl =
     match loc.included_from with
-    | Some loc2 -> sprintf ", included from\n%s" (to_string loc2)
+    | Some loc2 ->
+        sprintf ", included from\n%s" (to_string ?printed_filename loc2)
     | None -> ""
   in
   sprintf "%s%scolumn %d%s" file line loc.col_num incl

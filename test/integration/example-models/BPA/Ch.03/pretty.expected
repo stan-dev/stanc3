@@ -1,8 +1,8 @@
   $ ../../../../../../install/default/bin/stanc --auto-format GLM_Binomial.stan
 data {
   int<lower=0> nyears;
-  int<lower=0> C[nyears];
-  int<lower=0> N[nyears];
+  array[nyears] int<lower=0> C;
+  array[nyears] int<lower=0> N;
   vector[nyears] year;
 }
 transformed data {
@@ -25,7 +25,7 @@ model {
   C ~ binomial_logit(N, logit_p);
 }
 generated quantities {
-  real<lower=0, upper=1> p[nyears];
+  array[nyears] real<lower=0, upper=1> p;
   for (i in 1 : nyears) 
     p[i] = inv_logit(logit_p[i]);
 }
@@ -33,7 +33,7 @@ generated quantities {
   $ ../../../../../../install/default/bin/stanc --auto-format GLM_Poisson.stan
 data {
   int<lower=0> n;
-  int<lower=0> C[n];
+  array[n] int<lower=0> C;
   vector[n] year;
 }
 transformed data {

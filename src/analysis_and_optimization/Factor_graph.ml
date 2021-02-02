@@ -31,7 +31,7 @@ let extract_factors_statement stmt =
    |Break | Continue | Return _ | Skip
    |IfElse (_, _, _)
    |While (_, _)
-   |For _ | Block _ | SList _
+   |For _ | Profile _ | Block _ | SList _
    |Decl {decl_id= _; _} ->
       []
 
@@ -114,7 +114,8 @@ let prog_factor_graph ?(exclude_data_facs : bool = false) prog : factor_graph =
   let vars =
     Set.Poly.map
       ~f:(fun v -> VVar v)
-      (Set.Poly.union data_vars (parameter_names_set prog))
+      (Set.Poly.union data_vars
+         (parameter_names_set ~include_transformed:false prog))
   in
   let factor_list =
     List.map factors ~f:(fun (l, fac) ->

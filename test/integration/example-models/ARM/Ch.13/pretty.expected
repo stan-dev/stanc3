@@ -3,8 +3,8 @@ data {
   int<lower=0> N;
   int<lower=0> n_age;
   int<lower=0> n_eth;
-  int<lower=1, upper=n_age> age[N];
-  int<lower=1, upper=n_eth> eth[N];
+  array[N] int<lower=1, upper=n_age> age;
+  array[N] int<lower=1, upper=n_eth> eth;
   vector[N] x;
   vector[N] y;
 }
@@ -59,8 +59,8 @@ data {
   int<lower=0> N;
   int<lower=0> n_age;
   int<lower=0> n_eth;
-  int<lower=1, upper=n_age> age[N];
-  int<lower=1, upper=n_eth> eth[N];
+  array[N] int<lower=1, upper=n_age> age;
+  array[N] int<lower=1, upper=n_eth> eth;
   vector[N] x_centered;
   vector[N] y;
 }
@@ -126,7 +126,7 @@ model {
 data {
   int<lower=0> N;
   vector[N] earn;
-  int eth[N];
+  array[N] int eth;
   vector[N] height;
 }
 transformed data {
@@ -162,7 +162,7 @@ model {
 data {
   int<lower=0> N;
   vector[N] earn;
-  int eth[N];
+  array[N] int eth;
   vector[N] height;
 }
 transformed data {
@@ -204,8 +204,8 @@ data {
   int<lower=0> N;
   int<lower=0> n_groups;
   int<lower=0> n_scenarios;
-  int<lower=1, upper=n_groups> group_id[N];
-  int<lower=1, upper=n_scenarios> scenario_id[N];
+  array[N] int<lower=1, upper=n_groups> group_id;
+  array[N] int<lower=1, upper=n_scenarios> scenario_id;
   vector[N] y;
 }
 parameters {
@@ -227,26 +227,14 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-
-Warning: deprecated language construct used in 'pilots.stan', line 24, column 2:
-   -------------------------------------------------
-    22:  }
-    23:  model {
-    24:    # mu ~ unif(-inf, +inf); # implicit
-           ^
-    25:    gamma ~ normal(0, sigma_gamma);
-    26:    delta ~ normal(0, sigma_delta);
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
+Warning in 'pilots.stan', line 24, column 2: Comments beginning with # are deprecated. Please use // in place of # for line comments.
   $ ../../../../../../install/default/bin/stanc --auto-format pilots_chr.stan
 data {
   int<lower=0> N;
   int<lower=0> n_groups;
   int<lower=0> n_scenarios;
-  int<lower=1, upper=n_groups> group_id[N];
-  int<lower=1, upper=n_scenarios> scenario_id[N];
+  array[N] int<lower=1, upper=n_groups> group_id;
+  array[N] int<lower=1, upper=n_scenarios> scenario_id;
   vector[N] y;
 }
 parameters {
@@ -278,7 +266,7 @@ model {
   $ ../../../../../../install/default/bin/stanc --auto-format radon_inter_vary.stan
 data {
   int<lower=0> N;
-  int<lower=1, upper=85> county[N];
+  array[N] int<lower=1, upper=85> county;
   vector[N] u;
   vector[N] x;
   vector[N] y;
@@ -318,7 +306,7 @@ model {
   $ ../../../../../../install/default/bin/stanc --auto-format radon_inter_vary_chr.stan
 data {
   int<lower=0> N;
-  int<lower=1, upper=85> county[N];
+  array[N] int<lower=1, upper=85> county;
   vector[N] u;
   vector[N] x;
   vector[N] y;
@@ -359,7 +347,7 @@ model {
   $ ../../../../../../install/default/bin/stanc --auto-format radon_vary_si.stan
 data {
   int<lower=0> N;
-  int<lower=1, upper=85> county[N];
+  array[N] int<lower=1, upper=85> county;
   vector[N] x;
   vector[N] y;
 }
@@ -388,7 +376,7 @@ model {
   $ ../../../../../../install/default/bin/stanc --auto-format radon_vary_si_chr.stan
 data {
   int<lower=0> N;
-  int<lower=1, upper=85> county[N];
+  array[N] int<lower=1, upper=85> county;
   vector[N] x;
   vector[N] y;
 }

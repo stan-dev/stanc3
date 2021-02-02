@@ -1,8 +1,8 @@
   $ ../../../../../install/default/bin/stanc --auto-format index_expr.stan
 functions {
   void foo(int N) {
-    int c[4];
-    int d[3];
+    array[4] int c;
+    array[3] int d;
     c[2 : 10] = d;
   }
 }

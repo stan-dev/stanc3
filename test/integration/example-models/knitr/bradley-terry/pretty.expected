@@ -2,9 +2,9 @@
 data {
   int<lower=0> K;
   int<lower=0> N;
-  int<lower=1, upper=K> player1[N];
-  int<lower=1, upper=K> player0[N];
-  int<lower=0, upper=1> y[N];
+  array[N] int<lower=1, upper=K> player1;
+  array[N] int<lower=1, upper=K> player0;
+  array[N] int<lower=0, upper=1> y;
 }
 parameters {
   real<lower=0> sigma;
@@ -16,9 +16,9 @@ model {
   y ~ bernoulli_logit(alpha[player1] - alpha[player0]);
 }
 generated quantities {
-  int<lower=1, upper=K> ranking[K];
+  array[K] int<lower=1, upper=K> ranking;
   {
-    int ranked_index[K] = sort_indices_desc(alpha);
+    array[K] int ranked_index = sort_indices_desc(alpha);
     for (k in 1 : K) 
       ranking[ranked_index[k]] = k;
   }
@@ -28,9 +28,9 @@ generated quantities {
 data {
   int<lower=0> K;
   int<lower=0> N;
-  int<lower=1, upper=K> player1[N];
-  int<lower=1, upper=K> player0[N];
-  int<lower=0, upper=1> y[N];
+  array[N] int<lower=1, upper=K> player1;
+  array[N] int<lower=1, upper=K> player0;
+  array[N] int<lower=0, upper=1> y;
 }
 parameters {
   vector[K - 1] alpha_raw;
@@ -42,16 +42,16 @@ model {
   y ~ bernoulli_logit(alpha[player1] - alpha[player0]);
 }
 generated quantities {
-  int<lower=1, upper=K> ranked[K] = sort_indices_desc(alpha);
+  array[K] int<lower=1, upper=K> ranked = sort_indices_desc(alpha);
 }
 
   $ ../../../../../../install/default/bin/stanc --auto-format individual.stan
 data {
   int<lower=0> K;
   int<lower=0> N;
-  int<lower=1, upper=K> player1[N];
-  int<lower=1, upper=K> player0[N];
-  int<lower=0, upper=1> y[N];
+  array[N] int<lower=1, upper=K> player1;
+  array[N] int<lower=1, upper=K> player0;
+  array[N] int<lower=0, upper=1> y;
 }
 parameters {
   vector[K] alpha;
@@ -61,9 +61,9 @@ model {
   y ~ bernoulli_logit(alpha[player1] - alpha[player0]);
 }
 generated quantities {
-  int<lower=1, upper=K> ranking[K];
+  array[K] int<lower=1, upper=K> ranking;
   {
-    int ranked_index[K] = sort_indices_desc(alpha);
+    array[K] int ranked_index = sort_indices_desc(alpha);
     for (k in 1 : K) 
       ranking[ranked_index[k]] = k;
   }
@@ -76,9 +76,9 @@ data {
   int<lower=0> K;
   int<lower=0> J;
   int<lower=0> N;
-  int<lower=1, upper=K> team0[N, J];
-  int<lower=1, upper=K> team1[N, J];
-  int<lower=0, upper=1> y[N];
+  array[N, J] int<lower=1, upper=K> team0;
+  array[N, J] int<lower=1, upper=K> team1;
+  array[N] int<lower=0, upper=1> y;
 }
 parameters {
   vector[K] alpha_std;
@@ -94,9 +94,9 @@ model {
     y[n] ~ bernoulli_logit(sum(alpha[team1[n]]) - sum(alpha[team0[n]]));
 }
 generated quantities {
-  int<lower=1, upper=K> ranking[K];
+  array[K] int<lower=1, upper=K> ranking;
   {
-    int ranked_index[K] = sort_indices_desc(alpha);
+    array[K] int ranked_index = sort_indices_desc(alpha);
     for (k in 1 : K) 
       ranking[ranked_index[k]] = k;
   }

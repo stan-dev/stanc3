@@ -56,6 +56,7 @@ type context_flags_record =
   ; in_returning_fun_def: bool
   ; in_rng_fun_def: bool
   ; in_lp_fun_def: bool
+  ; in_udf_dist_def: bool
   ; loop_depth: int }
 
 (* Some helper functions *)
@@ -109,30 +110,35 @@ let lub_rt loc rt1 rt2 =
   | _, _ when rt1 = rt2 -> Validate.ok rt2
   | _ -> Semantic_error.mismatched_return_types loc rt1 rt2 |> Validate.error
 
-let check_fresh_variable_basic id is_nullary_function =
+(*
+Checks that a variable/function name:
+ - if UDF that it does not match a Stan Math function
+ - a function/identifier does not have the _lupdf/_lupmf suffix
+ - is not already in use
+*)
+let check_fresh_variable_basic id is_udf =
   Validate.(
-    (* No shadowing! *)
-    (* For some strange reason, Stan allows user declared identifiers that are
-       not of nullary function types to clash with nullary library functions.
-       No other name clashes are tolerated. Here's the logic to
-       achieve that. *)
     if
-      Stan_math_signatures.is_stan_math_function_name id.name
-      && ( is_nullary_function
-         || Stan_math_signatures.stan_math_returntype id.name [] = None )
-      || Stan_math_signatures.is_reduce_sum_fn id.name
-      || Stan_math_signatures.is_variadic_ode_fn id.name
+      is_udf
+      && ( Stan_math_signatures.is_stan_math_function_name id.name
+         (* variadic functions are currently not in math sigs *)
+         || Stan_math_signatures.is_reduce_sum_fn id.name
+         || Stan_math_signatures.is_variadic_ode_fn id.name )
     then Semantic_error.ident_is_stanmath_name id.id_loc id.name |> error
+    else if Utils.is_unnormalized_distribution id.name then
+      if is_udf then
+        Semantic_error.udf_is_unnormalized_fn id.id_loc id.name |> error
+      else
+        Semantic_error.ident_has_unnormalized_suffix id.id_loc id.name |> error
     else
       match Symbol_table.look vm id.name with
       | Some _ -> Semantic_error.ident_in_use id.id_loc id.name |> error
       | None -> ok ())
 
-let check_fresh_variable id is_nullary_function =
+let check_fresh_variable id is_udf =
   List.fold ~init:(Validate.ok ())
     ~f:(fun v0 name ->
-      check_fresh_variable_basic name is_nullary_function
-      |> Validate.apply_const v0 )
+      check_fresh_variable_basic name is_udf |> Validate.apply_const v0 )
     (probability_distribution_name_variants id)
 
 (* == SEMANTIC CHECK OF PROGRAM ELEMENTS ==================================== *)
@@ -180,7 +186,12 @@ let reserved_keywords =
   ; "short"; "signed"; "sizeof"; "static"; "static_assert"; "static_cast"
   ; "struct"; "switch"; "template"; "this"; "thread_local"; "throw"; "true"
   ; "try"; "typedef"; "typeid"; "typename"; "union"; "unsigned"; "using"
-  ; "virtual"; "void"; "volatile"; "wchar_t"; "while"; "xor"; "xor_eq" ]
+  ; "virtual"; "void"; "volatile"; "wchar_t"; "while"; "xor"; "xor_eq"
+  ; "functions"; "data"; "parameters"; "model"; "return"; "if"; "else"; "while"
+  ; "for"; "in"; "break"; "continue"; "void"; "int"; "real"; "vector"
+  ; "row_vector"; "matrix"; "ordered"; "positive_ordered"; "simplex"
+  ; "unit_vector"; "cholesky_factor_corr"; "cholesky_factor_cov"; "corr_matrix"
+  ; "cov_matrix"; "print"; "reject"; "target"; "get_lp"; "profile" ]
 
 let semantic_check_identifier id =
   Validate.(
@@ -215,8 +226,9 @@ let semantic_check_fn_map_rect ~loc id es =
 let semantic_check_fn_conditioning ~loc id =
   Validate.(
     if
-      List.exists ["_lpdf"; "_lpmf"; "_lcdf"; "_lccdf"] ~f:(fun x ->
-          String.is_suffix id.name ~suffix:x )
+      List.exists
+        ~f:(fun suffix -> String.is_suffix id.name ~suffix)
+        Utils.conditioning_suffices
     then Semantic_error.conditioning_required loc |> error
     else ok ())
 
@@ -227,7 +239,9 @@ let semantic_check_fn_target_plus_equals cf ~loc id =
   Validate.(
     if
       String.is_suffix id.name ~suffix:"_lp"
-      && not (cf.in_lp_fun_def || cf.current_block = Model)
+      && not
+           ( cf.in_lp_fun_def || cf.current_block = Model
+           || cf.current_block = TParam )
     then Semantic_error.target_plusequals_outisde_model_or_logprob loc |> error
     else ok ())
 
@@ -245,13 +259,24 @@ let semantic_check_fn_rng cf ~loc id =
     then Semantic_error.invalid_rng_fn loc |> error
     else ok ())
 
+(** unnormalized _lpdf/_lpmf functions can only be used in _lpdf/_lpmf/_lp udfs
+    or the model block
+*)
+let semantic_check_unnormalized cf ~loc id =
+  Validate.(
+    if
+      Utils.is_unnormalized_distribution id.name
+      && not ((cf.in_fun_def && cf.in_udf_dist_def) || cf.current_block = Model)
+    then Semantic_error.invalid_unnormalized_fn loc |> error
+    else ok ())
+
 let mk_fun_app ~is_cond_dist (x, y, z) =
   if is_cond_dist then CondDistApp (x, y, z) else FunApp (x, y, z)
 
 (* Regular function application *)
 let semantic_check_fn_normal ~is_cond_dist ~loc id es =
   Validate.(
-    match Symbol_table.look vm id.name with
+    match Symbol_table.look vm (Utils.normalized_name id.name) with
     | Some (_, UnsizedType.UFun (_, Void)) ->
         Semantic_error.returning_fn_expected_nonreturning_found loc id.name
         |> error
@@ -489,7 +514,7 @@ let semantic_check_postfixop loc op e =
 (* -- Variables ------------------------------------------------------------- *)
 let semantic_check_variable cf loc id =
   Validate.(
-    match Symbol_table.look vm id.name with
+    match Symbol_table.look vm (Utils.stdlib_distribution_name id.name) with
     | None when not (Stan_math_signatures.is_stan_math_function_name id.name)
       ->
         Semantic_error.ident_not_in_scope loc id.name |> error
@@ -501,6 +526,12 @@ let semantic_check_variable cf loc id =
         |> ok
     | Some ((Param | TParam | GQuant), _) when cf.in_toplevel_decl ->
         Semantic_error.non_data_variable_size_decl loc |> error
+    | Some _
+      when Utils.is_unnormalized_distribution id.name
+           && not
+                ( (cf.in_fun_def && (cf.in_udf_dist_def || cf.in_lp_fun_def))
+                || cf.current_block = Model ) ->
+        Semantic_error.invalid_unnormalized_fn loc |> error
     | Some (originblock, type_) ->
         mk_typed_expression ~expr:(Variable id)
           ~ad_level:(calculate_autodifftype cf originblock type_)
@@ -514,7 +545,7 @@ let semantic_check_conddist_name ~loc id =
     if
       List.exists
         ~f:(fun x -> String.is_suffix id.name ~suffix:x)
-        ["_lpdf"; "_lpmf"; "_lcdf"; "_lccdf"]
+        Utils.conditioning_suffices
     then ok ()
     else Semantic_error.conditional_notation_not_allowed loc |> error)
 
@@ -576,40 +607,32 @@ let semantic_check_rowvector ~loc es =
 let tuple2 a b = (a, b)
 let tuple3 a b c = (a, b, c)
 
-let index_with_type idx =
+let indexing_type idx =
   match idx with
-  | Single e -> (idx, e.emeta.type_)
-  | _ -> (idx, UnsizedType.UInt)
+  | Single {emeta= {type_= UnsizedType.UInt; _}; _} -> `Single
+  | _ -> `Multi
 
 let inferred_unsizedtype_of_indexed ~loc ut indices =
-  let rec aux k ut xs =
-    match (ut, xs) with
-    | UnsizedType.UMatrix, [(All, _); (Single _, UnsizedType.UInt)]
-     |UMatrix, [(Upfrom _, _); (Single _, UInt)]
-     |UMatrix, [(Downfrom _, _); (Single _, UInt)]
-     |UMatrix, [(Between _, _); (Single _, UInt)]
-     |UMatrix, [(Single _, UArray UInt); (Single _, UInt)] ->
-        k @@ Validate.ok UnsizedType.UVector
-    | _, [] -> k @@ Validate.ok ut
-    | _, next :: rest -> (
-      match next with
-      | Single _, UInt -> (
-        match ut with
-        | UArray inner_ty -> aux k inner_ty rest
-        | UVector | URowVector -> aux k UReal rest
-        | UMatrix -> aux k URowVector rest
-        | _ -> Semantic_error.not_indexable loc ut |> Validate.error )
-      | _ -> (
-        match ut with
-        | UArray inner_ty ->
-            let k' =
-              Fn.compose k (Validate.map ~f:(fun t -> UnsizedType.UArray t))
-            in
-            aux k' inner_ty rest
-        | UVector | URowVector | UMatrix -> aux k ut rest
-        | _ -> Semantic_error.not_indexable loc ut |> Validate.error ) )
+  let rec aux type_ idcs =
+    match (type_, idcs) with
+    | _, [] -> Validate.ok type_
+    | UnsizedType.UArray type_, `Single :: tl -> aux type_ tl
+    | UArray type_, `Multi :: tl ->
+        aux type_ tl |> Validate.map ~f:(fun t -> UnsizedType.UArray t)
+    | (UVector | URowVector), [`Single] | UMatrix, [`Single; `Single] ->
+        Validate.ok UnsizedType.UReal
+    | (UVector | URowVector | UMatrix), [`Multi] | UMatrix, [`Multi; `Multi] ->
+        Validate.ok type_
+    | UMatrix, ([`Single] | [`Single; `Multi]) ->
+        Validate.ok UnsizedType.URowVector
+    | UMatrix, [`Multi; `Single] -> Validate.ok UnsizedType.UVector
+    | UMatrix, _ :: _ :: _ :: _
+     |(UVector | URowVector), _ :: _ :: _
+     |(UInt | UReal | UFun _ | UMathLibraryFunction), _ :: _ ->
+        Semantic_error.not_indexable loc ut (List.length indices)
+        |> Validate.error
   in
-  aux Fn.id ut (List.map ~f:index_with_type indices)
+  aux ut (List.map ~f:indexing_type indices)
 
 let inferred_unsizedtype_of_indexed_exn ~loc ut indices =
   inferred_unsizedtype_of_indexed ~loc ut indices |> to_exn
@@ -797,7 +820,8 @@ and semantic_check_funapp ~is_cond_dist id es cf emeta =
     |> apply_const (semantic_check_fn_map_rect ~loc:emeta.loc id ues)
     |> apply_const (name_check ~loc:emeta.loc id)
     |> apply_const (semantic_check_fn_target_plus_equals cf ~loc:emeta.loc id)
-    |> apply_const (semantic_check_fn_rng cf ~loc:emeta.loc id))
+    |> apply_const (semantic_check_fn_rng cf ~loc:emeta.loc id)
+    |> apply_const (semantic_check_unnormalized cf ~loc:emeta.loc id))
 
 and semantic_check_expression_of_int_type cf e name =
   Validate.(
@@ -1009,10 +1033,14 @@ let mk_assignment_from_indexed_expr assop lhs rhs =
     {assign_lhs= Ast.lvalue_of_expr lhs; assign_op= assop; assign_rhs= rhs}
 
 let semantic_check_assignment_operator ~loc assop lhs rhs =
+  let op =
+    match assop with
+    | Assign | ArrowAssign -> Operator.Equals
+    | OperatorAssign op -> op
+  in
   Validate.(
     let err =
-      Semantic_error.illtyped_assignment loc assop lhs.emeta.type_
-        rhs.emeta.type_
+      Semantic_error.illtyped_assignment loc op lhs.emeta.type_ rhs.emeta.type_
     in
     match assop with
     | Assign | ArrowAssign ->
@@ -1098,7 +1126,10 @@ let semantic_check_sampling_pdf_pmf id =
   Validate.(
     if
       String.(
-        is_suffix id.name ~suffix:"_lpdf" || is_suffix id.name ~suffix:"_lpmf")
+        is_suffix id.name ~suffix:"_lpdf"
+        || is_suffix id.name ~suffix:"_lpmf"
+        || is_suffix id.name ~suffix:"_lupdf"
+        || is_suffix id.name ~suffix:"_lupmf")
     then error @@ Semantic_error.invalid_sampling_pdf_or_pmf id.id_loc
     else ok ())
 
@@ -1124,27 +1155,29 @@ let semantic_check_sampling_distribution ~loc id arguments =
     | UnsizedType.ReturnType UReal -> true
     | _ -> false
   in
-  let is_reat_rt_for_suffix suffix =
+  let is_name_w_suffix_sampling_dist suffix =
     Stan_math_signatures.stan_math_returntype (name ^ suffix) argumenttypes
     |> Option.value_map ~default:false ~f:is_real_rt
-  and valid_arg_types_for_suffix suffix =
+  in
+  let is_sampling_dist_in_math =
+    List.exists ~f:is_name_w_suffix_sampling_dist
+      (Utils.distribution_suffices @ Utils.unnormalized_suffices)
+    && name <> "binomial_coefficient"
+    && name <> "multiply"
+  in
+  let is_name_w_suffix_udf_sampling_dist suffix =
     match Symbol_table.look vm (name ^ suffix) with
     | Some (Functions, UFun (listedtypes, ReturnType UReal)) ->
         UnsizedType.check_compatible_arguments_mod_conv name listedtypes
           argumenttypes
     | _ -> false
   in
+  let is_udf_sampling_dist =
+    List.exists ~f:is_name_w_suffix_udf_sampling_dist
+      (Utils.distribution_suffices @ Utils.unnormalized_suffices)
+  in
   Validate.(
-    if
-      is_reat_rt_for_suffix "_lpdf"
-      || is_reat_rt_for_suffix "_lpmf"
-      || is_reat_rt_for_suffix "_log"
-         && name <> "binomial_coefficient"
-         && name <> "multiply"
-      || valid_arg_types_for_suffix "_lpdf"
-      || valid_arg_types_for_suffix "_lpmf"
-      || valid_arg_types_for_suffix "_log"
-    then ok ()
+    if is_sampling_dist_in_math || is_udf_sampling_dist then ok ()
     else error @@ Semantic_error.invalid_sampling_no_such_dist loc name)
 
 let cumulative_density_is_defined id arguments =
@@ -1154,7 +1187,7 @@ let cumulative_density_is_defined id arguments =
     | UnsizedType.ReturnType UReal -> true
     | _ -> false
   in
-  let is_reat_rt_for_suffix suffix =
+  let is_real_rt_for_suffix suffix =
     Stan_math_signatures.stan_math_returntype (name ^ suffix) argumenttypes
     |> Option.value_map ~default:false ~f:is_real_rt
   and valid_arg_types_for_suffix suffix =
@@ -1164,13 +1197,13 @@ let cumulative_density_is_defined id arguments =
           argumenttypes
     | _ -> false
   in
-  ( is_reat_rt_for_suffix "_lcdf"
+  ( is_real_rt_for_suffix "_lcdf"
   || valid_arg_types_for_suffix "_lcdf"
-  || is_reat_rt_for_suffix "_cdf_log"
+  || is_real_rt_for_suffix "_cdf_log"
   || valid_arg_types_for_suffix "_cdf_log" )
-  && ( is_reat_rt_for_suffix "_lccdf"
+  && ( is_real_rt_for_suffix "_lccdf"
      || valid_arg_types_for_suffix "_lccdf"
-     || is_reat_rt_for_suffix "_ccdf_log"
+     || is_real_rt_for_suffix "_ccdf_log"
      || valid_arg_types_for_suffix "_ccdf_log" )
 
 let can_truncate_distribution ~loc (arg : typed_expression) = function
@@ -1462,6 +1495,28 @@ and semantic_check_block ~loc ~cf stmts =
     map return_ty ~f:(fun return_type ->
         mk_typed_statement ~stmt:(Block xs) ~return_type ~loc ))
 
+and semantic_check_profile ~loc ~cf name stmts =
+  Symbol_table.begin_scope vm ;
+  (* Any statements after a break or continue or return or reject
+     do not count for the return type.
+  *)
+  let validated_stmts =
+    List.map ~f:(semantic_check_statement cf) stmts |> Validate.sequence
+  in
+  Symbol_table.end_scope vm ;
+  Validate.(
+    validated_stmts
+    >>= fun xs ->
+    let return_ty =
+      xs |> list_until_escape
+      |> List.map ~f:(fun s -> s.smeta.return_type)
+      |> List.fold ~init:(ok NoReturnType) ~f:(fun accu x ->
+             accu >>= fun y -> try_compute_block_statement_returntype loc y x
+         )
+    in
+    map return_ty ~f:(fun return_type ->
+        mk_typed_statement ~stmt:(Profile (name, xs)) ~return_type ~loc ))
+
 (* -- Variable Declarations ------------------------------------------------- *)
 and semantic_check_var_decl_bounds ~loc is_global sized_ty trans =
   let is_real {emeta; _} = emeta.type_ = UReal in
@@ -1550,7 +1605,7 @@ and semantic_check_fundef_overloaded ~loc id arg_tys rt =
           |> Option.map ~f:snd
           |> Semantic_error.mismatched_fn_def_decl loc id.name
           |> error
-    else check_fresh_variable id (List.length arg_tys = 0))
+    else check_fresh_variable id true)
 
 (** WARNING: side effecting *)
 and semantic_check_fundef_decl ~loc id body =
@@ -1571,7 +1626,7 @@ and semantic_check_fundef_dist_rt ~loc id return_ty =
     let is_dist =
       List.exists
         ~f:(fun x -> String.is_suffix id.name ~suffix:x)
-        ["_log"; "_lpdf"; "_lpmf"; "_lcdf"; "_lccdf"]
+        Utils.conditioning_suffices_w_log
     in
     if is_dist then
       match return_ty with
@@ -1690,10 +1745,16 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
              | AutoDiffable, ut -> (Param, ut))
            uarg_types)
     and context =
+      let is_udf_dist name =
+        List.exists
+          ~f:(fun suffix -> String.is_suffix name ~suffix)
+          Utils.distribution_suffices
+      in
       { cf with
         in_fun_def= true
       ; in_rng_fun_def= String.is_suffix id.name ~suffix:"_rng"
       ; in_lp_fun_def= String.is_suffix id.name ~suffix:"_lp"
+      ; in_udf_dist_def= is_udf_dist id.name
       ; in_returning_fun_def= urt <> Void }
     in
     let body' = semantic_check_statement context body in
@@ -1734,6 +1795,7 @@ and semantic_check_statement cf (s : Ast.untyped_statement) :
         loop_body
   | ForEach (id, e, s) -> semantic_check_foreach ~loc ~cf id e s
   | Block vdsl -> semantic_check_block ~loc ~cf vdsl
+  | Profile (name, vdsl) -> semantic_check_profile ~loc ~cf name vdsl
   | VarDecl {decl_type= Unsized _; _} ->
       raise_s [%message "Don't support unsized declarations yet."]
   | VarDecl
@@ -1806,6 +1868,7 @@ let semantic_check_program
     ; in_returning_fun_def= false
     ; in_rng_fun_def= false
     ; in_lp_fun_def= false
+    ; in_udf_dist_def= false
     ; loop_depth= 0 }
   in
   let ufb =

@@ -4,17 +4,17 @@ data {
   int<lower=2> V;
   int<lower=1> M;
   int<lower=1> N;
-  int<lower=1, upper=V> w[N];
-  int<lower=1, upper=M> doc[N];
+  array[N] int<lower=1, upper=V> w;
+  array[N] int<lower=1, upper=M> doc;
   vector<lower=0>[K] alpha;
   vector<lower=0>[V] beta;
 }
 parameters {
   simplex[K] theta;
-  simplex[V] phi[K];
+  array[K] simplex[V] phi;
 }
 model {
-  real gamma[M, K];
+  array[M, K] real gamma;
   theta ~ dirichlet(alpha);
   for (k in 1 : K) 
     phi[k] ~ dirichlet(beta);
@@ -28,60 +28,26 @@ model {
     increment_log_prob(log_sum_exp(gamma[m]));
 }
 
-
-Warning: deprecated language construct used in 'naive-bayes-unsup.stan', line 24, column 19:
-   -------------------------------------------------
-    22:     for (m in 1:M) 
-    23:       for (k in 1:K) 
-    24:         gamma[m,k] <- categorical_log(k,theta);
-                            ^
-    25:     for (n in 1:N)
-    26:       for (k in 1:K)
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'naive-bayes-unsup.stan', line 27, column 24:
-   -------------------------------------------------
-    25:     for (n in 1:N)
-    26:       for (k in 1:K)
-    27:         gamma[doc[n],k] <- gamma[doc[n],k] 
-                                 ^
-    28:                            + categorical_log(w[n],phi[k]);
-    29:     for (m in 1:M)
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'naive-bayes-unsup.stan', line 30, column 22:
-   -------------------------------------------------
-    28:                            + categorical_log(w[n],phi[k]);
-    29:     for (m in 1:M)
-    30:       increment_log_prob(log_sum_exp(gamma[m]));
-                               ^
-    31:  
-    32:     // to normalize s.t. gamma[m,k] = log Pr[Z2[m] = k|data]
-   -------------------------------------------------
-
-increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-
+Warning in 'naive-bayes-unsup.stan', line 24, column 18: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'naive-bayes-unsup.stan', line 27, column 23: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'naive-bayes-unsup.stan', line 30, column 5: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Warning in 'naive-bayes-unsup.stan', line 24, column 21: categorical_log is deprecated and will be removed in the future. Use categorical_lpmf instead.
+Warning in 'naive-bayes-unsup.stan', line 28, column 28: categorical_log is deprecated and will be removed in the future. Use categorical_lpmf instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format naive-bayes.stan
 data {
   int<lower=1> K;
   int<lower=1> V;
   int<lower=0> M;
   int<lower=0> N;
-  int<lower=1, upper=K> z[M];
-  int<lower=1, upper=V> w[N];
-  int<lower=1, upper=M> doc[N];
+  array[M] int<lower=1, upper=K> z;
+  array[N] int<lower=1, upper=V> w;
+  array[N] int<lower=1, upper=M> doc;
   vector<lower=0>[K] alpha;
   vector<lower=0>[V] beta;
 }
 parameters {
   simplex[K] theta;
-  simplex[V] phi[K];
+  array[K] simplex[V] phi;
 }
 model {
   theta ~ dirichlet(alpha);

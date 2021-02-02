@@ -16,7 +16,7 @@ transformed data {
   [%expect
     {|
     transformed data {
-      int indices[3] = {1, 2, 3};
-      matrix[3, 4] mat[5];
+      array[3] int indices = {1, 2, 3};
+      array[5] matrix[3, 4] mat;
       print(mat[indices,  : , indices][2, 1, 1]);
     } |}]

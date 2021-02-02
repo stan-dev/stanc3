@@ -2,7 +2,7 @@
 data {
   int<lower=0> R;
   int<lower=0> T;
-  int<lower=0, upper=1> y[R, T];
+  array[R, T] int<lower=0, upper=1> y;
 }
 parameters {
   real<lower=0, upper=1> psi1;

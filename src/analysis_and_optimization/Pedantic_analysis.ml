@@ -9,6 +9,8 @@ open Factor_graph
 open Mir_utils
 open Pedantic_dist_warnings
 
+type warning_span = Location_span.t * string [@@deriving compare]
+
 (*********************
    Pattern collection functions
  ********************)
@@ -16,7 +18,7 @@ open Pedantic_dist_warnings
 let list_unused_params (factor_graph : factor_graph) (mir : Program.Typed.t) :
     string Set.Poly.t =
   (* Build a factor graph of the program, check for missing parameters *)
-  let params = parameter_names_set ~include_transformed:true mir in
+  let params = parameter_names_set ~include_transformed:false mir in
   let used_params =
     Set.Poly.map
       ~f:(fun (VVar v) -> v)
@@ -123,19 +125,23 @@ let list_arg_dependant_fundef_cf (mir : Program.Typed.t)
     (fun_def : 'a Program.fun_def) :
     (Location_span.t * int * string) Set.Poly.t =
   let args = List.map ~f:(fun (_, name, _) -> name) fun_def.fdargs in
-  (* build dataflow data structure *)
-  let info_map = build_dep_info_map mir fun_def.fdbody in
-  let cf_deps = list_target_dependant_cf info_map (Set.Poly.of_list args) in
-  union_map cf_deps ~f:(fun (loc, names) ->
-      Set.Poly.map names ~f:(fun name ->
-          let ix, _ =
-            Option.value_exn
-              ~message:
-                "INTERNAL ERROR: Pedantic mode found CF dependent on an \
-                 arg,but the arg is mismatched. Please report a bug.\n"
-              (List.findi args ~f:(fun _ arg -> arg = name))
-          in
-          (loc, ix, name) ) )
+  (* Only look for control flow if this function definition has a body *)
+  Option.value_map fun_def.fdbody ~default:Set.Poly.empty ~f:(fun body ->
+      (* build dataflow data structure *)
+      let info_map = build_dep_info_map mir body in
+      let cf_deps =
+        list_target_dependant_cf info_map (Set.Poly.of_list args)
+      in
+      union_map cf_deps ~f:(fun (loc, names) ->
+          Set.Poly.map names ~f:(fun name ->
+              let ix, _ =
+                Option.value_exn
+                  ~message:
+                    "INTERNAL ERROR: Pedantic mode found CF dependent on an \
+                     arg,but the arg is mismatched. Please report a bug.\n"
+                  (List.findi args ~f:(fun _ arg -> arg = name))
+              in
+              (loc, ix, name) ) ) )
 
 let expr_collect_exprs (expr : Expr.Typed.t) ~f : 'a Set.Poly.t =
   let collect_expr s (expr : Expr.Typed.t) =
@@ -269,7 +275,7 @@ let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
   in
   stmts_collect_exprs
     (List.append mir.log_prob
-       (List.map ~f:(fun f -> f.fdbody) mir.functions_block))
+       (List.filter_map ~f:(fun f -> f.fdbody) mir.functions_block))
     ~f:take_dist
 
 (* Our definition of 'unscaled' for constants used in distributions *)
@@ -295,33 +301,6 @@ let list_unscaled_constants (distributions_list : dist_info Set.Poly.t) :
 (*********************
    Printing functions
  ********************)
-
-(* Fmt format for warnings, where the warning body comes after the
-   "Warning at <location>:" line and is indented by 2 spaces. *)
-let pp_warning ppf (loc, msg) =
-  let loc_str =
-    if loc = Location_span.empty then ""
-    else " at " ^ Location_span.to_string loc
-  in
-  Fmt.pf ppf "Warning%s:@\n@[<hov 2>  %a@]\n" loc_str Fmt.text msg
-
-(* Print a set of 'warnings', where each warning comes with its location.
-   By tupling with location and using a set, we're also sorting the warning
-   messages by increasing location.
-
-   I am not using Fmt to print to stderr here because there was a pretty awful
-   bug where it would unpredictably fail to flush. It would flush when using
-   stdout or when trying to print some strings and not others. I tried using
-   Fmt.flush and various other hacks to no avail. So now I use Fmt to build a
-   string, and Out_channel to write it.
-*)
-let print_warning_set (warnings : (Location_span.t * string) Set.Poly.t) =
-  let str =
-    Fmt.strf "%a"
-      (Fmt.list ~sep:Fmt.nop pp_warning)
-      (Set.Poly.to_list warnings)
-  in
-  Out_channel.output_string Out_channel.stderr str
 
 let unscaled_constants_message (name : string) : string =
   Printf.sprintf
@@ -441,10 +420,14 @@ let uninitialized_warnings (mir : Program.Typed.t) =
     ~f:(fun (loc, vname) -> (loc, uninitialized_message vname))
     uninit_vars
 
-(* Print uninitialized warnings
+let to_list warning_set =
+  Set.Poly.to_list warning_set
+  |> List.sort ~compare:compare_warning_span
+  |> List.rev
+
+(* String-print uninitialized warnings
    In case a user wants only this warning *)
-let print_warn_uninitialized mir =
-  print_warning_set (uninitialized_warnings mir)
+let warn_uninitialized mir = uninitialized_warnings mir |> to_list
 
 (* Optimization settings for constant propagation and partial evaluation *)
 let settings_constant_prop =
@@ -453,8 +436,8 @@ let settings_constant_prop =
   ; copy_propagation= true
   ; partial_evaluation= true }
 
-(* Print all pedantic mode warnings, sorted, to stderr *)
-let print_warn_pedantic (mir_unopt : Program.Typed.t) =
+(* Collect all pedantic mode warnings, sorted, to stderr *)
+let warn_pedantic (mir_unopt : Program.Typed.t) =
   (* Some warnings will be stronger when constants are propagated *)
   let mir =
     Optimize.optimization_suite ~settings:settings_constant_prop mir_unopt
@@ -462,16 +445,14 @@ let print_warn_pedantic (mir_unopt : Program.Typed.t) =
   (* Try to avoid recomputation by pre-building structures *)
   let distributions_info = list_distributions mir in
   let factor_graph = prog_factor_graph mir in
-  let warning_set =
-    Set.Poly.union_list
-      [ uninitialized_warnings mir
-      ; unscaled_constants_warnings distributions_info
-      ; multi_twiddles_warnings mir
-      ; hard_constrained_warnings mir
-      ; unused_params_warnings factor_graph mir
-      ; param_dependant_cf_warnings mir
-      ; param_dependant_fundef_cf_warnings mir
-      ; non_one_priors_warnings factor_graph mir
-      ; distribution_warnings distributions_info ]
-  in
-  print_warning_set warning_set
+  Set.Poly.union_list
+    [ uninitialized_warnings mir
+    ; unscaled_constants_warnings distributions_info
+    ; multi_twiddles_warnings mir
+    ; hard_constrained_warnings mir
+    ; unused_params_warnings factor_graph mir
+    ; param_dependant_cf_warnings mir
+    ; param_dependant_fundef_cf_warnings mir
+    ; non_one_priors_warnings factor_graph mir
+    ; distribution_warnings distributions_info ]
+  |> to_list

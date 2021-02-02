@@ -4,7 +4,7 @@ data {
   int<lower=2> D;
   int<lower=0> N;
   matrix[N, D] x;
-  int<lower=1, upper=K> y[N];
+  array[N] int<lower=1, upper=K> y;
 }
 parameters {
   matrix[K, D] beta;
@@ -17,16 +17,4 @@ model {
     y[n] ~ categorical_logit(gamma[n]');
 }
 
-
-Warning: deprecated language construct used in 'multi_logit.stan', line 13, column 9:
-   -------------------------------------------------
-    11:  model {
-    12:    matrix[N, K] gamma;
-    13:    gamma <- x * beta';
-                  ^
-    14:  
-    15:    // prior
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'multi_logit.stan', line 13, column 8: assignment operator <- is deprecated in the Stan language; use = instead.

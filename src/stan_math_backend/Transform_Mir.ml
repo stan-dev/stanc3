@@ -3,25 +3,50 @@ open Middle
 
 let use_opencl = ref false
 
-let opencl_triggers =
+let opencl_trigger_restrictions =
   String.Map.of_alist_exn
-    [ ( "normal_id_glm_lpdf"
-      , ( [0; 1]
-        , [ (* Array of conditions under which to move to OpenCL *)
-            ([1], (* Argument 1 is data *)
-                  [(1, UnsizedType.UMatrix)])
-          (* Argument 1 is a matrix *)
-           ] ) )
+    [ ( "bernoulli_lpmf"
+      , [ [ (0, UnsizedType.DataOnly, UnsizedType.UArray UnsizedType.UInt)
+          ; (1, UnsizedType.DataOnly, UnsizedType.UReal) ] ] )
     ; ( "bernoulli_logit_glm_lpmf"
-      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
+      , [ (* Array of conditions under which we do not want to move to OpenCL *)
+          [(1, UnsizedType.DataOnly, UnsizedType.URowVector)]
+        (* Argument 1 (0-based indexing) is a row vector *)
+         ] )
     ; ( "categorical_logit_glm_lpmf"
-      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
+      , [[(1, UnsizedType.DataOnly, UnsizedType.URowVector)]] )
+    ; ( "exponential_lpdf"
+      , [ [ (0, UnsizedType.AutoDiffable, UnsizedType.UVector)
+          ; (1, UnsizedType.DataOnly, UnsizedType.UReal) ] ] )
     ; ( "neg_binomial_2_log_glm_lpmf"
-      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
+      , [[(1, UnsizedType.DataOnly, UnsizedType.URowVector)]] )
+    ; ( "normal_id_glm_lpdf"
+      , [[(1, UnsizedType.DataOnly, UnsizedType.URowVector)]] )
     ; ( "ordered_logistic_glm_lpmf"
-      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
-    ; ("poisson_log_glm_lpmf", ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]))
-    ]
+      , [[(1, UnsizedType.DataOnly, UnsizedType.URowVector)]] )
+    ; ( "poisson_log_glm_lpmf"
+      , [[(1, UnsizedType.DataOnly, UnsizedType.URowVector)]] )
+    ; ( "std_normal_lpdf"
+      , [[(0, UnsizedType.AutoDiffable, UnsizedType.UVector)]] )
+    ; ( "uniform_lpdf"
+      , [ [ (0, UnsizedType.AutoDiffable, UnsizedType.UVector)
+          ; (1, UnsizedType.DataOnly, UnsizedType.UReal)
+          ; (1, UnsizedType.DataOnly, UnsizedType.UReal) ] ] ) ]
+
+let opencl_supported_functions =
+  [ "bernoulli_lpmf"; "bernoulli_logit_lpmf"; "bernoulli_logit_glm_lpmf"
+  ; "beta_lpdf"; "beta_proportion_lpdf"; "binomial_lpmf"
+  ; "categorical_logit_glm_lpmf"; "cauchy_lpdf"; "chi_square_lpdf"
+  ; "double_exponential_lpdf"; "exp_mod_normal_lpdf"; "exponential_lpdf"
+  ; "frechet_lpdf"; "gamma_lpdf"; "gumbel_lpdf"; "inv_chi_square_lpdf"
+  ; "inv_gamma_lpdf"; "logistic_lpdf"; "lognormal_lpdf"; "neg_binomial_lpmf"
+  ; "neg_binomial_2_lpmf"; "neg_binomial_2_log_lpmf"
+  ; "neg_binomial_2_log_glm_lpmf"; "normal_lpdf"; "normal_id_glm_lpdf"
+  ; "ordered_logistic_glm_lpmf"; "pareto_lpdf"; "pareto_type_2_lpdf"
+  ; "poisson_lpmf"; "poisson_log_lpmf"; "poisson_log_glm_lpmf"; "rayleigh_lpdf"
+  ; "scaled_inv_chi_square_lpdf"; "skew_normal_lpdf"; "std_normal_lpdf"
+  ; "student_t_lpdf"; "uniform_lpdf"; "weibull_lpdf" ]
+  |> String.Set.of_list
 
 let opencl_suffix = "_opencl__"
 
@@ -31,35 +56,33 @@ let to_matrix_cl e =
 let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
     =
   let is_avail = List.mem available_cl_vars ~equal:( = ) in
-  let to_cl (Expr.Fixed.({pattern; _}) as e) =
-    match pattern with
-    | Var s when is_avail s ->
+  let to_cl (Expr.Fixed.({pattern; meta= {Expr.Typed.Meta.type_; _}}) as e) =
+    match (pattern, type_) with
+    | Var s, _ when is_avail s ->
         Expr.Fixed.{e with pattern= Var (s ^ opencl_suffix)}
-    | _ -> to_matrix_cl e
+    | _, UnsizedType.(UInt | UReal) -> e
+    | _, _ -> to_matrix_cl e
   in
-  let move_cl_args cl_args index arg =
-    if List.mem ~equal:( = ) cl_args index then to_cl arg else arg
+  let check_type args (i, ad, t) =
+    let arg = List.nth_exn args i in
+    Expr.Typed.type_of arg = t
+    && UnsizedType.autodifftype_can_convert (Expr.Typed.adlevel_of arg) ad
   in
-  let check_type args (i, t) = Expr.Typed.type_of (List.nth_exn args i) = t in
-  let check_if_data args ind =
-    let Expr.Fixed.({pattern; _}) = List.nth_exn args ind in
-    match pattern with Var s when is_avail s -> true | _ -> false
+  let is_restricted args =
+    List.exists ~f:(List.for_all ~f:(check_type args))
   in
-  let req_met args (data_arg, type_arg) =
-    List.for_all ~f:(check_if_data args) data_arg
-    && List.for_all ~f:(check_type args) type_arg
+  let maybe_map_args args req_args =
+    match req_args with
+    | Some x when is_restricted args x -> args
+    | None | Some _ -> List.map args ~f:to_cl
   in
-  let any_req_met args req_args = List.exists ~f:(req_met args) req_args in
-  let maybe_map_args args (cl_args, req_args) =
-    match any_req_met args req_args with
-    | true -> List.mapi args ~f:(move_cl_args cl_args)
-    | false -> args
+  let is_fn_opencl_supported f =
+    Set.mem opencl_supported_functions (Utils.stdlib_distribution_name f)
   in
   match pattern with
-  | FunApp (StanLib, f, args)
-    when Map.mem opencl_triggers (Utils.stdlib_distribution_name f) ->
+  | FunApp (StanLib, f, args) when is_fn_opencl_supported f ->
       let trigger =
-        Map.find_exn opencl_triggers (Utils.stdlib_distribution_name f)
+        Map.find opencl_trigger_restrictions (Utils.stdlib_distribution_name f)
       in
       {e with pattern= FunApp (StanLib, f, maybe_map_args args trigger)}
   | x ->
@@ -361,11 +384,10 @@ let constrain_in_params outvars stmts =
   in
   let rec change_constrain_target (Stmt.Fixed.({pattern; _}) as s) =
     match pattern with
-    | Assignment (_, {pattern= FunApp (CompilerInternal, f, args); _})
-      when ( Internal_fun.of_string_opt f = Some FnConstrain
-           || Internal_fun.of_string_opt f = Some FnUnconstrain )
-           && List.exists args
-                ~f:(contains_var_expr (Set.mem target_vars) false) ->
+    | Assignment
+        (lval, {pattern= FunApp (CompilerInternal, f, var :: args); meta})
+      when Internal_fun.of_string_opt f = Some FnConstrain
+           && contains_var_expr (Set.mem target_vars) false var ->
         let rec change_var_expr (Expr.Fixed.({pattern; _}) as e) =
           match pattern with
           | Var vident when Set.mem target_vars vident ->
@@ -373,12 +395,14 @@ let constrain_in_params outvars stmts =
           | pattern ->
               {e with pattern= Expr.Fixed.Pattern.map change_var_expr pattern}
         in
-        let rec change_var_stmt s =
-          Stmt.Fixed.
-            { s with
-              pattern= Pattern.map change_var_expr change_var_stmt s.pattern }
-        in
-        change_var_stmt s
+        Stmt.Fixed.
+          { s with
+            pattern=
+              Assignment
+                ( lval
+                , { pattern=
+                      FunApp (CompilerInternal, f, change_var_expr var :: args)
+                  ; meta } ) }
     | pattern ->
         Stmt.Fixed.
           {s with pattern= Pattern.map Fn.id change_constrain_target pattern}
@@ -472,10 +496,8 @@ let trans_prog (p : Program.Typed.t) =
   let get_pname_ust = function
     | ( name
       , { Program.out_block= Parameters
-        ; out_constrained_st
-        ; out_unconstrained_st; _ } )
-      when SizedType.to_unsized out_constrained_st
-           = SizedType.to_unsized out_unconstrained_st ->
+        ; out_unconstrained_st
+        ; out_trans= Identity; _ } ) ->
         Some (name, out_unconstrained_st)
     | name, {Program.out_block= Parameters; out_unconstrained_st; _} ->
         Some (name ^ "_free__", out_unconstrained_st)
@@ -517,7 +539,10 @@ let trans_prog (p : Program.Typed.t) =
   let translate_to_open_cl stmts =
     if !use_opencl then
       let decl Stmt.Fixed.({pattern; _}) =
-        match pattern with Decl d -> Some d.decl_id | _ -> None
+        match pattern with
+        | Decl {decl_type= Sized (SInt | SReal); _} -> None
+        | Decl {decl_id; _} -> Some decl_id
+        | _ -> None
       in
       let data_var_idents = List.filter_map ~f:decl p.prepare_data in
       let switch_expr = switch_expr_to_opencl data_var_idents in

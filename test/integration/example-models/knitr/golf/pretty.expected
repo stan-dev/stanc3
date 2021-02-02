@@ -1,9 +1,9 @@
   $ ../../../../../../install/default/bin/stanc --auto-format golf1.stan
 data {
   int J;
-  int n[J];
+  array[J] int n;
   vector[J] x;
-  int y[J];
+  array[J] int y;
   real r;
   real R;
 }
@@ -25,9 +25,9 @@ generated quantities {
   $ ../../../../../../install/default/bin/stanc --auto-format golf_logistic.stan
 data {
   int J;
-  int n[J];
+  array[J] int n;
   vector[J] x;
-  int y[J];
+  array[J] int y;
 }
 parameters {
   real a;
