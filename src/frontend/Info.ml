@@ -49,7 +49,9 @@ let block_info name ff block =
 
 let info ast =
   let ff = Format.std_formatter in
-    Format.fprintf ff "{ @[<v 0>%a,@,%a @]}@."
+    Format.fprintf ff "{ @[<v 0>%a,@,%a@,%a@,%a @]}@."
       (block_info "inputs") ast.datablock
-      (block_info "parameters") ast.parametersblock;
+      (block_info "parameters") ast.parametersblock
+      (block_info "transformed parameters") ast.transformedparametersblock
+      (block_info "generated quantities") ast.generatedquantitiesblock;
     exit 0

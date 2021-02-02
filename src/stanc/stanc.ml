@@ -1,5 +1,4 @@
 (** stanc console application *)
-let trans_id = Middle.Program.Identity
 
 open Core_kernel
 open Frontend
