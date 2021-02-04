@@ -44,26 +44,32 @@ let basetype_dims t =
   | Type.Sized t -> sized_basetype_dims t
   | Type.Unsized t -> unsized_basetype_dims t
 
+let get_var_decl stmts =
+  List.fold_right ~init:[]
+    ~f:(fun stmt acc ->
+      match stmt.Ast.stmt with
+      | Ast.VarDecl decl ->
+          let t, n = basetype_dims decl.decl_type in
+          (decl.identifier.name, t, n) :: acc
+      | _ -> acc )
+    stmts
+
 let block_info name ff block =
-  let var_info ff s =
-    match s.Ast.stmt with
-    | Ast.VarDecl decl ->
-        let t, n = basetype_dims decl.decl_type in
-        Format.fprintf ff "\"%s\": { \"type\": \"%s\", \"dimensions\": %d}"
-          decl.identifier.name t n
-    | _ -> ()
+  let var_info ff (name, t, n) =
+    Format.fprintf ff "\"%s\": { \"type\": \"%s\", \"dimensions\": %d}" name t
+      n
   in
-  let vars_info ff ostmts =
-    Option.iter ostmts ~f:(fun stmts ->
-        Format.pp_print_list
-          ~pp_sep:(fun ff () -> Format.fprintf ff ",@,")
-          var_info ff stmts )
+  let vars_info ff decls =
+    Format.pp_print_list
+      ~pp_sep:(fun ff () -> Format.fprintf ff ",@,")
+      var_info ff decls
   in
-  Format.fprintf ff "\"%s\": { @[<v 0>%a @]}" name vars_info block
+  Format.fprintf ff "\"%s\": { @[<v 0>%a @]}" name vars_info
+    (Option.value_map block ~default:[] ~f:get_var_decl)
 
 let info ast =
   let ff = Format.std_formatter in
-  Format.fprintf ff "{ @[<v 0>%a,@,%a@,%a@,%a @]}@." (block_info "inputs")
+  Format.fprintf ff "{ @[<v 0>%a,@,%a,@,%a,@,%a @]}@." (block_info "inputs")
     ast.datablock (block_info "parameters") ast.parametersblock
     (block_info "transformed parameters")
     ast.transformedparametersblock

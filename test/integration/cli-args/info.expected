@@ -16,6 +16,6 @@
                   "p": { "type": "real", "dimensions": 2},
                   "q": { "type": "real", "dimensions": 2},
                   "r": { "type": "real", "dimensions": 2},
-                  "s": { "type": "real", "dimensions": 2} }
-  "transformed parameters": { "t": { "type": "real", "dimensions": 2} }
+                  "s": { "type": "real", "dimensions": 2} },
+  "transformed parameters": { "t": { "type": "real", "dimensions": 2} },
   "generated quantities": { "u": { "type": "real", "dimensions": 0} } }
