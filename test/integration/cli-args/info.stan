@@ -28,12 +28,18 @@ parameters {
 
 transformed parameters {
   matrix[14, 14] t = p;
+  {
+    real ignored_tp = r;
+  }
 }
 
 model {
-
+    real ignored_model = r;
 }
 
 generated quantities {
   real u = l[0];
+  {
+    real ignored_gq = l[1];
+  }
 }
