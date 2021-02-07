@@ -16,6 +16,7 @@ let usage = "Usage: " ^ name ^ " [option] ... <model_file.stan>"
 
 let model_file = ref ""
 let pretty_print_program = ref false
+let print_info_json = ref false
 let filename_for_msg = ref ""
 let canonicalize_program = ref false
 let print_model_cpp = ref false
@@ -144,7 +145,7 @@ let options =
       , " Sets the filename used in compiler errors. Uses actual filename by \
          default." )
     ; ( "--info"
-      , Arg.Set Info.with_info
+      , Arg.Set print_info_json
       , " If set, print information about the model." ) ]
 
 let print_deprecated_arg_warning =
@@ -184,7 +185,9 @@ let use_file filename =
   let ast =
     if !canonicalize_program then Canonicalize.repair_syntax ast else ast
   in
-  if !Info.with_info then Info.info ast ;
+  if !print_info_json then (
+    print_endline (Info.info ast) ;
+    exit 0 ) ;
   Debugging.ast_logger ast ;
   if !pretty_print_program then
     print_endline (Pretty_printing.pretty_print_program ast) ;

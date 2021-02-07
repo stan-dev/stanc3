@@ -19,3 +19,4 @@
                   "s": { "type": "real", "dimensions": 2} },
   "transformed parameters": { "t": { "type": "real", "dimensions": 2} },
   "generated quantities": { "u": { "type": "real", "dimensions": 0} } }
+
