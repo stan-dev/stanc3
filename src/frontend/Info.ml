@@ -16,8 +16,6 @@ open Middle
      a vector or row vector, etc.).
 *)
 
-let with_info = ref false
-
 let rec sized_basetype_dims t =
   match t with
   | SizedType.SInt -> ("int", 0)
@@ -54,25 +52,18 @@ let get_var_decl stmts =
       | _ -> acc )
     stmts
 
-let block_info name ff block =
-  let var_info ff (name, t, n) =
-    Format.fprintf ff "\"%s\": { \"type\": \"%s\", \"dimensions\": %d}" name t
-      n
+let block_info name ppf block =
+  let var_info ppf (name, t, n) =
+    Fmt.pf ppf "\"%s\": { \"type\": \"%s\", \"dimensions\": %d}" name t n
   in
-  let vars_info ff decls =
-    Format.pp_print_list
-      ~pp_sep:(fun ff () -> Format.fprintf ff ",@,")
-      var_info ff decls
-  in
-  Format.fprintf ff "\"%s\": { @[<v 0>%a @]}" name vars_info
+  let vars_info = Fmt.list ~sep:Fmt.comma var_info in
+  Fmt.pf ppf "\"%s\": { @[<v 0>%a @]}" name vars_info
     (Option.value_map block ~default:[] ~f:get_var_decl)
 
 let info ast =
-  let ff = Format.std_formatter in
-  Format.fprintf ff "{ @[<v 0>%a,@,%a,@,%a,@,%a @]}@." (block_info "inputs")
+  Fmt.strf "{ @[<v 0>%a,@,%a,@,%a,@,%a @]}@." (block_info "inputs")
     ast.datablock (block_info "parameters") ast.parametersblock
     (block_info "transformed parameters")
     ast.transformedparametersblock
     (block_info "generated quantities")
-    ast.generatedquantitiesblock ;
-  exit 0
+    ast.generatedquantitiesblock
