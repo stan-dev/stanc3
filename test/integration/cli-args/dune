@@ -19,3 +19,14 @@
 (alias
  (name runtest)
  (action (diff filename_good.expected filename_good.output)))
+
+(rule
+ (targets info.output)
+ (deps (package stanc) info.stan)
+ (action
+  (with-stdout-to %{targets}
+   (run %{bin:run_bin_on_args} "%{bin:stanc} --info " info.stan))))
+
+(alias
+ (name runtest)
+ (action (diff info.expected info.output)))
