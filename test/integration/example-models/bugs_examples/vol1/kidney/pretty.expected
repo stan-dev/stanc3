@@ -67,104 +67,11 @@ generated quantities {
 
 }
 
-
-Warning: deprecated language construct used in 'kidney.stan', line 1, column 0:
-   -------------------------------------------------
-     1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol1.pdf
-         ^
-     2:  # Page 51: Kidney: Weibull regression with random efects
-     3:  # http://www.openbugs.net/Examples/Kidney.html
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
-
-Warning: deprecated language construct used in 'kidney.stan', line 2, column 0:
-   -------------------------------------------------
-     1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol1.pdf
-     2:  # Page 51: Kidney: Weibull regression with random efects
-         ^
-     3:  # http://www.openbugs.net/Examples/Kidney.html
-     4:  
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
-
-Warning: deprecated language construct used in 'kidney.stan', line 3, column 0:
-   -------------------------------------------------
-     1:  # http://www.mrc-bsu.cam.ac.uk/bugs/winbugs/Vol1.pdf
-     2:  # Page 51: Kidney: Weibull regression with random efects
-     3:  # http://www.openbugs.net/Examples/Kidney.html
-         ^
-     4:  
-     5:  data {
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
-
-Warning: deprecated language construct used in 'kidney.stan', line 35, column 21:
-   -------------------------------------------------
-    33:    real sigma;
-    34:    real yabeta_disease[4];
-    35:    yabeta_disease[1] <- 0; 
-                              ^
-    36:    yabeta_disease[2] <- beta_disease2;
-    37:    yabeta_disease[3] <- beta_disease3;
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'kidney.stan', line 36, column 21:
-   -------------------------------------------------
-    34:    real yabeta_disease[4];
-    35:    yabeta_disease[1] <- 0; 
-    36:    yabeta_disease[2] <- beta_disease2;
-                              ^
-    37:    yabeta_disease[3] <- beta_disease3;
-    38:    yabeta_disease[4] <- beta_disease4;
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'kidney.stan', line 37, column 21:
-   -------------------------------------------------
-    35:    yabeta_disease[1] <- 0; 
-    36:    yabeta_disease[2] <- beta_disease2;
-    37:    yabeta_disease[3] <- beta_disease3;
-                              ^
-    38:    yabeta_disease[4] <- beta_disease4;
-    39:    sigma <- sqrt(1 / tau); 
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'kidney.stan', line 38, column 21:
-   -------------------------------------------------
-    36:    yabeta_disease[2] <- beta_disease2;
-    37:    yabeta_disease[3] <- beta_disease3;
-    38:    yabeta_disease[4] <- beta_disease4;
-                              ^
-    39:    sigma <- sqrt(1 / tau); 
-    40:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'kidney.stan', line 39, column 9:
-   -------------------------------------------------
-    37:    yabeta_disease[3] <- beta_disease3;
-    38:    yabeta_disease[4] <- beta_disease4;
-    39:    sigma <- sqrt(1 / tau); 
-                  ^
-    40:  }
-    41:  
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'kidney.stan', line 1, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
+Warning in 'kidney.stan', line 2, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
+Warning in 'kidney.stan', line 3, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
+Warning in 'kidney.stan', line 35, column 20: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'kidney.stan', line 36, column 20: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'kidney.stan', line 37, column 20: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'kidney.stan', line 38, column 20: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'kidney.stan', line 39, column 8: assignment operator <- is deprecated in the Stan language; use = instead.

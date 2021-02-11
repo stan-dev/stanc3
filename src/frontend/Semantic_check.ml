@@ -110,8 +110,8 @@ let lub_rt loc rt1 rt2 =
   | _, _ when rt1 = rt2 -> Validate.ok rt2
   | _ -> Semantic_error.mismatched_return_types loc rt1 rt2 |> Validate.error
 
-(* 
-Checks that a variable/function name: 
+(*
+Checks that a variable/function name:
  - if UDF that it does not match a Stan Math function
  - a function/identifier does not have the _lupdf/_lupmf suffix
  - is not already in use
@@ -186,7 +186,12 @@ let reserved_keywords =
   ; "short"; "signed"; "sizeof"; "static"; "static_assert"; "static_cast"
   ; "struct"; "switch"; "template"; "this"; "thread_local"; "throw"; "true"
   ; "try"; "typedef"; "typeid"; "typename"; "union"; "unsigned"; "using"
-  ; "virtual"; "void"; "volatile"; "wchar_t"; "while"; "xor"; "xor_eq" ]
+  ; "virtual"; "void"; "volatile"; "wchar_t"; "while"; "xor"; "xor_eq"
+  ; "functions"; "data"; "parameters"; "model"; "return"; "if"; "else"; "while"
+  ; "for"; "in"; "break"; "continue"; "void"; "int"; "real"; "vector"
+  ; "row_vector"; "matrix"; "ordered"; "positive_ordered"; "simplex"
+  ; "unit_vector"; "cholesky_factor_corr"; "cholesky_factor_cov"; "corr_matrix"
+  ; "cov_matrix"; "print"; "reject"; "target"; "get_lp"; "profile" ]
 
 let semantic_check_identifier id =
   Validate.(
@@ -234,7 +239,9 @@ let semantic_check_fn_target_plus_equals cf ~loc id =
   Validate.(
     if
       String.is_suffix id.name ~suffix:"_lp"
-      && not (cf.in_lp_fun_def || cf.current_block = Model)
+      && not
+           ( cf.in_lp_fun_def || cf.current_block = Model
+           || cf.current_block = TParam )
     then Semantic_error.target_plusequals_outisde_model_or_logprob loc |> error
     else ok ())
 
@@ -259,9 +266,7 @@ let semantic_check_unnormalized cf ~loc id =
   Validate.(
     if
       Utils.is_unnormalized_distribution id.name
-      && not
-           ( (cf.in_fun_def && (cf.in_udf_dist_def || cf.in_lp_fun_def))
-           || cf.current_block = Model )
+      && not ((cf.in_fun_def && cf.in_udf_dist_def) || cf.current_block = Model)
     then Semantic_error.invalid_unnormalized_fn loc |> error
     else ok ())
 
@@ -602,40 +607,32 @@ let semantic_check_rowvector ~loc es =
 let tuple2 a b = (a, b)
 let tuple3 a b c = (a, b, c)
 
-let index_with_type idx =
+let indexing_type idx =
   match idx with
-  | Single e -> (idx, e.emeta.type_)
-  | _ -> (idx, UnsizedType.UInt)
+  | Single {emeta= {type_= UnsizedType.UInt; _}; _} -> `Single
+  | _ -> `Multi
 
 let inferred_unsizedtype_of_indexed ~loc ut indices =
-  let rec aux k ut xs =
-    match (ut, xs) with
-    | UnsizedType.UMatrix, [(All, _); (Single _, UnsizedType.UInt)]
-     |UMatrix, [(Upfrom _, _); (Single _, UInt)]
-     |UMatrix, [(Downfrom _, _); (Single _, UInt)]
-     |UMatrix, [(Between _, _); (Single _, UInt)]
-     |UMatrix, [(Single _, UArray UInt); (Single _, UInt)] ->
-        k @@ Validate.ok UnsizedType.UVector
-    | _, [] -> k @@ Validate.ok ut
-    | _, next :: rest -> (
-      match next with
-      | Single _, UInt -> (
-        match ut with
-        | UArray inner_ty -> aux k inner_ty rest
-        | UVector | URowVector -> aux k UReal rest
-        | UMatrix -> aux k URowVector rest
-        | _ -> Semantic_error.not_indexable loc ut |> Validate.error )
-      | _ -> (
-        match ut with
-        | UArray inner_ty ->
-            let k' =
-              Fn.compose k (Validate.map ~f:(fun t -> UnsizedType.UArray t))
-            in
-            aux k' inner_ty rest
-        | UVector | URowVector | UMatrix -> aux k ut rest
-        | _ -> Semantic_error.not_indexable loc ut |> Validate.error ) )
+  let rec aux type_ idcs =
+    match (type_, idcs) with
+    | _, [] -> Validate.ok type_
+    | UnsizedType.UArray type_, `Single :: tl -> aux type_ tl
+    | UArray type_, `Multi :: tl ->
+        aux type_ tl |> Validate.map ~f:(fun t -> UnsizedType.UArray t)
+    | (UVector | URowVector), [`Single] | UMatrix, [`Single; `Single] ->
+        Validate.ok UnsizedType.UReal
+    | (UVector | URowVector | UMatrix), [`Multi] | UMatrix, [`Multi; `Multi] ->
+        Validate.ok type_
+    | UMatrix, ([`Single] | [`Single; `Multi]) ->
+        Validate.ok UnsizedType.URowVector
+    | UMatrix, [`Multi; `Single] -> Validate.ok UnsizedType.UVector
+    | UMatrix, _ :: _ :: _ :: _
+     |(UVector | URowVector), _ :: _ :: _
+     |(UInt | UReal | UFun _ | UMathLibraryFunction), _ :: _ ->
+        Semantic_error.not_indexable loc ut (List.length indices)
+        |> Validate.error
   in
-  aux Fn.id ut (List.map ~f:index_with_type indices)
+  aux ut (List.map ~f:indexing_type indices)
 
 let inferred_unsizedtype_of_indexed_exn ~loc ut indices =
   inferred_unsizedtype_of_indexed ~loc ut indices |> to_exn
@@ -1074,10 +1071,14 @@ let mk_assignment_from_indexed_expr assop lhs rhs =
     {assign_lhs= Ast.lvalue_of_expr lhs; assign_op= assop; assign_rhs= rhs}
 
 let semantic_check_assignment_operator ~loc assop lhs rhs =
+  let op =
+    match assop with
+    | Assign | ArrowAssign -> Operator.Equals
+    | OperatorAssign op -> op
+  in
   Validate.(
     let err =
-      Semantic_error.illtyped_assignment loc assop lhs.emeta.type_
-        rhs.emeta.type_
+      Semantic_error.illtyped_assignment loc op lhs.emeta.type_ rhs.emeta.type_
     in
     match assop with
     | Assign | ArrowAssign ->
@@ -1532,6 +1533,28 @@ and semantic_check_block ~loc ~cf stmts =
     map return_ty ~f:(fun return_type ->
         mk_typed_statement ~stmt:(Block xs) ~return_type ~loc ))
 
+and semantic_check_profile ~loc ~cf name stmts =
+  Symbol_table.begin_scope vm ;
+  (* Any statements after a break or continue or return or reject
+     do not count for the return type.
+  *)
+  let validated_stmts =
+    List.map ~f:(semantic_check_statement cf) stmts |> Validate.sequence
+  in
+  Symbol_table.end_scope vm ;
+  Validate.(
+    validated_stmts
+    >>= fun xs ->
+    let return_ty =
+      xs |> list_until_escape
+      |> List.map ~f:(fun s -> s.smeta.return_type)
+      |> List.fold ~init:(ok NoReturnType) ~f:(fun accu x ->
+             accu >>= fun y -> try_compute_block_statement_returntype loc y x
+         )
+    in
+    map return_ty ~f:(fun return_type ->
+        mk_typed_statement ~stmt:(Profile (name, xs)) ~return_type ~loc ))
+
 (* -- Variable Declarations ------------------------------------------------- *)
 and semantic_check_var_decl_bounds ~loc is_global sized_ty trans =
   let is_real {emeta; _} = emeta.type_ = UReal in
@@ -1810,6 +1833,7 @@ and semantic_check_statement cf (s : Ast.untyped_statement) :
         loop_body
   | ForEach (id, e, s) -> semantic_check_foreach ~loc ~cf id e s
   | Block vdsl -> semantic_check_block ~loc ~cf vdsl
+  | Profile (name, vdsl) -> semantic_check_profile ~loc ~cf name vdsl
   | VarDecl {decl_type= Unsized _; _} ->
       raise_s [%message "Don't support unsized declarations yet."]
   | VarDecl

@@ -45,19 +45,7 @@ model {
   y ~ normal(y_hat, sigma);
 }
 
-
-Warning: deprecated language construct used in 'radon_group.stan', line 3, column 18:
-   -------------------------------------------------
-     1:  data {
-     2:    int<lower=1> N;
-     3:    int<lower=1> J; # number of counties
-                           ^
-     4:    int<lower=1,upper=J> county[N];
-     5:    vector[N] u;
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
+Warning in 'radon_group.stan', line 3, column 18: Comments beginning with # are deprecated. Please use // in place of # for line comments.
   $ ../../../../../../install/default/bin/stanc --auto-format radon_group_chr.stan
 data {
   int<lower=1> N;
@@ -90,19 +78,7 @@ model {
   y ~ normal(y_hat, sigma);
 }
 
-
-Warning: deprecated language construct used in 'radon_group_chr.stan', line 3, column 18:
-   -------------------------------------------------
-     1:  data {
-     2:    int<lower=1> N;
-     3:    int<lower=1> J; # number of counties
-                           ^
-     4:    int<lower=1,upper=J> county[N];
-     5:    vector[N] u;
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
+Warning in 'radon_group_chr.stan', line 3, column 18: Comments beginning with # are deprecated. Please use // in place of # for line comments.
   $ ../../../../../../install/default/bin/stanc --auto-format radon_intercept.stan
 data {
   int<lower=1> N;
@@ -127,32 +103,8 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-
-Warning: deprecated language construct used in 'radon_intercept.stan', line 3, column 18:
-   -------------------------------------------------
-     1:  data {
-     2:    int<lower=1> N;
-     3:    int<lower=1> J; # number of counties
-                           ^
-     4:    int<lower=1,upper=J> county[N];
-     5:    vector[N] y;
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
-
-Warning: deprecated language construct used in 'radon_intercept.stan', line 8, column 15:
-   -------------------------------------------------
-     6:  }
-     7:  parameters {
-     8:    vector[J] a; # county intercepts
-                        ^
-     9:    real mu_a;
-    10:    real<lower=0> sigma_a;
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
+Warning in 'radon_intercept.stan', line 3, column 18: Comments beginning with # are deprecated. Please use // in place of # for line comments.
+Warning in 'radon_intercept.stan', line 8, column 15: Comments beginning with # are deprecated. Please use // in place of # for line comments.
   $ ../../../../../../install/default/bin/stanc --auto-format radon_intercept_chr.stan
 data {
   int<lower=1> N;
@@ -181,19 +133,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-
-Warning: deprecated language construct used in 'radon_intercept_chr.stan', line 3, column 18:
-   -------------------------------------------------
-     1:  data {
-     2:    int<lower=1> N;
-     3:    int<lower=1> J; # number of counties
-                           ^
-     4:    int<lower=1,upper=J> county[N];
-     5:    vector[N] y;
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
+Warning in 'radon_intercept_chr.stan', line 3, column 18: Comments beginning with # are deprecated. Please use // in place of # for line comments.
   $ ../../../../../../install/default/bin/stanc --auto-format radon_no_pool.stan
 data {
   int<lower=1> N;
@@ -221,19 +161,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-
-Warning: deprecated language construct used in 'radon_no_pool.stan', line 3, column 18:
-   -------------------------------------------------
-     1:  data {
-     2:    int<lower=1> N;
-     3:    int<lower=1> J; # number of counties
-                           ^
-     4:    int<lower=1,upper=J> county[N];
-     5:    vector[N] x;
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
+Warning in 'radon_no_pool.stan', line 3, column 18: Comments beginning with # are deprecated. Please use // in place of # for line comments.
   $ ../../../../../../install/default/bin/stanc --auto-format radon_no_pool_chr.stan
 data {
   int<lower=1> N;
@@ -265,16 +193,4 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-
-Warning: deprecated language construct used in 'radon_no_pool_chr.stan', line 3, column 18:
-   -------------------------------------------------
-     1:  data {
-     2:    int<lower=1> N;
-     3:    int<lower=1> J; # number of counties
-                           ^
-     4:    int<lower=1,upper=J> county[N];
-     5:    vector[N] x;
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
+Warning in 'radon_no_pool_chr.stan', line 3, column 18: Comments beginning with # are deprecated. Please use // in place of # for line comments.

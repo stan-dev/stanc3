@@ -57,7 +57,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'basic.stan', line 3, column 8 to column 28)",
                                                       " (in 'basic.stan', line 2, column 30 to line 4, column 5)",
@@ -167,10 +168,10 @@ return int_array_fun(a, pstream__);
 };
 
 template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
-my_vector_mul_by_5(const Eigen::Matrix<T0__, -1, 1>& x,
-                   std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
+my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
+  const auto& x = to_ref(x_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -198,8 +199,8 @@ my_vector_mul_by_5(const Eigen::Matrix<T0__, -1, 1>& x,
 
 struct my_vector_mul_by_5_functor__ {
 template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
-operator()(const Eigen::Matrix<T0__, -1, 1>& x, std::ostream* pstream__)  const 
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
+operator()(const T0__& x, std::ostream* pstream__)  const 
 {
 return my_vector_mul_by_5(x, pstream__);
 }
@@ -483,7 +484,8 @@ using stan::model::nil_index_list;
 using namespace stan::math;
 using stan::math::pow; 
 
-static int current_statement__ = 0;
+stan::math::profile_map profiles__;
+static int current_statement__= 0;
 static const std::vector<string> locations_array__ = {" (found before start of program)",
                                                       " (in 'integrate.stan', line 4, column 4 to column 27)",
                                                       " (in 'integrate.stan', line 3, column 29 to line 5, column 3)",
@@ -498,9 +500,10 @@ static const std::vector<string> locations_array__ = {" (found before start of p
 
 
 template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
-integrand(const Eigen::Matrix<T0__, -1, 1>& x, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
+integrand(const T0__& x_arg__, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
+  const auto& x = to_ref(x_arg__);
   const static bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -519,8 +522,8 @@ integrand(const Eigen::Matrix<T0__, -1, 1>& x, std::ostream* pstream__) {
 
 struct integrand_functor__ {
 template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
-operator()(const Eigen::Matrix<T0__, -1, 1>& x, std::ostream* pstream__)  const 
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
+operator()(const T0__& x, std::ostream* pstream__)  const 
 {
 return integrand(x, pstream__);
 }
@@ -636,3 +639,6 @@ auto ode_integrate(std::ostream* pstream__ = nullptr)
 }
 
 
+Warning in 'integrate.stan', line 21, column 11: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
+The new interface is slightly different, see: 
+https://mc-stan.org/users/documentation/case-studies/convert_odes.html

@@ -25,7 +25,8 @@
    off-dce.stan
    stalled1-failure.stan
    expr-prop-fail.stan
-   ad-level-failing.stan))
+   ad-level-failing.stan
+   lupdf-inlining.stan))
  (action
   (with-stdout-to %{targets}
    (run %{bin:run_bin_on_args} "%{bin:stanc} --O --print-cpp" %{stanfiles}))))

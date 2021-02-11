@@ -1725,5 +1725,9 @@ generated quantities {
   Sigma = lkj_corr_rng(3, 2.5);
   L = lkj_corr_cholesky_rng(3, 3.0);
   latent_states = hmm_latent_rng(log_omegas, Gamma, rho);
+  n = discrete_range_rng(n, n);
+  N = discrete_range_rng(n, N);
+  N = discrete_range_rng(N, n);
+  N = discrete_range_rng(N, N);
 }
 

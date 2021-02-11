@@ -24,29 +24,5 @@ model {
   x_raw ~ normal(0, 1);
 }
 
-
-Warning: deprecated language construct used in 'funnel_reparam.stan', line 9, column 5:
-   -------------------------------------------------
-     7:    vector[9] x;
-     8:  
-     9:    y <- 3.0 * y_raw;
-              ^
-    10:    x <- exp(y/2) * x_raw;
-    11:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'funnel_reparam.stan', line 10, column 5:
-   -------------------------------------------------
-     8:  
-     9:    y <- 3.0 * y_raw;
-    10:    x <- exp(y/2) * x_raw;
-              ^
-    11:  }
-    12:  model {
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'funnel_reparam.stan', line 9, column 4: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'funnel_reparam.stan', line 10, column 4: assignment operator <- is deprecated in the Stan language; use = instead.

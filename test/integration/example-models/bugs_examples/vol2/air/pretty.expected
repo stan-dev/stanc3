@@ -25,16 +25,4 @@ model {
   y ~ binomial_logit(n, theta1 + theta2 * X);
 }
 
-
-Warning: deprecated language construct used in 'air.stan', line 13, column 9:
-   -------------------------------------------------
-    11:  transformed data {
-    12:    real<lower=0> sigma; 
-    13:    sigma <- sqrt(sigma2); 
-                  ^
-    14:  } 
-    15:  
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'air.stan', line 13, column 8: assignment operator <- is deprecated in the Stan language; use = instead.

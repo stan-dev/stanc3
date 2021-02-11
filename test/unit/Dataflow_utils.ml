@@ -4,19 +4,16 @@ open Analysis_and_optimization.Dataflow_utils
 open Core_kernel
 open Analysis_and_optimization.Dataflow_types
 
-let semantic_check_program ast =
-  Option.value_exn
-    (Result.ok
-       (Semantic_check.semantic_check_program
-          (Option.value_exn (Result.ok ast))))
+let mir_of_string s =
+  Frontend_utils.typed_ast_of_string_exn s |> Ast_to_Mir.trans_prog ""
 
 (***********************************)
 (* Tests                           *)
 (***********************************)
 
 let%expect_test "Loop test" =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
+  let mir =
+    mir_of_string
       {|
       model {
         for (i in 1:2)
@@ -24,7 +21,6 @@ let%expect_test "Loop test" =
       }
       |}
   in
-  let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let block = Stmt.Fixed.Pattern.Block mir.log_prob in
   let statement_map =
     Stmt.Fixed.(
@@ -91,8 +87,8 @@ let%expect_test "Loop test" =
     |}]
 
 let%expect_test "Loop passthrough" =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
+  let mir =
+    mir_of_string
       {|
         model {
           if (1) {
@@ -119,7 +115,6 @@ let%expect_test "Loop passthrough" =
         }
       |}
   in
-  let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let block = Stmt.Fixed.Pattern.Block mir.log_prob in
   let statement_map =
     Stmt.Fixed.(
@@ -135,8 +130,8 @@ let%expect_test "Loop passthrough" =
     |}]
 
 let example1_program =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
+  let mir =
+    mir_of_string
       {|
         model
         {                                // 1
@@ -170,7 +165,6 @@ let example1_program =
         }
       |}
   in
-  let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let block = Stmt.Fixed.Pattern.Block mir.log_prob in
   Stmt.Fixed.{meta= Location_span.empty; pattern= block}
 
@@ -317,8 +311,8 @@ let%test "Reconstructed recursive statement" =
   stmt = example1_program
 
 let example3_program =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
+  let mir =
+    mir_of_string
       {|
       model {
         while (42);
@@ -326,7 +320,6 @@ let example3_program =
       }
       |}
   in
-  let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let blocks =
     Stmt.Fixed.(
       Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
@@ -410,8 +403,8 @@ let%expect_test "Predecessor graph example 3" =
     |}]
 
 let example4_program =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
+  let mir =
+    mir_of_string
       {|
       model {
         for (i in 1:6) {
@@ -421,7 +414,6 @@ let example4_program =
       }
       |}
   in
-  let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let blocks =
     Stmt.Fixed.(
       Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
@@ -512,8 +504,8 @@ let%expect_test "Predecessor graph example 4" =
     |}]
 
 let example5_program =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
+  let mir =
+    mir_of_string
       {|
       model {
         for (i in 1:6) {
@@ -524,7 +516,6 @@ let example5_program =
       }
       |}
   in
-  let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let blocks =
     Stmt.Fixed.(
       Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])

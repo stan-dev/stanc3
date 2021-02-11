@@ -16,14 +16,4 @@ model {
   x ~ poisson(theta .* t);
 }
 
-
-Warning: deprecated language construct used in 'pump.stan', line 1, column 0:
-   -------------------------------------------------
-     1:  # BUGS pump example (Vol 1, Example 2)
-         ^
-     2:  data {
-     3:    int<lower=0> N;
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
+Warning in 'pump.stan', line 1, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
