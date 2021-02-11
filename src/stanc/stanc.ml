@@ -185,13 +185,13 @@ let use_file filename =
   let ast =
     if !canonicalize_program then Canonicalize.repair_syntax ast else ast
   in
-  if !print_info_json then (
-    print_endline (Info.info ast) ;
-    exit 0 ) ;
   Debugging.ast_logger ast ;
   if !pretty_print_program then
     print_endline (Pretty_printing.pretty_print_program ast) ;
   let typed_ast = Frontend_utils.type_ast_or_exit ast in
+  if !print_info_json then (
+    print_endline (Info.info typed_ast) ;
+    exit 0 ) ;
   let printed_filename =
     match !filename_for_msg with "" -> None | s -> Some s
   in
