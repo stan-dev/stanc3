@@ -18,5 +18,8 @@
                   "r": { "type": "real", "dimensions": 2},
                   "s": { "type": "real", "dimensions": 2} },
   "transformed parameters": { "t": { "type": "real", "dimensions": 2} },
-  "generated quantities": { "u": { "type": "real", "dimensions": 0} } }
+  "generated quantities": { "u": { "type": "real", "dimensions": 0} },
+  "stanlib_calls": [ "log",
+                     "square" ],
+  "distributions": [ "dirichlet" ] }
 

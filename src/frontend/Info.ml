@@ -92,7 +92,7 @@ let function_calls ppf p =
   Fmt.pf ppf "\"stanlib_calls\": [ @[<v 0>%a @]],@,"
     (Fmt.list ~sep:Fmt.comma (fun ppf s -> Fmt.pf ppf "\"%s\"" s))
     (SSet.to_list funs) ;
-  Fmt.pf ppf "\"distributions\": [ @[<v 0>%a @]],@,"
+  Fmt.pf ppf "\"distributions\": [ @[<v 0>%a @]]"
     (Fmt.list ~sep:Fmt.comma (fun ppf s -> Fmt.pf ppf "\"%s\"" s))
     (SSet.to_list distrs)
 

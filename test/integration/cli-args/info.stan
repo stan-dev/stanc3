@@ -29,12 +29,13 @@ parameters {
 transformed parameters {
   matrix[14, 14] t = p;
   {
-    real ignored_tp = r;
+    real ignored_tp = log(r[0][0]);
   }
 }
 
 model {
-    real ignored_model = r;
+    real ignored_model = square(r[0][0]);
+    l ~ dirichlet(c);
 }
 
 generated quantities {
