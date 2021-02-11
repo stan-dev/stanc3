@@ -14,8 +14,9 @@ open Middle
    - [type]: the base type of the variable (["int"] or ["real"]).
    - [dimensions]: the number of dimensions ([0] for a scalar, [1] for
      a vector or row vector, etc.).
-   The JSON object also have a field [stanlib_calls] containing the name
-   of the standard library functions called.
+   The JSON object also have the fields [stanlib_calls] and [distributions]
+   containing the name of the standard library functions called and
+   distributions used.
 *)
 
 module SSet = Set.Make(String)
@@ -64,22 +65,23 @@ let block_info name ppf block =
   Fmt.pf ppf "\"%s\": { @[<v 0>%a @]}" name vars_info
     (Option.value_map block ~default:[] ~f:get_var_decl)
 
-let rec get_function_calls_expr acc expr =
+let rec get_function_calls_expr (funs, distrs) expr =
   let acc =
     match expr.expr with
-    | FunApp (_, f, _) -> SSet.add acc f.name
-    | _ -> acc
+    | FunApp (_, f, _) -> (SSet.add funs f.name, distrs)
+    | _ -> (funs, distrs)
   in
   fold_expression
     get_function_calls_expr
     (fun acc _ -> acc)
     acc expr.expr
 
-let rec get_function_calls_stmt acc stmt =
+let rec get_function_calls_stmt (funs, distrs) stmt =
   let acc =
     match stmt.stmt with
-    | NRFunApp (_, f, _) -> SSet.add acc f.name
-    | _ -> acc
+    | NRFunApp (_, f, _) -> (SSet.add funs f.name, distrs)
+    | Tilde { distribution; _ } -> (funs, SSet.add distrs distribution.name)
+    | _ -> (funs, distrs)
   in
   fold_statement
     get_function_calls_expr
@@ -89,10 +91,15 @@ let rec get_function_calls_stmt acc stmt =
     acc stmt.stmt
 
 let function_calls ppf p =
-  let calls = fold_program get_function_calls_stmt SSet.empty p in
-  Fmt.pf ppf "\"stanlib_calls\": [ @[<v 0>%a @]]"
+  let (funs, distrs) =
+    fold_program get_function_calls_stmt (SSet.empty, SSet.empty) p
+  in
+  Fmt.pf ppf "\"stanlib_calls\": [ @[<v 0>%a @]],@,"
     (Fmt.list ~sep:Fmt.comma (fun ppf s -> Fmt.pf ppf "\"%s\"" s))
-    (SSet.to_list calls)
+    (SSet.to_list funs);
+  Fmt.pf ppf "\"distributions\": [ @[<v 0>%a @]],@,"
+    (Fmt.list ~sep:Fmt.comma (fun ppf s -> Fmt.pf ppf "\"%s\"" s))
+    (SSet.to_list distrs)
 
 let info ast =
   Fmt.strf "{ @[<v 0>%a,@,%a,@,%a,@,%a,@,%a @]}@." (block_info "inputs")
