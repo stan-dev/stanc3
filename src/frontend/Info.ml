@@ -19,7 +19,7 @@ open Middle
    distributions used.
 *)
 
-module SSet = Set.Make(String)
+module SSet = Set.Make (String)
 
 let rec sized_basetype_dims t =
   match t with
@@ -71,32 +71,27 @@ let rec get_function_calls_expr (funs, distrs) expr =
     | FunApp (_, f, _) -> (SSet.add funs f.name, distrs)
     | _ -> (funs, distrs)
   in
-  fold_expression
-    get_function_calls_expr
-    (fun acc _ -> acc)
-    acc expr.expr
+  fold_expression get_function_calls_expr (fun acc _ -> acc) acc expr.expr
 
 let rec get_function_calls_stmt (funs, distrs) stmt =
   let acc =
     match stmt.stmt with
     | NRFunApp (_, f, _) -> (SSet.add funs f.name, distrs)
-    | Tilde { distribution; _ } -> (funs, SSet.add distrs distribution.name)
+    | Tilde {distribution; _} -> (funs, SSet.add distrs distribution.name)
     | _ -> (funs, distrs)
   in
-  fold_statement
-    get_function_calls_expr
-    get_function_calls_stmt
+  fold_statement get_function_calls_expr get_function_calls_stmt
     (fun acc _ -> acc)
     (fun acc _ -> acc)
     acc stmt.stmt
 
 let function_calls ppf p =
-  let (funs, distrs) =
+  let funs, distrs =
     fold_program get_function_calls_stmt (SSet.empty, SSet.empty) p
   in
   Fmt.pf ppf "\"stanlib_calls\": [ @[<v 0>%a @]],@,"
     (Fmt.list ~sep:Fmt.comma (fun ppf s -> Fmt.pf ppf "\"%s\"" s))
-    (SSet.to_list funs);
+    (SSet.to_list funs) ;
   Fmt.pf ppf "\"distributions\": [ @[<v 0>%a @]],@,"
     (Fmt.list ~sep:Fmt.comma (fun ppf s -> Fmt.pf ppf "\"%s\"" s))
     (SSet.to_list distrs)
@@ -107,5 +102,4 @@ let info ast =
     (block_info "transformed parameters")
     ast.transformedparametersblock
     (block_info "generated quantities")
-    ast.generatedquantitiesblock
-    function_calls ast
+    ast.generatedquantitiesblock function_calls ast
