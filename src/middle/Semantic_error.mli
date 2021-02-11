@@ -1,5 +1,3 @@
-open Middle
-
 type t
 
 val pp : Format.formatter -> t -> unit
@@ -25,11 +23,7 @@ val array_vector_rowvector_matrix_expected :
   Location_span.t -> UnsizedType.t -> t
 
 val illtyped_assignment :
-     Location_span.t
-  -> Ast.assignmentoperator
-  -> UnsizedType.t
-  -> UnsizedType.t
-  -> t
+  Location_span.t -> Operator.t -> UnsizedType.t -> UnsizedType.t -> t
 
 val illtyped_ternary_if :
   Location_span.t -> UnsizedType.t -> UnsizedType.t -> UnsizedType.t -> t
@@ -79,7 +73,7 @@ val illtyped_binary_op :
 
 val illtyped_prefix_op : Location_span.t -> Operator.t -> UnsizedType.t -> t
 val illtyped_postfix_op : Location_span.t -> Operator.t -> UnsizedType.t -> t
-val not_indexable : Location_span.t -> UnsizedType.t -> t
+val not_indexable : Location_span.t -> UnsizedType.t -> int -> t
 val ident_is_keyword : Location_span.t -> string -> t
 val ident_is_model_name : Location_span.t -> string -> t
 val ident_is_stanmath_name : Location_span.t -> string -> t

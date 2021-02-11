@@ -23,32 +23,8 @@ model {
   y ~ multi_normal_cholesky(mu, L_Sigma);
 }
 
-
-Warning: deprecated language construct used in 'sur.stan', line 17, column 11:
-   -------------------------------------------------
-    15:    matrix[K,K] L_Sigma;
-    16:    for (n in 1:N)
-    17:      mu[n] <- beta * x[n];
-                    ^
-    18:    L_Sigma <- diag_post_multiply(L_Omega, L_sigma);
-    19:  
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'sur.stan', line 18, column 11:
-   -------------------------------------------------
-    16:    for (n in 1:N)
-    17:      mu[n] <- beta * x[n];
-    18:    L_Sigma <- diag_post_multiply(L_Omega, L_sigma);
-                    ^
-    19:  
-    20:    to_vector(beta) ~ normal(0, 5);
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'sur.stan', line 17, column 10: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'sur.stan', line 18, column 10: assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../install/default/bin/stanc --auto-format sur_imrpoper.stan
 data {
   int<lower=1> K;
@@ -68,16 +44,4 @@ model {
   y ~ multi_normal(mu, Sigma);
 }
 
-
-Warning: deprecated language construct used in 'sur_imrpoper.stan', line 15, column 11:
-   -------------------------------------------------
-    13:    vector[K] mu[N];
-    14:    for (n in 1:N)
-    15:      mu[n] <- beta * x[n];
-                    ^
-    16:    y ~ multi_normal(mu, Sigma);
-    17:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'sur_imrpoper.stan', line 15, column 10: assignment operator <- is deprecated in the Stan language; use = instead.

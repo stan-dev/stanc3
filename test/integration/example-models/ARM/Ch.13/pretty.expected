@@ -227,19 +227,7 @@ model {
   y ~ normal(y_hat, sigma_y);
 }
 
-
-Warning: deprecated language construct used in 'pilots.stan', line 24, column 2:
-   -------------------------------------------------
-    22:  }
-    23:  model {
-    24:    # mu ~ unif(-inf, +inf); # implicit
-           ^
-    25:    gamma ~ normal(0, sigma_gamma);
-    26:    delta ~ normal(0, sigma_delta);
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
+Warning in 'pilots.stan', line 24, column 2: Comments beginning with # are deprecated. Please use // in place of # for line comments.
   $ ../../../../../../install/default/bin/stanc --auto-format pilots_chr.stan
 data {
   int<lower=0> N;

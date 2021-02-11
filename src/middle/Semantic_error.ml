@@ -1,5 +1,4 @@
 open Core_kernel
-open Middle
 
 (** Type errors that may arise during semantic check *)
 module TypeError = struct
@@ -14,8 +13,7 @@ module TypeError = struct
     | IntIntArrayOrRangeExpected of UnsizedType.t
     | IntOrRealContainerExpected of UnsizedType.t
     | ArrayVectorRowVectorMatrixExpected of UnsizedType.t
-    | IllTypedAssignment of
-        Ast.assignmentoperator * UnsizedType.t * UnsizedType.t
+    | IllTypedAssignment of Operator.t * UnsizedType.t * UnsizedType.t
     | IllTypedTernaryIf of UnsizedType.t * UnsizedType.t * UnsizedType.t
     | IllTypedReduceSum of
         string
@@ -41,7 +39,7 @@ module TypeError = struct
     | IllTypedBinaryOperator of Operator.t * UnsizedType.t * UnsizedType.t
     | IllTypedPrefixOperator of Operator.t * UnsizedType.t
     | IllTypedPostfixOperator of Operator.t * UnsizedType.t
-    | NotIndexable of UnsizedType.t
+    | NotIndexable of UnsizedType.t * int
 
   let pp ppf = function
     | MismatchedReturnTypes (rt1, rt2) ->
@@ -89,21 +87,20 @@ module TypeError = struct
           "Foreach-loop must be over array, vector, row_vector or matrix. \
            Instead found expression of type %a."
           UnsizedType.pp ut
-    | IllTypedAssignment ((OperatorAssign op as assignop), lt, rt) ->
+    | IllTypedAssignment (Operator.Equals, lt, rt) ->
+        Fmt.pf ppf
+          "Ill-typed arguments supplied to assignment operator %s: lhs has \
+           type %a and rhs has type %a"
+          "=" UnsizedType.pp lt UnsizedType.pp rt
+    | IllTypedAssignment (op, lt, rt) ->
         Fmt.pf ppf
           "@[<h>Ill-typed arguments supplied to assignment operator %s: lhs \
            has type %a and rhs has type %a. Available signatures:@]%s"
-          (Pretty_printing.pretty_print_assignmentoperator assignop)
+          (Fmt.strf "%a=" Operator.pp op)
           UnsizedType.pp lt UnsizedType.pp rt
           ( Stan_math_signatures.pretty_print_math_lib_assignmentoperator_sigs
               op
           |> Option.value ~default:"no matching signatures" )
-    | IllTypedAssignment (assignop, lt, rt) ->
-        Fmt.pf ppf
-          "Ill-typed arguments supplied to assignment operator %s: lhs has \
-           type %a and rhs has type %a"
-          (Pretty_printing.pretty_print_assignmentoperator assignop)
-          UnsizedType.pp lt UnsizedType.pp rt
     | IllTypedTernaryIf (UInt, ut2, ut3) ->
         Fmt.pf ppf
           "Type mismatch in ternary expression, expression when true is: %a; \
@@ -138,10 +135,9 @@ module TypeError = struct
         let type_string (a, b, c, d) i =
           Fmt.strf "(T[%s], %a, %a, ...) => %a, T[%s], %a, ...\n"
             (n_commas (i - 1))
-            Pretty_printing.pp_unsizedtype a Pretty_printing.pp_unsizedtype b
-            Pretty_printing.pp_unsizedtype c
+            UnsizedType.pp a UnsizedType.pp b UnsizedType.pp c
             (n_commas (i - 1))
-            Pretty_printing.pp_unsizedtype d
+            UnsizedType.pp d
         in
         let lines =
           List.map
@@ -224,11 +220,11 @@ module TypeError = struct
             name variadic_ode_generic_signature
             Fmt.(list UnsizedType.pp ~sep:comma)
             arg_tys
-    | NotIndexable ut ->
+    | NotIndexable (ut, nidcs) ->
         Fmt.pf ppf
-          "Only expressions of array, matrix, row_vector and vector type may \
-           be indexed. Instead, found type %a."
-          UnsizedType.pp ut
+          "Too many indexes, expression dimensions=%d, indexes found=%d."
+          (UnsizedType.count_dims ut)
+          nidcs
     | ReturningFnExpectedNonReturningFound fn_name ->
         Fmt.pf ppf
           "A returning function was expected but a non-returning function \
@@ -364,7 +360,7 @@ module ExpressionError = struct
         Fmt.pf ppf
           "Functions with names ending in _lupdf and _lupmf can only be used \
            in the model block or user-defined functions with names ending in \
-           _lpdf, _lpmf or _lp."
+           _lpdf or _lpmf."
     | InvalidUnnormalizedUDF fname ->
         Fmt.pf ppf
           "%s is an invalid user-defined function name. User-defined \
@@ -615,7 +611,8 @@ let illtyped_prefix_op loc op ut =
 let illtyped_postfix_op loc op ut =
   TypeError (loc, TypeError.IllTypedPostfixOperator (op, ut))
 
-let not_indexable loc ut = TypeError (loc, TypeError.NotIndexable ut)
+let not_indexable loc ut nidcs =
+  TypeError (loc, TypeError.NotIndexable (ut, nidcs))
 
 let ident_is_keyword loc name =
   IdentifierError (loc, IdentifierError.IsKeyword name)

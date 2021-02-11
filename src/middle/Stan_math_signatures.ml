@@ -185,6 +185,7 @@ let distributions =
   ; (full_lpdf, "cauchy", [DVReal; DVReal; DVReal])
   ; (full_lpdf, "chi_square", [DVReal; DVReal])
   ; ([Lpdf], "dirichlet", [DVectors; DVectors])
+  ; (full_lpmf, "discrete_range", [DVInt; DVInt; DVInt])
   ; (full_lpdf, "double_exponential", [DVReal; DVReal; DVReal])
   ; (full_lpdf, "exp_mod_normal", [DVReal; DVReal; DVReal; DVReal])
   ; (full_lpdf, "exponential", [DVReal; DVReal])
@@ -370,9 +371,9 @@ let pretty_print_math_sigs = Fmt.strf "@[<v>@,%a@]" pp_math_sigs
 let pretty_print_all_math_sigs ppf () =
   let open Fmt in
   let pp_sig ppf (name, (rt, args)) =
-    pf ppf "%a %s(@[<hov 2>%a@])" UnsizedType.pp_returntype rt name
+    pf ppf "%s(@[<hov 2>%a@]) => %a" name
       (list ~sep:comma UnsizedType.pp)
-      (List.map ~f:snd args)
+      (List.map ~f:snd args) UnsizedType.pp_returntype rt
   in
   let pp_sigs_for_name ppf name =
     (list ~sep:cut pp_sig) ppf
@@ -790,6 +791,7 @@ let () =
     ("append_col", ReturnType URowVector, [URowVector; URowVector]) ;
   add_unqualified ("append_col", ReturnType URowVector, [UReal; URowVector]) ;
   add_unqualified ("append_col", ReturnType URowVector, [URowVector; UReal]) ;
+  add_unqualified ("chol2inv", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified ("cholesky_decompose", ReturnType UMatrix, [UMatrix]) ;
   add_binary_vec_int_int "choose" ;
   add_unqualified ("col", ReturnType UVector, [UMatrix; UInt]) ;
@@ -881,6 +883,7 @@ let () =
   add_nullary "e" ;
   add_unqualified ("eigenvalues_sym", ReturnType UVector, [UMatrix]) ;
   add_unqualified ("eigenvectors_sym", ReturnType UMatrix, [UMatrix]) ;
+  add_unqualified ("generalized_inverse", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified ("qr_Q", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified ("qr_R", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified ("qr_thin_Q", ReturnType UMatrix, [UMatrix]) ;
@@ -1061,16 +1064,8 @@ let () =
   add_unqualified ("hypergeometric_rng", ReturnType UInt, [UInt; UInt; UInt]) ;
   add_binary_vec "hypot" ;
   add_unqualified ("identity_matrix", ReturnType UMatrix, [UInt]) ;
-  List.iter
-    ~f:(fun i ->
-      List.iter
-        ~f:(fun t ->
-          add_unqualified
-            ( "if_else"
-            , ReturnType (bare_array_type (t, i))
-            , [UInt; bare_array_type (t, i); bare_array_type (t, i)] ) )
-        bare_types )
-    (List.range 0 8) ;
+  add_unqualified ("if_else", ReturnType UInt, [UInt; UInt; UInt]) ;
+  add_unqualified ("if_else", ReturnType UReal, [UInt; UReal; UReal]) ;
   add_unqualified ("inc_beta", ReturnType UReal, [UReal; UReal; UReal]) ;
   add_unqualified ("int_step", ReturnType UInt, [UReal]) ;
   add_unqualified ("int_step", ReturnType UInt, [UInt]) ;
@@ -1219,6 +1214,10 @@ let () =
   add_binary_vec "lbeta" ;
   add_binary "lchoose" ;
   add_binary_vec_real_int "ldexp" ;
+  add_qualified
+    ( "linspaced_int_array"
+    , ReturnType (UArray UInt)
+    , [(DataOnly, UInt); (DataOnly, UInt); (DataOnly, UInt)] ) ;
   add_qualified
     ( "linspaced_array"
     , ReturnType (UArray UReal)
@@ -1705,6 +1704,9 @@ let () =
   add_unqualified ("sum", ReturnType UReal, [UVector]) ;
   add_unqualified ("sum", ReturnType UReal, [URowVector]) ;
   add_unqualified ("sum", ReturnType UReal, [UMatrix]) ;
+  add_unqualified ("svd_U", ReturnType UMatrix, [UMatrix]) ;
+  add_unqualified ("svd_V", ReturnType UMatrix, [UMatrix]) ;
+  add_unqualified ("symmetrize_from_lower_tri", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified ("tail", ReturnType URowVector, [URowVector; UInt]) ;
   add_unqualified ("tail", ReturnType UVector, [UVector; UInt]) ;
   List.iter

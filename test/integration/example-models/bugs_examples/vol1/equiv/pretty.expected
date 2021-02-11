@@ -53,104 +53,11 @@ Values will be rounded towards zero. If rounding is not desired you can write
 the division as
   (group[n] * (2 * p - 3) + 3) / 2.0
 If rounding is intended please use the integer division operator %/%.
-
-Warning: deprecated language construct used in 'equiv.stan', line 1, column 0:
-   -------------------------------------------------
-     1:  # Equiv: bioequivalence in a cross-over trial
-         ^
-     2:  #  http://www.openbugs.net/Examples/Equiv.html
-     3:  
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
-
-Warning: deprecated language construct used in 'equiv.stan', line 2, column 0:
-   -------------------------------------------------
-     1:  # Equiv: bioequivalence in a cross-over trial
-     2:  #  http://www.openbugs.net/Examples/Equiv.html
-         ^
-     3:  
-     4:  data {
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
-
-Warning: deprecated language construct used in 'equiv.stan', line 16, column 14:
-   -------------------------------------------------
-    14:    for (n in 1:N) 
-    15:      for (p in 1:P) 
-    16:        T[n,p] <- (group[n] * (2 * p - 3) + 3) / 2;
-                       ^
-    17:  } 
-    18:  
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'equiv.stan', line 31, column 10:
-   -------------------------------------------------
-    29:    real sigma1;
-    30:    real sigma2;
-    31:    sigma1 <- sqrt(sigmasq1); 
-                   ^
-    32:    sigma2 <- sqrt(sigmasq2); 
-    33:  } 
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'equiv.stan', line 32, column 10:
-   -------------------------------------------------
-    30:    real sigma2;
-    31:    sigma1 <- sqrt(sigmasq1); 
-    32:    sigma2 <- sqrt(sigmasq2); 
-                   ^
-    33:  } 
-    34:  
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'equiv.stan', line 39, column 12:
-   -------------------------------------------------
-    37:      vector[P] m;
-    38:      for (p in 1:P)
-    39:        m[p] <- mu + sign[T[n, p]] * phi / 2 + sign[p] * pi / 2 + delta[n];
-                     ^
-    40:      Y[n] ~ normal(m, sigma1);
-    41:    }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'equiv.stan', line 54, column 9:
-   -------------------------------------------------
-    52:    real theta;
-    53:  
-    54:    theta <- exp(phi);
-                  ^
-    55:    equiv <- step(theta - 0.8) -
-    56:             step(theta - 1.2);
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'equiv.stan', line 55, column 9:
-   -------------------------------------------------
-    53:  
-    54:    theta <- exp(phi);
-    55:    equiv <- step(theta - 0.8) -
-                  ^
-    56:             step(theta - 1.2);
-    57:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'equiv.stan', line 1, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
+Warning in 'equiv.stan', line 2, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
+Warning in 'equiv.stan', line 16, column 13: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'equiv.stan', line 31, column 9: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'equiv.stan', line 32, column 9: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'equiv.stan', line 39, column 11: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'equiv.stan', line 54, column 8: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'equiv.stan', line 55, column 8: assignment operator <- is deprecated in the Stan language; use = instead.

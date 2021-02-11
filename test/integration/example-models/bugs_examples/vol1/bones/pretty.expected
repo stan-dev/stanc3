@@ -28,68 +28,8 @@ model {
   }
 }
 
-
-Warning: deprecated language construct used in 'bones.stan', line 40, column 20:
-   -------------------------------------------------
-    38:        // Cumulative probability of > grade k given theta
-    39:        for (k in 1:(ncat[j] - 1))
-    40:          Q[i, j, k] <- inv_logit(delta[j] * (theta[i] - gamma[j, k])); 
-                             ^
-    41:        p[i, j, 1] <- 1 - Q[i, j, 1];
-    42:        for (k in 2:(ncat[j] - 1))  
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'bones.stan', line 41, column 18:
-   -------------------------------------------------
-    39:        for (k in 1:(ncat[j] - 1))
-    40:          Q[i, j, k] <- inv_logit(delta[j] * (theta[i] - gamma[j, k])); 
-    41:        p[i, j, 1] <- 1 - Q[i, j, 1];
-                           ^
-    42:        for (k in 2:(ncat[j] - 1))  
-    43:          p[i, j, k] <- Q[i, j, k - 1] - Q[i, j, k];
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'bones.stan', line 43, column 20:
-   -------------------------------------------------
-    41:        p[i, j, 1] <- 1 - Q[i, j, 1];
-    42:        for (k in 2:(ncat[j] - 1))  
-    43:          p[i, j, k] <- Q[i, j, k - 1] - Q[i, j, k];
-                             ^
-    44:        p[i, j, ncat[j]] <- Q[i, j, ncat[j] - 1];
-    45:  
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'bones.stan', line 44, column 24:
-   -------------------------------------------------
-    42:        for (k in 2:(ncat[j] - 1))  
-    43:          p[i, j, k] <- Q[i, j, k - 1] - Q[i, j, k];
-    44:        p[i, j, ncat[j]] <- Q[i, j, ncat[j] - 1];
-                                 ^
-    45:  
-    46:        // incement log probability directly because grade[i, j]
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'bones.stan', line 51, column 25:
-   -------------------------------------------------
-    49:        // contribution
-    50:        if (grade[i, j] != -1)
-    51:          increment_log_prob(log(p[i, j, grade[i, j]]));  
-                                  ^
-    52:      }
-    53:    }
-   -------------------------------------------------
-
-increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-
+Warning in 'bones.stan', line 40, column 19: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'bones.stan', line 41, column 17: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'bones.stan', line 43, column 19: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'bones.stan', line 44, column 23: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'bones.stan', line 51, column 8: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
