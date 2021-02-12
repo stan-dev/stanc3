@@ -16,10 +16,15 @@
                   "p": { "type": "real", "dimensions": 2},
                   "q": { "type": "real", "dimensions": 2},
                   "r": { "type": "real", "dimensions": 2},
-                  "s": { "type": "real", "dimensions": 2} },
+                  "s": { "type": "real", "dimensions": 2},
+                  "y": { "type": "real", "dimensions": 0} },
   "transformed parameters": { "t": { "type": "real", "dimensions": 2} },
   "generated quantities": { "u": { "type": "real", "dimensions": 0} },
   "stanlib_calls": [ "log",
+                     "sin",
                      "square" ],
-  "distributions": [ "dirichlet" ] }
+  "distributions": [ "dirichlet",
+                     "normal_lccdf",
+                     "normal_lcdf",
+                     "normal_lpdf" ] }
 
