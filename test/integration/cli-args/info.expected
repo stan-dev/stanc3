@@ -21,10 +21,12 @@
   "transformed parameters": { "t": { "type": "real", "dimensions": 2} },
   "generated quantities": { "u": { "type": "real", "dimensions": 0} },
   "stanlib_calls": [ "log",
+                     "reduce_sum",
                      "sin",
                      "square" ],
   "distributions": [ "dirichlet",
                      "normal_lccdf",
                      "normal_lcdf",
-                     "normal_lpdf" ] }
+                     "normal_lpdf",
+                     "std_normal_lupdf" ] }
 

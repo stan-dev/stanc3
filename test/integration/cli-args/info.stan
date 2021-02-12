@@ -5,6 +5,9 @@ functions {
   real goo_lpdf(real a) {
     return a;
   }
+  real f_lpdf(real[] y_slice, int start, int end) {
+    return normal_lpdf(y_slice| 0, 1);
+  }
 }
 
 data {
@@ -46,10 +49,10 @@ transformed parameters {
 model {
     real ignored_model = square(foo(square(r[0][0])));
     l ~ dirichlet(c);
-    target += normal_lpdf(y| 0, 1);
     target += normal_lcdf(y| 0, 1);
     target += normal_lccdf(y| 0, 1);
-    target += std_normal_lupdf(y)
+    target += std_normal_lupdf(y);
+    target += reduce_sum(f_lpdf, g, 1);
     y ~ goo();
 }
 
