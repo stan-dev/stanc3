@@ -74,21 +74,38 @@ let rec get_function_calls_expr (funs, distrs) expr =
   in
   fold_expression get_function_calls_expr (fun acc _ -> acc) acc expr.expr
 
-let rec get_function_calls_stmt (funs, distrs) stmt =
+let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
   let acc =
     match stmt.stmt with
     | NRFunApp (StanLib, f, _) -> (SSet.add funs f.name, distrs)
-    | Tilde {distribution; _} -> (funs, SSet.add distrs distribution.name)
+    | Tilde {distribution; _} ->
+        let possible_names =
+          List.map ~f:(( ^ ) distribution.name) Utils.distribution_suffices
+          |> String.Set.of_list
+        in
+        if List.exists ~f:(fun (n, _) -> Set.mem possible_names n) ud_dists
+        then (funs, distrs)
+        else (funs, SSet.add distrs distribution.name)
     | _ -> (funs, distrs)
   in
-  fold_statement get_function_calls_expr get_function_calls_stmt
+  fold_statement get_function_calls_expr
+    (get_function_calls_stmt ud_dists)
     (fun acc _ -> acc)
     (fun acc _ -> acc)
     acc stmt.stmt
 
 let function_calls ppf p =
+  let map f list_op =
+    Option.value_map ~default:[] ~f:(List.concat_map ~f) list_op
+  in
+  let grab_fundef_names_and_types = function
+    | {Ast.stmt= Ast.FunDef {funname; arguments= (_, type_, _) :: _; _}; _} ->
+        [(funname.name, type_)]
+    | _ -> []
+  in
+  let ud_dists = map grab_fundef_names_and_types p.functionblock in
   let funs, distrs =
-    fold_program get_function_calls_stmt (SSet.empty, SSet.empty) p
+    fold_program (get_function_calls_stmt ud_dists) (SSet.empty, SSet.empty) p
   in
   Fmt.pf ppf "\"stanlib_calls\": [ @[<v 0>%a @]],@,"
     (Fmt.list ~sep:Fmt.comma (fun ppf s -> Fmt.pf ppf "\"%s\"" s))
