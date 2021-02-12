@@ -49,6 +49,7 @@ model {
     target += normal_lpdf(y| 0, 1);
     target += normal_lcdf(y| 0, 1);
     target += normal_lccdf(y| 0, 1);
+    target += std_normal_lupdf(y)
     y ~ goo();
 }
 
