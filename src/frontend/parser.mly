@@ -279,16 +279,6 @@ decl(type_rule, rhs):
     }])
     }
 
-  (* (\* Array dimensions option must be inlined, else it will conflict with first
-   *    rule. *\)
-   * | dims_opt=ioption(arr_dims) ty=type_rule
-   *     vs=separated_nonempty_list(COMMA, id_and_optional_assignment(rhs)) SEMICOLON
-   *   { (fun ~is_global ->
-   *     (\* map over each variable in v (often only one), assigning each the same
-   *        type. *\)
-   *     let dims = Option.value dims_opt ~default:[] in
-   *     List.map vs ~f:(fun (id, rhs_opt) -> *)
-
   (* This rule matches non-array declarations and also the new array syntax, e.g:
        array[1,2] int x = ..;
    *)
