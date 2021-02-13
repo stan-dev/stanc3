@@ -111,7 +111,7 @@ Warning in 'compound-assign-decl-bad1.stan', line 1, column 18: assignment opera
                            ^
    -------------------------------------------------
 
-Expected  ";" or "=" expression ";".
+Expected  ";" or assignment.
   $ ../../../../../install/default/bin/stanc compound-assign-decl-bad2.stan
 Warning in 'compound-assign-decl-bad2.stan', line 1, column 29: assignment operator <- is deprecated in the Stan language; use = instead.Syntax error in 'compound-assign-decl-bad2.stan', line 1, column 29 to column 31, parsing error:
    -------------------------------------------------
@@ -119,7 +119,7 @@ Warning in 'compound-assign-decl-bad2.stan', line 1, column 29: assignment opera
                                       ^
    -------------------------------------------------
 
-Expected  ";" or "=" expression ";".
+Expected  ";" or assignment.
   $ ../../../../../install/default/bin/stanc fun-app-bad1.stan
 Syntax error in 'fun-app-bad1.stan', line 1, column 30 to column 31, parsing error:
    -------------------------------------------------

@@ -121,7 +121,7 @@ Syntax error in 'bad_bounds1.stan', line 2, column 15 to column 17, parsing erro
      4:  parameters {
    -------------------------------------------------
 
-">" or ", upper = expression (not containing binary logical operators) ">" expected after specifying lower bound for type.
+">" or ", upper = expression>" (with expression not containing binary logical operators) expected after specifying lower bound for type.
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_arr_rvec_data.stan
 Semantic error in 'bad_cov_exp_quad_arr_rvec_data.stan', line 13, column 41 to column 48:
    -------------------------------------------------

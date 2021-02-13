@@ -28,6 +28,27 @@ Syntax error in 'array-expr-decl-bad3.stan', line 2, column 2 to column 6, parsi
    -------------------------------------------------
 
 Found a declaration following an expression.
+  $ ../../../../install/default/bin/stanc array-multi-decl-bad.stan
+Syntax error in 'array-multi-decl-bad.stan', line 2, column 11 to column 12, parsing error:
+   -------------------------------------------------
+     1:  model {
+     2:    real x[5], y;
+                    ^
+     3:  }
+   -------------------------------------------------
+
+Expected  ";" or assignment.
+  $ ../../../../install/default/bin/stanc array-multi-decl-bad2.stan
+Syntax error in 'array-multi-decl-bad2.stan', line 2, column 21 to column 22, parsing error:
+   -------------------------------------------------
+     1:  model {
+     2:    real x[3] = {1,2,3}, y;
+                              ^
+     3:  }
+   -------------------------------------------------
+
+Multiple declarations are not allowed when array dimensions are given in TYPE IDENTIFIER[DIMENSIONS] form.
+When all declarations share array dimensions, use 'array[DIMENSIONS] TYPE IDENTIFIER' form, otherwise use separate declarations.
   $ ../../../../install/default/bin/stanc array_expr_bad1.stan
 Semantic error in 'array_expr_bad1.stan', line 2, column 2 to column 32:
    -------------------------------------------------
@@ -1342,16 +1363,16 @@ Semantic error in 'matrix_expr_bad2.stan', line 2, column 34 to column 35:
 
 Matrix expression must have all row_vector entries. Found type int.
   $ ../../../../install/default/bin/stanc matrix_expr_bad3.stan
-Syntax error in 'matrix_expr_bad3.stan', line 2, column 38 to column 39, parsing error:
+Syntax error in 'matrix_expr_bad3.stan', line 2, column 40 to column 41, parsing error:
    -------------------------------------------------
      1:  transformed data {
      2:    matrix[3,2] td_mat32 = [ [ [ 1 ] ] ], [ [ 2 ] ] ];
-                                               ^
+                                                 ^
      3:  }
      4:  model {
    -------------------------------------------------
 
-Ill-formed expression. Expression followed by ";" expected after "=".
+Expected identifier after comma in multiple declaration.
   $ ../../../../install/default/bin/stanc matrix_expr_bad4.stan
 Syntax error in 'matrix_expr_bad4.stan', line 2, column 44 to column 45, parsing error:
    -------------------------------------------------
