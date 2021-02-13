@@ -34,12 +34,20 @@
    (with-stdout-to %{targets} (run menhir --list-errors %{dep:parser.mly}))))
 
 (alias
+ (name dedup_messages)
+ (action
+  (progn
+   (run python3 %{dep:message_deduplicating_tool.py} %{dep:parser_new.messages} parser.messages.dune_dedup))))
+
+(alias
  (name update_messages)
  (action
   (progn
    (run python3 %{dep:add_missing_messages.py} %{dep:parser.mly} %{dep:parser_new.messages} %{dep:parser_updated_trimmed.messages})
    (diff %{dep:parser.messages} %{dep:parser_updated_trimmed.messages}))))
 
+; make a new rule for dedup with new.messages
+; overall: talk about your design decisions, including parsing with the .1 syntax, and tag the appropriate people
 (alias
  (name runtest)
  (action

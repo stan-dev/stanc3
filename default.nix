@@ -1,16 +1,23 @@
-with (import (builtins.fetchTarball {
-  name = "nixpkgs-19.09";
-  # Tarball of tagged release of Nixpkgs 19.09
-  url = "https://github.com/NixOS/nixpkgs/archive/19.09.tar.gz";
-  # Tarball hash obtained using `nix-prefetch-url --unpack <url>`
-  sha256 = "0mhqhq21y5vrr1f30qd2bvydv4bbbslvyzclhw0kdxmkgg3z4c92";
-}) {});
+# with (import (builtins.fetchTarball {
+#   name = "nixpkgs-19.09";
+#   # Tarball of tagged release of Nixpkgs 19.09
+#   url = "https://github.com/NixOS/nixpkgs/archive/19.09.tar.gz";
+#   # Tarball hash obtained using `nix-prefetch-url --unpack <url>`
+#   sha256 = "0mhqhq21y5vrr1f30qd2bvydv4bbbslvyzclhw0kdxmkgg3z4c92";
+# }) {});
 
+with (import (builtins.fetchTarball {
+  name = "nixpkgs-20.09";
+  # Tarball of tagged release of Nixpkgs 20.09
+  url = "https://github.com/NixOS/nixpkgs/archive/20.09.tar.gz";
+  # Tarball hash obtained using `nix-prefetch-url --unpack <url>`
+  sha256 = "1wg61h4gndm3vcprdcg7rc4s1v3jkm5xd7lw8r2f67w502y94gcy";
+}) {});
 
 ocamlPackages.buildDunePackage rec {
   pname = "stanc";
   version = "2.23.0";
-  
+
   # Only depend on necessary files to minimize rebuilds
   src = lib.sourceByRegex ./. [ "^src.*$" "^dune-project$" "^stanc\.opam$" ];
 
@@ -24,7 +31,8 @@ ocamlPackages.buildDunePackage rec {
 
   buildInputs = with ocamlPackages; [
     yojson
-    menhir
+    # menhir
+    (callPackage ./menhir.nix { })
     core_kernel
     ppx_jane
     ppx_deriving
