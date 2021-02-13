@@ -37,19 +37,15 @@ let stanc_args_to_print =
   |> List.filter ~f:sans_model_and_hpp_paths
   |> String.concat ~sep:" "
 
-let pp_unused = fmt "(void) %s;  // suppress unused var warning "
+let pp_unused = fmt "(void) %s;  // suppress unused var warning"
 
 (** Print name of model function.
   @param prog_name Name of the Stan program.
   @param fname Name of the function.
  *)
 let pp_function__ ppf (prog_name, fname) =
-  pf ppf {|
-    static const char* function__ = %S;
-    %s
-    |}
-    (strf "%s_namespace::%s" prog_name fname)
-    (strf "%a" pp_unused "function__")
+  pf ppf {|@[<v>static const char* function__ = "%s_namespace::%s";@,%a@]|}
+    prog_name fname pp_unused "function__"
 
 (** Print the body of exception handling for functions *)
 let pp_located ppf _ =
@@ -220,16 +216,15 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
     get_templates_and_args fdargs
   in
   let pp_body ppf (Stmt.Fixed.({pattern; _}) as fdbody) =
-    let text = pf ppf "%s@;" in
     pf ppf "@[<hv 8>using local_scalar_t__ = %a;@]@," pp_promoted_scalar fdargs ;
     if List.exists ~f:(fun (_, _, t) -> UnsizedType.is_eigen_type t) fdargs
     then pp_eigen_arg_to_ref ppf fdargs ;
     if not (is_dist || is_lp) then (
-      text "const static bool propto__ = true;" ;
-      text "(void) propto__;" ) ;
-    text
+      pf ppf "%s@ " "const static bool propto__ = true;" ;
+      pf ppf "%s@ " "(void) propto__;" ) ;
+    pf ppf "%s@ "
       "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
-    pp_unused ppf "DUMMY_VAR__" ;
+    pf ppf "%a" pp_unused "DUMMY_VAR__" ;
     let blocked_fdbody =
       match pattern with
       | SList stmts -> {fdbody with pattern= Block stmts}
@@ -405,12 +400,12 @@ let pp_ctor ppf p =
         pf ppf "using local_scalar_t__ = double ;@ " ;
         pf ppf "boost::ecuyer1988 base_rng__ = @ " ;
         pf ppf "    stan::services::util::create_rng(random_seed__, 0);@ " ;
-        pp_unused ppf "base_rng__" ;
-        pp_function__ ppf (prog_name, prog_name) ;
+        pf ppf "%a@ " pp_unused "base_rng__" ;
+        pf ppf "%a@ " pp_function__ (prog_name, prog_name) ;
         pf ppf
           "local_scalar_t__ \
            DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());@ " ;
-        pp_unused ppf "DUMMY_VAR__" ;
+        pf ppf "%a" pp_unused "DUMMY_VAR__" ;
         pp_located_error ppf
           (pp_block, (list ~sep:cut pp_stmt_topdecl_size_only, prepare_data)) ;
         cut ppf () ;
@@ -442,14 +437,13 @@ let pp_model_private ppf {Program.prepare_data; _} =
   @param cv_attr Optional parameter to add method attributes.
   @param ppbody (?A pretty printer of the method's body)
  *)
-let pp_method ppf rt name params intro ?(outro = []) ?(cv_attr = ["const"])
+let pp_method ppf rt name params intro ?(outro = nop) ?(cv_attr = ["const"])
     ppbody =
   pf ppf "@[<v 2>inline %s %s(@[<hov>@,%a@]) %a " rt name
     (list ~sep:comma string) params (list ~sep:cut string) cv_attr ;
-  pf ppf "{@,%a" (list ~sep:cut string) intro ;
-  pf ppf "@ " ;
+  pf ppf "{@,%a@ " intro () ;
   ppbody ppf ;
-  if not (List.is_empty outro) then pf ppf "@ %a" (list ~sep:cut string) outro ;
+  outro ppf () ;
   pf ppf "@,} // %s() @,@]" name
 
 (** Print the `get_param_names` method of the model class
@@ -458,7 +452,7 @@ let pp_method ppf rt name params intro ?(outro = []) ?(cv_attr = ["const"])
 let pp_get_param_names ppf {Program.output_vars; _} =
   let add_param = fmt "names__.emplace_back(%S);" in
   pp_method ppf "void" "get_param_names" ["std::vector<std::string>& names__"]
-    [] (fun ppf ->
+    nop (fun ppf ->
       pf ppf "names__.clear();@ " ;
       (list ~sep:cut add_param) ppf (List.map ~f:fst output_vars) )
 
@@ -485,11 +479,12 @@ let pp_get_dims ppf {Program.output_vars; _} =
   in
   let params = ["std::vector<std::vector<size_t>>& dimss__"] in
   let cv_attr = ["const"] in
-  pp_method ppf "void" "get_dims" params ["dimss__.clear();"]
+  pp_method ppf "void" "get_dims" params
+    (const string "dimss__.clear();")
     (fun ppf -> pp_output_var ppf)
     ~cv_attr
 
-let pp_method_b ppf rt name params intro ?(outro = []) ?(cv_attr = ["const"])
+let pp_method_b ppf rt name params intro ?(outro = nop) ?(cv_attr = ["const"])
     body =
   pp_method ppf rt name params intro
     (fun ppf -> pp_located_error_b ppf body)
@@ -508,15 +503,16 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
     ; "const bool emit_generated_quantities__ = true"
     ; "std::ostream* pstream__ = nullptr" ]
   in
-  let intro =
-    [ "using local_scalar_t__ = double;"; "vars__.resize(0);"
-    ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
-    ; strf "%a" pp_function__ (prog_name, "write_array")
-    ; "double lp__ = 0.0;"
-    ; "(void) lp__;  // dummy to suppress unused var warning"
-    ; "stan::math::accumulator<double> lp_accum__;"
-    ; "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());"
-    ; strf "%a" pp_unused "DUMMY_VAR__" ]
+  let intro ppf () =
+    pf ppf "%a@ %a@ %a" (list ~sep:cut string)
+      [ "using local_scalar_t__ = double;"; "vars__.resize(0);"
+      ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
+      ; "double lp__ = 0.0;"
+      ; "(void) lp__;  // dummy to suppress unused var warning"
+      ; "stan::math::accumulator<double> lp_accum__;"
+      ; "local_scalar_t__ \
+         DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ]
+      pp_unused "DUMMY_VAR__" pp_function__ (prog_name, "write_array")
   in
   pp_method_b ppf "void" "write_array_impl" params intro generate_quantities
 
@@ -574,7 +570,7 @@ let pp_constrained_param_names ppf {Program.output_vars; _} =
     pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
   in
   let cv_attr = ["const"; "final"] in
-  pp_method ppf "void" "constrained_param_names" params []
+  pp_method ppf "void" "constrained_param_names" params nop
     (fun ppf ->
       (list ~sep:cut pp_param_names) ppf paramvars ;
       pf ppf "@,if (emit_transformed_parameters__) %a@," pp_block
@@ -629,7 +625,7 @@ let pp_unconstrained_param_names ppf {Program.output_vars; _} =
     pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
   in
   let cv_attr = ["const"; "final"] in
-  pp_method ppf "void" "unconstrained_param_names" params []
+  pp_method ppf "void" "unconstrained_param_names" params nop
     (fun ppf ->
       (list ~sep:cut pp_param_names) ppf paramvars ;
       pf ppf "@,if (emit_transformed_parameters__) %a@," pp_block
@@ -648,9 +644,10 @@ let pp_transform_inits ppf {Program.transform_inits; _} =
     [ "const stan::io::var_context& context__"; "VecI& params_i__"
     ; "VecVar& vars__"; "std::ostream* pstream__ = nullptr" ]
   in
-  let intro =
-    [ "using local_scalar_t__ = double;"; "vars__.clear();"
-    ; "vars__.reserve(num_params_r__);" ]
+  let intro ppf () =
+    pf ppf
+      "using local_scalar_t__ = \
+       double;@,vars__.clear();@,vars__.reserve(num_params_r__);"
   in
   let cv_attr = ["const"] in
   pp_method_b ppf "void" "transform_inits_impl" params intro transform_inits
@@ -666,15 +663,19 @@ let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
     [ "VecR& params_r__"; "VecI& params_i__"
     ; "std::ostream* pstream__ = nullptr" ]
   in
-  let intro =
-    [ "using T__ = stan::scalar_type_t<VecR>;"; "using local_scalar_t__ = T__;"
-    ; "T__ lp__(0.0);"; "stan::math::accumulator<T__> lp_accum__;"
-    ; strf "%a" pp_function__ (prog_name, "log_prob")
-    ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
-    ; "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());"
-    ; strf "%a" pp_unused "DUMMY_VAR__" ]
+  let intro ppf () =
+    pf ppf "%a@ %a@ %a" (list ~sep:cut string)
+      [ "using T__ = stan::scalar_type_t<VecR>;"
+      ; "using local_scalar_t__ = T__;"; "T__ lp__(0.0);"
+      ; "stan::math::accumulator<T__> lp_accum__;"
+      ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
+      ; "local_scalar_t__ \
+         DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ]
+      pp_unused "DUMMY_VAR__" pp_function__ (prog_name, "log_prob")
   in
-  let outro = ["lp_accum__.add(lp__);"; "return lp_accum__.sum();"] in
+  let outro ppf () =
+    pf ppf "@ lp_accum__.add(lp__);@ return lp_accum__.sum();"
+  in
   let cv_attr = ["const"] in
   pp_method_b ppf "stan::scalar_type_t<VecR>" "log_prob_impl" params intro
     log_prob ~outro ~cv_attr
@@ -686,8 +687,8 @@ let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
  @param outvars The parameters to gather the sizes for.
  *)
 let pp_outvar_metadata ppf (method_name, outvars) =
-  let intro = ["std::stringstream s__;"] in
-  let outro = ["return s__.str();"] in
+  let intro = const string "std::stringstream s__;" in
+  let outro ppf () = pf ppf "@ return s__.str();" in
   let json_str = Cpp_Json.out_var_interpolated_json_str outvars in
   let ppbody ppf = pf ppf "s__ << %s;" json_str in
   pp_method ppf "std::string" method_name [] intro ~outro ppbody
@@ -753,7 +754,7 @@ let pp_overloads ppf () =
                         std::ostream* pstream = nullptr) const {
       return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
     }
-  
+
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
@@ -771,7 +772,7 @@ let pp_overloads ppf () =
                                 std::vector<double>& vars,
                                 std::ostream* pstream = nullptr) const final {
       transform_inits_impl(context, params_i, vars, pstream);
-    }        
+    }
 |}
 
 (** Print the public parts of the model class *)
