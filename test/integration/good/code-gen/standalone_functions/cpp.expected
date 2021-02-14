@@ -4,46 +4,7 @@
 #include <stan/model/model_header.hpp>
 namespace basic_model_namespace {
 
-
-inline void validate_positive_index(const char* var_name, const char* expr,
-                                    int val) {
-  if (val < 1) {
-    std::stringstream msg;
-    msg << "Found dimension size less than one in simplex declaration"
-        << "; variable=" << var_name << "; dimension size expression=" << expr
-        << "; expression value=" << val;
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-inline void validate_unit_vector_index(const char* var_name, const char* expr,
-                                       int val) {
-  if (val <= 1) {
-    std::stringstream msg;
-    if (val == 1) {
-      msg << "Found dimension size one in unit vector declaration."
-          << " One-dimensional unit vector is discrete"
-          << " but the target distribution must be continuous."
-          << " variable=" << var_name << "; dimension size expression=" << expr;
-    } else {
-      msg << "Found dimension size less than one in unit vector declaration"
-          << "; variable=" << var_name << "; dimension size expression=" << expr
-          << "; expression value=" << val;
-    }
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-
-using std::istream;
-using std::string;
-using std::stringstream;
-using std::vector;
-using std::pow;
 using stan::io::dump;
-using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
 using stan::model::cons_list;
@@ -55,31 +16,32 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
-using stan::math::pow; 
+
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'basic.stan', line 3, column 8 to column 28)",
-                                                      " (in 'basic.stan', line 2, column 30 to line 4, column 5)",
-                                                      " (in 'basic.stan', line 8, column 2 to column 16)",
-                                                      " (in 'basic.stan', line 7, column 1 to line 9, column 2)",
-                                                      " (in 'basic.stan', line 13, column 2 to column 16)",
-                                                      " (in 'basic.stan', line 12, column 1 to line 14, column 2)",
-                                                      " (in 'basic.stan', line 18, column 9 to column 24)",
-                                                      " (in 'basic.stan', line 18, column 2 to column 43)",
-                                                      " (in 'basic.stan', line 19, column 2 to column 16)",
-                                                      " (in 'basic.stan', line 17, column 1 to line 20, column 2)",
-                                                      " (in 'basic.stan', line 23, column 2 to column 13)",
-                                                      " (in 'basic.stan', line 22, column 43 to line 24, column 2)",
-                                                      " (in 'basic.stan', line 27, column 8 to column 25)",
-                                                      " (in 'basic.stan', line 26, column 26 to line 28, column 5)",
-                                                      " (in 'basic.stan', line 32, column 5 to column 22)",
-                                                      " (in 'basic.stan', line 31, column 22 to line 33, column 2)",
-                                                      " (in 'basic.stan', line 36, column 2 to column 26)",
-                                                      " (in 'basic.stan', line 35, column 23 to line 37, column 2)",
-                                                      " (in 'basic.stan', line 40, column 2 to column 31)",
-                                                      " (in 'basic.stan', line 39, column 32 to line 41, column 2)"};
+static const std::vector<std::string> locations_array__ = 
+{" (found before start of program)",
+ " (in 'basic.stan', line 3, column 8 to column 28)",
+ " (in 'basic.stan', line 2, column 30 to line 4, column 5)",
+ " (in 'basic.stan', line 8, column 2 to column 16)",
+ " (in 'basic.stan', line 7, column 1 to line 9, column 2)",
+ " (in 'basic.stan', line 13, column 2 to column 16)",
+ " (in 'basic.stan', line 12, column 1 to line 14, column 2)",
+ " (in 'basic.stan', line 18, column 9 to column 24)",
+ " (in 'basic.stan', line 18, column 2 to column 43)",
+ " (in 'basic.stan', line 19, column 2 to column 16)",
+ " (in 'basic.stan', line 17, column 1 to line 20, column 2)",
+ " (in 'basic.stan', line 23, column 2 to column 13)",
+ " (in 'basic.stan', line 22, column 43 to line 24, column 2)",
+ " (in 'basic.stan', line 27, column 8 to column 25)",
+ " (in 'basic.stan', line 26, column 26 to line 28, column 5)",
+ " (in 'basic.stan', line 32, column 5 to column 22)",
+ " (in 'basic.stan', line 31, column 22 to line 33, column 2)",
+ " (in 'basic.stan', line 36, column 2 to column 26)",
+ " (in 'basic.stan', line 35, column 23 to line 37, column 2)",
+ " (in 'basic.stan', line 40, column 2 to column 31)",
+ " (in 'basic.stan', line 39, column 32 to line 41, column 2)"};
 
 
 template <typename T0__>
@@ -90,7 +52,6 @@ my_log1p_exp(const T0__& x, std::ostream* pstream__) {
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  
   try {
     current_statement__ = 1;
     return log1p_exp(x);
@@ -119,7 +80,6 @@ array_fun(const std::vector<T0__>& a, std::ostream* pstream__) {
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  
   try {
     current_statement__ = 3;
     return sum(a);
@@ -147,7 +107,6 @@ int_array_fun(const std::vector<int>& a, std::ostream* pstream__) {
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  
   try {
     current_statement__ = 5;
     return sum(a);
@@ -176,7 +135,6 @@ my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  
   try {
     current_statement__ = 7;
     validate_non_negative_index("result", "num_elements(x)", num_elements(x));
@@ -213,7 +171,6 @@ int_only_multiplication(const int& a, const int& b, std::ostream* pstream__) {
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  
   try {
     current_statement__ = 11;
     return (a * b);
@@ -241,7 +198,6 @@ test_lgamma(const T0__& x, std::ostream* pstream__) {
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  
   try {
     current_statement__ = 13;
     return stan::math::lgamma(x);
@@ -270,7 +226,6 @@ test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  
   try {
     current_statement__ = 15;
     lp_accum__.add(normal_lpdf<propto__>(a, 0, 1));
@@ -301,7 +256,6 @@ test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  
   try {
     current_statement__ = 17;
     return normal_rng(a, 1, base_rng__);
@@ -329,7 +283,6 @@ test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  
   try {
     current_statement__ = 19;
     return normal_lpdf<false>(a, b, 1);
@@ -431,46 +384,7 @@ auto test_lpdf(const double& a, const double& b,
 #include <stan/model/model_header.hpp>
 namespace integrate_model_namespace {
 
-
-inline void validate_positive_index(const char* var_name, const char* expr,
-                                    int val) {
-  if (val < 1) {
-    std::stringstream msg;
-    msg << "Found dimension size less than one in simplex declaration"
-        << "; variable=" << var_name << "; dimension size expression=" << expr
-        << "; expression value=" << val;
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-inline void validate_unit_vector_index(const char* var_name, const char* expr,
-                                       int val) {
-  if (val <= 1) {
-    std::stringstream msg;
-    if (val == 1) {
-      msg << "Found dimension size one in unit vector declaration."
-          << " One-dimensional unit vector is discrete"
-          << " but the target distribution must be continuous."
-          << " variable=" << var_name << "; dimension size expression=" << expr;
-    } else {
-      msg << "Found dimension size less than one in unit vector declaration"
-          << "; variable=" << var_name << "; dimension size expression=" << expr
-          << "; expression value=" << val;
-    }
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-
-using std::istream;
-using std::string;
-using std::stringstream;
-using std::vector;
-using std::pow;
 using stan::io::dump;
-using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
 using stan::model::cons_list;
@@ -482,21 +396,22 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
-using stan::math::pow; 
+
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'integrate.stan', line 4, column 4 to column 27)",
-                                                      " (in 'integrate.stan', line 3, column 29 to line 5, column 3)",
-                                                      " (in 'integrate.stan', line 8, column 4 to column 18)",
-                                                      " (in 'integrate.stan', line 9, column 4 to column 22)",
-                                                      " (in 'integrate.stan', line 10, column 4 to column 47)",
-                                                      " (in 'integrate.stan', line 11, column 4 to column 18)",
-                                                      " (in 'integrate.stan', line 7, column 78 to line 12, column 3)",
-                                                      " (in 'integrate.stan', line 15, column 4 to column 15)",
-                                                      " (in 'integrate.stan', line 21, column 4 to column 142)",
-                                                      " (in 'integrate.stan', line 14, column 23 to line 22, column 3)"};
+static const std::vector<std::string> locations_array__ = 
+{" (found before start of program)",
+ " (in 'integrate.stan', line 4, column 4 to column 27)",
+ " (in 'integrate.stan', line 3, column 29 to line 5, column 3)",
+ " (in 'integrate.stan', line 8, column 4 to column 18)",
+ " (in 'integrate.stan', line 9, column 4 to column 22)",
+ " (in 'integrate.stan', line 10, column 4 to column 47)",
+ " (in 'integrate.stan', line 11, column 4 to column 18)",
+ " (in 'integrate.stan', line 7, column 78 to line 12, column 3)",
+ " (in 'integrate.stan', line 15, column 4 to column 15)",
+ " (in 'integrate.stan', line 21, column 4 to column 142)",
+ " (in 'integrate.stan', line 14, column 23 to line 22, column 3)"};
 
 
 template <typename T0__>
@@ -508,7 +423,6 @@ integrand(const T0__& x_arg__, std::ostream* pstream__) {
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  
   try {
     current_statement__ = 1;
     return stan::math::exp(minus(square(x)));
@@ -540,7 +454,6 @@ integrand_ode(const T0__& r, const std::vector<T1__>& f,
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  
   try {
     std::vector<local_scalar_t__> df_dx;
     df_dx = std::vector<local_scalar_t__>(1, DUMMY_VAR__);
@@ -583,7 +496,6 @@ ode_integrate(std::ostream* pstream__) {
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
-  
   try {
     std::vector<int> x_i;
     x_i = std::vector<int>(0, std::numeric_limits<int>::min());
