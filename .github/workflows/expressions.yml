@@ -1,0 +1,75 @@
+name: Stan Math Expressions
+
+on:
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'test/integration/signatures/stan_math_sigs.expected'
+  push:
+    branches: [ master ]
+    paths:
+      - 'test/integration/signatures/stan_math_sigs.expected'
+
+jobs:
+  build-binary:
+    name: Build stanc3 binary
+    runs-on: ubuntu-latest
+    container:
+      image: ocaml/opam2:alpine-3.9-ocaml-4.07
+      options: --user root
+    steps:    
+      - name: Checkout stanc3
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: opam caching
+        id: opam-cache
+        uses: actions/cache@v2
+        with:
+          path: "~/.opam"
+          key: linux-stanc-binary-4.07
+
+      - name: Install dependencies
+        run: |
+          sudo apk update
+          sudo apk add build-base bzip2 git tar curl ca-certificates openssl m4 bash
+          opam init --disable-sandboxing -y
+          opam switch 4.07.0 || opam switch create 4.07.0
+          eval $(opam env)
+          opam repo add internet https://opam.ocaml.org
+          opam update
+          bash -x scripts/install_build_deps.sh
+
+      - name: Build static Linux binaries
+        run: |
+          eval $(opam env)
+          dune subst
+          dune build @install --profile static
+          mv _build/default/src/stanc/stanc.exe linux-stanc
+      
+      - name: Upload Linux stanc
+        uses: actions/upload-artifact@v2
+        with:
+          name: linux-stanc
+          path: linux-stanc
+  expressions-tests:
+    needs: build-binary
+    name: Stan Math Expression tests
+    runs-on: ubuntu-latest
+    steps:    
+      - name: Checkout Stan Math
+        uses: actions/checkout@v2
+        with:
+          repository: "stan-dev/math"
+
+      - name: Download Linux stanc
+        uses: actions/download-artifact@v2
+        with:
+          name: linux-stanc
+          path: bin/stanc
+      
+      - name: Run expressions tests
+        run: |
+          chmod +x bin/stanc
+          ./runTests.py -e16 test/expressions

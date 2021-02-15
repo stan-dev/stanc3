@@ -46,19 +46,7 @@ model {
     y[i] ~ neg_binomial(alpha, beta);
 }
 
-
-Warning: deprecated language construct used in 'negative_binomial2.stan', line 11, column 9:
-   -------------------------------------------------
-     9:  transformed parameters {
-    10:     real<lower=0.0> beta;
-    11:     beta <- p_success / (1.0 - p_success);
-                  ^
-    12:  }
-    13:  model { 
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'negative_binomial2.stan', line 11, column 8: assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../install/default/bin/stanc --auto-format normal_censored.stan
 data {
   real U;
@@ -75,19 +63,7 @@ model {
   increment_log_prob(N_censored * log1m(normal_cdf(U, mu, 1.0)));
 }
 
-
-Warning: deprecated language construct used in 'normal_censored.stan', line 13, column 19:
-   -------------------------------------------------
-    11:    for (n in 1:N_observed)
-    12:      y[n] ~ normal(mu,1.0) T[,U];
-    13:    increment_log_prob(N_censored 
-                            ^
-    14:                       * log1m(normal_cdf(U,mu,1.0)));
-    15:  }
-   -------------------------------------------------
-
-increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-
+Warning in 'normal_censored.stan', line 13, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
   $ ../../../../../install/default/bin/stanc --auto-format normal_loc.stan
 transformed data {
   array[5] real y;
@@ -105,71 +81,11 @@ model {
     y[n] ~ normal(mu, 1.0);
 }
 
-
-Warning: deprecated language construct used in 'normal_loc.stan', line 3, column 10:
-   -------------------------------------------------
-     1:  transformed data {
-     2:      real y[5];
-     3:      y[1] <- 2.0;
-                   ^
-     4:      y[2] <- 1.0;
-     5:      y[3] <- -0.5;
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'normal_loc.stan', line 4, column 10:
-   -------------------------------------------------
-     2:      real y[5];
-     3:      y[1] <- 2.0;
-     4:      y[2] <- 1.0;
-                   ^
-     5:      y[3] <- -0.5;
-     6:      y[4] <- 3.0;
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'normal_loc.stan', line 5, column 10:
-   -------------------------------------------------
-     3:      y[1] <- 2.0;
-     4:      y[2] <- 1.0;
-     5:      y[3] <- -0.5;
-                   ^
-     6:      y[4] <- 3.0;
-     7:      y[5] <- 0.25;
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'normal_loc.stan', line 6, column 10:
-   -------------------------------------------------
-     4:      y[2] <- 1.0;
-     5:      y[3] <- -0.5;
-     6:      y[4] <- 3.0;
-                   ^
-     7:      y[5] <- 0.25;
-     8:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'normal_loc.stan', line 7, column 10:
-   -------------------------------------------------
-     5:      y[3] <- -0.5;
-     6:      y[4] <- 3.0;
-     7:      y[5] <- 0.25;
-                   ^
-     8:  }
-     9:  parameters {
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'normal_loc.stan', line 3, column 9: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'normal_loc.stan', line 4, column 9: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'normal_loc.stan', line 5, column 9: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'normal_loc.stan', line 6, column 9: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'normal_loc.stan', line 7, column 9: assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../install/default/bin/stanc --auto-format normal_mixture.stan
 data {
   int<lower=0> N;
@@ -195,49 +111,11 @@ model {
                                    + normal_log(y[n], mu[2], 1.0)));
 }
 
-
-Warning: deprecated language construct used in 'normal_mixture.stan', line 16, column 13:
-   -------------------------------------------------
-    14:    real log_one_minus_theta;
-    15:  
-    16:    log_theta <- log(theta);
-                      ^
-    17:    log_one_minus_theta <- log(1.0 - theta);
-    18:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'normal_mixture.stan', line 17, column 23:
-   -------------------------------------------------
-    15:  
-    16:    log_theta <- log(theta);
-    17:    log_one_minus_theta <- log(1.0 - theta);
-                                ^
-    18:  }
-    19:  model {
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'normal_mixture.stan', line 24, column 21:
-   -------------------------------------------------
-    22:      mu[k] ~ normal(0,10);
-    23:    for (n in 1:N)
-    24:      increment_log_prob(log_sum_exp(log_theta
-                              ^
-    25:                                       + normal_log(y[n],mu[1],1.0),
-    26:                                     log_one_minus_theta 
-   -------------------------------------------------
-
-increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-
-
-Warning: in 'normal_mixture.stan', line 25, column 39 to column 65: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
-
-Warning: in 'normal_mixture.stan', line 27, column 39 to column 65: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+Warning in 'normal_mixture.stan', line 16, column 12: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'normal_mixture.stan', line 17, column 22: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'normal_mixture.stan', line 24, column 4: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Warning in 'normal_mixture.stan', line 25, column 39: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+Warning in 'normal_mixture.stan', line 27, column 39: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
   $ ../../../../../install/default/bin/stanc --auto-format normal_mixture_k.stan
 data {
   int<lower=1> K;
@@ -259,34 +137,9 @@ model {
   }
 }
 
-
-Warning: deprecated language construct used in 'normal_mixture_k.stan', line 16, column 13:
-   -------------------------------------------------
-    14:    for (n in 1:N) {
-    15:      for (k in 1:K)
-    16:        ps[k] <- log(theta[k]) 
-                      ^
-    17:                 + normal_log(y[n],mu[k],sigma[k]);
-    18:      increment_log_prob(log_sum_exp(ps));    
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'normal_mixture_k.stan', line 18, column 21:
-   -------------------------------------------------
-    16:        ps[k] <- log(theta[k]) 
-    17:                 + normal_log(y[n],mu[k],sigma[k]);
-    18:      increment_log_prob(log_sum_exp(ps));    
-                              ^
-    19:    }
-    20:  }
-   -------------------------------------------------
-
-increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-
-
-Warning: in 'normal_mixture_k.stan', line 17, column 17 to column 48: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+Warning in 'normal_mixture_k.stan', line 16, column 12: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'normal_mixture_k.stan', line 18, column 4: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Warning in 'normal_mixture_k.stan', line 17, column 17: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
   $ ../../../../../install/default/bin/stanc --auto-format normal_mixture_k_prop.stan
 data {
   int<lower=1> K;
@@ -321,60 +174,11 @@ model {
   }
 }
 
-
-Warning: deprecated language construct used in 'normal_mixture_k_prop.stan', line 15, column 6:
-   -------------------------------------------------
-    13:  transformed parameters {
-    14:    ordered[K] mu;
-    15:    mu <- mu_loc + mu_scale * cumulative_sum(mu_prop);
-               ^
-    16:  }
-    17:  model {
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'normal_mixture_k_prop.stan', line 27, column 15:
-   -------------------------------------------------
-    25:      real ps[K];
-    26:      vector[K] log_theta;
-    27:      log_theta <- log(theta);
-                        ^
-    28:  
-    29:      for (n in 1:N) {
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'normal_mixture_k_prop.stan', line 31, column 15:
-   -------------------------------------------------
-    29:      for (n in 1:N) {
-    30:        for (k in 1:K) {
-    31:          ps[k] <- log_theta[k]
-                        ^
-    32:                   + normal_log(y[n],mu[k],sigma[k]);
-    33:        }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'normal_mixture_k_prop.stan', line 34, column 23:
-   -------------------------------------------------
-    32:                   + normal_log(y[n],mu[k],sigma[k]);
-    33:        }
-    34:        increment_log_prob(log_sum_exp(ps));    
-                                ^
-    35:      }
-    36:    }
-   -------------------------------------------------
-
-increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-
-
-Warning: in 'normal_mixture_k_prop.stan', line 32, column 19 to column 50: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+Warning in 'normal_mixture_k_prop.stan', line 15, column 5: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'normal_mixture_k_prop.stan', line 27, column 14: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'normal_mixture_k_prop.stan', line 31, column 14: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'normal_mixture_k_prop.stan', line 34, column 6: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Warning in 'normal_mixture_k_prop.stan', line 32, column 19: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
   $ ../../../../../install/default/bin/stanc --auto-format normal_multi.stan
 data {
   int<lower=0> N;
@@ -529,45 +333,9 @@ model {
   ry[1] ~ multi_student_t(10, rz[1], sigma);
 }
 
-
-Warning: deprecated language construct used in 'normal_multi.stan', line 14, column 16:
-   -------------------------------------------------
-    12:    for (n in 1:N)
-    13:      for (j in 1:J) {
-    14:        ry[j][n] <- y[j][n];
-                         ^
-    15:        rz[j][n] <- z[j][n];
-    16:      }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'normal_multi.stan', line 15, column 16:
-   -------------------------------------------------
-    13:      for (j in 1:J) {
-    14:        ry[j][n] <- y[j][n];
-    15:        rz[j][n] <- z[j][n];
-                         ^
-    16:      }
-    17:    inv_sigma <- inverse_spd(sigma);
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'normal_multi.stan', line 17, column 13:
-   -------------------------------------------------
-    15:        rz[j][n] <- z[j][n];
-    16:      }
-    17:    inv_sigma <- inverse_spd(sigma);
-                      ^
-    18:  }
-    19:  parameters {
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'normal_multi.stan', line 14, column 15: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'normal_multi.stan', line 15, column 15: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'normal_multi.stan', line 17, column 12: assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../install/default/bin/stanc --auto-format normal_truncated.stan
 data {
   real U;

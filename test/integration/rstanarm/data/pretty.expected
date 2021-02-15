@@ -1,5 +1,4 @@
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined NKX.stan
-
 Syntax error in 'NKX.stan', line 2, column 2 to column 5, parsing error:
    -------------------------------------------------
      1:    // dimensions
@@ -10,10 +9,7 @@ Syntax error in 'NKX.stan', line 2, column 2 to column 5, parsing error:
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined data_assoc.stan
-
 Syntax error in 'data_assoc.stan', line 3, column 2 to column 5, parsing error:
    -------------------------------------------------
      1:    // prior family: 0 = none, 1 = normal, 2 = student_t, 3 = hs, 4 = hs_plus,
@@ -25,10 +21,7 @@ Syntax error in 'data_assoc.stan', line 3, column 2 to column 5, parsing error:
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined data_betareg.stan
-
 Syntax error in 'data_betareg.stan', line 2, column 2 to column 5, parsing error:
    -------------------------------------------------
      1:    // betareg data
@@ -39,10 +32,7 @@ Syntax error in 'data_betareg.stan', line 2, column 2 to column 5, parsing error
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined data_event.stan
-
 Syntax error in 'data_event.stan', line 3, column 2 to column 5, parsing error:
    -------------------------------------------------
      1:    // prior family: 0 = none, 1 = normal, 2 = student_t, 3 = hs, 4 = hs_plus,
@@ -54,10 +44,7 @@ Syntax error in 'data_event.stan', line 3, column 2 to column 5, parsing error:
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined data_glm.stan
-
 Syntax error in 'data_glm.stan', line 2, column 2 to column 5, parsing error:
    -------------------------------------------------
      1:    // flag indicating whether to draw from the prior
@@ -68,10 +55,7 @@ Syntax error in 'data_glm.stan', line 2, column 2 to column 5, parsing error:
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined data_mvmer.stan
-
 Syntax error in 'data_mvmer.stan', line 2, column 2 to column 5, parsing error:
    -------------------------------------------------
      1:    // population level data
@@ -82,10 +66,7 @@ Syntax error in 'data_mvmer.stan', line 2, column 2 to column 5, parsing error:
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined dimensions_mvmer.stan
-
 Syntax error in 'dimensions_mvmer.stan', line 2, column 2 to column 5, parsing error:
    -------------------------------------------------
      1:    // population level dimensions
@@ -96,10 +77,7 @@ Syntax error in 'dimensions_mvmer.stan', line 2, column 2 to column 5, parsing e
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined glmer_stuff.stan
-
 Syntax error in 'glmer_stuff.stan', line 3, column 2 to column 5, parsing error:
    -------------------------------------------------
      1:    // glmer stuff, see table 3 of
@@ -111,10 +89,7 @@ Syntax error in 'glmer_stuff.stan', line 3, column 2 to column 5, parsing error:
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined glmer_stuff2.stan
-
 Syntax error in 'glmer_stuff2.stan', line 1, column 2 to column 5, parsing error:
    -------------------------------------------------
      1:    int<lower=0> num_non_zero;  // number of non-zero elements in the Z matrix
@@ -124,10 +99,7 @@ Syntax error in 'glmer_stuff2.stan', line 1, column 2 to column 5, parsing error
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined hyperparameters.stan
-
 Syntax error in 'hyperparameters.stan', line 2, column 2 to column 8, parsing error:
    -------------------------------------------------
      1:    // hyperparameter values are set to 0 if there is no prior
@@ -138,10 +110,7 @@ Syntax error in 'hyperparameters.stan', line 2, column 2 to column 8, parsing er
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined hyperparameters_assoc.stan
-
 Syntax error in 'hyperparameters_assoc.stan', line 2, column 2 to column 8, parsing error:
    -------------------------------------------------
      1:    // hyperparameter values are set to 0 if there is no prior
@@ -152,10 +121,7 @@ Syntax error in 'hyperparameters_assoc.stan', line 2, column 2 to column 8, pars
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined hyperparameters_event.stan
-
 Syntax error in 'hyperparameters_event.stan', line 2, column 2 to column 8, parsing error:
    -------------------------------------------------
      1:    // hyperparameter values are set to 0 if there is no prior
@@ -166,10 +132,7 @@ Syntax error in 'hyperparameters_event.stan', line 2, column 2 to column 8, pars
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined hyperparameters_mvmer.stan
-
 Syntax error in 'hyperparameters_mvmer.stan', line 4, column 2 to column 8, parsing error:
    -------------------------------------------------
      2:  
@@ -181,10 +144,7 @@ Syntax error in 'hyperparameters_mvmer.stan', line 4, column 2 to column 8, pars
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined weights_offset.stan
-
 Syntax error in 'weights_offset.stan', line 2, column 2 to column 5, parsing error:
    -------------------------------------------------
      1:    // weights
@@ -195,5 +155,3 @@ Syntax error in 'weights_offset.stan', line 2, column 2 to column 5, parsing err
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-

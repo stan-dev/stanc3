@@ -1,5 +1,4 @@
   $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format tdata_betareg.stan
-
 Syntax error in 'tdata_betareg.stan', line 1, column 2 to column 4, parsing error:
    -------------------------------------------------
      1:    if (prior_dist_z <= 2) hs_z = 0;
@@ -9,10 +8,7 @@ Syntax error in 'tdata_betareg.stan', line 1, column 2 to column 4, parsing erro
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format tdata_glm.stan
-
 Syntax error in 'tdata_glm.stan', line 1, column 2 to column 5, parsing error:
    -------------------------------------------------
      1:    int<lower=0> len_z_T = 0;
@@ -22,10 +18,7 @@ Syntax error in 'tdata_glm.stan', line 1, column 2 to column 5, parsing error:
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format tdata_mvmer.stan
-
 Syntax error in 'tdata_mvmer.stan', line 2, column 2 to column 5, parsing error:
    -------------------------------------------------
      1:    // dimensions for hs priors
@@ -36,5 +29,3 @@ Syntax error in 'tdata_mvmer.stan', line 2, column 2 to column 5, parsing error:
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-

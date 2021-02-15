@@ -27,42 +27,6 @@ model {
   tau ~ gamma(.0001, .0001);
 }
 
-
-Warning: deprecated language construct used in 'dugongs.stan', line 25, column 9:
-   -------------------------------------------------
-    23:    real sigma; 
-    24:    real U3; 
-    25:    sigma <- 1 / sqrt(tau); 
-                  ^
-    26:    U3 <- logit(lambda);
-    27:  } 
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'dugongs.stan', line 26, column 6:
-   -------------------------------------------------
-    24:    real U3; 
-    25:    sigma <- 1 / sqrt(tau); 
-    26:    U3 <- logit(lambda);
-               ^
-    27:  } 
-    28:  model {
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'dugongs.stan', line 31, column 10:
-   -------------------------------------------------
-    29:    real m[N];
-    30:    for (i in 1:N) 
-    31:      m[i] <- alpha - beta * pow(lambda, x[i]);
-                   ^
-    32:    Y ~ normal(m, sigma); 
-    33:      
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'dugongs.stan', line 25, column 8: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'dugongs.stan', line 26, column 5: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'dugongs.stan', line 31, column 9: assignment operator <- is deprecated in the Stan language; use = instead.

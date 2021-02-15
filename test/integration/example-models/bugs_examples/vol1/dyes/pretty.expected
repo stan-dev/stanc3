@@ -31,77 +31,9 @@ generated quantities {
   sigmasq_within <- 1 / tau_within;
 }
 
-
-Warning: deprecated language construct used in 'dyes.stan', line 1, column 0:
-   -------------------------------------------------
-     1:  # Dyes: variance components model 
-         ^
-     2:  #  http://www.openbugs.net/Examples/Dyes.html
-     3:  
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
-
-Warning: deprecated language construct used in 'dyes.stan', line 2, column 0:
-   -------------------------------------------------
-     1:  # Dyes: variance components model 
-     2:  #  http://www.openbugs.net/Examples/Dyes.html
-         ^
-     3:  
-     4:  data {
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
-
-Warning: deprecated language construct used in 'dyes.stan', line 21, column 17:
-   -------------------------------------------------
-    19:    real sigma_between; 
-    20:    real sigma_within;
-    21:    sigma_between <- 1/sqrt(tau_between); 
-                          ^
-    22:    sigma_within <- 1/sqrt(tau_within); 
-    23:  } 
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'dyes.stan', line 22, column 16:
-   -------------------------------------------------
-    20:    real sigma_within;
-    21:    sigma_between <- 1/sqrt(tau_between); 
-    22:    sigma_within <- 1/sqrt(tau_within); 
-                         ^
-    23:  } 
-    24:  
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'dyes.stan', line 39, column 19:
-   -------------------------------------------------
-    37:    real sigmasq_within;
-    38:    
-    39:    sigmasq_between <- 1 / tau_between;
-                            ^
-    40:    sigmasq_within <- 1 / tau_within;
-    41:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'dyes.stan', line 40, column 18:
-   -------------------------------------------------
-    38:    
-    39:    sigmasq_between <- 1 / tau_between;
-    40:    sigmasq_within <- 1 / tau_within;
-                           ^
-    41:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'dyes.stan', line 1, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
+Warning in 'dyes.stan', line 2, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
+Warning in 'dyes.stan', line 21, column 16: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'dyes.stan', line 22, column 15: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'dyes.stan', line 39, column 18: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'dyes.stan', line 40, column 17: assignment operator <- is deprecated in the Stan language; use = instead.
