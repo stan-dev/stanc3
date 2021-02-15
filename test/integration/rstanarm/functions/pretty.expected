@@ -1,5 +1,4 @@
   $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format SSfunctions.stan
-
 Syntax error in 'SSfunctions.stan', line 1, column 0 to column 6, parsing error:
    -------------------------------------------------
      1:  vector SS_asymp(vector input, matrix Phi_);
@@ -9,10 +8,7 @@ Syntax error in 'SSfunctions.stan', line 1, column 0 to column 6, parsing error:
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format bernoulli_likelihoods.stan
-
 Syntax error in 'bernoulli_likelihoods.stan', line 9, column 2 to column 8, parsing error:
    -------------------------------------------------
      7:     * @return A vector, i.e. inverse-link(eta)
@@ -24,10 +20,7 @@ Syntax error in 'bernoulli_likelihoods.stan', line 9, column 2 to column 8, pars
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format binomial_likelihoods.stan
-
 Syntax error in 'binomial_likelihoods.stan', line 8, column 2 to column 8, parsing error:
    -------------------------------------------------
      6:     * @return A vector, i.e. inverse-link(eta)
@@ -39,10 +32,7 @@ Syntax error in 'binomial_likelihoods.stan', line 8, column 2 to column 8, parsi
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format common_functions.stan
-
 Syntax error in 'common_functions.stan', line 19, column 2 to column 8, parsing error:
    -------------------------------------------------
     17:     * @return A vector that corresponds to theta in lme4
@@ -54,10 +44,7 @@ Syntax error in 'common_functions.stan', line 19, column 2 to column 8, parsing 
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format continuous_likelihoods.stan
-
 Syntax error in 'continuous_likelihoods.stan', line 8, column 2 to column 8, parsing error:
    -------------------------------------------------
      6:     * @return A vector, i.e. inverse-link(eta)
@@ -69,10 +56,7 @@ Syntax error in 'continuous_likelihoods.stan', line 8, column 2 to column 8, par
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format count_likelihoods.stan
-
 Syntax error in 'count_likelihoods.stan', line 9, column 2 to column 8, parsing error:
    -------------------------------------------------
      7:     * @return A vector, i.e. inverse-link(eta)
@@ -84,10 +68,7 @@ Syntax error in 'count_likelihoods.stan', line 9, column 2 to column 8, parsing 
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format jm_functions.stan
-
 Syntax error in 'jm_functions.stan', line 10, column 2 to column 8, parsing error:
    -------------------------------------------------
      8:    * @return A vector, corresponding to the scaled auxiliary parameters
@@ -99,10 +80,7 @@ Syntax error in 'jm_functions.stan', line 10, column 2 to column 8, parsing erro
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format mvmer_functions.stan
-
 Syntax error in 'mvmer_functions.stan', line 7, column 2 to column 5, parsing error:
    -------------------------------------------------
      5:    * @return An integer
@@ -114,5 +92,3 @@ Syntax error in 'mvmer_functions.stan', line 7, column 2 to column 5, parsing er
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-

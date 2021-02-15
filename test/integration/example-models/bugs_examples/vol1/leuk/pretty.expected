@@ -50,122 +50,13 @@ generated quantities {
   }
 }
 
-
-Warning: deprecated language construct used in 'leuk.stan', line 22, column 15:
-   -------------------------------------------------
-    20:    for(i in 1:N) {
-    21:      for(j in 1:NT) {
-    22:        Y[i, j] <- int_step(obs_t[i] - t[j] + .000000001);
-                        ^
-    23:        dN[i, j] <- Y[i, j] * fail[i] * int_step(t[j + 1] - obs_t[i] - .000000001);
-    24:      }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'leuk.stan', line 23, column 16:
-   -------------------------------------------------
-    21:      for(j in 1:NT) {
-    22:        Y[i, j] <- int_step(obs_t[i] - t[j] + .000000001);
-    23:        dN[i, j] <- Y[i, j] * fail[i] * int_step(t[j + 1] - obs_t[i] - .000000001);
-                         ^
-    24:      }
-    25:    }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'leuk.stan', line 26, column 5:
-   -------------------------------------------------
-    24:      }
-    25:    }
-    26:    c <- 0.001; 
-              ^
-    27:    r <- 0.1; 
-    28:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'leuk.stan', line 27, column 5:
-   -------------------------------------------------
-    25:    }
-    26:    c <- 0.001; 
-    27:    r <- 0.1; 
-              ^
-    28:  }
-    29:  parameters {
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'leuk.stan', line 39, column 25:
-   -------------------------------------------------
-    37:      for(i in 1:N) {
-    38:        if (Y[i, j] != 0)  
-    39:          increment_log_prob(poisson_log(dN[i, j], Y[i, j] * exp(beta * Z[i]) * dL0[j])); 
-                                  ^
-    40:      }     
-    41:    }
-   -------------------------------------------------
-
-increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-
-
-Warning: deprecated language construct used in 'leuk.stan', line 50, column 7:
-   -------------------------------------------------
-    48:      // Survivor function = exp(-Integral{l0(u)du})^exp(beta*z)
-    49:      real s;
-    50:      s <- 0;
-                ^
-    51:      for (i in 1:j)
-    52:        s <- s + dL0[i];
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'leuk.stan', line 52, column 9:
-   -------------------------------------------------
-    50:      s <- 0;
-    51:      for (i in 1:j)
-    52:        s <- s + dL0[i];
-                  ^
-    53:      S_treat[j] <- pow(exp(-s), exp(beta * -0.5));
-    54:      S_placebo[j] <- pow(exp(-s), exp(beta * 0.5));      
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'leuk.stan', line 53, column 16:
-   -------------------------------------------------
-    51:      for (i in 1:j)
-    52:        s <- s + dL0[i];
-    53:      S_treat[j] <- pow(exp(-s), exp(beta * -0.5));
-                         ^
-    54:      S_placebo[j] <- pow(exp(-s), exp(beta * 0.5));      
-    55:    }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'leuk.stan', line 54, column 18:
-   -------------------------------------------------
-    52:        s <- s + dL0[i];
-    53:      S_treat[j] <- pow(exp(-s), exp(beta * -0.5));
-    54:      S_placebo[j] <- pow(exp(-s), exp(beta * 0.5));      
-                           ^
-    55:    }
-    56:    
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: in 'leuk.stan', line 39, column 27 to column 85: poisson_log is deprecated and will be removed in the future. Use poisson_lpmf instead.
+Warning in 'leuk.stan', line 22, column 14: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'leuk.stan', line 23, column 15: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'leuk.stan', line 26, column 4: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'leuk.stan', line 27, column 4: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'leuk.stan', line 39, column 8: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Warning in 'leuk.stan', line 50, column 6: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'leuk.stan', line 52, column 8: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'leuk.stan', line 53, column 15: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'leuk.stan', line 54, column 17: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'leuk.stan', line 39, column 27: poisson_log is deprecated and will be removed in the future. Use poisson_lpmf instead.

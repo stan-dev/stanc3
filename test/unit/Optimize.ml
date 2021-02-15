@@ -2372,7 +2372,7 @@ let%expect_test "lazy code motion" =
   [%expect
     {|
     log_prob {
-      data real[] lcm_sym3__;
+      data array[] real lcm_sym3__;
       {
         lcm_sym3__ = FnMakeArray__(3.0);
         FnPrint__(lcm_sym3__);

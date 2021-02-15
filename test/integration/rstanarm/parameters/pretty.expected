@@ -1,5 +1,4 @@
   $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format parameters_assoc.stan
-
 Syntax error in 'parameters_assoc.stan', line 1, column 2 to column 8, parsing error:
    -------------------------------------------------
      1:    vector[a_K] a_z_beta; // primitive assoc params
@@ -9,10 +8,7 @@ Syntax error in 'parameters_assoc.stan', line 1, column 2 to column 8, parsing e
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format parameters_betareg.stan
-
 Syntax error in 'parameters_betareg.stan', line 1, column 2 to column 8, parsing error:
    -------------------------------------------------
      1:    vector[prior_dist_z == 7 ? sum(num_normals_z) : z_dim] z_omega; // betareg z variable coefficients
@@ -22,10 +18,7 @@ Syntax error in 'parameters_betareg.stan', line 1, column 2 to column 8, parsing
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format parameters_event.stan
-
 Syntax error in 'parameters_event.stan', line 1, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:    real e_gamma[e_has_intercept]; // intercept for event submodel
@@ -35,10 +28,7 @@ Syntax error in 'parameters_event.stan', line 1, column 2 to column 6, parsing e
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format parameters_glm.stan
-
 Syntax error in 'parameters_glm.stan', line 1, column 2 to column 8, parsing error:
    -------------------------------------------------
      1:    vector[prior_dist == 7 ? sum(num_normals) : K] z_beta;
@@ -48,10 +38,7 @@ Syntax error in 'parameters_glm.stan', line 1, column 2 to column 8, parsing err
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-
   $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format parameters_mvmer.stan
-
 Syntax error in 'parameters_mvmer.stan', line 2, column 2 to column 6, parsing error:
    -------------------------------------------------
      1:    // intercepts
@@ -62,5 +49,3 @@ Syntax error in 'parameters_mvmer.stan', line 2, column 2 to column 6, parsing e
    -------------------------------------------------
 
 Expected "functions {" or "data {" or "transformed data {" or "parameters {" or "transformed parameters {" or "model {" or "generated quantities {".
-
-

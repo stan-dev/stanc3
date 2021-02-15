@@ -1,4 +1,4 @@
-type t = Lexing.position * string
+type t = Location_span.t * string
 
 val init : unit -> unit
 (** As something of a hack, Warnings keeps track of which warnings the lexer has
@@ -7,7 +7,8 @@ val init : unit -> unit
 val collect : unit -> t list
 (** Returns all of the warnings issued since [init] was called. *)
 
-val pp : (Lexing.position * string) Fmt.t
+val pp : ?printed_filename:string -> t Fmt.t
+val pp_warnings : ?printed_filename:string -> t list Fmt.t
 
-val deprecated : t -> unit
+val deprecated : string -> Lexing.position * string -> unit
 (** Register that a deprecated language construct has been found. *)

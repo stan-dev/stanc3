@@ -2,7 +2,11 @@ open Core_kernel
 open Frontend
 
 let print_ast_of_string s =
-  let ast = Frontend_utils.untyped_ast_of_string s |> Result.ok_or_failwith in
+  let ast =
+    Frontend_utils.untyped_ast_of_string s
+    |> Result.map_error ~f:Middle.Errors.to_string
+    |> Result.ok_or_failwith
+  in
   print_s [%sexp (ast : Ast.untyped_program)]
 
 (* TESTS *)

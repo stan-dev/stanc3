@@ -35,7 +35,6 @@ let%expect_test "udf" =
       (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
       (void) DUMMY_VAR__;  // suppress unused var warning
-
       try {
         return add(x, 1);
       } catch (const std::exception& e) {
@@ -97,7 +96,6 @@ let%expect_test "udf-expressions" =
       (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
       (void) DUMMY_VAR__;  // suppress unused var warning
-
       try {
         return add(x, 1);
       } catch (const std::exception& e) {

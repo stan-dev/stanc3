@@ -33,85 +33,11 @@ model {
   }
 }
 
-
-Warning: deprecated language construct used in 'eyes.stan', line 22, column 11:
-   -------------------------------------------------
-    20:      real lambda[2];
-    21:      real sigma; 
-    22:      sigma <- sqrt(sigmasq); 
-                    ^
-    23:      lambda[1] <- lambda_1;
-    24:      lambda[2] <- lambda[1] + theta;
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'eyes.stan', line 23, column 15:
-   -------------------------------------------------
-    21:      real sigma; 
-    22:      sigma <- sqrt(sigmasq); 
-    23:      lambda[1] <- lambda_1;
-                        ^
-    24:      lambda[2] <- lambda[1] + theta;
-    25:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'eyes.stan', line 24, column 15:
-   -------------------------------------------------
-    22:      sigma <- sqrt(sigmasq); 
-    23:      lambda[1] <- lambda_1;
-    24:      lambda[2] <- lambda[1] + theta;
-                        ^
-    25:  }
-    26:  model {
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'eyes.stan', line 34, column 12:
-   -------------------------------------------------
-    32:      real log_p1;
-    33:      real log1m_p1;
-    34:      log_p1 <- log(p1);
-                     ^
-    35:      log1m_p1 <- log1m(p1);
-    36:      for (n in 1:N)
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'eyes.stan', line 35, column 14:
-   -------------------------------------------------
-    33:      real log1m_p1;
-    34:      log_p1 <- log(p1);
-    35:      log1m_p1 <- log1m(p1);
-                       ^
-    36:      for (n in 1:N)
-    37:        increment_log_prob(log_sum_exp(log_p1
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'eyes.stan', line 37, column 23:
-   -------------------------------------------------
-    35:      log1m_p1 <- log1m(p1);
-    36:      for (n in 1:N)
-    37:        increment_log_prob(log_sum_exp(log_p1
-                                ^
-    38:                                         + normal_log(y[n], lambda[1], sigma), 
-    39:                                       log1m_p1
-   -------------------------------------------------
-
-increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-
-
-Warning: in 'eyes.stan', line 38, column 41 to column 75: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
-
-Warning: in 'eyes.stan', line 40, column 41 to column 75: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+Warning in 'eyes.stan', line 22, column 10: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'eyes.stan', line 23, column 14: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'eyes.stan', line 24, column 14: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'eyes.stan', line 34, column 11: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'eyes.stan', line 35, column 13: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'eyes.stan', line 37, column 6: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
+Warning in 'eyes.stan', line 38, column 41: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+Warning in 'eyes.stan', line 40, column 41: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.

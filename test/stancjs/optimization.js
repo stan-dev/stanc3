@@ -2,7 +2,7 @@ var stanc = require('../../src/stancjs/stancjs.bc.js');
 var utils = require("./utils/utils.js");
 
 var opt_model = `
-transformed data { 
+transformed data {
     real p = 0;
     for(t in 1:5){
         p = p + 1;
@@ -27,13 +27,13 @@ data {
     int<lower=0> n;
     matrix[n, k] X;
     int y[n];
-  } 
-   
+  }
+
   parameters {
     vector[k] beta;
     real alpha;
-  } 
-  
+  }
+
   model {
     target += bernoulli_logit_glm_lpmf(y | X, alpha, beta);
   }
@@ -74,13 +74,13 @@ transformed data {
 parameters {
     vector[k] beta;
     real alpha;
-} 
+}
 
 model {
     target += bernoulli_logit_glm_lpmf(y | X, alpha, beta);
 }
 `
-var opencl_test = stanc.stanc("opencl", glm_model2, "use-opencl");
+var opencl_test = stanc.stanc("opencl", glm_model2, ["use-opencl"]);
 utils.print_error(opencl_test)
 
 var opencl_test = stanc.stanc("opencl", glm_model2, ["use-opencl", "allow-undefined"]);
