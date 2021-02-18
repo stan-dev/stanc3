@@ -1,7 +1,12 @@
 STANC3 RELEASE NOTES
 ======================================================================
 
-v.2.26.0 (26 January 2021)
+v2.26.1 (15 February 2021)
+======================================================================
+
+- Fixed issue with not allowing user-defined _lp functions with a void return type in transformed parameters block.
+
+v2.26.0 (26 January 2021)
 ======================================================================
 
  - Added deprecated functions warnings to regular use, and replace in canonicalizer.(#726)
@@ -20,7 +25,7 @@ v.2.26.0 (26 January 2021)
  - Added profiling to the Stan language.(#794)
  - Added `linspaced_int_array()`(#796)
 
-v.2.25.0 (26 October 2020)
+v2.25.0 (26 October 2020)
 ======================================================================
 
 - Improved parser error message on missing semicolon in the data or parameters block.
@@ -63,7 +68,7 @@ v.2.25.0 (26 October 2020)
 
 Code contributions were made by @andrjohns @nhuurre @rok-cesnovar @rybern and @seantalts 
 
-v.2.24.1 (11 August 2020)
+v2.24.1 (11 August 2020)
 ======================================================================
 
 Bugfixes:
@@ -73,7 +78,7 @@ Bugfixes:
 - added data quantifier to linspaced_* signatures
 - fixed code generation for empty matrices
 
-v.2.24.0 (28 July 2020)
+v2.24.0 (28 July 2020)
 ======================================================================
 
 New functions: 

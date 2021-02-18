@@ -4,46 +4,7 @@
 #include <stan/model/model_header.hpp>
 namespace filename_good_model_namespace {
 
-
-inline void validate_positive_index(const char* var_name, const char* expr,
-                                    int val) {
-  if (val < 1) {
-    std::stringstream msg;
-    msg << "Found dimension size less than one in simplex declaration"
-        << "; variable=" << var_name << "; dimension size expression=" << expr
-        << "; expression value=" << val;
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-inline void validate_unit_vector_index(const char* var_name, const char* expr,
-                                       int val) {
-  if (val <= 1) {
-    std::stringstream msg;
-    if (val == 1) {
-      msg << "Found dimension size one in unit vector declaration."
-          << " One-dimensional unit vector is discrete"
-          << " but the target distribution must be continuous."
-          << " variable=" << var_name << "; dimension size expression=" << expr;
-    } else {
-      msg << "Found dimension size less than one in unit vector declaration"
-          << "; variable=" << var_name << "; dimension size expression=" << expr
-          << "; expression value=" << val;
-    }
-    std::string msg_str(msg.str());
-    throw std::invalid_argument(msg_str.c_str());
-  }
-}
-
-
-using std::istream;
-using std::string;
-using std::stringstream;
-using std::vector;
-using std::pow;
 using stan::io::dump;
-using stan::math::lgamma;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
 using stan::model::cons_list;
@@ -55,13 +16,14 @@ using stan::model::index_multi;
 using stan::model::index_omni;
 using stan::model::nil_index_list;
 using namespace stan::math;
-using stan::math::pow; 
+
 
 stan::math::profile_map profiles__;
 static int current_statement__= 0;
-static const std::vector<string> locations_array__ = {" (found before start of program)",
-                                                      " (in 'filename_good.stan', line 2, column 4 to column 11)",
-                                                      " (in 'filename_good.stan', line 3, column 4 to column 19)"};
+static const std::vector<std::string> locations_array__ = 
+{" (found before start of program)",
+ " (in 'filename_good.stan', line 2, column 4 to column 11)",
+ " (in 'filename_good.stan', line 3, column 4 to column 19)"};
 
 
 
@@ -92,7 +54,6 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
@@ -129,13 +90,11 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    static const char* function__ = "filename_good_model_namespace::log_prob";
-(void) function__;  // suppress unused var warning
-
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-
+    static const char* function__ = "filename_good_model_namespace::log_prob";
+    (void) function__;  // suppress unused var warning
     
     try {
       
@@ -157,17 +116,13 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
-    static const char* function__ = "filename_good_model_namespace::write_array";
-(void) function__;  // suppress unused var warning
-
-    (void) function__;  // suppress unused var warning
-
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-
+    static const char* function__ = "filename_good_model_namespace::write_array";
+    (void) function__;  // suppress unused var warning
     
     try {
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
@@ -250,13 +205,13 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[]";
     return s__.str();
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
-    stringstream s__;
+    std::stringstream s__;
     s__ << "[]";
     return s__.str();
     } // get_unconstrained_sizedtypes() 
@@ -303,7 +258,7 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
                         std::ostream* pstream = nullptr) const {
       return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
     }
-  
+
 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
@@ -321,7 +276,7 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
                                 std::vector<double>& vars,
                                 std::ostream* pstream = nullptr) const final {
       transform_inits_impl(context, params_i, vars, pstream);
-    }        
+    }
 
 };
 }

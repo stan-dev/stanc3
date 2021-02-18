@@ -287,6 +287,17 @@ decl(type_rule, rhs):
         }
     }])
     }
+
+  (* This rule matches non-array declarations and also the new array syntax, e.g:
+       array[1,2] int x = ..;
+   *)
+  (* Note that the array dimensions option must be inlined with ioption, else
+     it will conflict with first rule. *)
+  (* It's a bit of a hack that "array[x,y,z]" is matched with a lhs rule and
+     then narrowed down by throwing errors. This is done to avoid reserving
+     "array" as a keyword, while also avoiding the reduce-reduce conflict that
+     would occur if "array[x,y,z]" were its own rule without reserving the
+     keyword. *)
   | ty=higher_type(type_rule)
      vs=separated_nonempty_list(COMMA, id_and_optional_assignment(rhs)) SEMICOLON
     { (fun ~is_global ->
@@ -308,6 +319,8 @@ decl(type_rule, rhs):
           })
     )}
 
+(* Take a type matched by type_rule and produce that type or any (possibly nested) container of that type *)
+(* Can't do the fully recursive array_type(higher_type) because arrays can't hold arrays *)
 %inline higher_type(type_rule):
   | ty=array_type(type_rule)
   | ty=tuple_type(type_rule)

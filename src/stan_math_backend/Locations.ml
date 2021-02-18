@@ -40,7 +40,8 @@ let pp_globals ppf location_list =
   in
   Fmt.pf ppf
     "@ stan::math::profile_map profiles__;@ static int current_statement__= \
-     0;@ static const std::vector<string> locations_array__ = {@[<hov>%a@]};@ "
+     0;@ static const std::vector<std::string> locations_array__ = @ \
+     {@[<hov>%a@]};@ "
     Fmt.(list ~sep:comma (fmt "%S"))
     location_list
 

@@ -31,8 +31,8 @@ ocamlPackages.buildDunePackage rec {
 
   buildInputs = with ocamlPackages; [
     yojson
-    # menhir
-    (callPackage ./menhir.nix { })
+    menhir
+    # (callPackage ./menhir.nix { })
     core_kernel
     ppx_jane
     ppx_deriving
