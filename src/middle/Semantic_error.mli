@@ -1,5 +1,3 @@
-open Middle
-
 type t
 
 val pp : Format.formatter -> t -> unit
@@ -25,11 +23,7 @@ val array_vector_rowvector_matrix_expected :
   Location_span.t -> UnsizedType.t -> t
 
 val illtyped_assignment :
-     Location_span.t
-  -> Ast.assignmentoperator
-  -> UnsizedType.t
-  -> UnsizedType.t
-  -> t
+  Location_span.t -> Operator.t -> UnsizedType.t -> UnsizedType.t -> t
 
 val illtyped_ternary_if :
   Location_span.t -> UnsizedType.t -> UnsizedType.t -> UnsizedType.t -> t

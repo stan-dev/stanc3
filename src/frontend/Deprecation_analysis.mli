@@ -1,9 +1,7 @@
 open Core_kernel
 open Ast
 
-type t = Middle.Location_span.t * string
-
-val pp : t Fmt.t
+type t = Middle.Warnings.t
 
 val find_udf_log_suffix :
   typed_statement -> (string * Middle.UnsizedType.t) option

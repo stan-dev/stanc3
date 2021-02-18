@@ -1,5 +1,4 @@
   $ ../../../../../install/default/bin/stanc forwarddecl.stan
-
 Semantic error in 'forwarddecl.stan', line 2, column 4 to line 3, column 29:
    -------------------------------------------------
      1:  model {
@@ -10,9 +9,7 @@ Semantic error in 'forwarddecl.stan', line 2, column 4 to line 3, column 29:
    -------------------------------------------------
 
 Local function is declared without specifying a definition.
-
   $ ../../../../../install/default/bin/stanc lpdf.stan
-
 Semantic error in 'lpdf.stan', line 3, column 9 to column 17:
    -------------------------------------------------
      1:  transformed parameters {
@@ -24,9 +21,7 @@ Semantic error in 'lpdf.stan', line 3, column 9 to column 17:
    -------------------------------------------------
 
 Local function cannot have suffix _rng, _lpdf, _lpmf, _lcdf, _lccdf, or _lp.
-
   $ ../../../../../install/default/bin/stanc mutate1.stan
-
 Semantic error in 'mutate1.stan', line 5, column 8 to column 16:
    -------------------------------------------------
      3:      functions
@@ -38,9 +33,7 @@ Semantic error in 'mutate1.stan', line 5, column 8 to column 16:
    -------------------------------------------------
 
 Cannot assign to function argument, captured variable or loop identifier 'x'.
-
   $ ../../../../../install/default/bin/stanc mutate2.stan
-
 Semantic error in 'mutate2.stan', line 7, column 4 to column 12:
    -------------------------------------------------
      5:          return x + y;
@@ -51,9 +44,7 @@ Semantic error in 'mutate2.stan', line 7, column 4 to column 12:
    -------------------------------------------------
 
 Cannot assign to function argument, captured variable or loop identifier 'x'.
-
   $ ../../../../../install/default/bin/stanc rng.stan
-
 Semantic error in 'rng.stan', line 3, column 9 to column 16:
    -------------------------------------------------
      1:  model {
@@ -65,4 +56,3 @@ Semantic error in 'rng.stan', line 3, column 9 to column 16:
    -------------------------------------------------
 
 Local function cannot have suffix _rng, _lpdf, _lpmf, _lcdf, _lccdf, or _lp.
-

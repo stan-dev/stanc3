@@ -167,19 +167,7 @@ model {
   y ~ bernoulli_logit(Xbeta);
 }
 
-
-Warning: deprecated language construct used in 'election88_expansion.stan', line 69, column 48:
-   -------------------------------------------------
-    67:    sigma_age_edu = xi_age_edu*sigma_age_edu_raw;
-    68:    sigma_state = xi_state*sigma_state_raw;
-    69:    sigma_region = xi_state*sigma_region_raw;     # not "xi_region"
-                                                         ^
-    70:  
-    71:    for (i in 1:N)
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
+Warning in 'election88_expansion.stan', line 69, column 48: Comments beginning with # are deprecated. Please use // in place of # for line comments.
   $ ../../../../../../install/default/bin/stanc --auto-format item_response.stan
 data {
   int<lower=0> K;

@@ -44,84 +44,12 @@ model {
   }
 }
 
-
-Warning: deprecated language construct used in 'corr-lda.stan', line 21, column 14:
-   -------------------------------------------------
-    19:    cov_matrix[K] Sigma;       // covariance matrix
-    20:    for (m in 1:M)
-    21:      theta[m] <- softmax(eta[m]);
-                       ^
-    22:    for (m in 1:K) {
-    23:      Sigma[m,m] <- sigma[m] * sigma[m] * Omega[m,m];
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'corr-lda.stan', line 23, column 16:
-   -------------------------------------------------
-    21:      theta[m] <- softmax(eta[m]);
-    22:    for (m in 1:K) {
-    23:      Sigma[m,m] <- sigma[m] * sigma[m] * Omega[m,m];
-                         ^
-    24:      for (n in (m+1):K) {
-    25:        Sigma[m,n] <- sigma[m] * sigma[n] * Omega[m,n];
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'corr-lda.stan', line 25, column 18:
-   -------------------------------------------------
-    23:      Sigma[m,m] <- sigma[m] * sigma[m] * Omega[m,m];
-    24:      for (n in (m+1):K) {
-    25:        Sigma[m,n] <- sigma[m] * sigma[n] * Omega[m,n];
-                           ^
-    26:        Sigma[n,m] <- Sigma[m,n];
-    27:      }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'corr-lda.stan', line 26, column 18:
-   -------------------------------------------------
-    24:      for (n in (m+1):K) {
-    25:        Sigma[m,n] <- sigma[m] * sigma[n] * Omega[m,n];
-    26:        Sigma[n,m] <- Sigma[m,n];
-                           ^
-    27:      }
-    28:    } 
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'corr-lda.stan', line 44, column 16:
-   -------------------------------------------------
-    42:      real gamma[K];
-    43:      for (k in 1:K) 
-    44:        gamma[k] <- log(theta[doc[n],k]) + log(phi[k,w[n]]);
-                         ^
-    45:      increment_log_prob(log_sum_exp(gamma));  // likelihood
-    46:    }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'corr-lda.stan', line 45, column 21:
-   -------------------------------------------------
-    43:      for (k in 1:K) 
-    44:        gamma[k] <- log(theta[doc[n],k]) + log(phi[k,w[n]]);
-    45:      increment_log_prob(log_sum_exp(gamma));  // likelihood
-                              ^
-    46:    }
-    47:  }
-   -------------------------------------------------
-
-increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-
+Warning in 'corr-lda.stan', line 21, column 13: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'corr-lda.stan', line 23, column 15: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'corr-lda.stan', line 25, column 17: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'corr-lda.stan', line 26, column 17: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'corr-lda.stan', line 44, column 15: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'corr-lda.stan', line 45, column 4: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format lda.stan
 data {
   int<lower=2> K;
@@ -150,29 +78,5 @@ model {
   }
 }
 
-
-Warning: deprecated language construct used in 'lda.stan', line 23, column 16:
-   -------------------------------------------------
-    21:      real gamma[K];
-    22:      for (k in 1:K) 
-    23:        gamma[k] <- log(theta[doc[n],k]) + log(phi[k,w[n]]);
-                         ^
-    24:      increment_log_prob(log_sum_exp(gamma));  // likelihood
-    25:    }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'lda.stan', line 24, column 21:
-   -------------------------------------------------
-    22:      for (k in 1:K) 
-    23:        gamma[k] <- log(theta[doc[n],k]) + log(phi[k,w[n]]);
-    24:      increment_log_prob(log_sum_exp(gamma));  // likelihood
-                              ^
-    25:    }
-    26:  }
-   -------------------------------------------------
-
-increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-
+Warning in 'lda.stan', line 23, column 15: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'lda.stan', line 24, column 4: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.

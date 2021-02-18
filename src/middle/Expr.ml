@@ -232,6 +232,7 @@ module Helpers = struct
     |> List.map ~f:(fun (ut, idx) -> infer_type_of_indexed ut idx)
     |> Fmt.(strf "@[<hov>%a@]" (list ~sep:comma UnsizedType.pp))
     |> print_endline ;
-    [%expect {|
-      vector, matrix[], matrix, vector[], real, real[] |}]
+    [%expect
+      {|
+      vector, array[] matrix, matrix, array[] vector, real, array[] real |}]
 end

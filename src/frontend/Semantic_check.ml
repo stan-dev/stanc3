@@ -119,8 +119,8 @@ let lub_rt loc rt1 rt2 =
   | _, _ when rt1 = rt2 -> Validate.ok rt2
   | _ -> Semantic_error.mismatched_return_types loc rt1 rt2 |> Validate.error
 
-(* 
-Checks that a variable/function name: 
+(*
+Checks that a variable/function name:
  - if UDF that it does not match a Stan Math function
  - a function/identifier does not have the _lupdf/_lupmf suffix
  - is not already in use
@@ -969,7 +969,9 @@ let semantic_check_nrfn_target ~loc ~cf id =
   Validate.(
     if
       String.is_suffix id.name ~suffix:"_lp"
-      && not (cf.in_lp_fun_def || cf.current_block = Model)
+      && not
+           ( cf.in_lp_fun_def || cf.current_block = Model
+           || cf.current_block = TParam )
     then Semantic_error.target_plusequals_outisde_model_or_logprob loc |> error
     else ok ())
 
@@ -1058,10 +1060,14 @@ let mk_assignment_from_indexed_expr assop lhs rhs =
     {assign_lhs= Ast.lvalue_of_expr lhs; assign_op= assop; assign_rhs= rhs}
 
 let semantic_check_assignment_operator ~loc assop lhs rhs =
+  let op =
+    match assop with
+    | Assign | ArrowAssign -> Operator.Equals
+    | OperatorAssign op -> op
+  in
   Validate.(
     let err =
-      Semantic_error.illtyped_assignment loc assop lhs.emeta.type_
-        rhs.emeta.type_
+      Semantic_error.illtyped_assignment loc op lhs.emeta.type_ rhs.emeta.type_
     in
     match assop with
     | Assign | ArrowAssign ->

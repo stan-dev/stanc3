@@ -38,84 +38,12 @@ model {
   }
 }
 
-
-Warning: deprecated language construct used in 'nnmf.stan', line 14, column 13:
-   -------------------------------------------------
-    12:    vector[T] temp;
-    13:    for (t in 1:T) 
-    14:      temp[t] <- log(sum(X[t]));
-                      ^
-    15:    g_bar <- mean(temp);
-    16:    g_sigma <- sd(temp);
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'nnmf.stan', line 15, column 9:
-   -------------------------------------------------
-    13:    for (t in 1:T) 
-    14:      temp[t] <- log(sum(X[t]));
-    15:    g_bar <- mean(temp);
-                  ^
-    16:    g_sigma <- sd(temp);
-    17:    for (i in 1:I)
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'nnmf.stan', line 16, column 11:
-   -------------------------------------------------
-    14:      temp[t] <- log(sum(X[t]));
-    15:    g_bar <- mean(temp);
-    16:    g_sigma <- sd(temp);
-                    ^
-    17:    for (i in 1:I)
-    18:      alpha[i] <- 10.0;
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'nnmf.stan', line 18, column 14:
-   -------------------------------------------------
-    16:    g_sigma <- sd(temp);
-    17:    for (i in 1:I)
-    18:      alpha[i] <- 10.0;
-                       ^
-    19:  }
-    20:  parameters {
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'nnmf.stan', line 33, column 10:
-   -------------------------------------------------
-    31:      for (i in 1:I) {
-    32:        real mu;
-    33:        mu <- 0;
-                   ^
-    34:        for (k in 1:K)
-    35:          mu <- mu + G[t,k] * F[k,i];
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'nnmf.stan', line 35, column 12:
-   -------------------------------------------------
-    33:        mu <- 0;
-    34:        for (k in 1:K)
-    35:          mu <- mu + G[t,k] * F[k,i];
-                     ^
-    36:        X[t,i] ~ normal(mu,sigma[i]) T[0,];
-    37:      }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'nnmf.stan', line 14, column 12: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'nnmf.stan', line 15, column 8: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'nnmf.stan', line 16, column 10: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'nnmf.stan', line 18, column 13: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'nnmf.stan', line 33, column 9: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'nnmf.stan', line 35, column 11: assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../install/default/bin/stanc --auto-format nnmf_vec.stan
 data {
   int<lower=0> T;
@@ -152,68 +80,8 @@ model {
   }
 }
 
-
-Warning: deprecated language construct used in 'nnmf_vec.stan', line 18, column 13:
-   -------------------------------------------------
-    16:    vector[T] temp;
-    17:    for (t in 1:T) 
-    18:      temp[t] <- log(sum(X[t]));
-                      ^
-    19:    g_bar <- mean(temp);
-    20:    g_sigma <- sd(temp);
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'nnmf_vec.stan', line 19, column 9:
-   -------------------------------------------------
-    17:    for (t in 1:T) 
-    18:      temp[t] <- log(sum(X[t]));
-    19:    g_bar <- mean(temp);
-                  ^
-    20:    g_sigma <- sd(temp);
-    21:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'nnmf_vec.stan', line 20, column 11:
-   -------------------------------------------------
-    18:      temp[t] <- log(sum(X[t]));
-    19:    g_bar <- mean(temp);
-    20:    g_sigma <- sd(temp);
-                    ^
-    21:  }
-    22:  parameters {
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'nnmf_vec.stan', line 33, column 13:
-   -------------------------------------------------
-    31:      vector[I] mu;
-    32:      for (i in 1:I) {
-    33:        mu[i] <- 0;
-                      ^
-    34:        for (k in 1:K) {
-    35:          mu[i] <- mu[i] + G[t,k] * F[k,i];
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'nnmf_vec.stan', line 35, column 15:
-   -------------------------------------------------
-    33:        mu[i] <- 0;
-    34:        for (k in 1:K) {
-    35:          mu[i] <- mu[i] + G[t,k] * F[k,i];
-                        ^
-    36:        }
-    37:      }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'nnmf_vec.stan', line 18, column 12: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'nnmf_vec.stan', line 19, column 8: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'nnmf_vec.stan', line 20, column 10: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'nnmf_vec.stan', line 33, column 12: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'nnmf_vec.stan', line 35, column 14: assignment operator <- is deprecated in the Stan language; use = instead.

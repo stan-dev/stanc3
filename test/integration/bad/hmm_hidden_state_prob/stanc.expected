@@ -1,5 +1,4 @@
   $ ../../../../../install/default/bin/stanc bad_gamma_var.stan
-
 Semantic error in 'bad_gamma_var.stan', line 19, column 9 to column 55:
    -------------------------------------------------
     17:    vector[K] rho_v;
@@ -14,9 +13,7 @@ Ill-typed arguments supplied to function 'hmm_hidden_state_prob'. Available sign
 (data matrix, data matrix, data vector) => matrix
 Instead supplied arguments of incompatible type:
 (matrix, matrix, vector)
-
   $ ../../../../../install/default/bin/stanc bad_log_omega_var.stan
-
 Semantic error in 'bad_log_omega_var.stan', line 19, column 9 to column 55:
    -------------------------------------------------
     17:    vector[K] rho_v;
@@ -31,9 +28,7 @@ Ill-typed arguments supplied to function 'hmm_hidden_state_prob'. Available sign
 (data matrix, data matrix, data vector) => matrix
 Instead supplied arguments of incompatible type:
 (matrix, matrix, vector)
-
   $ ../../../../../install/default/bin/stanc bad_rho_var.stan
-
 Semantic error in 'bad_rho_var.stan', line 19, column 9 to column 55:
    -------------------------------------------------
     17:    vector[K] rho_v;
@@ -48,4 +43,3 @@ Ill-typed arguments supplied to function 'hmm_hidden_state_prob'. Available sign
 (data matrix, data matrix, data vector) => matrix
 Instead supplied arguments of incompatible type:
 (matrix, matrix, vector)
-

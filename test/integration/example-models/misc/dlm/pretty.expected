@@ -37,97 +37,13 @@ model {
   y ~ gaussian_dlm_obs(F, G, V, W, m0, C0);
 }
 
-
-Warning: deprecated language construct used in 'fx_equicorr.stan', line 13, column 13:
-   -------------------------------------------------
-    11:    matrix[r, r] F;
-    12:    for (i in 1:r) {
-    13:      ones[i] <- 1.0;
-                      ^
-    14:    }
-    15:    G <- diag_matrix(ones);
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'fx_equicorr.stan', line 15, column 5:
-   -------------------------------------------------
-    13:      ones[i] <- 1.0;
-    14:    }
-    15:    G <- diag_matrix(ones);
-              ^
-    16:    F <- G;
-    17:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'fx_equicorr.stan', line 16, column 5:
-   -------------------------------------------------
-    14:    }
-    15:    G <- diag_matrix(ones);
-    16:    F <- G;
-              ^
-    17:  }
-    18:  parameters {
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'fx_equicorr.stan', line 26, column 5:
-   -------------------------------------------------
-    24:    cov_matrix[r] V;
-    25:    cov_matrix[r] W;
-    26:    W <- diag_matrix(W_diag);
-              ^
-    27:    for (i in 1:r) {
-    28:      V[i, i] <- pow(sigma[i], 2);
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'fx_equicorr.stan', line 28, column 13:
-   -------------------------------------------------
-    26:    W <- diag_matrix(W_diag);
-    27:    for (i in 1:r) {
-    28:      V[i, i] <- pow(sigma[i], 2);
-                      ^
-    29:      for (j in 1:(i - 1)) {
-    30:        V[i, j] <- sigma[i] * sigma[j] * rho;
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'fx_equicorr.stan', line 30, column 15:
-   -------------------------------------------------
-    28:      V[i, i] <- pow(sigma[i], 2);
-    29:      for (j in 1:(i - 1)) {
-    30:        V[i, j] <- sigma[i] * sigma[j] * rho;
-                        ^
-    31:        V[j, i] <- V[i, j];
-    32:      }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'fx_equicorr.stan', line 31, column 15:
-   -------------------------------------------------
-    29:      for (j in 1:(i - 1)) {
-    30:        V[i, j] <- sigma[i] * sigma[j] * rho;
-    31:        V[j, i] <- V[i, j];
-                        ^
-    32:      }
-    33:    }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'fx_equicorr.stan', line 13, column 12: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'fx_equicorr.stan', line 15, column 4: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'fx_equicorr.stan', line 16, column 4: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'fx_equicorr.stan', line 26, column 4: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'fx_equicorr.stan', line 28, column 12: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'fx_equicorr.stan', line 30, column 14: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'fx_equicorr.stan', line 31, column 14: assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../install/default/bin/stanc --auto-format fx_factor.stan
 data {
   int r;
@@ -155,32 +71,8 @@ model {
   y ~ gaussian_dlm_obs(F, G, V, W, m0, C0);
 }
 
-
-Warning: deprecated language construct used in 'fx_factor.stan', line 21, column 11:
-   -------------------------------------------------
-    19:  transformed parameters {
-    20:    matrix[1, r] F;
-    21:    F[1, 1] <- 1;
-                    ^
-    22:    for (i in 1:(r - 1)) {
-    23:      F[1, i + 1] <- lambda[i];
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
-
-Warning: deprecated language construct used in 'fx_factor.stan', line 23, column 17:
-   -------------------------------------------------
-    21:    F[1, 1] <- 1;
-    22:    for (i in 1:(r - 1)) {
-    23:      F[1, i + 1] <- lambda[i];
-                          ^
-    24:    }
-    25:  }
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'fx_factor.stan', line 21, column 10: assignment operator <- is deprecated in the Stan language; use = instead.
+Warning in 'fx_factor.stan', line 23, column 16: assignment operator <- is deprecated in the Stan language; use = instead.
   $ ../../../../../../install/default/bin/stanc --auto-format nile.stan
 data {
   int n;

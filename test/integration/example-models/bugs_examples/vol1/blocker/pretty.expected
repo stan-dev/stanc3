@@ -27,27 +27,5 @@ model {
   delta_new ~ student_t(4, d, sigma_delta);
 }
 
-
-Warning: deprecated language construct used in 'blocker.stan', line 1, column 0:
-   -------------------------------------------------
-     1:  #DOC See \url{http://www.openbugs.net/Examples/Blockers.html}.
-         ^
-     2:  data {
-     3:    int<lower=0> N; 
-   -------------------------------------------------
-
-Comments beginning with # are deprecated. Please use // in place of # for line comments.
-
-
-Warning: deprecated language construct used in 'blocker.stan', line 18, column 15:
-   -------------------------------------------------
-    16:  transformed parameters {
-    17:    real<lower=0> sigma_delta; 
-    18:    sigma_delta <- sqrt(sigmasq_delta); 
-                        ^
-    19:  } 
-    20:  model {
-   -------------------------------------------------
-
-assignment operator <- is deprecated in the Stan language; use = instead.
-
+Warning in 'blocker.stan', line 1, column 0: Comments beginning with # are deprecated. Please use // in place of # for line comments.
+Warning in 'blocker.stan', line 18, column 14: assignment operator <- is deprecated in the Stan language; use = instead.
