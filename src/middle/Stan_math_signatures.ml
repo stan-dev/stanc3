@@ -306,6 +306,22 @@ let is_stan_math_function_name name =
   let name = Utils.stdlib_distribution_name name in
   Hashtbl.mem stan_math_signatures name
 
+let dist_name_suffix udf_names name =
+  let is_udf_name s = List.exists ~f:(fun (n, _) -> n = s) udf_names in
+  match
+    Utils.distribution_suffices
+    |> List.filter ~f:(fun sfx ->
+           is_stan_math_function_name (name ^ sfx) || is_udf_name (name ^ sfx)
+       )
+    |> List.hd
+  with
+  | Some hd -> hd
+  | None -> raise_s [%message "Couldn't find distribution " name]
+
+let%expect_test "dist name suffix" =
+  dist_name_suffix [] "normal" |> print_endline ;
+  [%expect {| _lpdf |}]
+
 let assignmentoperator_to_stan_math_fn = function
   | Operator.Plus -> Some "assign_add"
   | Minus -> Some "assign_subtract"

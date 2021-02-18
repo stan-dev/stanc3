@@ -85,7 +85,12 @@ let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
         in
         if List.exists ~f:(fun (n, _) -> Set.mem possible_names n) ud_dists
         then (funs, distrs)
-        else (funs, SSet.add distrs distribution.name)
+        else
+          let suffix =
+            Stan_math_signatures.dist_name_suffix ud_dists distribution.name
+          in
+          let name = distribution.name ^ Utils.unnormalized_suffix suffix in
+          (funs, SSet.add distrs name)
     | _ -> (funs, distrs)
   in
   fold_statement get_function_calls_expr

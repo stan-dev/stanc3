@@ -498,22 +498,6 @@ let unwrap_block_or_skip = function
       raise_s
         [%message "Expecting a block or skip, not" (x : Stmt.Located.t list)]
 
-let dist_name_suffix udf_names name =
-  let is_udf_name s = List.exists ~f:(fun (n, _) -> n = s) udf_names in
-  match
-    Middle.Utils.distribution_suffices
-    |> List.filter ~f:(fun sfx ->
-           Stan_math_signatures.is_stan_math_function_name (name ^ sfx)
-           || is_udf_name (name ^ sfx) )
-    |> List.hd
-  with
-  | Some hd -> hd
-  | None -> raise_s [%message "Couldn't find distribution " name]
-
-let%expect_test "dist name suffix" =
-  dist_name_suffix [] "normal" |> print_endline ;
-  [%expect {| _lpdf |}]
-
 let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   let stmt_typed = ts.stmt and smeta = ts.smeta.loc in
   let trans_stmt = trans_stmt ud_dists {declc with dconstrain= None} in
@@ -572,7 +556,9 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       NRFunApp (trans_fn_kind fn_kind, name, trans_exprs args) |> swrap
   | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap
   | Ast.Tilde {arg; distribution; args; truncation} ->
-      let suffix = dist_name_suffix ud_dists distribution.name in
+      let suffix =
+        Stan_math_signatures.dist_name_suffix ud_dists distribution.name
+      in
       let kind =
         let possible_names =
           List.map ~f:(( ^ ) distribution.name) Utils.distribution_suffices

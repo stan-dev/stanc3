@@ -24,7 +24,7 @@
                      "reduce_sum",
                      "sin",
                      "square" ],
-  "distributions": [ "dirichlet",
+  "distributions": [ "dirichlet_lupdf",
                      "normal_lccdf",
                      "normal_lcdf",
                      "normal_lpdf",
