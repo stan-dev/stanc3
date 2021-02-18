@@ -1,3 +1,15 @@
+functions {
+  real foo(real a) {
+    return sin(a);
+  }
+  real goo_lpdf(real a) {
+    return a;
+  }
+  real f_lpdf(real[] y_slice, int start, int end) {
+    return normal_lpdf(y_slice| 0, 1);
+  }
+}
+
 data {
   int a;
   real b;
@@ -24,17 +36,24 @@ parameters {
   corr_matrix[15] q;
   cholesky_factor_cov[16] r;
   cholesky_factor_corr[17] s;
+  real y;
 }
 
 transformed parameters {
   matrix[14, 14] t = p;
   {
-    real ignored_tp = r;
+    real ignored_tp = log(r[0][0]);
   }
 }
 
 model {
-    real ignored_model = r;
+    real ignored_model = square(foo(square(r[0][0])));
+    l ~ dirichlet(c);
+    target += normal_lcdf(y| 0, 1);
+    target += normal_lccdf(y| 0, 1);
+    target += std_normal_lupdf(y);
+    target += reduce_sum(f_lpdf, g, 1);
+    y ~ goo();
 }
 
 generated quantities {
