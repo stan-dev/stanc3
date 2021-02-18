@@ -40,11 +40,10 @@ let rec pp ppf = function
   | URowVector -> pp_keyword ppf "row_vector"
   | UMatrix -> pp_keyword ppf "matrix"
   | UArray ut ->
-    let ut2, d = unwind_array_type ut in
-    let array_str = "[" ^ String.make d ',' ^ "]" in
-    Fmt.pf ppf "array%s %a" array_str pp ut2
-  | UTuple ts ->
-    Fmt.pf ppf "(%a)" Fmt.(list ~sep:(Fmt.unit ", ") pp) ts
+      let ut2, d = unwind_array_type ut in
+      let array_str = "[" ^ String.make d ',' ^ "]" in
+      Fmt.pf ppf "array%s %a" array_str pp ut2
+  | UTuple ts -> Fmt.pf ppf "(%a)" Fmt.(list ~sep:(Fmt.unit ", ") pp) ts
   | UFun (argtypes, rt) ->
       Fmt.pf ppf {|@[<h>(%a) => %a@]|}
         Fmt.(list pp_fun_arg ~sep:comma)

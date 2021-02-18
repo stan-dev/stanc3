@@ -22,6 +22,7 @@ let rec sized_basetype_dims t =
   | SReal -> ("real", 0)
   | SVector _ | SRowVector _ -> ("real", 1)
   | SMatrix _ -> ("real", 2)
+  | STuple _ -> ("tuple (unsupported)", 0) (* TUPLE DESIGN info output *)
   | SArray (t, _) ->
       let bt, n = sized_basetype_dims t in
       (bt, n + 1)
@@ -32,6 +33,7 @@ let rec unsized_basetype_dims t =
   | UReal -> ("real", 0)
   | UVector | URowVector -> ("real", 1)
   | UMatrix -> ("real", 2)
+  | UTuple _ -> ("tuple (unsupported)", 0) (* TUPLE DESIGN info output *)
   | UArray t ->
       let bt, n = unsized_basetype_dims t in
       (bt, n + 1)

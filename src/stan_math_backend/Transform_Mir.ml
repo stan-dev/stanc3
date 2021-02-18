@@ -126,8 +126,7 @@ let data_read smeta (decl_id, st) =
      Data read from tuples
      There seems to be dispatch to a FnReadData function, could foist to C++
   *)
-  | UTuple _ ->
-    raise_s [%message "Reading from tuples not implemented."]
+  | UTuple _ -> raise_s [%message "Reading from tuples not implemented."]
   | UFun _ | UMathLibraryFunction ->
       raise_s [%message "Cannot read a function type."]
   | UVector | URowVector | UMatrix | UArray _ ->

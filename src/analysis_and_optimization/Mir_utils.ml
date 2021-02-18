@@ -375,8 +375,7 @@ let rec expr_depth Expr.Fixed.({pattern; _}) =
       1
       + Option.value ~default:0
           (List.max_elt ~compare:compare_int (List.map ~f:expr_depth [e1; e2]))
-  | TupleIndexed (e, _) ->
-    1 + expr_depth e
+  | TupleIndexed (e, _) -> 1 + expr_depth e
 
 and idx_depth i =
   match i with
@@ -427,19 +426,16 @@ let rec update_expr_ad_levels autodiffable_variables
             adlevel= ad_level_sup (e :: List.concat_map ~f:Index.bounds i_list)
           } }
   | TupleIndexed (e, ix) ->
-    (* TUPLE TODO
+      (* TUPLE TODO
        For the purposes of program analysis, tuples should be treated as n Vars
        So for example, autodiffable_variables should possibly include tuple.1
 
        In the mean time, what's the most conservative?
        Make the whole thing AD when any part is?
     *)
-    let e' = update_expr_ad_levels autodiffable_variables e in
-    { pattern= TupleIndexed (e', ix)
-    ; meta=
-        { e.meta with
-          adlevel= e'.meta.adlevel
-        } }
+      let e' = update_expr_ad_levels autodiffable_variables e in
+      { pattern= TupleIndexed (e', ix)
+      ; meta= {e.meta with adlevel= e'.meta.adlevel} }
 
 and update_idx_ad_levels autodiffable_variables =
   Index.map (update_expr_ad_levels autodiffable_variables)

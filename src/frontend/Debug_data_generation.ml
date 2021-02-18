@@ -287,9 +287,9 @@ let rec generate_value m st t =
       let element () = generate_value m st t in
       gen_array element (unwrap_int_exn m e) t
   | STuple _ ->
-    (* TUPLE STUB
+      (* TUPLE STUB
        This should be easy when literals are implemented *)
-    raise_s [%message "Generating tuples not implemented."]
+      raise_s [%message "Generating tuples not implemented."]
 
 let rec pp_value_json ppf e =
   match e.expr with

@@ -39,15 +39,15 @@ module Fixed = struct
             else Fmt.(list (Index.pp pp_e) ~sep:comma |> brackets) )
             indices
       | TupleIndexed (expr, ix) ->
-          (* TUPLE DESIGN
+          (* TUPLE DESIGN pp parens
              Do I need the extra parens here?
              ((1,2)).1
              only if there might be tuple operators, like
              (1,1) + (2,2)
              needs parens
-             Defaulting to conservative parens
+             Defaulting to no parens
           *)
-          Fmt.pf ppf {|@[(%a).%d@]|} pp_e expr ix
+          Fmt.pf ppf {|@[%a.%d@]|} pp_e expr ix
       | EAnd (l, r) -> Fmt.pf ppf "%a && %a" pp_e l pp_e r
       | EOr (l, r) -> Fmt.pf ppf "%a || %a" pp_e l pp_e r
 
@@ -154,8 +154,7 @@ module Labelled = struct
         associate ~init:(associate ~init:(associate ~init:assocs e3) e2) e1
     | Indexed (e, idxs) ->
         List.fold idxs ~init:(associate ~init:assocs e) ~f:associate_index
-    | TupleIndexed (e, _) ->
-        associate ~init:assocs e
+    | TupleIndexed (e, _) -> associate ~init:assocs e
 
   and associate_index assocs = function
     | All -> assocs
@@ -230,10 +229,14 @@ module Helpers = struct
   (** [add_index expression index] returns an expression that (additionally)
       indexes into the input [expression] by [index].*)
   let add_tuple_index e i =
-    let mtype = match Typed.(type_of e) with
-        | UTuple ts -> List.nth_exn ts i
-        | _ -> raise_s [%message "Internal error: Attempted to apply \
-                                  tuple index to a non-tuple type."]
+    let mtype =
+      match Typed.(type_of e) with
+      | UTuple ts -> List.nth_exn ts (i - 1)
+      | _ ->
+          raise_s
+            [%message
+              "Internal error: Attempted to apply tuple index to a non-tuple \
+               type."]
     in
     let meta = Typed.Meta.{e.meta with type_= mtype} in
     let pattern = Fixed.Pattern.TupleIndexed (e, i) in

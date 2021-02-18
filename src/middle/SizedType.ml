@@ -24,8 +24,7 @@ let rec pp pp_e ppf = function
       Fmt.pf ppf {|array%a|}
         Fmt.(pair ~sep:comma (fun ppf st -> pp pp_e ppf st) pp_e |> brackets)
         (st, expr)
-  | STuple ts ->
-    Fmt.pf ppf "(%a)" Fmt.(list ~sep:(Fmt.unit ", ") (pp pp_e)) ts
+  | STuple ts -> Fmt.pf ppf "(%a)" Fmt.(list ~sep:(Fmt.unit ", ") (pp pp_e)) ts
 
 let collect_exprs st =
   let rec aux accu = function
@@ -64,22 +63,23 @@ let rec dims_of st =
   | SArray (t, _) -> dims_of t
   | SMatrix (d1, d2) -> [d1; d2]
   | SRowVector dim | SVector dim -> [dim]
-  (* TUPLE MAYBE
+  (* TUPLE STUB dims_of
+     How should tuples be expected to behave in this function?
+
      What does it mean for tuples to have dimensions?
      I think dims are used to emit parameter names
      But this is the only non-rectangular container
      Defaulting to 'no dimensions'
   *)
-  | STuple _
-  | SInt | SReal -> []
+  | STuple _ | SInt | SReal -> []
 
 let rec get_dims = function
-  (* TUPLE MAYBE
+  (* TUPLE STUB get_dims
+     How should tuples be expected to behave in this function?
      Same as above?
      Although this one seems to have a sense of recursion
   *)
-  | STuple _
-  | SInt | SReal -> []
+  | STuple _ | SInt | SReal -> []
   | SVector d | SRowVector d -> [d]
   | SMatrix (dim1, dim2) -> [dim1; dim2]
   | SArray (t, dim) -> dim :: get_dims t

@@ -555,8 +555,7 @@ let rec used_subexpressions_expr (e : Expr.Typed.t) =
           ( used_subexpressions_expr e
           :: List.map ~f:(used_expressions_idx_help used_subexpressions_expr) l
           )
-    | TupleIndexed (e, _) ->
-      used_subexpressions_expr e
+    | TupleIndexed (e, _) -> used_subexpressions_expr e
     | EAnd (e1, e2) | EOr (e1, e2) ->
         Expr.Typed.Set.union_list
           [used_subexpressions_expr e1; used_subexpressions_expr e2] )

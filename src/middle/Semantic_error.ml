@@ -223,15 +223,15 @@ module TypeError = struct
             Fmt.(list UnsizedType.pp ~sep:comma)
             arg_tys
     | TupleIndexInvalidIndex (ix_max, ix) ->
-      Fmt.pf ppf
-        "Found tuple index expression with index %d, but the tuple only \
-         indices 1-%d are valid."
-        ix ix_max
+        Fmt.pf ppf
+          "Found tuple index expression with index %d, but the tuple only \
+           indices 1-%d are valid."
+          ix ix_max
     | TupleIndexNotTuple ut ->
         Fmt.pf ppf
-        "Only tuple expressions can be indexed as a tuple. Instead, found \
-         type %a."
-        UnsizedType.pp ut
+          "Only tuple expressions can be indexed as a tuple. Instead, found \
+           type %a."
+          UnsizedType.pp ut
     | NotIndexable (ut, nidcs) ->
         Fmt.pf ppf
           "Too many indexes, expression dimensions=%d, indexes found=%d."
@@ -313,7 +313,6 @@ module TypeError = struct
           |> String.concat ~sep:"\n" )
           UnsizedType.pp ut
 end
-
 
 module IdentifierError = struct
   type t =

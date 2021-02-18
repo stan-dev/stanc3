@@ -612,6 +612,7 @@ let indexing_type idx =
   | Single {emeta= {type_= UnsizedType.UInt; _}; _} -> `Single
   | _ -> `Multi
 
+(* Validate if the square-bracket indices can be applied to the type *)
 let inferred_unsizedtype_of_indexed ~loc ut indices =
   let rec aux type_ idcs =
     match (type_, idcs) with
@@ -628,7 +629,7 @@ let inferred_unsizedtype_of_indexed ~loc ut indices =
     | UMatrix, [`Multi; `Single] -> Validate.ok UnsizedType.UVector
     | UMatrix, _ :: _ :: _ :: _
      |(UVector | URowVector), _ :: _ :: _
-     |(UInt | UReal | UFun _ | UMathLibraryFunction), _ :: _ ->
+     |(UTuple _ | UInt | UReal | UFun _ | UMathLibraryFunction), _ :: _ ->
         Semantic_error.not_indexable loc ut (List.length indices)
         |> Validate.error
   in
@@ -804,40 +805,39 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
              mk_typed_expression ~expr:(Paren ue) ~ad_level:ue.emeta.ad_level
                ~type_:ue.emeta.type_ ~loc:emeta.loc )
   | Indexed (e, indices) -> semantic_check_indexed ~loc:emeta.loc ~cf e indices
-  | TupleIndexed (e, i) ->
+  | TupleIndexed (e, i) -> (
       Validate.(
         semantic_check_expression cf e
         >>= fun typed ->
         match typed.emeta.type_ with
-        | UTuple ts ->
-          (match List.nth ts (i - 1) with
-           | Some t ->
-             (* TUPLE MAYBE ADLEVEL *)
-             mk_typed_expression ~expr:(TupleIndexed (typed, i)) ~ad_level:typed.emeta.ad_level
-               ~type_:t ~loc:emeta.loc
-             |> ok
-           | None ->
-             Semantic_error.tuple_index_invalid_index emeta.loc (List.length ts) i
-             |> Validate.error
-          )
+        | UTuple ts -> (
+          match List.nth ts (i - 1) with
+          | Some t ->
+              (* TUPLE MAYBE ADLEVEL *)
+              mk_typed_expression
+                ~expr:(TupleIndexed (typed, i))
+                ~ad_level:typed.emeta.ad_level ~type_:t ~loc:emeta.loc
+              |> ok
+          | None ->
+              Semantic_error.tuple_index_invalid_index emeta.loc
+                (List.length ts) i
+              |> Validate.error )
         | _ ->
-          Semantic_error.tuple_index_not_tuple emeta.loc typed.emeta.type_
-          |> Validate.error
-      )
+            Semantic_error.tuple_index_not_tuple emeta.loc typed.emeta.type_
+            |> Validate.error) )
   | TupleExpr es ->
-    Validate.(
-      es
-      |> List.map ~f:(semantic_check_expression cf)
-      |> sequence
-      >>= fun ues ->
-      if List.is_empty ues then
-        Semantic_error.empty_tuple emeta.loc |> error
-      else
-        (* TUPLE MAYBE ADLEVEL *)
-        mk_typed_expression ~expr:(TupleExpr ues) ~ad_level:(expr_ad_lub ues)
-          ~type_:(UTuple (List.map ~f:(fun e -> e.emeta.type_) ues)) ~loc:emeta.loc
-        |> ok
-    )
+      Validate.(
+        es
+        |> List.map ~f:(semantic_check_expression cf)
+        |> sequence
+        >>= fun ues ->
+        if List.is_empty ues then Semantic_error.empty_tuple emeta.loc |> error
+        else
+          (* TUPLE MAYBE ADLEVEL *)
+          mk_typed_expression ~expr:(TupleExpr ues) ~ad_level:(expr_ad_lub ues)
+            ~type_:(UTuple (List.map ~f:(fun e -> e.emeta.type_) ues))
+            ~loc:emeta.loc
+          |> ok)
 
 and semantic_check_funapp ~is_cond_dist id es cf emeta =
   let name_check =
@@ -902,9 +902,9 @@ let rec semantic_check_sizedtype cf = function
       and ue = semantic_check_expression_of_int_type cf e "Array sizes" in
       Validate.liftA2 (fun ust ue -> SizedType.SArray (ust, ue)) ust ue
   | STuple es ->
-    List.map ~f:(fun e -> semantic_check_sizedtype cf e) es
-    |> Validate.sequence
-    |> Validate.map ~f:(fun es -> SizedType.STuple es)
+      List.map ~f:(fun e -> semantic_check_sizedtype cf e) es
+      |> Validate.sequence
+      |> Validate.map ~f:(fun es -> SizedType.STuple es)
 
 (* -- Transformations ------------------------------------------------------- *)
 let semantic_check_transformation cf ut = function

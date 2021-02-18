@@ -85,14 +85,12 @@ and trans_expr {Ast.expr; Ast.emeta} =
       |> ewrap
   | Indexed (lhs, indices) ->
       Indexed (trans_expr lhs, List.map ~f:trans_idx indices) |> ewrap
-  | TupleIndexed (lhs, i) ->
-      TupleIndexed (trans_expr lhs, i) |> ewrap
+  | TupleIndexed (lhs, i) -> TupleIndexed (trans_expr lhs, i) |> ewrap
   | TupleExpr eles ->
-    (* TUPLE MAYBE IMPL *)
-    FunApp
-      (CompilerInternal, "std::make_tuple", trans_exprs eles)
+      (* TUPLE MAYBE IMPL *)
+      FunApp (CompilerInternal, "std::make_tuple", trans_exprs eles)
       (* (CompilerInternal, Internal_fun.to_string FnMakeTuple, trans_exprs eles) *)
-    |> ewrap
+      |> ewrap
 
 and trans_idx = function
   | Ast.All -> All
@@ -460,9 +458,9 @@ let check_sizedtype name =
         let ll, t = sizedtype t in
         (check s e @ ll, SizedType.SArray (t, e))
     | STuple ts ->
-      let sizedtypes = List.map ~f:sizedtype ts in
-      let (checks, types) = List.unzip sizedtypes in
-      (List.concat checks, SizedType.STuple types)
+        let sizedtypes = List.map ~f:sizedtype ts in
+        let checks, types = List.unzip sizedtypes in
+        (List.concat checks, SizedType.STuple types)
   in
   function
   | Type.Sized st ->
@@ -793,8 +791,7 @@ let trans_sizedtype_decl declc tr name =
         let l, s = grab_size FnValidateSize n s in
         let ll, t = go (n + 1) t in
         (l @ ll, SizedType.SArray (t, s))
-    | STuple _ ->
-      raise_s [%message "TUPLE STUB"]
+    | STuple _ -> raise_s [%message "TUPLE STUB"]
   in
   go 1
 

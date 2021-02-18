@@ -95,10 +95,15 @@ let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar
   | URowVector -> pf ppf "Eigen::Matrix<%s, 1, -1>" scalar
   | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" scalar
-  (* TUPLE MAYBE IMPL probably wrong, don't know what scalar should be *)
-  | UTuple ts ->
+  (* TUPLE STUB c++ scalar of type
+     Unclear what a scalar of tuple type would be, either semantic error or depend on usage
+
+     Could be tuple of scalars:
       pf ppf "std::tuple<%a>" (list ~sep:comma pp_unsizedtype_custom_scalar)
         (List.map ~f:(fun t -> (scalar, t)) ts)
+
+     *)
+  | UTuple _ -> raise_s [%message "Cannot take scalar of tuple type"]
   | x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
 
 let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
@@ -488,9 +493,12 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
       ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
     | _ -> pp_indexed ppf (strf "%a" pp_expr e, idx, pretty_print e) )
-  (* TUPLE MAYBE IMPL indexing *)
-  | TupleIndexed (t, ix) ->
-    pf ppf "std::get<%d>(%a)" (ix - 1) pp_expr t
+  (* TUPLE MAYBE c++ indexing
+
+     from https://en.cppreference.com/w/cpp/utility/tuple
+     Index std::tuple with std::get
+  *)
+  | TupleIndexed (t, ix) -> pf ppf "std::get<%d>(%a)" (ix - 1) pp_expr t
 
 (* these functions are just for testing *)
 let dummy_locate pattern =

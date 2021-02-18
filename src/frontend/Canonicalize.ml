@@ -107,22 +107,18 @@ let rec no_parens {expr; emeta} =
   | TernaryIf _ | BinOp _ | PrefixOp _ | PostfixOp _ ->
       {expr= map_expression keep_parens ident expr; emeta}
   | Indexed (e, l) ->
-    { expr=
-        Indexed
-          ( keep_parens e
-          , List.map
-              ~f:(function
+      { expr=
+          Indexed
+            ( keep_parens e
+            , List.map
+                ~f:(function
                   | Single e -> Single (no_parens e)
                   | i -> map_index keep_parens i)
-              l )
-    ; emeta }
-  | TupleIndexed (e, i) ->
-      { expr=
-          (* TUPLE MAYBE *)
-          TupleIndexed
-            ( keep_parens e
-            , i)
+                l )
       ; emeta }
+  | TupleIndexed (e, i) ->
+      {expr= (* TUPLE MAYBE *)
+             TupleIndexed (keep_parens e, i); emeta}
   | ArrayExpr _ | RowVectorExpr _ | FunApp _ | TupleExpr _ | CondDistApp _ ->
       {expr= map_expression no_parens ident expr; emeta}
 
