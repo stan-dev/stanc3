@@ -318,10 +318,6 @@ let dist_name_suffix udf_names name =
   | Some hd -> hd
   | None -> raise_s [%message "Couldn't find distribution " name]
 
-let%expect_test "dist name suffix" =
-  dist_name_suffix [] "normal" |> print_endline ;
-  [%expect {| _lpdf |}]
-
 let assignmentoperator_to_stan_math_fn = function
   | Operator.Plus -> Some "assign_add"
   | Minus -> Some "assign_subtract"
@@ -1801,3 +1797,7 @@ let () =
   Hashtbl.iteri manual_stan_math_signatures ~f:(fun ~key ~data ->
       List.iter data ~f:(fun data ->
           Hashtbl.add_multi stan_math_signatures ~key ~data ) )
+
+let%expect_test "dist name suffix" =
+  dist_name_suffix [] "normal" |> print_endline ;
+  [%expect {| _lpdf |}]
