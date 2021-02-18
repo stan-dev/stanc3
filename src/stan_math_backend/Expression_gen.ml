@@ -47,6 +47,8 @@ let rec local_scalar ut ad =
   | UnsizedType.UArray t, _ -> local_scalar t ad
   | _, UnsizedType.DataOnly | UInt, AutoDiffable -> stantype_prim_str ut
   | _, AutoDiffable -> "local_scalar_t__"
+    (* TUPLE MAYBE error on local scalar with tuple ad *)
+  | _, TupleAD _ -> raise_s [%message "Attempting to make a local scalar tuple"]
 
 let minus_one e =
   { e with
@@ -98,12 +100,10 @@ let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   (* TUPLE STUB c++ scalar of type
      Unclear what a scalar of tuple type would be, either semantic error or depend on usage
 
-     Could be tuple of scalars:
-      pf ppf "std::tuple<%a>" (list ~sep:comma pp_unsizedtype_custom_scalar)
-        (List.map ~f:(fun t -> (scalar, t)) ts)
-
+     This appears to be used as the type for variable initialization, so I'm guessing it should be recursive for tuples because initialization is (currently) recursive for tuples
      *)
-  | UTuple _ -> raise_s [%message "Cannot take scalar of tuple type"]
+  | UTuple ts -> pf ppf "std::tuple<%a>" (list ~sep:comma pp_unsizedtype_custom_scalar)
+                  (List.map ~f:(fun t -> (scalar, t)) ts)
   | x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
 
 let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =

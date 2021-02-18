@@ -458,8 +458,7 @@ let check_sizedtype name =
         let ll, t = sizedtype t in
         (check s e @ ll, SizedType.SArray (t, e))
     | STuple ts ->
-        let sizedtypes = List.map ~f:sizedtype ts in
-        let checks, types = List.unzip sizedtypes in
+        let checks, types = List.unzip (List.map ts ~f:sizedtype) in
         (List.concat checks, SizedType.STuple types)
   in
   function

@@ -1,6 +1,9 @@
 open Core_kernel
 open Common.Helpers
 
+type autodifftype = DataOnly | AutoDiffable | TupleAD of autodifftype list
+[@@deriving compare, hash, sexp]
+
 type t =
   | UInt
   | UReal
@@ -12,13 +15,13 @@ type t =
   | UFun of (autodifftype * t) list * returntype
   | UMathLibraryFunction
 
-and autodifftype = DataOnly | AutoDiffable
-
 and returntype = Void | ReturnType of t [@@deriving compare, hash, sexp]
 
 let pp_autodifftype ppf = function
   | DataOnly -> pp_keyword ppf "data "
   | AutoDiffable -> ()
+  (* TUPLE STUB tuplead print *)
+  | TupleAD _ -> raise_s [%message "Shouldn't be trying to print tuple adlevel."]
 
 let count_dims unsized_ty =
   let rec aux dims = function

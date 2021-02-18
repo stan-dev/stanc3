@@ -27,6 +27,7 @@ let pp_set_size ppf (decl_id, st, adtype) =
     match adtype with
     | UnsizedType.AutoDiffable -> "DUMMY_VAR__"
     | DataOnly -> "std::numeric_limits<double>::quiet_NaN()"
+    | TupleAD _ -> raise_s [%message "pp_set_size TUPLES STUB"]
   in
   let rec pp_size_ctor ppf st =
     let pp_st ppf st =
