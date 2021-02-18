@@ -112,7 +112,7 @@ let function_calls ppf p =
   let funs, distrs =
     fold_program (get_function_calls_stmt ud_dists) (SSet.empty, SSet.empty) p
   in
-  Fmt.pf ppf "\"stanlib_calls\": [ @[<v 0>%a @]],@,"
+  Fmt.pf ppf "\"functions\": [ @[<v 0>%a @]],@,"
     (Fmt.list ~sep:Fmt.comma (fun ppf s -> Fmt.pf ppf "\"%s\"" s))
     (SSet.to_list funs) ;
   Fmt.pf ppf "\"distributions\": [ @[<v 0>%a @]]"
