@@ -8,10 +8,10 @@ functions {
     }
 }
 data {
-    vector[2] k[1];
     real ts[5];
 }
 parameters {
+    vector[2] k[1];
     vector[2] init;
 }
 transformed parameters {

@@ -398,10 +398,14 @@ let pp_closure ppf (fdrt, fdname, fdcaptures, fdargs) =
          return stan::math::save_varis(dest%a%a);@ }"
         comma () pp fdcaptures
     in
+    let count ppf () =
+      pf ppf "size_t count_vars__() const {@ return vars_count__;@ }"
+    in
     pf ppf
       "@ @[<hov>%a@]@ @[<hov>%a@]@ @[<hov>%a@]@ @[<hov>%a@]@ @[<hov>%a@]@ \
-       @[<hov>%a@]@ "
-      pp_using () valueof () deepcopy () zeros () accumulate () save () ;
+       @[<hov>%a@]@ @[<hov>%a@]@ "
+      pp_using () count () valueof () deepcopy () zeros () accumulate () save
+      () ;
     ()
   in
   pf ppf
