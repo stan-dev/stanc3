@@ -21,7 +21,8 @@ let pp_autodifftype ppf = function
   | DataOnly -> pp_keyword ppf "data "
   | AutoDiffable -> ()
   (* TUPLE STUB tuplead print *)
-  | TupleAD _ -> raise_s [%message "Shouldn't be trying to print tuple adlevel."]
+  | TupleAD _ ->
+      raise_s [%message "Shouldn't be trying to print tuple adlevel."]
 
 let count_dims unsized_ty =
   let rec aux dims = function

@@ -335,7 +335,7 @@ module Helpers = struct
         bodyfn st var
     | SArray (t, d) -> mkfor d (fun e -> for_eigen t bodyfn e smeta) var smeta
     | STuple ts ->
-      for_each_tuple (fun t e -> for_eigen t bodyfn e smeta) var ts smeta
+        for_each_tuple (fun t e -> for_eigen t bodyfn e smeta) var ts smeta
 
   (** [for_scalar unsizedtype...] generates a For statement that loops
     over the scalars in the underlying [unsizedtype].
@@ -354,7 +354,7 @@ module Helpers = struct
         mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
     | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
     | STuple ts ->
-      for_each_tuple (fun t e -> for_scalar t bodyfn e smeta) var ts smeta
+        for_each_tuple (fun t e -> for_scalar t bodyfn e smeta) var ts smeta
 
   (** Exactly like for_scalar, but iterating through array dimensions in the
   inverted order.*)

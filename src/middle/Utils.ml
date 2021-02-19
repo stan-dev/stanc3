@@ -72,33 +72,35 @@ let%expect_test "all but last n" =
   [%expect {| (1 2) |}]
 
 let zip_tuple_trans_exn pst trans =
-  let tms = match trans with
+  let tms =
+    match trans with
     | Program.TupleTransformation tms -> tms
-    | _ -> raise_s [%message
-             "Internal error: expected TupleTransformation with Tuple"
-           ]
+    | _ ->
+        raise_s
+          [%message "Internal error: expected TupleTransformation with Tuple"]
   in
-  let psts = match pst with
-  | Type.Unsized (UTuple uts) -> List.map ~f:(fun ut -> Type.Unsized ut) uts
-  | Type.Sized (STuple sts) -> List.map ~f:(fun st -> Type.Sized st) sts
-  | _ -> raise_s [%message
-           "Internal error: expected Tuple with TupleTransformation"
-         ]
+  let psts =
+    match pst with
+    | Type.Unsized (UTuple uts) -> List.map ~f:(fun ut -> Type.Unsized ut) uts
+    | Type.Sized (STuple sts) -> List.map ~f:(fun st -> Type.Sized st) sts
+    | _ ->
+        raise_s
+          [%message "Internal error: expected Tuple with TupleTransformation"]
   in
   Option.value_exn
-    ~message:"Internal representation error: TupleTransformation not same length as Tuple"
+    ~message:
+      "Internal representation error: TupleTransformation not same length as \
+       Tuple"
     (List.zip psts tms)
 
 let zip_stuple_trans_exn pst trans =
-  List.map (zip_tuple_trans_exn (Sized pst) trans)
-    ~f:(fun (pst, trans) -> match pst with
-        | Sized st -> (st, trans)
-        | _ -> raise_s [%message "Internal error in zip_tuple"]
-      )
+  List.map (zip_tuple_trans_exn (Sized pst) trans) ~f:(fun (pst, trans) ->
+      match pst with
+      | Sized st -> (st, trans)
+      | _ -> raise_s [%message "Internal error in zip_tuple"] )
 
 let zip_utuple_trans_exn pst trans =
-  List.map (zip_tuple_trans_exn (Unsized pst) trans)
-    ~f:(fun (pst, trans) -> match pst with
-        | Unsized ut -> (ut, trans)
-        | _ -> raise_s [%message "Internal error in zip_tuple"]
-      )
+  List.map (zip_tuple_trans_exn (Unsized pst) trans) ~f:(fun (pst, trans) ->
+      match pst with
+      | Unsized ut -> (ut, trans)
+      | _ -> raise_s [%message "Internal error in zip_tuple"] )

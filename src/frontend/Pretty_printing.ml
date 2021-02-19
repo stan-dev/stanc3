@@ -194,16 +194,10 @@ and pp_transformation ppf = function
   | Multiplier e -> Fmt.pf ppf "<multiplier=%a>" pp_expression e
   | OffsetMultiplier (e1, e2) ->
       Fmt.pf ppf "<offset=%a, multiplier=%a>" pp_expression e1 pp_expression e2
-  | Ordered
-  | PositiveOrdered
-  | Simplex
-  | UnitVector
-  | CholeskyCorr
-  | CholeskyCov
-  | Correlation
-  | Covariance
-  | TupleTransformation _ (* tuple transformations are handled in pp_transformed_type *) ->
-    Fmt.pf ppf ""
+  | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
+   |CholeskyCov | Correlation | Covariance | TupleTransformation _
+  (* tuple transformations are handled in pp_transformed_type *) ->
+      Fmt.pf ppf ""
 
 (* Comment from rybern:
  * This seems like a mess to me. Why are we "discarding" arrays instead of just using unwind_sized_array_type to group them when they're printed? It seems like unwind_sized_array_type is called multiple times on the same input. Should sized types, unsized types, and transformations really be handled in the same function? Why split off pp_transformed if we're already matching on the transformation here? *)
@@ -270,9 +264,11 @@ and pp_transformed_type ppf (pst, trans) =
   | Correlation -> Fmt.pf ppf "corr_matrix%a" cov_sizes_fmt ()
   | Covariance -> Fmt.pf ppf "cov_matrix%a" cov_sizes_fmt ()
   | TupleTransformation _ as trans ->
-    (* TUPLES TODO: This is all we need to do for tuples, skip the rest *)
-    let transTypes = Middle.Utils.zip_tuple_trans_exn pst trans in
-    Fmt.pf ppf "(%a)" Fmt.(list ~sep:(Fmt.unit ", ") pp_transformed_type) transTypes
+      (* TUPLES TODO: This is all we need to do for tuples, skip the rest *)
+      let transTypes = Middle.Utils.zip_tuple_trans_exn pst trans in
+      Fmt.pf ppf "(%a)"
+        Fmt.(list ~sep:(Fmt.unit ", ") pp_transformed_type)
+        transTypes
 
 and pp_array_dims ppf = function
   | [] -> Fmt.pf ppf ""

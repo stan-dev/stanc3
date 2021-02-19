@@ -126,8 +126,8 @@ let data_read smeta (decl_id, st) =
      Data read from tuples
      There seems to be dispatch to a FnReadData function, could foist to C++
   *)
-  | UTuple _ -> []
-                  (* raise_s [%message "Reading from tuples not implemented."] *)
+  | UTuple _ ->
+      [] (* raise_s [%message "Reading from tuples not implemented."] *)
   | UFun _ | UMathLibraryFunction ->
       raise_s [%message "Cannot read a function type."]
   | UVector | URowVector | UMatrix | UArray _ ->
@@ -175,12 +175,12 @@ let rec base_ut_to_string = function
   | UInt -> "integer"
   | UArray t -> base_ut_to_string t
   | UTuple ts ->
-    (* TUPLE MAYBE base type to string
+      (* TUPLE MAYBE base type to string
        This is almost certainly wrong; probably should never call this with tuples; instead call read for each tuple element (does that work for arrays of tuples?)
 
        Side note: the only way to tell what these functions to is from their usage! Not great
     *)
-    "(" ^ String.concat ~sep:", " (List.map ~f:base_ut_to_string ts) ^ ")"
+      "(" ^ String.concat ~sep:", " (List.map ~f:base_ut_to_string ts) ^ ")"
   | t ->
       raise_s
         [%message "Another place where it's weird to get " (t : UnsizedType.t)]

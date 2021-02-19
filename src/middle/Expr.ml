@@ -236,7 +236,8 @@ module Helpers = struct
           raise_s
             [%message
               "Internal error: Attempted to apply tuple index to a non-tuple \
-               type:" (t : UnsizedType.t)]
+               type:"
+                (t : UnsizedType.t)]
     in
     let meta = Typed.Meta.{e.meta with type_= mtype} in
     let pattern = Fixed.Pattern.TupleIndexed (e, i) in

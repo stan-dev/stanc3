@@ -10,7 +10,6 @@ open Ast
 open Errors
 module Validate = Common.Validation.Make (Semantic_error)
 
-
 (* There is a semantic checking function for each AST node that calls
    the checking functions for its children left to right. *)
 
@@ -69,8 +68,9 @@ let dup_exists l =
 let type_of_expr_typed ue = ue.emeta.type_
 
 let rec calculate_autodifftype cf at ut =
-  match at, ut with
-  | _, UnsizedType.UTuple ts -> UnsizedType.TupleAD (List.map ~f:(calculate_autodifftype cf at) ts)
+  match (at, ut) with
+  | _, UnsizedType.UTuple ts ->
+      UnsizedType.TupleAD (List.map ~f:(calculate_autodifftype cf at) ts)
   | (Param | TParam | Model | Functions), _
     when not (UnsizedType.contains_int ut || cf.current_block = GQuant) ->
       UnsizedType.AutoDiffable
@@ -814,7 +814,7 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
         match (typed.emeta.type_, typed.emeta.ad_level) with
         | UTuple ts, TupleAD ads -> (
           match (List.nth ts (i - 1), List.nth ads (i - 1)) with
-          | (Some t, Some ad) ->
+          | Some t, Some ad ->
               mk_typed_expression
                 ~expr:(TupleIndexed (typed, i))
                 ~ad_level:ad ~type_:t ~loc:emeta.loc
@@ -823,16 +823,19 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
               Semantic_error.tuple_index_invalid_index emeta.loc
                 (List.length ts) i
               |> Validate.error
-          | _ -> raise_s [%message "Error in internal representation: tuple types don't match AD"]
-        )
+          | _ ->
+              raise_s
+                [%message
+                  "Error in internal representation: tuple types don't match AD"]
+          )
         | UTuple _, ad ->
-          (* raise_s [%message "Error in internal representation: tuple doesn't have tupleAD" ad] *)
-          raise_s [%sexp (ad : UnsizedType.autodifftype)]
+            (* raise_s [%message "Error in internal representation: tuple doesn't have tupleAD" ad] *)
+            raise_s [%sexp (ad : UnsizedType.autodifftype)]
         | _, _ ->
-          Semantic_error.tuple_index_not_tuple emeta.loc typed.emeta.type_
-          |> Validate.error) )
+            Semantic_error.tuple_index_not_tuple emeta.loc typed.emeta.type_
+            |> Validate.error) )
   | TupleExpr es ->
-    Validate.(
+      Validate.(
         es
         |> List.map ~f:(semantic_check_expression cf)
         |> sequence
@@ -908,9 +911,9 @@ let rec semantic_check_sizedtype cf = function
       and ue = semantic_check_expression_of_int_type cf e "Array sizes" in
       Validate.liftA2 (fun ust ue -> SizedType.SArray (ust, ue)) ust ue
   | STuple ts ->
-    List.map ~f:(fun t -> semantic_check_sizedtype cf t) ts
-    |> Validate.sequence
-    |> Validate.map ~f:(fun sts -> SizedType.STuple sts)
+      List.map ~f:(fun t -> semantic_check_sizedtype cf t) ts
+      |> Validate.sequence
+      |> Validate.map ~f:(fun sts -> SizedType.STuple sts)
 
 (* -- Transformations ------------------------------------------------------- *)
 let rec semantic_check_transformation cf ut = function
@@ -943,10 +946,11 @@ let rec semantic_check_transformation cf ut = function
         (fun ue1 ue2 -> Program.OffsetMultiplier (ue1, ue2))
         ue1 ue2
   | TupleTransformation _ as trans ->
-    let typesTrans = Utils.zip_utuple_trans_exn ut trans in
-    List.map typesTrans ~f:(fun (ut, tm) -> semantic_check_transformation cf ut tm)
-    |> Validate.sequence
-    |> Validate.map ~f:(fun tms -> Program.TupleTransformation tms)
+      let typesTrans = Utils.zip_utuple_trans_exn ut trans in
+      List.map typesTrans ~f:(fun (ut, tm) ->
+          semantic_check_transformation cf ut tm )
+      |> Validate.sequence
+      |> Validate.map ~f:(fun tms -> Program.TupleTransformation tms)
   | Ordered -> Validate.ok Program.Ordered
   | PositiveOrdered -> Validate.ok Program.PositiveOrdered
   | Simplex -> Validate.ok Program.Simplex
@@ -1794,7 +1798,8 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
            ~f:(function
              | UnsizedType.DataOnly, ut -> (Data, ut)
              | AutoDiffable, ut -> (Param, ut)
-             | TupleAD _, _ -> raise_s [%message "Validate fundef tupleAD TUPLES STUB"])
+             | TupleAD _, _ ->
+                 raise_s [%message "Validate fundef tupleAD TUPLES STUB"])
            uarg_types)
     and context =
       let is_udf_dist name =

@@ -54,8 +54,8 @@ let trans_bounds_values (trans : Expr.Typed.t transformation) : bound_values =
   | UnitVector -> {lower= `Lit (-1.); upper= `Lit 1.}
   | CholeskyCorr | CholeskyCov | Correlation | Covariance | Ordered
    |Offset _ | Multiplier _ | OffsetMultiplier _ | Identity
-  | TupleTransformation _ (* TODO: handle tuple var bounds in pedantic mode *)
-     ->
+   |TupleTransformation _ (* TODO: handle tuple var bounds in pedantic mode *)
+    ->
       {lower= `None; upper= `None}
 
 let chop_dist_name (fname : string) : string Option.t =
