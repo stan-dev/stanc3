@@ -70,3 +70,35 @@ let%expect_test "all but last n" =
   let l = all_but_last_n [1; 2; 3; 4] 2 in
   print_s [%sexp (l : int list)] ;
   [%expect {| (1 2) |}]
+
+let zip_tuple_trans_exn pst trans =
+  let tms = match trans with
+    | Program.TupleTransformation tms -> tms
+    | _ -> raise_s [%message
+             "Internal error: expected TupleTransformation with Tuple"
+           ]
+  in
+  let psts = match pst with
+  | Type.Unsized (UTuple uts) -> List.map ~f:(fun ut -> Type.Unsized ut) uts
+  | Type.Sized (STuple sts) -> List.map ~f:(fun st -> Type.Sized st) sts
+  | _ -> raise_s [%message
+           "Internal error: expected Tuple with TupleTransformation"
+         ]
+  in
+  Option.value_exn
+    ~message:"Internal representation error: TupleTransformation not same length as Tuple"
+    (List.zip psts tms)
+
+let zip_stuple_trans_exn pst trans =
+  List.map (zip_tuple_trans_exn (Sized pst) trans)
+    ~f:(fun (pst, trans) -> match pst with
+        | Sized st -> (st, trans)
+        | _ -> raise_s [%message "Internal error in zip_tuple"]
+      )
+
+let zip_utuple_trans_exn pst trans =
+  List.map (zip_tuple_trans_exn (Unsized pst) trans)
+    ~f:(fun (pst, trans) -> match pst with
+        | Unsized ut -> (ut, trans)
+        | _ -> raise_s [%message "Internal error in zip_tuple"]
+      )

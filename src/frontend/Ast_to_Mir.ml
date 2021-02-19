@@ -239,6 +239,10 @@ let check_constraint_to_string t (c : constrainaction) =
   | Offset _ | Multiplier _ | OffsetMultiplier _ -> (
     match c with Check -> "" | Constrain | Unconstrain -> "offset_multiplier" )
   | Identity -> ""
+  | TupleTransformation _ ->
+    (* TUPLE TODO this is being called *)
+    (* raise_s [%message "Cannot assign name to tuple transformation; should not be called"] *)
+    "[TUPLE TRANSFORMATION"
 
 let constrain_constraint_to_string t (c : constrainaction) =
   match t with
@@ -252,6 +256,8 @@ let constraint_forl = function
   | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
    |CholeskyCov | Correlation | Covariance ->
       Stmt.Helpers.for_eigen
+  | TupleTransformation _ ->
+    raise_s [%message "Cannot generate loop for tuple transformation; should not be called"]
 
 let same_shape decl_id decl_var id var meta =
   if UnsizedType.is_scalar_type (Expr.Typed.type_of var) then []
@@ -277,7 +283,7 @@ let check_transform_shape decl_id decl_var meta = function
       same_shape decl_id decl_var "lower" e1 meta
       @ same_shape decl_id decl_var "upper" e2 meta
   | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
-   |PositiveOrdered | Simplex | UnitVector | Identity ->
+   |PositiveOrdered | Simplex | UnitVector | Identity | TupleTransformation _ ->
       []
 
 let copy_indices indexed (var : Expr.Typed.t) =
@@ -302,28 +308,24 @@ let extract_transform_args var = function
   | LowerUpper (a1, a2) | OffsetMultiplier (a1, a2) ->
       [copy_indices var a1; copy_indices var a2]
   | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
-   |PositiveOrdered | Simplex | UnitVector | Identity ->
+  |PositiveOrdered | Simplex | UnitVector | Identity | TupleTransformation _ ->
       []
 
 let extra_constraint_args st = function
   | Program.Lower _ | Upper _ | Offset _ | Multiplier _ | LowerUpper _
    |OffsetMultiplier _ | Ordered | PositiveOrdered | Simplex | UnitVector
-   |Identity ->
+  |Identity | TupleTransformation _ ->
       []
   | Covariance | Correlation | CholeskyCorr ->
       [List.hd_exn (SizedType.dims_of st)]
   | CholeskyCov -> SizedType.dims_of st
 
-let param_size transform sizedtype =
+let rec param_size transform sizedtype =
   let rec shrink_eigen f st =
     match st with
     | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen f t, d)
     | SVector d | SMatrix (d, _) -> SVector (f d)
-    (* TUPLE MAYBE
-       I have very little idea of what this function does, this is my best guesses
-    *)
-    | STuple ts -> STuple (List.map ~f:(shrink_eigen f) ts)
-    | SInt | SReal | SRowVector _ ->
+    | SInt | SReal | SRowVector _ | STuple _ ->
         raise_s
           [%message
             "Expecting SVector or SMatrix, got " (st : Expr.Typed.t SizedType.t)]
@@ -349,6 +351,11 @@ let param_size transform sizedtype =
    |OffsetMultiplier (_, _)
    |Ordered | PositiveOrdered | UnitVector ->
       sizedtype
+  | TupleTransformation _ as trans ->
+    (* Call recursively for tuples *)
+    SizedType.STuple (List.map
+                        (Utils.zip_stuple_trans_exn sizedtype trans)
+                        ~f:(fun (st, trans) -> param_size trans st))
   | Simplex ->
       shrink_eigen (fun d -> Expr.Helpers.(binop d Minus (int 1))) sizedtype
   | CholeskyCorr | Correlation -> shrink_eigen k_choose_2 sizedtype
@@ -377,14 +384,13 @@ let remove_possibly_exn pst action loc =
 
 let constrain_decl st dconstrain t decl_id decl_var smeta =
   let mkstring = mkstring (Expr.Typed.loc_of decl_var) in
-  match Option.map ~f:(constrain_constraint_to_string t) dconstrain with
-  | None | Some "" -> []
-  | Some constraint_str ->
-      let dc = Option.value_exn dconstrain in
+  match Option.map ~f:(fun dc -> (constrain_constraint_to_string t dc, dc)) dconstrain with
+  | None | Some ("", _) -> []
+  | Some (constraint_str, dc) ->
       let fname = constrainaction_fname dc in
       let extra_args =
-        match dconstrain with
-        | Some Constrain -> extra_constraint_args st t
+        match dc with
+        | Constrain -> extra_constraint_args st t
         | _ -> []
       in
       let args var =
@@ -397,8 +403,8 @@ let constrain_decl st dconstrain t decl_id decl_var smeta =
       in
       let unconstrained_decls, decl_id, ut =
         let ut = SizedType.to_unsized (param_size t st) in
-        match dconstrain with
-        | Some Unconstrain when t <> Identity ->
+        match dc with
+        | Unconstrain when t <> Identity ->
             ( [ Stmt.Fixed.
                   { pattern=
                       Decl
@@ -412,13 +418,13 @@ let constrain_decl st dconstrain t decl_id decl_var smeta =
       in
       unconstrained_decls
       @ [ (constraint_forl t) st
-            (Stmt.Helpers.assign_indexed ut decl_id smeta constrainvar)
+            (fun _ var -> Stmt.Helpers.assign_indexed ut decl_id smeta constrainvar var)
             decl_var smeta ]
 
 let rec check_decl var decl_type' decl_id decl_trans smeta adlevel =
   let decl_type = remove_possibly_exn decl_type' "check" smeta in
   let chk fn var =
-    let check_id id =
+    let check_id _ id =
       let id_str = Expr.Helpers.str (Fmt.strf "%a" Expr.Typed.pp id) in
       let args = extract_transform_args id decl_trans in
       Stmt.Helpers.internal_nrfunapp FnCheck (fn :: id_str :: id :: args) smeta
@@ -467,6 +473,31 @@ let check_sizedtype name =
       (ll, Type.Sized st)
   | Unsized ut -> ([], Unsized ut)
 
+(* The statements that constrain and check a variable, given its context *)
+let rec var_constrain_check_stmts dconstrain loc adlevel decl_id decl_var trans type_ =
+  match type_ with
+  | Type.Sized (STuple _)
+  | Type.Unsized (UTuple _) ->
+    (* If the variable is a tuple, constrain each element in turn *)
+    let transTypes = Utils.zip_tuple_trans_exn type_ trans in
+    List.concat_mapi transTypes ~f:(fun ix (pst, trans) ->
+        let elem = Expr.Helpers.add_tuple_index decl_var (ix + 1) in
+        let elem_decl_id = decl_id ^ "_tupix" ^ string_of_int (ix + 1) ^ "__" in
+        var_constrain_check_stmts dconstrain loc adlevel elem_decl_id elem trans pst
+      )
+  | _ ->
+    (match (dconstrain, type_) with
+     | ((Some Constrain | Some Unconstrain), Type.Sized st) ->
+       check_transform_shape decl_id decl_var loc trans
+       @ constrain_decl st dconstrain trans decl_id
+         decl_var loc
+     | (Some Check, _) ->
+       check_transform_shape decl_id decl_var loc trans
+       @ check_decl decl_var type_ decl_id trans
+         loc adlevel
+     | _ -> []
+    )
+
 let trans_decl {dconstrain; dadlevel} smeta decl_type transform identifier
     initial_value =
   let decl_id = identifier.Ast.name in
@@ -495,16 +526,8 @@ let trans_decl {dconstrain; dadlevel} smeta decl_type transform identifier
     |> Option.to_list
   in
   if Utils.is_user_ident decl_id then
-    let constrain_checks =
-      match dconstrain with
-      | Some Constrain | Some Unconstrain ->
-          raise_s [%message "This should never happen."]
-      | Some Check ->
-          check_transform_shape decl_id decl_var smeta transform
-          @ check_decl decl_var dt decl_id transform smeta dadlevel
-      | None -> []
-    in
-    size_checks @ (decl :: rhs_assignment) @ constrain_checks
+    size_checks @ (decl :: rhs_assignment) @
+    var_constrain_check_stmts dconstrain smeta dadlevel decl_id decl_var transform dt
   else size_checks @ (decl :: rhs_assignment)
 
 let unwrap_block_or_skip = function
@@ -716,7 +739,7 @@ let get_block block prog =
   | TransformedParameters -> prog.transformedparametersblock
   | GeneratedQuantities -> prog.generatedquantitiesblock
 
-let trans_sizedtype_decl declc tr name =
+let rec trans_sizedtype_decl declc tr name st =
   let check fn x n =
     Stmt.Helpers.internal_nrfunapp fn
       Expr.Helpers.
@@ -790,12 +813,23 @@ let trans_sizedtype_decl declc tr name =
         let l, s = grab_size FnValidateSize n s in
         let ll, t = go (n + 1) t in
         (l @ ll, SizedType.SArray (t, s))
-    | STuple _ -> raise_s [%message "TUPLE STUB"]
+    | STuple _ as tuple ->
+      (* TUPLE MAYBE
+         I'm not 100% sure what this function should do. It looks like it's accumulating some statements to check the sizes of sized types, and also returning the type (will it ever change?)
+         The point of the mutual recursion with "go" seems to be to produce the correct decl_id for the nth dimension of array size. How critical is that dimension name, and where is it read? If it's critical, we'll need to rework it, because the array might be nested inside tuple.
+      *)
+      let stmts, sts' =
+        List.unzip (List.mapi
+                      (Utils.zip_stuple_trans_exn tuple tr)
+                      ~f:(fun ix (st, trans) ->
+                          trans_sizedtype_decl declc trans (name ^ "." ^ string_of_int (ix-1)) st))
+      in (List.concat stmts, SizedType.STuple sts')
   in
-  go 1
+  go 1 st
 
 let trans_block ud_dists declc block prog =
   let f stmt (accum1, accum2, accum3) =
+    (* TODO The level of code duplication between this and trans_decl is too much! *)
     match stmt with
     | { Ast.stmt=
           VarDecl
@@ -844,19 +878,8 @@ let trans_block ud_dists declc block prog =
         in
         let stmts =
           if Utils.is_user_ident decl_id then
-            let constrain_checks =
-              match declc.dconstrain with
-              | Some Constrain | Some Unconstrain ->
-                  check_transform_shape decl_id decl_var smeta.loc transform
-                  @ constrain_decl type_ declc.dconstrain transform decl_id
-                      decl_var smeta.loc
-              | Some Check ->
-                  check_transform_shape decl_id decl_var smeta.loc transform
-                  @ check_decl decl_var (Sized type_) decl_id transform
-                      smeta.loc declc.dadlevel
-              | None -> []
-            in
-            (decl :: rhs_assignment) @ constrain_checks
+            (decl :: rhs_assignment) @
+            var_constrain_check_stmts declc.dconstrain smeta.loc declc.dadlevel decl_id decl_var transform (Type.Sized type_)
           else decl :: rhs_assignment
         in
         (outvar :: accum1, size @ accum2, stmts @ accum3)

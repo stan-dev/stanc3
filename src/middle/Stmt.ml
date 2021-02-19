@@ -332,10 +332,10 @@ module Helpers = struct
   let rec for_eigen st bodyfn var smeta =
     match st with
     | SizedType.SInt | SReal | SVector _ | SRowVector _ | SMatrix _ ->
-        bodyfn var
+        bodyfn st var
     | SArray (t, d) -> mkfor d (fun e -> for_eigen t bodyfn e smeta) var smeta
     | STuple ts ->
-        for_each_tuple (fun t e -> for_eigen t bodyfn e smeta) var ts smeta
+      for_each_tuple (fun t e -> for_eigen t bodyfn e smeta) var ts smeta
 
   (** [for_scalar unsizedtype...] generates a For statement that loops
     over the scalars in the underlying [unsizedtype].
@@ -348,13 +348,13 @@ module Helpers = struct
 *)
   let rec for_scalar st bodyfn var smeta =
     match st with
-    | SizedType.SInt | SReal -> bodyfn var
-    | SVector d | SRowVector d -> mkfor d bodyfn var smeta
+    | SizedType.SInt | SReal -> bodyfn st var
+    | SVector d | SRowVector d -> mkfor d (bodyfn st) var smeta
     | SMatrix (d1, d2) ->
         mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
     | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
     | STuple ts ->
-        for_each_tuple (fun t e -> for_scalar t bodyfn e smeta) var ts smeta
+      for_each_tuple (fun t e -> for_scalar t bodyfn e smeta) var ts smeta
 
   (** Exactly like for_scalar, but iterating through array dimensions in the
   inverted order.*)
@@ -369,14 +369,14 @@ module Helpers = struct
     let rec go st bodyfn var smeta =
       match st with
       | SizedType.SArray (t, d) ->
-          let bodyfn' var = mkfor d bodyfn var smeta in
+          let bodyfn' _ var = mkfor d (bodyfn st) var smeta in
           go t bodyfn' var smeta
       | SMatrix (d1, d2) ->
-          let bodyfn' var = mkfor d1 bodyfn var smeta in
+          let bodyfn' _ var = mkfor d1 (bodyfn st) var smeta in
           go (SRowVector d2) bodyfn' var smeta
       | _ -> for_scalar st bodyfn var smeta
     in
-    go st (Fn.compose bodyfn invert_index_order) var smeta
+    go st (fun st var -> bodyfn st (invert_index_order var)) var smeta
 
   let assign_indexed decl_type vident meta varfn var =
     let indices = Expr.Helpers.collect_indices var in

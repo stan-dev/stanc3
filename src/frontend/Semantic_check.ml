@@ -913,7 +913,7 @@ let rec semantic_check_sizedtype cf = function
     |> Validate.map ~f:(fun sts -> SizedType.STuple sts)
 
 (* -- Transformations ------------------------------------------------------- *)
-let semantic_check_transformation cf ut = function
+let rec semantic_check_transformation cf ut = function
   | Program.Identity -> Validate.ok Program.Identity
   | Lower e ->
       semantic_check_expression_of_scalar_or_type cf ut e "Lower bound"
@@ -942,6 +942,11 @@ let semantic_check_transformation cf ut = function
       Validate.liftA2
         (fun ue1 ue2 -> Program.OffsetMultiplier (ue1, ue2))
         ue1 ue2
+  | TupleTransformation _ as trans ->
+    let typesTrans = Utils.zip_utuple_trans_exn ut trans in
+    List.map typesTrans ~f:(fun (ut, tm) -> semantic_check_transformation cf ut tm)
+    |> Validate.sequence
+    |> Validate.map ~f:(fun tms -> Program.TupleTransformation tms)
   | Ordered -> Validate.ok Program.Ordered
   | PositiveOrdered -> Validate.ok Program.PositiveOrdered
   | Simplex -> Validate.ok Program.Simplex

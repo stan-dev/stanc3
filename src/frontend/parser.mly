@@ -341,9 +341,8 @@ tuple_type(type_rule):
   | LPAREN head=higher_type(type_rule) COMMA rest=separated_nonempty_list(COMMA, higher_type(type_rule)) RPAREN
   { grammar_logger "tuple_type" ;
     let ts = head::rest in
-    let trans = snd (List.hd_exn ts) in
-    let types = List.map ~f:fst ts in
-    (SizedType.STuple types, trans)
+    let types, trans = List.unzip ts in
+    (SizedType.STuple types, TupleTransformation trans)
   }
 
 var_decl:

@@ -126,7 +126,8 @@ let data_read smeta (decl_id, st) =
      Data read from tuples
      There seems to be dispatch to a FnReadData function, could foist to C++
   *)
-  | UTuple _ -> raise_s [%message "Reading from tuples not implemented."]
+  | UTuple _ -> []
+                  (* raise_s [%message "Reading from tuples not implemented."] *)
   | UFun _ | UMathLibraryFunction ->
       raise_s [%message "Cannot read a function type."]
   | UVector | URowVector | UMatrix | UArray _ ->
@@ -141,7 +142,7 @@ let data_read smeta (decl_id, st) =
               Expr.Typed.Meta.{loc= smeta; type_= flat_type; adlevel= DataOnly}
           } )
       in
-      let bodyfn var =
+      let bodyfn _ var =
         let pos_increment =
           [ Assignment ((pos, UInt, []), Expr.Helpers.(binop pos_var Plus one))
             |> swrap ]
@@ -173,6 +174,13 @@ let rec base_ut_to_string = function
   | UReal -> "scalar"
   | UInt -> "integer"
   | UArray t -> base_ut_to_string t
+  | UTuple ts ->
+    (* TUPLE MAYBE base type to string
+       This is almost certainly wrong; probably should never call this with tuples; instead call read for each tuple element (does that work for arrays of tuples?)
+
+       Side note: the only way to tell what these functions to is from their usage! Not great
+    *)
+    "(" ^ String.concat ~sep:", " (List.map ~f:base_ut_to_string ts) ^ ")"
   | t ->
       raise_s
         [%message "Another place where it's weird to get " (t : UnsizedType.t)]
@@ -203,7 +211,7 @@ let param_read smeta
       in
       Expr.Fixed.{meta; pattern= Var decl_id}
     in
-    let bodyfn var =
+    let bodyfn _ var =
       let readfnapp (var : Expr.Typed.t) =
         Expr.(
           Helpers.(
@@ -331,7 +339,7 @@ let add_reads vars mkread stmts =
   List.concat_map ~f:add_read_to_decl stmts
 
 let gen_write (decl_id, sizedtype) =
-  let bodyfn var =
+  let bodyfn _ var =
     Stmt.Helpers.internal_nrfunapp FnWriteParam [var] Location_span.empty
   in
   let meta =
@@ -341,7 +349,7 @@ let gen_write (decl_id, sizedtype) =
   Stmt.Helpers.for_scalar_inv sizedtype bodyfn expr Location_span.empty
 
 let gen_write_unconstrained (decl_id, sizedtype) =
-  let bodyfn var =
+  let bodyfn _ var =
     let var =
       match var.Expr.Fixed.pattern with
       | Indexed ({pattern= Indexed (expr, idcs1); _}, idcs2) ->
@@ -354,10 +362,14 @@ let gen_write_unconstrained (decl_id, sizedtype) =
     {Expr.Typed.Meta.empty with type_= SizedType.to_unsized sizedtype}
   in
   let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
-  let writefn var =
-    Stmt.Helpers.for_scalar_inv
-      (SizedType.inner_type sizedtype)
-      bodyfn var Location_span.empty
+  let writefn st var =
+    (* TUPLE TODO inner_type and for_scalar
+
+       Why do we pass in both a typed expression and a type to for_scalar?
+       This breaks for tuples because the "inner_type" of a tuple is just the tuple, not the scalar
+       But - why do this anyway?
+    *)
+    Stmt.Helpers.for_scalar_inv st bodyfn var Location_span.empty
   in
   Stmt.Helpers.for_eigen sizedtype writefn expr Location_span.empty
 

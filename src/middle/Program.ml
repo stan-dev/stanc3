@@ -35,6 +35,7 @@ type 'e transformation =
   | CholeskyCov
   | Correlation
   | Covariance
+  | TupleTransformation of 'e transformation list
 [@@deriving sexp, compare, map, hash, fold]
 
 type 'e outvar =
