@@ -363,12 +363,11 @@ let gen_write_unconstrained (decl_id, sizedtype) =
   in
   let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
   let writefn st var =
-    (* TUPLE TODO inner_type and for_scalar
-
-       Why do we pass in both a typed expression and a type to for_scalar?
-       This breaks for tuples because the "inner_type" of a tuple is just the tuple, not the scalar
-       But - why do this anyway?
-    *)
+    (* This function will be called inside the loops over eigen variables.
+     * for_scalar_inv needs the sized type to construct the loops correctly
+     * We cannot just pass in the inner type of sizedtype because that
+       doesn't work for heterogeneous types like tuples
+     *)
     Stmt.Helpers.for_scalar_inv st bodyfn var Location_span.empty
   in
   Stmt.Helpers.for_eigen sizedtype writefn expr Location_span.empty

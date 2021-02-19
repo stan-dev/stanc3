@@ -56,7 +56,6 @@ let rec associate ?init:(assocs = Label.Int_label.Map.empty) = function
       List.fold ~init:assocs ~f:(fun assocs t -> associate ~init:assocs t) ts
 
 let is_scalar = function SInt | SReal -> true | _ -> false
-let rec inner_type = function SArray (t, _) -> inner_type t | t -> t
 
 let rec dims_of st =
   match st with
