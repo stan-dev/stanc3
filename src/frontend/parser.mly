@@ -215,7 +215,7 @@ arg_type:
 
 function_type:
   | rt=return_type LPAREN args=separated_list(COMMA, arg_type) RPAREN
-    { grammar_logger "function_type" ; UnsizedType.UFun (args, rt, true) }
+    { grammar_logger "function_type" ; UnsizedType.UFun (args, rt, (Fun_kind.FnPure, true)) }
 
 always(x):
   | x=x

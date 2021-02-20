@@ -138,6 +138,12 @@ let demangle_unnormalized_name udf f =
   then f ^ "<false>"
   else f
 
+let demangle_unnormalized_closure f =
+  if Utils.is_unnormalized_distribution f then
+    Utils.stdlib_distribution_name f ^ ".template operator()<propto__>"
+  else if Utils.is_distribution_name f then f ^ ".template operator()<false>"
+  else f
+
 let fn_renames =
   List.map
     ~f:(fun (k, v) -> (Internal_fun.to_string k, v))
@@ -158,6 +164,13 @@ let functor_suffix_select hof =
   | x when Stan_math_signatures.is_variadic_ode_fn x ->
       variadic_ode_functor_suffix
   | _ -> functor_suffix
+
+let wrap_fn f =
+  match Expr.(f.Fixed.meta.Typed.Meta.type_) with
+  | UFun (args, rt, (_, false)) ->
+      { Expr.Fixed.meta= {f.meta with type_= UFun (args, rt, (FnPure, true))}
+      ; pattern= FunApp (StanLib, "from_lambda", [f]) }
+  | _ -> f
 
 let rec pp_index ppf = function
   | Index.All -> pf ppf "index_omni()"
@@ -283,14 +296,6 @@ and gen_fun_app ppf fname es =
     let to_var s = Expr.{Fixed.pattern= Var s; meta= Typed.Meta.empty} in
     let extra = suffix_args fname |> List.map ~f:to_var in
     let msgs = "pstream__" |> to_var in
-    let wrap_ode f =
-      match Expr.(f.Fixed.meta.Typed.Meta.type_) with
-      | UFun (args, rt, false) ->
-          { Expr.Fixed.meta= {f.meta with type_= UFun (args, rt, true)}
-          ; pattern= FunApp (StanLib, "from_lambda", [f]) }
-          (* ODE solvers have unusual argument order. Convert to a closure to fix it. *)
-      | _ -> f
-    in
     (* Here, because these signatures are written in C++ such that they
        wanted to have optional arguments and piggyback on C++ default
        arguments and not write the necessary overloads, we have to
@@ -312,7 +317,7 @@ and gen_fun_app ppf fname es =
         ->
           (fname, f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl)
       | ( x
-        , {meta= {type_= UFun (_, _, false); _}; pattern= Var f}
+        , {meta= {type_= UFun (_, _, (_, false)); _}; pattern= Var f}
           :: grainsize :: container :: tl )
         when Stan_math_signatures.is_reduce_sum_fn x ->
           let propto_template =
@@ -327,22 +332,24 @@ and gen_fun_app ppf fname es =
           ( strf "%s<%s%s>" fname normalized_dist_functor propto_template
           , grainsize :: container :: msgs :: tl )
       | ( x
-        , ({meta= {type_= UFun (_, _, true); _}; _} as f)
+        , ({meta= {type_= UFun (_, _, (_, true)); _}; _} as f)
           :: grainsize :: container :: tl )
         when Stan_math_signatures.is_reduce_sum_fn x ->
-          (fname ^ "<stan::math::reduce_sum_closure_adapter>", grainsize :: container :: msgs :: f :: tl)
+          ( fname ^ "<stan::math::reduce_sum_closure_adapter>"
+          , grainsize :: container :: msgs :: f :: tl )
       | x, f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: tl
         when Stan_math_signatures.is_variadic_ode_fn x
              && String.is_suffix fname
                   ~suffix:Stan_math_signatures.ode_tolerances_suffix ->
           ( fname
-          , wrap_ode f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps
+          , wrap_fn f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps
             :: msgs :: tl )
       | x, f :: y0 :: t0 :: ts :: tl
         when Stan_math_signatures.is_variadic_ode_fn x ->
-          (fname, wrap_ode f :: y0 :: t0 :: ts :: msgs :: tl)
+          (fname, wrap_fn f :: y0 :: t0 :: ts :: msgs :: tl)
       | ( "map_rect"
-        , {pattern= Var f; meta= {type_= UFun (_, _, false); _}} :: tl ) ->
+        , {pattern= Var f; meta= {type_= UFun (_, _, (FnPure, false)); _}}
+          :: tl ) ->
           let f = f ^ functor_suffix_select fname in
           let next_map_rect_id = Hashtbl.length map_rect_calls + 1 in
           Hashtbl.add_exn map_rect_calls ~key:next_map_rect_id ~data:f ;
@@ -368,6 +375,7 @@ and pp_constrain_funapp constrain_or_un_str ppf = function
   | es -> raise_s [%message "Bad constraint " (es : Expr.Typed.t list)]
 
 and pp_user_defined_fun ppf (f, es) =
+  let es = List.map ~f:wrap_fn es in
   let extra_args = suffix_args f @ ["pstream__"] in
   let sep = if List.is_empty es then "" else ", " in
   pf ppf "@[<hov 2>%s(@,%a%s)@]"
@@ -376,10 +384,13 @@ and pp_user_defined_fun ppf (f, es) =
     (sep ^ String.concat ~sep:", " extra_args)
 
 and pp_closure ppf (f, es) =
+  let es = List.map ~f:wrap_fn es in
+  let extra_args = suffix_args f @ ["pstream__"] in
   let sep = if List.is_empty es then "" else ", " in
-  pf ppf "@[<hov 2>%s(pstream__%s@,%a)@]"
-    (demangle_unnormalized_name true f)
-    sep (list ~sep:comma pp_expr) es
+  pf ppf "@[<hov 2>%s(%s@,%a)@]"
+    (demangle_unnormalized_closure f)
+    (String.concat ~sep:", " extra_args ^ sep)
+    (list ~sep:comma pp_expr) es
 
 and pp_compiler_internal_fn ut f ppf es =
   let pp_array_literal ppf es =
@@ -449,7 +460,13 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
   match pattern with
   | Var s -> (
     match meta.type_ with
-    | UFun (_, _, false) -> pf ppf "%s%s()" s functor_suffix
+    | UFun (_, _, (_, false)) -> pf ppf "%s%s()" s functor_suffix
+    | UFun (_, _, (FnLpdf, true)) ->
+        let propto =
+          if Utils.is_unnormalized_distribution s then "propto__" else "false"
+        in
+        let s = Utils.normalized_name s in
+        pf ppf "%s.template with_propto<%s>()" s propto
     | _ -> pf ppf "%s" s )
   | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> pf ppf "%s" s

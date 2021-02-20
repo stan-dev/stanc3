@@ -133,8 +133,6 @@ template <typename T0__>
 stan::promote_args_t<T0__>
 my_log1p_exp(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
-  const static bool propto__ = true;
-  (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -151,8 +149,6 @@ template <typename T0__>
 stan::promote_args_t<T0__>
 array_fun(const std::vector<T0__>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
-  const static bool propto__ = true;
-  (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -168,8 +164,6 @@ array_fun(const std::vector<T0__>& a, std::ostream* pstream__) {
 double
 int_array_fun(const std::vector<int>& a, std::ostream* pstream__) {
   using local_scalar_t__ = double;
-  const static bool propto__ = true;
-  (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -187,8 +181,6 @@ Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
 my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
   const auto& x = to_ref(x_arg__);
-  const static bool propto__ = true;
-  (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -213,8 +205,6 @@ my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
 int
 int_only_multiplication(const int& a, const int& b, std::ostream* pstream__) {
   using local_scalar_t__ = double;
-  const static bool propto__ = true;
-  (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -231,8 +221,6 @@ template <typename T0__>
 stan::promote_args_t<T0__>
 test_lgamma(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
-  const static bool propto__ = true;
-  (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -267,8 +255,6 @@ template <typename T0__, typename RNG>
 stan::promote_args_t<T0__>
 test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
-  const static bool propto__ = true;
-  (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -455,8 +441,6 @@ Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
 integrand(const T0__& x_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
   const auto& x = to_ref(x_arg__);
-  const static bool propto__ = true;
-  (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -476,8 +460,6 @@ integrand_ode(const T0__& r, const std::vector<T1__>& f,
               const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
               const std::vector<int>& x_i, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__, T3__>;
-  const static bool propto__ = true;
-  (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -505,8 +487,6 @@ integrand_ode(const T0__& r, const std::vector<T1__>& f,
 double
 ode_integrate(std::ostream* pstream__) {
   using local_scalar_t__ = double;
-  const static bool propto__ = true;
-  (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {

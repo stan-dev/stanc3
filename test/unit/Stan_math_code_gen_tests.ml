@@ -16,6 +16,7 @@ let%expect_test "udf" =
   let w e = Expr.{Fixed.pattern= e; meta= Typed.Meta.empty} in
   { fdrt= None
   ; fdname= "sars"
+  ; fdsuffix= FnPure
   ; fdcaptures= None
   ; fdargs= [(DataOnly, "x", UMatrix); (AutoDiffable, "y", URowVector)]
   ; fdbody=
@@ -48,8 +49,6 @@ let%expect_test "udf" =
               stan::value_type_t<T1__>>;
       const auto& x = to_ref(x_arg__);
       const auto& y = to_ref(y_arg__);
-      const static bool propto__ = true;
-      (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
       (void) DUMMY_VAR__;  // suppress unused var warning
       try {
@@ -69,6 +68,7 @@ let%expect_test "udf-expressions" =
   let w e = Expr.{Fixed.pattern= e; meta= Typed.Meta.empty} in
   { fdrt= Some UMatrix
   ; fdname= "sars"
+  ; fdsuffix= FnPure
   ; fdcaptures= None
   ; fdargs=
       [ (DataOnly, "x", UMatrix)
@@ -120,8 +120,6 @@ let%expect_test "udf-expressions" =
       const auto& x = to_ref(x_arg__);
       const auto& y = to_ref(y_arg__);
       const auto& z = to_ref(z_arg__);
-      const static bool propto__ = true;
-      (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
       (void) DUMMY_VAR__;  // suppress unused var warning
       try {

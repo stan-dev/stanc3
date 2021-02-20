@@ -667,6 +667,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       ; captures= Some (implname, captures)
       ; arguments
       ; body } ->
+      let fdsuffix = Fun_kind.suffix_from_name funname.name in
       if Map.find !closures implname = None then
         closures :=
           String.Map.add_exn !closures ~key:implname
@@ -676,6 +677,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
                   | Void -> None
                   | ReturnType ut -> Some ut )
               ; fdname= implname
+              ; fdsuffix
               ; fdcaptures=
                   Some
                     (List.map
@@ -689,7 +691,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
                   |> unwrap_block_or_skip
               ; fdloc= ts.smeta.loc } ;
       let arguments = List.map ~f:(fun (ad, ut, _) -> (ad, ut)) arguments in
-      let type_ = UnsizedType.UFun (arguments, returntype, true) in
+      let type_ = UnsizedType.UFun (arguments, returntype, (fdsuffix, true)) in
       let captures =
         List.map
           ~f:(fun (_, adlevel, type_, id) ->
@@ -739,6 +741,7 @@ let trans_fun_def ud_dists (ts : Ast.typed_statement) =
           { fdrt=
               (match returntype with Void -> None | ReturnType ut -> Some ut)
           ; fdname= funname.name
+          ; fdsuffix= Fun_kind.suffix_from_name funname.name
           ; fdcaptures= None
           ; fdargs= List.map ~f:trans_arg arguments
           ; fdbody=

@@ -6,9 +6,12 @@ functions {
         }
         return g2(1.0);
     }
+    real foo2(real x) {
+        return x;
+    }
 }
 transformed data {
-    real x = 2.0;
+    real x = foo(foo2, 2.0);
     functions
     real bar(real y) {
         return x*y;

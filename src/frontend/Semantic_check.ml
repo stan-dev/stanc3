@@ -263,8 +263,9 @@ let semantic_check_fn_rng cf ~loc id =
       Semantic_error.invalid_decl_rng_fn loc |> error
     else if
       String.is_suffix id.name ~suffix:"_rng"
-      && ( (cf.in_fun_def && not cf.in_rng_fun_def)
-         || cf.current_block = TParam || cf.current_block = Model )
+      && (not (cf.in_fun_def && cf.in_rng_fun_def))
+      && ( cf.in_fun_def || cf.current_block = TParam
+         || cf.current_block = Model )
     then Semantic_error.invalid_rng_fn loc |> error
     else ok ())
 
@@ -298,7 +299,7 @@ let semantic_check_fn_normal ~is_cond_dist ~loc id es =
         |> Semantic_error.illtyped_userdefined_fn_app loc id.name listedtypes
              rt
         |> error
-    | Some (_, UFun (_, ReturnType ut, is_closure)) ->
+    | Some (_, UFun (_, ReturnType ut, (_, is_closure))) ->
         let kind = if is_closure then Closure else UserDefined in
         mk_typed_expression
           ~expr:(mk_fun_app ~is_cond_dist (kind, id, es))
@@ -326,9 +327,9 @@ let semantic_check_fn_stan_math ~is_cond_dist ~loc id es =
       |> Validate.ok
   | None -> (
     match get_arg_types es with
-    | (_, UFun (arg_tys, rt, true)) :: args
+    | (_, UFun (arg_tys, rt, (s, true))) :: args
       when Stan_math_signatures.stan_math_returntype id.name
-             ((UnsizedType.DataOnly, UFun (arg_tys, rt, false)) :: args)
+             ((UnsizedType.DataOnly, UFun (arg_tys, rt, (s, false))) :: args)
            <> None ->
         Semantic_error.illtyped_stanlib_hof_app loc id.name |> Validate.error
     | _ ->
@@ -352,7 +353,7 @@ let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
               ( ((_, sliced_arg_fun_type) as sliced_arg_fun)
                 :: (_, UInt) :: (_, UInt) :: fun_args
               , ReturnType UReal
-              , _ ); _ }; _ }
+              , ((FnPure | FnLpdf), _) ); _ }; _ }
     :: sliced :: {emeta= {type_= UInt; _}; _} :: args
     when arg_match sliced_arg_fun sliced
          && List.mem Stan_math_signatures.reduce_sum_slice_types
@@ -978,7 +979,7 @@ let semantic_check_nrfn_target ~loc ~cf id =
 let semantic_check_nrfn_normal ~loc id es =
   Validate.(
     match Symbol_table.look vm id.name with
-    | Some (_, UFun (listedtypes, Void, is_closure))
+    | Some (_, UFun (listedtypes, Void, (_, is_closure)))
       when UnsizedType.check_compatible_arguments_mod_conv id.name listedtypes
              (get_arg_types es) ->
         let kind = if is_closure then Closure else UserDefined in
@@ -1194,7 +1195,7 @@ let semantic_check_sampling_distribution ~loc id arguments =
   in
   let is_name_w_suffix_udf_sampling_dist suffix =
     match Symbol_table.look vm (name ^ suffix) with
-    | Some (Functions, UFun (listedtypes, ReturnType UReal, false)) ->
+    | Some (Functions, UFun (listedtypes, ReturnType UReal, (_, false))) ->
         UnsizedType.check_compatible_arguments_mod_conv name listedtypes
           argumenttypes
     | _ -> false
@@ -1219,7 +1220,8 @@ let cumulative_density_is_defined id arguments =
     |> Option.value_map ~default:false ~f:is_real_rt
   and valid_arg_types_for_suffix suffix =
     match Symbol_table.look vm (name ^ suffix) with
-    | Some (Functions, UFun (listedtypes, ReturnType UReal, false)) ->
+    | Some (Functions, UFun (listedtypes, ReturnType UReal, (FnPure, false)))
+      ->
         UnsizedType.check_compatible_arguments_mod_conv name listedtypes
           argumenttypes
     | _ -> false
@@ -1653,7 +1655,9 @@ and semantic_check_closure_id ~is_closure id =
   if not is_closure then Validate.ok ()
   else
     let f suffix = not (String.is_suffix ~suffix id.name) in
-    if List.for_all ~f ["_rng"; "_lpdf"; "_lpmf"; "_lcdf"; "_lccdf"; "_lp"]
+    if
+      List.for_all ~f
+        ["_rng"; "_lpdf"; "_lpmf"; "_lcdf"; "_lccdf"; "_log"; "_lp"]
     then Validate.ok ()
     else Validate.error @@ Semantic_error.impure_closure id.id_loc
 
@@ -1749,11 +1753,12 @@ and semantic_check_fundef ~loc ~cf ~is_closure return_ty id args body =
     let uarg_names = List.map ~f:(fun x -> x.name) uarg_identifiers in
     semantic_check_fundef_overloaded ~loc id uarg_types urt
     |> apply_const (semantic_check_fundef_decl ~loc ~is_closure id body)
-    |> apply_const (semantic_check_closure_id ~is_closure id)
     >>= fun () ->
     (* WARNING: SIDE EFFECTING *)
     Symbol_table.enter vm id.name
-      (Functions, UFun (uarg_types, urt, is_closure)) ;
+      ( Functions
+      , UFun (uarg_types, urt, (Fun_kind.suffix_from_name id.name, is_closure))
+      ) ;
     let body', captures =
       Symbol_table.with_capturing_scope vm (fun () ->
           (* Check that function args and loop identifiers are not modified in
@@ -1816,7 +1821,8 @@ and semantic_check_fundef ~loc ~cf ~is_closure return_ty id args body =
                  , Set.to_list captures
                    |> List.filter_map ~f:(fun name ->
                           match Symbol_table.look vm name with
-                          | None | Some (Functions, UFun (_, _, false)) -> None
+                          | None | Some (Functions, UFun (_, _, (_, false))) ->
+                              None
                           | Some (block, type_) ->
                               Symbol_table.set_read_only vm name ;
                               Some

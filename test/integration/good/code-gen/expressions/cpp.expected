@@ -105,8 +105,6 @@ foo1(const T0__& a, const int& b, const std::vector<T2__>& c,
   const auto& d = to_ref(d_arg__);
   const auto& e = to_ref(e_arg__);
   const auto& f = to_ref(f_arg__);
-  const static bool propto__ = true;
-  (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -129,8 +127,6 @@ foo2(const T0__& a_arg__, const std::vector<Eigen::Matrix<T1__, -1, -1>>& b,
           T1__,
           T2__>;
   const auto& a = to_ref(a_arg__);
-  const static bool propto__ = true;
-  (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -151,8 +147,6 @@ foo3(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
           stan::value_type_t<T1__>>;
   const auto& a = to_ref(a_arg__);
   const auto& b = to_ref(b_arg__);
-  const static bool propto__ = true;
-  (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {

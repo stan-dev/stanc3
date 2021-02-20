@@ -8,7 +8,7 @@ type t =
   | URowVector
   | UMatrix
   | UArray of t
-  | UFun of (autodifftype * t) list * returntype * bool
+  | UFun of (autodifftype * t) list * returntype * (Fun_kind.suffix * bool)
   | UMathLibraryFunction
 
 and autodifftype = DataOnly | AutoDiffable
@@ -41,6 +41,14 @@ let rec unwind_array_type = function
   | UArray ut -> ( match unwind_array_type ut with ut2, d -> (ut2, d + 1) )
   | ut -> (ut, 0)
 
+let make_suffix s args =
+  match s with
+  | Fun_kind.FnPure -> ""
+  | FnRng -> "_rng"
+  | FnTarget -> "_lp"
+  | FnLpdf -> (
+    match args with (_, (UInt | UArray UInt)) :: _ -> "_lpmf" | _ -> "_lpdf" )
+
 let rec pp ppf = function
   | UInt -> pp_keyword ppf "int"
   | UReal -> pp_keyword ppf "real"
@@ -51,8 +59,8 @@ let rec pp ppf = function
       let ut2, d = unwind_array_type ut in
       let array_str = "[" ^ String.make d ',' ^ "]" in
       Fmt.pf ppf "array%s %a" array_str pp ut2
-  | UFun (argtypes, rt, _) ->
-      Fmt.pf ppf {|@[<h>(%a) => %a@]|}
+  | UFun (argtypes, rt, (s, _)) ->
+      Fmt.pf ppf {|@[<h>%s(%a) => %a@]|} (make_suffix s argtypes)
         Fmt.(list pp_fun_arg ~sep:comma)
         argtypes pp_returntype rt
   | UMathLibraryFunction ->
@@ -82,9 +90,9 @@ let check_of_same_type_mod_conv name t1 t2 =
   else
     match (t1, t2) with
     | UReal, UInt -> true
-    | UFun (_, _, false), UFun (_, _, true) -> false
-    | UFun (l1, rt1, _), UFun (l2, rt2, _) -> (
-        rt1 = rt2
+    | UFun (_, _, (_, false)), UFun (_, _, (_, true)) -> false
+    | UFun (l1, rt1, (s1, _)), UFun (l2, rt2, (s2, _)) -> (
+        s1 = s2 && rt1 = rt2
         &&
         match
           List.for_all2
@@ -194,12 +202,12 @@ let pp_sigs ppf tys =
         let ut2, d = unwind_array_type ut in
         let array_str = "[" ^ String.make d ',' ^ "]" in
         Fmt.pf ppf "array%s %a" array_str pp ut2
-    | UFun (tys, rt, _) as t -> (
+    | UFun (tys, rt, (s, _)) as t -> (
       match Map.find !ctx t with
       | Some (id, _) -> Fmt.pf ppf "%s" id
       | None ->
           let id = Fmt.strf "<F%d>" (Map.length !ctx + 1) in
-          ctx := Map.add_exn !ctx ~key:t ~data:(id, (rt, tys)) ;
+          ctx := Map.add_exn !ctx ~key:t ~data:(id, (rt, s, tys)) ;
           Fmt.pf ppf "%s" id )
     | UMathLibraryFunction ->
         (pp_angle_brackets Fmt.string) ppf "Stan Math function"
@@ -214,10 +222,14 @@ let pp_sigs ppf tys =
     Fmt.pf ppf {|(@[<h>%a@]) => %a|}
       Fmt.(list pp_fun_arg ~sep:comma)
       argtypes pp_returntype rt
-  and pp_fun ppf (id, tys) = Fmt.pf ppf {|@[<h>%s = @[<h>%a@]@]|} id pp_fn tys
-  and pp_where ppf fns =
+  and pp_fun ppf (id, (rt, s, argtypes)) =
+    Fmt.pf ppf {|@[<h>%s = @[<h>%s(@[<h>%a@]) => %a@]@]|} id
+      (make_suffix s argtypes)
+      Fmt.(list pp_fun_arg ~sep:comma)
+      argtypes pp_returntype rt
+  and pp_where ppf old =
+    let new_ = Map.filter_keys !ctx ~f:(fun ty -> not (Map.mem old ty)) in
     let old = !ctx in
-    let new_ = Map.filter_keys !ctx ~f:(fun ty -> not (Map.mem fns ty)) in
     if not (Map.is_empty new_) then (
       Fmt.cut ppf () ;
       let compare (_, (id1, _)) (_, (id2, _)) = String.compare id1 id2 in
@@ -243,12 +255,12 @@ let pp_args ppf (fns, tys) =
         let ut2, d = unwind_array_type ut in
         let array_str = "[" ^ String.make d ',' ^ "]" in
         Fmt.pf ppf "array%s %a" array_str pp ut2
-    | UFun (tys, rt, _) as t -> (
+    | UFun (tys, rt, (s, _)) as t -> (
       match Map.find !ctx t with
       | Some (id, _) -> Fmt.pf ppf "%s" id
       | None ->
           let id = Fmt.strf "<F%d>" (Map.length !ctx + 1) in
-          ctx := Map.add_exn !ctx ~key:t ~data:(id, (rt, tys)) ;
+          ctx := Map.add_exn !ctx ~key:t ~data:(id, (rt, s, tys)) ;
           Fmt.pf ppf "%s" id )
     | UMathLibraryFunction ->
         (pp_angle_brackets Fmt.string) ppf "Stan Math function"
@@ -259,14 +271,14 @@ let pp_args ppf (fns, tys) =
   and pp_returntype ppf = function
     | Void -> Fmt.string ppf "void"
     | ReturnType ut -> pp ppf ut
-  and pp_fn ppf (rt, argtypes) =
-    Fmt.pf ppf {|(@[<h>%a@]) => %a|}
+  and pp_fun ppf (id, (rt, s, argtypes)) =
+    Fmt.pf ppf {|@[<h>%s = @[<h>%s(@[<h>%a@]) => %a@]@]|} id
+      (make_suffix s argtypes)
       Fmt.(list pp_fun_arg ~sep:comma)
       argtypes pp_returntype rt
-  and pp_fun ppf (id, tys) = Fmt.pf ppf {|@[<h>%s = @[<h>%a@]@]|} id pp_fn tys
-  and pp_where ppf fns =
+  and pp_where ppf old =
+    let new_ = Map.filter_keys !ctx ~f:(fun ty -> not (Map.mem old ty)) in
     let old = !ctx in
-    let new_ = Map.filter_keys !ctx ~f:(fun ty -> not (Map.mem fns ty)) in
     if not (Map.is_empty new_) then (
       Fmt.cut ppf () ;
       let compare (_, (id1, _)) (_, (id2, _)) = String.compare id1 id2 in

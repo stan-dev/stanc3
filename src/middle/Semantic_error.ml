@@ -123,7 +123,7 @@ module TypeError = struct
                   ( List.hd_exn args :: (AutoDiffable, UInt)
                     :: (AutoDiffable, UInt) :: List.tl_exn args
                   , ReturnType UReal
-                  , false ) ]
+                  , (FnPure, false) ) ]
             ; first; [UInt]; rest ]
         in
         Fmt.pf ppf
@@ -168,7 +168,7 @@ module TypeError = struct
           [ UnsizedType.UFun
               ( Stan_math_signatures.variadic_ode_mandatory_fun_args @ args
               , ReturnType Stan_math_signatures.variadic_ode_fun_return_type
-              , false ) ]
+              , (FnPure, false) ) ]
           @ types Stan_math_signatures.variadic_ode_mandatory_arg_types
           @ optional_tol_args @ types args
         in
@@ -492,8 +492,8 @@ For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
           "Local function is declared without specifying a definition."
     | ImpureClosure ->
         Fmt.pf ppf
-          "Local function cannot have suffix _rng, _lpdf, _lpmf, _lcdf, \
-           _lccdf, or _lp."
+          "Function argument cannot have suffix _rng, _lpdf, _lpmf, _lcdf, \
+           _lccdf, _log, or _lp."
     | RecursiveClosure -> Fmt.pf ppf "Local function cannot be recursive."
     | FunDeclNeedsBlock ->
         Fmt.pf ppf "Function definitions must be wrapped in curly braces."
