@@ -817,7 +817,6 @@ let usings =
 using stan::io::dump;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
-using stan::model::cons_list;
 using stan::model::index_uni;
 using stan::model::index_max;
 using stan::model::index_min;

@@ -7,7 +7,6 @@ namespace basic_model_namespace {
 using stan::io::dump;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
-using stan::model::cons_list;
 using stan::model::index_uni;
 using stan::model::index_max;
 using stan::model::index_min;
@@ -143,8 +142,7 @@ my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
     stan::math::fill(result, DUMMY_VAR__);
     
     current_statement__ = 8;
-    assign(result, nil_index_list(), multiply(x, 5.0),
-      "assigning variable result");
+    assign(result, multiply(x, 5.0), "assigning variable result");
     current_statement__ = 9;
     return result;
   } catch (const std::exception& e) {
@@ -387,7 +385,6 @@ namespace integrate_model_namespace {
 using stan::io::dump;
 using stan::model::model_base_crtp;
 using stan::model::rvalue;
-using stan::model::cons_list;
 using stan::model::index_uni;
 using stan::model::index_max;
 using stan::model::index_min;
@@ -464,9 +461,8 @@ integrand_ode(const T0__& r, const std::vector<T1__>& f,
     current_statement__ = 4;
     x = logit(r);
     current_statement__ = 5;
-    assign(df_dx, cons_list(index_uni(1), nil_index_list()),
-      ((stan::math::exp(-square(x)) * 1) / (r * (1 - r))),
-      "assigning variable df_dx");
+    assign(df_dx, ((stan::math::exp(-square(x)) * 1) / (r * (1 - r))),
+      "assigning variable df_dx", index_uni(1));
     current_statement__ = 6;
     return df_dx;
   } catch (const std::exception& e) {

@@ -168,9 +168,8 @@ let rec pp_index ppf = function
   | MultiIndex e -> pf ppf "index_multi(%a)" pp_expr e
 
 and pp_indexes ppf = function
-  | [] -> pf ppf "nil_index_list()"
-  | idx :: idxs ->
-      pf ppf "@[<hov 2>cons_list(@,%a,@ %a)@]" pp_index idx pp_indexes idxs
+  | [] -> pf ppf ""
+  | idxs -> pf ppf "@[<hov 2>%a@]" (list ~sep:comma pp_index) idxs
 
 and pp_logical_op ppf op lhs rhs =
   pf ppf "(primitive_value(@,%a)@ %s@ primitive_value(@,%a))" pp_expr lhs op
@@ -413,7 +412,7 @@ and pp_compiler_internal_fn ut f ppf es =
   | _ -> gen_fun_app ppf f es
 
 and pp_indexed ppf (vident, indices, pretty) =
-  pf ppf "@[<hov 2>rvalue(@,%s,@ %a,@ %S)@]" vident pp_indexes indices pretty
+  pf ppf "@[<hov 2>rvalue(@,%s,@ %S,@ %a)@]" vident pretty pp_indexes indices
 
 and pp_indexed_simple ppf (obj, idcs) =
   let idx_minus_one = function
@@ -542,7 +541,7 @@ let%expect_test "pp_expr9" =
 
 let%expect_test "pp_expr10" =
   printf "%s" (pp_unlocated (Indexed (dummy_locate (Var "a"), [All]))) ;
-  [%expect {| rvalue(a, cons_list(index_omni(), nil_index_list()), "a") |}]
+  [%expect {| rvalue(a, "a", index_omni()) |}]
 
 let%expect_test "pp_expr11" =
   printf "%s"

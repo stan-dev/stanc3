@@ -145,11 +145,10 @@ let rec pp_statement (ppf : Format.formatter)
             rhs
         | _ -> maybe_deep_copy rhs
       in
-      pf ppf "@[<hov 2>assign(@,%s,@ %a,@ %a,@ %S@]);" assignee pp_indexes idcs
-        pp_expr rhs
-        (strf "assigning variable %s"
-           assignee
-           (* (list ~sep:comma (Pretty.pp_index Pretty.pp_expr_typed_located)) idcs *))
+      pf ppf "@[<hov 2>assign(@,%s,@ %a,@ %S%s%a@]);" assignee pp_expr rhs
+        (strf "assigning variable %s" assignee)
+        (if List.length idcs = 0 then "" else ", ")
+        pp_indexes idcs
   | TargetPE e -> pf ppf "@[<hov 2>lp_accum__.add(@,%a@]);" pp_expr e
   | NRFunApp (CompilerInternal, fname, args)
     when fname = Internal_fun.to_string FnPrint ->
