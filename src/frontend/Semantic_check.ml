@@ -361,6 +361,8 @@ let semantic_check_variadic_ode ~is_cond_dist ~loc id es =
   let optional_tol_mandatory_args =
     if Stan_math_signatures.is_variadic_ode_tol_fn id.name then
       Stan_math_signatures.variadic_ode_tol_arg_types
+    else if id.name = "ode_adjoint" then
+      Stan_math_signatures.variadic_ode_adjoint_arg_types
     else []
   in
   let mandatory_arg_types =
@@ -384,7 +386,7 @@ let semantic_check_variadic_ode ~is_cond_dist ~loc id es =
   | {emeta= {type_= UnsizedType.UFun (fun_args, ReturnType return_type); _}; _}
     :: args ->
       let num_of_mandatory_args =
-        if Stan_math_signatures.is_variadic_ode_tol_fn id.name then 6 else 3
+        List.length optional_tol_mandatory_args + 3
       in
       let mandatory_args, variadic_args =
         List.split_n args num_of_mandatory_args

@@ -95,6 +95,21 @@ let reduce_sum_slice_types =
   List.concat (List.map ~f:base_slice_type reduce_sum_allowed_dimensionalities)
 
 (* Variadic ODE *)
+let variadic_ode_adjoint_arg_types =
+  [ (UnsizedType.AutoDiffable, UnsizedType.UReal) (* real rel_tol_f *)
+  ; (AutoDiffable, UVector) (* vector abs_tol_f *)
+  ; (AutoDiffable, UReal) (* real rel_tol_b *)
+  ; (AutoDiffable, UReal) (* real abs_tol_b *)
+  ; (AutoDiffable, UReal) (* real rel_tol_q *)
+  ; (AutoDiffable, UReal) (* real abs_tol_q *)
+  ; (DataOnly, UInt) (* int max_num_steps *)
+  ; (DataOnly, UInt) (* int num_checkpoints *)
+  ; (DataOnly, UInt) (* int interpolation_polynomial *)
+  ; (DataOnly, UInt) (* int solver_f *)
+  ; (DataOnly, UInt)
+  (* int solver_b *)
+   ]
+
 let variadic_ode_tol_arg_types =
   [ (UnsizedType.AutoDiffable, UnsizedType.UReal)
   ; (AutoDiffable, UReal); (DataOnly, UInt) ]
@@ -163,7 +178,7 @@ let reduce_sum_functions =
 let variadic_ode_functions =
   String.Set.of_list
     [ "ode_bdf_tol"; "ode_rk45_tol"; "ode_adams_tol"; "ode_bdf"; "ode_rk45"
-    ; "ode_adams" ]
+    ; "ode_adams"; "ode_adjoint" ]
 
 let ode_tolerances_suffix = "_tol"
 let is_reduce_sum_fn f = Set.mem reduce_sum_functions f

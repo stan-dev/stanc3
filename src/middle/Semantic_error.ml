@@ -157,6 +157,8 @@ module TypeError = struct
         let optional_tol_args =
           if Stan_math_signatures.is_variadic_ode_tol_fn name then
             types Stan_math_signatures.variadic_ode_tol_arg_types
+          else if name = "ode_adjoint" then
+            types Stan_math_signatures.variadic_ode_adjoint_arg_types
           else []
         in
         let generate_ode_sig =
@@ -178,6 +180,8 @@ module TypeError = struct
           let optional_tol_args =
             if Stan_math_signatures.is_variadic_ode_tol_fn name then
               types Stan_math_signatures.variadic_ode_tol_arg_types
+            else if name = "ode_adjoint" then
+              types Stan_math_signatures.variadic_ode_adjoint_arg_types
             else []
           in
           match
