@@ -131,15 +131,14 @@ let suffix_args f =
 
 let demangle_unnormalized_name udf f =
   if f = "multiply_log" || f = "binomial_coefficient_log" then f
-  else if Utils.is_unnormalized_distribution f then
+  else if Utils.is_unnormalized_distribution f || (udf && is_user_lp f) then
     Utils.stdlib_distribution_name f ^ "<propto__>"
-  else if
-    Utils.is_distribution_name f || (udf && (is_user_dist f || is_user_lp f))
-  then f ^ "<false>"
+  else if Utils.is_distribution_name f || (udf && is_user_dist f) then
+    f ^ "<false>"
   else f
 
 let demangle_unnormalized_closure f =
-  if Utils.is_unnormalized_distribution f then
+  if Utils.is_unnormalized_distribution f || is_user_lp f then
     Utils.stdlib_distribution_name f ^ ".template operator()<propto__>"
   else if Utils.is_distribution_name f then f ^ ".template operator()<false>"
   else f

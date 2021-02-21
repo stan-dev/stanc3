@@ -286,6 +286,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
                                const bool emit_transformed_parameters__ = true,
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
+    const static bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);

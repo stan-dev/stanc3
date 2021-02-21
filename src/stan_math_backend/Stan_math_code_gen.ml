@@ -358,7 +358,9 @@ let pp_closure ppf (fdrt, fdname, fdsuffix, fdcaptures, fdargs) =
       | FnLpdf | FnPure -> ["pstream__"]
     in
     let sfx =
-      match fdsuffix with FnLpdf -> "_impl__<propto__>" | _ -> "_impl__"
+      match fdsuffix with
+      | FnLpdf | FnTarget -> "_impl__<propto__>"
+      | FnPure | FnRng -> "_impl__"
     in
     pf ppf "%a const @,{@,return %a;@,}" pp_sig
       (fdrt, "operator()", fdargs)
@@ -434,8 +436,8 @@ let pp_closure ppf (fdrt, fdname, fdsuffix, fdcaptures, fdargs) =
       if fdsuffix = FnLpdf then
         pf ppf
           "template<bool propto>@ auto with_propto() {@ return \
-           stan::math::lpdf_wrapper<@[<hov>propto, %s%a, true@]>(*this);@ }@ auto \
-           copy_of__() {@ return CopyOf__(@[<hov>%a@]);@ }"
+           stan::math::lpdf_wrapper<@[<hov>propto, %s%a, true@]>(*this);@ }@ \
+           auto copy_of__() {@ return CopyOf__(@[<hov>%a@]);@ }"
           clsname pp_template false (list ~sep:comma string)
           (List.map ~f:(fun (_, _, x, _) -> x) fdcaptures)
     in
@@ -458,7 +460,8 @@ let pp_closure ppf (fdrt, fdname, fdsuffix, fdcaptures, fdargs) =
     if not (List.is_empty templates) then
       pf ppf "<%a>" (list ~sep:comma string) ("false" :: templates)
   in
-  pf ppf "@[<v>%aauto %s_make__(@[<hov>%a@]) {@ return %s%a(@[<hov>%a@]);@ }@]@,"
+  pf ppf
+    "@[<v>%aauto %s_make__(@[<hov>%a@]) {@ return %s%a(@[<hov>%a@]);@ }@]@,"
     pp_make_template () fdname (list ~sep:comma string) ctor_args clsname
     pp_types () (list ~sep:comma string)
     (List.map ~f:(fun (_, _, id, _) -> id) fdcaptures)
@@ -476,11 +479,7 @@ let pp_forward_decl funs_used_in_reduce_sum ppf
       if fdbody <> None then (
         if Set.mem funs_used_in_reduce_sum fdname then
           pp_rs_functor ppf (fdrt, fdname, fdargs) ;
-        if
-          not
-            ( is_user_lp fdname || is_user_dist fdname
-            || String.is_suffix fdname ~suffix:"_rng" )
-        then
+        if fdsuffix = FnPure then
           pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
             functor_suffix pp_opsig
             (fdrt, "operator()", fdargs)
@@ -513,13 +512,13 @@ let get_impl = function
 (* Creates functions outside the model namespaces which only call the ones
    inside the namespaces *)
 let pp_standalone_fun_def namespace_fun ppf
-    Program.({fdname; fdargs; fdbody; fdrt; _}) =
+    Program.({fdname; fdargs; fdsuffix; fdbody; fdrt; _}) =
   let extra, extra_templates =
-    if is_user_lp fdname then
-      (["lp__"; "lp_accum__"], ["double"; "stan::math::accumulator<double>"])
-    else if String.is_suffix fdname ~suffix:"_rng" then
-      (["base_rng__"], ["boost::ecuyer1988"])
-    else ([], [])
+    match fdsuffix with
+    | FnTarget ->
+        (["lp__"; "lp_accum__"], ["double"; "stan::math::accumulator<double>"])
+    | FnRng -> (["base_rng__"], ["boost::ecuyer1988"])
+    | FnLpdf | FnPure -> ([], [])
   in
   let args =
     List.map
@@ -546,7 +545,7 @@ let pp_standalone_fun_def namespace_fun ppf
       pf ppf "@,%s@,%s %s%a @,{@, %s%s::%a;@,}@," mark_function_comment
         return_type fdname pp_sig_standalone "" return_stmt namespace_fun
         pp_call_str
-        ( ( if is_user_dist fdname || is_user_lp fdname then fdname ^ "<false>"
+        ( ( if fdsuffix = FnLpdf || fdsuffix = FnTarget then fdname ^ "<false>"
           else fdname )
         , List.map ~f:(fun (_, name, _) -> name) fdargs @ extra @ ["pstream__"]
         )
@@ -717,7 +716,8 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
   in
   let intro ppf () =
     pf ppf "%a@ %a@ %a" (list ~sep:cut string)
-      [ "using local_scalar_t__ = double;"; "vars__.resize(0);"
+      [ "const static bool propto__ = true;"; "(void) propto__;"
+      ; "using local_scalar_t__ = double;"; "vars__.resize(0);"
       ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
       ; "double lp__ = 0.0;"
       ; "(void) lp__;  // dummy to suppress unused var warning"

@@ -408,7 +408,6 @@ module StatementError = struct
     | FunDeclExists of string
     | FunDeclNoDefn
     | ClosureNoDefn
-    | ImpureClosure
     | RecursiveClosure
     | FunDeclNeedsBlock
     | NonRealProbFunDef
@@ -490,10 +489,6 @@ For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
     | ClosureNoDefn ->
         Fmt.pf ppf
           "Local function is declared without specifying a definition."
-    | ImpureClosure ->
-        Fmt.pf ppf
-          "Function argument cannot have suffix _rng, _lpdf, _lpmf, _lcdf, \
-           _lccdf, _log, or _lp."
     | RecursiveClosure -> Fmt.pf ppf "Local function cannot be recursive."
     | FunDeclNeedsBlock ->
         Fmt.pf ppf "Function definitions must be wrapped in curly braces."
@@ -736,8 +731,6 @@ let fn_decl_needs_block loc =
 
 let non_real_prob_fn_def loc =
   StatementError (loc, StatementError.NonRealProbFunDef)
-
-let impure_closure loc = StatementError (loc, StatementError.ImpureClosure)
 
 let recursive_closure loc =
   StatementError (loc, StatementError.RecursiveClosure)

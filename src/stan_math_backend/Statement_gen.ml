@@ -115,7 +115,7 @@ let rec pp_statement (ppf : Format.formatter)
   | Assignment
       ( (vident, UFun _, [])
       , ({meta= {type_= UFun (_, _, (FnLpdf, true)); _}; _} as rhs) ) ->
-      pf ppf "@[<hov 4>auto %s = %a;@]" vident pp_expr rhs ;
+      pf ppf "@[<hov 4>auto %s = %a;@]" vident pp_expr rhs
   | Assignment ((vident, UFun _, []), ({meta= {type_= UFun _; _}; _} as rhs))
     ->
       pf ppf "@[<hov 4>auto %s = %a;@]" vident pp_expr rhs

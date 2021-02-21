@@ -21,6 +21,17 @@ let rec iterate_n f x = function
   | n -> iterate_n f (f x) (n - 1)
 let nest_unsized_array basic_type n =
   iterate_n (fun t -> UnsizedType.UArray t) basic_type n
+
+let fix_argtypes =
+  let open UnsizedType in
+  let suffix = Fun_kind.suffix_from_name in
+  let f (ad, ut, id) =
+    match ut with
+    | UFun (a, r, (FnPure, true)) ->
+        (ad, UFun (a, r, (suffix id.name, true)), id)
+    | ut -> (ad, ut, id)
+  in
+  List.map ~f
 %}
 
 %token FUNCTIONBLOCK DATABLOCK TRANSFORMEDDATABLOCK PARAMETERSBLOCK
@@ -180,7 +191,7 @@ function_def:
     {
       grammar_logger "function_def" ;
       {stmt=FunDef {returntype = rt; funname = name;
-                    captures = None; arguments = args; body=b;};
+                    captures = None; arguments = fix_argtypes args; body=b;};
        smeta={loc=Location_span.of_positions_exn $loc}
       }
     }
@@ -191,7 +202,7 @@ closure_def:
     {
       grammar_logger "function_def" ;
       {stmt=FunDef {returntype = rt; funname = name;
-                    captures = Some (); arguments = args; body=b;};
+                    captures = Some (); arguments = fix_argtypes args; body=b;};
        smeta={loc=Location_span.of_positions_exn $loc}
       }
     }

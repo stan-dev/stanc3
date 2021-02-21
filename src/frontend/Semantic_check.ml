@@ -1651,16 +1651,6 @@ and semantic_check_fundef_decl ~loc ~is_closure id body =
         Symbol_table.set_is_assigned vm id.name ;
         ok ())
 
-and semantic_check_closure_id ~is_closure id =
-  if not is_closure then Validate.ok ()
-  else
-    let f suffix = not (String.is_suffix ~suffix id.name) in
-    if
-      List.for_all ~f
-        ["_rng"; "_lpdf"; "_lpmf"; "_lcdf"; "_lccdf"; "_log"; "_lp"]
-    then Validate.ok ()
-    else Validate.error @@ Semantic_error.impure_closure id.id_loc
-
 and semantic_check_fundef_dist_rt ~loc id return_ty =
   Validate.(
     let is_dist =
@@ -1771,12 +1761,18 @@ and semantic_check_fundef ~loc ~cf ~is_closure return_ty id args body =
                (semantic_check_pmf_fundef_first_arg_ty ~loc id uarg_types)
           >>= fun () ->
           List.map
-            ~f:(fun (_, ut, x) ->
-              check_fresh_variable x false
-              |> apply_const
-                   (semantic_check_closure_id
-                      ~is_closure:(UnsizedType.is_fun_type ut)
-                      x) )
+            ~f:(fun (_, ut, id) ->
+              match ut with
+              | UFun (uarg_types, _, (FnLpdf, _)) ->
+                  check_fresh_variable id true
+                  |> apply_const
+                       (semantic_check_pdf_fundef_first_arg_ty ~loc:id.id_loc
+                          id uarg_types)
+                  |> apply_const
+                       (semantic_check_pmf_fundef_first_arg_ty ~loc:id.id_loc
+                          id uarg_types)
+              | UFun _ -> check_fresh_variable id true
+              | _ -> check_fresh_variable id false )
             uargs
           |> sequence
           |> map ~f:(List.iter ~f:Fn.id)
