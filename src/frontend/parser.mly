@@ -508,7 +508,7 @@ lhs:
                          ^ " in from tuple index. This should never happen,"
                          ^ " please file a bug."))
       | Some ix ->
-         {expr= TupleIndexed (l, ix)
+         {expr= IndexedTuple (l, ix)
          ;emeta={loc=Location_span.of_positions_exn $loc }}
     }
 
@@ -641,7 +641,7 @@ common_expression:
           raise (Failure ("Could not parse integer from string " ^ ix_str
                           ^ " in from tuple index. This should never happen."))
        | Some ix ->
-          TupleIndexed ({expr=e;
+          IndexedTuple ({expr=e;
                          emeta=
                            {loc= Location_span.of_positions_exn $loc}},
                         ix)

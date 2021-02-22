@@ -136,7 +136,7 @@ and pp_expression ppf {expr= e_content; _} =
     match l with
     | [] -> Fmt.pf ppf "%a" pp_expression e
     | l -> Fmt.pf ppf "%a[%a]" pp_expression e pp_list_of_indices l )
-  | TupleIndexed (e, i) -> Fmt.pf ppf "%a.%d" pp_expression e i
+  | IndexedTuple (e, i) -> Fmt.pf ppf "%a.%d" pp_expression e i
   | TupleExpr es ->
       Fmt.pf ppf "(" ;
       with_box ppf 0 (fun () -> Fmt.pf ppf "%a)" pp_list_of_expression es)

@@ -39,7 +39,7 @@ type ('e, 'f) expression =
   | RowVectorExpr of 'e list
   | Paren of 'e
   | Indexed of 'e * 'e index list
-  | TupleIndexed of 'e * int
+  | IndexedTuple of 'e * int
   | TupleExpr of 'e list
 [@@deriving sexp, hash, compare, map, fold]
 
@@ -102,6 +102,7 @@ type 'e printable = PString of string | PExpr of 'e
 type ('l, 'e) lvalue =
   | LVariable of identifier
   | LIndexed of 'l * 'e index list
+  | LIndexedTuple of 'l * int
 [@@deriving sexp, hash, compare, map, fold]
 
 type ('e, 'm) lval_with = {lval: (('e, 'm) lval_with, 'e) lvalue; lmeta: 'm}
@@ -258,7 +259,9 @@ let rec expr_of_lvalue {lval; lmeta} =
   { expr=
       ( match lval with
       | LVariable s -> Variable s
-      | LIndexed (l, i) -> Indexed (expr_of_lvalue l, i) )
+      | LIndexed (l, i) -> Indexed (expr_of_lvalue l, i)
+      | LIndexedTuple (l, i) -> IndexedTuple (expr_of_lvalue l, i)
+      )
   ; emeta= lmeta }
 
 let rec lvalue_of_expr {expr; emeta} =
@@ -267,10 +270,17 @@ let rec lvalue_of_expr {expr; emeta} =
       | Variable s -> LVariable s
       | Indexed (l, i) -> LIndexed (lvalue_of_expr l, i)
       (* TUPLE STUB *)
-      | TupleIndexed (_, _) ->
-          failwith "Cannot yet use a tuple index on the LHS"
+      | IndexedTuple (l, i) ->
+        LIndexedTuple (lvalue_of_expr l, i)
+          (* failwith "Cannot yet use a tuple index on the LHS" *)
       | _ -> failwith "Trying to convert illegal expression to lval." )
   ; lmeta= emeta }
 
 let rec id_of_lvalue {lval; _} =
-  match lval with LVariable s -> s | LIndexed (l, _) -> id_of_lvalue l
+  match lval with
+  | LVariable s -> s
+  | LIndexed (l, _) -> id_of_lvalue l
+  (* TUPLE MAYBE id_of_lvalue
+   * What does this function do?
+   *)
+  | LIndexedTuple (l, _) -> id_of_lvalue l

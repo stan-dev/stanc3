@@ -116,9 +116,9 @@ let rec no_parens {expr; emeta} =
                   | i -> map_index keep_parens i)
                 l )
       ; emeta }
-  | TupleIndexed (e, i) ->
+  | IndexedTuple (e, i) ->
       {expr= (* TUPLE MAYBE *)
-             TupleIndexed (keep_parens e, i); emeta}
+         IndexedTuple (keep_parens e, i); emeta}
   | ArrayExpr _ | RowVectorExpr _ | FunApp _ | TupleExpr _ | CondDistApp _ ->
       {expr= map_expression no_parens ident expr; emeta}
 

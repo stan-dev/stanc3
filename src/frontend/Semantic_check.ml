@@ -807,7 +807,7 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
              mk_typed_expression ~expr:(Paren ue) ~ad_level:ue.emeta.ad_level
                ~type_:ue.emeta.type_ ~loc:emeta.loc )
   | Indexed (e, indices) -> semantic_check_indexed ~loc:emeta.loc ~cf e indices
-  | TupleIndexed (e, i) -> (
+  | IndexedTuple (e, i) -> (
       Validate.(
         semantic_check_expression cf e
         >>= fun typed ->
@@ -816,7 +816,7 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
           match (List.nth ts (i - 1), List.nth ads (i - 1)) with
           | Some t, Some ad ->
               mk_typed_expression
-                ~expr:(TupleIndexed (typed, i))
+                ~expr:(IndexedTuple (typed, i))
                 ~ad_level:ad ~type_:t ~loc:emeta.loc
               |> ok
           | None, None ->

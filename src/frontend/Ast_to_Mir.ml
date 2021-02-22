@@ -85,7 +85,7 @@ and trans_expr {Ast.expr; Ast.emeta} =
       |> ewrap
   | Indexed (lhs, indices) ->
       Indexed (trans_expr lhs, List.map ~f:trans_idx indices) |> ewrap
-  | TupleIndexed (lhs, i) -> TupleIndexed (trans_expr lhs, i) |> ewrap
+  | IndexedTuple (lhs, i) -> TupleIndexed (trans_expr lhs, i) |> ewrap
   | TupleExpr eles ->
       (* TUPLE MAYBE IMPL *)
       FunApp (CompilerInternal, "std::make_tuple", trans_exprs eles)
@@ -575,6 +575,9 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       let rec get_lhs_base = function
         | {Ast.lval= Ast.LIndexed (l, _); _} -> get_lhs_base l
         | {lval= LVariable s; lmeta} -> (s, lmeta)
+        (* TUPLE MAYBE get_lhs_base
+         * Guessed because I don't know how this function is used *)
+        | {lval= LIndexedTuple (l, _); _} -> get_lhs_base l
       in
       let assign_identifier, lmeta = get_lhs_base assign_lhs in
       let id_ad_level = lmeta.Ast.ad_level in
@@ -584,6 +587,10 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       let rec get_lhs_indices = function
         | {Ast.lval= Ast.LIndexed (l, i); _} -> get_lhs_indices l @ i
         | {Ast.lval= Ast.LVariable _; _} -> []
+        (* TUPLE STUB get_lhs_indices
+         * This is certainly wrong, I'm going to have to overhaul the indexing system
+        *)
+        | {Ast.lval= Ast.LIndexedTuple (_, _); _} -> []
       in
       let assign_indices = get_lhs_indices assign_lhs in
       let assignee =
