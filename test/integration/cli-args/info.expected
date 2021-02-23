@@ -16,7 +16,17 @@
                   "p": { "type": "real", "dimensions": 2},
                   "q": { "type": "real", "dimensions": 2},
                   "r": { "type": "real", "dimensions": 2},
-                  "s": { "type": "real", "dimensions": 2} },
+                  "s": { "type": "real", "dimensions": 2},
+                  "y": { "type": "real", "dimensions": 0} },
   "transformed parameters": { "t": { "type": "real", "dimensions": 2} },
-  "generated quantities": { "u": { "type": "real", "dimensions": 0} } }
+  "generated quantities": { "u": { "type": "real", "dimensions": 0} },
+  "functions": [ "log",
+                 "reduce_sum",
+                 "sin",
+                 "square" ],
+  "distributions": [ "dirichlet_lupdf",
+                     "normal_lccdf",
+                     "normal_lcdf",
+                     "normal_lpdf",
+                     "std_normal_lupdf" ] }
 
