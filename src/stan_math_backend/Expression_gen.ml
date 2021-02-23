@@ -347,6 +347,28 @@ and gen_fun_app ppf fname es =
       | true, x, f :: y0 :: t0 :: ts :: tl
         when Stan_math_signatures.is_variadic_ode_fn x ->
           (fname, f :: y0 :: t0 :: ts :: msgs :: tl)
+      | ( true
+        , x
+        , f
+          :: y0
+             :: t0
+                :: ts
+                   :: rel_tol
+                      :: abs_tol
+                         :: rel_tol_b
+                            :: abs_tol_b
+                               :: rel_tol_q
+                                  :: abs_tol_q
+                                     :: max_num_steps
+                                        :: num_checkpoints
+                                           :: interpolation_polynomial
+                                              :: solver_f :: solver_b :: tl )
+        when x = "ode_adjoint" ->
+          ( fname
+          , f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: rel_tol_b :: abs_tol_b
+            :: rel_tol_q :: abs_tol_q :: max_num_steps :: num_checkpoints
+            :: interpolation_polynomial :: solver_f :: solver_b :: msgs :: tl
+          )
       | true, "map_rect", {pattern= FunApp (_, f, _); _} :: tl ->
           let next_map_rect_id = Hashtbl.length map_rect_calls + 1 in
           Hashtbl.add_exn map_rect_calls ~key:next_map_rect_id ~data:f ;
