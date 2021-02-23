@@ -166,9 +166,16 @@ let functor_suffix_select hof =
 
 let wrap_fn f =
   match Expr.(f.Fixed.meta.Typed.Meta.type_) with
-  | UFun (args, rt, (_, false)) ->
-      { Expr.Fixed.meta= {f.meta with type_= UFun (args, rt, (FnPure, true))}
-      ; pattern= FunApp (StanLib, "from_lambda", [f]) }
+  | UFun (args, rt, (suffix, false)) ->
+      let wrapper =
+        match suffix with
+        | FnPure -> "from_lambda"
+        | FnLpdf -> "lpdf_from_lambda"
+        | FnRng -> "rng_from_lambda"
+        | FnTarget -> "lp_from_lambda"
+      in
+      { Expr.Fixed.meta= {f.meta with type_= UFun (args, rt, (suffix, true))}
+      ; pattern= FunApp (StanLib, wrapper, [f]) }
   | _ -> f
 
 let rec pp_index ppf = function

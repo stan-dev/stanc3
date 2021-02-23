@@ -122,13 +122,46 @@ typename T_lp_accum__>
 void
 test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
         std::ostream* pstream__) ;
+
+struct test_lp_functor__ {
+template <bool propto__, typename T0__, typename T_lp__,
+typename T_lp_accum__>
+void
+operator()(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
+           std::ostream* pstream__)  const 
+{
+return test_lp(a, pstream__);
+}
+};
+
 template <typename T0__, typename RNG>
 stan::promote_args_t<T0__>
 test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) ;
+
+struct test_rng_functor__ {
+template <typename T0__, typename RNG>
+stan::promote_args_t<T0__>
+operator()(const T0__& a, RNG& base_rng__, std::ostream* pstream__)  const 
+{
+return test_rng(a, pstream__);
+}
+};
+
 template <bool propto__, typename T0__, typename T1__>
 stan::promote_args_t<T0__,
 T1__>
 test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) ;
+
+struct test_lpdf_functor__ {
+template <bool propto__, typename T0__, typename T1__>
+stan::promote_args_t<T0__,
+T1__>
+operator()(const T0__& a, const T1__& b, std::ostream* pstream__)  const 
+{
+return test_lpdf<propto__>(a, b, pstream__);
+}
+};
+
 template <typename T0__>
 stan::promote_args_t<T0__>
 my_log1p_exp(const T0__& x, std::ostream* pstream__) {

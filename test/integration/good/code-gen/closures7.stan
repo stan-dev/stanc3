@@ -1,4 +1,22 @@
+functions {
+    real ff_lpdf(real x) {
+        real s = std_normal_lupdf(0|);
+        return x;
+    }
+    real ff_rng(real x) {
+        real s = std_normal_rng();
+        return x;
+    }
+    real ff_lp(real x) {
+        real s = target();
+        return x;
+    }
+}
 transformed data {
+    functions
+    void hof(real(real) s_rng,real(real) s_lpdf, real(real) s_lp) {}
+    hof(ff_rng,ff_lpdf,ff_lp);
+
     functions
     real foo_rng(real(real) bar_lpdf) {
         return bar_lpdf(1);

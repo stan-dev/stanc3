@@ -12049,6 +12049,21 @@ js_super_lp(const std::vector<std::vector<int>>& y,
             const T3__& p, const T4__& phi, const T5__& psi, const T6__& nu,
             const T7__& chi, T_lp__& lp__, T_lp_accum__& lp_accum__,
             std::ostream* pstream__) ;
+
+struct js_super_lp_functor__ {
+template <bool propto__, typename T3__, typename T4__, typename T5__,
+typename T6__, typename T7__, typename T_lp__, typename T_lp_accum__>
+void
+operator()(const std::vector<std::vector<int>>& y,
+           const std::vector<int>& first, const std::vector<int>& last,
+           const T3__& p, const T4__& phi, const T5__& psi, const T6__& nu,
+           const T7__& chi, T_lp__& lp__, T_lp_accum__& lp_accum__,
+           std::ostream* pstream__)  const 
+{
+return js_super_lp(y, first, last, p, phi, psi, nu, chi, pstream__);
+}
+};
+
 int
 first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
@@ -21207,6 +21222,21 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
                const T3__& p, const T4__& phi, const T5__& gamma,
                const T6__& chi, T_lp__& lp__, T_lp_accum__& lp_accum__,
                std::ostream* pstream__) ;
+
+struct jolly_seber_lp_functor__ {
+template <bool propto__, typename T3__, typename T4__, typename T5__,
+typename T6__, typename T_lp__, typename T_lp_accum__>
+void
+operator()(const std::vector<std::vector<int>>& y,
+           const std::vector<int>& first, const std::vector<int>& last,
+           const T3__& p, const T4__& phi, const T5__& gamma,
+           const T6__& chi, T_lp__& lp__, T_lp_accum__& lp_accum__,
+           std::ostream* pstream__)  const 
+{
+return jolly_seber_lp(y, first, last, p, phi, gamma, chi, pstream__);
+}
+};
+
 template <typename T0__>
 Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
 seq_cprob(const T0__& gamma, std::ostream* pstream__) ;
@@ -28565,12 +28595,43 @@ template <bool propto__, typename T0__, typename T1__>
 stan::promote_args_t<T0__,
 T1__>
 foo_lpdf(const T0__& x, const T1__& mu, std::ostream* pstream__) ;
+
+struct foo_lpdf_functor__ {
+template <bool propto__, typename T0__, typename T1__>
+stan::promote_args_t<T0__,
+T1__>
+operator()(const T0__& x, const T1__& mu, std::ostream* pstream__)  const 
+{
+return foo_lpdf<propto__>(x, mu, pstream__);
+}
+};
+
 template <bool propto__, typename T1__>
 stan::promote_args_t<T1__>
 bar_lpmf(const int& n, const T1__& mu, std::ostream* pstream__) ;
+
+struct bar_lpmf_functor__ {
+template <bool propto__, typename T1__>
+stan::promote_args_t<T1__>
+operator()(const int& n, const T1__& mu, std::ostream* pstream__)  const 
+{
+return bar_lpmf<propto__>(n, mu, pstream__);
+}
+};
+
 template <bool propto__, typename T0__>
 stan::promote_args_t<T0__>
 baz_lpdf(const T0__& x, std::ostream* pstream__) ;
+
+struct baz_lpdf_functor__ {
+template <bool propto__, typename T0__>
+stan::promote_args_t<T0__>
+operator()(const T0__& x, std::ostream* pstream__)  const 
+{
+return baz_lpdf<propto__>(x, pstream__);
+}
+};
+
 template <bool propto__, typename T0__, typename T1__>
 stan::promote_args_t<T0__,
 T1__>
@@ -31161,6 +31222,18 @@ typename T_lp_accum__>
 void
 nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
          std::ostream* pstream__) ;
+
+struct nrfun_lp_functor__ {
+template <bool propto__, typename T0__, typename T_lp__,
+typename T_lp_accum__>
+void
+operator()(const T0__& x, const int& y, T_lp__& lp__,
+           T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
+{
+return nrfun_lp(x, y, pstream__);
+}
+};
+
 int
 rfun(const int& y, std::ostream* pstream__) ;
 
@@ -31175,6 +31248,16 @@ return rfun(y, pstream__);
 template <bool propto__, typename T_lp__, typename T_lp_accum__>
 int
 rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) ;
+
+struct rfun_lp_functor__ {
+template <bool propto__, typename T_lp__, typename T_lp_accum__>
+int
+operator()(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
+{
+return rfun_lp(pstream__);
+}
+};
+
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
 void

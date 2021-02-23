@@ -469,23 +469,18 @@ let pp_closure ppf (fdrt, fdname, fdsuffix, fdcaptures, fdargs) =
 let pp_forward_decl funs_used_in_reduce_sum ppf
     Program.({fdrt; fdname; fdsuffix; fdcaptures; fdargs; fdbody; _}) =
   let pp_sig = pp_signature fdsuffix false None in
-  let pp_opsig =
-    let suffix = if fdsuffix <> FnLpdf then fdsuffix else FnPure in
-    pp_signature suffix false None
-  in
   match fdcaptures with
   | None ->
       pf ppf "%a;" pp_sig (fdrt, fdname, fdargs) ;
       if fdbody <> None then (
         if Set.mem funs_used_in_reduce_sum fdname then
           pp_rs_functor ppf (fdrt, fdname, fdargs) ;
-        if fdsuffix = FnPure then
-          pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
-            functor_suffix pp_opsig
-            (fdrt, "operator()", fdargs)
-            pp_call_str
-            ( fdname
-            , List.map ~f:(fun (_, name, _) -> name) fdargs @ ["pstream__"] ) )
+        pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
+          functor_suffix pp_sig
+          (fdrt, "operator()", fdargs)
+          pp_call_str
+          ( (if fdsuffix = FnLpdf then fdname ^ "<propto__>" else fdname)
+          , List.map ~f:(fun (_, name, _) -> name) fdargs @ ["pstream__"] ) )
   | Some captures ->
       pf ppf "%a ;" pp_sig
         (fdrt, fdname ^ "_impl__", Program.captures_to_args captures @ fdargs) ;
