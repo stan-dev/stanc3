@@ -155,10 +155,10 @@ module TypeError = struct
     | IllTypedVariadicODE (name, arg_tys, args) ->
         let types x = List.map ~f:snd x in
         let optional_tol_args =
-          if Stan_math_signatures.is_variadic_ode_tol_fn name then
-            types Stan_math_signatures.variadic_ode_tol_arg_types
-          else if name = "ode_adjoint" || name = "ode_adjoint_tol" then
+          if Stan_math_signatures.is_variadic_ode_adjoint_fn name then
             types Stan_math_signatures.variadic_ode_adjoint_arg_types
+          else if Stan_math_signatures.is_variadic_ode_tol_fn name then
+            types Stan_math_signatures.variadic_ode_tol_arg_types
           else []
         in
         let generate_ode_sig =
@@ -178,10 +178,10 @@ module TypeError = struct
             (with explicit types for variadic args). *)
         let variadic_ode_generic_signature =
           let optional_tol_args =
-            if Stan_math_signatures.is_variadic_ode_tol_fn name then
-              types Stan_math_signatures.variadic_ode_tol_arg_types
-            else if name = "ode_adjoint" || name = "ode_adjoint_tol" then
+            if Stan_math_signatures.is_variadic_ode_adjoint_fn name then
               types Stan_math_signatures.variadic_ode_adjoint_arg_types
+            else if Stan_math_signatures.is_variadic_ode_tol_fn name then
+              types Stan_math_signatures.variadic_ode_tol_arg_types
             else []
           in
           match

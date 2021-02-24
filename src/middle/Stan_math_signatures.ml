@@ -175,14 +175,17 @@ let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
 let reduce_sum_functions =
   String.Set.of_list ["reduce_sum"; "reduce_sum_static"]
 
-let variadic_ode_functions =
+let variadic_ode_adjoint = String.Set.of_list ["ode_adjoint"; "ode_adjoint_tol"]
+
+let variadic_ode_basic_functions =
   String.Set.of_list
     [ "ode_bdf_tol"; "ode_rk45_tol"; "ode_adams_tol"; "ode_bdf"; "ode_rk45"
-    ; "ode_adams"; "ode_adjoint"; "ode_adjoint_tol" ]
+    ; "ode_adams"]
 
 let ode_tolerances_suffix = "_tol"
 let is_reduce_sum_fn f = Set.mem reduce_sum_functions f
-let is_variadic_ode_fn f = Set.mem variadic_ode_functions f
+let is_variadic_ode_fn f = Set.mem variadic_ode_basic_functions f || Set.mem variadic_ode_adjoint f
+let is_variadic_ode_adjoint_fn f = Set.mem variadic_ode_adjoint f
 
 let is_variadic_ode_tol_fn f =
   is_variadic_ode_fn f && String.is_suffix f ~suffix:ode_tolerances_suffix
