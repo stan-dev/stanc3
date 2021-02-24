@@ -13,7 +13,7 @@ module Fixed : sig
       | EAnd of 'a * 'a
       | EOr of 'a * 'a
       | Indexed of 'a * 'a Index.t list
-      | TupleIndexed of 'a * int
+      | IndexedTuple of 'a * int
     [@@deriving sexp, hash, compare]
 
     include Pattern.S with type 'a t := 'a t

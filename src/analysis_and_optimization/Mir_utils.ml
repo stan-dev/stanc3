@@ -258,7 +258,7 @@ let rec expr_var_set Expr.Fixed.({pattern; meta}) =
   | TernaryIf (expr1, expr2, expr3) -> union_recur [expr1; expr2; expr3]
   | Indexed (expr, ix) ->
       Set.Poly.union_list (expr_var_set expr :: List.map ix ~f:index_var_set)
-  | TupleIndexed (expr, _) -> expr_var_set expr
+  | IndexedTuple (expr, _) -> expr_var_set expr
   | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
 
 and index_var_set ix =
@@ -276,7 +276,7 @@ let stmt_rhs stmt =
   | NRFunApp (_, _, exprs) -> Set.Poly.of_list exprs
   | IfElse (rhs, _, _)
    |While (rhs, _)
-   |Assignment (_, rhs)
+   |Assignment (_, _, rhs)
    |TargetPE rhs
    |Return (Some rhs) ->
       Set.Poly.singleton rhs
@@ -322,7 +322,9 @@ let fn_subst_idx m = Index.map (fn_subst_expr m)
 let fn_subst_stmt_base_helper g h b =
   Stmt.Fixed.Pattern.(
     match b with
-    | Assignment ((x, ut, l), e2) -> Assignment ((x, ut, List.map ~f:h l), g e2)
+    | Assignment (LIndexed (x, l), ut, e2) ->
+        Assignment (LIndexed (x, List.map ~f:h l), ut, g e2)
+    | Assignment (lhs, ut, e2) -> Assignment (lhs, ut, g e2)
     | x -> map g (fun y -> y) x)
 
 let fn_subst_stmt_base m =
@@ -377,7 +379,7 @@ let rec expr_depth Expr.Fixed.({pattern; _}) =
       1
       + Option.value ~default:0
           (List.max_elt ~compare:compare_int (List.map ~f:expr_depth [e1; e2]))
-  | TupleIndexed (e, _) -> 1 + expr_depth e
+  | IndexedTuple (e, _) -> 1 + expr_depth e
 
 and idx_depth i =
   match i with
@@ -427,7 +429,7 @@ let rec update_expr_ad_levels autodiffable_variables
           { e.meta with
             adlevel= ad_level_sup (e :: List.concat_map ~f:Index.bounds i_list)
           } }
-  | TupleIndexed (e, ix) ->
+  | IndexedTuple (e, ix) ->
       (* TUPLE TODO
        For the purposes of program analysis, tuples should be treated as n Vars
        So for example, autodiffable_variables should possibly include tuple.1
@@ -436,7 +438,7 @@ let rec update_expr_ad_levels autodiffable_variables
        Make the whole thing AD when any part is?
     *)
       let e' = update_expr_ad_levels autodiffable_variables e in
-      { pattern= TupleIndexed (e', ix)
+      { pattern= IndexedTuple (e', ix)
       ; meta= {e.meta with adlevel= e'.meta.adlevel} }
 
 and update_idx_ad_levels autodiffable_variables =

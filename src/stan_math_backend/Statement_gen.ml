@@ -112,6 +112,32 @@ let pp_bool_expr ppf expr =
   | UReal -> pp_call ppf ("as_bool", pp_expr, [expr])
   | _ -> pp_expr ppf expr
 
+let rec pp_nonrange_lvalue ppf lvalue =
+  match lvalue with
+  | Stmt.Fixed.Pattern.LVariable v -> Fmt.string ppf v
+  | LIndexedTuple (lv, ix) ->
+      Fmt.pf ppf "std::get<%d>(%a)" ix pp_nonrange_lvalue lv
+  | LIndexed (lv, idcs) when List.for_all ~f:is_single_index idcs ->
+      pf ppf "%a%a" pp_nonrange_lvalue lv pp_indices_simple ("", idcs)
+  | LIndexed (_, _) ->
+      (* TODO TUPLE catch multi-index in semantic check *)
+      raise_s [%message "Multi-index must be the last (rightmost) index."]
+
+(* True if expr has a 'shallow' overlap with the lhs, for the purpose of checking if expr needs to be deep copied when it's assigned to the lhs.
+This is 'shallow' in the sense that it doesn't recurse into expressions *)
+let expr_needs_deep_copy (lhs_base_ref : 'e Middle.Stmt.Fixed.Pattern.lvalue)
+    (expr : 'a Expr.Fixed.t) : bool =
+  Option.value_map
+    (* Convert the expression to an lvalue to get rid of non-reference expressions *)
+    (Middle.Utils.lvalue_of_expr_opt expr)
+    (* If we can't, this expression can't be deep copied *)
+    ~default:
+      false
+      (* If we can, then find it's base reference and see if it overlaps with the LHS *)
+    ~f:(fun expr_lv ->
+      let expr_base_ref = Middle.Utils.lvalue_base_reference expr_lv in
+      expr_base_ref = lhs_base_ref )
+
 let rec pp_statement (ppf : Format.formatter)
     (Stmt.Fixed.({pattern; meta}) as stmt) =
   (* ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) = *)
@@ -120,34 +146,28 @@ let rec pp_statement (ppf : Format.formatter)
   | Block _ | SList _ | Decl _ | Skip | Break | Continue -> ()
   | _ -> Locations.pp_smeta ppf meta ) ;
   match pattern with
-  | Assignment
-      ((vident, _, []), ({meta= Expr.Typed.Meta.({type_= UInt; _}); _} as rhs))
-   |Assignment ((vident, _, []), ({meta= {type_= UReal; _}; _} as rhs)) ->
-      pf ppf "@[<hov 4>%s = %a;@]" vident pp_expr rhs
-  | Assignment ((assignee, UInt, idcs), rhs)
-   |Assignment ((assignee, UReal, idcs), rhs)
-    when List.for_all ~f:is_single_index idcs ->
-      pf ppf "@[<hov 4>%a = %a;@]" pp_indexed_simple (assignee, idcs) pp_expr
-        rhs
-  | Assignment ((assignee, _, idcs), rhs) ->
-      (* XXX I think in general we don't need to do a deepcopy if e is nested
-       inside some function call - the function should get its own copy
-       (in all cases???) *)
+  | Assignment (lhs, (UInt | UReal | UTuple _), rhs) ->
+      pf ppf "@[<hov 4>%a = %a;@]" pp_nonrange_lvalue lhs pp_expr rhs
+  | Assignment (lhs, _, rhs) ->
+      (* Assignments of arrays, vectors etc. need to use `assign()` and worry about deep copies *)
+    let lhs_ref = Middle.Utils.lvalue_base_reference lhs in
       let rec maybe_deep_copy e =
-        let recurse (e : 'a Expr.Fixed.t) =
+        (* If this expression overlaps with lhs, *)
+        if expr_needs_deep_copy lhs_ref e then
+          (* then wrap it in a deep copy. *)
           { e with
             Expr.Fixed.pattern=
-              Expr.Fixed.Pattern.map maybe_deep_copy e.pattern }
-        in
-        match e.pattern with
-        | _ when UnsizedType.is_scalar_type (Expr.Typed.type_of e) -> e
-        | FunApp (CompilerInternal, _, _) -> e
-        | (Indexed ({Expr.Fixed.pattern= Var v; _}, _) | Var v)
-          when v = assignee ->
-            { e with
-              Expr.Fixed.pattern=
-                FunApp (CompilerInternal, "stan::model::deep_copy", [e]) }
-        | _ -> recurse e
+              FunApp (CompilerInternal, "stan::model::deep_copy", [e]) }
+        else
+          (* Otherwise, check if any subexpressions need copies. *)
+          match e.pattern with
+          (* Don't recurse into function applications because they always copy anyway *)
+          | FunApp _ -> e
+          | _ ->
+              (* Recurse on subexpressions *)
+              { e with
+                Expr.Fixed.pattern=
+                  Expr.Fixed.Pattern.map maybe_deep_copy e.pattern }
       in
       let rhs =
         match rhs.pattern with
@@ -157,10 +177,14 @@ let rec pp_statement (ppf : Format.formatter)
             rhs
         | _ -> maybe_deep_copy rhs
       in
-      pf ppf "@[<hov 2>assign(@,%s,@ %a,@ %a,@ %S@]);" assignee pp_indexes idcs
-        pp_expr rhs
-        (strf "assigning variable %s"
-           assignee
+      (* Split up the top-level lvalue to fit in the assign call *)
+      let lhs_base, lhs_idcs =
+        match lhs with LIndexed (lv, idcs) -> (lv, idcs) | _ -> (lhs, [])
+      in
+      pf ppf "@[<hov 2>assign(@,%a,@ %a,@ %a,@ %S@]);" pp_nonrange_lvalue
+        lhs_base pp_indexes lhs_idcs pp_expr rhs
+        (strf "assigning variable %a" pp_nonrange_lvalue
+           lhs_base
            (* (list ~sep:comma (Pretty.pp_index Pretty.pp_expr_typed_located)) idcs *))
   | TargetPE e -> pf ppf "@[<hov 2>lp_accum__.add(@,%a@]);" pp_expr e
   | NRFunApp (CompilerInternal, fname, args)
@@ -209,7 +233,7 @@ let rec pp_statement (ppf : Format.formatter)
   | For
       { body=
           { pattern=
-              Assignment (_, {pattern= FunApp (CompilerInternal, f, _); _}); _
+              Assignment (_, _, {pattern= FunApp (CompilerInternal, f, _); _}); _
           } as body; _ }
     when Internal_fun.of_string_opt f = Some FnReadParam ->
       pp_statement ppf body

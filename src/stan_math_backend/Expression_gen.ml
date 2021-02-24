@@ -427,27 +427,27 @@ and pp_compiler_internal_fn ut f ppf es =
 and pp_indexed ppf (vident, indices, pretty) =
   pf ppf "@[<hov 2>rvalue(@,%s,@ %a,@ %S)@]" vident pp_indexes indices pretty
 
-and pp_indexed_simple ppf (obj, idcs) =
+and pp_indices_simple ppf (msg_name, idcs) =
   let idx_minus_one = function
     | Index.Single e -> minus_one e
     | MultiIndex e | Between (e, _) | Upfrom e ->
         raise_s
           [%message
-            "No non-Single indices allowed" ~obj
+            "No non-Single indices allowed" ~msg_name
               (idcs : Expr.Typed.t Index.t list)
               (Expr.Typed.loc_of e : Location_span.t)]
     | All ->
         raise_s
           [%message
-            "No non-Single indices allowed" ~obj
+            "No non-Single indices allowed" ~msg_name
               (idcs : Expr.Typed.t Index.t list)]
   in
-  pf ppf "%s%a" obj
-    (fun ppf idcs ->
-      match idcs with
-      | [] -> ()
-      | idcs -> pf ppf "[%a]" (list ~sep:(const string "][") pp_expr) idcs )
-    (List.map ~f:idx_minus_one idcs)
+  match List.map ~f:idx_minus_one idcs with
+  | [] -> ()
+  | idcs -> pf ppf "[%a]" (list ~sep:(const string "][") pp_expr) idcs
+
+and pp_indexed_simple ppf (obj, idcs) =
+  pf ppf "%s%a" obj pp_indices_simple (obj, idcs)
 
 and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
   match pattern with
@@ -501,7 +501,7 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
      from https://en.cppreference.com/w/cpp/utility/tuple
      Index std::tuple with std::get
   *)
-  | TupleIndexed (t, ix) -> pf ppf "std::get<%d>(%a)" (ix - 1) pp_expr t
+  | IndexedTuple (t, ix) -> pf ppf "std::get<%d>(%a)" (ix - 1) pp_expr t
 
 (* these functions are just for testing *)
 let dummy_locate pattern =

@@ -97,13 +97,14 @@ let replace_fresh_local_vars s' =
         in
         ( Stmt.Fixed.Pattern.For {loopvar= new_name; lower; upper; body}
         , Map.Poly.set m ~key:loopvar ~data:new_name )
-    | Assignment ((var_name, ut, l), e) ->
-        let var_name =
+    | Assignment (lhs, type_, e) ->
+        let update_name var_name =
           match Map.Poly.find m var_name with
           | None -> var_name
-          | Some var_name -> var_name
+          | Some var_name' -> var_name'
         in
-        (Stmt.Fixed.Pattern.Assignment ((var_name, ut, l), e), m)
+        let lhs' = Middle.Utils.map_lhs_variable ~f:update_name lhs in
+        (Stmt.Fixed.Pattern.Assignment (lhs', type_, e), m)
     | x -> (x, m)
   in
   let s, m = map_rec_state_stmt_loc f Map.Poly.empty s' in
@@ -132,7 +133,8 @@ let handle_early_returns opt_var b =
             [ Stmt.Fixed.
                 { pattern=
                     Assignment
-                      ( (returned, UInt, [])
+                      ( LVariable returned
+                      , UInt
                       , Expr.Fixed.
                           { pattern= Lit (Int, "1")
                           ; meta=
@@ -142,7 +144,7 @@ let handle_early_returns opt_var b =
                                 ; loc= Location_span.empty } } )
                 ; meta= Location_span.empty }
             ; Stmt.Fixed.
-                { pattern= Assignment ((name, Expr.Typed.type_of e, []), e)
+                { pattern= Assignment (LVariable name, Expr.Typed.type_of e, e)
                 ; meta= Location_span.empty }
             ; {pattern= Break; meta= Location_span.empty} ]
       | Some _, None ->
@@ -184,7 +186,8 @@ let handle_early_returns opt_var b =
     ; Stmt.Fixed.
         { pattern=
             Assignment
-              ( (returned, UInt, [])
+              ( LVariable returned
+              , UInt
               , Expr.Fixed.
                   { pattern= Lit (Int, "0")
                   ; meta=
@@ -281,9 +284,9 @@ let rec inline_function_expression propto adt fim
       in
       let i_list = List.map ~f:(function _, _, x -> x) dsi_list in
       (d_list @ dl, s_list @ sl, {e with pattern= Indexed (e', i_list)})
-  | TupleIndexed (e', ix) ->
+  | IndexedTuple (e', ix) ->
       let dl, sl, e' = inline_function_expression propto adt fim e' in
-      (dl, sl, {e with pattern= TupleIndexed (e', ix)})
+      (dl, sl, {e with pattern= IndexedTuple (e', ix)})
   | EAnd (e1, e2) ->
       let dl1, sl1, e1 = inline_function_expression propto adt fim e1 in
       let dl2, sl2, e2 = inline_function_expression propto adt fim e2 in
@@ -330,23 +333,21 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.({pattern; meta}) =
   Stmt.Fixed.
     { pattern=
         ( match pattern with
-        | Assignment ((x, ut, l), e2) ->
-            let e1 =
-              {e2 with pattern= Indexed ({e2 with pattern= Var x}, l)}
-            in
+        | Assignment (lhs, ut, e2) ->
+            let e1 = Middle.Utils.expr_of_lvalue lhs ~meta:e2.meta in
             (* This inner e2 is wrong. We are giving the wrong type to Var x. But it doens't really matter as we discard it later. *)
             let dl1, sl1, e1 = inline_function_expression propto adt fim e1 in
             let dl2, sl2, e2 = inline_function_expression propto adt fim e2 in
-            let x, l =
-              match e1.pattern with
-              | Var x -> (x, [])
-              | Indexed ({pattern= Var x; _}, l) -> (x, l)
-              | _ as w ->
-                  raise_s [%sexp (w : Expr.Typed.t Expr.Fixed.Pattern.t)]
+            let lhs' =
+              Option.value_exn
+                (Middle.Utils.lvalue_of_expr_opt e1)
+                ~message:
+                  "Internal error in inline optimization: lhs could not be \
+                   converted round-trip to expression"
             in
             slist_concat_no_loc
               (dl2 @ dl1 @ sl2 @ sl1)
-              (Assignment ((x, ut, l), e2))
+              (Assignment (lhs', ut, e2))
         | TargetPE e ->
             let d, s, e = inline_function_expression propto adt fim e in
             slist_concat_no_loc (d @ s) (TargetPE e)
@@ -500,7 +501,7 @@ let function_inlining (mir : Program.Typed.t) =
 let rec contains_top_break_or_continue Stmt.Fixed.({pattern; _}) =
   match pattern with
   | Break | Continue -> true
-  | Assignment (_, _)
+  | Assignment (_, _, _)
    |TargetPE _
    |NRFunApp (_, _, _)
    |Return _ | Decl _
@@ -733,15 +734,13 @@ let dead_code_elimination (mir : Program.Typed.t) =
         (Map.find_exn live_variables i).Monotone_framework_sigs.entry
       in
       match stmt with
-      | Stmt.Fixed.Pattern.Assignment ((x, _, []), rhs) ->
-          if Set.Poly.mem live_variables_s x || cannot_remove_expr rhs then
-            stmt
-          else Skip
-      | Assignment ((x, _, is), rhs) ->
+      | Stmt.Fixed.Pattern.Assignment (lhs, _, rhs) ->
           if
-            Set.Poly.mem live_variables_s x
+            Set.Poly.mem live_variables_s (Middle.Utils.lhs_variable lhs)
             || cannot_remove_expr rhs
-            || List.exists ~f:(idx_any cannot_remove_expr) is
+            || List.exists
+                 ~f:(idx_any cannot_remove_expr)
+                 (Middle.Utils.lhs_indices lhs)
           then stmt
           else Skip
       (* NOTE: we never get rid of declarations as we might not be able to
@@ -895,14 +894,14 @@ let lazy_code_motion (mir : Program.Typed.t) =
             Stmt.Fixed.
               { pattern=
                   Assignment
-                    ((Map.find_exn expression_map e, e.meta.type_, []), e)
+                    (LVariable (Map.find_exn expression_map e), e.meta.type_, e)
               ; meta= Location_span.empty } )
           to_assign_in_s
       in
       let expr_subst_stmt_except_initial_assign m =
         let f stmt =
           match stmt with
-          | Stmt.Fixed.Pattern.Assignment ((x, _, []), e')
+          | Stmt.Fixed.Pattern.Assignment (LVariable x, _, e')
             when Map.mem m e'
                  && Expr.Typed.equal {e' with pattern= Var x}
                       (Map.find_exn m e') ->

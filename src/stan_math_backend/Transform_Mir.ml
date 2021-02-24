@@ -115,13 +115,14 @@ let data_read smeta (decl_id, st) =
   match unsized with
   | UInt | UReal ->
       [ Assignment
-          ( (decl_id, unsized, [])
+          ( LVariable decl_id
+          , unsized
           , { Expr.Fixed.pattern=
                 Indexed (readfnapp decl_var, [Single Expr.Helpers.loop_bottom])
             ; meta= {decl_var.meta with type_= unsized} } )
         |> swrap ]
   | UArray UInt | UArray UReal ->
-      [Assignment ((decl_id, flat_type, []), readfnapp decl_var) |> swrap]
+      [Assignment (LVariable decl_id, flat_type, readfnapp decl_var) |> swrap]
   (* TUPLE STUB
      Data read from tuples
      There seems to be dispatch to a FnReadData function, could foist to C++
@@ -136,7 +137,8 @@ let data_read smeta (decl_id, st) =
         ( Stmt.Fixed.Pattern.Decl
             {decl_adtype= AutoDiffable; decl_id; decl_type= Unsized flat_type}
           |> swrap
-        , Assignment ((decl_id, flat_type, []), readfnapp decl_var) |> swrap
+        , Assignment (LVariable decl_id, flat_type, readfnapp decl_var)
+          |> swrap
         , { Expr.Fixed.pattern= Var decl_id
           ; meta=
               Expr.Typed.Meta.{loc= smeta; type_= flat_type; adlevel= DataOnly}
@@ -144,7 +146,8 @@ let data_read smeta (decl_id, st) =
       in
       let bodyfn _ var =
         let pos_increment =
-          [ Assignment ((pos, UInt, []), Expr.Helpers.(binop pos_var Plus one))
+          [ Assignment
+              (LVariable pos, UInt, Expr.Helpers.(binop pos_var Plus one))
             |> swrap ]
         in
         let read_indexed _ =
@@ -159,7 +162,7 @@ let data_read smeta (decl_id, st) =
       in
       let pos_reset =
         Stmt.Fixed.Pattern.Assignment
-          ((pos, UInt, []), Expr.Helpers.loop_bottom)
+          (LVariable pos, UInt, Expr.Helpers.loop_bottom)
         |> swrap
       in
       [ Block
@@ -232,11 +235,12 @@ let escape_name str =
 
 let rec add_jacobians Stmt.Fixed.({meta= smeta; pattern}) =
   match pattern with
-  | Assignment (lhs, {pattern= FunApp (CompilerInternal, f, args); meta= emeta})
+  | Assignment
+      (lhs, type_, {pattern= FunApp (CompilerInternal, f, args); meta= emeta})
     when Internal_fun.of_string_opt f = Some FnConstrain ->
       let var n = Expr.{Fixed.pattern= Var n; meta= Typed.Meta.empty} in
       let assign rhs =
-        Stmt.{Fixed.pattern= Assignment (lhs, rhs); meta= smeta}
+        Stmt.{Fixed.pattern= Assignment (lhs, type_, rhs); meta= smeta}
       in
       { Stmt.Fixed.pattern=
           IfElse
@@ -380,6 +384,7 @@ let rec contains_var_expr is_vident accum Expr.Fixed.({pattern; _}) =
   | pattern ->
       Expr.Fixed.Pattern.fold (contains_var_expr is_vident) false pattern
 
+(* TODO TUPLE Is this constraint variable point? *)
 (* When a parameter's unconstrained type and its constrained type are different,
    we generate a new variable "<param_name>_in__" and read into that. We now need
    to change the FnConstrain calls to constrain that variable and assign to the
@@ -401,7 +406,9 @@ let constrain_in_params outvars stmts =
   let rec change_constrain_target (Stmt.Fixed.({pattern; _}) as s) =
     match pattern with
     | Assignment
-        (lval, {pattern= FunApp (CompilerInternal, f, var :: args); meta})
+        ( lval
+        , type_
+        , {pattern= FunApp (CompilerInternal, f, var :: args); meta} )
       when Internal_fun.of_string_opt f = Some FnConstrain
            && contains_var_expr (Set.mem target_vars) false var ->
         let rec change_var_expr (Expr.Fixed.({pattern; _}) as e) =
@@ -416,6 +423,7 @@ let constrain_in_params outvars stmts =
             pattern=
               Assignment
                 ( lval
+                , type_
                 , { pattern=
                       FunApp (CompilerInternal, f, change_var_expr var :: args)
                   ; meta } ) }
@@ -574,7 +582,7 @@ let trans_prog (p : Program.Typed.t) =
   let init_pos =
     [ Stmt.Fixed.Pattern.Decl
         {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
-    ; Assignment ((pos, UInt, []), Expr.Helpers.loop_bottom) ]
+    ; Assignment (LVariable pos, UInt, Expr.Helpers.loop_bottom) ]
     |> List.map ~f:(fun pattern ->
            Stmt.Fixed.{pattern; meta= Location_span.empty} )
   in
@@ -701,7 +709,8 @@ let trans_prog (p : Program.Typed.t) =
             ; meta= Location_span.empty }
         ; { pattern=
               Assignment
-                ( (vident, type_of_input_var, [])
+                ( LVariable vident
+                , type_of_input_var
                 , to_matrix_cl
                     { pattern= Var vident_sans_opencl
                     ; meta= Expr.Typed.Meta.empty } )

@@ -8,7 +8,7 @@ module Fixed = struct
 
   module Pattern = struct
     type ('a, 'b) t =
-      | Assignment of 'a lvalue * 'a
+      | Assignment of 'a lvalue * UnsizedType.t * 'a
       | TargetPE of 'a
       | NRFunApp of Fun_kind.t * string * 'a list
       | Break
@@ -27,13 +27,24 @@ module Fixed = struct
           ; decl_type: 'a Type.t }
     [@@deriving sexp, hash, map, fold, compare]
 
-    and 'a lvalue = string * UnsizedType.t * 'a Index.t list
+    and 'e lvalue =
+      | LVariable of string
+      | LIndexed of 'e lvalue * 'e Index.t list
+      | LIndexedTuple of 'e lvalue * int
     [@@deriving sexp, hash, map, compare, fold]
 
+    (* and 'a lvalue = string * UnsizedType.t * 'a Index.t list *)
+
     let pp pp_e pp_s ppf = function
-      | Assignment ((assignee, _, idcs), rhs) ->
-          Fmt.pf ppf {|@[<h>%a =@ %a;@]|} (Index.pp_indexed pp_e)
-            (assignee, idcs) pp_e rhs
+      | Assignment (lvalue, _, rhs) ->
+          let rec pp_lvalue ppf = function
+            | LVariable v -> Fmt.string ppf v
+            | LIndexed (lv, idcs) ->
+                Fmt.pf ppf {|%a.%a@]|} pp_lvalue lv (Index.pp_indices pp_e)
+                  idcs
+            | LIndexedTuple (lv, ix) -> Fmt.pf ppf {|%a.%d@]|} pp_lvalue lv ix
+          in
+          Fmt.pf ppf {|@[<h>%a =@ %a;@]|} pp_lvalue lvalue pp_e rhs
       | TargetPE expr ->
           Fmt.pf ppf {|@[<h>%a +=@ %a;@]|} pp_keyword "target" pp_e expr
       | NRFunApp (_, name, args) ->
@@ -182,11 +193,16 @@ module Labelled = struct
           exprs=
             List.fold args ~init:assocs.exprs ~f:(fun accu x ->
                 Expr.Labelled.associate ~init:accu x ) }
-    | Assignment ((_, _, idxs), rhs) ->
+    | Assignment (lv, _, rhs) ->
+        let rec lvalue_exprs ~init = function
+          | Fixed.Pattern.LIndexed (lv, idxs) ->
+              List.fold ~f:Expr.Labelled.associate_index
+                ~init:(lvalue_exprs lv ~init) idxs
+          | _ -> init
+        in
         let exprs =
           Expr.Labelled.(
-            associate rhs
-              ~init:(List.fold ~f:associate_index ~init:assocs.exprs idxs))
+            associate rhs ~init:(lvalue_exprs ~init:assocs.exprs lv))
         in
         {assocs with exprs}
     | IfElse (pred, body, None) | While (pred, body) ->
@@ -244,7 +260,7 @@ module Helpers = struct
         let assign =
           { body with
             Fixed.pattern=
-              Assignment ((symbol, Expr.Typed.type_of expr, []), expr) }
+              Assignment (LVariable symbol, Expr.Typed.type_of expr, expr) }
         in
         reset () ;
         {body with Fixed.pattern= Block [decl; assign; body]}
@@ -380,5 +396,9 @@ module Helpers = struct
 
   let assign_indexed decl_type vident meta varfn var =
     let indices = Expr.Helpers.collect_indices var in
-    Fixed.{meta; pattern= Assignment ((vident, decl_type, indices), varfn var)}
+    Fixed.
+      { meta
+      ; pattern=
+          Assignment
+            (LIndexed (LVariable vident, indices), decl_type, varfn var) }
 end

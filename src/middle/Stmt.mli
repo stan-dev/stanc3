@@ -5,7 +5,7 @@ open Label
 module Fixed : sig
   module Pattern : sig
     type ('a, 'b) t =
-      | Assignment of 'a lvalue * 'a
+      | Assignment of 'a lvalue * UnsizedType.t * 'a
       | TargetPE of 'a
       | NRFunApp of Fun_kind.t * string * 'a list
       | Break
@@ -24,8 +24,13 @@ module Fixed : sig
           ; decl_type: 'a Type.t }
     [@@deriving sexp, hash, compare]
 
-    and 'a lvalue = string * UnsizedType.t * 'a Index.t list
+    and 'e lvalue =
+      | LVariable of string
+      | LIndexed of 'e lvalue * 'e Index.t list
+      | LIndexedTuple of 'e lvalue * int
     [@@deriving sexp, hash, map, compare, fold]
+
+    (* and 'a lvalue = string * UnsizedType.t * 'a Index.t list *)
 
     include Pattern.S2 with type ('a, 'b) t := ('a, 'b) t
   end

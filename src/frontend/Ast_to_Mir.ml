@@ -85,7 +85,7 @@ and trans_expr {Ast.expr; Ast.emeta} =
       |> ewrap
   | Indexed (lhs, indices) ->
       Indexed (trans_expr lhs, List.map ~f:trans_idx indices) |> ewrap
-  | IndexedTuple (lhs, i) -> TupleIndexed (trans_expr lhs, i) |> ewrap
+  | IndexedTuple (lhs, i) -> IndexedTuple (trans_expr lhs, i) |> ewrap
   | TupleExpr eles ->
       (* TUPLE MAYBE IMPL *)
       FunApp (CompilerInternal, "std::make_tuple", trans_exprs eles)
@@ -526,8 +526,8 @@ let trans_decl {dconstrain; dadlevel} smeta decl_type transform identifier
     Option.map
       ~f:(fun e ->
         Stmt.Fixed.
-          {pattern= Assignment ((decl_id, e.meta.type_, []), e); meta= smeta}
-        )
+          { pattern= Assignment (LVariable decl_id, e.meta.type_, e)
+          ; meta= smeta } )
       rhs
     |> Option.to_list
   in
@@ -572,6 +572,23 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   let mloc = smeta in
   match stmt_typed with
   | Ast.Assignment {assign_lhs; assign_rhs; assign_op} ->
+      (* Translates AST lvalues into MIR lvalues.
+       Also groups up non-tuple indices with `carry_idcs` *)
+      let rec trans_lvalue carry_idcs lv =
+        match lv.Ast.lval with
+        | LVariable v ->
+            let lv = Middle.Stmt.Fixed.Pattern.LVariable v.name in
+            if List.is_empty carry_idcs then lv else LIndexed (lv, carry_idcs)
+        | LIndexedTuple (lv, ix) ->
+            let lv =
+              Middle.Stmt.Fixed.Pattern.LIndexedTuple (trans_lvalue [] lv, ix)
+            in
+            if List.is_empty carry_idcs then lv else LIndexed (lv, carry_idcs)
+        | LIndexed (lv, idcs) ->
+            trans_lvalue (List.map ~f:trans_idx idcs @ carry_idcs) lv
+      in
+      let lhs = trans_lvalue [] assign_lhs in
+      (* let lhs_base_reference = Middle.Utils.lvalue_base_reference lhs in *)
       let rec get_lhs_base = function
         | {Ast.lval= Ast.LIndexed (l, _); _} -> get_lhs_base l
         | {lval= LVariable s; lmeta} -> (s, lmeta)
@@ -580,6 +597,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
         | {lval= LIndexedTuple (l, _); _} -> get_lhs_base l
       in
       let assign_identifier, lmeta = get_lhs_base assign_lhs in
+      (* Can't get metadata if I translate to MIR and use MIR utils; have to rewrite it in AST*)
       let id_ad_level = lmeta.Ast.ad_level in
       let id_type_ = lmeta.Ast.type_ in
       let lhs_type_ = assign_lhs.Ast.lmeta.type_ in
@@ -593,32 +611,33 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
         | {Ast.lval= Ast.LIndexedTuple (_, _); _} -> []
       in
       let assign_indices = get_lhs_indices assign_lhs in
-      let assignee =
-        { Ast.expr=
-            ( match assign_indices with
-            | [] -> Ast.Variable assign_identifier
-            | _ ->
-                Ast.Indexed
-                  ( { expr= Ast.Variable assign_identifier
-                    ; emeta=
-                        { Ast.loc= Location_span.empty
-                        ; ad_level= id_ad_level
-                        ; type_= id_type_ } }
-                  , assign_indices ) )
-        ; emeta=
-            { Ast.loc= assign_lhs.lmeta.loc
-            ; ad_level= lhs_ad_level
-            ; type_= lhs_type_ } }
-      in
       let rhs =
         match assign_op with
         | Ast.Assign | Ast.ArrowAssign -> trans_expr assign_rhs
-        | Ast.OperatorAssign op -> op_to_funapp op [assignee; assign_rhs]
+        | Ast.OperatorAssign op ->
+          (* this is certainly wrong because the metadata don't match with tuples *)
+            let assignee =
+              { Ast.expr=
+                  ( match assign_indices with
+                  | [] -> Ast.Variable assign_identifier
+                  | _ ->
+                      Ast.Indexed
+                        ( { expr= Ast.Variable assign_identifier
+                          ; emeta=
+                              { Ast.loc= Location_span.empty
+                              ; ad_level= id_ad_level
+                              ; type_= id_type_ } }
+                        , assign_indices ) )
+              ; emeta=
+                  { Ast.loc= assign_lhs.lmeta.loc
+                  ; ad_level= lhs_ad_level
+                  ; type_= lhs_type_ } }
+            in
+            op_to_funapp op [assignee; assign_rhs]
       in
       Assignment
-        ( ( assign_identifier.Ast.name
-          , id_type_
-          , List.map ~f:trans_idx assign_indices )
+        ( lhs
+        , id_type_
         , rhs )
       |> swrap
   | Ast.NRFunApp (fn_kind, {name; _}, args) ->
@@ -702,7 +721,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       in
       let assignment var =
         Stmt.Fixed.
-          { pattern= Assignment ((loopvar.name, decl_type, []), var)
+          { pattern= Assignment (LVariable loopvar.name, decl_type, var)
           ; meta= smeta }
       in
       let bodyfn var =
@@ -775,7 +794,7 @@ let rec trans_sizedtype_decl declc tr name st =
           ; meta= e.meta.loc }
         in
         let assign =
-          { Stmt.Fixed.pattern= Assignment ((decl_id, UInt, []), e)
+          { Stmt.Fixed.pattern= Assignment (LVariable decl_id, UInt, e)
           ; meta= e.meta.loc }
         in
         let var =
@@ -880,7 +899,7 @@ let trans_block ud_dists declc block prog =
           Option.map
             ~f:(fun e ->
               Stmt.Fixed.
-                { pattern= Assignment ((decl_id, e.meta.type_, []), e)
+                { pattern= Assignment (LVariable decl_id, e.meta.type_, e)
                 ; meta= smeta.loc } )
             rhs
           |> Option.to_list

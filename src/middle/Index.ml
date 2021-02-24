@@ -15,6 +15,12 @@ let pp pp_e ppf = function
   | Between (lower, upper) -> Fmt.pf ppf {|%a:%a|} pp_e lower pp_e upper
   | MultiIndex index -> Fmt.pf ppf {|%a|} pp_e index
 
+let pp_indices pp_e ppf indices =
+  Fmt.pf ppf {|@[%a@]|}
+    ( if List.is_empty indices then fun _ _ -> ()
+    else Fmt.(list (pp pp_e) ~sep:comma |> brackets) )
+    indices
+
 let pp_indexed pp_e ppf (ident, indices) =
   Fmt.pf ppf {|@[%s%a@]|} ident
     ( if List.is_empty indices then fun _ _ -> ()

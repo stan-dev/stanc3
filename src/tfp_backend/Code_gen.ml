@@ -51,7 +51,7 @@ let rec pp_expr ppf {Expr.Fixed.pattern; _} =
 *)
       raise_s [%message "Multi-indices not supported yet"]
   | Indexed (obj, indices) -> pf ppf "%a%a" pp_expr obj pp_indices indices
-  | TupleIndexed (obj, ix) ->
+  | IndexedTuple (obj, ix) ->
       (* This assumes that however TFP models tuples, it's compatible with
        standard indexing *)
       pf ppf "%a[%d]" pp_expr obj ix
@@ -67,10 +67,14 @@ and pp_paren ppf expr =
       pf ppf "(%a)" pp_expr expr
   | _ -> pp_expr ppf expr
 
+let rec pp_lhs ppf = function
+  | Middle.Stmt.Fixed.Pattern.LVariable v -> string ppf v
+  | LIndexed (lhs, indices) -> pf ppf "%a%a" pp_lhs lhs pp_indices indices
+  | LIndexedTuple (lhs, ix) -> pf ppf "%a[%d]" pp_lhs lhs ix
+
 let rec pp_stmt ppf s =
   match s.Stmt.Fixed.pattern with
-  | Assignment ((lhs, _, indices), rhs) ->
-      pf ppf "%s%a = %a" lhs pp_indices indices pp_expr rhs
+  | Assignment (lhs, _, rhs) -> pf ppf "%a = %a" pp_lhs lhs pp_expr rhs
   | TargetPE rhs -> pf ppf "target += tf__.reduce_sum(%a)" pp_expr rhs
   | NRFunApp (StanLib, f, args) | NRFunApp (UserDefined, f, args) ->
       pp_call ppf (f, pp_expr, args)
@@ -129,7 +133,7 @@ let pp_extract_data ppf p =
 let pp_extract_transf_data ppf p =
   let extract_arg_names x =
     match x.Stmt.Fixed.pattern with
-    | Assignment ((lhs, _, _), _) -> Some lhs
+    | Assignment (lhs, _, _) -> Some (Middle.Utils.lhs_variable lhs)
     | _ -> None
   in
   let arg_names =

@@ -103,7 +103,8 @@ let%expect_test "nested dist prefixes translated" =
 let rec remove_unused_stmts s =
   let pattern =
     match s.Stmt.Fixed.pattern with
-    | Assignment (_, {Expr.Fixed.pattern= FunApp (CompilerInternal, f, _); _})
+    | Assignment
+        (_, _, {Expr.Fixed.pattern= FunApp (CompilerInternal, f, _); _})
       when Internal_fun.to_string FnConstrain = f
            || Internal_fun.to_string FnUnconstrain = f ->
         Stmt.Fixed.Pattern.Skip
@@ -125,8 +126,9 @@ let rec change_kwrds_stmts s =
     match s.Stmt.Fixed.pattern with
     | Decl e -> Decl {e with decl_id= add_suffix_to_kwrds e.decl_id}
     | NRFunApp (t, s, e) -> NRFunApp (t, add_suffix_to_kwrds s, e)
-    | Assignment ((s, t, e1), e2) ->
-        Assignment ((add_suffix_to_kwrds s, t, e1), e2)
+    | Assignment (lhs, type_, e2) ->
+        Assignment
+          (Middle.Utils.map_lhs_variable ~f:add_suffix_to_kwrds lhs, type_, e2)
     | For e -> For {e with loopvar= add_suffix_to_kwrds e.loopvar}
     | x -> map Fn.id change_kwrds_stmts x
   in

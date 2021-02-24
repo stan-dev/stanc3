@@ -26,7 +26,7 @@ let extract_factors_statement stmt =
       [Reject]
   | NRFunApp (_, s, args) when String.suffix s 3 = "_lp" ->
       [LPFunction (s, args)]
-  | Assignment (_, _)
+  | Assignment (_, _, _)
    |NRFunApp (_, _, _)
    |Break | Continue | Return _ | Skip
    |IfElse (_, _, _)

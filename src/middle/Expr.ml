@@ -15,7 +15,7 @@ module Fixed = struct
       | EAnd of 'a * 'a
       | EOr of 'a * 'a
       | Indexed of 'a * 'a Index.t list
-      | TupleIndexed of 'a * int
+      | IndexedTuple of 'a * int
     [@@deriving sexp, hash, map, compare, fold]
 
     let pp pp_e ppf = function
@@ -38,7 +38,7 @@ module Fixed = struct
             ( if List.is_empty indices then fun _ _ -> ()
             else Fmt.(list (Index.pp pp_e) ~sep:comma |> brackets) )
             indices
-      | TupleIndexed (expr, ix) ->
+      | IndexedTuple (expr, ix) ->
           (* TUPLE DESIGN pp parens
              Do I need the extra parens here?
              ((1,2)).1
@@ -154,7 +154,7 @@ module Labelled = struct
         associate ~init:(associate ~init:(associate ~init:assocs e3) e2) e1
     | Indexed (e, idxs) ->
         List.fold idxs ~init:(associate ~init:assocs e) ~f:associate_index
-    | TupleIndexed (e, _) -> associate ~init:assocs e
+    | IndexedTuple (e, _) -> associate ~init:assocs e
 
   and associate_index assocs = function
     | All -> assocs
@@ -240,7 +240,7 @@ module Helpers = struct
                 (t : UnsizedType.t)]
     in
     let meta = Typed.Meta.{e.meta with type_= mtype} in
-    let pattern = Fixed.Pattern.TupleIndexed (e, i) in
+    let pattern = Fixed.Pattern.IndexedTuple (e, i) in
     Fixed.{meta; pattern}
 
   (** TODO: Make me tail recursive *)
