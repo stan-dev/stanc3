@@ -340,12 +340,14 @@ and gen_fun_app ppf fname es =
       | true, x, f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: tl
         when Stan_math_signatures.is_variadic_ode_fn x
              && String.is_suffix fname
-                  ~suffix:Stan_math_signatures.ode_tolerances_suffix ->
+                  ~suffix:Stan_math_signatures.ode_tolerances_suffix
+             && x <> "ode_adjoint" && x <> "ode_adjoint_tol" ->
           ( fname
           , f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: msgs
             :: tl )
       | true, x, f :: y0 :: t0 :: ts :: tl
-        when Stan_math_signatures.is_variadic_ode_fn x ->
+        when Stan_math_signatures.is_variadic_ode_fn x
+             && x <> "ode_adjoint" && x <> "ode_adjoint_tol" ->
           (fname, f :: y0 :: t0 :: ts :: msgs :: tl)
       | ( true
         , x
@@ -363,7 +365,7 @@ and gen_fun_app ppf fname es =
                                         :: num_checkpoints
                                            :: interpolation_polynomial
                                               :: solver_f :: solver_b :: tl )
-        when x = "ode_adjoint" ->
+        when x = "ode_adjoint" || x = "ode_adjoint_tol" ->
           ( fname
           , f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: rel_tol_b :: abs_tol_b
             :: rel_tol_q :: abs_tol_q :: max_num_steps :: num_checkpoints
