@@ -380,14 +380,20 @@ and pp_user_defined_fun ppf (f, es) =
     (list ~sep:comma pp_expr) es
     (sep ^ String.concat ~sep:", " extra_args)
 
-and pp_compiler_internal_fn ut f ppf es =
-  let pp_array_literal ppf es =
-    pf ppf "std::vector<%a>{@,%a}" pp_unsizedtype_local
-      (promote_adtype es, promote_unsizedtype es)
-      (list ~sep:comma pp_expr) es
+and pp_compiler_internal_fn ad ut f ppf es =
+  let pp_array_literal ut ppf es =
+    pf ppf "std::vector<%a>{@,%a}" pp_unsizedtype_local (ad, ut)
+      (list ~sep:comma (pp_promoted ad ut))
+      es
   in
   match Internal_fun.of_string_opt f with
-  | Some FnMakeArray -> pp_array_literal ppf es
+  | Some FnMakeArray ->
+      let ut =
+        match ut with
+        | UnsizedType.UArray ut -> ut
+        | _ -> raise_s [%message "Array literal must have array type"]
+      in
+      pp_array_literal ut ppf es
   | Some FnMakeRowVec -> (
     match ut with
     | UnsizedType.URowVector ->
@@ -396,7 +402,8 @@ and pp_compiler_internal_fn ut f ppf es =
         else
           pf ppf "(Eigen::Matrix<%s,1,-1>(%d) <<@ %a).finished()" st
             (List.length es) (list ~sep:comma pp_expr) es
-    | UMatrix -> pf ppf "stan::math::to_matrix(@,%a)" pp_array_literal es
+    | UMatrix ->
+        pf ppf "stan::math::to_matrix(@,%a)" (pp_array_literal URowVector) es
     | _ ->
         raise_s
           [%message
@@ -411,6 +418,18 @@ and pp_compiler_internal_fn ut f ppf es =
           dims
     | _ -> raise_s [%message "emit ReadParam with " (es : Expr.Typed.t list)] )
   | _ -> gen_fun_app ppf f es
+
+and pp_promoted ad ut ppf e =
+  match e with
+  | Expr.({Fixed.meta= {Typed.Meta.type_; adlevel; _}; _})
+    when type_ = ut && adlevel = ad ->
+      pp_expr ppf e
+  | {pattern= FunApp (CompilerInternal, f, es); _}
+    when Internal_fun.of_string_opt f = Some FnMakeArray ->
+      pp_compiler_internal_fn ad ut f ppf es
+  | _ ->
+      pf ppf "stan::math::promote_scalar<%s>(@[<hov>%a@])" (local_scalar ut ad)
+        pp_expr e
 
 and pp_indexed ppf (vident, indices, pretty) =
   pf ppf "@[<hov 2>rvalue(@,%s,@ %a,@ %S)@]" vident pp_indexes indices pretty
@@ -456,7 +475,8 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
           (List.length es) (list ~sep:comma pp_expr) es
   | FunApp (StanLib, f, es) -> gen_fun_app ppf f es
   | FunApp (CompilerInternal, f, es) ->
-      pp_compiler_internal_fn meta.type_ (stan_namespace_qualify f) ppf es
+      pp_compiler_internal_fn meta.adlevel meta.type_
+        (stan_namespace_qualify f) ppf es
   | FunApp (UserDefined, f, es) -> pp_user_defined_fun ppf (f, es)
   | EAnd (e1, e2) -> pp_logical_op ppf "&&" e1 e2
   | EOr (e1, e2) -> pp_logical_op ppf "||" e1 e2
