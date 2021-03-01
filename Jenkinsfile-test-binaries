@@ -45,7 +45,7 @@ def checkoutRepository(os_type) {
 pipeline {
     agent none
     parameters {
-        string(defaultValue: 'PR-829', name: 'git_branch',
+        string(defaultValue: 'master', name: 'git_branch',
                description: "Please specify a git branch ( develop ), git hash ( aace72b6ccecbb750431c46f418879b325416c7d ), pull request ( PR-123 ), pull request from fork ( PR-123 )")
     }
     environment {
