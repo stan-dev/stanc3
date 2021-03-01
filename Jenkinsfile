@@ -272,6 +272,34 @@ pipeline {
                     post {always { runShell("rm -rf ./*")}}
                 }
 
+                stage("Build & test a static Linux ARM binary") {
+                    agent { label "arm-ec2" }
+                    steps {
+                        script {
+                            checkoutRepository("sh")
+                        }
+
+                        runShell("""
+                            eval \$(opam env)
+                            opam update || true
+                            bash -x scripts/install_build_deps.sh
+                            dune subst
+                            dune build @install --profile static
+                        """)
+
+                        echo runShell("""
+                            eval \$(opam env)
+                            time dune runtest --verbose
+                        """)
+
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/arm-stanc"
+                        sh "mv _build/default/src/stan2tfp/stan2tfp.exe bin/arm-stan2tfp"
+
+                        stash name:'arm-exe', includes:'bin/*'
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+
                 // Cross compiling for windows on debian
                 stage("Build & test static Windows binary") {
                     agent {
@@ -313,6 +341,7 @@ pipeline {
                 unstash 'windows-exe'
                 unstash 'linux-exe'
                 unstash 'mac-exe'
+                unstash 'arm-exe'
                 unstash 'js-exe'
                 runShell("""
                     wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
