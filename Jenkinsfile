@@ -275,17 +275,30 @@ pipeline {
                 stage("Build & test a static Linux ARM binary") {
                     agent { label "arm-ec2" }
                     steps {
+
+                        runShell("""
+                            # Install and initialize ocaml
+                            bash -x install_ocaml.sh "--disable-sandboxing -y"
+                            opam update; bash -x scripts/install_build_deps.sh
+
+                            # Install build dependencies
+                            opam update; bash -x scripts/install_dev_deps.sh
+
+                            # Install dev dependencies
+                            opam update; opam install -y js_of_ocaml-compiler.3.4.0 js_of_ocaml-ppx.3.4.0 js_of_ocaml.3.4.0
+
+                            opam update; bash -x scripts/install_js_deps.sh
+                        """)
+
                         runShell("""
                             eval \$(opam env)
-                            opam update || true
-                            bash -x scripts/install_build_deps.sh
                             dune subst
                             dune build @install --profile static
                         """)
 
                         echo runShell("""
                             eval \$(opam env)
-                            time dune runtest --verbose
+                            time dune runtest --profile static --verbose
                         """)
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm-stanc"
