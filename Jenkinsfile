@@ -278,7 +278,7 @@ pipeline {
 
                         runShell("""
                             # Install and initialize ocaml
-                            bash -x install_ocaml.sh "--disable-sandboxing -y"
+                            bash -x scripts/install_ocaml.sh "--disable-sandboxing -y"
                             opam update; bash -x scripts/install_build_deps.sh
 
                             # Install build dependencies
