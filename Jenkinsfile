@@ -275,10 +275,6 @@ pipeline {
                 stage("Build & test a static Linux ARM binary") {
                     agent { label "arm-ec2" }
                     steps {
-                        script {
-                            checkoutRepository("sh")
-                        }
-
                         runShell("""
                             eval \$(opam env)
                             opam update || true
@@ -292,10 +288,10 @@ pipeline {
                             time dune runtest --verbose
                         """)
 
-                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/arm-stanc"
-                        sh "mv _build/default/src/stan2tfp/stan2tfp.exe bin/arm-stan2tfp"
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm-stanc"
+                        sh "mv _build/default/src/stan2tfp/stan2tfp.exe bin/linux-arm-stan2tfp"
 
-                        stash name:'arm-exe', includes:'bin/*'
+                        stash name:'linux-arm-exe', includes:'bin/*'
                     }
                     post { always { runShell("rm -rf ./*") }}
                 }
@@ -341,7 +337,7 @@ pipeline {
                 unstash 'windows-exe'
                 unstash 'linux-exe'
                 unstash 'mac-exe'
-                unstash 'arm-exe'
+                unstash 'linux-arm-exe'
                 unstash 'js-exe'
                 runShell("""
                     wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
