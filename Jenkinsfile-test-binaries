@@ -58,6 +58,7 @@ pipeline {
                 dockerfile {
                     filename 'docker/debian/Dockerfile'
                     args "-u root --entrypoint=\'\'"
+                    label 'linux-ec2'
                 }
             }
             steps {
@@ -111,6 +112,7 @@ pipeline {
                             filename 'docker/debian/Dockerfile'
                             //Forces image to ignore entrypoint
                             args "-u root --entrypoint=\'\'"
+                            label 'linux-ec2'
                         }
                     }
                     steps {
@@ -136,6 +138,7 @@ pipeline {
                             filename 'docker/static/Dockerfile'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\'"
+                            label 'linux-ec2'
                         }
                     }
                     steps {
