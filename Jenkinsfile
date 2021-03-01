@@ -281,7 +281,6 @@ pipeline {
 
                             opam update; opam install -y js_of_ocaml-compiler.3.4.0 js_of_ocaml-ppx.3.4.0 js_of_ocaml.3.4.0
                             opam update; bash -x scripts/install_build_deps.sh
-                            opam update; bash -x scripts/install_dev_deps.sh
                             opam update; bash -x scripts/install_js_deps.sh
                         """)
 
