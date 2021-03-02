@@ -572,74 +572,57 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   let mloc = smeta in
   match stmt_typed with
   | Ast.Assignment {assign_lhs; assign_rhs; assign_op} ->
-      (* Translates AST lvalues into MIR lvalues.
-       Also groups up non-tuple indices with `carry_idcs` *)
-      let rec trans_lvalue carry_idcs lv =
-        match lv.Ast.lval with
-        | LVariable v ->
-            let lv = Middle.Stmt.Fixed.Pattern.LVariable v.name in
-            if List.is_empty carry_idcs then lv else LIndexed (lv, carry_idcs)
-        | LIndexedTuple (lv, ix) ->
-            let lv =
-              Middle.Stmt.Fixed.Pattern.LIndexedTuple (trans_lvalue [] lv, ix)
-            in
-            if List.is_empty carry_idcs then lv else LIndexed (lv, carry_idcs)
-        | LIndexed (lv, idcs) ->
-            trans_lvalue (List.map ~f:trans_idx idcs @ carry_idcs) lv
-      in
-      let lhs = trans_lvalue [] assign_lhs in
-      (* let lhs_base_reference = Middle.Utils.lvalue_base_reference lhs in *)
-      let rec get_lhs_base = function
-        | {Ast.lval= Ast.LIndexed (l, _); _} -> get_lhs_base l
-        | {lval= LVariable s; lmeta} -> (s, lmeta)
-        (* TUPLE MAYBE get_lhs_base
-         * Guessed because I don't know how this function is used *)
-        | {lval= LIndexedTuple (l, _); _} -> get_lhs_base l
-      in
-      let assign_identifier, lmeta = get_lhs_base assign_lhs in
-      (* Can't get metadata if I translate to MIR and use MIR utils; have to rewrite it in AST*)
-      let id_ad_level = lmeta.Ast.ad_level in
-      let id_type_ = lmeta.Ast.type_ in
-      let lhs_type_ = assign_lhs.Ast.lmeta.type_ in
-      let lhs_ad_level = assign_lhs.Ast.lmeta.ad_level in
-      let rec get_lhs_indices = function
-        | {Ast.lval= Ast.LIndexed (l, i); _} -> get_lhs_indices l @ i
-        | {Ast.lval= Ast.LVariable _; _} -> []
-        (* TUPLE STUB get_lhs_indices
-         * This is certainly wrong, I'm going to have to overhaul the indexing system
+    let rec group_lvalue carry_idcs lv =
+      (* Group up non-tuple indices
+         e.g. x[1][2].1[3] -> x[1,2].1[3]
+
+         Done by passing current stack of indices down until it hits a non-indexed
+      *)
+      match lv.Ast.lval with
+      | LVariable _ ->
+        if List.is_empty carry_idcs then lv else {lv with lval = LIndexed (lv, carry_idcs)}
+      | LIndexedTuple (lv', ix) ->
+        let lv'' = {lv with lval = LIndexedTuple (group_lvalue [] lv', ix) }
+        in
+        if List.is_empty carry_idcs then lv'' else
+          {lv with lval = LIndexed (lv'', carry_idcs)}
+      | LIndexed (lv, idcs) ->
+        group_lvalue (idcs @ carry_idcs) lv
+    in
+    let grouped_lhs = group_lvalue [] assign_lhs in
+    let rec trans_lvalue lv =
+      match lv.Ast.lval with
+      | LVariable v ->
+        Middle.Stmt.Fixed.Pattern.LVariable v.name
+      | LIndexedTuple (lv, ix) ->
+        Middle.Stmt.Fixed.Pattern.LIndexedTuple (trans_lvalue lv, ix)
+      | LIndexed (lv, idcs) ->
+        Middle.Stmt.Fixed.Pattern.LIndexed (trans_lvalue lv, List.map ~f:trans_idx idcs)
+    in
+    let lhs = trans_lvalue grouped_lhs in
+    (* TUPLE MAYBE assignment type variable *)
+    (* The type of the assignee if it weren't indexed
+       e.g. in x[1,2] it's type(x), and in y.2 it's type(y.2)
+    *)
+    let unindexed_type = match grouped_lhs.Ast.lval with
+      | LVariable _ | LIndexedTuple _ -> grouped_lhs.Ast.lmeta.type_
+      | LIndexed (lv, _) -> lv.Ast.lmeta.type_
+    in
+    let rhs =
+      match assign_op with
+      | Ast.Assign | Ast.ArrowAssign -> trans_expr assign_rhs
+      | Ast.OperatorAssign op ->
+        (* TUPLE MAYBE assignee
+           I think this is what the old code was getting at?
         *)
-        | {Ast.lval= Ast.LIndexedTuple (_, _); _} -> []
-      in
-      let assign_indices = get_lhs_indices assign_lhs in
-      let rhs =
-        match assign_op with
-        | Ast.Assign | Ast.ArrowAssign -> trans_expr assign_rhs
-        | Ast.OperatorAssign op ->
-          (* this is certainly wrong because the metadata don't match with tuples *)
-            let assignee =
-              { Ast.expr=
-                  ( match assign_indices with
-                  | [] -> Ast.Variable assign_identifier
-                  | _ ->
-                      Ast.Indexed
-                        ( { expr= Ast.Variable assign_identifier
-                          ; emeta=
-                              { Ast.loc= Location_span.empty
-                              ; ad_level= id_ad_level
-                              ; type_= id_type_ } }
-                        , assign_indices ) )
-              ; emeta=
-                  { Ast.loc= assign_lhs.lmeta.loc
-                  ; ad_level= lhs_ad_level
-                  ; type_= lhs_type_ } }
-            in
-            op_to_funapp op [assignee; assign_rhs]
-      in
-      Assignment
-        ( lhs
-        , id_type_
-        , rhs )
-      |> swrap
+        let assignee = Ast.expr_of_lvalue grouped_lhs in
+        op_to_funapp op [assignee; assign_rhs]
+    in
+    Assignment
+      ( lhs
+      , unindexed_type
+      , rhs )
+    |> swrap
   | Ast.NRFunApp (fn_kind, {name; _}, args) ->
       NRFunApp (trans_fn_kind fn_kind, name, trans_exprs args) |> swrap
   | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap
