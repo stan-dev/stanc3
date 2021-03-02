@@ -278,6 +278,7 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux ARM binary") {
+                    when { anyOf { buildingTag(); branch 'master' } }
                     agent { label "arm-ec2" }
                     steps {
 
