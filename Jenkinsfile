@@ -277,6 +277,37 @@ pipeline {
                     post {always { runShell("rm -rf ./*")}}
                 }
 
+                stage("Build & test a static Linux ARM binary") {
+                    agent { label "arm-ec2" }
+                    steps {
+
+                        runShell("""
+                            bash -x scripts/install_ocaml.sh "--disable-sandboxing -y"
+
+                            opam update; opam install -y js_of_ocaml-compiler.3.4.0 js_of_ocaml-ppx.3.4.0 js_of_ocaml.3.4.0
+                            opam update; bash -x scripts/install_build_deps.sh
+                            opam update; bash -x scripts/install_js_deps.sh
+                        """)
+
+                        runShell("""
+                            eval \$(opam env)
+                            dune subst
+                            dune build @install --profile static
+                        """)
+                        /*
+                        echo runShell("""
+                            eval \$(opam env)
+                            time dune runtest --profile static --verbose
+                        """)
+                        */
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm-stanc"
+                        sh "mv _build/default/src/stan2tfp/stan2tfp.exe bin/linux-arm-stan2tfp"
+
+                        stash name:'linux-arm-exe', includes:'bin/*'
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+
                 // Cross compiling for windows on debian
                 stage("Build & test static Windows binary") {
                     agent {
@@ -318,6 +349,7 @@ pipeline {
                 unstash 'windows-exe'
                 unstash 'linux-exe'
                 unstash 'mac-exe'
+                unstash 'linux-arm-exe'
                 unstash 'js-exe'
                 runShell("""
                     wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
