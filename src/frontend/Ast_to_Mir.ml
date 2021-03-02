@@ -572,57 +572,55 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   let mloc = smeta in
   match stmt_typed with
   | Ast.Assignment {assign_lhs; assign_rhs; assign_op} ->
-    let rec group_lvalue carry_idcs lv =
-      (* Group up non-tuple indices
+      let rec group_lvalue carry_idcs lv =
+        (* Group up non-tuple indices
          e.g. x[1][2].1[3] -> x[1,2].1[3]
 
          Done by passing current stack of indices down until it hits a non-indexed
       *)
-      match lv.Ast.lval with
-      | LVariable _ ->
-        if List.is_empty carry_idcs then lv else {lv with lval = LIndexed (lv, carry_idcs)}
-      | LIndexedTuple (lv', ix) ->
-        let lv'' = {lv with lval = LIndexedTuple (group_lvalue [] lv', ix) }
-        in
-        if List.is_empty carry_idcs then lv'' else
-          {lv with lval = LIndexed (lv'', carry_idcs)}
-      | LIndexed (lv, idcs) ->
-        group_lvalue (idcs @ carry_idcs) lv
-    in
-    let grouped_lhs = group_lvalue [] assign_lhs in
-    let rec trans_lvalue lv =
-      match lv.Ast.lval with
-      | LVariable v ->
-        Middle.Stmt.Fixed.Pattern.LVariable v.name
-      | LIndexedTuple (lv, ix) ->
-        Middle.Stmt.Fixed.Pattern.LIndexedTuple (trans_lvalue lv, ix)
-      | LIndexed (lv, idcs) ->
-        Middle.Stmt.Fixed.Pattern.LIndexed (trans_lvalue lv, List.map ~f:trans_idx idcs)
-    in
-    let lhs = trans_lvalue grouped_lhs in
-    (* TUPLE MAYBE assignment type variable *)
-    (* The type of the assignee if it weren't indexed
+        match lv.Ast.lval with
+        | LVariable _ ->
+            if List.is_empty carry_idcs then lv
+            else {lv with lval= LIndexed (lv, carry_idcs)}
+        | LIndexedTuple (lv', ix) ->
+            let lv'' =
+              {lv with lval= LIndexedTuple (group_lvalue [] lv', ix)}
+            in
+            if List.is_empty carry_idcs then lv''
+            else {lv with lval= LIndexed (lv'', carry_idcs)}
+        | LIndexed (lv, idcs) -> group_lvalue (idcs @ carry_idcs) lv
+      in
+      let grouped_lhs = group_lvalue [] assign_lhs in
+      let rec trans_lvalue lv =
+        match lv.Ast.lval with
+        | LVariable v -> Middle.Stmt.Fixed.Pattern.LVariable v.name
+        | LIndexedTuple (lv, ix) ->
+            Middle.Stmt.Fixed.Pattern.LIndexedTuple (trans_lvalue lv, ix)
+        | LIndexed (lv, idcs) ->
+            Middle.Stmt.Fixed.Pattern.LIndexed
+              (trans_lvalue lv, List.map ~f:trans_idx idcs)
+      in
+      let lhs = trans_lvalue grouped_lhs in
+      (* TUPLE MAYBE assignment type variable *)
+      (* The type of the assignee if it weren't indexed
        e.g. in x[1,2] it's type(x), and in y.2 it's type(y.2)
     *)
-    let unindexed_type = match grouped_lhs.Ast.lval with
-      | LVariable _ | LIndexedTuple _ -> grouped_lhs.Ast.lmeta.type_
-      | LIndexed (lv, _) -> lv.Ast.lmeta.type_
-    in
-    let rhs =
-      match assign_op with
-      | Ast.Assign | Ast.ArrowAssign -> trans_expr assign_rhs
-      | Ast.OperatorAssign op ->
-        (* TUPLE MAYBE assignee
+      let unindexed_type =
+        match grouped_lhs.Ast.lval with
+        | LVariable _ | LIndexedTuple _ -> grouped_lhs.Ast.lmeta.type_
+        | LIndexed (lv, _) -> lv.Ast.lmeta.type_
+      in
+      let rhs =
+        match assign_op with
+        | Ast.Assign | Ast.ArrowAssign -> trans_expr assign_rhs
+        | Ast.OperatorAssign op ->
+            (* TUPLE MAYBE assignee
            I think this is what the old code was getting at?
         *)
-        let assignee = Ast.expr_of_lvalue grouped_lhs in
-        op_to_funapp op [assignee; assign_rhs]
-    in
-    Assignment
-      ( lhs
-      , unindexed_type
-      , rhs )
-    |> swrap
+            let assignee = Ast.expr_of_lvalue grouped_lhs in
+            op_to_funapp op [assignee; assign_rhs]
+      in
+      Assignment (lhs, unindexed_type, rhs) |> swrap
   | Ast.NRFunApp (fn_kind, {name; _}, args) ->
       NRFunApp (trans_fn_kind fn_kind, name, trans_exprs args) |> swrap
   | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap

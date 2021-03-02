@@ -150,7 +150,7 @@ let rec pp_statement (ppf : Format.formatter)
       pf ppf "@[<hov 4>%a = %a;@]" pp_nonrange_lvalue lhs pp_expr rhs
   | Assignment (lhs, _, rhs) ->
       (* Assignments of arrays, vectors etc. need to use `assign()` and worry about deep copies *)
-    let lhs_ref = Middle.Utils.lvalue_base_reference lhs in
+      let lhs_ref = Middle.Utils.lvalue_base_reference lhs in
       let rec maybe_deep_copy e =
         (* If this expression overlaps with lhs, *)
         if expr_needs_deep_copy lhs_ref e then
