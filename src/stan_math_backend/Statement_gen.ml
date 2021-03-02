@@ -128,7 +128,7 @@ This is 'shallow' in the sense that it doesn't recurse into expressions *)
 let expr_needs_deep_copy (lhs_base_ref : 'e Middle.Stmt.Fixed.Pattern.lvalue)
     (expr : 'a Expr.Fixed.t) : bool =
   Option.value_map
-    (* Convert the expression to an lvalue to get rid of non-reference expressions *)
+    (* Convert the expression to an lvalue to get rid of everything but variables and indices *)
     (Middle.Utils.lvalue_of_expr_opt expr)
     (* If we can't, this expression can't be deep copied *)
     ~default:
@@ -146,10 +146,17 @@ let rec pp_statement (ppf : Format.formatter)
   | Block _ | SList _ | Decl _ | Skip | Break | Continue -> ()
   | _ -> Locations.pp_smeta ppf meta ) ;
   match pattern with
+  (* TUPLE MAYBE assigning to tuples
+     Right now, tuples are assigned with `=`.
+     There's a potential issue when the tuple has an element that would normally be assigned to with `assign()`. I'm not sure what sort of checks are done inside `assign`, but they currently aren't being called on e.g. matrices inside tuples.
+  *)
+  (* Use = for any tuple-valued assignment or any scalar-valued assignment without LHS indices *)
+  | Assignment
+      ( lhs , _ , ({meta= {Expr.Typed.Meta.type_= UTuple _; _}; _} as rhs))
   | Assignment
       ( ((LVariable _ | LIndexedTuple _ | LIndexed (_, [])) as lhs)
       , _
-      , ({meta= {Expr.Typed.Meta.type_= UInt | UReal | UTuple _; _}; _} as rhs)
+      , ({meta= {Expr.Typed.Meta.type_= UInt | UReal ; _}; _} as rhs)
       ) ->
       pf ppf "@[<hov 4>%a = %a;@]" pp_nonrange_lvalue lhs pp_expr rhs
   | Assignment (lhs, _, rhs) ->
