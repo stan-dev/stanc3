@@ -120,7 +120,7 @@ let rec pp_nonrange_lvalue ppf lvalue =
   | LIndexed (lv, idcs) when List.for_all ~f:is_single_index idcs ->
       pf ppf "%a%a" pp_nonrange_lvalue lv pp_indices_simple ("", idcs)
   | LIndexed (_, _) ->
-      (* TODO TUPLE catch multi-index in semantic check *)
+      (* TODO TUPLE catch multi-index in semantic check, maybe it's already a type error? *)
       raise_s [%message "Multi-index must be the last (rightmost) index."]
 
 (* True if expr has a 'shallow' overlap with the lhs, for the purpose of checking if expr needs to be deep copied when it's assigned to the lhs.
@@ -146,7 +146,11 @@ let rec pp_statement (ppf : Format.formatter)
   | Block _ | SList _ | Decl _ | Skip | Break | Continue -> ()
   | _ -> Locations.pp_smeta ppf meta ) ;
   match pattern with
-  | Assignment (lhs, (UInt | UReal | UTuple _), rhs) ->
+  | Assignment
+      ( ((LVariable _ | LIndexedTuple _ | LIndexed (_, [])) as lhs)
+      , _
+      , ({meta= {Expr.Typed.Meta.type_= UInt | UReal | UTuple _; _}; _} as rhs)
+      ) ->
       pf ppf "@[<hov 4>%a = %a;@]" pp_nonrange_lvalue lhs pp_expr rhs
   | Assignment (lhs, _, rhs) ->
       (* Assignments of arrays, vectors etc. need to use `assign()` and worry about deep copies *)

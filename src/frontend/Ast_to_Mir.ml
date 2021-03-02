@@ -588,7 +588,10 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
             in
             if List.is_empty carry_idcs then lv''
             else {lv with lval= LIndexed (lv'', carry_idcs)}
-        | LIndexed (lv, idcs) -> group_lvalue (idcs @ carry_idcs) lv
+        | LIndexed (lv', idcs) ->
+          (* When we group indices,
+             the metadata of group-indexed LHS equals the metadata of the outermost indexed LHS *)
+          {lv with Ast.lval = (group_lvalue (idcs @ carry_idcs) lv').lval}
       in
       let grouped_lhs = group_lvalue [] assign_lhs in
       let rec trans_lvalue lv =
