@@ -125,7 +125,7 @@ let rec pp_nonrange_lvalue ppf lvalue =
 
 (* True if expr has a 'shallow' overlap with the lhs, for the purpose of checking if expr needs to be deep copied when it's assigned to the lhs.
 This is 'shallow' in the sense that it doesn't recurse into expressions *)
-let expr_needs_deep_copy (lhs_base_ref : 'e Middle.Stmt.Fixed.Pattern.lvalue)
+let expr_overlaps_lhs_ref (lhs_base_ref : 'e Middle.Stmt.Fixed.Pattern.lvalue)
     (expr : 'a Expr.Fixed.t) : bool =
   Option.value_map
     (* Convert the expression to an lvalue to get rid of everything but variables and indices *)
@@ -160,25 +160,28 @@ let rec pp_statement (ppf : Format.formatter)
       ) ->
       pf ppf "@[<hov 4>%a = %a;@]" pp_nonrange_lvalue lhs pp_expr rhs
   | Assignment (lhs, _, rhs) ->
-      (* Assignments of arrays, vectors etc. need to use `assign()` and worry about deep copies *)
+    (* Assignments of arrays, vectors etc. need to use `assign()` and worry about deep copies *)
+    (* XXX I think in general we don't need to do a deepcopy if e is nested
+       inside some function call - the function should get its own copy
+       (in all cases???) *)
       let lhs_ref = Middle.Utils.lvalue_base_reference lhs in
       let rec maybe_deep_copy e =
-        (* If this expression overlaps with lhs, *)
-        if expr_needs_deep_copy lhs_ref e then
+        match e.Expr.Fixed.pattern with
+        (* Never need to copy a scalar type *)
+        | _ when UnsizedType.is_scalar_type (Expr.Typed.type_of e) -> e
+        (* Never need to copy exprs inside a compiler FunApp *)
+        | FunApp (CompilerInternal, _, _) -> e
+        (* When the expression overlaps with the LHS, *)
+        | _ when expr_overlaps_lhs_ref lhs_ref e ->
           (* then wrap it in a deep copy. *)
           { e with
             Expr.Fixed.pattern=
               FunApp (CompilerInternal, "stan::model::deep_copy", [e]) }
-        else
-          (* Otherwise, check if any subexpressions need copies. *)
-          match e.pattern with
-          (* Don't recurse into function applications because they always copy anyway *)
-          | FunApp _ -> e
-          | _ ->
-              (* Recurse on subexpressions *)
-              { e with
-                Expr.Fixed.pattern=
-                  Expr.Fixed.Pattern.map maybe_deep_copy e.pattern }
+        | _ ->
+          (* Otherwise recurse on subexpressions *)
+          { e with
+            Expr.Fixed.pattern=
+              Expr.Fixed.Pattern.map maybe_deep_copy e.pattern }
       in
       let rhs =
         match rhs.pattern with
