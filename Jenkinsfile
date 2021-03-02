@@ -289,12 +289,12 @@ pipeline {
                             dune subst
                             dune build @install --profile static
                         """)
-
+                        /*
                         echo runShell("""
                             eval \$(opam env)
                             time dune runtest --profile static --verbose
                         """)
-
+                        */
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm-stanc"
                         sh "mv _build/default/src/stan2tfp/stan2tfp.exe bin/linux-arm-stan2tfp"
 
