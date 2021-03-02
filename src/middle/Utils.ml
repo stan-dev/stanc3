@@ -158,7 +158,7 @@ let rec lhs_variable (lhs : 'e Stmt.Fixed.Pattern.lvalue) : string =
 let lvalue_base_reference (lvalue : 'e Stmt.Fixed.Pattern.lvalue) =
   let rec go (lv : 'e Stmt.Fixed.Pattern.lvalue) wrap =
     match lv with
-    | LVariable _ | LIndexedTuple (LVariable _, _) -> wrap lvalue
+    | LVariable _ | LIndexedTuple (LVariable _, _) -> wrap lv
     | LIndexed (lv, _) -> go lv Fn.id
     | LIndexedTuple (lv, ix) -> go lv (fun lv -> wrap (LIndexedTuple (lv, ix)))
   in
