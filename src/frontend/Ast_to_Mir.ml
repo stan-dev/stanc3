@@ -362,30 +362,97 @@ let remove_possibly_exn pst action loc =
         [%message
           "Error extracting sizedtype" ~action ~loc:(loc : Location_span.t)]
 
-let constrain_decl st dconstrain t decl_id decl_var smeta =
-  let mkstring = mkstring (Expr.Typed.loc_of decl_var) in
-  match Option.map ~f:(constrain_constraint_to_string t) dconstrain with
-  | None | Some "" -> []
-  | Some constraint_str ->
-      let dc = Option.value_exn dconstrain in
-      let fname = constrainaction_fname dc in
+(* let constrain_decl_ st dconstrain_opt t decl_id decl_var smeta =
+ *   match
+ *     Option.map dconstrain_opt ~f:(fun dc ->
+ *         (constrain_constraint_to_string t dc, dc) )
+ *   with
+ *   | None | Some ("", _) -> []
+ *   | Some (constraint_str, dconstrain) ->
+ *       (\* Make an MIR string literal at this location *\)
+ *       let mkstring str = mkstring (Expr.Typed.loc_of decl_var) str in
+ *       (\* Get appropriate function name for the constraint action, e.g. FnConstrain *\)
+ *       let fname = constrainaction_fname dconstrain in
+ *       let extra_args =
+ *         match dconstrain with
+ *         | Constrain -> extra_constraint_args st t
+ *         | _ -> []
+ *       in
+ *       (\* The argument expressions for the constraint action function *\)
+ *       let args var =
+ *         (var :: mkstring constraint_str :: extract_transform_args var t)
+ *         @ extra_args
+ *       in
+ *       let var_constraint_funapp var =
+ *         { Expr.Fixed.pattern= FunApp (CompilerInternal, fname, args var)
+ *         ; meta= var.meta }
+ *       in
+ *       let unconstrained_decls, decl_id, ut =
+ *         let ut = SizedType.to_unsized (param_size t st) in
+ *         match dconstrain with
+ *         | Unconstrain when t <> Identity ->
+ *             ( [ Stmt.Fixed.
+ *                   { pattern=
+ *                       Decl
+ *                         { decl_adtype= DataOnly
+ *                         ; decl_id= decl_id ^ "_free__"
+ *                         ; decl_type= Sized (param_size t st) }
+ *                   ; meta= smeta } ]
+ *             , decl_id ^ "_free__"
+ *             , ut )
+ *         | _ -> ([], decl_id, SizedType.to_unsized st)
+ *       in
+ *       unconstrained_decls
+ *       @ [ (constraint_forl t) st
+ *             (fun var ->
+ *               Stmt.Helpers.assign_indexed ut decl_id smeta
+ *                 var_constraint_funapp var )
+ *             decl_var smeta ] *)
+
+let rec constrain_decl (st : Expr.Typed.t SizedType.t)
+    (dconstrain_opt : constrainaction option)
+    (t : Expr.Typed.t Program.transformation) decl_id decl_var smeta =
+  let recur_block st var =
+    Stmt.Fixed.
+      { pattern=
+          SList (constrain_decl st dconstrain_opt t decl_id var smeta)
+      ; meta= smeta }
+  in
+match (dconstrain_opt, st, t) with
+  | None, _, _
+   |_, _, Identity
+   |Some Check, _, (Offset _ | Multiplier _ | OffsetMultiplier _) ->
+      []
+  | _, SArray (st', d), _ ->
+      [ Stmt.Helpers.mkfor d (fun e -> recur_block st' e) decl_var smeta ]
+  | Some dconstrain, (SInt | SReal), _
+   |( Some dconstrain
+    , (SVector _ | SRowVector _ | SMatrix _)
+    , ( Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
+      | CholeskyCov | Correlation | Covariance ) ) ->
+      (* apply bodyfn *)
+      let constraint_str = constrain_constraint_to_string t dconstrain in
+      (* Make an MIR string literal at this location *)
+      let mkstring str = mkstring (Expr.Typed.loc_of decl_var) str in
+      (* Get appropriate function name for the constraint action, e.g. FnConstrain *)
+      let fname = constrainaction_fname dconstrain in
       let extra_args =
         match dconstrain with
-        | Some Constrain -> extra_constraint_args st t
+        | Constrain -> extra_constraint_args st t
         | _ -> []
       in
-      let args var =
-        (var :: mkstring constraint_str :: extract_transform_args var t)
-        @ extra_args
-      in
-      let constrainvar var =
-        { var with
-          Expr.Fixed.pattern= FunApp (CompilerInternal, fname, args var) }
+      let var_constraint_funapp var =
+        let args =
+          (var :: mkstring constraint_str :: extract_transform_args var t)
+          @ extra_args
+        in
+        { Expr.Fixed.pattern= FunApp (CompilerInternal, fname, args)
+        ; meta= var.meta }
       in
       let unconstrained_decls, decl_id, ut =
         let ut = SizedType.to_unsized (param_size t st) in
         match dconstrain with
-        | Some Unconstrain when t <> Identity ->
+        | Unconstrain when t <> Identity ->
             ( [ Stmt.Fixed.
                   { pattern=
                       Decl
@@ -398,9 +465,12 @@ let constrain_decl st dconstrain t decl_id decl_var smeta =
         | _ -> ([], decl_id, SizedType.to_unsized st)
       in
       unconstrained_decls
-      @ [ (constraint_forl t) st
-            (Stmt.Helpers.assign_indexed ut decl_id smeta constrainvar)
-            decl_var smeta ]
+      @ [ Stmt.Helpers.assign_indexed ut decl_id smeta var_constraint_funapp
+            decl_var ]
+  | _, (SVector d | SRowVector d), _ ->
+    [Stmt.Helpers.mkfor d (fun e -> recur_block SReal e) decl_var smeta]
+  | _, SMatrix (d1, d2), _ ->
+    [Stmt.Helpers.mkfor d1 (fun row -> Stmt.Helpers.mkfor d2 (fun e -> recur_block SReal e) row smeta) decl_var smeta]
 
 let rec check_decl var decl_type' decl_id decl_trans smeta adlevel =
   let decl_type = remove_possibly_exn decl_type' "check" smeta in
