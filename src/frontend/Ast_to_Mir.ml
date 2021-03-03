@@ -414,17 +414,16 @@ let rec constrain_decl (st : Expr.Typed.t SizedType.t)
     (t : Expr.Typed.t Program.transformation) decl_id decl_var smeta =
   let recur_block st var =
     Stmt.Fixed.
-      { pattern=
-          SList (constrain_decl st dconstrain_opt t decl_id var smeta)
+      { pattern= SList (constrain_decl st dconstrain_opt t decl_id var smeta)
       ; meta= smeta }
   in
-match (dconstrain_opt, st, t) with
+  match (dconstrain_opt, st, t) with
   | None, _, _
    |_, _, Identity
    |Some Check, _, (Offset _ | Multiplier _ | OffsetMultiplier _) ->
       []
   | _, SArray (st', d), _ ->
-      [ Stmt.Helpers.mkfor d (fun e -> recur_block st' e) decl_var smeta ]
+      [Stmt.Helpers.mkfor d (fun e -> recur_block st' e) decl_var smeta]
   | Some dconstrain, (SInt | SReal), _
    |( Some dconstrain
     , (SVector _ | SRowVector _ | SMatrix _)
@@ -468,9 +467,12 @@ match (dconstrain_opt, st, t) with
       @ [ Stmt.Helpers.assign_indexed ut decl_id smeta var_constraint_funapp
             decl_var ]
   | _, (SVector d | SRowVector d), _ ->
-    [Stmt.Helpers.mkfor d (fun e -> recur_block SReal e) decl_var smeta]
+      [Stmt.Helpers.mkfor d (fun e -> recur_block SReal e) decl_var smeta]
   | _, SMatrix (d1, d2), _ ->
-    [Stmt.Helpers.mkfor d1 (fun row -> Stmt.Helpers.mkfor d2 (fun e -> recur_block SReal e) row smeta) decl_var smeta]
+      [ Stmt.Helpers.mkfor d1
+          (fun row ->
+            Stmt.Helpers.mkfor d2 (fun e -> recur_block SReal e) row smeta )
+          decl_var smeta ]
 
 let rec check_decl var decl_type' decl_id decl_trans smeta adlevel =
   let decl_type = remove_possibly_exn decl_type' "check" smeta in
