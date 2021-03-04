@@ -156,7 +156,7 @@ module TypeError = struct
         let types x = List.map ~f:snd x in
         let optional_tol_args =
           if Stan_math_signatures.is_variadic_ode_adjoint_fn name then
-            types Stan_math_signatures.variadic_ode_adjoint_arg_types
+            types Stan_math_signatures.variadic_ode_adjoint_ctl_tol_arg_types
           else if Stan_math_signatures.is_variadic_ode_tol_fn name then
             types Stan_math_signatures.variadic_ode_tol_arg_types
           else []
@@ -179,7 +179,7 @@ module TypeError = struct
         let variadic_ode_generic_signature =
           let optional_tol_args =
             if Stan_math_signatures.is_variadic_ode_adjoint_fn name then
-              types Stan_math_signatures.variadic_ode_adjoint_arg_types
+              types Stan_math_signatures.variadic_ode_adjoint_ctl_tol_arg_types
             else if Stan_math_signatures.is_variadic_ode_tol_fn name then
               types Stan_math_signatures.variadic_ode_tol_arg_types
             else []

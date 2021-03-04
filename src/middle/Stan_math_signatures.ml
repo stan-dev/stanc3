@@ -95,7 +95,7 @@ let reduce_sum_slice_types =
   List.concat (List.map ~f:base_slice_type reduce_sum_allowed_dimensionalities)
 
 (* Variadic ODE *)
-let variadic_ode_adjoint_arg_types =
+let variadic_ode_adjoint_ctl_tol_arg_types =
   [ (UnsizedType.AutoDiffable, UnsizedType.UReal) (* real rel_tol_f *)
   ; (AutoDiffable, UVector) (* vector abs_tol_f *)
   ; (AutoDiffable, UReal) (* real rel_tol_b *)
@@ -175,7 +175,7 @@ let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
 let reduce_sum_functions =
   String.Set.of_list ["reduce_sum"; "reduce_sum_static"]
 
-let variadic_ode_adjoint = String.Set.of_list ["ode_adjoint"; "ode_adjoint_tol"]
+let variadic_ode_adjoint = String.Set.of_list ["ode_adjoint_tol_ctl"; "ode_adjoint_tol"]
 
 let variadic_ode_basic_functions =
   String.Set.of_list
@@ -185,7 +185,7 @@ let variadic_ode_basic_functions =
 let ode_tolerances_suffix = "_tol"
 let is_reduce_sum_fn f = Set.mem reduce_sum_functions f
 let is_variadic_ode_fn f = Set.mem variadic_ode_basic_functions f || Set.mem variadic_ode_adjoint f
-let is_variadic_ode_adjoint_fn f = Set.mem variadic_ode_adjoint f
+let is_variadic_ode_adjoint_fn f = f = "ode_adjoint_tol_ctl"
 
 let is_variadic_ode_tol_fn f =
   is_variadic_ode_fn f && String.is_suffix f ~suffix:ode_tolerances_suffix
