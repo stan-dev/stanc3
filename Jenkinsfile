@@ -2,6 +2,7 @@
 import org.stan.Utils
 
 def utils = new org.stan.Utils()
+def skipExpressionTests = false
 
 /* Functions that runs a sh command and returns the stdout */
 def runShell(String command){
@@ -21,8 +22,7 @@ def tagName() {
 pipeline {
     agent none
     parameters {
-        booleanParam(name:"compile_all", defaultValue: false,
-                     description:"Try compiling all models in test/integration/good")
+        booleanParam(name:"compile_all", defaultValue: false, description:"Try compiling all models in test/integration/good")
     }
     options {parallelsAlwaysFailFast()}
     stages {
@@ -33,6 +33,19 @@ pipeline {
                 not { branch 'downstream_tests' }
             }
             steps { script { utils.killOldBuilds() } }
+        }
+        stage('Verify changes') {
+            agent { label 'linux' }
+            steps {
+                script {
+
+                    retry(3) { checkout scm }
+                    sh 'git clean -xffd'
+
+                    def stanMathSigs = ['test/integration/signatures/stan_math_sigs.expected'].join(" ")
+                    skipExpressionTests = utils.verifyChanges(stanMathSigs)
+                }
+            }
         }
         stage("Build") {
             agent {
@@ -341,6 +354,40 @@ pipeline {
                 }
             }
 
+        }
+        stage('Math functions expressions test') {
+            when {
+                expression {
+                    !skipExpressionTests
+                }
+            }
+            agent any
+            steps {
+
+                sh """
+                    git clone --recursive https://github.com/stan-dev/stan.git
+                    cd stan && make math-revert && make clean-all && git clean -xffd && git submodule update --init --recursive
+                """
+
+                writeFile(file: "make/local", text: "CXX=${env.CXX} -Werror ")
+
+                unstash 'ubuntu-exe'
+                // Where to copy the binary ?
+
+                script {
+                    dir("stan/lib/stan_math/") {
+                        sh "echo O=0 > make/local"
+                        withEnv(['PATH+TBB=./lib/tbb']) {
+                            try { sh "./runTests.py -j${env.PARALLEL} test/expressions" }
+                            finally { junit 'test/**/*.xml' }
+                        }
+                        withEnv(['PATH+TBB=./lib/tbb']) {
+                            sh "python ./test/expressions/test_expression_testing_framework.py"
+                        }
+                    }
+                }
+            }
+            post { always { deleteDir() } }
         }
         stage("Release tag and publish binaries") {
             when { anyOf { buildingTag(); branch 'master' } }
