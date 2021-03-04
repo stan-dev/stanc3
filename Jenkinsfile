@@ -141,7 +141,7 @@ pipeline {
                 }
             }
         }
-        stage("CmdStan & Math tests") {
+        stage("CmdStan tests") {
             parallel {
                 stage("Compile tests") {
                     agent { label 'linux' }
@@ -211,36 +211,6 @@ pipeline {
                             errorUnstableThreshold: 100
                     }
                     post { always { runShell("rm -rf ./*") }}
-                }
-                stage('Math functions expressions test') {
-                    when {
-                        expression {
-                            !skipExpressionTests
-                        }
-                    }
-                    agent any
-                    steps {
-
-                        unstash 'ubuntu-exe'
-                        sh """
-                            git clone --recursive https://github.com/stan-dev/math.git
-                            cp ../bin/stanc math/bin/stanc
-                        """
-
-                        writeFile(file: "make/local", text: "CXX=${env.CXX} -Werror ")
-
-                        script {
-                            dir("stan/lib/stan_math/") {
-                                sh "echo O=0 > make/local"
-                                withEnv(['PATH+TBB=./lib/tbb']) {
-                                    try { sh "./runTests.py -j${env.PARALLEL} test/expressions" }
-                                    finally { junit 'test/**/*.xml' }
-                                }
-                            }
-                        }
-                        
-                    }
-                    post { always { deleteDir() } }
                 }
             }
         }
@@ -384,6 +354,37 @@ pipeline {
                 }
             }
 
+        }
+        stage('Math functions expressions test') {
+            when {
+                expression {
+                    !skipExpressionTests
+                }
+            }
+            agent any
+            steps {
+
+                unstash 'ubuntu-exe'
+                sh """
+                    git clone --recursive https://github.com/stan-dev/math.git
+                    mkdir -p math/bin/stanc
+                    cp bin/stanc math/bin/stanc
+                """
+
+                writeFile(file: "make/local", text: "CXX=${env.CXX} -Werror ")
+
+                script {
+                    dir("stan/lib/stan_math/") {
+                        sh "echo O=0 > make/local"
+                        withEnv(['PATH+TBB=./lib/tbb']) {
+                            try { sh "./runTests.py -j${env.PARALLEL} test/expressions" }
+                            finally { junit 'test/**/*.xml' }
+                        }
+                    }
+                }
+
+            }
+            post { always { deleteDir() } }
         }
         stage("Release tag and publish binaries") {
             when { anyOf { buildingTag(); branch 'master' } }
