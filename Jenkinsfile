@@ -364,15 +364,13 @@ pipeline {
             agent any
             steps {
 
+                unstash 'ubuntu-exe'
                 sh """
-                    git clone --recursive https://github.com/stan-dev/stan.git
-                    cd stan && make math-revert && make clean-all && git clean -xffd && git submodule update --init --recursive
+                    git clone --recursive https://github.com/stan-dev/math.git
+                    cp ../bin/stanc math/bin/stanc
                 """
 
                 writeFile(file: "make/local", text: "CXX=${env.CXX} -Werror ")
-
-                unstash 'ubuntu-exe'
-                // Where to copy the binary ?
 
                 script {
                     dir("stan/lib/stan_math/") {
@@ -381,11 +379,9 @@ pipeline {
                             try { sh "./runTests.py -j${env.PARALLEL} test/expressions" }
                             finally { junit 'test/**/*.xml' }
                         }
-                        withEnv(['PATH+TBB=./lib/tbb']) {
-                            sh "python ./test/expressions/test_expression_testing_framework.py"
-                        }
                     }
                 }
+                
             }
             post { always { deleteDir() } }
         }
