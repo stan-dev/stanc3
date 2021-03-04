@@ -464,8 +464,11 @@ let rec constrain_decl (st : Expr.Typed.t SizedType.t)
         | _ -> ([], decl_id, SizedType.to_unsized st)
       in
       unconstrained_decls
-      @ [ Stmt.Helpers.assign_indexed ut decl_id smeta var_constraint_funapp
-            decl_var ]
+      @ [ Stmt.Fixed.
+            { meta= smeta
+            ; pattern=
+                Assignment ((decl_id, ut, []), var_constraint_funapp decl_var)
+            } ]
   | _, (SVector d | SRowVector d), _ ->
       [Stmt.Helpers.mkfor d (fun e -> recur_block SReal e) decl_var smeta]
   | _, SMatrix (d1, d2), _ ->
