@@ -20,7 +20,7 @@ transformed data {
   real rel_tol_f;
   vector[N] abs_tol_f;
   real rel_tol_b;
-  real abs_tol_b;
+  vector[N] abs_tol_b;
   real rel_tol_q;
   real abs_tol_q;
   int max_num_steps;

@@ -99,7 +99,7 @@ let variadic_ode_adjoint_ctl_tol_arg_types =
   [ (UnsizedType.AutoDiffable, UnsizedType.UReal) (* real rel_tol_f *)
   ; (AutoDiffable, UVector) (* vector abs_tol_f *)
   ; (AutoDiffable, UReal) (* real rel_tol_b *)
-  ; (AutoDiffable, UReal) (* real abs_tol_b *)
+  ; (AutoDiffable, UVector) (* real abs_tol_b *)
   ; (AutoDiffable, UReal) (* real rel_tol_q *)
   ; (AutoDiffable, UReal) (* real abs_tol_q *)
   ; (DataOnly, UInt) (* int max_num_steps *)
