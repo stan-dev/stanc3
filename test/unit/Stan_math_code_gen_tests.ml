@@ -31,7 +31,7 @@ let%expect_test "udf" =
               stan::value_type_t<T1__>>;
       const auto& x = to_ref(x_arg__);
       const auto& y = to_ref(y_arg__);
-      const static bool propto__ = true;
+      static constexpr bool propto__ = true;
       (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
       (void) DUMMY_VAR__;  // suppress unused var warning
@@ -92,7 +92,7 @@ let%expect_test "udf-expressions" =
       const auto& x = to_ref(x_arg__);
       const auto& y = to_ref(y_arg__);
       const auto& z = to_ref(z_arg__);
-      const static bool propto__ = true;
+      static constexpr bool propto__ = true;
       (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
       (void) DUMMY_VAR__;  // suppress unused var warning
