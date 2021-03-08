@@ -131,8 +131,8 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     }
   }
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
-    stan::require_vector_like_t<VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -199,9 +199,9 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     } // log_prob_impl() 
     
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
-    stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-    stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -268,8 +268,8 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-    stan::require_std_vector_t<VecVar>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
@@ -580,8 +580,8 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     }
   }
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
-    stan::require_vector_like_t<VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -612,9 +612,9 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     } // log_prob_impl() 
     
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
-    stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-    stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -654,8 +654,8 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-    stan::require_std_vector_t<VecVar>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
@@ -959,8 +959,8 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
     }
   }
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
-    stan::require_vector_like_t<VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -1027,9 +1027,9 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
     } // log_prob_impl() 
     
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
-    stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-    stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -1096,8 +1096,8 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-    stan::require_std_vector_t<VecVar>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
@@ -1408,8 +1408,8 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
     }
   }
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
-    stan::require_vector_like_t<VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -1472,9 +1472,9 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
     } // log_prob_impl() 
     
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
-    stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-    stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -1558,8 +1558,8 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-    stan::require_std_vector_t<VecVar>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
@@ -6876,8 +6876,8 @@ class mother_model final : public model_base_crtp<mother_model> {
     }
   }
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
-    stan::require_vector_like_t<VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -7752,9 +7752,9 @@ class mother_model final : public model_base_crtp<mother_model> {
     } // log_prob_impl() 
     
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
-    stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-    stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -9135,8 +9135,8 @@ class mother_model final : public model_base_crtp<mother_model> {
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-    stan::require_std_vector_t<VecVar>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
@@ -11885,8 +11885,8 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
     }
   }
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
-    stan::require_vector_like_t<VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -12229,9 +12229,9 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
     } // log_prob_impl() 
     
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
-    stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-    stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -12674,8 +12674,8 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-    stan::require_std_vector_t<VecVar>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
@@ -14177,8 +14177,8 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     }
   }
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
-    stan::require_vector_like_t<VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -15823,9 +15823,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     } // log_prob_impl() 
     
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
-    stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-    stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -17483,8 +17483,8 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-    stan::require_std_vector_t<VecVar>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
@@ -17992,8 +17992,8 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     }
   }
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
-    stan::require_vector_like_t<VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -18156,9 +18156,9 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     } // log_prob_impl() 
     
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
-    stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-    stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -18270,8 +18270,8 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-    stan::require_std_vector_t<VecVar>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
@@ -19111,8 +19111,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     }
   }
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
-    stan::require_vector_like_t<VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -19735,9 +19735,9 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     } // log_prob_impl() 
     
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
-    stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-    stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -19848,8 +19848,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-    stan::require_std_vector_t<VecVar>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
@@ -20369,8 +20369,8 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     }
   }
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
-    stan::require_vector_like_t<VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -20453,9 +20453,9 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     } // log_prob_impl() 
     
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
-    stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-    stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -20537,8 +20537,8 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-    stan::require_std_vector_t<VecVar>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
@@ -21064,8 +21064,8 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     }
   }
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
-    stan::require_vector_like_t<VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -21127,9 +21127,9 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     } // log_prob_impl() 
     
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
-    stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-    stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -21193,8 +21193,8 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-    stan::require_std_vector_t<VecVar>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
@@ -22655,8 +22655,8 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     }
   }
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
-    stan::require_vector_like_t<VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -22888,9 +22888,9 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     } // log_prob_impl() 
     
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
-    stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-    stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -23178,8 +23178,8 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-    stan::require_std_vector_t<VecVar>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
@@ -26856,8 +26856,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     }
   }
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
-    stan::require_vector_like_t<VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -27146,9 +27146,9 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     } // log_prob_impl() 
     
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
-    stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-    stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -27522,8 +27522,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-    stan::require_std_vector_t<VecVar>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
@@ -28634,8 +28634,8 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
     }
   }
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
-    stan::require_vector_like_t<VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -28662,9 +28662,9 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
     } // log_prob_impl() 
     
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
-    stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-    stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -28698,8 +28698,8 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-    stan::require_std_vector_t<VecVar>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
@@ -28951,8 +28951,8 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
     }
   }
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
-    stan::require_vector_like_t<VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -29017,9 +29017,9 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
     } // log_prob_impl() 
     
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
-    stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-    stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -29061,8 +29061,8 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-    stan::require_std_vector_t<VecVar>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
@@ -29734,8 +29734,8 @@ class transform_model final : public model_base_crtp<transform_model> {
     }
   }
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
-    stan::require_vector_like_t<VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -30718,9 +30718,9 @@ class transform_model final : public model_base_crtp<transform_model> {
     } // log_prob_impl() 
     
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
-    stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-    stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -31630,8 +31630,8 @@ class transform_model final : public model_base_crtp<transform_model> {
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-    stan::require_std_vector_t<VecVar>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
@@ -33112,8 +33112,8 @@ class truncate_model final : public model_base_crtp<truncate_model> {
     }
   }
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
-    stan::require_vector_like_t<VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -33239,9 +33239,9 @@ class truncate_model final : public model_base_crtp<truncate_model> {
     } // log_prob_impl() 
     
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
-    stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-    stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -33289,8 +33289,8 @@ class truncate_model final : public model_base_crtp<truncate_model> {
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-    stan::require_std_vector_t<VecVar>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
@@ -33582,8 +33582,8 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
     }
   }
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
-    stan::require_vector_like_t<VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -33618,9 +33618,9 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
     } // log_prob_impl() 
     
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
-    stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-    stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -33660,8 +33660,8 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-    stan::require_std_vector_t<VecVar>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
@@ -33940,8 +33940,8 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
     }
   }
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
-    stan::require_vector_like_t<VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -33984,9 +33984,9 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
     } // log_prob_impl() 
     
   template <typename RNG, typename VecR, typename VecI, typename VecVar, 
-    stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
-    stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -34028,8 +34028,8 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
-    stan::require_std_vector_t<VecVar>* = nullptr, 
-    stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {

@@ -496,10 +496,10 @@ let pp_method_b ppf rt name params intro ?(outro = nop) ?(cv_attr = ["const"])
 let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
   pf ppf
     "template <typename RNG, typename VecR, typename VecI, typename VecVar, @ \
-     \x20 stan::require_vector_like_vt<std::is_floating_point, VecR>* = \
-     nullptr, @ \x20 stan::require_vector_like_vt<std::is_integral, VecI>* = \
-     nullptr, @ \x20 stan::require_std_vector_vt<std::is_floating_point, \
-     VecVar>* = nullptr> @ " ;
+     stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, @ \
+     stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, @ \
+     stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> \
+     @ " ;
   let params =
     [ "RNG& base_rng__"; "VecR& params_r__"; "VecI& params_i__"
     ; "VecVar& vars__"; "const bool emit_transformed_parameters__ = true"
@@ -641,8 +641,8 @@ let pp_unconstrained_param_names ppf {Program.output_vars; _} =
 (** Print the `transform_inits` method of the model class *)
 let pp_transform_inits ppf {Program.transform_inits; _} =
   pf ppf
-    "template <typename VecVar, typename VecI, @ \x20 \
-     stan::require_std_vector_t<VecVar>* = nullptr, @ \x20 \
+    "template <typename VecVar, typename VecI, @ \
+     stan::require_std_vector_t<VecVar>* = nullptr, @ \
      stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> @ " ;
   let params =
     [ "const stan::io::var_context& context__"; "VecI& params_i__"
@@ -662,7 +662,7 @@ let pp_transform_inits ppf {Program.transform_inits; _} =
 let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
   pf ppf
     "template <bool propto__, bool jacobian__ , typename VecR, typename VecI, \
-     @ \x20 stan::require_vector_like_t<VecR>* = nullptr, @ \x20 \
+     @ stan::require_vector_like_t<VecR>* = nullptr, @ \
      stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> @ " ;
   let params =
     [ "VecR& params_r__"; "VecI& params_i__"
