@@ -1,7 +1,9 @@
 (** stanc console application *)
 
 open Core_kernel
+
 let ( = ) = Stdlib.( = )
+
 open Frontend
 open Stan_math_backend
 open Analysis_and_optimization

@@ -1,7 +1,9 @@
 (** The common elements of a monotone framework *)
 
 open Core_kernel
+
 let ( = ) = Stdlib.( = )
+
 open Monotone_framework_sigs
 open Mir_utils
 open Middle

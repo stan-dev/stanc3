@@ -1,7 +1,9 @@
 (* Code for optimization passes on the MIR *)
 open Core_kernel
+
 let ( = ) = Stdlib.( = )
 let ( <> ) = Stdlib.( <> )
+
 open Common
 open Middle
 open Mir_utils

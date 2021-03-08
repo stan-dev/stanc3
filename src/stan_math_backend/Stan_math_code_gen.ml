@@ -17,8 +17,10 @@
 *)
 
 open Core_kernel
+
 let ( <> ) = Stdlib.( <> )
 let compare = Stdlib.compare
+
 open Middle
 open Fmt
 open Expression_gen

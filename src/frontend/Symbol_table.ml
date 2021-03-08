@@ -1,6 +1,7 @@
 (** Symbol table to implement var map *)
 
 open Core_kernel
+
 let ( <> ) = Stdlib.( <> )
 
 (* TODO: I'm sure this implementation could be made more efficient if that's necessary. There's no need for all the string comparison.

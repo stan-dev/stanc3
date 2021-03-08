@@ -1,12 +1,14 @@
 (* A partial evaluator for use in static analysis and optimization *)
 
 open Core_kernel
+
 let ( = ) = Stdlib.( = )
 let ( < ) = Stdlib.( < )
 let ( > ) = Stdlib.( > )
 let ( <> ) = Stdlib.( <> )
 let ( <= ) = Stdlib.( <= )
 let ( >= ) = Stdlib.( >= )
+
 open Mir_utils
 open Middle
 

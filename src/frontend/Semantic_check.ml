@@ -4,9 +4,11 @@
    during parsing and are in fact irrelevant for building up the parse tree *)
 
 open Core_kernel
+
 let ( = ) = Stdlib.( = )
 let ( <> ) = Stdlib.( <> )
 let ( < ) = Stdlib.( < )
+
 open Symbol_table
 open Middle
 open Ast

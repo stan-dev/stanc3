@@ -1,5 +1,7 @@
 open Core_kernel
+
 let ( = ) = Stdlib.( = )
+
 open Middle
 open Dataflow_types
 open Dataflow_utils

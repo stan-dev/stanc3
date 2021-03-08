@@ -1,7 +1,9 @@
 open Core_kernel
+
 let ( = ) = Stdlib.( = )
 let ( <> ) = Stdlib.( <> )
 let ( >= ) = Stdlib.( >= )
+
 open Middle
 
 (* XXX fix exn *)
