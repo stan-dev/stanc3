@@ -58,6 +58,7 @@ pipeline {
                 dockerfile {
                     filename 'docker/debian/Dockerfile'
                     args "-u root --entrypoint=\'\'"
+                    label 'linux-ec2'
                 }
             }
             steps {
@@ -111,6 +112,7 @@ pipeline {
                             filename 'docker/debian/Dockerfile'
                             //Forces image to ignore entrypoint
                             args "-u root --entrypoint=\'\'"
+                            label 'linux-ec2'
                         }
                     }
                     steps {
@@ -136,6 +138,7 @@ pipeline {
                             filename 'docker/static/Dockerfile'
                             //Forces image to ignore entrypoint
                             args "-u 1000 --entrypoint=\'\'"
+                            label 'linux-ec2'
                         }
                     }
                     steps {
@@ -188,6 +191,7 @@ pipeline {
                         sh "mv _build/default.windows/src/stan2tfp/stan2tfp.exe bin/windows-stan2tfp"
 
                         stash name:'windows-exe', includes:'bin/*'
+                        archiveArtifacts 'bin/*'
                     }
                     post {always { runShell("rm -rf ./*")}}
                 }
