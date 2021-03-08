@@ -1,4 +1,5 @@
 open Core_kernel
+let ( = ) = Stdlib.( = )
 open Common
 open Helpers
 
@@ -97,7 +98,7 @@ end
 (** Statements with location information and types for contained expressions *)
 module Located = struct
   module Meta = struct
-    type t = (Location_span.t sexp_opaque[@compare.ignore])
+    type t = (Location_span.t [@sexp.opaque] [@compare.ignore])
     [@@deriving compare, sexp, hash]
 
     let empty = Location_span.empty
@@ -120,7 +121,7 @@ module Located = struct
   module Non_recursive = struct
     type t =
       { pattern: (Expr.Typed.t, int) Fixed.Pattern.t
-      ; meta: Meta.t sexp_opaque [@compare.ignore] }
+      ; meta: Meta.t [@sexp.opaque] [@compare.ignore] }
     [@@deriving compare, sexp, hash]
   end
 end
@@ -130,7 +131,7 @@ both are typed and labelled. *)
 module Labelled = struct
   module Meta = struct
     type t =
-      { loc: Location_span.t sexp_opaque [@compare.ignore]
+      { loc: Location_span.t [@sexp.opaque] [@compare.ignore]
       ; label: Label.Int_label.t [@compare.ignore] }
     [@@deriving compare, create, sexp, hash]
 
@@ -215,7 +216,7 @@ end
 
 module Numbered = struct
   module Meta = struct
-    type t = (int sexp_opaque[@compare.ignore])
+    type t = (int [@sexp.opaque][@compare.ignore])
     [@@deriving compare, sexp, hash]
 
     let empty = 0

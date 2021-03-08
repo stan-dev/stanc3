@@ -1,4 +1,5 @@
 open Core_kernel
+let ( = ) = Stdlib.( = )
 open Common.Helpers
 
 type t =

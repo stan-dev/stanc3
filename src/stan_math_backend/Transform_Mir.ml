@@ -1,4 +1,5 @@
 open Core_kernel
+let ( = ) = Stdlib.( = )
 open Middle
 
 let use_opencl = ref false

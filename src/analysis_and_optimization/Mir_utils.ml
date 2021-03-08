@@ -1,4 +1,6 @@
 open Core_kernel
+let ( = ) = Stdlib.( = )
+let ( <> ) = Stdlib.( <> )
 open Middle
 open Middle.Program
 open Middle.Expr

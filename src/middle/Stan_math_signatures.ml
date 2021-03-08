@@ -1,5 +1,7 @@
 (** The signatures of the Stan Math library, which are used for type checking *)
 open Core_kernel
+let ( = ) = Stdlib.( = )
+let compare = Stdlib.compare
 
 (* The "dimensionality" (bad name?) is supposed to help us represent the
     vectorized nature of many Stan functions. It allows us to represent when

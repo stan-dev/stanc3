@@ -1,4 +1,10 @@
 open Core_kernel
+let ( = ) = Stdlib.( = )
+let ( < ) = Stdlib.( < )
+let ( > ) = Stdlib.( > )
+let ( <> ) = Stdlib.( <> )
+let ( <= ) = Stdlib.( <= )
+let ( >= ) = Stdlib.( >= )
 open Middle
 open Mir_utils
 
