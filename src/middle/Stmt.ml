@@ -123,7 +123,7 @@ module Located = struct
   module Non_recursive = struct
     type t =
       { pattern: (Expr.Typed.t, int) Fixed.Pattern.t
-      ; meta: (Meta.t [@sexp.opaque] [@compare.ignore]) }
+      ; meta: (Meta.t[@sexp.opaque] [@compare.ignore]) }
     [@@deriving compare, sexp, hash]
   end
 end
@@ -133,7 +133,7 @@ both are typed and labelled. *)
 module Labelled = struct
   module Meta = struct
     type t =
-      { loc: (Location_span.t [@sexp.opaque] [@compare.ignore])
+      { loc: (Location_span.t[@sexp.opaque] [@compare.ignore])
       ; label: Label.Int_label.t [@compare.ignore] }
     [@@deriving compare, create, sexp, hash]
 
