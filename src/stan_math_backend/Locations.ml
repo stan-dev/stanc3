@@ -40,9 +40,9 @@ let pp_globals ppf location_list =
   in
   let location_count = List.length location_list in
   Fmt.pf ppf
-    "@ stan::math::profile_map profiles__;@ \
-     static constexpr std::array<const char*, @[<hov>%d@]> locations_array__ = @ \
-     {@[<hov>%a@]};@ " location_count
+    "@ stan::math::profile_map profiles__;@ static constexpr std::array<const \
+     char*, @[<hov>%d@]> locations_array__ = @ {@[<hov>%a@]};@ "
+    location_count
     Fmt.(list ~sep:comma (fmt "%S"))
     location_list
 

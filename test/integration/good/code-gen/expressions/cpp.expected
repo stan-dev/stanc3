@@ -46,6 +46,7 @@ foo1(const T0__& a, const int& b, const std::vector<T2__>& c,
           stan::value_type_t<T3__>,
           stan::value_type_t<T4__>,
           stan::value_type_t<T5__>>;
+  int current_statement__ = 0; 
   const auto& d = to_ref(d_arg__);
   const auto& e = to_ref(e_arg__);
   const auto& f = to_ref(f_arg__);
@@ -87,6 +88,7 @@ foo2(const T0__& a_arg__, const std::vector<Eigen::Matrix<T1__, -1, -1>>& b,
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
           T1__,
           T2__>;
+  int current_statement__ = 0; 
   const auto& a = to_ref(a_arg__);
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -121,6 +123,7 @@ stan::value_type_t<T1__>>, -1, -1>
 foo3(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
           stan::value_type_t<T1__>>;
+  int current_statement__ = 0; 
   const auto& a = to_ref(a_arg__);
   const auto& b = to_ref(b_arg__);
   static constexpr bool propto__ = true;

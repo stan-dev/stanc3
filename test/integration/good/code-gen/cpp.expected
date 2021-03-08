@@ -2596,6 +2596,7 @@ foo(const int& n, std::ostream* pstream__) ;
 int
 foo(const int& n, std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -2638,6 +2639,7 @@ sho(const T0__& t, const std::vector<T1__>& y,
     const std::vector<T2__>& theta, const std::vector<double>& x,
     const std::vector<int>& x_int, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -2678,6 +2680,7 @@ return sho(t, y, theta, x, x_int, pstream__);
 double
 foo_bar0(std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -2705,6 +2708,7 @@ template <typename T0__>
 stan::promote_args_t<T0__>
 foo_bar1(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -2734,6 +2738,7 @@ stan::promote_args_t<T0__,
 T1__>
 foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -2763,6 +2768,7 @@ template <bool propto__, typename T1__>
 stan::promote_args_t<T1__>
 foo_lpmf(const int& y, const T1__& lambda, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T1__>;
+  int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -2789,6 +2795,7 @@ template <typename T1__>
 stan::promote_args_t<T1__>
 foo_lcdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T1__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -2817,6 +2824,7 @@ template <typename T1__>
 stan::promote_args_t<T1__>
 foo_lccdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T1__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -2847,6 +2855,7 @@ T1__>
 foo_rng(const T0__& mu, const T1__& sigma, RNG& base_rng__,
         std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -2879,6 +2888,7 @@ void
 unit_normal_lp(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
                std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -2908,6 +2918,7 @@ return unit_normal_lp<propto__>(u, lp__, lp_accum__, pstream__);
 int
 foo_1(const int& a, std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -3154,6 +3165,7 @@ return foo_1(a, pstream__);
 int
 foo_2(const int& a, std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -3196,6 +3208,7 @@ template <typename T0__>
 std::vector<stan::promote_args_t<T0__>>
 foo_3(const T0__& t, const int& n, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -3226,6 +3239,7 @@ stan::promote_args_t<T0__>
 foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
        std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -3254,6 +3268,7 @@ template <typename T0__>
 void
 foo_4(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -3287,6 +3302,7 @@ T3__>
 relative_diff(const T0__& x, const T1__& y, const T2__& max_,
               const T3__& min_, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__, T3__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -3355,6 +3371,7 @@ foo_5(const T0__& shared_params_arg__, const T1__& job_params_arg__,
       std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
           stan::value_type_t<T1__>>;
+  int current_statement__ = 0; 
   const auto& shared_params = to_ref(shared_params_arg__);
   const auto& job_params = to_ref(job_params_arg__);
   static constexpr bool propto__ = true;
@@ -3395,6 +3412,7 @@ foo_five_args(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
           T2__,
           T3__,
           T4__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -3436,6 +3454,7 @@ foo_five_args_lp(const T0__& x1, const T1__& x2, const T2__& x3,
           T2__,
           T3__,
           T4__, stan::promote_args_t<T5__>>;
+  int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -3469,6 +3488,7 @@ Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, -1>
 covsqrt2corsqrt(const T0__& mat_arg__, const int& invert,
                 std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
+  int current_statement__ = 0; 
   const auto& mat = to_ref(mat_arg__);
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -3534,6 +3554,7 @@ f0(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
+  int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
   static constexpr bool propto__ = true;
@@ -3593,6 +3614,7 @@ f1(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
+  int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
   static constexpr bool propto__ = true;
@@ -3649,6 +3671,7 @@ f2(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
+  int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
   static constexpr bool propto__ = true;
@@ -3705,6 +3728,7 @@ f3(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
+  int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
   static constexpr bool propto__ = true;
@@ -3763,6 +3787,7 @@ f4(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
+  int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
   static constexpr bool propto__ = true;
@@ -3823,6 +3848,7 @@ f5(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
+  int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
   static constexpr bool propto__ = true;
@@ -3883,6 +3909,7 @@ f6(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
+  int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
   static constexpr bool propto__ = true;
@@ -3943,6 +3970,7 @@ f7(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
+  int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
   static constexpr bool propto__ = true;
@@ -4003,6 +4031,7 @@ f8(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
+  int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
   static constexpr bool propto__ = true;
@@ -4063,6 +4092,7 @@ f9(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
+  int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
   static constexpr bool propto__ = true;
@@ -4123,6 +4153,7 @@ f10(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
+  int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
   static constexpr bool propto__ = true;
@@ -4183,6 +4214,7 @@ f11(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
+  int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
   static constexpr bool propto__ = true;
@@ -4243,6 +4275,7 @@ f12(const int& a1, const std::vector<int>& a2,
           stan::value_type_t<T9__>,
           T10__,
           T11__>>;
+  int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
   static constexpr bool propto__ = true;
@@ -4284,6 +4317,7 @@ return f12(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 void
 foo_6(std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -4327,6 +4361,7 @@ return foo_6(pstream__);
 Eigen::Matrix<double, -1, -1>
 matfoo(std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -4357,6 +4392,7 @@ return matfoo(pstream__);
 Eigen::Matrix<double, -1, 1>
 vecfoo(std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -4385,6 +4421,7 @@ template <typename T0__>
 Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
 vecmufoo(const T0__& mu, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -4420,6 +4457,7 @@ template <typename T0__>
 Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
 vecmubar(const T0__& mu, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -4463,6 +4501,7 @@ algebra_system(const T0__& x_arg__, const T1__& y_arg__,
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
           stan::value_type_t<T1__>,
           T2__>;
+  int current_statement__ = 0; 
   const auto& x = to_ref(x_arg__);
   const auto& y = to_ref(y_arg__);
   static constexpr bool propto__ = true;
@@ -4509,6 +4548,7 @@ binomialf(const T0__& phi_arg__, const T1__& theta_arg__,
           std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
           stan::value_type_t<T1__>>;
+  int current_statement__ = 0; 
   const auto& phi = to_ref(phi_arg__);
   const auto& theta = to_ref(theta_arg__);
   static constexpr bool propto__ = true;
@@ -11371,6 +11411,7 @@ sho(const T0__& t, const std::vector<T1__>& y,
     const std::vector<T2__>& theta, const std::vector<T3__>& x,
     const std::vector<int>& x_int, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__, T3__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -11415,6 +11456,7 @@ integrand(const T0__& x, const T1__& xc, const std::vector<T2__>& theta,
           const std::vector<T3__>& x_r, const std::vector<int>& x_i,
           std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__, T3__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -11451,6 +11493,7 @@ foo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
           stan::value_type_t<T1__>,
           T2__>;
+  int current_statement__ = 0; 
   const auto& shared_params = to_ref(shared_params_arg__);
   const auto& job_params = to_ref(job_params_arg__);
   static constexpr bool propto__ = true;
@@ -11489,6 +11532,7 @@ goo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
           stan::value_type_t<T1__>,
           T2__>;
+  int current_statement__ = 0; 
   const auto& shared_params = to_ref(shared_params_arg__);
   const auto& job_params = to_ref(job_params_arg__);
   static constexpr bool propto__ = true;
@@ -11522,6 +11566,7 @@ template <typename T0__>
 stan::promote_args_t<T0__>
 map_rectfake(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -11555,6 +11600,7 @@ algebra_system(const T0__& x_arg__, const T1__& y_arg__,
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
           stan::value_type_t<T1__>,
           T2__>;
+  int current_statement__ = 0; 
   const auto& x = to_ref(x_arg__);
   const auto& y = to_ref(y_arg__);
   static constexpr bool propto__ = true;
@@ -13913,6 +13959,7 @@ f(const T0__& t, const T1__& z_arg__, const T2__& a, const T3__& b_arg__,
           stan::value_type_t<T1__>,
           T2__,
           stan::value_type_t<T3__>>;
+  int current_statement__ = 0; 
   const auto& z = to_ref(z_arg__);
   const auto& b = to_ref(b_arg__);
   static constexpr bool propto__ = true;
@@ -17757,6 +17804,7 @@ dz_dt(const T0__& t, const std::vector<T1__>& z,
       const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
       const std::vector<int>& x_i, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__, T3__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -20816,6 +20864,7 @@ stan::promote_args_t<T0__>
 g(const std::vector<T0__>& y_slice, const int& start, const int& end,
   std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -20864,6 +20913,7 @@ T3__>
 h(const std::vector<T0__>& y_slice, const int& start, const int& end,
   const std::vector<T3__>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -20917,6 +20967,7 @@ stan::promote_args_t<T0__>
 foo_lpdf(const std::vector<T0__>& y_slice, const int& start, const int& end,
          std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -21583,6 +21634,7 @@ stan::promote_args_t<T0__>
 g1(const std::vector<T0__>& y_slice, const int& start, const int& end,
    std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -21624,6 +21676,7 @@ stan::promote_args_t<T0__>
 g2(const std::vector<Eigen::Matrix<T0__, -1, 1>>& y_slice, const int& start,
    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -21674,6 +21727,7 @@ stan::promote_args_t<T0__>
 g3(const std::vector<Eigen::Matrix<T0__, 1, -1>>& y_slice, const int& start,
    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -21724,6 +21778,7 @@ stan::promote_args_t<T0__>
 g4(const std::vector<Eigen::Matrix<T0__, -1, -1>>& y_slice, const int& start,
    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -21775,6 +21830,7 @@ stan::promote_args_t<T0__>
 g5(const std::vector<std::vector<T0__>>& y_slice, const int& start,
    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -21828,6 +21884,7 @@ stan::promote_args_t<T0__>
 g6(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>& y_slice,
    const int& start, const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -21882,6 +21939,7 @@ stan::promote_args_t<T0__>
 g7(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>& y_slice,
    const int& start, const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -21936,6 +21994,7 @@ stan::promote_args_t<T0__>
 g8(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>& y_slice,
    const int& start, const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -21991,6 +22050,7 @@ T3__>
 h1(const std::vector<T0__>& y, const int& start, const int& end,
    const std::vector<T3__>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -22038,6 +22098,7 @@ T3__>
 h2(const std::vector<T0__>& y, const int& start, const int& end,
    const std::vector<Eigen::Matrix<T3__, -1, 1>>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -22093,6 +22154,7 @@ T3__>
 h3(const std::vector<T0__>& y, const int& start, const int& end,
    const std::vector<Eigen::Matrix<T3__, 1, -1>>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -22148,6 +22210,7 @@ T3__>
 h4(const std::vector<T0__>& y, const int& start, const int& end,
    const std::vector<Eigen::Matrix<T3__, -1, -1>>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -22204,6 +22267,7 @@ T3__>
 h5(const std::vector<T0__>& y, const int& start, const int& end,
    const std::vector<std::vector<T3__>>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -22261,6 +22325,7 @@ h6(const std::vector<T0__>& y, const int& start, const int& end,
    const std::vector<std::vector<Eigen::Matrix<T3__, -1, 1>>>& a,
    std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -22321,6 +22386,7 @@ h7(const std::vector<T0__>& y, const int& start, const int& end,
    const std::vector<std::vector<Eigen::Matrix<T3__, 1, -1>>>& a,
    std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -22381,6 +22447,7 @@ h8(const std::vector<T0__>& y, const int& start, const int& end,
    const std::vector<std::vector<Eigen::Matrix<T3__, -1, -1>>>& a,
    std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -24455,6 +24522,7 @@ stan::promote_args_t<T0__>
 f1(const std::vector<T0__>& y_slice, const int& start, const int& end,
    std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -24496,6 +24564,7 @@ stan::promote_args_t<T0__>
 f1a(const std::vector<T0__>& y_slice, const int& start, const int& end,
     std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -24537,6 +24606,7 @@ stan::promote_args_t<T0__>
 f2(const std::vector<Eigen::Matrix<T0__, -1, 1>>& y_slice, const int& start,
    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -24578,6 +24648,7 @@ stan::promote_args_t<T0__>
 f3(const std::vector<Eigen::Matrix<T0__, 1, -1>>& y_slice, const int& start,
    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -24619,6 +24690,7 @@ stan::promote_args_t<T0__>
 f4(const std::vector<Eigen::Matrix<T0__, -1, -1>>& y_slice, const int& start,
    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -24660,6 +24732,7 @@ stan::promote_args_t<T0__>
 f5(const std::vector<std::vector<T0__>>& y_slice, const int& start,
    const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -24701,6 +24774,7 @@ stan::promote_args_t<T0__>
 f6(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>& y_slice,
    const int& start, const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -24742,6 +24816,7 @@ stan::promote_args_t<T0__>
 f7(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>& y_slice,
    const int& start, const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -24783,6 +24858,7 @@ stan::promote_args_t<T0__>
 f8(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>& y_slice,
    const int& start, const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -24823,6 +24899,7 @@ double
 f9(const std::vector<int>& y_slice, const int& start, const int& end,
    std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -24861,6 +24938,7 @@ double
 f10(const std::vector<std::vector<int>>& y_slice, const int& start,
     const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -24899,6 +24977,7 @@ double
 f11(const std::vector<std::vector<std::vector<int>>>& y_slice,
     const int& start, const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -24938,6 +25017,7 @@ stan::promote_args_t<T0__>
 f12(const std::vector<std::vector<std::vector<T0__>>>& y_slice,
     const int& start, const int& end, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -24980,6 +25060,7 @@ T3__>
 g1(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const T3__& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -25025,6 +25106,7 @@ g2(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const T3__& a_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__,
           stan::value_type_t<T3__>>;
+  int current_statement__ = 0; 
   const auto& a = to_ref(a_arg__);
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -25071,6 +25153,7 @@ g3(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const T3__& a_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__,
           stan::value_type_t<T3__>>;
+  int current_statement__ = 0; 
   const auto& a = to_ref(a_arg__);
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -25117,6 +25200,7 @@ g4(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const T3__& a_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__,
           stan::value_type_t<T3__>>;
+  int current_statement__ = 0; 
   const auto& a = to_ref(a_arg__);
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -25162,6 +25246,7 @@ T3__>
 g5(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const std::vector<T3__>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -25208,6 +25293,7 @@ T3__>
 g6(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const std::vector<Eigen::Matrix<T3__, -1, 1>>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -25254,6 +25340,7 @@ T3__>
 g7(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const std::vector<Eigen::Matrix<T3__, 1, -1>>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -25300,6 +25387,7 @@ T3__>
 g8(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const std::vector<Eigen::Matrix<T3__, -1, -1>>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -25346,6 +25434,7 @@ T3__>
 g9(const std::vector<T0__>& y_slice, const int& start, const int& end,
    const std::vector<std::vector<T3__>>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -25393,6 +25482,7 @@ g10(const std::vector<T0__>& y_slice, const int& start, const int& end,
     const std::vector<std::vector<Eigen::Matrix<T3__, -1, 1>>>& a,
     std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -25441,6 +25531,7 @@ g11(const std::vector<T0__>& y_slice, const int& start, const int& end,
     const std::vector<std::vector<Eigen::Matrix<T3__, 1, -1>>>& a,
     std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -25489,6 +25580,7 @@ g12(const std::vector<T0__>& y_slice, const int& start, const int& end,
     const std::vector<std::vector<Eigen::Matrix<T3__, -1, -1>>>& a,
     std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -25565,6 +25657,7 @@ s(const std::vector<T0__>& y_slice, const int& start, const int& end,
           T16__,
           T17__,
           T19__>>>;
+  int current_statement__ = 0; 
   const auto& c = to_ref(c_arg__);
   const auto& d = to_ref(d_arg__);
   const auto& e = to_ref(e_arg__);
@@ -25649,6 +25742,7 @@ return s(y_slice, start + 1, end + 1, a, b, c, d, e, f, g, h, i, j, k, l, m,
 double
 r(std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -28328,6 +28422,7 @@ template <bool propto__>
 double
 foo0_log(const int& y, std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -28354,6 +28449,7 @@ template <bool propto__>
 double
 foo1_lpmf(const int& y, std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -28381,6 +28477,7 @@ double
 foo4_lp(const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
         std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -28408,6 +28505,7 @@ template <bool propto__, typename T0__>
 stan::promote_args_t<T0__>
 foo2_log(const T0__& y, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -28434,6 +28532,7 @@ template <bool propto__, typename T0__>
 stan::promote_args_t<T0__>
 foo3_lpdf(const T0__& y, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -28462,6 +28561,7 @@ stan::promote_args_t<T0__>
 foo5_lp(const T0__& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
         std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -33409,6 +33509,7 @@ template <typename T0__>
 stan::promote_args_t<T0__>
 normal(const T0__& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -33765,6 +33866,7 @@ stan::promote_args_t<T0__,
 T1__>
 lb_constrain(const T0__& x, const T1__& y, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());

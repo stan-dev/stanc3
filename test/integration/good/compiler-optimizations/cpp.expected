@@ -64,6 +64,7 @@ simple_SIR(const T0__& t, const std::vector<T1__>& y,
            const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
            const std::vector<int>& x_i, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__, T3__>;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -956,6 +957,7 @@ static constexpr std::array<const char*, 68> locations_array__ =
 int
 first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -1002,6 +1004,7 @@ return first_capture(y_i, pstream__);
 int
 last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -1062,6 +1065,7 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
                 const T3__& phi_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
           stan::value_type_t<T3__>>;
+  int current_statement__ = 0; 
   const auto& p = to_ref(p_arg__);
   const auto& phi = to_ref(phi_arg__);
   static constexpr bool propto__ = true;
@@ -9497,6 +9501,7 @@ static constexpr std::array<const char*, 71> locations_array__ =
 int
 first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -9543,6 +9548,7 @@ return first_capture(y_i, pstream__);
 int
 last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -9603,6 +9609,7 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
                 const T3__& phi_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
           stan::value_type_t<T3__>>;
+  int current_statement__ = 0; 
   const auto& p = to_ref(p_arg__);
   const auto& phi = to_ref(phi_arg__);
   static constexpr bool propto__ = true;
@@ -12082,6 +12089,7 @@ static constexpr std::array<const char*, 147> locations_array__ =
 int
 first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -12128,6 +12136,7 @@ return first_capture(y_i, pstream__);
 int
 last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -12188,6 +12197,7 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
                 std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
           stan::value_type_t<T1__>>;
+  int current_statement__ = 0; 
   const auto& p = to_ref(p_arg__);
   const auto& phi = to_ref(phi_arg__);
   static constexpr bool propto__ = true;
@@ -12404,6 +12414,7 @@ js_super_lp(const std::vector<std::vector<int>>& y,
           T5__,
           stan::value_type_t<T6__>,
           stan::value_type_t<T7__>>;
+  int current_statement__ = 0; 
   const auto& p = to_ref(p_arg__);
   const auto& phi = to_ref(phi_arg__);
   const auto& nu = to_ref(nu_arg__);
@@ -18596,6 +18607,7 @@ static constexpr std::array<const char*, 68> locations_array__ =
 int
 first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -18642,6 +18654,7 @@ return first_capture(y_i, pstream__);
 int
 last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -18702,6 +18715,7 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
                 const T3__& phi_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
           stan::value_type_t<T3__>>;
+  int current_statement__ = 0; 
   const auto& p = to_ref(p_arg__);
   const auto& phi = to_ref(phi_arg__);
   static constexpr bool propto__ = true;
@@ -21277,6 +21291,7 @@ static constexpr std::array<const char*, 145> locations_array__ =
 int
 first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -21323,6 +21338,7 @@ return first_capture(y_i, pstream__);
 int
 last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -21383,6 +21399,7 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
                 std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
           stan::value_type_t<T1__>>;
+  int current_statement__ = 0; 
   const auto& p = to_ref(p_arg__);
   const auto& phi = to_ref(phi_arg__);
   static constexpr bool propto__ = true;
@@ -21598,6 +21615,7 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
           stan::value_type_t<T4__>,
           stan::value_type_t<T5__>,
           stan::value_type_t<T6__>>;
+  int current_statement__ = 0; 
   const auto& p = to_ref(p_arg__);
   const auto& phi = to_ref(phi_arg__);
   const auto& gamma = to_ref(gamma_arg__);
@@ -22147,6 +22165,7 @@ template <typename T0__>
 Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
 seq_cprob(const T0__& gamma_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
+  int current_statement__ = 0; 
   const auto& gamma = to_ref(gamma_arg__);
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -26416,6 +26435,7 @@ static constexpr std::array<const char*, 64> locations_array__ =
 int
 first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -26462,6 +26482,7 @@ return first_capture(y_i, pstream__);
 int
 last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -26522,6 +26543,7 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
                 const T3__& phi_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
           stan::value_type_t<T3__>>;
+  int current_statement__ = 0; 
   const auto& p = to_ref(p_arg__);
   const auto& phi = to_ref(phi_arg__);
   static constexpr bool propto__ = true;
@@ -28722,6 +28744,7 @@ stan::promote_args_t<T0__,
 T1__>
 foo_lpdf(const T0__& x, const T1__& mu, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
+  int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -28752,6 +28775,7 @@ template <bool propto__, typename T1__>
 stan::promote_args_t<T1__>
 bar_lpmf(const int& n, const T1__& mu, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T1__>;
+  int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -28781,6 +28805,7 @@ template <bool propto__, typename T0__>
 stan::promote_args_t<T0__>
 baz_lpdf(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -31364,6 +31389,7 @@ void
 nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
          std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -31399,6 +31425,7 @@ return nrfun_lp<propto__>(x, y, lp__, lp_accum__, pstream__);
 int
 rfun(const int& y, std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -31436,6 +31463,7 @@ template <bool propto__, typename T_lp__, typename T_lp_accum__>
 int
 rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {

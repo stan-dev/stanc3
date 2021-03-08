@@ -29,6 +29,7 @@ let%expect_test "udf" =
     sars(const T0__& x_arg__, const T1__& y_arg__, std::ostream* pstream__) {
       using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
               stan::value_type_t<T1__>>;
+      int current_statement__ = 0;
       const auto& x = to_ref(x_arg__);
       const auto& y = to_ref(y_arg__);
       static constexpr bool propto__ = true;
@@ -89,6 +90,7 @@ let%expect_test "udf-expressions" =
               stan::value_type_t<T1__>,
               stan::value_type_t<T2__>,
               T3__>;
+      int current_statement__ = 0;
       const auto& x = to_ref(x_arg__);
       const auto& y = to_ref(y_arg__);
       const auto& z = to_ref(z_arg__);

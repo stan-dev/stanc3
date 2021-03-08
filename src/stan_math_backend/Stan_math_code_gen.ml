@@ -217,6 +217,7 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
   in
   let pp_body ppf (Stmt.Fixed.({pattern; _}) as fdbody) =
     pf ppf "@[<hv 8>using local_scalar_t__ = %a;@]@," pp_promoted_scalar fdargs ;
+    pf ppf "int current_statement__ = 0; @ " ;
     if List.exists ~f:(fun (_, _, t) -> UnsizedType.is_eigen_type t) fdargs
     then pp_eigen_arg_to_ref ppf fdargs ;
     if not (is_dist || is_lp) then (
@@ -397,7 +398,7 @@ let pp_ctor ppf p =
   in
   pp_block ppf
     ( (fun ppf {Program.prog_name; prepare_data; output_vars; _} ->
-        pf ppf "int current_statement__ = 0;@ ";
+        pf ppf "int current_statement__ = 0;@ " ;
         pf ppf "using local_scalar_t__ = double ;@ " ;
         pf ppf "boost::ecuyer1988 base_rng__ = @ " ;
         pf ppf "    stan::services::util::create_rng(random_seed__, 0);@ " ;
@@ -495,9 +496,10 @@ let pp_method_b ppf rt name params intro ?(outro = nop) ?(cv_attr = ["const"])
 let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
   pf ppf
     "template <typename RNG, typename VecR, typename VecI, typename VecVar, @ \
-     \x20 stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, @ \
-     \x20 stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, @ \
-     \x20 stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> @ " ;
+     \x20 stan::require_vector_like_vt<std::is_floating_point, VecR>* = \
+     nullptr, @ \x20 stan::require_vector_like_vt<std::is_integral, VecI>* = \
+     nullptr, @ \x20 stan::require_std_vector_vt<std::is_floating_point, \
+     VecVar>* = nullptr> @ " ;
   let params =
     [ "RNG& base_rng__"; "VecR& params_r__"; "VecI& params_i__"
     ; "VecVar& vars__"; "const bool emit_transformed_parameters__ = true"
@@ -639,9 +641,9 @@ let pp_unconstrained_param_names ppf {Program.output_vars; _} =
 (** Print the `transform_inits` method of the model class *)
 let pp_transform_inits ppf {Program.transform_inits; _} =
   pf ppf
-    "template <typename VecVar, typename VecI, @ \
-     \x20 stan::require_std_vector_t<VecVar>* = nullptr, @ \
-     \x20 stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> @ " ;
+    "template <typename VecVar, typename VecI, @ \x20 \
+     stan::require_std_vector_t<VecVar>* = nullptr, @ \x20 \
+     stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> @ " ;
   let params =
     [ "const stan::io::var_context& context__"; "VecI& params_i__"
     ; "VecVar& vars__"; "std::ostream* pstream__ = nullptr" ]
@@ -649,8 +651,8 @@ let pp_transform_inits ppf {Program.transform_inits; _} =
   let intro ppf () =
     pf ppf
       "using local_scalar_t__ = \
-       double;@,vars__.clear();@,vars__.reserve(num_params_r__);@ \
-       int current_statement__ = 0; "
+       double;@,vars__.clear();@,vars__.reserve(num_params_r__);@ int \
+       current_statement__ = 0; "
   in
   let cv_attr = ["const"] in
   pp_method_b ppf "void" "transform_inits_impl" params intro transform_inits
@@ -659,9 +661,9 @@ let pp_transform_inits ppf {Program.transform_inits; _} =
 (** Print the `log_prob` method of the model class *)
 let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
   pf ppf
-    "template <bool propto__, bool jacobian__ , typename VecR, typename VecI, @ \
-     \x20 stan::require_vector_like_t<VecR>* = nullptr, @ \
-     \x20 stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> @ " ;
+    "template <bool propto__, bool jacobian__ , typename VecR, typename VecI, \
+     @ \x20 stan::require_vector_like_t<VecR>* = nullptr, @ \x20 \
+     stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> @ " ;
   let params =
     [ "VecR& params_r__"; "VecI& params_i__"
     ; "std::ostream* pstream__ = nullptr" ]
