@@ -68,7 +68,7 @@ module Located : sig
   module Non_recursive : sig
     type t =
       { pattern: (Expr.Typed.t, int) Fixed.Pattern.t
-      ; meta: Meta.t [@sexp.opaque] [@compare.ignore] }
+      ; meta: (Meta.t [@sexp.opaque] [@compare.ignore]) }
     [@@deriving compare, sexp, hash]
   end
 end
@@ -76,7 +76,7 @@ end
 module Labelled : sig
   module Meta : sig
     type t =
-      { loc: Location_span.t [@sexp.opaque] [@compare.ignore]
+      { loc: (Location_span.t [@sexp.opaque] [@compare.ignore])
       ; label: Int_label.t [@compare.ignore] }
     [@@deriving compare, create, sexp, hash]
 

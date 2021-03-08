@@ -1,4 +1,7 @@
 open Core_kernel
+
+let ( = ) = Stdlib.( = )
+
 open Middle
 
 let dist_prefix = "tfd__."
