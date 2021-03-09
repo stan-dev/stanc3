@@ -9,7 +9,9 @@ let run_capturing_output cmd =
   String.concat ~sep:"\n" (List.concat out)
 
 let () =
-  let files = Array.(sub Stdlib.Sys.argv ~pos:1 ~len:(length Stdlib.Sys.argv - 1)) in
+  let files =
+    Array.(sub Stdlib.Sys.argv ~pos:1 ~len:(length Stdlib.Sys.argv - 1))
+  in
   Array.stable_sort ~compare:String.compare files ;
   Array.iter files ~f:(fun arg ->
       let cmd = "node " ^ arg in

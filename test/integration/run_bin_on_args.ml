@@ -24,7 +24,9 @@ let run_capturing_output cmd =
 
 let () =
   let binary = Stdlib.Sys.argv.(1) in
-  let dirs = Array.(sub Stdlib.Sys.argv ~pos:2 ~len:(length Stdlib.Sys.argv - 2)) in
+  let dirs =
+    Array.(sub Stdlib.Sys.argv ~pos:2 ~len:(length Stdlib.Sys.argv - 2))
+  in
   Array.stable_sort ~compare:String.compare dirs ;
   Array.iter dirs ~f:(fun arg ->
       let cmd = binary ^ " " ^ arg in
