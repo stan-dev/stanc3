@@ -224,7 +224,7 @@ pipeline {
                         unstash 'ubuntu-exe'
 
                         sh """
-                            git clone --recursive https://github.com/stan-dev/math.git
+                            git clone --recursive https://github.com/stan-dev/math.git --branch bugfix/poisson_expressions
                             mkdir -p math/bin/stanc
                             cp bin/stanc math/bin/stanc
                         """
