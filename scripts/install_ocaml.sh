@@ -10,8 +10,8 @@ opam init $1
 eval $(opam env)
 
 # Create and switch to 4.07.0
-opam switch create 4.07.0
-opam switch 4.07.0
+opam switch create 4.12.0
+opam switch 4.12.0
 
 # Have further shell commands be evaluated in the proper opam context.
 eval $(opam env)
