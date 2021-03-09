@@ -147,7 +147,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "ad_level_failing_model_namespace::ad_level_failing_model";
+    static constexpr const char* function__ = "ad_level_failing_model_namespace::ad_level_failing_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -257,7 +257,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "ad_level_failing_model_namespace::log_prob";
+    static constexpr const char* function__ = "ad_level_failing_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -459,7 +459,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "ad_level_failing_model_namespace::write_array";
+    static constexpr const char* function__ = "ad_level_failing_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -1320,7 +1320,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "copy_fail_model_namespace::copy_fail_model";
+    static constexpr const char* function__ = "copy_fail_model_namespace::copy_fail_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -1837,7 +1837,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "copy_fail_model_namespace::log_prob";
+    static constexpr const char* function__ = "copy_fail_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -2526,7 +2526,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "copy_fail_model_namespace::write_array";
+    static constexpr const char* function__ = "copy_fail_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -3614,7 +3614,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "dce_fail_model_namespace::dce_fail_model";
+    static constexpr const char* function__ = "dce_fail_model_namespace::dce_fail_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -4005,7 +4005,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "dce_fail_model_namespace::log_prob";
+    static constexpr const char* function__ = "dce_fail_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -4316,7 +4316,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "dce_fail_model_namespace::write_array";
+    static constexpr const char* function__ = "dce_fail_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -5177,7 +5177,7 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_experiment_model_namespace::expr_prop_experiment_model";
+    static constexpr const char* function__ = "expr_prop_experiment_model_namespace::expr_prop_experiment_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -5245,7 +5245,7 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_experiment_model_namespace::log_prob";
+    static constexpr const char* function__ = "expr_prop_experiment_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -5277,7 +5277,7 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_experiment_model_namespace::write_array";
+    static constexpr const char* function__ = "expr_prop_experiment_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -5522,7 +5522,7 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_experiment2_model_namespace::expr_prop_experiment2_model";
+    static constexpr const char* function__ = "expr_prop_experiment2_model_namespace::expr_prop_experiment2_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -5589,7 +5589,7 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_experiment2_model_namespace::log_prob";
+    static constexpr const char* function__ = "expr_prop_experiment2_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -5621,7 +5621,7 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_experiment2_model_namespace::write_array";
+    static constexpr const char* function__ = "expr_prop_experiment2_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -5872,7 +5872,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_fail_model_namespace::expr_prop_fail_model";
+    static constexpr const char* function__ = "expr_prop_fail_model_namespace::expr_prop_fail_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -5956,7 +5956,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_fail_model_namespace::log_prob";
+    static constexpr const char* function__ = "expr_prop_fail_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -6088,7 +6088,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_fail_model_namespace::write_array";
+    static constexpr const char* function__ = "expr_prop_fail_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -6505,7 +6505,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_fail2_model_namespace::expr_prop_fail2_model";
+    static constexpr const char* function__ = "expr_prop_fail2_model_namespace::expr_prop_fail2_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -6591,7 +6591,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_fail2_model_namespace::log_prob";
+    static constexpr const char* function__ = "expr_prop_fail2_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -6662,7 +6662,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_fail2_model_namespace::write_array";
+    static constexpr const char* function__ = "expr_prop_fail2_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -7068,7 +7068,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_fail3_model_namespace::expr_prop_fail3_model";
+    static constexpr const char* function__ = "expr_prop_fail3_model_namespace::expr_prop_fail3_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -7546,7 +7546,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_fail3_model_namespace::log_prob";
+    static constexpr const char* function__ = "expr_prop_fail3_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -7734,7 +7734,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_fail3_model_namespace::write_array";
+    static constexpr const char* function__ = "expr_prop_fail3_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -8605,7 +8605,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_fail4_model_namespace::expr_prop_fail4_model";
+    static constexpr const char* function__ = "expr_prop_fail4_model_namespace::expr_prop_fail4_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -8808,7 +8808,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_fail4_model_namespace::log_prob";
+    static constexpr const char* function__ = "expr_prop_fail4_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -8899,7 +8899,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_fail4_model_namespace::write_array";
+    static constexpr const char* function__ = "expr_prop_fail4_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -9855,7 +9855,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_fail5_model_namespace::expr_prop_fail5_model";
+    static constexpr const char* function__ = "expr_prop_fail5_model_namespace::expr_prop_fail5_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -10244,7 +10244,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_fail5_model_namespace::log_prob";
+    static constexpr const char* function__ = "expr_prop_fail5_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -10933,7 +10933,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_fail5_model_namespace::write_array";
+    static constexpr const char* function__ = "expr_prop_fail5_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -13021,7 +13021,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_fail6_model_namespace::expr_prop_fail6_model";
+    static constexpr const char* function__ = "expr_prop_fail6_model_namespace::expr_prop_fail6_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -13426,7 +13426,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_fail6_model_namespace::log_prob";
+    static constexpr const char* function__ = "expr_prop_fail6_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -14631,7 +14631,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_fail6_model_namespace::write_array";
+    static constexpr const char* function__ = "expr_prop_fail6_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -16292,7 +16292,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_fail7_model_namespace::expr_prop_fail7_model";
+    static constexpr const char* function__ = "expr_prop_fail7_model_namespace::expr_prop_fail7_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -16637,7 +16637,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_fail7_model_namespace::log_prob";
+    static constexpr const char* function__ = "expr_prop_fail7_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -16941,7 +16941,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_fail7_model_namespace::write_array";
+    static constexpr const char* function__ = "expr_prop_fail7_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -17775,7 +17775,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_fail8_model_namespace::expr_prop_fail8_model";
+    static constexpr const char* function__ = "expr_prop_fail8_model_namespace::expr_prop_fail8_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -17970,7 +17970,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_fail8_model_namespace::log_prob";
+    static constexpr const char* function__ = "expr_prop_fail8_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -18078,7 +18078,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "expr_prop_fail8_model_namespace::write_array";
+    static constexpr const char* function__ = "expr_prop_fail8_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -18970,7 +18970,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "fails_test_model_namespace::fails_test_model";
+    static constexpr const char* function__ = "fails_test_model_namespace::fails_test_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -19487,7 +19487,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "fails_test_model_namespace::log_prob";
+    static constexpr const char* function__ = "fails_test_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -20176,7 +20176,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "fails_test_model_namespace::write_array";
+    static constexpr const char* function__ = "fails_test_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -22283,7 +22283,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "inlining_fail2_model_namespace::inlining_fail2_model";
+    static constexpr const char* function__ = "inlining_fail2_model_namespace::inlining_fail2_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -22690,7 +22690,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "inlining_fail2_model_namespace::log_prob";
+    static constexpr const char* function__ = "inlining_fail2_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -23819,7 +23819,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "inlining_fail2_model_namespace::write_array";
+    static constexpr const char* function__ = "inlining_fail2_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -25322,7 +25322,7 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "lcm_experiment_model_namespace::lcm_experiment_model";
+    static constexpr const char* function__ = "lcm_experiment_model_namespace::lcm_experiment_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -25387,7 +25387,7 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "lcm_experiment_model_namespace::log_prob";
+    static constexpr const char* function__ = "lcm_experiment_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -25419,7 +25419,7 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "lcm_experiment_model_namespace::write_array";
+    static constexpr const char* function__ = "lcm_experiment_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -25660,7 +25660,7 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "lcm_experiment2_model_namespace::lcm_experiment2_model";
+    static constexpr const char* function__ = "lcm_experiment2_model_namespace::lcm_experiment2_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -25698,7 +25698,7 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "lcm_experiment2_model_namespace::log_prob";
+    static constexpr const char* function__ = "lcm_experiment2_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -25753,7 +25753,7 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "lcm_experiment2_model_namespace::write_array";
+    static constexpr const char* function__ = "lcm_experiment2_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -26007,7 +26007,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "lcm_fails_model_namespace::lcm_fails_model";
+    static constexpr const char* function__ = "lcm_fails_model_namespace::lcm_fails_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -26067,7 +26067,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "lcm_fails_model_namespace::log_prob";
+    static constexpr const char* function__ = "lcm_fails_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -26117,7 +26117,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "lcm_fails_model_namespace::write_array";
+    static constexpr const char* function__ = "lcm_fails_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -26789,7 +26789,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "lcm_fails2_model_namespace::lcm_fails2_model";
+    static constexpr const char* function__ = "lcm_fails2_model_namespace::lcm_fails2_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -27174,7 +27174,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "lcm_fails2_model_namespace::log_prob";
+    static constexpr const char* function__ = "lcm_fails2_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -27833,7 +27833,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "lcm_fails2_model_namespace::write_array";
+    static constexpr const char* function__ = "lcm_fails2_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -28854,7 +28854,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "lupdf_inlining_model_namespace::lupdf_inlining_model";
+    static constexpr const char* function__ = "lupdf_inlining_model_namespace::lupdf_inlining_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -28899,7 +28899,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "lupdf_inlining_model_namespace::log_prob";
+    static constexpr const char* function__ = "lupdf_inlining_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -28979,7 +28979,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "lupdf_inlining_model_namespace::write_array";
+    static constexpr const char* function__ = "lupdf_inlining_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -29363,7 +29363,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "off_dce_model_namespace::off_dce_model";
+    static constexpr const char* function__ = "off_dce_model_namespace::off_dce_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -29656,7 +29656,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "off_dce_model_namespace::log_prob";
+    static constexpr const char* function__ = "off_dce_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -29784,7 +29784,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "off_dce_model_namespace::write_array";
+    static constexpr const char* function__ = "off_dce_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -30375,7 +30375,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "off_small_model_namespace::off_small_model";
+    static constexpr const char* function__ = "off_small_model_namespace::off_small_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -30584,7 +30584,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "off_small_model_namespace::log_prob";
+    static constexpr const char* function__ = "off_small_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -30743,7 +30743,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "off_small_model_namespace::write_array";
+    static constexpr const char* function__ = "off_small_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -31513,7 +31513,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "optimizations_model_namespace::optimizations_model";
+    static constexpr const char* function__ = "optimizations_model_namespace::optimizations_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -31555,7 +31555,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "optimizations_model_namespace::log_prob";
+    static constexpr const char* function__ = "optimizations_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -32138,7 +32138,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "optimizations_model_namespace::write_array";
+    static constexpr const char* function__ = "optimizations_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -32822,7 +32822,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "partial_eval_model_namespace::partial_eval_model";
+    static constexpr const char* function__ = "partial_eval_model_namespace::partial_eval_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -33047,7 +33047,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "partial_eval_model_namespace::log_prob";
+    static constexpr const char* function__ = "partial_eval_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -33156,7 +33156,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "partial_eval_model_namespace::write_array";
+    static constexpr const char* function__ = "partial_eval_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -33662,7 +33662,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "stalled1_failure_model_namespace::stalled1_failure_model";
+    static constexpr const char* function__ = "stalled1_failure_model_namespace::stalled1_failure_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -33846,7 +33846,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "stalled1_failure_model_namespace::log_prob";
+    static constexpr const char* function__ = "stalled1_failure_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -33977,7 +33977,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "stalled1_failure_model_namespace::write_array";
+    static constexpr const char* function__ = "stalled1_failure_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -34663,7 +34663,7 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "unroll_limit_model_namespace::unroll_limit_model";
+    static constexpr const char* function__ = "unroll_limit_model_namespace::unroll_limit_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -34701,7 +34701,7 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "unroll_limit_model_namespace::log_prob";
+    static constexpr const char* function__ = "unroll_limit_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -34733,7 +34733,7 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "unroll_limit_model_namespace::write_array";
+    static constexpr const char* function__ = "unroll_limit_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {

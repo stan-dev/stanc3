@@ -44,7 +44,8 @@ let pp_unused = fmt "(void) %s;  // suppress unused var warning"
   @param fname Name of the function.
  *)
 let pp_function__ ppf (prog_name, fname) =
-  pf ppf {|@[<v>static constexpr char* function__ = "%s_namespace::%s";@,%a@]|}
+  pf ppf
+    {|@[<v>static constexpr const char* function__ = "%s_namespace::%s";@,%a@]|}
     prog_name fname pp_unused "function__"
 
 (** Print the body of exception handling for functions *)
