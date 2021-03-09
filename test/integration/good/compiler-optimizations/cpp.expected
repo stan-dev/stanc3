@@ -19,8 +19,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 35> locations_array__ = 
 {" (found before start of program)",
  " (in 'ad-level-failing.stan', line 45, column 2 to column 21)",
  " (in 'ad-level-failing.stan', line 46, column 2 to column 22)",
@@ -65,7 +64,8 @@ simple_SIR(const T0__& t, const std::vector<T1__>& y,
            const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
            const std::vector<int>& x_i, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__, T3__>;
-  const static bool propto__ = true;
+  int current_statement__ = 0; 
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -142,11 +142,12 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
   ad_level_failing_model(stan::io::var_context& context__,
                          unsigned int random_seed__ = 0,
                          std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "ad_level_failing_model_namespace::ad_level_failing_model";
+    static constexpr char* function__ = "ad_level_failing_model_namespace::ad_level_failing_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -242,7 +243,9 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -251,9 +254,10 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "ad_level_failing_model_namespace::log_prob";
+    static constexpr char* function__ = "ad_level_failing_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -437,7 +441,10 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -448,10 +455,11 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "ad_level_failing_model_namespace::write_array";
+    static constexpr char* function__ = "ad_level_failing_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -610,13 +618,16 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       int pos__;
@@ -872,8 +883,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 68> locations_array__ = 
 {" (found before start of program)",
  " (in 'copy_fail.stan', line 71, column 2 to column 31)",
  " (in 'copy_fail.stan', line 72, column 2 to column 40)",
@@ -947,7 +957,8 @@ static const std::vector<std::string> locations_array__ =
 int
 first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
-  const static bool propto__ = true;
+  int current_statement__ = 0; 
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -993,7 +1004,8 @@ return first_capture(y_i, pstream__);
 int
 last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
-  const static bool propto__ = true;
+  int current_statement__ = 0; 
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -1053,9 +1065,10 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
                 const T3__& phi_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
           stan::value_type_t<T3__>>;
+  int current_statement__ = 0; 
   const auto& p = to_ref(p_arg__);
   const auto& phi = to_ref(phi_arg__);
-  const static bool propto__ = true;
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -1302,11 +1315,12 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
   copy_fail_model(stan::io::var_context& context__,
                   unsigned int random_seed__ = 0,
                   std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "copy_fail_model_namespace::copy_fail_model";
+    static constexpr char* function__ = "copy_fail_model_namespace::copy_fail_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -1809,7 +1823,9 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -1818,9 +1834,10 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "copy_fail_model_namespace::log_prob";
+    static constexpr char* function__ = "copy_fail_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -2491,7 +2508,10 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -2502,10 +2522,11 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "copy_fail_model_namespace::write_array";
+    static constexpr char* function__ = "copy_fail_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -3151,13 +3172,16 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       double lcm_sym53__;
@@ -3466,8 +3490,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 66> locations_array__ = 
 {" (found before start of program)",
  " (in 'dce-fail.stan', line 18, column 2 to column 22)",
  " (in 'dce-fail.stan', line 19, column 2 to column 26)",
@@ -3586,11 +3609,12 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
   dce_fail_model(stan::io::var_context& context__,
                  unsigned int random_seed__ = 0,
                  std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "dce_fail_model_namespace::dce_fail_model";
+    static constexpr char* function__ = "dce_fail_model_namespace::dce_fail_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -3967,7 +3991,9 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -3976,9 +4002,10 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "dce_fail_model_namespace::log_prob";
+    static constexpr char* function__ = "dce_fail_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -4271,7 +4298,10 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -4282,10 +4312,11 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "dce_fail_model_namespace::write_array";
+    static constexpr char* function__ = "dce_fail_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -4478,13 +4509,16 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       double lcm_sym27__;
@@ -5102,8 +5136,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 9> locations_array__ = 
 {" (found before start of program)",
  " (in 'expr-prop-experiment.stan', line 2, column 2 to column 8)",
  " (in 'expr-prop-experiment.stan', line 5, column 2 to column 9)",
@@ -5139,11 +5172,12 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
   expr_prop_experiment_model(stan::io::var_context& context__,
                              unsigned int random_seed__ = 0,
                              std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_experiment_model_namespace::expr_prop_experiment_model";
+    static constexpr char* function__ = "expr_prop_experiment_model_namespace::expr_prop_experiment_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -5197,7 +5231,9 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -5206,9 +5242,10 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_experiment_model_namespace::log_prob";
+    static constexpr char* function__ = "expr_prop_experiment_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -5222,7 +5259,10 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -5233,10 +5273,11 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_experiment_model_namespace::write_array";
+    static constexpr char* function__ = "expr_prop_experiment_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -5256,13 +5297,16 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       int pos__;
@@ -5440,8 +5484,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 8> locations_array__ = 
 {" (found before start of program)",
  " (in 'expr-prop-experiment2.stan', line 2, column 2 to column 8)",
  " (in 'expr-prop-experiment2.stan', line 5, column 2 to column 13)",
@@ -5474,11 +5517,12 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
   expr_prop_experiment2_model(stan::io::var_context& context__,
                               unsigned int random_seed__ = 0,
                               std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_experiment2_model_namespace::expr_prop_experiment2_model";
+    static constexpr char* function__ = "expr_prop_experiment2_model_namespace::expr_prop_experiment2_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -5531,7 +5575,9 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -5540,9 +5586,10 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_experiment2_model_namespace::log_prob";
+    static constexpr char* function__ = "expr_prop_experiment2_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -5556,7 +5603,10 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -5567,10 +5617,11 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_experiment2_model_namespace::write_array";
+    static constexpr char* function__ = "expr_prop_experiment2_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -5590,13 +5641,16 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       int pos__;
@@ -5774,8 +5828,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 12> locations_array__ = 
 {" (found before start of program)",
  " (in 'expr-prop-fail.stan', line 7, column 2 to column 16)",
  " (in 'expr-prop-fail.stan', line 8, column 2 to column 25)",
@@ -5814,11 +5867,12 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
   expr_prop_fail_model(stan::io::var_context& context__,
                        unsigned int random_seed__ = 0,
                        std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_fail_model_namespace::expr_prop_fail_model";
+    static constexpr char* function__ = "expr_prop_fail_model_namespace::expr_prop_fail_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -5888,7 +5942,9 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -5897,9 +5953,10 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_fail_model_namespace::log_prob";
+    static constexpr char* function__ = "expr_prop_fail_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -6013,7 +6070,10 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -6024,10 +6084,11 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_fail_model_namespace::write_array";
+    static constexpr char* function__ = "expr_prop_fail_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -6105,13 +6166,16 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       double lcm_sym9__;
@@ -6397,8 +6461,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 12> locations_array__ = 
 {" (found before start of program)",
  " (in 'expr-prop-fail2.stan', line 7, column 2 to column 10)",
  " (in 'expr-prop-fail2.stan', line 8, column 2 to column 16)",
@@ -6437,11 +6500,12 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
   expr_prop_fail2_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_fail2_model_namespace::expr_prop_fail2_model";
+    static constexpr char* function__ = "expr_prop_fail2_model_namespace::expr_prop_fail2_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -6513,7 +6577,9 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -6522,9 +6588,10 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_fail2_model_namespace::log_prob";
+    static constexpr char* function__ = "expr_prop_fail2_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -6577,7 +6644,10 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -6588,10 +6658,11 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_fail2_model_namespace::write_array";
+    static constexpr char* function__ = "expr_prop_fail2_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -6646,13 +6717,16 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       double lcm_sym3__;
@@ -6877,8 +6951,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 52> locations_array__ = 
 {" (found before start of program)",
  " (in 'expr-prop-fail3.stan', line 19, column 2 to column 18)",
  " (in 'expr-prop-fail3.stan', line 20, column 2 to column 18)",
@@ -6990,11 +7063,12 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
   expr_prop_fail3_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_fail3_model_namespace::expr_prop_fail3_model";
+    static constexpr char* function__ = "expr_prop_fail3_model_namespace::expr_prop_fail3_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -7458,7 +7532,9 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -7467,9 +7543,10 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_fail3_model_namespace::log_prob";
+    static constexpr char* function__ = "expr_prop_fail3_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -7639,7 +7716,10 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -7650,10 +7730,11 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_fail3_model_namespace::write_array";
+    static constexpr char* function__ = "expr_prop_fail3_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -7848,13 +7929,16 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       double lcm_sym30__;
@@ -8431,8 +8515,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 44> locations_array__ = 
 {" (found before start of program)",
  " (in 'expr-prop-fail4.stan', line 12, column 2 to column 24)",
  " (in 'expr-prop-fail4.stan', line 13, column 2 to column 28)",
@@ -8517,11 +8600,12 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
   expr_prop_fail4_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_fail4_model_namespace::expr_prop_fail4_model";
+    static constexpr char* function__ = "expr_prop_fail4_model_namespace::expr_prop_fail4_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -8710,7 +8794,9 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -8719,9 +8805,10 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_fail4_model_namespace::log_prob";
+    static constexpr char* function__ = "expr_prop_fail4_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -8794,7 +8881,10 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -8805,10 +8895,11 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_fail4_model_namespace::write_array";
+    static constexpr char* function__ = "expr_prop_fail4_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -9004,13 +9095,16 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       double lcm_sym7__;
@@ -9330,8 +9424,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 71> locations_array__ = 
 {" (found before start of program)",
  " (in 'expr-prop-fail5.stan', line 71, column 2 to column 33)",
  " (in 'expr-prop-fail5.stan', line 72, column 2 to column 31)",
@@ -9408,7 +9501,8 @@ static const std::vector<std::string> locations_array__ =
 int
 first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
-  const static bool propto__ = true;
+  int current_statement__ = 0; 
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -9454,7 +9548,8 @@ return first_capture(y_i, pstream__);
 int
 last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
-  const static bool propto__ = true;
+  int current_statement__ = 0; 
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -9514,9 +9609,10 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
                 const T3__& phi_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
           stan::value_type_t<T3__>>;
+  int current_statement__ = 0; 
   const auto& p = to_ref(p_arg__);
   const auto& phi = to_ref(phi_arg__);
-  const static bool propto__ = true;
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -9754,11 +9850,12 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
   expr_prop_fail5_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_fail5_model_namespace::expr_prop_fail5_model";
+    static constexpr char* function__ = "expr_prop_fail5_model_namespace::expr_prop_fail5_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -10133,7 +10230,9 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -10142,9 +10241,10 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_fail5_model_namespace::log_prob";
+    static constexpr char* function__ = "expr_prop_fail5_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -10815,7 +10915,10 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -10826,10 +10929,11 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_fail5_model_namespace::write_array";
+    static constexpr char* function__ = "expr_prop_fail5_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -11492,13 +11596,16 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       double lcm_sym51__;
@@ -11829,8 +11936,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 147> locations_array__ = 
 {" (found before start of program)",
  " (in 'expr-prop-fail6.stan', line 163, column 2 to column 33)",
  " (in 'expr-prop-fail6.stan', line 164, column 2 to column 31)",
@@ -11983,7 +12089,8 @@ static const std::vector<std::string> locations_array__ =
 int
 first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
-  const static bool propto__ = true;
+  int current_statement__ = 0; 
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -12029,7 +12136,8 @@ return first_capture(y_i, pstream__);
 int
 last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
-  const static bool propto__ = true;
+  int current_statement__ = 0; 
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -12089,9 +12197,10 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
                 std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
           stan::value_type_t<T1__>>;
+  int current_statement__ = 0; 
   const auto& p = to_ref(p_arg__);
   const auto& phi = to_ref(phi_arg__);
-  const static bool propto__ = true;
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -12305,6 +12414,7 @@ js_super_lp(const std::vector<std::vector<int>>& y,
           T5__,
           stan::value_type_t<T6__>,
           stan::value_type_t<T7__>>;
+  int current_statement__ = 0; 
   const auto& p = to_ref(p_arg__);
   const auto& phi = to_ref(phi_arg__);
   const auto& nu = to_ref(nu_arg__);
@@ -12906,11 +13016,12 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
   expr_prop_fail6_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_fail6_model_namespace::expr_prop_fail6_model";
+    static constexpr char* function__ = "expr_prop_fail6_model_namespace::expr_prop_fail6_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -13301,7 +13412,9 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -13310,9 +13423,10 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_fail6_model_namespace::log_prob";
+    static constexpr char* function__ = "expr_prop_fail6_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -14499,7 +14613,10 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -14510,10 +14627,11 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_fail6_model_namespace::write_array";
+    static constexpr char* function__ = "expr_prop_fail6_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -15603,13 +15721,16 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       double lcm_sym128__;
@@ -16081,8 +16202,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 38> locations_array__ = 
 {" (found before start of program)",
  " (in 'expr-prop-fail7.stan', line 20, column 2 to column 16)",
  " (in 'expr-prop-fail7.stan', line 21, column 2 to column 24)",
@@ -16167,11 +16287,12 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
   expr_prop_fail7_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_fail7_model_namespace::expr_prop_fail7_model";
+    static constexpr char* function__ = "expr_prop_fail7_model_namespace::expr_prop_fail7_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -16502,7 +16623,9 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -16511,9 +16634,10 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_fail7_model_namespace::log_prob";
+    static constexpr char* function__ = "expr_prop_fail7_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -16799,7 +16923,10 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -16810,10 +16937,11 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_fail7_model_namespace::write_array";
+    static constexpr char* function__ = "expr_prop_fail7_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -17093,13 +17221,16 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       double lcm_sym23__;
@@ -17576,8 +17707,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 25> locations_array__ = 
 {" (found before start of program)",
  " (in 'expr-prop-fail8.stan', line 11, column 2 to column 13)",
  " (in 'expr-prop-fail8.stan', line 12, column 2 to column 13)",
@@ -17640,11 +17770,12 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
   expr_prop_fail8_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_fail8_model_namespace::expr_prop_fail8_model";
+    static constexpr char* function__ = "expr_prop_fail8_model_namespace::expr_prop_fail8_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -17825,7 +17956,9 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -17834,9 +17967,10 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_fail8_model_namespace::log_prob";
+    static constexpr char* function__ = "expr_prop_fail8_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -17926,7 +18060,10 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -17937,10 +18074,11 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "expr_prop_fail8_model_namespace::write_array";
+    static constexpr char* function__ = "expr_prop_fail8_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -18047,13 +18185,16 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       double lcm_sym10__;
@@ -18392,8 +18533,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 68> locations_array__ = 
 {" (found before start of program)",
  " (in 'fails-test.stan', line 71, column 2 to column 31)",
  " (in 'fails-test.stan', line 72, column 2 to column 40)",
@@ -18467,7 +18607,8 @@ static const std::vector<std::string> locations_array__ =
 int
 first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
-  const static bool propto__ = true;
+  int current_statement__ = 0; 
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -18513,7 +18654,8 @@ return first_capture(y_i, pstream__);
 int
 last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
-  const static bool propto__ = true;
+  int current_statement__ = 0; 
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -18573,9 +18715,10 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
                 const T3__& phi_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
           stan::value_type_t<T3__>>;
+  int current_statement__ = 0; 
   const auto& p = to_ref(p_arg__);
   const auto& phi = to_ref(phi_arg__);
-  const static bool propto__ = true;
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -18822,11 +18965,12 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
   fails_test_model(stan::io::var_context& context__,
                    unsigned int random_seed__ = 0,
                    std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "fails_test_model_namespace::fails_test_model";
+    static constexpr char* function__ = "fails_test_model_namespace::fails_test_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -19329,7 +19473,9 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -19338,9 +19484,10 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "fails_test_model_namespace::log_prob";
+    static constexpr char* function__ = "fails_test_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -20011,7 +20158,10 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -20022,10 +20172,11 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "fails_test_model_namespace::write_array";
+    static constexpr char* function__ = "fails_test_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -20671,13 +20822,16 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       double lcm_sym53__;
@@ -20986,8 +21140,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 145> locations_array__ = 
 {" (found before start of program)",
  " (in 'inlining-fail2.stan', line 177, column 2 to column 33)",
  " (in 'inlining-fail2.stan', line 178, column 2 to column 31)",
@@ -21138,7 +21291,8 @@ static const std::vector<std::string> locations_array__ =
 int
 first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
-  const static bool propto__ = true;
+  int current_statement__ = 0; 
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -21184,7 +21338,8 @@ return first_capture(y_i, pstream__);
 int
 last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
-  const static bool propto__ = true;
+  int current_statement__ = 0; 
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -21244,9 +21399,10 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
                 std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
           stan::value_type_t<T1__>>;
+  int current_statement__ = 0; 
   const auto& p = to_ref(p_arg__);
   const auto& phi = to_ref(phi_arg__);
-  const static bool propto__ = true;
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -21459,6 +21615,7 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
           stan::value_type_t<T4__>,
           stan::value_type_t<T5__>,
           stan::value_type_t<T6__>>;
+  int current_statement__ = 0; 
   const auto& p = to_ref(p_arg__);
   const auto& phi = to_ref(phi_arg__);
   const auto& gamma = to_ref(gamma_arg__);
@@ -22008,8 +22165,9 @@ template <typename T0__>
 Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
 seq_cprob(const T0__& gamma_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
+  int current_statement__ = 0; 
   const auto& gamma = to_ref(gamma_arg__);
-  const static bool propto__ = true;
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -22120,11 +22278,12 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
   inlining_fail2_model(stan::io::var_context& context__,
                        unsigned int random_seed__ = 0,
                        std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "inlining_fail2_model_namespace::inlining_fail2_model";
+    static constexpr char* function__ = "inlining_fail2_model_namespace::inlining_fail2_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -22517,7 +22676,9 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -22526,9 +22687,10 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "inlining_fail2_model_namespace::log_prob";
+    static constexpr char* function__ = "inlining_fail2_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -23639,7 +23801,10 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -23650,10 +23815,11 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "inlining_fail2_model_namespace::write_array";
+    static constexpr char* function__ = "inlining_fail2_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -24654,13 +24820,16 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       double lcm_sym142__;
@@ -25115,8 +25284,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 7> locations_array__ = 
 {" (found before start of program)",
  " (in 'lcm-experiment.stan', line 2, column 2 to column 8)",
  " (in 'lcm-experiment.stan', line 5, column 2 to column 13)",
@@ -25149,11 +25317,12 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
   lcm_experiment_model(stan::io::var_context& context__,
                        unsigned int random_seed__ = 0,
                        std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "lcm_experiment_model_namespace::lcm_experiment_model";
+    static constexpr char* function__ = "lcm_experiment_model_namespace::lcm_experiment_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -25204,7 +25373,9 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -25213,9 +25384,10 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "lcm_experiment_model_namespace::log_prob";
+    static constexpr char* function__ = "lcm_experiment_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -25229,7 +25401,10 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -25240,10 +25415,11 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "lcm_experiment_model_namespace::write_array";
+    static constexpr char* function__ = "lcm_experiment_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -25263,13 +25439,16 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       int pos__;
@@ -25446,8 +25625,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 8> locations_array__ = 
 {" (found before start of program)",
  " (in 'lcm-experiment2.stan', line 2, column 2 to column 9)",
  " (in 'lcm-experiment2.stan', line 5, column 2 to column 18)",
@@ -25477,11 +25655,12 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
   lcm_experiment2_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "lcm_experiment2_model_namespace::lcm_experiment2_model";
+    static constexpr char* function__ = "lcm_experiment2_model_namespace::lcm_experiment2_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -25505,7 +25684,9 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -25514,9 +25695,10 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "lcm_experiment2_model_namespace::log_prob";
+    static constexpr char* function__ = "lcm_experiment2_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -25553,7 +25735,10 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -25564,10 +25749,11 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "lcm_experiment2_model_namespace::write_array";
+    static constexpr char* function__ = "lcm_experiment2_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -25593,13 +25779,16 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       int pos__;
@@ -25783,8 +25972,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 7> locations_array__ = 
 {" (found before start of program)",
  " (in 'lcm-fails.stan', line 6, column 2 to column 16)",
  " (in 'lcm-fails.stan', line 9, column 2 to column 22)",
@@ -25814,11 +26002,12 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
   lcm_fails_model(stan::io::var_context& context__,
                   unsigned int random_seed__ = 0,
                   std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "lcm_fails_model_namespace::lcm_fails_model";
+    static constexpr char* function__ = "lcm_fails_model_namespace::lcm_fails_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -25864,7 +26053,9 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -25873,9 +26064,10 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "lcm_fails_model_namespace::log_prob";
+    static constexpr char* function__ = "lcm_fails_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -25907,7 +26099,10 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -25918,10 +26113,11 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "lcm_fails_model_namespace::write_array";
+    static constexpr char* function__ = "lcm_fails_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -25962,13 +26158,16 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       double lcm_sym3__;
@@ -26166,8 +26365,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 64> locations_array__ = 
 {" (found before start of program)",
  " (in 'lcm-fails2.stan', line 69, column 2 to column 33)",
  " (in 'lcm-fails2.stan', line 70, column 2 to column 31)",
@@ -26237,7 +26435,8 @@ static const std::vector<std::string> locations_array__ =
 int
 first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
-  const static bool propto__ = true;
+  int current_statement__ = 0; 
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -26283,7 +26482,8 @@ return first_capture(y_i, pstream__);
 int
 last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
   using local_scalar_t__ = double;
-  const static bool propto__ = true;
+  int current_statement__ = 0; 
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -26343,9 +26543,10 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
                 const T3__& phi_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
           stan::value_type_t<T3__>>;
+  int current_statement__ = 0; 
   const auto& p = to_ref(p_arg__);
   const auto& phi = to_ref(phi_arg__);
-  const static bool propto__ = true;
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -26583,11 +26784,12 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
   lcm_fails2_model(stan::io::var_context& context__,
                    unsigned int random_seed__ = 0,
                    std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "lcm_fails2_model_namespace::lcm_fails2_model";
+    static constexpr char* function__ = "lcm_fails2_model_namespace::lcm_fails2_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -26958,7 +27160,9 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -26967,9 +27171,10 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "lcm_fails2_model_namespace::log_prob";
+    static constexpr char* function__ = "lcm_fails2_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -27610,7 +27815,10 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -27621,10 +27829,11 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "lcm_fails2_model_namespace::write_array";
+    static constexpr char* function__ = "lcm_fails2_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -28246,13 +28455,16 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       int pos__;
@@ -28511,8 +28723,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 13> locations_array__ = 
 {" (found before start of program)",
  " (in 'lupdf-inlining.stan', line 16, column 4 to column 12)",
  " (in 'lupdf-inlining.stan', line 19, column 4 to column 32)",
@@ -28533,6 +28744,7 @@ stan::promote_args_t<T0__,
 T1__>
 foo_lpdf(const T0__& x, const T1__& mu, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
+  int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -28563,6 +28775,7 @@ template <bool propto__, typename T1__>
 stan::promote_args_t<T1__>
 bar_lpmf(const int& n, const T1__& mu, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T1__>;
+  int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -28592,6 +28805,7 @@ template <bool propto__, typename T0__>
 stan::promote_args_t<T0__>
 baz_lpdf(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -28635,11 +28849,12 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
   lupdf_inlining_model(stan::io::var_context& context__,
                        unsigned int random_seed__ = 0,
                        std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "lupdf_inlining_model_namespace::lupdf_inlining_model";
+    static constexpr char* function__ = "lupdf_inlining_model_namespace::lupdf_inlining_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -28670,7 +28885,9 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -28679,9 +28896,10 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "lupdf_inlining_model_namespace::log_prob";
+    static constexpr char* function__ = "lupdf_inlining_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -28743,7 +28961,10 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -28754,10 +28975,11 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "lupdf_inlining_model_namespace::write_array";
+    static constexpr char* function__ = "lupdf_inlining_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -28836,13 +29058,16 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       int pos__;
@@ -29037,8 +29262,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 52> locations_array__ = 
 {" (found before start of program)",
  " (in 'off-dce.stan', line 23, column 2 to column 17)",
  " (in 'off-dce.stan', line 24, column 2 to column 16)",
@@ -29134,11 +29358,12 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
   off_dce_model(stan::io::var_context& context__,
                 unsigned int random_seed__ = 0,
                 std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "off_dce_model_namespace::off_dce_model";
+    static constexpr char* function__ = "off_dce_model_namespace::off_dce_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -29417,7 +29642,9 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -29426,9 +29653,10 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "off_dce_model_namespace::log_prob";
+    static constexpr char* function__ = "off_dce_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -29538,7 +29766,10 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -29549,10 +29780,11 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "off_dce_model_namespace::write_array";
+    static constexpr char* function__ = "off_dce_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -29788,13 +30020,16 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       int pos__;
@@ -30063,8 +30298,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 35> locations_array__ = 
 {" (found before start of program)",
  " (in 'off-small.stan', line 10, column 2 to column 12)",
  " (in 'off-small.stan', line 11, column 2 to column 17)",
@@ -30136,11 +30370,12 @@ class off_small_model final : public model_base_crtp<off_small_model> {
   off_small_model(stan::io::var_context& context__,
                   unsigned int random_seed__ = 0,
                   std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "off_small_model_namespace::off_small_model";
+    static constexpr char* function__ = "off_small_model_namespace::off_small_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -30335,7 +30570,9 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -30344,9 +30581,10 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "off_small_model_namespace::log_prob";
+    static constexpr char* function__ = "off_small_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -30487,7 +30725,10 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -30498,10 +30739,11 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "off_small_model_namespace::write_array";
+    static constexpr char* function__ = "off_small_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -30656,13 +30898,16 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       double lcm_sym10__;
@@ -31041,8 +31286,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 94> locations_array__ = 
 {" (found before start of program)",
  " (in 'optimizations.stan', line 20, column 4 to column 15)",
  " (in 'optimizations.stan', line 21, column 4 to column 13)",
@@ -31145,6 +31389,7 @@ void
 nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
          std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -31180,7 +31425,8 @@ return nrfun_lp<propto__>(x, y, lp__, lp_accum__, pstream__);
 int
 rfun(const int& y, std::ostream* pstream__) {
   using local_scalar_t__ = double;
-  const static bool propto__ = true;
+  int current_statement__ = 0; 
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -31217,6 +31463,7 @@ template <bool propto__, typename T_lp__, typename T_lp_accum__>
 int
 rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   using local_scalar_t__ = double;
+  int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -31261,11 +31508,12 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
   optimizations_model(stan::io::var_context& context__,
                       unsigned int random_seed__ = 0,
                       std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "optimizations_model_namespace::optimizations_model";
+    static constexpr char* function__ = "optimizations_model_namespace::optimizations_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -31293,7 +31541,9 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -31302,9 +31552,10 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "optimizations_model_namespace::log_prob";
+    static constexpr char* function__ = "optimizations_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -31869,7 +32120,10 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -31880,10 +32134,11 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "optimizations_model_namespace::write_array";
+    static constexpr char* function__ = "optimizations_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -32025,13 +32280,16 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       double lcm_sym53__;
@@ -32495,8 +32753,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 25> locations_array__ = 
 {" (found before start of program)",
  " (in 'partial-eval.stan', line 10, column 2 to column 19)",
  " (in 'partial-eval.stan', line 11, column 2 to column 17)",
@@ -32560,11 +32817,12 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
   partial_eval_model(stan::io::var_context& context__,
                      unsigned int random_seed__ = 0,
                      std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "partial_eval_model_namespace::partial_eval_model";
+    static constexpr char* function__ = "partial_eval_model_namespace::partial_eval_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -32775,7 +33033,9 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -32784,9 +33044,10 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "partial_eval_model_namespace::log_prob";
+    static constexpr char* function__ = "partial_eval_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -32877,7 +33138,10 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -32888,10 +33152,11 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "partial_eval_model_namespace::write_array";
+    static constexpr char* function__ = "partial_eval_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -32991,13 +33256,16 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       double lcm_sym10__;
@@ -33317,8 +33585,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 33> locations_array__ = 
 {" (found before start of program)",
  " (in 'stalled1-failure.stan', line 30, column 4 to column 16)",
  " (in 'stalled1-failure.stan', line 31, column 4 to column 16)",
@@ -33390,11 +33657,12 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
   stalled1_failure_model(stan::io::var_context& context__,
                          unsigned int random_seed__ = 0,
                          std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "stalled1_failure_model_namespace::stalled1_failure_model";
+    static constexpr char* function__ = "stalled1_failure_model_namespace::stalled1_failure_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -33564,7 +33832,9 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -33573,9 +33843,10 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "stalled1_failure_model_namespace::log_prob";
+    static constexpr char* function__ = "stalled1_failure_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -33688,7 +33959,10 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -33699,10 +33973,11 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "stalled1_failure_model_namespace::write_array";
+    static constexpr char* function__ = "stalled1_failure_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -33838,13 +34113,16 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       double lcm_sym8__;
@@ -34344,8 +34622,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 14> locations_array__ = 
 {" (found before start of program)",
  " (in 'unroll-limit.stan', line 2, column 2 to column 8)",
  " (in 'unroll-limit.stan', line 4, column 4 to column 15)",
@@ -34381,11 +34658,12 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
   unroll_limit_model(stan::io::var_context& context__,
                      unsigned int random_seed__ = 0,
                      std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "unroll_limit_model_namespace::unroll_limit_model";
+    static constexpr char* function__ = "unroll_limit_model_namespace::unroll_limit_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -34409,7 +34687,9 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -34418,9 +34698,10 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "unroll_limit_model_namespace::log_prob";
+    static constexpr char* function__ = "unroll_limit_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -34434,7 +34715,10 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -34445,10 +34729,11 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "unroll_limit_model_namespace::write_array";
+    static constexpr char* function__ = "unroll_limit_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -34744,13 +35029,16 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       int pos__;
