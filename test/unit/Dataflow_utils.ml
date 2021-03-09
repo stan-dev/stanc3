@@ -2,6 +2,9 @@ open Frontend
 open Middle
 open Analysis_and_optimization.Dataflow_utils
 open Core_kernel
+
+let ( = ) = Stdlib.( = )
+
 open Analysis_and_optimization.Dataflow_types
 
 let mir_of_string s =
