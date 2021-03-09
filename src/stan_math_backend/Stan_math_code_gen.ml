@@ -370,8 +370,32 @@ let pp_ctor ppf p =
     [ "stan::io::var_context& context__"; "unsigned int random_seed__ = 0"
     ; "std::ostream* pstream__ = nullptr" ]
   in
-  pf ppf "%s(@[<hov 0>%a) : model_base_crtp(0) @]" p.Program.prog_name
-    (list ~sep:comma string) params ;
+  let pp_initializer ppf ((name, st) : string * Expr.Typed.t SizedType.t) =
+    let pp_data_st ppf st =
+      pp_st ppf UnsizedType.DataOnly st
+    in
+    match st with
+    | SizedType.SInt ->
+        pf ppf "%s(stan::io::initialize_data<%a>(\"%s\", context__))" name
+        pp_data_st st name
+    | SReal ->
+        pf ppf "%s(stan::io::initialize_data<%a>(\"%s\", context__))" name
+        pp_data_st st name
+    | SVector d1 | SRowVector d1 ->
+        (* Why does this one need commas? *)
+        pf ppf "%s(stan::io::initialize_data<%a>(\"%s\", context__, model_arena_ %a))" name
+        pp_data_st st name pp_expr d1
+    | SMatrix (d1, d2) ->
+        pf ppf "%s(stan::io::initialize_data<%a>(\"%s\", context__, model_arena_,%a %a))"
+          name pp_data_st st name pp_expr d1 pp_expr d2
+    | SArray (_, _) ->
+        pf ppf "%s(stan::io::initialize_data<%a>(\"%s\", context__, model_arena_%a))" name
+        pp_data_st st name pp_dims st
+  in
+  pf ppf "%s(@[<hov 0>%a) : model_base_crtp(0), @ %a @]" p.Program.prog_name
+    (list ~sep:comma string) params
+    (list ~sep:comma pp_initializer)
+    p.Program.input_vars ;
   let pp_mul ppf () = pf ppf " * " in
   let pp_num_param ppf dims =
     pf ppf "num_params_r__ += %a;" (list ~sep:pp_mul pp_expr) dims
@@ -383,20 +407,18 @@ let pp_ctor ppf p =
       | ls -> Some ls )
     | _ -> None
   in
-  let data_idents = List.map ~f:fst p.input_vars |> String.Set.of_list in
-  let pp_stmt_topdecl_size_only ppf (Stmt.Fixed.({pattern; meta}) as s) =
+
+  (*  print_s[%message (p.Program.input_vars : (string * Expr.Typed.t SizedType.t) list)]; 
+  let pp_stmt_topdecl_size_only ppf (Stmt.Fixed.({pattern; _}) as s) =
     match pattern with
     | Decl {decl_id; decl_type; _} when decl_id <> "pos__" -> (
       match decl_type with
-      | Sized st ->
-          Locations.pp_smeta ppf meta ;
-          if Set.mem data_idents decl_id then pp_validate_data ppf (decl_id, st) ;
-          pp_set_size ppf (decl_id, st, DataOnly)
-      | Unsized _ -> () )
+      | _ -> () )
     | _ -> pp_statement ppf s
   in
+  *)  
   pp_block ppf
-    ( (fun ppf {Program.prog_name; prepare_data; output_vars; _} ->
+    ( (fun ppf {Program.prog_name; output_vars; _} ->
         pf ppf "using local_scalar_t__ = double ;@ " ;
         pf ppf "boost::ecuyer1988 base_rng__ = @ " ;
         pf ppf "    stan::services::util::create_rng(random_seed__, 0);@ " ;
@@ -406,8 +428,10 @@ let pp_ctor ppf p =
           "local_scalar_t__ \
            DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());@ " ;
         pf ppf "%a" pp_unused "DUMMY_VAR__" ;
+        (*
         pp_located_error ppf
           (pp_block, (list ~sep:cut pp_stmt_topdecl_size_only, prepare_data)) ;
+          *)
         cut ppf () ;
         pf ppf "num_params_r__ = 0U;@ " ;
         pp_located_error ppf
@@ -426,7 +450,7 @@ let rec top_level_decls Stmt.Fixed.({pattern; _}) =
 (** Print the private data members of the model class *)
 let pp_model_private ppf {Program.prepare_data; _} =
   let data_decls = List.concat_map ~f:top_level_decls prepare_data in
-  pf ppf "%a" (list ~sep:cut pp_decl) data_decls
+  pf ppf "stan::math::stack_alloc model_arena;@ %a" (list ~sep:cut pp_data_decl) data_decls
 
 (** Print the signature and blocks of the model class methods.
   @param ppf A pretty printer

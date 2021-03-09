@@ -97,6 +97,16 @@ let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" scalar
   | x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
 
+let rec pp_unsizedtype_map_custom_scalar ppf (scalar, ut) =
+  match ut with
+  | UnsizedType.UInt | UReal -> string ppf scalar
+  | UArray t ->
+      pf ppf "std::vector<%a>" pp_unsizedtype_map_custom_scalar (scalar, t)
+  | UMatrix -> pf ppf "Eigen::Map<Eigen::Matrix<%s, -1, -1>>" scalar
+  | URowVector -> pf ppf "Eigen::Map<Eigen::Matrix<%s, 1, -1>>" scalar
+  | UVector -> pf ppf "Eigen::Map<Eigen::Matrix<%s, -1, 1>>" scalar
+  | x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
+  
 let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
   match ut with
   | UnsizedType.UInt | UReal | UMatrix | URowVector | UVector ->
@@ -105,6 +115,11 @@ let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
       (* Expressions are not accepted for arrays of Eigen::Matrix *)
       pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar (scalar, t)
   | x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
+
+let pp_map_data ppf (adtype, ut) =
+  let s = local_scalar ut adtype in
+  pp_unsizedtype_map_custom_scalar ppf (s, ut)
+  
 
 let pp_unsizedtype_local ppf (adtype, ut) =
   let s = local_scalar ut adtype in

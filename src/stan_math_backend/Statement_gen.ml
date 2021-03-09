@@ -20,6 +20,25 @@ let rec contains_eigen = function
   | UMatrix | URowVector | UVector -> true
   | UInt | UReal | UMathLibraryFunction | UFun _ -> false
 
+(* Print out comma seperated dimensions of a sized type*)
+let rec pp_dims ppf st = 
+  match st with
+  | SizedType.SInt ->
+      pf ppf ""
+  | SReal ->
+      pf ppf ""
+  | SVector d1 | SRowVector d1 ->
+      pf ppf ", %a" pp_expr d1
+  | SMatrix (d1, d2) ->
+      pf ppf ", %a, %a" pp_expr d1 pp_expr d2
+  | SArray (st, d) ->
+      pf ppf ", %a %a" pp_expr d pp_dims st 
+
+(*Print the C++ type of the sized type*)
+let pp_st ppf adtype st =
+  pf ppf "%a" pp_unsizedtype_local
+    (adtype, SizedType.to_unsized st)
+  
 let pp_set_size ppf (decl_id, st, adtype) =
   (* TODO: generate optimal adtypes for expressions and declarations *)
   let real_nan =
@@ -72,6 +91,16 @@ let pp_decl ppf (vident, ut, adtype) =
     | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>"
   in
   pf ppf "%a %s;" pp_type (adtype, ut) vident
+
+let pp_data_decl ppf (vident, ut, adtype) =
+  let pp_type =
+    match (Transform_Mir.is_opencl_var vident, ut) with
+    | _, UnsizedType.(UInt | UReal) | false, _ -> pp_map_data
+    | true, UArray UInt -> fun ppf _ -> pf ppf "matrix_cl<int>"
+    | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>"
+  in
+  pf ppf "%a %s;" pp_type (adtype, ut) vident
+  
 
 let pp_sized_decl ppf (vident, st, adtype) =
   pf ppf "%a@,%a" pp_decl
