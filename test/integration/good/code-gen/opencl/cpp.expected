@@ -826,7 +826,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "distributions_model_namespace::distributions_model";
+    static constexpr const char* function__ = "distributions_model_namespace::distributions_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -970,7 +970,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "distributions_model_namespace::log_prob";
+    static constexpr const char* function__ = "distributions_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -3513,7 +3513,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "distributions_model_namespace::write_array";
+    static constexpr const char* function__ = "distributions_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -6471,7 +6471,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "restricted_model_namespace::restricted_model";
+    static constexpr const char* function__ = "restricted_model_namespace::restricted_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -6609,7 +6609,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "restricted_model_namespace::log_prob";
+    static constexpr const char* function__ = "restricted_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -6721,7 +6721,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "restricted_model_namespace::write_array";
+    static constexpr const char* function__ = "restricted_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {

@@ -50,7 +50,7 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static constexpr char* function__ = "filename_good_model_namespace::filename_good_model";
+    static constexpr const char* function__ = "filename_good_model_namespace::filename_good_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -96,7 +96,7 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "filename_good_model_namespace::log_prob";
+    static constexpr const char* function__ = "filename_good_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -128,7 +128,7 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static constexpr char* function__ = "filename_good_model_namespace::write_array";
+    static constexpr const char* function__ = "filename_good_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
