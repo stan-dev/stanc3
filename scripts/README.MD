@@ -57,7 +57,7 @@ opam repository add windows git://github.com/ocaml-cross/opam-cross-windows
 ```
 7. Install opam packages that are required for build/runtest
 ```
-   opam install -y core_kernel-windows menhir-windows ppx_deriving-windows fmt-windows
+   opam install -y core-windows menhir-windows ppx_deriving-windows fmt-windows
 ```
 8. Install dos2unix for running the Windows tests on Jenkins
 ```
@@ -95,7 +95,7 @@ Switch to the root of the project and run
 ```
 4. Install opam packages that are required for build/runtest
 ```
-opam install -y core_kernel menhir ppx_deriving fmt
+opam install -y core menhir ppx_deriving fmt
 ```
 
 ### Test the environment

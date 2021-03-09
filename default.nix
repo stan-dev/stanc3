@@ -25,7 +25,7 @@ ocamlPackages.buildDunePackage rec {
   buildInputs = with ocamlPackages; [
     yojson
     menhir
-    core_kernel
+    core
     ppx_jane
     ppx_deriving
     findlib

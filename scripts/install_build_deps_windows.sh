@@ -16,6 +16,6 @@ opam install conf-flambda-windows
 opam install "ocaml-windows64<=4.07.0"
 
 # Install dependencies
-opam install -y core_kernel core_kernel-windows menhir menhir-windows ppx_deriving ppx_deriving-windows fmt fmt-windows yojson yojson-windows
+opam install -y core core-windows menhir menhir-windows ppx_deriving ppx_deriving-windows fmt fmt-windows yojson yojson-windows
 
 eval $(opam env)
