@@ -2649,11 +2649,14 @@ sho(const T0__& t, const std::vector<T1__>& y,
     dydt = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
     
     current_statement__ = 586;
-    assign(dydt, cons_list(index_uni(1), nil_index_list()), y[(2 - 1)],
+    assign(dydt, cons_list(index_uni(1), nil_index_list()),
+      rvalue(y, cons_list(index_uni(2), nil_index_list()), "y"),
       "assigning variable dydt");
     current_statement__ = 587;
     assign(dydt, cons_list(index_uni(2), nil_index_list()),
-      (-y[(1 - 1)] - (theta[(1 - 1)] * y[(2 - 1)])),
+      (-rvalue(y, cons_list(index_uni(1), nil_index_list()), "y") -
+        (rvalue(theta, cons_list(index_uni(1), nil_index_list()), "theta") *
+          rvalue(y, cons_list(index_uni(2), nil_index_list()), "y"))),
       "assigning variable dydt");
     current_statement__ = 588;
     return dydt;
@@ -4515,10 +4518,14 @@ algebra_system(const T0__& x_arg__, const T1__& y_arg__,
     
     current_statement__ = 768;
     assign(f_x, cons_list(index_uni(1), nil_index_list()),
-      (x[(1 - 1)] - y[(1 - 1)]), "assigning variable f_x");
+      (rvalue(x, cons_list(index_uni(1), nil_index_list()), "x") -
+        rvalue(y, cons_list(index_uni(1), nil_index_list()), "y")),
+      "assigning variable f_x");
     current_statement__ = 769;
     assign(f_x, cons_list(index_uni(2), nil_index_list()),
-      (x[(2 - 1)] - y[(2 - 1)]), "assigning variable f_x");
+      (rvalue(x, cons_list(index_uni(2), nil_index_list()), "x") -
+        rvalue(y, cons_list(index_uni(2), nil_index_list()), "y")),
+      "assigning variable f_x");
     current_statement__ = 770;
     return f_x;
   } catch (const std::exception& e) {
@@ -6006,7 +6013,10 @@ class mother_model final : public model_base_crtp<mother_model> {
           stan::math::fill(l_mat, std::numeric_limits<double>::quiet_NaN());
           
           current_statement__ = 337;
-          assign(l_mat, nil_index_list(), d_ar_mat[(i - 1)][(j - 1)],
+          assign(l_mat, nil_index_list(),
+            rvalue(d_ar_mat,
+              cons_list(index_uni(i),
+                cons_list(index_uni(j), nil_index_list())), "d_ar_mat"),
             "assigning variable l_mat");
           current_statement__ = 338;
           if (pstream__) {
@@ -7514,10 +7524,14 @@ class mother_model final : public model_base_crtp<mother_model> {
       for (int i = 1; i <= N; ++i) {
         current_statement__ = 60;
         assign(tp_vec, cons_list(index_uni(i), nil_index_list()),
-          (-1.0 * p_vec[(i - 1)]), "assigning variable tp_vec");}
+          (-1.0 *
+            rvalue(p_vec, cons_list(index_uni(i), nil_index_list()), "p_vec")),
+          "assigning variable tp_vec");}
       current_statement__ = 62;
-      assign(tp_row_vec, nil_index_list(), transpose(tp_1d_vec[(1 - 1)]),
-        "assigning variable tp_row_vec");
+      assign(tp_row_vec, nil_index_list(),
+        transpose(
+          rvalue(tp_1d_vec, cons_list(index_uni(1), nil_index_list()),
+            "tp_1d_vec")), "assigning variable tp_row_vec");
       current_statement__ = 63;
       assign(tp_1d_row_vec, nil_index_list(), p_1d_row_vec,
         "assigning variable tp_1d_row_vec");
@@ -7684,13 +7698,24 @@ class mother_model final : public model_base_crtp<mother_model> {
         for (int n = 1; n <= N; ++n) {
           current_statement__ = 159;
           lp_accum__.add(
-            normal_lpdf<propto__>(to_vector(p_1d_vec[(n - 1)]), 0, 1));
+            normal_lpdf<propto__>(
+              to_vector(
+                rvalue(p_1d_vec, cons_list(index_uni(n), nil_index_list()),
+                  "p_1d_vec")), 0, 1));
           current_statement__ = 160;
           lp_accum__.add(
-            normal_lpdf<propto__>(to_vector(p_1d_row_vec[(n - 1)]), 0, 1));
+            normal_lpdf<propto__>(
+              to_vector(
+                rvalue(p_1d_row_vec,
+                  cons_list(index_uni(n), nil_index_list()), "p_1d_row_vec")),
+              0, 1));
           current_statement__ = 161;
           lp_accum__.add(
-            normal_lpdf<propto__>(to_vector(p_1d_simplex[(n - 1)]), 0, 1));
+            normal_lpdf<propto__>(
+              to_vector(
+                rvalue(p_1d_simplex,
+                  cons_list(index_uni(n), nil_index_list()), "p_1d_simplex")),
+              0, 1));
           current_statement__ = 169;
           for (int m = 1; m <= M; ++m) {
             current_statement__ = 167;
@@ -7698,36 +7723,79 @@ class mother_model final : public model_base_crtp<mother_model> {
               current_statement__ = 162;
               lp_accum__.add(
                 normal_lpdf<propto__>(
-                  to_vector(p_3d_vec[(n - 1)][(m - 1)][(k - 1)]),
-                  d_3d_vec[(n - 1)][(m - 1)][(k - 1)], 1));
+                  to_vector(
+                    rvalue(p_3d_vec,
+                      cons_list(index_uni(n),
+                        cons_list(index_uni(m),
+                          cons_list(index_uni(k), nil_index_list()))),
+                      "p_3d_vec")),
+                  rvalue(d_3d_vec,
+                    cons_list(index_uni(n),
+                      cons_list(index_uni(m),
+                        cons_list(index_uni(k), nil_index_list()))),
+                    "d_3d_vec"), 1));
               current_statement__ = 163;
               lp_accum__.add(
                 normal_lpdf<propto__>(
-                  to_vector(p_3d_row_vec[(n - 1)][(m - 1)][(k - 1)]),
-                  d_3d_row_vec[(n - 1)][(m - 1)][(k - 1)], 1));
+                  to_vector(
+                    rvalue(p_3d_row_vec,
+                      cons_list(index_uni(n),
+                        cons_list(index_uni(m),
+                          cons_list(index_uni(k), nil_index_list()))),
+                      "p_3d_row_vec")),
+                  rvalue(d_3d_row_vec,
+                    cons_list(index_uni(n),
+                      cons_list(index_uni(m),
+                        cons_list(index_uni(k), nil_index_list()))),
+                    "d_3d_row_vec"), 1));
               current_statement__ = 164;
               lp_accum__.add(
                 normal_lpdf<propto__>(
-                  to_vector(p_3d_simplex[(n - 1)][(m - 1)][(k - 1)]),
-                  d_3d_simplex[(n - 1)][(m - 1)][(k - 1)], 1));
+                  to_vector(
+                    rvalue(p_3d_simplex,
+                      cons_list(index_uni(n),
+                        cons_list(index_uni(m),
+                          cons_list(index_uni(k), nil_index_list()))),
+                      "p_3d_simplex")),
+                  rvalue(d_3d_simplex,
+                    cons_list(index_uni(n),
+                      cons_list(index_uni(m),
+                        cons_list(index_uni(k), nil_index_list()))),
+                    "d_3d_simplex"), 1));
               current_statement__ = 165;
               lp_accum__.add(
                 normal_lpdf<propto__>(
-                  p_real_3d_ar[(n - 1)][(m - 1)][(k - 1)],
-                  p_real_3d_ar[(n - 1)][(m - 1)][(k - 1)], 1));}}}
+                  rvalue(p_real_3d_ar,
+                    cons_list(index_uni(n),
+                      cons_list(index_uni(m),
+                        cons_list(index_uni(k), nil_index_list()))),
+                    "p_real_3d_ar"),
+                  rvalue(p_real_3d_ar,
+                    cons_list(index_uni(n),
+                      cons_list(index_uni(m),
+                        cons_list(index_uni(k), nil_index_list()))),
+                    "p_real_3d_ar"), 1));}}}
         current_statement__ = 176;
         for (int i = 1; i <= 4; ++i) {
           current_statement__ = 174;
           for (int j = 1; j <= 5; ++j) {
             current_statement__ = 172;
             lp_accum__.add(
-              normal_lpdf<propto__>(to_vector(p_ar_mat[(i - 1)][(j - 1)]), 0,
-                1));}}
+              normal_lpdf<propto__>(
+                to_vector(
+                  rvalue(p_ar_mat,
+                    cons_list(index_uni(i),
+                      cons_list(index_uni(j), nil_index_list())), "p_ar_mat")),
+                0, 1));}}
         current_statement__ = 179;
         for (int k = 1; k <= K; ++k) {
           current_statement__ = 177;
           lp_accum__.add(
-            normal_lpdf<propto__>(to_vector(p_cfcov_33_ar[(k - 1)]), 0, 1));}
+            normal_lpdf<propto__>(
+              to_vector(
+                rvalue(p_cfcov_33_ar,
+                  cons_list(index_uni(k), nil_index_list()), "p_cfcov_33_ar")),
+              0, 1));}
         current_statement__ = 180;
         lp_accum__.add(normal_lpdf<propto__>(to_vector(p_vec), d_vec, 1));
         current_statement__ = 181;
@@ -8342,10 +8410,14 @@ class mother_model final : public model_base_crtp<mother_model> {
       for (int i = 1; i <= N; ++i) {
         current_statement__ = 60;
         assign(tp_vec, cons_list(index_uni(i), nil_index_list()),
-          (-1.0 * p_vec[(i - 1)]), "assigning variable tp_vec");}
+          (-1.0 *
+            rvalue(p_vec, cons_list(index_uni(i), nil_index_list()), "p_vec")),
+          "assigning variable tp_vec");}
       current_statement__ = 62;
-      assign(tp_row_vec, nil_index_list(), transpose(tp_1d_vec[(1 - 1)]),
-        "assigning variable tp_row_vec");
+      assign(tp_row_vec, nil_index_list(),
+        transpose(
+          rvalue(tp_1d_vec, cons_list(index_uni(1), nil_index_list()),
+            "tp_1d_vec")), "assigning variable tp_row_vec");
       current_statement__ = 63;
       assign(tp_1d_row_vec, nil_index_list(), p_1d_row_vec,
         "assigning variable tp_1d_row_vec");
@@ -8737,7 +8809,9 @@ class mother_model final : public model_base_crtp<mother_model> {
       for (int i = 1; i <= N; ++i) {
         current_statement__ = 123;
         assign(gq_vec, cons_list(index_uni(i), nil_index_list()),
-          (-1.0 * p_vec[(i - 1)]), "assigning variable gq_vec");}
+          (-1.0 *
+            rvalue(p_vec, cons_list(index_uni(i), nil_index_list()), "p_vec")),
+          "assigning variable gq_vec");}
       current_statement__ = 128;
       for (int i = 1; i <= 3; ++i) {
         current_statement__ = 127;
@@ -8760,8 +8834,14 @@ class mother_model final : public model_base_crtp<mother_model> {
             cons_list(index_uni(i),
               cons_list(index_uni(j), nil_index_list())),
             rvalue(indexing_mat,
-              cons_list(index_uni(indices[(i - 1)]),
-                cons_list(index_uni(indices[(j - 1)]), nil_index_list())),
+              cons_list(
+                index_uni(rvalue(indices,
+                            cons_list(index_uni(i), nil_index_list()),
+                            "indices")),
+                cons_list(
+                  index_uni(rvalue(indices,
+                              cons_list(index_uni(j), nil_index_list()),
+                              "indices")), nil_index_list())),
               "indexing_mat"), "assigning variable idx_res1");}}
       current_statement__ = 132;
       assign(idx_res11, nil_index_list(),
@@ -8798,7 +8878,10 @@ class mother_model final : public model_base_crtp<mother_model> {
               cons_list(index_uni(j), nil_index_list())),
             rvalue(indexing_mat,
               cons_list(index_uni(i),
-                cons_list(index_uni(indices[(j - 1)]), nil_index_list())),
+                cons_list(
+                  index_uni(rvalue(indices,
+                              cons_list(index_uni(j), nil_index_list()),
+                              "indices")), nil_index_list())),
               "indexing_mat"), "assigning variable idx_res2");}}
       current_statement__ = 138;
       assign(idx_res21, nil_index_list(),
@@ -8837,9 +8920,15 @@ class mother_model final : public model_base_crtp<mother_model> {
                 cons_list(index_uni(j),
                   cons_list(index_uni(k), nil_index_list()))),
               rvalue(indexing_mat,
-                cons_list(index_uni(indices[(i - 1)]),
+                cons_list(
+                  index_uni(rvalue(indices,
+                              cons_list(index_uni(i), nil_index_list()),
+                              "indices")),
                   cons_list(index_uni(j),
-                    cons_list(index_uni(indices[(k - 1)]), nil_index_list()))),
+                    cons_list(
+                      index_uni(rvalue(indices,
+                                  cons_list(index_uni(k), nil_index_list()),
+                                  "indices")), nil_index_list()))),
                 "indexing_mat"), "assigning variable idx_res3");}}}
       current_statement__ = 145;
       assign(idx_res31, nil_index_list(),
@@ -11421,11 +11510,14 @@ sho(const T0__& t, const std::vector<T1__>& y,
     dydt = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
     
     current_statement__ = 141;
-    assign(dydt, cons_list(index_uni(1), nil_index_list()), y[(2 - 1)],
+    assign(dydt, cons_list(index_uni(1), nil_index_list()),
+      rvalue(y, cons_list(index_uni(2), nil_index_list()), "y"),
       "assigning variable dydt");
     current_statement__ = 142;
     assign(dydt, cons_list(index_uni(2), nil_index_list()),
-      (-y[(1 - 1)] - (theta[(1 - 1)] * y[(2 - 1)])),
+      (-rvalue(y, cons_list(index_uni(1), nil_index_list()), "y") -
+        (rvalue(theta, cons_list(index_uni(1), nil_index_list()), "theta") *
+          rvalue(y, cons_list(index_uni(2), nil_index_list()), "y"))),
       "assigning variable dydt");
     current_statement__ = 143;
     return dydt;
@@ -11614,10 +11706,14 @@ algebra_system(const T0__& x_arg__, const T1__& y_arg__,
     
     current_statement__ = 154;
     assign(f_x, cons_list(index_uni(1), nil_index_list()),
-      (x[(1 - 1)] - y[(1 - 1)]), "assigning variable f_x");
+      (rvalue(x, cons_list(index_uni(1), nil_index_list()), "x") -
+        rvalue(y, cons_list(index_uni(1), nil_index_list()), "y")),
+      "assigning variable f_x");
     current_statement__ = 155;
     assign(f_x, cons_list(index_uni(2), nil_index_list()),
-      (x[(2 - 1)] - y[(2 - 1)]), "assigning variable f_x");
+      (rvalue(x, cons_list(index_uni(2), nil_index_list()), "x") -
+        rvalue(y, cons_list(index_uni(2), nil_index_list()), "y")),
+      "assigning variable f_x");
     current_statement__ = 156;
     return f_x;
   } catch (const std::exception& e) {
@@ -17814,32 +17910,32 @@ dz_dt(const T0__& t, const std::vector<T1__>& z,
     u = DUMMY_VAR__;
     
     current_statement__ = 25;
-    u = z[(1 - 1)];
+    u = rvalue(z, cons_list(index_uni(1), nil_index_list()), "z");
     local_scalar_t__ v;
     v = DUMMY_VAR__;
     
     current_statement__ = 26;
-    v = z[(2 - 1)];
+    v = rvalue(z, cons_list(index_uni(2), nil_index_list()), "z");
     local_scalar_t__ alpha;
     alpha = DUMMY_VAR__;
     
     current_statement__ = 27;
-    alpha = theta[(1 - 1)];
+    alpha = rvalue(theta, cons_list(index_uni(1), nil_index_list()), "theta");
     local_scalar_t__ beta;
     beta = DUMMY_VAR__;
     
     current_statement__ = 28;
-    beta = theta[(2 - 1)];
+    beta = rvalue(theta, cons_list(index_uni(2), nil_index_list()), "theta");
     local_scalar_t__ gamma;
     gamma = DUMMY_VAR__;
     
     current_statement__ = 29;
-    gamma = theta[(3 - 1)];
+    gamma = rvalue(theta, cons_list(index_uni(3), nil_index_list()), "theta");
     local_scalar_t__ delta;
     delta = DUMMY_VAR__;
     
     current_statement__ = 30;
-    delta = theta[(4 - 1)];
+    delta = rvalue(theta, cons_list(index_uni(4), nil_index_list()), "theta");
     local_scalar_t__ du_dt;
     du_dt = DUMMY_VAR__;
     
@@ -18132,8 +18228,14 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
         for (int k = 1; k <= 2; ++k) {
           current_statement__ = 14;
           lp_accum__.add(
-            lognormal_lpdf<propto__>(y_init[(k - 1)],
-              stan::math::log(z_init[(k - 1)]), sigma[(k - 1)]));
+            lognormal_lpdf<propto__>(
+              rvalue(y_init, cons_list(index_uni(k), nil_index_list()),
+                "y_init"),
+              stan::math::log(
+                rvalue(z_init, cons_list(index_uni(k), nil_index_list()),
+                  "z_init")),
+              rvalue(sigma, cons_list(index_uni(k), nil_index_list()),
+                "sigma")));
           current_statement__ = 15;
           lp_accum__.add(
             lognormal_lpdf<propto__>(
@@ -18144,7 +18246,8 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
                 rvalue(z,
                   cons_list(index_omni(),
                     cons_list(index_uni(k), nil_index_list())), "z")),
-              sigma[(k - 1)]));}
+              rvalue(sigma, cons_list(index_uni(k), nil_index_list()),
+                "sigma")));}
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -19718,12 +19821,14 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
             beta_m));
         current_statement__ = 174;
         lp_accum__.add(
-          normal_id_glm_lpdf<false>(y_v_d, X_d_a[(1 - 1)], alpha, beta,
-            sigma));
+          normal_id_glm_lpdf<false>(y_v_d,
+            rvalue(X_d_a, cons_list(index_uni(1), nil_index_list()), "X_d_a"),
+            alpha, beta, sigma));
         current_statement__ = 175;
         lp_accum__.add(
-          normal_id_glm_lpdf<propto__>(y_v_d, X_d_a[(1 - 1)], alpha, beta,
-            sigma));
+          normal_id_glm_lpdf<propto__>(y_v_d,
+            rvalue(X_d_a, cons_list(index_uni(1), nil_index_list()), "X_d_a"),
+            alpha, beta, sigma));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -21690,7 +21795,11 @@ g2(const std::vector<Eigen::Matrix<T0__, -1, 1>>& y_slice, const int& start,
     current_statement__ = 81;
     for (int n = 1; n <= size(y_slice); ++n) {
       current_statement__ = 79;
-      sum_lpdf = (sum_lpdf + normal_lpdf<false>(y_slice[(n - 1)], 0, 1));}
+      sum_lpdf = (sum_lpdf +
+                   normal_lpdf<false>(
+                     rvalue(y_slice,
+                       cons_list(index_uni(n), nil_index_list()), "y_slice"),
+                     0, 1));}
     current_statement__ = 82;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -21741,7 +21850,11 @@ g3(const std::vector<Eigen::Matrix<T0__, 1, -1>>& y_slice, const int& start,
     current_statement__ = 87;
     for (int n = 1; n <= size(y_slice); ++n) {
       current_statement__ = 85;
-      sum_lpdf = (sum_lpdf + normal_lpdf<false>(y_slice[(n - 1)], 0, 1));}
+      sum_lpdf = (sum_lpdf +
+                   normal_lpdf<false>(
+                     rvalue(y_slice,
+                       cons_list(index_uni(n), nil_index_list()), "y_slice"),
+                     0, 1));}
     current_statement__ = 88;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -21793,7 +21906,11 @@ g4(const std::vector<Eigen::Matrix<T0__, -1, -1>>& y_slice, const int& start,
     for (int n = 1; n <= size(y_slice); ++n) {
       current_statement__ = 91;
       sum_lpdf = (sum_lpdf +
-                   normal_lpdf<false>(to_vector(y_slice[(n - 1)]), 0, 1));}
+                   normal_lpdf<false>(
+                     to_vector(
+                       rvalue(y_slice,
+                         cons_list(index_uni(n), nil_index_list()),
+                         "y_slice")), 0, 1));}
     current_statement__ = 94;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -21844,10 +21961,17 @@ g5(const std::vector<std::vector<T0__>>& y_slice, const int& start,
     current_statement__ = 101;
     for (int n = 1; n <= size(y_slice); ++n) {
       current_statement__ = 99;
-      for (int m = 1; m <= size(y_slice[(n - 1)]); ++m) {
+      for (int m = 1;
+           m <= size(
+                  rvalue(y_slice, cons_list(index_uni(n), nil_index_list()),
+                    "y_slice")); ++m) {
         current_statement__ = 97;
         sum_lpdf = (sum_lpdf +
-                     normal_lpdf<false>(y_slice[(n - 1)][(m - 1)], 0, 1));}}
+                     normal_lpdf<false>(
+                       rvalue(y_slice,
+                         cons_list(index_uni(n),
+                           cons_list(index_uni(m), nil_index_list())),
+                         "y_slice"), 0, 1));}}
     current_statement__ = 102;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -21898,11 +22022,18 @@ g6(const std::vector<std::vector<Eigen::Matrix<T0__, -1, 1>>>& y_slice,
     current_statement__ = 109;
     for (int n = 1; n <= size(y_slice); ++n) {
       current_statement__ = 107;
-      for (int m = 1; m <= size(y_slice[(n - 1)]); ++m) {
+      for (int m = 1;
+           m <= size(
+                  rvalue(y_slice, cons_list(index_uni(n), nil_index_list()),
+                    "y_slice")); ++m) {
         current_statement__ = 105;
         sum_lpdf = (sum_lpdf +
-                     normal_lpdf<false>(to_vector(y_slice[(n - 1)][(m - 1)]),
-                       0, 1));}}
+                     normal_lpdf<false>(
+                       to_vector(
+                         rvalue(y_slice,
+                           cons_list(index_uni(n),
+                             cons_list(index_uni(m), nil_index_list())),
+                           "y_slice")), 0, 1));}}
     current_statement__ = 110;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -21953,11 +22084,18 @@ g7(const std::vector<std::vector<Eigen::Matrix<T0__, 1, -1>>>& y_slice,
     current_statement__ = 117;
     for (int n = 1; n <= size(y_slice); ++n) {
       current_statement__ = 115;
-      for (int m = 1; m <= size(y_slice[(n - 1)]); ++m) {
+      for (int m = 1;
+           m <= size(
+                  rvalue(y_slice, cons_list(index_uni(n), nil_index_list()),
+                    "y_slice")); ++m) {
         current_statement__ = 113;
         sum_lpdf = (sum_lpdf +
-                     normal_lpdf<false>(to_vector(y_slice[(n - 1)][(m - 1)]),
-                       0, 1));}}
+                     normal_lpdf<false>(
+                       to_vector(
+                         rvalue(y_slice,
+                           cons_list(index_uni(n),
+                             cons_list(index_uni(m), nil_index_list())),
+                           "y_slice")), 0, 1));}}
     current_statement__ = 118;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -22008,11 +22146,18 @@ g8(const std::vector<std::vector<Eigen::Matrix<T0__, -1, -1>>>& y_slice,
     current_statement__ = 125;
     for (int n = 1; n <= size(y_slice); ++n) {
       current_statement__ = 123;
-      for (int m = 1; m <= size(y_slice[(n - 1)]); ++m) {
+      for (int m = 1;
+           m <= size(
+                  rvalue(y_slice, cons_list(index_uni(n), nil_index_list()),
+                    "y_slice")); ++m) {
         current_statement__ = 121;
         sum_lpdf = (sum_lpdf +
-                     normal_lpdf<false>(to_vector(y_slice[(n - 1)][(m - 1)]),
-                       0, 1));}}
+                     normal_lpdf<false>(
+                       to_vector(
+                         rvalue(y_slice,
+                           cons_list(index_uni(n),
+                             cons_list(index_uni(m), nil_index_list())),
+                           "y_slice")), 0, 1));}}
     current_statement__ = 126;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -22112,7 +22257,10 @@ h2(const std::vector<T0__>& y, const int& start, const int& end,
     current_statement__ = 133;
     for (int n = start; n <= end; ++n) {
       current_statement__ = 131;
-      sum_lpdf = (sum_lpdf + normal_lpdf<false>(a[(n - 1)], 0, 1));}
+      sum_lpdf = (sum_lpdf +
+                   normal_lpdf<false>(
+                     rvalue(a, cons_list(index_uni(n), nil_index_list()),
+                       "a"), 0, 1));}
     current_statement__ = 134;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -22168,7 +22316,10 @@ h3(const std::vector<T0__>& y, const int& start, const int& end,
     current_statement__ = 139;
     for (int n = start; n <= end; ++n) {
       current_statement__ = 137;
-      sum_lpdf = (sum_lpdf + normal_lpdf<false>(a[(n - 1)], 0, 1));}
+      sum_lpdf = (sum_lpdf +
+                   normal_lpdf<false>(
+                     rvalue(a, cons_list(index_uni(n), nil_index_list()),
+                       "a"), 0, 1));}
     current_statement__ = 140;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -22224,8 +22375,11 @@ h4(const std::vector<T0__>& y, const int& start, const int& end,
     current_statement__ = 145;
     for (int n = start; n <= end; ++n) {
       current_statement__ = 143;
-      sum_lpdf = (sum_lpdf + normal_lpdf<false>(to_vector(a[(n - 1)]), 0, 1));
-    }
+      sum_lpdf = (sum_lpdf +
+                   normal_lpdf<false>(
+                     to_vector(
+                       rvalue(a, cons_list(index_uni(n), nil_index_list()),
+                         "a")), 0, 1));}
     current_statement__ = 146;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -22281,10 +22435,17 @@ h5(const std::vector<T0__>& y, const int& start, const int& end,
     current_statement__ = 153;
     for (int n = start; n <= end; ++n) {
       current_statement__ = 151;
-      for (int m = 1; m <= size(a[(n - 1)]); ++m) {
+      for (int m = 1;
+           m <= size(
+                  rvalue(a, cons_list(index_uni(n), nil_index_list()), "a"));
+           ++m) {
         current_statement__ = 149;
-        sum_lpdf = (sum_lpdf + normal_lpdf<false>(a[(n - 1)][(m - 1)], 0, 1));
-      }}
+        sum_lpdf = (sum_lpdf +
+                     normal_lpdf<false>(
+                       rvalue(a,
+                         cons_list(index_uni(n),
+                           cons_list(index_uni(m), nil_index_list())), "a"),
+                       0, 1));}}
     current_statement__ = 154;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -22339,11 +22500,18 @@ h6(const std::vector<T0__>& y, const int& start, const int& end,
     current_statement__ = 161;
     for (int n = start; n <= end; ++n) {
       current_statement__ = 159;
-      for (int m = 1; m <= size(a[(n - 1)]); ++m) {
+      for (int m = 1;
+           m <= size(
+                  rvalue(a, cons_list(index_uni(n), nil_index_list()), "a"));
+           ++m) {
         current_statement__ = 157;
         sum_lpdf = (sum_lpdf +
-                     normal_lpdf<false>(to_vector(a[(n - 1)][(m - 1)]), 0, 1));
-      }}
+                     normal_lpdf<false>(
+                       to_vector(
+                         rvalue(a,
+                           cons_list(index_uni(n),
+                             cons_list(index_uni(m), nil_index_list())), "a")),
+                       0, 1));}}
     current_statement__ = 162;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -22400,11 +22568,18 @@ h7(const std::vector<T0__>& y, const int& start, const int& end,
     current_statement__ = 169;
     for (int n = start; n <= end; ++n) {
       current_statement__ = 167;
-      for (int m = 1; m <= size(a[(n - 1)]); ++m) {
+      for (int m = 1;
+           m <= size(
+                  rvalue(a, cons_list(index_uni(n), nil_index_list()), "a"));
+           ++m) {
         current_statement__ = 165;
         sum_lpdf = (sum_lpdf +
-                     normal_lpdf<false>(to_vector(a[(n - 1)][(m - 1)]), 0, 1));
-      }}
+                     normal_lpdf<false>(
+                       to_vector(
+                         rvalue(a,
+                           cons_list(index_uni(n),
+                             cons_list(index_uni(m), nil_index_list())), "a")),
+                       0, 1));}}
     current_statement__ = 170;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -22461,11 +22636,18 @@ h8(const std::vector<T0__>& y, const int& start, const int& end,
     current_statement__ = 177;
     for (int n = start; n <= end; ++n) {
       current_statement__ = 175;
-      for (int m = 1; m <= size(a[(n - 1)]); ++m) {
+      for (int m = 1;
+           m <= size(
+                  rvalue(a, cons_list(index_uni(n), nil_index_list()), "a"));
+           ++m) {
         current_statement__ = 173;
         sum_lpdf = (sum_lpdf +
-                     normal_lpdf<false>(to_vector(a[(n - 1)][(m - 1)]), 0, 1));
-      }}
+                     normal_lpdf<false>(
+                       to_vector(
+                         rvalue(a,
+                           cons_list(index_uni(n),
+                             cons_list(index_uni(m), nil_index_list())), "a")),
+                       0, 1));}}
     current_statement__ = 178;
     return sum_lpdf;
   } catch (const std::exception& e) {
@@ -29761,7 +29943,10 @@ class transform_model final : public model_base_crtp<transform_model> {
           in__.scalar(), "assigning variable p_1");}
       current_statement__ = 1;
       check_matching_dims("constraint", "p_1", p_1, "lower",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 1;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 1;
@@ -29769,13 +29954,16 @@ class transform_model final : public model_base_crtp<transform_model> {
           current_statement__ = 1;
           assign(p_1, cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::lb_constrain(p_1[(sym1__ - 1)],
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)], lp__),
-            "assigning variable p_1");
+              rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+              (sym1__ - 1)], lp__), "assigning variable p_1");
         } else {
           current_statement__ = 1;
           assign(p_1, cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::lb_constrain(p_1[(sym1__ - 1)],
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)]), "assigning variable p_1");
+              rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+              (sym1__ - 1)]), "assigning variable p_1");
         }}
       std::vector<local_scalar_t__> p_2;
       p_2 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
@@ -29787,7 +29975,10 @@ class transform_model final : public model_base_crtp<transform_model> {
           in__.scalar(), "assigning variable p_2");}
       current_statement__ = 2;
       check_matching_dims("constraint", "p_2", p_2, "upper",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 2;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 2;
@@ -29795,13 +29986,16 @@ class transform_model final : public model_base_crtp<transform_model> {
           current_statement__ = 2;
           assign(p_2, cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::ub_constrain(p_2[(sym1__ - 1)],
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)], lp__),
-            "assigning variable p_2");
+              rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+              (sym1__ - 1)], lp__), "assigning variable p_2");
         } else {
           current_statement__ = 2;
           assign(p_2, cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::ub_constrain(p_2[(sym1__ - 1)],
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)]), "assigning variable p_2");
+              rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+              (sym1__ - 1)]), "assigning variable p_2");
         }}
       std::vector<local_scalar_t__> p_3;
       p_3 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
@@ -29813,10 +30007,16 @@ class transform_model final : public model_base_crtp<transform_model> {
           in__.scalar(), "assigning variable p_3");}
       current_statement__ = 3;
       check_matching_dims("constraint", "p_3", p_3, "lower",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 3;
       check_matching_dims("constraint", "p_3", p_3, "upper",
-                          ds[(1 - 1)][(2 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       current_statement__ = 3;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 3;
@@ -29824,15 +30024,22 @@ class transform_model final : public model_base_crtp<transform_model> {
           current_statement__ = 3;
           assign(p_3, cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::lub_constrain(p_3[(sym1__ - 1)],
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-              ds[(1 - 1)][(2 - 1)][(sym1__ - 1)], lp__),
-            "assigning variable p_3");
+              rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+              (sym1__ - 1)],
+              rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "ds")[
+              (sym1__ - 1)], lp__), "assigning variable p_3");
         } else {
           current_statement__ = 3;
           assign(p_3, cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::lub_constrain(p_3[(sym1__ - 1)],
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-              ds[(1 - 1)][(2 - 1)][(sym1__ - 1)]), "assigning variable p_3");
+              rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+              (sym1__ - 1)],
+              rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "ds")[
+              (sym1__ - 1)]), "assigning variable p_3");
         }}
       std::vector<local_scalar_t__> p_4;
       p_4 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
@@ -29844,7 +30051,10 @@ class transform_model final : public model_base_crtp<transform_model> {
           in__.scalar(), "assigning variable p_4");}
       current_statement__ = 4;
       check_matching_dims("constraint", "p_4", p_4, "upper",
-                          ds[(1 - 1)][(2 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       current_statement__ = 4;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 4;
@@ -29852,13 +30062,16 @@ class transform_model final : public model_base_crtp<transform_model> {
           current_statement__ = 4;
           assign(p_4, cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::lub_constrain(p_4[(sym1__ - 1)], 0,
-              ds[(1 - 1)][(2 - 1)][(sym1__ - 1)], lp__),
-            "assigning variable p_4");
+              rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "ds")[
+              (sym1__ - 1)], lp__), "assigning variable p_4");
         } else {
           current_statement__ = 4;
           assign(p_4, cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::lub_constrain(p_4[(sym1__ - 1)], 0,
-              ds[(1 - 1)][(2 - 1)][(sym1__ - 1)]), "assigning variable p_4");
+              rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "ds")[
+              (sym1__ - 1)]), "assigning variable p_4");
         }}
       std::vector<local_scalar_t__> p_5;
       p_5 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
@@ -29870,7 +30083,10 @@ class transform_model final : public model_base_crtp<transform_model> {
           in__.scalar(), "assigning variable p_5");}
       current_statement__ = 5;
       check_matching_dims("constraint", "p_5", p_5, "lower",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 5;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 5;
@@ -29878,14 +30094,16 @@ class transform_model final : public model_base_crtp<transform_model> {
           current_statement__ = 5;
           assign(p_5, cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::lub_constrain(p_5[(sym1__ - 1)],
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)], 1, lp__),
-            "assigning variable p_5");
+              rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+              (sym1__ - 1)], 1, lp__), "assigning variable p_5");
         } else {
           current_statement__ = 5;
           assign(p_5, cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::lub_constrain(p_5[(sym1__ - 1)],
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)], 1),
-            "assigning variable p_5");
+              rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+              (sym1__ - 1)], 1), "assigning variable p_5");
         }}
       std::vector<local_scalar_t__> p_6;
       p_6 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
@@ -29897,7 +30115,10 @@ class transform_model final : public model_base_crtp<transform_model> {
           in__.scalar(), "assigning variable p_6");}
       current_statement__ = 6;
       check_matching_dims("constraint", "p_6", p_6, "offset",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 6;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 6;
@@ -29905,14 +30126,16 @@ class transform_model final : public model_base_crtp<transform_model> {
           current_statement__ = 6;
           assign(p_6, cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::offset_multiplier_constrain(p_6[(sym1__ - 1)],
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)], 1, lp__),
-            "assigning variable p_6");
+              rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+              (sym1__ - 1)], 1, lp__), "assigning variable p_6");
         } else {
           current_statement__ = 6;
           assign(p_6, cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::offset_multiplier_constrain(p_6[(sym1__ - 1)],
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)], 1),
-            "assigning variable p_6");
+              rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+              (sym1__ - 1)], 1), "assigning variable p_6");
         }}
       std::vector<local_scalar_t__> p_7;
       p_7 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
@@ -29924,7 +30147,10 @@ class transform_model final : public model_base_crtp<transform_model> {
           in__.scalar(), "assigning variable p_7");}
       current_statement__ = 7;
       check_matching_dims("constraint", "p_7", p_7, "multiplier",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 7;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 7;
@@ -29932,13 +30158,16 @@ class transform_model final : public model_base_crtp<transform_model> {
           current_statement__ = 7;
           assign(p_7, cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::offset_multiplier_constrain(p_7[(sym1__ - 1)], 0,
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)], lp__),
-            "assigning variable p_7");
+              rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+              (sym1__ - 1)], lp__), "assigning variable p_7");
         } else {
           current_statement__ = 7;
           assign(p_7, cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::offset_multiplier_constrain(p_7[(sym1__ - 1)], 0,
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)]), "assigning variable p_7");
+              rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+              (sym1__ - 1)]), "assigning variable p_7");
         }}
       std::vector<local_scalar_t__> p_8;
       p_8 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
@@ -29950,10 +30179,16 @@ class transform_model final : public model_base_crtp<transform_model> {
           in__.scalar(), "assigning variable p_8");}
       current_statement__ = 8;
       check_matching_dims("constraint", "p_8", p_8, "offset",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 8;
       check_matching_dims("constraint", "p_8", p_8, "multiplier",
-                          ds[(1 - 1)][(2 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       current_statement__ = 8;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 8;
@@ -29961,15 +30196,22 @@ class transform_model final : public model_base_crtp<transform_model> {
           current_statement__ = 8;
           assign(p_8, cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::offset_multiplier_constrain(p_8[(sym1__ - 1)],
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-              ds[(1 - 1)][(2 - 1)][(sym1__ - 1)], lp__),
-            "assigning variable p_8");
+              rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+              (sym1__ - 1)],
+              rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "ds")[
+              (sym1__ - 1)], lp__), "assigning variable p_8");
         } else {
           current_statement__ = 8;
           assign(p_8, cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::offset_multiplier_constrain(p_8[(sym1__ - 1)],
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-              ds[(1 - 1)][(2 - 1)][(sym1__ - 1)]), "assigning variable p_8");
+              rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+              (sym1__ - 1)],
+              rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "ds")[
+              (sym1__ - 1)]), "assigning variable p_8");
         }}
       std::vector<std::vector<local_scalar_t__>> p_9;
       p_9 = std::vector<std::vector<local_scalar_t__>>(m, std::vector<local_scalar_t__>(k, DUMMY_VAR__));
@@ -29984,7 +30226,9 @@ class transform_model final : public model_base_crtp<transform_model> {
               cons_list(index_uni(sym2__), nil_index_list())), in__.scalar(),
             "assigning variable p_9");}}
       current_statement__ = 9;
-      check_matching_dims("constraint", "p_9", p_9, "lower", ds[(1 - 1)]);
+      check_matching_dims("constraint", "p_9", p_9, "lower",
+                          rvalue(ds,
+                            cons_list(index_uni(1), nil_index_list()), "ds"));
       current_statement__ = 9;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 9;
@@ -29996,7 +30240,8 @@ class transform_model final : public model_base_crtp<transform_model> {
               cons_list(index_uni(sym1__),
                 cons_list(index_uni(sym2__), nil_index_list())),
               stan::math::lub_constrain(p_9[(sym1__ - 1)][(sym2__ - 1)],
-                ds[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)], 1, lp__),
+                rvalue(ds, cons_list(index_uni(1), nil_index_list()), "ds")[
+                (sym1__ - 1)][(sym2__ - 1)], 1, lp__),
               "assigning variable p_9");
           } else {
             current_statement__ = 9;
@@ -30004,8 +30249,8 @@ class transform_model final : public model_base_crtp<transform_model> {
               cons_list(index_uni(sym1__),
                 cons_list(index_uni(sym2__), nil_index_list())),
               stan::math::lub_constrain(p_9[(sym1__ - 1)][(sym2__ - 1)],
-                ds[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)], 1),
-              "assigning variable p_9");
+                rvalue(ds, cons_list(index_uni(1), nil_index_list()), "ds")[
+                (sym1__ - 1)][(sym2__ - 1)], 1), "assigning variable p_9");
           }}}
       std::vector<std::vector<std::vector<local_scalar_t__>>> p_10;
       p_10 = std::vector<std::vector<std::vector<local_scalar_t__>>>(n, std::vector<std::vector<local_scalar_t__>>(m, std::vector<local_scalar_t__>(k, DUMMY_VAR__)));
@@ -30060,10 +30305,16 @@ class transform_model final : public model_base_crtp<transform_model> {
       pv_1 = in__.vector(k);
       current_statement__ = 11;
       check_matching_dims("constraint", "pv_1", pv_1, "lower",
-                          dv[(1 - 1)][(1 - 1)]);
+                          rvalue(dv,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "dv"));
       current_statement__ = 11;
       check_matching_dims("constraint", "pv_1", pv_1, "upper",
-                          dv[(1 - 1)][(2 - 1)]);
+                          rvalue(dv,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "dv"));
       current_statement__ = 11;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 11;
@@ -30071,15 +30322,22 @@ class transform_model final : public model_base_crtp<transform_model> {
           current_statement__ = 11;
           assign(pv_1, cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::lub_constrain(pv_1[(sym1__ - 1)],
-              dv[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-              dv[(1 - 1)][(2 - 1)][(sym1__ - 1)], lp__),
-            "assigning variable pv_1");
+              rvalue(dv,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "dv")[
+              (sym1__ - 1)],
+              rvalue(dv,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "dv")[
+              (sym1__ - 1)], lp__), "assigning variable pv_1");
         } else {
           current_statement__ = 11;
           assign(pv_1, cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::lub_constrain(pv_1[(sym1__ - 1)],
-              dv[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-              dv[(1 - 1)][(2 - 1)][(sym1__ - 1)]), "assigning variable pv_1");
+              rvalue(dv,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "dv")[
+              (sym1__ - 1)],
+              rvalue(dv,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "dv")[
+              (sym1__ - 1)]), "assigning variable pv_1");
         }}
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> pv_2;
       pv_2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(m, Eigen::Matrix<local_scalar_t__, -1, 1>(k));
@@ -30091,7 +30349,9 @@ class transform_model final : public model_base_crtp<transform_model> {
         assign(pv_2, cons_list(index_uni(sym1__), nil_index_list()),
           in__.vector(k), "assigning variable pv_2");}
       current_statement__ = 12;
-      check_matching_dims("constraint", "pv_2", pv_2, "lower", dv[(1 - 1)]);
+      check_matching_dims("constraint", "pv_2", pv_2, "lower",
+                          rvalue(dv,
+                            cons_list(index_uni(1), nil_index_list()), "dv"));
       current_statement__ = 12;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 12;
@@ -30103,16 +30363,16 @@ class transform_model final : public model_base_crtp<transform_model> {
               cons_list(index_uni(sym1__),
                 cons_list(index_uni(sym2__), nil_index_list())),
               stan::math::lb_constrain(pv_2[(sym1__ - 1)][(sym2__ - 1)],
-                dv[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)], lp__),
-              "assigning variable pv_2");
+                rvalue(dv, cons_list(index_uni(1), nil_index_list()), "dv")[
+                (sym1__ - 1)][(sym2__ - 1)], lp__), "assigning variable pv_2");
           } else {
             current_statement__ = 12;
             assign(pv_2,
               cons_list(index_uni(sym1__),
                 cons_list(index_uni(sym2__), nil_index_list())),
               stan::math::lb_constrain(pv_2[(sym1__ - 1)][(sym2__ - 1)],
-                dv[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)]),
-              "assigning variable pv_2");
+                rvalue(dv, cons_list(index_uni(1), nil_index_list()), "dv")[
+                (sym1__ - 1)][(sym2__ - 1)]), "assigning variable pv_2");
           }}}
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> pv_3;
       pv_3 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(n, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(m, Eigen::Matrix<local_scalar_t__, -1, 1>(k)));
@@ -30165,10 +30425,16 @@ class transform_model final : public model_base_crtp<transform_model> {
       pr_1 = in__.row_vector(k);
       current_statement__ = 14;
       check_matching_dims("constraint", "pr_1", pr_1, "lower",
-                          dr[(1 - 1)][(1 - 1)]);
+                          rvalue(dr,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "dr"));
       current_statement__ = 14;
       check_matching_dims("constraint", "pr_1", pr_1, "upper",
-                          dr[(1 - 1)][(2 - 1)]);
+                          rvalue(dr,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "dr"));
       current_statement__ = 14;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 14;
@@ -30176,15 +30442,22 @@ class transform_model final : public model_base_crtp<transform_model> {
           current_statement__ = 14;
           assign(pr_1, cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::lub_constrain(pr_1[(sym1__ - 1)],
-              dr[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-              dr[(1 - 1)][(2 - 1)][(sym1__ - 1)], lp__),
-            "assigning variable pr_1");
+              rvalue(dr,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "dr")[
+              (sym1__ - 1)],
+              rvalue(dr,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "dr")[
+              (sym1__ - 1)], lp__), "assigning variable pr_1");
         } else {
           current_statement__ = 14;
           assign(pr_1, cons_list(index_uni(sym1__), nil_index_list()),
             stan::math::lub_constrain(pr_1[(sym1__ - 1)],
-              dr[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-              dr[(1 - 1)][(2 - 1)][(sym1__ - 1)]), "assigning variable pr_1");
+              rvalue(dr,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "dr")[
+              (sym1__ - 1)],
+              rvalue(dr,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "dr")[
+              (sym1__ - 1)]), "assigning variable pr_1");
         }}
       std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> pr_2;
       pr_2 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(m, Eigen::Matrix<local_scalar_t__, 1, -1>(k));
@@ -30196,7 +30469,9 @@ class transform_model final : public model_base_crtp<transform_model> {
         assign(pr_2, cons_list(index_uni(sym1__), nil_index_list()),
           in__.row_vector(k), "assigning variable pr_2");}
       current_statement__ = 15;
-      check_matching_dims("constraint", "pr_2", pr_2, "lower", dr[(1 - 1)]);
+      check_matching_dims("constraint", "pr_2", pr_2, "lower",
+                          rvalue(dr,
+                            cons_list(index_uni(1), nil_index_list()), "dr"));
       current_statement__ = 15;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 15;
@@ -30208,16 +30483,16 @@ class transform_model final : public model_base_crtp<transform_model> {
               cons_list(index_uni(sym1__),
                 cons_list(index_uni(sym2__), nil_index_list())),
               stan::math::lb_constrain(pr_2[(sym1__ - 1)][(sym2__ - 1)],
-                dr[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)], lp__),
-              "assigning variable pr_2");
+                rvalue(dr, cons_list(index_uni(1), nil_index_list()), "dr")[
+                (sym1__ - 1)][(sym2__ - 1)], lp__), "assigning variable pr_2");
           } else {
             current_statement__ = 15;
             assign(pr_2,
               cons_list(index_uni(sym1__),
                 cons_list(index_uni(sym2__), nil_index_list())),
               stan::math::lb_constrain(pr_2[(sym1__ - 1)][(sym2__ - 1)],
-                dr[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)]),
-              "assigning variable pr_2");
+                rvalue(dr, cons_list(index_uni(1), nil_index_list()), "dr")[
+                (sym1__ - 1)][(sym2__ - 1)]), "assigning variable pr_2");
           }}}
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> pr_3;
       pr_3 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(n, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(m, Eigen::Matrix<local_scalar_t__, 1, -1>(k)));
@@ -30269,7 +30544,9 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 17;
       pm_1 = in__.matrix(m, k);
       current_statement__ = 17;
-      check_matching_dims("constraint", "pm_1", pm_1, "lower", dm[(1 - 1)]);
+      check_matching_dims("constraint", "pm_1", pm_1, "lower",
+                          rvalue(dm,
+                            cons_list(index_uni(1), nil_index_list()), "dm"));
       current_statement__ = 17;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 17;
@@ -30284,7 +30561,8 @@ class transform_model final : public model_base_crtp<transform_model> {
                 rvalue(pm_1,
                   cons_list(index_uni(sym1__),
                     cons_list(index_uni(sym2__), nil_index_list())), "pm_1"),
-                rvalue(dm[(1 - 1)],
+                rvalue(
+                  rvalue(dm, cons_list(index_uni(1), nil_index_list()), "dm"),
                   cons_list(index_uni(sym1__),
                     cons_list(index_uni(sym2__), nil_index_list())), "dm[1]"),
                 lp__), "assigning variable pm_1");
@@ -30297,7 +30575,8 @@ class transform_model final : public model_base_crtp<transform_model> {
                 rvalue(pm_1,
                   cons_list(index_uni(sym1__),
                     cons_list(index_uni(sym2__), nil_index_list())), "pm_1"),
-                rvalue(dm[(1 - 1)],
+                rvalue(
+                  rvalue(dm, cons_list(index_uni(1), nil_index_list()), "dm"),
                   cons_list(index_uni(sym1__),
                     cons_list(index_uni(sym2__), nil_index_list())), "dm[1]")),
               "assigning variable pm_1");
@@ -30362,7 +30641,10 @@ class transform_model final : public model_base_crtp<transform_model> {
       assign(tp_1, nil_index_list(), p_1, "assigning variable tp_1");
       current_statement__ = 19;
       check_matching_dims("constraint", "tp_1", tp_1, "lower",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       std::vector<local_scalar_t__> tp_2;
       tp_2 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       
@@ -30370,7 +30652,10 @@ class transform_model final : public model_base_crtp<transform_model> {
       assign(tp_2, nil_index_list(), p_2, "assigning variable tp_2");
       current_statement__ = 20;
       check_matching_dims("constraint", "tp_2", tp_2, "upper",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       std::vector<local_scalar_t__> tp_3;
       tp_3 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       
@@ -30378,10 +30663,16 @@ class transform_model final : public model_base_crtp<transform_model> {
       assign(tp_3, nil_index_list(), p_3, "assigning variable tp_3");
       current_statement__ = 21;
       check_matching_dims("constraint", "tp_3", tp_3, "lower",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 21;
       check_matching_dims("constraint", "tp_3", tp_3, "upper",
-                          ds[(1 - 1)][(2 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       std::vector<local_scalar_t__> tp_4;
       tp_4 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       
@@ -30389,7 +30680,10 @@ class transform_model final : public model_base_crtp<transform_model> {
       assign(tp_4, nil_index_list(), p_4, "assigning variable tp_4");
       current_statement__ = 22;
       check_matching_dims("constraint", "tp_4", tp_4, "upper",
-                          ds[(1 - 1)][(2 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       std::vector<local_scalar_t__> tp_5;
       tp_5 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       
@@ -30397,7 +30691,10 @@ class transform_model final : public model_base_crtp<transform_model> {
       assign(tp_5, nil_index_list(), p_5, "assigning variable tp_5");
       current_statement__ = 23;
       check_matching_dims("constraint", "tp_5", tp_5, "lower",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       std::vector<local_scalar_t__> tp_6;
       tp_6 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       
@@ -30405,7 +30702,10 @@ class transform_model final : public model_base_crtp<transform_model> {
       assign(tp_6, nil_index_list(), p_6, "assigning variable tp_6");
       current_statement__ = 24;
       check_matching_dims("constraint", "tp_6", tp_6, "offset",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       std::vector<local_scalar_t__> tp_7;
       tp_7 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       
@@ -30413,7 +30713,10 @@ class transform_model final : public model_base_crtp<transform_model> {
       assign(tp_7, nil_index_list(), p_7, "assigning variable tp_7");
       current_statement__ = 25;
       check_matching_dims("constraint", "tp_7", tp_7, "multiplier",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       std::vector<local_scalar_t__> tp_8;
       tp_8 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       
@@ -30421,17 +30724,25 @@ class transform_model final : public model_base_crtp<transform_model> {
       assign(tp_8, nil_index_list(), p_8, "assigning variable tp_8");
       current_statement__ = 26;
       check_matching_dims("constraint", "tp_8", tp_8, "offset",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 26;
       check_matching_dims("constraint", "tp_8", tp_8, "multiplier",
-                          ds[(1 - 1)][(2 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       std::vector<std::vector<local_scalar_t__>> tp_9;
       tp_9 = std::vector<std::vector<local_scalar_t__>>(m, std::vector<local_scalar_t__>(k, DUMMY_VAR__));
       
       current_statement__ = 27;
       assign(tp_9, nil_index_list(), p_9, "assigning variable tp_9");
       current_statement__ = 27;
-      check_matching_dims("constraint", "tp_9", tp_9, "lower", ds[(1 - 1)]);
+      check_matching_dims("constraint", "tp_9", tp_9, "lower",
+                          rvalue(ds,
+                            cons_list(index_uni(1), nil_index_list()), "ds"));
       std::vector<std::vector<std::vector<local_scalar_t__>>> tp_10;
       tp_10 = std::vector<std::vector<std::vector<local_scalar_t__>>>(n, std::vector<std::vector<local_scalar_t__>>(m, std::vector<local_scalar_t__>(k, DUMMY_VAR__)));
       
@@ -30447,10 +30758,16 @@ class transform_model final : public model_base_crtp<transform_model> {
       assign(tpv_1, nil_index_list(), pv_1, "assigning variable tpv_1");
       current_statement__ = 29;
       check_matching_dims("constraint", "tpv_1", tpv_1, "lower",
-                          dv[(1 - 1)][(1 - 1)]);
+                          rvalue(dv,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "dv"));
       current_statement__ = 29;
       check_matching_dims("constraint", "tpv_1", tpv_1, "upper",
-                          dv[(1 - 1)][(2 - 1)]);
+                          rvalue(dv,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "dv"));
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> tpv_2;
       tpv_2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(m, Eigen::Matrix<local_scalar_t__, -1, 1>(k));
       stan::math::fill(tpv_2, DUMMY_VAR__);
@@ -30458,7 +30775,9 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 30;
       assign(tpv_2, nil_index_list(), pv_2, "assigning variable tpv_2");
       current_statement__ = 30;
-      check_matching_dims("constraint", "tpv_2", tpv_2, "lower", dv[(1 - 1)]);
+      check_matching_dims("constraint", "tpv_2", tpv_2, "lower",
+                          rvalue(dv,
+                            cons_list(index_uni(1), nil_index_list()), "dv"));
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> tpv_3;
       tpv_3 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(n, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(m, Eigen::Matrix<local_scalar_t__, -1, 1>(k)));
       stan::math::fill(tpv_3, DUMMY_VAR__);
@@ -30475,10 +30794,16 @@ class transform_model final : public model_base_crtp<transform_model> {
       assign(tpr_1, nil_index_list(), pr_1, "assigning variable tpr_1");
       current_statement__ = 32;
       check_matching_dims("constraint", "tpr_1", tpr_1, "lower",
-                          dr[(1 - 1)][(1 - 1)]);
+                          rvalue(dr,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "dr"));
       current_statement__ = 32;
       check_matching_dims("constraint", "tpr_1", tpr_1, "upper",
-                          dr[(1 - 1)][(2 - 1)]);
+                          rvalue(dr,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "dr"));
       std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> tpr_2;
       tpr_2 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(m, Eigen::Matrix<local_scalar_t__, 1, -1>(k));
       stan::math::fill(tpr_2, DUMMY_VAR__);
@@ -30486,7 +30811,9 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 33;
       assign(tpr_2, nil_index_list(), pr_2, "assigning variable tpr_2");
       current_statement__ = 33;
-      check_matching_dims("constraint", "tpr_2", tpr_2, "lower", dr[(1 - 1)]);
+      check_matching_dims("constraint", "tpr_2", tpr_2, "lower",
+                          rvalue(dr,
+                            cons_list(index_uni(1), nil_index_list()), "dr"));
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> tpr_3;
       tpr_3 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(n, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(m, Eigen::Matrix<local_scalar_t__, 1, -1>(k)));
       stan::math::fill(tpr_3, DUMMY_VAR__);
@@ -30502,7 +30829,9 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 35;
       assign(tpm_1, nil_index_list(), pm_1, "assigning variable tpm_1");
       current_statement__ = 35;
-      check_matching_dims("constraint", "tpm_1", tpm_1, "lower", dm[(1 - 1)]);
+      check_matching_dims("constraint", "tpm_1", tpm_1, "lower",
+                          rvalue(dm,
+                            cons_list(index_uni(1), nil_index_list()), "dm"));
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> tpm_2;
       tpm_2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, Eigen::Matrix<local_scalar_t__, -1, -1>(m, k));
       stan::math::fill(tpm_2, DUMMY_VAR__);
@@ -30517,26 +30846,34 @@ class transform_model final : public model_base_crtp<transform_model> {
         current_statement__ = 19;
         check_greater_or_equal(function__, "tp_1[sym1__]",
                                tp_1[(sym1__ - 1)],
-                               ds[(1 - 1)][(1 - 1)][(sym1__ - 1)]);}
+                               rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+                               (sym1__ - 1)]);}
       current_statement__ = 20;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 20;
         current_statement__ = 20;
         check_less_or_equal(function__, "tp_2[sym1__]", tp_2[(sym1__ - 1)],
-                            ds[(1 - 1)][(1 - 1)][(sym1__ - 1)]);}
+                            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+                            (sym1__ - 1)]);}
       current_statement__ = 21;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 21;
         current_statement__ = 21;
         check_greater_or_equal(function__, "tp_3[sym1__]",
                                tp_3[(sym1__ - 1)],
-                               ds[(1 - 1)][(1 - 1)][(sym1__ - 1)]);}
+                               rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+                               (sym1__ - 1)]);}
       current_statement__ = 21;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 21;
         current_statement__ = 21;
         check_less_or_equal(function__, "tp_3[sym1__]", tp_3[(sym1__ - 1)],
-                            ds[(1 - 1)][(2 - 1)][(sym1__ - 1)]);}
+                            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "ds")[
+                            (sym1__ - 1)]);}
       current_statement__ = 22;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 22;
@@ -30548,14 +30885,18 @@ class transform_model final : public model_base_crtp<transform_model> {
         current_statement__ = 22;
         current_statement__ = 22;
         check_less_or_equal(function__, "tp_4[sym1__]", tp_4[(sym1__ - 1)],
-                            ds[(1 - 1)][(2 - 1)][(sym1__ - 1)]);}
+                            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "ds")[
+                            (sym1__ - 1)]);}
       current_statement__ = 23;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 23;
         current_statement__ = 23;
         check_greater_or_equal(function__, "tp_5[sym1__]",
                                tp_5[(sym1__ - 1)],
-                               ds[(1 - 1)][(1 - 1)][(sym1__ - 1)]);}
+                               rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+                               (sym1__ - 1)]);}
       current_statement__ = 23;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 23;
@@ -30570,7 +30911,8 @@ class transform_model final : public model_base_crtp<transform_model> {
           current_statement__ = 27;
           check_greater_or_equal(function__, "tp_9[sym1__, sym2__]",
                                  tp_9[(sym1__ - 1)][(sym2__ - 1)],
-                                 ds[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)]);}}
+                                 rvalue(ds, cons_list(index_uni(1), nil_index_list()), "ds")[
+                                 (sym1__ - 1)][(sym2__ - 1)]);}}
       current_statement__ = 27;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 27;
@@ -30610,13 +30952,17 @@ class transform_model final : public model_base_crtp<transform_model> {
         current_statement__ = 29;
         check_greater_or_equal(function__, "tpv_1[sym1__]",
                                tpv_1[(sym1__ - 1)],
-                               dv[(1 - 1)][(1 - 1)][(sym1__ - 1)]);}
+                               rvalue(dv,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "dv")[
+                               (sym1__ - 1)]);}
       current_statement__ = 29;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 29;
         current_statement__ = 29;
         check_less_or_equal(function__, "tpv_1[sym1__]", tpv_1[(sym1__ - 1)],
-                            dv[(1 - 1)][(2 - 1)][(sym1__ - 1)]);}
+                            rvalue(dv,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "dv")[
+                            (sym1__ - 1)]);}
       current_statement__ = 30;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 30;
@@ -30625,7 +30971,8 @@ class transform_model final : public model_base_crtp<transform_model> {
           current_statement__ = 30;
           check_greater_or_equal(function__, "tpv_2[sym1__, sym2__]",
                                  tpv_2[(sym1__ - 1)][(sym2__ - 1)],
-                                 dv[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)]);}}
+                                 rvalue(dv, cons_list(index_uni(1), nil_index_list()), "dv")[
+                                 (sym1__ - 1)][(sym2__ - 1)]);}}
       current_statement__ = 31;
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 31;
@@ -30645,13 +30992,17 @@ class transform_model final : public model_base_crtp<transform_model> {
         current_statement__ = 32;
         check_greater_or_equal(function__, "tpr_1[sym1__]",
                                tpr_1[(sym1__ - 1)],
-                               dr[(1 - 1)][(1 - 1)][(sym1__ - 1)]);}
+                               rvalue(dr,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "dr")[
+                               (sym1__ - 1)]);}
       current_statement__ = 32;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 32;
         current_statement__ = 32;
         check_less_or_equal(function__, "tpr_1[sym1__]", tpr_1[(sym1__ - 1)],
-                            dr[(1 - 1)][(2 - 1)][(sym1__ - 1)]);}
+                            rvalue(dr,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "dr")[
+                            (sym1__ - 1)]);}
       current_statement__ = 33;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 33;
@@ -30660,7 +31011,8 @@ class transform_model final : public model_base_crtp<transform_model> {
           current_statement__ = 33;
           check_greater_or_equal(function__, "tpr_2[sym1__, sym2__]",
                                  tpr_2[(sym1__ - 1)][(sym2__ - 1)],
-                                 dr[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)]);}}
+                                 rvalue(dr, cons_list(index_uni(1), nil_index_list()), "dr")[
+                                 (sym1__ - 1)][(sym2__ - 1)]);}}
       current_statement__ = 34;
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 34;
@@ -30685,7 +31037,8 @@ class transform_model final : public model_base_crtp<transform_model> {
                                    cons_list(index_uni(sym1__),
                                      cons_list(index_uni(sym2__),
                                        nil_index_list())), "tpm_1"),
-                                 rvalue(dm[(1 - 1)],
+                                 rvalue(
+                                   rvalue(dm, cons_list(index_uni(1), nil_index_list()), "dm"),
                                    cons_list(index_uni(sym1__),
                                      cons_list(index_uni(sym2__),
                                        nil_index_list())), "dm[1]"));}}
@@ -30749,13 +31102,18 @@ class transform_model final : public model_base_crtp<transform_model> {
           in__.scalar(), "assigning variable p_1");}
       current_statement__ = 1;
       check_matching_dims("constraint", "p_1", p_1, "lower",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 1;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 1;
         assign(p_1, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::lb_constrain(p_1[(sym1__ - 1)],
-            ds[(1 - 1)][(1 - 1)][(sym1__ - 1)]), "assigning variable p_1");}
+            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+            (sym1__ - 1)]), "assigning variable p_1");}
       std::vector<double> p_2;
       p_2 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
@@ -30766,13 +31124,18 @@ class transform_model final : public model_base_crtp<transform_model> {
           in__.scalar(), "assigning variable p_2");}
       current_statement__ = 2;
       check_matching_dims("constraint", "p_2", p_2, "upper",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 2;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 2;
         assign(p_2, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::ub_constrain(p_2[(sym1__ - 1)],
-            ds[(1 - 1)][(1 - 1)][(sym1__ - 1)]), "assigning variable p_2");}
+            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+            (sym1__ - 1)]), "assigning variable p_2");}
       std::vector<double> p_3;
       p_3 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
@@ -30783,17 +31146,27 @@ class transform_model final : public model_base_crtp<transform_model> {
           in__.scalar(), "assigning variable p_3");}
       current_statement__ = 3;
       check_matching_dims("constraint", "p_3", p_3, "lower",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 3;
       check_matching_dims("constraint", "p_3", p_3, "upper",
-                          ds[(1 - 1)][(2 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       current_statement__ = 3;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 3;
         assign(p_3, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::lub_constrain(p_3[(sym1__ - 1)],
-            ds[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-            ds[(1 - 1)][(2 - 1)][(sym1__ - 1)]), "assigning variable p_3");}
+            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+            (sym1__ - 1)],
+            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "ds")[
+            (sym1__ - 1)]), "assigning variable p_3");}
       std::vector<double> p_4;
       p_4 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
@@ -30804,13 +31177,18 @@ class transform_model final : public model_base_crtp<transform_model> {
           in__.scalar(), "assigning variable p_4");}
       current_statement__ = 4;
       check_matching_dims("constraint", "p_4", p_4, "upper",
-                          ds[(1 - 1)][(2 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       current_statement__ = 4;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 4;
         assign(p_4, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::lub_constrain(p_4[(sym1__ - 1)], 0,
-            ds[(1 - 1)][(2 - 1)][(sym1__ - 1)]), "assigning variable p_4");}
+            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "ds")[
+            (sym1__ - 1)]), "assigning variable p_4");}
       std::vector<double> p_5;
       p_5 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
@@ -30821,14 +31199,18 @@ class transform_model final : public model_base_crtp<transform_model> {
           in__.scalar(), "assigning variable p_5");}
       current_statement__ = 5;
       check_matching_dims("constraint", "p_5", p_5, "lower",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 5;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 5;
         assign(p_5, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::lub_constrain(p_5[(sym1__ - 1)],
-            ds[(1 - 1)][(1 - 1)][(sym1__ - 1)], 1), "assigning variable p_5");
-      }
+            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+            (sym1__ - 1)], 1), "assigning variable p_5");}
       std::vector<double> p_6;
       p_6 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
@@ -30839,14 +31221,18 @@ class transform_model final : public model_base_crtp<transform_model> {
           in__.scalar(), "assigning variable p_6");}
       current_statement__ = 6;
       check_matching_dims("constraint", "p_6", p_6, "offset",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 6;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 6;
         assign(p_6, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::offset_multiplier_constrain(p_6[(sym1__ - 1)],
-            ds[(1 - 1)][(1 - 1)][(sym1__ - 1)], 1), "assigning variable p_6");
-      }
+            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+            (sym1__ - 1)], 1), "assigning variable p_6");}
       std::vector<double> p_7;
       p_7 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
@@ -30857,13 +31243,18 @@ class transform_model final : public model_base_crtp<transform_model> {
           in__.scalar(), "assigning variable p_7");}
       current_statement__ = 7;
       check_matching_dims("constraint", "p_7", p_7, "multiplier",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 7;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 7;
         assign(p_7, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::offset_multiplier_constrain(p_7[(sym1__ - 1)], 0,
-            ds[(1 - 1)][(1 - 1)][(sym1__ - 1)]), "assigning variable p_7");}
+            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+            (sym1__ - 1)]), "assigning variable p_7");}
       std::vector<double> p_8;
       p_8 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
@@ -30874,17 +31265,27 @@ class transform_model final : public model_base_crtp<transform_model> {
           in__.scalar(), "assigning variable p_8");}
       current_statement__ = 8;
       check_matching_dims("constraint", "p_8", p_8, "offset",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 8;
       check_matching_dims("constraint", "p_8", p_8, "multiplier",
-                          ds[(1 - 1)][(2 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       current_statement__ = 8;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 8;
         assign(p_8, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::offset_multiplier_constrain(p_8[(sym1__ - 1)],
-            ds[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-            ds[(1 - 1)][(2 - 1)][(sym1__ - 1)]), "assigning variable p_8");}
+            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+            (sym1__ - 1)],
+            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "ds")[
+            (sym1__ - 1)]), "assigning variable p_8");}
       std::vector<std::vector<double>> p_9;
       p_9 = std::vector<std::vector<double>>(m, std::vector<double>(k, std::numeric_limits<double>::quiet_NaN()));
       
@@ -30898,7 +31299,9 @@ class transform_model final : public model_base_crtp<transform_model> {
               cons_list(index_uni(sym2__), nil_index_list())), in__.scalar(),
             "assigning variable p_9");}}
       current_statement__ = 9;
-      check_matching_dims("constraint", "p_9", p_9, "lower", ds[(1 - 1)]);
+      check_matching_dims("constraint", "p_9", p_9, "lower",
+                          rvalue(ds,
+                            cons_list(index_uni(1), nil_index_list()), "ds"));
       current_statement__ = 9;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 9;
@@ -30908,8 +31311,8 @@ class transform_model final : public model_base_crtp<transform_model> {
             cons_list(index_uni(sym1__),
               cons_list(index_uni(sym2__), nil_index_list())),
             stan::math::lub_constrain(p_9[(sym1__ - 1)][(sym2__ - 1)],
-              ds[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)], 1),
-            "assigning variable p_9");}}
+              rvalue(ds, cons_list(index_uni(1), nil_index_list()), "ds")[
+              (sym1__ - 1)][(sym2__ - 1)], 1), "assigning variable p_9");}}
       std::vector<std::vector<std::vector<double>>> p_10;
       p_10 = std::vector<std::vector<std::vector<double>>>(n, std::vector<std::vector<double>>(m, std::vector<double>(k, std::numeric_limits<double>::quiet_NaN())));
       
@@ -30950,17 +31353,27 @@ class transform_model final : public model_base_crtp<transform_model> {
       pv_1 = in__.vector(k);
       current_statement__ = 11;
       check_matching_dims("constraint", "pv_1", pv_1, "lower",
-                          dv[(1 - 1)][(1 - 1)]);
+                          rvalue(dv,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "dv"));
       current_statement__ = 11;
       check_matching_dims("constraint", "pv_1", pv_1, "upper",
-                          dv[(1 - 1)][(2 - 1)]);
+                          rvalue(dv,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "dv"));
       current_statement__ = 11;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 11;
         assign(pv_1, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::lub_constrain(pv_1[(sym1__ - 1)],
-            dv[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-            dv[(1 - 1)][(2 - 1)][(sym1__ - 1)]), "assigning variable pv_1");}
+            rvalue(dv,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "dv")[
+            (sym1__ - 1)],
+            rvalue(dv,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "dv")[
+            (sym1__ - 1)]), "assigning variable pv_1");}
       std::vector<Eigen::Matrix<double, -1, 1>> pv_2;
       pv_2 = std::vector<Eigen::Matrix<double, -1, 1>>(m, Eigen::Matrix<double, -1, 1>(k));
       stan::math::fill(pv_2, std::numeric_limits<double>::quiet_NaN());
@@ -30971,7 +31384,9 @@ class transform_model final : public model_base_crtp<transform_model> {
         assign(pv_2, cons_list(index_uni(sym1__), nil_index_list()),
           in__.vector(k), "assigning variable pv_2");}
       current_statement__ = 12;
-      check_matching_dims("constraint", "pv_2", pv_2, "lower", dv[(1 - 1)]);
+      check_matching_dims("constraint", "pv_2", pv_2, "lower",
+                          rvalue(dv,
+                            cons_list(index_uni(1), nil_index_list()), "dv"));
       current_statement__ = 12;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 12;
@@ -30981,8 +31396,8 @@ class transform_model final : public model_base_crtp<transform_model> {
             cons_list(index_uni(sym1__),
               cons_list(index_uni(sym2__), nil_index_list())),
             stan::math::lb_constrain(pv_2[(sym1__ - 1)][(sym2__ - 1)],
-              dv[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)]),
-            "assigning variable pv_2");}}
+              rvalue(dv, cons_list(index_uni(1), nil_index_list()), "dv")[
+              (sym1__ - 1)][(sym2__ - 1)]), "assigning variable pv_2");}}
       std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> pv_3;
       pv_3 = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(n, std::vector<Eigen::Matrix<double, -1, 1>>(m, Eigen::Matrix<double, -1, 1>(k)));
       stan::math::fill(pv_3, std::numeric_limits<double>::quiet_NaN());
@@ -31021,17 +31436,27 @@ class transform_model final : public model_base_crtp<transform_model> {
       pr_1 = in__.row_vector(k);
       current_statement__ = 14;
       check_matching_dims("constraint", "pr_1", pr_1, "lower",
-                          dr[(1 - 1)][(1 - 1)]);
+                          rvalue(dr,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "dr"));
       current_statement__ = 14;
       check_matching_dims("constraint", "pr_1", pr_1, "upper",
-                          dr[(1 - 1)][(2 - 1)]);
+                          rvalue(dr,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "dr"));
       current_statement__ = 14;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 14;
         assign(pr_1, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::lub_constrain(pr_1[(sym1__ - 1)],
-            dr[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-            dr[(1 - 1)][(2 - 1)][(sym1__ - 1)]), "assigning variable pr_1");}
+            rvalue(dr,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "dr")[
+            (sym1__ - 1)],
+            rvalue(dr,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "dr")[
+            (sym1__ - 1)]), "assigning variable pr_1");}
       std::vector<Eigen::Matrix<double, 1, -1>> pr_2;
       pr_2 = std::vector<Eigen::Matrix<double, 1, -1>>(m, Eigen::Matrix<double, 1, -1>(k));
       stan::math::fill(pr_2, std::numeric_limits<double>::quiet_NaN());
@@ -31042,7 +31467,9 @@ class transform_model final : public model_base_crtp<transform_model> {
         assign(pr_2, cons_list(index_uni(sym1__), nil_index_list()),
           in__.row_vector(k), "assigning variable pr_2");}
       current_statement__ = 15;
-      check_matching_dims("constraint", "pr_2", pr_2, "lower", dr[(1 - 1)]);
+      check_matching_dims("constraint", "pr_2", pr_2, "lower",
+                          rvalue(dr,
+                            cons_list(index_uni(1), nil_index_list()), "dr"));
       current_statement__ = 15;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 15;
@@ -31052,8 +31479,8 @@ class transform_model final : public model_base_crtp<transform_model> {
             cons_list(index_uni(sym1__),
               cons_list(index_uni(sym2__), nil_index_list())),
             stan::math::lb_constrain(pr_2[(sym1__ - 1)][(sym2__ - 1)],
-              dr[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)]),
-            "assigning variable pr_2");}}
+              rvalue(dr, cons_list(index_uni(1), nil_index_list()), "dr")[
+              (sym1__ - 1)][(sym2__ - 1)]), "assigning variable pr_2");}}
       std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> pr_3;
       pr_3 = std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(n, std::vector<Eigen::Matrix<double, 1, -1>>(m, Eigen::Matrix<double, 1, -1>(k)));
       stan::math::fill(pr_3, std::numeric_limits<double>::quiet_NaN());
@@ -31091,7 +31518,9 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 17;
       pm_1 = in__.matrix(m, k);
       current_statement__ = 17;
-      check_matching_dims("constraint", "pm_1", pm_1, "lower", dm[(1 - 1)]);
+      check_matching_dims("constraint", "pm_1", pm_1, "lower",
+                          rvalue(dm,
+                            cons_list(index_uni(1), nil_index_list()), "dm"));
       current_statement__ = 17;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 17;
@@ -31104,7 +31533,8 @@ class transform_model final : public model_base_crtp<transform_model> {
               rvalue(pm_1,
                 cons_list(index_uni(sym1__),
                   cons_list(index_uni(sym2__), nil_index_list())), "pm_1"),
-              rvalue(dm[(1 - 1)],
+              rvalue(
+                rvalue(dm, cons_list(index_uni(1), nil_index_list()), "dm"),
                 cons_list(index_uni(sym1__),
                   cons_list(index_uni(sym2__), nil_index_list())), "dm[1]")),
             "assigning variable pm_1");}}
@@ -31270,52 +31700,84 @@ class transform_model final : public model_base_crtp<transform_model> {
       assign(tp_1, nil_index_list(), p_1, "assigning variable tp_1");
       current_statement__ = 19;
       check_matching_dims("constraint", "tp_1", tp_1, "lower",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 20;
       assign(tp_2, nil_index_list(), p_2, "assigning variable tp_2");
       current_statement__ = 20;
       check_matching_dims("constraint", "tp_2", tp_2, "upper",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 21;
       assign(tp_3, nil_index_list(), p_3, "assigning variable tp_3");
       current_statement__ = 21;
       check_matching_dims("constraint", "tp_3", tp_3, "lower",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 21;
       check_matching_dims("constraint", "tp_3", tp_3, "upper",
-                          ds[(1 - 1)][(2 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       current_statement__ = 22;
       assign(tp_4, nil_index_list(), p_4, "assigning variable tp_4");
       current_statement__ = 22;
       check_matching_dims("constraint", "tp_4", tp_4, "upper",
-                          ds[(1 - 1)][(2 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       current_statement__ = 23;
       assign(tp_5, nil_index_list(), p_5, "assigning variable tp_5");
       current_statement__ = 23;
       check_matching_dims("constraint", "tp_5", tp_5, "lower",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 24;
       assign(tp_6, nil_index_list(), p_6, "assigning variable tp_6");
       current_statement__ = 24;
       check_matching_dims("constraint", "tp_6", tp_6, "offset",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 25;
       assign(tp_7, nil_index_list(), p_7, "assigning variable tp_7");
       current_statement__ = 25;
       check_matching_dims("constraint", "tp_7", tp_7, "multiplier",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 26;
       assign(tp_8, nil_index_list(), p_8, "assigning variable tp_8");
       current_statement__ = 26;
       check_matching_dims("constraint", "tp_8", tp_8, "offset",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 26;
       check_matching_dims("constraint", "tp_8", tp_8, "multiplier",
-                          ds[(1 - 1)][(2 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       current_statement__ = 27;
       assign(tp_9, nil_index_list(), p_9, "assigning variable tp_9");
       current_statement__ = 27;
-      check_matching_dims("constraint", "tp_9", tp_9, "lower", ds[(1 - 1)]);
+      check_matching_dims("constraint", "tp_9", tp_9, "lower",
+                          rvalue(ds,
+                            cons_list(index_uni(1), nil_index_list()), "ds"));
       current_statement__ = 28;
       assign(tp_10, nil_index_list(), p_10, "assigning variable tp_10");
       current_statement__ = 28;
@@ -31324,14 +31786,22 @@ class transform_model final : public model_base_crtp<transform_model> {
       assign(tpv_1, nil_index_list(), pv_1, "assigning variable tpv_1");
       current_statement__ = 29;
       check_matching_dims("constraint", "tpv_1", tpv_1, "lower",
-                          dv[(1 - 1)][(1 - 1)]);
+                          rvalue(dv,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "dv"));
       current_statement__ = 29;
       check_matching_dims("constraint", "tpv_1", tpv_1, "upper",
-                          dv[(1 - 1)][(2 - 1)]);
+                          rvalue(dv,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "dv"));
       current_statement__ = 30;
       assign(tpv_2, nil_index_list(), pv_2, "assigning variable tpv_2");
       current_statement__ = 30;
-      check_matching_dims("constraint", "tpv_2", tpv_2, "lower", dv[(1 - 1)]);
+      check_matching_dims("constraint", "tpv_2", tpv_2, "lower",
+                          rvalue(dv,
+                            cons_list(index_uni(1), nil_index_list()), "dv"));
       current_statement__ = 31;
       assign(tpv_3, nil_index_list(), pv_3, "assigning variable tpv_3");
       current_statement__ = 31;
@@ -31340,14 +31810,22 @@ class transform_model final : public model_base_crtp<transform_model> {
       assign(tpr_1, nil_index_list(), pr_1, "assigning variable tpr_1");
       current_statement__ = 32;
       check_matching_dims("constraint", "tpr_1", tpr_1, "lower",
-                          dr[(1 - 1)][(1 - 1)]);
+                          rvalue(dr,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "dr"));
       current_statement__ = 32;
       check_matching_dims("constraint", "tpr_1", tpr_1, "upper",
-                          dr[(1 - 1)][(2 - 1)]);
+                          rvalue(dr,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "dr"));
       current_statement__ = 33;
       assign(tpr_2, nil_index_list(), pr_2, "assigning variable tpr_2");
       current_statement__ = 33;
-      check_matching_dims("constraint", "tpr_2", tpr_2, "lower", dr[(1 - 1)]);
+      check_matching_dims("constraint", "tpr_2", tpr_2, "lower",
+                          rvalue(dr,
+                            cons_list(index_uni(1), nil_index_list()), "dr"));
       current_statement__ = 34;
       assign(tpr_3, nil_index_list(), pr_3, "assigning variable tpr_3");
       current_statement__ = 34;
@@ -31355,7 +31833,9 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 35;
       assign(tpm_1, nil_index_list(), pm_1, "assigning variable tpm_1");
       current_statement__ = 35;
-      check_matching_dims("constraint", "tpm_1", tpm_1, "lower", dm[(1 - 1)]);
+      check_matching_dims("constraint", "tpm_1", tpm_1, "lower",
+                          rvalue(dm,
+                            cons_list(index_uni(1), nil_index_list()), "dm"));
       current_statement__ = 36;
       assign(tpm_2, nil_index_list(), pm_2, "assigning variable tpm_2");
       current_statement__ = 36;
@@ -31366,26 +31846,34 @@ class transform_model final : public model_base_crtp<transform_model> {
         current_statement__ = 19;
         check_greater_or_equal(function__, "tp_1[sym1__]",
                                tp_1[(sym1__ - 1)],
-                               ds[(1 - 1)][(1 - 1)][(sym1__ - 1)]);}
+                               rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+                               (sym1__ - 1)]);}
       current_statement__ = 20;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 20;
         current_statement__ = 20;
         check_less_or_equal(function__, "tp_2[sym1__]", tp_2[(sym1__ - 1)],
-                            ds[(1 - 1)][(1 - 1)][(sym1__ - 1)]);}
+                            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+                            (sym1__ - 1)]);}
       current_statement__ = 21;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 21;
         current_statement__ = 21;
         check_greater_or_equal(function__, "tp_3[sym1__]",
                                tp_3[(sym1__ - 1)],
-                               ds[(1 - 1)][(1 - 1)][(sym1__ - 1)]);}
+                               rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+                               (sym1__ - 1)]);}
       current_statement__ = 21;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 21;
         current_statement__ = 21;
         check_less_or_equal(function__, "tp_3[sym1__]", tp_3[(sym1__ - 1)],
-                            ds[(1 - 1)][(2 - 1)][(sym1__ - 1)]);}
+                            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "ds")[
+                            (sym1__ - 1)]);}
       current_statement__ = 22;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 22;
@@ -31397,14 +31885,18 @@ class transform_model final : public model_base_crtp<transform_model> {
         current_statement__ = 22;
         current_statement__ = 22;
         check_less_or_equal(function__, "tp_4[sym1__]", tp_4[(sym1__ - 1)],
-                            ds[(1 - 1)][(2 - 1)][(sym1__ - 1)]);}
+                            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "ds")[
+                            (sym1__ - 1)]);}
       current_statement__ = 23;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 23;
         current_statement__ = 23;
         check_greater_or_equal(function__, "tp_5[sym1__]",
                                tp_5[(sym1__ - 1)],
-                               ds[(1 - 1)][(1 - 1)][(sym1__ - 1)]);}
+                               rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+                               (sym1__ - 1)]);}
       current_statement__ = 23;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 23;
@@ -31419,7 +31911,8 @@ class transform_model final : public model_base_crtp<transform_model> {
           current_statement__ = 27;
           check_greater_or_equal(function__, "tp_9[sym1__, sym2__]",
                                  tp_9[(sym1__ - 1)][(sym2__ - 1)],
-                                 ds[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)]);}}
+                                 rvalue(ds, cons_list(index_uni(1), nil_index_list()), "ds")[
+                                 (sym1__ - 1)][(sym2__ - 1)]);}}
       current_statement__ = 27;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 27;
@@ -31459,13 +31952,17 @@ class transform_model final : public model_base_crtp<transform_model> {
         current_statement__ = 29;
         check_greater_or_equal(function__, "tpv_1[sym1__]",
                                tpv_1[(sym1__ - 1)],
-                               dv[(1 - 1)][(1 - 1)][(sym1__ - 1)]);}
+                               rvalue(dv,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "dv")[
+                               (sym1__ - 1)]);}
       current_statement__ = 29;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 29;
         current_statement__ = 29;
         check_less_or_equal(function__, "tpv_1[sym1__]", tpv_1[(sym1__ - 1)],
-                            dv[(1 - 1)][(2 - 1)][(sym1__ - 1)]);}
+                            rvalue(dv,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "dv")[
+                            (sym1__ - 1)]);}
       current_statement__ = 30;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 30;
@@ -31474,7 +31971,8 @@ class transform_model final : public model_base_crtp<transform_model> {
           current_statement__ = 30;
           check_greater_or_equal(function__, "tpv_2[sym1__, sym2__]",
                                  tpv_2[(sym1__ - 1)][(sym2__ - 1)],
-                                 dv[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)]);}}
+                                 rvalue(dv, cons_list(index_uni(1), nil_index_list()), "dv")[
+                                 (sym1__ - 1)][(sym2__ - 1)]);}}
       current_statement__ = 31;
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 31;
@@ -31494,13 +31992,17 @@ class transform_model final : public model_base_crtp<transform_model> {
         current_statement__ = 32;
         check_greater_or_equal(function__, "tpr_1[sym1__]",
                                tpr_1[(sym1__ - 1)],
-                               dr[(1 - 1)][(1 - 1)][(sym1__ - 1)]);}
+                               rvalue(dr,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "dr")[
+                               (sym1__ - 1)]);}
       current_statement__ = 32;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 32;
         current_statement__ = 32;
         check_less_or_equal(function__, "tpr_1[sym1__]", tpr_1[(sym1__ - 1)],
-                            dr[(1 - 1)][(2 - 1)][(sym1__ - 1)]);}
+                            rvalue(dr,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "dr")[
+                            (sym1__ - 1)]);}
       current_statement__ = 33;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 33;
@@ -31509,7 +32011,8 @@ class transform_model final : public model_base_crtp<transform_model> {
           current_statement__ = 33;
           check_greater_or_equal(function__, "tpr_2[sym1__, sym2__]",
                                  tpr_2[(sym1__ - 1)][(sym2__ - 1)],
-                                 dr[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)]);}}
+                                 rvalue(dr, cons_list(index_uni(1), nil_index_list()), "dr")[
+                                 (sym1__ - 1)][(sym2__ - 1)]);}}
       current_statement__ = 34;
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 34;
@@ -31534,7 +32037,8 @@ class transform_model final : public model_base_crtp<transform_model> {
                                    cons_list(index_uni(sym1__),
                                      cons_list(index_uni(sym2__),
                                        nil_index_list())), "tpm_1"),
-                                 rvalue(dm[(1 - 1)],
+                                 rvalue(
+                                   rvalue(dm, cons_list(index_uni(1), nil_index_list()), "dm"),
                                    cons_list(index_uni(sym1__),
                                      cons_list(index_uni(sym2__),
                                        nil_index_list())), "dm[1]"));}}
@@ -31653,7 +32157,10 @@ class transform_model final : public model_base_crtp<transform_model> {
         "assigning variable p_1");
       current_statement__ = 1;
       check_matching_dims("constraint", "p_1", p_1, "lower",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       std::vector<double> p_1_free__;
       p_1_free__ = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
@@ -31662,8 +32169,9 @@ class transform_model final : public model_base_crtp<transform_model> {
         current_statement__ = 1;
         assign(p_1_free__, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::lb_free(p_1[(sym1__ - 1)],
-            ds[(1 - 1)][(1 - 1)][(sym1__ - 1)]),
-          "assigning variable p_1_free__");}
+            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+            (sym1__ - 1)]), "assigning variable p_1_free__");}
       std::vector<double> p_2;
       p_2 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
@@ -31672,7 +32180,10 @@ class transform_model final : public model_base_crtp<transform_model> {
         "assigning variable p_2");
       current_statement__ = 2;
       check_matching_dims("constraint", "p_2", p_2, "upper",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       std::vector<double> p_2_free__;
       p_2_free__ = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
@@ -31681,8 +32192,9 @@ class transform_model final : public model_base_crtp<transform_model> {
         current_statement__ = 2;
         assign(p_2_free__, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::ub_free(p_2[(sym1__ - 1)],
-            ds[(1 - 1)][(1 - 1)][(sym1__ - 1)]),
-          "assigning variable p_2_free__");}
+            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+            (sym1__ - 1)]), "assigning variable p_2_free__");}
       std::vector<double> p_3;
       p_3 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
@@ -31691,10 +32203,16 @@ class transform_model final : public model_base_crtp<transform_model> {
         "assigning variable p_3");
       current_statement__ = 3;
       check_matching_dims("constraint", "p_3", p_3, "lower",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 3;
       check_matching_dims("constraint", "p_3", p_3, "upper",
-                          ds[(1 - 1)][(2 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       std::vector<double> p_3_free__;
       p_3_free__ = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
@@ -31703,9 +32221,12 @@ class transform_model final : public model_base_crtp<transform_model> {
         current_statement__ = 3;
         assign(p_3_free__, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::lub_free(p_3[(sym1__ - 1)],
-            ds[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-            ds[(1 - 1)][(2 - 1)][(sym1__ - 1)]),
-          "assigning variable p_3_free__");}
+            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+            (sym1__ - 1)],
+            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "ds")[
+            (sym1__ - 1)]), "assigning variable p_3_free__");}
       std::vector<double> p_4;
       p_4 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
@@ -31714,7 +32235,10 @@ class transform_model final : public model_base_crtp<transform_model> {
         "assigning variable p_4");
       current_statement__ = 4;
       check_matching_dims("constraint", "p_4", p_4, "upper",
-                          ds[(1 - 1)][(2 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       std::vector<double> p_4_free__;
       p_4_free__ = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
@@ -31723,8 +32247,9 @@ class transform_model final : public model_base_crtp<transform_model> {
         current_statement__ = 4;
         assign(p_4_free__, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::lub_free(p_4[(sym1__ - 1)], 0,
-            ds[(1 - 1)][(2 - 1)][(sym1__ - 1)]),
-          "assigning variable p_4_free__");}
+            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "ds")[
+            (sym1__ - 1)]), "assigning variable p_4_free__");}
       std::vector<double> p_5;
       p_5 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
@@ -31733,7 +32258,10 @@ class transform_model final : public model_base_crtp<transform_model> {
         "assigning variable p_5");
       current_statement__ = 5;
       check_matching_dims("constraint", "p_5", p_5, "lower",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       std::vector<double> p_5_free__;
       p_5_free__ = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
@@ -31742,8 +32270,9 @@ class transform_model final : public model_base_crtp<transform_model> {
         current_statement__ = 5;
         assign(p_5_free__, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::lub_free(p_5[(sym1__ - 1)],
-            ds[(1 - 1)][(1 - 1)][(sym1__ - 1)], 1),
-          "assigning variable p_5_free__");}
+            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+            (sym1__ - 1)], 1), "assigning variable p_5_free__");}
       std::vector<double> p_6;
       p_6 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
@@ -31752,7 +32281,10 @@ class transform_model final : public model_base_crtp<transform_model> {
         "assigning variable p_6");
       current_statement__ = 6;
       check_matching_dims("constraint", "p_6", p_6, "offset",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       std::vector<double> p_6_free__;
       p_6_free__ = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
@@ -31761,8 +32293,9 @@ class transform_model final : public model_base_crtp<transform_model> {
         current_statement__ = 6;
         assign(p_6_free__, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::offset_multiplier_free(p_6[(sym1__ - 1)],
-            ds[(1 - 1)][(1 - 1)][(sym1__ - 1)], 1),
-          "assigning variable p_6_free__");}
+            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+            (sym1__ - 1)], 1), "assigning variable p_6_free__");}
       std::vector<double> p_7;
       p_7 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
@@ -31771,7 +32304,10 @@ class transform_model final : public model_base_crtp<transform_model> {
         "assigning variable p_7");
       current_statement__ = 7;
       check_matching_dims("constraint", "p_7", p_7, "multiplier",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       std::vector<double> p_7_free__;
       p_7_free__ = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
@@ -31780,8 +32316,9 @@ class transform_model final : public model_base_crtp<transform_model> {
         current_statement__ = 7;
         assign(p_7_free__, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::offset_multiplier_free(p_7[(sym1__ - 1)], 0,
-            ds[(1 - 1)][(1 - 1)][(sym1__ - 1)]),
-          "assigning variable p_7_free__");}
+            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+            (sym1__ - 1)]), "assigning variable p_7_free__");}
       std::vector<double> p_8;
       p_8 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
@@ -31790,10 +32327,16 @@ class transform_model final : public model_base_crtp<transform_model> {
         "assigning variable p_8");
       current_statement__ = 8;
       check_matching_dims("constraint", "p_8", p_8, "offset",
-                          ds[(1 - 1)][(1 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "ds"));
       current_statement__ = 8;
       check_matching_dims("constraint", "p_8", p_8, "multiplier",
-                          ds[(1 - 1)][(2 - 1)]);
+                          rvalue(ds,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "ds"));
       std::vector<double> p_8_free__;
       p_8_free__ = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
@@ -31802,9 +32345,12 @@ class transform_model final : public model_base_crtp<transform_model> {
         current_statement__ = 8;
         assign(p_8_free__, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::offset_multiplier_free(p_8[(sym1__ - 1)],
-            ds[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-            ds[(1 - 1)][(2 - 1)][(sym1__ - 1)]),
-          "assigning variable p_8_free__");}
+            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "ds")[
+            (sym1__ - 1)],
+            rvalue(ds,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "ds")[
+            (sym1__ - 1)]), "assigning variable p_8_free__");}
       std::vector<std::vector<double>> p_9;
       p_9 = std::vector<std::vector<double>>(m, std::vector<double>(k, std::numeric_limits<double>::quiet_NaN()));
       
@@ -31828,7 +32374,9 @@ class transform_model final : public model_base_crtp<transform_model> {
             pos__ = (pos__ + 1);}}
       }
       current_statement__ = 9;
-      check_matching_dims("constraint", "p_9", p_9, "lower", ds[(1 - 1)]);
+      check_matching_dims("constraint", "p_9", p_9, "lower",
+                          rvalue(ds,
+                            cons_list(index_uni(1), nil_index_list()), "ds"));
       std::vector<std::vector<double>> p_9_free__;
       p_9_free__ = std::vector<std::vector<double>>(m, std::vector<double>(k, std::numeric_limits<double>::quiet_NaN()));
       
@@ -31841,7 +32389,8 @@ class transform_model final : public model_base_crtp<transform_model> {
             cons_list(index_uni(sym1__),
               cons_list(index_uni(sym2__), nil_index_list())),
             stan::math::lub_free(p_9[(sym1__ - 1)][(sym2__ - 1)],
-              ds[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)], 1),
+              rvalue(ds, cons_list(index_uni(1), nil_index_list()), "ds")[
+              (sym1__ - 1)][(sym2__ - 1)], 1),
             "assigning variable p_9_free__");}}
       std::vector<std::vector<std::vector<double>>> p_10;
       p_10 = std::vector<std::vector<std::vector<double>>>(n, std::vector<std::vector<double>>(m, std::vector<double>(k, std::numeric_limits<double>::quiet_NaN())));
@@ -31909,10 +32458,16 @@ class transform_model final : public model_base_crtp<transform_model> {
       }
       current_statement__ = 11;
       check_matching_dims("constraint", "pv_1", pv_1, "lower",
-                          dv[(1 - 1)][(1 - 1)]);
+                          rvalue(dv,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "dv"));
       current_statement__ = 11;
       check_matching_dims("constraint", "pv_1", pv_1, "upper",
-                          dv[(1 - 1)][(2 - 1)]);
+                          rvalue(dv,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "dv"));
       Eigen::Matrix<double, -1, 1> pv_1_free__;
       pv_1_free__ = Eigen::Matrix<double, -1, 1>(k);
       stan::math::fill(pv_1_free__, std::numeric_limits<double>::quiet_NaN());
@@ -31922,9 +32477,12 @@ class transform_model final : public model_base_crtp<transform_model> {
         current_statement__ = 11;
         assign(pv_1_free__, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::lub_free(pv_1[(sym1__ - 1)],
-            dv[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-            dv[(1 - 1)][(2 - 1)][(sym1__ - 1)]),
-          "assigning variable pv_1_free__");}
+            rvalue(dv,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "dv")[
+            (sym1__ - 1)],
+            rvalue(dv,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "dv")[
+            (sym1__ - 1)]), "assigning variable pv_1_free__");}
       std::vector<Eigen::Matrix<double, -1, 1>> pv_2;
       pv_2 = std::vector<Eigen::Matrix<double, -1, 1>>(m, Eigen::Matrix<double, -1, 1>(k));
       stan::math::fill(pv_2, std::numeric_limits<double>::quiet_NaN());
@@ -31949,7 +32507,9 @@ class transform_model final : public model_base_crtp<transform_model> {
             pos__ = (pos__ + 1);}}
       }
       current_statement__ = 12;
-      check_matching_dims("constraint", "pv_2", pv_2, "lower", dv[(1 - 1)]);
+      check_matching_dims("constraint", "pv_2", pv_2, "lower",
+                          rvalue(dv,
+                            cons_list(index_uni(1), nil_index_list()), "dv"));
       std::vector<Eigen::Matrix<double, -1, 1>> pv_2_free__;
       pv_2_free__ = std::vector<Eigen::Matrix<double, -1, 1>>(m, Eigen::Matrix<double, -1, 1>(k));
       stan::math::fill(pv_2_free__, std::numeric_limits<double>::quiet_NaN());
@@ -31963,8 +32523,9 @@ class transform_model final : public model_base_crtp<transform_model> {
             cons_list(index_uni(sym1__),
               cons_list(index_uni(sym2__), nil_index_list())),
             stan::math::lb_free(pv_2[(sym1__ - 1)][(sym2__ - 1)],
-              dv[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)]),
-            "assigning variable pv_2_free__");}}
+              rvalue(dv, cons_list(index_uni(1), nil_index_list()), "dv")[
+              (sym1__ - 1)][(sym2__ - 1)]), "assigning variable pv_2_free__");
+        }}
       std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> pv_3;
       pv_3 = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(n, std::vector<Eigen::Matrix<double, -1, 1>>(m, Eigen::Matrix<double, -1, 1>(k)));
       stan::math::fill(pv_3, std::numeric_limits<double>::quiet_NaN());
@@ -32033,10 +32594,16 @@ class transform_model final : public model_base_crtp<transform_model> {
       }
       current_statement__ = 14;
       check_matching_dims("constraint", "pr_1", pr_1, "lower",
-                          dr[(1 - 1)][(1 - 1)]);
+                          rvalue(dr,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(1), nil_index_list())),
+                            "dr"));
       current_statement__ = 14;
       check_matching_dims("constraint", "pr_1", pr_1, "upper",
-                          dr[(1 - 1)][(2 - 1)]);
+                          rvalue(dr,
+                            cons_list(index_uni(1),
+                              cons_list(index_uni(2), nil_index_list())),
+                            "dr"));
       Eigen::Matrix<double, 1, -1> pr_1_free__;
       pr_1_free__ = Eigen::Matrix<double, 1, -1>(k);
       stan::math::fill(pr_1_free__, std::numeric_limits<double>::quiet_NaN());
@@ -32046,9 +32613,12 @@ class transform_model final : public model_base_crtp<transform_model> {
         current_statement__ = 14;
         assign(pr_1_free__, cons_list(index_uni(sym1__), nil_index_list()),
           stan::math::lub_free(pr_1[(sym1__ - 1)],
-            dr[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-            dr[(1 - 1)][(2 - 1)][(sym1__ - 1)]),
-          "assigning variable pr_1_free__");}
+            rvalue(dr,
+  cons_list(index_uni(1), cons_list(index_uni(1), nil_index_list())), "dr")[
+            (sym1__ - 1)],
+            rvalue(dr,
+  cons_list(index_uni(1), cons_list(index_uni(2), nil_index_list())), "dr")[
+            (sym1__ - 1)]), "assigning variable pr_1_free__");}
       std::vector<Eigen::Matrix<double, 1, -1>> pr_2;
       pr_2 = std::vector<Eigen::Matrix<double, 1, -1>>(m, Eigen::Matrix<double, 1, -1>(k));
       stan::math::fill(pr_2, std::numeric_limits<double>::quiet_NaN());
@@ -32073,7 +32643,9 @@ class transform_model final : public model_base_crtp<transform_model> {
             pos__ = (pos__ + 1);}}
       }
       current_statement__ = 15;
-      check_matching_dims("constraint", "pr_2", pr_2, "lower", dr[(1 - 1)]);
+      check_matching_dims("constraint", "pr_2", pr_2, "lower",
+                          rvalue(dr,
+                            cons_list(index_uni(1), nil_index_list()), "dr"));
       std::vector<Eigen::Matrix<double, 1, -1>> pr_2_free__;
       pr_2_free__ = std::vector<Eigen::Matrix<double, 1, -1>>(m, Eigen::Matrix<double, 1, -1>(k));
       stan::math::fill(pr_2_free__, std::numeric_limits<double>::quiet_NaN());
@@ -32087,8 +32659,9 @@ class transform_model final : public model_base_crtp<transform_model> {
             cons_list(index_uni(sym1__),
               cons_list(index_uni(sym2__), nil_index_list())),
             stan::math::lb_free(pr_2[(sym1__ - 1)][(sym2__ - 1)],
-              dr[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)]),
-            "assigning variable pr_2_free__");}}
+              rvalue(dr, cons_list(index_uni(1), nil_index_list()), "dr")[
+              (sym1__ - 1)][(sym2__ - 1)]), "assigning variable pr_2_free__");
+        }}
       std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> pr_3;
       pr_3 = std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(n, std::vector<Eigen::Matrix<double, 1, -1>>(m, Eigen::Matrix<double, 1, -1>(k)));
       stan::math::fill(pr_3, std::numeric_limits<double>::quiet_NaN());
@@ -32160,7 +32733,9 @@ class transform_model final : public model_base_crtp<transform_model> {
             pos__ = (pos__ + 1);}}
       }
       current_statement__ = 17;
-      check_matching_dims("constraint", "pm_1", pm_1, "lower", dm[(1 - 1)]);
+      check_matching_dims("constraint", "pm_1", pm_1, "lower",
+                          rvalue(dm,
+                            cons_list(index_uni(1), nil_index_list()), "dm"));
       Eigen::Matrix<double, -1, -1> pm_1_free__;
       pm_1_free__ = Eigen::Matrix<double, -1, -1>(m, k);
       stan::math::fill(pm_1_free__, std::numeric_limits<double>::quiet_NaN());
@@ -32177,7 +32752,8 @@ class transform_model final : public model_base_crtp<transform_model> {
               rvalue(pm_1,
                 cons_list(index_uni(sym1__),
                   cons_list(index_uni(sym2__), nil_index_list())), "pm_1"),
-              rvalue(dm[(1 - 1)],
+              rvalue(
+                rvalue(dm, cons_list(index_uni(1), nil_index_list()), "dm"),
                 cons_list(index_uni(sym1__),
                   cons_list(index_uni(sym2__), nil_index_list())), "dm[1]")),
             "assigning variable pm_1_free__");}}

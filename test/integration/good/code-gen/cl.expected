@@ -1258,11 +1258,15 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         current_statement__ = 174;
         lp_accum__.add(
           normal_id_glm_lpdf<false>(y_v_d_opencl__,
-            to_matrix_cl(X_d_a[(1 - 1)]), alpha, to_matrix_cl(beta), sigma));
+            to_matrix_cl(
+              rvalue(X_d_a, cons_list(index_uni(1), nil_index_list()),
+                "X_d_a")), alpha, to_matrix_cl(beta), sigma));
         current_statement__ = 175;
         lp_accum__.add(
           normal_id_glm_lpdf<propto__>(y_v_d_opencl__,
-            to_matrix_cl(X_d_a[(1 - 1)]), alpha, to_matrix_cl(beta), sigma));
+            to_matrix_cl(
+              rvalue(X_d_a, cons_list(index_uni(1), nil_index_list()),
+                "X_d_a")), alpha, to_matrix_cl(beta), sigma));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
