@@ -106,7 +106,7 @@ let rec pp_unsizedtype_map_custom_scalar ppf (scalar, ut) =
   | URowVector -> pf ppf "Eigen::Map<Eigen::Matrix<%s, 1, -1>>" scalar
   | UVector -> pf ppf "Eigen::Map<Eigen::Matrix<%s, -1, 1>>" scalar
   | x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
-  
+
 let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
   match ut with
   | UnsizedType.UInt | UReal | UMatrix | URowVector | UVector ->
@@ -119,7 +119,6 @@ let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
 let pp_map_data ppf (adtype, ut) =
   let s = local_scalar ut adtype in
   pp_unsizedtype_map_custom_scalar ppf (s, ut)
-  
 
 let pp_unsizedtype_local ppf (adtype, ut) =
   let s = local_scalar ut adtype in
