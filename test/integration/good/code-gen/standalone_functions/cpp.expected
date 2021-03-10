@@ -511,10 +511,13 @@ ode_integrate(std::ostream* pstream__) {
     x_i = std::vector<int>(0, std::numeric_limits<int>::min());
     
     current_statement__ = 9;
-    return integrate_ode_bdf(integrand_ode_functor__(), rep_array(0.0, 1), 1E-5,
+    return rvalue(
+             integrate_ode_bdf(integrand_ode_functor__(), rep_array(0.0, 1), 1E-5,
   rep_array((1.0 - 1E-5), 1), rep_array(0.0, 0), rep_array(0.0, 0), x_i,
-  pstream__)[
-        (1 - 1)][(1 - 1)];
+  pstream__),
+             cons_list(index_uni(1),
+               cons_list(index_uni(1), nil_index_list())),
+             "integrate_ode_bdf(integrand_ode, rep_array(0.0, 1), 1E-5,\n                  rep_array((1.0 - 1E-5), 1), rep_array(0.0, 0),\n                  rep_array(0.0, 0), x_i)");
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
