@@ -830,7 +830,6 @@ using stan::model::index_min;
 using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
-using stan::model::nil_index_list;
 using namespace stan::math;
 |}
 
