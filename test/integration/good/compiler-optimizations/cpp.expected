@@ -143,6 +143,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
   ad_level_failing_model(stan::io::var_context& context__,
                          unsigned int random_seed__ = 0,
                          std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                         model_arena_(stan::io::get_data_sizes(context__)), 
                          N_t(stan::io::initialize_data<int>("N_t", context__)),
                          t(stan::io::initialize_data<std::vector<double>>("t", context__, model_arena_, N_t )),
                          y0(stan::io::initialize_data<std::vector<double>>("y0", context__, model_arena_, 4 )),
@@ -1292,6 +1293,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
   copy_fail_model(stan::io::var_context& context__,
                   unsigned int random_seed__ = 0,
                   std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                  model_arena_(stan::io::get_data_sizes(context__)), 
                   nind(stan::io::initialize_data<int>("nind", context__)),
                   n_occasions(stan::io::initialize_data<int>("n_occasions", context__)),
                   y(stan::io::initialize_data<std::vector<std::vector<int>>>("y", context__, model_arena_, nind , n_occasions )),
@@ -3473,6 +3475,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
   dce_fail_model(stan::io::var_context& context__,
                  unsigned int random_seed__ = 0,
                  std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                 model_arena_(stan::io::get_data_sizes(context__)), 
                  N(stan::io::initialize_data<int>("N", context__)),
                  n_age(stan::io::initialize_data<int>("n_age", context__)),
                  n_edu(stan::io::initialize_data<int>("n_edu", context__)),
@@ -4970,6 +4973,7 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
   expr_prop_experiment_model(stan::io::var_context& context__,
                              unsigned int random_seed__ = 0,
                              std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                             model_arena_(stan::io::get_data_sizes(context__)), 
                              j(stan::io::initialize_data<int>("j", context__)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
@@ -5305,6 +5309,7 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
   expr_prop_experiment2_model(stan::io::var_context& context__,
                               unsigned int random_seed__ = 0,
                               std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                              model_arena_(stan::io::get_data_sizes(context__)), 
                               j(stan::io::initialize_data<int>("j", context__)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
@@ -5639,6 +5644,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
   expr_prop_fail_model(stan::io::var_context& context__,
                        unsigned int random_seed__ = 0,
                        std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                       model_arena_(stan::io::get_data_sizes(context__)), 
                        N(stan::io::initialize_data<int>("N", context__)),
                        y(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("y", context__, model_arena_ N)) {
     int current_statement__ = 0;
@@ -6246,6 +6252,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
   expr_prop_fail2_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                        model_arena_(stan::io::get_data_sizes(context__)), 
                         J(stan::io::initialize_data<int>("J", context__)),
                         y(stan::io::initialize_data<std::vector<double>>("y", context__, model_arena_, J )),
                         sigma(stan::io::initialize_data<std::vector<double>>("sigma", context__, model_arena_, J )) {
@@ -6799,6 +6806,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
   expr_prop_fail3_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                        model_arena_(stan::io::get_data_sizes(context__)), 
                         N(stan::io::initialize_data<int>("N", context__)),
                         n_age(stan::io::initialize_data<int>("n_age", context__)),
                         n_age_edu(stan::io::initialize_data<int>("n_age_edu", context__)),
@@ -8220,6 +8228,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
   expr_prop_fail4_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                        model_arena_(stan::io::get_data_sizes(context__)), 
                         N(stan::io::initialize_data<int>("N", context__)),
                         N_edges(stan::io::initialize_data<int>("N_edges", context__)),
                         node1(stan::io::initialize_data<std::vector<int>>("node1", context__, model_arena_, N_edges )),
@@ -9428,6 +9437,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
   expr_prop_fail5_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                        model_arena_(stan::io::get_data_sizes(context__)), 
                         nind(stan::io::initialize_data<int>("nind", context__)),
                         n_occasions(stan::io::initialize_data<int>("n_occasions", context__)),
                         y(stan::io::initialize_data<std::vector<std::vector<int>>>("y", context__, model_arena_, nind , n_occasions )) {
@@ -12533,6 +12543,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
   expr_prop_fail6_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                        model_arena_(stan::io::get_data_sizes(context__)), 
                         M(stan::io::initialize_data<int>("M", context__)),
                         n_occasions(stan::io::initialize_data<int>("n_occasions", context__)),
                         y(stan::io::initialize_data<std::vector<std::vector<int>>>("y", context__, model_arena_, M , n_occasions )) {
@@ -15743,6 +15754,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
   expr_prop_fail7_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                        model_arena_(stan::io::get_data_sizes(context__)), 
                         K(stan::io::initialize_data<int>("K", context__)),
                         I(stan::io::initialize_data<int>("I", context__)),
                         J(stan::io::initialize_data<int>("J", context__)),
@@ -17091,6 +17103,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
   expr_prop_fail8_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                        model_arena_(stan::io::get_data_sizes(context__)), 
                         N(stan::io::initialize_data<int>("N", context__)),
                         N_edges(stan::io::initialize_data<int>("N_edges", context__)),
                         node1(stan::io::initialize_data<std::vector<int>>("node1", context__, model_arena_, N_edges )),
@@ -18245,6 +18258,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
   fails_test_model(stan::io::var_context& context__,
                    unsigned int random_seed__ = 0,
                    std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                   model_arena_(stan::io::get_data_sizes(context__)), 
                    nind(stan::io::initialize_data<int>("nind", context__)),
                    n_occasions(stan::io::initialize_data<int>("n_occasions", context__)),
                    y(stan::io::initialize_data<std::vector<std::vector<int>>>("y", context__, model_arena_, nind , n_occasions )),
@@ -21445,6 +21459,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
   inlining_fail2_model(stan::io::var_context& context__,
                        unsigned int random_seed__ = 0,
                        std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                       model_arena_(stan::io::get_data_sizes(context__)), 
                        M(stan::io::initialize_data<int>("M", context__)),
                        n_occasions(stan::io::initialize_data<int>("n_occasions", context__)),
                        y(stan::io::initialize_data<std::vector<std::vector<int>>>("y", context__, model_arena_, M , n_occasions )) {
@@ -24421,6 +24436,7 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
   lcm_experiment_model(stan::io::var_context& context__,
                        unsigned int random_seed__ = 0,
                        std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                       model_arena_(stan::io::get_data_sizes(context__)), 
                        j(stan::io::initialize_data<int>("j", context__)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
@@ -24747,7 +24763,7 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
   lcm_experiment2_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                         {
+                        model_arena_(stan::io::get_data_sizes(context__)),   {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -25096,6 +25112,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
   lcm_fails_model(stan::io::var_context& context__,
                   unsigned int random_seed__ = 0,
                   std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                  model_arena_(stan::io::get_data_sizes(context__)), 
                   J(stan::io::initialize_data<int>("J", context__)),
                   y(stan::io::initialize_data<std::vector<double>>("y", context__, model_arena_, J )) {
     int current_statement__ = 0;
@@ -25872,6 +25889,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
   lcm_fails2_model(stan::io::var_context& context__,
                    unsigned int random_seed__ = 0,
                    std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                   model_arena_(stan::io::get_data_sizes(context__)), 
                    nind(stan::io::initialize_data<int>("nind", context__)),
                    n_occasions(stan::io::initialize_data<int>("n_occasions", context__)),
                    y(stan::io::initialize_data<std::vector<std::vector<int>>>("y", context__, model_arena_, nind , n_occasions )) {
@@ -27876,6 +27894,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
   lupdf_inlining_model(stan::io::var_context& context__,
                        unsigned int random_seed__ = 0,
                        std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                       model_arena_(stan::io::get_data_sizes(context__)), 
                        n(stan::io::initialize_data<int>("n", context__)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
@@ -28383,6 +28402,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
   off_dce_model(stan::io::var_context& context__,
                 unsigned int random_seed__ = 0,
                 std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                model_arena_(stan::io::get_data_sizes(context__)), 
                 R(stan::io::initialize_data<int>("R", context__)),
                 T(stan::io::initialize_data<int>("T", context__)),
                 y(stan::io::initialize_data<std::vector<std::vector<int>>>("y", context__, model_arena_, R , T )),
@@ -29310,6 +29330,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
   off_small_model(stan::io::var_context& context__,
                   unsigned int random_seed__ = 0,
                   std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                  model_arena_(stan::io::get_data_sizes(context__)), 
                   J(stan::io::initialize_data<int>("J", context__)),
                   N(stan::io::initialize_data<int>("N", context__)),
                   person(stan::io::initialize_data<std::vector<int>>("person", context__, model_arena_, N )),
@@ -30366,7 +30387,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
   optimizations_model(stan::io::var_context& context__,
                       unsigned int random_seed__ = 0,
                       std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                       {
+                      model_arena_(stan::io::get_data_sizes(context__)),   {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -31677,6 +31698,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
   partial_eval_model(stan::io::var_context& context__,
                      unsigned int random_seed__ = 0,
                      std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                     model_arena_(stan::io::get_data_sizes(context__)), 
                      N(stan::io::initialize_data<int>("N", context__)),
                      n_pair(stan::io::initialize_data<int>("n_pair", context__)),
                      pair(stan::io::initialize_data<std::vector<int>>("pair", context__, model_arena_, N )),
@@ -32435,6 +32457,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
   stalled1_failure_model(stan::io::var_context& context__,
                          unsigned int random_seed__ = 0,
                          std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                         model_arena_(stan::io::get_data_sizes(context__)), 
                          I(stan::io::initialize_data<int>("I", context__)),
                          n(stan::io::initialize_data<std::vector<int>>("n", context__, model_arena_, I )),
                          N(stan::io::initialize_data<std::vector<int>>("N", context__, model_arena_, I )),
@@ -33372,7 +33395,7 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
   unroll_limit_model(stan::io::var_context& context__,
                      unsigned int random_seed__ = 0,
                      std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                      {
+                     model_arena_(stan::io::get_data_sizes(context__)),   {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 

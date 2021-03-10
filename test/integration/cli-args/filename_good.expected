@@ -46,7 +46,7 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
   filename_good_model(stan::io::var_context& context__,
                       unsigned int random_seed__ = 0,
                       std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                       {
+                      model_arena_(stan::io::get_data_sizes(context__)),   {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 

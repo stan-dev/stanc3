@@ -283,6 +283,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   optimize_glm_model(stan::io::var_context& context__,
                      unsigned int random_seed__ = 0,
                      std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                     model_arena_(stan::io::get_data_sizes(context__)), 
                      k(stan::io::initialize_data<int>("k", context__)),
                      n(stan::io::initialize_data<int>("n", context__)),
                      X_d(stan::io::initialize_data<Eigen::Matrix<double, -1, -1>>("X_d", context__, model_arena_,n k)),

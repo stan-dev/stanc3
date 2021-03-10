@@ -60,6 +60,7 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
   _8_schools_ncp_model(stan::io::var_context& context__,
                        unsigned int random_seed__ = 0,
                        std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                       model_arena_(stan::io::get_data_sizes(context__)), 
                        J(stan::io::initialize_data<int>("J", context__)),
                        y(stan::io::initialize_data<std::vector<double>>("y", context__, model_arena_, J )),
                        sigma(stan::io::initialize_data<std::vector<double>>("sigma", context__, model_arena_, J )) {
@@ -529,6 +530,7 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
   _8start_with_number_model(stan::io::var_context& context__,
                             unsigned int random_seed__ = 0,
                             std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                            model_arena_(stan::io::get_data_sizes(context__)), 
                             good_model(stan::io::initialize_data<int>("good_model", context__)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
@@ -871,6 +873,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
   eight_schools_ncp_model(stan::io::var_context& context__,
                           unsigned int random_seed__ = 0,
                           std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                          model_arena_(stan::io::get_data_sizes(context__)), 
                           J(stan::io::initialize_data<int>("J", context__)),
                           y(stan::io::initialize_data<std::vector<double>>("y", context__, model_arena_, J )),
                           sigma(stan::io::initialize_data<std::vector<double>>("sigma", context__, model_arena_, J )) {
@@ -1344,6 +1347,7 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
   mixed_type_arrays_model(stan::io::var_context& context__,
                           unsigned int random_seed__ = 0,
                           std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                          model_arena_(stan::io::get_data_sizes(context__)), 
                            {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
@@ -4649,6 +4653,7 @@ class mother_model final : public model_base_crtp<mother_model> {
   mother_model(stan::io::var_context& context__,
                unsigned int random_seed__ = 0,
                std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+               model_arena_(stan::io::get_data_sizes(context__)), 
                N(stan::io::initialize_data<int>("N", context__)),
                M(stan::io::initialize_data<int>("M", context__)),
                K(stan::io::initialize_data<int>("K", context__)),
@@ -10281,6 +10286,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
   motherHOF_model(stan::io::var_context& context__,
                   unsigned int random_seed__ = 0,
                   std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                  model_arena_(stan::io::get_data_sizes(context__)), 
                   T(stan::io::initialize_data<int>("T", context__)),
                   y0_d(stan::io::initialize_data<std::vector<double>>("y0_d", context__, model_arena_, 2 )),
                   t0(stan::io::initialize_data<double>("t0", context__)),
@@ -12519,6 +12525,7 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
   new_integrate_interface_model(stan::io::var_context& context__,
                                 unsigned int random_seed__ = 0,
                                 std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                                model_arena_(stan::io::get_data_sizes(context__)), 
                                 N(stan::io::initialize_data<int>("N", context__)),
                                 id(stan::io::initialize_data<int>("id", context__)),
                                 rd(stan::io::initialize_data<double>("rd", context__)),
@@ -16322,6 +16329,7 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
   old_integrate_interface_model(stan::io::var_context& context__,
                                 unsigned int random_seed__ = 0,
                                 std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                                model_arena_(stan::io::get_data_sizes(context__)), 
                                 N(stan::io::initialize_data<int>("N", context__)),
                                 ts(stan::io::initialize_data<std::vector<double>>("ts", context__, model_arena_, N )),
                                 y_init(stan::io::initialize_data<std::vector<double>>("y_init", context__, model_arena_, 2 )),
@@ -17240,6 +17248,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   optimize_glm_model(stan::io::var_context& context__,
                      unsigned int random_seed__ = 0,
                      std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                     model_arena_(stan::io::get_data_sizes(context__)), 
                      k(stan::io::initialize_data<int>("k", context__)),
                      n(stan::io::initialize_data<int>("n", context__)),
                      X_d(stan::io::initialize_data<Eigen::Matrix<double, -1, -1>>("X_d", context__, model_arena_,n k)),
@@ -18602,6 +18611,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
   param_constraint_model(stan::io::var_context& context__,
                          unsigned int random_seed__ = 0,
                          std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                         model_arena_(stan::io::get_data_sizes(context__)), 
                          nt(stan::io::initialize_data<int>("nt", context__)),
                          NS(stan::io::initialize_data<int>("NS", context__)) {
     int current_statement__ = 0;
@@ -19298,7 +19308,7 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
   reduce_sum_m1_model(stan::io::var_context& context__,
                       unsigned int random_seed__ = 0,
                       std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                       {
+                      model_arena_(stan::io::get_data_sizes(context__)),   {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -20797,7 +20807,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
   reduce_sum_m2_model(stan::io::var_context& context__,
                       unsigned int random_seed__ = 0,
                       std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                       {
+                      model_arena_(stan::io::get_data_sizes(context__)),   {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -24466,6 +24476,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
   reduce_sum_m3_model(stan::io::var_context& context__,
                       unsigned int random_seed__ = 0,
                       std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                      model_arena_(stan::io::get_data_sizes(context__)), 
                       N(stan::io::initialize_data<int>("N", context__)),
                       y1d(stan::io::initialize_data<std::vector<double>>("y1d", context__, model_arena_, N )),
                       y2d(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, 1>>>("y2d", context__, model_arena_, N , N)),
@@ -26527,6 +26538,7 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
   single_argument_lpmf_model(stan::io::var_context& context__,
                              unsigned int random_seed__ = 0,
                              std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                             model_arena_(stan::io::get_data_sizes(context__)), 
                               {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
@@ -26839,6 +26851,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
   tilde_block_model(stan::io::var_context& context__,
                     unsigned int random_seed__ = 0,
                     std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                    model_arena_(stan::io::get_data_sizes(context__)), 
                     t(stan::io::initialize_data<int>("t", context__)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
@@ -27325,6 +27338,7 @@ class transform_model final : public model_base_crtp<transform_model> {
   transform_model(stan::io::var_context& context__,
                   unsigned int random_seed__ = 0,
                   std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                  model_arena_(stan::io::get_data_sizes(context__)), 
                   n(stan::io::initialize_data<int>("n", context__)),
                   m(stan::io::initialize_data<int>("m", context__)),
                   k(stan::io::initialize_data<int>("k", context__)),
@@ -30887,6 +30901,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
   truncate_model(stan::io::var_context& context__,
                  unsigned int random_seed__ = 0,
                  std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                 model_arena_(stan::io::get_data_sizes(context__)), 
                  n(stan::io::initialize_data<int>("n", context__)),
                  x(stan::io::initialize_data<double>("x", context__)) {
     int current_statement__ = 0;
@@ -31367,6 +31382,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
   udf_tilde_stmt_conflict_model(stan::io::var_context& context__,
                                 unsigned int random_seed__ = 0,
                                 std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
+                                model_arena_(stan::io::get_data_sizes(context__)), 
                                  {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
@@ -31727,7 +31743,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
   user_constrain_model(stan::io::var_context& context__,
                        unsigned int random_seed__ = 0,
                        std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                        {
+                       model_arena_(stan::io::get_data_sizes(context__)),   {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 

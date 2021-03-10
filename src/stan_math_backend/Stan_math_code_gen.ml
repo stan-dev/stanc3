@@ -373,6 +373,7 @@ let pp_ctor ppf p =
     ; "std::ostream* pstream__ = nullptr" ]
   in
   let pp_initializer ppf ((name, st) : string * Expr.Typed.t SizedType.t) =
+    (*Sets up each of the initializers in the initializer list*)
     let pp_data_st ppf st = pp_st ppf UnsizedType.DataOnly st in
     match st with
     | SizedType.SInt ->
@@ -382,7 +383,6 @@ let pp_ctor ppf p =
         pf ppf "%s(stan::io::initialize_data<%a>(\"%s\", context__))" name
           pp_data_st st name
     | SVector d1 | SRowVector d1 ->
-        (* Why does this one need commas? *)
         pf ppf
           "%s(stan::io::initialize_data<%a>(\"%s\", context__, model_arena_ \
            %a))"
@@ -397,8 +397,10 @@ let pp_ctor ppf p =
           "%s(stan::io::initialize_data<%a>(\"%s\", context__, model_arena_%a))"
           name pp_data_st st name pp_dims st
   in
-  pf ppf "%s(@[<hov 0>%a) : model_base_crtp(0), @ %a @]" p.Program.prog_name
-    (list ~sep:comma string) params
+  (* let pp_plus ppf _ = Format.pp_print_string ppf " + "; sp ppf () in*)
+  pf ppf
+    "%s(@[<hov 0>%a) : model_base_crtp(0), @ model_arena_(stan::io::get_data_sizes(context__)), @ %a @]"
+    p.Program.prog_name (list ~sep:comma string) params
     (list ~sep:comma pp_initializer)
     p.Program.input_vars ;
   let pp_mul ppf () = pf ppf " * " in
