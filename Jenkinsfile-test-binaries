@@ -191,6 +191,7 @@ pipeline {
                         sh "mv _build/default.windows/src/stan2tfp/stan2tfp.exe bin/windows-stan2tfp"
 
                         stash name:'windows-exe', includes:'bin/*'
+                        archiveArtifacts 'bin/*'
                     }
                     post {always { runShell("rm -rf ./*")}}
                 }
