@@ -232,8 +232,8 @@ pipeline {
                         script {
                             dir("math") {
                                 sh """
-                                    echo O=0 > make/local
-                                    echo "CXX=${env.CXX} -Werror " > make/local
+                                    echo O=0 >> make/local
+                                    echo "CXX=${env.CXX} -Werror " >> make/local
                                 """
                                 withEnv(['PATH+TBB=./lib/tbb']) {
                                     try { sh "./runTests.py -j${env.PARALLEL} test/expressions" }
