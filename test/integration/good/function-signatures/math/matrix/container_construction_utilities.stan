@@ -37,7 +37,7 @@ transformed data {
   transformed_int_array = zeros_int_array(d_int);
   transformed_data_real_array = zeros_array(d_int);
   transformed_data_row_vector = zeros_row_vector(d_int);
-  // transformed_data_vector = zeros_vector(d_int);
+  transformed_data_vector = zeros_vector(d_int);
 }
 parameters {
   real y_p;
