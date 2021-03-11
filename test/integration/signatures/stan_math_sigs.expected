@@ -26967,3 +26967,4 @@ wishart_rng(real, matrix) => matrix
 zeros_array(int) => array[] real
 zeros_int_array(int) => array[] int
 zeros_row_vector(int) => row_vector
+zeros_vector(int) => vector

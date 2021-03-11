@@ -3716,17 +3716,6 @@ model {
   y_p ~ normal(0, 1);
 }
 
-Semantic error in 'container_construction_utilities.stan', line 40, column 28 to column 47:
-   -------------------------------------------------
-    38:    transformed_data_real_array = zeros_array(d_int);
-    39:    transformed_data_row_vector = zeros_row_vector(d_int);
-    40:    transformed_data_vector = zeros_vector(d_int);
-                                     ^
-    41:  }
-    42:  parameters {
-   -------------------------------------------------
-
-A returning function was expected but an undeclared identifier 'zeros_vector' was supplied.
   $ ../../../../../../../install/default/bin/stanc --auto-format cos.stan
 data {
   int d_int;
