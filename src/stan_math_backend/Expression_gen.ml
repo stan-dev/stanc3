@@ -61,8 +61,7 @@ let minus_one e =
 let is_single_index = function Index.Single _ -> true | _ -> false
 
 let dont_need_range_check = function
-  | Index.Single Expr.Fixed.({pattern= Var id; _}) ->
-      not (Utils.is_user_ident id)
+  | Index.Single Expr.Fixed.{pattern= Var id; _} -> not (Utils.is_user_ident id)
   | _ -> false
 
 let promote_adtype =
@@ -380,15 +379,13 @@ and pp_compiler_internal_fn ad ut f ppf es =
   let pp_array_literal ut ppf es =
     pf ppf "std::vector<%a>{@,%a}" pp_unsizedtype_local (ad, ut)
       (list ~sep:comma (pp_promoted ad ut))
-      es
-  in
+      es in
   match Internal_fun.of_string_opt f with
   | Some FnMakeArray ->
       let ut =
         match ut with
         | UnsizedType.UArray ut -> ut
-        | _ -> raise_s [%message "Array literal must have array type"]
-      in
+        | _ -> raise_s [%message "Array literal must have array type"] in
       pp_array_literal ut ppf es
   | Some FnMakeRowVec -> (
     match ut with
@@ -417,7 +414,7 @@ and pp_compiler_internal_fn ad ut f ppf es =
 
 and pp_promoted ad ut ppf e =
   match e with
-  | Expr.({Fixed.meta= {Typed.Meta.type_; adlevel; _}; _})
+  | Expr.{Fixed.meta= {Typed.Meta.type_; adlevel; _}; _}
     when type_ = ut && adlevel = ad ->
       pp_expr ppf e
   | {pattern= FunApp (CompilerInternal, f, es); _}
@@ -470,8 +467,8 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
           (List.length es) (list ~sep:comma pp_expr) es
   | FunApp (StanLib, f, es) -> gen_fun_app ppf f es
   | FunApp (CompilerInternal, f, es) ->
-      pp_compiler_internal_fn meta.adlevel meta.type_
-        (stan_namespace_qualify f) ppf es
+      pp_compiler_internal_fn meta.adlevel meta.type_ (stan_namespace_qualify f)
+        ppf es
   | FunApp (UserDefined, f, es) -> pp_user_defined_fun ppf (f, es)
   | EAnd (e1, e2) -> pp_logical_op ppf "&&" e1 e2
   | EOr (e1, e2) -> pp_logical_op ppf "||" e1 e2

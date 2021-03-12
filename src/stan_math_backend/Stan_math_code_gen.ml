@@ -214,8 +214,8 @@ let pp_fun_def ppf Program.{fdrt; fdname; fdargs; fdbody; _}
   let pp_body ppf (Stmt.Fixed.{pattern; _} as fdbody) =
     pf ppf "@[<hv 8>using local_scalar_t__ = %a;@]@," pp_promoted_scalar fdargs ;
     pf ppf "int current_statement__ = 0; @ " ;
-    if List.exists ~f:(fun (_, _, t) -> UnsizedType.is_eigen_type t) fdargs
-    then pp_eigen_arg_to_ref ppf fdargs ;
+    if List.exists ~f:(fun (_, _, t) -> UnsizedType.is_eigen_type t) fdargs then
+      pp_eigen_arg_to_ref ppf fdargs ;
     if not (is_dist || is_lp) then (
       pf ppf "%s@ " "static constexpr bool propto__ = true;" ;
       pf ppf "%s@ " "(void) propto__;" ) ;
@@ -616,10 +616,9 @@ let pp_transform_inits ppf {Program.transform_inits; _} =
     ; "VecVar& vars__"; "std::ostream* pstream__ = nullptr" ] in
   let intro ppf () =
     pf ppf
-      "using local_scalar_t__ = \
-       double;@,vars__.clear();@,vars__.reserve(num_params_r__);@ int \
-       current_statement__ = 0; "
-  in
+      "using local_scalar_t__ = double;@,\
+       vars__.clear();@,\
+       vars__.reserve(num_params_r__);@ int current_statement__ = 0; " in
   let cv_attr = ["const"] in
   pp_method_b ppf "void" "transform_inits_impl" params intro transform_inits
     ~cv_attr
