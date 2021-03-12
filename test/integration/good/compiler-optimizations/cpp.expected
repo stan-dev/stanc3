@@ -4275,34 +4275,34 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       b_0 = DUMMY_VAR__;
       
       current_statement__ = 7;
-      b_0 = in__.read<local_scalar_t__>(lp__);
+      b_0 = in__.read<local_scalar_t__>();
       local_scalar_t__ b_female;
       b_female = DUMMY_VAR__;
       
       current_statement__ = 8;
-      b_female = in__.read<local_scalar_t__>(lp__);
+      b_female = in__.read<local_scalar_t__>();
       local_scalar_t__ b_black;
       b_black = DUMMY_VAR__;
       
       current_statement__ = 9;
-      b_black = in__.read<local_scalar_t__>(lp__);
+      b_black = in__.read<local_scalar_t__>();
       local_scalar_t__ b_female_black;
       b_female_black = DUMMY_VAR__;
       
       current_statement__ = 10;
-      b_female_black = in__.read<local_scalar_t__>(lp__);
+      b_female_black = in__.read<local_scalar_t__>();
       local_scalar_t__ b_v_prev;
       b_v_prev = DUMMY_VAR__;
       
       current_statement__ = 11;
-      b_v_prev = in__.read<local_scalar_t__>(lp__);
+      b_v_prev = in__.read<local_scalar_t__>();
       Eigen::Matrix<local_scalar_t__, -1, 1> b_age;
       b_age = Eigen::Matrix<local_scalar_t__, -1, 1>(n_age);
       stan::math::fill(b_age, DUMMY_VAR__);
       
       current_statement__ = 12;
       assign(b_age, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, n_age),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_age),
         "assigning variable b_age");
       Eigen::Matrix<local_scalar_t__, -1, 1> b_edu;
       b_edu = Eigen::Matrix<local_scalar_t__, -1, 1>(n_edu);
@@ -4310,7 +4310,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       
       current_statement__ = 13;
       assign(b_edu, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, n_edu),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_edu),
         "assigning variable b_edu");
       Eigen::Matrix<local_scalar_t__, -1, 1> b_region;
       b_region = Eigen::Matrix<local_scalar_t__, -1, 1>(n_region);
@@ -4318,7 +4318,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       
       current_statement__ = 14;
       assign(b_region, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, n_region),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_region),
         "assigning variable b_region");
       Eigen::Matrix<local_scalar_t__, -1, -1> b_age_edu;
       b_age_edu = Eigen::Matrix<local_scalar_t__, -1, -1>(n_age, n_edu);
@@ -4326,15 +4326,15 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       
       current_statement__ = 15;
       assign(b_age_edu, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(lp__, n_age,
-          n_edu), "assigning variable b_age_edu");
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n_age, n_edu),
+        "assigning variable b_age_edu");
       Eigen::Matrix<local_scalar_t__, -1, 1> b_hat;
       b_hat = Eigen::Matrix<local_scalar_t__, -1, 1>(n_state);
       stan::math::fill(b_hat, DUMMY_VAR__);
       
       current_statement__ = 16;
       assign(b_hat, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, n_state),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_state),
         "assigning variable b_hat");
       {
         current_statement__ = 17;
@@ -4621,34 +4621,34 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       b_0 = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 7;
-      b_0 = in__.read<local_scalar_t__>(lp__);
+      b_0 = in__.read<local_scalar_t__>();
       double b_female;
       b_female = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 8;
-      b_female = in__.read<local_scalar_t__>(lp__);
+      b_female = in__.read<local_scalar_t__>();
       double b_black;
       b_black = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 9;
-      b_black = in__.read<local_scalar_t__>(lp__);
+      b_black = in__.read<local_scalar_t__>();
       double b_female_black;
       b_female_black = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 10;
-      b_female_black = in__.read<local_scalar_t__>(lp__);
+      b_female_black = in__.read<local_scalar_t__>();
       double b_v_prev;
       b_v_prev = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 11;
-      b_v_prev = in__.read<local_scalar_t__>(lp__);
+      b_v_prev = in__.read<local_scalar_t__>();
       Eigen::Matrix<double, -1, 1> b_age;
       b_age = Eigen::Matrix<double, -1, 1>(n_age);
       stan::math::fill(b_age, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 12;
       assign(b_age, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, n_age),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_age),
         "assigning variable b_age");
       Eigen::Matrix<double, -1, 1> b_edu;
       b_edu = Eigen::Matrix<double, -1, 1>(n_edu);
@@ -4656,7 +4656,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       
       current_statement__ = 13;
       assign(b_edu, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, n_edu),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_edu),
         "assigning variable b_edu");
       Eigen::Matrix<double, -1, 1> b_region;
       b_region = Eigen::Matrix<double, -1, 1>(n_region);
@@ -4664,7 +4664,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       
       current_statement__ = 14;
       assign(b_region, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, n_region),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_region),
         "assigning variable b_region");
       Eigen::Matrix<double, -1, -1> b_age_edu;
       b_age_edu = Eigen::Matrix<double, -1, -1>(n_age, n_edu);
@@ -4672,15 +4672,15 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       
       current_statement__ = 15;
       assign(b_age_edu, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(lp__, n_age,
-          n_edu), "assigning variable b_age_edu");
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n_age, n_edu),
+        "assigning variable b_age_edu");
       Eigen::Matrix<double, -1, 1> b_hat;
       b_hat = Eigen::Matrix<double, -1, 1>(n_state);
       stan::math::fill(b_hat, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 16;
       assign(b_hat, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, n_state),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_state),
         "assigning variable b_hat");
       vars__.emplace_back(sigma);
       vars__.emplace_back(sigma_age);
@@ -6826,13 +6826,13 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       mu = DUMMY_VAR__;
       
       current_statement__ = 1;
-      mu = in__.read<local_scalar_t__>(lp__);
+      mu = in__.read<local_scalar_t__>();
       std::vector<local_scalar_t__> theta;
       theta = std::vector<local_scalar_t__>(J, DUMMY_VAR__);
       
       current_statement__ = 2;
       assign(theta, nil_index_list(),
-        in__.read<std::vector<local_scalar_t__>>(lp__, J),
+        in__.read<std::vector<local_scalar_t__>>(J),
         "assigning variable theta");
       local_scalar_t__ tau;
       tau = DUMMY_VAR__;
@@ -6885,13 +6885,13 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       mu = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      mu = in__.read<local_scalar_t__>(lp__);
+      mu = in__.read<local_scalar_t__>();
       std::vector<double> theta;
       theta = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
       assign(theta, nil_index_list(),
-        in__.read<std::vector<local_scalar_t__>>(lp__, J),
+        in__.read<std::vector<local_scalar_t__>>(J),
         "assigning variable theta");
       double tau;
       tau = std::numeric_limits<double>::quiet_NaN();
@@ -7816,7 +7816,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       
       current_statement__ = 1;
       assign(a, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, n_age),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_age),
         "assigning variable a");
       Eigen::Matrix<local_scalar_t__, -1, 1> b;
       b = Eigen::Matrix<local_scalar_t__, -1, 1>(n_edu);
@@ -7824,7 +7824,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       
       current_statement__ = 2;
       assign(b, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, n_edu),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_edu),
         "assigning variable b");
       Eigen::Matrix<local_scalar_t__, -1, 1> c;
       c = Eigen::Matrix<local_scalar_t__, -1, 1>(n_age_edu);
@@ -7832,7 +7832,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       
       current_statement__ = 3;
       assign(c, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, n_age_edu),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_age_edu),
         "assigning variable c");
       Eigen::Matrix<local_scalar_t__, -1, 1> d;
       d = Eigen::Matrix<local_scalar_t__, -1, 1>(n_state);
@@ -7840,7 +7840,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       
       current_statement__ = 4;
       assign(d, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, n_state),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_state),
         "assigning variable d");
       Eigen::Matrix<local_scalar_t__, -1, 1> e;
       e = Eigen::Matrix<local_scalar_t__, -1, 1>(n_region_full);
@@ -7848,15 +7848,15 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       
       current_statement__ = 5;
       assign(e, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__,
-          n_region_full), "assigning variable e");
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_region_full),
+        "assigning variable e");
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
       beta = Eigen::Matrix<local_scalar_t__, -1, 1>(5);
       stan::math::fill(beta, DUMMY_VAR__);
       
       current_statement__ = 6;
       assign(beta, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, 5),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(5),
         "assigning variable beta");
       local_scalar_t__ sigma_a;
       sigma_a = DUMMY_VAR__;
@@ -8076,7 +8076,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       
       current_statement__ = 1;
       assign(a, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, n_age),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_age),
         "assigning variable a");
       Eigen::Matrix<double, -1, 1> b;
       b = Eigen::Matrix<double, -1, 1>(n_edu);
@@ -8084,7 +8084,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       
       current_statement__ = 2;
       assign(b, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, n_edu),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_edu),
         "assigning variable b");
       Eigen::Matrix<double, -1, 1> c;
       c = Eigen::Matrix<double, -1, 1>(n_age_edu);
@@ -8092,7 +8092,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       
       current_statement__ = 3;
       assign(c, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, n_age_edu),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_age_edu),
         "assigning variable c");
       Eigen::Matrix<double, -1, 1> d;
       d = Eigen::Matrix<double, -1, 1>(n_state);
@@ -8100,7 +8100,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       
       current_statement__ = 4;
       assign(d, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, n_state),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_state),
         "assigning variable d");
       Eigen::Matrix<double, -1, 1> e;
       e = Eigen::Matrix<double, -1, 1>(n_region_full);
@@ -8108,15 +8108,15 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       
       current_statement__ = 5;
       assign(e, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__,
-          n_region_full), "assigning variable e");
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_region_full),
+        "assigning variable e");
       Eigen::Matrix<double, -1, 1> beta;
       beta = Eigen::Matrix<double, -1, 1>(5);
       stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 6;
       assign(beta, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, 5),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(5),
         "assigning variable beta");
       double sigma_a;
       sigma_a = std::numeric_limits<double>::quiet_NaN();
@@ -9268,7 +9268,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       
       lcm_sym39__ = (N - 1);
       assign(phi_std_raw, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, lcm_sym39__),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lcm_sym39__),
         "assigning variable phi_std_raw");
       local_scalar_t__ sigma_phi;
       sigma_phi = DUMMY_VAR__;
@@ -9371,7 +9371,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       
       lcm_sym20__ = (N - 1);
       assign(phi_std_raw, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, lcm_sym20__),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lcm_sym20__),
         "assigning variable phi_std_raw");
       double sigma_phi;
       sigma_phi = std::numeric_limits<double>::quiet_NaN();
@@ -10819,7 +10819,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       
       current_statement__ = 3;
       assign(epsilon, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, nind),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(nind),
         "assigning variable epsilon");
       local_scalar_t__ sigma;
       sigma = DUMMY_VAR__;
@@ -11514,7 +11514,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       
       current_statement__ = 3;
       assign(epsilon, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, nind),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(nind),
         "assigning variable epsilon");
       double sigma;
       sigma = std::numeric_limits<double>::quiet_NaN();
@@ -14165,7 +14165,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       
       current_statement__ = 5;
       assign(epsilon, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, M),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(M),
         "assigning variable epsilon");
       local_scalar_t__ sigma;
       sigma = DUMMY_VAR__;
@@ -15363,7 +15363,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       
       current_statement__ = 5;
       assign(epsilon, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, M),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(M),
         "assigning variable epsilon");
       double sigma;
       sigma = std::numeric_limits<double>::quiet_NaN();
@@ -18665,12 +18665,12 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       beta0 = DUMMY_VAR__;
       
       current_statement__ = 1;
-      beta0 = in__.read<local_scalar_t__>(lp__);
+      beta0 = in__.read<local_scalar_t__>();
       local_scalar_t__ beta1;
       beta1 = DUMMY_VAR__;
       
       current_statement__ = 2;
-      beta1 = in__.read<local_scalar_t__>(lp__);
+      beta1 = in__.read<local_scalar_t__>();
       local_scalar_t__ tau_theta;
       tau_theta = DUMMY_VAR__;
       
@@ -18687,7 +18687,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       
       current_statement__ = 5;
       assign(theta_std, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, N),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N),
         "assigning variable theta_std");
       Eigen::Matrix<local_scalar_t__, -1, 1> phi_std_raw;
       phi_std_raw = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
@@ -18695,7 +18695,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       
       current_statement__ = 6;
       assign(phi_std_raw, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, N),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N),
         "assigning variable phi_std_raw");
       local_scalar_t__ sigma_phi;
       sigma_phi = DUMMY_VAR__;
@@ -18769,12 +18769,12 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       beta0 = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      beta0 = in__.read<local_scalar_t__>(lp__);
+      beta0 = in__.read<local_scalar_t__>();
       double beta1;
       beta1 = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
-      beta1 = in__.read<local_scalar_t__>(lp__);
+      beta1 = in__.read<local_scalar_t__>();
       double tau_theta;
       tau_theta = std::numeric_limits<double>::quiet_NaN();
       
@@ -18791,7 +18791,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       
       current_statement__ = 5;
       assign(theta_std, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, N),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N),
         "assigning variable theta_std");
       Eigen::Matrix<double, -1, 1> phi_std_raw;
       phi_std_raw = Eigen::Matrix<double, -1, 1>(N);
@@ -18799,7 +18799,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       
       current_statement__ = 6;
       assign(phi_std_raw, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, N),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N),
         "assigning variable phi_std_raw");
       double sigma_phi;
       sigma_phi = std::numeric_limits<double>::quiet_NaN();
@@ -23679,7 +23679,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       
       lcm_sym297__ = (n_occasions - 1);
       assign(epsilon, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, lcm_sym297__),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lcm_sym297__),
         "assigning variable epsilon");
       local_scalar_t__ sigma;
       sigma = DUMMY_VAR__;
@@ -24816,7 +24816,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       
       lcm_sym198__ = (n_occasions - 1);
       assign(epsilon, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, lcm_sym198__),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lcm_sym198__),
         "assigning variable epsilon");
       double sigma;
       sigma = std::numeric_limits<double>::quiet_NaN();
@@ -26669,7 +26669,7 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
       x = DUMMY_VAR__;
       
       current_statement__ = 1;
-      x = in__.read<local_scalar_t__>(lp__);
+      x = in__.read<local_scalar_t__>();
       {
         local_scalar_t__ y;
         y = DUMMY_VAR__;
@@ -26723,7 +26723,7 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
       x = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      x = in__.read<local_scalar_t__>(lp__);
+      x = in__.read<local_scalar_t__>();
       vars__.emplace_back(x);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
@@ -27037,7 +27037,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       
       current_statement__ = 1;
       assign(theta, nil_index_list(),
-        in__.read<std::vector<local_scalar_t__>>(lp__, J),
+        in__.read<std::vector<local_scalar_t__>>(J),
         "assigning variable theta");
       {
         current_statement__ = 2;
@@ -27084,7 +27084,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       
       current_statement__ = 1;
       assign(theta, nil_index_list(),
-        in__.read<std::vector<local_scalar_t__>>(lp__, J),
+        in__.read<std::vector<local_scalar_t__>>(J),
         "assigning variable theta");
       if (logical_gte(J, 1)) {
         vars__.emplace_back(
@@ -29909,7 +29909,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       mu = DUMMY_VAR__;
       
       current_statement__ = 1;
-      mu = in__.read<local_scalar_t__>(lp__);
+      mu = in__.read<local_scalar_t__>();
       local_scalar_t__ tp;
       tp = DUMMY_VAR__;
       
@@ -29991,7 +29991,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       mu = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      mu = in__.read<local_scalar_t__>(lp__);
+      mu = in__.read<local_scalar_t__>();
       double tp;
       tp = std::numeric_limits<double>::quiet_NaN();
       
@@ -30703,22 +30703,22 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       alpha_occ = DUMMY_VAR__;
       
       current_statement__ = 1;
-      alpha_occ = in__.read<local_scalar_t__>(lp__);
+      alpha_occ = in__.read<local_scalar_t__>();
       local_scalar_t__ beta_occ;
       beta_occ = DUMMY_VAR__;
       
       current_statement__ = 2;
-      beta_occ = in__.read<local_scalar_t__>(lp__);
+      beta_occ = in__.read<local_scalar_t__>();
       local_scalar_t__ alpha_p;
       alpha_p = DUMMY_VAR__;
       
       current_statement__ = 3;
-      alpha_p = in__.read<local_scalar_t__>(lp__);
+      alpha_p = in__.read<local_scalar_t__>();
       local_scalar_t__ beta_p;
       beta_p = DUMMY_VAR__;
       
       current_statement__ = 4;
-      beta_p = in__.read<local_scalar_t__>(lp__);
+      beta_p = in__.read<local_scalar_t__>();
       Eigen::Matrix<local_scalar_t__, -1, 1> logit_psi;
       logit_psi = Eigen::Matrix<local_scalar_t__, -1, 1>(R);
       stan::math::fill(logit_psi, DUMMY_VAR__);
@@ -30867,22 +30867,22 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       alpha_occ = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      alpha_occ = in__.read<local_scalar_t__>(lp__);
+      alpha_occ = in__.read<local_scalar_t__>();
       double beta_occ;
       beta_occ = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
-      beta_occ = in__.read<local_scalar_t__>(lp__);
+      beta_occ = in__.read<local_scalar_t__>();
       double alpha_p;
       alpha_p = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 3;
-      alpha_p = in__.read<local_scalar_t__>(lp__);
+      alpha_p = in__.read<local_scalar_t__>();
       double beta_p;
       beta_p = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 4;
-      beta_p = in__.read<local_scalar_t__>(lp__);
+      beta_p = in__.read<local_scalar_t__>();
       Eigen::Matrix<double, -1, 1> logit_psi;
       logit_psi = Eigen::Matrix<double, -1, 1>(R);
       stan::math::fill(logit_psi, std::numeric_limits<double>::quiet_NaN());
@@ -31675,14 +31675,14 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       beta = DUMMY_VAR__;
       
       current_statement__ = 1;
-      beta = in__.read<local_scalar_t__>(lp__);
+      beta = in__.read<local_scalar_t__>();
       Eigen::Matrix<local_scalar_t__, -1, 1> eta1;
       eta1 = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       stan::math::fill(eta1, DUMMY_VAR__);
       
       current_statement__ = 2;
       assign(eta1, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, J),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J),
         "assigning variable eta1");
       Eigen::Matrix<local_scalar_t__, -1, 1> eta2;
       eta2 = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
@@ -31690,18 +31690,18 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       
       current_statement__ = 3;
       assign(eta2, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, J),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J),
         "assigning variable eta2");
       local_scalar_t__ mu_a1;
       mu_a1 = DUMMY_VAR__;
       
       current_statement__ = 4;
-      mu_a1 = in__.read<local_scalar_t__>(lp__);
+      mu_a1 = in__.read<local_scalar_t__>();
       local_scalar_t__ mu_a2;
       mu_a2 = DUMMY_VAR__;
       
       current_statement__ = 5;
-      mu_a2 = in__.read<local_scalar_t__>(lp__);
+      mu_a2 = in__.read<local_scalar_t__>();
       local_scalar_t__ sigma_a1;
       sigma_a1 = DUMMY_VAR__;
       
@@ -31850,14 +31850,14 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       beta = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      beta = in__.read<local_scalar_t__>(lp__);
+      beta = in__.read<local_scalar_t__>();
       Eigen::Matrix<double, -1, 1> eta1;
       eta1 = Eigen::Matrix<double, -1, 1>(J);
       stan::math::fill(eta1, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
       assign(eta1, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, J),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J),
         "assigning variable eta1");
       Eigen::Matrix<double, -1, 1> eta2;
       eta2 = Eigen::Matrix<double, -1, 1>(J);
@@ -31865,18 +31865,18 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       
       current_statement__ = 3;
       assign(eta2, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, J),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J),
         "assigning variable eta2");
       double mu_a1;
       mu_a1 = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 4;
-      mu_a1 = in__.read<local_scalar_t__>(lp__);
+      mu_a1 = in__.read<local_scalar_t__>();
       double mu_a2;
       mu_a2 = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 5;
-      mu_a2 = in__.read<local_scalar_t__>(lp__);
+      mu_a2 = in__.read<local_scalar_t__>();
       double sigma_a1;
       sigma_a1 = std::numeric_limits<double>::quiet_NaN();
       
@@ -32696,19 +32696,19 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       theta = DUMMY_VAR__;
       
       current_statement__ = 1;
-      theta = in__.read<local_scalar_t__>(lp__);
+      theta = in__.read<local_scalar_t__>();
       local_scalar_t__ phi;
       phi = DUMMY_VAR__;
       
       current_statement__ = 2;
-      phi = in__.read<local_scalar_t__>(lp__);
+      phi = in__.read<local_scalar_t__>();
       Eigen::Matrix<local_scalar_t__, -1, -1> x_matrix;
       x_matrix = Eigen::Matrix<local_scalar_t__, -1, -1>(3, 2);
       stan::math::fill(x_matrix, DUMMY_VAR__);
       
       current_statement__ = 3;
       assign(x_matrix, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(lp__, 3, 2),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(3, 2),
         "assigning variable x_matrix");
       Eigen::Matrix<local_scalar_t__, -1, 1> x_vector;
       x_vector = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
@@ -32716,7 +32716,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       
       current_statement__ = 4;
       assign(x_vector, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, 2),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2),
         "assigning variable x_vector");
       Eigen::Matrix<local_scalar_t__, -1, -1> x_cov;
       x_cov = Eigen::Matrix<local_scalar_t__, -1, -1>(2, 2);
@@ -33267,19 +33267,19 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       theta = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      theta = in__.read<local_scalar_t__>(lp__);
+      theta = in__.read<local_scalar_t__>();
       double phi;
       phi = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
-      phi = in__.read<local_scalar_t__>(lp__);
+      phi = in__.read<local_scalar_t__>();
       Eigen::Matrix<double, -1, -1> x_matrix;
       x_matrix = Eigen::Matrix<double, -1, -1>(3, 2);
       stan::math::fill(x_matrix, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
       assign(x_matrix, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(lp__, 3, 2),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(3, 2),
         "assigning variable x_matrix");
       Eigen::Matrix<double, -1, 1> x_vector;
       x_vector = Eigen::Matrix<double, -1, 1>(2);
@@ -33287,7 +33287,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       
       current_statement__ = 4;
       assign(x_vector, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, 2),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2),
         "assigning variable x_vector");
       Eigen::Matrix<double, -1, -1> x_cov;
       x_cov = Eigen::Matrix<double, -1, -1>(2, 2);
@@ -34205,7 +34205,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       
       current_statement__ = 1;
       assign(a, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, n_pair),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_pair),
         "assigning variable a");
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
       beta = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
@@ -34213,13 +34213,13 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       
       current_statement__ = 2;
       assign(beta, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, 2),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2),
         "assigning variable beta");
       local_scalar_t__ mu_a;
       mu_a = DUMMY_VAR__;
       
       current_statement__ = 3;
-      mu_a = in__.read<local_scalar_t__>(lp__);
+      mu_a = in__.read<local_scalar_t__>();
       local_scalar_t__ sigma_a;
       sigma_a = DUMMY_VAR__;
       
@@ -34330,7 +34330,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       
       current_statement__ = 1;
       assign(a, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, n_pair),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_pair),
         "assigning variable a");
       Eigen::Matrix<double, -1, 1> beta;
       beta = Eigen::Matrix<double, -1, 1>(2);
@@ -34338,13 +34338,13 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       
       current_statement__ = 2;
       assign(beta, nil_index_list(),
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lp__, 2),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2),
         "assigning variable beta");
       double mu_a;
       mu_a = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 3;
-      mu_a = in__.read<local_scalar_t__>(lp__);
+      mu_a = in__.read<local_scalar_t__>();
       double sigma_a;
       sigma_a = std::numeric_limits<double>::quiet_NaN();
       
@@ -35057,22 +35057,22 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       alpha0 = DUMMY_VAR__;
       
       current_statement__ = 1;
-      alpha0 = in__.read<local_scalar_t__>(lp__);
+      alpha0 = in__.read<local_scalar_t__>();
       local_scalar_t__ alpha1;
       alpha1 = DUMMY_VAR__;
       
       current_statement__ = 2;
-      alpha1 = in__.read<local_scalar_t__>(lp__);
+      alpha1 = in__.read<local_scalar_t__>();
       local_scalar_t__ alpha2;
       alpha2 = DUMMY_VAR__;
       
       current_statement__ = 3;
-      alpha2 = in__.read<local_scalar_t__>(lp__);
+      alpha2 = in__.read<local_scalar_t__>();
       local_scalar_t__ alpha12;
       alpha12 = DUMMY_VAR__;
       
       current_statement__ = 4;
-      alpha12 = in__.read<local_scalar_t__>(lp__);
+      alpha12 = in__.read<local_scalar_t__>();
       local_scalar_t__ tau;
       tau = DUMMY_VAR__;
       
@@ -35084,8 +35084,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       
       current_statement__ = 6;
       assign(b, nil_index_list(),
-        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(lp__,
-          I, 8), "assigning variable b");
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(I, 8),
+        "assigning variable b");
       local_scalar_t__ sigma;
       sigma = DUMMY_VAR__;
       
@@ -35194,22 +35194,22 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       alpha0 = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      alpha0 = in__.read<local_scalar_t__>(lp__);
+      alpha0 = in__.read<local_scalar_t__>();
       double alpha1;
       alpha1 = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
-      alpha1 = in__.read<local_scalar_t__>(lp__);
+      alpha1 = in__.read<local_scalar_t__>();
       double alpha2;
       alpha2 = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 3;
-      alpha2 = in__.read<local_scalar_t__>(lp__);
+      alpha2 = in__.read<local_scalar_t__>();
       double alpha12;
       alpha12 = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 4;
-      alpha12 = in__.read<local_scalar_t__>(lp__);
+      alpha12 = in__.read<local_scalar_t__>();
       double tau;
       tau = std::numeric_limits<double>::quiet_NaN();
       
@@ -35221,8 +35221,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       
       current_statement__ = 6;
       assign(b, nil_index_list(),
-        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(lp__,
-          I, 8), "assigning variable b");
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(I, 8),
+        "assigning variable b");
       double sigma;
       sigma = std::numeric_limits<double>::quiet_NaN();
       

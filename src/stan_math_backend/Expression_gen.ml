@@ -422,16 +422,18 @@ and pp_compiler_internal_fn ad ut f ppf es =
       :: {Expr.Fixed.pattern= Lit (Int, n_constraint_args_str); _} :: args ->
         let n_constraint_args = int_of_string n_constraint_args_str in
         let constraint_args, dims = List.split_n args n_constraint_args in
-        let lp_expr = Expr.Fixed.{pattern= Var "lp__"; meta= emeta} in
-        let arg_exprs = constraint_args @ [lp_expr] @ dims in
-        let maybe_constraint, maybe_jacobian =
-          if String.is_empty constraint_string then ("", "")
-          else ("_" ^ constraint_string, ", jacobian__")
-        in
-        pf ppf "@[<hov 2>in__.read%s<%a%s>(@,%a)@]" maybe_constraint
-          pp_unsizedtype_local
-          (UnsizedType.AutoDiffable, ut)
-          maybe_jacobian (list ~sep:comma pp_expr) arg_exprs
+        if String.is_empty constraint_string then
+          let arg_exprs = constraint_args @ dims in
+          pf ppf "@[<hov 2>in__.read<%a>(@,%a)@]" pp_unsizedtype_local
+            (UnsizedType.AutoDiffable, ut)
+            (list ~sep:comma pp_expr) arg_exprs
+        else
+          let lp_expr = Expr.Fixed.{pattern= Var "lp__"; meta= emeta} in
+          let arg_exprs = constraint_args @ lp_expr @ dims in
+          pf ppf "@[<hov 2>in__.read_%s<%a, jacobian__>(@,%a)@]"
+            constraint_string pp_unsizedtype_local
+            (UnsizedType.AutoDiffable, ut)
+            (list ~sep:comma pp_expr) arg_exprs
     | _ -> raise_s [%message "emit ReadParam with " (es : Expr.Typed.t list)] )
   | _ -> gen_fun_app ppf f es
 
