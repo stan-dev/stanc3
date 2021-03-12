@@ -2188,7 +2188,6 @@ model {
         vector[2] x_vector;
         vector[3] y_vector;
         matrix[2, 2] x_cov;
-        x_cov = FnConstrain__(x_cov, "cov_matrix", 2);
         real theta_u;
         real phi_u;
         {
@@ -2324,7 +2323,6 @@ model {
         data vector[2] x_vector;
         data vector[3] y_vector;
         data matrix[2, 2] x_cov;
-        x_cov = FnConstrain__(x_cov, "cov_matrix", 2);
         data real theta_u;
         data real phi_u;
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
