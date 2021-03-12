@@ -662,7 +662,7 @@ let pp_transform_inits ppf {Program.transform_inits; _} =
 (** Print the `log_prob` method of the model class *)
 let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
   pf ppf
-    "template <bool propto__, bool jacobian__ , typename VecR, typename VecI, \
+    "@ template <bool propto__, bool jacobian__ , typename VecR, typename VecI, \
      @ stan::require_vector_like_t<VecR>* = nullptr, @ \
      stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> @ " ;
   let params =
