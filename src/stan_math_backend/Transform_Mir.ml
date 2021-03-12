@@ -161,17 +161,6 @@ let data_read smeta (decl_id, st) =
           ; Stmt.Helpers.for_scalar_inv st bodyfn decl_var smeta ]
         |> swrap ]
 
-(* let rec base_ut_to_string = function
- *   | UnsizedType.UMatrix -> "matrix"
- *   | UVector -> "vector"
- *   | URowVector -> "row_vector"
- *   | UReal -> "scalar"
- *   | UInt -> "integer"
- *   | UArray t -> base_ut_to_string t
- *   | t ->
- *       raise_s
- *         [%message "Another place where it's weird to get " (t : UnsizedType.t)] *)
-
 type constrainaction = Check | Constrain | Unconstrain [@@deriving sexp]
 
 let check_constraint_to_string t (c : constrainaction) =
@@ -205,6 +194,16 @@ let constrain_constraint_to_string t (c : constrainaction) =
   | Program.CholeskyCorr -> "cholesky_corr"
   | _ -> check_constraint_to_string t c
 
+let default_multiplier = 1
+let default_offset = 0
+let transform_args = function
+  | Program.Offset offset ->
+    [offset; Expr.Helpers.int default_multiplier]
+  | Multiplier multiplier ->
+    [Expr.Helpers.int default_offset; multiplier]
+  | transform ->
+    Program.fold_transformation (fun args arg -> args @ [arg]) [] transform
+
 let param_read smeta
     (decl_id, Program.({out_constrained_st= cst; out_block; out_trans; _})) =
   if not (out_block = Parameters) then []
@@ -217,7 +216,7 @@ let param_read smeta
             Expr.Typed.Meta.create ~loc:smeta ~type_:ut ~adlevel:AutoDiffable
               () }
     in
-    let transform_args = Program.fold_transformation (fun args arg -> args @ [arg]) [] out_trans in
+    let transform_args = transform_args out_trans in
     (* this is an absolute hack
 
        I need to unpack the constraint arguments and the dimensions in codegen, but we pack them all together into a fake function FnReadParam as expressions
@@ -231,46 +230,12 @@ let param_read smeta
           internal_funapp FnReadParam
             ( Expr.Helpers.str
                 (constrain_constraint_to_string out_trans Constrain)
-              :: n_args_expression
-              :: (transform_args
-              @ (SizedType.get_dims cst)) ))
+            :: n_args_expression
+            :: (transform_args @ SizedType.get_dims cst) ))
           Typed.Meta.{decl_var.meta with type_= ut})
     in
     [ Stmt.Fixed.
         {pattern= Pattern.Assignment ((decl_id, ut, []), read); meta= smeta} ]
-
-(* let decl_id, decl =
-     *   match cst = ucst with
-     *   | true -> (decl_id, [])
-     *   | false ->
-     *       let decl_id = decl_id ^ "_in__" in
-     *       let d =
-     *         Stmt.Fixed.Pattern.Decl
-     *           {decl_adtype= AutoDiffable; decl_id; decl_type= Sized ucst}
-     *       in
-     *       (decl_id, [Stmt.Fixed.{meta= smeta; pattern= d}])
-     * in
-     * let unconstrained_decl_var =
-     *   let meta =
-     *     Expr.Typed.Meta.create ~loc:smeta
-     *       ~type_:SizedType.(to_unsized cst)
-     *       ~adlevel:AutoDiffable ()
-     *   in
-     *   Expr.Fixed.{meta; pattern= Var decl_id}
-     * in
-     * let bodyfn var =
-     *   let readfnapp (var : Expr.Typed.t) =
-     *     Expr.(
-     *       Helpers.(
-     *         internal_funapp FnReadParam
-     *           ( str (base_ut_to_string (SizedType.to_unsized ucst))
-     *           :: SizedType.dims_of ucst ))
-     *         Typed.Meta.{var.meta with type_= base_type ucst})
-     *   in
-     *   Stmt.Helpers.assign_indexed (SizedType.to_unsized cst) decl_id smeta
-     *     readfnapp var
-     * in
-     * decl @ [Stmt.Helpers.for_eigen ucst bodyfn unconstrained_decl_var smeta] *)
 
 let escape_name str =
   str

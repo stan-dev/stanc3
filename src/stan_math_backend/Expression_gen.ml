@@ -406,15 +406,15 @@ and pp_compiler_internal_fn ut f ppf es =
   | Some FnReadData -> read_data ut ppf es
   | Some FnReadParam -> (
     match es with
-      | {Expr.Fixed.pattern= Lit (Str, constraint_string); meta=emeta} ::
-        {Expr.Fixed.pattern= Lit (Int, n_constraint_args_str); _} :: args ->
+    | {Expr.Fixed.pattern= Lit (Str, constraint_string); meta= emeta}
+      :: {Expr.Fixed.pattern= Lit (Int, n_constraint_args_str); _} :: args ->
         let n_constraint_args = int_of_string n_constraint_args_str in
         let constraint_args, dims = List.split_n args n_constraint_args in
         let constraint_extension =
           if String.is_empty constraint_string then ""
           else "_" ^ constraint_string
         in
-        let lp_expr = Expr.Fixed.{ pattern = Var "lp__"; meta = emeta} in
+        let lp_expr = Expr.Fixed.{pattern= Var "lp__"; meta= emeta} in
         let arg_exprs = constraint_args @ [lp_expr] @ dims in
         pf ppf "@[<hov 2>in__.read%s<%a, jacobian__>(@,%a)@]"
           constraint_extension pp_unsizedtype_local

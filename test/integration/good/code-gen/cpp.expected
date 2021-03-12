@@ -149,26 +149,20 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       mu = DUMMY_VAR__;
       
       current_statement__ = 1;
-      mu = in__.scalar();
+      mu = in__.read<local_scalar_t__, jacobian__>(lp__);
       local_scalar_t__ tau;
       tau = DUMMY_VAR__;
       
       current_statement__ = 2;
-      tau = in__.scalar();
-      current_statement__ = 2;
-      if (jacobian__) {
-        current_statement__ = 2;
-        tau = stan::math::lb_constrain(tau, 0, lp__);
-      } else {
-        current_statement__ = 2;
-        tau = stan::math::lb_constrain(tau, 0);
-      }
+      tau = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> theta_tilde;
       theta_tilde = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       stan::math::fill(theta_tilde, DUMMY_VAR__);
       
       current_statement__ = 3;
-      theta_tilde = in__.vector(J);
+      assign(theta_tilde, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__,
+          J), "assigning variable theta_tilde");
       Eigen::Matrix<local_scalar_t__, -1, 1> theta;
       theta = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       stan::math::fill(theta, DUMMY_VAR__);
@@ -217,20 +211,20 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       mu = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      mu = in__.scalar();
+      mu = in__.read<local_scalar_t__, jacobian__>(lp__);
       double tau;
       tau = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
-      tau = in__.scalar();
-      current_statement__ = 2;
-      tau = stan::math::lb_constrain(tau, 0);
+      tau = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
       Eigen::Matrix<double, -1, 1> theta_tilde;
       theta_tilde = Eigen::Matrix<double, -1, 1>(J);
       stan::math::fill(theta_tilde, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
-      theta_tilde = in__.vector(J);
+      assign(theta_tilde, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__,
+          J), "assigning variable theta_tilde");
       Eigen::Matrix<double, -1, 1> theta;
       theta = Eigen::Matrix<double, -1, 1>(J);
       stan::math::fill(theta, std::numeric_limits<double>::quiet_NaN());
@@ -588,7 +582,7 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
       bar = DUMMY_VAR__;
       
       current_statement__ = 1;
-      bar = in__.scalar();
+      bar = in__.read<local_scalar_t__, jacobian__>(lp__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -620,7 +614,7 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
       bar = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      bar = in__.scalar();
+      bar = in__.read<local_scalar_t__, jacobian__>(lp__);
       vars__.emplace_back(bar);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
@@ -957,26 +951,20 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       mu = DUMMY_VAR__;
       
       current_statement__ = 1;
-      mu = in__.scalar();
+      mu = in__.read<local_scalar_t__, jacobian__>(lp__);
       local_scalar_t__ tau;
       tau = DUMMY_VAR__;
       
       current_statement__ = 2;
-      tau = in__.scalar();
-      current_statement__ = 2;
-      if (jacobian__) {
-        current_statement__ = 2;
-        tau = stan::math::lb_constrain(tau, 0, lp__);
-      } else {
-        current_statement__ = 2;
-        tau = stan::math::lb_constrain(tau, 0);
-      }
+      tau = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> theta_tilde;
       theta_tilde = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       stan::math::fill(theta_tilde, DUMMY_VAR__);
       
       current_statement__ = 3;
-      theta_tilde = in__.vector(J);
+      assign(theta_tilde, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__,
+          J), "assigning variable theta_tilde");
       Eigen::Matrix<local_scalar_t__, -1, 1> theta;
       theta = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       stan::math::fill(theta, DUMMY_VAR__);
@@ -1025,20 +1013,20 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       mu = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      mu = in__.scalar();
+      mu = in__.read<local_scalar_t__, jacobian__>(lp__);
       double tau;
       tau = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
-      tau = in__.scalar();
-      current_statement__ = 2;
-      tau = stan::math::lb_constrain(tau, 0);
+      tau = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
       Eigen::Matrix<double, -1, 1> theta_tilde;
       theta_tilde = Eigen::Matrix<double, -1, 1>(J);
       stan::math::fill(theta_tilde, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
-      theta_tilde = in__.vector(J);
+      assign(theta_tilde, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__,
+          J), "assigning variable theta_tilde");
       Eigen::Matrix<double, -1, 1> theta;
       theta = Eigen::Matrix<double, -1, 1>(J);
       stan::math::fill(theta, std::numeric_limits<double>::quiet_NaN());
@@ -6360,509 +6348,172 @@ class mother_model final : public model_base_crtp<mother_model> {
       p_real = DUMMY_VAR__;
       
       current_statement__ = 1;
-      p_real = in__.scalar();
+      p_real = in__.read<local_scalar_t__, jacobian__>(lp__);
       local_scalar_t__ p_upper;
       p_upper = DUMMY_VAR__;
       
       current_statement__ = 2;
-      p_upper = in__.scalar();
-      current_statement__ = 2;
-      if (jacobian__) {
-        current_statement__ = 2;
-        p_upper = stan::math::lb_constrain(p_upper, p_real, lp__);
-      } else {
-        current_statement__ = 2;
-        p_upper = stan::math::lb_constrain(p_upper, p_real);
-      }
+      p_upper = in__.read_lb<local_scalar_t__, jacobian__>(p_real, lp__);
       local_scalar_t__ p_lower;
       p_lower = DUMMY_VAR__;
       
       current_statement__ = 3;
-      p_lower = in__.scalar();
-      current_statement__ = 3;
-      if (jacobian__) {
-        current_statement__ = 3;
-        p_lower = stan::math::ub_constrain(p_lower, p_upper, lp__);
-      } else {
-        current_statement__ = 3;
-        p_lower = stan::math::ub_constrain(p_lower, p_upper);
-      }
+      p_lower = in__.read_ub<local_scalar_t__, jacobian__>(p_upper, lp__);
       std::vector<local_scalar_t__> offset_multiplier;
       offset_multiplier = std::vector<local_scalar_t__>(5, DUMMY_VAR__);
       
       current_statement__ = 4;
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        current_statement__ = 4;
-        assign(offset_multiplier,
-          cons_list(index_uni(sym1__), nil_index_list()), in__.scalar(),
-          "assigning variable offset_multiplier");}
-      current_statement__ = 4;
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        current_statement__ = 4;
-        if (jacobian__) {
-          current_statement__ = 4;
-          assign(offset_multiplier,
-            cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::offset_multiplier_constrain(
-              offset_multiplier[(sym1__ - 1)], 1, 2, lp__),
-            "assigning variable offset_multiplier");
-        } else {
-          current_statement__ = 4;
-          assign(offset_multiplier,
-            cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::offset_multiplier_constrain(
-              offset_multiplier[(sym1__ - 1)], 1, 2),
-            "assigning variable offset_multiplier");
-        }}
+      assign(offset_multiplier, nil_index_list(),
+        in__.read_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
+          1, 2, lp__, 5), "assigning variable offset_multiplier");
       std::vector<local_scalar_t__> no_offset_multiplier;
       no_offset_multiplier = std::vector<local_scalar_t__>(5, DUMMY_VAR__);
       
       current_statement__ = 5;
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        current_statement__ = 5;
-        assign(no_offset_multiplier,
-          cons_list(index_uni(sym1__), nil_index_list()), in__.scalar(),
-          "assigning variable no_offset_multiplier");}
-      current_statement__ = 5;
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        current_statement__ = 5;
-        if (jacobian__) {
-          current_statement__ = 5;
-          assign(no_offset_multiplier,
-            cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::offset_multiplier_constrain(
-              no_offset_multiplier[(sym1__ - 1)], 0, 2, lp__),
-            "assigning variable no_offset_multiplier");
-        } else {
-          current_statement__ = 5;
-          assign(no_offset_multiplier,
-            cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::offset_multiplier_constrain(
-              no_offset_multiplier[(sym1__ - 1)], 0, 2),
-            "assigning variable no_offset_multiplier");
-        }}
+      assign(no_offset_multiplier, nil_index_list(),
+        in__.read_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
+          0, 2, lp__, 5), "assigning variable no_offset_multiplier");
       std::vector<local_scalar_t__> offset_no_multiplier;
       offset_no_multiplier = std::vector<local_scalar_t__>(5, DUMMY_VAR__);
       
       current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        current_statement__ = 6;
-        assign(offset_no_multiplier,
-          cons_list(index_uni(sym1__), nil_index_list()), in__.scalar(),
-          "assigning variable offset_no_multiplier");}
-      current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        current_statement__ = 6;
-        if (jacobian__) {
-          current_statement__ = 6;
-          assign(offset_no_multiplier,
-            cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::offset_multiplier_constrain(
-              offset_no_multiplier[(sym1__ - 1)], 3, 1, lp__),
-            "assigning variable offset_no_multiplier");
-        } else {
-          current_statement__ = 6;
-          assign(offset_no_multiplier,
-            cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::offset_multiplier_constrain(
-              offset_no_multiplier[(sym1__ - 1)], 3, 1),
-            "assigning variable offset_no_multiplier");
-        }}
+      assign(offset_no_multiplier, nil_index_list(),
+        in__.read_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
+          3, 1, lp__, 5), "assigning variable offset_no_multiplier");
       std::vector<local_scalar_t__> p_real_1d_ar;
       p_real_1d_ar = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       
       current_statement__ = 7;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 7;
-        assign(p_real_1d_ar, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable p_real_1d_ar");}
-      current_statement__ = 7;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 7;
-        if (jacobian__) {
-          current_statement__ = 7;
-          assign(p_real_1d_ar,
-            cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::lb_constrain(p_real_1d_ar[(sym1__ - 1)], 0, lp__),
-            "assigning variable p_real_1d_ar");
-        } else {
-          current_statement__ = 7;
-          assign(p_real_1d_ar,
-            cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::lb_constrain(p_real_1d_ar[(sym1__ - 1)], 0),
-            "assigning variable p_real_1d_ar");
-        }}
+      assign(p_real_1d_ar, nil_index_list(),
+        in__.read_lb<std::vector<local_scalar_t__>, jacobian__>(0, lp__, N),
+        "assigning variable p_real_1d_ar");
       std::vector<std::vector<std::vector<local_scalar_t__>>> p_real_3d_ar;
       p_real_3d_ar = std::vector<std::vector<std::vector<local_scalar_t__>>>(N, std::vector<std::vector<local_scalar_t__>>(M, std::vector<local_scalar_t__>(K, DUMMY_VAR__)));
       
       current_statement__ = 8;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 8;
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 8;
-          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 8;
-            assign(p_real_3d_ar,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              in__.scalar(), "assigning variable p_real_3d_ar");}}}
-      current_statement__ = 8;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 8;
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 8;
-          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 8;
-            if (jacobian__) {
-              current_statement__ = 8;
-              assign(p_real_3d_ar,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__), nil_index_list()))),
-                stan::math::lb_constrain(
-                  p_real_3d_ar[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)], 0,
-                  lp__), "assigning variable p_real_3d_ar");
-            } else {
-              current_statement__ = 8;
-              assign(p_real_3d_ar,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__), nil_index_list()))),
-                stan::math::lb_constrain(
-                  p_real_3d_ar[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)], 0),
-                "assigning variable p_real_3d_ar");
-            }}}}
+      assign(p_real_3d_ar, nil_index_list(),
+        in__.read_lb<std::vector<std::vector<std::vector<local_scalar_t__>>>, jacobian__>(
+          0, lp__, N, M, K), "assigning variable p_real_3d_ar");
       Eigen::Matrix<local_scalar_t__, -1, 1> p_vec;
       p_vec = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(p_vec, DUMMY_VAR__);
       
       current_statement__ = 9;
-      p_vec = in__.vector(N);
-      current_statement__ = 9;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 9;
-        if (jacobian__) {
-          current_statement__ = 9;
-          assign(p_vec, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::lb_constrain(p_vec[(sym1__ - 1)], 0, lp__),
-            "assigning variable p_vec");
-        } else {
-          current_statement__ = 9;
-          assign(p_vec, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::lb_constrain(p_vec[(sym1__ - 1)], 0),
-            "assigning variable p_vec");
-        }}
+      assign(p_vec, nil_index_list(),
+        in__.read_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(0,
+          lp__, N), "assigning variable p_vec");
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_1d_vec;
       p_1d_vec = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       stan::math::fill(p_1d_vec, DUMMY_VAR__);
       
       current_statement__ = 10;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 10;
-        assign(p_1d_vec, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.vector(N), "assigning variable p_1d_vec");}
+      assign(p_1d_vec, nil_index_list(),
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+          lp__, N, N), "assigning variable p_1d_vec");
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> p_3d_vec;
       p_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
       stan::math::fill(p_3d_vec, DUMMY_VAR__);
       
       current_statement__ = 11;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 11;
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 11;
-          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 11;
-            assign(p_3d_vec,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              in__.vector(N), "assigning variable p_3d_vec");}}}
+      assign(p_3d_vec, nil_index_list(),
+        in__.read<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>, jacobian__>(
+          lp__, N, M, K, N), "assigning variable p_3d_vec");
       Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vec;
       p_row_vec = Eigen::Matrix<local_scalar_t__, 1, -1>(N);
       stan::math::fill(p_row_vec, DUMMY_VAR__);
       
       current_statement__ = 12;
-      p_row_vec = in__.row_vector(N);
+      assign(p_row_vec, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>, jacobian__>(lp__,
+          N), "assigning variable p_row_vec");
       std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> p_1d_row_vec;
       p_1d_row_vec = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
       stan::math::fill(p_1d_row_vec, DUMMY_VAR__);
       
       current_statement__ = 13;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 13;
-        assign(p_1d_row_vec, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.row_vector(N), "assigning variable p_1d_row_vec");}
+      assign(p_1d_row_vec, nil_index_list(),
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>, jacobian__>(
+          lp__, N, N), "assigning variable p_1d_row_vec");
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>> p_3d_row_vec;
       p_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(K, Eigen::Matrix<local_scalar_t__, 1, -1>(N))));
       stan::math::fill(p_3d_row_vec, DUMMY_VAR__);
       
       current_statement__ = 14;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 14;
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 14;
-          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 14;
-            assign(p_3d_row_vec,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              in__.row_vector(N), "assigning variable p_3d_row_vec");}}}
+      assign(p_3d_row_vec, nil_index_list(),
+        in__.read<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>, jacobian__>(
+          lp__, N, M, K, N), "assigning variable p_3d_row_vec");
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> p_ar_mat;
       p_ar_mat = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(4, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(5, Eigen::Matrix<local_scalar_t__, -1, -1>(2, 3)));
       stan::math::fill(p_ar_mat, DUMMY_VAR__);
       
       current_statement__ = 15;
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        current_statement__ = 15;
-        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
-          current_statement__ = 15;
-          assign(p_ar_mat,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            in__.matrix(2, 3), "assigning variable p_ar_mat");}}
-      current_statement__ = 15;
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        current_statement__ = 15;
-        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
-          current_statement__ = 15;
-          for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-            current_statement__ = 15;
-            for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
-              current_statement__ = 15;
-              if (jacobian__) {
-                current_statement__ = 15;
-                assign(p_ar_mat,
-                  cons_list(index_uni(sym1__),
-                    cons_list(index_uni(sym2__),
-                      cons_list(index_uni(sym3__),
-                        cons_list(index_uni(sym4__), nil_index_list())))),
-                  stan::math::lub_constrain(
-                    rvalue(p_ar_mat,
-                      cons_list(index_uni(sym1__),
-                        cons_list(index_uni(sym2__),
-                          cons_list(index_uni(sym3__),
-                            cons_list(index_uni(sym4__), nil_index_list())))),
-                      "p_ar_mat"), 0, 1, lp__), "assigning variable p_ar_mat");
-              } else {
-                current_statement__ = 15;
-                assign(p_ar_mat,
-                  cons_list(index_uni(sym1__),
-                    cons_list(index_uni(sym2__),
-                      cons_list(index_uni(sym3__),
-                        cons_list(index_uni(sym4__), nil_index_list())))),
-                  stan::math::lub_constrain(
-                    rvalue(p_ar_mat,
-                      cons_list(index_uni(sym1__),
-                        cons_list(index_uni(sym2__),
-                          cons_list(index_uni(sym3__),
-                            cons_list(index_uni(sym4__), nil_index_list())))),
-                      "p_ar_mat"), 0, 1), "assigning variable p_ar_mat");
-              }}}}}
+      assign(p_ar_mat, nil_index_list(),
+        in__.read_lub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>, jacobian__>(
+          0, 1, lp__, 4, 5, 2, 3), "assigning variable p_ar_mat");
       Eigen::Matrix<local_scalar_t__, -1, 1> p_simplex;
       p_simplex = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(p_simplex, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, 1> p_simplex_in__;
-      p_simplex_in__ = Eigen::Matrix<local_scalar_t__, -1, 1>((N - 1));
-      stan::math::fill(p_simplex_in__, DUMMY_VAR__);
-      
       current_statement__ = 16;
-      p_simplex_in__ = in__.vector((N - 1));
-      current_statement__ = 16;
-      if (jacobian__) {
-        current_statement__ = 16;
-        assign(p_simplex, nil_index_list(),
-          stan::math::simplex_constrain(p_simplex_in__, lp__),
-          "assigning variable p_simplex");
-      } else {
-        current_statement__ = 16;
-        assign(p_simplex, nil_index_list(),
-          stan::math::simplex_constrain(p_simplex_in__),
-          "assigning variable p_simplex");
-      }
+      assign(p_simplex, nil_index_list(),
+        in__.read_simplex<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+          lp__, N), "assigning variable p_simplex");
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_1d_simplex;
       p_1d_simplex = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       stan::math::fill(p_1d_simplex, DUMMY_VAR__);
       
-      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_1d_simplex_in__;
-      p_1d_simplex_in__ = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(
-        (N - 1)));
-      stan::math::fill(p_1d_simplex_in__, DUMMY_VAR__);
-      
       current_statement__ = 17;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 17;
-        assign(p_1d_simplex_in__,
-          cons_list(index_uni(sym1__), nil_index_list()),
-          in__.vector((N - 1)), "assigning variable p_1d_simplex_in__");}
-      current_statement__ = 17;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 17;
-        if (jacobian__) {
-          current_statement__ = 17;
-          assign(p_1d_simplex,
-            cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::simplex_constrain(p_1d_simplex_in__[(sym1__ - 1)],
-              lp__), "assigning variable p_1d_simplex");
-        } else {
-          current_statement__ = 17;
-          assign(p_1d_simplex,
-            cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::simplex_constrain(p_1d_simplex_in__[(sym1__ - 1)]),
-            "assigning variable p_1d_simplex");
-        }}
+      assign(p_1d_simplex, nil_index_list(),
+        in__.read_simplex<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+          lp__, N, N), "assigning variable p_1d_simplex");
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> p_3d_simplex;
       p_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
       stan::math::fill(p_3d_simplex, DUMMY_VAR__);
       
-      std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> p_3d_simplex_in__;
-      p_3d_simplex_in__ = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(
-        (N - 1)))));
-      stan::math::fill(p_3d_simplex_in__, DUMMY_VAR__);
-      
       current_statement__ = 18;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 18;
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 18;
-          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 18;
-            assign(p_3d_simplex_in__,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              in__.vector((N - 1)), "assigning variable p_3d_simplex_in__");}
-        }}
-      current_statement__ = 18;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 18;
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 18;
-          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 18;
-            if (jacobian__) {
-              current_statement__ = 18;
-              assign(p_3d_simplex,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__), nil_index_list()))),
-                stan::math::simplex_constrain(
-                  p_3d_simplex_in__[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)],
-                  lp__), "assigning variable p_3d_simplex");
-            } else {
-              current_statement__ = 18;
-              assign(p_3d_simplex,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__), nil_index_list()))),
-                stan::math::simplex_constrain(
-                  p_3d_simplex_in__[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]),
-                "assigning variable p_3d_simplex");
-            }}}}
+      assign(p_3d_simplex, nil_index_list(),
+        in__.read_simplex<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>, jacobian__>(
+          lp__, N, M, K, N), "assigning variable p_3d_simplex");
       Eigen::Matrix<local_scalar_t__, -1, -1> p_cfcov_54;
       p_cfcov_54 = Eigen::Matrix<local_scalar_t__, -1, -1>(5, 4);
       stan::math::fill(p_cfcov_54, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, 1> p_cfcov_54_in__;
-      p_cfcov_54_in__ = Eigen::Matrix<local_scalar_t__, -1, 1>(((((4 *
-                                                                    (4 - 1))
-                                                                   / 2) + 4)
-                                                                 +
-                                                                 ((5 - 4) *
-                                                                   4)));
-      stan::math::fill(p_cfcov_54_in__, DUMMY_VAR__);
-      
       current_statement__ = 19;
-      p_cfcov_54_in__ = in__.vector(
-                          ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)));
-      current_statement__ = 19;
-      if (jacobian__) {
-        current_statement__ = 19;
-        assign(p_cfcov_54, nil_index_list(),
-          stan::math::cholesky_factor_constrain(p_cfcov_54_in__, 5, 4, lp__),
-          "assigning variable p_cfcov_54");
-      } else {
-        current_statement__ = 19;
-        assign(p_cfcov_54, nil_index_list(),
-          stan::math::cholesky_factor_constrain(p_cfcov_54_in__, 5, 4),
-          "assigning variable p_cfcov_54");
-      }
+      assign(p_cfcov_54, nil_index_list(),
+        in__.read_cholesky_factor<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
+          lp__, 5, 4), "assigning variable p_cfcov_54");
       Eigen::Matrix<local_scalar_t__, -1, -1> p_cfcov_33;
       p_cfcov_33 = Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3);
       stan::math::fill(p_cfcov_33, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, 1> p_cfcov_33_in__;
-      p_cfcov_33_in__ = Eigen::Matrix<local_scalar_t__, -1, 1>(((((3 *
-                                                                    (3 - 1))
-                                                                   / 2) + 3)
-                                                                 +
-                                                                 ((3 - 3) *
-                                                                   3)));
-      stan::math::fill(p_cfcov_33_in__, DUMMY_VAR__);
-      
       current_statement__ = 20;
-      p_cfcov_33_in__ = in__.vector(
-                          ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)));
-      current_statement__ = 20;
-      if (jacobian__) {
-        current_statement__ = 20;
-        assign(p_cfcov_33, nil_index_list(),
-          stan::math::cholesky_factor_constrain(p_cfcov_33_in__, 3, 3, lp__),
-          "assigning variable p_cfcov_33");
-      } else {
-        current_statement__ = 20;
-        assign(p_cfcov_33, nil_index_list(),
-          stan::math::cholesky_factor_constrain(p_cfcov_33_in__, 3, 3),
-          "assigning variable p_cfcov_33");
-      }
+      assign(p_cfcov_33, nil_index_list(),
+        in__.read_cholesky_factor<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
+          lp__, 3, 3), "assigning variable p_cfcov_33");
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> p_cfcov_33_ar;
       p_cfcov_33_ar = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(K, Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3));
       stan::math::fill(p_cfcov_33_ar, DUMMY_VAR__);
       
-      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_cfcov_33_ar_in__;
-      p_cfcov_33_ar_in__ = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(
-        ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3))));
-      stan::math::fill(p_cfcov_33_ar_in__, DUMMY_VAR__);
-      
       current_statement__ = 21;
-      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        current_statement__ = 21;
-        assign(p_cfcov_33_ar_in__,
-          cons_list(index_uni(sym1__), nil_index_list()),
-          in__.vector(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3))),
-          "assigning variable p_cfcov_33_ar_in__");}
-      current_statement__ = 21;
-      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        current_statement__ = 21;
-        if (jacobian__) {
-          current_statement__ = 21;
-          assign(p_cfcov_33_ar,
-            cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::cholesky_factor_constrain(
-              p_cfcov_33_ar_in__[(sym1__ - 1)], 3, 3, lp__),
-            "assigning variable p_cfcov_33_ar");
-        } else {
-          current_statement__ = 21;
-          assign(p_cfcov_33_ar,
-            cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::cholesky_factor_constrain(
-              p_cfcov_33_ar_in__[(sym1__ - 1)], 3, 3),
-            "assigning variable p_cfcov_33_ar");
-        }}
+      assign(p_cfcov_33_ar, nil_index_list(),
+        in__.read_cholesky_factor<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+          lp__, K, 3, 3), "assigning variable p_cfcov_33_ar");
       Eigen::Matrix<local_scalar_t__, -1, 1> x_p;
       x_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(x_p, DUMMY_VAR__);
       
       current_statement__ = 22;
-      x_p = in__.vector(2);
+      assign(x_p, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__,
+          2), "assigning variable x_p");
       Eigen::Matrix<local_scalar_t__, -1, 1> y_p;
       y_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(y_p, DUMMY_VAR__);
       
       current_statement__ = 23;
-      y_p = in__.vector(2);
+      assign(y_p, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__,
+          2), "assigning variable y_p");
       std::vector<local_scalar_t__> tp_real_1d_ar;
       tp_real_1d_ar = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       
@@ -7236,363 +6887,172 @@ class mother_model final : public model_base_crtp<mother_model> {
       p_real = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      p_real = in__.scalar();
+      p_real = in__.read<local_scalar_t__, jacobian__>(lp__);
       double p_upper;
       p_upper = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
-      p_upper = in__.scalar();
-      current_statement__ = 2;
-      p_upper = stan::math::lb_constrain(p_upper, p_real);
+      p_upper = in__.read_lb<local_scalar_t__, jacobian__>(p_real, lp__);
       double p_lower;
       p_lower = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 3;
-      p_lower = in__.scalar();
-      current_statement__ = 3;
-      p_lower = stan::math::ub_constrain(p_lower, p_upper);
+      p_lower = in__.read_ub<local_scalar_t__, jacobian__>(p_upper, lp__);
       std::vector<double> offset_multiplier;
       offset_multiplier = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 4;
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        current_statement__ = 4;
-        assign(offset_multiplier,
-          cons_list(index_uni(sym1__), nil_index_list()), in__.scalar(),
-          "assigning variable offset_multiplier");}
-      current_statement__ = 4;
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        current_statement__ = 4;
-        assign(offset_multiplier,
-          cons_list(index_uni(sym1__), nil_index_list()),
-          stan::math::offset_multiplier_constrain(
-            offset_multiplier[(sym1__ - 1)], 1, 2),
-          "assigning variable offset_multiplier");}
+      assign(offset_multiplier, nil_index_list(),
+        in__.read_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
+          1, 2, lp__, 5), "assigning variable offset_multiplier");
       std::vector<double> no_offset_multiplier;
       no_offset_multiplier = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        current_statement__ = 5;
-        assign(no_offset_multiplier,
-          cons_list(index_uni(sym1__), nil_index_list()), in__.scalar(),
-          "assigning variable no_offset_multiplier");}
-      current_statement__ = 5;
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        current_statement__ = 5;
-        assign(no_offset_multiplier,
-          cons_list(index_uni(sym1__), nil_index_list()),
-          stan::math::offset_multiplier_constrain(
-            no_offset_multiplier[(sym1__ - 1)], 0, 2),
-          "assigning variable no_offset_multiplier");}
+      assign(no_offset_multiplier, nil_index_list(),
+        in__.read_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
+          0, 2, lp__, 5), "assigning variable no_offset_multiplier");
       std::vector<double> offset_no_multiplier;
       offset_no_multiplier = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        current_statement__ = 6;
-        assign(offset_no_multiplier,
-          cons_list(index_uni(sym1__), nil_index_list()), in__.scalar(),
-          "assigning variable offset_no_multiplier");}
-      current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        current_statement__ = 6;
-        assign(offset_no_multiplier,
-          cons_list(index_uni(sym1__), nil_index_list()),
-          stan::math::offset_multiplier_constrain(
-            offset_no_multiplier[(sym1__ - 1)], 3, 1),
-          "assigning variable offset_no_multiplier");}
+      assign(offset_no_multiplier, nil_index_list(),
+        in__.read_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
+          3, 1, lp__, 5), "assigning variable offset_no_multiplier");
       std::vector<double> p_real_1d_ar;
       p_real_1d_ar = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 7;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 7;
-        assign(p_real_1d_ar, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable p_real_1d_ar");}
-      current_statement__ = 7;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 7;
-        assign(p_real_1d_ar, cons_list(index_uni(sym1__), nil_index_list()),
-          stan::math::lb_constrain(p_real_1d_ar[(sym1__ - 1)], 0),
-          "assigning variable p_real_1d_ar");}
+      assign(p_real_1d_ar, nil_index_list(),
+        in__.read_lb<std::vector<local_scalar_t__>, jacobian__>(0, lp__, N),
+        "assigning variable p_real_1d_ar");
       std::vector<std::vector<std::vector<double>>> p_real_3d_ar;
       p_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, std::numeric_limits<double>::quiet_NaN())));
       
       current_statement__ = 8;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 8;
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 8;
-          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 8;
-            assign(p_real_3d_ar,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              in__.scalar(), "assigning variable p_real_3d_ar");}}}
-      current_statement__ = 8;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 8;
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 8;
-          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 8;
-            assign(p_real_3d_ar,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              stan::math::lb_constrain(
-                p_real_3d_ar[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)], 0),
-              "assigning variable p_real_3d_ar");}}}
+      assign(p_real_3d_ar, nil_index_list(),
+        in__.read_lb<std::vector<std::vector<std::vector<local_scalar_t__>>>, jacobian__>(
+          0, lp__, N, M, K), "assigning variable p_real_3d_ar");
       Eigen::Matrix<double, -1, 1> p_vec;
       p_vec = Eigen::Matrix<double, -1, 1>(N);
       stan::math::fill(p_vec, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 9;
-      p_vec = in__.vector(N);
-      current_statement__ = 9;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 9;
-        assign(p_vec, cons_list(index_uni(sym1__), nil_index_list()),
-          stan::math::lb_constrain(p_vec[(sym1__ - 1)], 0),
-          "assigning variable p_vec");}
+      assign(p_vec, nil_index_list(),
+        in__.read_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(0,
+          lp__, N), "assigning variable p_vec");
       std::vector<Eigen::Matrix<double, -1, 1>> p_1d_vec;
       p_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       stan::math::fill(p_1d_vec, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 10;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 10;
-        assign(p_1d_vec, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.vector(N), "assigning variable p_1d_vec");}
+      assign(p_1d_vec, nil_index_list(),
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+          lp__, N, N), "assigning variable p_1d_vec");
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_vec;
       p_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       stan::math::fill(p_3d_vec, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 11;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 11;
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 11;
-          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 11;
-            assign(p_3d_vec,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              in__.vector(N), "assigning variable p_3d_vec");}}}
+      assign(p_3d_vec, nil_index_list(),
+        in__.read<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>, jacobian__>(
+          lp__, N, M, K, N), "assigning variable p_3d_vec");
       Eigen::Matrix<double, 1, -1> p_row_vec;
       p_row_vec = Eigen::Matrix<double, 1, -1>(N);
       stan::math::fill(p_row_vec, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 12;
-      p_row_vec = in__.row_vector(N);
+      assign(p_row_vec, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>, jacobian__>(lp__,
+          N), "assigning variable p_row_vec");
       std::vector<Eigen::Matrix<double, 1, -1>> p_1d_row_vec;
       p_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
       stan::math::fill(p_1d_row_vec, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 13;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 13;
-        assign(p_1d_row_vec, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.row_vector(N), "assigning variable p_1d_row_vec");}
+      assign(p_1d_row_vec, nil_index_list(),
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>, jacobian__>(
+          lp__, N, N), "assigning variable p_1d_row_vec");
       std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> p_3d_row_vec;
       p_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
       stan::math::fill(p_3d_row_vec, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 14;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 14;
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 14;
-          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 14;
-            assign(p_3d_row_vec,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              in__.row_vector(N), "assigning variable p_3d_row_vec");}}}
+      assign(p_3d_row_vec, nil_index_list(),
+        in__.read<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>, jacobian__>(
+          lp__, N, M, K, N), "assigning variable p_3d_row_vec");
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> p_ar_mat;
       p_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
       stan::math::fill(p_ar_mat, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 15;
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        current_statement__ = 15;
-        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
-          current_statement__ = 15;
-          assign(p_ar_mat,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            in__.matrix(2, 3), "assigning variable p_ar_mat");}}
-      current_statement__ = 15;
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        current_statement__ = 15;
-        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
-          current_statement__ = 15;
-          for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-            current_statement__ = 15;
-            for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
-              current_statement__ = 15;
-              assign(p_ar_mat,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__),
-                      cons_list(index_uni(sym4__), nil_index_list())))),
-                stan::math::lub_constrain(
-                  rvalue(p_ar_mat,
-                    cons_list(index_uni(sym1__),
-                      cons_list(index_uni(sym2__),
-                        cons_list(index_uni(sym3__),
-                          cons_list(index_uni(sym4__), nil_index_list())))),
-                    "p_ar_mat"), 0, 1), "assigning variable p_ar_mat");}}}}
+      assign(p_ar_mat, nil_index_list(),
+        in__.read_lub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>, jacobian__>(
+          0, 1, lp__, 4, 5, 2, 3), "assigning variable p_ar_mat");
       Eigen::Matrix<double, -1, 1> p_simplex;
       p_simplex = Eigen::Matrix<double, -1, 1>(N);
       stan::math::fill(p_simplex, std::numeric_limits<double>::quiet_NaN());
       
-      Eigen::Matrix<local_scalar_t__, -1, 1> p_simplex_in__;
-      p_simplex_in__ = Eigen::Matrix<local_scalar_t__, -1, 1>((N - 1));
-      stan::math::fill(p_simplex_in__, DUMMY_VAR__);
-      
-      current_statement__ = 16;
-      p_simplex_in__ = in__.vector((N - 1));
       current_statement__ = 16;
       assign(p_simplex, nil_index_list(),
-        stan::math::simplex_constrain(p_simplex_in__),
-        "assigning variable p_simplex");
+        in__.read_simplex<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+          lp__, N), "assigning variable p_simplex");
       std::vector<Eigen::Matrix<double, -1, 1>> p_1d_simplex;
       p_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       stan::math::fill(p_1d_simplex, std::numeric_limits<double>::quiet_NaN());
       
-      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_1d_simplex_in__;
-      p_1d_simplex_in__ = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(
-        (N - 1)));
-      stan::math::fill(p_1d_simplex_in__, DUMMY_VAR__);
-      
       current_statement__ = 17;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 17;
-        assign(p_1d_simplex_in__,
-          cons_list(index_uni(sym1__), nil_index_list()),
-          in__.vector((N - 1)), "assigning variable p_1d_simplex_in__");}
-      current_statement__ = 17;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 17;
-        assign(p_1d_simplex, cons_list(index_uni(sym1__), nil_index_list()),
-          stan::math::simplex_constrain(p_1d_simplex_in__[(sym1__ - 1)]),
-          "assigning variable p_1d_simplex");}
+      assign(p_1d_simplex, nil_index_list(),
+        in__.read_simplex<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+          lp__, N, N), "assigning variable p_1d_simplex");
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_simplex;
       p_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       stan::math::fill(p_3d_simplex, std::numeric_limits<double>::quiet_NaN());
       
-      std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> p_3d_simplex_in__;
-      p_3d_simplex_in__ = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(
-        (N - 1)))));
-      stan::math::fill(p_3d_simplex_in__, DUMMY_VAR__);
-      
       current_statement__ = 18;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 18;
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 18;
-          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 18;
-            assign(p_3d_simplex_in__,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              in__.vector((N - 1)), "assigning variable p_3d_simplex_in__");}
-        }}
-      current_statement__ = 18;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 18;
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 18;
-          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 18;
-            assign(p_3d_simplex,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              stan::math::simplex_constrain(
-                p_3d_simplex_in__[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]),
-              "assigning variable p_3d_simplex");}}}
+      assign(p_3d_simplex, nil_index_list(),
+        in__.read_simplex<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>, jacobian__>(
+          lp__, N, M, K, N), "assigning variable p_3d_simplex");
       Eigen::Matrix<double, -1, -1> p_cfcov_54;
       p_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
       stan::math::fill(p_cfcov_54, std::numeric_limits<double>::quiet_NaN());
       
-      Eigen::Matrix<local_scalar_t__, -1, 1> p_cfcov_54_in__;
-      p_cfcov_54_in__ = Eigen::Matrix<local_scalar_t__, -1, 1>(((((4 *
-                                                                    (4 - 1))
-                                                                   / 2) + 4)
-                                                                 +
-                                                                 ((5 - 4) *
-                                                                   4)));
-      stan::math::fill(p_cfcov_54_in__, DUMMY_VAR__);
-      
-      current_statement__ = 19;
-      p_cfcov_54_in__ = in__.vector(
-                          ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)));
       current_statement__ = 19;
       assign(p_cfcov_54, nil_index_list(),
-        stan::math::cholesky_factor_constrain(p_cfcov_54_in__, 5, 4),
-        "assigning variable p_cfcov_54");
+        in__.read_cholesky_factor<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
+          lp__, 5, 4), "assigning variable p_cfcov_54");
       Eigen::Matrix<double, -1, -1> p_cfcov_33;
       p_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
       stan::math::fill(p_cfcov_33, std::numeric_limits<double>::quiet_NaN());
       
-      Eigen::Matrix<local_scalar_t__, -1, 1> p_cfcov_33_in__;
-      p_cfcov_33_in__ = Eigen::Matrix<local_scalar_t__, -1, 1>(((((3 *
-                                                                    (3 - 1))
-                                                                   / 2) + 3)
-                                                                 +
-                                                                 ((3 - 3) *
-                                                                   3)));
-      stan::math::fill(p_cfcov_33_in__, DUMMY_VAR__);
-      
-      current_statement__ = 20;
-      p_cfcov_33_in__ = in__.vector(
-                          ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)));
       current_statement__ = 20;
       assign(p_cfcov_33, nil_index_list(),
-        stan::math::cholesky_factor_constrain(p_cfcov_33_in__, 3, 3),
-        "assigning variable p_cfcov_33");
+        in__.read_cholesky_factor<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
+          lp__, 3, 3), "assigning variable p_cfcov_33");
       std::vector<Eigen::Matrix<double, -1, -1>> p_cfcov_33_ar;
       p_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
       stan::math::fill(p_cfcov_33_ar, std::numeric_limits<double>::quiet_NaN());
       
-      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_cfcov_33_ar_in__;
-      p_cfcov_33_ar_in__ = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(
-        ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3))));
-      stan::math::fill(p_cfcov_33_ar_in__, DUMMY_VAR__);
-      
       current_statement__ = 21;
-      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        current_statement__ = 21;
-        assign(p_cfcov_33_ar_in__,
-          cons_list(index_uni(sym1__), nil_index_list()),
-          in__.vector(((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3))),
-          "assigning variable p_cfcov_33_ar_in__");}
-      current_statement__ = 21;
-      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        current_statement__ = 21;
-        assign(p_cfcov_33_ar, cons_list(index_uni(sym1__), nil_index_list()),
-          stan::math::cholesky_factor_constrain(
-            p_cfcov_33_ar_in__[(sym1__ - 1)], 3, 3),
-          "assigning variable p_cfcov_33_ar");}
+      assign(p_cfcov_33_ar, nil_index_list(),
+        in__.read_cholesky_factor<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+          lp__, K, 3, 3), "assigning variable p_cfcov_33_ar");
       Eigen::Matrix<double, -1, 1> x_p;
       x_p = Eigen::Matrix<double, -1, 1>(2);
       stan::math::fill(x_p, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 22;
-      x_p = in__.vector(2);
+      assign(x_p, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__,
+          2), "assigning variable x_p");
       Eigen::Matrix<double, -1, 1> y_p;
       y_p = Eigen::Matrix<double, -1, 1>(2);
       stan::math::fill(y_p, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 23;
-      y_p = in__.vector(2);
+      assign(y_p, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__,
+          2), "assigning variable y_p");
       std::vector<double> tp_real_1d_ar;
       tp_real_1d_ar = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
@@ -11353,52 +10813,52 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       y0_p = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
       
       current_statement__ = 1;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 1;
-        assign(y0_p, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable y0_p");}
+      assign(y0_p, nil_index_list(),
+        in__.read<std::vector<local_scalar_t__>, jacobian__>(lp__, 2),
+        "assigning variable y0_p");
       std::vector<local_scalar_t__> theta_p;
       theta_p = std::vector<local_scalar_t__>(1, DUMMY_VAR__);
       
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        current_statement__ = 2;
-        assign(theta_p, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable theta_p");}
+      assign(theta_p, nil_index_list(),
+        in__.read<std::vector<local_scalar_t__>, jacobian__>(lp__, 1),
+        "assigning variable theta_p");
       std::vector<local_scalar_t__> x_p;
       x_p = std::vector<local_scalar_t__>(1, DUMMY_VAR__);
       
       current_statement__ = 3;
-      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        current_statement__ = 3;
-        assign(x_p, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable x_p");}
+      assign(x_p, nil_index_list(),
+        in__.read<std::vector<local_scalar_t__>, jacobian__>(lp__, 1),
+        "assigning variable x_p");
       Eigen::Matrix<local_scalar_t__, -1, 1> x_p_v;
       x_p_v = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(x_p_v, DUMMY_VAR__);
       
       current_statement__ = 4;
-      x_p_v = in__.vector(2);
+      assign(x_p_v, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__,
+          2), "assigning variable x_p_v");
       Eigen::Matrix<local_scalar_t__, -1, 1> shared_params_p;
       shared_params_p = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
       stan::math::fill(shared_params_p, DUMMY_VAR__);
       
       current_statement__ = 5;
-      shared_params_p = in__.vector(3);
+      assign(shared_params_p, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__,
+          3), "assigning variable shared_params_p");
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> job_params_p;
       job_params_p = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(3, Eigen::Matrix<local_scalar_t__, -1, 1>(3));
       stan::math::fill(job_params_p, DUMMY_VAR__);
       
       current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 6;
-        assign(job_params_p, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.vector(3), "assigning variable job_params_p");}
+      assign(job_params_p, nil_index_list(),
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+          lp__, 3, 3), "assigning variable job_params_p");
       local_scalar_t__ x_r;
       x_r = DUMMY_VAR__;
       
       current_statement__ = 7;
-      x_r = in__.scalar();
+      x_r = in__.read<local_scalar_t__, jacobian__>(lp__);
       local_scalar_t__ abc1_p;
       abc1_p = DUMMY_VAR__;
       
@@ -11697,52 +11157,52 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       y0_p = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 1;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 1;
-        assign(y0_p, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable y0_p");}
+      assign(y0_p, nil_index_list(),
+        in__.read<std::vector<local_scalar_t__>, jacobian__>(lp__, 2),
+        "assigning variable y0_p");
       std::vector<double> theta_p;
       theta_p = std::vector<double>(1, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        current_statement__ = 2;
-        assign(theta_p, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable theta_p");}
+      assign(theta_p, nil_index_list(),
+        in__.read<std::vector<local_scalar_t__>, jacobian__>(lp__, 1),
+        "assigning variable theta_p");
       std::vector<double> x_p;
       x_p = std::vector<double>(1, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
-      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        current_statement__ = 3;
-        assign(x_p, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable x_p");}
+      assign(x_p, nil_index_list(),
+        in__.read<std::vector<local_scalar_t__>, jacobian__>(lp__, 1),
+        "assigning variable x_p");
       Eigen::Matrix<double, -1, 1> x_p_v;
       x_p_v = Eigen::Matrix<double, -1, 1>(2);
       stan::math::fill(x_p_v, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 4;
-      x_p_v = in__.vector(2);
+      assign(x_p_v, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__,
+          2), "assigning variable x_p_v");
       Eigen::Matrix<double, -1, 1> shared_params_p;
       shared_params_p = Eigen::Matrix<double, -1, 1>(3);
       stan::math::fill(shared_params_p, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
-      shared_params_p = in__.vector(3);
+      assign(shared_params_p, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__,
+          3), "assigning variable shared_params_p");
       std::vector<Eigen::Matrix<double, -1, 1>> job_params_p;
       job_params_p = std::vector<Eigen::Matrix<double, -1, 1>>(3, Eigen::Matrix<double, -1, 1>(3));
       stan::math::fill(job_params_p, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        current_statement__ = 6;
-        assign(job_params_p, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.vector(3), "assigning variable job_params_p");}
+      assign(job_params_p, nil_index_list(),
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+          lp__, 3, 3), "assigning variable job_params_p");
       double x_r;
       x_r = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 7;
-      x_r = in__.scalar();
+      x_r = in__.read<local_scalar_t__, jacobian__>(lp__);
       double abc1_p;
       abc1_p = std::numeric_limits<double>::quiet_NaN();
       
@@ -13634,21 +13094,22 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       r = DUMMY_VAR__;
       
       current_statement__ = 1;
-      r = in__.scalar();
+      r = in__.read<local_scalar_t__, jacobian__>(lp__);
       std::vector<local_scalar_t__> ra;
       ra = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 2;
-        assign(ra, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable ra");}
+      assign(ra, nil_index_list(),
+        in__.read<std::vector<local_scalar_t__>, jacobian__>(lp__, N),
+        "assigning variable ra");
       Eigen::Matrix<local_scalar_t__, -1, 1> v;
       v = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(v, DUMMY_VAR__);
       
       current_statement__ = 3;
-      v = in__.vector(N);
+      assign(v, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__,
+          N), "assigning variable v");
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> z;
       z = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       stan::math::fill(z, DUMMY_VAR__);
@@ -15280,21 +14741,22 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       r = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      r = in__.scalar();
+      r = in__.read<local_scalar_t__, jacobian__>(lp__);
       std::vector<double> ra;
       ra = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 2;
-        assign(ra, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable ra");}
+      assign(ra, nil_index_list(),
+        in__.read<std::vector<local_scalar_t__>, jacobian__>(lp__, N),
+        "assigning variable ra");
       Eigen::Matrix<double, -1, 1> v;
       v = Eigen::Matrix<double, -1, 1>(N);
       stan::math::fill(v, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
-      v = in__.vector(N);
+      assign(v, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__,
+          N), "assigning variable v");
       std::vector<Eigen::Matrix<double, -1, 1>> z;
       z = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       stan::math::fill(z, std::numeric_limits<double>::quiet_NaN());
@@ -17438,98 +16900,36 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       alpha = DUMMY_VAR__;
       
       current_statement__ = 1;
-      alpha = in__.scalar();
-      current_statement__ = 1;
-      if (jacobian__) {
-        current_statement__ = 1;
-        alpha = stan::math::lb_constrain(alpha, 0, lp__);
-      } else {
-        current_statement__ = 1;
-        alpha = stan::math::lb_constrain(alpha, 0);
-      }
+      alpha = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
       local_scalar_t__ beta;
       beta = DUMMY_VAR__;
       
       current_statement__ = 2;
-      beta = in__.scalar();
-      current_statement__ = 2;
-      if (jacobian__) {
-        current_statement__ = 2;
-        beta = stan::math::lb_constrain(beta, 0, lp__);
-      } else {
-        current_statement__ = 2;
-        beta = stan::math::lb_constrain(beta, 0);
-      }
+      beta = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
       local_scalar_t__ gamma;
       gamma = DUMMY_VAR__;
       
       current_statement__ = 3;
-      gamma = in__.scalar();
-      current_statement__ = 3;
-      if (jacobian__) {
-        current_statement__ = 3;
-        gamma = stan::math::lb_constrain(gamma, 0, lp__);
-      } else {
-        current_statement__ = 3;
-        gamma = stan::math::lb_constrain(gamma, 0);
-      }
+      gamma = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
       local_scalar_t__ delta;
       delta = DUMMY_VAR__;
       
       current_statement__ = 4;
-      delta = in__.scalar();
-      current_statement__ = 4;
-      if (jacobian__) {
-        current_statement__ = 4;
-        delta = stan::math::lb_constrain(delta, 0, lp__);
-      } else {
-        current_statement__ = 4;
-        delta = stan::math::lb_constrain(delta, 0);
-      }
+      delta = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
       std::vector<local_scalar_t__> z_init;
       z_init = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
       
       current_statement__ = 5;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 5;
-        assign(z_init, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable z_init");}
-      current_statement__ = 5;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 5;
-        if (jacobian__) {
-          current_statement__ = 5;
-          assign(z_init, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::lb_constrain(z_init[(sym1__ - 1)], 0, lp__),
-            "assigning variable z_init");
-        } else {
-          current_statement__ = 5;
-          assign(z_init, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::lb_constrain(z_init[(sym1__ - 1)], 0),
-            "assigning variable z_init");
-        }}
+      assign(z_init, nil_index_list(),
+        in__.read_lb<std::vector<local_scalar_t__>, jacobian__>(0, lp__, 2),
+        "assigning variable z_init");
       std::vector<local_scalar_t__> sigma;
       sigma = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
       
       current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 6;
-        assign(sigma, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable sigma");}
-      current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 6;
-        if (jacobian__) {
-          current_statement__ = 6;
-          assign(sigma, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::lb_constrain(sigma[(sym1__ - 1)], 0, lp__),
-            "assigning variable sigma");
-        } else {
-          current_statement__ = 6;
-          assign(sigma, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::lb_constrain(sigma[(sym1__ - 1)], 0),
-            "assigning variable sigma");
-        }}
+      assign(sigma, nil_index_list(),
+        in__.read_lb<std::vector<local_scalar_t__>, jacobian__>(0, lp__, 2),
+        "assigning variable sigma");
       std::vector<std::vector<local_scalar_t__>> z;
       z = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(2, DUMMY_VAR__));
       
@@ -17602,58 +17002,36 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       alpha = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      alpha = in__.scalar();
-      current_statement__ = 1;
-      alpha = stan::math::lb_constrain(alpha, 0);
+      alpha = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
       double beta;
       beta = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
-      beta = in__.scalar();
-      current_statement__ = 2;
-      beta = stan::math::lb_constrain(beta, 0);
+      beta = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
       double gamma;
       gamma = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 3;
-      gamma = in__.scalar();
-      current_statement__ = 3;
-      gamma = stan::math::lb_constrain(gamma, 0);
+      gamma = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
       double delta;
       delta = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 4;
-      delta = in__.scalar();
-      current_statement__ = 4;
-      delta = stan::math::lb_constrain(delta, 0);
+      delta = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
       std::vector<double> z_init;
       z_init = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 5;
-        assign(z_init, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable z_init");}
-      current_statement__ = 5;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 5;
-        assign(z_init, cons_list(index_uni(sym1__), nil_index_list()),
-          stan::math::lb_constrain(z_init[(sym1__ - 1)], 0),
-          "assigning variable z_init");}
+      assign(z_init, nil_index_list(),
+        in__.read_lb<std::vector<local_scalar_t__>, jacobian__>(0, lp__, 2),
+        "assigning variable z_init");
       std::vector<double> sigma;
       sigma = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 6;
-        assign(sigma, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable sigma");}
-      current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 6;
-        assign(sigma, cons_list(index_uni(sym1__), nil_index_list()),
-          stan::math::lb_constrain(sigma[(sym1__ - 1)], 0),
-          "assigning variable sigma");}
+      assign(sigma, nil_index_list(),
+        in__.read_lb<std::vector<local_scalar_t__>, jacobian__>(0, lp__, 2),
+        "assigning variable sigma");
       std::vector<std::vector<double>> z;
       z = std::vector<std::vector<double>>(N, std::vector<double>(2, std::numeric_limits<double>::quiet_NaN()));
       
@@ -18548,60 +17926,64 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       stan::math::fill(alpha_v, DUMMY_VAR__);
       
       current_statement__ = 1;
-      alpha_v = in__.vector(k);
+      assign(alpha_v, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__,
+          k), "assigning variable alpha_v");
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
       beta = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
       stan::math::fill(beta, DUMMY_VAR__);
       
       current_statement__ = 2;
-      beta = in__.vector(k);
+      assign(beta, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__,
+          k), "assigning variable beta");
       Eigen::Matrix<local_scalar_t__, -1, 1> cuts;
       cuts = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
       stan::math::fill(cuts, DUMMY_VAR__);
       
       current_statement__ = 3;
-      cuts = in__.vector(k);
+      assign(cuts, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__,
+          k), "assigning variable cuts");
       local_scalar_t__ sigma;
       sigma = DUMMY_VAR__;
       
       current_statement__ = 4;
-      sigma = in__.scalar();
-      current_statement__ = 4;
-      if (jacobian__) {
-        current_statement__ = 4;
-        sigma = stan::math::lb_constrain(sigma, 0, lp__);
-      } else {
-        current_statement__ = 4;
-        sigma = stan::math::lb_constrain(sigma, 0);
-      }
+      sigma = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
       local_scalar_t__ alpha;
       alpha = DUMMY_VAR__;
       
       current_statement__ = 5;
-      alpha = in__.scalar();
+      alpha = in__.read<local_scalar_t__, jacobian__>(lp__);
       local_scalar_t__ phi;
       phi = DUMMY_VAR__;
       
       current_statement__ = 6;
-      phi = in__.scalar();
+      phi = in__.read<local_scalar_t__, jacobian__>(lp__);
       Eigen::Matrix<local_scalar_t__, -1, -1> X_p;
       X_p = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
       stan::math::fill(X_p, DUMMY_VAR__);
       
       current_statement__ = 7;
-      X_p = in__.matrix(n, k);
+      assign(X_p, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(lp__,
+          n, k), "assigning variable X_p");
       Eigen::Matrix<local_scalar_t__, -1, -1> beta_m;
       beta_m = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
       stan::math::fill(beta_m, DUMMY_VAR__);
       
       current_statement__ = 8;
-      beta_m = in__.matrix(n, k);
+      assign(beta_m, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(lp__,
+          n, k), "assigning variable beta_m");
       Eigen::Matrix<local_scalar_t__, 1, -1> X_rv_p;
       X_rv_p = Eigen::Matrix<local_scalar_t__, 1, -1>(n);
       stan::math::fill(X_rv_p, DUMMY_VAR__);
       
       current_statement__ = 9;
-      X_rv_p = in__.row_vector(n);
+      assign(X_rv_p, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>, jacobian__>(lp__,
+          n), "assigning variable X_rv_p");
       {
         current_statement__ = 10;
         lp_accum__.add(
@@ -19172,54 +18554,64 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       stan::math::fill(alpha_v, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 1;
-      alpha_v = in__.vector(k);
+      assign(alpha_v, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__,
+          k), "assigning variable alpha_v");
       Eigen::Matrix<double, -1, 1> beta;
       beta = Eigen::Matrix<double, -1, 1>(k);
       stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
-      beta = in__.vector(k);
+      assign(beta, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__,
+          k), "assigning variable beta");
       Eigen::Matrix<double, -1, 1> cuts;
       cuts = Eigen::Matrix<double, -1, 1>(k);
       stan::math::fill(cuts, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
-      cuts = in__.vector(k);
+      assign(cuts, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__,
+          k), "assigning variable cuts");
       double sigma;
       sigma = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 4;
-      sigma = in__.scalar();
-      current_statement__ = 4;
-      sigma = stan::math::lb_constrain(sigma, 0);
+      sigma = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
       double alpha;
       alpha = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 5;
-      alpha = in__.scalar();
+      alpha = in__.read<local_scalar_t__, jacobian__>(lp__);
       double phi;
       phi = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 6;
-      phi = in__.scalar();
+      phi = in__.read<local_scalar_t__, jacobian__>(lp__);
       Eigen::Matrix<double, -1, -1> X_p;
       X_p = Eigen::Matrix<double, -1, -1>(n, k);
       stan::math::fill(X_p, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 7;
-      X_p = in__.matrix(n, k);
+      assign(X_p, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(lp__,
+          n, k), "assigning variable X_p");
       Eigen::Matrix<double, -1, -1> beta_m;
       beta_m = Eigen::Matrix<double, -1, -1>(n, k);
       stan::math::fill(beta_m, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 8;
-      beta_m = in__.matrix(n, k);
+      assign(beta_m, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(lp__,
+          n, k), "assigning variable beta_m");
       Eigen::Matrix<double, 1, -1> X_rv_p;
       X_rv_p = Eigen::Matrix<double, 1, -1>(n);
       stan::math::fill(X_rv_p, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 9;
-      X_rv_p = in__.row_vector(n);
+      assign(X_rv_p, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>, jacobian__>(lp__,
+          n), "assigning variable X_rv_p");
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.emplace_back(alpha_v[(sym1__ - 1)]);}
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
@@ -19795,59 +19187,22 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
       L_Omega = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(nt, Eigen::Matrix<local_scalar_t__, -1, -1>(2, 2));
       stan::math::fill(L_Omega, DUMMY_VAR__);
       
-      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> L_Omega_in__;
-      L_Omega_in__ = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(nt, Eigen::Matrix<local_scalar_t__, -1, 1>(
-        ((2 * (2 - 1)) / 2)));
-      stan::math::fill(L_Omega_in__, DUMMY_VAR__);
-      
       current_statement__ = 1;
-      for (int sym1__ = 1; sym1__ <= nt; ++sym1__) {
-        current_statement__ = 1;
-        assign(L_Omega_in__, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.vector(((2 * (2 - 1)) / 2)), "assigning variable L_Omega_in__");
-      }
-      current_statement__ = 1;
-      for (int sym1__ = 1; sym1__ <= nt; ++sym1__) {
-        current_statement__ = 1;
-        if (jacobian__) {
-          current_statement__ = 1;
-          assign(L_Omega, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::cholesky_corr_constrain(L_Omega_in__[(sym1__ - 1)],
-              2, lp__), "assigning variable L_Omega");
-        } else {
-          current_statement__ = 1;
-          assign(L_Omega, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::cholesky_corr_constrain(L_Omega_in__[(sym1__ - 1)], 2),
-            "assigning variable L_Omega");
-        }}
+      assign(L_Omega, nil_index_list(),
+        in__.read_cholesky_corr<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+          lp__, nt, 2, 2), "assigning variable L_Omega");
       Eigen::Matrix<local_scalar_t__, -1, 1> z1;
       z1 = Eigen::Matrix<local_scalar_t__, -1, 1>(NS);
       stan::math::fill(z1, DUMMY_VAR__);
       
       current_statement__ = 2;
-      z1 = in__.vector(NS);
-      current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= NS; ++sym1__) {
-        current_statement__ = 2;
-        if (jacobian__) {
-          current_statement__ = 2;
-          assign(z1, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::lb_constrain(z1[(sym1__ - 1)],
-              rvalue(L_Omega,
-                cons_list(index_uni(1),
-                  cons_list(index_uni(1),
-                    cons_list(index_uni(2), nil_index_list()))), "L_Omega"),
-              lp__), "assigning variable z1");
-        } else {
-          current_statement__ = 2;
-          assign(z1, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::lb_constrain(z1[(sym1__ - 1)],
-              rvalue(L_Omega,
-                cons_list(index_uni(1),
-                  cons_list(index_uni(1),
-                    cons_list(index_uni(2), nil_index_list()))), "L_Omega")),
-            "assigning variable z1");
-        }}
+      assign(z1, nil_index_list(),
+        in__.read_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+          rvalue(L_Omega,
+            cons_list(index_uni(1),
+              cons_list(index_uni(1),
+                cons_list(index_uni(2), nil_index_list()))), "L_Omega"),
+          lp__, NS), "assigning variable z1");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -19879,39 +19234,22 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
       L_Omega = std::vector<Eigen::Matrix<double, -1, -1>>(nt, Eigen::Matrix<double, -1, -1>(2, 2));
       stan::math::fill(L_Omega, std::numeric_limits<double>::quiet_NaN());
       
-      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> L_Omega_in__;
-      L_Omega_in__ = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(nt, Eigen::Matrix<local_scalar_t__, -1, 1>(
-        ((2 * (2 - 1)) / 2)));
-      stan::math::fill(L_Omega_in__, DUMMY_VAR__);
-      
       current_statement__ = 1;
-      for (int sym1__ = 1; sym1__ <= nt; ++sym1__) {
-        current_statement__ = 1;
-        assign(L_Omega_in__, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.vector(((2 * (2 - 1)) / 2)), "assigning variable L_Omega_in__");
-      }
-      current_statement__ = 1;
-      for (int sym1__ = 1; sym1__ <= nt; ++sym1__) {
-        current_statement__ = 1;
-        assign(L_Omega, cons_list(index_uni(sym1__), nil_index_list()),
-          stan::math::cholesky_corr_constrain(L_Omega_in__[(sym1__ - 1)], 2),
-          "assigning variable L_Omega");}
+      assign(L_Omega, nil_index_list(),
+        in__.read_cholesky_corr<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+          lp__, nt, 2, 2), "assigning variable L_Omega");
       Eigen::Matrix<double, -1, 1> z1;
       z1 = Eigen::Matrix<double, -1, 1>(NS);
       stan::math::fill(z1, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
-      z1 = in__.vector(NS);
-      current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= NS; ++sym1__) {
-        current_statement__ = 2;
-        assign(z1, cons_list(index_uni(sym1__), nil_index_list()),
-          stan::math::lb_constrain(z1[(sym1__ - 1)],
-            rvalue(L_Omega,
+      assign(z1, nil_index_list(),
+        in__.read_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+          rvalue(L_Omega,
+            cons_list(index_uni(1),
               cons_list(index_uni(1),
-                cons_list(index_uni(1),
-                  cons_list(index_uni(2), nil_index_list()))), "L_Omega")),
-          "assigning variable z1");}
+                cons_list(index_uni(2), nil_index_list()))), "L_Omega"),
+          lp__, NS), "assigning variable z1");
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= nt; ++sym3__) {
@@ -20477,26 +19815,23 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
       y1 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       
       current_statement__ = 1;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 1;
-        assign(y1, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable y1");}
+      assign(y1, nil_index_list(),
+        in__.read<std::vector<local_scalar_t__>, jacobian__>(lp__, N),
+        "assigning variable y1");
       std::vector<local_scalar_t__> y2;
       y2 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 2;
-        assign(y2, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable y2");}
+      assign(y2, nil_index_list(),
+        in__.read<std::vector<local_scalar_t__>, jacobian__>(lp__, N),
+        "assigning variable y2");
       std::vector<local_scalar_t__> y3;
       y3 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       
       current_statement__ = 3;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 3;
-        assign(y3, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable y3");}
+      assign(y3, nil_index_list(),
+        in__.read<std::vector<local_scalar_t__>, jacobian__>(lp__, N),
+        "assigning variable y3");
       {
         current_statement__ = 4;
         lp_accum__.add(reduce_sum<g_rsfunctor__>(y1, 1, pstream__));
@@ -20540,26 +19875,23 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
       y1 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 1;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 1;
-        assign(y1, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable y1");}
+      assign(y1, nil_index_list(),
+        in__.read<std::vector<local_scalar_t__>, jacobian__>(lp__, N),
+        "assigning variable y1");
       std::vector<double> y2;
       y2 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 2;
-        assign(y2, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable y2");}
+      assign(y2, nil_index_list(),
+        in__.read<std::vector<local_scalar_t__>, jacobian__>(lp__, N),
+        "assigning variable y2");
       std::vector<double> y3;
       y3 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 3;
-        assign(y3, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable y3");}
+      assign(y3, nil_index_list(),
+        in__.read<std::vector<local_scalar_t__>, jacobian__>(lp__, N),
+        "assigning variable y3");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         vars__.emplace_back(y1[(sym1__ - 1)]);}
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -22043,173 +21375,125 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
       stan::math::fill(a8, DUMMY_VAR__);
       
       current_statement__ = 1;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 1;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 1;
-          assign(a8,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            in__.matrix(N, N), "assigning variable a8");}}
+      assign(a8, nil_index_list(),
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>, jacobian__>(
+          lp__, N, N, N, N), "assigning variable a8");
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> a7;
       a7 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N)));
       stan::math::fill(a7, DUMMY_VAR__);
       
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 2;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 2;
-          assign(a7,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            in__.row_vector(N), "assigning variable a7");}}
+      assign(a7, nil_index_list(),
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>, jacobian__>(
+          lp__, N, N, N), "assigning variable a7");
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> a6;
       a6 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N)));
       stan::math::fill(a6, DUMMY_VAR__);
       
       current_statement__ = 3;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 3;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 3;
-          assign(a6,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            in__.vector(N), "assigning variable a6");}}
+      assign(a6, nil_index_list(),
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>, jacobian__>(
+          lp__, N, N, N), "assigning variable a6");
       std::vector<std::vector<local_scalar_t__>> a5;
       a5 = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__));
       
       current_statement__ = 4;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 4;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 4;
-          assign(a5,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), in__.scalar(),
-            "assigning variable a5");}}
+      assign(a5, nil_index_list(),
+        in__.read<std::vector<std::vector<local_scalar_t__>>, jacobian__>(
+          lp__, N, N), "assigning variable a5");
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> a4;
       a4 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N));
       stan::math::fill(a4, DUMMY_VAR__);
       
       current_statement__ = 5;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 5;
-        assign(a4, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.matrix(N, N), "assigning variable a4");}
+      assign(a4, nil_index_list(),
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+          lp__, N, N, N), "assigning variable a4");
       std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> a3;
       a3 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
       stan::math::fill(a3, DUMMY_VAR__);
       
       current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 6;
-        assign(a3, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.row_vector(N), "assigning variable a3");}
+      assign(a3, nil_index_list(),
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>, jacobian__>(
+          lp__, N, N), "assigning variable a3");
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> a2;
       a2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       stan::math::fill(a2, DUMMY_VAR__);
       
       current_statement__ = 7;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 7;
-        assign(a2, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.vector(N), "assigning variable a2");}
+      assign(a2, nil_index_list(),
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+          lp__, N, N), "assigning variable a2");
       std::vector<local_scalar_t__> a1;
       a1 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       
       current_statement__ = 8;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 8;
-        assign(a1, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable a1");}
+      assign(a1, nil_index_list(),
+        in__.read<std::vector<local_scalar_t__>, jacobian__>(lp__, N),
+        "assigning variable a1");
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> y8;
       y8 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
       stan::math::fill(y8, DUMMY_VAR__);
       
       current_statement__ = 9;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 9;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 9;
-          assign(y8,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            in__.matrix(N, N), "assigning variable y8");}}
+      assign(y8, nil_index_list(),
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>, jacobian__>(
+          lp__, N, N, N, N), "assigning variable y8");
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> y7;
       y7 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N)));
       stan::math::fill(y7, DUMMY_VAR__);
       
       current_statement__ = 10;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 10;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 10;
-          assign(y7,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            in__.row_vector(N), "assigning variable y7");}}
+      assign(y7, nil_index_list(),
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>, jacobian__>(
+          lp__, N, N, N), "assigning variable y7");
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> y6;
       y6 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N)));
       stan::math::fill(y6, DUMMY_VAR__);
       
       current_statement__ = 11;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 11;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 11;
-          assign(y6,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            in__.vector(N), "assigning variable y6");}}
+      assign(y6, nil_index_list(),
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>, jacobian__>(
+          lp__, N, N, N), "assigning variable y6");
       std::vector<std::vector<local_scalar_t__>> y5;
       y5 = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__));
       
       current_statement__ = 12;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 12;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 12;
-          assign(y5,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), in__.scalar(),
-            "assigning variable y5");}}
+      assign(y5, nil_index_list(),
+        in__.read<std::vector<std::vector<local_scalar_t__>>, jacobian__>(
+          lp__, N, N), "assigning variable y5");
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> y4;
       y4 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N));
       stan::math::fill(y4, DUMMY_VAR__);
       
       current_statement__ = 13;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 13;
-        assign(y4, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.matrix(N, N), "assigning variable y4");}
+      assign(y4, nil_index_list(),
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+          lp__, N, N, N), "assigning variable y4");
       std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> y3;
       y3 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
       stan::math::fill(y3, DUMMY_VAR__);
       
       current_statement__ = 14;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 14;
-        assign(y3, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.row_vector(N), "assigning variable y3");}
+      assign(y3, nil_index_list(),
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>, jacobian__>(
+          lp__, N, N), "assigning variable y3");
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> y2;
       y2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       stan::math::fill(y2, DUMMY_VAR__);
       
       current_statement__ = 15;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 15;
-        assign(y2, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.vector(N), "assigning variable y2");}
+      assign(y2, nil_index_list(),
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+          lp__, N, N), "assigning variable y2");
       std::vector<local_scalar_t__> y1;
       y1 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       
       current_statement__ = 16;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 16;
-        assign(y1, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable y1");}
+      assign(y1, nil_index_list(),
+        in__.read<std::vector<local_scalar_t__>, jacobian__>(lp__, N),
+        "assigning variable y1");
       {
         current_statement__ = 17;
         lp_accum__.add(reduce_sum<h8_rsfunctor__>(x, 1, pstream__, a8));
@@ -22276,173 +21560,125 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
       stan::math::fill(a8, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 1;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 1;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 1;
-          assign(a8,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            in__.matrix(N, N), "assigning variable a8");}}
+      assign(a8, nil_index_list(),
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>, jacobian__>(
+          lp__, N, N, N, N), "assigning variable a8");
       std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> a7;
       a7 = std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(N, std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N)));
       stan::math::fill(a7, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 2;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 2;
-          assign(a7,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            in__.row_vector(N), "assigning variable a7");}}
+      assign(a7, nil_index_list(),
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>, jacobian__>(
+          lp__, N, N, N), "assigning variable a7");
       std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> a6;
       a6 = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(N, std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N)));
       stan::math::fill(a6, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 3;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 3;
-          assign(a6,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            in__.vector(N), "assigning variable a6");}}
+      assign(a6, nil_index_list(),
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>, jacobian__>(
+          lp__, N, N, N), "assigning variable a6");
       std::vector<std::vector<double>> a5;
       a5 = std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN()));
       
       current_statement__ = 4;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 4;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 4;
-          assign(a5,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), in__.scalar(),
-            "assigning variable a5");}}
+      assign(a5, nil_index_list(),
+        in__.read<std::vector<std::vector<local_scalar_t__>>, jacobian__>(
+          lp__, N, N), "assigning variable a5");
       std::vector<Eigen::Matrix<double, -1, -1>> a4;
       a4 = std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N));
       stan::math::fill(a4, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 5;
-        assign(a4, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.matrix(N, N), "assigning variable a4");}
+      assign(a4, nil_index_list(),
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+          lp__, N, N, N), "assigning variable a4");
       std::vector<Eigen::Matrix<double, 1, -1>> a3;
       a3 = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
       stan::math::fill(a3, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 6;
-        assign(a3, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.row_vector(N), "assigning variable a3");}
+      assign(a3, nil_index_list(),
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>, jacobian__>(
+          lp__, N, N), "assigning variable a3");
       std::vector<Eigen::Matrix<double, -1, 1>> a2;
       a2 = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       stan::math::fill(a2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 7;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 7;
-        assign(a2, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.vector(N), "assigning variable a2");}
+      assign(a2, nil_index_list(),
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+          lp__, N, N), "assigning variable a2");
       std::vector<double> a1;
       a1 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 8;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 8;
-        assign(a1, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable a1");}
+      assign(a1, nil_index_list(),
+        in__.read<std::vector<local_scalar_t__>, jacobian__>(lp__, N),
+        "assigning variable a1");
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> y8;
       y8 = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(N, std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N)));
       stan::math::fill(y8, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 9;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 9;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 9;
-          assign(y8,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            in__.matrix(N, N), "assigning variable y8");}}
+      assign(y8, nil_index_list(),
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>, jacobian__>(
+          lp__, N, N, N, N), "assigning variable y8");
       std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> y7;
       y7 = std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(N, std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N)));
       stan::math::fill(y7, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 10;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 10;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 10;
-          assign(y7,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            in__.row_vector(N), "assigning variable y7");}}
+      assign(y7, nil_index_list(),
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>, jacobian__>(
+          lp__, N, N, N), "assigning variable y7");
       std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> y6;
       y6 = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(N, std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N)));
       stan::math::fill(y6, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 11;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 11;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 11;
-          assign(y6,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            in__.vector(N), "assigning variable y6");}}
+      assign(y6, nil_index_list(),
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>, jacobian__>(
+          lp__, N, N, N), "assigning variable y6");
       std::vector<std::vector<double>> y5;
       y5 = std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN()));
       
       current_statement__ = 12;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 12;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 12;
-          assign(y5,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), in__.scalar(),
-            "assigning variable y5");}}
+      assign(y5, nil_index_list(),
+        in__.read<std::vector<std::vector<local_scalar_t__>>, jacobian__>(
+          lp__, N, N), "assigning variable y5");
       std::vector<Eigen::Matrix<double, -1, -1>> y4;
       y4 = std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N));
       stan::math::fill(y4, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 13;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 13;
-        assign(y4, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.matrix(N, N), "assigning variable y4");}
+      assign(y4, nil_index_list(),
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+          lp__, N, N, N), "assigning variable y4");
       std::vector<Eigen::Matrix<double, 1, -1>> y3;
       y3 = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
       stan::math::fill(y3, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 14;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 14;
-        assign(y3, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.row_vector(N), "assigning variable y3");}
+      assign(y3, nil_index_list(),
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>, jacobian__>(
+          lp__, N, N), "assigning variable y3");
       std::vector<Eigen::Matrix<double, -1, 1>> y2;
       y2 = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       stan::math::fill(y2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 15;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 15;
-        assign(y2, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.vector(N), "assigning variable y2");}
+      assign(y2, nil_index_list(),
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+          lp__, N, N), "assigning variable y2");
       std::vector<double> y1;
       y1 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 16;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 16;
-        assign(y1, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable y1");}
+      assign(y1, nil_index_list(),
+        in__.read<std::vector<local_scalar_t__>, jacobian__>(lp__, N),
+        "assigning variable y1");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
@@ -26206,126 +25442,100 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       y1 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       
       current_statement__ = 1;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 1;
-        assign(y1, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable y1");}
+      assign(y1, nil_index_list(),
+        in__.read<std::vector<local_scalar_t__>, jacobian__>(lp__, N),
+        "assigning variable y1");
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> y2;
       y2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       stan::math::fill(y2, DUMMY_VAR__);
       
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 2;
-        assign(y2, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.vector(N), "assigning variable y2");}
+      assign(y2, nil_index_list(),
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+          lp__, N, N), "assigning variable y2");
       std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> y3;
       y3 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
       stan::math::fill(y3, DUMMY_VAR__);
       
       current_statement__ = 3;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 3;
-        assign(y3, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.row_vector(N), "assigning variable y3");}
+      assign(y3, nil_index_list(),
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>, jacobian__>(
+          lp__, N, N), "assigning variable y3");
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> y4;
       y4 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N));
       stan::math::fill(y4, DUMMY_VAR__);
       
       current_statement__ = 4;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 4;
-        assign(y4, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.matrix(N, N), "assigning variable y4");}
+      assign(y4, nil_index_list(),
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+          lp__, N, N, N), "assigning variable y4");
       std::vector<std::vector<local_scalar_t__>> y5;
       y5 = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__));
       
       current_statement__ = 5;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 5;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 5;
-          assign(y5,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), in__.scalar(),
-            "assigning variable y5");}}
+      assign(y5, nil_index_list(),
+        in__.read<std::vector<std::vector<local_scalar_t__>>, jacobian__>(
+          lp__, N, N), "assigning variable y5");
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> y6;
       y6 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N)));
       stan::math::fill(y6, DUMMY_VAR__);
       
       current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 6;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 6;
-          assign(y6,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            in__.vector(N), "assigning variable y6");}}
+      assign(y6, nil_index_list(),
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>, jacobian__>(
+          lp__, N, N, N), "assigning variable y6");
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> y7;
       y7 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N)));
       stan::math::fill(y7, DUMMY_VAR__);
       
       current_statement__ = 7;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 7;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 7;
-          assign(y7,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            in__.row_vector(N), "assigning variable y7");}}
+      assign(y7, nil_index_list(),
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>, jacobian__>(
+          lp__, N, N, N), "assigning variable y7");
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> y8;
       y8 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
       stan::math::fill(y8, DUMMY_VAR__);
       
       current_statement__ = 8;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 8;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 8;
-          assign(y8,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            in__.matrix(N, N), "assigning variable y8");}}
+      assign(y8, nil_index_list(),
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>, jacobian__>(
+          lp__, N, N, N, N), "assigning variable y8");
       local_scalar_t__ y9;
       y9 = DUMMY_VAR__;
       
       current_statement__ = 9;
-      y9 = in__.scalar();
+      y9 = in__.read<local_scalar_t__, jacobian__>(lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> y10;
       y10 = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(y10, DUMMY_VAR__);
       
       current_statement__ = 10;
-      y10 = in__.vector(N);
+      assign(y10, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__,
+          N), "assigning variable y10");
       Eigen::Matrix<local_scalar_t__, 1, -1> y11;
       y11 = Eigen::Matrix<local_scalar_t__, 1, -1>(N);
       stan::math::fill(y11, DUMMY_VAR__);
       
       current_statement__ = 11;
-      y11 = in__.row_vector(N);
+      assign(y11, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>, jacobian__>(lp__,
+          N), "assigning variable y11");
       Eigen::Matrix<local_scalar_t__, -1, -1> y12;
       y12 = Eigen::Matrix<local_scalar_t__, -1, -1>(N, N);
       stan::math::fill(y12, DUMMY_VAR__);
       
       current_statement__ = 12;
-      y12 = in__.matrix(N, N);
+      assign(y12, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(lp__,
+          N, N), "assigning variable y12");
       std::vector<std::vector<std::vector<local_scalar_t__>>> y17;
       y17 = std::vector<std::vector<std::vector<local_scalar_t__>>>(N, std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__)));
       
       current_statement__ = 13;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 13;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 13;
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            current_statement__ = 13;
-            assign(y17,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              in__.scalar(), "assigning variable y17");}}}
+      assign(y17, nil_index_list(),
+        in__.read<std::vector<std::vector<std::vector<local_scalar_t__>>>, jacobian__>(
+          lp__, N, N, N), "assigning variable y17");
       {
         local_scalar_t__ t1;
         t1 = DUMMY_VAR__;
@@ -26496,126 +25706,100 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       y1 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 1;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 1;
-        assign(y1, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable y1");}
+      assign(y1, nil_index_list(),
+        in__.read<std::vector<local_scalar_t__>, jacobian__>(lp__, N),
+        "assigning variable y1");
       std::vector<Eigen::Matrix<double, -1, 1>> y2;
       y2 = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       stan::math::fill(y2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 2;
-        assign(y2, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.vector(N), "assigning variable y2");}
+      assign(y2, nil_index_list(),
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+          lp__, N, N), "assigning variable y2");
       std::vector<Eigen::Matrix<double, 1, -1>> y3;
       y3 = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
       stan::math::fill(y3, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 3;
-        assign(y3, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.row_vector(N), "assigning variable y3");}
+      assign(y3, nil_index_list(),
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>, jacobian__>(
+          lp__, N, N), "assigning variable y3");
       std::vector<Eigen::Matrix<double, -1, -1>> y4;
       y4 = std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N));
       stan::math::fill(y4, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 4;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 4;
-        assign(y4, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.matrix(N, N), "assigning variable y4");}
+      assign(y4, nil_index_list(),
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+          lp__, N, N, N), "assigning variable y4");
       std::vector<std::vector<double>> y5;
       y5 = std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN()));
       
       current_statement__ = 5;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 5;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 5;
-          assign(y5,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), in__.scalar(),
-            "assigning variable y5");}}
+      assign(y5, nil_index_list(),
+        in__.read<std::vector<std::vector<local_scalar_t__>>, jacobian__>(
+          lp__, N, N), "assigning variable y5");
       std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> y6;
       y6 = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(N, std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N)));
       stan::math::fill(y6, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 6;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 6;
-          assign(y6,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            in__.vector(N), "assigning variable y6");}}
+      assign(y6, nil_index_list(),
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>, jacobian__>(
+          lp__, N, N, N), "assigning variable y6");
       std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> y7;
       y7 = std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(N, std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N)));
       stan::math::fill(y7, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 7;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 7;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 7;
-          assign(y7,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            in__.row_vector(N), "assigning variable y7");}}
+      assign(y7, nil_index_list(),
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>, jacobian__>(
+          lp__, N, N, N), "assigning variable y7");
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> y8;
       y8 = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(N, std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N)));
       stan::math::fill(y8, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 8;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 8;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 8;
-          assign(y8,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            in__.matrix(N, N), "assigning variable y8");}}
+      assign(y8, nil_index_list(),
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>, jacobian__>(
+          lp__, N, N, N, N), "assigning variable y8");
       double y9;
       y9 = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 9;
-      y9 = in__.scalar();
+      y9 = in__.read<local_scalar_t__, jacobian__>(lp__);
       Eigen::Matrix<double, -1, 1> y10;
       y10 = Eigen::Matrix<double, -1, 1>(N);
       stan::math::fill(y10, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 10;
-      y10 = in__.vector(N);
+      assign(y10, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(lp__,
+          N), "assigning variable y10");
       Eigen::Matrix<double, 1, -1> y11;
       y11 = Eigen::Matrix<double, 1, -1>(N);
       stan::math::fill(y11, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 11;
-      y11 = in__.row_vector(N);
+      assign(y11, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>, jacobian__>(lp__,
+          N), "assigning variable y11");
       Eigen::Matrix<double, -1, -1> y12;
       y12 = Eigen::Matrix<double, -1, -1>(N, N);
       stan::math::fill(y12, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 12;
-      y12 = in__.matrix(N, N);
+      assign(y12, nil_index_list(),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(lp__,
+          N, N), "assigning variable y12");
       std::vector<std::vector<std::vector<double>>> y17;
       y17 = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN())));
       
       current_statement__ = 13;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 13;
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          current_statement__ = 13;
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            current_statement__ = 13;
-            assign(y17,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              in__.scalar(), "assigning variable y17");}}}
+      assign(y17, nil_index_list(),
+        in__.read<std::vector<std::vector<std::vector<local_scalar_t__>>>, jacobian__>(
+          lp__, N, N, N), "assigning variable y17");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         vars__.emplace_back(y1[(sym1__ - 1)]);}
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -28275,15 +27459,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
       x = DUMMY_VAR__;
       
       current_statement__ = 1;
-      x = in__.scalar();
-      current_statement__ = 1;
-      if (jacobian__) {
-        current_statement__ = 1;
-        x = stan::math::lb_constrain(x, 0, lp__);
-      } else {
-        current_statement__ = 1;
-        x = stan::math::lb_constrain(x, 0);
-      }
+      x = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
       {
         current_statement__ = 4;
         if (t) {
@@ -28341,9 +27517,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
       x = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      x = in__.scalar();
-      current_statement__ = 1;
-      x = stan::math::lb_constrain(x, 0);
+      x = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
       vars__.emplace_back(x);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
@@ -29048,606 +28222,198 @@ class transform_model final : public model_base_crtp<transform_model> {
       p_1 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       
       current_statement__ = 1;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 1;
-        assign(p_1, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable p_1");}
+      assign(p_1, nil_index_list(),
+        in__.read_lb<std::vector<local_scalar_t__>, jacobian__>(
+          ds[(1 - 1)][(1 - 1)], lp__, k), "assigning variable p_1");
       current_statement__ = 1;
       check_matching_dims("constraint", "p_1", p_1, "lower",
                           ds[(1 - 1)][(1 - 1)]);
-      current_statement__ = 1;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 1;
-        if (jacobian__) {
-          current_statement__ = 1;
-          assign(p_1, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::lb_constrain(p_1[(sym1__ - 1)],
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)], lp__),
-            "assigning variable p_1");
-        } else {
-          current_statement__ = 1;
-          assign(p_1, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::lb_constrain(p_1[(sym1__ - 1)],
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)]), "assigning variable p_1");
-        }}
       std::vector<local_scalar_t__> p_2;
       p_2 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 2;
-        assign(p_2, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable p_2");}
+      assign(p_2, nil_index_list(),
+        in__.read_ub<std::vector<local_scalar_t__>, jacobian__>(
+          ds[(1 - 1)][(1 - 1)], lp__, k), "assigning variable p_2");
       current_statement__ = 2;
       check_matching_dims("constraint", "p_2", p_2, "upper",
                           ds[(1 - 1)][(1 - 1)]);
-      current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 2;
-        if (jacobian__) {
-          current_statement__ = 2;
-          assign(p_2, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::ub_constrain(p_2[(sym1__ - 1)],
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)], lp__),
-            "assigning variable p_2");
-        } else {
-          current_statement__ = 2;
-          assign(p_2, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::ub_constrain(p_2[(sym1__ - 1)],
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)]), "assigning variable p_2");
-        }}
       std::vector<local_scalar_t__> p_3;
       p_3 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       
       current_statement__ = 3;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 3;
-        assign(p_3, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable p_3");}
+      assign(p_3, nil_index_list(),
+        in__.read_lub<std::vector<local_scalar_t__>, jacobian__>(
+          ds[(1 - 1)][(1 - 1)], ds[(1 - 1)][(2 - 1)], lp__, k),
+        "assigning variable p_3");
       current_statement__ = 3;
       check_matching_dims("constraint", "p_3", p_3, "lower",
                           ds[(1 - 1)][(1 - 1)]);
       current_statement__ = 3;
       check_matching_dims("constraint", "p_3", p_3, "upper",
                           ds[(1 - 1)][(2 - 1)]);
-      current_statement__ = 3;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 3;
-        if (jacobian__) {
-          current_statement__ = 3;
-          assign(p_3, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::lub_constrain(p_3[(sym1__ - 1)],
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-              ds[(1 - 1)][(2 - 1)][(sym1__ - 1)], lp__),
-            "assigning variable p_3");
-        } else {
-          current_statement__ = 3;
-          assign(p_3, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::lub_constrain(p_3[(sym1__ - 1)],
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-              ds[(1 - 1)][(2 - 1)][(sym1__ - 1)]), "assigning variable p_3");
-        }}
       std::vector<local_scalar_t__> p_4;
       p_4 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       
       current_statement__ = 4;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 4;
-        assign(p_4, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable p_4");}
+      assign(p_4, nil_index_list(),
+        in__.read_lub<std::vector<local_scalar_t__>, jacobian__>(0,
+          ds[(1 - 1)][(2 - 1)], lp__, k), "assigning variable p_4");
       current_statement__ = 4;
       check_matching_dims("constraint", "p_4", p_4, "upper",
                           ds[(1 - 1)][(2 - 1)]);
-      current_statement__ = 4;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 4;
-        if (jacobian__) {
-          current_statement__ = 4;
-          assign(p_4, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::lub_constrain(p_4[(sym1__ - 1)], 0,
-              ds[(1 - 1)][(2 - 1)][(sym1__ - 1)], lp__),
-            "assigning variable p_4");
-        } else {
-          current_statement__ = 4;
-          assign(p_4, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::lub_constrain(p_4[(sym1__ - 1)], 0,
-              ds[(1 - 1)][(2 - 1)][(sym1__ - 1)]), "assigning variable p_4");
-        }}
       std::vector<local_scalar_t__> p_5;
       p_5 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       
       current_statement__ = 5;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 5;
-        assign(p_5, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable p_5");}
+      assign(p_5, nil_index_list(),
+        in__.read_lub<std::vector<local_scalar_t__>, jacobian__>(
+          ds[(1 - 1)][(1 - 1)], 1, lp__, k), "assigning variable p_5");
       current_statement__ = 5;
       check_matching_dims("constraint", "p_5", p_5, "lower",
                           ds[(1 - 1)][(1 - 1)]);
-      current_statement__ = 5;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 5;
-        if (jacobian__) {
-          current_statement__ = 5;
-          assign(p_5, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::lub_constrain(p_5[(sym1__ - 1)],
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)], 1, lp__),
-            "assigning variable p_5");
-        } else {
-          current_statement__ = 5;
-          assign(p_5, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::lub_constrain(p_5[(sym1__ - 1)],
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)], 1),
-            "assigning variable p_5");
-        }}
       std::vector<local_scalar_t__> p_6;
       p_6 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       
       current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 6;
-        assign(p_6, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable p_6");}
+      assign(p_6, nil_index_list(),
+        in__.read_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
+          ds[(1 - 1)][(1 - 1)], 1, lp__, k), "assigning variable p_6");
       current_statement__ = 6;
       check_matching_dims("constraint", "p_6", p_6, "offset",
                           ds[(1 - 1)][(1 - 1)]);
-      current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 6;
-        if (jacobian__) {
-          current_statement__ = 6;
-          assign(p_6, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::offset_multiplier_constrain(p_6[(sym1__ - 1)],
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)], 1, lp__),
-            "assigning variable p_6");
-        } else {
-          current_statement__ = 6;
-          assign(p_6, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::offset_multiplier_constrain(p_6[(sym1__ - 1)],
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)], 1),
-            "assigning variable p_6");
-        }}
       std::vector<local_scalar_t__> p_7;
       p_7 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       
       current_statement__ = 7;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 7;
-        assign(p_7, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable p_7");}
+      assign(p_7, nil_index_list(),
+        in__.read_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
+          0, ds[(1 - 1)][(1 - 1)], lp__, k), "assigning variable p_7");
       current_statement__ = 7;
       check_matching_dims("constraint", "p_7", p_7, "multiplier",
                           ds[(1 - 1)][(1 - 1)]);
-      current_statement__ = 7;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 7;
-        if (jacobian__) {
-          current_statement__ = 7;
-          assign(p_7, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::offset_multiplier_constrain(p_7[(sym1__ - 1)], 0,
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)], lp__),
-            "assigning variable p_7");
-        } else {
-          current_statement__ = 7;
-          assign(p_7, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::offset_multiplier_constrain(p_7[(sym1__ - 1)], 0,
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)]), "assigning variable p_7");
-        }}
       std::vector<local_scalar_t__> p_8;
       p_8 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       
       current_statement__ = 8;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 8;
-        assign(p_8, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable p_8");}
+      assign(p_8, nil_index_list(),
+        in__.read_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
+          ds[(1 - 1)][(1 - 1)], ds[(1 - 1)][(2 - 1)], lp__, k),
+        "assigning variable p_8");
       current_statement__ = 8;
       check_matching_dims("constraint", "p_8", p_8, "offset",
                           ds[(1 - 1)][(1 - 1)]);
       current_statement__ = 8;
       check_matching_dims("constraint", "p_8", p_8, "multiplier",
                           ds[(1 - 1)][(2 - 1)]);
-      current_statement__ = 8;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 8;
-        if (jacobian__) {
-          current_statement__ = 8;
-          assign(p_8, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::offset_multiplier_constrain(p_8[(sym1__ - 1)],
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-              ds[(1 - 1)][(2 - 1)][(sym1__ - 1)], lp__),
-            "assigning variable p_8");
-        } else {
-          current_statement__ = 8;
-          assign(p_8, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::offset_multiplier_constrain(p_8[(sym1__ - 1)],
-              ds[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-              ds[(1 - 1)][(2 - 1)][(sym1__ - 1)]), "assigning variable p_8");
-        }}
       std::vector<std::vector<local_scalar_t__>> p_9;
       p_9 = std::vector<std::vector<local_scalar_t__>>(m, std::vector<local_scalar_t__>(k, DUMMY_VAR__));
       
       current_statement__ = 9;
-      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
-        current_statement__ = 9;
-        for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
-          current_statement__ = 9;
-          assign(p_9,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), in__.scalar(),
-            "assigning variable p_9");}}
+      assign(p_9, nil_index_list(),
+        in__.read_lub<std::vector<std::vector<local_scalar_t__>>, jacobian__>(
+          ds[(1 - 1)], 1, lp__, m, k), "assigning variable p_9");
       current_statement__ = 9;
       check_matching_dims("constraint", "p_9", p_9, "lower", ds[(1 - 1)]);
-      current_statement__ = 9;
-      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
-        current_statement__ = 9;
-        for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
-          current_statement__ = 9;
-          if (jacobian__) {
-            current_statement__ = 9;
-            assign(p_9,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__), nil_index_list())),
-              stan::math::lub_constrain(p_9[(sym1__ - 1)][(sym2__ - 1)],
-                ds[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)], 1, lp__),
-              "assigning variable p_9");
-          } else {
-            current_statement__ = 9;
-            assign(p_9,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__), nil_index_list())),
-              stan::math::lub_constrain(p_9[(sym1__ - 1)][(sym2__ - 1)],
-                ds[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)], 1),
-              "assigning variable p_9");
-          }}}
       std::vector<std::vector<std::vector<local_scalar_t__>>> p_10;
       p_10 = std::vector<std::vector<std::vector<local_scalar_t__>>>(n, std::vector<std::vector<local_scalar_t__>>(m, std::vector<local_scalar_t__>(k, DUMMY_VAR__)));
       
       current_statement__ = 10;
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 10;
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          current_statement__ = 10;
-          for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
-            current_statement__ = 10;
-            assign(p_10,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              in__.scalar(), "assigning variable p_10");}}}
+      assign(p_10, nil_index_list(),
+        in__.read_lub<std::vector<std::vector<std::vector<local_scalar_t__>>>, jacobian__>(
+          0, ds, lp__, n, m, k), "assigning variable p_10");
       current_statement__ = 10;
       check_matching_dims("constraint", "p_10", p_10, "upper", ds);
-      current_statement__ = 10;
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 10;
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          current_statement__ = 10;
-          for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
-            current_statement__ = 10;
-            if (jacobian__) {
-              current_statement__ = 10;
-              assign(p_10,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__), nil_index_list()))),
-                stan::math::lub_constrain(
-                  p_10[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)], 0,
-                  ds[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)], lp__),
-                "assigning variable p_10");
-            } else {
-              current_statement__ = 10;
-              assign(p_10,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__), nil_index_list()))),
-                stan::math::lub_constrain(
-                  p_10[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)], 0,
-                  ds[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]),
-                "assigning variable p_10");
-            }}}}
       Eigen::Matrix<local_scalar_t__, -1, 1> pv_1;
       pv_1 = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
       stan::math::fill(pv_1, DUMMY_VAR__);
       
       current_statement__ = 11;
-      pv_1 = in__.vector(k);
+      assign(pv_1, nil_index_list(),
+        in__.read_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+          dv[(1 - 1)][(1 - 1)], dv[(1 - 1)][(2 - 1)], lp__, k),
+        "assigning variable pv_1");
       current_statement__ = 11;
       check_matching_dims("constraint", "pv_1", pv_1, "lower",
                           dv[(1 - 1)][(1 - 1)]);
       current_statement__ = 11;
       check_matching_dims("constraint", "pv_1", pv_1, "upper",
                           dv[(1 - 1)][(2 - 1)]);
-      current_statement__ = 11;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 11;
-        if (jacobian__) {
-          current_statement__ = 11;
-          assign(pv_1, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::lub_constrain(pv_1[(sym1__ - 1)],
-              dv[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-              dv[(1 - 1)][(2 - 1)][(sym1__ - 1)], lp__),
-            "assigning variable pv_1");
-        } else {
-          current_statement__ = 11;
-          assign(pv_1, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::lub_constrain(pv_1[(sym1__ - 1)],
-              dv[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-              dv[(1 - 1)][(2 - 1)][(sym1__ - 1)]), "assigning variable pv_1");
-        }}
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> pv_2;
       pv_2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(m, Eigen::Matrix<local_scalar_t__, -1, 1>(k));
       stan::math::fill(pv_2, DUMMY_VAR__);
       
       current_statement__ = 12;
-      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
-        current_statement__ = 12;
-        assign(pv_2, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.vector(k), "assigning variable pv_2");}
+      assign(pv_2, nil_index_list(),
+        in__.read_lb<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+          dv[(1 - 1)], lp__, m, k), "assigning variable pv_2");
       current_statement__ = 12;
       check_matching_dims("constraint", "pv_2", pv_2, "lower", dv[(1 - 1)]);
-      current_statement__ = 12;
-      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
-        current_statement__ = 12;
-        for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
-          current_statement__ = 12;
-          if (jacobian__) {
-            current_statement__ = 12;
-            assign(pv_2,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__), nil_index_list())),
-              stan::math::lb_constrain(pv_2[(sym1__ - 1)][(sym2__ - 1)],
-                dv[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)], lp__),
-              "assigning variable pv_2");
-          } else {
-            current_statement__ = 12;
-            assign(pv_2,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__), nil_index_list())),
-              stan::math::lb_constrain(pv_2[(sym1__ - 1)][(sym2__ - 1)],
-                dv[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)]),
-              "assigning variable pv_2");
-          }}}
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> pv_3;
       pv_3 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(n, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(m, Eigen::Matrix<local_scalar_t__, -1, 1>(k)));
       stan::math::fill(pv_3, DUMMY_VAR__);
       
       current_statement__ = 13;
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 13;
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          current_statement__ = 13;
-          assign(pv_3,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            in__.vector(k), "assigning variable pv_3");}}
+      assign(pv_3, nil_index_list(),
+        in__.read_ub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>, jacobian__>(
+          dv, lp__, n, m, k), "assigning variable pv_3");
       current_statement__ = 13;
       check_matching_dims("constraint", "pv_3", pv_3, "upper", dv);
-      current_statement__ = 13;
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 13;
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          current_statement__ = 13;
-          for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
-            current_statement__ = 13;
-            if (jacobian__) {
-              current_statement__ = 13;
-              assign(pv_3,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__), nil_index_list()))),
-                stan::math::ub_constrain(
-                  pv_3[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)],
-                  dv[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)], lp__),
-                "assigning variable pv_3");
-            } else {
-              current_statement__ = 13;
-              assign(pv_3,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__), nil_index_list()))),
-                stan::math::ub_constrain(
-                  pv_3[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)],
-                  dv[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]),
-                "assigning variable pv_3");
-            }}}}
       Eigen::Matrix<local_scalar_t__, 1, -1> pr_1;
       pr_1 = Eigen::Matrix<local_scalar_t__, 1, -1>(k);
       stan::math::fill(pr_1, DUMMY_VAR__);
       
       current_statement__ = 14;
-      pr_1 = in__.row_vector(k);
+      assign(pr_1, nil_index_list(),
+        in__.read_lub<Eigen::Matrix<local_scalar_t__, 1, -1>, jacobian__>(
+          dr[(1 - 1)][(1 - 1)], dr[(1 - 1)][(2 - 1)], lp__, k),
+        "assigning variable pr_1");
       current_statement__ = 14;
       check_matching_dims("constraint", "pr_1", pr_1, "lower",
                           dr[(1 - 1)][(1 - 1)]);
       current_statement__ = 14;
       check_matching_dims("constraint", "pr_1", pr_1, "upper",
                           dr[(1 - 1)][(2 - 1)]);
-      current_statement__ = 14;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 14;
-        if (jacobian__) {
-          current_statement__ = 14;
-          assign(pr_1, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::lub_constrain(pr_1[(sym1__ - 1)],
-              dr[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-              dr[(1 - 1)][(2 - 1)][(sym1__ - 1)], lp__),
-            "assigning variable pr_1");
-        } else {
-          current_statement__ = 14;
-          assign(pr_1, cons_list(index_uni(sym1__), nil_index_list()),
-            stan::math::lub_constrain(pr_1[(sym1__ - 1)],
-              dr[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-              dr[(1 - 1)][(2 - 1)][(sym1__ - 1)]), "assigning variable pr_1");
-        }}
       std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> pr_2;
       pr_2 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(m, Eigen::Matrix<local_scalar_t__, 1, -1>(k));
       stan::math::fill(pr_2, DUMMY_VAR__);
       
       current_statement__ = 15;
-      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
-        current_statement__ = 15;
-        assign(pr_2, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.row_vector(k), "assigning variable pr_2");}
+      assign(pr_2, nil_index_list(),
+        in__.read_lb<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>, jacobian__>(
+          dr[(1 - 1)], lp__, m, k), "assigning variable pr_2");
       current_statement__ = 15;
       check_matching_dims("constraint", "pr_2", pr_2, "lower", dr[(1 - 1)]);
-      current_statement__ = 15;
-      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
-        current_statement__ = 15;
-        for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
-          current_statement__ = 15;
-          if (jacobian__) {
-            current_statement__ = 15;
-            assign(pr_2,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__), nil_index_list())),
-              stan::math::lb_constrain(pr_2[(sym1__ - 1)][(sym2__ - 1)],
-                dr[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)], lp__),
-              "assigning variable pr_2");
-          } else {
-            current_statement__ = 15;
-            assign(pr_2,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__), nil_index_list())),
-              stan::math::lb_constrain(pr_2[(sym1__ - 1)][(sym2__ - 1)],
-                dr[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)]),
-              "assigning variable pr_2");
-          }}}
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> pr_3;
       pr_3 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(n, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(m, Eigen::Matrix<local_scalar_t__, 1, -1>(k)));
       stan::math::fill(pr_3, DUMMY_VAR__);
       
       current_statement__ = 16;
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 16;
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          current_statement__ = 16;
-          assign(pr_3,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            in__.row_vector(k), "assigning variable pr_3");}}
+      assign(pr_3, nil_index_list(),
+        in__.read_ub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>, jacobian__>(
+          dr, lp__, n, m, k), "assigning variable pr_3");
       current_statement__ = 16;
       check_matching_dims("constraint", "pr_3", pr_3, "upper", dr);
-      current_statement__ = 16;
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 16;
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          current_statement__ = 16;
-          for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
-            current_statement__ = 16;
-            if (jacobian__) {
-              current_statement__ = 16;
-              assign(pr_3,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__), nil_index_list()))),
-                stan::math::ub_constrain(
-                  pr_3[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)],
-                  dr[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)], lp__),
-                "assigning variable pr_3");
-            } else {
-              current_statement__ = 16;
-              assign(pr_3,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__), nil_index_list()))),
-                stan::math::ub_constrain(
-                  pr_3[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)],
-                  dr[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]),
-                "assigning variable pr_3");
-            }}}}
       Eigen::Matrix<local_scalar_t__, -1, -1> pm_1;
       pm_1 = Eigen::Matrix<local_scalar_t__, -1, -1>(m, k);
       stan::math::fill(pm_1, DUMMY_VAR__);
       
       current_statement__ = 17;
-      pm_1 = in__.matrix(m, k);
+      assign(pm_1, nil_index_list(),
+        in__.read_lb<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
+          dm[(1 - 1)], lp__, m, k), "assigning variable pm_1");
       current_statement__ = 17;
       check_matching_dims("constraint", "pm_1", pm_1, "lower", dm[(1 - 1)]);
-      current_statement__ = 17;
-      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
-        current_statement__ = 17;
-        for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
-          current_statement__ = 17;
-          if (jacobian__) {
-            current_statement__ = 17;
-            assign(pm_1,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__), nil_index_list())),
-              stan::math::lb_constrain(
-                rvalue(pm_1,
-                  cons_list(index_uni(sym1__),
-                    cons_list(index_uni(sym2__), nil_index_list())), "pm_1"),
-                rvalue(dm[(1 - 1)],
-                  cons_list(index_uni(sym1__),
-                    cons_list(index_uni(sym2__), nil_index_list())), "dm[1]"),
-                lp__), "assigning variable pm_1");
-          } else {
-            current_statement__ = 17;
-            assign(pm_1,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__), nil_index_list())),
-              stan::math::lb_constrain(
-                rvalue(pm_1,
-                  cons_list(index_uni(sym1__),
-                    cons_list(index_uni(sym2__), nil_index_list())), "pm_1"),
-                rvalue(dm[(1 - 1)],
-                  cons_list(index_uni(sym1__),
-                    cons_list(index_uni(sym2__), nil_index_list())), "dm[1]")),
-              "assigning variable pm_1");
-          }}}
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> pm_2;
       pm_2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, Eigen::Matrix<local_scalar_t__, -1, -1>(m, k));
       stan::math::fill(pm_2, DUMMY_VAR__);
       
       current_statement__ = 18;
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 18;
-        assign(pm_2, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.matrix(m, k), "assigning variable pm_2");}
+      assign(pm_2, nil_index_list(),
+        in__.read_ub<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+          dm, lp__, n, m, k), "assigning variable pm_2");
       current_statement__ = 18;
       check_matching_dims("constraint", "pm_2", pm_2, "upper", dm);
-      current_statement__ = 18;
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 18;
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          current_statement__ = 18;
-          for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
-            current_statement__ = 18;
-            if (jacobian__) {
-              current_statement__ = 18;
-              assign(pm_2,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__), nil_index_list()))),
-                stan::math::ub_constrain(
-                  rvalue(pm_2,
-                    cons_list(index_uni(sym1__),
-                      cons_list(index_uni(sym2__),
-                        cons_list(index_uni(sym3__), nil_index_list()))),
-                    "pm_2"),
-                  rvalue(dm,
-                    cons_list(index_uni(sym1__),
-                      cons_list(index_uni(sym2__),
-                        cons_list(index_uni(sym3__), nil_index_list()))),
-                    "dm"), lp__), "assigning variable pm_2");
-            } else {
-              current_statement__ = 18;
-              assign(pm_2,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__),
-                    cons_list(index_uni(sym3__), nil_index_list()))),
-                stan::math::ub_constrain(
-                  rvalue(pm_2,
-                    cons_list(index_uni(sym1__),
-                      cons_list(index_uni(sym2__),
-                        cons_list(index_uni(sym3__), nil_index_list()))),
-                    "pm_2"),
-                  rvalue(dm,
-                    cons_list(index_uni(sym1__),
-                      cons_list(index_uni(sym2__),
-                        cons_list(index_uni(sym3__), nil_index_list()))),
-                    "dm")), "assigning variable pm_2");
-            }}}}
       std::vector<local_scalar_t__> tp_1;
       tp_1 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       
@@ -30032,404 +28798,198 @@ class transform_model final : public model_base_crtp<transform_model> {
       p_1 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 1;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 1;
-        assign(p_1, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable p_1");}
+      assign(p_1, nil_index_list(),
+        in__.read_lb<std::vector<local_scalar_t__>, jacobian__>(
+          ds[(1 - 1)][(1 - 1)], lp__, k), "assigning variable p_1");
       current_statement__ = 1;
       check_matching_dims("constraint", "p_1", p_1, "lower",
                           ds[(1 - 1)][(1 - 1)]);
-      current_statement__ = 1;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 1;
-        assign(p_1, cons_list(index_uni(sym1__), nil_index_list()),
-          stan::math::lb_constrain(p_1[(sym1__ - 1)],
-            ds[(1 - 1)][(1 - 1)][(sym1__ - 1)]), "assigning variable p_1");}
       std::vector<double> p_2;
       p_2 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 2;
-        assign(p_2, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable p_2");}
+      assign(p_2, nil_index_list(),
+        in__.read_ub<std::vector<local_scalar_t__>, jacobian__>(
+          ds[(1 - 1)][(1 - 1)], lp__, k), "assigning variable p_2");
       current_statement__ = 2;
       check_matching_dims("constraint", "p_2", p_2, "upper",
                           ds[(1 - 1)][(1 - 1)]);
-      current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 2;
-        assign(p_2, cons_list(index_uni(sym1__), nil_index_list()),
-          stan::math::ub_constrain(p_2[(sym1__ - 1)],
-            ds[(1 - 1)][(1 - 1)][(sym1__ - 1)]), "assigning variable p_2");}
       std::vector<double> p_3;
       p_3 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 3;
-        assign(p_3, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable p_3");}
+      assign(p_3, nil_index_list(),
+        in__.read_lub<std::vector<local_scalar_t__>, jacobian__>(
+          ds[(1 - 1)][(1 - 1)], ds[(1 - 1)][(2 - 1)], lp__, k),
+        "assigning variable p_3");
       current_statement__ = 3;
       check_matching_dims("constraint", "p_3", p_3, "lower",
                           ds[(1 - 1)][(1 - 1)]);
       current_statement__ = 3;
       check_matching_dims("constraint", "p_3", p_3, "upper",
                           ds[(1 - 1)][(2 - 1)]);
-      current_statement__ = 3;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 3;
-        assign(p_3, cons_list(index_uni(sym1__), nil_index_list()),
-          stan::math::lub_constrain(p_3[(sym1__ - 1)],
-            ds[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-            ds[(1 - 1)][(2 - 1)][(sym1__ - 1)]), "assigning variable p_3");}
       std::vector<double> p_4;
       p_4 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 4;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 4;
-        assign(p_4, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable p_4");}
+      assign(p_4, nil_index_list(),
+        in__.read_lub<std::vector<local_scalar_t__>, jacobian__>(0,
+          ds[(1 - 1)][(2 - 1)], lp__, k), "assigning variable p_4");
       current_statement__ = 4;
       check_matching_dims("constraint", "p_4", p_4, "upper",
                           ds[(1 - 1)][(2 - 1)]);
-      current_statement__ = 4;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 4;
-        assign(p_4, cons_list(index_uni(sym1__), nil_index_list()),
-          stan::math::lub_constrain(p_4[(sym1__ - 1)], 0,
-            ds[(1 - 1)][(2 - 1)][(sym1__ - 1)]), "assigning variable p_4");}
       std::vector<double> p_5;
       p_5 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 5;
-        assign(p_5, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable p_5");}
+      assign(p_5, nil_index_list(),
+        in__.read_lub<std::vector<local_scalar_t__>, jacobian__>(
+          ds[(1 - 1)][(1 - 1)], 1, lp__, k), "assigning variable p_5");
       current_statement__ = 5;
       check_matching_dims("constraint", "p_5", p_5, "lower",
                           ds[(1 - 1)][(1 - 1)]);
-      current_statement__ = 5;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 5;
-        assign(p_5, cons_list(index_uni(sym1__), nil_index_list()),
-          stan::math::lub_constrain(p_5[(sym1__ - 1)],
-            ds[(1 - 1)][(1 - 1)][(sym1__ - 1)], 1), "assigning variable p_5");
-      }
       std::vector<double> p_6;
       p_6 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 6;
-        assign(p_6, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable p_6");}
+      assign(p_6, nil_index_list(),
+        in__.read_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
+          ds[(1 - 1)][(1 - 1)], 1, lp__, k), "assigning variable p_6");
       current_statement__ = 6;
       check_matching_dims("constraint", "p_6", p_6, "offset",
                           ds[(1 - 1)][(1 - 1)]);
-      current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 6;
-        assign(p_6, cons_list(index_uni(sym1__), nil_index_list()),
-          stan::math::offset_multiplier_constrain(p_6[(sym1__ - 1)],
-            ds[(1 - 1)][(1 - 1)][(sym1__ - 1)], 1), "assigning variable p_6");
-      }
       std::vector<double> p_7;
       p_7 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 7;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 7;
-        assign(p_7, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable p_7");}
+      assign(p_7, nil_index_list(),
+        in__.read_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
+          0, ds[(1 - 1)][(1 - 1)], lp__, k), "assigning variable p_7");
       current_statement__ = 7;
       check_matching_dims("constraint", "p_7", p_7, "multiplier",
                           ds[(1 - 1)][(1 - 1)]);
-      current_statement__ = 7;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 7;
-        assign(p_7, cons_list(index_uni(sym1__), nil_index_list()),
-          stan::math::offset_multiplier_constrain(p_7[(sym1__ - 1)], 0,
-            ds[(1 - 1)][(1 - 1)][(sym1__ - 1)]), "assigning variable p_7");}
       std::vector<double> p_8;
       p_8 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 8;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 8;
-        assign(p_8, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable p_8");}
+      assign(p_8, nil_index_list(),
+        in__.read_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
+          ds[(1 - 1)][(1 - 1)], ds[(1 - 1)][(2 - 1)], lp__, k),
+        "assigning variable p_8");
       current_statement__ = 8;
       check_matching_dims("constraint", "p_8", p_8, "offset",
                           ds[(1 - 1)][(1 - 1)]);
       current_statement__ = 8;
       check_matching_dims("constraint", "p_8", p_8, "multiplier",
                           ds[(1 - 1)][(2 - 1)]);
-      current_statement__ = 8;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 8;
-        assign(p_8, cons_list(index_uni(sym1__), nil_index_list()),
-          stan::math::offset_multiplier_constrain(p_8[(sym1__ - 1)],
-            ds[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-            ds[(1 - 1)][(2 - 1)][(sym1__ - 1)]), "assigning variable p_8");}
       std::vector<std::vector<double>> p_9;
       p_9 = std::vector<std::vector<double>>(m, std::vector<double>(k, std::numeric_limits<double>::quiet_NaN()));
       
       current_statement__ = 9;
-      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
-        current_statement__ = 9;
-        for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
-          current_statement__ = 9;
-          assign(p_9,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())), in__.scalar(),
-            "assigning variable p_9");}}
+      assign(p_9, nil_index_list(),
+        in__.read_lub<std::vector<std::vector<local_scalar_t__>>, jacobian__>(
+          ds[(1 - 1)], 1, lp__, m, k), "assigning variable p_9");
       current_statement__ = 9;
       check_matching_dims("constraint", "p_9", p_9, "lower", ds[(1 - 1)]);
-      current_statement__ = 9;
-      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
-        current_statement__ = 9;
-        for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
-          current_statement__ = 9;
-          assign(p_9,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            stan::math::lub_constrain(p_9[(sym1__ - 1)][(sym2__ - 1)],
-              ds[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)], 1),
-            "assigning variable p_9");}}
       std::vector<std::vector<std::vector<double>>> p_10;
       p_10 = std::vector<std::vector<std::vector<double>>>(n, std::vector<std::vector<double>>(m, std::vector<double>(k, std::numeric_limits<double>::quiet_NaN())));
       
       current_statement__ = 10;
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 10;
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          current_statement__ = 10;
-          for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
-            current_statement__ = 10;
-            assign(p_10,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              in__.scalar(), "assigning variable p_10");}}}
+      assign(p_10, nil_index_list(),
+        in__.read_lub<std::vector<std::vector<std::vector<local_scalar_t__>>>, jacobian__>(
+          0, ds, lp__, n, m, k), "assigning variable p_10");
       current_statement__ = 10;
       check_matching_dims("constraint", "p_10", p_10, "upper", ds);
-      current_statement__ = 10;
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 10;
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          current_statement__ = 10;
-          for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
-            current_statement__ = 10;
-            assign(p_10,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              stan::math::lub_constrain(
-                p_10[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)], 0,
-                ds[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]),
-              "assigning variable p_10");}}}
       Eigen::Matrix<double, -1, 1> pv_1;
       pv_1 = Eigen::Matrix<double, -1, 1>(k);
       stan::math::fill(pv_1, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 11;
-      pv_1 = in__.vector(k);
+      assign(pv_1, nil_index_list(),
+        in__.read_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+          dv[(1 - 1)][(1 - 1)], dv[(1 - 1)][(2 - 1)], lp__, k),
+        "assigning variable pv_1");
       current_statement__ = 11;
       check_matching_dims("constraint", "pv_1", pv_1, "lower",
                           dv[(1 - 1)][(1 - 1)]);
       current_statement__ = 11;
       check_matching_dims("constraint", "pv_1", pv_1, "upper",
                           dv[(1 - 1)][(2 - 1)]);
-      current_statement__ = 11;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 11;
-        assign(pv_1, cons_list(index_uni(sym1__), nil_index_list()),
-          stan::math::lub_constrain(pv_1[(sym1__ - 1)],
-            dv[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-            dv[(1 - 1)][(2 - 1)][(sym1__ - 1)]), "assigning variable pv_1");}
       std::vector<Eigen::Matrix<double, -1, 1>> pv_2;
       pv_2 = std::vector<Eigen::Matrix<double, -1, 1>>(m, Eigen::Matrix<double, -1, 1>(k));
       stan::math::fill(pv_2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 12;
-      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
-        current_statement__ = 12;
-        assign(pv_2, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.vector(k), "assigning variable pv_2");}
+      assign(pv_2, nil_index_list(),
+        in__.read_lb<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+          dv[(1 - 1)], lp__, m, k), "assigning variable pv_2");
       current_statement__ = 12;
       check_matching_dims("constraint", "pv_2", pv_2, "lower", dv[(1 - 1)]);
-      current_statement__ = 12;
-      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
-        current_statement__ = 12;
-        for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
-          current_statement__ = 12;
-          assign(pv_2,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            stan::math::lb_constrain(pv_2[(sym1__ - 1)][(sym2__ - 1)],
-              dv[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)]),
-            "assigning variable pv_2");}}
       std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> pv_3;
       pv_3 = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(n, std::vector<Eigen::Matrix<double, -1, 1>>(m, Eigen::Matrix<double, -1, 1>(k)));
       stan::math::fill(pv_3, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 13;
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 13;
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          current_statement__ = 13;
-          assign(pv_3,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            in__.vector(k), "assigning variable pv_3");}}
+      assign(pv_3, nil_index_list(),
+        in__.read_ub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>, jacobian__>(
+          dv, lp__, n, m, k), "assigning variable pv_3");
       current_statement__ = 13;
       check_matching_dims("constraint", "pv_3", pv_3, "upper", dv);
-      current_statement__ = 13;
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 13;
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          current_statement__ = 13;
-          for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
-            current_statement__ = 13;
-            assign(pv_3,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              stan::math::ub_constrain(
-                pv_3[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)],
-                dv[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]),
-              "assigning variable pv_3");}}}
       Eigen::Matrix<double, 1, -1> pr_1;
       pr_1 = Eigen::Matrix<double, 1, -1>(k);
       stan::math::fill(pr_1, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 14;
-      pr_1 = in__.row_vector(k);
+      assign(pr_1, nil_index_list(),
+        in__.read_lub<Eigen::Matrix<local_scalar_t__, 1, -1>, jacobian__>(
+          dr[(1 - 1)][(1 - 1)], dr[(1 - 1)][(2 - 1)], lp__, k),
+        "assigning variable pr_1");
       current_statement__ = 14;
       check_matching_dims("constraint", "pr_1", pr_1, "lower",
                           dr[(1 - 1)][(1 - 1)]);
       current_statement__ = 14;
       check_matching_dims("constraint", "pr_1", pr_1, "upper",
                           dr[(1 - 1)][(2 - 1)]);
-      current_statement__ = 14;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 14;
-        assign(pr_1, cons_list(index_uni(sym1__), nil_index_list()),
-          stan::math::lub_constrain(pr_1[(sym1__ - 1)],
-            dr[(1 - 1)][(1 - 1)][(sym1__ - 1)],
-            dr[(1 - 1)][(2 - 1)][(sym1__ - 1)]), "assigning variable pr_1");}
       std::vector<Eigen::Matrix<double, 1, -1>> pr_2;
       pr_2 = std::vector<Eigen::Matrix<double, 1, -1>>(m, Eigen::Matrix<double, 1, -1>(k));
       stan::math::fill(pr_2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 15;
-      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
-        current_statement__ = 15;
-        assign(pr_2, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.row_vector(k), "assigning variable pr_2");}
+      assign(pr_2, nil_index_list(),
+        in__.read_lb<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>, jacobian__>(
+          dr[(1 - 1)], lp__, m, k), "assigning variable pr_2");
       current_statement__ = 15;
       check_matching_dims("constraint", "pr_2", pr_2, "lower", dr[(1 - 1)]);
-      current_statement__ = 15;
-      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
-        current_statement__ = 15;
-        for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
-          current_statement__ = 15;
-          assign(pr_2,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            stan::math::lb_constrain(pr_2[(sym1__ - 1)][(sym2__ - 1)],
-              dr[(1 - 1)][(sym1__ - 1)][(sym2__ - 1)]),
-            "assigning variable pr_2");}}
       std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> pr_3;
       pr_3 = std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(n, std::vector<Eigen::Matrix<double, 1, -1>>(m, Eigen::Matrix<double, 1, -1>(k)));
       stan::math::fill(pr_3, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 16;
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 16;
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          current_statement__ = 16;
-          assign(pr_3,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            in__.row_vector(k), "assigning variable pr_3");}}
+      assign(pr_3, nil_index_list(),
+        in__.read_ub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>, jacobian__>(
+          dr, lp__, n, m, k), "assigning variable pr_3");
       current_statement__ = 16;
       check_matching_dims("constraint", "pr_3", pr_3, "upper", dr);
-      current_statement__ = 16;
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 16;
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          current_statement__ = 16;
-          for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
-            current_statement__ = 16;
-            assign(pr_3,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              stan::math::ub_constrain(
-                pr_3[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)],
-                dr[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]),
-              "assigning variable pr_3");}}}
       Eigen::Matrix<double, -1, -1> pm_1;
       pm_1 = Eigen::Matrix<double, -1, -1>(m, k);
       stan::math::fill(pm_1, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 17;
-      pm_1 = in__.matrix(m, k);
+      assign(pm_1, nil_index_list(),
+        in__.read_lb<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
+          dm[(1 - 1)], lp__, m, k), "assigning variable pm_1");
       current_statement__ = 17;
       check_matching_dims("constraint", "pm_1", pm_1, "lower", dm[(1 - 1)]);
-      current_statement__ = 17;
-      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
-        current_statement__ = 17;
-        for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
-          current_statement__ = 17;
-          assign(pm_1,
-            cons_list(index_uni(sym1__),
-              cons_list(index_uni(sym2__), nil_index_list())),
-            stan::math::lb_constrain(
-              rvalue(pm_1,
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__), nil_index_list())), "pm_1"),
-              rvalue(dm[(1 - 1)],
-                cons_list(index_uni(sym1__),
-                  cons_list(index_uni(sym2__), nil_index_list())), "dm[1]")),
-            "assigning variable pm_1");}}
       std::vector<Eigen::Matrix<double, -1, -1>> pm_2;
       pm_2 = std::vector<Eigen::Matrix<double, -1, -1>>(n, Eigen::Matrix<double, -1, -1>(m, k));
       stan::math::fill(pm_2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 18;
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 18;
-        assign(pm_2, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.matrix(m, k), "assigning variable pm_2");}
+      assign(pm_2, nil_index_list(),
+        in__.read_ub<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+          dm, lp__, n, m, k), "assigning variable pm_2");
       current_statement__ = 18;
       check_matching_dims("constraint", "pm_2", pm_2, "upper", dm);
-      current_statement__ = 18;
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 18;
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          current_statement__ = 18;
-          for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
-            current_statement__ = 18;
-            assign(pm_2,
-              cons_list(index_uni(sym1__),
-                cons_list(index_uni(sym2__),
-                  cons_list(index_uni(sym3__), nil_index_list()))),
-              stan::math::ub_constrain(
-                rvalue(pm_2,
-                  cons_list(index_uni(sym1__),
-                    cons_list(index_uni(sym2__),
-                      cons_list(index_uni(sym3__), nil_index_list()))),
-                  "pm_2"),
-                rvalue(dm,
-                  cons_list(index_uni(sym1__),
-                    cons_list(index_uni(sym2__),
-                      cons_list(index_uni(sym3__), nil_index_list()))), "dm")),
-              "assigning variable pm_2");}}}
       std::vector<double> tp_1;
       tp_1 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
@@ -32416,20 +30976,12 @@ class truncate_model final : public model_base_crtp<truncate_model> {
       m = DUMMY_VAR__;
       
       current_statement__ = 1;
-      m = in__.scalar();
+      m = in__.read<local_scalar_t__, jacobian__>(lp__);
       local_scalar_t__ y;
       y = DUMMY_VAR__;
       
       current_statement__ = 2;
-      y = in__.scalar();
-      current_statement__ = 2;
-      if (jacobian__) {
-        current_statement__ = 2;
-        y = stan::math::lb_constrain(y, 0, lp__);
-      } else {
-        current_statement__ = 2;
-        y = stan::math::lb_constrain(y, 0);
-      }
+      y = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
       {
         current_statement__ = 3;
         lp_accum__.add(normal_lpdf<propto__>(x, m, 1));
@@ -32543,14 +31095,12 @@ class truncate_model final : public model_base_crtp<truncate_model> {
       m = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      m = in__.scalar();
+      m = in__.read<local_scalar_t__, jacobian__>(lp__);
       double y;
       y = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
-      y = in__.scalar();
-      current_statement__ = 2;
-      y = stan::math::lb_constrain(y, 0);
+      y = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
       vars__.emplace_back(m);
       vars__.emplace_back(y);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
@@ -32875,7 +31425,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
       x = DUMMY_VAR__;
       
       current_statement__ = 1;
-      x = in__.scalar();
+      x = in__.read<local_scalar_t__, jacobian__>(lp__);
       {
         current_statement__ = 2;
         lp_accum__.add(normal_lpdf<propto__>(x, 0, 1));
@@ -32911,7 +31461,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
       x = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      x = in__.scalar();
+      x = in__.read<local_scalar_t__, jacobian__>(lp__);
       vars__.emplace_back(x);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
@@ -33222,15 +31772,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
       x = DUMMY_VAR__;
       
       current_statement__ = 1;
-      x = in__.scalar();
-      current_statement__ = 1;
-      if (jacobian__) {
-        current_statement__ = 1;
-        x = stan::math::lb_constrain(x, 0, lp__);
-      } else {
-        current_statement__ = 1;
-        x = stan::math::lb_constrain(x, 0);
-      }
+      x = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
       {
         current_statement__ = 2;
         lp_accum__.add(std_normal_lpdf<propto__>(x));
@@ -33266,9 +31808,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
       x = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      x = in__.scalar();
-      current_statement__ = 1;
-      x = stan::math::lb_constrain(x, 0);
+      x = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
       vars__.emplace_back(x);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
