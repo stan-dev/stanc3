@@ -406,9 +406,16 @@ and pp_compiler_internal_fn ut f ppf es =
   | Some FnReadData -> read_data ut ppf es
   | Some FnReadParam -> (
     match es with
-    | {Expr.Fixed.pattern= Lit (Str, base_type); _} :: dims ->
-        pf ppf "@[<hov 2>in__.%s(@,%a)@]" base_type (list ~sep:comma pp_expr)
-          dims
+    | {Expr.Fixed.pattern= Lit (Str, constraint_string); _} :: dims ->
+        let constraint_extension =
+          if String.is_empty constraint_string then ""
+          else "_" ^ constraint_string
+        in
+        let maybe_comma = if List.is_empty dims then "" else ", " in
+        pf ppf "@[<hov 2>in__.read%s<%a, jacobian__>(@,lp__%s%a)@]"
+          constraint_extension pp_unsizedtype_local
+          (UnsizedType.AutoDiffable, ut)
+          maybe_comma (list ~sep:comma pp_expr) dims
     | _ -> raise_s [%message "emit ReadParam with " (es : Expr.Typed.t list)] )
   | _ -> gen_fun_app ppf f es
 

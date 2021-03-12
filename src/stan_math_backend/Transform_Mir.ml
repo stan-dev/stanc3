@@ -161,56 +161,106 @@ let data_read smeta (decl_id, st) =
           ; Stmt.Helpers.for_scalar_inv st bodyfn decl_var smeta ]
         |> swrap ]
 
-let rec base_ut_to_string = function
-  | UnsizedType.UMatrix -> "matrix"
-  | UVector -> "vector"
-  | URowVector -> "row_vector"
-  | UReal -> "scalar"
-  | UInt -> "integer"
-  | UArray t -> base_ut_to_string t
-  | t ->
-      raise_s
-        [%message "Another place where it's weird to get " (t : UnsizedType.t)]
+(* let rec base_ut_to_string = function
+ *   | UnsizedType.UMatrix -> "matrix"
+ *   | UVector -> "vector"
+ *   | URowVector -> "row_vector"
+ *   | UReal -> "scalar"
+ *   | UInt -> "integer"
+ *   | UArray t -> base_ut_to_string t
+ *   | t ->
+ *       raise_s
+ *         [%message "Another place where it's weird to get " (t : UnsizedType.t)] *)
+
+type constrainaction = Check | Constrain | Unconstrain [@@deriving sexp]
+
+let check_constraint_to_string t (c : constrainaction) =
+  match t with
+  | Program.Ordered -> "ordered"
+  | PositiveOrdered -> "positive_ordered"
+  | Simplex -> "simplex"
+  | UnitVector -> "unit_vector"
+  | CholeskyCorr -> "cholesky_factor_corr"
+  | CholeskyCov -> "cholesky_factor"
+  | Correlation -> "corr_matrix"
+  | Covariance -> "cov_matrix"
+  | Lower _ -> (
+    match c with
+    | Check -> "greater_or_equal"
+    | Constrain | Unconstrain -> "lb" )
+  | Upper _ -> (
+    match c with Check -> "less_or_equal" | Constrain | Unconstrain -> "ub" )
+  | LowerUpper _ -> (
+    match c with
+    | Check ->
+        raise_s
+          [%message "LowerUpper is really two other checks tied together"]
+    | Constrain | Unconstrain -> "lub" )
+  | Offset _ | Multiplier _ | OffsetMultiplier _ -> (
+    match c with Check -> "" | Constrain | Unconstrain -> "offset_multiplier" )
+  | Identity -> ""
+
+let constrain_constraint_to_string t (c : constrainaction) =
+  match t with
+  | Program.CholeskyCorr -> "cholesky_corr"
+  | _ -> check_constraint_to_string t c
 
 let param_read smeta
-    ( decl_id
-    , Program.({ out_constrained_st= cst
-               ; out_unconstrained_st= ucst
-               ; out_block; _ }) ) =
+    (decl_id, Program.({out_constrained_st= cst; out_block; out_trans; _})) =
   if not (out_block = Parameters) then []
   else
-    let decl_id, decl =
-      match cst = ucst with
-      | true -> (decl_id, [])
-      | false ->
-          let decl_id = decl_id ^ "_in__" in
-          let d =
-            Stmt.Fixed.Pattern.Decl
-              {decl_adtype= AutoDiffable; decl_id; decl_type= Sized ucst}
-          in
-          (decl_id, [Stmt.Fixed.{meta= smeta; pattern= d}])
+    let ut = SizedType.to_unsized cst in
+    let decl_var =
+      Expr.Fixed.
+        { pattern= Var decl_id
+        ; meta=
+            Expr.Typed.Meta.create ~loc:smeta ~type_:ut ~adlevel:AutoDiffable
+              () }
     in
-    let unconstrained_decl_var =
-      let meta =
-        Expr.Typed.Meta.create ~loc:smeta
-          ~type_:SizedType.(to_unsized cst)
-          ~adlevel:AutoDiffable ()
-      in
-      Expr.Fixed.{meta; pattern= Var decl_id}
+    let read =
+      Expr.(
+        Helpers.(
+          internal_funapp FnReadParam
+            ( Expr.Helpers.str
+                (constrain_constraint_to_string out_trans Constrain)
+            :: SizedType.get_dims cst ))
+          Typed.Meta.{decl_var.meta with type_= ut})
     in
-    let bodyfn var =
-      let readfnapp (var : Expr.Typed.t) =
-        Expr.(
-          Helpers.(
-            internal_funapp FnReadParam
-              ( str (base_ut_to_string (SizedType.to_unsized ucst))
-              :: SizedType.dims_of ucst ))
-            Typed.Meta.{var.meta with type_= base_type ucst})
-      in
-      Stmt.Helpers.assign_indexed (SizedType.to_unsized cst) decl_id smeta
-        readfnapp var
-    in
-    decl @ [Stmt.Helpers.for_eigen ucst bodyfn unconstrained_decl_var smeta]
+    [ Stmt.Fixed.
+        {pattern= Pattern.Assignment ((decl_id, ut, []), read); meta= smeta} ]
+
+(* let decl_id, decl =
+     *   match cst = ucst with
+     *   | true -> (decl_id, [])
+     *   | false ->
+     *       let decl_id = decl_id ^ "_in__" in
+     *       let d =
+     *         Stmt.Fixed.Pattern.Decl
+     *           {decl_adtype= AutoDiffable; decl_id; decl_type= Sized ucst}
+     *       in
+     *       (decl_id, [Stmt.Fixed.{meta= smeta; pattern= d}])
+     * in
+     * let unconstrained_decl_var =
+     *   let meta =
+     *     Expr.Typed.Meta.create ~loc:smeta
+     *       ~type_:SizedType.(to_unsized cst)
+     *       ~adlevel:AutoDiffable ()
+     *   in
+     *   Expr.Fixed.{meta; pattern= Var decl_id}
+     * in
+     * let bodyfn var =
+     *   let readfnapp (var : Expr.Typed.t) =
+     *     Expr.(
+     *       Helpers.(
+     *         internal_funapp FnReadParam
+     *           ( str (base_ut_to_string (SizedType.to_unsized ucst))
+     *           :: SizedType.dims_of ucst ))
+     *         Typed.Meta.{var.meta with type_= base_type ucst})
+     *   in
+     *   Stmt.Helpers.assign_indexed (SizedType.to_unsized cst) decl_id smeta
+     *     readfnapp var
+     * in
+     * decl @ [Stmt.Helpers.for_eigen ucst bodyfn unconstrained_decl_var smeta] *)
 
 let escape_name str =
   str
