@@ -27,8 +27,7 @@ let%expect_test "map_rec_stmt_loc" =
   let f = function
     | Stmt.Fixed.Pattern.NRFunApp (CompilerInternal, "FnPrint__", [s]) ->
         Stmt.Fixed.Pattern.NRFunApp (CompilerInternal, "FnPrint__", [s; s])
-    | x -> x
-  in
+    | x -> x in
   let mir = Program.map Fn.id (map_rec_stmt_loc f) mir in
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   [%expect
@@ -69,12 +68,10 @@ let%expect_test "map_rec_state_stmt_loc" =
     | Stmt.Fixed.Pattern.NRFunApp (CompilerInternal, "FnPrint__", [s]) ->
         Stmt.Fixed.Pattern.
           (NRFunApp (CompilerInternal, "FnPrint__", [s; s]), i + 1)
-    | x -> (x, i)
-  in
+    | x -> (x, i) in
   let mir_stmt, num =
     (map_rec_state_stmt_loc f 0)
-      Stmt.Fixed.{pattern= SList mir.log_prob; meta= Location_span.empty}
-  in
+      Stmt.Fixed.{pattern= SList mir.log_prob; meta= Location_span.empty} in
   let mir = {mir with log_prob= [mir_stmt]} in
   Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
   print_endline (string_of_int num) ;
@@ -3029,8 +3026,7 @@ let%expect_test "block fixing" =
                           , {pattern= SList []; meta= Location_span.empty} )
                     ; meta= Location_span.empty }
                   , None )
-            ; meta= Location_span.empty } ] }
-  in
+            ; meta= Location_span.empty } ] } in
   let mir = block_fixing mir in
   print_s [%sexp (mir : Program.Typed.t)] ;
   [%expect

@@ -6,16 +6,13 @@ type t = Location_span.t * string
 
 let deprecated_functions =
   String.Map.of_alist_exn
-    [ ("multiply_log", "lmultiply")
-    ; ("binomial_coefficient_log", "lchoose")
+    [ ("multiply_log", "lmultiply"); ("binomial_coefficient_log", "lchoose")
     ; ("cov_exp_quad", "gp_exp_quad_cov") ]
 
 let deprecated_odes =
   String.Map.of_alist_exn
-    [ ("integrate_ode", "ode_rk45")
-    ; ("integrate_ode_rk45", "ode_rk45")
-    ; ("integrate_ode_bdf", "ode_bdf")
-    ; ("integrate_ode_adams", "ode_adams") ]
+    [ ("integrate_ode", "ode_rk45"); ("integrate_ode_rk45", "ode_rk45")
+    ; ("integrate_ode_bdf", "ode_bdf"); ("integrate_ode_adams", "ode_adams") ]
 
 let deprecated_distributions =
   String.Map.of_alist_exn
@@ -26,7 +23,7 @@ let deprecated_distributions =
            | Lpmf -> Some (name ^ "_log", name ^ "_lpmf")
            | Cdf -> Some (name ^ "_cdf_log", name ^ "_lcdf")
            | Ccdf -> Some (name ^ "_ccdf_log", name ^ "_lccdf")
-           | Rng | UnaryVectorized -> None ) ))
+           | Rng | UnaryVectorized -> None ) ) )
 
 let is_deprecated_distribution name =
   Option.is_some (String.Map.find deprecated_distributions name)
@@ -53,7 +50,7 @@ let userdef_distributions stmts =
           else if is_suffix ~suffix:"_log_log" name then
             Some (drop_suffix name 4)
           else None
-      | _ -> None)
+      | _ -> None )
     (Option.value ~default:[] stmts)
 
 let without_suffix user_dists name =
@@ -108,7 +105,7 @@ let rec collect_deprecated_expr deprecated_userdefined
              operator (x ? y : z) instead." ) ]
       @ List.concat
           (List.map l ~f:(fun e ->
-               collect_deprecated_expr deprecated_userdefined [] e ))
+               collect_deprecated_expr deprecated_userdefined [] e ) )
   | FunApp (StanLib, {name; _}, l) ->
       let w =
         if Option.is_some (String.Map.find deprecated_distributions name) then
@@ -129,12 +126,11 @@ let rec collect_deprecated_expr deprecated_userdefined
                  The new interface is slightly different, see: \n\
                  https://mc-stan.org/users/documentation/case-studies/convert_odes.html"
             ) ]
-        else []
-      in
+        else [] in
       acc @ w
       @ List.concat
           (List.map l ~f:(fun e ->
-               collect_deprecated_expr deprecated_userdefined [] e ))
+               collect_deprecated_expr deprecated_userdefined [] e ) )
   | FunApp (UserDefined, {name; _}, l) ->
       let w =
         let type_ = String.Map.find deprecated_userdefined name in
@@ -144,12 +140,11 @@ let rec collect_deprecated_expr deprecated_userdefined
               ^ " is deprecated, use "
               ^ update_suffix name (Option.value_exn type_)
               ^ " instead." ) ]
-        else []
-      in
+        else [] in
       acc @ w
       @ List.concat
           (List.map l ~f:(fun e ->
-               collect_deprecated_expr deprecated_userdefined [] e ))
+               collect_deprecated_expr deprecated_userdefined [] e ) )
   | _ ->
       fold_expression
         (collect_deprecated_expr deprecated_userdefined)

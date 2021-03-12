@@ -14,7 +14,7 @@ open Middle
 
 let preserve_stability = false
 
-let is_int i Expr.Fixed.({pattern; _}) =
+let is_int i Expr.Fixed.{pattern; _} =
   let nums = List.map ~f:(fun s -> string_of_int i ^ s) [""; "."; ".0"] in
   match pattern with
   | (Lit (Int, i) | Lit (Real, i)) when List.mem nums i ~equal:String.equal ->
@@ -105,8 +105,7 @@ let rec eval_expr (e : Expr.Typed.t) =
                      argument_types )
                  ~default:
                    (Stan_math_signatures.stan_math_returntype name
-                      argument_types)
-          in
+                      argument_types ) in
           let try_partially_evaluate_to e =
             Expr.Fixed.Pattern.(
               match e with
@@ -114,8 +113,7 @@ let rec eval_expr (e : Expr.Typed.t) =
                 match get_fun_or_op_rt_opt f' l' with
                 | Some _ -> FunApp (StanLib, f', l')
                 | None -> FunApp (StanLib, f, l) )
-              | e -> e)
-          in
+              | e -> e) in
           try_partially_evaluate_to
             ( match (f, l) with
             (* TODO: deal with tilde statements and unnormalized distributions properly here *)
@@ -131,11 +129,12 @@ let rec eval_expr (e : Expr.Typed.t) =
                                   , "Plus__"
                                   , [ alpha
                                     ; { pattern=
-                                          FunApp (StanLib, "Times__", [x; beta]); _
-                                      } ] ); _ } ] ); _ } ] )
+                                          FunApp (StanLib, "Times__", [x; beta])
+                                      ; _ } ] )
+                            ; _ } ] )
+                  ; _ } ] )
               when Expr.Typed.type_of x = UMatrix ->
-                FunApp
-                  (StanLib, "bernoulli_logit_glm_lpmf", [y; x; alpha; beta])
+                FunApp (StanLib, "bernoulli_logit_glm_lpmf", [y; x; alpha; beta])
             | ( "bernoulli_lpmf"
               , [ y
                 ; { pattern=
@@ -147,12 +146,12 @@ let rec eval_expr (e : Expr.Typed.t) =
                                   ( StanLib
                                   , "Plus__"
                                   , [ { pattern=
-                                          FunApp (StanLib, "Times__", [x; beta]); _
-                                      }
-                                    ; alpha ] ); _ } ] ); _ } ] )
+                                          FunApp (StanLib, "Times__", [x; beta])
+                                      ; _ }; alpha ] )
+                            ; _ } ] )
+                  ; _ } ] )
               when Expr.Typed.type_of x = UMatrix ->
-                FunApp
-                  (StanLib, "bernoulli_logit_glm_lpmf", [y; x; alpha; beta])
+                FunApp (StanLib, "bernoulli_logit_glm_lpmf", [y; x; alpha; beta])
             | ( "bernoulli_lpmf"
               , [ y
                 ; { pattern=
@@ -160,7 +159,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                         ( StanLib
                         , "inv_logit"
                         , [{pattern= FunApp (StanLib, "Times__", [x; beta]); _}]
-                        ); _ } ] )
+                        )
+                  ; _ } ] )
               when Expr.Typed.type_of x = UMatrix ->
                 FunApp
                   ( StanLib
@@ -174,10 +174,10 @@ let rec eval_expr (e : Expr.Typed.t) =
                         , "Plus__"
                         , [ alpha
                           ; {pattern= FunApp (StanLib, "Times__", [x; beta]); _}
-                          ] ); _ } ] )
+                          ] )
+                  ; _ } ] )
               when Expr.Typed.type_of x = UMatrix ->
-                FunApp
-                  (StanLib, "bernoulli_logit_glm_lpmf", [y; x; alpha; beta])
+                FunApp (StanLib, "bernoulli_logit_glm_lpmf", [y; x; alpha; beta])
             | ( "bernoulli_logit_lpmf"
               , [ y
                 ; { pattern=
@@ -185,10 +185,10 @@ let rec eval_expr (e : Expr.Typed.t) =
                         ( StanLib
                         , "Plus__"
                         , [ {pattern= FunApp (StanLib, "Times__", [x; beta]); _}
-                          ; alpha ] ); _ } ] )
+                          ; alpha ] )
+                  ; _ } ] )
               when Expr.Typed.type_of x = UMatrix ->
-                FunApp
-                  (StanLib, "bernoulli_logit_glm_lpmf", [y; x; alpha; beta])
+                FunApp (StanLib, "bernoulli_logit_glm_lpmf", [y; x; alpha; beta])
             | ( "bernoulli_logit_lpmf"
               , [y; {pattern= FunApp (StanLib, "Times__", [x; beta]); _}] )
               when Expr.Typed.type_of x = UMatrix ->
@@ -225,8 +225,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                       FunApp
                         ( StanLib
                         , "Minus__"
-                        , [y; {pattern= FunApp (StanLib, "exp", [x]); _}] ); _
-                  } ] )
+                        , [y; {pattern= FunApp (StanLib, "exp", [x]); _}] )
+                  ; _ } ] )
               when is_int 1 y && not preserve_stability ->
                 FunApp (StanLib, "log1m_exp", [x])
             | ( "log"
@@ -235,7 +235,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                         ( StanLib
                         , "Minus__"
                         , [y; {pattern= FunApp (StanLib, "inv_logit", [x]); _}]
-                        ); _ } ] )
+                        )
+                  ; _ } ] )
               when is_int 1 y && not preserve_stability ->
                 FunApp (StanLib, "log1m_inv_logit", [x])
             | "log", [{pattern= FunApp (StanLib, "Minus__", [y; x]); _}]
@@ -246,8 +247,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                       FunApp
                         ( StanLib
                         , "Plus__"
-                        , [y; {pattern= FunApp (StanLib, "exp", [x]); _}] ); _
-                  } ] )
+                        , [y; {pattern= FunApp (StanLib, "exp", [x]); _}] )
+                  ; _ } ] )
               when is_int 1 y && not preserve_stability ->
                 FunApp (StanLib, "log1p_exp", [x])
             | "log", [{pattern= FunApp (StanLib, "Plus__", [y; x]); _}]
@@ -259,7 +260,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                         ( StanLib
                         , "fabs"
                         , [{pattern= FunApp (StanLib, "determinant", [x]); _}]
-                        ); _ } ] ) ->
+                        )
+                  ; _ } ] ) ->
                 FunApp (StanLib, "log_determinant", [x])
             | ( "log"
               , [ { pattern=
@@ -267,12 +269,11 @@ let rec eval_expr (e : Expr.Typed.t) =
                         ( StanLib
                         , "Minus__"
                         , [ {pattern= FunApp (StanLib, "exp", [x]); _}
-                          ; {pattern= FunApp (StanLib, "exp", [y]); _} ] ); _
-                  } ] ) ->
+                          ; {pattern= FunApp (StanLib, "exp", [y]); _} ] )
+                  ; _ } ] ) ->
                 FunApp (StanLib, "log_diff_exp", [x; y])
             (* TODO: log_mix?*)
-            | "log", [{pattern= FunApp (StanLib, "falling_factorial", l); _}]
-              ->
+            | "log", [{pattern= FunApp (StanLib, "falling_factorial", l); _}] ->
                 FunApp (StanLib, "log_falling_factorial", l)
             | "log", [{pattern= FunApp (StanLib, "rising_factorial", l); _}] ->
                 FunApp (StanLib, "log_rising_factorial", l)
@@ -285,8 +286,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                       FunApp
                         ( StanLib
                         , "sum"
-                        , [{pattern= FunApp (StanLib, "exp", l); _}] ); _ } ] )
-              ->
+                        , [{pattern= FunApp (StanLib, "exp", l); _}] )
+                  ; _ } ] ) ->
                 FunApp (StanLib, "log_sum_exp", l)
             | ( "log"
               , [ { pattern=
@@ -294,8 +295,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                         ( StanLib
                         , "Plus__"
                         , [ {pattern= FunApp (StanLib, "exp", [x]); _}
-                          ; {pattern= FunApp (StanLib, "exp", [y]); _} ] ); _
-                  } ] ) ->
+                          ; {pattern= FunApp (StanLib, "exp", [y]); _} ] )
+                  ; _ } ] ) ->
                 FunApp (StanLib, "log_sum_exp", [x; y])
             | ( "multi_normal_lpdf"
               , [y; mu; {pattern= FunApp (StanLib, "inverse", [tau]); _}] ) ->
@@ -312,9 +313,10 @@ let rec eval_expr (e : Expr.Typed.t) =
                                   , "Plus__"
                                   , [ alpha
                                     ; { pattern=
-                                          FunApp (StanLib, "Times__", [x; beta]); _
-                                      } ] ); _ } ] ); _ }
-                ; sigma ] )
+                                          FunApp (StanLib, "Times__", [x; beta])
+                                      ; _ } ] )
+                            ; _ } ] )
+                  ; _ }; sigma ] )
               when Expr.Typed.type_of x = UMatrix ->
                 FunApp
                   ( StanLib
@@ -331,10 +333,10 @@ let rec eval_expr (e : Expr.Typed.t) =
                                   ( StanLib
                                   , "Plus__"
                                   , [ { pattern=
-                                          FunApp (StanLib, "Times__", [x; beta]); _
-                                      }
-                                    ; alpha ] ); _ } ] ); _ }
-                ; sigma ] )
+                                          FunApp (StanLib, "Times__", [x; beta])
+                                      ; _ }; alpha ] )
+                            ; _ } ] )
+                  ; _ }; sigma ] )
               when Expr.Typed.type_of x = UMatrix ->
                 FunApp
                   ( StanLib
@@ -347,8 +349,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                         ( StanLib
                         , "exp"
                         , [{pattern= FunApp (StanLib, "Times__", [x; beta]); _}]
-                        ); _ }
-                ; sigma ] )
+                        )
+                  ; _ }; sigma ] )
               when Expr.Typed.type_of x = UMatrix ->
                 FunApp
                   ( StanLib
@@ -362,8 +364,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                         , "Plus__"
                         , [ alpha
                           ; {pattern= FunApp (StanLib, "Times__", [x; beta]); _}
-                          ] ); _ }
-                ; sigma ] )
+                          ] )
+                  ; _ }; sigma ] )
               when Expr.Typed.type_of x = UMatrix ->
                 FunApp
                   ( StanLib
@@ -376,8 +378,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                         ( StanLib
                         , "Plus__"
                         , [ {pattern= FunApp (StanLib, "Times__", [x; beta]); _}
-                          ; alpha ] ); _ }
-                ; sigma ] )
+                          ; alpha ] )
+                  ; _ }; sigma ] )
               when Expr.Typed.type_of x = UMatrix ->
                 FunApp
                   ( StanLib
@@ -405,8 +407,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                         , "Plus__"
                         , [ alpha
                           ; {pattern= FunApp (StanLib, "Times__", [x; beta]); _}
-                          ] ); _ }
-                ; sigma ] )
+                          ] )
+                  ; _ }; sigma ] )
               when Expr.Typed.type_of x = UMatrix ->
                 FunApp
                   (StanLib, "normal_id_glm_lpdf", [y; x; alpha; beta; sigma])
@@ -417,8 +419,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                         ( StanLib
                         , "Plus__"
                         , [ {pattern= FunApp (StanLib, "Times__", [x; beta]); _}
-                          ; alpha ] ); _ }
-                ; sigma ] )
+                          ; alpha ] )
+                  ; _ }; sigma ] )
               when Expr.Typed.type_of x = UMatrix ->
                 FunApp
                   (StanLib, "normal_id_glm_lpdf", [y; x; alpha; beta; sigma])
@@ -442,8 +444,10 @@ let rec eval_expr (e : Expr.Typed.t) =
                                   , "Plus__"
                                   , [ alpha
                                     ; { pattern=
-                                          FunApp (StanLib, "Times__", [x; beta]); _
-                                      } ] ); _ } ] ); _ } ] )
+                                          FunApp (StanLib, "Times__", [x; beta])
+                                      ; _ } ] )
+                            ; _ } ] )
+                  ; _ } ] )
               when Expr.Typed.type_of x = UMatrix ->
                 FunApp (StanLib, "poisson_log_glm_lpmf", [y; x; alpha; beta])
             | ( "poisson_lpmf"
@@ -457,9 +461,10 @@ let rec eval_expr (e : Expr.Typed.t) =
                                   ( StanLib
                                   , "Plus__"
                                   , [ { pattern=
-                                          FunApp (StanLib, "Times__", [x; beta]); _
-                                      }
-                                    ; alpha ] ); _ } ] ); _ } ] )
+                                          FunApp (StanLib, "Times__", [x; beta])
+                                      ; _ }; alpha ] )
+                            ; _ } ] )
+                  ; _ } ] )
               when Expr.Typed.type_of x = UMatrix ->
                 FunApp (StanLib, "poisson_log_glm_lpmf", [y; x; alpha; beta])
             | ( "poisson_lpmf"
@@ -469,7 +474,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                         ( StanLib
                         , "exp"
                         , [{pattern= FunApp (StanLib, "Times__", [x; beta]); _}]
-                        ); _ } ] )
+                        )
+                  ; _ } ] )
               when Expr.Typed.type_of x = UMatrix ->
                 FunApp
                   ( StanLib
@@ -483,7 +489,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                         , "Plus__"
                         , [ alpha
                           ; {pattern= FunApp (StanLib, "Times__", [x; beta]); _}
-                          ] ); _ } ] )
+                          ] )
+                  ; _ } ] )
               when Expr.Typed.type_of x = UMatrix ->
                 FunApp (StanLib, "poisson_log_glm_lpmf", [y; x; alpha; beta])
             | ( "poisson_log_lpmf"
@@ -493,7 +500,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                         ( StanLib
                         , "Plus__"
                         , [ {pattern= FunApp (StanLib, "Times__", [x; beta]); _}
-                          ; alpha ] ); _ } ] )
+                          ; alpha ] )
+                  ; _ } ] )
               when Expr.Typed.type_of x = UMatrix ->
                 FunApp (StanLib, "poisson_log_glm_lpmf", [y; x; alpha; beta])
             | ( "poisson_log_lpmf"
@@ -527,8 +535,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                       FunApp
                         ( StanLib
                         , "square"
-                        , [{pattern= FunApp (StanLib, "Minus__", [x; y]); _}] ); _
-                  } ] ) ->
+                        , [{pattern= FunApp (StanLib, "Minus__", [x; y]); _}] )
+                  ; _ } ] ) ->
                 FunApp (StanLib, "squared_distance", [x; y])
             | "sum", [{pattern= FunApp (StanLib, "diagonal", l); _}] ->
                 FunApp (StanLib, "trace", l)
@@ -548,11 +556,11 @@ let rec eval_expr (e : Expr.Typed.t) =
                                             , [ d
                                               ; { pattern=
                                                     FunApp
-                                                      ( StanLib
-                                                      , "transpose"
-                                                      , [b] ); _ } ] ); _ }
-                                    ; a ] ); _ }
-                          ; c ] ); _ } ] )
+                                                      (StanLib, "transpose", [b])
+                                                ; _ } ] )
+                                      ; _ }; a ] )
+                            ; _ }; c ] )
+                  ; _ } ] )
               when Expr.Typed.equal b c ->
                 FunApp (StanLib, "trace_gen_quad_form", [d; a; b])
             | "trace", [{pattern= FunApp (StanLib, "quad_form", [a; b]); _}] ->
@@ -581,9 +589,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                       FunApp
                         ( StanLib
                         , "matrix_exp"
-                        , [{pattern= FunApp (StanLib, "Times__", [t; a]); _}] ); _
-                  }
-                ; b ] )
+                        , [{pattern= FunApp (StanLib, "Times__", [t; a]); _}] )
+                  ; _ }; b ] )
               when Expr.Typed.type_of t = UInt || Expr.Typed.type_of t = UReal
               ->
                 FunApp (StanLib, "scale_matrix_exp_multiply", [t; a; b])
@@ -592,9 +599,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                       FunApp
                         ( StanLib
                         , "matrix_exp"
-                        , [{pattern= FunApp (StanLib, "Times__", [a; t]); _}] ); _
-                  }
-                ; b ] )
+                        , [{pattern= FunApp (StanLib, "Times__", [a; t]); _}] )
+                  ; _ }; b ] )
               when Expr.Typed.type_of t = UInt || Expr.Typed.type_of t = UReal
               ->
                 FunApp (StanLib, "scale_matrix_exp_multiply", [t; a; b])
@@ -627,8 +633,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                         ( StanLib
                         , "Times__"
                         , [{pattern= FunApp (StanLib, "transpose", [b]); _}; a]
-                        ); _ }
-                ; c ] )
+                        )
+                  ; _ }; c ] )
               when Expr.Typed.equal b c ->
                 FunApp (StanLib, "quad_form", [a; b])
             | ( "Times__"
@@ -648,7 +654,8 @@ let rec eval_expr (e : Expr.Typed.t) =
               | "PPlus__" | "PMinus__" ->
                   apply_prefix_operator_real op (Float.of_string r)
               | _ -> FunApp (t, op, l) )
-            | op, [{pattern= Lit (Int, i1); _}; {pattern= Lit (Int, i2); _}] -> (
+            | op, [{pattern= Lit (Int, i1); _}; {pattern= Lit (Int, i2); _}]
+              -> (
               match op with
               | "Plus__" | "Minus__" | "Times__" | "Divide__" | "IntDivide__"
                |"Modulo__" | "Or__" | "And__" | "Equals__" | "NEquals__"
@@ -658,7 +665,7 @@ let rec eval_expr (e : Expr.Typed.t) =
             | op, [{pattern= Lit (Real, i1); _}; {pattern= Lit (Real, i2); _}]
              |op, [{pattern= Lit (Int, i1); _}; {pattern= Lit (Real, i2); _}]
              |op, [{pattern= Lit (Real, i1); _}; {pattern= Lit (Int, i2); _}]
-            -> (
+              -> (
               match op with
               | "Plus__" | "Minus__" | "Times__" | "Divide__" ->
                   apply_arithmetic_operator_real op (Float.of_string i1)
@@ -694,7 +701,7 @@ let rec eval_expr (e : Expr.Typed.t) =
         | e1', e2' -> EOr (e1', e2') )
       | Indexed (e, l) ->
           (* TODO: do something clever with array and matrix expressions here?
-       Note  that we could also constant fold array sizes if we keep those around on declarations. *)
+             Note  that we could also constant fold array sizes if we keep those around on declarations. *)
           Indexed (eval_expr e, List.map ~f:(Index.map eval_expr) l) ) }
 
 let rec simplify_index_expr pattern =
@@ -706,14 +713,14 @@ let rec simplify_index_expr pattern =
               (* , Single ({emeta= {type_= UArray UInt; _} as emeta; _} as multi)
                *   :: inner_tl ) *)
           ; meta }
-        , ( Single ({meta= Expr.Typed.Meta.({type_= UInt; _}); _} as single_e)
-          as single )
+        , ( Single ({meta= Expr.Typed.Meta.{type_= UInt; _}; _} as single_e) as
+          single )
           :: outer_tl )
       when List.exists ~f:is_multi_index inner_indices -> (
       match List.split_while ~f:(Fn.non is_multi_index) inner_indices with
       | inner_singles, MultiIndex first_multi :: inner_tl ->
           (* foo [arr1, ..., arrN] [i1, ..., iN] ->
-         foo [arr1[i1]] [arr[i2]] ... [arrN[iN]] *)
+             foo [arr1[i1]] [arr[i2]] ... [arrN[iN]] *)
           simplify_index_expr
             (Indexed
                ( { pattern=
@@ -725,7 +732,7 @@ let rec simplify_index_expr pattern =
                                ; meta= {meta with type_= UInt} } ]
                          @ inner_tl )
                  ; meta }
-               , outer_tl ))
+               , outer_tl ) )
       | inner_singles, All :: inner_tl ->
           (* v[:x][i] -> v[i] *)
           (* v[:][i] -> v[i] *)
@@ -734,7 +741,7 @@ let rec simplify_index_expr pattern =
             (Indexed
                ( { pattern= Indexed (obj, inner_singles @ [single] @ inner_tl)
                  ; meta }
-               , outer_tl ))
+               , outer_tl ) )
       | inner_singles, Between (bot, _) :: inner_tl
        |inner_singles, Upfrom bot :: inner_tl ->
           (* v[x:y][z] -> v[x+z-1] *)
@@ -751,7 +758,7 @@ let rec simplify_index_expr pattern =
                                    loop_bottom) ]
                          @ inner_tl )
                  ; meta }
-               , outer_tl ))
+               , outer_tl ) )
       | inner_singles, (([] | Single _ :: _) as multis) ->
           raise_s
             [%message
@@ -766,8 +773,7 @@ let remove_trailing_alls_expr = function
       let rec remove_trailing_alls indices =
         match List.rev indices with
         | Index.All :: tl -> remove_trailing_alls (List.rev tl)
-        | _ -> indices
-      in
+        | _ -> indices in
       Expr.Fixed.Pattern.Indexed (obj, remove_trailing_alls indices)
   | e -> e
 
@@ -775,8 +781,7 @@ let rec simplify_indices_expr expr =
   Expr.Fixed.(
     let pattern =
       expr.pattern |> remove_trailing_alls_expr |> simplify_index_expr
-      |> Expr.Fixed.Pattern.map simplify_indices_expr
-    in
+      |> Expr.Fixed.Pattern.map simplify_indices_expr in
     {expr with pattern})
 
 let eval_stmt_base =

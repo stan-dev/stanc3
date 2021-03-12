@@ -48,7 +48,7 @@ let pp_syntax_error ?printed_filename ppf = function
   | Lexing (_, loc) ->
       Fmt.pf ppf "Syntax error in %s, lexing error:@,%a"
         (Location.to_string ?printed_filename
-           {loc with col_num= loc.col_num - 1})
+           {loc with col_num= loc.col_num - 1} )
         pp_context_with_message
         ("Invalid character found.", loc)
   | Include (message, loc) ->

@@ -62,8 +62,7 @@ let%expect_test "Reaching defns example" =
     Map.Poly.map (log_prob_build_dep_info_map example1_program)
       ~f:(fun (_, x) ->
         ( reaching_defn_lookup x.reaching_defn_entry (VVar "j")
-        , reaching_defn_lookup x.reaching_defn_exit (VVar "j") ) )
-  in
+        , reaching_defn_lookup x.reaching_defn_exit (VVar "j") ) ) in
   print_s
     [%sexp (deps : (label, label Set.Poly.t * label Set.Poly.t) Map.Poly.t)] ;
   [%expect
@@ -79,8 +78,7 @@ let%expect_test "Reaching defns example" =
   (*let deps = snd (build_predecessor_graph example1_statement_map) in*)
   let deps =
     Map.Poly.map (log_prob_build_dep_info_map example1_program)
-      ~f:(fun (_, x) -> (x.reaching_defn_entry, x.reaching_defn_exit) )
-  in
+      ~f:(fun (_, x) -> (x.reaching_defn_entry, x.reaching_defn_exit)) in
   print_s
     [%sexp
       ( deps
@@ -116,8 +114,7 @@ let%expect_test "Variable dependency example" =
     node_vars_dependencies
       (log_prob_build_dep_info_map example1_program)
       (Set.Poly.singleton (VVar "j"))
-      17
-  in
+      17 in
   print_s [%sexp (deps : label Set.Poly.t)] ;
   [%expect {|
       (4 5 9 11 13 14 16)

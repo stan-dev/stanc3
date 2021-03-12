@@ -49,27 +49,27 @@ val map_rec_expr :
 val map_rec_expr_state :
      (   's
       -> Expr.Typed.t Expr.Fixed.Pattern.t
-      -> Expr.Typed.t Expr.Fixed.Pattern.t * 's)
+      -> Expr.Typed.t Expr.Fixed.Pattern.t * 's )
   -> 's
   -> Expr.Typed.t
   -> Expr.Typed.t * 's
 
 val map_rec_stmt_loc :
      (   (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t
-      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
+      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t )
   -> Stmt.Located.t
   -> Stmt.Located.t
 
 val top_down_map_rec_stmt_loc :
      (   (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t
-      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
+      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t )
   -> Stmt.Located.t
   -> Stmt.Located.t
 
 val map_rec_state_stmt_loc :
      (   's
       -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t
-      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t * 's)
+      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t * 's )
   -> 's
   -> Stmt.Located.t
   -> Stmt.Located.t * 's
@@ -78,7 +78,7 @@ val map_rec_stmt_loc_num :
      (int, Stmt.Located.Non_recursive.t) Map.Poly.t
   -> (   int
       -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t
-      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t)
+      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t )
   -> Stmt.Located.Non_recursive.t
   -> Stmt.Located.t
 
@@ -87,7 +87,7 @@ val map_rec_state_stmt_loc_num :
   -> (   int
       -> 's
       -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t
-      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t * 's)
+      -> (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t * 's )
   -> 's
   -> Stmt.Located.Non_recursive.t
   -> Stmt.Located.t * 's

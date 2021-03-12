@@ -59,8 +59,7 @@ let get_var_decl stmts =
 
 let block_info name ppf block =
   let var_info ppf (name, t, n) =
-    Fmt.pf ppf "\"%s\": { \"type\": \"%s\", \"dimensions\": %d}" name t n
-  in
+    Fmt.pf ppf "\"%s\": { \"type\": \"%s\", \"dimensions\": %d}" name t n in
   let vars_info = Fmt.list ~sep:Fmt.comma var_info in
   Fmt.pf ppf "\"%s\": { @[<v 0>%a @]}" name vars_info
     (Option.value_map block ~default:[] ~f:get_var_decl)
@@ -70,8 +69,7 @@ let rec get_function_calls_expr (funs, distrs) expr =
     match expr.expr with
     | FunApp (StanLib, f, _) -> (SSet.add funs f.name, distrs)
     | CondDistApp (StanLib, f, _) -> (funs, SSet.add distrs f.name)
-    | _ -> (funs, distrs)
-  in
+    | _ -> (funs, distrs) in
   fold_expression get_function_calls_expr (fun acc _ -> acc) acc expr.expr
 
 let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
@@ -81,18 +79,16 @@ let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
     | Tilde {distribution; _} ->
         let possible_names =
           List.map ~f:(( ^ ) distribution.name) Utils.distribution_suffices
-          |> String.Set.of_list
-        in
-        if List.exists ~f:(fun (n, _) -> Set.mem possible_names n) ud_dists
-        then (funs, distrs)
+          |> String.Set.of_list in
+        if List.exists ~f:(fun (n, _) -> Set.mem possible_names n) ud_dists then
+          (funs, distrs)
         else
           let suffix =
             Stan_math_signatures.dist_name_suffix ud_dists distribution.name
           in
           let name = distribution.name ^ Utils.unnormalized_suffix suffix in
           (funs, SSet.add distrs name)
-    | _ -> (funs, distrs)
-  in
+    | _ -> (funs, distrs) in
   fold_statement get_function_calls_expr
     (get_function_calls_stmt ud_dists)
     (fun acc _ -> acc)
@@ -101,13 +97,11 @@ let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
 
 let function_calls ppf p =
   let map f list_op =
-    Option.value_map ~default:[] ~f:(List.concat_map ~f) list_op
-  in
+    Option.value_map ~default:[] ~f:(List.concat_map ~f) list_op in
   let grab_fundef_names_and_types = function
     | {Ast.stmt= Ast.FunDef {funname; arguments= (_, type_, _) :: _; _}; _} ->
         [(funname.name, type_)]
-    | _ -> []
-  in
+    | _ -> [] in
   let ud_dists = map grab_fundef_names_and_types p.functionblock in
   let funs, distrs =
     fold_program (get_function_calls_stmt ud_dists) (SSet.empty, SSet.empty) p

@@ -118,7 +118,7 @@ end) : S with type error := X.t = struct
   let append xs ys =
     match (xs, ys) with
     | NonEmpty (x, []), NonEmpty (y, []) -> NonEmpty (x, [y])
-    | NonEmpty (x, xs), NonEmpty (y, ys) -> NonEmpty (x, xs @ (y :: ys))
+    | NonEmpty (x, xs), NonEmpty (y, ys) -> NonEmpty (x, xs @ y :: ys)
 
   type 'a t = ('a, errors) result
 
@@ -160,7 +160,7 @@ end) : S with type error := X.t = struct
   let get_with x ~with_ok ~with_errors =
     match x with
     | Ok x -> with_ok x
-    | Error (NonEmpty (x, xs)) -> with_errors @@ (x :: xs)
+    | Error (NonEmpty (x, xs)) -> with_errors @@ x :: xs
 
   let to_result x =
     match x with Ok x -> Ok x | Error (NonEmpty (x, xs)) -> Error (x :: xs)

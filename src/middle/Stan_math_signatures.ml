@@ -93,18 +93,16 @@ let reduce_sum_slice_types =
     ; bare_array_type (UnsizedType.UInt, i)
     ; bare_array_type (UnsizedType.UMatrix, i)
     ; bare_array_type (UnsizedType.UVector, i)
-    ; bare_array_type (UnsizedType.URowVector, i) ]
-  in
+    ; bare_array_type (UnsizedType.URowVector, i) ] in
   List.concat (List.map ~f:base_slice_type reduce_sum_allowed_dimensionalities)
 
 (* Variadic ODE *)
 let variadic_ode_tol_arg_types =
-  [ (UnsizedType.AutoDiffable, UnsizedType.UReal)
-  ; (AutoDiffable, UReal); (DataOnly, UInt) ]
+  [ (UnsizedType.AutoDiffable, UnsizedType.UReal); (AutoDiffable, UReal)
+  ; (DataOnly, UInt) ]
 
 let variadic_ode_mandatory_arg_types =
-  [ (UnsizedType.AutoDiffable, UnsizedType.UVector)
-  ; (AutoDiffable, UReal)
+  [ (UnsizedType.AutoDiffable, UnsizedType.UVector); (AutoDiffable, UReal)
   ; (AutoDiffable, UArray UReal) ]
 
 let variadic_ode_mandatory_fun_args =
@@ -121,25 +119,21 @@ let mk_declarative_sig (fnkinds, name, args) =
     | Rng -> ["_rng"]
     | Cdf -> ["_cdf"; "_cdf_log"; "_lcdf"]
     | Ccdf -> ["_ccdf_log"; "_lccdf"]
-    | UnaryVectorized -> [""]
-  in
+    | UnaryVectorized -> [""] in
   let add_ints = function DVReal -> DIntAndReals | x -> x in
   let all_expanded args = all_combinations (List.map ~f:expand_arg args) in
   let promoted_dim = function
     | DVInt -> UnsizedType.UInt
     (* XXX fix this up to work with more RNGs *)
-    | _ -> UReal
-  in
+    | _ -> UReal in
   let find_rt rt args = function
     | Rng -> UnsizedType.ReturnType (rng_return_type rt args)
     | UnaryVectorized -> ReturnType (ints_to_real (List.hd_exn args))
-    | _ -> ReturnType UReal
-  in
+    | _ -> ReturnType UReal in
   let create_from_fk_args fk arglists =
     List.concat_map arglists ~f:(fun args ->
         List.map (sfxes fk) ~f:(fun sfx ->
-            (name ^ sfx, find_rt UReal args fk, args) ) )
-  in
+            (name ^ sfx, find_rt UReal args fk, args) ) ) in
   let add_fnkind = function
     | Rng ->
         let rt, args = (List.hd_exn args, List.tl_exn args) in
@@ -148,10 +142,8 @@ let mk_declarative_sig (fnkinds, name, args) =
         let name = name ^ "_rng" in
         List.map (all_expanded args) ~f:(fun args ->
             (name, find_rt rt args Rng, args) )
-    | UnaryVectorized ->
-        create_from_fk_args UnaryVectorized (all_expanded args)
-    | fk -> create_from_fk_args fk (all_expanded args)
-  in
+    | UnaryVectorized -> create_from_fk_args UnaryVectorized (all_expanded args)
+    | fk -> create_from_fk_args fk (all_expanded args) in
   List.concat_map fnkinds ~f:add_fnkind
   |> List.filter ~f:(fun (n, _, _) -> not (Set.mem missing_math_functions n))
   |> List.map ~f:(fun (n, rt, args) ->
@@ -159,9 +151,7 @@ let mk_declarative_sig (fnkinds, name, args) =
 
 let full_lpdf = [Lpdf; Rng; Ccdf; Cdf]
 let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
-
-let reduce_sum_functions =
-  String.Set.of_list ["reduce_sum"; "reduce_sum_static"]
+let reduce_sum_functions = String.Set.of_list ["reduce_sum"; "reduce_sum_static"]
 
 let variadic_ode_functions =
   String.Set.of_list
@@ -290,12 +280,10 @@ let stan_math_returntype name args =
     List.filter
       ~f:(fun x ->
         UnsizedType.check_compatible_arguments_mod_conv name (snd x) args )
-      namematches
-  in
+      namematches in
   match name with
   | x when is_reduce_sum_fn x -> Some (UnsizedType.ReturnType UReal)
-  | x when is_variadic_ode_fn x ->
-      Some (UnsizedType.ReturnType (UArray UVector))
+  | x when is_variadic_ode_fn x -> Some (UnsizedType.ReturnType (UArray UVector))
   | _ ->
       if List.length filteredmatches = 0 then None
         (* Return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
@@ -303,7 +291,7 @@ let stan_math_returntype name args =
         Some
           (List.hd_exn
              (List.sort ~compare:UnsizedType.compare_returntype
-                (List.map ~f:fst filteredmatches)))
+                (List.map ~f:fst filteredmatches) ) )
 
 let is_stan_math_function_name name =
   let name = Utils.stdlib_distribution_name name in
@@ -314,8 +302,7 @@ let dist_name_suffix udf_names name =
   match
     Utils.distribution_suffices
     |> List.filter ~f:(fun sfx ->
-           is_stan_math_function_name (name ^ sfx) || is_udf_name (name ^ sfx)
-       )
+           is_stan_math_function_name (name ^ sfx) || is_udf_name (name ^ sfx) )
     |> List.hd
   with
   | Some hd -> hd
@@ -388,12 +375,10 @@ let pretty_print_all_math_sigs ppf () =
   let pp_sig ppf (name, (rt, args)) =
     pf ppf "%s(@[<hov 2>%a@]) => %a" name
       (list ~sep:comma UnsizedType.pp)
-      (List.map ~f:snd args) UnsizedType.pp_returntype rt
-  in
+      (List.map ~f:snd args) UnsizedType.pp_returntype rt in
   let pp_sigs_for_name ppf name =
     (list ~sep:cut pp_sig) ppf
-      (List.map ~f:(fun t -> (name, t)) (get_sigs name))
-  in
+      (List.map ~f:(fun t -> (name, t)) (get_sigs name)) in
   pf ppf "@[<v>%a@]"
     (list ~sep:cut pp_sigs_for_name)
     (List.sort ~compare (Hashtbl.keys stan_math_signatures))
@@ -431,8 +416,7 @@ let add_binary_vec name =
   List.iter
     ~f:(fun i ->
       List.iter
-        ~f:(fun j ->
-          add_unqualified (name, ReturnType (ints_to_real i), [i; j]) )
+        ~f:(fun j -> add_unqualified (name, ReturnType (ints_to_real i), [i; j]))
         [UnsizedType.UInt; UReal] )
     [UnsizedType.UInt; UReal] ;
   List.iter
@@ -443,8 +427,7 @@ let add_binary_vec name =
             ( name
             , ReturnType (ints_to_real (bare_array_type (j, i)))
             , [bare_array_type (j, i); bare_array_type (j, i)] ) )
-        [UnsizedType.UArray UInt; UArray UReal; UVector; URowVector; UMatrix]
-      )
+        [UnsizedType.UArray UInt; UArray UReal; UVector; URowVector; UMatrix] )
     (List.range 0 8) ;
   List.iter
     ~f:(fun i ->
@@ -456,8 +439,8 @@ let add_binary_vec name =
                 ( name
                 , ReturnType (ints_to_real (bare_array_type (k, j)))
                 , [bare_array_type (k, j); i] ) )
-            [ UnsizedType.UArray UInt; UArray UReal; UVector; URowVector
-            ; UMatrix ] )
+            [UnsizedType.UArray UInt; UArray UReal; UVector; URowVector; UMatrix]
+          )
         (List.range 0 8) )
     [UnsizedType.UInt; UReal] ;
   List.iter
@@ -470,8 +453,8 @@ let add_binary_vec name =
                 ( name
                 , ReturnType (ints_to_real (bare_array_type (k, j)))
                 , [i; bare_array_type (k, j)] ) )
-            [ UnsizedType.UArray UInt; UArray UReal; UVector; URowVector
-            ; UMatrix ] )
+            [UnsizedType.UArray UInt; UArray UReal; UVector; URowVector; UMatrix]
+          )
         (List.range 0 8) )
     [UnsizedType.UInt; UReal]
 
@@ -640,9 +623,9 @@ let () =
         , UFun
             ( [ (AutoDiffable, UVector); (AutoDiffable, UVector)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType UVector ) )
-      ; (AutoDiffable, UVector); (AutoDiffable, UVector)
-      ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ] ) ;
+            , ReturnType UVector ) ); (AutoDiffable, UVector)
+      ; (AutoDiffable, UVector); (DataOnly, UArray UReal)
+      ; (DataOnly, UArray UInt) ] ) ;
   add_qualified
     ( "algebra_solver"
     , ReturnType UVector
@@ -650,10 +633,10 @@ let () =
         , UFun
             ( [ (AutoDiffable, UVector); (AutoDiffable, UVector)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType UVector ) )
-      ; (AutoDiffable, UVector); (AutoDiffable, UVector)
-      ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal)
-      ; (DataOnly, UReal); (DataOnly, UReal) ] ) ;
+            , ReturnType UVector ) ); (AutoDiffable, UVector)
+      ; (AutoDiffable, UVector); (DataOnly, UArray UReal)
+      ; (DataOnly, UArray UInt); (DataOnly, UReal); (DataOnly, UReal)
+      ; (DataOnly, UReal) ] ) ;
   add_qualified
     ( "algebra_solver_newton"
     , ReturnType UVector
@@ -661,9 +644,9 @@ let () =
         , UFun
             ( [ (AutoDiffable, UVector); (AutoDiffable, UVector)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType UVector ) )
-      ; (AutoDiffable, UVector); (AutoDiffable, UVector)
-      ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ] ) ;
+            , ReturnType UVector ) ); (AutoDiffable, UVector)
+      ; (AutoDiffable, UVector); (DataOnly, UArray UReal)
+      ; (DataOnly, UArray UInt) ] ) ;
   add_qualified
     ( "algebra_solver_newton"
     , ReturnType UVector
@@ -671,10 +654,10 @@ let () =
         , UFun
             ( [ (AutoDiffable, UVector); (AutoDiffable, UVector)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType UVector ) )
-      ; (AutoDiffable, UVector); (AutoDiffable, UVector)
-      ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal)
-      ; (DataOnly, UReal); (DataOnly, UReal) ] ) ;
+            , ReturnType UVector ) ); (AutoDiffable, UVector)
+      ; (AutoDiffable, UVector); (DataOnly, UArray UReal)
+      ; (DataOnly, UArray UInt); (DataOnly, UReal); (DataOnly, UReal)
+      ; (DataOnly, UReal) ] ) ;
   List.iter
     ~f:(fun i ->
       List.iter
@@ -802,8 +785,7 @@ let () =
   add_unqualified ("append_col", ReturnType UMatrix, [UVector; UMatrix]) ;
   add_unqualified ("append_col", ReturnType UMatrix, [UMatrix; UVector]) ;
   add_unqualified ("append_col", ReturnType UMatrix, [UVector; UVector]) ;
-  add_unqualified
-    ("append_col", ReturnType URowVector, [URowVector; URowVector]) ;
+  add_unqualified ("append_col", ReturnType URowVector, [URowVector; URowVector]) ;
   add_unqualified ("append_col", ReturnType URowVector, [UReal; URowVector]) ;
   add_unqualified ("append_col", ReturnType URowVector, [URowVector; UReal]) ;
   add_unqualified ("chol2inv", ReturnType UMatrix, [UMatrix]) ;
@@ -891,8 +873,7 @@ let () =
   add_unqualified ("dot_product", ReturnType UReal, [URowVector; URowVector]) ;
   add_unqualified ("dot_product", ReturnType UReal, [UVector; URowVector]) ;
   add_unqualified ("dot_product", ReturnType UReal, [URowVector; UVector]) ;
-  add_unqualified
-    ("dot_product", ReturnType UReal, [UArray UReal; UArray UReal]) ;
+  add_unqualified ("dot_product", ReturnType UReal, [UArray UReal; UArray UReal]) ;
   add_unqualified ("dot_self", ReturnType UReal, [UVector]) ;
   add_unqualified ("dot_self", ReturnType UReal, [URowVector]) ;
   add_nullary "e" ;
@@ -906,8 +887,7 @@ let () =
   add_unqualified ("elt_divide", ReturnType UInt, [UInt; UInt]) ;
   add_unqualified ("elt_divide", ReturnType UReal, [UReal; UReal]) ;
   add_unqualified ("elt_divide", ReturnType UVector, [UVector; UVector]) ;
-  add_unqualified
-    ("elt_divide", ReturnType URowVector, [URowVector; URowVector]) ;
+  add_unqualified ("elt_divide", ReturnType URowVector, [URowVector; URowVector]) ;
   add_unqualified ("elt_divide", ReturnType UMatrix, [UMatrix; UMatrix]) ;
   add_unqualified ("elt_divide", ReturnType UVector, [UVector; UReal]) ;
   add_unqualified ("elt_divide", ReturnType URowVector, [URowVector; UReal]) ;
@@ -1064,8 +1044,7 @@ let () =
             , [bare_array_type (t, j); UInt] ) )
         (List.range 1 4) )
     bare_types ;
-  add_unqualified
-    ("hmm_marginal", ReturnType UReal, [UMatrix; UMatrix; UVector]) ;
+  add_unqualified ("hmm_marginal", ReturnType UReal, [UMatrix; UMatrix; UVector]) ;
   add_qualified
     ( "hmm_hidden_state_prob"
     , ReturnType UMatrix
@@ -1090,133 +1069,109 @@ let () =
     , [ ( AutoDiffable
         , UFun
             ( [ (AutoDiffable, UReal); (AutoDiffable, UReal)
-              ; (AutoDiffable, UArray UReal)
-              ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType UReal ) )
-      ; (AutoDiffable, UReal); (AutoDiffable, UReal)
-      ; (AutoDiffable, UArray UReal)
-      ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ] ) ;
+              ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
+              ; (DataOnly, UArray UInt) ]
+            , ReturnType UReal ) ); (AutoDiffable, UReal); (AutoDiffable, UReal)
+      ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
+      ; (DataOnly, UArray UInt) ] ) ;
   add_qualified
     ( "integrate_1d"
     , ReturnType UReal
     , [ ( AutoDiffable
         , UFun
             ( [ (AutoDiffable, UReal); (AutoDiffable, UReal)
-              ; (AutoDiffable, UArray UReal)
-              ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType UReal ) )
-      ; (AutoDiffable, UReal); (AutoDiffable, UReal)
-      ; (AutoDiffable, UArray UReal)
-      ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal) ]
-    ) ;
+              ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
+              ; (DataOnly, UArray UInt) ]
+            , ReturnType UReal ) ); (AutoDiffable, UReal); (AutoDiffable, UReal)
+      ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
+      ; (DataOnly, UArray UInt); (DataOnly, UReal) ] ) ;
   add_qualified
     ( "integrate_ode"
     , ReturnType (UArray (UArray UReal))
     , [ ( AutoDiffable
         , UFun
-            ( [ (AutoDiffable, UReal)
-              ; (AutoDiffable, UArray UReal)
-              ; (AutoDiffable, UArray UReal)
-              ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType (UArray UReal) ) )
-      ; (AutoDiffable, UArray UReal)
-      ; (AutoDiffable, UReal)
-      ; (AutoDiffable, UArray UReal)
-      ; (AutoDiffable, UArray UReal)
-      ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ] ) ;
+            ( [ (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
+              ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
+              ; (DataOnly, UArray UInt) ]
+            , ReturnType (UArray UReal) ) ); (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
+      ; (DataOnly, UArray UInt) ] ) ;
   add_qualified
     ( "integrate_ode_adams"
     , ReturnType (UArray (UArray UReal))
     , [ ( AutoDiffable
         , UFun
-            ( [ (AutoDiffable, UReal)
-              ; (AutoDiffable, UArray UReal)
-              ; (AutoDiffable, UArray UReal)
-              ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType (UArray UReal) ) )
-      ; (AutoDiffable, UArray UReal)
-      ; (AutoDiffable, UReal)
-      ; (AutoDiffable, UArray UReal)
-      ; (AutoDiffable, UArray UReal)
-      ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ] ) ;
+            ( [ (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
+              ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
+              ; (DataOnly, UArray UInt) ]
+            , ReturnType (UArray UReal) ) ); (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
+      ; (DataOnly, UArray UInt) ] ) ;
   add_qualified
     ( "integrate_ode_adams"
     , ReturnType (UArray (UArray UReal))
     , [ ( AutoDiffable
         , UFun
-            ( [ (AutoDiffable, UReal)
-              ; (AutoDiffable, UArray UReal)
-              ; (AutoDiffable, UArray UReal)
-              ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType (UArray UReal) ) )
-      ; (AutoDiffable, UArray UReal)
-      ; (AutoDiffable, UReal)
-      ; (AutoDiffable, UArray UReal)
-      ; (AutoDiffable, UArray UReal)
-      ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal)
-      ; (DataOnly, UReal); (DataOnly, UReal) ] ) ;
+            ( [ (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
+              ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
+              ; (DataOnly, UArray UInt) ]
+            , ReturnType (UArray UReal) ) ); (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
+      ; (DataOnly, UArray UInt); (DataOnly, UReal); (DataOnly, UReal)
+      ; (DataOnly, UReal) ] ) ;
   add_qualified
     ( "integrate_ode_bdf"
     , ReturnType (UArray (UArray UReal))
     , [ ( AutoDiffable
         , UFun
-            ( [ (AutoDiffable, UReal)
-              ; (AutoDiffable, UArray UReal)
-              ; (AutoDiffable, UArray UReal)
-              ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType (UArray UReal) ) )
-      ; (AutoDiffable, UArray UReal)
-      ; (AutoDiffable, UReal)
-      ; (AutoDiffable, UArray UReal)
-      ; (AutoDiffable, UArray UReal)
-      ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ] ) ;
+            ( [ (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
+              ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
+              ; (DataOnly, UArray UInt) ]
+            , ReturnType (UArray UReal) ) ); (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
+      ; (DataOnly, UArray UInt) ] ) ;
   add_qualified
     ( "integrate_ode_bdf"
     , ReturnType (UArray (UArray UReal))
     , [ ( AutoDiffable
         , UFun
-            ( [ (AutoDiffable, UReal)
-              ; (AutoDiffable, UArray UReal)
-              ; (AutoDiffable, UArray UReal)
-              ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType (UArray UReal) ) )
-      ; (AutoDiffable, UArray UReal)
-      ; (AutoDiffable, UReal)
-      ; (AutoDiffable, UArray UReal)
-      ; (AutoDiffable, UArray UReal)
-      ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal)
-      ; (DataOnly, UReal); (DataOnly, UReal) ] ) ;
+            ( [ (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
+              ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
+              ; (DataOnly, UArray UInt) ]
+            , ReturnType (UArray UReal) ) ); (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
+      ; (DataOnly, UArray UInt); (DataOnly, UReal); (DataOnly, UReal)
+      ; (DataOnly, UReal) ] ) ;
   add_qualified
     ( "integrate_ode_rk45"
     , ReturnType (UArray (UArray UReal))
     , [ ( AutoDiffable
         , UFun
-            ( [ (AutoDiffable, UReal)
-              ; (AutoDiffable, UArray UReal)
-              ; (AutoDiffable, UArray UReal)
-              ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType (UArray UReal) ) )
-      ; (AutoDiffable, UArray UReal)
-      ; (AutoDiffable, UReal)
-      ; (AutoDiffable, UArray UReal)
-      ; (AutoDiffable, UArray UReal)
-      ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ] ) ;
+            ( [ (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
+              ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
+              ; (DataOnly, UArray UInt) ]
+            , ReturnType (UArray UReal) ) ); (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
+      ; (DataOnly, UArray UInt) ] ) ;
   add_qualified
     ( "integrate_ode_rk45"
     , ReturnType (UArray (UArray UReal))
     , [ ( AutoDiffable
         , UFun
-            ( [ (AutoDiffable, UReal)
-              ; (AutoDiffable, UArray UReal)
-              ; (AutoDiffable, UArray UReal)
-              ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType (UArray UReal) ) )
-      ; (AutoDiffable, UArray UReal)
-      ; (AutoDiffable, UReal)
-      ; (AutoDiffable, UArray UReal)
-      ; (AutoDiffable, UArray UReal)
-      ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal)
-      ; (DataOnly, UReal); (DataOnly, UReal) ] ) ;
+            ( [ (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
+              ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
+              ; (DataOnly, UArray UInt) ]
+            , ReturnType (UArray UReal) ) ); (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UReal); (AutoDiffable, UArray UReal)
+      ; (AutoDiffable, UArray UReal); (DataOnly, UArray UReal)
+      ; (DataOnly, UArray UInt); (DataOnly, UReal); (DataOnly, UReal)
+      ; (DataOnly, UReal) ] ) ;
   add_unqualified
     ("inv_wishart_log", ReturnType UReal, [UMatrix; UReal; UMatrix]) ;
   add_unqualified
@@ -1280,8 +1235,7 @@ let () =
   add_binary "log_sum_exp" ;
   let logical_binops =
     [ "logical_or"; "logical_and"; "logical_eq"; "logical_neq"; "logical_lt"
-    ; "logical_lte"; "logical_gt"; "logical_gte" ]
-  in
+    ; "logical_lte"; "logical_gt"; "logical_gte" ] in
   List.iter
     ~f:(fun t1 ->
       add_unqualified ("logical_negation", ReturnType UInt, [t1]) ;
@@ -1300,14 +1254,11 @@ let () =
         , UFun
             ( [ (AutoDiffable, UVector); (AutoDiffable, UVector)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
-            , ReturnType UVector ) )
-      ; (AutoDiffable, UVector)
-      ; (AutoDiffable, UArray UVector)
-      ; (DataOnly, UArray (UArray UReal))
+            , ReturnType UVector ) ); (AutoDiffable, UVector)
+      ; (AutoDiffable, UArray UVector); (DataOnly, UArray (UArray UReal))
       ; (DataOnly, UArray (UArray UInt)) ] ) ;
   add_unqualified ("matrix_exp", ReturnType UMatrix, [UMatrix]) ;
-  add_unqualified
-    ("matrix_exp_multiply", ReturnType UMatrix, [UMatrix; UMatrix]) ;
+  add_unqualified ("matrix_exp_multiply", ReturnType UMatrix, [UMatrix; UMatrix]) ;
   add_unqualified ("matrix_power", ReturnType UMatrix, [UMatrix; UInt]) ;
   add_unqualified ("max", ReturnType UInt, [UArray UInt]) ;
   add_unqualified ("max", ReturnType UReal, [UArray UReal]) ;
@@ -1323,8 +1274,7 @@ let () =
     ("mdivide_left_tri_low", ReturnType UMatrix, [UMatrix; UMatrix]) ;
   add_unqualified
     ("mdivide_left_tri_low", ReturnType UVector, [UMatrix; UVector]) ;
-  add_unqualified
-    ("mdivide_right", ReturnType URowVector, [URowVector; UMatrix]) ;
+  add_unqualified ("mdivide_right", ReturnType URowVector, [URowVector; UMatrix]) ;
   add_unqualified ("mdivide_right_spd", ReturnType UMatrix, [UMatrix; UMatrix]) ;
   add_unqualified
     ("mdivide_right_spd", ReturnType URowVector, [URowVector; UMatrix]) ;
@@ -1354,8 +1304,7 @@ let () =
   add_unqualified ("multi_normal_rng", ReturnType UVector, [UVector; UMatrix]) ;
   add_unqualified
     ("multi_normal_rng", ReturnType (UArray UVector), [UArray UVector; UMatrix]) ;
-  add_unqualified
-    ("multi_normal_rng", ReturnType UVector, [URowVector; UMatrix]) ;
+  add_unqualified ("multi_normal_rng", ReturnType UVector, [URowVector; UMatrix]) ;
   add_unqualified
     ( "multi_normal_rng"
     , ReturnType (UArray UVector)
@@ -1552,9 +1501,7 @@ let () =
   add_unqualified
     ("poisson_log_glm_lpmf", ReturnType UReal, [UInt; UMatrix; UReal; UVector]) ;
   add_unqualified
-    ( "poisson_log_glm_lpmf"
-    , ReturnType UReal
-    , [UInt; UMatrix; UVector; UVector] ) ;
+    ("poisson_log_glm_lpmf", ReturnType UReal, [UInt; UMatrix; UVector; UVector]) ;
   add_unqualified
     ( "poisson_log_glm_lpmf"
     , ReturnType UReal
@@ -1594,9 +1541,7 @@ let () =
       add_unqualified
         ("rep_array", ReturnType (bare_array_type (t, 2)), [t; UInt; UInt]) ;
       add_unqualified
-        ( "rep_array"
-        , ReturnType (bare_array_type (t, 3))
-        , [t; UInt; UInt; UInt] ) ;
+        ("rep_array", ReturnType (bare_array_type (t, 3)), [t; UInt; UInt; UInt]) ;
       List.iter
         ~f:(fun j ->
           add_unqualified
@@ -1666,8 +1611,7 @@ let () =
     ~f:(fun i ->
       List.iter
         ~f:(fun t ->
-          add_unqualified ("size", ReturnType UInt, [bare_array_type (t, i)])
-          )
+          add_unqualified ("size", ReturnType UInt, [bare_array_type (t, i)]) )
         bare_types )
     (List.range 1 8) ;
   List.iter
@@ -1687,8 +1631,7 @@ let () =
   add_unqualified ("sort_indices_asc", ReturnType (UArray UInt), [UVector]) ;
   add_unqualified ("sort_indices_asc", ReturnType (UArray UInt), [URowVector]) ;
   add_unqualified ("sort_indices_desc", ReturnType (UArray UInt), [UArray UInt]) ;
-  add_unqualified
-    ("sort_indices_desc", ReturnType (UArray UInt), [UArray UReal]) ;
+  add_unqualified ("sort_indices_desc", ReturnType (UArray UInt), [UArray UReal]) ;
   add_unqualified ("sort_indices_desc", ReturnType (UArray UInt), [UVector]) ;
   add_unqualified ("sort_indices_desc", ReturnType (UArray UInt), [URowVector]) ;
   add_unqualified ("squared_distance", ReturnType UReal, [UReal; UReal]) ;
@@ -1699,8 +1642,7 @@ let () =
   add_unqualified ("squared_distance", ReturnType UReal, [URowVector; UVector]) ;
   add_nullary "sqrt2" ;
   add_unqualified ("sub_col", ReturnType UVector, [UMatrix; UInt; UInt; UInt]) ;
-  add_unqualified
-    ("sub_row", ReturnType URowVector, [UMatrix; UInt; UInt; UInt]) ;
+  add_unqualified ("sub_row", ReturnType URowVector, [UMatrix; UInt; UInt; UInt]) ;
   List.iter
     ~f:(fun i ->
       add_unqualified
@@ -1764,8 +1706,7 @@ let () =
   add_unqualified ("to_matrix", ReturnType UMatrix, [UArray UInt; UInt; UInt]) ;
   add_unqualified
     ("to_matrix", ReturnType UMatrix, [UArray UInt; UInt; UInt; UInt]) ;
-  add_unqualified
-    ("to_matrix", ReturnType UMatrix, [bare_array_type (UReal, 2)]) ;
+  add_unqualified ("to_matrix", ReturnType UMatrix, [bare_array_type (UReal, 2)]) ;
   add_unqualified ("to_matrix", ReturnType UMatrix, [bare_array_type (UInt, 2)]) ;
   add_unqualified ("to_row_vector", ReturnType URowVector, [UMatrix]) ;
   add_unqualified ("to_row_vector", ReturnType URowVector, [UVector]) ;

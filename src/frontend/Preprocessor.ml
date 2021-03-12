@@ -21,7 +21,7 @@ let rec try_open_in paths fname pos =
               ( "Could not find include file " ^ fname
                 ^ " in specified include paths.\n"
               , Middle.Location.of_position_exn
-                  (lexeme_start_p (Stack.top_exn include_stack)) )))
+                  (lexeme_start_p (Stack.top_exn include_stack)) ) ) )
   | path :: rest_of_paths -> (
     try
       let full_path = path ^ "/" ^ fname in
@@ -29,7 +29,7 @@ let rec try_open_in paths fname pos =
       , sprintf "%s, included from\n%s" full_path
           (Middle.Location.to_string
              (Middle.Location.of_position_exn
-                (Stack.top_exn include_stack).lex_start_p)) )
+                (Stack.top_exn include_stack).lex_start_p ) ) )
     with _ -> try_open_in rest_of_paths fname pos )
 
 let maybe_remove_quotes str =
@@ -39,12 +39,10 @@ let maybe_remove_quotes str =
   else str
 
 let try_get_new_lexbuf fname pos =
-  let chan, path =
-    try_open_in !include_paths (maybe_remove_quotes fname) pos
-  in
+  let chan, path = try_open_in !include_paths (maybe_remove_quotes fname) pos in
   let new_lexbuf = from_channel chan in
-  new_lexbuf.lex_start_p
-  <- {pos_fname= path; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} ;
+  new_lexbuf.lex_start_p <-
+    {pos_fname= path; pos_lnum= 1; pos_bol= 0; pos_cnum= 0} ;
   new_lexbuf.lex_curr_p <- new_lexbuf.lex_start_p ;
   if dup_exists (Str.split (Str.regexp ", included from\n") path) then
     raise
@@ -52,6 +50,6 @@ let try_get_new_lexbuf fname pos =
          (Include
             ( Printf.sprintf "File %s recursively included itself.\n" fname
             , Middle.Location.of_position_exn
-                (lexeme_start_p (Stack.top_exn include_stack)) ))) ;
+                (lexeme_start_p (Stack.top_exn include_stack)) ) ) ) ;
   Stack.push include_stack new_lexbuf ;
   new_lexbuf

@@ -27,10 +27,9 @@ let rec pp pp_e ppf = function
 let collect_exprs st =
   let rec aux accu = function
     | SInt | SReal -> List.rev accu
-    | SVector e | SRowVector e -> List.rev @@ (e :: accu)
-    | SMatrix (e1, e2) -> List.rev @@ (e1 :: e2 :: accu)
-    | SArray (inner, e) -> aux (e :: accu) inner
-  in
+    | SVector e | SRowVector e -> List.rev @@ e :: accu
+    | SMatrix (e1, e2) -> List.rev @@ e1 :: e2 :: accu
+    | SArray (inner, e) -> aux (e :: accu) inner in
   aux [] st
 
 let rec to_unsized = function

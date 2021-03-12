@@ -25,8 +25,7 @@ let pp_autodifftype ppf = function
 let unsized_array_depth unsized_ty =
   let rec aux depth = function
     | UArray ut -> aux (depth + 1) ut
-    | ut -> (ut, depth)
-  in
+    | ut -> (ut, depth) in
   aux 0 unsized_ty
 
 let count_dims unsized_ty =
@@ -34,8 +33,7 @@ let count_dims unsized_ty =
     | UArray t -> aux (dims + 1) t
     | UMatrix -> dims + 2
     | UVector | URowVector -> dims + 1
-    | _ -> dims
-  in
+    | _ -> dims in
   aux 0 unsized_ty
 
 let rec unwind_array_type = function
@@ -91,7 +89,7 @@ let check_of_same_type_mod_conv name t1 t2 =
              (List.map2_exn
                 ~f:(fun (at1, ut1) (at2, ut2) ->
                   ut1 = ut2 && autodifftype_can_convert at2 at1 )
-                l1 l2)
+                l1 l2 )
     | _ -> t1 = t2
 
 let rec check_of_same_type_mod_array_conv name t1 t2 =
@@ -108,7 +106,7 @@ let check_compatible_arguments_mod_conv name args1 args2 =
           ~f:(fun sign1 sign2 ->
             check_of_same_type_mod_conv name (snd sign1) (snd sign2)
             && autodifftype_can_convert (fst sign1) (fst sign2) )
-          args1 args2)
+          args1 args2 )
 
 (** Given two types find the minimal type both can convert to *)
 let rec common_type = function

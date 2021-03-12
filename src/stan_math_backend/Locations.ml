@@ -24,23 +24,21 @@ let prepare_prog (mir : Program.Typed.t) : Program.Numbered.t * state_t =
         let new_label = Hashtbl.length label_to_location in
         Hashtbl.set label_to_location ~key:new_label ~data:meta ;
         Hashtbl.set location_to_label ~key:meta ~data:new_label ;
-        {pattern; meta= new_label}
-  in
+        {pattern; meta= new_label} in
   let mir = Program.map Fn.id number_locations_stmt mir in
   let location_list =
     List.map ~f:snd
       (List.sort
          ~compare:(fun x y -> compare_int (fst x) (fst y))
-         (Hashtbl.to_alist label_to_location))
-  in
+         (Hashtbl.to_alist label_to_location) ) in
   (mir, location_list)
 
 let pp_globals ppf location_list =
   let location_list =
     " (found before start of program)"
-    :: ( List.filter ~f:(fun x -> x <> Location_span.empty) location_list
-       |> List.map ~f:(fun x -> " (in " ^ Location_span.to_string x ^ ")") )
-  in
+    ::
+    ( List.filter ~f:(fun x -> x <> Location_span.empty) location_list
+    |> List.map ~f:(fun x -> " (in " ^ Location_span.to_string x ^ ")") ) in
   Fmt.pf ppf
     "@ stan::math::profile_map profiles__;@ static int current_statement__= \
      0;@ static const std::vector<std::string> locations_array__ = @ \

@@ -36,8 +36,7 @@ let with_indented_box ppf indentation offset f =
     | 0 -> ()
     | i ->
         Format.pp_print_space ppf () ;
-        pp_print_n_spaces ppf (i - 1)
-  in
+        pp_print_n_spaces ppf (i - 1) in
   with_hbox ppf (fun () ->
       pp_print_n_spaces ppf indentation ;
       with_box ppf offset f ) ;
@@ -199,15 +198,13 @@ and pp_transformed_type ppf (pst, trans) =
     | Middle.Type.Sized st ->
         Middle.Type.Sized (Fn.compose fst unwind_sized_array_type st)
     | Unsized (UArray t) -> discard_arrays (Unsized t)
-    | Unsized ut -> Unsized ut
-  in
+    | Unsized ut -> Unsized ut in
   let pst = discard_arrays pst in
   let unsizedtype_fmt =
     match pst with
     | Middle.Type.Sized (SArray _ as st) ->
         Fmt.const pp_sizedtype (Fn.compose fst unwind_sized_array_type st)
-    | _ -> Fmt.const pp_unsizedtype (Middle.Type.to_unsized pst)
-  in
+    | _ -> Fmt.const pp_unsizedtype (Middle.Type.to_unsized pst) in
   let sizes_fmt =
     match pst with
     | Sized (SVector e) | Sized (SRowVector e) ->
@@ -218,8 +215,7 @@ and pp_transformed_type ppf (pst, trans) =
           e2
     | Sized (SArray _) | Unsized _ | Sized Middle.SizedType.SInt | Sized SReal
       ->
-        Fmt.nop
-  in
+        Fmt.nop in
   let cov_sizes_fmt =
     match pst with
     | Sized (SMatrix (e1, e2)) ->
@@ -229,11 +225,9 @@ and pp_transformed_type ppf (pst, trans) =
           Fmt.const
             (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression e1 pp_expression)
             e2
-    | _ -> Fmt.nop
-  in
+    | _ -> Fmt.nop in
   match trans with
-  | Middle.Program.Identity ->
-      Fmt.pf ppf "%a%a" unsizedtype_fmt () sizes_fmt ()
+  | Middle.Program.Identity -> Fmt.pf ppf "%a%a" unsizedtype_fmt () sizes_fmt ()
   | Lower _ | Upper _ | LowerUpper _ | Offset _ | Multiplier _
    |OffsetMultiplier _ ->
       Fmt.pf ppf "%a%a%a" unsizedtype_fmt () pp_transformation trans sizes_fmt
@@ -331,13 +325,11 @@ and pp_statement ppf ({stmt= s_content; _} as ss) =
       let pp_init ppf init =
         match init with
         | None -> Fmt.pf ppf ""
-        | Some e -> Fmt.pf ppf " = %a" pp_expression e
-      in
+        | Some e -> Fmt.pf ppf " = %a" pp_expression e in
       let es =
         match pst with
         | Sized st -> Fn.compose snd unwind_sized_array_type st
-        | Unsized _ -> []
-      in
+        | Unsized _ -> [] in
       with_hbox ppf (fun () ->
           Fmt.pf ppf "%a%a %a%a;" pp_array_dims es pp_transformed_type
             (pst, trans) pp_identifier id pp_init init )
@@ -390,10 +382,8 @@ let pp_program ppf
 
 let check_correctness prog pretty =
   let result_ast, (_ : Middle.Warnings.t list) =
-    Parse.parse_string Parser.Incremental.program pretty
-  in
-  if
-    compare_untyped_program prog (Option.value_exn (Result.ok result_ast)) <> 0
+    Parse.parse_string Parser.Incremental.program pretty in
+  if compare_untyped_program prog (Option.value_exn (Result.ok result_ast)) <> 0
   then failwith "Pretty printing failed. Please file a bug."
 
 let pretty_print_program p =

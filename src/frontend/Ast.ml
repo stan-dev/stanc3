@@ -115,10 +115,7 @@ type typed_lval = (typed_expression, typed_expr_meta) lval_with
     for 'e and 's respectively to get untyped_statement and typed_expression and
     typed_statement to get typed_statement    *)
 type ('e, 's, 'l, 'f) statement =
-  | Assignment of
-      { assign_lhs: 'l
-      ; assign_op: assignmentoperator
-      ; assign_rhs: 'e }
+  | Assignment of {assign_lhs: 'l; assign_op: assignmentoperator; assign_rhs: 'e}
   | NRFunApp of 'f * identifier * 'e list
   | TargetPE of 'e
   (* IncrementLogProb is deprecated *)
@@ -217,8 +214,7 @@ type 's program =
 [@@deriving sexp, hash, compare, map, fold]
 
 (** Untyped programs (before type checking) *)
-type untyped_program = untyped_statement program
-[@@deriving sexp, compare, map]
+type untyped_program = untyped_statement program [@@deriving sexp, compare, map]
 
 (** Typed programs (after type checking) *)
 type typed_program = typed_statement program [@@deriving sexp, compare, map]
@@ -226,8 +222,8 @@ type typed_program = typed_statement program [@@deriving sexp, compare, map]
 (*========================== Helper functions ===============================*)
 
 (** Forgetful function from typed to untyped expressions *)
-let rec untyped_expression_of_typed_expression
-    ({expr; emeta} : typed_expression) : untyped_expression =
+let rec untyped_expression_of_typed_expression ({expr; emeta} : typed_expression)
+    : untyped_expression =
   { expr=
       map_expression untyped_expression_of_typed_expression (fun _ -> ()) expr
   ; emeta= {loc= emeta.loc} }

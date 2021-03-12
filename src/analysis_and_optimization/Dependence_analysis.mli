@@ -104,8 +104,7 @@ val log_prob_dependency_graph :
    correspond to the labels built by statement_map.
 *)
 
-val reaching_defn_lookup :
-  reaching_defn Set.Poly.t -> vexpr -> label Set.Poly.t
+val reaching_defn_lookup : reaching_defn Set.Poly.t -> vexpr -> label Set.Poly.t
 
 val mir_uninitialized_variables :
   Program.Typed.t -> (Location_span.t * string) Set.Poly.t

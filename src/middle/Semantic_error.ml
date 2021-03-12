@@ -54,8 +54,8 @@ module TypeError = struct
           UnsizedType.pp t1 UnsizedType.pp t2
     | InvalidRowVectorTypes ty ->
         Fmt.pf ppf
-          "Row_vector expression must have all int or real entries. Found \
-           type %a."
+          "Row_vector expression must have all int or real entries. Found type \
+           %a."
           UnsizedType.pp ty
     | InvalidMatrixTypes ty ->
         Fmt.pf ppf
@@ -65,8 +65,8 @@ module TypeError = struct
         Fmt.pf ppf "%s must be of type int. Instead found type %a." name
           UnsizedType.pp ut
     | IntOrRealExpected (name, ut) ->
-        Fmt.pf ppf "%s must be of type int or real. Instead found type %a."
-          name UnsizedType.pp ut
+        Fmt.pf ppf "%s must be of type int or real. Instead found type %a." name
+          UnsizedType.pp ut
     | TypeExpected (name, (UInt | UReal), ut) ->
         Fmt.pf ppf "%s must be a scalar. Instead found type %a." name
           UnsizedType.pp ut
@@ -98,8 +98,7 @@ module TypeError = struct
            has type %a and rhs has type %a. Available signatures:@]%s"
           (Fmt.strf "%a=" Operator.pp op)
           UnsizedType.pp lt UnsizedType.pp rt
-          ( Stan_math_signatures.pretty_print_math_lib_assignmentoperator_sigs
-              op
+          ( Stan_math_signatures.pretty_print_math_lib_assignmentoperator_sigs op
           |> Option.value ~default:"no matching signatures" )
     | IllTypedTernaryIf (UInt, ut2, ut3) ->
         Fmt.pf ppf
@@ -116,16 +115,15 @@ module TypeError = struct
         let generate_reduce_sum_sig =
           List.concat
             [ [ UnsizedType.UFun
-                  ( List.hd_exn args :: (AutoDiffable, UInt)
+                  ( List.hd_exn args
+                    ::
+                    (AutoDiffable, UInt)
                     :: (AutoDiffable, UInt) :: List.tl_exn args
-                  , ReturnType UReal ) ]
-            ; first; [UInt]; rest ]
-        in
+                  , ReturnType UReal ) ]; first; [UInt]; rest ] in
         Fmt.pf ppf
           "Ill-typed arguments supplied to function '%s'. Expected \
            arguments:@[<h>%a@]\n\
-           @[<h>Instead supplied arguments of incompatible type: %a@]"
-          name
+           @[<h>Instead supplied arguments of incompatible type: %a@]" name
           Fmt.(list UnsizedType.pp ~sep:comma)
           generate_reduce_sum_sig
           Fmt.(list UnsizedType.pp ~sep:comma)
@@ -137,13 +135,11 @@ module TypeError = struct
             (n_commas (i - 1))
             UnsizedType.pp a UnsizedType.pp b UnsizedType.pp c
             (n_commas (i - 1))
-            UnsizedType.pp d
-        in
+            UnsizedType.pp d in
         let lines =
           List.map
             ~f:(fun i -> type_string (UInt, UInt, UReal, UInt) i)
-            Stan_math_signatures.reduce_sum_allowed_dimensionalities
-        in
+            Stan_math_signatures.reduce_sum_allowed_dimensionalities in
         Fmt.pf ppf
           "Ill-typed arguments supplied to function '%s'. Available arguments:\n\
            %sWhere T is any one of int, real, vector, row_vector or \
@@ -157,16 +153,14 @@ module TypeError = struct
         let optional_tol_args =
           if Stan_math_signatures.is_variadic_ode_tol_fn name then
             types Stan_math_signatures.variadic_ode_tol_arg_types
-          else []
-        in
+          else [] in
         let generate_ode_sig =
           [ UnsizedType.UFun
               ( Stan_math_signatures.variadic_ode_mandatory_fun_args @ args
               , ReturnType Stan_math_signatures.variadic_ode_fun_return_type )
           ]
           @ types Stan_math_signatures.variadic_ode_mandatory_arg_types
-          @ optional_tol_args @ types args
-        in
+          @ optional_tol_args @ types args in
         (* This function is used to generate the generic signature for variadic ODEs,
            i.e. with ... representing the variadic parts of the signature.
            This should be removed once a type representing variadic arguments is added.
@@ -178,8 +172,7 @@ module TypeError = struct
           let optional_tol_args =
             if Stan_math_signatures.is_variadic_ode_tol_fn name then
               types Stan_math_signatures.variadic_ode_tol_arg_types
-            else []
-          in
+            else [] in
           match
             ( types Stan_math_signatures.variadic_ode_mandatory_arg_types
             , types Stan_math_signatures.variadic_ode_mandatory_fun_args )
@@ -187,17 +180,16 @@ module TypeError = struct
           | arg0 :: arg1 :: arg2 :: _, fun_arg0 :: fun_arg1 :: _ ->
               Fmt.strf "(%a, %a, ...) => %a, %a, %a, %a, %a ...\n"
                 UnsizedType.pp fun_arg0 UnsizedType.pp fun_arg1 UnsizedType.pp
-                Stan_math_signatures.variadic_ode_fun_return_type
-                UnsizedType.pp arg0 UnsizedType.pp arg1 UnsizedType.pp arg2
+                Stan_math_signatures.variadic_ode_fun_return_type UnsizedType.pp
+                arg0 UnsizedType.pp arg1 UnsizedType.pp arg2
                 Fmt.(list UnsizedType.pp ~sep:comma)
                 optional_tol_args
           | _ ->
               raise_s
                 [%message
-                  "This should not happen. Variadic ODE functions have \
-                   exactly three mandatory arguments and the function \
-                   supplied to the variadic ODE function has exactly two \
-                   mandatory arguments."]
+                  "This should not happen. Variadic ODE functions have exactly \
+                   three mandatory arguments and the function supplied to the \
+                   variadic ODE function has exactly two mandatory arguments."]
         in
         if List.length args = 0 then
           Fmt.pf ppf
@@ -227,28 +219,28 @@ module TypeError = struct
           nidcs
     | ReturningFnExpectedNonReturningFound fn_name ->
         Fmt.pf ppf
-          "A returning function was expected but a non-returning function \
-           '%s' was supplied."
+          "A returning function was expected but a non-returning function '%s' \
+           was supplied."
           fn_name
     | NonReturningFnExpectedReturningFound fn_name ->
         Fmt.pf ppf
-          "A non-returning function was expected but a returning function \
-           '%s' was supplied."
+          "A non-returning function was expected but a returning function '%s' \
+           was supplied."
           fn_name
     | ReturningFnExpectedNonFnFound fn_name ->
         Fmt.pf ppf
-          "A returning function was expected but a non-function value '%s' \
-           was supplied."
+          "A returning function was expected but a non-function value '%s' was \
+           supplied."
           fn_name
     | NonReturningFnExpectedNonFnFound fn_name ->
         Fmt.pf ppf
-          "A non-returning function was expected but a non-function value \
-           '%s' was supplied."
+          "A non-returning function was expected but a non-function value '%s' \
+           was supplied."
           fn_name
     | ReturningFnExpectedUndeclaredIdentFound fn_name ->
         Fmt.pf ppf
-          "A returning function was expected but an undeclared identifier \
-           '%s' was supplied."
+          "A returning function was expected but an undeclared identifier '%s' \
+           was supplied."
           fn_name
     | NonReturningFnExpectedUndeclaredIdentFound fn_name ->
         Fmt.pf ppf
@@ -258,8 +250,8 @@ module TypeError = struct
     | IllTypedStanLibFunctionApp (name, arg_tys) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to function '%s'. Available \
-           signatures: %s@[<h>Instead supplied arguments of incompatible \
-           type: %a.@]"
+           signatures: %s@[<h>Instead supplied arguments of incompatible type: \
+           %a.@]"
           name
           (Stan_math_signatures.pretty_print_math_sigs name)
           Fmt.(list UnsizedType.pp ~sep:comma)
@@ -268,16 +260,16 @@ module TypeError = struct
         Fmt.pf ppf
           "Ill-typed arguments supplied to function '%s'. Available \
            signatures:%a\n\
-           @[<h>Instead supplied arguments of incompatible type: %a.@]"
-          name UnsizedType.pp
+           @[<h>Instead supplied arguments of incompatible type: %a.@]" name
+          UnsizedType.pp
           (UFun (listed_tys, return_ty))
           Fmt.(list UnsizedType.pp ~sep:comma)
           arg_tys
     | IllTypedBinaryOperator (op, lt, rt) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to infix operator %a. Available \
-           signatures: %s@[<h>Instead supplied arguments of incompatible \
-           type: %a, %a.@]"
+           signatures: %s@[<h>Instead supplied arguments of incompatible type: \
+           %a, %a.@]"
           Operator.pp op
           ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
           |> String.concat ~sep:"\n" )
@@ -295,8 +287,7 @@ module TypeError = struct
         Fmt.pf ppf
           "Ill-typed arguments supplied to postfix operator %a. Available \
            signatures: %s\n\
-           Instead supplied argument of incompatible type: %a."
-          Operator.pp op
+           Instead supplied argument of incompatible type: %a." Operator.pp op
           ( Stan_math_signatures.pretty_print_math_lib_operator_sigs op
           |> String.concat ~sep:"\n" )
           UnsizedType.pp ut
@@ -413,16 +404,16 @@ module StatementError = struct
 
   let pp ppf = function
     | CannotAssignToReadOnly name ->
-        Fmt.pf ppf
-          "Cannot assign to function argument or loop identifier '%s'." name
+        Fmt.pf ppf "Cannot assign to function argument or loop identifier '%s'."
+          name
     | CannotAssignToGlobal name ->
         Fmt.pf ppf
           "Cannot assign to global variable '%s' declared in previous blocks."
           name
     | TargetPlusEqualsOutsideModelOrLogProb ->
         Fmt.pf ppf
-          "Target can only be accessed in the model block or in definitions \
-           of functions with the suffix _lp."
+          "Target can only be accessed in the model block or in definitions of \
+           functions with the suffix _lp."
     | InvalidSamplingPDForPMF ->
         Fmt.pf ppf
           {|
@@ -483,8 +474,8 @@ For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
         Fmt.pf ppf "Function definitions must be wrapped in curly braces."
     | NonRealProbFunDef ->
         Fmt.pf ppf
-          "Real return type required for probability functions ending in \
-           _log, _lpdf, _lupdf, _lpmf, _lupmf, _lcdf, or _lccdf."
+          "Real return type required for probability functions ending in _log, \
+           _lpdf, _lupdf, _lpmf, _lupmf, _lcdf, or _lccdf."
     | ProbDensityNonRealVariate (Some ut) ->
         Fmt.pf ppf
           "Probability density functions require real variates (first \
