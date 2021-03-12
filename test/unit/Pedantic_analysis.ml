@@ -617,8 +617,7 @@ model {
 
 let%expect_test "Function body parameter-dependent control flow" =
   print_warn_pedantic (build_program fundef_cf_example) ;
-  [%expect
-    {|
+  [%expect {|
       Warning: The parameter sigma has no priors.
     |}]
 

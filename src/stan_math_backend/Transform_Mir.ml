@@ -196,13 +196,12 @@ let constrain_constraint_to_string t (c : constrainaction) =
 
 let default_multiplier = 1
 let default_offset = 0
+
 let transform_args = function
-  | Program.Offset offset ->
-    [offset; Expr.Helpers.int default_multiplier]
-  | Multiplier multiplier ->
-    [Expr.Helpers.int default_offset; multiplier]
+  | Program.Offset offset -> [offset; Expr.Helpers.int default_multiplier]
+  | Multiplier multiplier -> [Expr.Helpers.int default_offset; multiplier]
   | transform ->
-    Program.fold_transformation (fun args arg -> args @ [arg]) [] transform
+      Program.fold_transformation (fun args arg -> args @ [arg]) [] transform
 
 let param_read smeta
     (decl_id, Program.({out_constrained_st= cst; out_block; out_trans; _})) =
