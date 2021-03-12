@@ -217,13 +217,23 @@ let param_read smeta
             Expr.Typed.Meta.create ~loc:smeta ~type_:ut ~adlevel:AutoDiffable
               () }
     in
+    let transform_args = Program.fold_transformation (fun args arg -> args @ [arg]) [] out_trans in
+    (* this is an absolute hack
+
+       I need to unpack the constraint arguments and the dimensions in codegen, but we pack them all together into a fake function FnReadParam as expressions
+       So, I'm packing in the number of constraint arguments to read as an int expression
+       To avoid this hack, keep internal functions as a variant type instead of a normal funapp
+    *)
+    let n_args_expression = Expr.Helpers.int (List.length transform_args) in
     let read =
       Expr.(
         Helpers.(
           internal_funapp FnReadParam
             ( Expr.Helpers.str
                 (constrain_constraint_to_string out_trans Constrain)
-            :: SizedType.get_dims cst ))
+              :: n_args_expression
+              :: (transform_args
+              @ (SizedType.get_dims cst)) ))
           Typed.Meta.{decl_var.meta with type_= ut})
     in
     [ Stmt.Fixed.
