@@ -36,13 +36,14 @@ let prepare_prog (mir : Program.Typed.t) : Program.Numbered.t * state_t =
 let pp_globals ppf location_list =
   let location_list =
     " (found before start of program)"
-    ::
-    ( List.filter ~f:(fun x -> x <> Location_span.empty) location_list
-    |> List.map ~f:(fun x -> " (in " ^ Location_span.to_string x ^ ")") ) in
+    :: ( List.filter ~f:(fun x -> x <> Location_span.empty) location_list
+       |> List.map ~f:(fun x -> " (in " ^ Location_span.to_string x ^ ")") )
+  in
+  let location_count = List.length location_list in
   Fmt.pf ppf
-    "@ stan::math::profile_map profiles__;@ static int current_statement__= \
-     0;@ static const std::vector<std::string> locations_array__ = @ \
-     {@[<hov>%a@]};@ "
+    "@ stan::math::profile_map profiles__;@ static constexpr std::array<const \
+     char*, @[<hov>%d@]> locations_array__ = @ {@[<hov>%a@]};@ "
+    location_count
     Fmt.(list ~sep:comma (fmt "%S"))
     location_list
 
