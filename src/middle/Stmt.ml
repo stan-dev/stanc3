@@ -8,7 +8,7 @@ module Fixed = struct
 
   module Pattern = struct
     type ('a, 'b) t =
-      | Assignment of 'a lvalue * 'a
+      | Assignment of 'a lvalue * UnsizedType.t * 'a
       | TargetPE of 'a
       | NRFunApp of Fun_kind.t * string * 'a list
       | Break
@@ -27,13 +27,24 @@ module Fixed = struct
           ; decl_type: 'a Type.t }
     [@@deriving sexp, hash, map, fold, compare]
 
-    and 'a lvalue = string * UnsizedType.t * 'a Index.t list
+    and 'e lvalue =
+      | LVariable of string
+      | LIndexed of 'e lvalue * 'e Index.t list
+      | LIndexedTuple of 'e lvalue * int
     [@@deriving sexp, hash, map, compare, fold]
 
+    (* and 'a lvalue = string * UnsizedType.t * 'a Index.t list *)
+
     let pp pp_e pp_s ppf = function
-      | Assignment ((assignee, _, idcs), rhs) ->
-          Fmt.pf ppf {|@[<h>%a =@ %a;@]|} (Index.pp_indexed pp_e)
-            (assignee, idcs) pp_e rhs
+      | Assignment (lvalue, _, rhs) ->
+          let rec pp_lvalue ppf = function
+            | LVariable v -> Fmt.string ppf v
+            | LIndexed (lv, idcs) ->
+                Fmt.pf ppf {|%a.%a@]|} pp_lvalue lv (Index.pp_indices pp_e)
+                  idcs
+            | LIndexedTuple (lv, ix) -> Fmt.pf ppf {|%a.%d@]|} pp_lvalue lv ix
+          in
+          Fmt.pf ppf {|@[<h>%a =@ %a;@]|} pp_lvalue lvalue pp_e rhs
       | TargetPE expr ->
           Fmt.pf ppf {|@[<h>%a +=@ %a;@]|} pp_keyword "target" pp_e expr
       | NRFunApp (_, name, args) ->
@@ -182,11 +193,16 @@ module Labelled = struct
           exprs=
             List.fold args ~init:assocs.exprs ~f:(fun accu x ->
                 Expr.Labelled.associate ~init:accu x ) }
-    | Assignment ((_, _, idxs), rhs) ->
+    | Assignment (lv, _, rhs) ->
+        let rec lvalue_exprs ~init = function
+          | Fixed.Pattern.LIndexed (lv, idxs) ->
+              List.fold ~f:Expr.Labelled.associate_index
+                ~init:(lvalue_exprs lv ~init) idxs
+          | _ -> init
+        in
         let exprs =
           Expr.Labelled.(
-            associate rhs
-              ~init:(List.fold ~f:associate_index ~init:assocs.exprs idxs))
+            associate rhs ~init:(lvalue_exprs ~init:assocs.exprs lv))
         in
         {assocs with exprs}
     | IfElse (pred, body, None) | While (pred, body) ->
@@ -244,7 +260,7 @@ module Helpers = struct
         let assign =
           { body with
             Fixed.pattern=
-              Assignment ((symbol, Expr.Typed.type_of expr, []), expr) }
+              Assignment (LVariable symbol, Expr.Typed.type_of expr, expr) }
         in
         reset () ;
         {body with Fixed.pattern= Block [decl; assign; body]}
@@ -275,6 +291,15 @@ module Helpers = struct
     let pattern = Fixed.Pattern.For {loopvar; lower; upper; body} in
     Fixed.{meta; pattern}
 
+  let for_each_tuple bodyfn iteratee ts meta =
+    let stmt =
+      Fixed.Pattern.SList
+        (List.mapi ts ~f:(fun tuple_ix t ->
+             let e = Expr.Helpers.add_tuple_index iteratee (tuple_ix + 1) in
+             bodyfn t e ))
+    in
+    Fixed.{meta; pattern= stmt}
+
   let rec for_each bodyfn iteratee smeta =
     let len (e : Expr.Typed.t) =
       let emeta = e.meta in
@@ -293,6 +318,8 @@ module Helpers = struct
         in
         mkfor rows (fun e -> for_each bodyfn e smeta) iteratee smeta
     | UArray _ -> mkfor (len iteratee) bodyfn iteratee smeta
+    (* It's not clear that this should ever be called: *)
+    | UTuple ts -> for_each_tuple (const bodyfn) iteratee ts smeta
     | UMathLibraryFunction | UFun _ ->
         raise_s [%message "can't iterate over " (iteratee : Expr.Typed.t)]
 
@@ -321,8 +348,10 @@ module Helpers = struct
   let rec for_eigen st bodyfn var smeta =
     match st with
     | SizedType.SInt | SReal | SVector _ | SRowVector _ | SMatrix _ ->
-        bodyfn var
+        bodyfn st var
     | SArray (t, d) -> mkfor d (fun e -> for_eigen t bodyfn e smeta) var smeta
+    | STuple ts ->
+        for_each_tuple (fun t e -> for_eigen t bodyfn e smeta) var ts smeta
 
   (** [for_scalar unsizedtype...] generates a For statement that loops
     over the scalars in the underlying [unsizedtype].
@@ -335,11 +364,13 @@ module Helpers = struct
 *)
   let rec for_scalar st bodyfn var smeta =
     match st with
-    | SizedType.SInt | SReal -> bodyfn var
-    | SVector d | SRowVector d -> mkfor d bodyfn var smeta
+    | SizedType.SInt | SReal -> bodyfn st var
+    | SVector d | SRowVector d -> mkfor d (bodyfn st) var smeta
     | SMatrix (d1, d2) ->
         mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
     | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
+    | STuple ts ->
+        for_each_tuple (fun t e -> for_scalar t bodyfn e smeta) var ts smeta
 
   (** Exactly like for_scalar, but iterating through array dimensions in the
   inverted order.*)
@@ -354,16 +385,20 @@ module Helpers = struct
     let rec go st bodyfn var smeta =
       match st with
       | SizedType.SArray (t, d) ->
-          let bodyfn' var = mkfor d bodyfn var smeta in
+          let bodyfn' _ var = mkfor d (bodyfn st) var smeta in
           go t bodyfn' var smeta
       | SMatrix (d1, d2) ->
-          let bodyfn' var = mkfor d1 bodyfn var smeta in
+          let bodyfn' _ var = mkfor d1 (bodyfn st) var smeta in
           go (SRowVector d2) bodyfn' var smeta
       | _ -> for_scalar st bodyfn var smeta
     in
-    go st (Fn.compose bodyfn invert_index_order) var smeta
+    go st (fun st var -> bodyfn st (invert_index_order var)) var smeta
 
   let assign_indexed decl_type vident meta varfn var =
     let indices = Expr.Helpers.collect_indices var in
-    Fixed.{meta; pattern= Assignment ((vident, decl_type, indices), varfn var)}
+    Fixed.
+      { meta
+      ; pattern=
+          Assignment
+            (LIndexed (LVariable vident, indices), decl_type, varfn var) }
 end

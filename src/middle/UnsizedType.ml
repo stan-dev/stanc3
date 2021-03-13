@@ -1,6 +1,9 @@
 open Core_kernel
 open Common.Helpers
 
+type autodifftype = DataOnly | AutoDiffable | TupleAD of autodifftype list
+[@@deriving compare, hash, sexp]
+
 type t =
   | UInt
   | UReal
@@ -8,23 +11,18 @@ type t =
   | URowVector
   | UMatrix
   | UArray of t
+  | UTuple of t list
   | UFun of (autodifftype * t) list * returntype
   | UMathLibraryFunction
-
-and autodifftype = DataOnly | AutoDiffable
 
 and returntype = Void | ReturnType of t [@@deriving compare, hash, sexp]
 
 let pp_autodifftype ppf = function
   | DataOnly -> pp_keyword ppf "data "
   | AutoDiffable -> ()
-
-let unsized_array_depth unsized_ty =
-  let rec aux depth = function
-    | UArray ut -> aux (depth + 1) ut
-    | ut -> (ut, depth)
-  in
-  aux 0 unsized_ty
+  (* TUPLE STUB tuplead print *)
+  | TupleAD _ ->
+      raise_s [%message "Shouldn't be trying to print tuple adlevel."]
 
 let count_dims unsized_ty =
   let rec aux dims = function
@@ -49,6 +47,7 @@ let rec pp ppf = function
       let ut2, d = unwind_array_type ut in
       let array_str = "[" ^ String.make d ',' ^ "]" in
       Fmt.pf ppf "array%s %a" array_str pp ut2
+  | UTuple ts -> Fmt.pf ppf "(%a)" Fmt.(list ~sep:(Fmt.unit ", ") pp) ts
   | UFun (argtypes, rt) ->
       Fmt.pf ppf {|@[<h>(%a) => %a@]|}
         Fmt.(list pp_fun_arg ~sep:comma)

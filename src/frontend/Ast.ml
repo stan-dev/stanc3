@@ -39,6 +39,8 @@ type ('e, 'f) expression =
   | RowVectorExpr of 'e list
   | Paren of 'e
   | Indexed of 'e * 'e index list
+  | IndexedTuple of 'e * int
+  | TupleExpr of 'e list
 [@@deriving sexp, hash, compare, map, fold]
 
 type ('m, 'f) expr_with = {expr: (('m, 'f) expr_with, 'f) expression; emeta: 'm}
@@ -100,6 +102,7 @@ type 'e printable = PString of string | PExpr of 'e
 type ('l, 'e) lvalue =
   | LVariable of identifier
   | LIndexed of 'l * 'e index list
+  | LIndexedTuple of 'l * int
 [@@deriving sexp, hash, compare, map, fold]
 
 type ('e, 'm) lval_with = {lval: (('e, 'm) lval_with, 'e) lvalue; lmeta: 'm}
@@ -256,16 +259,33 @@ let rec expr_of_lvalue {lval; lmeta} =
   { expr=
       ( match lval with
       | LVariable s -> Variable s
-      | LIndexed (l, i) -> Indexed (expr_of_lvalue l, i) )
+      | LIndexed (l, i) -> Indexed (expr_of_lvalue l, i)
+      | LIndexedTuple (l, i) -> IndexedTuple (expr_of_lvalue l, i) )
   ; emeta= lmeta }
 
-let rec lvalue_of_expr {expr; emeta} =
-  { lval=
-      ( match expr with
-      | Variable s -> LVariable s
-      | Indexed (l, i) -> LIndexed (lvalue_of_expr l, i)
-      | _ -> failwith "Trying to convert illegal expression to lval." )
-  ; lmeta= emeta }
+let rec lvalue_of_expr_opt {expr; emeta} =
+  let lval_opt =
+    match expr with
+    | Variable s -> Some (LVariable s)
+    | Indexed (l, i) ->
+        Option.( >>= ) (lvalue_of_expr_opt l) (fun lv ->
+            Some (LIndexed (lv, i)) )
+    | IndexedTuple (l, i) ->
+        Option.( >>= ) (lvalue_of_expr_opt l) (fun lv ->
+            Some (LIndexedTuple (lv, i)) )
+    | _ -> None
+  in
+  Option.map lval_opt ~f:(fun lval -> {lval; lmeta= emeta})
+
+let lvalue_of_expr expr =
+  Option.value_exn ~message:"Trying to convert illegal expression to lval."
+    (lvalue_of_expr_opt expr)
 
 let rec id_of_lvalue {lval; _} =
-  match lval with LVariable s -> s | LIndexed (l, _) -> id_of_lvalue l
+  match lval with
+  | LVariable s -> s
+  | LIndexed (l, _) -> id_of_lvalue l
+  (* TUPLE MAYBE id_of_lvalue
+   * What does this function do?
+   *)
+  | LIndexedTuple (l, _) -> id_of_lvalue l

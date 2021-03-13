@@ -8,6 +8,7 @@ type 'a t =
   | SRowVector of 'a
   | SMatrix of 'a * 'a
   | SArray of 'a t * 'a
+  | STuple of 'a t list
 [@@deriving sexp, compare, map, hash, fold]
 
 let rec pp pp_e ppf = function
@@ -23,6 +24,7 @@ let rec pp pp_e ppf = function
       Fmt.pf ppf {|array%a|}
         Fmt.(pair ~sep:comma (fun ppf st -> pp pp_e ppf st) pp_e |> brackets)
         (st, expr)
+  | STuple ts -> Fmt.pf ppf "(%a)" Fmt.(list ~sep:(Fmt.unit ", ") (pp pp_e)) ts
 
 let collect_exprs st =
   let rec aux accu = function
@@ -30,6 +32,7 @@ let collect_exprs st =
     | SVector e | SRowVector e -> List.rev @@ (e :: accu)
     | SMatrix (e1, e2) -> List.rev @@ (e1 :: e2 :: accu)
     | SArray (inner, e) -> aux (e :: accu) inner
+    | STuple ts -> List.fold ~init:accu ~f:aux ts
   in
   aux [] st
 
@@ -40,6 +43,7 @@ let rec to_unsized = function
   | SRowVector _ -> URowVector
   | SMatrix _ -> UMatrix
   | SArray (t, _) -> UArray (to_unsized t)
+  | STuple ts -> UTuple (List.map ~f:to_unsized ts)
 
 let rec associate ?init:(assocs = Label.Int_label.Map.empty) = function
   | SInt | SReal -> assocs
@@ -48,19 +52,33 @@ let rec associate ?init:(assocs = Label.Int_label.Map.empty) = function
       Expr.Labelled.(associate ~init:(associate ~init:assocs e1) e2)
   | SArray (st, e) ->
       associate ~init:(Expr.Labelled.associate ~init:assocs e) st
+  | STuple ts ->
+      List.fold ~init:assocs ~f:(fun assocs t -> associate ~init:assocs t) ts
 
 let is_scalar = function SInt | SReal -> true | _ -> false
-let rec inner_type = function SArray (t, _) -> inner_type t | t -> t
 
 let rec dims_of st =
   match st with
   | SArray (t, _) -> dims_of t
   | SMatrix (d1, d2) -> [d1; d2]
   | SRowVector dim | SVector dim -> [dim]
-  | SInt | SReal -> []
+  (* TUPLE STUB dims_of
+     How should tuples be expected to behave in this function?
+
+     What does it mean for tuples to have dimensions?
+     I think dims are used to emit parameter names
+     But this is the only non-rectangular container
+     Defaulting to 'no dimensions'
+  *)
+  | STuple _ | SInt | SReal -> []
 
 let rec get_dims = function
-  | SInt | SReal -> []
+  (* TUPLE STUB get_dims
+     How should tuples be expected to behave in this function?
+     Same as above?
+     Although this one seems to have a sense of recursion
+  *)
+  | STuple _ | SInt | SReal -> []
   | SVector d | SRowVector d -> [d]
   | SMatrix (dim1, dim2) -> [dim1; dim2]
   | SArray (t, dim) -> dim :: get_dims t

@@ -115,13 +115,20 @@ let data_read smeta (decl_id, st) =
   match unsized with
   | UInt | UReal ->
       [ Assignment
-          ( (decl_id, unsized, [])
+          ( LVariable decl_id
+          , unsized
           , { Expr.Fixed.pattern=
                 Indexed (readfnapp decl_var, [Single Expr.Helpers.loop_bottom])
             ; meta= {decl_var.meta with type_= unsized} } )
         |> swrap ]
   | UArray UInt | UArray UReal ->
-      [Assignment ((decl_id, flat_type, []), readfnapp decl_var) |> swrap]
+      [Assignment (LVariable decl_id, flat_type, readfnapp decl_var) |> swrap]
+  (* TUPLE STUB
+     Data read from tuples
+     There seems to be dispatch to a FnReadData function, could foist to C++
+  *)
+  | UTuple _ ->
+      [] (* raise_s [%message "Reading from tuples not implemented."] *)
   | UFun _ | UMathLibraryFunction ->
       raise_s [%message "Cannot read a function type."]
   | UVector | URowVector | UMatrix | UArray _ ->
@@ -130,15 +137,17 @@ let data_read smeta (decl_id, st) =
         ( Stmt.Fixed.Pattern.Decl
             {decl_adtype= AutoDiffable; decl_id; decl_type= Unsized flat_type}
           |> swrap
-        , Assignment ((decl_id, flat_type, []), readfnapp decl_var) |> swrap
+        , Assignment (LVariable decl_id, flat_type, readfnapp decl_var)
+          |> swrap
         , { Expr.Fixed.pattern= Var decl_id
           ; meta=
               Expr.Typed.Meta.{loc= smeta; type_= flat_type; adlevel= DataOnly}
           } )
       in
-      let bodyfn var =
+      let bodyfn _ var =
         let pos_increment =
-          [ Assignment ((pos, UInt, []), Expr.Helpers.(binop pos_var Plus one))
+          [ Assignment
+              (LVariable pos, UInt, Expr.Helpers.(binop pos_var Plus one))
             |> swrap ]
         in
         let read_indexed _ =
@@ -153,7 +162,7 @@ let data_read smeta (decl_id, st) =
       in
       let pos_reset =
         Stmt.Fixed.Pattern.Assignment
-          ((pos, UInt, []), Expr.Helpers.loop_bottom)
+          (LVariable pos, UInt, Expr.Helpers.loop_bottom)
         |> swrap
       in
       [ Block
@@ -168,6 +177,13 @@ let rec base_ut_to_string = function
   | UReal -> "scalar"
   | UInt -> "integer"
   | UArray t -> base_ut_to_string t
+  | UTuple ts ->
+      (* TUPLE MAYBE base type to string
+       This is almost certainly wrong; probably should never call this with tuples; instead call read for each tuple element (does that work for arrays of tuples?)
+
+       Side note: the only way to tell what these functions to is from their usage! Not great
+    *)
+      "(" ^ String.concat ~sep:", " (List.map ~f:base_ut_to_string ts) ^ ")"
   | t ->
       raise_s
         [%message "Another place where it's weird to get " (t : UnsizedType.t)]
@@ -198,7 +214,7 @@ let param_read smeta
       in
       Expr.Fixed.{meta; pattern= Var decl_id}
     in
-    let bodyfn var =
+    let bodyfn _ var =
       let readfnapp (var : Expr.Typed.t) =
         Expr.(
           Helpers.(
@@ -219,11 +235,12 @@ let escape_name str =
 
 let rec add_jacobians Stmt.Fixed.({meta= smeta; pattern}) =
   match pattern with
-  | Assignment (lhs, {pattern= FunApp (CompilerInternal, f, args); meta= emeta})
+  | Assignment
+      (lhs, type_, {pattern= FunApp (CompilerInternal, f, args); meta= emeta})
     when Internal_fun.of_string_opt f = Some FnConstrain ->
       let var n = Expr.{Fixed.pattern= Var n; meta= Typed.Meta.empty} in
       let assign rhs =
-        Stmt.{Fixed.pattern= Assignment (lhs, rhs); meta= smeta}
+        Stmt.{Fixed.pattern= Assignment (lhs, type_, rhs); meta= smeta}
       in
       { Stmt.Fixed.pattern=
           IfElse
@@ -326,7 +343,7 @@ let add_reads vars mkread stmts =
   List.concat_map ~f:add_read_to_decl stmts
 
 let gen_write (decl_id, sizedtype) =
-  let bodyfn var =
+  let bodyfn _ var =
     Stmt.Helpers.internal_nrfunapp FnWriteParam [var] Location_span.empty
   in
   let meta =
@@ -336,7 +353,7 @@ let gen_write (decl_id, sizedtype) =
   Stmt.Helpers.for_scalar_inv sizedtype bodyfn expr Location_span.empty
 
 let gen_write_unconstrained (decl_id, sizedtype) =
-  let bodyfn var =
+  let bodyfn _ var =
     let var =
       match var.Expr.Fixed.pattern with
       | Indexed ({pattern= Indexed (expr, idcs1); _}, idcs2) ->
@@ -349,10 +366,13 @@ let gen_write_unconstrained (decl_id, sizedtype) =
     {Expr.Typed.Meta.empty with type_= SizedType.to_unsized sizedtype}
   in
   let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
-  let writefn var =
-    Stmt.Helpers.for_scalar_inv
-      (SizedType.inner_type sizedtype)
-      bodyfn var Location_span.empty
+  let writefn st var =
+    (* This function will be called inside the loops over eigen variables.
+     * for_scalar_inv needs the sized type to construct the loops correctly
+     * We cannot just pass in the inner type of sizedtype because that
+       doesn't work for heterogeneous types like tuples
+     *)
+    Stmt.Helpers.for_scalar_inv st bodyfn var Location_span.empty
   in
   Stmt.Helpers.for_eigen sizedtype writefn expr Location_span.empty
 
@@ -364,6 +384,7 @@ let rec contains_var_expr is_vident accum Expr.Fixed.({pattern; _}) =
   | pattern ->
       Expr.Fixed.Pattern.fold (contains_var_expr is_vident) false pattern
 
+(* TODO TUPLE Is this constraint variable point? *)
 (* When a parameter's unconstrained type and its constrained type are different,
    we generate a new variable "<param_name>_in__" and read into that. We now need
    to change the FnConstrain calls to constrain that variable and assign to the
@@ -385,7 +406,9 @@ let constrain_in_params outvars stmts =
   let rec change_constrain_target (Stmt.Fixed.({pattern; _}) as s) =
     match pattern with
     | Assignment
-        (lval, {pattern= FunApp (CompilerInternal, f, var :: args); meta})
+        ( lval
+        , type_
+        , {pattern= FunApp (CompilerInternal, f, var :: args); meta} )
       when Internal_fun.of_string_opt f = Some FnConstrain
            && contains_var_expr (Set.mem target_vars) false var ->
         let rec change_var_expr (Expr.Fixed.({pattern; _}) as e) =
@@ -400,6 +423,7 @@ let constrain_in_params outvars stmts =
             pattern=
               Assignment
                 ( lval
+                , type_
                 , { pattern=
                       FunApp (CompilerInternal, f, change_var_expr var :: args)
                   ; meta } ) }
@@ -472,6 +496,80 @@ let%expect_test "insert before" =
   [%sexp (l : int list)] |> print_s ;
   [%expect {| (1 2 3 4 5 999 6) |}]
 
+(* TUPLES TODO
+   This section appears to be outdated in head
+
+let validate_sized decl_id meta transform st =
+  let check fn x =
+    Stmt.Helpers.internal_nrfunapp fn
+      Expr.Helpers.
+        [str decl_id; str (Fmt.strf "%a" Expression_gen.pp_expr x); x]
+      meta
+  in
+  let nrfunapp fname args =
+    Stmt.Fixed.{pattern= NRFunApp (CompilerInternal, fname, args); meta}
+  in
+  let rec dims_check = function
+    | SizedType.SInt | SReal -> []
+    | SArray (st, s) -> check FnValidateSize s :: dims_check st
+    | STuple ts -> List.concat_map ~f:dims_check ts
+    | SVector s | SRowVector s ->
+        let fn =
+          match transform with
+          | Some Program.Simplex -> Internal_fun.FnValidateSizeSimplex
+          | Some UnitVector -> FnValidateSizeUnitVector
+          | _ -> FnValidateSize
+        in
+        [check fn s]
+    | SMatrix (rows, cols) ->
+        let validate_rows =
+          match transform with
+          | Some CholeskyCov ->
+              nrfunapp "check_greater_or_equal"
+                Expr.Helpers.
+                  [ str ("cholesky_factor_cov " ^ decl_id)
+                  ; str "num rows (must be greater or equal to num cols)"
+                  ; rows; cols ]
+          | _ -> check FnValidateSize rows
+        in
+        [validate_rows; check FnValidateSize cols]
+  in
+  dims_check st
+
+let rec add_validate_dims outvars stmts =
+  let transforms =
+    List.filter_map
+      ~f:(function
+        | decl_id, Program.({out_block= Parameters; out_trans; _}) ->
+            Some (decl_id, out_trans)
+        | _ -> None)
+      outvars
+    |> String.Map.of_alist_exn
+  in
+  let with_size_checks = function
+    | Stmt.Fixed.({pattern= Decl {decl_id; decl_type= Sized st; _}; meta}) as
+      decl ->
+        let tr = Map.find transforms decl_id in
+        validate_sized decl_id meta tr st @ [decl]
+    | stmt -> [validate_dims_stmt stmt]
+  in
+  List.concat_map ~f:with_size_checks stmts
+
+and validate_dims_stmt stmt =
+  let pattern =
+    match stmt.pattern with
+    | Stmt.Fixed.Pattern.Block s ->
+        Stmt.Fixed.Pattern.Block (add_validate_dims [] s)
+    | SList s -> SList (add_validate_dims [] s)
+    | While (a, b) -> While (a, validate_dims_stmt b)
+    | For f -> For {f with body= validate_dims_stmt f.body}
+    | IfElse (p, t, e) ->
+        IfElse (p, validate_dims_stmt t, Option.map ~f:validate_dims_stmt e)
+    | s -> s
+  in
+  {stmt with pattern}
+*)
+
 let map_prog_stmt_lists f (p : ('a, 'b) Program.t) =
   { p with
     Program.prepare_data= f p.prepare_data
@@ -484,7 +582,7 @@ let trans_prog (p : Program.Typed.t) =
   let init_pos =
     [ Stmt.Fixed.Pattern.Decl
         {decl_adtype= DataOnly; decl_id= pos; decl_type= Sized SInt}
-    ; Assignment ((pos, UInt, []), Expr.Helpers.loop_bottom) ]
+    ; Assignment (LVariable pos, UInt, Expr.Helpers.loop_bottom) ]
     |> List.map ~f:(fun pattern ->
            Stmt.Fixed.{pattern; meta= Location_span.empty} )
   in
@@ -611,7 +709,8 @@ let trans_prog (p : Program.Typed.t) =
             ; meta= Location_span.empty }
         ; { pattern=
               Assignment
-                ( (vident, type_of_input_var, [])
+                ( LVariable vident
+                , type_of_input_var
                 , to_matrix_cl
                     { pattern= Var vident_sans_opencl
                     ; meta= Expr.Typed.Meta.empty } )

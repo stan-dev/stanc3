@@ -47,6 +47,9 @@ let rec local_scalar ut ad =
   | UnsizedType.UArray t, _ -> local_scalar t ad
   | _, UnsizedType.DataOnly | UInt, AutoDiffable -> stantype_prim_str ut
   | _, AutoDiffable -> "local_scalar_t__"
+  (* TUPLE MAYBE error on local scalar with tuple ad *)
+  | _, TupleAD _ ->
+      raise_s [%message "Attempting to make a local scalar tuple"]
 
 let minus_one e =
   { e with
@@ -100,6 +103,15 @@ let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar
   | URowVector -> pf ppf "Eigen::Matrix<%s, 1, -1>" scalar
   | UVector -> pf ppf "Eigen::Matrix<%s, -1, 1>" scalar
+  (* TUPLE STUB c++ scalar of type
+     Unclear what a scalar of tuple type would be, either semantic error or depend on usage
+
+     This appears to be used as the type for variable initialization, so I'm guessing it should be recursive for tuples because initialization is (currently) recursive for tuples
+     *)
+  | UTuple ts ->
+      pf ppf "std::tuple<%a>"
+        (list ~sep:comma pp_unsizedtype_custom_scalar)
+        (List.map ~f:(fun t -> (scalar, t)) ts)
   | x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
 
 let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
@@ -276,7 +288,7 @@ and read_data ut ppf es =
     match ut with
     | UnsizedType.UArray UInt -> "i"
     | UArray UReal -> "r"
-    | UInt | UReal | UVector | URowVector | UMatrix | UArray _
+    | UInt | UReal | UVector | URowVector | UMatrix | UArray _ | UTuple _
      |UFun (_, _)
      |UMathLibraryFunction ->
         raise_s [%message "Can't ReadData of " (ut : UnsizedType.t)]
@@ -439,27 +451,27 @@ and pp_promoted ad ut ppf e =
 and pp_indexed ppf (vident, indices, pretty) =
   pf ppf "@[<hov 2>rvalue(@,%s,@ %a,@ %S)@]" vident pp_indexes indices pretty
 
-and pp_indexed_simple ppf (obj, idcs) =
+and pp_indices_simple ppf (msg_name, idcs) =
   let idx_minus_one = function
     | Index.Single e -> minus_one e
     | MultiIndex e | Between (e, _) | Upfrom e ->
         raise_s
           [%message
-            "No non-Single indices allowed" ~obj
+            "No non-Single indices allowed" ~msg_name
               (idcs : Expr.Typed.t Index.t list)
               (Expr.Typed.loc_of e : Location_span.t)]
     | All ->
         raise_s
           [%message
-            "No non-Single indices allowed" ~obj
+            "No non-Single indices allowed" ~msg_name
               (idcs : Expr.Typed.t Index.t list)]
   in
-  pf ppf "%s%a" obj
-    (fun ppf idcs ->
-      match idcs with
-      | [] -> ()
-      | idcs -> pf ppf "[%a]" (list ~sep:(const string "][") pp_expr) idcs )
-    (List.map ~f:idx_minus_one idcs)
+  match List.map ~f:idx_minus_one idcs with
+  | [] -> ()
+  | idcs -> pf ppf "[%a]" (list ~sep:(const string "][") pp_expr) idcs
+
+and pp_indexed_simple ppf (obj, idcs) =
+  pf ppf "%s%a" obj pp_indices_simple (obj, idcs)
 
 and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
   match pattern with
@@ -509,6 +521,12 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
       ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
     | _ -> pp_indexed ppf (strf "%a" pp_expr e, idx, pretty_print e) )
+  (* TUPLE MAYBE c++ indexing
+
+     from https://en.cppreference.com/w/cpp/utility/tuple
+     Index std::tuple with std::get
+  *)
+  | IndexedTuple (t, ix) -> pf ppf "std::get<%d>(%a)" (ix - 1) pp_expr t
 
 (* these functions are just for testing *)
 let dummy_locate pattern =

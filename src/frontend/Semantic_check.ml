@@ -67,12 +67,14 @@ let dup_exists l =
 
 let type_of_expr_typed ue = ue.emeta.type_
 
-let calculate_autodifftype cf at ut =
-  match at with
-  | (Param | TParam | Model | Functions)
+let rec calculate_autodifftype cf at ut =
+  match (at, ut) with
+  | _, UnsizedType.UTuple ts ->
+      UnsizedType.TupleAD (List.map ~f:(calculate_autodifftype cf at) ts)
+  | (Param | TParam | Model | Functions), _
     when not (UnsizedType.contains_int ut || cf.current_block = GQuant) ->
       UnsizedType.AutoDiffable
-  | _ -> DataOnly
+  | _, _ -> DataOnly
 
 let has_int_type ue = ue.emeta.type_ = UInt
 let has_int_array_type ue = ue.emeta.type_ = UArray UInt
@@ -612,6 +614,7 @@ let indexing_type idx =
   | Single {emeta= {type_= UnsizedType.UInt; _}; _} -> `Single
   | _ -> `Multi
 
+(* Validate if the square-bracket indices can be applied to the type *)
 let inferred_unsizedtype_of_indexed ~loc ut indices =
   let rec aux type_ idcs =
     match (type_, idcs) with
@@ -628,7 +631,7 @@ let inferred_unsizedtype_of_indexed ~loc ut indices =
     | UMatrix, [`Multi; `Single] -> Validate.ok UnsizedType.UVector
     | UMatrix, _ :: _ :: _ :: _
      |(UVector | URowVector), _ :: _ :: _
-     |(UInt | UReal | UFun _ | UMathLibraryFunction), _ :: _ ->
+     |(UTuple _ | UInt | UReal | UFun _ | UMathLibraryFunction), _ :: _ ->
         Semantic_error.not_indexable loc ut (List.length indices)
         |> Validate.error
   in
@@ -804,6 +807,46 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
              mk_typed_expression ~expr:(Paren ue) ~ad_level:ue.emeta.ad_level
                ~type_:ue.emeta.type_ ~loc:emeta.loc )
   | Indexed (e, indices) -> semantic_check_indexed ~loc:emeta.loc ~cf e indices
+  | IndexedTuple (e, i) -> (
+      Validate.(
+        semantic_check_expression cf e
+        >>= fun typed ->
+        match (typed.emeta.type_, typed.emeta.ad_level) with
+        | UTuple ts, TupleAD ads -> (
+          match (List.nth ts (i - 1), List.nth ads (i - 1)) with
+          | Some t, Some ad ->
+              mk_typed_expression
+                ~expr:(IndexedTuple (typed, i))
+                ~ad_level:ad ~type_:t ~loc:emeta.loc
+              |> ok
+          | None, None ->
+              Semantic_error.tuple_index_invalid_index emeta.loc
+                (List.length ts) i
+              |> Validate.error
+          | _ ->
+              raise_s
+                [%message
+                  "Error in internal representation: tuple types don't match AD"]
+          )
+        | UTuple _, ad ->
+            (* raise_s [%message "Error in internal representation: tuple doesn't have tupleAD" ad] *)
+            raise_s [%sexp (ad : UnsizedType.autodifftype)]
+        | _, _ ->
+            Semantic_error.tuple_index_not_tuple emeta.loc typed.emeta.type_
+            |> Validate.error) )
+  | TupleExpr es ->
+      Validate.(
+        es
+        |> List.map ~f:(semantic_check_expression cf)
+        |> sequence
+        >>= fun ues ->
+        if List.is_empty ues then Semantic_error.empty_tuple emeta.loc |> error
+        else
+          mk_typed_expression ~expr:(TupleExpr ues)
+            ~ad_level:(TupleAD (List.map ~f:(fun e -> e.emeta.ad_level) ues))
+            ~type_:(UTuple (List.map ~f:(fun e -> e.emeta.type_) ues))
+            ~loc:emeta.loc
+          |> ok)
 
 and semantic_check_funapp ~is_cond_dist id es cf emeta =
   let name_check =
@@ -867,9 +910,13 @@ let rec semantic_check_sizedtype cf = function
       let ust = semantic_check_sizedtype cf st
       and ue = semantic_check_expression_of_int_type cf e "Array sizes" in
       Validate.liftA2 (fun ust ue -> SizedType.SArray (ust, ue)) ust ue
+  | STuple ts ->
+      List.map ~f:(fun t -> semantic_check_sizedtype cf t) ts
+      |> Validate.sequence
+      |> Validate.map ~f:(fun sts -> SizedType.STuple sts)
 
 (* -- Transformations ------------------------------------------------------- *)
-let semantic_check_transformation cf ut = function
+let rec semantic_check_transformation cf ut = function
   | Program.Identity -> Validate.ok Program.Identity
   | Lower e ->
       semantic_check_expression_of_scalar_or_type cf ut e "Lower bound"
@@ -898,6 +945,12 @@ let semantic_check_transformation cf ut = function
       Validate.liftA2
         (fun ue1 ue2 -> Program.OffsetMultiplier (ue1, ue2))
         ue1 ue2
+  | TupleTransformation _ as trans ->
+      let typesTrans = Utils.zip_utuple_trans_exn ut trans in
+      List.map typesTrans ~f:(fun (ut, tm) ->
+          semantic_check_transformation cf ut tm )
+      |> Validate.sequence
+      |> Validate.map ~f:(fun tms -> Program.TupleTransformation tms)
   | Ordered -> Validate.ok Program.Ordered
   | PositiveOrdered -> Validate.ok Program.PositiveOrdered
   | Simplex -> Validate.ok Program.Simplex
@@ -1744,7 +1797,9 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
         (List.map
            ~f:(function
              | UnsizedType.DataOnly, ut -> (Data, ut)
-             | AutoDiffable, ut -> (Param, ut))
+             | AutoDiffable, ut -> (Param, ut)
+             | TupleAD _, _ ->
+                 raise_s [%message "Validate fundef tupleAD TUPLES STUB"])
            uarg_types)
     and context =
       let is_udf_dist name =

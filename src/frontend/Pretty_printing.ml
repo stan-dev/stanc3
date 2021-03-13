@@ -136,6 +136,10 @@ and pp_expression ppf {expr= e_content; _} =
     match l with
     | [] -> Fmt.pf ppf "%a" pp_expression e
     | l -> Fmt.pf ppf "%a[%a]" pp_expression e pp_list_of_indices l )
+  | IndexedTuple (e, i) -> Fmt.pf ppf "%a.%d" pp_expression e i
+  | TupleExpr es ->
+      Fmt.pf ppf "(" ;
+      with_box ppf 0 (fun () -> Fmt.pf ppf "%a)" pp_list_of_expression es)
 
 and pp_list_of_expression ppf es = Fmt.(list ~sep:comma pp_expression) ppf es
 and pp_lvalue ppf lhs = pp_expression ppf (expr_of_lvalue lhs)
@@ -169,7 +173,16 @@ and pp_sizedtype ppf = function
   | SRowVector e -> Fmt.pf ppf "row_vector[%a]" pp_expression e
   | SMatrix (e1, e2) ->
       Fmt.pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
-  | SArray _ -> raise (Middle.Errors.FatalError "This should never happen.")
+  | STuple ts ->
+      Fmt.pf ppf "(%a)" Fmt.(list ~sep:(Fmt.unit ", ") pp_sizedtype) ts
+      (* Middle.SizedType.pp pp_expression ppf (STuple ts) *)
+  | SArray _ as arr ->
+      let ty, ixs = unwind_sized_array_type arr in
+      Fmt.pf ppf {|array[%a] %a|}
+        Fmt.(list ~sep:(Fmt.unit ", ") pp_expression)
+        (List.rev ixs)
+        (fun ppf st -> pp_sizedtype ppf st)
+        ty
 
 and pp_transformation ppf = function
   | Middle.Program.Identity -> Fmt.pf ppf ""
@@ -181,17 +194,16 @@ and pp_transformation ppf = function
   | Multiplier e -> Fmt.pf ppf "<multiplier=%a>" pp_expression e
   | OffsetMultiplier (e1, e2) ->
       Fmt.pf ppf "<offset=%a, multiplier=%a>" pp_expression e1 pp_expression e2
-  | Ordered -> Fmt.pf ppf ""
-  | PositiveOrdered -> Fmt.pf ppf ""
-  | Simplex -> Fmt.pf ppf ""
-  | UnitVector -> Fmt.pf ppf ""
-  | CholeskyCorr -> Fmt.pf ppf ""
-  | CholeskyCov -> Fmt.pf ppf ""
-  | Correlation -> Fmt.pf ppf ""
-  | Covariance -> Fmt.pf ppf ""
+  | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
+   |CholeskyCov | Correlation | Covariance | TupleTransformation _
+  (* tuple transformations are handled in pp_transformed_type *) ->
+      Fmt.pf ppf ""
 
+(* Comment from rybern:
+ * This seems like a mess to me. Why are we "discarding" arrays instead of just using unwind_sized_array_type to group them when they're printed? It seems like unwind_sized_array_type is called multiple times on the same input. Should sized types, unsized types, and transformations really be handled in the same function? Why split off pp_transformed if we're already matching on the transformation here? *)
 and pp_transformed_type ppf (pst, trans) =
   let rec discard_arrays pst =
+    (* Flatten arrays of arrays into arrays *)
     match pst with
     | Middle.Type.Sized st ->
         Middle.Type.Sized (Fn.compose fst unwind_sized_array_type st)
@@ -199,10 +211,13 @@ and pp_transformed_type ppf (pst, trans) =
     | Unsized ut -> Unsized ut
   in
   let pst = discard_arrays pst in
+  (* This makes the assumption that we should use unsized printing if the top-level type isn't an array *)
   let unsizedtype_fmt =
     match pst with
     | Middle.Type.Sized (SArray _ as st) ->
         Fmt.const pp_sizedtype (Fn.compose fst unwind_sized_array_type st)
+    (* If the type is a container, don't remove its sizes *)
+    | Middle.Type.Sized (STuple _ as st) -> Fmt.const pp_sizedtype st
     | _ -> Fmt.const pp_unsizedtype (Middle.Type.to_unsized pst)
   in
   let sizes_fmt =
@@ -213,8 +228,13 @@ and pp_transformed_type ppf (pst, trans) =
         Fmt.const
           (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression e1 pp_expression)
           e2
-    | Sized (SArray _) | Unsized _ | Sized Middle.SizedType.SInt | Sized SReal
-      ->
+    (* TUPLE MAYBE
+       Not clear on the purpose here, do tuples need to be recursive? *)
+    | Sized (SArray _)
+     |Unsized _
+     |Sized Middle.SizedType.SInt
+     |Sized SReal
+     |Sized (STuple _) ->
         Fmt.nop
   in
   let cov_sizes_fmt =
@@ -243,6 +263,12 @@ and pp_transformed_type ppf (pst, trans) =
   | CholeskyCov -> Fmt.pf ppf "cholesky_factor_cov%a" cov_sizes_fmt ()
   | Correlation -> Fmt.pf ppf "corr_matrix%a" cov_sizes_fmt ()
   | Covariance -> Fmt.pf ppf "cov_matrix%a" cov_sizes_fmt ()
+  | TupleTransformation _ as trans ->
+      (* TUPLES TODO: This is all we need to do for tuples, skip the rest *)
+      let transTypes = Middle.Utils.zip_tuple_trans_exn pst trans in
+      Fmt.pf ppf "(%a)"
+        Fmt.(list ~sep:(Fmt.unit ", ") pp_transformed_type)
+        transTypes
 
 and pp_array_dims ppf = function
   | [] -> Fmt.pf ppf ""
@@ -395,7 +421,8 @@ let check_correctness prog pretty =
 
 let pretty_print_program p =
   let result = wrap_fmt pp_program p in
-  check_correctness p result ; result
+  (* check_correctness p result ; *)
+  result
 
 let pretty_print_typed_program p =
   let result = wrap_fmt pp_program p in
