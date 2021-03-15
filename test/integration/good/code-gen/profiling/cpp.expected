@@ -5,22 +5,20 @@
 namespace simple_function_model_namespace {
 
 using stan::io::dump;
-using stan::model::model_base_crtp;
-using stan::model::rvalue;
-using stan::model::cons_list;
+using stan::model::assign;
 using stan::model::index_uni;
 using stan::model::index_max;
 using stan::model::index_min;
 using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
-using stan::model::nil_index_list;
+using stan::model::model_base_crtp;
+using stan::model::rvalue;
 using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 29> locations_array__ = 
 {" (found before start of program)",
  " (in 'simple_function.stan', line 14, column 2 to column 20)",
  " (in 'simple_function.stan', line 15, column 2 to column 22)",
@@ -74,11 +72,12 @@ class simple_function_model final : public model_base_crtp<simple_function_model
   simple_function_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
     (void) base_rng__;  // suppress unused var warning
-    static const char* function__ = "simple_function_model_namespace::simple_function_model";
+    static constexpr const char* function__ = "simple_function_model_namespace::simple_function_model";
     (void) function__;  // suppress unused var warning
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -105,8 +104,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       x = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 23;
-      assign(x, nil_index_list(), context__.vals_r("x"),
-        "assigning variable x");
+      assign(x, context__.vals_r("x"), "assigning variable x");
       current_statement__ = 24;
       validate_non_negative_index("y", "N", N);
       current_statement__ = 25;
@@ -118,15 +116,14 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       {
         std::vector<local_scalar_t__> y_flat__;
         current_statement__ = 25;
-        assign(y_flat__, nil_index_list(), context__.vals_r("y"),
-          "assigning variable y_flat__");
+        assign(y_flat__, context__.vals_r("y"), "assigning variable y_flat__");
         current_statement__ = 25;
         pos__ = 1;
         current_statement__ = 25;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 25;
-          assign(y, cons_list(index_uni(sym1__), nil_index_list()),
-            y_flat__[(pos__ - 1)], "assigning variable y");
+          assign(y, y_flat__[(pos__ - 1)],
+            "assigning variable y", index_uni(sym1__));
           current_statement__ = 25;
           pos__ = (pos__ + 1);}
       }
@@ -157,7 +154,10 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
-  template <bool propto__, bool jacobian__, typename VecR, typename VecI, stan::require_vector_like_t<VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
                                                  VecI& params_i__,
                                                  std::ostream* pstream__ = nullptr) const {
@@ -166,9 +166,10 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "simple_function_model_namespace::log_prob";
+    static constexpr const char* function__ = "simple_function_model_namespace::log_prob";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -233,7 +234,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
           profile<local_scalar_t__> profile__("cov_exp_quad", const_cast<profile_map&>(profiles__));
           
           current_statement__ = 10;
-          assign(cov, nil_index_list(),
+          assign(cov,
             add(gp_exp_quad_cov(x, alpha, rho),
               diag_matrix(rep_vector(sigma, N))), "assigning variable cov");
         }
@@ -242,8 +243,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
           profile<local_scalar_t__> profile__("cholesky_decompose", const_cast<profile_map&>(profiles__));
           
           current_statement__ = 12;
-          assign(L_cov, nil_index_list(), cholesky_decompose(cov),
-            "assigning variable L_cov");
+          assign(L_cov, cholesky_decompose(cov), "assigning variable L_cov");
         }
         current_statement__ = 20;
         {
@@ -280,7 +280,10 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     return lp_accum__.sum();
     } // log_prob_impl() 
     
-  template <typename RNG, typename VecR, typename VecI, typename VecVar, stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
   inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
                                VecI& params_i__, VecVar& vars__,
                                const bool emit_transformed_parameters__ = true,
@@ -291,10 +294,11 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
-    static const char* function__ = "simple_function_model_namespace::write_array";
+    static constexpr const char* function__ = "simple_function_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
     
     try {
@@ -336,13 +340,16 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     }
     } // write_array_impl() 
     
-  template <typename VecVar, typename VecI, stan::require_std_vector_t<VecVar>* = nullptr, stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(const stan::io::var_context& context__,
                                    VecI& params_i__, VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
     
     try {
       int pos__;

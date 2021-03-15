@@ -44,7 +44,8 @@ let pp_unused = fmt "(void) %s;  // suppress unused var warning"
   @param fname Name of the function.
  *)
 let pp_function__ ppf (prog_name, fname) =
-  pf ppf {|@[<v>static const char* function__ = "%s_namespace::%s";@,%a@]|}
+  pf ppf
+    {|@[<v>static constexpr const char* function__ = "%s_namespace::%s";@,%a@]|}
     prog_name fname pp_unused "function__"
 
 (** Print the body of exception handling for functions *)
@@ -217,10 +218,11 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
   in
   let pp_body ppf (Stmt.Fixed.({pattern; _}) as fdbody) =
     pf ppf "@[<hv 8>using local_scalar_t__ = %a;@]@," pp_promoted_scalar fdargs ;
+    pf ppf "int current_statement__ = 0; @ " ;
     if List.exists ~f:(fun (_, _, t) -> UnsizedType.is_eigen_type t) fdargs
     then pp_eigen_arg_to_ref ppf fdargs ;
     if not (is_dist || is_lp) then (
-      pf ppf "%s@ " "const static bool propto__ = true;" ;
+      pf ppf "%s@ " "static constexpr bool propto__ = true;" ;
       pf ppf "%s@ " "(void) propto__;" ) ;
     pf ppf "%s@ "
       "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
@@ -397,6 +399,7 @@ let pp_ctor ppf p =
   in
   pp_block ppf
     ( (fun ppf {Program.prog_name; prepare_data; output_vars; _} ->
+        pf ppf "int current_statement__ = 0;@ " ;
         pf ppf "using local_scalar_t__ = double ;@ " ;
         pf ppf "boost::ecuyer1988 base_rng__ = @ " ;
         pf ppf "    stan::services::util::create_rng(random_seed__, 0);@ " ;
@@ -493,10 +496,11 @@ let pp_method_b ppf rt name params intro ?(outro = nop) ?(cv_attr = ["const"])
 (** Print the write_array method of the model class *)
 let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
   pf ppf
-    "template <typename RNG, typename VecR, typename VecI, typename VecVar, \
-     stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, \
-     stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, \
-     stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr>" ;
+    "template <typename RNG, typename VecR, typename VecI, typename VecVar, @ \
+     stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, @ \
+     stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, @ \
+     stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> \
+     @ " ;
   let params =
     [ "RNG& base_rng__"; "VecR& params_r__"; "VecI& params_i__"
     ; "VecVar& vars__"; "const bool emit_transformed_parameters__ = true"
@@ -509,6 +513,7 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
       ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
       ; "double lp__ = 0.0;"
       ; "(void) lp__;  // dummy to suppress unused var warning"
+      ; "int current_statement__ = 0; "
       ; "stan::math::accumulator<double> lp_accum__;"
       ; "local_scalar_t__ \
          DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ]
@@ -637,9 +642,9 @@ let pp_unconstrained_param_names ppf {Program.output_vars; _} =
 (** Print the `transform_inits` method of the model class *)
 let pp_transform_inits ppf {Program.transform_inits; _} =
   pf ppf
-    "template <typename VecVar, typename VecI, \
-     stan::require_std_vector_t<VecVar>* = nullptr, \
-     stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>" ;
+    "template <typename VecVar, typename VecI, @ \
+     stan::require_std_vector_t<VecVar>* = nullptr, @ \
+     stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> @ " ;
   let params =
     [ "const stan::io::var_context& context__"; "VecI& params_i__"
     ; "VecVar& vars__"; "std::ostream* pstream__ = nullptr" ]
@@ -647,7 +652,8 @@ let pp_transform_inits ppf {Program.transform_inits; _} =
   let intro ppf () =
     pf ppf
       "using local_scalar_t__ = \
-       double;@,vars__.clear();@,vars__.reserve(num_params_r__);"
+       double;@,vars__.clear();@,vars__.reserve(num_params_r__);@ int \
+       current_statement__ = 0; "
   in
   let cv_attr = ["const"] in
   pp_method_b ppf "void" "transform_inits_impl" params intro transform_inits
@@ -656,9 +662,9 @@ let pp_transform_inits ppf {Program.transform_inits; _} =
 (** Print the `log_prob` method of the model class *)
 let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
   pf ppf
-    "template <bool propto__, bool jacobian__, typename VecR, typename VecI, \
-     stan::require_vector_like_t<VecR>* = nullptr, \
-     stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr>" ;
+    "@ template <bool propto__, bool jacobian__ , typename VecR, typename \
+     VecI, @ stan::require_vector_like_t<VecR>* = nullptr, @ \
+     stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> @ " ;
   let params =
     [ "VecR& params_r__"; "VecI& params_i__"
     ; "std::ostream* pstream__ = nullptr" ]
@@ -669,6 +675,7 @@ let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
       ; "using local_scalar_t__ = T__;"; "T__ lp__(0.0);"
       ; "stan::math::accumulator<T__> lp_accum__;"
       ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
+      ; "int current_statement__ = 0;"
       ; "local_scalar_t__ \
          DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ]
       pp_unused "DUMMY_VAR__" pp_function__ (prog_name, "log_prob")
@@ -815,16 +822,15 @@ let pp_model ppf ({Program.prog_name; _} as p) =
 let usings =
   {|
 using stan::io::dump;
-using stan::model::model_base_crtp;
-using stan::model::rvalue;
-using stan::model::cons_list;
+using stan::model::assign;
 using stan::model::index_uni;
 using stan::model::index_max;
 using stan::model::index_min;
 using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
-using stan::model::nil_index_list;
+using stan::model::model_base_crtp;
+using stan::model::rvalue;
 using namespace stan::math;
 |}
 

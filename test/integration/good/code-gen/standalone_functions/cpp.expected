@@ -5,22 +5,20 @@
 namespace basic_model_namespace {
 
 using stan::io::dump;
-using stan::model::model_base_crtp;
-using stan::model::rvalue;
-using stan::model::cons_list;
+using stan::model::assign;
 using stan::model::index_uni;
 using stan::model::index_max;
 using stan::model::index_min;
 using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
-using stan::model::nil_index_list;
+using stan::model::model_base_crtp;
+using stan::model::rvalue;
 using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 21> locations_array__ = 
 {" (found before start of program)",
  " (in 'basic.stan', line 3, column 8 to column 28)",
  " (in 'basic.stan', line 2, column 30 to line 4, column 5)",
@@ -48,7 +46,8 @@ template <typename T0__>
 stan::promote_args_t<T0__>
 my_log1p_exp(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
-  const static bool propto__ = true;
+  int current_statement__ = 0; 
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -76,7 +75,8 @@ template <typename T0__>
 stan::promote_args_t<T0__>
 array_fun(const std::vector<T0__>& a, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
-  const static bool propto__ = true;
+  int current_statement__ = 0; 
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -103,7 +103,8 @@ return array_fun(a, pstream__);
 double
 int_array_fun(const std::vector<int>& a, std::ostream* pstream__) {
   using local_scalar_t__ = double;
-  const static bool propto__ = true;
+  int current_statement__ = 0; 
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -130,8 +131,9 @@ template <typename T0__>
 Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
 my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
+  int current_statement__ = 0; 
   const auto& x = to_ref(x_arg__);
-  const static bool propto__ = true;
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -143,8 +145,7 @@ my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
     stan::math::fill(result, DUMMY_VAR__);
     
     current_statement__ = 8;
-    assign(result, nil_index_list(), multiply(x, 5.0),
-      "assigning variable result");
+    assign(result, multiply(x, 5.0), "assigning variable result");
     current_statement__ = 9;
     return result;
   } catch (const std::exception& e) {
@@ -167,7 +168,8 @@ return my_vector_mul_by_5(x, pstream__);
 int
 int_only_multiplication(const int& a, const int& b, std::ostream* pstream__) {
   using local_scalar_t__ = double;
-  const static bool propto__ = true;
+  int current_statement__ = 0; 
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -194,7 +196,8 @@ template <typename T0__>
 stan::promote_args_t<T0__>
 test_lgamma(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
-  const static bool propto__ = true;
+  int current_statement__ = 0; 
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -224,6 +227,7 @@ void
 test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
         std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -252,7 +256,8 @@ template <typename T0__, typename RNG>
 stan::promote_args_t<T0__>
 test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
-  const static bool propto__ = true;
+  int current_statement__ = 0; 
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -281,6 +286,7 @@ stan::promote_args_t<T0__,
 T1__>
 test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
+  int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
@@ -385,22 +391,20 @@ auto test_lpdf(const double& a, const double& b,
 namespace integrate_model_namespace {
 
 using stan::io::dump;
-using stan::model::model_base_crtp;
-using stan::model::rvalue;
-using stan::model::cons_list;
+using stan::model::assign;
 using stan::model::index_uni;
 using stan::model::index_max;
 using stan::model::index_min;
 using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
-using stan::model::nil_index_list;
+using stan::model::model_base_crtp;
+using stan::model::rvalue;
 using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static int current_statement__= 0;
-static const std::vector<std::string> locations_array__ = 
+static constexpr std::array<const char*, 11> locations_array__ = 
 {" (found before start of program)",
  " (in 'integrate.stan', line 4, column 4 to column 27)",
  " (in 'integrate.stan', line 3, column 29 to line 5, column 3)",
@@ -418,8 +422,9 @@ template <typename T0__>
 Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
 integrand(const T0__& x_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
+  int current_statement__ = 0; 
   const auto& x = to_ref(x_arg__);
-  const static bool propto__ = true;
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -450,7 +455,8 @@ integrand_ode(const T0__& r, const std::vector<T1__>& f,
               const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
               const std::vector<int>& x_i, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__, T3__>;
-  const static bool propto__ = true;
+  int current_statement__ = 0; 
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -464,9 +470,8 @@ integrand_ode(const T0__& r, const std::vector<T1__>& f,
     current_statement__ = 4;
     x = logit(r);
     current_statement__ = 5;
-    assign(df_dx, cons_list(index_uni(1), nil_index_list()),
-      ((stan::math::exp(-square(x)) * 1) / (r * (1 - r))),
-      "assigning variable df_dx");
+    assign(df_dx, ((stan::math::exp(-square(x)) * 1) / (r * (1 - r))),
+      "assigning variable df_dx", index_uni(1));
     current_statement__ = 6;
     return df_dx;
   } catch (const std::exception& e) {
@@ -492,7 +497,8 @@ return integrand_ode(r, f, theta, x_r, x_i, pstream__);
 double
 ode_integrate(std::ostream* pstream__) {
   using local_scalar_t__ = double;
-  const static bool propto__ = true;
+  int current_statement__ = 0; 
+  static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -501,10 +507,12 @@ ode_integrate(std::ostream* pstream__) {
     x_i = std::vector<int>(0, std::numeric_limits<int>::min());
     
     current_statement__ = 9;
-    return integrate_ode_bdf(integrand_ode_functor__(), rep_array(0.0, 1), 1E-5,
+    return rvalue(
+             integrate_ode_bdf(integrand_ode_functor__(), rep_array(0.0, 1), 1E-5,
   rep_array((1.0 - 1E-5), 1), rep_array(0.0, 0), rep_array(0.0, 0), x_i,
-  pstream__)[
-        (1 - 1)][(1 - 1)];
+  pstream__),
+             "integrate_ode_bdf(integrand_ode, rep_array(0.0, 1), 1E-5,\n                  rep_array((1.0 - 1E-5), 1), rep_array(0.0, 0),\n                  rep_array(0.0, 0), x_i)",
+             index_uni(1), index_uni(1));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return

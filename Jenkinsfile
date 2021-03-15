@@ -2,6 +2,7 @@
 import org.stan.Utils
 
 def utils = new org.stan.Utils()
+def skipExpressionTests = false
 
 /* Functions that runs a sh command and returns the stdout */
 def runShell(String command){
@@ -21,8 +22,7 @@ def tagName() {
 pipeline {
     agent none
     parameters {
-        booleanParam(name:"compile_all", defaultValue: false,
-                     description:"Try compiling all models in test/integration/good")
+        booleanParam(name:"compile_all", defaultValue: false, description:"Try compiling all models in test/integration/good")
     }
     options {parallelsAlwaysFailFast()}
     stages {
@@ -33,6 +33,19 @@ pipeline {
                 not { branch 'downstream_tests' }
             }
             steps { script { utils.killOldBuilds() } }
+        }
+        stage('Verify changes') {
+            agent { label 'linux' }
+            steps {
+                script {
+
+                    retry(3) { checkout scm }
+                    sh 'git clean -xffd'
+
+                    def stanMathSigs = ['test/integration/signatures/stan_math_sigs.expected'].join(" ")
+                    skipExpressionTests = utils.verifyChanges(stanMathSigs)
+                }
+            }
         }
         stage("Build") {
             agent {
@@ -128,7 +141,7 @@ pipeline {
                 }
             }
         }
-        stage("CmdStan tests") {
+        stage("CmdStan & Math tests") {
             parallel {
                 stage("Compile tests") {
                     agent { label 'linux' }
@@ -198,6 +211,38 @@ pipeline {
                             errorUnstableThreshold: 100
                     }
                     post { always { runShell("rm -rf ./*") }}
+                }
+                stage('Math functions expressions test') {
+                    when {
+                        expression {
+                            !skipExpressionTests
+                        }
+                    }
+                    agent any
+                    steps {
+
+                        unstash 'ubuntu-exe'
+
+                        sh """
+                            git clone --recursive https://github.com/stan-dev/math.git
+                            mkdir -p math/bin/stanc
+                            cp bin/stanc math/bin/stanc
+                        """
+
+                        script {
+                            dir("math") {
+                                sh """
+                                    echo O=0 >> make/local
+                                    echo "CXX=${env.CXX} -Werror " >> make/local
+                                """
+                                withEnv(['PATH+TBB=./lib/tbb']) {
+                                    try { sh "./runTests.py -j${env.PARALLEL} test/expressions" }
+                                    finally { junit 'test/**/*.xml' }
+                                }
+                            }
+                        }
+                    }
+                    post { always { deleteDir() } }
                 }
             }
         }
