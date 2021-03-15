@@ -5,16 +5,15 @@
 namespace simple_function_model_namespace {
 
 using stan::io::dump;
-using stan::model::model_base_crtp;
-using stan::model::rvalue;
-using stan::model::cons_list;
+using stan::model::assign;
 using stan::model::index_uni;
 using stan::model::index_max;
 using stan::model::index_min;
 using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
-using stan::model::nil_index_list;
+using stan::model::model_base_crtp;
+using stan::model::rvalue;
 using namespace stan::math;
 
 
@@ -105,8 +104,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       x = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 23;
-      assign(x, nil_index_list(), context__.vals_r("x"),
-        "assigning variable x");
+      assign(x, context__.vals_r("x"), "assigning variable x");
       current_statement__ = 24;
       validate_non_negative_index("y", "N", N);
       current_statement__ = 25;
@@ -118,15 +116,14 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       {
         std::vector<local_scalar_t__> y_flat__;
         current_statement__ = 25;
-        assign(y_flat__, nil_index_list(), context__.vals_r("y"),
-          "assigning variable y_flat__");
+        assign(y_flat__, context__.vals_r("y"), "assigning variable y_flat__");
         current_statement__ = 25;
         pos__ = 1;
         current_statement__ = 25;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 25;
-          assign(y, cons_list(index_uni(sym1__), nil_index_list()),
-            y_flat__[(pos__ - 1)], "assigning variable y");
+          assign(y, y_flat__[(pos__ - 1)],
+            "assigning variable y", index_uni(sym1__));
           current_statement__ = 25;
           pos__ = (pos__ + 1);}
       }
@@ -157,6 +154,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
+  
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
   stan::require_vector_like_t<VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
@@ -236,7 +234,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
           profile<local_scalar_t__> profile__("cov_exp_quad", const_cast<profile_map&>(profiles__));
           
           current_statement__ = 10;
-          assign(cov, nil_index_list(),
+          assign(cov,
             add(gp_exp_quad_cov(x, alpha, rho),
               diag_matrix(rep_vector(sigma, N))), "assigning variable cov");
         }
@@ -245,8 +243,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
           profile<local_scalar_t__> profile__("cholesky_decompose", const_cast<profile_map&>(profiles__));
           
           current_statement__ = 12;
-          assign(L_cov, nil_index_list(), cholesky_decompose(cov),
-            "assigning variable L_cov");
+          assign(L_cov, cholesky_decompose(cov), "assigning variable L_cov");
         }
         current_statement__ = 20;
         {

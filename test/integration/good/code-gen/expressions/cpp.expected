@@ -5,16 +5,15 @@
 namespace simple_function_model_namespace {
 
 using stan::io::dump;
-using stan::model::model_base_crtp;
-using stan::model::rvalue;
-using stan::model::cons_list;
+using stan::model::assign;
 using stan::model::index_uni;
 using stan::model::index_max;
 using stan::model::index_min;
 using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
-using stan::model::nil_index_list;
+using stan::model::model_base_crtp;
+using stan::model::rvalue;
 using namespace stan::math;
 
 
@@ -204,8 +203,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       {
         std::vector<local_scalar_t__> m_flat__;
         current_statement__ = 4;
-        assign(m_flat__, nil_index_list(), context__.vals_r("m"),
-          "assigning variable m_flat__");
+        assign(m_flat__, context__.vals_r("m"), "assigning variable m_flat__");
         current_statement__ = 4;
         pos__ = 1;
         current_statement__ = 4;
@@ -213,10 +211,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
           current_statement__ = 4;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             current_statement__ = 4;
-            assign(m,
-              cons_list(index_uni(sym2__),
-                cons_list(index_uni(sym1__), nil_index_list())),
-              m_flat__[(pos__ - 1)], "assigning variable m");
+            assign(m, m_flat__[(pos__ - 1)],
+              "assigning variable m", index_uni(sym2__), index_uni(sym1__));
             current_statement__ = 4;
             pos__ = (pos__ + 1);}}
       }
@@ -235,6 +231,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
+  
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
   stan::require_vector_like_t<VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 

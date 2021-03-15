@@ -662,8 +662,8 @@ let pp_transform_inits ppf {Program.transform_inits; _} =
 (** Print the `log_prob` method of the model class *)
 let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
   pf ppf
-    "template <bool propto__, bool jacobian__ , typename VecR, typename VecI, \
-     @ stan::require_vector_like_t<VecR>* = nullptr, @ \
+    "@ template <bool propto__, bool jacobian__ , typename VecR, typename \
+     VecI, @ stan::require_vector_like_t<VecR>* = nullptr, @ \
      stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> @ " ;
   let params =
     [ "VecR& params_r__"; "VecI& params_i__"
@@ -822,16 +822,15 @@ let pp_model ppf ({Program.prog_name; _} as p) =
 let usings =
   {|
 using stan::io::dump;
-using stan::model::model_base_crtp;
-using stan::model::rvalue;
-using stan::model::cons_list;
+using stan::model::assign;
 using stan::model::index_uni;
 using stan::model::index_max;
 using stan::model::index_min;
 using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
-using stan::model::nil_index_list;
+using stan::model::model_base_crtp;
+using stan::model::rvalue;
 using namespace stan::math;
 |}
 
