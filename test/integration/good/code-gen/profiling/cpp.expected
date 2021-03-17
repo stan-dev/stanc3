@@ -177,17 +177,17 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       rho = DUMMY_VAR__;
       
       current_statement__ = 1;
-      rho = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      rho = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       local_scalar_t__ alpha;
       alpha = DUMMY_VAR__;
       
       current_statement__ = 2;
-      alpha = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      alpha = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       local_scalar_t__ sigma;
       sigma = DUMMY_VAR__;
       
       current_statement__ = 3;
-      sigma = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      sigma = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       {
         current_statement__ = 4;
         validate_non_negative_index("cov", "N", N);
@@ -282,17 +282,17 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       rho = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      rho = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      rho = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       double alpha;
       alpha = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
-      alpha = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      alpha = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       double sigma;
       sigma = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 3;
-      sigma = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      sigma = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       vars__.emplace_back(rho);
       vars__.emplace_back(alpha);
       vars__.emplace_back(sigma);

@@ -595,7 +595,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       sigma = DUMMY_VAR__;
       
       current_statement__ = 4;
-      sigma = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      sigma = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       local_scalar_t__ alpha;
       alpha = DUMMY_VAR__;
       
@@ -1317,7 +1317,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       sigma = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 4;
-      sigma = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      sigma = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       double alpha;
       alpha = std::numeric_limits<double>::quiet_NaN();
       

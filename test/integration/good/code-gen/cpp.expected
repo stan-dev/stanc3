@@ -155,7 +155,7 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       tau = DUMMY_VAR__;
       
       current_statement__ = 2;
-      tau = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      tau = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> theta_tilde;
       theta_tilde = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       stan::math::fill(theta_tilde, DUMMY_VAR__);
@@ -221,7 +221,7 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       tau = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
-      tau = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      tau = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       Eigen::Matrix<double, -1, 1> theta_tilde;
       theta_tilde = Eigen::Matrix<double, -1, 1>(J);
       stan::math::fill(theta_tilde, std::numeric_limits<double>::quiet_NaN());
@@ -974,7 +974,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       tau = DUMMY_VAR__;
       
       current_statement__ = 2;
-      tau = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      tau = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> theta_tilde;
       theta_tilde = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       stan::math::fill(theta_tilde, DUMMY_VAR__);
@@ -1040,7 +1040,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       tau = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
-      tau = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      tau = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       Eigen::Matrix<double, -1, 1> theta_tilde;
       theta_tilde = Eigen::Matrix<double, -1, 1>(J);
       stan::math::fill(theta_tilde, std::numeric_limits<double>::quiet_NaN());
@@ -6728,46 +6728,48 @@ class mother_model final : public model_base_crtp<mother_model> {
       p_upper = DUMMY_VAR__;
       
       current_statement__ = 2;
-      p_upper = in__.read_lb<local_scalar_t__, jacobian__>(p_real, lp__);
+      p_upper = in__.read_constrain_lb<local_scalar_t__, jacobian__>(p_real,
+                  lp__);
       local_scalar_t__ p_lower;
       p_lower = DUMMY_VAR__;
       
       current_statement__ = 3;
-      p_lower = in__.read_ub<local_scalar_t__, jacobian__>(p_upper, lp__);
+      p_lower = in__.read_constrain_ub<local_scalar_t__, jacobian__>(p_upper,
+                  lp__);
       std::vector<local_scalar_t__> offset_multiplier;
       offset_multiplier = std::vector<local_scalar_t__>(5, DUMMY_VAR__);
       
       current_statement__ = 4;
       assign(offset_multiplier,
-        in__.read_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
+        in__.read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
           1, 2, lp__, 5), "assigning variable offset_multiplier");
       std::vector<local_scalar_t__> no_offset_multiplier;
       no_offset_multiplier = std::vector<local_scalar_t__>(5, DUMMY_VAR__);
       
       current_statement__ = 5;
       assign(no_offset_multiplier,
-        in__.read_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
+        in__.read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
           0, 2, lp__, 5), "assigning variable no_offset_multiplier");
       std::vector<local_scalar_t__> offset_no_multiplier;
       offset_no_multiplier = std::vector<local_scalar_t__>(5, DUMMY_VAR__);
       
       current_statement__ = 6;
       assign(offset_no_multiplier,
-        in__.read_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
+        in__.read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
           3, 1, lp__, 5), "assigning variable offset_no_multiplier");
       std::vector<local_scalar_t__> p_real_1d_ar;
       p_real_1d_ar = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       
       current_statement__ = 7;
       assign(p_real_1d_ar,
-        in__.read_lb<std::vector<local_scalar_t__>, jacobian__>(0, lp__, N),
-        "assigning variable p_real_1d_ar");
+        in__.read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(0,
+          lp__, N), "assigning variable p_real_1d_ar");
       std::vector<std::vector<std::vector<local_scalar_t__>>> p_real_3d_ar;
       p_real_3d_ar = std::vector<std::vector<std::vector<local_scalar_t__>>>(N, std::vector<std::vector<local_scalar_t__>>(M, std::vector<local_scalar_t__>(K, DUMMY_VAR__)));
       
       current_statement__ = 8;
       assign(p_real_3d_ar,
-        in__.read_lb<std::vector<std::vector<std::vector<local_scalar_t__>>>, jacobian__>(
+        in__.read_constrain_lb<std::vector<std::vector<std::vector<local_scalar_t__>>>, jacobian__>(
           0, lp__, N, M, K), "assigning variable p_real_3d_ar");
       Eigen::Matrix<local_scalar_t__, -1, 1> p_vec;
       p_vec = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
@@ -6775,8 +6777,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       current_statement__ = 9;
       assign(p_vec,
-        in__.read_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(0,
-          lp__, N), "assigning variable p_vec");
+        in__.read_constrain_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+          0, lp__, N), "assigning variable p_vec");
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_1d_vec;
       p_1d_vec = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       stan::math::fill(p_1d_vec, DUMMY_VAR__);
@@ -6822,7 +6824,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       current_statement__ = 15;
       assign(p_ar_mat,
-        in__.read_lub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>, jacobian__>(
+        in__.read_constrain_lub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>, jacobian__>(
           0, 1, lp__, 4, 5, 2, 3), "assigning variable p_ar_mat");
       Eigen::Matrix<local_scalar_t__, -1, 1> p_simplex;
       p_simplex = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
@@ -6830,7 +6832,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       current_statement__ = 16;
       assign(p_simplex,
-        in__.read_simplex<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+        in__.read_constrain_simplex<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
           lp__, N), "assigning variable p_simplex");
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_1d_simplex;
       p_1d_simplex = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
@@ -6838,7 +6840,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       current_statement__ = 17;
       assign(p_1d_simplex,
-        in__.read_simplex<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+        in__.read_constrain_simplex<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
           lp__, N, N), "assigning variable p_1d_simplex");
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> p_3d_simplex;
       p_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
@@ -6846,7 +6848,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       current_statement__ = 18;
       assign(p_3d_simplex,
-        in__.read_simplex<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>, jacobian__>(
+        in__.read_constrain_simplex<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>, jacobian__>(
           lp__, N, M, K, N), "assigning variable p_3d_simplex");
       Eigen::Matrix<local_scalar_t__, -1, -1> p_cfcov_54;
       p_cfcov_54 = Eigen::Matrix<local_scalar_t__, -1, -1>(5, 4);
@@ -6854,7 +6856,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       current_statement__ = 19;
       assign(p_cfcov_54,
-        in__.read_cholesky_factor<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
+        in__.read_constrain_cholesky_factor<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
           lp__, 5, 4), "assigning variable p_cfcov_54");
       Eigen::Matrix<local_scalar_t__, -1, -1> p_cfcov_33;
       p_cfcov_33 = Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3);
@@ -6862,7 +6864,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       current_statement__ = 20;
       assign(p_cfcov_33,
-        in__.read_cholesky_factor<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
+        in__.read_constrain_cholesky_factor<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
           lp__, 3, 3), "assigning variable p_cfcov_33");
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> p_cfcov_33_ar;
       p_cfcov_33_ar = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(K, Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3));
@@ -6870,7 +6872,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       current_statement__ = 21;
       assign(p_cfcov_33_ar,
-        in__.read_cholesky_factor<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+        in__.read_constrain_cholesky_factor<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
           lp__, K, 3, 3), "assigning variable p_cfcov_33_ar");
       Eigen::Matrix<local_scalar_t__, -1, 1> x_p;
       x_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
@@ -7270,46 +7272,48 @@ class mother_model final : public model_base_crtp<mother_model> {
       p_upper = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
-      p_upper = in__.read_lb<local_scalar_t__, jacobian__>(p_real, lp__);
+      p_upper = in__.read_constrain_lb<local_scalar_t__, jacobian__>(p_real,
+                  lp__);
       double p_lower;
       p_lower = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 3;
-      p_lower = in__.read_ub<local_scalar_t__, jacobian__>(p_upper, lp__);
+      p_lower = in__.read_constrain_ub<local_scalar_t__, jacobian__>(p_upper,
+                  lp__);
       std::vector<double> offset_multiplier;
       offset_multiplier = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 4;
       assign(offset_multiplier,
-        in__.read_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
+        in__.read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
           1, 2, lp__, 5), "assigning variable offset_multiplier");
       std::vector<double> no_offset_multiplier;
       no_offset_multiplier = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
       assign(no_offset_multiplier,
-        in__.read_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
+        in__.read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
           0, 2, lp__, 5), "assigning variable no_offset_multiplier");
       std::vector<double> offset_no_multiplier;
       offset_no_multiplier = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 6;
       assign(offset_no_multiplier,
-        in__.read_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
+        in__.read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
           3, 1, lp__, 5), "assigning variable offset_no_multiplier");
       std::vector<double> p_real_1d_ar;
       p_real_1d_ar = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 7;
       assign(p_real_1d_ar,
-        in__.read_lb<std::vector<local_scalar_t__>, jacobian__>(0, lp__, N),
-        "assigning variable p_real_1d_ar");
+        in__.read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(0,
+          lp__, N), "assigning variable p_real_1d_ar");
       std::vector<std::vector<std::vector<double>>> p_real_3d_ar;
       p_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, std::numeric_limits<double>::quiet_NaN())));
       
       current_statement__ = 8;
       assign(p_real_3d_ar,
-        in__.read_lb<std::vector<std::vector<std::vector<local_scalar_t__>>>, jacobian__>(
+        in__.read_constrain_lb<std::vector<std::vector<std::vector<local_scalar_t__>>>, jacobian__>(
           0, lp__, N, M, K), "assigning variable p_real_3d_ar");
       Eigen::Matrix<double, -1, 1> p_vec;
       p_vec = Eigen::Matrix<double, -1, 1>(N);
@@ -7317,8 +7321,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       current_statement__ = 9;
       assign(p_vec,
-        in__.read_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(0,
-          lp__, N), "assigning variable p_vec");
+        in__.read_constrain_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+          0, lp__, N), "assigning variable p_vec");
       std::vector<Eigen::Matrix<double, -1, 1>> p_1d_vec;
       p_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       stan::math::fill(p_1d_vec, std::numeric_limits<double>::quiet_NaN());
@@ -7364,7 +7368,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       current_statement__ = 15;
       assign(p_ar_mat,
-        in__.read_lub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>, jacobian__>(
+        in__.read_constrain_lub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>, jacobian__>(
           0, 1, lp__, 4, 5, 2, 3), "assigning variable p_ar_mat");
       Eigen::Matrix<double, -1, 1> p_simplex;
       p_simplex = Eigen::Matrix<double, -1, 1>(N);
@@ -7372,7 +7376,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       current_statement__ = 16;
       assign(p_simplex,
-        in__.read_simplex<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+        in__.read_constrain_simplex<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
           lp__, N), "assigning variable p_simplex");
       std::vector<Eigen::Matrix<double, -1, 1>> p_1d_simplex;
       p_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
@@ -7380,7 +7384,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       current_statement__ = 17;
       assign(p_1d_simplex,
-        in__.read_simplex<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+        in__.read_constrain_simplex<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
           lp__, N, N), "assigning variable p_1d_simplex");
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_simplex;
       p_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
@@ -7388,7 +7392,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       current_statement__ = 18;
       assign(p_3d_simplex,
-        in__.read_simplex<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>, jacobian__>(
+        in__.read_constrain_simplex<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>, jacobian__>(
           lp__, N, M, K, N), "assigning variable p_3d_simplex");
       Eigen::Matrix<double, -1, -1> p_cfcov_54;
       p_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
@@ -7396,7 +7400,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       current_statement__ = 19;
       assign(p_cfcov_54,
-        in__.read_cholesky_factor<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
+        in__.read_constrain_cholesky_factor<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
           lp__, 5, 4), "assigning variable p_cfcov_54");
       Eigen::Matrix<double, -1, -1> p_cfcov_33;
       p_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
@@ -7404,7 +7408,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       current_statement__ = 20;
       assign(p_cfcov_33,
-        in__.read_cholesky_factor<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
+        in__.read_constrain_cholesky_factor<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
           lp__, 3, 3), "assigning variable p_cfcov_33");
       std::vector<Eigen::Matrix<double, -1, -1>> p_cfcov_33_ar;
       p_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
@@ -7412,7 +7416,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       current_statement__ = 21;
       assign(p_cfcov_33_ar,
-        in__.read_cholesky_factor<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+        in__.read_constrain_cholesky_factor<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
           lp__, K, 3, 3), "assigning variable p_cfcov_33_ar");
       Eigen::Matrix<double, -1, 1> x_p;
       x_p = Eigen::Matrix<double, -1, 1>(2);
@@ -16709,36 +16713,36 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       alpha = DUMMY_VAR__;
       
       current_statement__ = 1;
-      alpha = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      alpha = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       local_scalar_t__ beta;
       beta = DUMMY_VAR__;
       
       current_statement__ = 2;
-      beta = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      beta = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       local_scalar_t__ gamma;
       gamma = DUMMY_VAR__;
       
       current_statement__ = 3;
-      gamma = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      gamma = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       local_scalar_t__ delta;
       delta = DUMMY_VAR__;
       
       current_statement__ = 4;
-      delta = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      delta = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       std::vector<local_scalar_t__> z_init;
       z_init = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
       
       current_statement__ = 5;
       assign(z_init,
-        in__.read_lb<std::vector<local_scalar_t__>, jacobian__>(0, lp__, 2),
-        "assigning variable z_init");
+        in__.read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(0,
+          lp__, 2), "assigning variable z_init");
       std::vector<local_scalar_t__> sigma;
       sigma = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
       
       current_statement__ = 6;
       assign(sigma,
-        in__.read_lb<std::vector<local_scalar_t__>, jacobian__>(0, lp__, 2),
-        "assigning variable sigma");
+        in__.read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(0,
+          lp__, 2), "assigning variable sigma");
       std::vector<std::vector<local_scalar_t__>> z;
       z = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(2, DUMMY_VAR__));
       
@@ -16811,36 +16815,36 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       alpha = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      alpha = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      alpha = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       double beta;
       beta = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
-      beta = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      beta = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       double gamma;
       gamma = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 3;
-      gamma = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      gamma = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       double delta;
       delta = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 4;
-      delta = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      delta = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       std::vector<double> z_init;
       z_init = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
       assign(z_init,
-        in__.read_lb<std::vector<local_scalar_t__>, jacobian__>(0, lp__, 2),
-        "assigning variable z_init");
+        in__.read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(0,
+          lp__, 2), "assigning variable z_init");
       std::vector<double> sigma;
       sigma = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 6;
       assign(sigma,
-        in__.read_lb<std::vector<local_scalar_t__>, jacobian__>(0, lp__, 2),
-        "assigning variable sigma");
+        in__.read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(0,
+          lp__, 2), "assigning variable sigma");
       std::vector<std::vector<double>> z;
       z = std::vector<std::vector<double>>(N, std::vector<double>(2, std::numeric_limits<double>::quiet_NaN()));
       
@@ -17753,7 +17757,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       sigma = DUMMY_VAR__;
       
       current_statement__ = 4;
-      sigma = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      sigma = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       local_scalar_t__ alpha;
       alpha = DUMMY_VAR__;
       
@@ -18380,7 +18384,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       sigma = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 4;
-      sigma = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      sigma = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       double alpha;
       alpha = std::numeric_limits<double>::quiet_NaN();
       
@@ -18985,7 +18989,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
       
       current_statement__ = 1;
       assign(L_Omega,
-        in__.read_cholesky_corr<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+        in__.read_constrain_cholesky_corr<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
           lp__, nt, 2, 2), "assigning variable L_Omega");
       Eigen::Matrix<local_scalar_t__, -1, 1> z1;
       z1 = Eigen::Matrix<local_scalar_t__, -1, 1>(NS);
@@ -18993,7 +18997,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
       
       current_statement__ = 2;
       assign(z1,
-        in__.read_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+        in__.read_constrain_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
           rvalue(L_Omega, "L_Omega",
             index_uni(1), index_uni(1), index_uni(2)), lp__, NS),
         "assigning variable z1");
@@ -19034,7 +19038,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
       
       current_statement__ = 1;
       assign(L_Omega,
-        in__.read_cholesky_corr<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+        in__.read_constrain_cholesky_corr<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
           lp__, nt, 2, 2), "assigning variable L_Omega");
       Eigen::Matrix<double, -1, 1> z1;
       z1 = Eigen::Matrix<double, -1, 1>(NS);
@@ -19042,7 +19046,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
       
       current_statement__ = 2;
       assign(z1,
-        in__.read_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+        in__.read_constrain_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
           rvalue(L_Omega, "L_Omega",
             index_uni(1), index_uni(1), index_uni(2)), lp__, NS),
         "assigning variable z1");
@@ -27247,7 +27251,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
       x = DUMMY_VAR__;
       
       current_statement__ = 1;
-      x = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      x = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       {
         current_statement__ = 4;
         if (t) {
@@ -27309,7 +27313,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
       x = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      x = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      x = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       vars__.emplace_back(x);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
@@ -28017,7 +28021,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 1;
       assign(p_1,
-        in__.read_lb<std::vector<local_scalar_t__>, jacobian__>(
+        in__.read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(
           rvalue(ds, "ds", index_uni(1), index_uni(1)), lp__, k),
         "assigning variable p_1");
       current_statement__ = 1;
@@ -28028,7 +28032,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 2;
       assign(p_2,
-        in__.read_ub<std::vector<local_scalar_t__>, jacobian__>(
+        in__.read_constrain_ub<std::vector<local_scalar_t__>, jacobian__>(
           rvalue(ds, "ds", index_uni(1), index_uni(1)), lp__, k),
         "assigning variable p_2");
       current_statement__ = 2;
@@ -28039,7 +28043,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 3;
       assign(p_3,
-        in__.read_lub<std::vector<local_scalar_t__>, jacobian__>(
+        in__.read_constrain_lub<std::vector<local_scalar_t__>, jacobian__>(
           rvalue(ds, "ds", index_uni(1), index_uni(1)),
           rvalue(ds, "ds", index_uni(1), index_uni(2)), lp__, k),
         "assigning variable p_3");
@@ -28054,7 +28058,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 4;
       assign(p_4,
-        in__.read_lub<std::vector<local_scalar_t__>, jacobian__>(0,
+        in__.read_constrain_lub<std::vector<local_scalar_t__>, jacobian__>(0,
           rvalue(ds, "ds", index_uni(1), index_uni(2)), lp__, k),
         "assigning variable p_4");
       current_statement__ = 4;
@@ -28065,7 +28069,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 5;
       assign(p_5,
-        in__.read_lub<std::vector<local_scalar_t__>, jacobian__>(
+        in__.read_constrain_lub<std::vector<local_scalar_t__>, jacobian__>(
           rvalue(ds, "ds", index_uni(1), index_uni(1)), 1, lp__, k),
         "assigning variable p_5");
       current_statement__ = 5;
@@ -28076,7 +28080,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 6;
       assign(p_6,
-        in__.read_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
+        in__.read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
           rvalue(ds, "ds", index_uni(1), index_uni(1)), 1, lp__, k),
         "assigning variable p_6");
       current_statement__ = 6;
@@ -28087,7 +28091,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 7;
       assign(p_7,
-        in__.read_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
+        in__.read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
           0, rvalue(ds, "ds", index_uni(1), index_uni(1)), lp__, k),
         "assigning variable p_7");
       current_statement__ = 7;
@@ -28098,7 +28102,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 8;
       assign(p_8,
-        in__.read_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
+        in__.read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
           rvalue(ds, "ds", index_uni(1), index_uni(1)),
           rvalue(ds, "ds", index_uni(1), index_uni(2)), lp__, k),
         "assigning variable p_8");
@@ -28113,7 +28117,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 9;
       assign(p_9,
-        in__.read_lub<std::vector<std::vector<local_scalar_t__>>, jacobian__>(
+        in__.read_constrain_lub<std::vector<std::vector<local_scalar_t__>>, jacobian__>(
           rvalue(ds, "ds", index_uni(1)), 1, lp__, m, k),
         "assigning variable p_9");
       current_statement__ = 9;
@@ -28124,7 +28128,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 10;
       assign(p_10,
-        in__.read_lub<std::vector<std::vector<std::vector<local_scalar_t__>>>, jacobian__>(
+        in__.read_constrain_lub<std::vector<std::vector<std::vector<local_scalar_t__>>>, jacobian__>(
           0, ds, lp__, n, m, k), "assigning variable p_10");
       current_statement__ = 10;
       check_matching_dims("constraint", "p_10", p_10, "upper", ds);
@@ -28134,7 +28138,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 11;
       assign(pv_1,
-        in__.read_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+        in__.read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
           rvalue(dv, "dv", index_uni(1), index_uni(1)),
           rvalue(dv, "dv", index_uni(1), index_uni(2)), lp__, k),
         "assigning variable pv_1");
@@ -28150,7 +28154,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 12;
       assign(pv_2,
-        in__.read_lb<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+        in__.read_constrain_lb<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
           rvalue(dv, "dv", index_uni(1)), lp__, m, k),
         "assigning variable pv_2");
       current_statement__ = 12;
@@ -28162,7 +28166,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 13;
       assign(pv_3,
-        in__.read_ub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>, jacobian__>(
+        in__.read_constrain_ub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>, jacobian__>(
           dv, lp__, n, m, k), "assigning variable pv_3");
       current_statement__ = 13;
       check_matching_dims("constraint", "pv_3", pv_3, "upper", dv);
@@ -28172,7 +28176,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 14;
       assign(pr_1,
-        in__.read_lub<Eigen::Matrix<local_scalar_t__, 1, -1>, jacobian__>(
+        in__.read_constrain_lub<Eigen::Matrix<local_scalar_t__, 1, -1>, jacobian__>(
           rvalue(dr, "dr", index_uni(1), index_uni(1)),
           rvalue(dr, "dr", index_uni(1), index_uni(2)), lp__, k),
         "assigning variable pr_1");
@@ -28188,7 +28192,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 15;
       assign(pr_2,
-        in__.read_lb<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>, jacobian__>(
+        in__.read_constrain_lb<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>, jacobian__>(
           rvalue(dr, "dr", index_uni(1)), lp__, m, k),
         "assigning variable pr_2");
       current_statement__ = 15;
@@ -28200,7 +28204,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 16;
       assign(pr_3,
-        in__.read_ub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>, jacobian__>(
+        in__.read_constrain_ub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>, jacobian__>(
           dr, lp__, n, m, k), "assigning variable pr_3");
       current_statement__ = 16;
       check_matching_dims("constraint", "pr_3", pr_3, "upper", dr);
@@ -28210,7 +28214,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 17;
       assign(pm_1,
-        in__.read_lb<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
+        in__.read_constrain_lb<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
           rvalue(dm, "dm", index_uni(1)), lp__, m, k),
         "assigning variable pm_1");
       current_statement__ = 17;
@@ -28222,7 +28226,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 18;
       assign(pm_2,
-        in__.read_ub<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+        in__.read_constrain_ub<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
           dm, lp__, n, m, k), "assigning variable pm_2");
       current_statement__ = 18;
       check_matching_dims("constraint", "pm_2", pm_2, "upper", dm);
@@ -28625,7 +28629,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 1;
       assign(p_1,
-        in__.read_lb<std::vector<local_scalar_t__>, jacobian__>(
+        in__.read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(
           rvalue(ds, "ds", index_uni(1), index_uni(1)), lp__, k),
         "assigning variable p_1");
       current_statement__ = 1;
@@ -28636,7 +28640,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 2;
       assign(p_2,
-        in__.read_ub<std::vector<local_scalar_t__>, jacobian__>(
+        in__.read_constrain_ub<std::vector<local_scalar_t__>, jacobian__>(
           rvalue(ds, "ds", index_uni(1), index_uni(1)), lp__, k),
         "assigning variable p_2");
       current_statement__ = 2;
@@ -28647,7 +28651,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 3;
       assign(p_3,
-        in__.read_lub<std::vector<local_scalar_t__>, jacobian__>(
+        in__.read_constrain_lub<std::vector<local_scalar_t__>, jacobian__>(
           rvalue(ds, "ds", index_uni(1), index_uni(1)),
           rvalue(ds, "ds", index_uni(1), index_uni(2)), lp__, k),
         "assigning variable p_3");
@@ -28662,7 +28666,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 4;
       assign(p_4,
-        in__.read_lub<std::vector<local_scalar_t__>, jacobian__>(0,
+        in__.read_constrain_lub<std::vector<local_scalar_t__>, jacobian__>(0,
           rvalue(ds, "ds", index_uni(1), index_uni(2)), lp__, k),
         "assigning variable p_4");
       current_statement__ = 4;
@@ -28673,7 +28677,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 5;
       assign(p_5,
-        in__.read_lub<std::vector<local_scalar_t__>, jacobian__>(
+        in__.read_constrain_lub<std::vector<local_scalar_t__>, jacobian__>(
           rvalue(ds, "ds", index_uni(1), index_uni(1)), 1, lp__, k),
         "assigning variable p_5");
       current_statement__ = 5;
@@ -28684,7 +28688,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 6;
       assign(p_6,
-        in__.read_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
+        in__.read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
           rvalue(ds, "ds", index_uni(1), index_uni(1)), 1, lp__, k),
         "assigning variable p_6");
       current_statement__ = 6;
@@ -28695,7 +28699,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 7;
       assign(p_7,
-        in__.read_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
+        in__.read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
           0, rvalue(ds, "ds", index_uni(1), index_uni(1)), lp__, k),
         "assigning variable p_7");
       current_statement__ = 7;
@@ -28706,7 +28710,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 8;
       assign(p_8,
-        in__.read_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
+        in__.read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
           rvalue(ds, "ds", index_uni(1), index_uni(1)),
           rvalue(ds, "ds", index_uni(1), index_uni(2)), lp__, k),
         "assigning variable p_8");
@@ -28721,7 +28725,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 9;
       assign(p_9,
-        in__.read_lub<std::vector<std::vector<local_scalar_t__>>, jacobian__>(
+        in__.read_constrain_lub<std::vector<std::vector<local_scalar_t__>>, jacobian__>(
           rvalue(ds, "ds", index_uni(1)), 1, lp__, m, k),
         "assigning variable p_9");
       current_statement__ = 9;
@@ -28732,7 +28736,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 10;
       assign(p_10,
-        in__.read_lub<std::vector<std::vector<std::vector<local_scalar_t__>>>, jacobian__>(
+        in__.read_constrain_lub<std::vector<std::vector<std::vector<local_scalar_t__>>>, jacobian__>(
           0, ds, lp__, n, m, k), "assigning variable p_10");
       current_statement__ = 10;
       check_matching_dims("constraint", "p_10", p_10, "upper", ds);
@@ -28742,7 +28746,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 11;
       assign(pv_1,
-        in__.read_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+        in__.read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
           rvalue(dv, "dv", index_uni(1), index_uni(1)),
           rvalue(dv, "dv", index_uni(1), index_uni(2)), lp__, k),
         "assigning variable pv_1");
@@ -28758,7 +28762,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 12;
       assign(pv_2,
-        in__.read_lb<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+        in__.read_constrain_lb<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
           rvalue(dv, "dv", index_uni(1)), lp__, m, k),
         "assigning variable pv_2");
       current_statement__ = 12;
@@ -28770,7 +28774,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 13;
       assign(pv_3,
-        in__.read_ub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>, jacobian__>(
+        in__.read_constrain_ub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>, jacobian__>(
           dv, lp__, n, m, k), "assigning variable pv_3");
       current_statement__ = 13;
       check_matching_dims("constraint", "pv_3", pv_3, "upper", dv);
@@ -28780,7 +28784,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 14;
       assign(pr_1,
-        in__.read_lub<Eigen::Matrix<local_scalar_t__, 1, -1>, jacobian__>(
+        in__.read_constrain_lub<Eigen::Matrix<local_scalar_t__, 1, -1>, jacobian__>(
           rvalue(dr, "dr", index_uni(1), index_uni(1)),
           rvalue(dr, "dr", index_uni(1), index_uni(2)), lp__, k),
         "assigning variable pr_1");
@@ -28796,7 +28800,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 15;
       assign(pr_2,
-        in__.read_lb<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>, jacobian__>(
+        in__.read_constrain_lb<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>, jacobian__>(
           rvalue(dr, "dr", index_uni(1)), lp__, m, k),
         "assigning variable pr_2");
       current_statement__ = 15;
@@ -28808,7 +28812,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 16;
       assign(pr_3,
-        in__.read_ub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>, jacobian__>(
+        in__.read_constrain_ub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>, jacobian__>(
           dr, lp__, n, m, k), "assigning variable pr_3");
       current_statement__ = 16;
       check_matching_dims("constraint", "pr_3", pr_3, "upper", dr);
@@ -28818,7 +28822,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 17;
       assign(pm_1,
-        in__.read_lb<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
+        in__.read_constrain_lb<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
           rvalue(dm, "dm", index_uni(1)), lp__, m, k),
         "assigning variable pm_1");
       current_statement__ = 17;
@@ -28830,7 +28834,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 18;
       assign(pm_2,
-        in__.read_ub<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+        in__.read_constrain_ub<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
           dm, lp__, n, m, k), "assigning variable pm_2");
       current_statement__ = 18;
       check_matching_dims("constraint", "pm_2", pm_2, "upper", dm);
@@ -30795,7 +30799,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
       y = DUMMY_VAR__;
       
       current_statement__ = 2;
-      y = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      y = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       {
         current_statement__ = 3;
         lp_accum__.add(normal_lpdf<propto__>(x, m, 1));
@@ -30918,7 +30922,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
       y = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
-      y = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      y = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       vars__.emplace_back(m);
       vars__.emplace_back(y);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
@@ -31608,7 +31612,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
       x = DUMMY_VAR__;
       
       current_statement__ = 1;
-      x = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      x = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       {
         current_statement__ = 2;
         lp_accum__.add(std_normal_lpdf<propto__>(x));
@@ -31648,7 +31652,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
       x = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      x = in__.read_lb<local_scalar_t__, jacobian__>(0, lp__);
+      x = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
       vars__.emplace_back(x);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
