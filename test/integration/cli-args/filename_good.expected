@@ -5,16 +5,15 @@
 namespace filename_good_model_namespace {
 
 using stan::io::dump;
-using stan::model::model_base_crtp;
-using stan::model::rvalue;
-using stan::model::cons_list;
+using stan::model::assign;
 using stan::model::index_uni;
 using stan::model::index_max;
 using stan::model::index_min;
 using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
-using stan::model::nil_index_list;
+using stan::model::model_base_crtp;
+using stan::model::rvalue;
 using namespace stan::math;
 
 
@@ -82,6 +81,7 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
+  
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
   stan::require_vector_like_t<VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
