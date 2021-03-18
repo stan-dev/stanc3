@@ -674,7 +674,7 @@ let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
       [ "using T__ = stan::scalar_type_t<VecR>;"
       ; "using local_scalar_t__ = T__;"; "T__ lp__(0.0);"
       ; "stan::math::accumulator<T__> lp_accum__;"
-      ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
+      ; "stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);"
       ; "int current_statement__ = 0;"
       ; "local_scalar_t__ \
          DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ]
