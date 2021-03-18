@@ -76,12 +76,13 @@ let var_deps info_map label ?expr:(expr_opt : Expr.Typed.t option = None)
     (targets : string Set.Poly.t) : string Set.Poly.t =
   (* Labels of dependencies *)
   (* let expr_vars_opt = Set.Poly.map ~f:fst (expr_var_set expr) in *)
-  let (dep_labels, expr_vars) =
+  let dep_labels, expr_vars =
     match expr_opt with
     | None -> (node_dependencies info_map label, Set.Poly.empty)
     | Some expr ->
         let vvars = Set.Poly.map ~f:fst (expr_var_set expr) in
-        (node_vars_dependencies info_map vvars label, Set.Poly.map ~f:string_of_vexpr vvars)
+        ( node_vars_dependencies info_map vvars label
+        , Set.Poly.map ~f:string_of_vexpr vvars )
   in
   (* expressions of dependencies *)
   let dep_exprs =

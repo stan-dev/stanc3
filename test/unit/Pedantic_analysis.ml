@@ -617,7 +617,8 @@ model {
 
 let%expect_test "Function body parameter-dependent control flow" =
   print_warn_pedantic (build_program fundef_cf_example) ;
-  [%expect {|
+  [%expect
+    {|
       Warning in 'string', line 4, column 4: A control flow statement inside function func depends on argument b. At 'string', line 19, column 21 to column 26, the value of b depends on parameter(s): sigma.
       Warning: The parameter sigma has no priors.
     |}]
