@@ -216,6 +216,23 @@ let param_read smeta
               () }
     in
     let transform_args = transform_args out_trans in
+    (*
+      For constrains that return square / lower triangular matrices the C++
+      only wants one of the matrix dimensions.
+    *)
+    let rec constrain_get_dims st =
+      match st with
+      | SizedType.SInt | SReal -> []
+      | SVector d | SRowVector d -> [d]
+      | SMatrix (_, dim2) -> [dim2]
+      | SArray (t, dim) -> dim :: constrain_get_dims t
+    in
+    let read_constrain_dims constrain_transform st =
+      match constrain_transform with
+      | Program.CholeskyCorr | Correlation | Covariance ->
+          constrain_get_dims st
+      | _ -> SizedType.get_dims st
+    in
     (* this is an absolute hack
 
        I need to unpack the constraint arguments and the dimensions in codegen, but we pack them all together into a fake function FnReadParam as expressions
@@ -230,7 +247,7 @@ let param_read smeta
             ( Expr.Helpers.str
                 (constrain_constraint_to_string out_trans Constrain)
             :: n_args_expression
-            :: (transform_args @ SizedType.get_dims cst) ))
+            :: (transform_args @ read_constrain_dims out_trans cst) ))
           Typed.Meta.{decl_var.meta with type_= ut})
     in
     [ Stmt.Fixed.

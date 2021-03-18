@@ -28953,7 +28953,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       current_statement__ = 5;
       assign(x_cov,
         in__.template read_constrain_cov_matrix<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
-          lp__, 2, 2), "assigning variable x_cov");
+          lp__, 2), "assigning variable x_cov");
       {
         double x;
         x = std::numeric_limits<double>::quiet_NaN();
@@ -29524,7 +29524,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       current_statement__ = 5;
       assign(x_cov,
         in__.template read_constrain_cov_matrix<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
-          lp__, 2, 2), "assigning variable x_cov");
+          lp__, 2), "assigning variable x_cov");
       vars__.emplace_back(theta);
       vars__.emplace_back(phi);
       {
