@@ -595,7 +595,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       sigma = DUMMY_VAR__;
       
       current_statement__ = 4;
-      sigma = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
+      sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
+                0, lp__);
       local_scalar_t__ alpha;
       alpha = DUMMY_VAR__;
       
@@ -1287,6 +1288,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    constexpr bool jacobian__ = false;
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "optimize_glm_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
@@ -1317,7 +1319,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       sigma = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 4;
-      sigma = in__.read_constrain_lb<local_scalar_t__, jacobian__>(0, lp__);
+      sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
+                0, lp__);
       double alpha;
       alpha = std::numeric_limits<double>::quiet_NaN();
       

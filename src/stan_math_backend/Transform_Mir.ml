@@ -191,7 +191,7 @@ let check_constraint_to_string t (c : constrainaction) =
 
 let constrain_constraint_to_string t (c : constrainaction) =
   match t with
-  | Program.CholeskyCorr -> "cholesky_corr"
+  | Program.CholeskyCorr -> "cholesky_factor_corr"
   | _ -> check_constraint_to_string t c
 
 let default_multiplier = 1

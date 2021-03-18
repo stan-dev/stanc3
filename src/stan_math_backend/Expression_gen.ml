@@ -429,7 +429,8 @@ and pp_compiler_internal_fn ad ut f ppf es =
         else
           let lp_expr = Expr.Fixed.{pattern= Var "lp__"; meta= emeta} in
           let arg_exprs = constraint_args @ [lp_expr] @ dims in
-          pf ppf "@[<hov 2>in__.read_constrain_%s<%a, jacobian__>(@,%a)@]"
+          pf ppf
+            "@[<hov 2>in__.template read_constrain_%s<%a, jacobian__>(@,%a)@]"
             constraint_string pp_unsizedtype_local
             (UnsizedType.AutoDiffable, ut)
             (list ~sep:comma pp_expr) arg_exprs

@@ -516,7 +516,8 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
       ; "int current_statement__ = 0; "
       ; "stan::math::accumulator<double> lp_accum__;"
       ; "local_scalar_t__ \
-         DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ]
+         DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());"
+      ; "constexpr bool jacobian__ = false;" ]
       pp_unused "DUMMY_VAR__" pp_function__ (prog_name, "write_array")
   in
   pp_method_b ppf "void" "write_array_impl" params intro generate_quantities

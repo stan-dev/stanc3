@@ -3513,6 +3513,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    constexpr bool jacobian__ = false;
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "distributions_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
@@ -6718,6 +6719,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    constexpr bool jacobian__ = false;
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "restricted_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
