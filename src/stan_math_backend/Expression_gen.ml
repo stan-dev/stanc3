@@ -423,7 +423,7 @@ and pp_compiler_internal_fn ad ut f ppf es =
         let constraint_args, dims = List.split_n args n_constraint_args in
         if String.is_empty constraint_string then
           let arg_exprs = constraint_args @ dims in
-          pf ppf "@[<hov 2>in__.read<%a>(@,%a)@]" pp_unsizedtype_local
+          pf ppf "@[<hov 2>in__.template read<%a>(@,%a)@]" pp_unsizedtype_local
             (UnsizedType.AutoDiffable, ut)
             (list ~sep:comma pp_expr) arg_exprs
         else
