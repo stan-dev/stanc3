@@ -170,7 +170,7 @@ let check_constraint_to_string t (c : constrainaction) =
   | Simplex -> "simplex"
   | UnitVector -> "unit_vector"
   | CholeskyCorr -> "cholesky_factor_corr"
-  | CholeskyCov -> "cholesky_factor"
+  | CholeskyCov -> "cholesky_factor_cov"
   | Correlation -> "corr_matrix"
   | Covariance -> "cov_matrix"
   | Lower _ -> (

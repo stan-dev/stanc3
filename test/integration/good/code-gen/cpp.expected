@@ -6865,7 +6865,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       current_statement__ = 19;
       assign(p_cfcov_54,
-        in__.template read_constrain_cholesky_factor<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
+        in__.template read_constrain_cholesky_factor_cov<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
           lp__, 5, 4), "assigning variable p_cfcov_54");
       Eigen::Matrix<local_scalar_t__, -1, -1> p_cfcov_33;
       p_cfcov_33 = Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3);
@@ -6873,7 +6873,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       current_statement__ = 20;
       assign(p_cfcov_33,
-        in__.template read_constrain_cholesky_factor<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
+        in__.template read_constrain_cholesky_factor_cov<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
           lp__, 3, 3), "assigning variable p_cfcov_33");
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> p_cfcov_33_ar;
       p_cfcov_33_ar = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(K, Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3));
@@ -6881,7 +6881,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       current_statement__ = 21;
       assign(p_cfcov_33_ar,
-        in__.template read_constrain_cholesky_factor<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+        in__.template read_constrain_cholesky_factor_cov<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
           lp__, K, 3, 3), "assigning variable p_cfcov_33_ar");
       Eigen::Matrix<local_scalar_t__, -1, 1> x_p;
       x_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
@@ -7413,7 +7413,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       current_statement__ = 19;
       assign(p_cfcov_54,
-        in__.template read_constrain_cholesky_factor<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
+        in__.template read_constrain_cholesky_factor_cov<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
           lp__, 5, 4), "assigning variable p_cfcov_54");
       Eigen::Matrix<double, -1, -1> p_cfcov_33;
       p_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
@@ -7421,7 +7421,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       current_statement__ = 20;
       assign(p_cfcov_33,
-        in__.template read_constrain_cholesky_factor<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
+        in__.template read_constrain_cholesky_factor_cov<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
           lp__, 3, 3), "assigning variable p_cfcov_33");
       std::vector<Eigen::Matrix<double, -1, -1>> p_cfcov_33_ar;
       p_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
@@ -7429,7 +7429,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       current_statement__ = 21;
       assign(p_cfcov_33_ar,
-        in__.template read_constrain_cholesky_factor<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+        in__.template read_constrain_cholesky_factor_cov<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
           lp__, K, 3, 3), "assigning variable p_cfcov_33_ar");
       Eigen::Matrix<double, -1, 1> x_p;
       x_p = Eigen::Matrix<double, -1, 1>(2);
