@@ -184,14 +184,14 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       t = std::vector<double>(N_t, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 18;
-      assign(t, context__.vals_r("t"), "assigning variable t");
+      t = context__.vals_r("t");
       current_statement__ = 19;
       context__.validate_dims("data initialization","y0","double",
           context__.to_vec(4));
       y0 = std::vector<double>(4, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 19;
-      assign(y0, context__.vals_r("y0"), "assigning variable y0");
+      y0 = context__.vals_r("y0");
       current_statement__ = 20;
       validate_non_negative_index("stoi_hat", "N_t", N_t);
       current_statement__ = 21;
@@ -200,8 +200,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       stoi_hat = std::vector<int>(N_t, std::numeric_limits<int>::min());
       
       current_statement__ = 21;
-      assign(stoi_hat, context__.vals_i("stoi_hat"),
-        "assigning variable stoi_hat");
+      stoi_hat = context__.vals_i("stoi_hat");
       current_statement__ = 22;
       validate_non_negative_index("B_hat", "N_t", N_t);
       current_statement__ = 23;
@@ -210,7 +209,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       B_hat = std::vector<double>(N_t, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 23;
-      assign(B_hat, context__.vals_r("B_hat"), "assigning variable B_hat");
+      B_hat = context__.vals_r("B_hat");
       current_statement__ = 24;
       t0 = std::numeric_limits<double>::quiet_NaN();
       
@@ -1351,7 +1350,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       {
         std::vector<int> y_flat__;
         current_statement__ = 35;
-        assign(y_flat__, context__.vals_i("y"), "assigning variable y_flat__");
+        y_flat__ = context__.vals_i("y");
         current_statement__ = 35;
         pos__ = 1;
         lcm_sym156__ = logical_gte(n_occasions, 1);
@@ -1475,7 +1474,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       {
         std::vector<int> x_flat__;
         current_statement__ = 38;
-        assign(x_flat__, context__.vals_i("x"), "assigning variable x_flat__");
+        x_flat__ = context__.vals_i("x");
         current_statement__ = 38;
         pos__ = 1;
         lcm_sym158__ = logical_gte(lcm_sym159__, 1);
@@ -1862,9 +1861,8 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       stan::math::fill(beta, DUMMY_VAR__);
       
       current_statement__ = 2;
-      assign(beta,
-        in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
-          0, 1, lp__, max_age), "assigning variable beta");
+      beta = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+               0, 1, lp__, max_age);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
       phi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(phi, DUMMY_VAR__);
@@ -2400,9 +2398,8 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
-      assign(beta,
-        in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
-          0, 1, lp__, max_age), "assigning variable beta");
+      beta = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+               0, 1, lp__, max_age);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
       phi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(phi, DUMMY_VAR__);
@@ -2893,8 +2890,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       {
         std::vector<double> beta_flat__;
         current_statement__ = 2;
-        assign(beta_flat__, context__.vals_r("beta"),
-          "assigning variable beta_flat__");
+        beta_flat__ = context__.vals_r("beta");
         current_statement__ = 2;
         pos__ = 1;
         lcm_sym46__ = logical_gte(max_age, 1);
@@ -3379,7 +3375,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       female = std::vector<int>(N, std::numeric_limits<int>::min());
       
       current_statement__ = 45;
-      assign(female, context__.vals_i("female"), "assigning variable female");
+      female = context__.vals_i("female");
       lcm_sym68__ = logical_gte(N, 1);
       if (lcm_sym68__) {
         current_statement__ = 45;
@@ -3412,7 +3408,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       black = std::vector<int>(N, std::numeric_limits<int>::min());
       
       current_statement__ = 47;
-      assign(black, context__.vals_i("black"), "assigning variable black");
+      black = context__.vals_i("black");
       current_statement__ = 47;
       if (lcm_sym68__) {
         current_statement__ = 47;
@@ -3445,7 +3441,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       age = std::vector<int>(N, std::numeric_limits<int>::min());
       
       current_statement__ = 49;
-      assign(age, context__.vals_i("age"), "assigning variable age");
+      age = context__.vals_i("age");
       current_statement__ = 49;
       if (lcm_sym68__) {
         current_statement__ = 49;
@@ -3478,7 +3474,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       edu = std::vector<int>(N, std::numeric_limits<int>::min());
       
       current_statement__ = 51;
-      assign(edu, context__.vals_i("edu"), "assigning variable edu");
+      edu = context__.vals_i("edu");
       current_statement__ = 51;
       if (lcm_sym68__) {
         current_statement__ = 51;
@@ -3511,7 +3507,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       region = std::vector<int>(n_state, std::numeric_limits<int>::min());
       
       current_statement__ = 53;
-      assign(region, context__.vals_i("region"), "assigning variable region");
+      region = context__.vals_i("region");
       lcm_sym69__ = logical_gte(n_state, 1);
       if (lcm_sym69__) {
         current_statement__ = 53;
@@ -3544,7 +3540,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       state = std::vector<int>(N, std::numeric_limits<int>::min());
       
       current_statement__ = 55;
-      assign(state, context__.vals_i("state"), "assigning variable state");
+      state = context__.vals_i("state");
       current_statement__ = 55;
       if (lcm_sym68__) {
         current_statement__ = 55;
@@ -3577,7 +3573,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       y = std::vector<int>(N, std::numeric_limits<int>::min());
       
       current_statement__ = 57;
-      assign(y, context__.vals_i("y"), "assigning variable y");
+      y = context__.vals_i("y");
       current_statement__ = 57;
       if (lcm_sym68__) {
         current_statement__ = 57;
@@ -3612,8 +3608,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       {
         std::vector<double> v_prev_flat__;
         current_statement__ = 59;
-        assign(v_prev_flat__, context__.vals_r("v_prev"),
-          "assigning variable v_prev_flat__");
+        v_prev_flat__ = context__.vals_r("v_prev");
         current_statement__ = 59;
         pos__ = 1;
         current_statement__ = 59;
@@ -3781,41 +3776,36 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       stan::math::fill(b_age, DUMMY_VAR__);
       
       current_statement__ = 12;
-      assign(b_age,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_age),
-        "assigning variable b_age");
+      b_age = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                n_age);
       Eigen::Matrix<local_scalar_t__, -1, 1> b_edu;
       b_edu = Eigen::Matrix<local_scalar_t__, -1, 1>(n_edu);
       stan::math::fill(b_edu, DUMMY_VAR__);
       
       current_statement__ = 13;
-      assign(b_edu,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_edu),
-        "assigning variable b_edu");
+      b_edu = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                n_edu);
       Eigen::Matrix<local_scalar_t__, -1, 1> b_region;
       b_region = Eigen::Matrix<local_scalar_t__, -1, 1>(n_region);
       stan::math::fill(b_region, DUMMY_VAR__);
       
       current_statement__ = 14;
-      assign(b_region,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_region),
-        "assigning variable b_region");
+      b_region = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                   n_region);
       Eigen::Matrix<local_scalar_t__, -1, -1> b_age_edu;
       b_age_edu = Eigen::Matrix<local_scalar_t__, -1, -1>(n_age, n_edu);
       stan::math::fill(b_age_edu, DUMMY_VAR__);
       
       current_statement__ = 15;
-      assign(b_age_edu,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n_age,
-          n_edu), "assigning variable b_age_edu");
+      b_age_edu = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+                    n_age, n_edu);
       Eigen::Matrix<local_scalar_t__, -1, 1> b_hat;
       b_hat = Eigen::Matrix<local_scalar_t__, -1, 1>(n_state);
       stan::math::fill(b_hat, DUMMY_VAR__);
       
       current_statement__ = 16;
-      assign(b_hat,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_state),
-        "assigning variable b_hat");
+      b_hat = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                n_state);
       {
         current_statement__ = 17;
         validate_non_negative_index("p", "N", N);
@@ -4066,41 +4056,36 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       stan::math::fill(b_age, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 12;
-      assign(b_age,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_age),
-        "assigning variable b_age");
+      b_age = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                n_age);
       Eigen::Matrix<double, -1, 1> b_edu;
       b_edu = Eigen::Matrix<double, -1, 1>(n_edu);
       stan::math::fill(b_edu, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 13;
-      assign(b_edu,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_edu),
-        "assigning variable b_edu");
+      b_edu = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                n_edu);
       Eigen::Matrix<double, -1, 1> b_region;
       b_region = Eigen::Matrix<double, -1, 1>(n_region);
       stan::math::fill(b_region, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 14;
-      assign(b_region,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_region),
-        "assigning variable b_region");
+      b_region = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                   n_region);
       Eigen::Matrix<double, -1, -1> b_age_edu;
       b_age_edu = Eigen::Matrix<double, -1, -1>(n_age, n_edu);
       stan::math::fill(b_age_edu, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 15;
-      assign(b_age_edu,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n_age,
-          n_edu), "assigning variable b_age_edu");
+      b_age_edu = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+                    n_age, n_edu);
       Eigen::Matrix<double, -1, 1> b_hat;
       b_hat = Eigen::Matrix<double, -1, 1>(n_state);
       stan::math::fill(b_hat, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 16;
-      assign(b_hat,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_state),
-        "assigning variable b_hat");
+      b_hat = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                n_state);
       vars__.emplace_back(sigma);
       vars__.emplace_back(sigma_age);
       vars__.emplace_back(sigma_edu);
@@ -4302,8 +4287,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       {
         std::vector<double> b_age_flat__;
         current_statement__ = 12;
-        assign(b_age_flat__, context__.vals_r("b_age"),
-          "assigning variable b_age_flat__");
+        b_age_flat__ = context__.vals_r("b_age");
         current_statement__ = 12;
         pos__ = 1;
         lcm_sym1__ = logical_gte(n_age, 1);
@@ -4328,8 +4312,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       {
         std::vector<double> b_edu_flat__;
         current_statement__ = 13;
-        assign(b_edu_flat__, context__.vals_r("b_edu"),
-          "assigning variable b_edu_flat__");
+        b_edu_flat__ = context__.vals_r("b_edu");
         current_statement__ = 13;
         pos__ = 1;
         lcm_sym2__ = logical_gte(n_edu, 1);
@@ -4354,8 +4337,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       {
         std::vector<double> b_region_flat__;
         current_statement__ = 14;
-        assign(b_region_flat__, context__.vals_r("b_region"),
-          "assigning variable b_region_flat__");
+        b_region_flat__ = context__.vals_r("b_region");
         current_statement__ = 14;
         pos__ = 1;
         lcm_sym3__ = logical_gte(n_region, 1);
@@ -4381,8 +4363,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       {
         std::vector<double> b_age_edu_flat__;
         current_statement__ = 15;
-        assign(b_age_edu_flat__, context__.vals_r("b_age_edu"),
-          "assigning variable b_age_edu_flat__");
+        b_age_edu_flat__ = context__.vals_r("b_age_edu");
         current_statement__ = 15;
         pos__ = 1;
         current_statement__ = 15;
@@ -4429,8 +4410,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       {
         std::vector<double> b_hat_flat__;
         current_statement__ = 16;
-        assign(b_hat_flat__, context__.vals_r("b_hat"),
-          "assigning variable b_hat_flat__");
+        b_hat_flat__ = context__.vals_r("b_hat");
         current_statement__ = 16;
         pos__ = 1;
         lcm_sym4__ = logical_gte(n_state, 1);
@@ -5552,7 +5532,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       {
         std::vector<double> y_flat__;
         current_statement__ = 11;
-        assign(y_flat__, context__.vals_r("y"), "assigning variable y_flat__");
+        y_flat__ = context__.vals_r("y");
         current_statement__ = 11;
         pos__ = 1;
         current_statement__ = 11;
@@ -5617,16 +5597,14 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       stan::math::fill(mu, DUMMY_VAR__);
       
       current_statement__ = 1;
-      assign(mu,
-        in__.template read_constrain_ordered<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
-          lp__, 2), "assigning variable mu");
+      mu = in__.template read_constrain_ordered<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+             lp__, 2);
       std::vector<local_scalar_t__> sigma;
       sigma = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
       
       current_statement__ = 2;
-      assign(sigma,
-        in__.template read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(
-          0, lp__, 2), "assigning variable sigma");
+      sigma = in__.template read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(
+                0, lp__, 2);
       local_scalar_t__ theta;
       theta = DUMMY_VAR__;
       
@@ -5706,16 +5684,14 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       stan::math::fill(mu, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 1;
-      assign(mu,
-        in__.template read_constrain_ordered<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
-          lp__, 2), "assigning variable mu");
+      mu = in__.template read_constrain_ordered<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+             lp__, 2);
       std::vector<double> sigma;
       sigma = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
-      assign(sigma,
-        in__.template read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(
-          0, lp__, 2), "assigning variable sigma");
+      sigma = in__.template read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(
+                0, lp__, 2);
       double theta;
       theta = std::numeric_limits<double>::quiet_NaN();
       
@@ -5781,8 +5757,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       {
         std::vector<double> mu_flat__;
         current_statement__ = 1;
-        assign(mu_flat__, context__.vals_r("mu"),
-          "assigning variable mu_flat__");
+        mu_flat__ = context__.vals_r("mu");
         current_statement__ = 1;
         pos__ = 1;
         {
@@ -5811,7 +5786,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       sigma = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
-      assign(sigma, context__.vals_r("sigma"), "assigning variable sigma");
+      sigma = context__.vals_r("sigma");
       std::vector<double> sigma_free__;
       sigma_free__ = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
@@ -6118,7 +6093,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       y = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 8;
-      assign(y, context__.vals_r("y"), "assigning variable y");
+      y = context__.vals_r("y");
       current_statement__ = 9;
       validate_non_negative_index("sigma", "J", J);
       current_statement__ = 10;
@@ -6127,7 +6102,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       sigma = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 10;
-      assign(sigma, context__.vals_r("sigma"), "assigning variable sigma");
+      sigma = context__.vals_r("sigma");
       current_statement__ = 10;
       if (logical_gte(J, 1)) {
         current_statement__ = 10;
@@ -6189,8 +6164,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       theta = std::vector<local_scalar_t__>(J, DUMMY_VAR__);
       
       current_statement__ = 2;
-      assign(theta, in__.template read<std::vector<local_scalar_t__>>(J),
-        "assigning variable theta");
+      theta = in__.template read<std::vector<local_scalar_t__>>(J);
       local_scalar_t__ tau;
       tau = DUMMY_VAR__;
       
@@ -6249,8 +6223,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       theta = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
-      assign(theta, in__.template read<std::vector<local_scalar_t__>>(J),
-        "assigning variable theta");
+      theta = in__.template read<std::vector<local_scalar_t__>>(J);
       double tau;
       tau = std::numeric_limits<double>::quiet_NaN();
       
@@ -6306,7 +6279,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       theta = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
-      assign(theta, context__.vals_r("theta"), "assigning variable theta");
+      theta = context__.vals_r("theta");
       double tau;
       tau = std::numeric_limits<double>::quiet_NaN();
       
@@ -6728,7 +6701,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       age = std::vector<int>(N, std::numeric_limits<int>::min());
       
       current_statement__ = 29;
-      assign(age, context__.vals_i("age"), "assigning variable age");
+      age = context__.vals_i("age");
       lcm_sym65__ = logical_gte(N, 1);
       if (lcm_sym65__) {
         current_statement__ = 29;
@@ -6761,8 +6734,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       age_edu = std::vector<int>(N, std::numeric_limits<int>::min());
       
       current_statement__ = 31;
-      assign(age_edu, context__.vals_i("age_edu"),
-        "assigning variable age_edu");
+      age_edu = context__.vals_i("age_edu");
       current_statement__ = 31;
       if (lcm_sym65__) {
         current_statement__ = 31;
@@ -6799,8 +6771,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       {
         std::vector<double> black_flat__;
         current_statement__ = 33;
-        assign(black_flat__, context__.vals_r("black"),
-          "assigning variable black_flat__");
+        black_flat__ = context__.vals_r("black");
         current_statement__ = 33;
         pos__ = 1;
         current_statement__ = 33;
@@ -6850,7 +6821,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       edu = std::vector<int>(N, std::numeric_limits<int>::min());
       
       current_statement__ = 35;
-      assign(edu, context__.vals_i("edu"), "assigning variable edu");
+      edu = context__.vals_i("edu");
       current_statement__ = 35;
       if (lcm_sym65__) {
         current_statement__ = 35;
@@ -6886,8 +6857,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       {
         std::vector<double> female_flat__;
         current_statement__ = 37;
-        assign(female_flat__, context__.vals_r("female"),
-          "assigning variable female_flat__");
+        female_flat__ = context__.vals_r("female");
         current_statement__ = 37;
         pos__ = 1;
         current_statement__ = 37;
@@ -6938,8 +6908,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       region_full = std::vector<int>(N, std::numeric_limits<int>::min());
       
       current_statement__ = 39;
-      assign(region_full, context__.vals_i("region_full"),
-        "assigning variable region_full");
+      region_full = context__.vals_i("region_full");
       current_statement__ = 39;
       if (lcm_sym65__) {
         current_statement__ = 39;
@@ -6974,7 +6943,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       state = std::vector<int>(N, std::numeric_limits<int>::min());
       
       current_statement__ = 41;
-      assign(state, context__.vals_i("state"), "assigning variable state");
+      state = context__.vals_i("state");
       current_statement__ = 41;
       if (lcm_sym65__) {
         current_statement__ = 41;
@@ -7010,8 +6979,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       {
         std::vector<double> v_prev_full_flat__;
         current_statement__ = 43;
-        assign(v_prev_full_flat__, context__.vals_r("v_prev_full"),
-          "assigning variable v_prev_full_flat__");
+        v_prev_full_flat__ = context__.vals_r("v_prev_full");
         current_statement__ = 43;
         pos__ = 1;
         current_statement__ = 43;
@@ -7038,7 +7006,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       y = std::vector<int>(N, std::numeric_limits<int>::min());
       
       current_statement__ = 45;
-      assign(y, context__.vals_i("y"), "assigning variable y");
+      y = context__.vals_i("y");
       current_statement__ = 45;
       if (lcm_sym65__) {
         current_statement__ = 45;
@@ -7133,49 +7101,39 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       stan::math::fill(a, DUMMY_VAR__);
       
       current_statement__ = 1;
-      assign(a,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_age),
-        "assigning variable a");
+      a = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_age);
       Eigen::Matrix<local_scalar_t__, -1, 1> b;
       b = Eigen::Matrix<local_scalar_t__, -1, 1>(n_edu);
       stan::math::fill(b, DUMMY_VAR__);
       
       current_statement__ = 2;
-      assign(b,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_edu),
-        "assigning variable b");
+      b = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_edu);
       Eigen::Matrix<local_scalar_t__, -1, 1> c;
       c = Eigen::Matrix<local_scalar_t__, -1, 1>(n_age_edu);
       stan::math::fill(c, DUMMY_VAR__);
       
       current_statement__ = 3;
-      assign(c,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_age_edu),
-        "assigning variable c");
+      c = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+            n_age_edu);
       Eigen::Matrix<local_scalar_t__, -1, 1> d;
       d = Eigen::Matrix<local_scalar_t__, -1, 1>(n_state);
       stan::math::fill(d, DUMMY_VAR__);
       
       current_statement__ = 4;
-      assign(d,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_state),
-        "assigning variable d");
+      d = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_state);
       Eigen::Matrix<local_scalar_t__, -1, 1> e;
       e = Eigen::Matrix<local_scalar_t__, -1, 1>(n_region_full);
       stan::math::fill(e, DUMMY_VAR__);
       
       current_statement__ = 5;
-      assign(e,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
-          n_region_full), "assigning variable e");
+      e = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+            n_region_full);
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
       beta = Eigen::Matrix<local_scalar_t__, -1, 1>(5);
       stan::math::fill(beta, DUMMY_VAR__);
       
       current_statement__ = 6;
-      assign(beta,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(5),
-        "assigning variable beta");
+      beta = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(5);
       local_scalar_t__ sigma_a;
       sigma_a = DUMMY_VAR__;
       
@@ -7338,49 +7296,39 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       stan::math::fill(a, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 1;
-      assign(a,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_age),
-        "assigning variable a");
+      a = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_age);
       Eigen::Matrix<double, -1, 1> b;
       b = Eigen::Matrix<double, -1, 1>(n_edu);
       stan::math::fill(b, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
-      assign(b,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_edu),
-        "assigning variable b");
+      b = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_edu);
       Eigen::Matrix<double, -1, 1> c;
       c = Eigen::Matrix<double, -1, 1>(n_age_edu);
       stan::math::fill(c, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
-      assign(c,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_age_edu),
-        "assigning variable c");
+      c = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+            n_age_edu);
       Eigen::Matrix<double, -1, 1> d;
       d = Eigen::Matrix<double, -1, 1>(n_state);
       stan::math::fill(d, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 4;
-      assign(d,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_state),
-        "assigning variable d");
+      d = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_state);
       Eigen::Matrix<double, -1, 1> e;
       e = Eigen::Matrix<double, -1, 1>(n_region_full);
       stan::math::fill(e, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
-      assign(e,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
-          n_region_full), "assigning variable e");
+      e = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+            n_region_full);
       Eigen::Matrix<double, -1, 1> beta;
       beta = Eigen::Matrix<double, -1, 1>(5);
       stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 6;
-      assign(beta,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(5),
-        "assigning variable beta");
+      beta = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(5);
       double sigma_a;
       sigma_a = std::numeric_limits<double>::quiet_NaN();
       
@@ -7585,7 +7533,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       {
         std::vector<double> a_flat__;
         current_statement__ = 1;
-        assign(a_flat__, context__.vals_r("a"), "assigning variable a_flat__");
+        a_flat__ = context__.vals_r("a");
         current_statement__ = 1;
         pos__ = 1;
         lcm_sym1__ = logical_gte(n_age, 1);
@@ -7610,7 +7558,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       {
         std::vector<double> b_flat__;
         current_statement__ = 2;
-        assign(b_flat__, context__.vals_r("b"), "assigning variable b_flat__");
+        b_flat__ = context__.vals_r("b");
         current_statement__ = 2;
         pos__ = 1;
         lcm_sym3__ = logical_gte(n_edu, 1);
@@ -7635,7 +7583,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       {
         std::vector<double> c_flat__;
         current_statement__ = 3;
-        assign(c_flat__, context__.vals_r("c"), "assigning variable c_flat__");
+        c_flat__ = context__.vals_r("c");
         current_statement__ = 3;
         pos__ = 1;
         lcm_sym2__ = logical_gte(n_age_edu, 1);
@@ -7660,7 +7608,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       {
         std::vector<double> d_flat__;
         current_statement__ = 4;
-        assign(d_flat__, context__.vals_r("d"), "assigning variable d_flat__");
+        d_flat__ = context__.vals_r("d");
         current_statement__ = 4;
         pos__ = 1;
         lcm_sym5__ = logical_gte(n_state, 1);
@@ -7685,7 +7633,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       {
         std::vector<double> e_flat__;
         current_statement__ = 5;
-        assign(e_flat__, context__.vals_r("e"), "assigning variable e_flat__");
+        e_flat__ = context__.vals_r("e");
         current_statement__ = 5;
         pos__ = 1;
         lcm_sym4__ = logical_gte(n_region_full, 1);
@@ -7710,8 +7658,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       {
         std::vector<double> beta_flat__;
         current_statement__ = 6;
-        assign(beta_flat__, context__.vals_r("beta"),
-          "assigning variable beta_flat__");
+        beta_flat__ = context__.vals_r("beta");
         current_statement__ = 6;
         pos__ = 1;
         {
@@ -8252,7 +8199,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       node1 = std::vector<int>(N_edges, std::numeric_limits<int>::min());
       
       current_statement__ = 31;
-      assign(node1, context__.vals_i("node1"), "assigning variable node1");
+      node1 = context__.vals_i("node1");
       lcm_sym41__ = logical_gte(N_edges, 1);
       if (lcm_sym41__) {
         current_statement__ = 31;
@@ -8285,7 +8232,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       node2 = std::vector<int>(N_edges, std::numeric_limits<int>::min());
       
       current_statement__ = 33;
-      assign(node2, context__.vals_i("node2"), "assigning variable node2");
+      node2 = context__.vals_i("node2");
       current_statement__ = 33;
       if (lcm_sym41__) {
         current_statement__ = 33;
@@ -8321,7 +8268,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       {
         std::vector<double> E_flat__;
         current_statement__ = 35;
-        assign(E_flat__, context__.vals_r("E"), "assigning variable E_flat__");
+        E_flat__ = context__.vals_r("E");
         current_statement__ = 35;
         pos__ = 1;
         lcm_sym40__ = logical_gte(N, 1);
@@ -8428,9 +8375,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       stan::math::fill(phi_std_raw, DUMMY_VAR__);
       
       lcm_sym39__ = (N - 1);
-      assign(phi_std_raw,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
-          lcm_sym39__), "assigning variable phi_std_raw");
+      phi_std_raw = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                      lcm_sym39__);
       local_scalar_t__ sigma_phi;
       sigma_phi = DUMMY_VAR__;
       
@@ -8528,9 +8474,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       stan::math::fill(phi_std_raw, std::numeric_limits<double>::quiet_NaN());
       
       lcm_sym20__ = (N - 1);
-      assign(phi_std_raw,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
-          lcm_sym20__), "assigning variable phi_std_raw");
+      phi_std_raw = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                      lcm_sym20__);
       double sigma_phi;
       sigma_phi = std::numeric_limits<double>::quiet_NaN();
       
@@ -8730,8 +8675,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       {
         std::vector<double> phi_std_raw_flat__;
         current_statement__ = 2;
-        assign(phi_std_raw_flat__, context__.vals_r("phi_std_raw"),
-          "assigning variable phi_std_raw_flat__");
+        phi_std_raw_flat__ = context__.vals_r("phi_std_raw");
         current_statement__ = 2;
         pos__ = 1;
         lcm_sym2__ = (N - 1);
@@ -9461,7 +9405,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       {
         std::vector<int> y_flat__;
         current_statement__ = 41;
-        assign(y_flat__, context__.vals_i("y"), "assigning variable y_flat__");
+        y_flat__ = context__.vals_i("y");
         current_statement__ = 41;
         pos__ = 1;
         lcm_sym153__ = logical_gte(n_occasions, 1);
@@ -9858,9 +9802,8 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       stan::math::fill(epsilon, DUMMY_VAR__);
       
       current_statement__ = 3;
-      assign(epsilon,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(nind),
-        "assigning variable epsilon");
+      epsilon = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                  nind);
       local_scalar_t__ sigma;
       sigma = DUMMY_VAR__;
       
@@ -10409,9 +10352,8 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       stan::math::fill(epsilon, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
-      assign(epsilon,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(nind),
-        "assigning variable epsilon");
+      epsilon = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                  nind);
       double sigma;
       sigma = std::numeric_limits<double>::quiet_NaN();
       
@@ -10929,8 +10871,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       {
         std::vector<double> epsilon_flat__;
         current_statement__ = 3;
-        assign(epsilon_flat__, context__.vals_r("epsilon"),
-          "assigning variable epsilon_flat__");
+        epsilon_flat__ = context__.vals_r("epsilon");
         current_statement__ = 3;
         pos__ = 1;
         lcm_sym46__ = logical_gte(nind, 1);
@@ -12215,7 +12156,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       {
         std::vector<int> y_flat__;
         current_statement__ = 110;
-        assign(y_flat__, context__.vals_i("y"), "assigning variable y_flat__");
+        y_flat__ = context__.vals_i("y");
         current_statement__ = 110;
         pos__ = 1;
         lcm_sym310__ = logical_gte(n_occasions, 1);
@@ -12670,17 +12611,14 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       stan::math::fill(beta, DUMMY_VAR__);
       
       current_statement__ = 4;
-      assign(beta,
-        in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
-          0, lp__, n_occasions), "assigning variable beta");
+      beta = in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+               0, lp__, n_occasions);
       Eigen::Matrix<local_scalar_t__, -1, 1> epsilon;
       epsilon = Eigen::Matrix<local_scalar_t__, -1, 1>(M);
       stan::math::fill(epsilon, DUMMY_VAR__);
       
       current_statement__ = 5;
-      assign(epsilon,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(M),
-        "assigning variable epsilon");
+      epsilon = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(M);
       local_scalar_t__ sigma;
       sigma = DUMMY_VAR__;
       
@@ -13651,17 +13589,14 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 4;
-      assign(beta,
-        in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
-          0, lp__, n_occasions), "assigning variable beta");
+      beta = in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+               0, lp__, n_occasions);
       Eigen::Matrix<double, -1, 1> epsilon;
       epsilon = Eigen::Matrix<double, -1, 1>(M);
       stan::math::fill(epsilon, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
-      assign(epsilon,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(M),
-        "assigning variable epsilon");
+      epsilon = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(M);
       double sigma;
       sigma = std::numeric_limits<double>::quiet_NaN();
       
@@ -14564,8 +14499,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       {
         std::vector<double> beta_flat__;
         current_statement__ = 4;
-        assign(beta_flat__, context__.vals_r("beta"),
-          "assigning variable beta_flat__");
+        beta_flat__ = context__.vals_r("beta");
         current_statement__ = 4;
         pos__ = 1;
         lcm_sym117__ = logical_gte(n_occasions, 1);
@@ -14605,8 +14539,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       {
         std::vector<double> epsilon_flat__;
         current_statement__ = 5;
-        assign(epsilon_flat__, context__.vals_r("epsilon"),
-          "assigning variable epsilon_flat__");
+        epsilon_flat__ = context__.vals_r("epsilon");
         current_statement__ = 5;
         pos__ = 1;
         lcm_sym116__ = logical_gte(M, 1);
@@ -15139,7 +15072,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       {
         std::vector<int> y_flat__;
         current_statement__ = 25;
-        assign(y_flat__, context__.vals_i("y"), "assigning variable y_flat__");
+        y_flat__ = context__.vals_i("y");
         current_statement__ = 25;
         pos__ = 1;
         lcm_sym64__ = logical_gte(J, 1);
@@ -15252,8 +15185,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       {
         std::vector<double> alpha_flat__;
         current_statement__ = 27;
-        assign(alpha_flat__, context__.vals_r("alpha"),
-          "assigning variable alpha_flat__");
+        alpha_flat__ = context__.vals_r("alpha");
         current_statement__ = 27;
         pos__ = 1;
         lcm_sym65__ = logical_gte(K, 1);
@@ -15296,8 +15228,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       {
         std::vector<double> beta_flat__;
         current_statement__ = 30;
-        assign(beta_flat__, context__.vals_r("beta"),
-          "assigning variable beta_flat__");
+        beta_flat__ = context__.vals_r("beta");
         current_statement__ = 30;
         pos__ = 1;
         current_statement__ = 30;
@@ -15431,17 +15362,15 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       stan::math::fill(pi, DUMMY_VAR__);
       
       current_statement__ = 1;
-      assign(pi,
-        in__.template read_constrain_simplex<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
-          lp__, K), "assigning variable pi");
+      pi = in__.template read_constrain_simplex<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+             lp__, K);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> theta;
       theta = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(J, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(K)));
       stan::math::fill(theta, DUMMY_VAR__);
       
       current_statement__ = 2;
-      assign(theta,
-        in__.template read_constrain_simplex<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>, jacobian__>(
-          lp__, J, K, K), "assigning variable theta");
+      theta = in__.template read_constrain_simplex<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>, jacobian__>(
+                lp__, J, K, K);
       {
         current_statement__ = 10;
         lp_accum__.add(dirichlet_lpdf<propto__>(pi, alpha));
@@ -15612,17 +15541,15 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       stan::math::fill(pi, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 1;
-      assign(pi,
-        in__.template read_constrain_simplex<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
-          lp__, K), "assigning variable pi");
+      pi = in__.template read_constrain_simplex<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+             lp__, K);
       std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> theta;
       theta = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(J, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(K)));
       stan::math::fill(theta, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
-      assign(theta,
-        in__.template read_constrain_simplex<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>, jacobian__>(
-          lp__, J, K, K), "assigning variable theta");
+      theta = in__.template read_constrain_simplex<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>, jacobian__>(
+                lp__, J, K, K);
       lcm_sym26__ = logical_gte(K, 1);
       if (lcm_sym26__) {
         vars__.emplace_back(rvalue(pi, "pi", index_uni(1)));
@@ -15828,8 +15755,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       {
         std::vector<double> pi_flat__;
         current_statement__ = 1;
-        assign(pi_flat__, context__.vals_r("pi"),
-          "assigning variable pi_flat__");
+        pi_flat__ = context__.vals_r("pi");
         current_statement__ = 1;
         pos__ = 1;
         lcm_sym2__ = logical_gte(K, 1);
@@ -15861,8 +15787,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       {
         std::vector<double> theta_flat__;
         current_statement__ = 2;
-        assign(theta_flat__, context__.vals_r("theta"),
-          "assigning variable theta_flat__");
+        theta_flat__ = context__.vals_r("theta");
         current_statement__ = 2;
         pos__ = 1;
         current_statement__ = 2;
@@ -16380,7 +16305,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       node1 = std::vector<int>(N_edges, std::numeric_limits<int>::min());
       
       current_statement__ = 15;
-      assign(node1, context__.vals_i("node1"), "assigning variable node1");
+      node1 = context__.vals_i("node1");
       lcm_sym26__ = logical_gte(N_edges, 1);
       if (lcm_sym26__) {
         current_statement__ = 15;
@@ -16413,7 +16338,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       node2 = std::vector<int>(N_edges, std::numeric_limits<int>::min());
       
       current_statement__ = 17;
-      assign(node2, context__.vals_i("node2"), "assigning variable node2");
+      node2 = context__.vals_i("node2");
       current_statement__ = 17;
       if (lcm_sym26__) {
         current_statement__ = 17;
@@ -16446,7 +16371,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       y = std::vector<int>(N, std::numeric_limits<int>::min());
       
       current_statement__ = 19;
-      assign(y, context__.vals_i("y"), "assigning variable y");
+      y = context__.vals_i("y");
       lcm_sym25__ = logical_gte(N, 1);
       if (lcm_sym25__) {
         current_statement__ = 19;
@@ -16470,7 +16395,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       {
         std::vector<double> x_flat__;
         current_statement__ = 21;
-        assign(x_flat__, context__.vals_r("x"), "assigning variable x_flat__");
+        x_flat__ = context__.vals_r("x");
         current_statement__ = 21;
         pos__ = 1;
         current_statement__ = 21;
@@ -16563,17 +16488,15 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       stan::math::fill(theta_std, DUMMY_VAR__);
       
       current_statement__ = 5;
-      assign(theta_std,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N),
-        "assigning variable theta_std");
+      theta_std = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                    N);
       Eigen::Matrix<local_scalar_t__, -1, 1> phi_std_raw;
       phi_std_raw = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(phi_std_raw, DUMMY_VAR__);
       
       current_statement__ = 6;
-      assign(phi_std_raw,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N),
-        "assigning variable phi_std_raw");
+      phi_std_raw = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                      N);
       local_scalar_t__ sigma_phi;
       sigma_phi = DUMMY_VAR__;
       
@@ -16665,17 +16588,15 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       stan::math::fill(theta_std, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
-      assign(theta_std,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N),
-        "assigning variable theta_std");
+      theta_std = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                    N);
       Eigen::Matrix<double, -1, 1> phi_std_raw;
       phi_std_raw = Eigen::Matrix<double, -1, 1>(N);
       stan::math::fill(phi_std_raw, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 6;
-      assign(phi_std_raw,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N),
-        "assigning variable phi_std_raw");
+      phi_std_raw = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                      N);
       double sigma_phi;
       sigma_phi = std::numeric_limits<double>::quiet_NaN();
       
@@ -16794,8 +16715,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       {
         std::vector<double> theta_std_flat__;
         current_statement__ = 5;
-        assign(theta_std_flat__, context__.vals_r("theta_std"),
-          "assigning variable theta_std_flat__");
+        theta_std_flat__ = context__.vals_r("theta_std");
         current_statement__ = 5;
         pos__ = 1;
         lcm_sym1__ = logical_gte(N, 1);
@@ -16821,8 +16741,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       {
         std::vector<double> phi_std_raw_flat__;
         current_statement__ = 6;
-        assign(phi_std_raw_flat__, context__.vals_r("phi_std_raw"),
-          "assigning variable phi_std_raw_flat__");
+        phi_std_raw_flat__ = context__.vals_r("phi_std_raw");
         current_statement__ = 6;
         pos__ = 1;
         current_statement__ = 6;
@@ -17534,7 +17453,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       {
         std::vector<int> y_flat__;
         current_statement__ = 35;
-        assign(y_flat__, context__.vals_i("y"), "assigning variable y_flat__");
+        y_flat__ = context__.vals_i("y");
         current_statement__ = 35;
         pos__ = 1;
         lcm_sym156__ = logical_gte(n_occasions, 1);
@@ -17658,7 +17577,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       {
         std::vector<int> x_flat__;
         current_statement__ = 38;
-        assign(x_flat__, context__.vals_i("x"), "assigning variable x_flat__");
+        x_flat__ = context__.vals_i("x");
         current_statement__ = 38;
         pos__ = 1;
         lcm_sym158__ = logical_gte(lcm_sym159__, 1);
@@ -18045,9 +17964,8 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       stan::math::fill(beta, DUMMY_VAR__);
       
       current_statement__ = 2;
-      assign(beta,
-        in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
-          0, 1, lp__, max_age), "assigning variable beta");
+      beta = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+               0, 1, lp__, max_age);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
       phi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(phi, DUMMY_VAR__);
@@ -18583,9 +18501,8 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
-      assign(beta,
-        in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
-          0, 1, lp__, max_age), "assigning variable beta");
+      beta = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+               0, 1, lp__, max_age);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
       phi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(phi, DUMMY_VAR__);
@@ -19076,8 +18993,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       {
         std::vector<double> beta_flat__;
         current_statement__ = 2;
-        assign(beta_flat__, context__.vals_r("beta"),
-          "assigning variable beta_flat__");
+        beta_flat__ = context__.vals_r("beta");
         current_statement__ = 2;
         pos__ = 1;
         lcm_sym46__ = logical_gte(max_age, 1);
@@ -20412,7 +20328,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       {
         std::vector<int> y_flat__;
         current_statement__ = 107;
-        assign(y_flat__, context__.vals_i("y"), "assigning variable y_flat__");
+        y_flat__ = context__.vals_i("y");
         current_statement__ = 107;
         pos__ = 1;
         lcm_sym317__ = logical_gte(n_occasions, 1);
@@ -20853,17 +20769,15 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       stan::math::fill(gamma, DUMMY_VAR__);
       
       current_statement__ = 3;
-      assign(gamma,
-        in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
-          0, 1, lp__, n_occasions), "assigning variable gamma");
+      gamma = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+                0, 1, lp__, n_occasions);
       Eigen::Matrix<local_scalar_t__, -1, 1> epsilon;
       epsilon = Eigen::Matrix<local_scalar_t__, -1, 1>((n_occasions - 1));
       stan::math::fill(epsilon, DUMMY_VAR__);
       
       lcm_sym297__ = (n_occasions - 1);
-      assign(epsilon,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
-          lcm_sym297__), "assigning variable epsilon");
+      epsilon = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                  lcm_sym297__);
       local_scalar_t__ sigma;
       sigma = DUMMY_VAR__;
       
@@ -21783,17 +21697,15 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       stan::math::fill(gamma, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
-      assign(gamma,
-        in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
-          0, 1, lp__, n_occasions), "assigning variable gamma");
+      gamma = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+                0, 1, lp__, n_occasions);
       Eigen::Matrix<double, -1, 1> epsilon;
       epsilon = Eigen::Matrix<double, -1, 1>((n_occasions - 1));
       stan::math::fill(epsilon, std::numeric_limits<double>::quiet_NaN());
       
       lcm_sym198__ = (n_occasions - 1);
-      assign(epsilon,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
-          lcm_sym198__), "assigning variable epsilon");
+      epsilon = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                  lcm_sym198__);
       double sigma;
       sigma = std::numeric_limits<double>::quiet_NaN();
       
@@ -22596,8 +22508,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       {
         std::vector<double> gamma_flat__;
         current_statement__ = 3;
-        assign(gamma_flat__, context__.vals_r("gamma"),
-          "assigning variable gamma_flat__");
+        gamma_flat__ = context__.vals_r("gamma");
         current_statement__ = 3;
         pos__ = 1;
         lcm_sym129__ = logical_gte(n_occasions, 1);
@@ -22638,8 +22549,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       {
         std::vector<double> epsilon_flat__;
         current_statement__ = 4;
-        assign(epsilon_flat__, context__.vals_r("epsilon"),
-          "assigning variable epsilon_flat__");
+        epsilon_flat__ = context__.vals_r("epsilon");
         current_statement__ = 4;
         pos__ = 1;
         lcm_sym131__ = (n_occasions - 1);
@@ -23755,7 +23665,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       y = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
-      assign(y, context__.vals_r("y"), "assigning variable y");
+      y = context__.vals_r("y");
       current_statement__ = 6;
       validate_non_negative_index("theta", "J", J);
     } catch (const std::exception& e) {
@@ -23797,8 +23707,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       theta = std::vector<local_scalar_t__>(J, DUMMY_VAR__);
       
       current_statement__ = 1;
-      assign(theta, in__.template read<std::vector<local_scalar_t__>>(J),
-        "assigning variable theta");
+      theta = in__.template read<std::vector<local_scalar_t__>>(J);
       {
         current_statement__ = 2;
         lp_accum__.add(normal_lpdf<propto__>(y, theta, 1));
@@ -23844,8 +23753,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       theta = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 1;
-      assign(theta, in__.template read<std::vector<local_scalar_t__>>(J),
-        "assigning variable theta");
+      theta = in__.template read<std::vector<local_scalar_t__>>(J);
       if (logical_gte(J, 1)) {
         vars__.emplace_back(rvalue(theta, "theta", index_uni(1)));
         for (int sym1__ = 2; sym1__ <= J; ++sym1__) {
@@ -23888,7 +23796,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       theta = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 1;
-      assign(theta, context__.vals_r("theta"), "assigning variable theta");
+      theta = context__.vals_r("theta");
       if (logical_gte(J, 1)) {
         vars__.emplace_back(rvalue(theta, "theta", index_uni(1)));
         for (int sym1__ = 2; sym1__ <= J; ++sym1__) {
@@ -24507,7 +24415,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       {
         std::vector<int> y_flat__;
         current_statement__ = 35;
-        assign(y_flat__, context__.vals_i("y"), "assigning variable y_flat__");
+        y_flat__ = context__.vals_i("y");
         current_statement__ = 35;
         pos__ = 1;
         lcm_sym137__ = logical_gte(n_occasions, 1);
@@ -26813,7 +26721,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       {
         std::vector<int> y_flat__;
         current_statement__ = 35;
-        assign(y_flat__, context__.vals_i("y"), "assigning variable y_flat__");
+        y_flat__ = context__.vals_i("y");
         current_statement__ = 35;
         pos__ = 1;
         lcm_sym42__ = logical_gte(T, 1);
@@ -26926,7 +26834,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       {
         std::vector<double> X_flat__;
         current_statement__ = 37;
-        assign(X_flat__, context__.vals_r("X"), "assigning variable X_flat__");
+        X_flat__ = context__.vals_r("X");
         current_statement__ = 37;
         pos__ = 1;
         current_statement__ = 37;
@@ -27791,7 +27699,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       person = std::vector<int>(N, std::numeric_limits<int>::min());
       
       current_statement__ = 23;
-      assign(person, context__.vals_i("person"), "assigning variable person");
+      person = context__.vals_i("person");
       lcm_sym40__ = logical_gte(N, 1);
       if (lcm_sym40__) {
         current_statement__ = 23;
@@ -27827,8 +27735,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       {
         std::vector<double> time_flat__;
         current_statement__ = 25;
-        assign(time_flat__, context__.vals_r("time"),
-          "assigning variable time_flat__");
+        time_flat__ = context__.vals_r("time");
         current_statement__ = 25;
         pos__ = 1;
         current_statement__ = 25;
@@ -27857,8 +27764,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       {
         std::vector<double> treatment_flat__;
         current_statement__ = 27;
-        assign(treatment_flat__, context__.vals_r("treatment"),
-          "assigning variable treatment_flat__");
+        treatment_flat__ = context__.vals_r("treatment");
         current_statement__ = 27;
         pos__ = 1;
         current_statement__ = 27;
@@ -27888,7 +27794,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       {
         std::vector<double> y_flat__;
         current_statement__ = 29;
-        assign(y_flat__, context__.vals_r("y"), "assigning variable y_flat__");
+        y_flat__ = context__.vals_r("y");
         current_statement__ = 29;
         pos__ = 1;
         current_statement__ = 29;
@@ -27978,17 +27884,13 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       stan::math::fill(eta1, DUMMY_VAR__);
       
       current_statement__ = 2;
-      assign(eta1,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J),
-        "assigning variable eta1");
+      eta1 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J);
       Eigen::Matrix<local_scalar_t__, -1, 1> eta2;
       eta2 = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       stan::math::fill(eta2, DUMMY_VAR__);
       
       current_statement__ = 3;
-      assign(eta2,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J),
-        "assigning variable eta2");
+      eta2 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J);
       local_scalar_t__ mu_a1;
       mu_a1 = DUMMY_VAR__;
       
@@ -28135,17 +28037,13 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       stan::math::fill(eta1, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
-      assign(eta1,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J),
-        "assigning variable eta1");
+      eta1 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J);
       Eigen::Matrix<double, -1, 1> eta2;
       eta2 = Eigen::Matrix<double, -1, 1>(J);
       stan::math::fill(eta2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
-      assign(eta2,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J),
-        "assigning variable eta2");
+      eta2 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J);
       double mu_a1;
       mu_a1 = std::numeric_limits<double>::quiet_NaN();
       
@@ -28306,8 +28204,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       {
         std::vector<double> eta1_flat__;
         current_statement__ = 2;
-        assign(eta1_flat__, context__.vals_r("eta1"),
-          "assigning variable eta1_flat__");
+        eta1_flat__ = context__.vals_r("eta1");
         current_statement__ = 2;
         pos__ = 1;
         lcm_sym1__ = logical_gte(J, 1);
@@ -28332,8 +28229,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       {
         std::vector<double> eta2_flat__;
         current_statement__ = 3;
-        assign(eta2_flat__, context__.vals_r("eta2"),
-          "assigning variable eta2_flat__");
+        eta2_flat__ = context__.vals_r("eta2");
         current_statement__ = 3;
         pos__ = 1;
         current_statement__ = 3;
@@ -28958,25 +28854,22 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       stan::math::fill(x_matrix, DUMMY_VAR__);
       
       current_statement__ = 3;
-      assign(x_matrix,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(3, 2),
-        "assigning variable x_matrix");
+      x_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+                   3, 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> x_vector;
       x_vector = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(x_vector, DUMMY_VAR__);
       
       current_statement__ = 4;
-      assign(x_vector,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2),
-        "assigning variable x_vector");
+      x_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                   2);
       Eigen::Matrix<local_scalar_t__, -1, -1> x_cov;
       x_cov = Eigen::Matrix<local_scalar_t__, -1, -1>(2, 2);
       stan::math::fill(x_cov, DUMMY_VAR__);
       
       current_statement__ = 5;
-      assign(x_cov,
-        in__.template read_constrain_cov_matrix<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
-          lp__, 2), "assigning variable x_cov");
+      x_cov = in__.template read_constrain_cov_matrix<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
+                lp__, 2);
       {
         double x;
         x = std::numeric_limits<double>::quiet_NaN();
@@ -29530,25 +29423,22 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       stan::math::fill(x_matrix, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
-      assign(x_matrix,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(3, 2),
-        "assigning variable x_matrix");
+      x_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+                   3, 2);
       Eigen::Matrix<double, -1, 1> x_vector;
       x_vector = Eigen::Matrix<double, -1, 1>(2);
       stan::math::fill(x_vector, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 4;
-      assign(x_vector,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2),
-        "assigning variable x_vector");
+      x_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                   2);
       Eigen::Matrix<double, -1, -1> x_cov;
       x_cov = Eigen::Matrix<double, -1, -1>(2, 2);
       stan::math::fill(x_cov, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
-      assign(x_cov,
-        in__.template read_constrain_cov_matrix<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
-          lp__, 2), "assigning variable x_cov");
+      x_cov = in__.template read_constrain_cov_matrix<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
+                lp__, 2);
       vars__.emplace_back(theta);
       vars__.emplace_back(phi);
       {
@@ -29667,8 +29557,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       {
         std::vector<double> x_matrix_flat__;
         current_statement__ = 3;
-        assign(x_matrix_flat__, context__.vals_r("x_matrix"),
-          "assigning variable x_matrix_flat__");
+        x_matrix_flat__ = context__.vals_r("x_matrix");
         current_statement__ = 3;
         pos__ = 1;
         {
@@ -29726,8 +29615,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       {
         std::vector<double> x_vector_flat__;
         current_statement__ = 4;
-        assign(x_vector_flat__, context__.vals_r("x_vector"),
-          "assigning variable x_vector_flat__");
+        x_vector_flat__ = context__.vals_r("x_vector");
         current_statement__ = 4;
         pos__ = 1;
         {
@@ -29753,8 +29641,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       {
         std::vector<double> x_cov_flat__;
         current_statement__ = 5;
-        assign(x_cov_flat__, context__.vals_r("x_cov"),
-          "assigning variable x_cov_flat__");
+        x_cov_flat__ = context__.vals_r("x_cov");
         current_statement__ = 5;
         pos__ = 1;
         {
@@ -30182,7 +30069,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       pair = std::vector<int>(N, std::numeric_limits<int>::min());
       
       current_statement__ = 16;
-      assign(pair, context__.vals_i("pair"), "assigning variable pair");
+      pair = context__.vals_i("pair");
       lcm_sym30__ = logical_gte(N, 1);
       if (lcm_sym30__) {
         current_statement__ = 16;
@@ -30218,8 +30105,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       {
         std::vector<double> pre_test_flat__;
         current_statement__ = 18;
-        assign(pre_test_flat__, context__.vals_r("pre_test"),
-          "assigning variable pre_test_flat__");
+        pre_test_flat__ = context__.vals_r("pre_test");
         current_statement__ = 18;
         pos__ = 1;
         current_statement__ = 18;
@@ -30249,8 +30135,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       {
         std::vector<double> treatment_flat__;
         current_statement__ = 20;
-        assign(treatment_flat__, context__.vals_r("treatment"),
-          "assigning variable treatment_flat__");
+        treatment_flat__ = context__.vals_r("treatment");
         current_statement__ = 20;
         pos__ = 1;
         current_statement__ = 20;
@@ -30305,7 +30190,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       {
         std::vector<double> y_flat__;
         current_statement__ = 22;
-        assign(y_flat__, context__.vals_r("y"), "assigning variable y_flat__");
+        y_flat__ = context__.vals_r("y");
         current_statement__ = 22;
         pos__ = 1;
         current_statement__ = 22;
@@ -30377,17 +30262,13 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       stan::math::fill(a, DUMMY_VAR__);
       
       current_statement__ = 1;
-      assign(a,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_pair),
-        "assigning variable a");
+      a = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_pair);
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
       beta = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(beta, DUMMY_VAR__);
       
       current_statement__ = 2;
-      assign(beta,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2),
-        "assigning variable beta");
+      beta = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
       local_scalar_t__ mu_a;
       mu_a = DUMMY_VAR__;
       
@@ -30488,17 +30369,13 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       stan::math::fill(a, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 1;
-      assign(a,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_pair),
-        "assigning variable a");
+      a = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_pair);
       Eigen::Matrix<double, -1, 1> beta;
       beta = Eigen::Matrix<double, -1, 1>(2);
       stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
-      assign(beta,
-        in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2),
-        "assigning variable beta");
+      beta = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
       double mu_a;
       mu_a = std::numeric_limits<double>::quiet_NaN();
       
@@ -30608,7 +30485,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       {
         std::vector<double> a_flat__;
         current_statement__ = 1;
-        assign(a_flat__, context__.vals_r("a"), "assigning variable a_flat__");
+        a_flat__ = context__.vals_r("a");
         current_statement__ = 1;
         pos__ = 1;
         lcm_sym1__ = logical_gte(n_pair, 1);
@@ -30633,8 +30510,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       {
         std::vector<double> beta_flat__;
         current_statement__ = 2;
-        assign(beta_flat__, context__.vals_r("beta"),
-          "assigning variable beta_flat__");
+        beta_flat__ = context__.vals_r("beta");
         current_statement__ = 2;
         pos__ = 1;
         {
@@ -31017,7 +30893,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       n = std::vector<int>(I, std::numeric_limits<int>::min());
       
       current_statement__ = 19;
-      assign(n, context__.vals_i("n"), "assigning variable n");
+      n = context__.vals_i("n");
       lcm_sym29__ = logical_gte(I, 1);
       if (lcm_sym29__) {
         current_statement__ = 19;
@@ -31038,7 +30914,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       N = std::vector<int>(I, std::numeric_limits<int>::min());
       
       current_statement__ = 21;
-      assign(N, context__.vals_i("N"), "assigning variable N");
+      N = context__.vals_i("N");
       current_statement__ = 21;
       if (lcm_sym29__) {
         current_statement__ = 21;
@@ -31062,8 +30938,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       {
         std::vector<double> x1_flat__;
         current_statement__ = 23;
-        assign(x1_flat__, context__.vals_r("x1"),
-          "assigning variable x1_flat__");
+        x1_flat__ = context__.vals_r("x1");
         current_statement__ = 23;
         pos__ = 1;
         current_statement__ = 23;
@@ -31092,8 +30967,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       {
         std::vector<double> x2_flat__;
         current_statement__ = 25;
-        assign(x2_flat__, context__.vals_r("x2"),
-          "assigning variable x2_flat__");
+        x2_flat__ = context__.vals_r("x2");
         current_statement__ = 25;
         pos__ = 1;
         current_statement__ = 25;
@@ -31209,9 +31083,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       stan::math::fill(b, DUMMY_VAR__);
       
       current_statement__ = 6;
-      assign(b,
-        in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-          I, 8), "assigning variable b");
+      b = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+            I, 8);
       local_scalar_t__ sigma;
       sigma = DUMMY_VAR__;
       
@@ -31332,9 +31205,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       stan::math::fill(b, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 6;
-      assign(b,
-        in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-          I, 8), "assigning variable b");
+      b = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+            I, 8);
       double sigma;
       sigma = std::numeric_limits<double>::quiet_NaN();
       
@@ -31488,7 +31360,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       {
         std::vector<double> b_flat__;
         current_statement__ = 6;
-        assign(b_flat__, context__.vals_r("b"), "assigning variable b_flat__");
+        b_flat__ = context__.vals_r("b");
         current_statement__ = 6;
         pos__ = 1;
         {

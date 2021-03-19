@@ -203,7 +203,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       {
         std::vector<local_scalar_t__> m_flat__;
         current_statement__ = 4;
-        assign(m_flat__, context__.vals_r("m"), "assigning variable m_flat__");
+        m_flat__ = context__.vals_r("m");
         current_statement__ = 4;
         pos__ = 1;
         current_statement__ = 4;

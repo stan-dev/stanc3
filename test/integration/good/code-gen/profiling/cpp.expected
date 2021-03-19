@@ -104,7 +104,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       x = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 23;
-      assign(x, context__.vals_r("x"), "assigning variable x");
+      x = context__.vals_r("x");
       current_statement__ = 24;
       validate_non_negative_index("y", "N", N);
       current_statement__ = 25;
@@ -116,7 +116,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       {
         std::vector<local_scalar_t__> y_flat__;
         current_statement__ = 25;
-        assign(y_flat__, context__.vals_r("y"), "assigning variable y_flat__");
+        y_flat__ = context__.vals_r("y");
         current_statement__ = 25;
         pos__ = 1;
         current_statement__ = 25;
