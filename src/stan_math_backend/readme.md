@@ -35,7 +35,7 @@ Notes:
 
 Code of the form `Expr.Typed.Meta` or anything that is `Capital.Capital2` Can be search by thinking o them as `File.Module.Submodule`. For instance `Expr.Meta` is a module, `Meta` sitting in the file `Expr`.
 
-Tuples in Ocaml are represented as `(first_val, second_val, third_val)`. Like C++, these are unnamed their use is most comment in match statements where a type has an inner tuple (see `dims_of` in `SizedType.ml` for an example)
+Tuples in Ocaml are represented as `(first_val, second_val, third_val)`. Like C++, these the values in the tuple are unnamed and their use is most common in match statements where a type has an inner tuple (see `dims_of` in `SizedType.ml` for an example)
 
 Records are the objects you see in curly brackets such as `{pattern = yada, meta = yada}`. These are like named lists where you can extract values by asking for the pattern. These are also commonly used in signatures and match statements such as in `pp_expr`
 
