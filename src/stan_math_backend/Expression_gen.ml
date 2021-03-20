@@ -56,6 +56,11 @@ let minus_one e =
 
 let is_single_index = function Index.Single _ -> true | _ -> false
 
+let dont_need_range_check = function
+  | Index.Single Expr.Fixed.({pattern= Var id; _}) ->
+      not (Utils.is_user_ident id)
+  | _ -> false
+
 let promote_adtype =
   List.fold
     ~f:(fun accum expr ->
@@ -187,9 +192,8 @@ let rec pp_index ppf = function
   | MultiIndex e -> pf ppf "index_multi(%a)" pp_expr e
 
 and pp_indexes ppf = function
-  | [] -> pf ppf "nil_index_list()"
-  | idx :: idxs ->
-      pf ppf "@[<hov 2>cons_list(@,%a,@ %a)@]" pp_index idx pp_indexes idxs
+  | [] -> pf ppf ""
+  | idxs -> pf ppf "@[<hov 2>%a@]" (list ~sep:comma pp_index) idxs
 
 and pp_logical_op ppf op lhs rhs =
   pf ppf "(primitive_value(@,%a)@ %s@ primitive_value(@,%a))" pp_expr lhs op
@@ -398,11 +402,11 @@ and pp_closure ppf (f, es) =
     (String.concat ~sep:", " extra_args ^ sep)
     (list ~sep:comma pp_expr) es
 
-and pp_compiler_internal_fn ut f ppf es =
-  let pp_array_literal ppf es =
-    pf ppf "std::vector<%a>{@,%a}" pp_unsizedtype_local
-      (promote_adtype es, promote_unsizedtype es)
-      (list ~sep:comma pp_expr) es
+and pp_compiler_internal_fn ad ut f ppf es =
+  let pp_array_literal ut ppf es =
+    pf ppf "std::vector<%a>{@,%a}" pp_unsizedtype_local (ad, ut)
+      (list ~sep:comma (pp_promoted ad ut))
+      es
   in
   match Internal_fun.of_string_opt f with
   | Some FnMakeClosure -> (
@@ -412,7 +416,13 @@ and pp_compiler_internal_fn ut f ppf es =
     | _ ->
         raise_s
           [%message "Missing closure constructor " (es : Expr.Typed.t list)] )
-  | Some FnMakeArray -> pp_array_literal ppf es
+  | Some FnMakeArray ->
+      let ut =
+        match ut with
+        | UnsizedType.UArray ut -> ut
+        | _ -> raise_s [%message "Array literal must have array type"]
+      in
+      pp_array_literal ut ppf es
   | Some FnMakeRowVec -> (
     match ut with
     | UnsizedType.URowVector ->
@@ -421,7 +431,8 @@ and pp_compiler_internal_fn ut f ppf es =
         else
           pf ppf "(Eigen::Matrix<%s,1,-1>(%d) <<@ %a).finished()" st
             (List.length es) (list ~sep:comma pp_expr) es
-    | UMatrix -> pf ppf "stan::math::to_matrix(@,%a)" pp_array_literal es
+    | UMatrix ->
+        pf ppf "stan::math::to_matrix(@,%a)" (pp_array_literal URowVector) es
     | _ ->
         raise_s
           [%message
@@ -437,8 +448,20 @@ and pp_compiler_internal_fn ut f ppf es =
     | _ -> raise_s [%message "emit ReadParam with " (es : Expr.Typed.t list)] )
   | _ -> gen_fun_app ppf f es
 
+and pp_promoted ad ut ppf e =
+  match e with
+  | Expr.({Fixed.meta= {Typed.Meta.type_; adlevel; _}; _})
+    when type_ = ut && adlevel = ad ->
+      pp_expr ppf e
+  | {pattern= FunApp (CompilerInternal, f, es); _}
+    when Internal_fun.of_string_opt f = Some FnMakeArray ->
+      pp_compiler_internal_fn ad ut f ppf es
+  | _ ->
+      pf ppf "stan::math::promote_scalar<%s>(@[<hov>%a@])" (local_scalar ut ad)
+        pp_expr e
+
 and pp_indexed ppf (vident, indices, pretty) =
-  pf ppf "@[<hov 2>rvalue(@,%s,@ %a,@ %S)@]" vident pp_indexes indices pretty
+  pf ppf "@[<hov 2>rvalue(@,%s,@ %S,@ %a)@]" vident pretty pp_indexes indices
 
 and pp_indexed_simple ppf (obj, idcs) =
   let idx_minus_one = function
@@ -490,7 +513,8 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
           (List.length es) (list ~sep:comma pp_expr) es
   | FunApp (StanLib, f, es) -> gen_fun_app ppf f es
   | FunApp (CompilerInternal, f, es) ->
-      pp_compiler_internal_fn meta.type_ (stan_namespace_qualify f) ppf es
+      pp_compiler_internal_fn meta.adlevel meta.type_
+        (stan_namespace_qualify f) ppf es
   | FunApp (UserDefined, f, es) -> pp_user_defined_fun ppf (f, es)
   | FunApp (Closure, f, es) -> pp_closure ppf (f, es)
   | EAnd (e1, e2) -> pp_logical_op ppf "&&" e1 e2
@@ -514,7 +538,7 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
       when Some Internal_fun.FnReadData = Internal_fun.of_string_opt f ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
     | _
-      when List.for_all ~f:is_single_index idx
+      when List.for_all ~f:dont_need_range_check idx
            && not (UnsizedType.is_indexing_matrix (Expr.Typed.type_of e, idx))
       ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
@@ -577,7 +601,7 @@ let%expect_test "pp_expr9" =
 
 let%expect_test "pp_expr10" =
   printf "%s" (pp_unlocated (Indexed (dummy_locate (Var "a"), [All]))) ;
-  [%expect {| rvalue(a, cons_list(index_omni(), nil_index_list()), "a") |}]
+  [%expect {| rvalue(a, "a", index_omni()) |}]
 
 let%expect_test "pp_expr11" =
   printf "%s"

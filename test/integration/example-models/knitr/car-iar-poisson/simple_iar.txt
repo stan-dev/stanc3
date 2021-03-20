@@ -1,3 +1,0 @@
-simple_iar <- function() {
-  phi[1:N]~car.normal(adj[],weights[],num[],1)
-}

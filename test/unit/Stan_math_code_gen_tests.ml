@@ -29,37 +29,40 @@ let%expect_test "udf" =
   |> strf "@[<v>%a" pp_fun_def |> print_endline ;
   [%expect
     {|
-    template <typename T0__, typename T1__>
-    void
-    sars(const T0__& x, const T1__& y, std::ostream* pstream__) ;
+template <typename T0__, typename T1__>
+void
+sars(const T0__& x, const T1__& y, std::ostream* pstream__) ;
 
-    struct sars_functor__ {
-    template <typename T0__, typename T1__>
-    void
-    operator()(const T0__& x, const T1__& y, std::ostream* pstream__)  const
-    {
-    return sars(x, y, pstream__);
-    }
-    };
+struct sars_functor__ {
+template <typename T0__, typename T1__>
+void
+operator()(const T0__& x, const T1__& y, std::ostream* pstream__)  const
+{
+return sars(x, y, pstream__);
+}
+};
 
-    template <typename T0__, typename T1__>
-    void
-    sars(const T0__& x_arg__, const T1__& y_arg__, std::ostream* pstream__) {
-      using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-              stan::value_type_t<T1__>>;
-      const auto& x = to_ref(x_arg__);
-      const auto& y = to_ref(y_arg__);
-      local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-      (void) DUMMY_VAR__;  // suppress unused var warning
-      try {
-        return add(x, 1);
-      } catch (const std::exception& e) {
-        stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-          // Next line prevents compiler griping about no return
-          throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
-      }
+template <typename T0__, typename T1__>
+void
+sars(const T0__& x_arg__, const T1__& y_arg__, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
+          stan::value_type_t<T1__>>;
+  int current_statement__ = 0;
+  const auto& x = to_ref(x_arg__);
+  const auto& y = to_ref(y_arg__);
+  static constexpr bool propto__ = true;
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
+  try {
+    return add(x, 1);
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+  }
 
-    } |}]
+} |}]
 
 let%expect_test "udf-expressions" =
   let with_no_loc stmt =
@@ -85,49 +88,52 @@ let%expect_test "udf-expressions" =
   |> strf "@[<v>%a" pp_fun_def |> print_endline ;
   [%expect
     {|
-    template <typename T0__, typename T1__, typename T2__, typename T3__>
-    Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>,
-    stan::value_type_t<T2__>,
-    T3__>, -1, -1>
-    sars(const T0__& x, const T1__& y, const T2__& z,
-         const std::vector<Eigen::Matrix<T3__, -1, -1>>& w,
-         std::ostream* pstream__) ;
+template <typename T0__, typename T1__, typename T2__, typename T3__>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>,
+stan::value_type_t<T2__>,
+T3__>, -1, -1>
+sars(const T0__& x, const T1__& y, const T2__& z,
+     const std::vector<Eigen::Matrix<T3__, -1, -1>>& w,
+     std::ostream* pstream__) ;
 
-    struct sars_functor__ {
-    template <typename T0__, typename T1__, typename T2__, typename T3__>
-    Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>,
-    stan::value_type_t<T2__>,
-    T3__>, -1, -1>
-    operator()(const T0__& x, const T1__& y, const T2__& z,
-               const std::vector<Eigen::Matrix<T3__, -1, -1>>& w,
-               std::ostream* pstream__)  const
-    {
-    return sars(x, y, z, w, pstream__);
-    }
-    };
+struct sars_functor__ {
+template <typename T0__, typename T1__, typename T2__, typename T3__>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>,
+stan::value_type_t<T2__>,
+T3__>, -1, -1>
+operator()(const T0__& x, const T1__& y, const T2__& z,
+           const std::vector<Eigen::Matrix<T3__, -1, -1>>& w,
+           std::ostream* pstream__)  const
+{
+return sars(x, y, z, w, pstream__);
+}
+};
 
-    template <typename T0__, typename T1__, typename T2__, typename T3__>
-    Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>,
-    stan::value_type_t<T2__>,
-    T3__>, -1, -1>
-    sars(const T0__& x_arg__, const T1__& y_arg__, const T2__& z_arg__,
-         const std::vector<Eigen::Matrix<T3__, -1, -1>>& w,
-         std::ostream* pstream__) {
-      using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-              stan::value_type_t<T1__>,
-              stan::value_type_t<T2__>,
-              T3__>;
-      const auto& x = to_ref(x_arg__);
-      const auto& y = to_ref(y_arg__);
-      const auto& z = to_ref(z_arg__);
-      local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-      (void) DUMMY_VAR__;  // suppress unused var warning
-      try {
-        return add(x, 1);
-      } catch (const std::exception& e) {
-        stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-          // Next line prevents compiler griping about no return
-          throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
-      }
+template <typename T0__, typename T1__, typename T2__, typename T3__>
+Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>,
+stan::value_type_t<T2__>,
+T3__>, -1, -1>
+sars(const T0__& x_arg__, const T1__& y_arg__, const T2__& z_arg__,
+     const std::vector<Eigen::Matrix<T3__, -1, -1>>& w,
+     std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
+          stan::value_type_t<T1__>,
+          stan::value_type_t<T2__>,
+          T3__>;
+  int current_statement__ = 0;
+  const auto& x = to_ref(x_arg__);
+  const auto& y = to_ref(y_arg__);
+  const auto& z = to_ref(z_arg__);
+  static constexpr bool propto__ = true;
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
+  try {
+    return add(x, 1);
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
+  }
 
-    } |}]
+} |}]
