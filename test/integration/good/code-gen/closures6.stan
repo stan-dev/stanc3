@@ -3,11 +3,11 @@ parameters {
     real k;
 }
 transformed parameters {
-    functions
+    function
     real foo_rng(real x) {
         return normal_rng(x,1);
     }
-    functions
+    function
     real foo_lpdf(real y, real x) {
         return normal_lupdf(y|x,1);
     }

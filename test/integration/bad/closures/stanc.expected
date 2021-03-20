@@ -2,17 +2,17 @@
 Semantic error in 'forwarddecl.stan', line 2, column 4 to line 3, column 29:
    -------------------------------------------------
      1:  model {
-     2:      functions
+     2:      function
              ^
      3:      real foo(real x, real y);
-     4:      functions
+     4:      function
    -------------------------------------------------
 
 Local function is declared without specifying a definition.
   $ ../../../../../install/default/bin/stanc mutate1.stan
 Semantic error in 'mutate1.stan', line 5, column 8 to column 16:
    -------------------------------------------------
-     3:      functions
+     3:      function
      4:      real foo(real y) {
      5:          x = 2.0;
                  ^
@@ -32,3 +32,58 @@ Semantic error in 'mutate2.stan', line 7, column 4 to column 12:
    -------------------------------------------------
 
 Cannot assign to function argument, captured variable or loop identifier 'x'.
+  $ ../../../../../install/default/bin/stanc no_keyword1.stan
+Syntax error in 'no_keyword1.stan', line 2, column 12 to column 13, parsing error:
+   -------------------------------------------------
+     1:  model {
+     2:      real foo(real x) {
+                     ^
+     3:          return x;
+     4:      }
+   -------------------------------------------------
+
+";" or plain assignment expected after variable declaration. (Local function definition requires 'function' keyword.)
+  $ ../../../../../install/default/bin/stanc no_keyword2.stan
+Syntax error in 'no_keyword2.stan', line 2, column 11 to column 14, parsing error:
+   -------------------------------------------------
+     1:  model {
+     2:      vector foo(vector x) {
+                    ^
+     3:          return x;
+     4:      }
+   -------------------------------------------------
+
+"[" expression  "]" expected after "vector" in local (or model block) variable declaration. (No transformations/constraints allowed.)
+  $ ../../../../../install/default/bin/stanc no_keyword3.stan
+Syntax error in 'no_keyword3.stan', line 2, column 11 to column 12, parsing error:
+   -------------------------------------------------
+     1:  model {
+     2:      vector[] foo(vector x) {
+                    ^
+     3:          return {x};
+     4:      }
+   -------------------------------------------------
+
+"[" expression "]" expected for vector sizes.
+  $ ../../../../../install/default/bin/stanc no_keyword4.stan
+Syntax error in 'no_keyword4.stan', line 2, column 20 to column 21, parsing error:
+   -------------------------------------------------
+     1:  model {
+     2:      array[] real foo(real x) {
+                             ^
+     3:          return {x};
+     4:      }
+   -------------------------------------------------
+
+Expected non-array type after array in return type. (Local function definition requires 'function' keyword.)
+  $ ../../../../../install/default/bin/stanc no_keyword5.stan
+Syntax error in 'no_keyword5.stan', line 2, column 4 to column 8, parsing error:
+   -------------------------------------------------
+     1:  model {
+     2:      void foo_lp(real x) {
+             ^
+     3:          target += x;
+     4:      }
+   -------------------------------------------------
+
+Variable declaration, statement or "}" expected.

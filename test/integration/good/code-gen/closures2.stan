@@ -1,9 +1,9 @@
 transformed data {
-    functions
+    function
     real foo(real x) {
         return x;
     }
-    functions
+    function
     real bar(real y) {
         return foo(y);
     }
@@ -12,13 +12,13 @@ parameters {
     real alpha;
 }
 transformed parameters {
-    functions
+    function
     real baz(real y) {
         return foo(y);
     }
-    functions
+    function
     real goo(real s) {
-        functions
+        function
         real gar(real b) {
             return b;
         }

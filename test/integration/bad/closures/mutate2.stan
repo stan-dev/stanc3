@@ -1,6 +1,6 @@
 model {
     real x = 0.0;
-    functions
+    function
     real foo(real y) {
         return x + y;
     }

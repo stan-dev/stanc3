@@ -1,6 +1,6 @@
 functions {
     vector[] integrate(vector[] k, vector init, real[] ts) {
-        functions
+        function
         vector harmonic(real t, vector y) {
             return -k[1] .* y;
         }
