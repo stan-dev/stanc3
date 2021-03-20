@@ -460,7 +460,14 @@ and pp_indexed_simple ppf (obj, idcs) =
       | idcs -> pf ppf "[%a]" (list ~sep:(const string "][") pp_expr) idcs )
     (List.map ~f:idx_minus_one idcs)
 
-and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
+(*
+ * Prints out fixed expressions
+ * @param ppf A formatter used to direct the string output.
+ * @param expr The fixed expression record containing the pattern and meta information.
+ * @param pattern See types in Expr.Pattern.t
+ * @param meta Metadata such as autodiffable and UnsizedType.
+ *)
+and pp_expr ppf Expr.Fixed.({pattern; meta} as expr) =
   match pattern with
   | Var s -> pf ppf "%s" s
   | Lit (Str, s) -> pf ppf "%S" s
@@ -492,7 +499,7 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
       in
       let tform ppf = pf ppf "(@[<hov 2>@,%a@ ?@ %a@ :@ %a@])" in
       if types_match et ef then tform ppf pp_expr ec pp_expr et pp_expr ef
-      else tform ppf pp_expr ec promoted (e, et) promoted (e, ef)
+      else tform ppf pp_expr ec promoted (expr, et) promoted (expr, ef)
   | Indexed (e, []) -> pp_expr ppf e
   | Indexed (e, idx) -> (
     match e.pattern with
