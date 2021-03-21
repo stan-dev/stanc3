@@ -158,8 +158,8 @@ pipeline {
                                 cd performance-tests-cmdstan
                                 cd cmdstan; make -j${env.PARALLEL} build; cd ..
                                 cp ../bin/stanc cmdstan/bin/stanc
-                                ./runPerformanceTests.py --runs=0 ../test/integration/good
-                                ./runPerformanceTests.py --runs=0 example-models
+                                ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ../test/integration/good
+                                ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 example-models
                                 """
                         }
 
