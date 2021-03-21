@@ -189,7 +189,7 @@ pipeline {
                             cat shotgun_perf_all.tests >> all.tests
                             cat all.tests
                             echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
-                            cd cmdstan; git show HEAD --stat; make -j${env.PARALLEL} build; cd ..
+                            cd cmdstan; git show HEAD --stat; make -j4 build; cd ..
                             CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
                         """
 
