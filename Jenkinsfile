@@ -3,6 +3,7 @@ import org.stan.Utils
 
 def utils = new org.stan.Utils()
 def skipExpressionTests = false
+
 /* Functions that runs a sh command and returns the stdout */
 def runShell(String command){
     def output = sh (returnStdout: true, script: "${command}").trim()
@@ -155,8 +156,7 @@ pipeline {
                                     text:"O=0\nCXX=${CXX}")
                             sh """
                                 cd performance-tests-cmdstan
-
-                                cd cmdstan; make -j6 build; cd ..
+                                cd cmdstan; make -j${env.PARALLEL} build; cd ..
                                 cp ../bin/stanc cmdstan/bin/stanc
                                 ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ../test/integration/good
                                 ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 example-models

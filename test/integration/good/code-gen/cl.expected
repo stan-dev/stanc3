@@ -328,7 +328,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       {
         std::vector<local_scalar_t__> X_d_flat__;
         current_statement__ = 180;
-        X_d_flat__ = context__.vals_r("X_d");
+        assign(X_d_flat__, context__.vals_r("X_d"),
+          "assigning variable X_d_flat__");
         current_statement__ = 180;
         pos__ = 1;
         current_statement__ = 180;
@@ -354,7 +355,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       {
         std::vector<local_scalar_t__> X_d_a_flat__;
         current_statement__ = 183;
-        X_d_a_flat__ = context__.vals_r("X_d_a");
+        assign(X_d_a_flat__, context__.vals_r("X_d_a"),
+          "assigning variable X_d_a_flat__");
         current_statement__ = 183;
         pos__ = 1;
         current_statement__ = 183;
@@ -382,7 +384,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       {
         std::vector<local_scalar_t__> y_v_d_flat__;
         current_statement__ = 185;
-        y_v_d_flat__ = context__.vals_r("y_v_d");
+        assign(y_v_d_flat__, context__.vals_r("y_v_d"),
+          "assigning variable y_v_d_flat__");
         current_statement__ = 185;
         pos__ = 1;
         current_statement__ = 185;
@@ -404,7 +407,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       {
         std::vector<local_scalar_t__> X_rv_d_flat__;
         current_statement__ = 187;
-        X_rv_d_flat__ = context__.vals_r("X_rv_d");
+        assign(X_rv_d_flat__, context__.vals_r("X_rv_d"),
+          "assigning variable X_rv_d_flat__");
         current_statement__ = 187;
         pos__ = 1;
         current_statement__ = 187;
@@ -423,7 +427,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       y_vi_d = std::vector<int>(n, std::numeric_limits<int>::min());
       
       current_statement__ = 189;
-      y_vi_d = context__.vals_i("y_vi_d");
+      assign(y_vi_d, context__.vals_i("y_vi_d"), "assigning variable y_vi_d");
       current_statement__ = 190;
       validate_non_negative_index("y2_vi_d", "n", n);
       current_statement__ = 191;
@@ -432,7 +436,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       y2_vi_d = std::vector<int>(n, std::numeric_limits<int>::min());
       
       current_statement__ = 191;
-      y2_vi_d = context__.vals_i("y2_vi_d");
+      assign(y2_vi_d, context__.vals_i("y2_vi_d"),
+        "assigning variable y2_vi_d");
       current_statement__ = 192;
       context__.validate_dims("data initialization","y_s_d","int",
           context__.to_vec());
@@ -557,7 +562,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -570,54 +575,60 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       stan::math::fill(alpha_v, DUMMY_VAR__);
       
       current_statement__ = 1;
-      alpha_v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
+      alpha_v = in__.vector(k);
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
       beta = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
       stan::math::fill(beta, DUMMY_VAR__);
       
       current_statement__ = 2;
-      beta = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
+      beta = in__.vector(k);
       Eigen::Matrix<local_scalar_t__, -1, 1> cuts;
       cuts = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
       stan::math::fill(cuts, DUMMY_VAR__);
       
       current_statement__ = 3;
-      cuts = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
+      cuts = in__.vector(k);
       local_scalar_t__ sigma;
       sigma = DUMMY_VAR__;
       
       current_statement__ = 4;
-      sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                0, lp__);
+      sigma = in__.scalar();
+      current_statement__ = 4;
+      if (jacobian__) {
+        current_statement__ = 4;
+        sigma = stan::math::lb_constrain(sigma, 0, lp__);
+      } else {
+        current_statement__ = 4;
+        sigma = stan::math::lb_constrain(sigma, 0);
+      }
       local_scalar_t__ alpha;
       alpha = DUMMY_VAR__;
       
       current_statement__ = 5;
-      alpha = in__.template read<local_scalar_t__>();
+      alpha = in__.scalar();
       local_scalar_t__ phi;
       phi = DUMMY_VAR__;
       
       current_statement__ = 6;
-      phi = in__.template read<local_scalar_t__>();
+      phi = in__.scalar();
       Eigen::Matrix<local_scalar_t__, -1, -1> X_p;
       X_p = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
       stan::math::fill(X_p, DUMMY_VAR__);
       
       current_statement__ = 7;
-      X_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, k);
+      X_p = in__.matrix(n, k);
       Eigen::Matrix<local_scalar_t__, -1, -1> beta_m;
       beta_m = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
       stan::math::fill(beta_m, DUMMY_VAR__);
       
       current_statement__ = 8;
-      beta_m = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n,
-                 k);
+      beta_m = in__.matrix(n, k);
       Eigen::Matrix<local_scalar_t__, 1, -1> X_rv_p;
       X_rv_p = Eigen::Matrix<local_scalar_t__, 1, -1>(n);
       stan::math::fill(X_rv_p, DUMMY_VAR__);
       
       current_statement__ = 9;
-      X_rv_p = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(n);
+      X_rv_p = in__.row_vector(n);
       {
         current_statement__ = 10;
         lp_accum__.add(
@@ -1271,13 +1282,12 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
-    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-    constexpr bool jacobian__ = false;
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "optimize_glm_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
@@ -1288,54 +1298,54 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       stan::math::fill(alpha_v, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 1;
-      alpha_v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
+      alpha_v = in__.vector(k);
       Eigen::Matrix<double, -1, 1> beta;
       beta = Eigen::Matrix<double, -1, 1>(k);
       stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
-      beta = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
+      beta = in__.vector(k);
       Eigen::Matrix<double, -1, 1> cuts;
       cuts = Eigen::Matrix<double, -1, 1>(k);
       stan::math::fill(cuts, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
-      cuts = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
+      cuts = in__.vector(k);
       double sigma;
       sigma = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 4;
-      sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                0, lp__);
+      sigma = in__.scalar();
+      current_statement__ = 4;
+      sigma = stan::math::lb_constrain(sigma, 0);
       double alpha;
       alpha = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 5;
-      alpha = in__.template read<local_scalar_t__>();
+      alpha = in__.scalar();
       double phi;
       phi = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 6;
-      phi = in__.template read<local_scalar_t__>();
+      phi = in__.scalar();
       Eigen::Matrix<double, -1, -1> X_p;
       X_p = Eigen::Matrix<double, -1, -1>(n, k);
       stan::math::fill(X_p, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 7;
-      X_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, k);
+      X_p = in__.matrix(n, k);
       Eigen::Matrix<double, -1, -1> beta_m;
       beta_m = Eigen::Matrix<double, -1, -1>(n, k);
       stan::math::fill(beta_m, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 8;
-      beta_m = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n,
-                 k);
+      beta_m = in__.matrix(n, k);
       Eigen::Matrix<double, 1, -1> X_rv_p;
       X_rv_p = Eigen::Matrix<double, 1, -1>(n);
       stan::math::fill(X_rv_p, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 9;
-      X_rv_p = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(n);
+      X_rv_p = in__.row_vector(n);
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.emplace_back(alpha_v[(sym1__ - 1)]);}
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
@@ -1393,7 +1403,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       {
         std::vector<local_scalar_t__> alpha_v_flat__;
         current_statement__ = 1;
-        alpha_v_flat__ = context__.vals_r("alpha_v");
+        assign(alpha_v_flat__, context__.vals_r("alpha_v"),
+          "assigning variable alpha_v_flat__");
         current_statement__ = 1;
         pos__ = 1;
         current_statement__ = 1;
@@ -1411,7 +1422,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       {
         std::vector<local_scalar_t__> beta_flat__;
         current_statement__ = 2;
-        beta_flat__ = context__.vals_r("beta");
+        assign(beta_flat__, context__.vals_r("beta"),
+          "assigning variable beta_flat__");
         current_statement__ = 2;
         pos__ = 1;
         current_statement__ = 2;
@@ -1429,7 +1441,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       {
         std::vector<local_scalar_t__> cuts_flat__;
         current_statement__ = 3;
-        cuts_flat__ = context__.vals_r("cuts");
+        assign(cuts_flat__, context__.vals_r("cuts"),
+          "assigning variable cuts_flat__");
         current_statement__ = 3;
         pos__ = 1;
         current_statement__ = 3;
@@ -1467,7 +1480,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       {
         std::vector<local_scalar_t__> X_p_flat__;
         current_statement__ = 7;
-        X_p_flat__ = context__.vals_r("X_p");
+        assign(X_p_flat__, context__.vals_r("X_p"),
+          "assigning variable X_p_flat__");
         current_statement__ = 7;
         pos__ = 1;
         current_statement__ = 7;
@@ -1487,7 +1501,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       {
         std::vector<local_scalar_t__> beta_m_flat__;
         current_statement__ = 8;
-        beta_m_flat__ = context__.vals_r("beta_m");
+        assign(beta_m_flat__, context__.vals_r("beta_m"),
+          "assigning variable beta_m_flat__");
         current_statement__ = 8;
         pos__ = 1;
         current_statement__ = 8;
@@ -1508,7 +1523,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       {
         std::vector<local_scalar_t__> X_rv_p_flat__;
         current_statement__ = 9;
-        X_rv_p_flat__ = context__.vals_r("X_rv_p");
+        assign(X_rv_p_flat__, context__.vals_r("X_rv_p"),
+          "assigning variable X_rv_p_flat__");
         current_statement__ = 9;
         pos__ = 1;
         current_statement__ = 9;

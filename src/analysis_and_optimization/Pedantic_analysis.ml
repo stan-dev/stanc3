@@ -75,14 +75,12 @@ let list_multi_twiddles (mir : Program.Typed.t) :
 let var_deps info_map label ?expr:(expr_opt : Expr.Typed.t option = None)
     (targets : string Set.Poly.t) : string Set.Poly.t =
   (* Labels of dependencies *)
-  (* let expr_vars_opt = Set.Poly.map ~f:fst (expr_var_set expr) in *)
-  let dep_labels, expr_vars =
+  let dep_labels =
     match expr_opt with
-    | None -> (node_dependencies info_map label, Set.Poly.empty)
+    | None -> node_dependencies info_map label
     | Some expr ->
-        let vvars = Set.Poly.map ~f:fst (expr_var_set expr) in
-        ( node_vars_dependencies info_map vvars label
-        , Set.Poly.map ~f:string_of_vexpr vvars )
+        let vars = Set.Poly.map ~f:fst (expr_var_set expr) in
+        node_vars_dependencies info_map vars label
   in
   (* expressions of dependencies *)
   let dep_exprs =
@@ -93,7 +91,7 @@ let var_deps info_map label ?expr:(expr_opt : Expr.Typed.t option = None)
   (* variable dependencies *)
   let dep_vars = Set.Poly.map ~f:(fun (VVar v, _) -> v) dep_exprs in
   (* target dependencies *)
-  Set.Poly.inter targets (Set.Poly.union dep_vars expr_vars)
+  Set.Poly.inter targets dep_vars
 
 let list_target_dependant_cf
     (info_map :
