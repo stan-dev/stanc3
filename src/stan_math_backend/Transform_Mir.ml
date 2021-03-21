@@ -161,56 +161,97 @@ let data_read smeta (decl_id, st) =
           ; Stmt.Helpers.for_scalar_inv st bodyfn decl_var smeta ]
         |> swrap ]
 
-let rec base_ut_to_string = function
-  | UnsizedType.UMatrix -> "matrix"
-  | UVector -> "vector"
-  | URowVector -> "row_vector"
-  | UReal -> "scalar"
-  | UInt -> "integer"
-  | UArray t -> base_ut_to_string t
-  | t ->
-      raise_s
-        [%message "Another place where it's weird to get " (t : UnsizedType.t)]
+type constrainaction = Check | Constrain | Unconstrain [@@deriving sexp]
+
+let check_constraint_to_string t (c : constrainaction) =
+  match t with
+  | Program.Ordered -> "ordered"
+  | PositiveOrdered -> "positive_ordered"
+  | Simplex -> "simplex"
+  | UnitVector -> "unit_vector"
+  | CholeskyCorr -> "cholesky_factor_corr"
+  | CholeskyCov -> "cholesky_factor_cov"
+  | Correlation -> "corr_matrix"
+  | Covariance -> "cov_matrix"
+  | Lower _ -> (
+    match c with
+    | Check -> "greater_or_equal"
+    | Constrain | Unconstrain -> "lb" )
+  | Upper _ -> (
+    match c with Check -> "less_or_equal" | Constrain | Unconstrain -> "ub" )
+  | LowerUpper _ -> (
+    match c with
+    | Check ->
+        raise_s
+          [%message "LowerUpper is really two other checks tied together"]
+    | Constrain | Unconstrain -> "lub" )
+  | Offset _ | Multiplier _ | OffsetMultiplier _ -> (
+    match c with Check -> "" | Constrain | Unconstrain -> "offset_multiplier" )
+  | Identity -> ""
+
+let constrain_constraint_to_string t (c : constrainaction) =
+  match t with
+  | Program.CholeskyCorr -> "cholesky_factor_corr"
+  | _ -> check_constraint_to_string t c
+
+let default_multiplier = 1
+let default_offset = 0
+
+let transform_args = function
+  | Program.Offset offset -> [offset; Expr.Helpers.int default_multiplier]
+  | Multiplier multiplier -> [Expr.Helpers.int default_offset; multiplier]
+  | transform ->
+      Program.fold_transformation (fun args arg -> args @ [arg]) [] transform
 
 let param_read smeta
-    ( decl_id
-    , Program.({ out_constrained_st= cst
-               ; out_unconstrained_st= ucst
-               ; out_block; _ }) ) =
+    (decl_id, Program.({out_constrained_st= cst; out_block; out_trans; _})) =
   if not (out_block = Parameters) then []
   else
-    let decl_id, decl =
-      match cst = ucst with
-      | true -> (decl_id, [])
-      | false ->
-          let decl_id = decl_id ^ "_in__" in
-          let d =
-            Stmt.Fixed.Pattern.Decl
-              {decl_adtype= AutoDiffable; decl_id; decl_type= Sized ucst}
-          in
-          (decl_id, [Stmt.Fixed.{meta= smeta; pattern= d}])
+    let ut = SizedType.to_unsized cst in
+    let decl_var =
+      Expr.Fixed.
+        { pattern= Var decl_id
+        ; meta=
+            Expr.Typed.Meta.create ~loc:smeta ~type_:ut ~adlevel:AutoDiffable
+              () }
     in
-    let unconstrained_decl_var =
-      let meta =
-        Expr.Typed.Meta.create ~loc:smeta
-          ~type_:SizedType.(to_unsized cst)
-          ~adlevel:AutoDiffable ()
-      in
-      Expr.Fixed.{meta; pattern= Var decl_id}
+    let transform_args = transform_args out_trans in
+    (*
+      For constrains that return square / lower triangular matrices the C++
+      only wants one of the matrix dimensions.
+    *)
+    let rec constrain_get_dims st =
+      match st with
+      | SizedType.SInt | SReal -> []
+      | SVector d | SRowVector d -> [d]
+      | SMatrix (_, dim2) -> [dim2]
+      | SArray (t, dim) -> dim :: constrain_get_dims t
     in
-    let bodyfn var =
-      let readfnapp (var : Expr.Typed.t) =
-        Expr.(
-          Helpers.(
-            internal_funapp FnReadParam
-              ( str (base_ut_to_string (SizedType.to_unsized ucst))
-              :: SizedType.dims_of ucst ))
-            Typed.Meta.{var.meta with type_= base_type ucst})
-      in
-      Stmt.Helpers.assign_indexed (SizedType.to_unsized cst) decl_id smeta
-        readfnapp var
+    let read_constrain_dims constrain_transform st =
+      match constrain_transform with
+      | Program.CholeskyCorr | Correlation | Covariance ->
+          constrain_get_dims st
+      | _ -> SizedType.get_dims st
     in
-    decl @ [Stmt.Helpers.for_eigen ucst bodyfn unconstrained_decl_var smeta]
+    (* this is an absolute hack
+
+       I need to unpack the constraint arguments and the dimensions in codegen, but we pack them all together into a fake function FnReadParam as expressions
+       So, I'm packing in the number of constraint arguments to read as an int expression
+       To avoid this hack, keep internal functions as a variant type instead of a normal funapp
+    *)
+    let n_args_expression = Expr.Helpers.int (List.length transform_args) in
+    let read =
+      Expr.(
+        Helpers.(
+          internal_funapp FnReadParam
+            ( Expr.Helpers.str
+                (constrain_constraint_to_string out_trans Constrain)
+            :: n_args_expression
+            :: (transform_args @ read_constrain_dims out_trans cst) ))
+          Typed.Meta.{decl_var.meta with type_= ut})
+    in
+    [ Stmt.Fixed.
+        {pattern= Pattern.Assignment ((decl_id, ut, []), read); meta= smeta} ]
 
 let escape_name str =
   str

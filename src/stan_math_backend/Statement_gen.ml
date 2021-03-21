@@ -109,6 +109,11 @@ let rec pp_statement (ppf : Format.formatter)
   | _ -> Locations.pp_smeta ppf meta ) ;
   match pattern with
   | Assignment
+      ((vident, _, []), ({pattern= FunApp (CompilerInternal, f, _); _} as rhs))
+    when f = Internal_fun.to_string FnReadData
+         || f = Internal_fun.to_string FnReadParam ->
+      pf ppf "@[<hov 4>%s = %a;@]" vident pp_expr rhs
+  | Assignment
       ((vident, _, []), ({meta= Expr.Typed.Meta.({type_= UInt; _}); _} as rhs))
    |Assignment ((vident, _, []), ({meta= {type_= UReal; _}; _} as rhs)) ->
       pf ppf "@[<hov 4>%s = %a;@]" vident pp_expr rhs
