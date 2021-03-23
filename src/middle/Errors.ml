@@ -20,7 +20,10 @@ exception SemanticError of Semantic_error.t
     [msg]. *)
 exception FatalError of string
 
-type t = Syntax_error of syntax_error | Semantic_error of Semantic_error.t
+type t =
+  | FileNotFound of string
+  | Syntax_error of syntax_error
+  | Semantic_error of Semantic_error.t
 
 (* A fatal error reported by the toplevel *)
 let fatal_error ?(msg = "") _ =
@@ -57,6 +60,7 @@ let pp_syntax_error ?printed_filename ppf = function
         pp_context_with_message (message, loc)
 
 let pp ?printed_filename ppf = function
+  | FileNotFound f -> Fmt.pf ppf "Cannot not open file %s@." f
   | Syntax_error e -> pp_syntax_error ?printed_filename ppf e
   | Semantic_error e -> pp_semantic_error ?printed_filename ppf e
 
