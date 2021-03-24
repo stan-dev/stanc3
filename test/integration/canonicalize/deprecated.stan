@@ -15,6 +15,9 @@ functions {
     }
     return s;
   }
+  real foo_cdf(real a, real b, real c) {
+    return a + b + c;
+  }
 }
 data {
   int<lower=1> N;
@@ -58,6 +61,7 @@ model {
   target += sum(K);
 
   target += normal_cdf(1, 2, 3);
+  target += foo_cdf(1, 2, 3);
 
   print("target: ", get_lp());
 }
