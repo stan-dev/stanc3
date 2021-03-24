@@ -57,6 +57,8 @@ model {
     + normal_ccdf_log(3, 0, 1);
   target += sum(K);
 
+  target += normal_cdf(1, 2, 3);
+
   print("target: ", get_lp());
 }
 generated quantities {

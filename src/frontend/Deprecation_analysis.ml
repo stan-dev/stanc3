@@ -114,8 +114,12 @@ let rec collect_deprecated_expr deprecated_userdefined
         if Option.is_some (String.Map.find deprecated_distributions name) then
           [ ( emeta.loc
             , name ^ " is deprecated and will be removed in the future. Use "
-              ^ rename_deprecated deprecated_distributions name
-              ^ " instead." ) ]
+            ^ rename_deprecated deprecated_distributions name
+            ^ " instead." ) ]
+        else if String.is_suffix name ~suffix:"_cdf" then
+          [ ( emeta.loc
+            , "Use of " ^ name ^ " without a vertical bar (|) between the \
+            first two arguments is deprecated." ) ]
         else if Option.is_some (String.Map.find deprecated_functions name) then
           [ ( emeta.loc
             , name ^ " is deprecated and will be removed in the future. Use "

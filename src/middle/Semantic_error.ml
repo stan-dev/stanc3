@@ -371,12 +371,12 @@ module ExpressionError = struct
     | ConditionalNotationNotAllowed ->
         Fmt.pf ppf
           "Only functions with names ending in _lpdf, _lupdf, _lpmf, _lupmf, \
-           _lcdf, _lccdf can make use of conditional notation."
+           _cdf, _lcdf, _lccdf can make use of conditional notation."
     | ConditioningRequired ->
         Fmt.pf ppf
           "Probability functions with suffixes _lpdf, _lupdf, _lpmf, _lupmf, \
-           _lcdf and _lccdf, require a vertical bar (|) between the first two \
-           arguments."
+           _cdf, _lcdf and _lccdf, require a vertical bar (|) between the \
+           first two arguments."
     | NotPrintable -> Fmt.pf ppf "Functions cannot be printed."
     | EmptyArray ->
         Fmt.pf ppf "Array expressions must contain at least one element."
