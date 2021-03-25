@@ -5,16 +5,15 @@
 namespace simple_function_model_namespace {
 
 using stan::io::dump;
-using stan::model::model_base_crtp;
-using stan::model::rvalue;
-using stan::model::cons_list;
+using stan::model::assign;
 using stan::model::index_uni;
 using stan::model::index_max;
 using stan::model::index_min;
 using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
-using stan::model::nil_index_list;
+using stan::model::model_base_crtp;
+using stan::model::rvalue;
 using namespace stan::math;
 
 
@@ -134,6 +133,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
+  
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
   stan::require_vector_like_t<VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
@@ -144,7 +144,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -156,41 +156,20 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       rho = DUMMY_VAR__;
       
       current_statement__ = 1;
-      rho = in__.scalar();
-      current_statement__ = 1;
-      if (jacobian__) {
-        current_statement__ = 1;
-        rho = stan::math::lb_constrain(rho, 0, lp__);
-      } else {
-        current_statement__ = 1;
-        rho = stan::math::lb_constrain(rho, 0);
-      }
+      rho = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+              lp__);
       local_scalar_t__ alpha;
       alpha = DUMMY_VAR__;
       
       current_statement__ = 2;
-      alpha = in__.scalar();
-      current_statement__ = 2;
-      if (jacobian__) {
-        current_statement__ = 2;
-        alpha = stan::math::lb_constrain(alpha, 0, lp__);
-      } else {
-        current_statement__ = 2;
-        alpha = stan::math::lb_constrain(alpha, 0);
-      }
+      alpha = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
+                0, lp__);
       local_scalar_t__ sigma;
       sigma = DUMMY_VAR__;
       
       current_statement__ = 3;
-      sigma = in__.scalar();
-      current_statement__ = 3;
-      if (jacobian__) {
-        current_statement__ = 3;
-        sigma = stan::math::lb_constrain(sigma, 0, lp__);
-      } else {
-        current_statement__ = 3;
-        sigma = stan::math::lb_constrain(sigma, 0);
-      }
+      sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
+                0, lp__);
       {
         current_statement__ = 4;
         validate_non_negative_index("cov", "N", N);
@@ -213,7 +192,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
           profile<local_scalar_t__> profile__("cov_exp_quad", const_cast<profile_map&>(profiles__));
           
           current_statement__ = 10;
-          assign(cov, nil_index_list(),
+          assign(cov,
             add(gp_exp_quad_cov(x, alpha, rho),
               diag_matrix(rep_vector(sigma, N))), "assigning variable cov");
         }
@@ -222,8 +201,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
           profile<local_scalar_t__> profile__("cholesky_decompose", const_cast<profile_map&>(profiles__));
           
           current_statement__ = 12;
-          assign(L_cov, nil_index_list(), cholesky_decompose(cov),
-            "assigning variable L_cov");
+          assign(L_cov, cholesky_decompose(cov), "assigning variable L_cov");
         }
         current_statement__ = 20;
         {
@@ -271,12 +249,13 @@ class simple_function_model final : public model_base_crtp<simple_function_model
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
-    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    constexpr bool jacobian__ = false;
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "simple_function_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
@@ -286,23 +265,20 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       rho = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      rho = in__.scalar();
-      current_statement__ = 1;
-      rho = stan::math::lb_constrain(rho, 0);
+      rho = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
+              lp__);
       double alpha;
       alpha = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
-      alpha = in__.scalar();
-      current_statement__ = 2;
-      alpha = stan::math::lb_constrain(alpha, 0);
+      alpha = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
+                0, lp__);
       double sigma;
       sigma = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 3;
-      sigma = in__.scalar();
-      current_statement__ = 3;
-      sigma = stan::math::lb_constrain(sigma, 0);
+      sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
+                0, lp__);
       vars__.emplace_back(rho);
       vars__.emplace_back(alpha);
       vars__.emplace_back(sigma);

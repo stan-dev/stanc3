@@ -815,7 +815,9 @@ let trans_block ud_dists declc block prog =
           if Utils.is_user_ident decl_id then
             let constrain_checks =
               match declc.dconstrain with
-              | Some Constrain | Some Unconstrain ->
+              | Some Constrain ->
+                  check_transform_shape decl_id decl_var smeta.loc transform
+              | Some Unconstrain ->
                   check_transform_shape decl_id decl_var smeta.loc transform
                   @ constrain_decl type_ declc.dconstrain transform decl_id
                       decl_var smeta.loc

@@ -5,16 +5,15 @@
 namespace basic_model_namespace {
 
 using stan::io::dump;
-using stan::model::model_base_crtp;
-using stan::model::rvalue;
-using stan::model::cons_list;
+using stan::model::assign;
 using stan::model::index_uni;
 using stan::model::index_max;
 using stan::model::index_min;
 using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
-using stan::model::nil_index_list;
+using stan::model::model_base_crtp;
+using stan::model::rvalue;
 using namespace stan::math;
 
 
@@ -146,8 +145,7 @@ my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
     stan::math::fill(result, DUMMY_VAR__);
     
     current_statement__ = 8;
-    assign(result, nil_index_list(), multiply(x, 5.0),
-      "assigning variable result");
+    assign(result, multiply(x, 5.0), "assigning variable result");
     current_statement__ = 9;
     return result;
   } catch (const std::exception& e) {
@@ -393,16 +391,15 @@ auto test_lpdf(const double& a, const double& b,
 namespace integrate_model_namespace {
 
 using stan::io::dump;
-using stan::model::model_base_crtp;
-using stan::model::rvalue;
-using stan::model::cons_list;
+using stan::model::assign;
 using stan::model::index_uni;
 using stan::model::index_max;
 using stan::model::index_min;
 using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
-using stan::model::nil_index_list;
+using stan::model::model_base_crtp;
+using stan::model::rvalue;
 using namespace stan::math;
 
 
@@ -473,9 +470,8 @@ integrand_ode(const T0__& r, const std::vector<T1__>& f,
     current_statement__ = 4;
     x = logit(r);
     current_statement__ = 5;
-    assign(df_dx, cons_list(index_uni(1), nil_index_list()),
-      ((stan::math::exp(-square(x)) * 1) / (r * (1 - r))),
-      "assigning variable df_dx");
+    assign(df_dx, ((stan::math::exp(-square(x)) * 1) / (r * (1 - r))),
+      "assigning variable df_dx", index_uni(1));
     current_statement__ = 6;
     return df_dx;
   } catch (const std::exception& e) {
@@ -511,10 +507,12 @@ ode_integrate(std::ostream* pstream__) {
     x_i = std::vector<int>(0, std::numeric_limits<int>::min());
     
     current_statement__ = 9;
-    return integrate_ode_bdf(integrand_ode_functor__(), rep_array(0.0, 1), 1E-5,
+    return rvalue(
+             integrate_ode_bdf(integrand_ode_functor__(), rep_array(0.0, 1), 1E-5,
   rep_array((1.0 - 1E-5), 1), rep_array(0.0, 0), rep_array(0.0, 0), x_i,
-  pstream__)[
-        (1 - 1)][(1 - 1)];
+  pstream__),
+             "integrate_ode_bdf(integrand_ode, rep_array(0.0, 1), 1E-5,\n                  rep_array((1.0 - 1E-5), 1), rep_array(0.0, 0),\n                  rep_array(0.0, 0), x_i)",
+             index_uni(1), index_uni(1));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return

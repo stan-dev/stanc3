@@ -175,7 +175,10 @@ pipeline {
                         }
                     }
                     steps {
-                        
+
+                        script {
+                            checkoutRepository("sh")
+                        }                        
                         runShell("""
                             eval \$(opam env)
                             dune subst

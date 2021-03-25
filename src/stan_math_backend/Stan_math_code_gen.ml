@@ -546,13 +546,14 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
   let intro ppf () =
     pf ppf "%a@ %a@ %a" (list ~sep:cut string)
       [ "using local_scalar_t__ = double;"; "vars__.resize(0);"
-      ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
+      ; "stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);"
       ; "double lp__ = 0.0;"
       ; "(void) lp__;  // dummy to suppress unused var warning"
       ; "int current_statement__ = 0; "
       ; "stan::math::accumulator<double> lp_accum__;"
       ; "local_scalar_t__ \
-         DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ]
+         DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());"
+      ; "constexpr bool jacobian__ = false;" ]
       pp_unused "DUMMY_VAR__" pp_function__ (prog_name, "write_array")
   in
   pp_method_b ppf "void" "write_array_impl" params intro generate_quantities
@@ -698,8 +699,8 @@ let pp_transform_inits ppf {Program.transform_inits; _} =
 (** Print the `log_prob` method of the model class *)
 let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
   pf ppf
-    "template <bool propto__, bool jacobian__ , typename VecR, typename VecI, \
-     @ stan::require_vector_like_t<VecR>* = nullptr, @ \
+    "@ template <bool propto__, bool jacobian__ , typename VecR, typename \
+     VecI, @ stan::require_vector_like_t<VecR>* = nullptr, @ \
      stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> @ " ;
   let params =
     [ "VecR& params_r__"; "VecI& params_i__"
@@ -710,7 +711,7 @@ let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
       [ "using T__ = stan::scalar_type_t<VecR>;"
       ; "using local_scalar_t__ = T__;"; "T__ lp__(0.0);"
       ; "stan::math::accumulator<T__> lp_accum__;"
-      ; "stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);"
+      ; "stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);"
       ; "int current_statement__ = 0;"
       ; "local_scalar_t__ \
          DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ]
@@ -858,16 +859,15 @@ let pp_model ppf ({Program.prog_name; _} as p) =
 let usings =
   {|
 using stan::io::dump;
-using stan::model::model_base_crtp;
-using stan::model::rvalue;
-using stan::model::cons_list;
+using stan::model::assign;
 using stan::model::index_uni;
 using stan::model::index_max;
 using stan::model::index_min;
 using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
-using stan::model::nil_index_list;
+using stan::model::model_base_crtp;
+using stan::model::rvalue;
 using namespace stan::math;
 |}
 

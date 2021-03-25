@@ -5,16 +5,15 @@
 namespace distributions_model_namespace {
 
 using stan::io::dump;
-using stan::model::model_base_crtp;
-using stan::model::rvalue;
-using stan::model::cons_list;
+using stan::model::assign;
 using stan::model::index_uni;
 using stan::model::index_max;
 using stan::model::index_min;
 using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
-using stan::model::nil_index_list;
+using stan::model::model_base_crtp;
+using stan::model::rvalue;
 using namespace stan::math;
 
 
@@ -907,6 +906,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
+  
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
   stan::require_vector_like_t<VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
@@ -917,7 +917,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -929,38 +929,38 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       p_real = DUMMY_VAR__;
       
       current_statement__ = 1;
-      p_real = in__.scalar();
+      p_real = in__.template read<local_scalar_t__>();
       std::vector<local_scalar_t__> p_real_array;
       p_real_array = std::vector<local_scalar_t__>(d_int, DUMMY_VAR__);
       
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        current_statement__ = 2;
-        assign(p_real_array, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable p_real_array");}
+      p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_matrix;
       p_matrix = Eigen::Matrix<local_scalar_t__, -1, -1>(d_int, d_int);
       stan::math::fill(p_matrix, DUMMY_VAR__);
       
       current_statement__ = 3;
-      p_matrix = in__.matrix(d_int, d_int);
+      p_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+                   d_int, d_int);
       Eigen::Matrix<local_scalar_t__, -1, 1> p_vector;
       p_vector = Eigen::Matrix<local_scalar_t__, -1, 1>(d_int);
       stan::math::fill(p_vector, DUMMY_VAR__);
       
       current_statement__ = 4;
-      p_vector = in__.vector(d_int);
+      p_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                   d_int);
       Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vector;
       p_row_vector = Eigen::Matrix<local_scalar_t__, 1, -1>(d_int);
       stan::math::fill(p_row_vector, DUMMY_VAR__);
       
       current_statement__ = 5;
-      p_row_vector = in__.row_vector(d_int);
+      p_row_vector = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(
+                       d_int);
       local_scalar_t__ y_p;
       y_p = DUMMY_VAR__;
       
       current_statement__ = 6;
-      y_p = in__.scalar();
+      y_p = in__.template read<local_scalar_t__>();
       local_scalar_t__ transformed_param_real;
       transformed_param_real = DUMMY_VAR__;
       
@@ -3457,12 +3457,13 @@ class distributions_model final : public model_base_crtp<distributions_model> {
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
-    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    constexpr bool jacobian__ = false;
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "distributions_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
@@ -3472,38 +3473,38 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       p_real = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      p_real = in__.scalar();
+      p_real = in__.template read<local_scalar_t__>();
       std::vector<double> p_real_array;
       p_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        current_statement__ = 2;
-        assign(p_real_array, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable p_real_array");}
+      p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
       Eigen::Matrix<double, -1, -1> p_matrix;
       p_matrix = Eigen::Matrix<double, -1, -1>(d_int, d_int);
       stan::math::fill(p_matrix, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
-      p_matrix = in__.matrix(d_int, d_int);
+      p_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+                   d_int, d_int);
       Eigen::Matrix<double, -1, 1> p_vector;
       p_vector = Eigen::Matrix<double, -1, 1>(d_int);
       stan::math::fill(p_vector, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 4;
-      p_vector = in__.vector(d_int);
+      p_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                   d_int);
       Eigen::Matrix<double, 1, -1> p_row_vector;
       p_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
       stan::math::fill(p_row_vector, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
-      p_row_vector = in__.row_vector(d_int);
+      p_row_vector = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(
+                       d_int);
       double y_p;
       y_p = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 6;
-      y_p = in__.scalar();
+      y_p = in__.template read<local_scalar_t__>();
       double transformed_param_real;
       transformed_param_real = std::numeric_limits<double>::quiet_NaN();
       
@@ -3513,10 +3514,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
           vars__.emplace_back(
-            rvalue(p_matrix,
-              cons_list(index_uni(sym2__),
-                cons_list(index_uni(sym1__), nil_index_list())), "p_matrix"));
-        }}
+            rvalue(p_matrix, "p_matrix",
+              index_uni(sym2__), index_uni(sym1__)));}}
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         vars__.emplace_back(p_vector[(sym1__ - 1)]);}
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
@@ -6033,8 +6032,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       p_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
-      assign(p_real_array, nil_index_list(),
-        context__.vals_r("p_real_array"), "assigning variable p_real_array");
+      p_real_array = context__.vals_r("p_real_array");
       Eigen::Matrix<double, -1, -1> p_matrix;
       p_matrix = Eigen::Matrix<double, -1, -1>(d_int, d_int);
       stan::math::fill(p_matrix, std::numeric_limits<double>::quiet_NaN());
@@ -6042,8 +6040,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       {
         std::vector<local_scalar_t__> p_matrix_flat__;
         current_statement__ = 3;
-        assign(p_matrix_flat__, nil_index_list(),
-          context__.vals_r("p_matrix"), "assigning variable p_matrix_flat__");
+        p_matrix_flat__ = context__.vals_r("p_matrix");
         current_statement__ = 3;
         pos__ = 1;
         current_statement__ = 3;
@@ -6051,10 +6048,9 @@ class distributions_model final : public model_base_crtp<distributions_model> {
           current_statement__ = 3;
           for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
             current_statement__ = 3;
-            assign(p_matrix,
-              cons_list(index_uni(sym2__),
-                cons_list(index_uni(sym1__), nil_index_list())),
-              p_matrix_flat__[(pos__ - 1)], "assigning variable p_matrix");
+            assign(p_matrix, p_matrix_flat__[(pos__ - 1)],
+              "assigning variable p_matrix", index_uni(sym2__),
+                                               index_uni(sym1__));
             current_statement__ = 3;
             pos__ = (pos__ + 1);}}
       }
@@ -6065,15 +6061,14 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       {
         std::vector<local_scalar_t__> p_vector_flat__;
         current_statement__ = 4;
-        assign(p_vector_flat__, nil_index_list(),
-          context__.vals_r("p_vector"), "assigning variable p_vector_flat__");
+        p_vector_flat__ = context__.vals_r("p_vector");
         current_statement__ = 4;
         pos__ = 1;
         current_statement__ = 4;
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
           current_statement__ = 4;
-          assign(p_vector, cons_list(index_uni(sym1__), nil_index_list()),
-            p_vector_flat__[(pos__ - 1)], "assigning variable p_vector");
+          assign(p_vector, p_vector_flat__[(pos__ - 1)],
+            "assigning variable p_vector", index_uni(sym1__));
           current_statement__ = 4;
           pos__ = (pos__ + 1);}
       }
@@ -6084,18 +6079,14 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       {
         std::vector<local_scalar_t__> p_row_vector_flat__;
         current_statement__ = 5;
-        assign(p_row_vector_flat__, nil_index_list(),
-          context__.vals_r("p_row_vector"),
-          "assigning variable p_row_vector_flat__");
+        p_row_vector_flat__ = context__.vals_r("p_row_vector");
         current_statement__ = 5;
         pos__ = 1;
         current_statement__ = 5;
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
           current_statement__ = 5;
-          assign(p_row_vector,
-            cons_list(index_uni(sym1__), nil_index_list()),
-            p_row_vector_flat__[(pos__ - 1)],
-            "assigning variable p_row_vector");
+          assign(p_row_vector, p_row_vector_flat__[(pos__ - 1)],
+            "assigning variable p_row_vector", index_uni(sym1__));
           current_statement__ = 5;
           pos__ = (pos__ + 1);}
       }
@@ -6110,10 +6101,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
           vars__.emplace_back(
-            rvalue(p_matrix,
-              cons_list(index_uni(sym2__),
-                cons_list(index_uni(sym1__), nil_index_list())), "p_matrix"));
-        }}
+            rvalue(p_matrix, "p_matrix",
+              index_uni(sym2__), index_uni(sym1__)));}}
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         vars__.emplace_back(p_vector[(sym1__ - 1)]);}
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
@@ -6335,16 +6324,15 @@ stan::math::profile_map& get_stan_profile_data() {
 namespace restricted_model_namespace {
 
 using stan::io::dump;
-using stan::model::model_base_crtp;
-using stan::model::rvalue;
-using stan::model::cons_list;
+using stan::model::assign;
 using stan::model::index_uni;
 using stan::model::index_max;
 using stan::model::index_min;
 using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
-using stan::model::nil_index_list;
+using stan::model::model_base_crtp;
+using stan::model::rvalue;
 using namespace stan::math;
 
 
@@ -6497,6 +6485,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
+  
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
   stan::require_vector_like_t<VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
@@ -6507,7 +6496,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -6519,38 +6508,38 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       p_real = DUMMY_VAR__;
       
       current_statement__ = 1;
-      p_real = in__.scalar();
+      p_real = in__.template read<local_scalar_t__>();
       std::vector<local_scalar_t__> p_real_array;
       p_real_array = std::vector<local_scalar_t__>(d_int, DUMMY_VAR__);
       
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        current_statement__ = 2;
-        assign(p_real_array, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable p_real_array");}
+      p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_matrix;
       p_matrix = Eigen::Matrix<local_scalar_t__, -1, -1>(d_int, d_int);
       stan::math::fill(p_matrix, DUMMY_VAR__);
       
       current_statement__ = 3;
-      p_matrix = in__.matrix(d_int, d_int);
+      p_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+                   d_int, d_int);
       Eigen::Matrix<local_scalar_t__, -1, 1> p_vector;
       p_vector = Eigen::Matrix<local_scalar_t__, -1, 1>(d_int);
       stan::math::fill(p_vector, DUMMY_VAR__);
       
       current_statement__ = 4;
-      p_vector = in__.vector(d_int);
+      p_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                   d_int);
       Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vector;
       p_row_vector = Eigen::Matrix<local_scalar_t__, 1, -1>(d_int);
       stan::math::fill(p_row_vector, DUMMY_VAR__);
       
       current_statement__ = 5;
-      p_row_vector = in__.row_vector(d_int);
+      p_row_vector = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(
+                       d_int);
       local_scalar_t__ y_p;
       y_p = DUMMY_VAR__;
       
       current_statement__ = 6;
-      y_p = in__.scalar();
+      y_p = in__.template read<local_scalar_t__>();
       local_scalar_t__ transformed_param_real;
       transformed_param_real = DUMMY_VAR__;
       
@@ -6616,12 +6605,13 @@ class restricted_model final : public model_base_crtp<restricted_model> {
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
-    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    constexpr bool jacobian__ = false;
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "restricted_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
@@ -6631,38 +6621,38 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       p_real = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      p_real = in__.scalar();
+      p_real = in__.template read<local_scalar_t__>();
       std::vector<double> p_real_array;
       p_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        current_statement__ = 2;
-        assign(p_real_array, cons_list(index_uni(sym1__), nil_index_list()),
-          in__.scalar(), "assigning variable p_real_array");}
+      p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
       Eigen::Matrix<double, -1, -1> p_matrix;
       p_matrix = Eigen::Matrix<double, -1, -1>(d_int, d_int);
       stan::math::fill(p_matrix, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
-      p_matrix = in__.matrix(d_int, d_int);
+      p_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+                   d_int, d_int);
       Eigen::Matrix<double, -1, 1> p_vector;
       p_vector = Eigen::Matrix<double, -1, 1>(d_int);
       stan::math::fill(p_vector, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 4;
-      p_vector = in__.vector(d_int);
+      p_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                   d_int);
       Eigen::Matrix<double, 1, -1> p_row_vector;
       p_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
       stan::math::fill(p_row_vector, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
-      p_row_vector = in__.row_vector(d_int);
+      p_row_vector = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(
+                       d_int);
       double y_p;
       y_p = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 6;
-      y_p = in__.scalar();
+      y_p = in__.template read<local_scalar_t__>();
       double transformed_param_real;
       transformed_param_real = std::numeric_limits<double>::quiet_NaN();
       
@@ -6672,10 +6662,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
           vars__.emplace_back(
-            rvalue(p_matrix,
-              cons_list(index_uni(sym2__),
-                cons_list(index_uni(sym1__), nil_index_list())), "p_matrix"));
-        }}
+            rvalue(p_matrix, "p_matrix",
+              index_uni(sym2__), index_uni(sym1__)));}}
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         vars__.emplace_back(p_vector[(sym1__ - 1)]);}
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
@@ -6761,8 +6749,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       p_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
-      assign(p_real_array, nil_index_list(),
-        context__.vals_r("p_real_array"), "assigning variable p_real_array");
+      p_real_array = context__.vals_r("p_real_array");
       Eigen::Matrix<double, -1, -1> p_matrix;
       p_matrix = Eigen::Matrix<double, -1, -1>(d_int, d_int);
       stan::math::fill(p_matrix, std::numeric_limits<double>::quiet_NaN());
@@ -6770,8 +6757,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       {
         std::vector<local_scalar_t__> p_matrix_flat__;
         current_statement__ = 3;
-        assign(p_matrix_flat__, nil_index_list(),
-          context__.vals_r("p_matrix"), "assigning variable p_matrix_flat__");
+        p_matrix_flat__ = context__.vals_r("p_matrix");
         current_statement__ = 3;
         pos__ = 1;
         current_statement__ = 3;
@@ -6779,10 +6765,9 @@ class restricted_model final : public model_base_crtp<restricted_model> {
           current_statement__ = 3;
           for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
             current_statement__ = 3;
-            assign(p_matrix,
-              cons_list(index_uni(sym2__),
-                cons_list(index_uni(sym1__), nil_index_list())),
-              p_matrix_flat__[(pos__ - 1)], "assigning variable p_matrix");
+            assign(p_matrix, p_matrix_flat__[(pos__ - 1)],
+              "assigning variable p_matrix", index_uni(sym2__),
+                                               index_uni(sym1__));
             current_statement__ = 3;
             pos__ = (pos__ + 1);}}
       }
@@ -6793,15 +6778,14 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       {
         std::vector<local_scalar_t__> p_vector_flat__;
         current_statement__ = 4;
-        assign(p_vector_flat__, nil_index_list(),
-          context__.vals_r("p_vector"), "assigning variable p_vector_flat__");
+        p_vector_flat__ = context__.vals_r("p_vector");
         current_statement__ = 4;
         pos__ = 1;
         current_statement__ = 4;
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
           current_statement__ = 4;
-          assign(p_vector, cons_list(index_uni(sym1__), nil_index_list()),
-            p_vector_flat__[(pos__ - 1)], "assigning variable p_vector");
+          assign(p_vector, p_vector_flat__[(pos__ - 1)],
+            "assigning variable p_vector", index_uni(sym1__));
           current_statement__ = 4;
           pos__ = (pos__ + 1);}
       }
@@ -6812,18 +6796,14 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       {
         std::vector<local_scalar_t__> p_row_vector_flat__;
         current_statement__ = 5;
-        assign(p_row_vector_flat__, nil_index_list(),
-          context__.vals_r("p_row_vector"),
-          "assigning variable p_row_vector_flat__");
+        p_row_vector_flat__ = context__.vals_r("p_row_vector");
         current_statement__ = 5;
         pos__ = 1;
         current_statement__ = 5;
         for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
           current_statement__ = 5;
-          assign(p_row_vector,
-            cons_list(index_uni(sym1__), nil_index_list()),
-            p_row_vector_flat__[(pos__ - 1)],
-            "assigning variable p_row_vector");
+          assign(p_row_vector, p_row_vector_flat__[(pos__ - 1)],
+            "assigning variable p_row_vector", index_uni(sym1__));
           current_statement__ = 5;
           pos__ = (pos__ + 1);}
       }
@@ -6838,10 +6818,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
           vars__.emplace_back(
-            rvalue(p_matrix,
-              cons_list(index_uni(sym2__),
-                cons_list(index_uni(sym1__), nil_index_list())), "p_matrix"));
-        }}
+            rvalue(p_matrix, "p_matrix",
+              index_uni(sym2__), index_uni(sym1__)));}}
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         vars__.emplace_back(p_vector[(sym1__ - 1)]);}
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {

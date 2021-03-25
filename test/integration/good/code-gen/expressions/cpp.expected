@@ -5,16 +5,15 @@
 namespace simple_function_model_namespace {
 
 using stan::io::dump;
-using stan::model::model_base_crtp;
-using stan::model::rvalue;
-using stan::model::cons_list;
+using stan::model::assign;
 using stan::model::index_uni;
 using stan::model::index_max;
 using stan::model::index_min;
 using stan::model::index_min_max;
 using stan::model::index_multi;
 using stan::model::index_omni;
-using stan::model::nil_index_list;
+using stan::model::model_base_crtp;
+using stan::model::rvalue;
 using namespace stan::math;
 
 
@@ -213,6 +212,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
   }
+  
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
   stan::require_vector_like_t<VecR>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
@@ -223,7 +223,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -252,12 +252,13 @@ class simple_function_model final : public model_base_crtp<simple_function_model
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
-    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    constexpr bool jacobian__ = false;
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "simple_function_model_namespace::write_array";
     (void) function__;  // suppress unused var warning

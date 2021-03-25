@@ -56,6 +56,11 @@ let minus_one e =
 
 let is_single_index = function Index.Single _ -> true | _ -> false
 
+let dont_need_range_check = function
+  | Index.Single Expr.Fixed.({pattern= Var id; _}) ->
+      not (Utils.is_user_ident id)
+  | _ -> false
+
 let promote_adtype =
   List.fold
     ~f:(fun accum expr ->
@@ -182,9 +187,8 @@ let rec pp_index ppf = function
   | MultiIndex e -> pf ppf "index_multi(%a)" pp_expr e
 
 and pp_indexes ppf = function
-  | [] -> pf ppf "nil_index_list()"
-  | idx :: idxs ->
-      pf ppf "@[<hov 2>cons_list(@,%a,@ %a)@]" pp_index idx pp_indexes idxs
+  | [] -> pf ppf ""
+  | idxs -> pf ppf "@[<hov 2>%a@]" (list ~sep:comma pp_index) idxs
 
 and pp_logical_op ppf op lhs rhs =
   pf ppf "(primitive_value(@,%a)@ %s@ primitive_value(@,%a))" pp_expr lhs op
@@ -427,9 +431,23 @@ and pp_compiler_internal_fn ad ut f ppf es =
   | Some FnReadData -> read_data ut ppf es
   | Some FnReadParam -> (
     match es with
-    | {Expr.Fixed.pattern= Lit (Str, base_type); _} :: dims ->
-        pf ppf "@[<hov 2>in__.%s(@,%a)@]" base_type (list ~sep:comma pp_expr)
-          dims
+    | {Expr.Fixed.pattern= Lit (Str, constraint_string); meta= emeta}
+      :: {Expr.Fixed.pattern= Lit (Int, n_constraint_args_str); _} :: args ->
+        let n_constraint_args = int_of_string n_constraint_args_str in
+        let constraint_args, dims = List.split_n args n_constraint_args in
+        if String.is_empty constraint_string then
+          let arg_exprs = constraint_args @ dims in
+          pf ppf "@[<hov 2>in__.template read<%a>(@,%a)@]" pp_unsizedtype_local
+            (UnsizedType.AutoDiffable, ut)
+            (list ~sep:comma pp_expr) arg_exprs
+        else
+          let lp_expr = Expr.Fixed.{pattern= Var "lp__"; meta= emeta} in
+          let arg_exprs = constraint_args @ [lp_expr] @ dims in
+          pf ppf
+            "@[<hov 2>in__.template read_constrain_%s<%a, jacobian__>(@,%a)@]"
+            constraint_string pp_unsizedtype_local
+            (UnsizedType.AutoDiffable, ut)
+            (list ~sep:comma pp_expr) arg_exprs
     | _ -> raise_s [%message "emit ReadParam with " (es : Expr.Typed.t list)] )
   | _ -> gen_fun_app ppf f es
 
@@ -446,7 +464,7 @@ and pp_promoted ad ut ppf e =
         pp_expr e
 
 and pp_indexed ppf (vident, indices, pretty) =
-  pf ppf "@[<hov 2>rvalue(@,%s,@ %a,@ %S)@]" vident pp_indexes indices pretty
+  pf ppf "@[<hov 2>rvalue(@,%s,@ %S,@ %a)@]" vident pretty pp_indexes indices
 
 and pp_indexed_simple ppf (obj, idcs) =
   let idx_minus_one = function
@@ -513,7 +531,7 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
       when Some Internal_fun.FnReadData = Internal_fun.of_string_opt f ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
     | _
-      when List.for_all ~f:is_single_index idx
+      when List.for_all ~f:dont_need_range_check idx
            && not (UnsizedType.is_indexing_matrix (Expr.Typed.type_of e, idx))
       ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
@@ -576,7 +594,7 @@ let%expect_test "pp_expr9" =
 
 let%expect_test "pp_expr10" =
   printf "%s" (pp_unlocated (Indexed (dummy_locate (Var "a"), [All]))) ;
-  [%expect {| rvalue(a, cons_list(index_omni(), nil_index_list()), "a") |}]
+  [%expect {| rvalue(a, "a", index_omni()) |}]
 
 let%expect_test "pp_expr11" =
   printf "%s"
