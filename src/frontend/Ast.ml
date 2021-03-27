@@ -62,6 +62,9 @@ type typed_expr_meta =
 type typed_expression = (typed_expr_meta, fun_kind) expr_with
 [@@deriving sexp, compare, map, hash, fold]
 
+type 'a abstract_typed_expression = (typed_expr_meta, 'a) expr_with
+[@@deriving sexp, compare, map, hash, fold]
+
 let mk_untyped_expression ~expr ~loc = {expr; emeta= {loc}}
 
 let mk_typed_expression ~expr ~loc ~type_ ~ad_level =
