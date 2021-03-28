@@ -95,15 +95,17 @@ let pp_data_decl ppf (vident, ut, adtype) =
   in
   pf ppf "%a %s;" pp_type (adtype, ut) vident
 
-let pp_sized_decl ppf (vident, st, adtype) =
+let pp_sized_decl ppf (decl_id, st, adtype) =
   pf ppf "%a@,%a" pp_decl
-    (vident, SizedType.to_unsized st, adtype)
-    pp_set_size (vident, st, adtype)
+    (decl_id, SizedType.to_unsized st, adtype)
+    pp_set_size (decl_id, st, adtype)
 
-let pp_possibly_sized_decl ppf (vident, pst, adtype) =
-  match pst with
-  | Type.Sized st -> pp_sized_decl ppf (vident, st, adtype)
-  | Unsized ut -> pp_decl ppf (vident, ut, adtype)
+let pp_possibly_sized_decl ppf
+    ((decl_id, decl_type, adtype) :
+      string * Expr.Typed.t Type.t * UnsizedType.autodifftype) =
+  match decl_type with
+  | Type.Sized st -> pp_sized_decl ppf (decl_id, st, adtype)
+  | Unsized ut -> pp_decl ppf (decl_id, ut, adtype)
 
 let math_fn_translations = function
   | Internal_fun.FnLength -> Some ("length", [])
@@ -233,8 +235,10 @@ let rec pp_statement (ppf : Format.formatter)
   | Profile (name, ls) -> pp_profile ppf (pp_stmt_list, name, ls)
   | Block ls -> pp_block ppf (pp_stmt_list, ls)
   | SList ls -> pp_stmt_list ppf ls
-  | Decl {decl_adtype; decl_id; decl_type} ->
-      pp_possibly_sized_decl ppf (decl_id, decl_type, decl_adtype)
+  | Decl {decl_adtype; decl_id; decl_type} -> (
+    match decl_type with
+    | Type.Sized st -> pp_sized_decl ppf (decl_id, st, decl_adtype)
+    | Unsized ut -> pp_decl ppf (decl_id, ut, decl_adtype) )
 
 and pp_block_s ppf body =
   match body.pattern with

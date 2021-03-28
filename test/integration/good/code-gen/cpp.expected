@@ -41,7 +41,7 @@ static constexpr std::array<const char*, 16> locations_array__ =
 class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int J;
   std::vector<double> y;
   std::vector<double> sigma;
@@ -59,10 +59,12 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
   _8_schools_ncp_model(stan::io::var_context& context__,
                        unsigned int random_seed__ = 0,
                        std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                       model_arena_(stan::io::get_data_sizes(context__)), 
-                       J(stan::io::initialize_data<int>("J", context__)),
-                       y(stan::io::initialize_data<std::vector<double>>("y", context__, model_arena_, J )),
-                       sigma(stan::io::initialize_data<std::vector<double>>("sigma", context__, model_arena_, J )) {
+                       model_arena_(),  J(stan::io::initialize_data<int>("J",
+                       context__)),
+                       y(stan::io::initialize_data<std::vector<double>>("y",
+                       model_arena_  , J )),
+                       sigma(stan::io::initialize_data<std::vector<double>>("sigma",
+                       model_arena_  , J )) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -76,10 +78,11 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 9;
       
-      
+      current_statement__ = 9;
+      J = context__.vals_i("J")[(1 - 1)];
       current_statement__ = 9;
       current_statement__ = 9;
       check_greater_or_equal(function__, "J", J, 0);
@@ -87,13 +90,20 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       validate_non_negative_index("y", "J", J);
       current_statement__ = 11;
       
-      
+      current_statement__ = 11;
+      y = context__.vals_r("y");
       current_statement__ = 12;
       validate_non_negative_index("sigma", "J", J);
       current_statement__ = 13;
       
-      
-      
+      current_statement__ = 13;
+      sigma = context__.vals_r("sigma");
+      current_statement__ = 13;
+      for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
+        current_statement__ = 13;
+        current_statement__ = 13;
+        check_greater_or_equal(function__, "sigma[sym1__]",
+                               sigma[(sym1__ - 1)], 0);}
       current_statement__ = 14;
       validate_non_negative_index("theta_tilde", "J", J);
       current_statement__ = 15;
@@ -506,7 +516,7 @@ static constexpr std::array<const char*, 3> locations_array__ =
 class _8start_with_number_model final : public model_base_crtp<_8start_with_number_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int good_model;
  
  public:
@@ -522,8 +532,9 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
   _8start_with_number_model(stan::io::var_context& context__,
                             unsigned int random_seed__ = 0,
                             std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                            model_arena_(stan::io::get_data_sizes(context__)), 
-                            good_model(stan::io::initialize_data<int>("good_model", context__)) {
+                            model_arena_(), 
+                            good_model(stan::io::initialize_data<int>("good_model",
+                            context__)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -537,10 +548,11 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 2;
       
-      
+      current_statement__ = 2;
+      good_model = context__.vals_i("good_model")[(1 - 1)];
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -848,7 +860,7 @@ static constexpr std::array<const char*, 16> locations_array__ =
 class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int J;
   std::vector<double> y;
   std::vector<double> sigma;
@@ -866,10 +878,12 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
   eight_schools_ncp_model(stan::io::var_context& context__,
                           unsigned int random_seed__ = 0,
                           std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                          model_arena_(stan::io::get_data_sizes(context__)), 
+                          model_arena_(), 
                           J(stan::io::initialize_data<int>("J", context__)),
-                          y(stan::io::initialize_data<std::vector<double>>("y", context__, model_arena_, J )),
-                          sigma(stan::io::initialize_data<std::vector<double>>("sigma", context__, model_arena_, J )) {
+                          y(stan::io::initialize_data<std::vector<double>>("y",
+                          model_arena_  , J )),
+                          sigma(stan::io::initialize_data<std::vector<double>>("sigma",
+                          model_arena_  , J )) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -883,10 +897,11 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 9;
       
-      
+      current_statement__ = 9;
+      J = context__.vals_i("J")[(1 - 1)];
       current_statement__ = 9;
       current_statement__ = 9;
       check_greater_or_equal(function__, "J", J, 0);
@@ -894,13 +909,20 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       validate_non_negative_index("y", "J", J);
       current_statement__ = 11;
       
-      
+      current_statement__ = 11;
+      y = context__.vals_r("y");
       current_statement__ = 12;
       validate_non_negative_index("sigma", "J", J);
       current_statement__ = 13;
       
-      
-      
+      current_statement__ = 13;
+      sigma = context__.vals_r("sigma");
+      current_statement__ = 13;
+      for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
+        current_statement__ = 13;
+        current_statement__ = 13;
+        check_greater_or_equal(function__, "sigma[sym1__]",
+                               sigma[(sym1__ - 1)], 0);}
       current_statement__ = 14;
       validate_non_negative_index("theta_tilde", "J", J);
       current_statement__ = 15;
@@ -1317,7 +1339,7 @@ static constexpr std::array<const char*, 6> locations_array__ =
 class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   std::vector<double> x;
  
  public:
@@ -1333,8 +1355,9 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
   mixed_type_arrays_model(stan::io::var_context& context__,
                           unsigned int random_seed__ = 0,
                           std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                          model_arena_(stan::io::get_data_sizes(context__)), 
-                           {
+                          model_arena_(), 
+                          x(stan::io::initialize_data<std::vector<double>>("x",
+                          model_arena_  , 3 )) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -1348,7 +1371,7 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 5;
       
     } catch (const std::exception& e) {
@@ -4523,7 +4546,7 @@ return binomialf(phi, theta, x_r, x_i, pstream__);
 class mother_model final : public model_base_crtp<mother_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int N;
   int M;
   int K;
@@ -4615,48 +4638,152 @@ class mother_model final : public model_base_crtp<mother_model> {
   mother_model(stan::io::var_context& context__,
                unsigned int random_seed__ = 0,
                std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-               model_arena_(stan::io::get_data_sizes(context__)), 
-               N(stan::io::initialize_data<int>("N", context__)),
-               M(stan::io::initialize_data<int>("M", context__)),
-               K(stan::io::initialize_data<int>("K", context__)),
-               d_int_1d_ar(stan::io::initialize_data<std::vector<int>>("d_int_1d_ar", context__, model_arena_, N )),
-               d_int_3d_ar(stan::io::initialize_data<std::vector<std::vector<std::vector<int>>>>("d_int_3d_ar", context__, model_arena_, N , M , K )),
+               model_arena_(),  N(stan::io::initialize_data<int>("N",
+               context__)), M(stan::io::initialize_data<int>("M",
+               context__)), K(stan::io::initialize_data<int>("K",
+               context__)),
+               d_int_1d_ar(stan::io::initialize_data<std::vector<int>>("d_int_1d_ar",
+               model_arena_  , N )),
+               d_int_3d_ar(stan::io::initialize_data<std::vector<std::vector<std::vector<int>>>>("d_int_3d_ar",
+               model_arena_  , N , M , K )),
                J(stan::io::initialize_data<double>("J", context__)),
-               d_real_1d_ar(stan::io::initialize_data<std::vector<double>>("d_real_1d_ar", context__, model_arena_, N )),
-               d_real_3d_ar(stan::io::initialize_data<std::vector<std::vector<std::vector<double>>>>("d_real_3d_ar", context__, model_arena_, N , M , K )),
-               d_vec(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("d_vec", context__, model_arena_ N)),
-               d_1d_vec(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, 1>>>("d_1d_vec", context__, model_arena_, N , N)),
-               d_3d_vec(stan::io::initialize_data<std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>>("d_3d_vec", context__, model_arena_, N , M , K , N)),
-               d_row_vec(stan::io::initialize_data<Eigen::Matrix<double, 1, -1>>("d_row_vec", context__, model_arena_ N)),
-               d_1d_row_vec(stan::io::initialize_data<std::vector<Eigen::Matrix<double, 1, -1>>>("d_1d_row_vec", context__, model_arena_, N , N)),
-               d_3d_row_vec(stan::io::initialize_data<std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>>("d_3d_row_vec", context__, model_arena_, N , M , K , N)),
-               d_ar_mat(stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>>("d_ar_mat", context__, model_arena_, 4 , 5 , 2, 3)),
-               d_simplex(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("d_simplex", context__, model_arena_ N)),
-               d_1d_simplex(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, 1>>>("d_1d_simplex", context__, model_arena_, N , N)),
-               d_3d_simplex(stan::io::initialize_data<std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>>("d_3d_simplex", context__, model_arena_, N , M , K , N)),
-               d_cfcov_54(stan::io::initialize_data<Eigen::Matrix<double, -1, -1>>("d_cfcov_54", context__, model_arena_,5 4)),
-               d_cfcov_33(stan::io::initialize_data<Eigen::Matrix<double, -1, -1>>("d_cfcov_33", context__, model_arena_,3 3)),
-               d_cfcov_33_ar(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, -1>>>("d_cfcov_33_ar", context__, model_arena_, K , 3, 3)),
+               d_real_1d_ar(stan::io::initialize_data<std::vector<double>>("d_real_1d_ar",
+               model_arena_  , N )),
+               d_real_3d_ar(stan::io::initialize_data<std::vector<std::vector<std::vector<double>>>>("d_real_3d_ar",
+               model_arena_  , N , M , K )),
+               d_vec(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("d_vec",
+               model_arena_, N)),
+               d_1d_vec(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, 1>>>("d_1d_vec",
+               model_arena_  , N , N)),
+               d_3d_vec(stan::io::initialize_data<std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>>("d_3d_vec",
+               model_arena_  , N , M , K , N)),
+               d_row_vec(stan::io::initialize_data<Eigen::Matrix<double, 1, -1>>("d_row_vec",
+               model_arena_, N)),
+               d_1d_row_vec(stan::io::initialize_data<std::vector<Eigen::Matrix<double, 1, -1>>>("d_1d_row_vec",
+               model_arena_  , N , N)),
+               d_3d_row_vec(stan::io::initialize_data<std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>>("d_3d_row_vec",
+               model_arena_  , N , M , K , N)),
+               d_ar_mat(stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>>("d_ar_mat",
+               model_arena_  , 4 , 5 , 2, 3)),
+               d_simplex(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("d_simplex",
+               model_arena_, N)),
+               d_1d_simplex(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, 1>>>("d_1d_simplex",
+               model_arena_  , N , N)),
+               d_3d_simplex(stan::io::initialize_data<std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>>("d_3d_simplex",
+               model_arena_  , N , M , K , N)),
+               d_cfcov_54(stan::io::initialize_data<Eigen::Matrix<double, -1, -1>>("d_cfcov_54",
+               model_arena_, 5, 4)),
+               d_cfcov_33(stan::io::initialize_data<Eigen::Matrix<double, -1, -1>>("d_cfcov_33",
+               model_arena_, 3, 3)),
+               d_cfcov_33_ar(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, -1>>>("d_cfcov_33_ar",
+               model_arena_  , K , 3, 3)),
                d_int(stan::io::initialize_data<int>("d_int", context__)),
-               d_int_array(stan::io::initialize_data<std::vector<int>>("d_int_array", context__, model_arena_, d_int )),
-               d_int_array_2d(stan::io::initialize_data<std::vector<std::vector<int>>>("d_int_array_2d", context__, model_arena_, d_int , 2 )),
-               d_int_array_3d(stan::io::initialize_data<std::vector<std::vector<std::vector<int>>>>("d_int_array_3d", context__, model_arena_, d_int , 2 , 3 )),
-               d_real(stan::io::initialize_data<double>("d_real", context__)),
-               d_real_array(stan::io::initialize_data<std::vector<double>>("d_real_array", context__, model_arena_, d_int )),
-               d_real_array_2d(stan::io::initialize_data<std::vector<std::vector<double>>>("d_real_array_2d", context__, model_arena_, d_int , 2 )),
-               d_real_array_3d(stan::io::initialize_data<std::vector<std::vector<std::vector<double>>>>("d_real_array_3d", context__, model_arena_, d_int , 2 , 3 )),
-               d_matrix(stan::io::initialize_data<Eigen::Matrix<double, -1, -1>>("d_matrix", context__, model_arena_,d_int d_int)),
-               d_matrix_array(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, -1>>>("d_matrix_array", context__, model_arena_, d_int , d_int, d_int)),
-               d_matrix_array_2d(stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>>("d_matrix_array_2d", context__, model_arena_, d_int , 2 , d_int, d_int)),
-               d_matrix_array_3d(stan::io::initialize_data<std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>>>("d_matrix_array_3d", context__, model_arena_, d_int , 2 , 3 , d_int, d_int)),
-               d_vector(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("d_vector", context__, model_arena_ d_int)),
-               d_vector_array(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, 1>>>("d_vector_array", context__, model_arena_, d_int , d_int)),
-               d_vector_array_2d(stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>("d_vector_array_2d", context__, model_arena_, d_int , 2 , d_int)),
-               d_vector_array_3d(stan::io::initialize_data<std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>>("d_vector_array_3d", context__, model_arena_, d_int , 2 , 3 , d_int)),
-               d_row_vector(stan::io::initialize_data<Eigen::Matrix<double, 1, -1>>("d_row_vector", context__, model_arena_ d_int)),
-               d_row_vector_array(stan::io::initialize_data<std::vector<Eigen::Matrix<double, 1, -1>>>("d_row_vector_array", context__, model_arena_, d_int , d_int)),
-               d_row_vector_array_2d(stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>("d_row_vector_array_2d", context__, model_arena_, d_int , 2 , d_int)),
-               d_row_vector_array_3d(stan::io::initialize_data<std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>>("d_row_vector_array_3d", context__, model_arena_, d_int , 2 , 3 , d_int)) {
+               d_int_array(stan::io::initialize_data<std::vector<int>>("d_int_array",
+               model_arena_  , d_int )),
+               d_int_array_2d(stan::io::initialize_data<std::vector<std::vector<int>>>("d_int_array_2d",
+               model_arena_  , d_int , 2 )),
+               d_int_array_3d(stan::io::initialize_data<std::vector<std::vector<std::vector<int>>>>("d_int_array_3d",
+               model_arena_  , d_int , 2 , 3 )),
+               d_real(stan::io::initialize_data<double>("d_real",
+               context__)),
+               d_real_array(stan::io::initialize_data<std::vector<double>>("d_real_array",
+               model_arena_  , d_int )),
+               d_real_array_2d(stan::io::initialize_data<std::vector<std::vector<double>>>("d_real_array_2d",
+               model_arena_  , d_int , 2 )),
+               d_real_array_3d(stan::io::initialize_data<std::vector<std::vector<std::vector<double>>>>("d_real_array_3d",
+               model_arena_  , d_int , 2 , 3 )),
+               d_matrix(stan::io::initialize_data<Eigen::Matrix<double, -1, -1>>("d_matrix",
+               model_arena_, d_int, d_int)),
+               d_matrix_array(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, -1>>>("d_matrix_array",
+               model_arena_  , d_int , d_int, d_int)),
+               d_matrix_array_2d(stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>>("d_matrix_array_2d",
+               model_arena_  , d_int , 2 , d_int, d_int)),
+               d_matrix_array_3d(stan::io::initialize_data<std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>>>("d_matrix_array_3d",
+               model_arena_  , d_int , 2 , 3 , d_int, d_int)),
+               d_vector(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("d_vector",
+               model_arena_, d_int)),
+               d_vector_array(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, 1>>>("d_vector_array",
+               model_arena_  , d_int , d_int)),
+               d_vector_array_2d(stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>("d_vector_array_2d",
+               model_arena_  , d_int , 2 , d_int)),
+               d_vector_array_3d(stan::io::initialize_data<std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>>("d_vector_array_3d",
+               model_arena_  , d_int , 2 , 3 , d_int)),
+               d_row_vector(stan::io::initialize_data<Eigen::Matrix<double, 1, -1>>("d_row_vector",
+               model_arena_, d_int)),
+               d_row_vector_array(stan::io::initialize_data<std::vector<Eigen::Matrix<double, 1, -1>>>("d_row_vector_array",
+               model_arena_  , d_int , d_int)),
+               d_row_vector_array_2d(stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>("d_row_vector_array_2d",
+               model_arena_  , d_int , 2 , d_int)),
+               d_row_vector_array_3d(stan::io::initialize_data<std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>>("d_row_vector_array_3d",
+               model_arena_  , d_int , 2 , 3 , d_int)),
+               td_int(stan::io::initialize_data<int>("td_int", context__)),
+               td_1d(stan::io::initialize_data<std::vector<int>>("td_1d",
+               model_arena_  , N )),
+               td_1dk(stan::io::initialize_data<std::vector<int>>("td_1dk",
+               model_arena_  , M )),
+               td_a(stan::io::initialize_data<int>("td_a", context__)),
+               td_b(stan::io::initialize_data<double>("td_b", context__)),
+               td_c(stan::io::initialize_data<double>("td_c", context__)),
+               td_ar_mat(stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>>("td_ar_mat",
+               model_arena_  , 4 , 5 , 2, 3)),
+               td_simplex(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("td_simplex",
+               model_arena_, N)),
+               td_1d_simplex(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, 1>>>("td_1d_simplex",
+               model_arena_  , N , N)),
+               td_3d_simplex(stan::io::initialize_data<std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>>("td_3d_simplex",
+               model_arena_  , N , M , K , N)),
+               td_cfcov_54(stan::io::initialize_data<Eigen::Matrix<double, -1, -1>>("td_cfcov_54",
+               model_arena_, 5, 5)),
+               td_cfcov_33(stan::io::initialize_data<Eigen::Matrix<double, -1, -1>>("td_cfcov_33",
+               model_arena_, 3, 3)),
+               x(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("x",
+               model_arena_, 2)),
+               y(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("y",
+               model_arena_, 2)),
+               dat(stan::io::initialize_data<std::vector<double>>("dat",
+               model_arena_  , 0 )),
+               dat_int(stan::io::initialize_data<std::vector<int>>("dat_int",
+               model_arena_  , 0 )),
+               x_r(stan::io::initialize_data<std::vector<std::vector<double>>>("x_r",
+               model_arena_  , 0 , 0 )),
+               x_i(stan::io::initialize_data<std::vector<std::vector<int>>>("x_i",
+               model_arena_  , 0 , 0 )),
+               arr_mul_ind(stan::io::initialize_data<std::vector<std::vector<int>>>("arr_mul_ind",
+               model_arena_  , 2 , 2 )),
+               x_mul_ind(stan::io::initialize_data<std::vector<double>>("x_mul_ind",
+               model_arena_  , 2 )),
+               transformed_data_real(stan::io::initialize_data<double>("transformed_data_real",
+               context__)),
+               transformed_data_real_array(stan::io::initialize_data<std::vector<double>>("transformed_data_real_array",
+               model_arena_  , d_int )),
+               transformed_data_real_array_2d(stan::io::initialize_data<std::vector<std::vector<double>>>("transformed_data_real_array_2d",
+               model_arena_  , d_int , 2 )),
+               transformed_data_real_array_3d(stan::io::initialize_data<std::vector<std::vector<std::vector<double>>>>("transformed_data_real_array_3d",
+               model_arena_  , d_int , 2 , 3 )),
+               transformed_data_matrix(stan::io::initialize_data<Eigen::Matrix<double, -1, -1>>("transformed_data_matrix",
+               model_arena_, d_int, d_int)),
+               transformed_data_matrix_array(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, -1>>>("transformed_data_matrix_array",
+               model_arena_  , d_int , d_int, d_int)),
+               transformed_data_matrix_array_2d(stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>>("transformed_data_matrix_array_2d",
+               model_arena_  , d_int , 2 , d_int, d_int)),
+               transformed_data_matrix_array_3d(stan::io::initialize_data<std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>>>("transformed_data_matrix_array_3d",
+               model_arena_  , d_int , 2 , 3 , d_int, d_int)),
+               transformed_data_vector(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("transformed_data_vector",
+               model_arena_, d_int)),
+               transformed_data_vector_array(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, 1>>>("transformed_data_vector_array",
+               model_arena_  , d_int , d_int)),
+               transformed_data_vector_array_2d(stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>("transformed_data_vector_array_2d",
+               model_arena_  , d_int , 2 , d_int)),
+               transformed_data_vector_array_3d(stan::io::initialize_data<std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>>("transformed_data_vector_array_3d",
+               model_arena_  , d_int , 2 , 3 , d_int)),
+               transformed_data_row_vector(stan::io::initialize_data<Eigen::Matrix<double, 1, -1>>("transformed_data_row_vector",
+               model_arena_, d_int)),
+               transformed_data_row_vector_array(stan::io::initialize_data<std::vector<Eigen::Matrix<double, 1, -1>>>("transformed_data_row_vector_array",
+               model_arena_  , d_int , d_int)),
+               transformed_data_row_vector_array_2d(stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>("transformed_data_row_vector_array_2d",
+               model_arena_  , d_int , 2 , d_int)),
+               transformed_data_row_vector_array_3d(stan::io::initialize_data<std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>>("transformed_data_row_vector_array_3d",
+               model_arena_  , d_int , 2 , 3 , d_int)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -4670,22 +4797,25 @@ class mother_model final : public model_base_crtp<mother_model> {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 186;
       
-      
+      current_statement__ = 186;
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 186;
       current_statement__ = 186;
       check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 187;
       
-      
+      current_statement__ = 187;
+      M = context__.vals_i("M")[(1 - 1)];
       current_statement__ = 187;
       current_statement__ = 187;
       check_greater_or_equal(function__, "M", M, 0);
       current_statement__ = 188;
       
-      
+      current_statement__ = 188;
+      K = context__.vals_i("K")[(1 - 1)];
       current_statement__ = 188;
       current_statement__ = 188;
       check_greater_or_equal(function__, "K", K, 0);
@@ -4696,8 +4826,14 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_int_1d_ar", "N", N);
       current_statement__ = 190;
       
-      
-      
+      current_statement__ = 190;
+      d_int_1d_ar = context__.vals_i("d_int_1d_ar");
+      current_statement__ = 190;
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        current_statement__ = 190;
+        current_statement__ = 190;
+        check_less_or_equal(function__, "d_int_1d_ar[sym1__]",
+                            d_int_1d_ar[(sym1__ - 1)], N);}
       current_statement__ = 191;
       validate_non_negative_index("d_int_3d_ar", "N", N);
       current_statement__ = 192;
@@ -4706,11 +4842,42 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_int_3d_ar", "K", K);
       current_statement__ = 194;
       
-      
-      
+      {
+        std::vector<int> d_int_3d_ar_flat__;
+        current_statement__ = 194;
+        d_int_3d_ar_flat__ = context__.vals_i("d_int_3d_ar");
+        current_statement__ = 194;
+        pos__ = 1;
+        current_statement__ = 194;
+        for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+          current_statement__ = 194;
+          for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+            current_statement__ = 194;
+            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+              current_statement__ = 194;
+              assign(d_int_3d_ar, d_int_3d_ar_flat__[(pos__ - 1)],
+                "assigning variable d_int_3d_ar", index_uni(sym3__),
+                                                    index_uni(sym2__),
+                                                    index_uni(sym1__));
+              current_statement__ = 194;
+              pos__ = (pos__ + 1);}}}
+      }
+      current_statement__ = 194;
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        current_statement__ = 194;
+        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+          current_statement__ = 194;
+          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
+            current_statement__ = 194;
+            current_statement__ = 194;
+            check_less_or_equal(function__,
+                                "d_int_3d_ar[sym1__, sym2__, sym3__]",
+                                d_int_3d_ar[(sym1__ - 1)][(sym2__ - 1)][
+                                (sym3__ - 1)], N);}}}
       current_statement__ = 195;
       
-      
+      current_statement__ = 195;
+      J = context__.vals_r("J")[(1 - 1)];
       current_statement__ = 195;
       current_statement__ = 195;
       check_greater_or_equal(function__, "J", J, -2.0);
@@ -4721,7 +4888,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_real_1d_ar", "N", N);
       current_statement__ = 197;
       
-      
+      current_statement__ = 197;
+      d_real_1d_ar = context__.vals_r("d_real_1d_ar");
       current_statement__ = 198;
       validate_non_negative_index("d_real_3d_ar", "N", N);
       current_statement__ = 199;
@@ -4730,19 +4898,67 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_real_3d_ar", "K", K);
       current_statement__ = 201;
       
-      
+      {
+        std::vector<local_scalar_t__> d_real_3d_ar_flat__;
+        current_statement__ = 201;
+        d_real_3d_ar_flat__ = context__.vals_r("d_real_3d_ar");
+        current_statement__ = 201;
+        pos__ = 1;
+        current_statement__ = 201;
+        for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+          current_statement__ = 201;
+          for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+            current_statement__ = 201;
+            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+              current_statement__ = 201;
+              assign(d_real_3d_ar, d_real_3d_ar_flat__[(pos__ - 1)],
+                "assigning variable d_real_3d_ar", index_uni(sym3__),
+                                                     index_uni(sym2__),
+                                                     index_uni(sym1__));
+              current_statement__ = 201;
+              pos__ = (pos__ + 1);}}}
+      }
       current_statement__ = 202;
       validate_non_negative_index("d_vec", "N", N);
       current_statement__ = 203;
       
-      
+      {
+        std::vector<local_scalar_t__> d_vec_flat__;
+        current_statement__ = 203;
+        d_vec_flat__ = context__.vals_r("d_vec");
+        current_statement__ = 203;
+        pos__ = 1;
+        current_statement__ = 203;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 203;
+          assign(d_vec, d_vec_flat__[(pos__ - 1)],
+            "assigning variable d_vec", index_uni(sym1__));
+          current_statement__ = 203;
+          pos__ = (pos__ + 1);}
+      }
       current_statement__ = 204;
       validate_non_negative_index("d_1d_vec", "N", N);
       current_statement__ = 205;
       validate_non_negative_index("d_1d_vec", "N", N);
       current_statement__ = 206;
       
-      
+      {
+        std::vector<local_scalar_t__> d_1d_vec_flat__;
+        current_statement__ = 206;
+        d_1d_vec_flat__ = context__.vals_r("d_1d_vec");
+        current_statement__ = 206;
+        pos__ = 1;
+        current_statement__ = 206;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 206;
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            current_statement__ = 206;
+            assign(d_1d_vec, d_1d_vec_flat__[(pos__ - 1)],
+              "assigning variable d_1d_vec", index_uni(sym2__),
+                                               index_uni(sym1__));
+            current_statement__ = 206;
+            pos__ = (pos__ + 1);}}
+      }
       current_statement__ = 207;
       validate_non_negative_index("d_3d_vec", "N", N);
       current_statement__ = 208;
@@ -4753,19 +4969,70 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_3d_vec", "N", N);
       current_statement__ = 211;
       
-      
+      {
+        std::vector<local_scalar_t__> d_3d_vec_flat__;
+        current_statement__ = 211;
+        d_3d_vec_flat__ = context__.vals_r("d_3d_vec");
+        current_statement__ = 211;
+        pos__ = 1;
+        current_statement__ = 211;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 211;
+          for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
+            current_statement__ = 211;
+            for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
+              current_statement__ = 211;
+              for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+                current_statement__ = 211;
+                assign(d_3d_vec, d_3d_vec_flat__[(pos__ - 1)],
+                  "assigning variable d_3d_vec", index_uni(sym4__),
+                                                   index_uni(sym3__),
+                                                   index_uni(sym2__),
+                                                   index_uni(sym1__));
+                current_statement__ = 211;
+                pos__ = (pos__ + 1);}}}}
+      }
       current_statement__ = 212;
       validate_non_negative_index("d_row_vec", "N", N);
       current_statement__ = 213;
       
-      
+      {
+        std::vector<local_scalar_t__> d_row_vec_flat__;
+        current_statement__ = 213;
+        d_row_vec_flat__ = context__.vals_r("d_row_vec");
+        current_statement__ = 213;
+        pos__ = 1;
+        current_statement__ = 213;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 213;
+          assign(d_row_vec, d_row_vec_flat__[(pos__ - 1)],
+            "assigning variable d_row_vec", index_uni(sym1__));
+          current_statement__ = 213;
+          pos__ = (pos__ + 1);}
+      }
       current_statement__ = 214;
       validate_non_negative_index("d_1d_row_vec", "N", N);
       current_statement__ = 215;
       validate_non_negative_index("d_1d_row_vec", "N", N);
       current_statement__ = 216;
       
-      
+      {
+        std::vector<local_scalar_t__> d_1d_row_vec_flat__;
+        current_statement__ = 216;
+        d_1d_row_vec_flat__ = context__.vals_r("d_1d_row_vec");
+        current_statement__ = 216;
+        pos__ = 1;
+        current_statement__ = 216;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 216;
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            current_statement__ = 216;
+            assign(d_1d_row_vec, d_1d_row_vec_flat__[(pos__ - 1)],
+              "assigning variable d_1d_row_vec", index_uni(sym2__),
+                                                   index_uni(sym1__));
+            current_statement__ = 216;
+            pos__ = (pos__ + 1);}}
+      }
       current_statement__ = 217;
       validate_non_negative_index("d_3d_row_vec", "N", N);
       current_statement__ = 218;
@@ -4776,17 +5043,104 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_3d_row_vec", "N", N);
       current_statement__ = 221;
       
-      
+      {
+        std::vector<local_scalar_t__> d_3d_row_vec_flat__;
+        current_statement__ = 221;
+        d_3d_row_vec_flat__ = context__.vals_r("d_3d_row_vec");
+        current_statement__ = 221;
+        pos__ = 1;
+        current_statement__ = 221;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 221;
+          for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
+            current_statement__ = 221;
+            for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
+              current_statement__ = 221;
+              for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+                current_statement__ = 221;
+                assign(d_3d_row_vec, d_3d_row_vec_flat__[(pos__ - 1)],
+                  "assigning variable d_3d_row_vec", index_uni(sym4__),
+                                                       index_uni(sym3__),
+                                                       index_uni(sym2__),
+                                                       index_uni(sym1__));
+                current_statement__ = 221;
+                pos__ = (pos__ + 1);}}}}
+      }
       current_statement__ = 222;
       
-      
-      
-      
+      {
+        std::vector<local_scalar_t__> d_ar_mat_flat__;
+        current_statement__ = 222;
+        d_ar_mat_flat__ = context__.vals_r("d_ar_mat");
+        current_statement__ = 222;
+        pos__ = 1;
+        current_statement__ = 222;
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          current_statement__ = 222;
+          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+            current_statement__ = 222;
+            for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+              current_statement__ = 222;
+              for (int sym4__ = 1; sym4__ <= 4; ++sym4__) {
+                current_statement__ = 222;
+                assign(d_ar_mat, d_ar_mat_flat__[(pos__ - 1)],
+                  "assigning variable d_ar_mat", index_uni(sym4__),
+                                                   index_uni(sym3__),
+                                                   index_uni(sym2__),
+                                                   index_uni(sym1__));
+                current_statement__ = 222;
+                pos__ = (pos__ + 1);}}}}
+      }
+      current_statement__ = 222;
+      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+        current_statement__ = 222;
+        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+          current_statement__ = 222;
+          for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+            current_statement__ = 222;
+            for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
+              current_statement__ = 222;
+              current_statement__ = 222;
+              check_greater_or_equal(function__,
+                                     "d_ar_mat[sym1__, sym2__, sym3__, sym4__]",
+                                     rvalue(d_ar_mat, "d_ar_mat",
+                                       index_uni(sym1__), index_uni(sym2__),
+                                         index_uni(sym3__), index_uni(sym4__)),
+                                     0);}}}}
+      current_statement__ = 222;
+      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+        current_statement__ = 222;
+        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+          current_statement__ = 222;
+          for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+            current_statement__ = 222;
+            for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
+              current_statement__ = 222;
+              current_statement__ = 222;
+              check_less_or_equal(function__,
+                                  "d_ar_mat[sym1__, sym2__, sym3__, sym4__]",
+                                  rvalue(d_ar_mat, "d_ar_mat",
+                                    index_uni(sym1__), index_uni(sym2__),
+                                      index_uni(sym3__), index_uni(sym4__)),
+                                  1);}}}}
       current_statement__ = 223;
       validate_non_negative_index("d_simplex", "N", N);
       current_statement__ = 224;
       
-      
+      {
+        std::vector<local_scalar_t__> d_simplex_flat__;
+        current_statement__ = 224;
+        d_simplex_flat__ = context__.vals_r("d_simplex");
+        current_statement__ = 224;
+        pos__ = 1;
+        current_statement__ = 224;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 224;
+          assign(d_simplex, d_simplex_flat__[(pos__ - 1)],
+            "assigning variable d_simplex", index_uni(sym1__));
+          current_statement__ = 224;
+          pos__ = (pos__ + 1);}
+      }
       current_statement__ = 224;
       current_statement__ = 224;
       check_simplex(function__, "d_simplex", d_simplex);
@@ -4796,8 +5150,29 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_1d_simplex", "N", N);
       current_statement__ = 227;
       
-      
-      
+      {
+        std::vector<local_scalar_t__> d_1d_simplex_flat__;
+        current_statement__ = 227;
+        d_1d_simplex_flat__ = context__.vals_r("d_1d_simplex");
+        current_statement__ = 227;
+        pos__ = 1;
+        current_statement__ = 227;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 227;
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            current_statement__ = 227;
+            assign(d_1d_simplex, d_1d_simplex_flat__[(pos__ - 1)],
+              "assigning variable d_1d_simplex", index_uni(sym2__),
+                                                   index_uni(sym1__));
+            current_statement__ = 227;
+            pos__ = (pos__ + 1);}}
+      }
+      current_statement__ = 227;
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        current_statement__ = 227;
+        current_statement__ = 227;
+        check_simplex(function__, "d_1d_simplex[sym1__]",
+                      d_1d_simplex[(sym1__ - 1)]);}
       current_statement__ = 228;
       validate_non_negative_index("d_3d_simplex", "N", N);
       current_statement__ = 229;
@@ -4808,17 +5183,81 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_3d_simplex", "N", N);
       current_statement__ = 232;
       
-      
-      
+      {
+        std::vector<local_scalar_t__> d_3d_simplex_flat__;
+        current_statement__ = 232;
+        d_3d_simplex_flat__ = context__.vals_r("d_3d_simplex");
+        current_statement__ = 232;
+        pos__ = 1;
+        current_statement__ = 232;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 232;
+          for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
+            current_statement__ = 232;
+            for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
+              current_statement__ = 232;
+              for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+                current_statement__ = 232;
+                assign(d_3d_simplex, d_3d_simplex_flat__[(pos__ - 1)],
+                  "assigning variable d_3d_simplex", index_uni(sym4__),
+                                                       index_uni(sym3__),
+                                                       index_uni(sym2__),
+                                                       index_uni(sym1__));
+                current_statement__ = 232;
+                pos__ = (pos__ + 1);}}}}
+      }
+      current_statement__ = 232;
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        current_statement__ = 232;
+        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+          current_statement__ = 232;
+          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
+            current_statement__ = 232;
+            current_statement__ = 232;
+            check_simplex(function__, "d_3d_simplex[sym1__, sym2__, sym3__]",
+                          d_3d_simplex[(sym1__ - 1)][(sym2__ - 1)][(sym3__ -
+                                                                    1)]);}}}
       current_statement__ = 233;
       
-      
+      {
+        std::vector<local_scalar_t__> d_cfcov_54_flat__;
+        current_statement__ = 233;
+        d_cfcov_54_flat__ = context__.vals_r("d_cfcov_54");
+        current_statement__ = 233;
+        pos__ = 1;
+        current_statement__ = 233;
+        for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+          current_statement__ = 233;
+          for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+            current_statement__ = 233;
+            assign(d_cfcov_54, d_cfcov_54_flat__[(pos__ - 1)],
+              "assigning variable d_cfcov_54", index_uni(sym2__),
+                                                 index_uni(sym1__));
+            current_statement__ = 233;
+            pos__ = (pos__ + 1);}}
+      }
       current_statement__ = 233;
       current_statement__ = 233;
       check_cholesky_factor(function__, "d_cfcov_54", d_cfcov_54);
       current_statement__ = 234;
       
-      
+      {
+        std::vector<local_scalar_t__> d_cfcov_33_flat__;
+        current_statement__ = 234;
+        d_cfcov_33_flat__ = context__.vals_r("d_cfcov_33");
+        current_statement__ = 234;
+        pos__ = 1;
+        current_statement__ = 234;
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          current_statement__ = 234;
+          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+            current_statement__ = 234;
+            assign(d_cfcov_33, d_cfcov_33_flat__[(pos__ - 1)],
+              "assigning variable d_cfcov_33", index_uni(sym2__),
+                                                 index_uni(sym1__));
+            current_statement__ = 234;
+            pos__ = (pos__ + 1);}}
+      }
       current_statement__ = 234;
       current_statement__ = 234;
       check_cholesky_factor(function__, "d_cfcov_33", d_cfcov_33);
@@ -4826,51 +5265,165 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_cfcov_33_ar", "K", K);
       current_statement__ = 236;
       
-      
-      
+      {
+        std::vector<local_scalar_t__> d_cfcov_33_ar_flat__;
+        current_statement__ = 236;
+        d_cfcov_33_ar_flat__ = context__.vals_r("d_cfcov_33_ar");
+        current_statement__ = 236;
+        pos__ = 1;
+        current_statement__ = 236;
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          current_statement__ = 236;
+          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+            current_statement__ = 236;
+            for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
+              current_statement__ = 236;
+              assign(d_cfcov_33_ar, d_cfcov_33_ar_flat__[(pos__ - 1)],
+                "assigning variable d_cfcov_33_ar", index_uni(sym3__),
+                                                      index_uni(sym2__),
+                                                      index_uni(sym1__));
+              current_statement__ = 236;
+              pos__ = (pos__ + 1);}}}
+      }
+      current_statement__ = 236;
+      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+        current_statement__ = 236;
+        current_statement__ = 236;
+        check_cholesky_factor(function__, "d_cfcov_33_ar[sym1__]",
+                              d_cfcov_33_ar[(sym1__ - 1)]);}
       current_statement__ = 237;
       
-      
+      current_statement__ = 237;
+      d_int = context__.vals_i("d_int")[(1 - 1)];
       current_statement__ = 238;
       validate_non_negative_index("d_int_array", "d_int", d_int);
       current_statement__ = 239;
       
-      
+      current_statement__ = 239;
+      d_int_array = context__.vals_i("d_int_array");
       current_statement__ = 240;
       validate_non_negative_index("d_int_array_2d", "d_int", d_int);
       current_statement__ = 241;
       
-      
+      {
+        std::vector<int> d_int_array_2d_flat__;
+        current_statement__ = 241;
+        d_int_array_2d_flat__ = context__.vals_i("d_int_array_2d");
+        current_statement__ = 241;
+        pos__ = 1;
+        current_statement__ = 241;
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          current_statement__ = 241;
+          for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
+            current_statement__ = 241;
+            assign(d_int_array_2d, d_int_array_2d_flat__[(pos__ - 1)],
+              "assigning variable d_int_array_2d", index_uni(sym2__),
+                                                     index_uni(sym1__));
+            current_statement__ = 241;
+            pos__ = (pos__ + 1);}}
+      }
       current_statement__ = 242;
       validate_non_negative_index("d_int_array_3d", "d_int", d_int);
       current_statement__ = 243;
       
-      
+      {
+        std::vector<int> d_int_array_3d_flat__;
+        current_statement__ = 243;
+        d_int_array_3d_flat__ = context__.vals_i("d_int_array_3d");
+        current_statement__ = 243;
+        pos__ = 1;
+        current_statement__ = 243;
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          current_statement__ = 243;
+          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+            current_statement__ = 243;
+            for (int sym3__ = 1; sym3__ <= d_int; ++sym3__) {
+              current_statement__ = 243;
+              assign(d_int_array_3d, d_int_array_3d_flat__[(pos__ - 1)],
+                "assigning variable d_int_array_3d", index_uni(sym3__),
+                                                       index_uni(sym2__),
+                                                       index_uni(sym1__));
+              current_statement__ = 243;
+              pos__ = (pos__ + 1);}}}
+      }
       current_statement__ = 244;
       
-      
+      current_statement__ = 244;
+      d_real = context__.vals_r("d_real")[(1 - 1)];
       current_statement__ = 245;
       validate_non_negative_index("d_real_array", "d_int", d_int);
       current_statement__ = 246;
       
-      
+      current_statement__ = 246;
+      d_real_array = context__.vals_r("d_real_array");
       current_statement__ = 247;
       validate_non_negative_index("d_real_array_2d", "d_int", d_int);
       current_statement__ = 248;
       
-      
+      {
+        std::vector<local_scalar_t__> d_real_array_2d_flat__;
+        current_statement__ = 248;
+        d_real_array_2d_flat__ = context__.vals_r("d_real_array_2d");
+        current_statement__ = 248;
+        pos__ = 1;
+        current_statement__ = 248;
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          current_statement__ = 248;
+          for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
+            current_statement__ = 248;
+            assign(d_real_array_2d, d_real_array_2d_flat__[(pos__ - 1)],
+              "assigning variable d_real_array_2d", index_uni(sym2__),
+                                                      index_uni(sym1__));
+            current_statement__ = 248;
+            pos__ = (pos__ + 1);}}
+      }
       current_statement__ = 249;
       validate_non_negative_index("d_real_array_3d", "d_int", d_int);
       current_statement__ = 250;
       
-      
+      {
+        std::vector<local_scalar_t__> d_real_array_3d_flat__;
+        current_statement__ = 250;
+        d_real_array_3d_flat__ = context__.vals_r("d_real_array_3d");
+        current_statement__ = 250;
+        pos__ = 1;
+        current_statement__ = 250;
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          current_statement__ = 250;
+          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+            current_statement__ = 250;
+            for (int sym3__ = 1; sym3__ <= d_int; ++sym3__) {
+              current_statement__ = 250;
+              assign(d_real_array_3d, d_real_array_3d_flat__[(pos__ - 1)],
+                "assigning variable d_real_array_3d", index_uni(sym3__),
+                                                        index_uni(sym2__),
+                                                        index_uni(sym1__));
+              current_statement__ = 250;
+              pos__ = (pos__ + 1);}}}
+      }
       current_statement__ = 251;
       validate_non_negative_index("d_matrix", "d_int", d_int);
       current_statement__ = 252;
       validate_non_negative_index("d_matrix", "d_int", d_int);
       current_statement__ = 253;
       
-      
+      {
+        std::vector<local_scalar_t__> d_matrix_flat__;
+        current_statement__ = 253;
+        d_matrix_flat__ = context__.vals_r("d_matrix");
+        current_statement__ = 253;
+        pos__ = 1;
+        current_statement__ = 253;
+        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+          current_statement__ = 253;
+          for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
+            current_statement__ = 253;
+            assign(d_matrix, d_matrix_flat__[(pos__ - 1)],
+              "assigning variable d_matrix", index_uni(sym2__),
+                                               index_uni(sym1__));
+            current_statement__ = 253;
+            pos__ = (pos__ + 1);}}
+      }
       current_statement__ = 254;
       validate_non_negative_index("d_matrix_array", "d_int", d_int);
       current_statement__ = 255;
@@ -4879,7 +5432,26 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_matrix_array", "d_int", d_int);
       current_statement__ = 257;
       
-      
+      {
+        std::vector<local_scalar_t__> d_matrix_array_flat__;
+        current_statement__ = 257;
+        d_matrix_array_flat__ = context__.vals_r("d_matrix_array");
+        current_statement__ = 257;
+        pos__ = 1;
+        current_statement__ = 257;
+        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+          current_statement__ = 257;
+          for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
+            current_statement__ = 257;
+            for (int sym3__ = 1; sym3__ <= d_int; ++sym3__) {
+              current_statement__ = 257;
+              assign(d_matrix_array, d_matrix_array_flat__[(pos__ - 1)],
+                "assigning variable d_matrix_array", index_uni(sym3__),
+                                                       index_uni(sym2__),
+                                                       index_uni(sym1__));
+              current_statement__ = 257;
+              pos__ = (pos__ + 1);}}}
+      }
       current_statement__ = 258;
       validate_non_negative_index("d_matrix_array_2d", "d_int", d_int);
       current_statement__ = 259;
@@ -4888,7 +5460,30 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_matrix_array_2d", "d_int", d_int);
       current_statement__ = 261;
       
-      
+      {
+        std::vector<local_scalar_t__> d_matrix_array_2d_flat__;
+        current_statement__ = 261;
+        d_matrix_array_2d_flat__ = context__.vals_r("d_matrix_array_2d");
+        current_statement__ = 261;
+        pos__ = 1;
+        current_statement__ = 261;
+        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+          current_statement__ = 261;
+          for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
+            current_statement__ = 261;
+            for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+              current_statement__ = 261;
+              for (int sym4__ = 1; sym4__ <= d_int; ++sym4__) {
+                current_statement__ = 261;
+                assign(d_matrix_array_2d,
+                  d_matrix_array_2d_flat__[(pos__ - 1)],
+                  "assigning variable d_matrix_array_2d", index_uni(sym4__),
+                                                            index_uni(sym3__),
+                                                            index_uni(sym2__),
+                                                            index_uni(sym1__));
+                current_statement__ = 261;
+                pos__ = (pos__ + 1);}}}}
+      }
       current_statement__ = 262;
       validate_non_negative_index("d_matrix_array_3d", "d_int", d_int);
       current_statement__ = 263;
@@ -4897,59 +5492,230 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_matrix_array_3d", "d_int", d_int);
       current_statement__ = 265;
       
-      
+      {
+        std::vector<local_scalar_t__> d_matrix_array_3d_flat__;
+        current_statement__ = 265;
+        d_matrix_array_3d_flat__ = context__.vals_r("d_matrix_array_3d");
+        current_statement__ = 265;
+        pos__ = 1;
+        current_statement__ = 265;
+        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+          current_statement__ = 265;
+          for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
+            current_statement__ = 265;
+            for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+              current_statement__ = 265;
+              for (int sym4__ = 1; sym4__ <= 2; ++sym4__) {
+                current_statement__ = 265;
+                for (int sym5__ = 1; sym5__ <= d_int; ++sym5__) {
+                  current_statement__ = 265;
+                  assign(d_matrix_array_3d,
+                    d_matrix_array_3d_flat__[(pos__ - 1)],
+                    "assigning variable d_matrix_array_3d", index_uni(sym5__),
+                                                              index_uni(sym4__),
+                                                              index_uni(sym3__),
+                                                              index_uni(sym2__),
+                                                              index_uni(sym1__));
+                  current_statement__ = 265;
+                  pos__ = (pos__ + 1);}}}}}
+      }
       current_statement__ = 266;
       validate_non_negative_index("d_vector", "d_int", d_int);
       current_statement__ = 267;
       
-      
+      {
+        std::vector<local_scalar_t__> d_vector_flat__;
+        current_statement__ = 267;
+        d_vector_flat__ = context__.vals_r("d_vector");
+        current_statement__ = 267;
+        pos__ = 1;
+        current_statement__ = 267;
+        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+          current_statement__ = 267;
+          assign(d_vector, d_vector_flat__[(pos__ - 1)],
+            "assigning variable d_vector", index_uni(sym1__));
+          current_statement__ = 267;
+          pos__ = (pos__ + 1);}
+      }
       current_statement__ = 268;
       validate_non_negative_index("d_vector_array", "d_int", d_int);
       current_statement__ = 269;
       validate_non_negative_index("d_vector_array", "d_int", d_int);
       current_statement__ = 270;
       
-      
+      {
+        std::vector<local_scalar_t__> d_vector_array_flat__;
+        current_statement__ = 270;
+        d_vector_array_flat__ = context__.vals_r("d_vector_array");
+        current_statement__ = 270;
+        pos__ = 1;
+        current_statement__ = 270;
+        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+          current_statement__ = 270;
+          for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
+            current_statement__ = 270;
+            assign(d_vector_array, d_vector_array_flat__[(pos__ - 1)],
+              "assigning variable d_vector_array", index_uni(sym2__),
+                                                     index_uni(sym1__));
+            current_statement__ = 270;
+            pos__ = (pos__ + 1);}}
+      }
       current_statement__ = 271;
       validate_non_negative_index("d_vector_array_2d", "d_int", d_int);
       current_statement__ = 272;
       validate_non_negative_index("d_vector_array_2d", "d_int", d_int);
       current_statement__ = 273;
       
-      
+      {
+        std::vector<local_scalar_t__> d_vector_array_2d_flat__;
+        current_statement__ = 273;
+        d_vector_array_2d_flat__ = context__.vals_r("d_vector_array_2d");
+        current_statement__ = 273;
+        pos__ = 1;
+        current_statement__ = 273;
+        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+          current_statement__ = 273;
+          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+            current_statement__ = 273;
+            for (int sym3__ = 1; sym3__ <= d_int; ++sym3__) {
+              current_statement__ = 273;
+              assign(d_vector_array_2d,
+                d_vector_array_2d_flat__[(pos__ - 1)],
+                "assigning variable d_vector_array_2d", index_uni(sym3__),
+                                                          index_uni(sym2__),
+                                                          index_uni(sym1__));
+              current_statement__ = 273;
+              pos__ = (pos__ + 1);}}}
+      }
       current_statement__ = 274;
       validate_non_negative_index("d_vector_array_3d", "d_int", d_int);
       current_statement__ = 275;
       validate_non_negative_index("d_vector_array_3d", "d_int", d_int);
       current_statement__ = 276;
       
-      
+      {
+        std::vector<local_scalar_t__> d_vector_array_3d_flat__;
+        current_statement__ = 276;
+        d_vector_array_3d_flat__ = context__.vals_r("d_vector_array_3d");
+        current_statement__ = 276;
+        pos__ = 1;
+        current_statement__ = 276;
+        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+          current_statement__ = 276;
+          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+            current_statement__ = 276;
+            for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+              current_statement__ = 276;
+              for (int sym4__ = 1; sym4__ <= d_int; ++sym4__) {
+                current_statement__ = 276;
+                assign(d_vector_array_3d,
+                  d_vector_array_3d_flat__[(pos__ - 1)],
+                  "assigning variable d_vector_array_3d", index_uni(sym4__),
+                                                            index_uni(sym3__),
+                                                            index_uni(sym2__),
+                                                            index_uni(sym1__));
+                current_statement__ = 276;
+                pos__ = (pos__ + 1);}}}}
+      }
       current_statement__ = 277;
       validate_non_negative_index("d_row_vector", "d_int", d_int);
       current_statement__ = 278;
       
-      
+      {
+        std::vector<local_scalar_t__> d_row_vector_flat__;
+        current_statement__ = 278;
+        d_row_vector_flat__ = context__.vals_r("d_row_vector");
+        current_statement__ = 278;
+        pos__ = 1;
+        current_statement__ = 278;
+        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+          current_statement__ = 278;
+          assign(d_row_vector, d_row_vector_flat__[(pos__ - 1)],
+            "assigning variable d_row_vector", index_uni(sym1__));
+          current_statement__ = 278;
+          pos__ = (pos__ + 1);}
+      }
       current_statement__ = 279;
       validate_non_negative_index("d_row_vector_array", "d_int", d_int);
       current_statement__ = 280;
       validate_non_negative_index("d_row_vector_array", "d_int", d_int);
       current_statement__ = 281;
       
-      
+      {
+        std::vector<local_scalar_t__> d_row_vector_array_flat__;
+        current_statement__ = 281;
+        d_row_vector_array_flat__ = context__.vals_r("d_row_vector_array");
+        current_statement__ = 281;
+        pos__ = 1;
+        current_statement__ = 281;
+        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+          current_statement__ = 281;
+          for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
+            current_statement__ = 281;
+            assign(d_row_vector_array,
+              d_row_vector_array_flat__[(pos__ - 1)],
+              "assigning variable d_row_vector_array", index_uni(sym2__),
+                                                         index_uni(sym1__));
+            current_statement__ = 281;
+            pos__ = (pos__ + 1);}}
+      }
       current_statement__ = 282;
       validate_non_negative_index("d_row_vector_array_2d", "d_int", d_int);
       current_statement__ = 283;
       validate_non_negative_index("d_row_vector_array_2d", "d_int", d_int);
       current_statement__ = 284;
       
-      
+      {
+        std::vector<local_scalar_t__> d_row_vector_array_2d_flat__;
+        current_statement__ = 284;
+        d_row_vector_array_2d_flat__ = context__.vals_r("d_row_vector_array_2d");
+        current_statement__ = 284;
+        pos__ = 1;
+        current_statement__ = 284;
+        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+          current_statement__ = 284;
+          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+            current_statement__ = 284;
+            for (int sym3__ = 1; sym3__ <= d_int; ++sym3__) {
+              current_statement__ = 284;
+              assign(d_row_vector_array_2d,
+                d_row_vector_array_2d_flat__[(pos__ - 1)],
+                "assigning variable d_row_vector_array_2d", index_uni(sym3__),
+                                                              index_uni(sym2__),
+                                                              index_uni(sym1__));
+              current_statement__ = 284;
+              pos__ = (pos__ + 1);}}}
+      }
       current_statement__ = 285;
       validate_non_negative_index("d_row_vector_array_3d", "d_int", d_int);
       current_statement__ = 286;
       validate_non_negative_index("d_row_vector_array_3d", "d_int", d_int);
       current_statement__ = 287;
       
-      
+      {
+        std::vector<local_scalar_t__> d_row_vector_array_3d_flat__;
+        current_statement__ = 287;
+        d_row_vector_array_3d_flat__ = context__.vals_r("d_row_vector_array_3d");
+        current_statement__ = 287;
+        pos__ = 1;
+        current_statement__ = 287;
+        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+          current_statement__ = 287;
+          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+            current_statement__ = 287;
+            for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+              current_statement__ = 287;
+              for (int sym4__ = 1; sym4__ <= d_int; ++sym4__) {
+                current_statement__ = 287;
+                assign(d_row_vector_array_3d,
+                  d_row_vector_array_3d_flat__[(pos__ - 1)],
+                  "assigning variable d_row_vector_array_3d", index_uni(sym4__),
+                                                                index_uni(sym3__),
+                                                                index_uni(sym2__),
+                                                                index_uni(sym1__));
+                current_statement__ = 287;
+                pos__ = (pos__ + 1);}}}}
+      }
       current_statement__ = 288;
       
       current_statement__ = 289;
@@ -4960,16 +5726,20 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("td_1dk", "M", M);
       current_statement__ = 292;
       
-      
+      current_statement__ = 292;
+      assign(td_1dk, rep_array(1, M), "assigning variable td_1dk");
       current_statement__ = 293;
       
-      
+      current_statement__ = 293;
+      td_a = N;
       current_statement__ = 294;
       
-      
+      current_statement__ = 294;
+      td_b = (N * J);
       current_statement__ = 295;
       
-      
+      current_statement__ = 295;
+      td_c = foo_bar1(td_b, pstream__);
       current_statement__ = 296;
       
       current_statement__ = 297;
@@ -5008,24 +5778,137 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       current_statement__ = 314;
       
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+      current_statement__ = 315;
+      td_int = (primitive_value(1) || primitive_value(2));
+      current_statement__ = 316;
+      td_int = (primitive_value(1) && primitive_value(2));
+      current_statement__ = 325;
+      for (int i = 1; i <= 2; ++i) {
+        current_statement__ = 323;
+        for (int j = 1; j <= 3; ++j) {
+          current_statement__ = 321;
+          for (int m = 1; m <= 4; ++m) {
+            current_statement__ = 319;
+            for (int n = 1; n <= 5; ++n) {
+              current_statement__ = 317;
+              assign(td_ar_mat, 0.4,
+                "assigning variable td_ar_mat", index_uni(m), index_uni(n),
+                                                  index_uni(i), index_uni(j));
+            }}}}
+      current_statement__ = 336;
+      for (int i = 1; i <= N; ++i) {
+        current_statement__ = 326;
+        assign(td_simplex, (1.0 / N),
+          "assigning variable td_simplex", index_uni(i));
+        current_statement__ = 334;
+        for (int n = 1; n <= N; ++n) {
+          current_statement__ = 327;
+          assign(td_1d_simplex, (1.0 / N),
+            "assigning variable td_1d_simplex", index_uni(n), index_uni(i));
+          current_statement__ = 332;
+          for (int m = 1; m <= M; ++m) {
+            current_statement__ = 330;
+            for (int k = 1; k <= K; ++k) {
+              current_statement__ = 328;
+              assign(td_3d_simplex, (1.0 / N),
+                "assigning variable td_3d_simplex", index_uni(n),
+                                                      index_uni(m),
+                                                      index_uni(k),
+                                                      index_uni(i));}}}}
+      current_statement__ = 342;
+      for (int i = 1; i <= 4; ++i) {
+        current_statement__ = 340;
+        for (int j = 1; j <= 5; ++j) {
+          Eigen::Matrix<double, -1, -1> l_mat;
+          l_mat = Eigen::Matrix<double, -1, -1>(2, 3);
+          stan::math::fill(l_mat, std::numeric_limits<double>::quiet_NaN());
+          
+          current_statement__ = 337;
+          assign(l_mat,
+            rvalue(d_ar_mat, "d_ar_mat", index_uni(i), index_uni(j)),
+            "assigning variable l_mat");
+          current_statement__ = 338;
+          if (pstream__) {
+            stan_print(pstream__, "ar dim1: ");
+            stan_print(pstream__, i);
+            stan_print(pstream__, " ar dim2: ");
+            stan_print(pstream__, j);
+            stan_print(pstream__, " matrix: ");
+            stan_print(pstream__, l_mat);
+            stan_print(pstream__, "\n");
+          }}}
+      current_statement__ = 343;
+      assign(td_cfcov_54, diag_matrix(rep_vector(1, rows(td_cfcov_54))),
+        "assigning variable td_cfcov_54");
+      current_statement__ = 344;
+      assign(td_cfcov_33, diag_matrix(rep_vector(1, rows(td_cfcov_33))),
+        "assigning variable td_cfcov_33");
+      {
+        double z;
+        z = std::numeric_limits<double>::quiet_NaN();
+        
+        Eigen::Matrix<double, 1, -1> blocked_tdata_vs;
+        blocked_tdata_vs = Eigen::Matrix<double, 1, -1>(2);
+        stan::math::fill(blocked_tdata_vs, std::numeric_limits<double>::quiet_NaN());
+        
+        current_statement__ = 347;
+        for (int sym1__ = 1; sym1__ <= stan::math::size(blocked_tdata_vs);
+             ++sym1__) {
+          {
+            double v;
+            current_statement__ = 347;
+            v = blocked_tdata_vs[(sym1__ - 1)];
+            current_statement__ = 348;
+            z = 0;
+          }}
+        std::vector<int> indices;
+        indices = std::vector<int>(4, std::numeric_limits<int>::min());
+        
+        current_statement__ = 349;
+        assign(indices, std::vector<int>{1, 2, 3, 4},
+          "assigning variable indices");
+        {
+          std::vector<int> sym1__;
+          current_statement__ = 350;
+          assign(sym1__, rvalue(indices, "indices", index_min_max(1, 3)),
+            "assigning variable sym1__");
+          current_statement__ = 350;
+          for (int sym2__ = 1; sym2__ <= stan::math::size(sym1__); ++sym2__) {
+            {
+              int i;
+              current_statement__ = 350;
+              i = sym1__[(sym2__ - 1)];
+              current_statement__ = 351;
+              z = i;
+            }}
+        }
+      }
+      current_statement__ = 353;
+      assign(td_1dk,
+        rvalue(td_1d, "td_1d", index_multi(stan::model::deep_copy(td_1dk))),
+        "assigning variable td_1dk");
+      current_statement__ = 354;
+      assign(td_simplex,
+        rvalue(td_1d_simplex, "td_1d_simplex", index_uni(1), index_omni()),
+        "assigning variable td_simplex");
+      current_statement__ = 355;
+      assign(td_simplex,
+        rvalue(td_1d_simplex, "td_1d_simplex", index_uni(1), index_omni()),
+        "assigning variable td_simplex");
+      current_statement__ = 356;
+      assign(td_simplex,
+        rvalue(td_1d_simplex, "td_1d_simplex",
+          index_uni(1), index_min_max(1, N)), "assigning variable td_simplex");
       current_statement__ = 357;
       
-      
+      current_statement__ = 358;
+      assign(arr_mul_ind, std::vector<int>{1, 1},
+        "assigning variable arr_mul_ind", index_uni(1), index_min_max(1, 2));
       current_statement__ = 359;
       
-      
+      current_statement__ = 359;
+      assign(x_mul_ind, std::vector<int>{1, 2},
+        "assigning variable x_mul_ind");
       current_statement__ = 360;
       
       current_statement__ = 361;
@@ -5139,109 +6022,374 @@ class mother_model final : public model_base_crtp<mother_model> {
                                   "d_int", d_int);
       current_statement__ = 403;
       
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+      current_statement__ = 404;
+      transformed_data_real = pow(d_int, d_int);
+      current_statement__ = 405;
+      transformed_data_real = pow(d_real, d_int);
+      current_statement__ = 406;
+      transformed_data_real = pow(d_int, d_real);
+      current_statement__ = 407;
+      transformed_data_real = pow(d_real, d_real);
+      current_statement__ = 408;
+      assign(transformed_data_real_array, pow(d_int_array, d_int),
+        "assigning variable transformed_data_real_array");
+      current_statement__ = 409;
+      assign(transformed_data_real_array, pow(d_int_array, d_real),
+        "assigning variable transformed_data_real_array");
+      current_statement__ = 410;
+      assign(transformed_data_real_array_2d, pow(d_int_array_2d, d_int),
+        "assigning variable transformed_data_real_array_2d");
+      current_statement__ = 411;
+      assign(transformed_data_real_array_2d, pow(d_int_array_2d, d_real),
+        "assigning variable transformed_data_real_array_2d");
+      current_statement__ = 412;
+      assign(transformed_data_real_array_3d, pow(d_int_array_3d, d_int),
+        "assigning variable transformed_data_real_array_3d");
+      current_statement__ = 413;
+      assign(transformed_data_real_array_3d, pow(d_int_array_3d, d_real),
+        "assigning variable transformed_data_real_array_3d");
+      current_statement__ = 414;
+      assign(transformed_data_real_array, pow(d_int, d_int_array),
+        "assigning variable transformed_data_real_array");
+      current_statement__ = 415;
+      assign(transformed_data_real_array, pow(d_real, d_int_array),
+        "assigning variable transformed_data_real_array");
+      current_statement__ = 416;
+      assign(transformed_data_real_array_2d, pow(d_int, d_int_array_2d),
+        "assigning variable transformed_data_real_array_2d");
+      current_statement__ = 417;
+      assign(transformed_data_real_array_2d, pow(d_real, d_int_array_2d),
+        "assigning variable transformed_data_real_array_2d");
+      current_statement__ = 418;
+      assign(transformed_data_real_array_3d, pow(d_int, d_int_array_3d),
+        "assigning variable transformed_data_real_array_3d");
+      current_statement__ = 419;
+      assign(transformed_data_real_array_3d, pow(d_real, d_int_array_3d),
+        "assigning variable transformed_data_real_array_3d");
+      current_statement__ = 420;
+      assign(transformed_data_real_array, pow(d_int, d_real_array),
+        "assigning variable transformed_data_real_array");
+      current_statement__ = 421;
+      assign(transformed_data_real_array, pow(d_real, d_real_array),
+        "assigning variable transformed_data_real_array");
+      current_statement__ = 422;
+      assign(transformed_data_real_array_2d, pow(d_int, d_real_array_2d),
+        "assigning variable transformed_data_real_array_2d");
+      current_statement__ = 423;
+      assign(transformed_data_real_array_2d, pow(d_real, d_real_array_2d),
+        "assigning variable transformed_data_real_array_2d");
+      current_statement__ = 424;
+      assign(transformed_data_real_array_3d, pow(d_int, d_real_array_3d),
+        "assigning variable transformed_data_real_array_3d");
+      current_statement__ = 425;
+      assign(transformed_data_real_array_3d, pow(d_real, d_real_array_3d),
+        "assigning variable transformed_data_real_array_3d");
+      current_statement__ = 426;
+      assign(transformed_data_real_array, pow(d_real_array, d_int),
+        "assigning variable transformed_data_real_array");
+      current_statement__ = 427;
+      assign(transformed_data_real_array, pow(d_real_array, d_real),
+        "assigning variable transformed_data_real_array");
+      current_statement__ = 428;
+      assign(transformed_data_real_array_2d, pow(d_real_array_2d, d_int),
+        "assigning variable transformed_data_real_array_2d");
+      current_statement__ = 429;
+      assign(transformed_data_real_array_2d, pow(d_real_array_2d, d_real),
+        "assigning variable transformed_data_real_array_2d");
+      current_statement__ = 430;
+      assign(transformed_data_real_array_3d, pow(d_real_array_3d, d_int),
+        "assigning variable transformed_data_real_array_3d");
+      current_statement__ = 431;
+      assign(transformed_data_real_array_3d, pow(d_real_array_3d, d_real),
+        "assigning variable transformed_data_real_array_3d");
+      current_statement__ = 432;
+      assign(transformed_data_real_array, pow(d_int_array, d_int_array),
+        "assigning variable transformed_data_real_array");
+      current_statement__ = 433;
+      assign(transformed_data_real_array, pow(d_real_array, d_real_array),
+        "assigning variable transformed_data_real_array");
+      current_statement__ = 434;
+      assign(transformed_data_real_array_2d,
+        pow(d_int_array_2d, d_int_array_2d),
+        "assigning variable transformed_data_real_array_2d");
+      current_statement__ = 435;
+      assign(transformed_data_real_array_2d,
+        pow(d_real_array_2d, d_real_array_2d),
+        "assigning variable transformed_data_real_array_2d");
+      current_statement__ = 436;
+      assign(transformed_data_real_array_3d,
+        pow(d_int_array_3d, d_int_array_3d),
+        "assigning variable transformed_data_real_array_3d");
+      current_statement__ = 437;
+      assign(transformed_data_real_array_3d,
+        pow(d_real_array_3d, d_real_array_3d),
+        "assigning variable transformed_data_real_array_3d");
+      current_statement__ = 438;
+      assign(transformed_data_vector, pow(d_vector, d_int),
+        "assigning variable transformed_data_vector");
+      current_statement__ = 439;
+      assign(transformed_data_vector, pow(d_vector, d_real),
+        "assigning variable transformed_data_vector");
+      current_statement__ = 440;
+      assign(transformed_data_vector_array, pow(d_vector_array, d_int),
+        "assigning variable transformed_data_vector_array");
+      current_statement__ = 441;
+      assign(transformed_data_vector_array, pow(d_vector_array, d_real),
+        "assigning variable transformed_data_vector_array");
+      current_statement__ = 442;
+      assign(transformed_data_vector_array_2d, pow(d_vector_array_2d, d_int),
+        "assigning variable transformed_data_vector_array_2d");
+      current_statement__ = 443;
+      assign(transformed_data_vector_array_2d,
+        pow(d_vector_array_2d, d_real),
+        "assigning variable transformed_data_vector_array_2d");
+      current_statement__ = 444;
+      assign(transformed_data_vector_array_3d, pow(d_vector_array_3d, d_int),
+        "assigning variable transformed_data_vector_array_3d");
+      current_statement__ = 445;
+      assign(transformed_data_vector_array_3d,
+        pow(d_vector_array_3d, d_real),
+        "assigning variable transformed_data_vector_array_3d");
+      current_statement__ = 446;
+      assign(transformed_data_vector, pow(d_int, d_vector),
+        "assigning variable transformed_data_vector");
+      current_statement__ = 447;
+      assign(transformed_data_vector, pow(d_real, d_vector),
+        "assigning variable transformed_data_vector");
+      current_statement__ = 448;
+      assign(transformed_data_vector_array, pow(d_int, d_vector_array),
+        "assigning variable transformed_data_vector_array");
+      current_statement__ = 449;
+      assign(transformed_data_vector_array, pow(d_real, d_vector_array),
+        "assigning variable transformed_data_vector_array");
+      current_statement__ = 450;
+      assign(transformed_data_vector_array_2d, pow(d_int, d_vector_array_2d),
+        "assigning variable transformed_data_vector_array_2d");
+      current_statement__ = 451;
+      assign(transformed_data_vector_array_2d,
+        pow(d_real, d_vector_array_2d),
+        "assigning variable transformed_data_vector_array_2d");
+      current_statement__ = 452;
+      assign(transformed_data_vector_array_3d, pow(d_int, d_vector_array_3d),
+        "assigning variable transformed_data_vector_array_3d");
+      current_statement__ = 453;
+      assign(transformed_data_vector_array_3d,
+        pow(d_real, d_vector_array_3d),
+        "assigning variable transformed_data_vector_array_3d");
+      current_statement__ = 454;
+      assign(transformed_data_vector, pow(d_vector, d_vector),
+        "assigning variable transformed_data_vector");
+      current_statement__ = 455;
+      assign(transformed_data_vector_array,
+        pow(d_vector_array, d_vector_array),
+        "assigning variable transformed_data_vector_array");
+      current_statement__ = 456;
+      assign(transformed_data_vector_array_2d,
+        pow(d_vector_array_2d, d_vector_array_2d),
+        "assigning variable transformed_data_vector_array_2d");
+      current_statement__ = 457;
+      assign(transformed_data_vector_array_3d,
+        pow(d_vector_array_3d, d_vector_array_3d),
+        "assigning variable transformed_data_vector_array_3d");
+      current_statement__ = 458;
+      assign(transformed_data_row_vector, pow(d_row_vector, d_int),
+        "assigning variable transformed_data_row_vector");
+      current_statement__ = 459;
+      assign(transformed_data_row_vector, pow(d_row_vector, d_real),
+        "assigning variable transformed_data_row_vector");
+      current_statement__ = 460;
+      assign(transformed_data_row_vector_array,
+        pow(d_row_vector_array, d_int),
+        "assigning variable transformed_data_row_vector_array");
+      current_statement__ = 461;
+      assign(transformed_data_row_vector_array,
+        pow(d_row_vector_array, d_real),
+        "assigning variable transformed_data_row_vector_array");
+      current_statement__ = 462;
+      assign(transformed_data_row_vector_array_2d,
+        pow(d_row_vector_array_2d, d_int),
+        "assigning variable transformed_data_row_vector_array_2d");
+      current_statement__ = 463;
+      assign(transformed_data_row_vector_array_2d,
+        pow(d_row_vector_array_2d, d_real),
+        "assigning variable transformed_data_row_vector_array_2d");
+      current_statement__ = 464;
+      assign(transformed_data_row_vector_array_3d,
+        pow(d_row_vector_array_3d, d_int),
+        "assigning variable transformed_data_row_vector_array_3d");
+      current_statement__ = 465;
+      assign(transformed_data_row_vector_array_3d,
+        pow(d_row_vector_array_3d, d_real),
+        "assigning variable transformed_data_row_vector_array_3d");
+      current_statement__ = 466;
+      assign(transformed_data_row_vector, pow(d_int, d_row_vector),
+        "assigning variable transformed_data_row_vector");
+      current_statement__ = 467;
+      assign(transformed_data_row_vector, pow(d_real, d_row_vector),
+        "assigning variable transformed_data_row_vector");
+      current_statement__ = 468;
+      assign(transformed_data_row_vector_array,
+        pow(d_int, d_row_vector_array),
+        "assigning variable transformed_data_row_vector_array");
+      current_statement__ = 469;
+      assign(transformed_data_row_vector_array,
+        pow(d_real, d_row_vector_array),
+        "assigning variable transformed_data_row_vector_array");
+      current_statement__ = 470;
+      assign(transformed_data_row_vector_array_2d,
+        pow(d_int, d_row_vector_array_2d),
+        "assigning variable transformed_data_row_vector_array_2d");
+      current_statement__ = 471;
+      assign(transformed_data_row_vector_array_2d,
+        pow(d_real, d_row_vector_array_2d),
+        "assigning variable transformed_data_row_vector_array_2d");
+      current_statement__ = 472;
+      assign(transformed_data_row_vector_array_3d,
+        pow(d_int, d_row_vector_array_3d),
+        "assigning variable transformed_data_row_vector_array_3d");
+      current_statement__ = 473;
+      assign(transformed_data_row_vector_array_3d,
+        pow(d_real, d_row_vector_array_3d),
+        "assigning variable transformed_data_row_vector_array_3d");
+      current_statement__ = 474;
+      assign(transformed_data_row_vector, pow(d_row_vector, d_row_vector),
+        "assigning variable transformed_data_row_vector");
+      current_statement__ = 475;
+      assign(transformed_data_row_vector_array,
+        pow(d_row_vector_array, d_row_vector_array),
+        "assigning variable transformed_data_row_vector_array");
+      current_statement__ = 476;
+      assign(transformed_data_row_vector_array_2d,
+        pow(d_row_vector_array_2d, d_row_vector_array_2d),
+        "assigning variable transformed_data_row_vector_array_2d");
+      current_statement__ = 477;
+      assign(transformed_data_row_vector_array_3d,
+        pow(d_row_vector_array_3d, d_row_vector_array_3d),
+        "assigning variable transformed_data_row_vector_array_3d");
+      current_statement__ = 478;
+      assign(transformed_data_matrix, pow(d_matrix, d_int),
+        "assigning variable transformed_data_matrix");
+      current_statement__ = 479;
+      assign(transformed_data_matrix, pow(d_matrix, d_real),
+        "assigning variable transformed_data_matrix");
+      current_statement__ = 480;
+      assign(transformed_data_matrix_array, pow(d_matrix_array, d_int),
+        "assigning variable transformed_data_matrix_array");
+      current_statement__ = 481;
+      assign(transformed_data_matrix_array, pow(d_matrix_array, d_real),
+        "assigning variable transformed_data_matrix_array");
+      current_statement__ = 482;
+      assign(transformed_data_matrix_array_2d, pow(d_matrix_array_2d, d_int),
+        "assigning variable transformed_data_matrix_array_2d");
+      current_statement__ = 483;
+      assign(transformed_data_matrix_array_2d,
+        pow(d_matrix_array_2d, d_real),
+        "assigning variable transformed_data_matrix_array_2d");
+      current_statement__ = 484;
+      assign(transformed_data_matrix_array_3d, pow(d_matrix_array_3d, d_int),
+        "assigning variable transformed_data_matrix_array_3d");
+      current_statement__ = 485;
+      assign(transformed_data_matrix_array_3d,
+        pow(d_matrix_array_3d, d_real),
+        "assigning variable transformed_data_matrix_array_3d");
+      current_statement__ = 486;
+      assign(transformed_data_matrix, pow(d_int, d_matrix),
+        "assigning variable transformed_data_matrix");
+      current_statement__ = 487;
+      assign(transformed_data_matrix, pow(d_real, d_matrix),
+        "assigning variable transformed_data_matrix");
+      current_statement__ = 488;
+      assign(transformed_data_matrix_array, pow(d_int, d_matrix_array),
+        "assigning variable transformed_data_matrix_array");
+      current_statement__ = 489;
+      assign(transformed_data_matrix_array, pow(d_real, d_matrix_array),
+        "assigning variable transformed_data_matrix_array");
+      current_statement__ = 490;
+      assign(transformed_data_matrix_array_2d, pow(d_int, d_matrix_array_2d),
+        "assigning variable transformed_data_matrix_array_2d");
+      current_statement__ = 491;
+      assign(transformed_data_matrix_array_2d,
+        pow(d_real, d_matrix_array_2d),
+        "assigning variable transformed_data_matrix_array_2d");
+      current_statement__ = 492;
+      assign(transformed_data_matrix_array_3d, pow(d_int, d_matrix_array_3d),
+        "assigning variable transformed_data_matrix_array_3d");
+      current_statement__ = 493;
+      assign(transformed_data_matrix_array_3d,
+        pow(d_real, d_matrix_array_3d),
+        "assigning variable transformed_data_matrix_array_3d");
+      current_statement__ = 494;
+      assign(transformed_data_matrix, pow(d_matrix, d_matrix),
+        "assigning variable transformed_data_matrix");
+      current_statement__ = 495;
+      assign(transformed_data_matrix_array,
+        pow(d_matrix_array, d_matrix_array),
+        "assigning variable transformed_data_matrix_array");
+      current_statement__ = 496;
+      assign(transformed_data_matrix_array_2d,
+        pow(d_matrix_array_2d, d_matrix_array_2d),
+        "assigning variable transformed_data_matrix_array_2d");
+      current_statement__ = 497;
+      assign(transformed_data_matrix_array_3d,
+        pow(d_matrix_array_3d, d_matrix_array_3d),
+        "assigning variable transformed_data_matrix_array_3d");
+      current_statement__ = 498;
+      td_int = (d_int * d_int);
+      current_statement__ = 499;
+      transformed_data_real = (d_real * d_real);
+      current_statement__ = 296;
+      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+        current_statement__ = 296;
+        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+          current_statement__ = 296;
+          for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+            current_statement__ = 296;
+            for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
+              current_statement__ = 296;
+              current_statement__ = 296;
+              check_greater_or_equal(function__,
+                                     "td_ar_mat[sym1__, sym2__, sym3__, sym4__]",
+                                     rvalue(td_ar_mat, "td_ar_mat",
+                                       index_uni(sym1__), index_uni(sym2__),
+                                         index_uni(sym3__), index_uni(sym4__)),
+                                     0);}}}}
+      current_statement__ = 296;
+      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+        current_statement__ = 296;
+        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+          current_statement__ = 296;
+          for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+            current_statement__ = 296;
+            for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
+              current_statement__ = 296;
+              current_statement__ = 296;
+              check_less_or_equal(function__,
+                                  "td_ar_mat[sym1__, sym2__, sym3__, sym4__]",
+                                  rvalue(td_ar_mat, "td_ar_mat",
+                                    index_uni(sym1__), index_uni(sym2__),
+                                      index_uni(sym3__), index_uni(sym4__)),
+                                  1);}}}}
       current_statement__ = 298;
       current_statement__ = 298;
       check_simplex(function__, "td_simplex", td_simplex);
-      
-      
+      current_statement__ = 301;
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        current_statement__ = 301;
+        current_statement__ = 301;
+        check_simplex(function__, "td_1d_simplex[sym1__]",
+                      td_1d_simplex[(sym1__ - 1)]);}
+      current_statement__ = 306;
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        current_statement__ = 306;
+        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+          current_statement__ = 306;
+          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
+            current_statement__ = 306;
+            current_statement__ = 306;
+            check_simplex(function__,
+                          "td_3d_simplex[sym1__, sym2__, sym3__]",
+                          td_3d_simplex[(sym1__ - 1)][(sym2__ - 1)][(sym3__ -
+                                                                    1)]);}}}
       current_statement__ = 307;
       current_statement__ = 307;
       check_cholesky_factor(function__, "td_cfcov_54", td_cfcov_54);
@@ -9470,7 +10618,7 @@ return algebra_system(x, y, dat, dat_int, pstream__);
 class motherHOF_model final : public model_base_crtp<motherHOF_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int T;
   std::vector<double> y0_d;
   double t0;
@@ -9498,20 +10646,31 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
   motherHOF_model(stan::io::var_context& context__,
                   unsigned int random_seed__ = 0,
                   std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                  model_arena_(stan::io::get_data_sizes(context__)), 
-                  T(stan::io::initialize_data<int>("T", context__)),
-                  y0_d(stan::io::initialize_data<std::vector<double>>("y0_d", context__, model_arena_, 2 )),
+                  model_arena_(),  T(stan::io::initialize_data<int>("T",
+                  context__)),
+                  y0_d(stan::io::initialize_data<std::vector<double>>("y0_d",
+                  model_arena_  , 2 )),
                   t0(stan::io::initialize_data<double>("t0", context__)),
-                  ts(stan::io::initialize_data<std::vector<double>>("ts", context__, model_arena_, T )),
-                  theta_d(stan::io::initialize_data<std::vector<double>>("theta_d", context__, model_arena_, 1 )),
-                  x(stan::io::initialize_data<std::vector<double>>("x", context__, model_arena_, 0 )),
-                  x_int(stan::io::initialize_data<std::vector<int>>("x_int", context__, model_arena_, 0 )),
-                  x_d_r(stan::io::initialize_data<std::vector<double>>("x_d_r", context__, model_arena_, 0 )),
-                  x_d_i(stan::io::initialize_data<std::vector<int>>("x_d_i", context__, model_arena_, 0 )),
-                  shared_params_d(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("shared_params_d", context__, model_arena_ 3)),
-                  job_params_d(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, 1>>>("job_params_d", context__, model_arena_, 3 , 3)),
-                  data_r(stan::io::initialize_data<std::vector<std::vector<double>>>("data_r", context__, model_arena_, 3 , 3 )),
-                  data_i(stan::io::initialize_data<std::vector<std::vector<int>>>("data_i", context__, model_arena_, 3 , 3 )) {
+                  ts(stan::io::initialize_data<std::vector<double>>("ts",
+                  model_arena_  , T )),
+                  theta_d(stan::io::initialize_data<std::vector<double>>("theta_d",
+                  model_arena_  , 1 )),
+                  x(stan::io::initialize_data<std::vector<double>>("x",
+                  model_arena_  , 0 )),
+                  x_int(stan::io::initialize_data<std::vector<int>>("x_int",
+                  model_arena_  , 0 )),
+                  x_d_r(stan::io::initialize_data<std::vector<double>>("x_d_r",
+                  model_arena_  , 0 )),
+                  x_d_i(stan::io::initialize_data<std::vector<int>>("x_d_i",
+                  model_arena_  , 0 )),
+                  shared_params_d(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("shared_params_d",
+                  model_arena_, 3)),
+                  job_params_d(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, 1>>>("job_params_d",
+                  model_arena_  , 3 , 3)),
+                  data_r(stan::io::initialize_data<std::vector<std::vector<double>>>("data_r",
+                  model_arena_  , 3 , 3 )),
+                  data_i(stan::io::initialize_data<std::vector<std::vector<int>>>("data_i",
+                  model_arena_  , 3 , 3 )) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -9525,51 +10684,121 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 123;
       
-      
+      current_statement__ = 123;
+      T = context__.vals_i("T")[(1 - 1)];
       current_statement__ = 123;
       current_statement__ = 123;
       check_greater_or_equal(function__, "T", T, 1);
       current_statement__ = 124;
       
-      
+      current_statement__ = 124;
+      y0_d = context__.vals_r("y0_d");
       current_statement__ = 125;
       
-      
+      current_statement__ = 125;
+      t0 = context__.vals_r("t0")[(1 - 1)];
       current_statement__ = 126;
       validate_non_negative_index("ts", "T", T);
       current_statement__ = 127;
       
-      
+      current_statement__ = 127;
+      ts = context__.vals_r("ts");
       current_statement__ = 128;
       
-      
+      current_statement__ = 128;
+      theta_d = context__.vals_r("theta_d");
       current_statement__ = 129;
       
-      
+      current_statement__ = 129;
+      x = context__.vals_r("x");
       current_statement__ = 130;
       
-      
+      current_statement__ = 130;
+      x_int = context__.vals_i("x_int");
       current_statement__ = 131;
       
-      
+      current_statement__ = 131;
+      x_d_r = context__.vals_r("x_d_r");
       current_statement__ = 132;
       
-      
+      current_statement__ = 132;
+      x_d_i = context__.vals_i("x_d_i");
       current_statement__ = 133;
       
-      
+      {
+        std::vector<local_scalar_t__> shared_params_d_flat__;
+        current_statement__ = 133;
+        shared_params_d_flat__ = context__.vals_r("shared_params_d");
+        current_statement__ = 133;
+        pos__ = 1;
+        current_statement__ = 133;
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          current_statement__ = 133;
+          assign(shared_params_d, shared_params_d_flat__[(pos__ - 1)],
+            "assigning variable shared_params_d", index_uni(sym1__));
+          current_statement__ = 133;
+          pos__ = (pos__ + 1);}
+      }
       current_statement__ = 134;
       
-      
+      {
+        std::vector<local_scalar_t__> job_params_d_flat__;
+        current_statement__ = 134;
+        job_params_d_flat__ = context__.vals_r("job_params_d");
+        current_statement__ = 134;
+        pos__ = 1;
+        current_statement__ = 134;
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          current_statement__ = 134;
+          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+            current_statement__ = 134;
+            assign(job_params_d, job_params_d_flat__[(pos__ - 1)],
+              "assigning variable job_params_d", index_uni(sym2__),
+                                                   index_uni(sym1__));
+            current_statement__ = 134;
+            pos__ = (pos__ + 1);}}
+      }
       current_statement__ = 135;
       
-      
+      {
+        std::vector<local_scalar_t__> data_r_flat__;
+        current_statement__ = 135;
+        data_r_flat__ = context__.vals_r("data_r");
+        current_statement__ = 135;
+        pos__ = 1;
+        current_statement__ = 135;
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          current_statement__ = 135;
+          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+            current_statement__ = 135;
+            assign(data_r, data_r_flat__[(pos__ - 1)],
+              "assigning variable data_r", index_uni(sym2__),
+                                             index_uni(sym1__));
+            current_statement__ = 135;
+            pos__ = (pos__ + 1);}}
+      }
       current_statement__ = 136;
       
-      
+      {
+        std::vector<int> data_i_flat__;
+        current_statement__ = 136;
+        data_i_flat__ = context__.vals_i("data_i");
+        current_statement__ = 136;
+        pos__ = 1;
+        current_statement__ = 136;
+        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+          current_statement__ = 136;
+          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+            current_statement__ = 136;
+            assign(data_i, data_i_flat__[(pos__ - 1)],
+              "assigning variable data_i", index_uni(sym2__),
+                                             index_uni(sym1__));
+            current_statement__ = 136;
+            pos__ = (pos__ + 1);}}
+      }
       current_statement__ = 137;
       validate_non_negative_index("theta_p", "1", 1);
       current_statement__ = 138;
@@ -11685,7 +12914,7 @@ return f(t, z, a, b, pstream__);
 class new_integrate_interface_model final : public model_base_crtp<new_integrate_interface_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int N;
   int id;
   double rd;
@@ -11706,12 +12935,19 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
   new_integrate_interface_model(stan::io::var_context& context__,
                                 unsigned int random_seed__ = 0,
                                 std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                                model_arena_(stan::io::get_data_sizes(context__)), 
-                                N(stan::io::initialize_data<int>("N", context__)),
-                                id(stan::io::initialize_data<int>("id", context__)),
-                                rd(stan::io::initialize_data<double>("rd", context__)),
-                                rad(stan::io::initialize_data<std::vector<double>>("rad", context__, model_arena_, N )),
-                                vd(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("vd", context__, model_arena_ N)) {
+                                model_arena_(), 
+                                N(stan::io::initialize_data<int>("N",
+                                context__)),
+                                id(stan::io::initialize_data<int>("id",
+                                context__)),
+                                rd(stan::io::initialize_data<double>("rd",
+                                context__)),
+                                rad(stan::io::initialize_data<std::vector<double>>("rad",
+                                model_arena_  , N )),
+                                vd(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("vd",
+                                model_arena_, N)),
+                                zd(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, 1>>>("zd",
+                                model_arena_  , N , N)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -11725,44 +12961,91 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 601;
       
-      
+      current_statement__ = 601;
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 602;
       
-      
+      current_statement__ = 602;
+      id = context__.vals_i("id")[(1 - 1)];
       current_statement__ = 603;
       
-      
+      current_statement__ = 603;
+      rd = context__.vals_r("rd")[(1 - 1)];
       current_statement__ = 604;
       validate_non_negative_index("rad", "N", N);
       current_statement__ = 605;
       
-      
+      current_statement__ = 605;
+      rad = context__.vals_r("rad");
       current_statement__ = 606;
       validate_non_negative_index("vd", "N", N);
       current_statement__ = 607;
       
-      
+      {
+        std::vector<local_scalar_t__> vd_flat__;
+        current_statement__ = 607;
+        vd_flat__ = context__.vals_r("vd");
+        current_statement__ = 607;
+        pos__ = 1;
+        current_statement__ = 607;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 607;
+          assign(vd, vd_flat__[(pos__ - 1)],
+            "assigning variable vd", index_uni(sym1__));
+          current_statement__ = 607;
+          pos__ = (pos__ + 1);}
+      }
       current_statement__ = 608;
       validate_non_negative_index("zd", "N", N);
       current_statement__ = 609;
       validate_non_negative_index("zd", "N", N);
       current_statement__ = 610;
       
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+      current_statement__ = 610;
+      assign(zd,
+        ode_bdf_tol(f_odefunctor__(), vd, rd, rad, 1e-6, 1e-6, 100,
+          pstream__, rd, vd), "assigning variable zd");
+      current_statement__ = 611;
+      assign(zd,
+        ode_bdf_tol(f_odefunctor__(), vd, id, rad, 1e-6, 1e-6, 100,
+          pstream__, rd, vd), "assigning variable zd");
+      current_statement__ = 612;
+      assign(zd,
+        ode_adams_tol(f_odefunctor__(), vd, rd, rad, 1e-6, 1e-6, 100,
+          pstream__, rd, vd), "assigning variable zd");
+      current_statement__ = 613;
+      assign(zd,
+        ode_adams_tol(f_odefunctor__(), vd, id, rad, 1e-6, 1e-6, 100,
+          pstream__, rd, vd), "assigning variable zd");
+      current_statement__ = 614;
+      assign(zd,
+        ode_rk45_tol(f_odefunctor__(), vd, rd, rad, 1e-6, 1e-6, 100,
+          pstream__, rd, vd), "assigning variable zd");
+      current_statement__ = 615;
+      assign(zd,
+        ode_rk45_tol(f_odefunctor__(), vd, id, rad, 1e-6, 1e-6, 100,
+          pstream__, rd, vd), "assigning variable zd");
+      current_statement__ = 616;
+      assign(zd, ode_bdf(f_odefunctor__(), vd, rd, rad, pstream__, rd, vd),
+        "assigning variable zd");
+      current_statement__ = 617;
+      assign(zd, ode_bdf(f_odefunctor__(), vd, id, rad, pstream__, rd, vd),
+        "assigning variable zd");
+      current_statement__ = 618;
+      assign(zd, ode_adams(f_odefunctor__(), vd, rd, rad, pstream__, rd, vd),
+        "assigning variable zd");
+      current_statement__ = 619;
+      assign(zd, ode_adams(f_odefunctor__(), vd, id, rad, pstream__, rd, vd),
+        "assigning variable zd");
+      current_statement__ = 620;
+      assign(zd, ode_rk45(f_odefunctor__(), vd, rd, rad, pstream__, rd, vd),
+        "assigning variable zd");
+      current_statement__ = 621;
+      assign(zd, ode_rk45(f_odefunctor__(), vd, id, rad, pstream__, rd, vd),
+        "assigning variable zd");
       current_statement__ = 622;
       validate_non_negative_index("ra", "N", N);
       current_statement__ = 623;
@@ -15097,7 +16380,7 @@ return dz_dt(t, z, theta, x_r, x_i, pstream__);
 class old_integrate_interface_model final : public model_base_crtp<old_integrate_interface_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int N;
   std::vector<double> ts;
   std::vector<double> y_init;
@@ -15116,11 +16399,15 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
   old_integrate_interface_model(stan::io::var_context& context__,
                                 unsigned int random_seed__ = 0,
                                 std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                                model_arena_(stan::io::get_data_sizes(context__)), 
-                                N(stan::io::initialize_data<int>("N", context__)),
-                                ts(stan::io::initialize_data<std::vector<double>>("ts", context__, model_arena_, N )),
-                                y_init(stan::io::initialize_data<std::vector<double>>("y_init", context__, model_arena_, 2 )),
-                                y(stan::io::initialize_data<std::vector<std::vector<double>>>("y", context__, model_arena_, N , 2 )) {
+                                model_arena_(), 
+                                N(stan::io::initialize_data<int>("N",
+                                context__)),
+                                ts(stan::io::initialize_data<std::vector<double>>("ts",
+                                model_arena_  , N )),
+                                y_init(stan::io::initialize_data<std::vector<double>>("y_init",
+                                model_arena_  , 2 )),
+                                y(stan::io::initialize_data<std::vector<std::vector<double>>>("y",
+                                model_arena_  , N , 2 )) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -15134,10 +16421,11 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 18;
       
-      
+      current_statement__ = 18;
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 18;
       current_statement__ = 18;
       check_greater_or_equal(function__, "N", N, 0);
@@ -15145,16 +16433,40 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       validate_non_negative_index("ts", "N", N);
       current_statement__ = 20;
       
-      
+      current_statement__ = 20;
+      ts = context__.vals_r("ts");
       current_statement__ = 21;
       
-      
+      current_statement__ = 21;
+      y_init = context__.vals_r("y_init");
       current_statement__ = 22;
       validate_non_negative_index("y", "N", N);
       current_statement__ = 23;
       
-      
-      
+      {
+        std::vector<local_scalar_t__> y_flat__;
+        current_statement__ = 23;
+        y_flat__ = context__.vals_r("y");
+        current_statement__ = 23;
+        pos__ = 1;
+        current_statement__ = 23;
+        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+          current_statement__ = 23;
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            current_statement__ = 23;
+            assign(y, y_flat__[(pos__ - 1)],
+              "assigning variable y", index_uni(sym2__), index_uni(sym1__));
+            current_statement__ = 23;
+            pos__ = (pos__ + 1);}}
+      }
+      current_statement__ = 23;
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        current_statement__ = 23;
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          current_statement__ = 23;
+          current_statement__ = 23;
+          check_greater_or_equal(function__, "y[sym1__, sym2__]",
+                                 y[(sym1__ - 1)][(sym2__ - 1)], 0);}}
       current_statement__ = 24;
       validate_non_negative_index("z", "N", N);
     } catch (const std::exception& e) {
@@ -15914,7 +17226,7 @@ static constexpr std::array<const char*, 217> locations_array__ =
 class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int k;
   int n;
   Eigen::Map<Eigen::Matrix<double, -1, -1>> X_d;
@@ -15948,17 +17260,41 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   optimize_glm_model(stan::io::var_context& context__,
                      unsigned int random_seed__ = 0,
                      std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                     model_arena_(stan::io::get_data_sizes(context__)), 
-                     k(stan::io::initialize_data<int>("k", context__)),
-                     n(stan::io::initialize_data<int>("n", context__)),
-                     X_d(stan::io::initialize_data<Eigen::Matrix<double, -1, -1>>("X_d", context__, model_arena_,n k)),
-                     X_d_a(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, -1>>>("X_d_a", context__, model_arena_, 2 , n, k)),
-                     y_v_d(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("y_v_d", context__, model_arena_ n)),
-                     X_rv_d(stan::io::initialize_data<Eigen::Matrix<double, 1, -1>>("X_rv_d", context__, model_arena_ n)),
-                     y_vi_d(stan::io::initialize_data<std::vector<int>>("y_vi_d", context__, model_arena_, n )),
-                     y2_vi_d(stan::io::initialize_data<std::vector<int>>("y2_vi_d", context__, model_arena_, n )),
-                     y_s_d(stan::io::initialize_data<int>("y_s_d", context__)),
-                     y_r_d(stan::io::initialize_data<double>("y_r_d", context__)) {
+                     model_arena_(),  k(stan::io::initialize_data<int>("k",
+                     context__)), n(stan::io::initialize_data<int>("n",
+                     context__)),
+                     X_d(stan::io::initialize_data<Eigen::Matrix<double, -1, -1>>("X_d",
+                     model_arena_, n, k)),
+                     X_d_a(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, -1>>>("X_d_a",
+                     model_arena_  , 2 , n, k)),
+                     y_v_d(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("y_v_d",
+                     model_arena_, n)),
+                     X_rv_d(stan::io::initialize_data<Eigen::Matrix<double, 1, -1>>("X_rv_d",
+                     model_arena_, n)),
+                     y_vi_d(stan::io::initialize_data<std::vector<int>>("y_vi_d",
+                     model_arena_  , n )),
+                     y2_vi_d(stan::io::initialize_data<std::vector<int>>("y2_vi_d",
+                     model_arena_  , n )),
+                     y_s_d(stan::io::initialize_data<int>("y_s_d",
+                     context__)),
+                     y_r_d(stan::io::initialize_data<double>("y_r_d",
+                     context__)), k_td(stan::io::initialize_data<int>("k_td",
+                     context__)), n_td(stan::io::initialize_data<int>("n_td",
+                     context__)),
+                     X_d_td(stan::io::initialize_data<Eigen::Matrix<double, -1, -1>>("X_d_td",
+                     model_arena_, n, k)),
+                     y_v_d_td(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("y_v_d_td",
+                     model_arena_, n)),
+                     X_rv_d_td(stan::io::initialize_data<Eigen::Matrix<double, 1, -1>>("X_rv_d_td",
+                     model_arena_, n)),
+                     y_vi_d_td(stan::io::initialize_data<std::vector<int>>("y_vi_d_td",
+                     model_arena_  , n )),
+                     y2_vi_d_td(stan::io::initialize_data<std::vector<int>>("y2_vi_d_td",
+                     model_arena_  , n )),
+                     y_s_d_td(stan::io::initialize_data<int>("y_s_d_td",
+                     context__)),
+                     y_r_d_td(stan::io::initialize_data<double>("y_r_d_td",
+                     context__)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -15972,16 +17308,18 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 176;
       
-      
+      current_statement__ = 176;
+      k = context__.vals_i("k")[(1 - 1)];
       current_statement__ = 176;
       current_statement__ = 176;
       check_greater_or_equal(function__, "k", k, 1);
       current_statement__ = 177;
       
-      
+      current_statement__ = 177;
+      n = context__.vals_i("n")[(1 - 1)];
       current_statement__ = 177;
       current_statement__ = 177;
       check_greater_or_equal(function__, "n", n, 0);
@@ -15991,40 +17329,104 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("X_d", "k", k);
       current_statement__ = 180;
       
-      
+      {
+        std::vector<local_scalar_t__> X_d_flat__;
+        current_statement__ = 180;
+        X_d_flat__ = context__.vals_r("X_d");
+        current_statement__ = 180;
+        pos__ = 1;
+        current_statement__ = 180;
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          current_statement__ = 180;
+          for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
+            current_statement__ = 180;
+            assign(X_d, X_d_flat__[(pos__ - 1)],
+              "assigning variable X_d", index_uni(sym2__), index_uni(sym1__));
+            current_statement__ = 180;
+            pos__ = (pos__ + 1);}}
+      }
       current_statement__ = 181;
       validate_non_negative_index("X_d_a", "n", n);
       current_statement__ = 182;
       validate_non_negative_index("X_d_a", "k", k);
       current_statement__ = 183;
       
-      
+      {
+        std::vector<local_scalar_t__> X_d_a_flat__;
+        current_statement__ = 183;
+        X_d_a_flat__ = context__.vals_r("X_d_a");
+        current_statement__ = 183;
+        pos__ = 1;
+        current_statement__ = 183;
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          current_statement__ = 183;
+          for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
+            current_statement__ = 183;
+            for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+              current_statement__ = 183;
+              assign(X_d_a, X_d_a_flat__[(pos__ - 1)],
+                "assigning variable X_d_a", index_uni(sym3__),
+                                              index_uni(sym2__),
+                                              index_uni(sym1__));
+              current_statement__ = 183;
+              pos__ = (pos__ + 1);}}}
+      }
       current_statement__ = 184;
       validate_non_negative_index("y_v_d", "n", n);
       current_statement__ = 185;
       
-      
+      {
+        std::vector<local_scalar_t__> y_v_d_flat__;
+        current_statement__ = 185;
+        y_v_d_flat__ = context__.vals_r("y_v_d");
+        current_statement__ = 185;
+        pos__ = 1;
+        current_statement__ = 185;
+        for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
+          current_statement__ = 185;
+          assign(y_v_d, y_v_d_flat__[(pos__ - 1)],
+            "assigning variable y_v_d", index_uni(sym1__));
+          current_statement__ = 185;
+          pos__ = (pos__ + 1);}
+      }
       current_statement__ = 186;
       validate_non_negative_index("X_rv_d", "n", n);
       current_statement__ = 187;
       
-      
+      {
+        std::vector<local_scalar_t__> X_rv_d_flat__;
+        current_statement__ = 187;
+        X_rv_d_flat__ = context__.vals_r("X_rv_d");
+        current_statement__ = 187;
+        pos__ = 1;
+        current_statement__ = 187;
+        for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
+          current_statement__ = 187;
+          assign(X_rv_d, X_rv_d_flat__[(pos__ - 1)],
+            "assigning variable X_rv_d", index_uni(sym1__));
+          current_statement__ = 187;
+          pos__ = (pos__ + 1);}
+      }
       current_statement__ = 188;
       validate_non_negative_index("y_vi_d", "n", n);
       current_statement__ = 189;
       
-      
+      current_statement__ = 189;
+      y_vi_d = context__.vals_i("y_vi_d");
       current_statement__ = 190;
       validate_non_negative_index("y2_vi_d", "n", n);
       current_statement__ = 191;
       
-      
+      current_statement__ = 191;
+      y2_vi_d = context__.vals_i("y2_vi_d");
       current_statement__ = 192;
       
-      
+      current_statement__ = 192;
+      y_s_d = context__.vals_i("y_s_d")[(1 - 1)];
       current_statement__ = 193;
       
-      
+      current_statement__ = 193;
+      y_r_d = context__.vals_r("y_r_d")[(1 - 1)];
       current_statement__ = 194;
       
       current_statement__ = 195;
@@ -17272,7 +18674,7 @@ static constexpr std::array<const char*, 7> locations_array__ =
 class param_constraint_model final : public model_base_crtp<param_constraint_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int nt;
   int NS;
  
@@ -17289,7 +18691,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
   param_constraint_model(stan::io::var_context& context__,
                          unsigned int random_seed__ = 0,
                          std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                         model_arena_(stan::io::get_data_sizes(context__)), 
+                         model_arena_(), 
                          nt(stan::io::initialize_data<int>("nt", context__)),
                          NS(stan::io::initialize_data<int>("NS", context__)) {
     int current_statement__ = 0;
@@ -17305,13 +18707,15 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 3;
       
-      
+      current_statement__ = 3;
+      nt = context__.vals_i("nt")[(1 - 1)];
       current_statement__ = 4;
       
-      
+      current_statement__ = 4;
+      NS = context__.vals_i("NS")[(1 - 1)];
       current_statement__ = 5;
       validate_non_negative_index("L_Omega", "nt", nt);
       current_statement__ = 6;
@@ -17897,7 +19301,7 @@ return foo_lpdf<propto__>(y_slice, start + 1, end + 1, pstream__);
 class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int N;
  
  public:
@@ -17913,7 +19317,8 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
   reduce_sum_m1_model(stan::io::var_context& context__,
                       unsigned int random_seed__ = 0,
                       std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                      model_arena_(stan::io::get_data_sizes(context__)),   {
+                      model_arena_(),  N(stan::io::initialize_data<int>("N",
+                      context__)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -17927,10 +19332,11 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 8;
       
-      
+      current_statement__ = 8;
+      N = 100;
       current_statement__ = 9;
       validate_non_negative_index("y1", "N", N);
       current_statement__ = 10;
@@ -19398,7 +20804,7 @@ return h8(y, start + 1, end + 1, a, pstream__);
 class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int N;
   std::vector<double> x;
  
@@ -19415,7 +20821,10 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
   reduce_sum_m2_model(stan::io::var_context& context__,
                       unsigned int random_seed__ = 0,
                       std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                      model_arena_(stan::io::get_data_sizes(context__)),   {
+                      model_arena_(),  N(stan::io::initialize_data<int>("N",
+                      context__)),
+                      x(stan::io::initialize_data<std::vector<double>>("x",
+                      model_arena_  , N )) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -19429,10 +20838,11 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 33;
       
-      
+      current_statement__ = 33;
+      N = 2;
       current_statement__ = 34;
       validate_non_negative_index("x", "N", N);
       current_statement__ = 35;
@@ -22834,7 +24244,7 @@ return r(pstream__);
 class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int N;
   std::vector<double> y1d;
   std::vector<Eigen::Map<Eigen::Matrix<double, -1, 1>>> y2d;
@@ -22893,25 +24303,94 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
   reduce_sum_m3_model(stan::io::var_context& context__,
                       unsigned int random_seed__ = 0,
                       std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                      model_arena_(stan::io::get_data_sizes(context__)), 
-                      N(stan::io::initialize_data<int>("N", context__)),
-                      y1d(stan::io::initialize_data<std::vector<double>>("y1d", context__, model_arena_, N )),
-                      y2d(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, 1>>>("y2d", context__, model_arena_, N , N)),
-                      y3d(stan::io::initialize_data<std::vector<Eigen::Matrix<double, 1, -1>>>("y3d", context__, model_arena_, N , N)),
-                      y4d(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, -1>>>("y4d", context__, model_arena_, N , N, N)),
-                      y5d(stan::io::initialize_data<std::vector<std::vector<double>>>("y5d", context__, model_arena_, N , N )),
-                      y6d(stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>("y6d", context__, model_arena_, N , N , N)),
-                      y7d(stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>("y7d", context__, model_arena_, N , N , N)),
-                      y8d(stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>>("y8d", context__, model_arena_, N , N , N, N)),
-                      y9d(stan::io::initialize_data<double>("y9d", context__)),
-                      y10d(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("y10d", context__, model_arena_ N)),
-                      y11d(stan::io::initialize_data<Eigen::Matrix<double, 1, -1>>("y11d", context__, model_arena_ N)),
-                      y12d(stan::io::initialize_data<Eigen::Matrix<double, -1, -1>>("y12d", context__, model_arena_,N N)),
-                      y13d(stan::io::initialize_data<int>("y13d", context__)),
-                      y14d(stan::io::initialize_data<std::vector<int>>("y14d", context__, model_arena_, N )),
-                      y15d(stan::io::initialize_data<std::vector<std::vector<int>>>("y15d", context__, model_arena_, N , N )),
-                      y16d(stan::io::initialize_data<std::vector<std::vector<std::vector<int>>>>("y16d", context__, model_arena_, N , N , N )),
-                      y17d(stan::io::initialize_data<std::vector<std::vector<std::vector<double>>>>("y17d", context__, model_arena_, N , N , N )) {
+                      model_arena_(),  N(stan::io::initialize_data<int>("N",
+                      context__)),
+                      y1d(stan::io::initialize_data<std::vector<double>>("y1d",
+                      model_arena_  , N )),
+                      y2d(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, 1>>>("y2d",
+                      model_arena_  , N , N)),
+                      y3d(stan::io::initialize_data<std::vector<Eigen::Matrix<double, 1, -1>>>("y3d",
+                      model_arena_  , N , N)),
+                      y4d(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, -1>>>("y4d",
+                      model_arena_  , N , N, N)),
+                      y5d(stan::io::initialize_data<std::vector<std::vector<double>>>("y5d",
+                      model_arena_  , N , N )),
+                      y6d(stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>("y6d",
+                      model_arena_  , N , N , N)),
+                      y7d(stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>("y7d",
+                      model_arena_  , N , N , N)),
+                      y8d(stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>>("y8d",
+                      model_arena_  , N , N , N, N)),
+                      y9d(stan::io::initialize_data<double>("y9d",
+                      context__)),
+                      y10d(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("y10d",
+                      model_arena_, N)),
+                      y11d(stan::io::initialize_data<Eigen::Matrix<double, 1, -1>>("y11d",
+                      model_arena_, N)),
+                      y12d(stan::io::initialize_data<Eigen::Matrix<double, -1, -1>>("y12d",
+                      model_arena_, N, N)),
+                      y13d(stan::io::initialize_data<int>("y13d",
+                      context__)),
+                      y14d(stan::io::initialize_data<std::vector<int>>("y14d",
+                      model_arena_  , N )),
+                      y15d(stan::io::initialize_data<std::vector<std::vector<int>>>("y15d",
+                      model_arena_  , N , N )),
+                      y16d(stan::io::initialize_data<std::vector<std::vector<std::vector<int>>>>("y16d",
+                      model_arena_  , N , N , N )),
+                      y17d(stan::io::initialize_data<std::vector<std::vector<std::vector<double>>>>("y17d",
+                      model_arena_  , N , N , N )),
+                      td1(stan::io::initialize_data<double>("td1",
+                      context__)),
+                      td1a(stan::io::initialize_data<double>("td1a",
+                      context__)),
+                      td2(stan::io::initialize_data<double>("td2",
+                      context__)),
+                      td3(stan::io::initialize_data<double>("td3",
+                      context__)),
+                      td4(stan::io::initialize_data<double>("td4",
+                      context__)),
+                      td5(stan::io::initialize_data<double>("td5",
+                      context__)),
+                      td6(stan::io::initialize_data<double>("td6",
+                      context__)),
+                      td7(stan::io::initialize_data<double>("td7",
+                      context__)),
+                      td8(stan::io::initialize_data<double>("td8",
+                      context__)),
+                      td9(stan::io::initialize_data<double>("td9",
+                      context__)),
+                      td10(stan::io::initialize_data<double>("td10",
+                      context__)),
+                      td11(stan::io::initialize_data<double>("td11",
+                      context__)),
+                      td12(stan::io::initialize_data<double>("td12",
+                      context__)),
+                      tgd1(stan::io::initialize_data<double>("tgd1",
+                      context__)),
+                      tgd2(stan::io::initialize_data<double>("tgd2",
+                      context__)),
+                      tgd3(stan::io::initialize_data<double>("tgd3",
+                      context__)),
+                      tgd4(stan::io::initialize_data<double>("tgd4",
+                      context__)),
+                      tgd5(stan::io::initialize_data<double>("tgd5",
+                      context__)),
+                      tgd6(stan::io::initialize_data<double>("tgd6",
+                      context__)),
+                      tgd7(stan::io::initialize_data<double>("tgd7",
+                      context__)),
+                      tgd8(stan::io::initialize_data<double>("tgd8",
+                      context__)),
+                      tgd9(stan::io::initialize_data<double>("tgd9",
+                      context__)),
+                      tgd10(stan::io::initialize_data<double>("tgd10",
+                      context__)),
+                      tgd11(stan::io::initialize_data<double>("tgd11",
+                      context__)),
+                      tgd12(stan::io::initialize_data<double>("tgd12",
+                      context__)),
+                      tsd(stan::io::initialize_data<double>("tsd",
+                      context__)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -22925,29 +24404,61 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 67;
       
-      
+      current_statement__ = 67;
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 68;
       validate_non_negative_index("y1d", "N", N);
       current_statement__ = 69;
       
-      
+      current_statement__ = 69;
+      y1d = context__.vals_r("y1d");
       current_statement__ = 70;
       validate_non_negative_index("y2d", "N", N);
       current_statement__ = 71;
       validate_non_negative_index("y2d", "N", N);
       current_statement__ = 72;
       
-      
+      {
+        std::vector<local_scalar_t__> y2d_flat__;
+        current_statement__ = 72;
+        y2d_flat__ = context__.vals_r("y2d");
+        current_statement__ = 72;
+        pos__ = 1;
+        current_statement__ = 72;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 72;
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            current_statement__ = 72;
+            assign(y2d, y2d_flat__[(pos__ - 1)],
+              "assigning variable y2d", index_uni(sym2__), index_uni(sym1__));
+            current_statement__ = 72;
+            pos__ = (pos__ + 1);}}
+      }
       current_statement__ = 73;
       validate_non_negative_index("y3d", "N", N);
       current_statement__ = 74;
       validate_non_negative_index("y3d", "N", N);
       current_statement__ = 75;
       
-      
+      {
+        std::vector<local_scalar_t__> y3d_flat__;
+        current_statement__ = 75;
+        y3d_flat__ = context__.vals_r("y3d");
+        current_statement__ = 75;
+        pos__ = 1;
+        current_statement__ = 75;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 75;
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            current_statement__ = 75;
+            assign(y3d, y3d_flat__[(pos__ - 1)],
+              "assigning variable y3d", index_uni(sym2__), index_uni(sym1__));
+            current_statement__ = 75;
+            pos__ = (pos__ + 1);}}
+      }
       current_statement__ = 76;
       validate_non_negative_index("y4d", "N", N);
       current_statement__ = 77;
@@ -22956,14 +24467,48 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       validate_non_negative_index("y4d", "N", N);
       current_statement__ = 79;
       
-      
+      {
+        std::vector<local_scalar_t__> y4d_flat__;
+        current_statement__ = 79;
+        y4d_flat__ = context__.vals_r("y4d");
+        current_statement__ = 79;
+        pos__ = 1;
+        current_statement__ = 79;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 79;
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            current_statement__ = 79;
+            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+              current_statement__ = 79;
+              assign(y4d, y4d_flat__[(pos__ - 1)],
+                "assigning variable y4d", index_uni(sym3__),
+                                            index_uni(sym2__),
+                                            index_uni(sym1__));
+              current_statement__ = 79;
+              pos__ = (pos__ + 1);}}}
+      }
       current_statement__ = 80;
       validate_non_negative_index("y5d", "N", N);
       current_statement__ = 81;
       validate_non_negative_index("y5d", "N", N);
       current_statement__ = 82;
       
-      
+      {
+        std::vector<local_scalar_t__> y5d_flat__;
+        current_statement__ = 82;
+        y5d_flat__ = context__.vals_r("y5d");
+        current_statement__ = 82;
+        pos__ = 1;
+        current_statement__ = 82;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 82;
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            current_statement__ = 82;
+            assign(y5d, y5d_flat__[(pos__ - 1)],
+              "assigning variable y5d", index_uni(sym2__), index_uni(sym1__));
+            current_statement__ = 82;
+            pos__ = (pos__ + 1);}}
+      }
       current_statement__ = 83;
       validate_non_negative_index("y6d", "N", N);
       current_statement__ = 84;
@@ -22972,7 +24517,26 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       validate_non_negative_index("y6d", "N", N);
       current_statement__ = 86;
       
-      
+      {
+        std::vector<local_scalar_t__> y6d_flat__;
+        current_statement__ = 86;
+        y6d_flat__ = context__.vals_r("y6d");
+        current_statement__ = 86;
+        pos__ = 1;
+        current_statement__ = 86;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 86;
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            current_statement__ = 86;
+            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+              current_statement__ = 86;
+              assign(y6d, y6d_flat__[(pos__ - 1)],
+                "assigning variable y6d", index_uni(sym3__),
+                                            index_uni(sym2__),
+                                            index_uni(sym1__));
+              current_statement__ = 86;
+              pos__ = (pos__ + 1);}}}
+      }
       current_statement__ = 87;
       validate_non_negative_index("y7d", "N", N);
       current_statement__ = 88;
@@ -22981,7 +24545,26 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       validate_non_negative_index("y7d", "N", N);
       current_statement__ = 90;
       
-      
+      {
+        std::vector<local_scalar_t__> y7d_flat__;
+        current_statement__ = 90;
+        y7d_flat__ = context__.vals_r("y7d");
+        current_statement__ = 90;
+        pos__ = 1;
+        current_statement__ = 90;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 90;
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            current_statement__ = 90;
+            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+              current_statement__ = 90;
+              assign(y7d, y7d_flat__[(pos__ - 1)],
+                "assigning variable y7d", index_uni(sym3__),
+                                            index_uni(sym2__),
+                                            index_uni(sym1__));
+              current_statement__ = 90;
+              pos__ = (pos__ + 1);}}}
+      }
       current_statement__ = 91;
       validate_non_negative_index("y8d", "N", N);
       current_statement__ = 92;
@@ -22992,42 +24575,123 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       validate_non_negative_index("y8d", "N", N);
       current_statement__ = 95;
       
-      
+      {
+        std::vector<local_scalar_t__> y8d_flat__;
+        current_statement__ = 95;
+        y8d_flat__ = context__.vals_r("y8d");
+        current_statement__ = 95;
+        pos__ = 1;
+        current_statement__ = 95;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 95;
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            current_statement__ = 95;
+            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+              current_statement__ = 95;
+              for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+                current_statement__ = 95;
+                assign(y8d, y8d_flat__[(pos__ - 1)],
+                  "assigning variable y8d", index_uni(sym4__),
+                                              index_uni(sym3__),
+                                              index_uni(sym2__),
+                                              index_uni(sym1__));
+                current_statement__ = 95;
+                pos__ = (pos__ + 1);}}}}
+      }
       current_statement__ = 96;
       
-      
+      current_statement__ = 96;
+      y9d = context__.vals_r("y9d")[(1 - 1)];
       current_statement__ = 97;
       validate_non_negative_index("y10d", "N", N);
       current_statement__ = 98;
       
-      
+      {
+        std::vector<local_scalar_t__> y10d_flat__;
+        current_statement__ = 98;
+        y10d_flat__ = context__.vals_r("y10d");
+        current_statement__ = 98;
+        pos__ = 1;
+        current_statement__ = 98;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 98;
+          assign(y10d, y10d_flat__[(pos__ - 1)],
+            "assigning variable y10d", index_uni(sym1__));
+          current_statement__ = 98;
+          pos__ = (pos__ + 1);}
+      }
       current_statement__ = 99;
       validate_non_negative_index("y11d", "N", N);
       current_statement__ = 100;
       
-      
+      {
+        std::vector<local_scalar_t__> y11d_flat__;
+        current_statement__ = 100;
+        y11d_flat__ = context__.vals_r("y11d");
+        current_statement__ = 100;
+        pos__ = 1;
+        current_statement__ = 100;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 100;
+          assign(y11d, y11d_flat__[(pos__ - 1)],
+            "assigning variable y11d", index_uni(sym1__));
+          current_statement__ = 100;
+          pos__ = (pos__ + 1);}
+      }
       current_statement__ = 101;
       validate_non_negative_index("y12d", "N", N);
       current_statement__ = 102;
       validate_non_negative_index("y12d", "N", N);
       current_statement__ = 103;
       
-      
+      {
+        std::vector<local_scalar_t__> y12d_flat__;
+        current_statement__ = 103;
+        y12d_flat__ = context__.vals_r("y12d");
+        current_statement__ = 103;
+        pos__ = 1;
+        current_statement__ = 103;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 103;
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            current_statement__ = 103;
+            assign(y12d, y12d_flat__[(pos__ - 1)],
+              "assigning variable y12d", index_uni(sym2__), index_uni(sym1__));
+            current_statement__ = 103;
+            pos__ = (pos__ + 1);}}
+      }
       current_statement__ = 104;
       
-      
+      current_statement__ = 104;
+      y13d = context__.vals_i("y13d")[(1 - 1)];
       current_statement__ = 105;
       validate_non_negative_index("y14d", "N", N);
       current_statement__ = 106;
       
-      
+      current_statement__ = 106;
+      y14d = context__.vals_i("y14d");
       current_statement__ = 107;
       validate_non_negative_index("y15d", "N", N);
       current_statement__ = 108;
       validate_non_negative_index("y15d", "N", N);
       current_statement__ = 109;
       
-      
+      {
+        std::vector<int> y15d_flat__;
+        current_statement__ = 109;
+        y15d_flat__ = context__.vals_i("y15d");
+        current_statement__ = 109;
+        pos__ = 1;
+        current_statement__ = 109;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 109;
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            current_statement__ = 109;
+            assign(y15d, y15d_flat__[(pos__ - 1)],
+              "assigning variable y15d", index_uni(sym2__), index_uni(sym1__));
+            current_statement__ = 109;
+            pos__ = (pos__ + 1);}}
+      }
       current_statement__ = 110;
       validate_non_negative_index("y16d", "N", N);
       current_statement__ = 111;
@@ -23036,7 +24700,26 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       validate_non_negative_index("y16d", "N", N);
       current_statement__ = 113;
       
-      
+      {
+        std::vector<int> y16d_flat__;
+        current_statement__ = 113;
+        y16d_flat__ = context__.vals_i("y16d");
+        current_statement__ = 113;
+        pos__ = 1;
+        current_statement__ = 113;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 113;
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            current_statement__ = 113;
+            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+              current_statement__ = 113;
+              assign(y16d, y16d_flat__[(pos__ - 1)],
+                "assigning variable y16d", index_uni(sym3__),
+                                             index_uni(sym2__),
+                                             index_uni(sym1__));
+              current_statement__ = 113;
+              pos__ = (pos__ + 1);}}}
+      }
       current_statement__ = 114;
       validate_non_negative_index("y17d", "N", N);
       current_statement__ = 115;
@@ -23045,85 +24728,133 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       validate_non_negative_index("y17d", "N", N);
       current_statement__ = 117;
       
-      
+      {
+        std::vector<local_scalar_t__> y17d_flat__;
+        current_statement__ = 117;
+        y17d_flat__ = context__.vals_r("y17d");
+        current_statement__ = 117;
+        pos__ = 1;
+        current_statement__ = 117;
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          current_statement__ = 117;
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            current_statement__ = 117;
+            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+              current_statement__ = 117;
+              assign(y17d, y17d_flat__[(pos__ - 1)],
+                "assigning variable y17d", index_uni(sym3__),
+                                             index_uni(sym2__),
+                                             index_uni(sym1__));
+              current_statement__ = 117;
+              pos__ = (pos__ + 1);}}}
+      }
       current_statement__ = 118;
       
-      
+      current_statement__ = 118;
+      td1 = reduce_sum<f1_rsfunctor__>(y1d, 1, pstream__);
       current_statement__ = 119;
       
-      
+      current_statement__ = 119;
+      td1a = (reduce_sum<f1_rsfunctor__>(y1d, 1, pstream__) +
+               reduce_sum<f1a_rsfunctor__>(y1d, 1, pstream__));
       current_statement__ = 120;
       
-      
+      current_statement__ = 120;
+      td2 = reduce_sum<f2_rsfunctor__>(y2d, 1, pstream__);
       current_statement__ = 121;
       
-      
+      current_statement__ = 121;
+      td3 = reduce_sum<f3_rsfunctor__>(y3d, 1, pstream__);
       current_statement__ = 122;
       
-      
+      current_statement__ = 122;
+      td4 = reduce_sum<f4_rsfunctor__>(y4d, 1, pstream__);
       current_statement__ = 123;
       
-      
+      current_statement__ = 123;
+      td5 = reduce_sum<f5_rsfunctor__>(y5d, 1, pstream__);
       current_statement__ = 124;
       
-      
+      current_statement__ = 124;
+      td6 = reduce_sum<f6_rsfunctor__>(y6d, 1, pstream__);
       current_statement__ = 125;
       
-      
+      current_statement__ = 125;
+      td7 = reduce_sum<f7_rsfunctor__>(y7d, 1, pstream__);
       current_statement__ = 126;
       
-      
+      current_statement__ = 126;
+      td8 = reduce_sum<f8_rsfunctor__>(y8d, 1, pstream__);
       current_statement__ = 127;
       
-      
+      current_statement__ = 127;
+      td9 = reduce_sum<f9_rsfunctor__>(y14d, 1, pstream__);
       current_statement__ = 128;
       
-      
+      current_statement__ = 128;
+      td10 = reduce_sum<f10_rsfunctor__>(y15d, 1, pstream__);
       current_statement__ = 129;
       
-      
+      current_statement__ = 129;
+      td11 = reduce_sum<f11_rsfunctor__>(y16d, 1, pstream__);
       current_statement__ = 130;
       
-      
+      current_statement__ = 130;
+      td12 = reduce_sum<f12_rsfunctor__>(y17d, 1, pstream__);
       current_statement__ = 131;
       
-      
+      current_statement__ = 131;
+      tgd1 = reduce_sum<g1_rsfunctor__>(y1d, 1, pstream__, y9d);
       current_statement__ = 132;
       
-      
+      current_statement__ = 132;
+      tgd2 = reduce_sum<g2_rsfunctor__>(y1d, 1, pstream__, y10d);
       current_statement__ = 133;
       
-      
+      current_statement__ = 133;
+      tgd3 = reduce_sum<g3_rsfunctor__>(y1d, 1, pstream__, y11d);
       current_statement__ = 134;
       
-      
+      current_statement__ = 134;
+      tgd4 = reduce_sum<g4_rsfunctor__>(y1d, 1, pstream__, y12d);
       current_statement__ = 135;
       
-      
+      current_statement__ = 135;
+      tgd5 = reduce_sum<g5_rsfunctor__>(y1d, 1, pstream__, y1d);
       current_statement__ = 136;
       
-      
+      current_statement__ = 136;
+      tgd6 = reduce_sum<g6_rsfunctor__>(y1d, 1, pstream__, y2d);
       current_statement__ = 137;
       
-      
+      current_statement__ = 137;
+      tgd7 = reduce_sum<g7_rsfunctor__>(y1d, 1, pstream__, y3d);
       current_statement__ = 138;
       
-      
+      current_statement__ = 138;
+      tgd8 = reduce_sum<g8_rsfunctor__>(y1d, 1, pstream__, y4d);
       current_statement__ = 139;
       
-      
+      current_statement__ = 139;
+      tgd9 = reduce_sum<g9_rsfunctor__>(y1d, 1, pstream__, y5d);
       current_statement__ = 140;
       
-      
+      current_statement__ = 140;
+      tgd10 = reduce_sum<g10_rsfunctor__>(y1d, 1, pstream__, y6d);
       current_statement__ = 141;
       
-      
+      current_statement__ = 141;
+      tgd11 = reduce_sum<g11_rsfunctor__>(y1d, 1, pstream__, y7d);
       current_statement__ = 142;
       
-      
+      current_statement__ = 142;
+      tgd12 = reduce_sum<g12_rsfunctor__>(y1d, 1, pstream__, y8d);
       current_statement__ = 143;
       
-      
+      current_statement__ = 143;
+      tsd = reduce_sum<s_rsfunctor__>(y1d, 1, pstream__, y13d, y9d, y10d,
+              y11d, y12d, y14d, y1d, y2d, y3d, y4d, y15d, y5d, y6d, y7d, y8d,
+              y16d, y17d);
       current_statement__ = 144;
       validate_non_negative_index("y1", "N", N);
       current_statement__ = 145;
@@ -24815,7 +26546,7 @@ return foo5_lp<propto__>(y, lp__, lp_accum__, pstream__);
 class single_argument_lpmf_model final : public model_base_crtp<single_argument_lpmf_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   
  
  public:
@@ -24831,8 +26562,7 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
   single_argument_lpmf_model(stan::io::var_context& context__,
                              unsigned int random_seed__ = 0,
                              std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                             model_arena_(stan::io::get_data_sizes(context__)), 
-                              {
+                             model_arena_(),   {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -24846,7 +26576,7 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -25129,7 +26859,7 @@ static constexpr std::array<const char*, 8> locations_array__ =
 class tilde_block_model final : public model_base_crtp<tilde_block_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int t;
  
  public:
@@ -25145,8 +26875,8 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
   tilde_block_model(stan::io::var_context& context__,
                     unsigned int random_seed__ = 0,
                     std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                    model_arena_(stan::io::get_data_sizes(context__)), 
-                    t(stan::io::initialize_data<int>("t", context__)) {
+                    model_arena_(),  t(stan::io::initialize_data<int>("t",
+                    context__)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -25160,10 +26890,11 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 7;
       
-      
+      current_statement__ = 7;
+      t = context__.vals_i("t")[(1 - 1)];
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -25603,7 +27334,7 @@ static constexpr std::array<const char*, 116> locations_array__ =
 class transform_model final : public model_base_crtp<transform_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int n;
   int m;
   int k;
@@ -25625,14 +27356,18 @@ class transform_model final : public model_base_crtp<transform_model> {
   transform_model(stan::io::var_context& context__,
                   unsigned int random_seed__ = 0,
                   std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                  model_arena_(stan::io::get_data_sizes(context__)), 
-                  n(stan::io::initialize_data<int>("n", context__)),
-                  m(stan::io::initialize_data<int>("m", context__)),
-                  k(stan::io::initialize_data<int>("k", context__)),
-                  ds(stan::io::initialize_data<std::vector<std::vector<std::vector<double>>>>("ds", context__, model_arena_, n , m , k )),
-                  dv(stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>("dv", context__, model_arena_, n , m , k)),
-                  dr(stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>("dr", context__, model_arena_, n , m , k)),
-                  dm(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, -1>>>("dm", context__, model_arena_, n , m, k)) {
+                  model_arena_(),  n(stan::io::initialize_data<int>("n",
+                  context__)), m(stan::io::initialize_data<int>("m",
+                  context__)), k(stan::io::initialize_data<int>("k",
+                  context__)),
+                  ds(stan::io::initialize_data<std::vector<std::vector<std::vector<double>>>>("ds",
+                  model_arena_  , n , m , k )),
+                  dv(stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>("dv",
+                  model_arena_  , n , m , k)),
+                  dr(stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>("dr",
+                  model_arena_  , n , m , k)),
+                  dm(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, -1>>>("dm",
+                  model_arena_  , n , m, k)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -25646,22 +27381,25 @@ class transform_model final : public model_base_crtp<transform_model> {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 37;
       
-      
+      current_statement__ = 37;
+      n = context__.vals_i("n")[(1 - 1)];
       current_statement__ = 37;
       current_statement__ = 37;
       check_greater_or_equal(function__, "n", n, 1);
       current_statement__ = 38;
       
-      
+      current_statement__ = 38;
+      m = context__.vals_i("m")[(1 - 1)];
       current_statement__ = 38;
       current_statement__ = 38;
       check_greater_or_equal(function__, "m", m, 1);
       current_statement__ = 39;
       
-      
+      current_statement__ = 39;
+      k = context__.vals_i("k")[(1 - 1)];
       current_statement__ = 39;
       current_statement__ = 39;
       check_greater_or_equal(function__, "k", k, 1);
@@ -25673,7 +27411,26 @@ class transform_model final : public model_base_crtp<transform_model> {
       validate_non_negative_index("ds", "k", k);
       current_statement__ = 43;
       
-      
+      {
+        std::vector<local_scalar_t__> ds_flat__;
+        current_statement__ = 43;
+        ds_flat__ = context__.vals_r("ds");
+        current_statement__ = 43;
+        pos__ = 1;
+        current_statement__ = 43;
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          current_statement__ = 43;
+          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
+            current_statement__ = 43;
+            for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
+              current_statement__ = 43;
+              assign(ds, ds_flat__[(pos__ - 1)],
+                "assigning variable ds", index_uni(sym3__),
+                                           index_uni(sym2__),
+                                           index_uni(sym1__));
+              current_statement__ = 43;
+              pos__ = (pos__ + 1);}}}
+      }
       current_statement__ = 44;
       validate_non_negative_index("dv", "n", n);
       current_statement__ = 45;
@@ -25682,7 +27439,26 @@ class transform_model final : public model_base_crtp<transform_model> {
       validate_non_negative_index("dv", "k", k);
       current_statement__ = 47;
       
-      
+      {
+        std::vector<local_scalar_t__> dv_flat__;
+        current_statement__ = 47;
+        dv_flat__ = context__.vals_r("dv");
+        current_statement__ = 47;
+        pos__ = 1;
+        current_statement__ = 47;
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          current_statement__ = 47;
+          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
+            current_statement__ = 47;
+            for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
+              current_statement__ = 47;
+              assign(dv, dv_flat__[(pos__ - 1)],
+                "assigning variable dv", index_uni(sym3__),
+                                           index_uni(sym2__),
+                                           index_uni(sym1__));
+              current_statement__ = 47;
+              pos__ = (pos__ + 1);}}}
+      }
       current_statement__ = 48;
       validate_non_negative_index("dr", "n", n);
       current_statement__ = 49;
@@ -25691,7 +27467,26 @@ class transform_model final : public model_base_crtp<transform_model> {
       validate_non_negative_index("dr", "k", k);
       current_statement__ = 51;
       
-      
+      {
+        std::vector<local_scalar_t__> dr_flat__;
+        current_statement__ = 51;
+        dr_flat__ = context__.vals_r("dr");
+        current_statement__ = 51;
+        pos__ = 1;
+        current_statement__ = 51;
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          current_statement__ = 51;
+          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
+            current_statement__ = 51;
+            for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
+              current_statement__ = 51;
+              assign(dr, dr_flat__[(pos__ - 1)],
+                "assigning variable dr", index_uni(sym3__),
+                                           index_uni(sym2__),
+                                           index_uni(sym1__));
+              current_statement__ = 51;
+              pos__ = (pos__ + 1);}}}
+      }
       current_statement__ = 52;
       validate_non_negative_index("dm", "n", n);
       current_statement__ = 53;
@@ -25700,7 +27495,26 @@ class transform_model final : public model_base_crtp<transform_model> {
       validate_non_negative_index("dm", "k", k);
       current_statement__ = 55;
       
-      
+      {
+        std::vector<local_scalar_t__> dm_flat__;
+        current_statement__ = 55;
+        dm_flat__ = context__.vals_r("dm");
+        current_statement__ = 55;
+        pos__ = 1;
+        current_statement__ = 55;
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          current_statement__ = 55;
+          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
+            current_statement__ = 55;
+            for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
+              current_statement__ = 55;
+              assign(dm, dm_flat__[(pos__ - 1)],
+                "assigning variable dm", index_uni(sym3__),
+                                           index_uni(sym2__),
+                                           index_uni(sym1__));
+              current_statement__ = 55;
+              pos__ = (pos__ + 1);}}}
+      }
       current_statement__ = 56;
       validate_non_negative_index("p_1", "k", k);
       current_statement__ = 57;
@@ -28494,7 +30308,7 @@ static constexpr std::array<const char*, 21> locations_array__ =
 class truncate_model final : public model_base_crtp<truncate_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int n;
   double x;
  
@@ -28511,9 +30325,9 @@ class truncate_model final : public model_base_crtp<truncate_model> {
   truncate_model(stan::io::var_context& context__,
                  unsigned int random_seed__ = 0,
                  std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                 model_arena_(stan::io::get_data_sizes(context__)), 
-                 n(stan::io::initialize_data<int>("n", context__)),
-                 x(stan::io::initialize_data<double>("x", context__)) {
+                 model_arena_(),  n(stan::io::initialize_data<int>("n",
+                 context__)), x(stan::io::initialize_data<double>("x",
+                 context__)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -28527,13 +30341,15 @@ class truncate_model final : public model_base_crtp<truncate_model> {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 19;
       
-      
+      current_statement__ = 19;
+      n = context__.vals_i("n")[(1 - 1)];
       current_statement__ = 20;
       
-      
+      current_statement__ = 20;
+      x = context__.vals_r("x")[(1 - 1)];
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -28969,7 +30785,7 @@ return normal(a, pstream__);
 class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stmt_conflict_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   
  
  public:
@@ -28985,8 +30801,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
   udf_tilde_stmt_conflict_model(stan::io::var_context& context__,
                                 unsigned int random_seed__ = 0,
                                 std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                                model_arena_(stan::io::get_data_sizes(context__)), 
-                                 {
+                                model_arena_(),   {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -29000,7 +30815,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -29331,7 +31146,7 @@ return lb_constrain(x, y, pstream__);
 class user_constrain_model final : public model_base_crtp<user_constrain_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   
  
  public:
@@ -29347,7 +31162,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
   user_constrain_model(stan::io::var_context& context__,
                        unsigned int random_seed__ = 0,
                        std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                       model_arena_(stan::io::get_data_sizes(context__)),   {
+                       model_arena_(),   {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -29361,7 +31176,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return

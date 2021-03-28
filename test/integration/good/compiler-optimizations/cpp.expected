@@ -129,7 +129,7 @@ return simple_SIR(t, y, theta, x_r, x_i, pstream__);
 class ad_level_failing_model final : public model_base_crtp<ad_level_failing_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int N_t;
   std::vector<double> t;
   std::vector<double> y0;
@@ -153,12 +153,25 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
   ad_level_failing_model(stan::io::var_context& context__,
                          unsigned int random_seed__ = 0,
                          std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                         model_arena_(stan::io::get_data_sizes(context__)), 
-                         N_t(stan::io::initialize_data<int>("N_t", context__)),
-                         t(stan::io::initialize_data<std::vector<double>>("t", context__, model_arena_, N_t )),
-                         y0(stan::io::initialize_data<std::vector<double>>("y0", context__, model_arena_, 4 )),
-                         stoi_hat(stan::io::initialize_data<std::vector<int>>("stoi_hat", context__, model_arena_, N_t )),
-                         B_hat(stan::io::initialize_data<std::vector<double>>("B_hat", context__, model_arena_, N_t )) {
+                         model_arena_(), 
+                         N_t(stan::io::initialize_data<int>("N_t",
+                         context__)),
+                         t(stan::io::initialize_data<std::vector<double>>("t",
+                         model_arena_  , N_t )),
+                         y0(stan::io::initialize_data<std::vector<double>>("y0",
+                         model_arena_  , 4 )),
+                         stoi_hat(stan::io::initialize_data<std::vector<int>>("stoi_hat",
+                         model_arena_  , N_t )),
+                         B_hat(stan::io::initialize_data<std::vector<double>>("B_hat",
+                         model_arena_  , N_t )),
+                         t0(stan::io::initialize_data<double>("t0",
+                         context__)),
+                         kappa(stan::io::initialize_data<double>("kappa",
+                         context__)),
+                         x_r(stan::io::initialize_data<std::vector<double>>("x_r",
+                         model_arena_  , 0 )),
+                         x_i(stan::io::initialize_data<std::vector<int>>("x_i",
+                         model_arena_  , 0 )) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -172,10 +185,11 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 16;
       
-      
+      current_statement__ = 16;
+      N_t = context__.vals_i("N_t")[(1 - 1)];
       current_statement__ = 16;
       current_statement__ = 16;
       check_greater_or_equal(function__, "N_t", N_t, 0);
@@ -183,26 +197,32 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       validate_non_negative_index("t", "N_t", N_t);
       current_statement__ = 18;
       
-      
+      current_statement__ = 18;
+      t = context__.vals_r("t");
       current_statement__ = 19;
       
-      
+      current_statement__ = 19;
+      y0 = context__.vals_r("y0");
       current_statement__ = 20;
       validate_non_negative_index("stoi_hat", "N_t", N_t);
       current_statement__ = 21;
       
-      
+      current_statement__ = 21;
+      stoi_hat = context__.vals_i("stoi_hat");
       current_statement__ = 22;
       validate_non_negative_index("B_hat", "N_t", N_t);
       current_statement__ = 23;
       
-      
+      current_statement__ = 23;
+      B_hat = context__.vals_r("B_hat");
       current_statement__ = 24;
       
-      
+      current_statement__ = 24;
+      t0 = 0;
       current_statement__ = 25;
       
-      
+      current_statement__ = 25;
+      kappa = 1000000;
       current_statement__ = 26;
       
       current_statement__ = 27;
@@ -1201,7 +1221,7 @@ return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
 class copy_fail_model final : public model_base_crtp<copy_fail_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int lcm_sym186__;
   int lcm_sym185__;
   int lcm_sym184__;
@@ -1255,13 +1275,22 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
   copy_fail_model(stan::io::var_context& context__,
                   unsigned int random_seed__ = 0,
                   std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                  model_arena_(stan::io::get_data_sizes(context__)), 
+                  model_arena_(), 
                   nind(stan::io::initialize_data<int>("nind", context__)),
-                  n_occasions(stan::io::initialize_data<int>("n_occasions", context__)),
-                  y(stan::io::initialize_data<std::vector<std::vector<int>>>("y", context__, model_arena_, nind , n_occasions )),
-                  max_age(stan::io::initialize_data<int>("max_age", context__)),
-                  x(stan::io::initialize_data<std::vector<std::vector<int>>>("x", context__, model_arena_, nind , 
-                  (n_occasions - 1) )) {
+                  n_occasions(stan::io::initialize_data<int>("n_occasions",
+                  context__)),
+                  y(stan::io::initialize_data<std::vector<std::vector<int>>>("y",
+                  model_arena_  , nind , n_occasions )),
+                  max_age(stan::io::initialize_data<int>("max_age",
+                  context__)),
+                  x(stan::io::initialize_data<std::vector<std::vector<int>>>("x",
+                  model_arena_  , nind , lcm_sym159__ )),
+                  n_occ_minus_1(stan::io::initialize_data<int>("n_occ_minus_1",
+                  context__)),
+                  first(stan::io::initialize_data<std::vector<int>>("first",
+                  model_arena_  , nind )),
+                  last(stan::io::initialize_data<std::vector<int>>("last",
+                  model_arena_  , nind )) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -1306,16 +1335,18 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 31;
       
-      
+      current_statement__ = 31;
+      nind = context__.vals_i("nind")[(1 - 1)];
       current_statement__ = 31;
       current_statement__ = 31;
       check_greater_or_equal(function__, "nind", nind, 0);
       current_statement__ = 32;
       
-      
+      current_statement__ = 32;
+      n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
       current_statement__ = 32;
       current_statement__ = 32;
       check_greater_or_equal(function__, "n_occasions", n_occasions, 2);
@@ -1325,7 +1356,50 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       validate_non_negative_index("y", "n_occasions", n_occasions);
       current_statement__ = 35;
       
-      
+      {
+        std::vector<int> y_flat__;
+        current_statement__ = 35;
+        y_flat__ = context__.vals_i("y");
+        current_statement__ = 35;
+        pos__ = 1;
+        lcm_sym156__ = logical_gte(n_occasions, 1);
+        if (lcm_sym156__) {
+          {
+            lcm_sym157__ = logical_gte(nind, 1);
+            if (lcm_sym157__) {
+              current_statement__ = 35;
+              assign(y, rvalue(y_flat__, "y_flat__", index_uni(1)),
+                "assigning variable y", index_uni(1), index_uni(1));
+              current_statement__ = 35;
+              pos__ = 2;
+              for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
+                current_statement__ = 35;
+                assign(y, y_flat__[(pos__ - 1)],
+                  "assigning variable y", index_uni(sym2__), index_uni(1));
+                current_statement__ = 35;
+                pos__ = (pos__ + 1);}
+            } 
+            for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
+              current_statement__ = 35;
+              if (lcm_sym157__) {
+                current_statement__ = 35;
+                assign(y, y_flat__[(pos__ - 1)],
+                  "assigning variable y", index_uni(1), index_uni(sym1__));
+                current_statement__ = 35;
+                pos__ = (pos__ + 1);
+                for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
+                  current_statement__ = 35;
+                  assign(y, y_flat__[(pos__ - 1)],
+                    "assigning variable y", index_uni(sym2__),
+                                              index_uni(sym1__));
+                  current_statement__ = 35;
+                  pos__ = (pos__ + 1);}
+              } }
+          }
+        } else {
+          lcm_sym157__ = logical_gte(nind, 1);
+        }
+      }
       current_statement__ = 35;
       if (lcm_sym157__) {
         current_statement__ = 35;
@@ -1389,17 +1463,57 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       } 
       current_statement__ = 36;
       
-      
+      current_statement__ = 36;
+      max_age = context__.vals_i("max_age")[(1 - 1)];
       current_statement__ = 36;
       current_statement__ = 36;
       check_greater_or_equal(function__, "max_age", max_age, 1);
       current_statement__ = 37;
       validate_non_negative_index("x", "nind", nind);
-      
+      lcm_sym159__ = (n_occasions - 1);
       validate_non_negative_index("x", "n_occasions - 1", lcm_sym159__);
       current_statement__ = 38;
       
-      
+      {
+        std::vector<int> x_flat__;
+        current_statement__ = 38;
+        x_flat__ = context__.vals_i("x");
+        current_statement__ = 38;
+        pos__ = 1;
+        lcm_sym158__ = logical_gte(lcm_sym159__, 1);
+        if (lcm_sym158__) {
+          current_statement__ = 38;
+          if (lcm_sym157__) {
+            current_statement__ = 38;
+            assign(x, rvalue(x_flat__, "x_flat__", index_uni(1)),
+              "assigning variable x", index_uni(1), index_uni(1));
+            current_statement__ = 38;
+            pos__ = 2;
+            for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
+              current_statement__ = 38;
+              assign(x, x_flat__[(pos__ - 1)],
+                "assigning variable x", index_uni(sym2__), index_uni(1));
+              current_statement__ = 38;
+              pos__ = (pos__ + 1);}
+          } 
+          for (int sym1__ = 2; sym1__ <= lcm_sym159__; ++sym1__) {
+            current_statement__ = 38;
+            if (lcm_sym157__) {
+              current_statement__ = 38;
+              assign(x, x_flat__[(pos__ - 1)],
+                "assigning variable x", index_uni(1), index_uni(sym1__));
+              current_statement__ = 38;
+              pos__ = (pos__ + 1);
+              for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
+                current_statement__ = 38;
+                assign(x, x_flat__[(pos__ - 1)],
+                  "assigning variable x", index_uni(sym2__),
+                                            index_uni(sym1__));
+                current_statement__ = 38;
+                pos__ = (pos__ + 1);}
+            } }
+        } 
+      }
       current_statement__ = 38;
       if (lcm_sym157__) {
         current_statement__ = 38;
@@ -1465,7 +1579,8 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       } 
       current_statement__ = 39;
       
-      
+      current_statement__ = 39;
+      n_occ_minus_1 = lcm_sym159__;
       current_statement__ = 40;
       validate_non_negative_index("first", "nind", nind);
       current_statement__ = 41;
@@ -3123,7 +3238,7 @@ static constexpr std::array<const char*, 66> locations_array__ =
 class dce_fail_model final : public model_base_crtp<dce_fail_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int lcm_sym86__;
   int lcm_sym85__;
   double lcm_sym84__;
@@ -3170,20 +3285,30 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
   dce_fail_model(stan::io::var_context& context__,
                  unsigned int random_seed__ = 0,
                  std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                 model_arena_(stan::io::get_data_sizes(context__)), 
-                 N(stan::io::initialize_data<int>("N", context__)),
-                 n_age(stan::io::initialize_data<int>("n_age", context__)),
-                 n_edu(stan::io::initialize_data<int>("n_edu", context__)),
-                 n_region(stan::io::initialize_data<int>("n_region", context__)),
-                 n_state(stan::io::initialize_data<int>("n_state", context__)),
-                 female(stan::io::initialize_data<std::vector<int>>("female", context__, model_arena_, N )),
-                 black(stan::io::initialize_data<std::vector<int>>("black", context__, model_arena_, N )),
-                 age(stan::io::initialize_data<std::vector<int>>("age", context__, model_arena_, N )),
-                 edu(stan::io::initialize_data<std::vector<int>>("edu", context__, model_arena_, N )),
-                 region(stan::io::initialize_data<std::vector<int>>("region", context__, model_arena_, n_state )),
-                 state(stan::io::initialize_data<std::vector<int>>("state", context__, model_arena_, N )),
-                 y(stan::io::initialize_data<std::vector<int>>("y", context__, model_arena_, N )),
-                 v_prev(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("v_prev", context__, model_arena_ n_state)) {
+                 model_arena_(),  N(stan::io::initialize_data<int>("N",
+                 context__)), n_age(stan::io::initialize_data<int>("n_age",
+                 context__)), n_edu(stan::io::initialize_data<int>("n_edu",
+                 context__)),
+                 n_region(stan::io::initialize_data<int>("n_region",
+                 context__)),
+                 n_state(stan::io::initialize_data<int>("n_state",
+                 context__)),
+                 female(stan::io::initialize_data<std::vector<int>>("female",
+                 model_arena_  , N )),
+                 black(stan::io::initialize_data<std::vector<int>>("black",
+                 model_arena_  , N )),
+                 age(stan::io::initialize_data<std::vector<int>>("age",
+                 model_arena_  , N )),
+                 edu(stan::io::initialize_data<std::vector<int>>("edu",
+                 model_arena_  , N )),
+                 region(stan::io::initialize_data<std::vector<int>>("region",
+                 model_arena_  , n_state )),
+                 state(stan::io::initialize_data<std::vector<int>>("state",
+                 model_arena_  , N )),
+                 y(stan::io::initialize_data<std::vector<int>>("y",
+                 model_arena_  , N )),
+                 v_prev(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("v_prev",
+                 model_arena_, n_state)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -3216,34 +3341,39 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 39;
       
-      
+      current_statement__ = 39;
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 39;
       current_statement__ = 39;
       check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 40;
       
-      
+      current_statement__ = 40;
+      n_age = context__.vals_i("n_age")[(1 - 1)];
       current_statement__ = 40;
       current_statement__ = 40;
       check_greater_or_equal(function__, "n_age", n_age, 0);
       current_statement__ = 41;
       
-      
+      current_statement__ = 41;
+      n_edu = context__.vals_i("n_edu")[(1 - 1)];
       current_statement__ = 41;
       current_statement__ = 41;
       check_greater_or_equal(function__, "n_edu", n_edu, 0);
       current_statement__ = 42;
       
-      
+      current_statement__ = 42;
+      n_region = context__.vals_i("n_region")[(1 - 1)];
       current_statement__ = 42;
       current_statement__ = 42;
       check_greater_or_equal(function__, "n_region", n_region, 0);
       current_statement__ = 43;
       
-      
+      current_statement__ = 43;
+      n_state = context__.vals_i("n_state")[(1 - 1)];
       current_statement__ = 43;
       current_statement__ = 43;
       check_greater_or_equal(function__, "n_state", n_state, 0);
@@ -3251,8 +3381,9 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       validate_non_negative_index("female", "N", N);
       current_statement__ = 45;
       
-      
-      
+      current_statement__ = 45;
+      female = context__.vals_i("female");
+      lcm_sym68__ = logical_gte(N, 1);
       if (lcm_sym68__) {
         current_statement__ = 45;
         current_statement__ = 45;
@@ -3280,7 +3411,8 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       validate_non_negative_index("black", "N", N);
       current_statement__ = 47;
       
-      
+      current_statement__ = 47;
+      black = context__.vals_i("black");
       current_statement__ = 47;
       if (lcm_sym68__) {
         current_statement__ = 47;
@@ -3309,7 +3441,8 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       validate_non_negative_index("age", "N", N);
       current_statement__ = 49;
       
-      
+      current_statement__ = 49;
+      age = context__.vals_i("age");
       current_statement__ = 49;
       if (lcm_sym68__) {
         current_statement__ = 49;
@@ -3338,7 +3471,8 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       validate_non_negative_index("edu", "N", N);
       current_statement__ = 51;
       
-      
+      current_statement__ = 51;
+      edu = context__.vals_i("edu");
       current_statement__ = 51;
       if (lcm_sym68__) {
         current_statement__ = 51;
@@ -3367,8 +3501,9 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       validate_non_negative_index("region", "n_state", n_state);
       current_statement__ = 53;
       
-      
-      
+      current_statement__ = 53;
+      region = context__.vals_i("region");
+      lcm_sym69__ = logical_gte(n_state, 1);
       if (lcm_sym69__) {
         current_statement__ = 53;
         current_statement__ = 53;
@@ -3396,7 +3531,8 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       validate_non_negative_index("state", "N", N);
       current_statement__ = 55;
       
-      
+      current_statement__ = 55;
+      state = context__.vals_i("state");
       current_statement__ = 55;
       if (lcm_sym68__) {
         current_statement__ = 55;
@@ -3425,7 +3561,8 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       validate_non_negative_index("y", "N", N);
       current_statement__ = 57;
       
-      
+      current_statement__ = 57;
+      y = context__.vals_i("y");
       current_statement__ = 57;
       if (lcm_sym68__) {
         current_statement__ = 57;
@@ -3453,7 +3590,28 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       validate_non_negative_index("v_prev", "n_state", n_state);
       current_statement__ = 59;
       
-      
+      {
+        std::vector<double> v_prev_flat__;
+        current_statement__ = 59;
+        v_prev_flat__ = context__.vals_r("v_prev");
+        current_statement__ = 59;
+        pos__ = 1;
+        current_statement__ = 59;
+        if (lcm_sym69__) {
+          current_statement__ = 59;
+          assign(v_prev,
+            rvalue(v_prev_flat__, "v_prev_flat__", index_uni(1)),
+            "assigning variable v_prev", index_uni(1));
+          current_statement__ = 59;
+          pos__ = 2;
+          for (int sym1__ = 2; sym1__ <= n_state; ++sym1__) {
+            current_statement__ = 59;
+            assign(v_prev, v_prev_flat__[(pos__ - 1)],
+              "assigning variable v_prev", index_uni(sym1__));
+            current_statement__ = 59;
+            pos__ = (pos__ + 1);}
+        } 
+      }
       current_statement__ = 60;
       validate_non_negative_index("b_age", "n_age", n_age);
       current_statement__ = 61;
@@ -4603,7 +4761,7 @@ static constexpr std::array<const char*, 9> locations_array__ =
 class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experiment_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   double lcm_sym4__;
   int j;
   double z;
@@ -4624,8 +4782,17 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
   expr_prop_experiment_model(stan::io::var_context& context__,
                              unsigned int random_seed__ = 0,
                              std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                             model_arena_(stan::io::get_data_sizes(context__)), 
-                             j(stan::io::initialize_data<int>("j", context__)) {
+                             model_arena_(), 
+                             j(stan::io::initialize_data<int>("j",
+                             context__)),
+                             z(stan::io::initialize_data<double>("z",
+                             context__)),
+                             x(stan::io::initialize_data<double>("x",
+                             context__)),
+                             y(stan::io::initialize_data<double>("y",
+                             context__)),
+                             i(stan::io::initialize_data<double>("i",
+                             context__)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -4640,10 +4807,11 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 1;
       
-      
+      current_statement__ = 1;
+      j = context__.vals_i("j")[(1 - 1)];
       current_statement__ = 2;
       
       current_statement__ = 3;
@@ -4652,12 +4820,16 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
       
       current_statement__ = 5;
       
-      
-      
-      
-      
-      
-      
+      current_statement__ = 5;
+      i = normal_rng(5, 1, base_rng__);
+      lcm_sym4__ = (i * j);
+      z = lcm_sym4__;
+      current_statement__ = 6;
+      x = normal_rng(lcm_sym4__, 1, base_rng__);
+      current_statement__ = 7;
+      i = normal_rng(5, 1, base_rng__);
+      current_statement__ = 8;
+      y = normal_rng(z, 1, base_rng__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -4942,7 +5114,7 @@ static constexpr std::array<const char*, 8> locations_array__ =
 class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_experiment2_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   double lcm_sym4__;
   int j;
   double z;
@@ -4961,8 +5133,13 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
   expr_prop_experiment2_model(stan::io::var_context& context__,
                               unsigned int random_seed__ = 0,
                               std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                              model_arena_(stan::io::get_data_sizes(context__)), 
-                              j(stan::io::initialize_data<int>("j", context__)) {
+                              model_arena_(), 
+                              j(stan::io::initialize_data<int>("j",
+                              context__)),
+                              z(stan::io::initialize_data<double>("z",
+                              context__)),
+                              y(stan::io::initialize_data<double>("y",
+                              context__)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -4977,17 +5154,30 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 1;
       
-      
+      current_statement__ = 1;
+      j = context__.vals_i("j")[(1 - 1)];
       current_statement__ = 2;
       
-      
+      current_statement__ = 2;
+      z = 1;
       current_statement__ = 3;
       
-      
-      
+      {
+        double x;
+        x = std::numeric_limits<double>::quiet_NaN();
+        
+        current_statement__ = 4;
+        x = normal_rng(123, 1, base_rng__);
+        lcm_sym4__ = (x * 2);
+        z = lcm_sym4__;
+        current_statement__ = 5;
+        y = normal_rng(lcm_sym4__, 1, base_rng__);
+      }
+      current_statement__ = 7;
+      y = normal_rng(z, 1, base_rng__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -5276,7 +5466,7 @@ static constexpr std::array<const char*, 12> locations_array__ =
 class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   double lcm_sym25__;
   double lcm_sym24__;
   int lcm_sym23__;
@@ -5297,9 +5487,10 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
   expr_prop_fail_model(stan::io::var_context& context__,
                        unsigned int random_seed__ = 0,
                        std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                       model_arena_(stan::io::get_data_sizes(context__)), 
-                       N(stan::io::initialize_data<int>("N", context__)),
-                       y(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("y", context__, model_arena_ N)) {
+                       model_arena_(),  N(stan::io::initialize_data<int>("N",
+                       context__)),
+                       y(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("y",
+                       model_arena_, N)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -5317,10 +5508,11 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 9;
       
-      
+      current_statement__ = 9;
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 9;
       current_statement__ = 9;
       check_greater_or_equal(function__, "N", N, 0);
@@ -5328,7 +5520,27 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       validate_non_negative_index("y", "N", N);
       current_statement__ = 11;
       
-      
+      {
+        std::vector<double> y_flat__;
+        current_statement__ = 11;
+        y_flat__ = context__.vals_r("y");
+        current_statement__ = 11;
+        pos__ = 1;
+        current_statement__ = 11;
+        if (logical_gte(N, 1)) {
+          current_statement__ = 11;
+          assign(y, rvalue(y_flat__, "y_flat__", index_uni(1)),
+            "assigning variable y", index_uni(1));
+          current_statement__ = 11;
+          pos__ = 2;
+          for (int sym1__ = 2; sym1__ <= N; ++sym1__) {
+            current_statement__ = 11;
+            assign(y, y_flat__[(pos__ - 1)],
+              "assigning variable y", index_uni(sym1__));
+            current_statement__ = 11;
+            pos__ = (pos__ + 1);}
+        } 
+      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -5817,7 +6029,7 @@ static constexpr std::array<const char*, 12> locations_array__ =
 class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   double lcm_sym13__;
   double lcm_sym12__;
   int lcm_sym11__;
@@ -5838,10 +6050,12 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
   expr_prop_fail2_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                        model_arena_(stan::io::get_data_sizes(context__)), 
+                        model_arena_(), 
                         J(stan::io::initialize_data<int>("J", context__)),
-                        y(stan::io::initialize_data<std::vector<double>>("y", context__, model_arena_, J )),
-                        sigma(stan::io::initialize_data<std::vector<double>>("sigma", context__, model_arena_, J )) {
+                        y(stan::io::initialize_data<std::vector<double>>("y",
+                        model_arena_  , J )),
+                        sigma(stan::io::initialize_data<std::vector<double>>("sigma",
+                        model_arena_  , J )) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -5858,10 +6072,11 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 6;
       
-      
+      current_statement__ = 6;
+      J = context__.vals_i("J")[(1 - 1)];
       current_statement__ = 6;
       current_statement__ = 6;
       check_greater_or_equal(function__, "J", J, 0);
@@ -5869,12 +6084,14 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       validate_non_negative_index("y", "J", J);
       current_statement__ = 8;
       
-      
+      current_statement__ = 8;
+      y = context__.vals_r("y");
       current_statement__ = 9;
       validate_non_negative_index("sigma", "J", J);
       current_statement__ = 10;
       
-      
+      current_statement__ = 10;
+      sigma = context__.vals_r("sigma");
       current_statement__ = 10;
       if (logical_gte(J, 1)) {
         current_statement__ = 10;
@@ -6314,7 +6531,7 @@ static constexpr std::array<const char*, 52> locations_array__ =
 class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int lcm_sym88__;
   int lcm_sym87__;
   double lcm_sym86__;
@@ -6368,22 +6585,36 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
   expr_prop_fail3_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                        model_arena_(stan::io::get_data_sizes(context__)), 
+                        model_arena_(), 
                         N(stan::io::initialize_data<int>("N", context__)),
-                        n_age(stan::io::initialize_data<int>("n_age", context__)),
-                        n_age_edu(stan::io::initialize_data<int>("n_age_edu", context__)),
-                        n_edu(stan::io::initialize_data<int>("n_edu", context__)),
-                        n_region_full(stan::io::initialize_data<int>("n_region_full", context__)),
-                        n_state(stan::io::initialize_data<int>("n_state", context__)),
-                        age(stan::io::initialize_data<std::vector<int>>("age", context__, model_arena_, N )),
-                        age_edu(stan::io::initialize_data<std::vector<int>>("age_edu", context__, model_arena_, N )),
-                        black(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("black", context__, model_arena_ N)),
-                        edu(stan::io::initialize_data<std::vector<int>>("edu", context__, model_arena_, N )),
-                        female(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("female", context__, model_arena_ N)),
-                        region_full(stan::io::initialize_data<std::vector<int>>("region_full", context__, model_arena_, N )),
-                        state(stan::io::initialize_data<std::vector<int>>("state", context__, model_arena_, N )),
-                        v_prev_full(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("v_prev_full", context__, model_arena_ N)),
-                        y(stan::io::initialize_data<std::vector<int>>("y", context__, model_arena_, N )) {
+                        n_age(stan::io::initialize_data<int>("n_age",
+                        context__)),
+                        n_age_edu(stan::io::initialize_data<int>("n_age_edu",
+                        context__)),
+                        n_edu(stan::io::initialize_data<int>("n_edu",
+                        context__)),
+                        n_region_full(stan::io::initialize_data<int>("n_region_full",
+                        context__)),
+                        n_state(stan::io::initialize_data<int>("n_state",
+                        context__)),
+                        age(stan::io::initialize_data<std::vector<int>>("age",
+                        model_arena_  , N )),
+                        age_edu(stan::io::initialize_data<std::vector<int>>("age_edu",
+                        model_arena_  , N )),
+                        black(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("black",
+                        model_arena_, N)),
+                        edu(stan::io::initialize_data<std::vector<int>>("edu",
+                        model_arena_  , N )),
+                        female(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("female",
+                        model_arena_, N)),
+                        region_full(stan::io::initialize_data<std::vector<int>>("region_full",
+                        model_arena_  , N )),
+                        state(stan::io::initialize_data<std::vector<int>>("state",
+                        model_arena_  , N )),
+                        v_prev_full(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("v_prev_full",
+                        model_arena_, N)),
+                        y(stan::io::initialize_data<std::vector<int>>("y",
+                        model_arena_  , N )) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -6421,40 +6652,46 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 22;
       
-      
+      current_statement__ = 22;
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 22;
       current_statement__ = 22;
       check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 23;
       
-      
+      current_statement__ = 23;
+      n_age = context__.vals_i("n_age")[(1 - 1)];
       current_statement__ = 23;
       current_statement__ = 23;
       check_greater_or_equal(function__, "n_age", n_age, 0);
       current_statement__ = 24;
       
-      
+      current_statement__ = 24;
+      n_age_edu = context__.vals_i("n_age_edu")[(1 - 1)];
       current_statement__ = 24;
       current_statement__ = 24;
       check_greater_or_equal(function__, "n_age_edu", n_age_edu, 0);
       current_statement__ = 25;
       
-      
+      current_statement__ = 25;
+      n_edu = context__.vals_i("n_edu")[(1 - 1)];
       current_statement__ = 25;
       current_statement__ = 25;
       check_greater_or_equal(function__, "n_edu", n_edu, 0);
       current_statement__ = 26;
       
-      
+      current_statement__ = 26;
+      n_region_full = context__.vals_i("n_region_full")[(1 - 1)];
       current_statement__ = 26;
       current_statement__ = 26;
       check_greater_or_equal(function__, "n_region_full", n_region_full, 0);
       current_statement__ = 27;
       
-      
+      current_statement__ = 27;
+      n_state = context__.vals_i("n_state")[(1 - 1)];
       current_statement__ = 27;
       current_statement__ = 27;
       check_greater_or_equal(function__, "n_state", n_state, 0);
@@ -6462,8 +6699,9 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       validate_non_negative_index("age", "N", N);
       current_statement__ = 29;
       
-      
-      
+      current_statement__ = 29;
+      age = context__.vals_i("age");
+      lcm_sym65__ = logical_gte(N, 1);
       if (lcm_sym65__) {
         current_statement__ = 29;
         current_statement__ = 29;
@@ -6491,7 +6729,8 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       validate_non_negative_index("age_edu", "N", N);
       current_statement__ = 31;
       
-      
+      current_statement__ = 31;
+      age_edu = context__.vals_i("age_edu");
       current_statement__ = 31;
       if (lcm_sym65__) {
         current_statement__ = 31;
@@ -6521,7 +6760,27 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       validate_non_negative_index("black", "N", N);
       current_statement__ = 33;
       
-      
+      {
+        std::vector<double> black_flat__;
+        current_statement__ = 33;
+        black_flat__ = context__.vals_r("black");
+        current_statement__ = 33;
+        pos__ = 1;
+        current_statement__ = 33;
+        if (lcm_sym65__) {
+          current_statement__ = 33;
+          assign(black, rvalue(black_flat__, "black_flat__", index_uni(1)),
+            "assigning variable black", index_uni(1));
+          current_statement__ = 33;
+          pos__ = 2;
+          for (int sym1__ = 2; sym1__ <= N; ++sym1__) {
+            current_statement__ = 33;
+            assign(black, black_flat__[(pos__ - 1)],
+              "assigning variable black", index_uni(sym1__));
+            current_statement__ = 33;
+            pos__ = (pos__ + 1);}
+        } 
+      }
       current_statement__ = 33;
       if (lcm_sym65__) {
         current_statement__ = 33;
@@ -6550,7 +6809,8 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       validate_non_negative_index("edu", "N", N);
       current_statement__ = 35;
       
-      
+      current_statement__ = 35;
+      edu = context__.vals_i("edu");
       current_statement__ = 35;
       if (lcm_sym65__) {
         current_statement__ = 35;
@@ -6579,7 +6839,28 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       validate_non_negative_index("female", "N", N);
       current_statement__ = 37;
       
-      
+      {
+        std::vector<double> female_flat__;
+        current_statement__ = 37;
+        female_flat__ = context__.vals_r("female");
+        current_statement__ = 37;
+        pos__ = 1;
+        current_statement__ = 37;
+        if (lcm_sym65__) {
+          current_statement__ = 37;
+          assign(female,
+            rvalue(female_flat__, "female_flat__", index_uni(1)),
+            "assigning variable female", index_uni(1));
+          current_statement__ = 37;
+          pos__ = 2;
+          for (int sym1__ = 2; sym1__ <= N; ++sym1__) {
+            current_statement__ = 37;
+            assign(female, female_flat__[(pos__ - 1)],
+              "assigning variable female", index_uni(sym1__));
+            current_statement__ = 37;
+            pos__ = (pos__ + 1);}
+        } 
+      }
       current_statement__ = 37;
       if (lcm_sym65__) {
         current_statement__ = 37;
@@ -6608,7 +6889,8 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       validate_non_negative_index("region_full", "N", N);
       current_statement__ = 39;
       
-      
+      current_statement__ = 39;
+      region_full = context__.vals_i("region_full");
       current_statement__ = 39;
       if (lcm_sym65__) {
         current_statement__ = 39;
@@ -6639,7 +6921,8 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       validate_non_negative_index("state", "N", N);
       current_statement__ = 41;
       
-      
+      current_statement__ = 41;
+      state = context__.vals_i("state");
       current_statement__ = 41;
       if (lcm_sym65__) {
         current_statement__ = 41;
@@ -6668,12 +6951,34 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       validate_non_negative_index("v_prev_full", "N", N);
       current_statement__ = 43;
       
-      
+      {
+        std::vector<double> v_prev_full_flat__;
+        current_statement__ = 43;
+        v_prev_full_flat__ = context__.vals_r("v_prev_full");
+        current_statement__ = 43;
+        pos__ = 1;
+        current_statement__ = 43;
+        if (lcm_sym65__) {
+          current_statement__ = 43;
+          assign(v_prev_full,
+            rvalue(v_prev_full_flat__, "v_prev_full_flat__", index_uni(1)),
+            "assigning variable v_prev_full", index_uni(1));
+          current_statement__ = 43;
+          pos__ = 2;
+          for (int sym1__ = 2; sym1__ <= N; ++sym1__) {
+            current_statement__ = 43;
+            assign(v_prev_full, v_prev_full_flat__[(pos__ - 1)],
+              "assigning variable v_prev_full", index_uni(sym1__));
+            current_statement__ = 43;
+            pos__ = (pos__ + 1);}
+        } 
+      }
       current_statement__ = 44;
       validate_non_negative_index("y", "N", N);
       current_statement__ = 45;
       
-      
+      current_statement__ = 45;
+      y = context__.vals_i("y");
       current_statement__ = 45;
       if (lcm_sym65__) {
         current_statement__ = 45;
@@ -7777,7 +8082,7 @@ static constexpr std::array<const char*, 44> locations_array__ =
 class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int lcm_sym52__;
   int lcm_sym51__;
   int lcm_sym50__;
@@ -7812,12 +8117,20 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
   expr_prop_fail4_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                        model_arena_(stan::io::get_data_sizes(context__)), 
+                        model_arena_(), 
                         N(stan::io::initialize_data<int>("N", context__)),
-                        N_edges(stan::io::initialize_data<int>("N_edges", context__)),
-                        node1(stan::io::initialize_data<std::vector<int>>("node1", context__, model_arena_, N_edges )),
-                        node2(stan::io::initialize_data<std::vector<int>>("node2", context__, model_arena_, N_edges )),
-                        E(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("E", context__, model_arena_ N)) {
+                        N_edges(stan::io::initialize_data<int>("N_edges",
+                        context__)),
+                        node1(stan::io::initialize_data<std::vector<int>>("node1",
+                        model_arena_  , N_edges )),
+                        node2(stan::io::initialize_data<std::vector<int>>("node2",
+                        model_arena_  , N_edges )),
+                        E(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("E",
+                        model_arena_, N)),
+                        log_E(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("log_E",
+                        model_arena_, N)),
+                        phi_std_raw_1dim__(stan::io::initialize_data<int>("phi_std_raw_1dim__",
+                        context__)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -7844,16 +8157,18 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 28;
       
-      
+      current_statement__ = 28;
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 28;
       current_statement__ = 28;
       check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 29;
       
-      
+      current_statement__ = 29;
+      N_edges = context__.vals_i("N_edges")[(1 - 1)];
       current_statement__ = 29;
       current_statement__ = 29;
       check_greater_or_equal(function__, "N_edges", N_edges, 0);
@@ -7861,8 +8176,9 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       validate_non_negative_index("node1", "N_edges", N_edges);
       current_statement__ = 31;
       
-      
-      
+      current_statement__ = 31;
+      node1 = context__.vals_i("node1");
+      lcm_sym41__ = logical_gte(N_edges, 1);
       if (lcm_sym41__) {
         current_statement__ = 31;
         current_statement__ = 31;
@@ -7890,7 +8206,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       validate_non_negative_index("node2", "N_edges", N_edges);
       current_statement__ = 33;
       
-      
+      current_statement__ = 33;
+      node2 = context__.vals_i("node2");
       current_statement__ = 33;
       if (lcm_sym41__) {
         current_statement__ = 33;
@@ -7919,7 +8236,27 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       validate_non_negative_index("E", "N", N);
       current_statement__ = 35;
       
-      
+      {
+        std::vector<double> E_flat__;
+        current_statement__ = 35;
+        E_flat__ = context__.vals_r("E");
+        current_statement__ = 35;
+        pos__ = 1;
+        lcm_sym40__ = logical_gte(N, 1);
+        if (lcm_sym40__) {
+          current_statement__ = 35;
+          assign(E, rvalue(E_flat__, "E_flat__", index_uni(1)),
+            "assigning variable E", index_uni(1));
+          current_statement__ = 35;
+          pos__ = 2;
+          for (int sym1__ = 2; sym1__ <= N; ++sym1__) {
+            current_statement__ = 35;
+            assign(E, E_flat__[(pos__ - 1)],
+              "assigning variable E", index_uni(sym1__));
+            current_statement__ = 35;
+            pos__ = (pos__ + 1);}
+        } 
+      }
       current_statement__ = 35;
       if (lcm_sym40__) {
         current_statement__ = 35;
@@ -7936,11 +8273,12 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       validate_non_negative_index("log_E", "N", N);
       current_statement__ = 37;
       
-      
+      current_statement__ = 37;
+      assign(log_E, stan::math::log(E), "assigning variable log_E");
       current_statement__ = 38;
       
-      
-      
+      lcm_sym42__ = (N - 1);
+      phi_std_raw_1dim__ = lcm_sym42__;
       current_statement__ = 38;
       validate_non_negative_index("phi_std_raw", "N - 1", lcm_sym42__);
       current_statement__ = 39;
@@ -8921,7 +9259,7 @@ return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
 class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int lcm_sym176__;
   int lcm_sym175__;
   int lcm_sym174__;
@@ -8966,10 +9304,19 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
   expr_prop_fail5_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                        model_arena_(stan::io::get_data_sizes(context__)), 
-                        nind(stan::io::initialize_data<int>("nind", context__)),
-                        n_occasions(stan::io::initialize_data<int>("n_occasions", context__)),
-                        y(stan::io::initialize_data<std::vector<std::vector<int>>>("y", context__, model_arena_, nind , n_occasions )) {
+                        model_arena_(), 
+                        nind(stan::io::initialize_data<int>("nind",
+                        context__)),
+                        n_occasions(stan::io::initialize_data<int>("n_occasions",
+                        context__)),
+                        y(stan::io::initialize_data<std::vector<std::vector<int>>>("y",
+                        model_arena_  , nind , n_occasions )),
+                        n_occ_minus_1(stan::io::initialize_data<int>("n_occ_minus_1",
+                        context__)),
+                        first(stan::io::initialize_data<std::vector<int>>("first",
+                        model_arena_  , nind )),
+                        last(stan::io::initialize_data<std::vector<int>>("last",
+                        model_arena_  , nind )) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -9007,16 +9354,18 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 37;
       
-      
+      current_statement__ = 37;
+      nind = context__.vals_i("nind")[(1 - 1)];
       current_statement__ = 37;
       current_statement__ = 37;
       check_greater_or_equal(function__, "nind", nind, 0);
       current_statement__ = 38;
       
-      
+      current_statement__ = 38;
+      n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
       current_statement__ = 38;
       current_statement__ = 38;
       check_greater_or_equal(function__, "n_occasions", n_occasions, 2);
@@ -9026,7 +9375,50 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       validate_non_negative_index("y", "n_occasions", n_occasions);
       current_statement__ = 41;
       
-      
+      {
+        std::vector<int> y_flat__;
+        current_statement__ = 41;
+        y_flat__ = context__.vals_i("y");
+        current_statement__ = 41;
+        pos__ = 1;
+        lcm_sym153__ = logical_gte(n_occasions, 1);
+        if (lcm_sym153__) {
+          {
+            lcm_sym154__ = logical_gte(nind, 1);
+            if (lcm_sym154__) {
+              current_statement__ = 41;
+              assign(y, rvalue(y_flat__, "y_flat__", index_uni(1)),
+                "assigning variable y", index_uni(1), index_uni(1));
+              current_statement__ = 41;
+              pos__ = 2;
+              for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
+                current_statement__ = 41;
+                assign(y, y_flat__[(pos__ - 1)],
+                  "assigning variable y", index_uni(sym2__), index_uni(1));
+                current_statement__ = 41;
+                pos__ = (pos__ + 1);}
+            } 
+            for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
+              current_statement__ = 41;
+              if (lcm_sym154__) {
+                current_statement__ = 41;
+                assign(y, y_flat__[(pos__ - 1)],
+                  "assigning variable y", index_uni(1), index_uni(sym1__));
+                current_statement__ = 41;
+                pos__ = (pos__ + 1);
+                for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
+                  current_statement__ = 41;
+                  assign(y, y_flat__[(pos__ - 1)],
+                    "assigning variable y", index_uni(sym2__),
+                                              index_uni(sym1__));
+                  current_statement__ = 41;
+                  pos__ = (pos__ + 1);}
+              } }
+          }
+        } else {
+          lcm_sym154__ = logical_gte(nind, 1);
+        }
+      }
       current_statement__ = 41;
       if (lcm_sym154__) {
         current_statement__ = 41;
@@ -9090,8 +9482,8 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       } 
       current_statement__ = 42;
       
-      
-      
+      lcm_sym155__ = (n_occasions - 1);
+      n_occ_minus_1 = lcm_sym155__;
       current_statement__ = 43;
       validate_non_negative_index("first", "nind", nind);
       current_statement__ = 44;
@@ -11620,7 +12012,7 @@ return js_super_lp<propto__>(y, first, last, p, phi, psi, nu, chi, lp__,
 class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int lcm_sym332__;
   int lcm_sym331__;
   int lcm_sym330__;
@@ -11665,10 +12057,18 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
   expr_prop_fail6_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                        model_arena_(stan::io::get_data_sizes(context__)), 
+                        model_arena_(), 
                         M(stan::io::initialize_data<int>("M", context__)),
-                        n_occasions(stan::io::initialize_data<int>("n_occasions", context__)),
-                        y(stan::io::initialize_data<std::vector<std::vector<int>>>("y", context__, model_arena_, M , n_occasions )) {
+                        n_occasions(stan::io::initialize_data<int>("n_occasions",
+                        context__)),
+                        y(stan::io::initialize_data<std::vector<std::vector<int>>>("y",
+                        model_arena_  , M , n_occasions )),
+                        first(stan::io::initialize_data<std::vector<int>>("first",
+                        model_arena_  , M )),
+                        last(stan::io::initialize_data<std::vector<int>>("last",
+                        model_arena_  , M )),
+                        phi_2dim__(stan::io::initialize_data<int>("phi_2dim__",
+                        context__)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -11706,16 +12106,18 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 106;
       
-      
+      current_statement__ = 106;
+      M = context__.vals_i("M")[(1 - 1)];
       current_statement__ = 106;
       current_statement__ = 106;
       check_greater_or_equal(function__, "M", M, 0);
       current_statement__ = 107;
       
-      
+      current_statement__ = 107;
+      n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
       current_statement__ = 107;
       current_statement__ = 107;
       check_greater_or_equal(function__, "n_occasions", n_occasions, 0);
@@ -11725,7 +12127,50 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       validate_non_negative_index("y", "n_occasions", n_occasions);
       current_statement__ = 110;
       
-      
+      {
+        std::vector<int> y_flat__;
+        current_statement__ = 110;
+        y_flat__ = context__.vals_i("y");
+        current_statement__ = 110;
+        pos__ = 1;
+        lcm_sym310__ = logical_gte(n_occasions, 1);
+        if (lcm_sym310__) {
+          {
+            lcm_sym309__ = logical_gte(M, 1);
+            if (lcm_sym309__) {
+              current_statement__ = 110;
+              assign(y, rvalue(y_flat__, "y_flat__", index_uni(1)),
+                "assigning variable y", index_uni(1), index_uni(1));
+              current_statement__ = 110;
+              pos__ = 2;
+              for (int sym2__ = 2; sym2__ <= M; ++sym2__) {
+                current_statement__ = 110;
+                assign(y, y_flat__[(pos__ - 1)],
+                  "assigning variable y", index_uni(sym2__), index_uni(1));
+                current_statement__ = 110;
+                pos__ = (pos__ + 1);}
+            } 
+            for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
+              current_statement__ = 110;
+              if (lcm_sym309__) {
+                current_statement__ = 110;
+                assign(y, y_flat__[(pos__ - 1)],
+                  "assigning variable y", index_uni(1), index_uni(sym1__));
+                current_statement__ = 110;
+                pos__ = (pos__ + 1);
+                for (int sym2__ = 2; sym2__ <= M; ++sym2__) {
+                  current_statement__ = 110;
+                  assign(y, y_flat__[(pos__ - 1)],
+                    "assigning variable y", index_uni(sym2__),
+                                              index_uni(sym1__));
+                  current_statement__ = 110;
+                  pos__ = (pos__ + 1);}
+              } }
+          }
+        } else {
+          lcm_sym309__ = logical_gte(M, 1);
+        }
+      }
       current_statement__ = 110;
       if (lcm_sym309__) {
         current_statement__ = 110;
@@ -11962,8 +12407,8 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       validate_non_negative_index("phi", "M", M);
       current_statement__ = 127;
       
-      
-      
+      lcm_sym311__ = (n_occasions - 1);
+      phi_2dim__ = lcm_sym311__;
       current_statement__ = 127;
       validate_non_negative_index("phi", "n_occasions - 1", lcm_sym311__);
       current_statement__ = 128;
@@ -14482,7 +14927,7 @@ static constexpr std::array<const char*, 37> locations_array__ =
 class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int lcm_sym82__;
   int lcm_sym81__;
   int lcm_sym80__;
@@ -14523,13 +14968,16 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
   expr_prop_fail7_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                        model_arena_(stan::io::get_data_sizes(context__)), 
+                        model_arena_(), 
                         K(stan::io::initialize_data<int>("K", context__)),
                         I(stan::io::initialize_data<int>("I", context__)),
                         J(stan::io::initialize_data<int>("J", context__)),
-                        y(stan::io::initialize_data<std::vector<std::vector<int>>>("y", context__, model_arena_, I , J )),
-                        alpha(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("alpha", context__, model_arena_ K)),
-                        beta(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, 1>>>("beta", context__, model_arena_, K , K)) {
+                        y(stan::io::initialize_data<std::vector<std::vector<int>>>("y",
+                        model_arena_  , I , J )),
+                        alpha(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("alpha",
+                        model_arena_, K)),
+                        beta(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, 1>>>("beta",
+                        model_arena_  , K , K)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -14563,22 +15011,25 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 20;
       
-      
+      current_statement__ = 20;
+      K = context__.vals_i("K")[(1 - 1)];
       current_statement__ = 20;
       current_statement__ = 20;
       check_greater_or_equal(function__, "K", K, 2);
       current_statement__ = 21;
       
-      
+      current_statement__ = 21;
+      I = context__.vals_i("I")[(1 - 1)];
       current_statement__ = 21;
       current_statement__ = 21;
       check_greater_or_equal(function__, "I", I, 1);
       current_statement__ = 22;
       
-      
+      current_statement__ = 22;
+      J = context__.vals_i("J")[(1 - 1)];
       current_statement__ = 22;
       current_statement__ = 22;
       check_greater_or_equal(function__, "J", J, 1);
@@ -14588,7 +15039,50 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       validate_non_negative_index("y", "J", J);
       current_statement__ = 25;
       
-      
+      {
+        std::vector<int> y_flat__;
+        current_statement__ = 25;
+        y_flat__ = context__.vals_i("y");
+        current_statement__ = 25;
+        pos__ = 1;
+        lcm_sym64__ = logical_gte(J, 1);
+        if (lcm_sym64__) {
+          {
+            lcm_sym63__ = logical_gte(I, 1);
+            if (lcm_sym63__) {
+              current_statement__ = 25;
+              assign(y, rvalue(y_flat__, "y_flat__", index_uni(1)),
+                "assigning variable y", index_uni(1), index_uni(1));
+              current_statement__ = 25;
+              pos__ = 2;
+              for (int sym2__ = 2; sym2__ <= I; ++sym2__) {
+                current_statement__ = 25;
+                assign(y, y_flat__[(pos__ - 1)],
+                  "assigning variable y", index_uni(sym2__), index_uni(1));
+                current_statement__ = 25;
+                pos__ = (pos__ + 1);}
+            } 
+            for (int sym1__ = 2; sym1__ <= J; ++sym1__) {
+              current_statement__ = 25;
+              if (lcm_sym63__) {
+                current_statement__ = 25;
+                assign(y, y_flat__[(pos__ - 1)],
+                  "assigning variable y", index_uni(1), index_uni(sym1__));
+                current_statement__ = 25;
+                pos__ = (pos__ + 1);
+                for (int sym2__ = 2; sym2__ <= I; ++sym2__) {
+                  current_statement__ = 25;
+                  assign(y, y_flat__[(pos__ - 1)],
+                    "assigning variable y", index_uni(sym2__),
+                                              index_uni(sym1__));
+                  current_statement__ = 25;
+                  pos__ = (pos__ + 1);}
+              } }
+          }
+        } else {
+          lcm_sym63__ = logical_gte(I, 1);
+        }
+      }
       current_statement__ = 25;
       if (lcm_sym63__) {
         current_statement__ = 25;
@@ -14654,7 +15148,27 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       validate_non_negative_index("alpha", "K", K);
       current_statement__ = 27;
       
-      
+      {
+        std::vector<double> alpha_flat__;
+        current_statement__ = 27;
+        alpha_flat__ = context__.vals_r("alpha");
+        current_statement__ = 27;
+        pos__ = 1;
+        lcm_sym65__ = logical_gte(K, 1);
+        if (lcm_sym65__) {
+          current_statement__ = 27;
+          assign(alpha, rvalue(alpha_flat__, "alpha_flat__", index_uni(1)),
+            "assigning variable alpha", index_uni(1));
+          current_statement__ = 27;
+          pos__ = 2;
+          for (int sym1__ = 2; sym1__ <= K; ++sym1__) {
+            current_statement__ = 27;
+            assign(alpha, alpha_flat__[(pos__ - 1)],
+              "assigning variable alpha", index_uni(sym1__));
+            current_statement__ = 27;
+            pos__ = (pos__ + 1);}
+        } 
+      }
       current_statement__ = 27;
       if (lcm_sym65__) {
         current_statement__ = 27;
@@ -14673,7 +15187,46 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       validate_non_negative_index("beta", "K", K);
       current_statement__ = 30;
       
-      
+      {
+        std::vector<double> beta_flat__;
+        current_statement__ = 30;
+        beta_flat__ = context__.vals_r("beta");
+        current_statement__ = 30;
+        pos__ = 1;
+        current_statement__ = 30;
+        if (lcm_sym65__) {
+          current_statement__ = 30;
+          if (lcm_sym65__) {
+            current_statement__ = 30;
+            assign(beta, rvalue(beta_flat__, "beta_flat__", index_uni(1)),
+              "assigning variable beta", index_uni(1), index_uni(1));
+            current_statement__ = 30;
+            pos__ = 2;
+            for (int sym2__ = 2; sym2__ <= K; ++sym2__) {
+              current_statement__ = 30;
+              assign(beta, beta_flat__[(pos__ - 1)],
+                "assigning variable beta", index_uni(sym2__), index_uni(1));
+              current_statement__ = 30;
+              pos__ = (pos__ + 1);}
+          } 
+          for (int sym1__ = 2; sym1__ <= K; ++sym1__) {
+            current_statement__ = 30;
+            if (lcm_sym65__) {
+              current_statement__ = 30;
+              assign(beta, beta_flat__[(pos__ - 1)],
+                "assigning variable beta", index_uni(1), index_uni(sym1__));
+              current_statement__ = 30;
+              pos__ = (pos__ + 1);
+              for (int sym2__ = 2; sym2__ <= K; ++sym2__) {
+                current_statement__ = 30;
+                assign(beta, beta_flat__[(pos__ - 1)],
+                  "assigning variable beta", index_uni(sym2__),
+                                               index_uni(sym1__));
+                current_statement__ = 30;
+                pos__ = (pos__ + 1);}
+            } }
+        } 
+      }
       current_statement__ = 30;
       if (lcm_sym65__) {
         current_statement__ = 30;
@@ -15630,7 +16183,7 @@ static constexpr std::array<const char*, 25> locations_array__ =
 class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int lcm_sym35__;
   int lcm_sym34__;
   double lcm_sym33__;
@@ -15662,13 +16215,18 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
   expr_prop_fail8_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                        model_arena_(stan::io::get_data_sizes(context__)), 
+                        model_arena_(), 
                         N(stan::io::initialize_data<int>("N", context__)),
-                        N_edges(stan::io::initialize_data<int>("N_edges", context__)),
-                        node1(stan::io::initialize_data<std::vector<int>>("node1", context__, model_arena_, N_edges )),
-                        node2(stan::io::initialize_data<std::vector<int>>("node2", context__, model_arena_, N_edges )),
-                        y(stan::io::initialize_data<std::vector<int>>("y", context__, model_arena_, N )),
-                        x(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("x", context__, model_arena_ N)) {
+                        N_edges(stan::io::initialize_data<int>("N_edges",
+                        context__)),
+                        node1(stan::io::initialize_data<std::vector<int>>("node1",
+                        model_arena_  , N_edges )),
+                        node2(stan::io::initialize_data<std::vector<int>>("node2",
+                        model_arena_  , N_edges )),
+                        y(stan::io::initialize_data<std::vector<int>>("y",
+                        model_arena_  , N )),
+                        x(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("x",
+                        model_arena_, N)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -15693,16 +16251,18 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 12;
       
-      
+      current_statement__ = 12;
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 12;
       current_statement__ = 12;
       check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 13;
       
-      
+      current_statement__ = 13;
+      N_edges = context__.vals_i("N_edges")[(1 - 1)];
       current_statement__ = 13;
       current_statement__ = 13;
       check_greater_or_equal(function__, "N_edges", N_edges, 0);
@@ -15710,8 +16270,9 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       validate_non_negative_index("node1", "N_edges", N_edges);
       current_statement__ = 15;
       
-      
-      
+      current_statement__ = 15;
+      node1 = context__.vals_i("node1");
+      lcm_sym26__ = logical_gte(N_edges, 1);
       if (lcm_sym26__) {
         current_statement__ = 15;
         current_statement__ = 15;
@@ -15739,7 +16300,8 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       validate_non_negative_index("node2", "N_edges", N_edges);
       current_statement__ = 17;
       
-      
+      current_statement__ = 17;
+      node2 = context__.vals_i("node2");
       current_statement__ = 17;
       if (lcm_sym26__) {
         current_statement__ = 17;
@@ -15768,8 +16330,9 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       validate_non_negative_index("y", "N", N);
       current_statement__ = 19;
       
-      
-      
+      current_statement__ = 19;
+      y = context__.vals_i("y");
+      lcm_sym25__ = logical_gte(N, 1);
       if (lcm_sym25__) {
         current_statement__ = 19;
         current_statement__ = 19;
@@ -15785,7 +16348,27 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       validate_non_negative_index("x", "N", N);
       current_statement__ = 21;
       
-      
+      {
+        std::vector<double> x_flat__;
+        current_statement__ = 21;
+        x_flat__ = context__.vals_r("x");
+        current_statement__ = 21;
+        pos__ = 1;
+        current_statement__ = 21;
+        if (lcm_sym25__) {
+          current_statement__ = 21;
+          assign(x, rvalue(x_flat__, "x_flat__", index_uni(1)),
+            "assigning variable x", index_uni(1));
+          current_statement__ = 21;
+          pos__ = 2;
+          for (int sym1__ = 2; sym1__ <= N; ++sym1__) {
+            current_statement__ = 21;
+            assign(x, x_flat__[(pos__ - 1)],
+              "assigning variable x", index_uni(sym1__));
+            current_statement__ = 21;
+            pos__ = (pos__ + 1);}
+        } 
+      }
       current_statement__ = 22;
       validate_non_negative_index("theta_std", "N", N);
       current_statement__ = 23;
@@ -16696,7 +17279,7 @@ return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
 class fails_test_model final : public model_base_crtp<fails_test_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int lcm_sym186__;
   int lcm_sym185__;
   int lcm_sym184__;
@@ -16750,13 +17333,22 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
   fails_test_model(stan::io::var_context& context__,
                    unsigned int random_seed__ = 0,
                    std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                   model_arena_(stan::io::get_data_sizes(context__)), 
+                   model_arena_(), 
                    nind(stan::io::initialize_data<int>("nind", context__)),
-                   n_occasions(stan::io::initialize_data<int>("n_occasions", context__)),
-                   y(stan::io::initialize_data<std::vector<std::vector<int>>>("y", context__, model_arena_, nind , n_occasions )),
-                   max_age(stan::io::initialize_data<int>("max_age", context__)),
-                   x(stan::io::initialize_data<std::vector<std::vector<int>>>("x", context__, model_arena_, nind , 
-                   (n_occasions - 1) )) {
+                   n_occasions(stan::io::initialize_data<int>("n_occasions",
+                   context__)),
+                   y(stan::io::initialize_data<std::vector<std::vector<int>>>("y",
+                   model_arena_  , nind , n_occasions )),
+                   max_age(stan::io::initialize_data<int>("max_age",
+                   context__)),
+                   x(stan::io::initialize_data<std::vector<std::vector<int>>>("x",
+                   model_arena_  , nind , lcm_sym159__ )),
+                   n_occ_minus_1(stan::io::initialize_data<int>("n_occ_minus_1",
+                   context__)),
+                   first(stan::io::initialize_data<std::vector<int>>("first",
+                   model_arena_  , nind )),
+                   last(stan::io::initialize_data<std::vector<int>>("last",
+                   model_arena_  , nind )) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -16801,16 +17393,18 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 31;
       
-      
+      current_statement__ = 31;
+      nind = context__.vals_i("nind")[(1 - 1)];
       current_statement__ = 31;
       current_statement__ = 31;
       check_greater_or_equal(function__, "nind", nind, 0);
       current_statement__ = 32;
       
-      
+      current_statement__ = 32;
+      n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
       current_statement__ = 32;
       current_statement__ = 32;
       check_greater_or_equal(function__, "n_occasions", n_occasions, 2);
@@ -16820,7 +17414,50 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       validate_non_negative_index("y", "n_occasions", n_occasions);
       current_statement__ = 35;
       
-      
+      {
+        std::vector<int> y_flat__;
+        current_statement__ = 35;
+        y_flat__ = context__.vals_i("y");
+        current_statement__ = 35;
+        pos__ = 1;
+        lcm_sym156__ = logical_gte(n_occasions, 1);
+        if (lcm_sym156__) {
+          {
+            lcm_sym157__ = logical_gte(nind, 1);
+            if (lcm_sym157__) {
+              current_statement__ = 35;
+              assign(y, rvalue(y_flat__, "y_flat__", index_uni(1)),
+                "assigning variable y", index_uni(1), index_uni(1));
+              current_statement__ = 35;
+              pos__ = 2;
+              for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
+                current_statement__ = 35;
+                assign(y, y_flat__[(pos__ - 1)],
+                  "assigning variable y", index_uni(sym2__), index_uni(1));
+                current_statement__ = 35;
+                pos__ = (pos__ + 1);}
+            } 
+            for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
+              current_statement__ = 35;
+              if (lcm_sym157__) {
+                current_statement__ = 35;
+                assign(y, y_flat__[(pos__ - 1)],
+                  "assigning variable y", index_uni(1), index_uni(sym1__));
+                current_statement__ = 35;
+                pos__ = (pos__ + 1);
+                for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
+                  current_statement__ = 35;
+                  assign(y, y_flat__[(pos__ - 1)],
+                    "assigning variable y", index_uni(sym2__),
+                                              index_uni(sym1__));
+                  current_statement__ = 35;
+                  pos__ = (pos__ + 1);}
+              } }
+          }
+        } else {
+          lcm_sym157__ = logical_gte(nind, 1);
+        }
+      }
       current_statement__ = 35;
       if (lcm_sym157__) {
         current_statement__ = 35;
@@ -16884,17 +17521,57 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       } 
       current_statement__ = 36;
       
-      
+      current_statement__ = 36;
+      max_age = context__.vals_i("max_age")[(1 - 1)];
       current_statement__ = 36;
       current_statement__ = 36;
       check_greater_or_equal(function__, "max_age", max_age, 1);
       current_statement__ = 37;
       validate_non_negative_index("x", "nind", nind);
-      
+      lcm_sym159__ = (n_occasions - 1);
       validate_non_negative_index("x", "n_occasions - 1", lcm_sym159__);
       current_statement__ = 38;
       
-      
+      {
+        std::vector<int> x_flat__;
+        current_statement__ = 38;
+        x_flat__ = context__.vals_i("x");
+        current_statement__ = 38;
+        pos__ = 1;
+        lcm_sym158__ = logical_gte(lcm_sym159__, 1);
+        if (lcm_sym158__) {
+          current_statement__ = 38;
+          if (lcm_sym157__) {
+            current_statement__ = 38;
+            assign(x, rvalue(x_flat__, "x_flat__", index_uni(1)),
+              "assigning variable x", index_uni(1), index_uni(1));
+            current_statement__ = 38;
+            pos__ = 2;
+            for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
+              current_statement__ = 38;
+              assign(x, x_flat__[(pos__ - 1)],
+                "assigning variable x", index_uni(sym2__), index_uni(1));
+              current_statement__ = 38;
+              pos__ = (pos__ + 1);}
+          } 
+          for (int sym1__ = 2; sym1__ <= lcm_sym159__; ++sym1__) {
+            current_statement__ = 38;
+            if (lcm_sym157__) {
+              current_statement__ = 38;
+              assign(x, x_flat__[(pos__ - 1)],
+                "assigning variable x", index_uni(1), index_uni(sym1__));
+              current_statement__ = 38;
+              pos__ = (pos__ + 1);
+              for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
+                current_statement__ = 38;
+                assign(x, x_flat__[(pos__ - 1)],
+                  "assigning variable x", index_uni(sym2__),
+                                            index_uni(sym1__));
+                current_statement__ = 38;
+                pos__ = (pos__ + 1);}
+            } }
+        } 
+      }
       current_statement__ = 38;
       if (lcm_sym157__) {
         current_statement__ = 38;
@@ -16960,7 +17637,8 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       } 
       current_statement__ = 39;
       
-      
+      current_statement__ = 39;
+      n_occ_minus_1 = lcm_sym159__;
       current_statement__ = 40;
       validate_non_negative_index("first", "nind", nind);
       current_statement__ = 41;
@@ -19490,7 +20168,7 @@ return seq_cprob(gamma, pstream__);
 class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int lcm_sym339__;
   int lcm_sym338__;
   int lcm_sym337__;
@@ -19536,10 +20214,20 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
   inlining_fail2_model(stan::io::var_context& context__,
                        unsigned int random_seed__ = 0,
                        std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                       model_arena_(stan::io::get_data_sizes(context__)), 
-                       M(stan::io::initialize_data<int>("M", context__)),
-                       n_occasions(stan::io::initialize_data<int>("n_occasions", context__)),
-                       y(stan::io::initialize_data<std::vector<std::vector<int>>>("y", context__, model_arena_, M , n_occasions )) {
+                       model_arena_(),  M(stan::io::initialize_data<int>("M",
+                       context__)),
+                       n_occasions(stan::io::initialize_data<int>("n_occasions",
+                       context__)),
+                       y(stan::io::initialize_data<std::vector<std::vector<int>>>("y",
+                       model_arena_  , M , n_occasions )),
+                       first(stan::io::initialize_data<std::vector<int>>("first",
+                       model_arena_  , M )),
+                       last(stan::io::initialize_data<std::vector<int>>("last",
+                       model_arena_  , M )),
+                       epsilon_1dim__(stan::io::initialize_data<int>("epsilon_1dim__",
+                       context__)),
+                       phi_2dim__(stan::io::initialize_data<int>("phi_2dim__",
+                       context__)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -19577,16 +20265,18 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 103;
       
-      
+      current_statement__ = 103;
+      M = context__.vals_i("M")[(1 - 1)];
       current_statement__ = 103;
       current_statement__ = 103;
       check_greater_or_equal(function__, "M", M, 0);
       current_statement__ = 104;
       
-      
+      current_statement__ = 104;
+      n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
       current_statement__ = 104;
       current_statement__ = 104;
       check_greater_or_equal(function__, "n_occasions", n_occasions, 0);
@@ -19596,7 +20286,50 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       validate_non_negative_index("y", "n_occasions", n_occasions);
       current_statement__ = 107;
       
-      
+      {
+        std::vector<int> y_flat__;
+        current_statement__ = 107;
+        y_flat__ = context__.vals_i("y");
+        current_statement__ = 107;
+        pos__ = 1;
+        lcm_sym317__ = logical_gte(n_occasions, 1);
+        if (lcm_sym317__) {
+          {
+            lcm_sym316__ = logical_gte(M, 1);
+            if (lcm_sym316__) {
+              current_statement__ = 107;
+              assign(y, rvalue(y_flat__, "y_flat__", index_uni(1)),
+                "assigning variable y", index_uni(1), index_uni(1));
+              current_statement__ = 107;
+              pos__ = 2;
+              for (int sym2__ = 2; sym2__ <= M; ++sym2__) {
+                current_statement__ = 107;
+                assign(y, y_flat__[(pos__ - 1)],
+                  "assigning variable y", index_uni(sym2__), index_uni(1));
+                current_statement__ = 107;
+                pos__ = (pos__ + 1);}
+            } 
+            for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
+              current_statement__ = 107;
+              if (lcm_sym316__) {
+                current_statement__ = 107;
+                assign(y, y_flat__[(pos__ - 1)],
+                  "assigning variable y", index_uni(1), index_uni(sym1__));
+                current_statement__ = 107;
+                pos__ = (pos__ + 1);
+                for (int sym2__ = 2; sym2__ <= M; ++sym2__) {
+                  current_statement__ = 107;
+                  assign(y, y_flat__[(pos__ - 1)],
+                    "assigning variable y", index_uni(sym2__),
+                                              index_uni(sym1__));
+                  current_statement__ = 107;
+                  pos__ = (pos__ + 1);}
+              } }
+          }
+        } else {
+          lcm_sym316__ = logical_gte(M, 1);
+        }
+      }
       current_statement__ = 107;
       if (lcm_sym316__) {
         current_statement__ = 107;
@@ -19829,15 +20562,16 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       validate_non_negative_index("gamma", "n_occasions", n_occasions);
       current_statement__ = 122;
       
-      
-      
+      lcm_sym318__ = (n_occasions - 1);
+      epsilon_1dim__ = lcm_sym318__;
       current_statement__ = 122;
       validate_non_negative_index("epsilon", "n_occasions - 1", lcm_sym318__);
       current_statement__ = 123;
       validate_non_negative_index("phi", "M", M);
       current_statement__ = 124;
       
-      
+      current_statement__ = 124;
+      phi_2dim__ = lcm_sym318__;
       current_statement__ = 124;
       validate_non_negative_index("phi", "n_occasions - 1", lcm_sym318__);
       current_statement__ = 125;
@@ -22150,7 +22884,7 @@ static constexpr std::array<const char*, 7> locations_array__ =
 class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   double lcm_sym3__;
   int j;
   double z;
@@ -22170,8 +22904,11 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
   lcm_experiment_model(stan::io::var_context& context__,
                        unsigned int random_seed__ = 0,
                        std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                       model_arena_(stan::io::get_data_sizes(context__)), 
-                       j(stan::io::initialize_data<int>("j", context__)) {
+                       model_arena_(),  j(stan::io::initialize_data<int>("j",
+                       context__)), z(stan::io::initialize_data<double>("z",
+                       context__)), x(stan::io::initialize_data<double>("x",
+                       context__)), i(stan::io::initialize_data<double>("i",
+                       context__)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -22186,19 +22923,27 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 1;
       
-      
+      current_statement__ = 1;
+      j = context__.vals_i("j")[(1 - 1)];
       current_statement__ = 2;
       
-      
+      current_statement__ = 2;
+      z = 1;
       current_statement__ = 3;
       
-      
+      {
+        current_statement__ = 4;
+        x = normal_rng(123, 1, base_rng__);
+        lcm_sym3__ = stan::math::fma(stan::math::sqrt(j), 2, 1);
+        z = normal_rng(lcm_sym3__, 1, base_rng__);
+      }
       current_statement__ = 6;
       
-      
+      current_statement__ = 6;
+      i = normal_rng(lcm_sym3__, 1, base_rng__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -22482,7 +23227,7 @@ static constexpr std::array<const char*, 8> locations_array__ =
 class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   
  
  public:
@@ -22498,7 +23243,7 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
   lcm_experiment2_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                        model_arena_(stan::io::get_data_sizes(context__)),   {
+                        model_arena_(),   {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -22512,7 +23257,7 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -22831,7 +23576,7 @@ static constexpr std::array<const char*, 7> locations_array__ =
 class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int J;
   std::vector<double> y;
  
@@ -22848,9 +23593,10 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
   lcm_fails_model(stan::io::var_context& context__,
                   unsigned int random_seed__ = 0,
                   std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                  model_arena_(stan::io::get_data_sizes(context__)), 
-                  J(stan::io::initialize_data<int>("J", context__)),
-                  y(stan::io::initialize_data<std::vector<double>>("y", context__, model_arena_, J )) {
+                  model_arena_(),  J(stan::io::initialize_data<int>("J",
+                  context__)),
+                  y(stan::io::initialize_data<std::vector<double>>("y",
+                  model_arena_  , J )) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -22864,10 +23610,11 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 3;
       
-      
+      current_statement__ = 3;
+      J = context__.vals_i("J")[(1 - 1)];
       current_statement__ = 3;
       current_statement__ = 3;
       check_greater_or_equal(function__, "J", J, 0);
@@ -22875,7 +23622,8 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       validate_non_negative_index("y", "J", J);
       current_statement__ = 5;
       
-      
+      current_statement__ = 5;
+      y = context__.vals_r("y");
       current_statement__ = 6;
       validate_non_negative_index("theta", "J", J);
     } catch (const std::exception& e) {
@@ -23511,7 +24259,7 @@ return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
 class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int lcm_sym160__;
   int lcm_sym159__;
   int lcm_sym158__;
@@ -23556,10 +24304,18 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
   lcm_fails2_model(stan::io::var_context& context__,
                    unsigned int random_seed__ = 0,
                    std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                   model_arena_(stan::io::get_data_sizes(context__)), 
+                   model_arena_(), 
                    nind(stan::io::initialize_data<int>("nind", context__)),
-                   n_occasions(stan::io::initialize_data<int>("n_occasions", context__)),
-                   y(stan::io::initialize_data<std::vector<std::vector<int>>>("y", context__, model_arena_, nind , n_occasions )) {
+                   n_occasions(stan::io::initialize_data<int>("n_occasions",
+                   context__)),
+                   y(stan::io::initialize_data<std::vector<std::vector<int>>>("y",
+                   model_arena_  , nind , n_occasions )),
+                   n_occ_minus_1(stan::io::initialize_data<int>("n_occ_minus_1",
+                   context__)),
+                   first(stan::io::initialize_data<std::vector<int>>("first",
+                   model_arena_  , nind )),
+                   last(stan::io::initialize_data<std::vector<int>>("last",
+                   model_arena_  , nind )) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -23597,16 +24353,18 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 31;
       
-      
+      current_statement__ = 31;
+      nind = context__.vals_i("nind")[(1 - 1)];
       current_statement__ = 31;
       current_statement__ = 31;
       check_greater_or_equal(function__, "nind", nind, 0);
       current_statement__ = 32;
       
-      
+      current_statement__ = 32;
+      n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
       current_statement__ = 32;
       current_statement__ = 32;
       check_greater_or_equal(function__, "n_occasions", n_occasions, 2);
@@ -23616,7 +24374,50 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       validate_non_negative_index("y", "n_occasions", n_occasions);
       current_statement__ = 35;
       
-      
+      {
+        std::vector<int> y_flat__;
+        current_statement__ = 35;
+        y_flat__ = context__.vals_i("y");
+        current_statement__ = 35;
+        pos__ = 1;
+        lcm_sym137__ = logical_gte(n_occasions, 1);
+        if (lcm_sym137__) {
+          {
+            lcm_sym138__ = logical_gte(nind, 1);
+            if (lcm_sym138__) {
+              current_statement__ = 35;
+              assign(y, rvalue(y_flat__, "y_flat__", index_uni(1)),
+                "assigning variable y", index_uni(1), index_uni(1));
+              current_statement__ = 35;
+              pos__ = 2;
+              for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
+                current_statement__ = 35;
+                assign(y, y_flat__[(pos__ - 1)],
+                  "assigning variable y", index_uni(sym2__), index_uni(1));
+                current_statement__ = 35;
+                pos__ = (pos__ + 1);}
+            } 
+            for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
+              current_statement__ = 35;
+              if (lcm_sym138__) {
+                current_statement__ = 35;
+                assign(y, y_flat__[(pos__ - 1)],
+                  "assigning variable y", index_uni(1), index_uni(sym1__));
+                current_statement__ = 35;
+                pos__ = (pos__ + 1);
+                for (int sym2__ = 2; sym2__ <= nind; ++sym2__) {
+                  current_statement__ = 35;
+                  assign(y, y_flat__[(pos__ - 1)],
+                    "assigning variable y", index_uni(sym2__),
+                                              index_uni(sym1__));
+                  current_statement__ = 35;
+                  pos__ = (pos__ + 1);}
+              } }
+          }
+        } else {
+          lcm_sym138__ = logical_gte(nind, 1);
+        }
+      }
       current_statement__ = 35;
       if (lcm_sym138__) {
         current_statement__ = 35;
@@ -23680,8 +24481,8 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       } 
       current_statement__ = 36;
       
-      
-      
+      lcm_sym139__ = (n_occasions - 1);
+      n_occ_minus_1 = lcm_sym139__;
       current_statement__ = 37;
       validate_non_negative_index("first", "nind", nind);
       current_statement__ = 38;
@@ -25291,7 +26092,7 @@ return baz_lpdf<propto__>(x, pstream__);
 class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int n;
  
  public:
@@ -25307,8 +26108,8 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
   lupdf_inlining_model(stan::io::var_context& context__,
                        unsigned int random_seed__ = 0,
                        std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                       model_arena_(stan::io::get_data_sizes(context__)), 
-                       n(stan::io::initialize_data<int>("n", context__)) {
+                       model_arena_(),  n(stan::io::initialize_data<int>("n",
+                       context__)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -25322,10 +26123,11 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 9;
       
-      
+      current_statement__ = 9;
+      n = context__.vals_i("n")[(1 - 1)];
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -25778,7 +26580,7 @@ static constexpr std::array<const char*, 52> locations_array__ =
 class off_dce_model final : public model_base_crtp<off_dce_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int lcm_sym57__;
   int lcm_sym56__;
   int lcm_sym55__;
@@ -25816,11 +26618,17 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
   off_dce_model(stan::io::var_context& context__,
                 unsigned int random_seed__ = 0,
                 std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                model_arena_(stan::io::get_data_sizes(context__)), 
-                R(stan::io::initialize_data<int>("R", context__)),
-                T(stan::io::initialize_data<int>("T", context__)),
-                y(stan::io::initialize_data<std::vector<std::vector<int>>>("y", context__, model_arena_, R , T )),
-                X(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("X", context__, model_arena_ R)) {
+                model_arena_(),  R(stan::io::initialize_data<int>("R",
+                context__)), T(stan::io::initialize_data<int>("T",
+                context__)),
+                y(stan::io::initialize_data<std::vector<std::vector<int>>>("y",
+                model_arena_  , R , T )),
+                X(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("X",
+                model_arena_, R)),
+                sum_y(stan::io::initialize_data<std::vector<int>>("sum_y",
+                model_arena_  , R )),
+                occ_obs(stan::io::initialize_data<int>("occ_obs",
+                context__)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -25851,16 +26659,18 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 31;
       
-      
+      current_statement__ = 31;
+      R = context__.vals_i("R")[(1 - 1)];
       current_statement__ = 31;
       current_statement__ = 31;
       check_greater_or_equal(function__, "R", R, 1);
       current_statement__ = 32;
       
-      
+      current_statement__ = 32;
+      T = context__.vals_i("T")[(1 - 1)];
       current_statement__ = 32;
       current_statement__ = 32;
       check_greater_or_equal(function__, "T", T, 1);
@@ -25870,7 +26680,50 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       validate_non_negative_index("y", "T", T);
       current_statement__ = 35;
       
-      
+      {
+        std::vector<int> y_flat__;
+        current_statement__ = 35;
+        y_flat__ = context__.vals_i("y");
+        current_statement__ = 35;
+        pos__ = 1;
+        lcm_sym42__ = logical_gte(T, 1);
+        if (lcm_sym42__) {
+          {
+            lcm_sym41__ = logical_gte(R, 1);
+            if (lcm_sym41__) {
+              current_statement__ = 35;
+              assign(y, rvalue(y_flat__, "y_flat__", index_uni(1)),
+                "assigning variable y", index_uni(1), index_uni(1));
+              current_statement__ = 35;
+              pos__ = 2;
+              for (int sym2__ = 2; sym2__ <= R; ++sym2__) {
+                current_statement__ = 35;
+                assign(y, y_flat__[(pos__ - 1)],
+                  "assigning variable y", index_uni(sym2__), index_uni(1));
+                current_statement__ = 35;
+                pos__ = (pos__ + 1);}
+            } 
+            for (int sym1__ = 2; sym1__ <= T; ++sym1__) {
+              current_statement__ = 35;
+              if (lcm_sym41__) {
+                current_statement__ = 35;
+                assign(y, y_flat__[(pos__ - 1)],
+                  "assigning variable y", index_uni(1), index_uni(sym1__));
+                current_statement__ = 35;
+                pos__ = (pos__ + 1);
+                for (int sym2__ = 2; sym2__ <= R; ++sym2__) {
+                  current_statement__ = 35;
+                  assign(y, y_flat__[(pos__ - 1)],
+                    "assigning variable y", index_uni(sym2__),
+                                              index_uni(sym1__));
+                  current_statement__ = 35;
+                  pos__ = (pos__ + 1);}
+              } }
+          }
+        } else {
+          lcm_sym41__ = logical_gte(R, 1);
+        }
+      }
       current_statement__ = 35;
       if (lcm_sym41__) {
         current_statement__ = 35;
@@ -25936,14 +26789,35 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       validate_non_negative_index("X", "R", R);
       current_statement__ = 37;
       
-      
+      {
+        std::vector<double> X_flat__;
+        current_statement__ = 37;
+        X_flat__ = context__.vals_r("X");
+        current_statement__ = 37;
+        pos__ = 1;
+        current_statement__ = 37;
+        if (lcm_sym41__) {
+          current_statement__ = 37;
+          assign(X, rvalue(X_flat__, "X_flat__", index_uni(1)),
+            "assigning variable X", index_uni(1));
+          current_statement__ = 37;
+          pos__ = 2;
+          for (int sym1__ = 2; sym1__ <= R; ++sym1__) {
+            current_statement__ = 37;
+            assign(X, X_flat__[(pos__ - 1)],
+              "assigning variable X", index_uni(sym1__));
+            current_statement__ = 37;
+            pos__ = (pos__ + 1);}
+        } 
+      }
       current_statement__ = 38;
       validate_non_negative_index("sum_y", "R", R);
       current_statement__ = 39;
       
       current_statement__ = 40;
       
-      
+      current_statement__ = 41;
+      occ_obs = 0;
       current_statement__ = 46;
       if (lcm_sym41__) {
         current_statement__ = 42;
@@ -26699,7 +27573,7 @@ static constexpr std::array<const char*, 35> locations_array__ =
 class off_small_model final : public model_base_crtp<off_small_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   double lcm_sym49__;
   double lcm_sym48__;
   double lcm_sym47__;
@@ -26730,13 +27604,17 @@ class off_small_model final : public model_base_crtp<off_small_model> {
   off_small_model(stan::io::var_context& context__,
                   unsigned int random_seed__ = 0,
                   std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                  model_arena_(stan::io::get_data_sizes(context__)), 
-                  J(stan::io::initialize_data<int>("J", context__)),
-                  N(stan::io::initialize_data<int>("N", context__)),
-                  person(stan::io::initialize_data<std::vector<int>>("person", context__, model_arena_, N )),
-                  time(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("time", context__, model_arena_ N)),
-                  treatment(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("treatment", context__, model_arena_ N)),
-                  y(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("y", context__, model_arena_ N)) {
+                  model_arena_(),  J(stan::io::initialize_data<int>("J",
+                  context__)), N(stan::io::initialize_data<int>("N",
+                  context__)),
+                  person(stan::io::initialize_data<std::vector<int>>("person",
+                  model_arena_  , N )),
+                  time(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("time",
+                  model_arena_, N)),
+                  treatment(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("treatment",
+                  model_arena_, N)),
+                  y(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("y",
+                  model_arena_, N)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -26760,16 +27638,18 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 20;
       
-      
+      current_statement__ = 20;
+      J = context__.vals_i("J")[(1 - 1)];
       current_statement__ = 20;
       current_statement__ = 20;
       check_greater_or_equal(function__, "J", J, 0);
       current_statement__ = 21;
       
-      
+      current_statement__ = 21;
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 21;
       current_statement__ = 21;
       check_greater_or_equal(function__, "N", N, 0);
@@ -26777,8 +27657,9 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       validate_non_negative_index("person", "N", N);
       current_statement__ = 23;
       
-      
-      
+      current_statement__ = 23;
+      person = context__.vals_i("person");
+      lcm_sym40__ = logical_gte(N, 1);
       if (lcm_sym40__) {
         current_statement__ = 23;
         current_statement__ = 23;
@@ -26806,17 +27687,78 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       validate_non_negative_index("time", "N", N);
       current_statement__ = 25;
       
-      
+      {
+        std::vector<double> time_flat__;
+        current_statement__ = 25;
+        time_flat__ = context__.vals_r("time");
+        current_statement__ = 25;
+        pos__ = 1;
+        current_statement__ = 25;
+        if (lcm_sym40__) {
+          current_statement__ = 25;
+          assign(time, rvalue(time_flat__, "time_flat__", index_uni(1)),
+            "assigning variable time", index_uni(1));
+          current_statement__ = 25;
+          pos__ = 2;
+          for (int sym1__ = 2; sym1__ <= N; ++sym1__) {
+            current_statement__ = 25;
+            assign(time, time_flat__[(pos__ - 1)],
+              "assigning variable time", index_uni(sym1__));
+            current_statement__ = 25;
+            pos__ = (pos__ + 1);}
+        } 
+      }
       current_statement__ = 26;
       validate_non_negative_index("treatment", "N", N);
       current_statement__ = 27;
       
-      
+      {
+        std::vector<double> treatment_flat__;
+        current_statement__ = 27;
+        treatment_flat__ = context__.vals_r("treatment");
+        current_statement__ = 27;
+        pos__ = 1;
+        current_statement__ = 27;
+        if (lcm_sym40__) {
+          current_statement__ = 27;
+          assign(treatment,
+            rvalue(treatment_flat__, "treatment_flat__", index_uni(1)),
+            "assigning variable treatment", index_uni(1));
+          current_statement__ = 27;
+          pos__ = 2;
+          for (int sym1__ = 2; sym1__ <= N; ++sym1__) {
+            current_statement__ = 27;
+            assign(treatment, treatment_flat__[(pos__ - 1)],
+              "assigning variable treatment", index_uni(sym1__));
+            current_statement__ = 27;
+            pos__ = (pos__ + 1);}
+        } 
+      }
       current_statement__ = 28;
       validate_non_negative_index("y", "N", N);
       current_statement__ = 29;
       
-      
+      {
+        std::vector<double> y_flat__;
+        current_statement__ = 29;
+        y_flat__ = context__.vals_r("y");
+        current_statement__ = 29;
+        pos__ = 1;
+        current_statement__ = 29;
+        if (lcm_sym40__) {
+          current_statement__ = 29;
+          assign(y, rvalue(y_flat__, "y_flat__", index_uni(1)),
+            "assigning variable y", index_uni(1));
+          current_statement__ = 29;
+          pos__ = 2;
+          for (int sym1__ = 2; sym1__ <= N; ++sym1__) {
+            current_statement__ = 29;
+            assign(y, y_flat__[(pos__ - 1)],
+              "assigning variable y", index_uni(sym1__));
+            current_statement__ = 29;
+            pos__ = (pos__ + 1);}
+        } 
+      }
       current_statement__ = 30;
       validate_non_negative_index("eta1", "J", J);
       current_statement__ = 31;
@@ -27763,7 +28705,7 @@ return rfun_lp<propto__>(lp__, lp_accum__, pstream__);
 class optimizations_model final : public model_base_crtp<optimizations_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   
  
  public:
@@ -27779,7 +28721,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
   optimizations_model(stan::io::var_context& context__,
                       unsigned int random_seed__ = 0,
                       std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                      model_arena_(stan::io::get_data_sizes(context__)),   {
+                      model_arena_(),   {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -27793,7 +28735,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -28990,7 +29932,7 @@ static constexpr std::array<const char*, 25> locations_array__ =
 class partial_eval_model final : public model_base_crtp<partial_eval_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   double lcm_sym41__;
   double lcm_sym40__;
   double lcm_sym39__;
@@ -29023,13 +29965,18 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
   partial_eval_model(stan::io::var_context& context__,
                      unsigned int random_seed__ = 0,
                      std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                     model_arena_(stan::io::get_data_sizes(context__)), 
-                     N(stan::io::initialize_data<int>("N", context__)),
-                     n_pair(stan::io::initialize_data<int>("n_pair", context__)),
-                     pair(stan::io::initialize_data<std::vector<int>>("pair", context__, model_arena_, N )),
-                     pre_test(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("pre_test", context__, model_arena_ N)),
-                     treatment(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("treatment", context__, model_arena_ N)),
-                     y(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("y", context__, model_arena_ N)) {
+                     model_arena_(),  N(stan::io::initialize_data<int>("N",
+                     context__)),
+                     n_pair(stan::io::initialize_data<int>("n_pair",
+                     context__)),
+                     pair(stan::io::initialize_data<std::vector<int>>("pair",
+                     model_arena_  , N )),
+                     pre_test(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("pre_test",
+                     model_arena_, N)),
+                     treatment(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("treatment",
+                     model_arena_, N)),
+                     y(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("y",
+                     model_arena_, N)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -29055,16 +30002,18 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 13;
       
-      
+      current_statement__ = 13;
+      N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 13;
       current_statement__ = 13;
       check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 14;
       
-      
+      current_statement__ = 14;
+      n_pair = context__.vals_i("n_pair")[(1 - 1)];
       current_statement__ = 14;
       current_statement__ = 14;
       check_greater_or_equal(function__, "n_pair", n_pair, 0);
@@ -29072,8 +30021,9 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       validate_non_negative_index("pair", "N", N);
       current_statement__ = 16;
       
-      
-      
+      current_statement__ = 16;
+      pair = context__.vals_i("pair");
+      lcm_sym30__ = logical_gte(N, 1);
       if (lcm_sym30__) {
         current_statement__ = 16;
         current_statement__ = 16;
@@ -29101,12 +30051,54 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       validate_non_negative_index("pre_test", "N", N);
       current_statement__ = 18;
       
-      
+      {
+        std::vector<double> pre_test_flat__;
+        current_statement__ = 18;
+        pre_test_flat__ = context__.vals_r("pre_test");
+        current_statement__ = 18;
+        pos__ = 1;
+        current_statement__ = 18;
+        if (lcm_sym30__) {
+          current_statement__ = 18;
+          assign(pre_test,
+            rvalue(pre_test_flat__, "pre_test_flat__", index_uni(1)),
+            "assigning variable pre_test", index_uni(1));
+          current_statement__ = 18;
+          pos__ = 2;
+          for (int sym1__ = 2; sym1__ <= N; ++sym1__) {
+            current_statement__ = 18;
+            assign(pre_test, pre_test_flat__[(pos__ - 1)],
+              "assigning variable pre_test", index_uni(sym1__));
+            current_statement__ = 18;
+            pos__ = (pos__ + 1);}
+        } 
+      }
       current_statement__ = 19;
       validate_non_negative_index("treatment", "N", N);
       current_statement__ = 20;
       
-      
+      {
+        std::vector<double> treatment_flat__;
+        current_statement__ = 20;
+        treatment_flat__ = context__.vals_r("treatment");
+        current_statement__ = 20;
+        pos__ = 1;
+        current_statement__ = 20;
+        if (lcm_sym30__) {
+          current_statement__ = 20;
+          assign(treatment,
+            rvalue(treatment_flat__, "treatment_flat__", index_uni(1)),
+            "assigning variable treatment", index_uni(1));
+          current_statement__ = 20;
+          pos__ = 2;
+          for (int sym1__ = 2; sym1__ <= N; ++sym1__) {
+            current_statement__ = 20;
+            assign(treatment, treatment_flat__[(pos__ - 1)],
+              "assigning variable treatment", index_uni(sym1__));
+            current_statement__ = 20;
+            pos__ = (pos__ + 1);}
+        } 
+      }
       current_statement__ = 20;
       if (lcm_sym30__) {
         current_statement__ = 20;
@@ -29136,7 +30128,27 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       validate_non_negative_index("y", "N", N);
       current_statement__ = 22;
       
-      
+      {
+        std::vector<double> y_flat__;
+        current_statement__ = 22;
+        y_flat__ = context__.vals_r("y");
+        current_statement__ = 22;
+        pos__ = 1;
+        current_statement__ = 22;
+        if (lcm_sym30__) {
+          current_statement__ = 22;
+          assign(y, rvalue(y_flat__, "y_flat__", index_uni(1)),
+            "assigning variable y", index_uni(1));
+          current_statement__ = 22;
+          pos__ = 2;
+          for (int sym1__ = 2; sym1__ <= N; ++sym1__) {
+            current_statement__ = 22;
+            assign(y, y_flat__[(pos__ - 1)],
+              "assigning variable y", index_uni(sym1__));
+            current_statement__ = 22;
+            pos__ = (pos__ + 1);}
+        } 
+      }
       current_statement__ = 23;
       validate_non_negative_index("a", "n_pair", n_pair);
       current_statement__ = 24;
@@ -29747,7 +30759,7 @@ static constexpr std::array<const char*, 33> locations_array__ =
 class stalled1_failure_model final : public model_base_crtp<stalled1_failure_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   double lcm_sym38__;
   double lcm_sym37__;
   double lcm_sym36__;
@@ -29780,12 +30792,19 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
   stalled1_failure_model(stan::io::var_context& context__,
                          unsigned int random_seed__ = 0,
                          std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                         model_arena_(stan::io::get_data_sizes(context__)), 
+                         model_arena_(), 
                          I(stan::io::initialize_data<int>("I", context__)),
-                         n(stan::io::initialize_data<std::vector<int>>("n", context__, model_arena_, I )),
-                         N(stan::io::initialize_data<std::vector<int>>("N", context__, model_arena_, I )),
-                         x1(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("x1", context__, model_arena_ I)),
-                         x2(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("x2", context__, model_arena_ I)) {
+                         n(stan::io::initialize_data<std::vector<int>>("n",
+                         model_arena_  , I )),
+                         N(stan::io::initialize_data<std::vector<int>>("N",
+                         model_arena_  , I )),
+                         x1(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("x1",
+                         model_arena_, I)),
+                         x2(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("x2",
+                         model_arena_, I)),
+                         K(stan::io::initialize_data<int>("K", context__)),
+                         x1x2(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("x1x2",
+                         model_arena_, I)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -29810,10 +30829,11 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 17;
       
-      
+      current_statement__ = 17;
+      I = context__.vals_i("I")[(1 - 1)];
       current_statement__ = 17;
       current_statement__ = 17;
       check_greater_or_equal(function__, "I", I, 0);
@@ -29821,8 +30841,9 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       validate_non_negative_index("n", "I", I);
       current_statement__ = 19;
       
-      
-      
+      current_statement__ = 19;
+      n = context__.vals_i("n");
+      lcm_sym29__ = logical_gte(I, 1);
       if (lcm_sym29__) {
         current_statement__ = 19;
         current_statement__ = 19;
@@ -29838,7 +30859,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       validate_non_negative_index("N", "I", I);
       current_statement__ = 21;
       
-      
+      current_statement__ = 21;
+      N = context__.vals_i("N");
       current_statement__ = 21;
       if (lcm_sym29__) {
         current_statement__ = 21;
@@ -29855,20 +30877,62 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       validate_non_negative_index("x1", "I", I);
       current_statement__ = 23;
       
-      
+      {
+        std::vector<double> x1_flat__;
+        current_statement__ = 23;
+        x1_flat__ = context__.vals_r("x1");
+        current_statement__ = 23;
+        pos__ = 1;
+        current_statement__ = 23;
+        if (lcm_sym29__) {
+          current_statement__ = 23;
+          assign(x1, rvalue(x1_flat__, "x1_flat__", index_uni(1)),
+            "assigning variable x1", index_uni(1));
+          current_statement__ = 23;
+          pos__ = 2;
+          for (int sym1__ = 2; sym1__ <= I; ++sym1__) {
+            current_statement__ = 23;
+            assign(x1, x1_flat__[(pos__ - 1)],
+              "assigning variable x1", index_uni(sym1__));
+            current_statement__ = 23;
+            pos__ = (pos__ + 1);}
+        } 
+      }
       current_statement__ = 24;
       validate_non_negative_index("x2", "I", I);
       current_statement__ = 25;
       
-      
+      {
+        std::vector<double> x2_flat__;
+        current_statement__ = 25;
+        x2_flat__ = context__.vals_r("x2");
+        current_statement__ = 25;
+        pos__ = 1;
+        current_statement__ = 25;
+        if (lcm_sym29__) {
+          current_statement__ = 25;
+          assign(x2, rvalue(x2_flat__, "x2_flat__", index_uni(1)),
+            "assigning variable x2", index_uni(1));
+          current_statement__ = 25;
+          pos__ = 2;
+          for (int sym1__ = 2; sym1__ <= I; ++sym1__) {
+            current_statement__ = 25;
+            assign(x2, x2_flat__[(pos__ - 1)],
+              "assigning variable x2", index_uni(sym1__));
+            current_statement__ = 25;
+            pos__ = (pos__ + 1);}
+        } 
+      }
       current_statement__ = 26;
       
       current_statement__ = 27;
       validate_non_negative_index("x1x2", "I", I);
       current_statement__ = 28;
       
-      
-      
+      current_statement__ = 29;
+      K = 8;
+      current_statement__ = 30;
+      assign(x1x2, elt_multiply(x1, x2), "assigning variable x1x2");
       current_statement__ = 31;
       validate_non_negative_index("b", "I", I);
       current_statement__ = 32;
@@ -30674,7 +31738,7 @@ static constexpr std::array<const char*, 14> locations_array__ =
 class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   
  
  public:
@@ -30690,7 +31754,7 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
   unroll_limit_model(stan::io::var_context& context__,
                      unsigned int random_seed__ = 0,
                      std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                     model_arena_(stan::io::get_data_sizes(context__)),   {
+                     model_arena_(),   {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -30704,7 +31768,7 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return

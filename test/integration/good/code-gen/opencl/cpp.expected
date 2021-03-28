@@ -796,7 +796,7 @@ static constexpr std::array<const char*, 771> locations_array__ =
 class distributions_model final : public model_base_crtp<distributions_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int d_int;
   std::vector<int> d_int_array;
   double d_real;
@@ -821,13 +821,19 @@ class distributions_model final : public model_base_crtp<distributions_model> {
   distributions_model(stan::io::var_context& context__,
                       unsigned int random_seed__ = 0,
                       std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                      model_arena_(stan::io::get_data_sizes(context__)), 
-                      d_int(stan::io::initialize_data<int>("d_int", context__)),
-                      d_int_array(stan::io::initialize_data<std::vector<int>>("d_int_array", context__, model_arena_, d_int )),
-                      d_real(stan::io::initialize_data<double>("d_real", context__)),
-                      d_real_array(stan::io::initialize_data<std::vector<double>>("d_real_array", context__, model_arena_, d_int )),
-                      d_vector(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("d_vector", context__, model_arena_ d_int)),
-                      d_row_vector(stan::io::initialize_data<Eigen::Matrix<double, 1, -1>>("d_row_vector", context__, model_arena_ d_int)) {
+                      model_arena_(), 
+                      d_int(stan::io::initialize_data<int>("d_int",
+                      context__)),
+                      d_int_array(stan::io::initialize_data<std::vector<int>>("d_int_array",
+                      model_arena_  , d_int )),
+                      d_real(stan::io::initialize_data<double>("d_real",
+                      context__)),
+                      d_real_array(stan::io::initialize_data<std::vector<double>>("d_real_array",
+                      model_arena_  , d_int )),
+                      d_vector(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("d_vector",
+                      model_arena_, d_int)),
+                      d_row_vector(stan::io::initialize_data<Eigen::Matrix<double, 1, -1>>("d_row_vector",
+                      model_arena_, d_int)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -841,33 +847,63 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 756;
       
-      
+      current_statement__ = 756;
+      d_int = context__.vals_i("d_int")[(1 - 1)];
       current_statement__ = 757;
       validate_non_negative_index("d_int_array", "d_int", d_int);
       current_statement__ = 758;
       
-      
+      current_statement__ = 758;
+      d_int_array = context__.vals_i("d_int_array");
       current_statement__ = 759;
       
-      
+      current_statement__ = 759;
+      d_real = context__.vals_r("d_real")[(1 - 1)];
       current_statement__ = 760;
       validate_non_negative_index("d_real_array", "d_int", d_int);
       current_statement__ = 761;
       
-      
+      current_statement__ = 761;
+      d_real_array = context__.vals_r("d_real_array");
       current_statement__ = 762;
       validate_non_negative_index("d_vector", "d_int", d_int);
       current_statement__ = 763;
       
-      
+      {
+        std::vector<local_scalar_t__> d_vector_flat__;
+        current_statement__ = 763;
+        d_vector_flat__ = context__.vals_r("d_vector");
+        current_statement__ = 763;
+        pos__ = 1;
+        current_statement__ = 763;
+        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+          current_statement__ = 763;
+          assign(d_vector, d_vector_flat__[(pos__ - 1)],
+            "assigning variable d_vector", index_uni(sym1__));
+          current_statement__ = 763;
+          pos__ = (pos__ + 1);}
+      }
       current_statement__ = 764;
       validate_non_negative_index("d_row_vector", "d_int", d_int);
       current_statement__ = 765;
       
-      
+      {
+        std::vector<local_scalar_t__> d_row_vector_flat__;
+        current_statement__ = 765;
+        d_row_vector_flat__ = context__.vals_r("d_row_vector");
+        current_statement__ = 765;
+        pos__ = 1;
+        current_statement__ = 765;
+        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+          current_statement__ = 765;
+          assign(d_row_vector, d_row_vector_flat__[(pos__ - 1)],
+            "assigning variable d_row_vector", index_uni(sym1__));
+          current_statement__ = 765;
+          pos__ = (pos__ + 1);}
+      }
       current_statement__ = 766;
       validate_non_negative_index("p_real_array", "d_int", d_int);
       current_statement__ = 767;
@@ -879,13 +915,13 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       current_statement__ = 770;
       validate_non_negative_index("p_row_vector", "d_int", d_int);
       
+      d_int_array_opencl__ = to_matrix_cl(d_int_array);
       
+      d_real_array_opencl__ = to_matrix_cl(d_real_array);
       
+      d_row_vector_opencl__ = to_matrix_cl(d_row_vector);
       
-      
-      
-      
-      
+      d_vector_opencl__ = to_matrix_cl(d_vector);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -6384,7 +6420,7 @@ static constexpr std::array<const char*, 40> locations_array__ =
 class restricted_model final : public model_base_crtp<restricted_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int d_int;
   std::vector<int> d_int_array;
   double d_real;
@@ -6406,13 +6442,18 @@ class restricted_model final : public model_base_crtp<restricted_model> {
   restricted_model(stan::io::var_context& context__,
                    unsigned int random_seed__ = 0,
                    std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                   model_arena_(stan::io::get_data_sizes(context__)), 
+                   model_arena_(), 
                    d_int(stan::io::initialize_data<int>("d_int", context__)),
-                   d_int_array(stan::io::initialize_data<std::vector<int>>("d_int_array", context__, model_arena_, d_int )),
-                   d_real(stan::io::initialize_data<double>("d_real", context__)),
-                   d_real_array(stan::io::initialize_data<std::vector<double>>("d_real_array", context__, model_arena_, d_int )),
-                   d_vector(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("d_vector", context__, model_arena_ d_int)),
-                   d_row_vector(stan::io::initialize_data<Eigen::Matrix<double, 1, -1>>("d_row_vector", context__, model_arena_ d_int)) {
+                   d_int_array(stan::io::initialize_data<std::vector<int>>("d_int_array",
+                   model_arena_  , d_int )),
+                   d_real(stan::io::initialize_data<double>("d_real",
+                   context__)),
+                   d_real_array(stan::io::initialize_data<std::vector<double>>("d_real_array",
+                   model_arena_  , d_int )),
+                   d_vector(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("d_vector",
+                   model_arena_, d_int)),
+                   d_row_vector(stan::io::initialize_data<Eigen::Matrix<double, 1, -1>>("d_row_vector",
+                   model_arena_, d_int)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -6426,33 +6467,63 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 25;
       
-      
+      current_statement__ = 25;
+      d_int = context__.vals_i("d_int")[(1 - 1)];
       current_statement__ = 26;
       validate_non_negative_index("d_int_array", "d_int", d_int);
       current_statement__ = 27;
       
-      
+      current_statement__ = 27;
+      d_int_array = context__.vals_i("d_int_array");
       current_statement__ = 28;
       
-      
+      current_statement__ = 28;
+      d_real = context__.vals_r("d_real")[(1 - 1)];
       current_statement__ = 29;
       validate_non_negative_index("d_real_array", "d_int", d_int);
       current_statement__ = 30;
       
-      
+      current_statement__ = 30;
+      d_real_array = context__.vals_r("d_real_array");
       current_statement__ = 31;
       validate_non_negative_index("d_vector", "d_int", d_int);
       current_statement__ = 32;
       
-      
+      {
+        std::vector<local_scalar_t__> d_vector_flat__;
+        current_statement__ = 32;
+        d_vector_flat__ = context__.vals_r("d_vector");
+        current_statement__ = 32;
+        pos__ = 1;
+        current_statement__ = 32;
+        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+          current_statement__ = 32;
+          assign(d_vector, d_vector_flat__[(pos__ - 1)],
+            "assigning variable d_vector", index_uni(sym1__));
+          current_statement__ = 32;
+          pos__ = (pos__ + 1);}
+      }
       current_statement__ = 33;
       validate_non_negative_index("d_row_vector", "d_int", d_int);
       current_statement__ = 34;
       
-      
+      {
+        std::vector<local_scalar_t__> d_row_vector_flat__;
+        current_statement__ = 34;
+        d_row_vector_flat__ = context__.vals_r("d_row_vector");
+        current_statement__ = 34;
+        pos__ = 1;
+        current_statement__ = 34;
+        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+          current_statement__ = 34;
+          assign(d_row_vector, d_row_vector_flat__[(pos__ - 1)],
+            "assigning variable d_row_vector", index_uni(sym1__));
+          current_statement__ = 34;
+          pos__ = (pos__ + 1);}
+      }
       current_statement__ = 35;
       validate_non_negative_index("p_real_array", "d_int", d_int);
       current_statement__ = 36;
@@ -6464,7 +6535,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       current_statement__ = 39;
       validate_non_negative_index("p_row_vector", "d_int", d_int);
       
-      
+      d_vector_opencl__ = to_matrix_cl(d_vector);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return

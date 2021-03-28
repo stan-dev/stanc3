@@ -372,37 +372,39 @@ let pp_ctor ppf p =
     [ "stan::io::var_context& context__"; "unsigned int random_seed__ = 0"
     ; "std::ostream* pstream__ = nullptr" ]
   in
-  let pp_initializer ppf ((name, st) : string * Expr.Typed.t SizedType.t) =
-    (*Sets up each of the initializers in the initializer list*)
+  (*Construct the initializer list*)
+  let pp_initializer ppf ((decl_id, st) : string * Expr.Typed.t SizedType.t) =
     let pp_data_st ppf st = pp_st ppf UnsizedType.DataOnly st in
     match st with
-    | SizedType.SInt ->
-        pf ppf "%s(stan::io::initialize_data<%a>(\"%s\", context__))" name
-          pp_data_st st name
-    | SReal ->
-        pf ppf "%s(stan::io::initialize_data<%a>(\"%s\", context__))" name
-          pp_data_st st name
+    | SizedType.SInt | SReal ->
+        pf ppf "%s(stan::io::initialize_data<%a>(\"%s\",@ context__))" decl_id
+          pp_data_st st decl_id
     | SVector d1 | SRowVector d1 ->
-        pf ppf
-          "%s(stan::io::initialize_data<%a>(\"%s\", context__, model_arena_ \
-           %a))"
-          name pp_data_st st name pp_expr d1
+        pf ppf "%s(stan::io::initialize_data<%a>(\"%s\",@ model_arena_, %a))"
+          decl_id pp_data_st st decl_id pp_expr d1
     | SMatrix (d1, d2) ->
         pf ppf
-          "%s(stan::io::initialize_data<%a>(\"%s\", context__, \
-           model_arena_,%a %a))"
-          name pp_data_st st name pp_expr d1 pp_expr d2
+          "%s(stan::io::initialize_data<%a>(\"%s\",@ model_arena_, %a, %a))"
+          decl_id pp_data_st st decl_id pp_expr d1 pp_expr d2
     | SArray (_, _) ->
-        pf ppf
-          "%s(stan::io::initialize_data<%a>(\"%s\", context__, model_arena_%a))"
-          name pp_data_st st name pp_dims st
+        pf ppf "%s(stan::io::initialize_data<%a>(\"%s\",@ model_arena_ @ %a))"
+          decl_id pp_data_st st decl_id pp_dims st
+  in
+  (*Filter prepare_data to get the sizes and types of class members*)
+  let get_named_decls Stmt.Fixed.({pattern; _}) =
+    match pattern with
+    | Decl {decl_id; decl_type; _} when decl_id <> "pos__" -> (
+      match decl_type with Type.Sized st -> Some (decl_id, st) | _ -> None )
+    | _ -> None
+  in
+  let named_decls =
+    List.filter_map ~f:get_named_decls p.Program.prepare_data
   in
   (* let pp_plus ppf _ = Format.pp_print_string ppf " + "; sp ppf () in*)
-  pf ppf
-    "%s(@[<hov 0>%a) : model_base_crtp(0), @ model_arena_(stan::io::get_data_sizes(context__)), @ %a @]"
+  pf ppf "%s(@[<hov 0>%a) : model_base_crtp(0), @ model_arena_(), @ %a @]"
     p.Program.prog_name (list ~sep:comma string) params
     (list ~sep:comma pp_initializer)
-    p.Program.input_vars ;
+    named_decls ;
   let pp_mul ppf () = pf ppf " * " in
   let pp_num_param ppf dims =
     pf ppf "num_params_r__ += %a;" (list ~sep:pp_mul pp_expr) dims
@@ -424,11 +426,6 @@ let pp_ctor ppf p =
             pp_set_size ppf (decl_id, st, DataOnly)
           else ()
       | Unsized _ -> () )
-    (* TODO: I need to figure out how to get matrix_cl assignments *)
-    | Assignment _ -> ()
-    (* TODO: I need to figure out how get transformed params *)
-    | Block _ -> ()
-    | For _ -> ()
     | _ -> pp_statement ppf s
   in
   pp_block ppf
@@ -463,7 +460,7 @@ let rec top_level_decls Stmt.Fixed.({pattern; _}) =
 (** Print the private data members of the model class *)
 let pp_model_private ppf {Program.prepare_data; _} =
   let data_decls = List.concat_map ~f:top_level_decls prepare_data in
-  pf ppf "stan::math::stack_alloc model_arena;@ %a"
+  pf ppf "stan::math::stack_alloc model_arena_;@ %a"
     (list ~sep:cut pp_data_decl)
     data_decls
 

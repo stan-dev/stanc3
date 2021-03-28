@@ -242,7 +242,7 @@ static constexpr std::array<const char*, 217> locations_array__ =
 class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
 
  private:
-  stan::math::stack_alloc model_arena;
+  stan::math::stack_alloc model_arena_;
   int k;
   int n;
   Eigen::Map<Eigen::Matrix<double, -1, -1>> X_d;
@@ -282,17 +282,41 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   optimize_glm_model(stan::io::var_context& context__,
                      unsigned int random_seed__ = 0,
                      std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                     model_arena_(stan::io::get_data_sizes(context__)), 
-                     k(stan::io::initialize_data<int>("k", context__)),
-                     n(stan::io::initialize_data<int>("n", context__)),
-                     X_d(stan::io::initialize_data<Eigen::Matrix<double, -1, -1>>("X_d", context__, model_arena_,n k)),
-                     X_d_a(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, -1>>>("X_d_a", context__, model_arena_, 2 , n, k)),
-                     y_v_d(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("y_v_d", context__, model_arena_ n)),
-                     X_rv_d(stan::io::initialize_data<Eigen::Matrix<double, 1, -1>>("X_rv_d", context__, model_arena_ n)),
-                     y_vi_d(stan::io::initialize_data<std::vector<int>>("y_vi_d", context__, model_arena_, n )),
-                     y2_vi_d(stan::io::initialize_data<std::vector<int>>("y2_vi_d", context__, model_arena_, n )),
-                     y_s_d(stan::io::initialize_data<int>("y_s_d", context__)),
-                     y_r_d(stan::io::initialize_data<double>("y_r_d", context__)) {
+                     model_arena_(),  k(stan::io::initialize_data<int>("k",
+                     context__)), n(stan::io::initialize_data<int>("n",
+                     context__)),
+                     X_d(stan::io::initialize_data<Eigen::Matrix<double, -1, -1>>("X_d",
+                     model_arena_, n, k)),
+                     X_d_a(stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, -1>>>("X_d_a",
+                     model_arena_  , 2 , n, k)),
+                     y_v_d(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("y_v_d",
+                     model_arena_, n)),
+                     X_rv_d(stan::io::initialize_data<Eigen::Matrix<double, 1, -1>>("X_rv_d",
+                     model_arena_, n)),
+                     y_vi_d(stan::io::initialize_data<std::vector<int>>("y_vi_d",
+                     model_arena_  , n )),
+                     y2_vi_d(stan::io::initialize_data<std::vector<int>>("y2_vi_d",
+                     model_arena_  , n )),
+                     y_s_d(stan::io::initialize_data<int>("y_s_d",
+                     context__)),
+                     y_r_d(stan::io::initialize_data<double>("y_r_d",
+                     context__)), k_td(stan::io::initialize_data<int>("k_td",
+                     context__)), n_td(stan::io::initialize_data<int>("n_td",
+                     context__)),
+                     X_d_td(stan::io::initialize_data<Eigen::Matrix<double, -1, -1>>("X_d_td",
+                     model_arena_, n, k)),
+                     y_v_d_td(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("y_v_d_td",
+                     model_arena_, n)),
+                     X_rv_d_td(stan::io::initialize_data<Eigen::Matrix<double, 1, -1>>("X_rv_d_td",
+                     model_arena_, n)),
+                     y_vi_d_td(stan::io::initialize_data<std::vector<int>>("y_vi_d_td",
+                     model_arena_  , n )),
+                     y2_vi_d_td(stan::io::initialize_data<std::vector<int>>("y2_vi_d_td",
+                     model_arena_  , n )),
+                     y_s_d_td(stan::io::initialize_data<int>("y_s_d_td",
+                     context__)),
+                     y_r_d_td(stan::io::initialize_data<double>("y_r_d_td",
+                     context__)) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -306,16 +330,18 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
-      
+      pos__ = 1;
       current_statement__ = 176;
       
-      
+      current_statement__ = 176;
+      k = context__.vals_i("k")[(1 - 1)];
       current_statement__ = 176;
       current_statement__ = 176;
       check_greater_or_equal(function__, "k", k, 1);
       current_statement__ = 177;
       
-      
+      current_statement__ = 177;
+      n = context__.vals_i("n")[(1 - 1)];
       current_statement__ = 177;
       current_statement__ = 177;
       check_greater_or_equal(function__, "n", n, 0);
@@ -325,40 +351,104 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("X_d", "k", k);
       current_statement__ = 180;
       
-      
+      {
+        std::vector<local_scalar_t__> X_d_flat__;
+        current_statement__ = 180;
+        X_d_flat__ = context__.vals_r("X_d");
+        current_statement__ = 180;
+        pos__ = 1;
+        current_statement__ = 180;
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          current_statement__ = 180;
+          for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
+            current_statement__ = 180;
+            assign(X_d, X_d_flat__[(pos__ - 1)],
+              "assigning variable X_d", index_uni(sym2__), index_uni(sym1__));
+            current_statement__ = 180;
+            pos__ = (pos__ + 1);}}
+      }
       current_statement__ = 181;
       validate_non_negative_index("X_d_a", "n", n);
       current_statement__ = 182;
       validate_non_negative_index("X_d_a", "k", k);
       current_statement__ = 183;
       
-      
+      {
+        std::vector<local_scalar_t__> X_d_a_flat__;
+        current_statement__ = 183;
+        X_d_a_flat__ = context__.vals_r("X_d_a");
+        current_statement__ = 183;
+        pos__ = 1;
+        current_statement__ = 183;
+        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+          current_statement__ = 183;
+          for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
+            current_statement__ = 183;
+            for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
+              current_statement__ = 183;
+              assign(X_d_a, X_d_a_flat__[(pos__ - 1)],
+                "assigning variable X_d_a", index_uni(sym3__),
+                                              index_uni(sym2__),
+                                              index_uni(sym1__));
+              current_statement__ = 183;
+              pos__ = (pos__ + 1);}}}
+      }
       current_statement__ = 184;
       validate_non_negative_index("y_v_d", "n", n);
       current_statement__ = 185;
       
-      
+      {
+        std::vector<local_scalar_t__> y_v_d_flat__;
+        current_statement__ = 185;
+        y_v_d_flat__ = context__.vals_r("y_v_d");
+        current_statement__ = 185;
+        pos__ = 1;
+        current_statement__ = 185;
+        for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
+          current_statement__ = 185;
+          assign(y_v_d, y_v_d_flat__[(pos__ - 1)],
+            "assigning variable y_v_d", index_uni(sym1__));
+          current_statement__ = 185;
+          pos__ = (pos__ + 1);}
+      }
       current_statement__ = 186;
       validate_non_negative_index("X_rv_d", "n", n);
       current_statement__ = 187;
       
-      
+      {
+        std::vector<local_scalar_t__> X_rv_d_flat__;
+        current_statement__ = 187;
+        X_rv_d_flat__ = context__.vals_r("X_rv_d");
+        current_statement__ = 187;
+        pos__ = 1;
+        current_statement__ = 187;
+        for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
+          current_statement__ = 187;
+          assign(X_rv_d, X_rv_d_flat__[(pos__ - 1)],
+            "assigning variable X_rv_d", index_uni(sym1__));
+          current_statement__ = 187;
+          pos__ = (pos__ + 1);}
+      }
       current_statement__ = 188;
       validate_non_negative_index("y_vi_d", "n", n);
       current_statement__ = 189;
       
-      
+      current_statement__ = 189;
+      y_vi_d = context__.vals_i("y_vi_d");
       current_statement__ = 190;
       validate_non_negative_index("y2_vi_d", "n", n);
       current_statement__ = 191;
       
-      
+      current_statement__ = 191;
+      y2_vi_d = context__.vals_i("y2_vi_d");
       current_statement__ = 192;
       
-      
+      current_statement__ = 192;
+      y_s_d = context__.vals_i("y_s_d")[(1 - 1)];
       current_statement__ = 193;
       
-      
+      current_statement__ = 193;
+      y_r_d = context__.vals_r("y_r_d")[(1 - 1)];
       current_statement__ = 194;
       
       current_statement__ = 195;
@@ -412,17 +502,17 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 216;
       validate_non_negative_index("X_rv_p", "n", n);
       
+      X_d_opencl__ = to_matrix_cl(X_d);
       
+      X_d_td_opencl__ = to_matrix_cl(X_d_td);
       
+      y_v_d_opencl__ = to_matrix_cl(y_v_d);
       
+      y_v_d_td_opencl__ = to_matrix_cl(y_v_d_td);
       
+      y_vi_d_opencl__ = to_matrix_cl(y_vi_d);
       
-      
-      
-      
-      
-      
-      
+      y_vi_d_td_opencl__ = to_matrix_cl(y_vi_d_td);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
