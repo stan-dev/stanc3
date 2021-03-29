@@ -163,7 +163,7 @@ let data_read smeta (decl_id, st) =
 
 type constrainaction = Check | Constrain | Unconstrain [@@deriving sexp]
 
-let check_constraint_to_string t (c : constrainaction) =
+let constraint_to_string t (c : constrainaction) =
   match t with
   | Program.Ordered -> "ordered"
   | PositiveOrdered -> "positive_ordered"
@@ -187,12 +187,7 @@ let check_constraint_to_string t (c : constrainaction) =
     | Constrain | Unconstrain -> "lub" )
   | Offset _ | Multiplier _ | OffsetMultiplier _ -> (
     match c with Check -> "" | Constrain | Unconstrain -> "offset_multiplier" )
-  | Identity -> ""
-
-let constrain_constraint_to_string t (c : constrainaction) =
-  match t with
-  | Program.CholeskyCorr -> "cholesky_factor_corr"
-  | _ -> check_constraint_to_string t c
+  | Identity -> "identity"
 
 let default_multiplier = 1
 let default_offset = 0
@@ -245,7 +240,7 @@ let param_read smeta
         Helpers.(
           internal_funapp FnReadParam
             ( Expr.Helpers.str
-                (constrain_constraint_to_string out_trans Constrain)
+                (constraint_to_string out_trans Constrain)
             :: n_args_expression
             :: (transform_args @ read_constrain_dims out_trans cst) ))
           Typed.Meta.{decl_var.meta with type_= ut})
