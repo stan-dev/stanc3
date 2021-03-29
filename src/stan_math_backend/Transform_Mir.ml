@@ -239,8 +239,7 @@ let param_read smeta
       Expr.(
         Helpers.(
           internal_funapp FnReadParam
-            ( Expr.Helpers.str
-                (constraint_to_string out_trans Constrain)
+            ( Expr.Helpers.str (constraint_to_string out_trans Constrain)
             :: n_args_expression
             :: (transform_args @ read_constrain_dims out_trans cst) ))
           Typed.Meta.{decl_var.meta with type_= ut})
