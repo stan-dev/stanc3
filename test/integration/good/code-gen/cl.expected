@@ -244,19 +244,19 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
  private:
   int k;
   int n;
-  Eigen::Matrix<double, -1, -1> X_d;
+  Eigen::Matrix<double, -1, -1> X_d__;
   std::vector<Eigen::Matrix<double, -1, -1>> X_d_a;
-  Eigen::Matrix<double, -1, 1> y_v_d;
-  Eigen::Matrix<double, 1, -1> X_rv_d;
+  Eigen::Matrix<double, -1, 1> y_v_d__;
+  Eigen::Matrix<double, 1, -1> X_rv_d__;
   std::vector<int> y_vi_d;
   std::vector<int> y2_vi_d;
   int y_s_d;
   double y_r_d;
   int k_td;
   int n_td;
-  Eigen::Matrix<double, -1, -1> X_d_td;
-  Eigen::Matrix<double, -1, 1> y_v_d_td;
-  Eigen::Matrix<double, 1, -1> X_rv_d_td;
+  Eigen::Matrix<double, -1, -1> X_d_td__;
+  Eigen::Matrix<double, -1, 1> y_v_d_td__;
+  Eigen::Matrix<double, 1, -1> X_rv_d_td__;
   std::vector<int> y_vi_d_td;
   std::vector<int> y2_vi_d_td;
   int y_s_d_td;
@@ -266,7 +266,18 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   matrix_cl<double> y_v_d_opencl__;
   matrix_cl<double> y_v_d_td_opencl__;
   matrix_cl<int> y_vi_d_opencl__;
-  matrix_cl<double> y_vi_d_td_opencl__;
+  matrix_cl<double> y_vi_d_td_opencl__; 
+  Eigen::Map<Eigen::Matrix<double, -1, -1>> X_d{nullptr, 0, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> y_v_d{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, 1, -1>> X_rv_d{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, -1>> X_d_td{nullptr, 0, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> y_v_d_td{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, 1, -1>> X_rv_d_td{nullptr, 0};
+  
+  
+  
+  
+  
  
  public:
   ~optimize_glm_model() { }
@@ -322,7 +333,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 180;
       context__.validate_dims("data initialization","X_d","double",
           context__.to_vec(n, k));
-      X_d = Eigen::Matrix<double, -1, -1>(n, k);
+      X_d__ = Eigen::Matrix<double, -1, -1>(n, k);
+      new (&X_d) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_d__.data(), n, k);
       stan::math::fill(X_d, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -376,7 +388,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 185;
       context__.validate_dims("data initialization","y_v_d","double",
           context__.to_vec(n));
-      y_v_d = Eigen::Matrix<double, -1, 1>(n);
+      y_v_d__ = Eigen::Matrix<double, -1, 1>(n);
+      new (&y_v_d) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y_v_d__.data(), n);
       stan::math::fill(y_v_d, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -398,7 +411,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 187;
       context__.validate_dims("data initialization","X_rv_d","double",
           context__.to_vec(n));
-      X_rv_d = Eigen::Matrix<double, 1, -1>(n);
+      X_rv_d__ = Eigen::Matrix<double, 1, -1>(n);
+      new (&X_rv_d) Eigen::Map<Eigen::Matrix<double, 1, -1>>(X_rv_d__.data(), n);
       stan::math::fill(X_rv_d, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -458,19 +472,22 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 197;
       validate_non_negative_index("X_d_td", "k", k);
       current_statement__ = 198;
-      X_d_td = Eigen::Matrix<double, -1, -1>(n, k);
+      X_d_td__ = Eigen::Matrix<double, -1, -1>(n, k);
+      new (&X_d_td) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_d_td__.data(), n, k);
       stan::math::fill(X_d_td, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 199;
       validate_non_negative_index("y_v_d_td", "n", n);
       current_statement__ = 200;
-      y_v_d_td = Eigen::Matrix<double, -1, 1>(n);
+      y_v_d_td__ = Eigen::Matrix<double, -1, 1>(n);
+      new (&y_v_d_td) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y_v_d_td__.data(), n);
       stan::math::fill(y_v_d_td, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 201;
       validate_non_negative_index("X_rv_d_td", "n", n);
       current_statement__ = 202;
-      X_rv_d_td = Eigen::Matrix<double, 1, -1>(n);
+      X_rv_d_td__ = Eigen::Matrix<double, 1, -1>(n);
+      new (&X_rv_d_td) Eigen::Map<Eigen::Matrix<double, 1, -1>>(X_rv_d_td__.data(), n);
       stan::math::fill(X_rv_d_td, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 203;

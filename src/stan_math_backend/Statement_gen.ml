@@ -52,6 +52,46 @@ let%expect_test "set size mat array" =
       d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3)));
       stan::math::fill(d, std::numeric_limits<double>::quiet_NaN()); |}]
 
+let pp_set_map_size ppf (decl_id, st) =
+  let real_nan = "std::numeric_limits<double>::quiet_NaN()" in
+  let pp_st ppf st =
+    pf ppf "%a" pp_unsizedtype_local
+      (UnsizedType.DataOnly, SizedType.to_unsized st)
+  in
+  let rec pp_size_ctor ppf st =
+    match st with
+    | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
+    | SReal -> pf ppf "%s" real_nan
+    | SVector d | SRowVector d -> pf ppf "%a(%a)" pp_st st pp_expr d
+    | SMatrix (d1, d2) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d1 pp_expr d2
+    | SArray (t, d) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d pp_size_ctor t
+  in
+  if contains_eigen (SizedType.to_unsized st) then
+    pf ppf "@[<hov 2>%s__ = %a;@]@," decl_id pp_size_ctor st
+  else pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_size_ctor st ;
+  if contains_eigen (SizedType.to_unsized st) then (
+    let pp_new_alloc ppf (decl_id, st) =
+      match st with
+      | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
+      | SReal -> pf ppf "%s" real_nan
+      | SVector d | SRowVector d ->
+          pf ppf "Eigen::Map<%a>(%s__.data(), %a)" pp_st st decl_id pp_expr d
+      | SMatrix (d1, d2) ->
+          pf ppf "Eigen::Map<%a>(%s__.data(), %a, %a)" pp_st st decl_id pp_expr
+            d1 pp_expr d2
+      | SArray (t, d) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d pp_size_ctor t
+    in
+    pf ppf "@[<hov 2>new (&%s) %a;@]@," decl_id pp_new_alloc (decl_id, st) ;
+    pf ppf "@[<hov 2>stan::math::fill(%s, %s);@]@," decl_id real_nan )
+
+let pp_set_data_size ppf (decl_id, st) =
+  match st with
+  | SizedType.SVector _ | SRowVector _ | SMatrix _ ->
+      pp_set_map_size ppf (decl_id, st)
+  | _ -> pp_set_size ppf (decl_id, st, DataOnly)
+
+(* TODO: generate optimal adtypes for expressions and declarations *)
+
 (** [pp_for_loop ppf (loopvar, lower, upper, pp_body, body)] tries to
     pretty print a for-loop from lower to upper given some loopvar.*)
 let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
@@ -72,6 +112,46 @@ let pp_decl ppf (vident, ut, adtype) =
     | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>"
   in
   pf ppf "%a %s;" pp_type (adtype, ut) vident
+
+let pp_data_decl ppf (vident, ut, adtype) =
+  let opencl_check = (Transform_Mir.is_opencl_var vident, ut) in
+  let pp_type =
+    match opencl_check with
+    | _, UnsizedType.(UInt | UReal) | false, _ -> pp_unsizedtype_local
+    | true, UArray UInt -> fun ppf _ -> pf ppf "matrix_cl<int>"
+    | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>"
+  in
+  match (opencl_check, ut) with
+  | (false, _), ut -> (
+    match ut with
+    | UnsizedType.URowVector | UVector | UMatrix ->
+        pf ppf "%a %s__;" pp_type (adtype, ut) vident
+    | _ -> pf ppf "%a %s;" pp_type (adtype, ut) vident )
+  | (true, _), _ -> pf ppf "%a %s;" pp_type (adtype, ut) vident
+
+let pp_map_decl ppf (vident, ut, adtype) =
+  let opencl_checker = (Transform_Mir.is_opencl_var vident, ut) in
+  let opencl_check =
+    match opencl_checker with true, _ -> true | false, _ -> false
+  in
+  let pp_type ppf (adtype, ut) =
+    let scalar = local_scalar ut adtype in
+    match (opencl_check, ut) with
+    | false, UnsizedType.UInt | false, UReal -> ()
+    | false, UMatrix -> pf ppf "Eigen::Map<Eigen::Matrix<%s, -1, -1>>" scalar
+    | false, URowVector -> pf ppf "Eigen::Map<Eigen::Matrix<%s, 1, -1>>" scalar
+    | false, UVector -> pf ppf "Eigen::Map<Eigen::Matrix<%s, -1, 1>>" scalar
+    | false, UArray _ -> ()
+    | true, _ -> ()
+    | _, x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
+  in
+  match (opencl_check, ut) with
+  | false, UnsizedType.UMatrix ->
+      pf ppf "%a %s{nullptr, 0, 0};" pp_type (adtype, ut) vident
+  | false, URowVector ->
+      pf ppf "%a %s{nullptr, 0};" pp_type (adtype, ut) vident
+  | false, UVector -> pf ppf "%a %s{nullptr, 0};" pp_type (adtype, ut) vident
+  | _ -> ()
 
 let pp_sized_decl ppf (vident, st, adtype) =
   pf ppf "%a@,%a" pp_decl

@@ -393,7 +393,7 @@ let pp_ctor ppf p =
       | Sized st ->
           Locations.pp_smeta ppf meta ;
           if Set.mem data_idents decl_id then pp_validate_data ppf (decl_id, st) ;
-          pp_set_size ppf (decl_id, st, DataOnly)
+          pp_set_data_size ppf (decl_id, st)
       | Unsized _ -> () )
     | _ -> pp_statement ppf s
   in
@@ -429,7 +429,17 @@ let rec top_level_decls Stmt.Fixed.({pattern; _}) =
 (** Print the private data members of the model class *)
 let pp_model_private ppf {Program.prepare_data; _} =
   let data_decls = List.concat_map ~f:top_level_decls prepare_data in
-  pf ppf "%a" (list ~sep:cut pp_decl) data_decls
+  let get_eigen_types (name, ut, adtype) =
+    match ut with
+    | UnsizedType.URowVector | UVector | UMatrix -> Some (name, ut, adtype)
+    | _ -> None
+  in
+  let just_eigen_decls = (List.filter_map ~f:get_eigen_types) data_decls in
+  pf ppf "%a @ %a"
+    (list ~sep:cut pp_data_decl)
+    data_decls
+    (list ~sep:cut pp_map_decl)
+    just_eigen_decls
 
 (** Print the signature and blocks of the model class methods.
   @param ppf A pretty printer

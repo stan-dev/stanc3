@@ -29,7 +29,8 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
 
  private:
   double p;
-  double q;
+  double q; 
+  
  
  public:
   ~filename_good_model() { }

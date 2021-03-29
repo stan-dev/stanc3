@@ -800,12 +800,16 @@ class distributions_model final : public model_base_crtp<distributions_model> {
   std::vector<int> d_int_array;
   double d_real;
   std::vector<double> d_real_array;
-  Eigen::Matrix<double, -1, 1> d_vector;
-  Eigen::Matrix<double, 1, -1> d_row_vector;
+  Eigen::Matrix<double, -1, 1> d_vector__;
+  Eigen::Matrix<double, 1, -1> d_row_vector__;
   matrix_cl<int> d_int_array_opencl__;
   matrix_cl<double> d_real_array_opencl__;
   matrix_cl<double> d_row_vector_opencl__;
-  matrix_cl<double> d_vector_opencl__;
+  matrix_cl<double> d_vector_opencl__; 
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> d_vector{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, 1, -1>> d_row_vector{nullptr, 0};
+  
+  
  
  public:
   ~distributions_model() { }
@@ -871,7 +875,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       current_statement__ = 763;
       context__.validate_dims("data initialization","d_vector","double",
           context__.to_vec(d_int));
-      d_vector = Eigen::Matrix<double, -1, 1>(d_int);
+      d_vector__ = Eigen::Matrix<double, -1, 1>(d_int);
+      new (&d_vector) Eigen::Map<Eigen::Matrix<double, -1, 1>>(d_vector__.data(), d_int);
       stan::math::fill(d_vector, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -893,7 +898,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       current_statement__ = 765;
       context__.validate_dims("data initialization","d_row_vector","double",
           context__.to_vec(d_int));
-      d_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
+      d_row_vector__ = Eigen::Matrix<double, 1, -1>(d_int);
+      new (&d_row_vector) Eigen::Map<Eigen::Matrix<double, 1, -1>>(d_row_vector__.data(), d_int);
       stan::math::fill(d_row_vector, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -6430,9 +6436,12 @@ class restricted_model final : public model_base_crtp<restricted_model> {
   std::vector<int> d_int_array;
   double d_real;
   std::vector<double> d_real_array;
-  Eigen::Matrix<double, -1, 1> d_vector;
-  Eigen::Matrix<double, 1, -1> d_row_vector;
-  matrix_cl<double> d_vector_opencl__;
+  Eigen::Matrix<double, -1, 1> d_vector__;
+  Eigen::Matrix<double, 1, -1> d_row_vector__;
+  matrix_cl<double> d_vector_opencl__; 
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> d_vector{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, 1, -1>> d_row_vector{nullptr, 0};
+  
  
  public:
   ~restricted_model() { }
@@ -6498,7 +6507,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       current_statement__ = 32;
       context__.validate_dims("data initialization","d_vector","double",
           context__.to_vec(d_int));
-      d_vector = Eigen::Matrix<double, -1, 1>(d_int);
+      d_vector__ = Eigen::Matrix<double, -1, 1>(d_int);
+      new (&d_vector) Eigen::Map<Eigen::Matrix<double, -1, 1>>(d_vector__.data(), d_int);
       stan::math::fill(d_vector, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -6520,7 +6530,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       current_statement__ = 34;
       context__.validate_dims("data initialization","d_row_vector","double",
           context__.to_vec(d_int));
-      d_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
+      d_row_vector__ = Eigen::Matrix<double, 1, -1>(d_int);
+      new (&d_row_vector) Eigen::Map<Eigen::Matrix<double, 1, -1>>(d_row_vector__.data(), d_int);
       stan::math::fill(d_row_vector, std::numeric_limits<double>::quiet_NaN());
       
       {

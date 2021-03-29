@@ -43,7 +43,8 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
  private:
   int J;
   std::vector<double> y;
-  std::vector<double> sigma;
+  std::vector<double> sigma; 
+  
  
  public:
   ~_8_schools_ncp_model() { }
@@ -518,7 +519,8 @@ static constexpr std::array<const char*, 3> locations_array__ =
 class _8start_with_number_model final : public model_base_crtp<_8start_with_number_model> {
 
  private:
-  int good_model;
+  int good_model; 
+  
  
  public:
   ~_8start_with_number_model() { }
@@ -863,7 +865,8 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
  private:
   int J;
   std::vector<double> y;
-  std::vector<double> sigma;
+  std::vector<double> sigma; 
+  
  
  public:
   ~eight_schools_ncp_model() { }
@@ -1342,7 +1345,8 @@ static constexpr std::array<const char*, 6> locations_array__ =
 class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_model> {
 
  private:
-  std::vector<double> x;
+  std::vector<double> x; 
+  
  
  public:
   ~mixed_type_arrays_model() { }
@@ -4554,18 +4558,18 @@ class mother_model final : public model_base_crtp<mother_model> {
   double J;
   std::vector<double> d_real_1d_ar;
   std::vector<std::vector<std::vector<double>>> d_real_3d_ar;
-  Eigen::Matrix<double, -1, 1> d_vec;
+  Eigen::Matrix<double, -1, 1> d_vec__;
   std::vector<Eigen::Matrix<double, -1, 1>> d_1d_vec;
   std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> d_3d_vec;
-  Eigen::Matrix<double, 1, -1> d_row_vec;
+  Eigen::Matrix<double, 1, -1> d_row_vec__;
   std::vector<Eigen::Matrix<double, 1, -1>> d_1d_row_vec;
   std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> d_3d_row_vec;
   std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> d_ar_mat;
-  Eigen::Matrix<double, -1, 1> d_simplex;
+  Eigen::Matrix<double, -1, 1> d_simplex__;
   std::vector<Eigen::Matrix<double, -1, 1>> d_1d_simplex;
   std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> d_3d_simplex;
-  Eigen::Matrix<double, -1, -1> d_cfcov_54;
-  Eigen::Matrix<double, -1, -1> d_cfcov_33;
+  Eigen::Matrix<double, -1, -1> d_cfcov_54__;
+  Eigen::Matrix<double, -1, -1> d_cfcov_33__;
   std::vector<Eigen::Matrix<double, -1, -1>> d_cfcov_33_ar;
   int d_int;
   std::vector<int> d_int_array;
@@ -4575,15 +4579,15 @@ class mother_model final : public model_base_crtp<mother_model> {
   std::vector<double> d_real_array;
   std::vector<std::vector<double>> d_real_array_2d;
   std::vector<std::vector<std::vector<double>>> d_real_array_3d;
-  Eigen::Matrix<double, -1, -1> d_matrix;
+  Eigen::Matrix<double, -1, -1> d_matrix__;
   std::vector<Eigen::Matrix<double, -1, -1>> d_matrix_array;
   std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> d_matrix_array_2d;
   std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>> d_matrix_array_3d;
-  Eigen::Matrix<double, -1, 1> d_vector;
+  Eigen::Matrix<double, -1, 1> d_vector__;
   std::vector<Eigen::Matrix<double, -1, 1>> d_vector_array;
   std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> d_vector_array_2d;
   std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> d_vector_array_3d;
-  Eigen::Matrix<double, 1, -1> d_row_vector;
+  Eigen::Matrix<double, 1, -1> d_row_vector__;
   std::vector<Eigen::Matrix<double, 1, -1>> d_row_vector_array;
   std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> d_row_vector_array_2d;
   std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> d_row_vector_array_3d;
@@ -4594,13 +4598,13 @@ class mother_model final : public model_base_crtp<mother_model> {
   double td_b;
   double td_c;
   std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> td_ar_mat;
-  Eigen::Matrix<double, -1, 1> td_simplex;
+  Eigen::Matrix<double, -1, 1> td_simplex__;
   std::vector<Eigen::Matrix<double, -1, 1>> td_1d_simplex;
   std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> td_3d_simplex;
-  Eigen::Matrix<double, -1, -1> td_cfcov_54;
-  Eigen::Matrix<double, -1, -1> td_cfcov_33;
-  Eigen::Matrix<double, -1, 1> x;
-  Eigen::Matrix<double, -1, 1> y;
+  Eigen::Matrix<double, -1, -1> td_cfcov_54__;
+  Eigen::Matrix<double, -1, -1> td_cfcov_33__;
+  Eigen::Matrix<double, -1, 1> x__;
+  Eigen::Matrix<double, -1, 1> y__;
   std::vector<double> dat;
   std::vector<int> dat_int;
   std::vector<std::vector<double>> x_r;
@@ -4611,18 +4615,34 @@ class mother_model final : public model_base_crtp<mother_model> {
   std::vector<double> transformed_data_real_array;
   std::vector<std::vector<double>> transformed_data_real_array_2d;
   std::vector<std::vector<std::vector<double>>> transformed_data_real_array_3d;
-  Eigen::Matrix<double, -1, -1> transformed_data_matrix;
+  Eigen::Matrix<double, -1, -1> transformed_data_matrix__;
   std::vector<Eigen::Matrix<double, -1, -1>> transformed_data_matrix_array;
   std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> transformed_data_matrix_array_2d;
   std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>> transformed_data_matrix_array_3d;
-  Eigen::Matrix<double, -1, 1> transformed_data_vector;
+  Eigen::Matrix<double, -1, 1> transformed_data_vector__;
   std::vector<Eigen::Matrix<double, -1, 1>> transformed_data_vector_array;
   std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> transformed_data_vector_array_2d;
   std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> transformed_data_vector_array_3d;
-  Eigen::Matrix<double, 1, -1> transformed_data_row_vector;
+  Eigen::Matrix<double, 1, -1> transformed_data_row_vector__;
   std::vector<Eigen::Matrix<double, 1, -1>> transformed_data_row_vector_array;
   std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> transformed_data_row_vector_array_2d;
-  std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> transformed_data_row_vector_array_3d;
+  std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> transformed_data_row_vector_array_3d; 
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> d_vec{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, 1, -1>> d_row_vec{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> d_simplex{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, -1>> d_cfcov_54{nullptr, 0, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, -1>> d_cfcov_33{nullptr, 0, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, -1>> d_matrix{nullptr, 0, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> d_vector{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, 1, -1>> d_row_vector{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> td_simplex{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, -1>> td_cfcov_54{nullptr, 0, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, -1>> td_cfcov_33{nullptr, 0, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> x{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> y{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, -1>> transformed_data_matrix{nullptr, 0, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> transformed_data_vector{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, 1, -1>> transformed_data_row_vector{nullptr, 0};
  
  public:
   ~mother_model() { }
@@ -4800,7 +4820,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 203;
       context__.validate_dims("data initialization","d_vec","double",
           context__.to_vec(N));
-      d_vec = Eigen::Matrix<double, -1, 1>(N);
+      d_vec__ = Eigen::Matrix<double, -1, 1>(N);
+      new (&d_vec) Eigen::Map<Eigen::Matrix<double, -1, 1>>(d_vec__.data(), N);
       stan::math::fill(d_vec, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -4886,7 +4907,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 213;
       context__.validate_dims("data initialization","d_row_vec","double",
           context__.to_vec(N));
-      d_row_vec = Eigen::Matrix<double, 1, -1>(N);
+      d_row_vec__ = Eigen::Matrix<double, 1, -1>(N);
+      new (&d_row_vec) Eigen::Map<Eigen::Matrix<double, 1, -1>>(d_row_vec__.data(), N);
       stan::math::fill(d_row_vec, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -5033,7 +5055,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 224;
       context__.validate_dims("data initialization","d_simplex","double",
           context__.to_vec(N));
-      d_simplex = Eigen::Matrix<double, -1, 1>(N);
+      d_simplex__ = Eigen::Matrix<double, -1, 1>(N);
+      new (&d_simplex) Eigen::Map<Eigen::Matrix<double, -1, 1>>(d_simplex__.data(), N);
       stan::math::fill(d_simplex, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -5137,7 +5160,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 233;
       context__.validate_dims("data initialization","d_cfcov_54","double",
           context__.to_vec(5, 4));
-      d_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
+      d_cfcov_54__ = Eigen::Matrix<double, -1, -1>(5, 4);
+      new (&d_cfcov_54) Eigen::Map<Eigen::Matrix<double, -1, -1>>(d_cfcov_54__.data(), 5, 4);
       stan::math::fill(d_cfcov_54, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -5163,7 +5187,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 234;
       context__.validate_dims("data initialization","d_cfcov_33","double",
           context__.to_vec(3, 3));
-      d_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
+      d_cfcov_33__ = Eigen::Matrix<double, -1, -1>(3, 3);
+      new (&d_cfcov_33) Eigen::Map<Eigen::Matrix<double, -1, -1>>(d_cfcov_33__.data(), 3, 3);
       stan::math::fill(d_cfcov_33, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -5361,7 +5386,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 253;
       context__.validate_dims("data initialization","d_matrix","double",
           context__.to_vec(d_int, d_int));
-      d_matrix = Eigen::Matrix<double, -1, -1>(d_int, d_int);
+      d_matrix__ = Eigen::Matrix<double, -1, -1>(d_int, d_int);
+      new (&d_matrix) Eigen::Map<Eigen::Matrix<double, -1, -1>>(d_matrix__.data(), d_int, d_int);
       stan::math::fill(d_matrix, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -5493,7 +5519,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 267;
       context__.validate_dims("data initialization","d_vector","double",
           context__.to_vec(d_int));
-      d_vector = Eigen::Matrix<double, -1, 1>(d_int);
+      d_vector__ = Eigen::Matrix<double, -1, 1>(d_int);
+      new (&d_vector) Eigen::Map<Eigen::Matrix<double, -1, 1>>(d_vector__.data(), d_int);
       stan::math::fill(d_vector, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -5607,7 +5634,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 278;
       context__.validate_dims("data initialization","d_row_vector","double",
           context__.to_vec(d_int));
-      d_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
+      d_row_vector__ = Eigen::Matrix<double, 1, -1>(d_int);
+      new (&d_row_vector) Eigen::Map<Eigen::Matrix<double, 1, -1>>(d_row_vector__.data(), d_int);
       stan::math::fill(d_row_vector, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -5754,7 +5782,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 297;
       validate_non_negative_index("td_simplex", "N", N);
       current_statement__ = 298;
-      td_simplex = Eigen::Matrix<double, -1, 1>(N);
+      td_simplex__ = Eigen::Matrix<double, -1, 1>(N);
+      new (&td_simplex) Eigen::Map<Eigen::Matrix<double, -1, 1>>(td_simplex__.data(), N);
       stan::math::fill(td_simplex, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 299;
@@ -5778,19 +5807,23 @@ class mother_model final : public model_base_crtp<mother_model> {
       stan::math::fill(td_3d_simplex, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 307;
-      td_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 5);
+      td_cfcov_54__ = Eigen::Matrix<double, -1, -1>(5, 5);
+      new (&td_cfcov_54) Eigen::Map<Eigen::Matrix<double, -1, -1>>(td_cfcov_54__.data(), 5, 5);
       stan::math::fill(td_cfcov_54, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 308;
-      td_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
+      td_cfcov_33__ = Eigen::Matrix<double, -1, -1>(3, 3);
+      new (&td_cfcov_33) Eigen::Map<Eigen::Matrix<double, -1, -1>>(td_cfcov_33__.data(), 3, 3);
       stan::math::fill(td_cfcov_33, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 309;
-      x = Eigen::Matrix<double, -1, 1>(2);
+      x__ = Eigen::Matrix<double, -1, 1>(2);
+      new (&x) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x__.data(), 2);
       stan::math::fill(x, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 310;
-      y = Eigen::Matrix<double, -1, 1>(2);
+      y__ = Eigen::Matrix<double, -1, 1>(2);
+      new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y__.data(), 2);
       stan::math::fill(y, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 311;
@@ -5964,7 +5997,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 368;
       validate_non_negative_index("transformed_data_matrix", "d_int", d_int);
       current_statement__ = 369;
-      transformed_data_matrix = Eigen::Matrix<double, -1, -1>(d_int, d_int);
+      transformed_data_matrix__ = Eigen::Matrix<double, -1, -1>(d_int, d_int);
+      new (&transformed_data_matrix) Eigen::Map<Eigen::Matrix<double, -1, -1>>(transformed_data_matrix__.data(), d_int, d_int);
       stan::math::fill(transformed_data_matrix, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 370;
@@ -6009,7 +6043,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 382;
       validate_non_negative_index("transformed_data_vector", "d_int", d_int);
       current_statement__ = 383;
-      transformed_data_vector = Eigen::Matrix<double, -1, 1>(d_int);
+      transformed_data_vector__ = Eigen::Matrix<double, -1, 1>(d_int);
+      new (&transformed_data_vector) Eigen::Map<Eigen::Matrix<double, -1, 1>>(transformed_data_vector__.data(), d_int);
       stan::math::fill(transformed_data_vector, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 384;
@@ -6046,7 +6081,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("transformed_data_row_vector", "d_int",
                                   d_int);
       current_statement__ = 394;
-      transformed_data_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
+      transformed_data_row_vector__ = Eigen::Matrix<double, 1, -1>(d_int);
+      new (&transformed_data_row_vector) Eigen::Map<Eigen::Matrix<double, 1, -1>>(transformed_data_row_vector__.data(), d_int);
       stan::math::fill(transformed_data_row_vector, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 395;
@@ -10684,10 +10720,11 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
   std::vector<int> x_int;
   std::vector<double> x_d_r;
   std::vector<int> x_d_i;
-  Eigen::Matrix<double, -1, 1> shared_params_d;
+  Eigen::Matrix<double, -1, 1> shared_params_d__;
   std::vector<Eigen::Matrix<double, -1, 1>> job_params_d;
   std::vector<std::vector<double>> data_r;
-  std::vector<std::vector<int>> data_i;
+  std::vector<std::vector<int>> data_i; 
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> shared_params_d{nullptr, 0};
  
  public:
   ~motherHOF_model() { }
@@ -10787,7 +10824,8 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       current_statement__ = 133;
       context__.validate_dims("data initialization","shared_params_d",
           "double",context__.to_vec(3));
-      shared_params_d = Eigen::Matrix<double, -1, 1>(3);
+      shared_params_d__ = Eigen::Matrix<double, -1, 1>(3);
+      new (&shared_params_d) Eigen::Map<Eigen::Matrix<double, -1, 1>>(shared_params_d__.data(), 3);
       stan::math::fill(shared_params_d, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -12990,8 +13028,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
   int id;
   double rd;
   std::vector<double> rad;
-  Eigen::Matrix<double, -1, 1> vd;
-  std::vector<Eigen::Matrix<double, -1, 1>> zd;
+  Eigen::Matrix<double, -1, 1> vd__;
+  std::vector<Eigen::Matrix<double, -1, 1>> zd; 
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> vd{nullptr, 0};
  
  public:
   ~new_integrate_interface_model() { }
@@ -13055,7 +13094,8 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       current_statement__ = 607;
       context__.validate_dims("data initialization","vd","double",
           context__.to_vec(N));
-      vd = Eigen::Matrix<double, -1, 1>(N);
+      vd__ = Eigen::Matrix<double, -1, 1>(N);
+      new (&vd) Eigen::Map<Eigen::Matrix<double, -1, 1>>(vd__.data(), N);
       stan::math::fill(vd, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -16459,7 +16499,8 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
   int N;
   std::vector<double> ts;
   std::vector<double> y_init;
-  std::vector<std::vector<double>> y;
+  std::vector<std::vector<double>> y; 
+  
  
  public:
   ~old_integrate_interface_model() { }
@@ -17306,23 +17347,29 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
  private:
   int k;
   int n;
-  Eigen::Matrix<double, -1, -1> X_d;
+  Eigen::Matrix<double, -1, -1> X_d__;
   std::vector<Eigen::Matrix<double, -1, -1>> X_d_a;
-  Eigen::Matrix<double, -1, 1> y_v_d;
-  Eigen::Matrix<double, 1, -1> X_rv_d;
+  Eigen::Matrix<double, -1, 1> y_v_d__;
+  Eigen::Matrix<double, 1, -1> X_rv_d__;
   std::vector<int> y_vi_d;
   std::vector<int> y2_vi_d;
   int y_s_d;
   double y_r_d;
   int k_td;
   int n_td;
-  Eigen::Matrix<double, -1, -1> X_d_td;
-  Eigen::Matrix<double, -1, 1> y_v_d_td;
-  Eigen::Matrix<double, 1, -1> X_rv_d_td;
+  Eigen::Matrix<double, -1, -1> X_d_td__;
+  Eigen::Matrix<double, -1, 1> y_v_d_td__;
+  Eigen::Matrix<double, 1, -1> X_rv_d_td__;
   std::vector<int> y_vi_d_td;
   std::vector<int> y2_vi_d_td;
   int y_s_d_td;
-  double y_r_d_td;
+  double y_r_d_td; 
+  Eigen::Map<Eigen::Matrix<double, -1, -1>> X_d{nullptr, 0, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> y_v_d{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, 1, -1>> X_rv_d{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, -1>> X_d_td{nullptr, 0, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> y_v_d_td{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, 1, -1>> X_rv_d_td{nullptr, 0};
  
  public:
   ~optimize_glm_model() { }
@@ -17378,7 +17425,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 180;
       context__.validate_dims("data initialization","X_d","double",
           context__.to_vec(n, k));
-      X_d = Eigen::Matrix<double, -1, -1>(n, k);
+      X_d__ = Eigen::Matrix<double, -1, -1>(n, k);
+      new (&X_d) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_d__.data(), n, k);
       stan::math::fill(X_d, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -17432,7 +17480,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 185;
       context__.validate_dims("data initialization","y_v_d","double",
           context__.to_vec(n));
-      y_v_d = Eigen::Matrix<double, -1, 1>(n);
+      y_v_d__ = Eigen::Matrix<double, -1, 1>(n);
+      new (&y_v_d) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y_v_d__.data(), n);
       stan::math::fill(y_v_d, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -17454,7 +17503,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 187;
       context__.validate_dims("data initialization","X_rv_d","double",
           context__.to_vec(n));
-      X_rv_d = Eigen::Matrix<double, 1, -1>(n);
+      X_rv_d__ = Eigen::Matrix<double, 1, -1>(n);
+      new (&X_rv_d) Eigen::Map<Eigen::Matrix<double, 1, -1>>(X_rv_d__.data(), n);
       stan::math::fill(X_rv_d, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -17514,19 +17564,22 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 197;
       validate_non_negative_index("X_d_td", "k", k);
       current_statement__ = 198;
-      X_d_td = Eigen::Matrix<double, -1, -1>(n, k);
+      X_d_td__ = Eigen::Matrix<double, -1, -1>(n, k);
+      new (&X_d_td) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_d_td__.data(), n, k);
       stan::math::fill(X_d_td, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 199;
       validate_non_negative_index("y_v_d_td", "n", n);
       current_statement__ = 200;
-      y_v_d_td = Eigen::Matrix<double, -1, 1>(n);
+      y_v_d_td__ = Eigen::Matrix<double, -1, 1>(n);
+      new (&y_v_d_td) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y_v_d_td__.data(), n);
       stan::math::fill(y_v_d_td, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 201;
       validate_non_negative_index("X_rv_d_td", "n", n);
       current_statement__ = 202;
-      X_rv_d_td = Eigen::Matrix<double, 1, -1>(n);
+      X_rv_d_td__ = Eigen::Matrix<double, 1, -1>(n);
+      new (&X_rv_d_td) Eigen::Map<Eigen::Matrix<double, 1, -1>>(X_rv_d_td__.data(), n);
       stan::math::fill(X_rv_d_td, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 203;
@@ -18763,7 +18816,8 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
 
  private:
   int nt;
-  int NS;
+  int NS; 
+  
  
  public:
   ~param_constraint_model() { }
@@ -19391,7 +19445,8 @@ return foo_lpdf<propto__>(y_slice, start + 1, end + 1, pstream__);
 class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
 
  private:
-  int N;
+  int N; 
+  
  
  public:
   ~reduce_sum_m1_model() { }
@@ -20893,7 +20948,8 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
 
  private:
   int N;
-  std::vector<double> x;
+  std::vector<double> x; 
+  
  
  public:
   ~reduce_sum_m2_model() { }
@@ -24339,9 +24395,9 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
   std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> y7d;
   std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> y8d;
   double y9d;
-  Eigen::Matrix<double, -1, 1> y10d;
-  Eigen::Matrix<double, 1, -1> y11d;
-  Eigen::Matrix<double, -1, -1> y12d;
+  Eigen::Matrix<double, -1, 1> y10d__;
+  Eigen::Matrix<double, 1, -1> y11d__;
+  Eigen::Matrix<double, -1, -1> y12d__;
   int y13d;
   std::vector<int> y14d;
   std::vector<std::vector<int>> y15d;
@@ -24372,7 +24428,10 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
   double tgd10;
   double tgd11;
   double tgd12;
-  double tsd;
+  double tsd; 
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> y10d{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, 1, -1>> y11d{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, -1>> y12d{nullptr, 0, 0};
  
  public:
   ~reduce_sum_m3_model() { }
@@ -24639,7 +24698,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       current_statement__ = 98;
       context__.validate_dims("data initialization","y10d","double",
           context__.to_vec(N));
-      y10d = Eigen::Matrix<double, -1, 1>(N);
+      y10d__ = Eigen::Matrix<double, -1, 1>(N);
+      new (&y10d) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y10d__.data(), N);
       stan::math::fill(y10d, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -24661,7 +24721,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       current_statement__ = 100;
       context__.validate_dims("data initialization","y11d","double",
           context__.to_vec(N));
-      y11d = Eigen::Matrix<double, 1, -1>(N);
+      y11d__ = Eigen::Matrix<double, 1, -1>(N);
+      new (&y11d) Eigen::Map<Eigen::Matrix<double, 1, -1>>(y11d__.data(), N);
       stan::math::fill(y11d, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -24685,7 +24746,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       current_statement__ = 103;
       context__.validate_dims("data initialization","y12d","double",
           context__.to_vec(N, N));
-      y12d = Eigen::Matrix<double, -1, -1>(N, N);
+      y12d__ = Eigen::Matrix<double, -1, -1>(N, N);
+      new (&y12d) Eigen::Map<Eigen::Matrix<double, -1, -1>>(y12d__.data(), N, N);
       stan::math::fill(y12d, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -26631,6 +26693,7 @@ return foo5_lp<propto__>(y, lp__, lp_accum__, pstream__);
 class single_argument_lpmf_model final : public model_base_crtp<single_argument_lpmf_model> {
 
  private:
+   
   
  
  public:
@@ -26942,7 +27005,8 @@ static constexpr std::array<const char*, 8> locations_array__ =
 class tilde_block_model final : public model_base_crtp<tilde_block_model> {
 
  private:
-  int t;
+  int t; 
+  
  
  public:
   ~tilde_block_model() { }
@@ -27423,7 +27487,8 @@ class transform_model final : public model_base_crtp<transform_model> {
   std::vector<std::vector<std::vector<double>>> ds;
   std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> dv;
   std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> dr;
-  std::vector<Eigen::Matrix<double, -1, -1>> dm;
+  std::vector<Eigen::Matrix<double, -1, -1>> dm; 
+  
  
  public:
   ~transform_model() { }
@@ -30403,7 +30468,8 @@ class truncate_model final : public model_base_crtp<truncate_model> {
 
  private:
   int n;
-  double x;
+  double x; 
+  
  
  public:
   ~truncate_model() { }
@@ -30881,6 +30947,7 @@ return normal(a, pstream__);
 class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stmt_conflict_model> {
 
  private:
+   
   
  
  public:
@@ -31240,6 +31307,7 @@ return lb_constrain(x, y, pstream__);
 class user_constrain_model final : public model_base_crtp<user_constrain_model> {
 
  private:
+   
   
  
  public:

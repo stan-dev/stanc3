@@ -154,7 +154,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
 
  private:
   int N;
-  Eigen::Matrix<double, -1, -1> m;
+  Eigen::Matrix<double, -1, -1> m__; 
+  Eigen::Map<Eigen::Matrix<double, -1, -1>> m{nullptr, 0, 0};
  
  public:
   ~simple_function_model() { }
@@ -197,7 +198,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       current_statement__ = 4;
       context__.validate_dims("data initialization","m","double",
           context__.to_vec(N, N));
-      m = Eigen::Matrix<double, -1, -1>(N, N);
+      m__ = Eigen::Matrix<double, -1, -1>(N, N);
+      new (&m) Eigen::Map<Eigen::Matrix<double, -1, -1>>(m__.data(), N, N);
       stan::math::fill(m, std::numeric_limits<double>::quiet_NaN());
       
       {

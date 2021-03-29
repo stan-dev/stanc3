@@ -137,7 +137,8 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
   double t0;
   double kappa;
   std::vector<double> x_r;
-  std::vector<int> x_i;
+  std::vector<int> x_i; 
+  
  
  public:
   ~ad_level_failing_model() { }
@@ -1258,7 +1259,8 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
   std::vector<std::vector<int>> x;
   int n_occ_minus_1;
   std::vector<int> first;
-  std::vector<int> last;
+  std::vector<int> last; 
+  
  
  public:
   ~copy_fail_model() { }
@@ -3269,7 +3271,8 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
   std::vector<int> region;
   std::vector<int> state;
   std::vector<int> y;
-  Eigen::Matrix<double, -1, 1> v_prev;
+  Eigen::Matrix<double, -1, 1> v_prev__; 
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> v_prev{nullptr, 0};
  
  public:
   ~dce_fail_model() { }
@@ -3602,7 +3605,8 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       current_statement__ = 59;
       context__.validate_dims("data initialization","v_prev","double",
           context__.to_vec(n_state));
-      v_prev = Eigen::Matrix<double, -1, 1>(n_state);
+      v_prev__ = Eigen::Matrix<double, -1, 1>(n_state);
+      new (&v_prev) Eigen::Map<Eigen::Matrix<double, -1, 1>>(v_prev__.data(), n_state);
       stan::math::fill(v_prev, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -4781,7 +4785,8 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
   double z;
   double x;
   double y;
-  double i;
+  double i; 
+  
  
  public:
   ~expr_prop_experiment_model() { }
@@ -5127,7 +5132,8 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
   double lcm_sym4__;
   int j;
   double z;
-  double y;
+  double y; 
+  
  
  public:
   ~expr_prop_experiment2_model() { }
@@ -5478,7 +5484,8 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
   int lcm_sym23__;
   int lcm_sym22__;
   int N;
-  Eigen::Matrix<double, -1, 1> y;
+  Eigen::Matrix<double, -1, 1> y__; 
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> y{nullptr, 0};
  
  public:
   ~expr_prop_fail_model() { }
@@ -5526,7 +5533,8 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       current_statement__ = 11;
       context__.validate_dims("data initialization","y","double",
           context__.to_vec(N));
-      y = Eigen::Matrix<double, -1, 1>(N);
+      y__ = Eigen::Matrix<double, -1, 1>(N);
+      new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y__.data(), N);
       stan::math::fill(y, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -6043,7 +6051,8 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
   int lcm_sym11__;
   int J;
   std::vector<double> y;
-  std::vector<double> sigma;
+  std::vector<double> sigma; 
+  
  
  public:
   ~expr_prop_fail2_model() { }
@@ -6574,13 +6583,16 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
   int n_state;
   std::vector<int> age;
   std::vector<int> age_edu;
-  Eigen::Matrix<double, -1, 1> black;
+  Eigen::Matrix<double, -1, 1> black__;
   std::vector<int> edu;
-  Eigen::Matrix<double, -1, 1> female;
+  Eigen::Matrix<double, -1, 1> female__;
   std::vector<int> region_full;
   std::vector<int> state;
-  Eigen::Matrix<double, -1, 1> v_prev_full;
-  std::vector<int> y;
+  Eigen::Matrix<double, -1, 1> v_prev_full__;
+  std::vector<int> y; 
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> black{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> female{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> v_prev_full{nullptr, 0};
  
  public:
   ~expr_prop_fail3_model() { }
@@ -6765,7 +6777,8 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       current_statement__ = 33;
       context__.validate_dims("data initialization","black","double",
           context__.to_vec(N));
-      black = Eigen::Matrix<double, -1, 1>(N);
+      black__ = Eigen::Matrix<double, -1, 1>(N);
+      new (&black) Eigen::Map<Eigen::Matrix<double, -1, 1>>(black__.data(), N);
       stan::math::fill(black, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -6851,7 +6864,8 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       current_statement__ = 37;
       context__.validate_dims("data initialization","female","double",
           context__.to_vec(N));
-      female = Eigen::Matrix<double, -1, 1>(N);
+      female__ = Eigen::Matrix<double, -1, 1>(N);
+      new (&female) Eigen::Map<Eigen::Matrix<double, -1, 1>>(female__.data(), N);
       stan::math::fill(female, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -6973,7 +6987,8 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       current_statement__ = 43;
       context__.validate_dims("data initialization","v_prev_full","double",
           context__.to_vec(N));
-      v_prev_full = Eigen::Matrix<double, -1, 1>(N);
+      v_prev_full__ = Eigen::Matrix<double, -1, 1>(N);
+      new (&v_prev_full) Eigen::Map<Eigen::Matrix<double, -1, 1>>(v_prev_full__.data(), N);
       stan::math::fill(v_prev_full, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -8118,7 +8133,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
   double lcm_sym47__;
   double lcm_sym46__;
   double lcm_sym45__;
-  Eigen::Matrix<double, -1, 1> lcm_sym44__;
+  Eigen::Matrix<double, -1, 1> lcm_sym44____;
   int lcm_sym43__;
   int lcm_sym42__;
   int lcm_sym41__;
@@ -8127,9 +8142,12 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
   int N_edges;
   std::vector<int> node1;
   std::vector<int> node2;
-  Eigen::Matrix<double, -1, 1> E;
-  Eigen::Matrix<double, -1, 1> log_E;
-  int phi_std_raw_1dim__;
+  Eigen::Matrix<double, -1, 1> E__;
+  Eigen::Matrix<double, -1, 1> log_E__;
+  int phi_std_raw_1dim__; 
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> lcm_sym44__{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> E{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> log_E{nullptr, 0};
  
  public:
   ~expr_prop_fail4_model() { }
@@ -8262,7 +8280,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       current_statement__ = 35;
       context__.validate_dims("data initialization","E","double",
           context__.to_vec(N));
-      E = Eigen::Matrix<double, -1, 1>(N);
+      E__ = Eigen::Matrix<double, -1, 1>(N);
+      new (&E) Eigen::Map<Eigen::Matrix<double, -1, 1>>(E__.data(), N);
       stan::math::fill(E, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -8301,7 +8320,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       current_statement__ = 36;
       validate_non_negative_index("log_E", "N", N);
       current_statement__ = 37;
-      log_E = Eigen::Matrix<double, -1, 1>(N);
+      log_E__ = Eigen::Matrix<double, -1, 1>(N);
+      new (&log_E) Eigen::Map<Eigen::Matrix<double, -1, 1>>(log_E__.data(), N);
       stan::math::fill(log_E, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 37;
@@ -9320,7 +9340,8 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
   std::vector<std::vector<int>> y;
   int n_occ_minus_1;
   std::vector<int> first;
-  std::vector<int> last;
+  std::vector<int> last; 
+  
  
  public:
   ~expr_prop_fail5_model() { }
@@ -12071,7 +12092,8 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
   std::vector<std::vector<int>> y;
   std::vector<int> first;
   std::vector<int> last;
-  int phi_2dim__;
+  int phi_2dim__; 
+  
  
  public:
   ~expr_prop_fail6_model() { }
@@ -14980,8 +15002,9 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
   int I;
   int J;
   std::vector<std::vector<int>> y;
-  Eigen::Matrix<double, -1, 1> alpha;
-  std::vector<Eigen::Matrix<double, -1, 1>> beta;
+  Eigen::Matrix<double, -1, 1> alpha__;
+  std::vector<Eigen::Matrix<double, -1, 1>> beta; 
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> alpha{nullptr, 0};
  
  public:
   ~expr_prop_fail7_model() { }
@@ -15179,7 +15202,8 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       current_statement__ = 27;
       context__.validate_dims("data initialization","alpha","double",
           context__.to_vec(K));
-      alpha = Eigen::Matrix<double, -1, 1>(K);
+      alpha__ = Eigen::Matrix<double, -1, 1>(K);
+      new (&alpha) Eigen::Map<Eigen::Matrix<double, -1, 1>>(alpha__.data(), K);
       stan::math::fill(alpha, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -16237,7 +16261,8 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
   std::vector<int> node1;
   std::vector<int> node2;
   std::vector<int> y;
-  Eigen::Matrix<double, -1, 1> x;
+  Eigen::Matrix<double, -1, 1> x__; 
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> x{nullptr, 0};
  
  public:
   ~expr_prop_fail8_model() { }
@@ -16389,7 +16414,8 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       current_statement__ = 21;
       context__.validate_dims("data initialization","x","double",
           context__.to_vec(N));
-      x = Eigen::Matrix<double, -1, 1>(N);
+      x__ = Eigen::Matrix<double, -1, 1>(N);
+      new (&x) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x__.data(), N);
       stan::math::fill(x, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -17361,7 +17387,8 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
   std::vector<std::vector<int>> x;
   int n_occ_minus_1;
   std::vector<int> first;
-  std::vector<int> last;
+  std::vector<int> last; 
+  
  
  public:
   ~fails_test_model() { }
@@ -20243,7 +20270,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
   std::vector<int> first;
   std::vector<int> last;
   int epsilon_1dim__;
-  int phi_2dim__;
+  int phi_2dim__; 
+  
  
  public:
   ~inlining_fail2_model() { }
@@ -22931,7 +22959,8 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
   int j;
   double z;
   double x;
-  double i;
+  double i; 
+  
  
  public:
   ~lcm_experiment_model() { }
@@ -23270,6 +23299,7 @@ static constexpr std::array<const char*, 8> locations_array__ =
 class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model> {
 
  private:
+   
   
  
  public:
@@ -23618,7 +23648,8 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
 
  private:
   int J;
-  std::vector<double> y;
+  std::vector<double> y; 
+  
  
  public:
   ~lcm_fails_model() { }
@@ -24330,7 +24361,8 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
   std::vector<std::vector<int>> y;
   int n_occ_minus_1;
   std::vector<int> first;
-  std::vector<int> last;
+  std::vector<int> last; 
+  
  
  public:
   ~lcm_fails2_model() { }
@@ -26133,7 +26165,8 @@ return baz_lpdf<propto__>(x, pstream__);
 class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> {
 
  private:
-  int n;
+  int n; 
+  
  
  public:
   ~lupdf_inlining_model() { }
@@ -26641,9 +26674,10 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
   int R;
   int T;
   std::vector<std::vector<int>> y;
-  Eigen::Matrix<double, -1, 1> X;
+  Eigen::Matrix<double, -1, 1> X__;
   std::vector<int> sum_y;
-  int occ_obs;
+  int occ_obs; 
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> X{nullptr, 0};
  
  public:
   ~off_dce_model() { }
@@ -26828,7 +26862,8 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       current_statement__ = 37;
       context__.validate_dims("data initialization","X","double",
           context__.to_vec(R));
-      X = Eigen::Matrix<double, -1, 1>(R);
+      X__ = Eigen::Matrix<double, -1, 1>(R);
+      new (&X) Eigen::Map<Eigen::Matrix<double, -1, 1>>(X__.data(), R);
       stan::math::fill(X, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -27630,9 +27665,12 @@ class off_small_model final : public model_base_crtp<off_small_model> {
   int J;
   int N;
   std::vector<int> person;
-  Eigen::Matrix<double, -1, 1> time;
-  Eigen::Matrix<double, -1, 1> treatment;
-  Eigen::Matrix<double, -1, 1> y;
+  Eigen::Matrix<double, -1, 1> time__;
+  Eigen::Matrix<double, -1, 1> treatment__;
+  Eigen::Matrix<double, -1, 1> y__; 
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> time{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> treatment{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> y{nullptr, 0};
  
  public:
   ~off_small_model() { }
@@ -27729,7 +27767,8 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       current_statement__ = 25;
       context__.validate_dims("data initialization","time","double",
           context__.to_vec(N));
-      time = Eigen::Matrix<double, -1, 1>(N);
+      time__ = Eigen::Matrix<double, -1, 1>(N);
+      new (&time) Eigen::Map<Eigen::Matrix<double, -1, 1>>(time__.data(), N);
       stan::math::fill(time, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -27758,7 +27797,8 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       current_statement__ = 27;
       context__.validate_dims("data initialization","treatment","double",
           context__.to_vec(N));
-      treatment = Eigen::Matrix<double, -1, 1>(N);
+      treatment__ = Eigen::Matrix<double, -1, 1>(N);
+      new (&treatment) Eigen::Map<Eigen::Matrix<double, -1, 1>>(treatment__.data(), N);
       stan::math::fill(treatment, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -27788,7 +27828,8 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       current_statement__ = 29;
       context__.validate_dims("data initialization","y","double",
           context__.to_vec(N));
-      y = Eigen::Matrix<double, -1, 1>(N);
+      y__ = Eigen::Matrix<double, -1, 1>(N);
+      new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y__.data(), N);
       stan::math::fill(y, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -28758,6 +28799,7 @@ return rfun_lp<propto__>(lp__, lp_accum__, pstream__);
 class optimizations_model final : public model_base_crtp<optimizations_model> {
 
  private:
+   
   
  
  public:
@@ -29998,9 +30040,12 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
   int N;
   int n_pair;
   std::vector<int> pair;
-  Eigen::Matrix<double, -1, 1> pre_test;
-  Eigen::Matrix<double, -1, 1> treatment;
-  Eigen::Matrix<double, -1, 1> y;
+  Eigen::Matrix<double, -1, 1> pre_test__;
+  Eigen::Matrix<double, -1, 1> treatment__;
+  Eigen::Matrix<double, -1, 1> y__; 
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> pre_test{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> treatment{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> y{nullptr, 0};
  
  public:
   ~partial_eval_model() { }
@@ -30099,7 +30144,8 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       current_statement__ = 18;
       context__.validate_dims("data initialization","pre_test","double",
           context__.to_vec(N));
-      pre_test = Eigen::Matrix<double, -1, 1>(N);
+      pre_test__ = Eigen::Matrix<double, -1, 1>(N);
+      new (&pre_test) Eigen::Map<Eigen::Matrix<double, -1, 1>>(pre_test__.data(), N);
       stan::math::fill(pre_test, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -30129,7 +30175,8 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       current_statement__ = 20;
       context__.validate_dims("data initialization","treatment","double",
           context__.to_vec(N));
-      treatment = Eigen::Matrix<double, -1, 1>(N);
+      treatment__ = Eigen::Matrix<double, -1, 1>(N);
+      new (&treatment) Eigen::Map<Eigen::Matrix<double, -1, 1>>(treatment__.data(), N);
       stan::math::fill(treatment, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -30184,7 +30231,8 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       current_statement__ = 22;
       context__.validate_dims("data initialization","y","double",
           context__.to_vec(N));
-      y = Eigen::Matrix<double, -1, 1>(N);
+      y__ = Eigen::Matrix<double, -1, 1>(N);
+      new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y__.data(), N);
       stan::math::fill(y, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -30828,14 +30876,18 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
   int lcm_sym31__;
   int lcm_sym30__;
   int lcm_sym29__;
-  Eigen::Matrix<double, -1, 1> lcm_sym28__;
+  Eigen::Matrix<double, -1, 1> lcm_sym28____;
   int I;
   std::vector<int> n;
   std::vector<int> N;
-  Eigen::Matrix<double, -1, 1> x1;
-  Eigen::Matrix<double, -1, 1> x2;
+  Eigen::Matrix<double, -1, 1> x1__;
+  Eigen::Matrix<double, -1, 1> x2__;
   int K;
-  Eigen::Matrix<double, -1, 1> x1x2;
+  Eigen::Matrix<double, -1, 1> x1x2__; 
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> lcm_sym28__{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> x1{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> x2{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> x1x2{nullptr, 0};
  
  public:
   ~stalled1_failure_model() { }
@@ -30932,7 +30984,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       current_statement__ = 23;
       context__.validate_dims("data initialization","x1","double",
           context__.to_vec(I));
-      x1 = Eigen::Matrix<double, -1, 1>(I);
+      x1__ = Eigen::Matrix<double, -1, 1>(I);
+      new (&x1) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x1__.data(), I);
       stan::math::fill(x1, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -30961,7 +31014,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       current_statement__ = 25;
       context__.validate_dims("data initialization","x2","double",
           context__.to_vec(I));
-      x2 = Eigen::Matrix<double, -1, 1>(I);
+      x2__ = Eigen::Matrix<double, -1, 1>(I);
+      new (&x2) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x2__.data(), I);
       stan::math::fill(x2, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -30991,7 +31045,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       current_statement__ = 27;
       validate_non_negative_index("x1x2", "I", I);
       current_statement__ = 28;
-      x1x2 = Eigen::Matrix<double, -1, 1>(I);
+      x1x2__ = Eigen::Matrix<double, -1, 1>(I);
+      new (&x1x2) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x1x2__.data(), I);
       stan::math::fill(x1x2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 29;
@@ -31803,6 +31858,7 @@ static constexpr std::array<const char*, 14> locations_array__ =
 class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
 
  private:
+   
   
  
  public:
