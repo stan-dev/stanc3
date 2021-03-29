@@ -372,39 +372,8 @@ let pp_ctor ppf p =
     [ "stan::io::var_context& context__"; "unsigned int random_seed__ = 0"
     ; "std::ostream* pstream__ = nullptr" ]
   in
-  (*Construct the initializer list*)
-  let pp_initializer ppf ((decl_id, st) : string * Expr.Typed.t SizedType.t) =
-    let pp_data_st ppf st = pp_st ppf UnsizedType.DataOnly st in
-    match st with
-    | SizedType.SInt | SReal ->
-        pf ppf "%s(stan::io::initialize_data<%a>(\"%s\",@ context__))" decl_id
-          pp_data_st st decl_id
-    | SVector d1 | SRowVector d1 ->
-        pf ppf "%s(stan::io::initialize_data<%a>(\"%s\",@ model_arena_, %a))"
-          decl_id pp_data_st st decl_id pp_expr d1
-    | SMatrix (d1, d2) ->
-        pf ppf
-          "%s(stan::io::initialize_data<%a>(\"%s\",@ model_arena_, %a, %a))"
-          decl_id pp_data_st st decl_id pp_expr d1 pp_expr d2
-    | SArray (_, _) ->
-        pf ppf "%s(stan::io::initialize_data<%a>(\"%s\",@ model_arena_ @ %a))"
-          decl_id pp_data_st st decl_id pp_dims st
-  in
-  (*Filter prepare_data to get the sizes and types of class members*)
-  let get_named_decls Stmt.Fixed.({pattern; _}) =
-    match pattern with
-    | Decl {decl_id; decl_type; _} when decl_id <> "pos__" -> (
-      match decl_type with Type.Sized st -> Some (decl_id, st) | _ -> None )
-    | _ -> None
-  in
-  let named_decls =
-    List.filter_map ~f:get_named_decls p.Program.prepare_data
-  in
-  (* let pp_plus ppf _ = Format.pp_print_string ppf " + "; sp ppf () in*)
-  pf ppf "%s(@[<hov 0>%a) : model_base_crtp(0), @ model_arena_(), @ %a @]"
-    p.Program.prog_name (list ~sep:comma string) params
-    (list ~sep:comma pp_initializer)
-    named_decls ;
+  pf ppf "%s(@[<hov 0>%a) : model_base_crtp(0) @]" p.Program.prog_name
+    (list ~sep:comma string) params ;
   let pp_mul ppf () = pf ppf " * " in
   let pp_num_param ppf dims =
     pf ppf "num_params_r__ += %a;" (list ~sep:pp_mul pp_expr) dims
@@ -416,15 +385,15 @@ let pp_ctor ppf p =
       | ls -> Some ls )
     | _ -> None
   in
+  let data_idents = List.map ~f:fst p.input_vars |> String.Set.of_list in
   let pp_stmt_topdecl_size_only ppf (Stmt.Fixed.({pattern; meta}) as s) =
     match pattern with
     | Decl {decl_id; decl_type; _} when decl_id <> "pos__" -> (
       match decl_type with
       | Sized st ->
           Locations.pp_smeta ppf meta ;
-          if Transform_Mir.is_opencl_var decl_id then
-            pp_set_size ppf (decl_id, st, DataOnly)
-          else ()
+          if Set.mem data_idents decl_id then pp_validate_data ppf (decl_id, st) ;
+          pp_set_size ppf (decl_id, st, DataOnly)
       | Unsized _ -> () )
     | _ -> pp_statement ppf s
   in
@@ -461,8 +430,8 @@ let rec top_level_decls Stmt.Fixed.({pattern; _}) =
 let pp_model_private ppf {Program.prepare_data; _} =
   let data_decls = List.concat_map ~f:top_level_decls prepare_data in
   pf ppf "stan::math::stack_alloc model_arena_;@ %a"
-    (list ~sep:cut pp_data_decl)
-    data_decls
+  (list ~sep:cut pp_data_decl)
+  data_decls
 
 (** Print the signature and blocks of the model class methods.
   @param ppf A pretty printer

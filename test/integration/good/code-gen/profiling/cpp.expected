@@ -72,15 +72,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
   
   simple_function_model(stan::io::var_context& context__,
                         unsigned int random_seed__ = 0,
-                        std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                        model_arena_(), 
-                        N(stan::io::initialize_data<int>("N", context__)),
-                        x(stan::io::initialize_data<std::vector<double>>("x",
-                        model_arena_  , N )),
-                        y(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("y",
-                        model_arena_, N)),
-                        sum_y(stan::io::initialize_data<double>("sum_y",
-                        context__)) {
+                        std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -96,6 +88,9 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       
       pos__ = 1;
       current_statement__ = 21;
+      context__.validate_dims("data initialization","N","int",
+          context__.to_vec());
+      N = std::numeric_limits<int>::min();
       
       current_statement__ = 21;
       N = context__.vals_i("N")[(1 - 1)];
@@ -105,12 +100,19 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       current_statement__ = 22;
       validate_non_negative_index("x", "N", N);
       current_statement__ = 23;
+      context__.validate_dims("data initialization","x","double",
+          context__.to_vec(N));
+      x = stan::io::initialize_data<std::vector<double>>(model_arena_, N );
       
       current_statement__ = 23;
       x = context__.vals_r("x");
       current_statement__ = 24;
       validate_non_negative_index("y", "N", N);
       current_statement__ = 25;
+      context__.validate_dims("data initialization","y","double",
+          context__.to_vec(N));
+      y = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, N);
+      stan::math::fill(y, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> y_flat__;
@@ -127,6 +129,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
           pos__ = (pos__ + 1);}
       }
       current_statement__ = 26;
+      sum_y = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 28;
       {
@@ -195,7 +198,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         current_statement__ = 5;
         validate_non_negative_index("cov", "N", N);
         Eigen::Matrix<local_scalar_t__, -1, -1> cov;
-        cov = Eigen::Matrix<local_scalar_t__, -1, -1>(N, N);
+        cov = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, N, N);
         stan::math::fill(cov, DUMMY_VAR__);
         
         current_statement__ = 7;
@@ -203,7 +206,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         current_statement__ = 8;
         validate_non_negative_index("L_cov", "N", N);
         Eigen::Matrix<local_scalar_t__, -1, -1> L_cov;
-        L_cov = Eigen::Matrix<local_scalar_t__, -1, -1>(N, N);
+        L_cov = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, N, N);
         stan::math::fill(L_cov, DUMMY_VAR__);
         
         current_statement__ = 11;

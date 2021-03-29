@@ -820,20 +820,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
   
   distributions_model(stan::io::var_context& context__,
                       unsigned int random_seed__ = 0,
-                      std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                      model_arena_(), 
-                      d_int(stan::io::initialize_data<int>("d_int",
-                      context__)),
-                      d_int_array(stan::io::initialize_data<std::vector<int>>("d_int_array",
-                      model_arena_  , d_int )),
-                      d_real(stan::io::initialize_data<double>("d_real",
-                      context__)),
-                      d_real_array(stan::io::initialize_data<std::vector<double>>("d_real_array",
-                      model_arena_  , d_int )),
-                      d_vector(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("d_vector",
-                      model_arena_, d_int)),
-                      d_row_vector(stan::io::initialize_data<Eigen::Matrix<double, 1, -1>>("d_row_vector",
-                      model_arena_, d_int)) {
+                      std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -849,28 +836,44 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       
       pos__ = 1;
       current_statement__ = 756;
+      context__.validate_dims("data initialization","d_int","int",
+          context__.to_vec());
+      d_int = std::numeric_limits<int>::min();
       
       current_statement__ = 756;
       d_int = context__.vals_i("d_int")[(1 - 1)];
       current_statement__ = 757;
       validate_non_negative_index("d_int_array", "d_int", d_int);
       current_statement__ = 758;
+      context__.validate_dims("data initialization","d_int_array","int",
+          context__.to_vec(d_int));
+      d_int_array = stan::io::initialize_data<std::vector<int>>(model_arena_, d_int );
       
       current_statement__ = 758;
       d_int_array = context__.vals_i("d_int_array");
       current_statement__ = 759;
+      context__.validate_dims("data initialization","d_real","double",
+          context__.to_vec());
+      d_real = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 759;
       d_real = context__.vals_r("d_real")[(1 - 1)];
       current_statement__ = 760;
       validate_non_negative_index("d_real_array", "d_int", d_int);
       current_statement__ = 761;
+      context__.validate_dims("data initialization","d_real_array","double",
+          context__.to_vec(d_int));
+      d_real_array = stan::io::initialize_data<std::vector<double>>(model_arena_, d_int );
       
       current_statement__ = 761;
       d_real_array = context__.vals_r("d_real_array");
       current_statement__ = 762;
       validate_non_negative_index("d_vector", "d_int", d_int);
       current_statement__ = 763;
+      context__.validate_dims("data initialization","d_vector","double",
+          context__.to_vec(d_int));
+      d_vector = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, d_int);
+      stan::math::fill(d_vector, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> d_vector_flat__;
@@ -889,6 +892,10 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       current_statement__ = 764;
       validate_non_negative_index("d_row_vector", "d_int", d_int);
       current_statement__ = 765;
+      context__.validate_dims("data initialization","d_row_vector","double",
+          context__.to_vec(d_int));
+      d_row_vector = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, d_int);
+      stan::math::fill(d_row_vector, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> d_row_vector_flat__;
@@ -967,26 +974,26 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       current_statement__ = 1;
       p_real = in__.template read<local_scalar_t__>();
       std::vector<local_scalar_t__> p_real_array;
-      p_real_array = std::vector<local_scalar_t__>(d_int, DUMMY_VAR__);
+      p_real_array = stan::io::initialize_data<std::vector<local_scalar_t__>>(model_arena_, d_int );
       
       current_statement__ = 2;
       p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_matrix;
-      p_matrix = Eigen::Matrix<local_scalar_t__, -1, -1>(d_int, d_int);
+      p_matrix = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, d_int, d_int);
       stan::math::fill(p_matrix, DUMMY_VAR__);
       
       current_statement__ = 3;
       p_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                    d_int, d_int);
       Eigen::Matrix<local_scalar_t__, -1, 1> p_vector;
-      p_vector = Eigen::Matrix<local_scalar_t__, -1, 1>(d_int);
+      p_vector = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, d_int);
       stan::math::fill(p_vector, DUMMY_VAR__);
       
       current_statement__ = 4;
       p_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                    d_int);
       Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vector;
-      p_row_vector = Eigen::Matrix<local_scalar_t__, 1, -1>(d_int);
+      p_row_vector = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, d_int);
       stan::math::fill(p_row_vector, DUMMY_VAR__);
       
       current_statement__ = 5;
@@ -3511,26 +3518,26 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       current_statement__ = 1;
       p_real = in__.template read<local_scalar_t__>();
       std::vector<double> p_real_array;
-      p_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
+      p_real_array = stan::io::initialize_data<std::vector<double>>(model_arena_, d_int );
       
       current_statement__ = 2;
       p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
       Eigen::Matrix<double, -1, -1> p_matrix;
-      p_matrix = Eigen::Matrix<double, -1, -1>(d_int, d_int);
+      p_matrix = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, d_int, d_int);
       stan::math::fill(p_matrix, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
       p_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                    d_int, d_int);
       Eigen::Matrix<double, -1, 1> p_vector;
-      p_vector = Eigen::Matrix<double, -1, 1>(d_int);
+      p_vector = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, d_int);
       stan::math::fill(p_vector, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 4;
       p_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                    d_int);
       Eigen::Matrix<double, 1, -1> p_row_vector;
-      p_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
+      p_row_vector = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, d_int);
       stan::math::fill(p_row_vector, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
@@ -6065,12 +6072,12 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       current_statement__ = 1;
       p_real = context__.vals_r("p_real")[(1 - 1)];
       std::vector<double> p_real_array;
-      p_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
+      p_real_array = stan::io::initialize_data<std::vector<double>>(model_arena_, d_int );
       
       current_statement__ = 2;
       p_real_array = context__.vals_r("p_real_array");
       Eigen::Matrix<double, -1, -1> p_matrix;
-      p_matrix = Eigen::Matrix<double, -1, -1>(d_int, d_int);
+      p_matrix = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, d_int, d_int);
       stan::math::fill(p_matrix, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -6091,7 +6098,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
             pos__ = (pos__ + 1);}}
       }
       Eigen::Matrix<double, -1, 1> p_vector;
-      p_vector = Eigen::Matrix<double, -1, 1>(d_int);
+      p_vector = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, d_int);
       stan::math::fill(p_vector, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -6109,7 +6116,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
           pos__ = (pos__ + 1);}
       }
       Eigen::Matrix<double, 1, -1> p_row_vector;
-      p_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
+      p_row_vector = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, d_int);
       stan::math::fill(p_row_vector, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -6441,19 +6448,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
   
   restricted_model(stan::io::var_context& context__,
                    unsigned int random_seed__ = 0,
-                   std::ostream* pstream__ = nullptr) : model_base_crtp(0), 
-                   model_arena_(), 
-                   d_int(stan::io::initialize_data<int>("d_int", context__)),
-                   d_int_array(stan::io::initialize_data<std::vector<int>>("d_int_array",
-                   model_arena_  , d_int )),
-                   d_real(stan::io::initialize_data<double>("d_real",
-                   context__)),
-                   d_real_array(stan::io::initialize_data<std::vector<double>>("d_real_array",
-                   model_arena_  , d_int )),
-                   d_vector(stan::io::initialize_data<Eigen::Matrix<double, -1, 1>>("d_vector",
-                   model_arena_, d_int)),
-                   d_row_vector(stan::io::initialize_data<Eigen::Matrix<double, 1, -1>>("d_row_vector",
-                   model_arena_, d_int)) {
+                   std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
@@ -6469,28 +6464,44 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       
       pos__ = 1;
       current_statement__ = 25;
+      context__.validate_dims("data initialization","d_int","int",
+          context__.to_vec());
+      d_int = std::numeric_limits<int>::min();
       
       current_statement__ = 25;
       d_int = context__.vals_i("d_int")[(1 - 1)];
       current_statement__ = 26;
       validate_non_negative_index("d_int_array", "d_int", d_int);
       current_statement__ = 27;
+      context__.validate_dims("data initialization","d_int_array","int",
+          context__.to_vec(d_int));
+      d_int_array = stan::io::initialize_data<std::vector<int>>(model_arena_, d_int );
       
       current_statement__ = 27;
       d_int_array = context__.vals_i("d_int_array");
       current_statement__ = 28;
+      context__.validate_dims("data initialization","d_real","double",
+          context__.to_vec());
+      d_real = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 28;
       d_real = context__.vals_r("d_real")[(1 - 1)];
       current_statement__ = 29;
       validate_non_negative_index("d_real_array", "d_int", d_int);
       current_statement__ = 30;
+      context__.validate_dims("data initialization","d_real_array","double",
+          context__.to_vec(d_int));
+      d_real_array = stan::io::initialize_data<std::vector<double>>(model_arena_, d_int );
       
       current_statement__ = 30;
       d_real_array = context__.vals_r("d_real_array");
       current_statement__ = 31;
       validate_non_negative_index("d_vector", "d_int", d_int);
       current_statement__ = 32;
+      context__.validate_dims("data initialization","d_vector","double",
+          context__.to_vec(d_int));
+      d_vector = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, d_int);
+      stan::math::fill(d_vector, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> d_vector_flat__;
@@ -6509,6 +6520,10 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       current_statement__ = 33;
       validate_non_negative_index("d_row_vector", "d_int", d_int);
       current_statement__ = 34;
+      context__.validate_dims("data initialization","d_row_vector","double",
+          context__.to_vec(d_int));
+      d_row_vector = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, d_int);
+      stan::math::fill(d_row_vector, std::numeric_limits<double>::quiet_NaN());
       
       {
         std::vector<local_scalar_t__> d_row_vector_flat__;
@@ -6581,26 +6596,26 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       current_statement__ = 1;
       p_real = in__.template read<local_scalar_t__>();
       std::vector<local_scalar_t__> p_real_array;
-      p_real_array = std::vector<local_scalar_t__>(d_int, DUMMY_VAR__);
+      p_real_array = stan::io::initialize_data<std::vector<local_scalar_t__>>(model_arena_, d_int );
       
       current_statement__ = 2;
       p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_matrix;
-      p_matrix = Eigen::Matrix<local_scalar_t__, -1, -1>(d_int, d_int);
+      p_matrix = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, d_int, d_int);
       stan::math::fill(p_matrix, DUMMY_VAR__);
       
       current_statement__ = 3;
       p_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                    d_int, d_int);
       Eigen::Matrix<local_scalar_t__, -1, 1> p_vector;
-      p_vector = Eigen::Matrix<local_scalar_t__, -1, 1>(d_int);
+      p_vector = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, d_int);
       stan::math::fill(p_vector, DUMMY_VAR__);
       
       current_statement__ = 4;
       p_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                    d_int);
       Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vector;
-      p_row_vector = Eigen::Matrix<local_scalar_t__, 1, -1>(d_int);
+      p_row_vector = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, d_int);
       stan::math::fill(p_row_vector, DUMMY_VAR__);
       
       current_statement__ = 5;
@@ -6694,26 +6709,26 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       current_statement__ = 1;
       p_real = in__.template read<local_scalar_t__>();
       std::vector<double> p_real_array;
-      p_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
+      p_real_array = stan::io::initialize_data<std::vector<double>>(model_arena_, d_int );
       
       current_statement__ = 2;
       p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
       Eigen::Matrix<double, -1, -1> p_matrix;
-      p_matrix = Eigen::Matrix<double, -1, -1>(d_int, d_int);
+      p_matrix = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, d_int, d_int);
       stan::math::fill(p_matrix, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
       p_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                    d_int, d_int);
       Eigen::Matrix<double, -1, 1> p_vector;
-      p_vector = Eigen::Matrix<double, -1, 1>(d_int);
+      p_vector = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, d_int);
       stan::math::fill(p_vector, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 4;
       p_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                    d_int);
       Eigen::Matrix<double, 1, -1> p_row_vector;
-      p_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
+      p_row_vector = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, d_int);
       stan::math::fill(p_row_vector, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
@@ -6817,12 +6832,12 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       current_statement__ = 1;
       p_real = context__.vals_r("p_real")[(1 - 1)];
       std::vector<double> p_real_array;
-      p_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
+      p_real_array = stan::io::initialize_data<std::vector<double>>(model_arena_, d_int );
       
       current_statement__ = 2;
       p_real_array = context__.vals_r("p_real_array");
       Eigen::Matrix<double, -1, -1> p_matrix;
-      p_matrix = Eigen::Matrix<double, -1, -1>(d_int, d_int);
+      p_matrix = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, d_int, d_int);
       stan::math::fill(p_matrix, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -6843,7 +6858,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
             pos__ = (pos__ + 1);}}
       }
       Eigen::Matrix<double, -1, 1> p_vector;
-      p_vector = Eigen::Matrix<double, -1, 1>(d_int);
+      p_vector = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, d_int);
       stan::math::fill(p_vector, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -6861,7 +6876,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
           pos__ = (pos__ + 1);}
       }
       Eigen::Matrix<double, 1, -1> p_row_vector;
-      p_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
+      p_row_vector = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, d_int);
       stan::math::fill(p_row_vector, std::numeric_limits<double>::quiet_NaN());
       
       {
