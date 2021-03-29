@@ -13,7 +13,10 @@ exception SyntaxError of syntax_error
     [msg], occurring at location [loc]. *)
 exception SemanticError of Semantic_error.t
 
-type t = Syntax_error of syntax_error | Semantic_error of Semantic_error.t
+type t =
+  | FileNotFound of string
+  | Syntax_error of syntax_error
+  | Semantic_error of Semantic_error.t
 
 val pp : ?printed_filename:string -> t Fmt.t
 val to_string : t -> string
