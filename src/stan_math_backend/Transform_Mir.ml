@@ -51,7 +51,7 @@ let opencl_supported_functions =
 let opencl_suffix = "_opencl__"
 
 let to_matrix_cl e =
-  Expr.Fixed.{e with pattern= FunApp (StanLib, "to_matrix_cl", [e])}
+  Expr.Fixed.{e with pattern= FunApp (StanLib "to_matrix_cl", [e])}
 
 let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
     =
@@ -80,11 +80,11 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
     Set.mem opencl_supported_functions (Utils.stdlib_distribution_name f)
   in
   match pattern with
-  | FunApp (StanLib, f, args) when is_fn_opencl_supported f ->
+  | FunApp (StanLib f, args) when is_fn_opencl_supported f ->
       let trigger =
         Map.find opencl_trigger_restrictions (Utils.stdlib_distribution_name f)
       in
-      {e with pattern= FunApp (StanLib, f, maybe_map_args args trigger)}
+      {e with pattern= FunApp (StanLib f, maybe_map_args args trigger)}
   | x ->
       { e with
         pattern=
@@ -254,8 +254,10 @@ let escape_name str =
 
 let rec add_jacobians Stmt.Fixed.({meta= smeta; pattern}) =
   match pattern with
-  | Assignment (lhs, {pattern= FunApp (CompilerInternal, f, args); meta= emeta})
-    when Internal_fun.of_string_opt f = Some FnConstrain ->
+  | Assignment
+      ( lhs
+      , { pattern= FunApp (CompilerInternal (FnConstrain trans), args)
+        ; meta= emeta } ) ->
       let var n = Expr.{Fixed.pattern= Var n; meta= Typed.Meta.empty} in
       let assign rhs =
         Stmt.{Fixed.pattern= Assignment (lhs, rhs); meta= smeta}
@@ -265,11 +267,14 @@ let rec add_jacobians Stmt.Fixed.({meta= smeta; pattern}) =
             ( var "jacobian__"
             , assign
                 { Expr.Fixed.pattern=
-                    FunApp (CompilerInternal, f, args @ [var "lp__"])
+                    FunApp
+                      ( CompilerInternal (FnConstrain trans)
+                      , args @ [var "lp__"] )
                 ; meta= emeta }
             , Some
                 (assign
-                   { Expr.Fixed.pattern= FunApp (CompilerInternal, f, args)
+                   { Expr.Fixed.pattern=
+                       FunApp (CompilerInternal (FnConstrain trans), args)
                    ; meta= emeta }) )
       ; meta= smeta }
   | ptn ->
@@ -420,9 +425,11 @@ let constrain_in_params outvars stmts =
   let rec change_constrain_target (Stmt.Fixed.({pattern; _}) as s) =
     match pattern with
     | Assignment
-        (lval, {pattern= FunApp (CompilerInternal, f, var :: args); meta})
-      when Internal_fun.of_string_opt f = Some FnConstrain
-           && contains_var_expr (Set.mem target_vars) false var ->
+        ( lval
+        , { pattern=
+              FunApp ((CompilerInternal (FnConstrain _) as kind), var :: args)
+          ; meta } )
+      when contains_var_expr (Set.mem target_vars) false var ->
         let rec change_var_expr (Expr.Fixed.({pattern; _}) as e) =
           match pattern with
           | Var vident when Set.mem target_vars vident ->
@@ -435,9 +442,8 @@ let constrain_in_params outvars stmts =
             pattern=
               Assignment
                 ( lval
-                , { pattern=
-                      FunApp (CompilerInternal, f, change_var_expr var :: args)
-                  ; meta } ) }
+                , {pattern= FunApp (kind, change_var_expr var :: args); meta}
+                ) }
     | pattern ->
         Stmt.Fixed.
           {s with pattern= Pattern.map Fn.id change_constrain_target pattern}
@@ -452,8 +458,8 @@ let rec map_fn_names s =
     let pattern =
       Expr.Fixed.(
         match e.pattern with
-        | FunApp (k, f, a) when Map.mem fn_name_map f ->
-            Pattern.FunApp (k, Map.find_exn fn_name_map f, a)
+        | FunApp (StanLib f, a) when Map.mem fn_name_map f ->
+            Pattern.FunApp (StanLib (Map.find_exn fn_name_map f), a)
         | expr -> Pattern.map map_fn_names_expr expr)
     in
     {e with pattern}
@@ -461,8 +467,8 @@ let rec map_fn_names s =
   let stmt =
     Stmt.Fixed.(
       match s.pattern with
-      | NRFunApp (k, f, a) when Map.mem fn_name_map f ->
-          Pattern.NRFunApp (k, Map.find_exn fn_name_map f, a)
+      | NRFunApp (StanLib f, a) when Map.mem fn_name_map f ->
+          Pattern.NRFunApp (StanLib (Map.find_exn fn_name_map f), a)
       | stmt -> Pattern.map map_fn_names_expr map_fn_names stmt)
   in
   {s with pattern= stmt}
@@ -496,7 +502,7 @@ let%expect_test "collect vars expr" =
   let args = List.map ~f:mkvar ["y"; "x_opencl__"; "z"; "w_opencl__"] in
   let fnapp =
     Expr.
-      {Fixed.pattern= FunApp (StanLib, "print", args); meta= Typed.Meta.empty}
+      {Fixed.pattern= FunApp (StanLib "print", args); meta= Typed.Meta.empty}
   in
   Stmt.Fixed.{pattern= TargetPE fnapp; meta= Location_span.empty}
   |> collect_opencl_vars |> String.Set.sexp_of_t |> print_s ;
@@ -564,7 +570,7 @@ let trans_prog (p : Program.Typed.t) =
     match pattern with
     | IfElse
         ( { pattern=
-              FunApp (_, _, [{pattern= Var "emit_generated_quantities__"; _}]); _
+              FunApp (_, [{pattern= Var "emit_generated_quantities__"; _}]); _
           }
         , _
         , _ ) ->

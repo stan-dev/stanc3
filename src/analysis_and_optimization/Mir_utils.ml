@@ -30,7 +30,7 @@ let rec num_expr_value (v : Expr.Typed.t) : (float * string) option =
   | {pattern= Fixed.Pattern.Lit (Real, str); _}
    |{pattern= Fixed.Pattern.Lit (Int, str); _} ->
       Some (float_of_string str, str)
-  | {pattern= Fixed.Pattern.FunApp (StanLib, "PMinus__", [v]); _} -> (
+  | {pattern= Fixed.Pattern.FunApp (StanLib "PMinus__", [v]); _} -> (
     match num_expr_value v with
     | Some (v, s) -> Some (-.v, "-" ^ s)
     | None -> None )
@@ -252,7 +252,7 @@ let rec expr_var_set Expr.Fixed.({pattern; meta}) =
   match pattern with
   | Var s -> Set.Poly.singleton (VVar s, meta)
   | Lit _ -> Set.Poly.empty
-  | FunApp (_, _, exprs) -> union_recur exprs
+  | FunApp (_, exprs) -> union_recur exprs
   | TernaryIf (expr1, expr2, expr3) -> union_recur [expr1; expr2; expr3]
   | Indexed (expr, ix) ->
       Set.Poly.union_list (expr_var_set expr :: List.map ix ~f:index_var_set)
@@ -270,7 +270,7 @@ and index_var_set ix =
 let stmt_rhs stmt =
   match stmt with
   | Stmt.Fixed.Pattern.For vars -> Set.Poly.of_list [vars.lower; vars.upper]
-  | NRFunApp (_, _, exprs) -> Set.Poly.of_list exprs
+  | NRFunApp (_, exprs) -> Set.Poly.of_list exprs
   | IfElse (rhs, _, _)
    |While (rhs, _)
    |Assignment (_, rhs)
@@ -296,7 +296,7 @@ let expr_assigned_var Expr.Fixed.({pattern; _}) =
 (** See interface file *)
 let rec summation_terms (Expr.Fixed.({pattern; _}) as rhs) =
   match pattern with
-  | FunApp (_, "Plus__", [e1; e2]) ->
+  | FunApp (StanLib "Plus__", [e1; e2]) ->
       List.append (summation_terms e1) (summation_terms e2)
   | _ -> [rhs]
 
@@ -356,7 +356,7 @@ let expr_subst_stmt m = map_rec_stmt_loc (expr_subst_stmt_base m)
 let rec expr_depth Expr.Fixed.({pattern; _}) =
   match pattern with
   | Var _ | Lit (_, _) -> 0
-  | FunApp (_, _, l) ->
+  | FunApp (_, l) ->
       1
       + Option.value ~default:0
           (List.max_elt ~compare:compare_int (List.map ~f:expr_depth l))
@@ -394,9 +394,9 @@ let rec update_expr_ad_levels autodiffable_variables
         Expr.Typed.{e with meta= Meta.{e.meta with adlevel= AutoDiffable}}
       else {e with meta= {e.meta with adlevel= DataOnly}}
   | Lit (_, _) -> {e with meta= {e.meta with adlevel= DataOnly}}
-  | FunApp (o, f, l) ->
+  | FunApp (kind, l) ->
       let l = List.map ~f:(update_expr_ad_levels autodiffable_variables) l in
-      {pattern= FunApp (o, f, l); meta= {e.meta with adlevel= ad_level_sup l}}
+      {pattern= FunApp (kind, l); meta= {e.meta with adlevel= ad_level_sup l}}
   | TernaryIf (e1, e2, e3) ->
       let e1 = update_expr_ad_levels autodiffable_variables e1 in
       let e2 = update_expr_ad_levels autodiffable_variables e2 in

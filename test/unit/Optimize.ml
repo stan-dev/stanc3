@@ -25,8 +25,8 @@ let%expect_test "map_rec_stmt_loc" =
       |}
   in
   let f = function
-    | Stmt.Fixed.Pattern.NRFunApp (CompilerInternal, "FnPrint__", [s]) ->
-        Stmt.Fixed.Pattern.NRFunApp (CompilerInternal, "FnPrint__", [s; s])
+    | Stmt.Fixed.Pattern.NRFunApp (CompilerInternal FnPrint, [s]) ->
+        Stmt.Fixed.Pattern.NRFunApp (CompilerInternal FnPrint, [s; s])
     | x -> x
   in
   let mir = Program.map Fn.id (map_rec_stmt_loc f) mir in
@@ -66,9 +66,8 @@ let%expect_test "map_rec_state_stmt_loc" =
       |}
   in
   let f i = function
-    | Stmt.Fixed.Pattern.NRFunApp (CompilerInternal, "FnPrint__", [s]) ->
-        Stmt.Fixed.Pattern.
-          (NRFunApp (CompilerInternal, "FnPrint__", [s; s]), i + 1)
+    | Stmt.Fixed.Pattern.NRFunApp (CompilerInternal FnPrint, [s]) ->
+        Stmt.Fixed.Pattern.(NRFunApp (CompilerInternal FnPrint, [s; s]), i + 1)
     | x -> (x, i)
   in
   let mir_stmt, num =
