@@ -75,7 +75,7 @@ simple_SIR(const T0__& t, const std::vector<T1__>& y,
     double lcm_sym1__;
     {
       std::vector<local_scalar_t__> dydt;
-      dydt = stan::io::initialize_data<std::vector<local_scalar_t__>>(model_arena_, 4 );
+      dydt = std::vector<local_scalar_t__>(4, DUMMY_VAR__);
       
       current_statement__ = 30;
       assign(dydt,
@@ -310,11 +310,11 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       delta = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
       std::vector<std::vector<local_scalar_t__>> y;
-      y = stan::io::initialize_data<std::vector<std::vector<local_scalar_t__>>>(model_arena_, N_t , 4 );
+      y = std::vector<std::vector<local_scalar_t__>>(N_t, std::vector<local_scalar_t__>(4, DUMMY_VAR__));
       
       {
         std::vector<double> theta;
-        theta = stan::io::initialize_data<std::vector<double>>(model_arena_, 5 );
+        theta = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
         
         assign(lcm_sym28__, std::vector<local_scalar_t__>{beta,
           stan::math::promote_scalar<local_scalar_t__>(1000000), gamma, xi,
@@ -496,7 +496,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       delta = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
       std::vector<std::vector<double>> y;
-      y = stan::io::initialize_data<std::vector<std::vector<double>>>(model_arena_, N_t , 4 );
+      y = std::vector<std::vector<double>>(N_t, std::vector<double>(4, std::numeric_limits<double>::quiet_NaN()));
       
       vars__.emplace_back(beta);
       vars__.emplace_back(gamma);
@@ -508,7 +508,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       } 
       {
         std::vector<double> theta;
-        theta = stan::io::initialize_data<std::vector<double>>(model_arena_, 5 );
+        theta = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
         
         assign(lcm_sym9__, std::vector<double>{beta,
           stan::math::promote_scalar<double>(1000000), gamma, xi, delta},
@@ -1100,7 +1100,7 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
       current_statement__ = 15;
       validate_non_negative_index("chi", "n_occasions", n_occasions);
       Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-      chi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, n_occasions);
+      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
       stan::math::fill(chi, DUMMY_VAR__);
       
       current_statement__ = 66;
@@ -1859,24 +1859,22 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                  0, 1, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
-      beta = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, max_age);
+      beta = Eigen::Matrix<local_scalar_t__, -1, 1>(max_age);
       stan::math::fill(beta, DUMMY_VAR__);
       
       current_statement__ = 2;
       beta = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                0, 1, lp__, max_age);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
-      phi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, 
-        (n_occasions - 1));
+      phi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(phi, DUMMY_VAR__);
       
       Eigen::Matrix<local_scalar_t__, -1, -1> p;
-      p = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, 
-        (n_occasions - 1));
+      p = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(p, DUMMY_VAR__);
       
       Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-      chi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, n_occasions);
+      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
       stan::math::fill(chi, DUMMY_VAR__);
       
       lcm_sym104__ = logical_gte(nind, 1);
@@ -1966,7 +1964,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
         current_statement__ = 15;
         validate_non_negative_index("chi", "n_occasions", n_occasions);
         Eigen::Matrix<local_scalar_t__, -1, -1> inline_sym10__;
-        inline_sym10__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, n_occasions);
+        inline_sym10__ = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
         stan::math::fill(inline_sym10__, DUMMY_VAR__);
         
         for (int inline_sym14__ = 1; inline_sym14__ <= nind; ++inline_sym14__) {
@@ -2398,24 +2396,22 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                  0, 1, lp__);
       Eigen::Matrix<double, -1, 1> beta;
-      beta = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, max_age);
+      beta = Eigen::Matrix<double, -1, 1>(max_age);
       stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
       beta = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                0, 1, lp__, max_age);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
-      phi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, 
-        (n_occasions - 1));
+      phi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(phi, DUMMY_VAR__);
       
       Eigen::Matrix<double, -1, -1> p;
-      p = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, 
-        (n_occasions - 1));
+      p = Eigen::Matrix<double, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(p, std::numeric_limits<double>::quiet_NaN());
       
       Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-      chi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, n_occasions);
+      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
       stan::math::fill(chi, DUMMY_VAR__);
       
       vars__.emplace_back(mean_p);
@@ -2515,7 +2511,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
         current_statement__ = 15;
         validate_non_negative_index("chi", "n_occasions", n_occasions);
         Eigen::Matrix<local_scalar_t__, -1, -1> inline_sym2__;
-        inline_sym2__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, n_occasions);
+        inline_sym2__ = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
         stan::math::fill(inline_sym2__, DUMMY_VAR__);
         
         for (int inline_sym6__ = 1; inline_sym6__ <= nind; ++inline_sym6__) {
@@ -2890,7 +2886,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       current_statement__ = 1;
       mean_p_free__ = stan::math::lub_free(mean_p, 0, 1);
       Eigen::Matrix<double, -1, 1> beta;
-      beta = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, max_age);
+      beta = Eigen::Matrix<double, -1, 1>(max_age);
       stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -2915,7 +2911,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
         } 
       }
       Eigen::Matrix<double, -1, 1> beta_free__;
-      beta_free__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, max_age);
+      beta_free__ = Eigen::Matrix<double, -1, 1>(max_age);
       stan::math::fill(beta_free__, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
@@ -3779,35 +3775,35 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       current_statement__ = 11;
       b_v_prev = in__.template read<local_scalar_t__>();
       Eigen::Matrix<local_scalar_t__, -1, 1> b_age;
-      b_age = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_age);
+      b_age = Eigen::Matrix<local_scalar_t__, -1, 1>(n_age);
       stan::math::fill(b_age, DUMMY_VAR__);
       
       current_statement__ = 12;
       b_age = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                 n_age);
       Eigen::Matrix<local_scalar_t__, -1, 1> b_edu;
-      b_edu = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_edu);
+      b_edu = Eigen::Matrix<local_scalar_t__, -1, 1>(n_edu);
       stan::math::fill(b_edu, DUMMY_VAR__);
       
       current_statement__ = 13;
       b_edu = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                 n_edu);
       Eigen::Matrix<local_scalar_t__, -1, 1> b_region;
-      b_region = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_region);
+      b_region = Eigen::Matrix<local_scalar_t__, -1, 1>(n_region);
       stan::math::fill(b_region, DUMMY_VAR__);
       
       current_statement__ = 14;
       b_region = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                    n_region);
       Eigen::Matrix<local_scalar_t__, -1, -1> b_age_edu;
-      b_age_edu = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, n_age, n_edu);
+      b_age_edu = Eigen::Matrix<local_scalar_t__, -1, -1>(n_age, n_edu);
       stan::math::fill(b_age_edu, DUMMY_VAR__);
       
       current_statement__ = 15;
       b_age_edu = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                     n_age, n_edu);
       Eigen::Matrix<local_scalar_t__, -1, 1> b_hat;
-      b_hat = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_state);
+      b_hat = Eigen::Matrix<local_scalar_t__, -1, 1>(n_state);
       stan::math::fill(b_hat, DUMMY_VAR__);
       
       current_statement__ = 16;
@@ -3817,13 +3813,13 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         current_statement__ = 17;
         validate_non_negative_index("p", "N", N);
         Eigen::Matrix<local_scalar_t__, -1, 1> p;
-        p = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, N);
+        p = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
         stan::math::fill(p, DUMMY_VAR__);
         
         current_statement__ = 19;
         validate_non_negative_index("b_state_hat", "n_state", n_state);
         Eigen::Matrix<local_scalar_t__, -1, 1> b_state_hat;
-        b_state_hat = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_state);
+        b_state_hat = Eigen::Matrix<local_scalar_t__, -1, 1>(n_state);
         stan::math::fill(b_state_hat, DUMMY_VAR__);
         
         current_statement__ = 21;
@@ -4059,35 +4055,35 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       current_statement__ = 11;
       b_v_prev = in__.template read<local_scalar_t__>();
       Eigen::Matrix<double, -1, 1> b_age;
-      b_age = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_age);
+      b_age = Eigen::Matrix<double, -1, 1>(n_age);
       stan::math::fill(b_age, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 12;
       b_age = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                 n_age);
       Eigen::Matrix<double, -1, 1> b_edu;
-      b_edu = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_edu);
+      b_edu = Eigen::Matrix<double, -1, 1>(n_edu);
       stan::math::fill(b_edu, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 13;
       b_edu = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                 n_edu);
       Eigen::Matrix<double, -1, 1> b_region;
-      b_region = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_region);
+      b_region = Eigen::Matrix<double, -1, 1>(n_region);
       stan::math::fill(b_region, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 14;
       b_region = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                    n_region);
       Eigen::Matrix<double, -1, -1> b_age_edu;
-      b_age_edu = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, n_age, n_edu);
+      b_age_edu = Eigen::Matrix<double, -1, -1>(n_age, n_edu);
       stan::math::fill(b_age_edu, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 15;
       b_age_edu = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                     n_age, n_edu);
       Eigen::Matrix<double, -1, 1> b_hat;
-      b_hat = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_state);
+      b_hat = Eigen::Matrix<double, -1, 1>(n_state);
       stan::math::fill(b_hat, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 16;
@@ -4288,7 +4284,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       current_statement__ = 11;
       b_v_prev = context__.vals_r("b_v_prev")[(1 - 1)];
       Eigen::Matrix<double, -1, 1> b_age;
-      b_age = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_age);
+      b_age = Eigen::Matrix<double, -1, 1>(n_age);
       stan::math::fill(b_age, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -4313,7 +4309,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         } 
       }
       Eigen::Matrix<double, -1, 1> b_edu;
-      b_edu = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_edu);
+      b_edu = Eigen::Matrix<double, -1, 1>(n_edu);
       stan::math::fill(b_edu, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -4338,7 +4334,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         } 
       }
       Eigen::Matrix<double, -1, 1> b_region;
-      b_region = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_region);
+      b_region = Eigen::Matrix<double, -1, 1>(n_region);
       stan::math::fill(b_region, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -4364,7 +4360,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         } 
       }
       Eigen::Matrix<double, -1, -1> b_age_edu;
-      b_age_edu = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, n_age, n_edu);
+      b_age_edu = Eigen::Matrix<double, -1, -1>(n_age, n_edu);
       stan::math::fill(b_age_edu, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -4411,7 +4407,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         } 
       }
       Eigen::Matrix<double, -1, 1> b_hat;
-      b_hat = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_state);
+      b_hat = Eigen::Matrix<double, -1, 1>(n_state);
       stan::math::fill(b_hat, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -5603,14 +5599,14 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       double lcm_sym17__;
       int lcm_sym16__;
       Eigen::Matrix<local_scalar_t__, -1, 1> mu;
-      mu = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, 2);
+      mu = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(mu, DUMMY_VAR__);
       
       current_statement__ = 1;
       mu = in__.template read_constrain_ordered<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
              lp__, 2);
       std::vector<local_scalar_t__> sigma;
-      sigma = stan::io::initialize_data<std::vector<local_scalar_t__>>(model_arena_, 2 );
+      sigma = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
       
       current_statement__ = 2;
       sigma = in__.template read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(
@@ -5690,14 +5686,14 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       int lcm_sym11__;
       int lcm_sym10__;
       Eigen::Matrix<double, -1, 1> mu;
-      mu = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, 2);
+      mu = Eigen::Matrix<double, -1, 1>(2);
       stan::math::fill(mu, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 1;
       mu = in__.template read_constrain_ordered<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
              lp__, 2);
       std::vector<double> sigma;
-      sigma = stan::io::initialize_data<std::vector<double>>(model_arena_, 2 );
+      sigma = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
       sigma = in__.template read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(
@@ -5761,7 +5757,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       
       pos__ = 1;
       Eigen::Matrix<double, -1, 1> mu;
-      mu = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, 2);
+      mu = Eigen::Matrix<double, -1, 1>(2);
       stan::math::fill(mu, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -5786,19 +5782,19 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
         }
       }
       Eigen::Matrix<double, -1, 1> mu_free__;
-      mu_free__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, 2);
+      mu_free__ = Eigen::Matrix<double, -1, 1>(2);
       stan::math::fill(mu_free__, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 1;
       assign(mu_free__, stan::math::ordered_free(mu),
         "assigning variable mu_free__");
       std::vector<double> sigma;
-      sigma = stan::io::initialize_data<std::vector<double>>(model_arena_, 2 );
+      sigma = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
       sigma = context__.vals_r("sigma");
       std::vector<double> sigma_free__;
-      sigma_free__ = stan::io::initialize_data<std::vector<double>>(model_arena_, 2 );
+      sigma_free__ = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
       {
         current_statement__ = 2;
@@ -6172,7 +6168,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       current_statement__ = 1;
       mu = in__.template read<local_scalar_t__>();
       std::vector<local_scalar_t__> theta;
-      theta = stan::io::initialize_data<std::vector<local_scalar_t__>>(model_arena_, J );
+      theta = std::vector<local_scalar_t__>(J, DUMMY_VAR__);
       
       current_statement__ = 2;
       theta = in__.template read<std::vector<local_scalar_t__>>(J);
@@ -6231,7 +6227,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       current_statement__ = 1;
       mu = in__.template read<local_scalar_t__>();
       std::vector<double> theta;
-      theta = stan::io::initialize_data<std::vector<double>>(model_arena_, J );
+      theta = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
       theta = in__.template read<std::vector<local_scalar_t__>>(J);
@@ -6287,7 +6283,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       current_statement__ = 1;
       mu = context__.vals_r("mu")[(1 - 1)];
       std::vector<double> theta;
-      theta = stan::io::initialize_data<std::vector<double>>(model_arena_, J );
+      theta = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
       theta = context__.vals_r("theta");
@@ -7109,39 +7105,39 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       double lcm_sym56__;
       int lcm_sym55__;
       Eigen::Matrix<local_scalar_t__, -1, 1> a;
-      a = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_age);
+      a = Eigen::Matrix<local_scalar_t__, -1, 1>(n_age);
       stan::math::fill(a, DUMMY_VAR__);
       
       current_statement__ = 1;
       a = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_age);
       Eigen::Matrix<local_scalar_t__, -1, 1> b;
-      b = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_edu);
+      b = Eigen::Matrix<local_scalar_t__, -1, 1>(n_edu);
       stan::math::fill(b, DUMMY_VAR__);
       
       current_statement__ = 2;
       b = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_edu);
       Eigen::Matrix<local_scalar_t__, -1, 1> c;
-      c = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_age_edu);
+      c = Eigen::Matrix<local_scalar_t__, -1, 1>(n_age_edu);
       stan::math::fill(c, DUMMY_VAR__);
       
       current_statement__ = 3;
       c = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
             n_age_edu);
       Eigen::Matrix<local_scalar_t__, -1, 1> d;
-      d = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_state);
+      d = Eigen::Matrix<local_scalar_t__, -1, 1>(n_state);
       stan::math::fill(d, DUMMY_VAR__);
       
       current_statement__ = 4;
       d = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_state);
       Eigen::Matrix<local_scalar_t__, -1, 1> e;
-      e = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_region_full);
+      e = Eigen::Matrix<local_scalar_t__, -1, 1>(n_region_full);
       stan::math::fill(e, DUMMY_VAR__);
       
       current_statement__ = 5;
       e = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
             n_region_full);
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
-      beta = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, 5);
+      beta = Eigen::Matrix<local_scalar_t__, -1, 1>(5);
       stan::math::fill(beta, DUMMY_VAR__);
       
       current_statement__ = 6;
@@ -7177,7 +7173,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       sigma_e = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                   0, 100, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat;
-      y_hat = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, N);
+      y_hat = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(y_hat, DUMMY_VAR__);
       
       current_statement__ = 14;
@@ -7304,39 +7300,39 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       int lcm_sym32__;
       int lcm_sym31__;
       Eigen::Matrix<double, -1, 1> a;
-      a = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_age);
+      a = Eigen::Matrix<double, -1, 1>(n_age);
       stan::math::fill(a, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 1;
       a = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_age);
       Eigen::Matrix<double, -1, 1> b;
-      b = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_edu);
+      b = Eigen::Matrix<double, -1, 1>(n_edu);
       stan::math::fill(b, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
       b = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_edu);
       Eigen::Matrix<double, -1, 1> c;
-      c = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_age_edu);
+      c = Eigen::Matrix<double, -1, 1>(n_age_edu);
       stan::math::fill(c, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
       c = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
             n_age_edu);
       Eigen::Matrix<double, -1, 1> d;
-      d = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_state);
+      d = Eigen::Matrix<double, -1, 1>(n_state);
       stan::math::fill(d, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 4;
       d = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_state);
       Eigen::Matrix<double, -1, 1> e;
-      e = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_region_full);
+      e = Eigen::Matrix<double, -1, 1>(n_region_full);
       stan::math::fill(e, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
       e = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
             n_region_full);
       Eigen::Matrix<double, -1, 1> beta;
-      beta = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, 5);
+      beta = Eigen::Matrix<double, -1, 1>(5);
       stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 6;
@@ -7372,7 +7368,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       sigma_e = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                   0, 100, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat;
-      y_hat = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, N);
+      y_hat = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(y_hat, DUMMY_VAR__);
       
       if (logical_gte(n_age, 1)) {
@@ -7539,7 +7535,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       
       pos__ = 1;
       Eigen::Matrix<double, -1, 1> a;
-      a = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_age);
+      a = Eigen::Matrix<double, -1, 1>(n_age);
       stan::math::fill(a, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -7564,7 +7560,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         } 
       }
       Eigen::Matrix<double, -1, 1> b;
-      b = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_edu);
+      b = Eigen::Matrix<double, -1, 1>(n_edu);
       stan::math::fill(b, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -7589,7 +7585,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         } 
       }
       Eigen::Matrix<double, -1, 1> c;
-      c = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_age_edu);
+      c = Eigen::Matrix<double, -1, 1>(n_age_edu);
       stan::math::fill(c, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -7614,7 +7610,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         } 
       }
       Eigen::Matrix<double, -1, 1> d;
-      d = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_state);
+      d = Eigen::Matrix<double, -1, 1>(n_state);
       stan::math::fill(d, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -7639,7 +7635,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         } 
       }
       Eigen::Matrix<double, -1, 1> e;
-      e = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_region_full);
+      e = Eigen::Matrix<double, -1, 1>(n_region_full);
       stan::math::fill(e, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -7664,7 +7660,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         } 
       }
       Eigen::Matrix<double, -1, 1> beta;
-      beta = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, 5);
+      beta = Eigen::Matrix<double, -1, 1>(5);
       stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -8384,8 +8380,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       tau_phi = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                   0, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> phi_std_raw;
-      phi_std_raw = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, 
-        (N - 1));
+      phi_std_raw = Eigen::Matrix<local_scalar_t__, -1, 1>((N - 1));
       stan::math::fill(phi_std_raw, DUMMY_VAR__);
       
       lcm_sym39__ = (N - 1);
@@ -8397,7 +8392,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       lcm_sym38__ = inv_sqrt(tau_phi);
       sigma_phi = lcm_sym38__;
       Eigen::Matrix<local_scalar_t__, -1, 1> phi;
-      phi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, N);
+      phi = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(phi, DUMMY_VAR__);
       
       current_statement__ = 5;
@@ -8484,8 +8479,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       tau_phi = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                   0, lp__);
       Eigen::Matrix<double, -1, 1> phi_std_raw;
-      phi_std_raw = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, 
-        (N - 1));
+      phi_std_raw = Eigen::Matrix<double, -1, 1>((N - 1));
       stan::math::fill(phi_std_raw, std::numeric_limits<double>::quiet_NaN());
       
       lcm_sym20__ = (N - 1);
@@ -8495,7 +8489,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       sigma_phi = std::numeric_limits<double>::quiet_NaN();
       
       Eigen::Matrix<double, -1, 1> phi;
-      phi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, N);
+      phi = Eigen::Matrix<double, -1, 1>(N);
       stan::math::fill(phi, std::numeric_limits<double>::quiet_NaN());
       
       vars__.emplace_back(tau_phi);
@@ -8551,19 +8545,19 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       sigma_theta = std::numeric_limits<double>::quiet_NaN();
       
       Eigen::Matrix<double, -1, 1> theta;
-      theta = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, N);
+      theta = Eigen::Matrix<double, -1, 1>(N);
       stan::math::fill(theta, std::numeric_limits<double>::quiet_NaN());
       
       Eigen::Matrix<double, -1, 1> theta_std;
-      theta_std = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, N);
+      theta_std = Eigen::Matrix<double, -1, 1>(N);
       stan::math::fill(theta_std, std::numeric_limits<double>::quiet_NaN());
       
       Eigen::Matrix<double, -1, 1> x;
-      x = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, N);
+      x = Eigen::Matrix<double, -1, 1>(N);
       stan::math::fill(x, std::numeric_limits<double>::quiet_NaN());
       
       std::vector<int> y;
-      y = stan::io::initialize_data<std::vector<int>>(model_arena_, N );
+      y = std::vector<int>(N, std::numeric_limits<int>::min());
       
       current_statement__ = 16;
       beta0 = normal_rng(0, 1, base_rng__);
@@ -8684,8 +8678,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       current_statement__ = 1;
       tau_phi_free__ = stan::math::lb_free(tau_phi, 0);
       Eigen::Matrix<double, -1, 1> phi_std_raw;
-      phi_std_raw = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, 
-        (N - 1));
+      phi_std_raw = Eigen::Matrix<double, -1, 1>((N - 1));
       stan::math::fill(phi_std_raw, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -9186,7 +9179,7 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
       current_statement__ = 19;
       validate_non_negative_index("chi", "n_occasions", n_occasions);
       Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-      chi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, n_occasions);
+      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
       stan::math::fill(chi, DUMMY_VAR__);
       
       current_statement__ = 69;
@@ -9815,7 +9808,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                  0, 1, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> epsilon;
-      epsilon = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, nind);
+      epsilon = Eigen::Matrix<local_scalar_t__, -1, 1>(nind);
       stan::math::fill(epsilon, DUMMY_VAR__);
       
       current_statement__ = 3;
@@ -9828,17 +9821,15 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       sigma = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                 0, 5, lp__);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
-      phi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, 
-        (n_occasions - 1));
+      phi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(phi, DUMMY_VAR__);
       
       Eigen::Matrix<local_scalar_t__, -1, -1> p;
-      p = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, 
-        (n_occasions - 1));
+      p = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(p, DUMMY_VAR__);
       
       Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-      chi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, n_occasions);
+      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
       stan::math::fill(chi, DUMMY_VAR__);
       
       local_scalar_t__ mu;
@@ -9928,7 +9919,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
         current_statement__ = 19;
         validate_non_negative_index("chi", "n_occasions", n_occasions);
         Eigen::Matrix<local_scalar_t__, -1, -1> inline_sym10__;
-        inline_sym10__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, n_occasions);
+        inline_sym10__ = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
         stan::math::fill(inline_sym10__, DUMMY_VAR__);
         
         for (int inline_sym14__ = 1; inline_sym14__ <= nind; ++inline_sym14__) {
@@ -10367,7 +10358,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                  0, 1, lp__);
       Eigen::Matrix<double, -1, 1> epsilon;
-      epsilon = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, nind);
+      epsilon = Eigen::Matrix<double, -1, 1>(nind);
       stan::math::fill(epsilon, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
@@ -10380,17 +10371,15 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       sigma = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                 0, 5, lp__);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
-      phi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, 
-        (n_occasions - 1));
+      phi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(phi, DUMMY_VAR__);
       
       Eigen::Matrix<double, -1, -1> p;
-      p = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, 
-        (n_occasions - 1));
+      p = Eigen::Matrix<double, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(p, std::numeric_limits<double>::quiet_NaN());
       
       Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-      chi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, n_occasions);
+      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
       stan::math::fill(chi, DUMMY_VAR__);
       
       double mu;
@@ -10493,7 +10482,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
         current_statement__ = 19;
         validate_non_negative_index("chi", "n_occasions", n_occasions);
         Eigen::Matrix<local_scalar_t__, -1, -1> inline_sym2__;
-        inline_sym2__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, n_occasions);
+        inline_sym2__ = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
         stan::math::fill(inline_sym2__, DUMMY_VAR__);
         
         for (int inline_sym6__ = 1; inline_sym6__ <= nind; ++inline_sym6__) {
@@ -10886,7 +10875,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       current_statement__ = 2;
       mean_p_free__ = stan::math::lub_free(mean_p, 0, 1);
       Eigen::Matrix<double, -1, 1> epsilon;
-      epsilon = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, nind);
+      epsilon = Eigen::Matrix<double, -1, 1>(nind);
       stan::math::fill(epsilon, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -11478,7 +11467,7 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
       current_statement__ = 25;
       validate_non_negative_index("chi", "n_occasions", lcm_sym59__);
       Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-      chi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, lcm_sym64__, lcm_sym59__);
+      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(lcm_sym64__, lcm_sym59__);
       stan::math::fill(chi, DUMMY_VAR__);
       
       current_statement__ = 141;
@@ -11674,7 +11663,7 @@ js_super_lp(const std::vector<std::vector<int>>& y,
       current_statement__ = 80;
       validate_non_negative_index("qnu", "n_occasions", lcm_sym115__);
       Eigen::Matrix<double, -1, 1> qnu;
-      qnu = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym115__);
+      qnu = Eigen::Matrix<double, -1, 1>(lcm_sym115__);
       stan::math::fill(qnu, std::numeric_limits<double>::quiet_NaN());
       
       assign(lcm_sym73__, subtract(1.0, nu), "assigning variable lcm_sym73__");
@@ -11683,7 +11672,7 @@ js_super_lp(const std::vector<std::vector<int>>& y,
         current_statement__ = 82;
         validate_non_negative_index("qp", "n_occasions", lcm_sym115__);
         Eigen::Matrix<double, -1, 1> qp;
-        qp = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym115__);
+        qp = Eigen::Matrix<double, -1, 1>(lcm_sym115__);
         stan::math::fill(qp, std::numeric_limits<double>::quiet_NaN());
         
         assign(lcm_sym75__,
@@ -11704,7 +11693,7 @@ js_super_lp(const std::vector<std::vector<int>>& y,
             current_statement__ = 90;
             validate_non_negative_index("lp", "first[i]", lcm_sym111__);
             Eigen::Matrix<local_scalar_t__, -1, 1> lp;
-            lp = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym111__);
+            lp = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym111__);
             stan::math::fill(lp, DUMMY_VAR__);
             
             lcm_sym77__ = (lcm_sym111__ - 1);
@@ -11807,7 +11796,7 @@ js_super_lp(const std::vector<std::vector<int>>& y,
           lcm_sym94__ = (lcm_sym115__ + 1);
           validate_non_negative_index("lp", "n_occasions + 1", lcm_sym94__);
           Eigen::Matrix<local_scalar_t__, -1, 1> lp;
-          lp = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym94__);
+          lp = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym94__);
           stan::math::fill(lp, DUMMY_VAR__);
           
           current_statement__ = 103;
@@ -11860,7 +11849,7 @@ js_super_lp(const std::vector<std::vector<int>>& y,
           current_statement__ = 82;
           validate_non_negative_index("qp", "n_occasions", lcm_sym115__);
           Eigen::Matrix<double, -1, 1> qp;
-          qp = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym115__);
+          qp = Eigen::Matrix<double, -1, 1>(lcm_sym115__);
           stan::math::fill(qp, std::numeric_limits<double>::quiet_NaN());
           
           assign(lcm_sym74__,
@@ -11881,7 +11870,7 @@ js_super_lp(const std::vector<std::vector<int>>& y,
               current_statement__ = 90;
               validate_non_negative_index("lp", "first[i]", lcm_sym110__);
               Eigen::Matrix<local_scalar_t__, -1, 1> lp;
-              lp = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym110__);
+              lp = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym110__);
               stan::math::fill(lp, DUMMY_VAR__);
               
               lcm_sym76__ = (lcm_sym110__ - 1);
@@ -11985,7 +11974,7 @@ js_super_lp(const std::vector<std::vector<int>>& y,
             lcm_sym94__ = (lcm_sym115__ + 1);
             validate_non_negative_index("lp", "n_occasions + 1", lcm_sym94__);
             Eigen::Matrix<local_scalar_t__, -1, 1> lp;
-            lp = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym94__);
+            lp = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym94__);
             stan::math::fill(lp, DUMMY_VAR__);
             
             current_statement__ = 103;
@@ -12629,14 +12618,14 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       psi = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
               1, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
-      beta = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_occasions);
+      beta = Eigen::Matrix<local_scalar_t__, -1, 1>(n_occasions);
       stan::math::fill(beta, DUMMY_VAR__);
       
       current_statement__ = 4;
       beta = in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                0, lp__, n_occasions);
       Eigen::Matrix<local_scalar_t__, -1, 1> epsilon;
-      epsilon = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, M);
+      epsilon = Eigen::Matrix<local_scalar_t__, -1, 1>(M);
       stan::math::fill(epsilon, DUMMY_VAR__);
       
       current_statement__ = 5;
@@ -12648,24 +12637,23 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       sigma = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                 0, 5, lp__);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
-      phi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, M, 
-        (n_occasions - 1));
+      phi = Eigen::Matrix<local_scalar_t__, -1, -1>(M, (n_occasions - 1));
       stan::math::fill(phi, DUMMY_VAR__);
       
       Eigen::Matrix<local_scalar_t__, -1, -1> p;
-      p = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, M, n_occasions);
+      p = Eigen::Matrix<local_scalar_t__, -1, -1>(M, n_occasions);
       stan::math::fill(p, DUMMY_VAR__);
       
       Eigen::Matrix<local_scalar_t__, -1, 1> b;
-      b = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_occasions);
+      b = Eigen::Matrix<local_scalar_t__, -1, 1>(n_occasions);
       stan::math::fill(b, DUMMY_VAR__);
       
       Eigen::Matrix<local_scalar_t__, -1, 1> nu;
-      nu = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_occasions);
+      nu = Eigen::Matrix<local_scalar_t__, -1, 1>(n_occasions);
       stan::math::fill(nu, DUMMY_VAR__);
       
       Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-      chi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, M, n_occasions);
+      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(M, n_occasions);
       stan::math::fill(chi, DUMMY_VAR__);
       
       lcm_sym236__ = (n_occasions - 1);
@@ -12733,7 +12721,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         current_statement__ = 25;
         validate_non_negative_index("chi", "n_occasions", lcm_sym279__);
         Eigen::Matrix<local_scalar_t__, -1, -1> inline_sym18__;
-        inline_sym18__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, lcm_sym287__, lcm_sym279__);
+        inline_sym18__ = Eigen::Matrix<local_scalar_t__, -1, -1>(lcm_sym287__, lcm_sym279__);
         stan::math::fill(inline_sym18__, DUMMY_VAR__);
         
         for (int inline_sym22__ = 1; inline_sym22__ <= lcm_sym287__;
@@ -13048,7 +13036,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
           current_statement__ = 80;
           validate_non_negative_index("qnu", "n_occasions", lcm_sym304__);
           Eigen::Matrix<double, -1, 1> inline_sym27__;
-          inline_sym27__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym304__);
+          inline_sym27__ = Eigen::Matrix<double, -1, 1>(lcm_sym304__);
           stan::math::fill(inline_sym27__, std::numeric_limits<double>::quiet_NaN());
           
           assign(lcm_sym237__, subtract(1.0, nu),
@@ -13058,7 +13046,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
             current_statement__ = 82;
             validate_non_negative_index("qp", "n_occasions", lcm_sym304__);
             Eigen::Matrix<double, -1, 1> inline_sym28__;
-            inline_sym28__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym304__);
+            inline_sym28__ = Eigen::Matrix<double, -1, 1>(lcm_sym304__);
             stan::math::fill(inline_sym28__, std::numeric_limits<double>::quiet_NaN());
             
             assign(lcm_sym239__,
@@ -13079,7 +13067,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                 current_statement__ = 90;
                 validate_non_negative_index("lp", "first[i]", lcm_sym289__);
                 Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym29__;
-                inline_sym29__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym289__);
+                inline_sym29__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym289__);
                 stan::math::fill(inline_sym29__, DUMMY_VAR__);
                 
                 lcm_sym297__ = rvalue(nu, "nu", index_uni(1));
@@ -13196,7 +13184,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
               validate_non_negative_index("lp", "n_occasions + 1",
                                           lcm_sym264__);
               Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym29__;
-              inline_sym29__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym264__);
+              inline_sym29__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym264__);
               stan::math::fill(inline_sym29__, DUMMY_VAR__);
               
               lcm_sym297__ = rvalue(nu, "nu", index_uni(1));
@@ -13255,7 +13243,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
               current_statement__ = 82;
               validate_non_negative_index("qp", "n_occasions", lcm_sym304__);
               Eigen::Matrix<double, -1, 1> inline_sym28__;
-              inline_sym28__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym304__);
+              inline_sym28__ = Eigen::Matrix<double, -1, 1>(lcm_sym304__);
               stan::math::fill(inline_sym28__, std::numeric_limits<double>::quiet_NaN());
               
               assign(lcm_sym238__,
@@ -13278,7 +13266,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                   current_statement__ = 90;
                   validate_non_negative_index("lp", "first[i]", lcm_sym288__);
                   Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym29__;
-                  inline_sym29__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym288__);
+                  inline_sym29__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym288__);
                   stan::math::fill(inline_sym29__, DUMMY_VAR__);
                   
                   lcm_sym242__ = (lcm_sym288__ - 1);
@@ -13405,7 +13393,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                 validate_non_negative_index("lp", "n_occasions + 1",
                                             lcm_sym264__);
                 Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym29__;
-                inline_sym29__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym264__);
+                inline_sym29__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym264__);
                 stan::math::fill(inline_sym29__, DUMMY_VAR__);
                 
                 current_statement__ = 103;
@@ -13608,14 +13596,14 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       psi = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
               1, lp__);
       Eigen::Matrix<double, -1, 1> beta;
-      beta = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_occasions);
+      beta = Eigen::Matrix<double, -1, 1>(n_occasions);
       stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 4;
       beta = in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                0, lp__, n_occasions);
       Eigen::Matrix<double, -1, 1> epsilon;
-      epsilon = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, M);
+      epsilon = Eigen::Matrix<double, -1, 1>(M);
       stan::math::fill(epsilon, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
@@ -13627,24 +13615,23 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       sigma = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                 0, 5, lp__);
       Eigen::Matrix<double, -1, -1> phi;
-      phi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, M, 
-        (n_occasions - 1));
+      phi = Eigen::Matrix<double, -1, -1>(M, (n_occasions - 1));
       stan::math::fill(phi, std::numeric_limits<double>::quiet_NaN());
       
       Eigen::Matrix<double, -1, -1> p;
-      p = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, M, n_occasions);
+      p = Eigen::Matrix<double, -1, -1>(M, n_occasions);
       stan::math::fill(p, std::numeric_limits<double>::quiet_NaN());
       
       Eigen::Matrix<double, -1, 1> b;
-      b = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_occasions);
+      b = Eigen::Matrix<double, -1, 1>(n_occasions);
       stan::math::fill(b, std::numeric_limits<double>::quiet_NaN());
       
       Eigen::Matrix<local_scalar_t__, -1, 1> nu;
-      nu = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_occasions);
+      nu = Eigen::Matrix<local_scalar_t__, -1, 1>(n_occasions);
       stan::math::fill(nu, DUMMY_VAR__);
       
       Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-      chi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, M, n_occasions);
+      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(M, n_occasions);
       stan::math::fill(chi, DUMMY_VAR__);
       
       vars__.emplace_back(mean_phi);
@@ -13732,7 +13719,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         current_statement__ = 25;
         validate_non_negative_index("chi", "n_occasions", lcm_sym159__);
         Eigen::Matrix<local_scalar_t__, -1, -1> inline_sym4__;
-        inline_sym4__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, lcm_sym166__, lcm_sym159__);
+        inline_sym4__ = Eigen::Matrix<local_scalar_t__, -1, -1>(lcm_sym166__, lcm_sym159__);
         stan::math::fill(inline_sym4__, DUMMY_VAR__);
         
         for (int inline_sym8__ = 1; inline_sym8__ <= lcm_sym166__;
@@ -14108,13 +14095,13 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       Nsuper = std::numeric_limits<int>::min();
       
       std::vector<int> N;
-      N = stan::io::initialize_data<std::vector<int>>(model_arena_, n_occasions );
+      N = std::vector<int>(n_occasions, std::numeric_limits<int>::min());
       
       std::vector<int> B;
-      B = stan::io::initialize_data<std::vector<int>>(model_arena_, n_occasions );
+      B = std::vector<int>(n_occasions, std::numeric_limits<int>::min());
       
       std::vector<std::vector<int>> z;
-      z = stan::io::initialize_data<std::vector<std::vector<int>>>(model_arena_, M , n_occasions );
+      z = std::vector<std::vector<int>>(M, std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
       
       lcm_sym169__ = square(sigma);
       sigma2 = lcm_sym169__;
@@ -14213,7 +14200,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         current_statement__ = 52;
         validate_non_negative_index("recruit", "n_occasions", n_occasions);
         std::vector<std::vector<int>> recruit;
-        recruit = stan::io::initialize_data<std::vector<std::vector<int>>>(model_arena_, M , n_occasions );
+        recruit = std::vector<std::vector<int>>(M, std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
         
         current_statement__ = 53;
         assign(recruit, rep_array(0, M, n_occasions),
@@ -14221,12 +14208,12 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         current_statement__ = 54;
         validate_non_negative_index("Nind", "M", M);
         std::vector<int> Nind;
-        Nind = stan::io::initialize_data<std::vector<int>>(model_arena_, M );
+        Nind = std::vector<int>(M, std::numeric_limits<int>::min());
         
         current_statement__ = 56;
         validate_non_negative_index("Nalive", "M", M);
         std::vector<int> Nalive;
-        Nalive = stan::io::initialize_data<std::vector<int>>(model_arena_, M );
+        Nalive = std::vector<int>(M, std::numeric_limits<int>::min());
         
         current_statement__ = 65;
         if (lcm_sym132__) {
@@ -14517,7 +14504,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       current_statement__ = 3;
       psi_free__ = stan::math::lub_free(psi, 0, 1);
       Eigen::Matrix<double, -1, 1> beta;
-      beta = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_occasions);
+      beta = Eigen::Matrix<double, -1, 1>(n_occasions);
       stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -14542,7 +14529,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         } 
       }
       Eigen::Matrix<double, -1, 1> beta_free__;
-      beta_free__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_occasions);
+      beta_free__ = Eigen::Matrix<double, -1, 1>(n_occasions);
       stan::math::fill(beta_free__, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 4;
@@ -14557,7 +14544,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
             "assigning variable beta_free__", index_uni(sym1__));}
       } 
       Eigen::Matrix<double, -1, 1> epsilon;
-      epsilon = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, M);
+      epsilon = Eigen::Matrix<double, -1, 1>(M);
       stan::math::fill(epsilon, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -15383,14 +15370,14 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       int lcm_sym50__;
       int lcm_sym49__;
       Eigen::Matrix<local_scalar_t__, -1, 1> pi;
-      pi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, K);
+      pi = Eigen::Matrix<local_scalar_t__, -1, 1>(K);
       stan::math::fill(pi, DUMMY_VAR__);
       
       current_statement__ = 1;
       pi = in__.template read_constrain_simplex<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
              lp__, K);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> theta;
-      theta = stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(model_arena_, J , K , K);
+      theta = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(J, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(K)));
       stan::math::fill(theta, DUMMY_VAR__);
       
       current_statement__ = 2;
@@ -15436,7 +15423,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
           current_statement__ = 13;
           validate_non_negative_index("log_q", "K", K);
           Eigen::Matrix<local_scalar_t__, -1, 1> log_q;
-          log_q = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, K);
+          log_q = Eigen::Matrix<local_scalar_t__, -1, 1>(K);
           stan::math::fill(log_q, DUMMY_VAR__);
           
           assign(lcm_sym61__, stan::math::log(pi),
@@ -15471,7 +15458,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
             current_statement__ = 13;
             validate_non_negative_index("log_q", "K", K);
             Eigen::Matrix<local_scalar_t__, -1, 1> log_q;
-            log_q = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, K);
+            log_q = Eigen::Matrix<local_scalar_t__, -1, 1>(K);
             stan::math::fill(log_q, DUMMY_VAR__);
             
             current_statement__ = 14;
@@ -15562,14 +15549,14 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       int lcm_sym25__;
       int lcm_sym24__;
       Eigen::Matrix<double, -1, 1> pi;
-      pi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, K);
+      pi = Eigen::Matrix<double, -1, 1>(K);
       stan::math::fill(pi, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 1;
       pi = in__.template read_constrain_simplex<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
              lp__, K);
       std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> theta;
-      theta = stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(model_arena_, J , K , K);
+      theta = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(J, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(K)));
       stan::math::fill(theta, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
@@ -15635,7 +15622,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         return ;
       } 
       std::vector<Eigen::Matrix<double, -1, 1>> log_Pr_z;
-      log_Pr_z = stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, 1>>>(model_arena_, I , K);
+      log_Pr_z = std::vector<Eigen::Matrix<double, -1, 1>>(I, Eigen::Matrix<double, -1, 1>(K));
       stan::math::fill(log_Pr_z, std::numeric_limits<double>::quiet_NaN());
       
       lcm_sym24__ = logical_gte(I, 1);
@@ -15643,7 +15630,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         current_statement__ = 4;
         validate_non_negative_index("log_q", "K", K);
         Eigen::Matrix<double, -1, 1> log_q;
-        log_q = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, K);
+        log_q = Eigen::Matrix<double, -1, 1>(K);
         stan::math::fill(log_q, std::numeric_limits<double>::quiet_NaN());
         
         assign(lcm_sym34__, stan::math::log(pi),
@@ -15678,7 +15665,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
           current_statement__ = 4;
           validate_non_negative_index("log_q", "K", K);
           Eigen::Matrix<double, -1, 1> log_q;
-          log_q = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, K);
+          log_q = Eigen::Matrix<double, -1, 1>(K);
           stan::math::fill(log_q, std::numeric_limits<double>::quiet_NaN());
           
           current_statement__ = 5;
@@ -15774,7 +15761,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       
       pos__ = 1;
       Eigen::Matrix<double, -1, 1> pi;
-      pi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, K);
+      pi = Eigen::Matrix<double, -1, 1>(K);
       stan::math::fill(pi, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -15799,15 +15786,14 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         } 
       }
       Eigen::Matrix<double, -1, 1> pi_free__;
-      pi_free__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, 
-        (K - 1));
+      pi_free__ = Eigen::Matrix<double, -1, 1>((K - 1));
       stan::math::fill(pi_free__, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 1;
       assign(pi_free__, stan::math::simplex_free(pi),
         "assigning variable pi_free__");
       std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> theta;
-      theta = stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(model_arena_, J , K , K);
+      theta = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(J, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(K)));
       stan::math::fill(theta, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -15909,8 +15895,8 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         }
       }
       std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> theta_free__;
-      theta_free__ = stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(model_arena_, J , K , 
-        (K - 1));
+      theta_free__ = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(J, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(
+        (K - 1))));
       stan::math::fill(theta_free__, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
@@ -16511,14 +16497,14 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       tau_phi = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                   0, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> theta_std;
-      theta_std = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, N);
+      theta_std = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(theta_std, DUMMY_VAR__);
       
       current_statement__ = 5;
       theta_std = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                     N);
       Eigen::Matrix<local_scalar_t__, -1, 1> phi_std_raw;
-      phi_std_raw = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, N);
+      phi_std_raw = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(phi_std_raw, DUMMY_VAR__);
       
       current_statement__ = 6;
@@ -16530,7 +16516,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       lcm_sym24__ = inv_sqrt(tau_phi);
       sigma_phi = lcm_sym24__;
       Eigen::Matrix<local_scalar_t__, -1, 1> phi;
-      phi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, N);
+      phi = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(phi, DUMMY_VAR__);
       
       current_statement__ = 9;
@@ -16611,14 +16597,14 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       tau_phi = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                   0, lp__);
       Eigen::Matrix<double, -1, 1> theta_std;
-      theta_std = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, N);
+      theta_std = Eigen::Matrix<double, -1, 1>(N);
       stan::math::fill(theta_std, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
       theta_std = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                     N);
       Eigen::Matrix<double, -1, 1> phi_std_raw;
-      phi_std_raw = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, N);
+      phi_std_raw = Eigen::Matrix<double, -1, 1>(N);
       stan::math::fill(phi_std_raw, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 6;
@@ -16628,7 +16614,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       sigma_phi = std::numeric_limits<double>::quiet_NaN();
       
       Eigen::Matrix<double, -1, 1> phi;
-      phi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, N);
+      phi = Eigen::Matrix<double, -1, 1>(N);
       stan::math::fill(phi, std::numeric_limits<double>::quiet_NaN());
       
       vars__.emplace_back(beta0);
@@ -16736,7 +16722,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       current_statement__ = 4;
       tau_phi_free__ = stan::math::lb_free(tau_phi, 0);
       Eigen::Matrix<double, -1, 1> theta_std;
-      theta_std = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, N);
+      theta_std = Eigen::Matrix<double, -1, 1>(N);
       stan::math::fill(theta_std, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -16762,7 +16748,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
         } 
       }
       Eigen::Matrix<double, -1, 1> phi_std_raw;
-      phi_std_raw = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, N);
+      phi_std_raw = Eigen::Matrix<double, -1, 1>(N);
       stan::math::fill(phi_std_raw, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -17229,7 +17215,7 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
       current_statement__ = 15;
       validate_non_negative_index("chi", "n_occasions", n_occasions);
       Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-      chi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, n_occasions);
+      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
       stan::math::fill(chi, DUMMY_VAR__);
       
       current_statement__ = 66;
@@ -17988,24 +17974,22 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                  0, 1, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
-      beta = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, max_age);
+      beta = Eigen::Matrix<local_scalar_t__, -1, 1>(max_age);
       stan::math::fill(beta, DUMMY_VAR__);
       
       current_statement__ = 2;
       beta = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                0, 1, lp__, max_age);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
-      phi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, 
-        (n_occasions - 1));
+      phi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(phi, DUMMY_VAR__);
       
       Eigen::Matrix<local_scalar_t__, -1, -1> p;
-      p = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, 
-        (n_occasions - 1));
+      p = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(p, DUMMY_VAR__);
       
       Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-      chi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, n_occasions);
+      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
       stan::math::fill(chi, DUMMY_VAR__);
       
       lcm_sym104__ = logical_gte(nind, 1);
@@ -18095,7 +18079,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
         current_statement__ = 15;
         validate_non_negative_index("chi", "n_occasions", n_occasions);
         Eigen::Matrix<local_scalar_t__, -1, -1> inline_sym10__;
-        inline_sym10__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, n_occasions);
+        inline_sym10__ = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
         stan::math::fill(inline_sym10__, DUMMY_VAR__);
         
         for (int inline_sym14__ = 1; inline_sym14__ <= nind; ++inline_sym14__) {
@@ -18527,24 +18511,22 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                  0, 1, lp__);
       Eigen::Matrix<double, -1, 1> beta;
-      beta = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, max_age);
+      beta = Eigen::Matrix<double, -1, 1>(max_age);
       stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
       beta = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                0, 1, lp__, max_age);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
-      phi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, 
-        (n_occasions - 1));
+      phi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(phi, DUMMY_VAR__);
       
       Eigen::Matrix<double, -1, -1> p;
-      p = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, 
-        (n_occasions - 1));
+      p = Eigen::Matrix<double, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(p, std::numeric_limits<double>::quiet_NaN());
       
       Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-      chi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, n_occasions);
+      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
       stan::math::fill(chi, DUMMY_VAR__);
       
       vars__.emplace_back(mean_p);
@@ -18644,7 +18626,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
         current_statement__ = 15;
         validate_non_negative_index("chi", "n_occasions", n_occasions);
         Eigen::Matrix<local_scalar_t__, -1, -1> inline_sym2__;
-        inline_sym2__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, n_occasions);
+        inline_sym2__ = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
         stan::math::fill(inline_sym2__, DUMMY_VAR__);
         
         for (int inline_sym6__ = 1; inline_sym6__ <= nind; ++inline_sym6__) {
@@ -19019,7 +19001,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       current_statement__ = 1;
       mean_p_free__ = stan::math::lub_free(mean_p, 0, 1);
       Eigen::Matrix<double, -1, 1> beta;
-      beta = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, max_age);
+      beta = Eigen::Matrix<double, -1, 1>(max_age);
       stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -19044,7 +19026,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
         } 
       }
       Eigen::Matrix<double, -1, 1> beta_free__;
-      beta_free__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, max_age);
+      beta_free__ = Eigen::Matrix<double, -1, 1>(max_age);
       stan::math::fill(beta_free__, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
@@ -19594,7 +19576,7 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
       current_statement__ = 15;
       validate_non_negative_index("chi", "n_occasions", lcm_sym66__);
       Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-      chi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, lcm_sym71__, lcm_sym66__);
+      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(lcm_sym71__, lcm_sym66__);
       stan::math::fill(chi, DUMMY_VAR__);
       
       current_statement__ = 137;
@@ -19788,7 +19770,7 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
       current_statement__ = 78;
       validate_non_negative_index("qgamma", "n_occasions", lcm_sym121__);
       Eigen::Matrix<double, -1, 1> qgamma;
-      qgamma = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym121__);
+      qgamma = Eigen::Matrix<double, -1, 1>(lcm_sym121__);
       stan::math::fill(qgamma, std::numeric_limits<double>::quiet_NaN());
       
       assign(lcm_sym80__, subtract(1.0, gamma),
@@ -19798,7 +19780,7 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
         current_statement__ = 80;
         validate_non_negative_index("qp", "n_occasions", lcm_sym121__);
         Eigen::Matrix<double, -1, 1> qp;
-        qp = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym121__);
+        qp = Eigen::Matrix<double, -1, 1>(lcm_sym121__);
         stan::math::fill(qp, std::numeric_limits<double>::quiet_NaN());
         
         assign(lcm_sym82__,
@@ -19817,7 +19799,7 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
             current_statement__ = 88;
             validate_non_negative_index("lp", "first[i]", lcm_sym117__);
             Eigen::Matrix<local_scalar_t__, -1, 1> lp;
-            lp = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym117__);
+            lp = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym117__);
             stan::math::fill(lp, DUMMY_VAR__);
             
             lcm_sym84__ = (lcm_sym117__ - 1);
@@ -19921,7 +19903,7 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
           lcm_sym101__ = (lcm_sym121__ + 1);
           validate_non_negative_index("lp", "n_occasions + 1", lcm_sym101__);
           Eigen::Matrix<local_scalar_t__, -1, 1> lp;
-          lp = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym101__);
+          lp = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym101__);
           stan::math::fill(lp, DUMMY_VAR__);
           
           current_statement__ = 83;
@@ -19973,7 +19955,7 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
           current_statement__ = 80;
           validate_non_negative_index("qp", "n_occasions", lcm_sym121__);
           Eigen::Matrix<double, -1, 1> qp;
-          qp = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym121__);
+          qp = Eigen::Matrix<double, -1, 1>(lcm_sym121__);
           stan::math::fill(qp, std::numeric_limits<double>::quiet_NaN());
           
           assign(lcm_sym81__,
@@ -19992,7 +19974,7 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
               current_statement__ = 88;
               validate_non_negative_index("lp", "first[i]", lcm_sym116__);
               Eigen::Matrix<local_scalar_t__, -1, 1> lp;
-              lp = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym116__);
+              lp = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym116__);
               stan::math::fill(lp, DUMMY_VAR__);
               
               lcm_sym83__ = (lcm_sym116__ - 1);
@@ -20097,7 +20079,7 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
             lcm_sym101__ = (lcm_sym121__ + 1);
             validate_non_negative_index("lp", "n_occasions + 1", lcm_sym101__);
             Eigen::Matrix<local_scalar_t__, -1, 1> lp;
-            lp = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym101__);
+            lp = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym101__);
             stan::math::fill(lp, DUMMY_VAR__);
             
             current_statement__ = 83;
@@ -20197,7 +20179,7 @@ seq_cprob(const T0__& gamma_arg__, std::ostream* pstream__) {
       current_statement__ = 43;
       validate_non_negative_index("log_cprob", "N", lcm_sym128__);
       Eigen::Matrix<local_scalar_t__, -1, 1> log_cprob;
-      log_cprob = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym128__);
+      log_cprob = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym128__);
       stan::math::fill(log_cprob, DUMMY_VAR__);
       
       local_scalar_t__ log_residual_prob;
@@ -20798,15 +20780,14 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                  0, 1, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> gamma;
-      gamma = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_occasions);
+      gamma = Eigen::Matrix<local_scalar_t__, -1, 1>(n_occasions);
       stan::math::fill(gamma, DUMMY_VAR__);
       
       current_statement__ = 3;
       gamma = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                 0, 1, lp__, n_occasions);
       Eigen::Matrix<local_scalar_t__, -1, 1> epsilon;
-      epsilon = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, 
-        (n_occasions - 1));
+      epsilon = Eigen::Matrix<local_scalar_t__, -1, 1>((n_occasions - 1));
       stan::math::fill(epsilon, DUMMY_VAR__);
       
       lcm_sym297__ = (n_occasions - 1);
@@ -20819,15 +20800,15 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       sigma = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                 0, 5, lp__);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
-      phi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, M, lcm_sym297__);
+      phi = Eigen::Matrix<local_scalar_t__, -1, -1>(M, lcm_sym297__);
       stan::math::fill(phi, DUMMY_VAR__);
       
       Eigen::Matrix<local_scalar_t__, -1, -1> p;
-      p = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, M, n_occasions);
+      p = Eigen::Matrix<local_scalar_t__, -1, -1>(M, n_occasions);
       stan::math::fill(p, DUMMY_VAR__);
       
       Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-      chi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, M, n_occasions);
+      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(M, n_occasions);
       stan::math::fill(chi, DUMMY_VAR__);
       
       lcm_sym240__ = logical_gte(lcm_sym297__, 1);
@@ -20884,7 +20865,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         current_statement__ = 15;
         validate_non_negative_index("chi", "n_occasions", lcm_sym288__);
         Eigen::Matrix<local_scalar_t__, -1, -1> inline_sym25__;
-        inline_sym25__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, lcm_sym296__, lcm_sym288__);
+        inline_sym25__ = Eigen::Matrix<local_scalar_t__, -1, -1>(lcm_sym296__, lcm_sym288__);
         stan::math::fill(inline_sym25__, DUMMY_VAR__);
         
         for (int inline_sym29__ = 1; inline_sym29__ <= lcm_sym296__;
@@ -21171,7 +21152,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           current_statement__ = 78;
           validate_non_negative_index("qgamma", "n_occasions", lcm_sym311__);
           Eigen::Matrix<double, -1, 1> inline_sym34__;
-          inline_sym34__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym311__);
+          inline_sym34__ = Eigen::Matrix<double, -1, 1>(lcm_sym311__);
           stan::math::fill(inline_sym34__, std::numeric_limits<double>::quiet_NaN());
           
           assign(lcm_sym249__, subtract(1.0, gamma),
@@ -21181,7 +21162,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             current_statement__ = 80;
             validate_non_negative_index("qp", "n_occasions", lcm_sym311__);
             Eigen::Matrix<double, -1, 1> inline_sym35__;
-            inline_sym35__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym311__);
+            inline_sym35__ = Eigen::Matrix<double, -1, 1>(lcm_sym311__);
             stan::math::fill(inline_sym35__, std::numeric_limits<double>::quiet_NaN());
             
             assign(lcm_sym251__,
@@ -21202,7 +21183,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                 current_statement__ = 88;
                 validate_non_negative_index("lp", "first[i]", lcm_sym299__);
                 Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym36__;
-                inline_sym36__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym299__);
+                inline_sym36__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym299__);
                 stan::math::fill(inline_sym36__, DUMMY_VAR__);
                 
                 lcm_sym255__ = (lcm_sym299__ - 1);
@@ -21322,7 +21303,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
               validate_non_negative_index("lp", "n_occasions + 1",
                                           lcm_sym274__);
               Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym36__;
-              inline_sym36__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym274__);
+              inline_sym36__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym274__);
               stan::math::fill(inline_sym36__, DUMMY_VAR__);
               
               current_statement__ = 83;
@@ -21383,7 +21364,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
               current_statement__ = 80;
               validate_non_negative_index("qp", "n_occasions", lcm_sym311__);
               Eigen::Matrix<double, -1, 1> inline_sym35__;
-              inline_sym35__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym311__);
+              inline_sym35__ = Eigen::Matrix<double, -1, 1>(lcm_sym311__);
               stan::math::fill(inline_sym35__, std::numeric_limits<double>::quiet_NaN());
               
               assign(lcm_sym250__,
@@ -21406,7 +21387,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                   current_statement__ = 88;
                   validate_non_negative_index("lp", "first[i]", lcm_sym298__);
                   Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym36__;
-                  inline_sym36__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym298__);
+                  inline_sym36__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym298__);
                   stan::math::fill(inline_sym36__, DUMMY_VAR__);
                   
                   lcm_sym254__ = (lcm_sym298__ - 1);
@@ -21534,7 +21515,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                 validate_non_negative_index("lp", "n_occasions + 1",
                                             lcm_sym274__);
                 Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym36__;
-                inline_sym36__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym274__);
+                inline_sym36__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym274__);
                 stan::math::fill(inline_sym36__, DUMMY_VAR__);
                 
                 current_statement__ = 83;
@@ -21727,15 +21708,14 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                  0, 1, lp__);
       Eigen::Matrix<double, -1, 1> gamma;
-      gamma = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_occasions);
+      gamma = Eigen::Matrix<double, -1, 1>(n_occasions);
       stan::math::fill(gamma, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
       gamma = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                 0, 1, lp__, n_occasions);
       Eigen::Matrix<double, -1, 1> epsilon;
-      epsilon = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, 
-        (n_occasions - 1));
+      epsilon = Eigen::Matrix<double, -1, 1>((n_occasions - 1));
       stan::math::fill(epsilon, std::numeric_limits<double>::quiet_NaN());
       
       lcm_sym198__ = (n_occasions - 1);
@@ -21748,15 +21728,15 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       sigma = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                 0, 5, lp__);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
-      phi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, M, lcm_sym198__);
+      phi = Eigen::Matrix<local_scalar_t__, -1, -1>(M, lcm_sym198__);
       stan::math::fill(phi, DUMMY_VAR__);
       
       Eigen::Matrix<double, -1, -1> p;
-      p = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, M, n_occasions);
+      p = Eigen::Matrix<double, -1, -1>(M, n_occasions);
       stan::math::fill(p, std::numeric_limits<double>::quiet_NaN());
       
       Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-      chi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, M, n_occasions);
+      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(M, n_occasions);
       stan::math::fill(chi, DUMMY_VAR__);
       
       vars__.emplace_back(mean_phi);
@@ -21832,7 +21812,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         current_statement__ = 15;
         validate_non_negative_index("chi", "n_occasions", lcm_sym173__);
         Eigen::Matrix<local_scalar_t__, -1, -1> inline_sym4__;
-        inline_sym4__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, lcm_sym186__, lcm_sym173__);
+        inline_sym4__ = Eigen::Matrix<local_scalar_t__, -1, -1>(lcm_sym186__, lcm_sym173__);
         stan::math::fill(inline_sym4__, DUMMY_VAR__);
         
         for (int inline_sym8__ = 1; inline_sym8__ <= lcm_sym186__;
@@ -22172,20 +22152,20 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       psi = DUMMY_VAR__;
       
       Eigen::Matrix<local_scalar_t__, -1, 1> b;
-      b = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_occasions);
+      b = Eigen::Matrix<local_scalar_t__, -1, 1>(n_occasions);
       stan::math::fill(b, DUMMY_VAR__);
       
       int Nsuper;
       Nsuper = std::numeric_limits<int>::min();
       
       std::vector<int> N;
-      N = stan::io::initialize_data<std::vector<int>>(model_arena_, n_occasions );
+      N = std::vector<int>(n_occasions, std::numeric_limits<int>::min());
       
       std::vector<int> B;
-      B = stan::io::initialize_data<std::vector<int>>(model_arena_, n_occasions );
+      B = std::vector<int>(n_occasions, std::numeric_limits<int>::min());
       
       std::vector<std::vector<int>> z;
-      z = stan::io::initialize_data<std::vector<std::vector<int>>>(model_arena_, M , n_occasions );
+      z = std::vector<std::vector<int>>(M, std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
       
       current_statement__ = 39;
       if (lcm_sym144__) {
@@ -22264,7 +22244,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         current_statement__ = 40;
         validate_non_negative_index("cprob", "n_occasions", n_occasions);
         Eigen::Matrix<double, -1, 1> cprob;
-        cprob = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_occasions);
+        cprob = Eigen::Matrix<double, -1, 1>(n_occasions);
         stan::math::fill(cprob, std::numeric_limits<double>::quiet_NaN());
         
         Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym11__;
@@ -22280,7 +22260,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           current_statement__ = 43;
           validate_non_negative_index("log_cprob", "N", lcm_sym185__);
           Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym13__;
-          inline_sym13__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, lcm_sym185__);
+          inline_sym13__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym185__);
           stan::math::fill(inline_sym13__, DUMMY_VAR__);
           
           local_scalar_t__ inline_sym14__;
@@ -22317,7 +22297,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         current_statement__ = 51;
         validate_non_negative_index("recruit", "n_occasions", n_occasions);
         std::vector<std::vector<int>> recruit;
-        recruit = stan::io::initialize_data<std::vector<std::vector<int>>>(model_arena_, M , n_occasions );
+        recruit = std::vector<std::vector<int>>(M, std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
         
         current_statement__ = 52;
         assign(recruit, rep_array(0, M, n_occasions),
@@ -22325,12 +22305,12 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         current_statement__ = 53;
         validate_non_negative_index("Nind", "M", M);
         std::vector<int> Nind;
-        Nind = stan::io::initialize_data<std::vector<int>>(model_arena_, M );
+        Nind = std::vector<int>(M, std::numeric_limits<int>::min());
         
         current_statement__ = 55;
         validate_non_negative_index("Nalive", "M", M);
         std::vector<int> Nalive;
-        Nalive = stan::io::initialize_data<std::vector<int>>(model_arena_, M );
+        Nalive = std::vector<int>(M, std::numeric_limits<int>::min());
         
         lcm_sym189__ = square(sigma);
         sigma2 = lcm_sym189__;
@@ -22537,7 +22517,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       current_statement__ = 2;
       mean_p_free__ = stan::math::lub_free(mean_p, 0, 1);
       Eigen::Matrix<double, -1, 1> gamma;
-      gamma = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_occasions);
+      gamma = Eigen::Matrix<double, -1, 1>(n_occasions);
       stan::math::fill(gamma, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -22562,7 +22542,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         } 
       }
       Eigen::Matrix<double, -1, 1> gamma_free__;
-      gamma_free__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_occasions);
+      gamma_free__ = Eigen::Matrix<double, -1, 1>(n_occasions);
       stan::math::fill(gamma_free__, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
@@ -22578,8 +22558,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             "assigning variable gamma_free__", index_uni(sym1__));}
       } 
       Eigen::Matrix<double, -1, 1> epsilon;
-      epsilon = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, 
-        (n_occasions - 1));
+      epsilon = Eigen::Matrix<double, -1, 1>((n_occasions - 1));
       stan::math::fill(epsilon, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -23743,7 +23722,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     try {
       double lcm_sym9__;
       std::vector<local_scalar_t__> theta;
-      theta = stan::io::initialize_data<std::vector<local_scalar_t__>>(model_arena_, J );
+      theta = std::vector<local_scalar_t__>(J, DUMMY_VAR__);
       
       current_statement__ = 1;
       theta = in__.template read<std::vector<local_scalar_t__>>(J);
@@ -23789,7 +23768,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       int lcm_sym5__;
       int lcm_sym4__;
       std::vector<double> theta;
-      theta = stan::io::initialize_data<std::vector<double>>(model_arena_, J );
+      theta = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 1;
       theta = in__.template read<std::vector<local_scalar_t__>>(J);
@@ -23832,7 +23811,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       
       pos__ = 1;
       std::vector<double> theta;
-      theta = stan::io::initialize_data<std::vector<double>>(model_arena_, J );
+      theta = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 1;
       theta = context__.vals_r("theta");
@@ -24219,7 +24198,7 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
       current_statement__ = 15;
       validate_non_negative_index("chi", "n_occasions", n_occasions);
       Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-      chi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, n_occasions);
+      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
       stan::math::fill(chi, DUMMY_VAR__);
       
       current_statement__ = 62;
@@ -24840,17 +24819,15 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                  0, 1, lp__);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
-      phi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, 
-        (n_occasions - 1));
+      phi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(phi, DUMMY_VAR__);
       
       Eigen::Matrix<local_scalar_t__, -1, -1> p;
-      p = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, 
-        (n_occasions - 1));
+      p = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(p, DUMMY_VAR__);
       
       Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-      chi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, n_occasions);
+      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
       stan::math::fill(chi, DUMMY_VAR__);
       
       lcm_sym89__ = logical_gte(nind, 1);
@@ -24931,7 +24908,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
         current_statement__ = 15;
         validate_non_negative_index("chi", "n_occasions", n_occasions);
         Eigen::Matrix<local_scalar_t__, -1, -1> inline_sym10__;
-        inline_sym10__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, n_occasions);
+        inline_sym10__ = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
         stan::math::fill(inline_sym10__, DUMMY_VAR__);
         
         for (int inline_sym14__ = 1; inline_sym14__ <= nind; ++inline_sym14__) {
@@ -25362,17 +25339,15 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                  0, 1, lp__);
       Eigen::Matrix<double, -1, -1> phi;
-      phi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, 
-        (n_occasions - 1));
+      phi = Eigen::Matrix<double, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(phi, std::numeric_limits<double>::quiet_NaN());
       
       Eigen::Matrix<double, -1, -1> p;
-      p = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, 
-        (n_occasions - 1));
+      p = Eigen::Matrix<double, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(p, std::numeric_limits<double>::quiet_NaN());
       
       Eigen::Matrix<local_scalar_t__, -1, -1> chi;
-      chi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, n_occasions);
+      chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
       stan::math::fill(chi, DUMMY_VAR__);
       
       vars__.emplace_back(mean_phi);
@@ -25459,7 +25434,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
         current_statement__ = 15;
         validate_non_negative_index("chi", "n_occasions", n_occasions);
         Eigen::Matrix<local_scalar_t__, -1, -1> inline_sym2__;
-        inline_sym2__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, nind, n_occasions);
+        inline_sym2__ = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
         stan::math::fill(inline_sym2__, DUMMY_VAR__);
         
         for (int inline_sym6__ = 1; inline_sym6__ <= nind; ++inline_sym6__) {
@@ -27037,11 +27012,11 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       current_statement__ = 4;
       beta_p = in__.template read<local_scalar_t__>();
       Eigen::Matrix<local_scalar_t__, -1, 1> logit_psi;
-      logit_psi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, R);
+      logit_psi = Eigen::Matrix<local_scalar_t__, -1, 1>(R);
       stan::math::fill(logit_psi, DUMMY_VAR__);
       
       Eigen::Matrix<local_scalar_t__, -1, -1> logit_p;
-      logit_p = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, R, T);
+      logit_p = Eigen::Matrix<local_scalar_t__, -1, -1>(R, T);
       stan::math::fill(logit_p, DUMMY_VAR__);
       
       assign(lcm_sym31__, add(alpha_occ, multiply(beta_occ, X)),
@@ -27179,11 +27154,11 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       current_statement__ = 4;
       beta_p = in__.template read<local_scalar_t__>();
       Eigen::Matrix<double, -1, 1> logit_psi;
-      logit_psi = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, R);
+      logit_psi = Eigen::Matrix<double, -1, 1>(R);
       stan::math::fill(logit_psi, std::numeric_limits<double>::quiet_NaN());
       
       Eigen::Matrix<double, -1, -1> logit_p;
-      logit_p = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, R, T);
+      logit_p = Eigen::Matrix<double, -1, -1>(R, T);
       stan::math::fill(logit_p, std::numeric_limits<double>::quiet_NaN());
       
       vars__.emplace_back(alpha_occ);
@@ -27241,10 +27216,10 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       occ_fs = std::numeric_limits<int>::min();
       
       std::vector<double> psi_con;
-      psi_con = stan::io::initialize_data<std::vector<double>>(model_arena_, R );
+      psi_con = std::vector<double>(R, std::numeric_limits<double>::quiet_NaN());
       
       std::vector<int> z;
-      z = stan::io::initialize_data<std::vector<int>>(model_arena_, R );
+      z = std::vector<int>(R, std::numeric_limits<int>::min());
       
       current_statement__ = 22;
       if (lcm_sym5__) {
@@ -27258,7 +27233,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
           current_statement__ = 14;
           validate_non_negative_index("q", "T", T);
           Eigen::Matrix<double, -1, 1> q;
-          q = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, T);
+          q = Eigen::Matrix<double, -1, 1>(T);
           stan::math::fill(q, std::numeric_limits<double>::quiet_NaN());
           
           assign(lcm_sym11__,
@@ -27296,7 +27271,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
             current_statement__ = 14;
             validate_non_negative_index("q", "T", T);
             Eigen::Matrix<double, -1, 1> q;
-            q = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, T);
+            q = Eigen::Matrix<double, -1, 1>(T);
             stan::math::fill(q, std::numeric_limits<double>::quiet_NaN());
             
             assign(lcm_sym10__,
@@ -27927,13 +27902,13 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       current_statement__ = 1;
       beta = in__.template read<local_scalar_t__>();
       Eigen::Matrix<local_scalar_t__, -1, 1> eta1;
-      eta1 = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, J);
+      eta1 = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       stan::math::fill(eta1, DUMMY_VAR__);
       
       current_statement__ = 2;
       eta1 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J);
       Eigen::Matrix<local_scalar_t__, -1, 1> eta2;
-      eta2 = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, J);
+      eta2 = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       stan::math::fill(eta2, DUMMY_VAR__);
       
       current_statement__ = 3;
@@ -27967,15 +27942,15 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       sigma_y = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                   0, 100, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> a1;
-      a1 = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, J);
+      a1 = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       stan::math::fill(a1, DUMMY_VAR__);
       
       Eigen::Matrix<local_scalar_t__, -1, 1> a2;
-      a2 = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, J);
+      a2 = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       stan::math::fill(a2, DUMMY_VAR__);
       
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat;
-      y_hat = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, N);
+      y_hat = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(y_hat, DUMMY_VAR__);
       
       assign(lcm_sym30__, add((10 * mu_a1), multiply(sigma_a1, eta1)),
@@ -28080,13 +28055,13 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       current_statement__ = 1;
       beta = in__.template read<local_scalar_t__>();
       Eigen::Matrix<double, -1, 1> eta1;
-      eta1 = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, J);
+      eta1 = Eigen::Matrix<double, -1, 1>(J);
       stan::math::fill(eta1, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
       eta1 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J);
       Eigen::Matrix<double, -1, 1> eta2;
-      eta2 = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, J);
+      eta2 = Eigen::Matrix<double, -1, 1>(J);
       stan::math::fill(eta2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
@@ -28120,15 +28095,15 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       sigma_y = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                   0, 100, lp__);
       Eigen::Matrix<double, -1, 1> a1;
-      a1 = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, J);
+      a1 = Eigen::Matrix<double, -1, 1>(J);
       stan::math::fill(a1, std::numeric_limits<double>::quiet_NaN());
       
       Eigen::Matrix<double, -1, 1> a2;
-      a2 = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, J);
+      a2 = Eigen::Matrix<double, -1, 1>(J);
       stan::math::fill(a2, std::numeric_limits<double>::quiet_NaN());
       
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat;
-      y_hat = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, N);
+      y_hat = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(y_hat, DUMMY_VAR__);
       
       vars__.emplace_back(beta);
@@ -28245,7 +28220,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       current_statement__ = 1;
       beta = context__.vals_r("beta")[(1 - 1)];
       Eigen::Matrix<double, -1, 1> eta1;
-      eta1 = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, J);
+      eta1 = Eigen::Matrix<double, -1, 1>(J);
       stan::math::fill(eta1, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -28270,7 +28245,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
         } 
       }
       Eigen::Matrix<double, -1, 1> eta2;
-      eta2 = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, J);
+      eta2 = Eigen::Matrix<double, -1, 1>(J);
       stan::math::fill(eta2, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -28898,21 +28873,21 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       current_statement__ = 2;
       phi = in__.template read<local_scalar_t__>();
       Eigen::Matrix<local_scalar_t__, -1, -1> x_matrix;
-      x_matrix = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, 3, 2);
+      x_matrix = Eigen::Matrix<local_scalar_t__, -1, -1>(3, 2);
       stan::math::fill(x_matrix, DUMMY_VAR__);
       
       current_statement__ = 3;
       x_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                    3, 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> x_vector;
-      x_vector = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, 2);
+      x_vector = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(x_vector, DUMMY_VAR__);
       
       current_statement__ = 4;
       x_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                    2);
       Eigen::Matrix<local_scalar_t__, -1, -1> x_cov;
-      x_cov = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, 2, 2);
+      x_cov = Eigen::Matrix<local_scalar_t__, -1, -1>(2, 2);
       stan::math::fill(x_cov, DUMMY_VAR__);
       
       current_statement__ = 5;
@@ -29467,21 +29442,21 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       current_statement__ = 2;
       phi = in__.template read<local_scalar_t__>();
       Eigen::Matrix<double, -1, -1> x_matrix;
-      x_matrix = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, 3, 2);
+      x_matrix = Eigen::Matrix<double, -1, -1>(3, 2);
       stan::math::fill(x_matrix, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
       x_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                    3, 2);
       Eigen::Matrix<double, -1, 1> x_vector;
-      x_vector = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, 2);
+      x_vector = Eigen::Matrix<double, -1, 1>(2);
       stan::math::fill(x_vector, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 4;
       x_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                    2);
       Eigen::Matrix<double, -1, -1> x_cov;
-      x_cov = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, 2, 2);
+      x_cov = Eigen::Matrix<double, -1, -1>(2, 2);
       stan::math::fill(x_cov, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
@@ -29599,7 +29574,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       current_statement__ = 2;
       phi = context__.vals_r("phi")[(1 - 1)];
       Eigen::Matrix<double, -1, -1> x_matrix;
-      x_matrix = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, 3, 2);
+      x_matrix = Eigen::Matrix<double, -1, -1>(3, 2);
       stan::math::fill(x_matrix, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -29657,7 +29632,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         }
       }
       Eigen::Matrix<double, -1, 1> x_vector;
-      x_vector = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, 2);
+      x_vector = Eigen::Matrix<double, -1, 1>(2);
       stan::math::fill(x_vector, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -29683,7 +29658,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         }
       }
       Eigen::Matrix<double, -1, -1> x_cov;
-      x_cov = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, 2, 2);
+      x_cov = Eigen::Matrix<double, -1, -1>(2, 2);
       stan::math::fill(x_cov, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -29726,7 +29701,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         }
       }
       Eigen::Matrix<double, -1, 1> x_cov_free__;
-      x_cov_free__ = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, 3);
+      x_cov_free__ = Eigen::Matrix<double, -1, 1>(3);
       stan::math::fill(x_cov_free__, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 5;
@@ -30307,13 +30282,13 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       double lcm_sym24__;
       int lcm_sym23__;
       Eigen::Matrix<local_scalar_t__, -1, 1> a;
-      a = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_pair);
+      a = Eigen::Matrix<local_scalar_t__, -1, 1>(n_pair);
       stan::math::fill(a, DUMMY_VAR__);
       
       current_statement__ = 1;
       a = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_pair);
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
-      beta = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, 2);
+      beta = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(beta, DUMMY_VAR__);
       
       current_statement__ = 2;
@@ -30336,7 +30311,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       sigma_y = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                   0, 100, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat;
-      y_hat = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, N);
+      y_hat = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(y_hat, DUMMY_VAR__);
       
       current_statement__ = 8;
@@ -30414,13 +30389,13 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       int lcm_sym12__;
       int lcm_sym11__;
       Eigen::Matrix<double, -1, 1> a;
-      a = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_pair);
+      a = Eigen::Matrix<double, -1, 1>(n_pair);
       stan::math::fill(a, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 1;
       a = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_pair);
       Eigen::Matrix<double, -1, 1> beta;
-      beta = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, 2);
+      beta = Eigen::Matrix<double, -1, 1>(2);
       stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 2;
@@ -30443,7 +30418,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       sigma_y = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                   0, 100, lp__);
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat;
-      y_hat = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, N);
+      y_hat = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(y_hat, DUMMY_VAR__);
       
       if (logical_gte(n_pair, 1)) {
@@ -30528,7 +30503,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       
       pos__ = 1;
       Eigen::Matrix<double, -1, 1> a;
-      a = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, n_pair);
+      a = Eigen::Matrix<double, -1, 1>(n_pair);
       stan::math::fill(a, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -30553,7 +30528,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         } 
       }
       Eigen::Matrix<double, -1, 1> beta;
-      beta = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, 2);
+      beta = Eigen::Matrix<double, -1, 1>(2);
       stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
       
       {
@@ -31129,7 +31104,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       tau = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
               lp__);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> b;
-      b = stan::io::initialize_data<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(model_arena_, I , 8);
+      b = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(I, Eigen::Matrix<local_scalar_t__, -1, 1>(8));
       stan::math::fill(b, DUMMY_VAR__);
       
       current_statement__ = 6;
@@ -31251,7 +31226,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       tau = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
               lp__);
       std::vector<Eigen::Matrix<double, -1, 1>> b;
-      b = stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, 1>>>(model_arena_, I , 8);
+      b = std::vector<Eigen::Matrix<double, -1, 1>>(I, Eigen::Matrix<double, -1, 1>(8));
       stan::math::fill(b, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 6;
@@ -31404,7 +31379,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       current_statement__ = 5;
       tau_free__ = stan::math::lb_free(tau, 0);
       std::vector<Eigen::Matrix<double, -1, 1>> b;
-      b = stan::io::initialize_data<std::vector<Eigen::Matrix<double, -1, 1>>>(model_arena_, I , 8);
+      b = std::vector<Eigen::Matrix<double, -1, 1>>(I, Eigen::Matrix<double, -1, 1>(8));
       stan::math::fill(b, std::numeric_limits<double>::quiet_NaN());
       
       {

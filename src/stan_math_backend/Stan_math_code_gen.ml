@@ -393,7 +393,7 @@ let pp_ctor ppf p =
       | Sized st ->
           Locations.pp_smeta ppf meta ;
           if Set.mem data_idents decl_id then pp_validate_data ppf (decl_id, st) ;
-          pp_set_size ppf (decl_id, st, DataOnly)
+          pp_init_data ppf (decl_id, st, DataOnly)
       | Unsized _ -> () )
     | _ -> pp_statement ppf s
   in
@@ -430,8 +430,8 @@ let rec top_level_decls Stmt.Fixed.({pattern; _}) =
 let pp_model_private ppf {Program.prepare_data; _} =
   let data_decls = List.concat_map ~f:top_level_decls prepare_data in
   pf ppf "stan::math::stack_alloc model_arena_;@ %a"
-  (list ~sep:cut pp_data_decl)
-  data_decls
+    (list ~sep:cut pp_data_decl)
+    data_decls
 
 (** Print the signature and blocks of the model class methods.
   @param ppf A pretty printer

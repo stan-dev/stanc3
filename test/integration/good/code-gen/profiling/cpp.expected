@@ -198,7 +198,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         current_statement__ = 5;
         validate_non_negative_index("cov", "N", N);
         Eigen::Matrix<local_scalar_t__, -1, -1> cov;
-        cov = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, N, N);
+        cov = Eigen::Matrix<local_scalar_t__, -1, -1>(N, N);
         stan::math::fill(cov, DUMMY_VAR__);
         
         current_statement__ = 7;
@@ -206,7 +206,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         current_statement__ = 8;
         validate_non_negative_index("L_cov", "N", N);
         Eigen::Matrix<local_scalar_t__, -1, -1> L_cov;
-        L_cov = stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, N, N);
+        L_cov = Eigen::Matrix<local_scalar_t__, -1, -1>(N, N);
         stan::math::fill(L_cov, DUMMY_VAR__);
         
         current_statement__ = 11;

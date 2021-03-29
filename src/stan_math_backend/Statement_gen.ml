@@ -33,29 +33,66 @@ let rec pp_dims ppf st =
 let pp_st ppf adtype st =
   pf ppf "%a" pp_unsizedtype_local (adtype, SizedType.to_unsized st)
 
-  let pp_set_size ppf ((decl_id, st, adtype) : 
-    (string * Expr.Typed.t SizedType.t * UnsizedType.autodifftype))=
-    (* TODO: generate optimal adtypes for expressions and declarations *)
-    let real_nan =
-      match adtype with
-      | UnsizedType.AutoDiffable -> "DUMMY_VAR__"
-      | DataOnly -> "std::numeric_limits<double>::quiet_NaN()"
+let pp_init_data ppf
+    ((decl_id, st, adtype) :
+      string * Expr.Typed.t SizedType.t * UnsizedType.autodifftype) =
+  (* TODO: generate optimal adtypes for expressions and declarations *)
+  let real_nan =
+    match adtype with
+    | UnsizedType.AutoDiffable -> "DUMMY_VAR__"
+    | DataOnly -> "std::numeric_limits<double>::quiet_NaN()"
+  in
+  let pp_size_ctor ppf st =
+    let pp_st ppf st =
+      pf ppf "%a" pp_unsizedtype_local (adtype, SizedType.to_unsized st)
     in
-    let pp_size_ctor ppf st =
-      let pp_st ppf st =
-        pf ppf "%a" pp_unsizedtype_local (adtype, SizedType.to_unsized st)
-      in
-      match st with
-      | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
-      | SReal -> pf ppf "%s" real_nan
-      | SVector d -> pf ppf "stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, 1>>>(model_arena_, %a)" pp_expr d 
-      | SRowVector d -> pf ppf "stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, %a)" pp_expr d 
-      | SMatrix (d1, d2) -> pf ppf "stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, -1>>>(model_arena_, %a, %a)" pp_expr d1 pp_expr d2
-      | SArray (t, d) -> pf ppf "stan::io::initialize_data<%a>(model_arena_, %a %a)" pp_st st pp_expr d pp_dims t
+    match st with
+    | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
+    | SReal -> pf ppf "%s" real_nan
+    | SVector d ->
+        pf ppf
+          "stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, \
+           1>>>(model_arena_, %a)"
+          pp_expr d
+    | SRowVector d ->
+        pf ppf
+          "stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, \
+           -1>>>(model_arena_, %a)"
+          pp_expr d
+    | SMatrix (d1, d2) ->
+        pf ppf
+          "stan::io::initialize_data<Eigen::Map<Eigen::Matrix<double, -1, \
+           -1>>>(model_arena_, %a, %a)"
+          pp_expr d1 pp_expr d2
+    | SArray (t, d) ->
+        pf ppf "stan::io::initialize_data<%a>(model_arena_, %a %a)" pp_st st
+          pp_expr d pp_dims t
+  in
+  pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_size_ctor st ;
+  if contains_eigen (SizedType.to_unsized st) then
+    pf ppf "@[<hov 2>stan::math::fill(%s, %s);@]@," decl_id real_nan
+
+let pp_set_size ppf (decl_id, st, adtype) =
+  (* TODO: generate optimal adtypes for expressions and declarations *)
+  let real_nan =
+    match adtype with
+    | UnsizedType.AutoDiffable -> "DUMMY_VAR__"
+    | DataOnly -> "std::numeric_limits<double>::quiet_NaN()"
+  in
+  let rec pp_size_ctor ppf st =
+    let pp_st ppf st =
+      pf ppf "%a" pp_unsizedtype_local (adtype, SizedType.to_unsized st)
     in
-    pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_size_ctor st ;
-    if contains_eigen (SizedType.to_unsized st) then
-      pf ppf "@[<hov 2>stan::math::fill(%s, %s);@]@," decl_id real_nan
+    match st with
+    | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
+    | SReal -> pf ppf "%s" real_nan
+    | SVector d | SRowVector d -> pf ppf "%a(%a)" pp_st st pp_expr d
+    | SMatrix (d1, d2) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d1 pp_expr d2
+    | SArray (t, d) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d pp_size_ctor t
+  in
+  pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_size_ctor st ;
+  if contains_eigen (SizedType.to_unsized st) then
+    pf ppf "@[<hov 2>stan::math::fill(%s, %s);@]@," decl_id real_nan
 
 let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in
@@ -64,7 +101,7 @@ let%expect_test "set size mat array" =
   |> print_endline ;
   [%expect
     {|
-      d = stan::io::initialize_data<std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>>(model_arena_, 5 , 4 , 2, 3);
+      d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3)));
       stan::math::fill(d, std::numeric_limits<double>::quiet_NaN()); |}]
 
 (** [pp_for_loop ppf (loopvar, lower, upper, pp_body, body)] tries to
