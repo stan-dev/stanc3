@@ -440,6 +440,7 @@ and pp_compiler_internal_fn ad ut f ppf es =
             (UnsizedType.AutoDiffable, ut)
             (list ~sep:comma pp_expr) arg_exprs
     | _ -> raise_s [%message "emit ReadParam with " (es : Expr.Typed.t list)] )
+  | FnDeepCopy -> gen_fun_app ppf "stan::model::deep_copy" es
   | _ -> gen_fun_app ppf (Internal_fun.to_string f) es
 
 and pp_promoted ad ut ppf e =

@@ -393,20 +393,20 @@ let constrain_decl st dconstrain t decl_id decl_var smeta =
 
 let rec check_decl var decl_type' decl_id decl_trans smeta adlevel =
   let decl_type = remove_possibly_exn decl_type' "check" smeta in
-  let chk fn var =
-    let check_id id =
-      let id_str = Fmt.strf "%a" Expr.Typed.pp id in
-      let args = extract_transform_args id decl_trans in
-      Stmt.Helpers.internal_nrfunapp (FnCheck id_str) (fn :: id :: args) smeta
-    in
-    [(constraint_forl decl_trans) decl_type check_id var smeta]
-  in
   match decl_trans with
-  | Identity | Offset _ | Multiplier _ | OffsetMultiplier (_, _) -> []
+  | Program.Identity | Offset _ | Multiplier _ | OffsetMultiplier (_, _) -> []
   | LowerUpper (lb, ub) ->
       check_decl var decl_type' decl_id (Lower lb) smeta adlevel
       @ check_decl var decl_type' decl_id (Upper ub) smeta adlevel
-  | _ -> chk (mkstring smeta (check_constraint_to_string decl_trans Check)) var
+  | _ ->
+      let fn = check_constraint_to_string decl_trans Check in
+      let check_id id =
+        let id_str = Expr.Helpers.str (Fmt.strf "%a" Expr.Typed.pp id) in
+        let args = extract_transform_args id decl_trans in
+        Stmt.Helpers.internal_nrfunapp (FnCheck fn) (id_str :: id :: args)
+          smeta
+      in
+      [(constraint_forl decl_trans) decl_type check_id var smeta]
 
 let check_sizedtype name =
   let check x = function

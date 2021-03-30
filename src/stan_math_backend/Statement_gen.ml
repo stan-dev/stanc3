@@ -100,8 +100,7 @@ let pp_bool_expr ppf expr =
   | UReal -> pp_call ppf ("as_bool", pp_expr, [expr])
   | _ -> pp_expr ppf expr
 
-let rec pp_statement (ppf : Format.formatter)
-    (Stmt.Fixed.({pattern; meta}) as stmt) =
+let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
   (* ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) = *)
   let pp_stmt_list = list ~sep:cut pp_statement in
   ( match pattern with
@@ -161,12 +160,12 @@ let rec pp_statement (ppf : Format.formatter)
       pf ppf "std::stringstream %s;@," err_strm ;
       pf ppf "%a@," (list ~sep:cut add_to_string) args ;
       pf ppf "throw std::domain_error(%s.str());" err_strm
-  | NRFunApp ((CompilerInternal (FnCheck _) as kind), args) ->
-      let args =
+  | NRFunApp (CompilerInternal (FnCheck check_name), args) ->
+      let function_arg =
         {Expr.Fixed.pattern= Var "function__"; meta= Expr.Typed.Meta.empty}
-        :: args
       in
-      pp_statement ppf {pattern= NRFunApp (kind, args); meta= stmt.meta}
+      pf ppf "%s(@[<hov>%a@]);" ("check_" ^ check_name)
+        (list ~sep:comma pp_expr) (function_arg :: args)
   | NRFunApp (CompilerInternal FnWriteParam, [var]) ->
       pf ppf "@[<hov 2>vars__.emplace_back(@,%a);@]" pp_expr var
   | NRFunApp (CompilerInternal f, args) ->
