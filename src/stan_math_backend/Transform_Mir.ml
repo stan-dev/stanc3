@@ -187,7 +187,7 @@ let constraint_to_string t (c : constrainaction) =
     | Constrain | Unconstrain -> "lub" )
   | Offset _ | Multiplier _ | OffsetMultiplier _ -> (
     match c with Check -> "" | Constrain | Unconstrain -> "offset_multiplier" )
-  | Identity -> "identity"
+  | Identity -> ""
 
 let default_multiplier = 1
 let default_offset = 0
