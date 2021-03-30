@@ -93,8 +93,8 @@ let%expect_test "nested dist prefixes translated" =
   [%expect
     {|
     ((pattern
-      (FunApp StanLib tfd__.Normal
-       (((pattern (FunApp StanLib tfd__.Normal ()))
+      (FunApp (StanLib tfd__.Normal)
+       (((pattern (FunApp (StanLib tfd__.Normal) ()))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))) |}]
 
