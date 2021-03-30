@@ -109,8 +109,8 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
   match pattern with
   | Assignment
       ( (vident, _, [])
-      , ( {pattern= FunApp (CompilerInternal (FnReadData | FnReadParam), _); _}
-        as rhs ) ) ->
+      , ( { pattern= FunApp (CompilerInternal (FnReadData | FnReadParam _), _); _
+          } as rhs ) ) ->
       pf ppf "@[<hov 4>%s = %a;@]" vident pp_expr rhs
   | Assignment
       ((vident, _, []), ({meta= Expr.Typed.Meta.({type_= UInt; _}); _} as rhs))
@@ -191,7 +191,7 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
       { body=
           { pattern=
               Assignment
-                (_, {pattern= FunApp (CompilerInternal FnReadParam, _); _}); _
+                (_, {pattern= FunApp (CompilerInternal (FnReadParam _), _); _}); _
           } as body; _ } ->
       pp_statement ppf body
       (* Skip For loop part, just emit body due to the way FnReadParam emits *)

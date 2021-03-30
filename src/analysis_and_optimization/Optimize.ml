@@ -689,7 +689,7 @@ let can_side_effect_top_expr (e : Expr.Typed.t) =
   | FunApp ((UserDefined f | StanLib f), _) -> String.suffix f 3 = "_lp"
   | FunApp
       ( CompilerInternal
-          ( FnReadParam | FnReadData | FnWriteParam | FnConstrain _
+          ( FnReadParam _ | FnReadData | FnWriteParam | FnConstrain _
           | FnValidateSize | FnValidateSizeSimplex | FnValidateSizeUnitVector
           | FnUnconstrain _ )
       , _ ) ->

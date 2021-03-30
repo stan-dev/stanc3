@@ -420,26 +420,15 @@ and pp_compiler_internal_fn ad ut f ppf es =
   | FnConstrain flavor -> pp_constrain_funapp "constrain" flavor ppf es
   | FnUnconstrain flavor -> pp_constrain_funapp "free" flavor ppf es
   | FnReadData -> read_data ut ppf es
-  | FnReadParam -> (
-    match es with
-    | {Expr.Fixed.pattern= Lit (Str, constraint_string); meta= emeta}
-      :: {Expr.Fixed.pattern= Lit (Int, n_constraint_args_str); _} :: args ->
-        let n_constraint_args = int_of_string n_constraint_args_str in
-        let constraint_args, dims = List.split_n args n_constraint_args in
-        if String.is_empty constraint_string then
-          let arg_exprs = constraint_args @ dims in
-          pf ppf "@[<hov 2>in__.template read<%a>(@,%a)@]" pp_unsizedtype_local
-            (UnsizedType.AutoDiffable, ut)
-            (list ~sep:comma pp_expr) arg_exprs
-        else
-          let lp_expr = Expr.Fixed.{pattern= Var "lp__"; meta= emeta} in
-          let arg_exprs = constraint_args @ [lp_expr] @ dims in
-          pf ppf
-            "@[<hov 2>in__.template read_constrain_%s<%a, jacobian__>(@,%a)@]"
-            constraint_string pp_unsizedtype_local
-            (UnsizedType.AutoDiffable, ut)
-            (list ~sep:comma pp_expr) arg_exprs
-    | _ -> raise_s [%message "emit ReadParam with " (es : Expr.Typed.t list)] )
+  | FnReadParam constraint_string ->
+      let constraint_suffix_opt, jacobian_param_opt =
+        if String.is_empty constraint_string then (None, None)
+        else (Some ("_constrain_" ^ constraint_string), Some ", jacobian__")
+      in
+      pf ppf "@[<hov 2>in__.template read%a<%a%a>(@,%a)@]"
+        (Fmt.option Fmt.string) constraint_suffix_opt pp_unsizedtype_local
+        (UnsizedType.AutoDiffable, ut)
+        (Fmt.option Fmt.string) jacobian_param_opt (list ~sep:comma pp_expr) es
   | FnDeepCopy -> gen_fun_app ppf "stan::model::deep_copy" es
   | _ -> gen_fun_app ppf (Internal_fun.to_string f) es
 
@@ -513,7 +502,7 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
   | Indexed (e, []) -> pp_expr ppf e
   | Indexed (e, idx) -> (
     match e.pattern with
-    | FunApp (CompilerInternal FnReadParam, _) -> pp_expr ppf e
+    | FunApp (CompilerInternal (FnReadParam _), _) -> pp_expr ppf e
     | FunApp (CompilerInternal FnReadData, _) ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
     | _
