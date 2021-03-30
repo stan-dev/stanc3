@@ -165,29 +165,33 @@ type constrainaction = Check | Constrain | Unconstrain [@@deriving sexp]
 
 let constraint_to_string t (c : constrainaction) =
   match t with
-  | Program.Ordered -> "ordered"
-  | PositiveOrdered -> "positive_ordered"
-  | Simplex -> "simplex"
-  | UnitVector -> "unit_vector"
-  | CholeskyCorr -> "cholesky_factor_corr"
-  | CholeskyCov -> "cholesky_factor_cov"
-  | Correlation -> "corr_matrix"
-  | Covariance -> "cov_matrix"
+  | Program.Ordered -> Some "ordered"
+  | PositiveOrdered -> Some "positive_ordered"
+  | Simplex -> Some "simplex"
+  | UnitVector -> Some "unit_vector"
+  | CholeskyCorr -> Some "cholesky_factor_corr"
+  | CholeskyCov -> Some "cholesky_factor_cov"
+  | Correlation -> Some "corr_matrix"
+  | Covariance -> Some "cov_matrix"
   | Lower _ -> (
     match c with
-    | Check -> "greater_or_equal"
-    | Constrain | Unconstrain -> "lb" )
+    | Check -> Some "greater_or_equal"
+    | Constrain | Unconstrain -> Some "lb" )
   | Upper _ -> (
-    match c with Check -> "less_or_equal" | Constrain | Unconstrain -> "ub" )
+    match c with
+    | Check -> Some "less_or_equal"
+    | Constrain | Unconstrain -> Some "ub" )
   | LowerUpper _ -> (
     match c with
     | Check ->
         raise_s
           [%message "LowerUpper is really two other checks tied together"]
-    | Constrain | Unconstrain -> "lub" )
+    | Constrain | Unconstrain -> Some "lub" )
   | Offset _ | Multiplier _ | OffsetMultiplier _ -> (
-    match c with Check -> "" | Constrain | Unconstrain -> "offset_multiplier" )
-  | Identity -> ""
+    match c with
+    | Check -> None
+    | Constrain | Unconstrain -> Some "offset_multiplier" )
+  | Identity -> None
 
 let default_multiplier = 1
 let default_offset = 0

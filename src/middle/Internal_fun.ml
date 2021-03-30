@@ -8,7 +8,7 @@ type t =
   (* In AST_to_MIR being used as StanLib *)
   | FnReadData
   (* XXX move these to a backend specific file?*)
-  | FnReadParam of string
+  | FnReadParam of string option
   | FnWriteParam
   | FnValidateSize
   | FnValidateSizeSimplex

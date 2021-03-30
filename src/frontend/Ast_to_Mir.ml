@@ -198,33 +198,37 @@ type decl_context =
 
 let check_constraint_to_string t (c : constrainaction) =
   match t with
-  | Program.Ordered -> "ordered"
-  | PositiveOrdered -> "positive_ordered"
-  | Simplex -> "simplex"
-  | UnitVector -> "unit_vector"
-  | CholeskyCorr -> "cholesky_factor_corr"
-  | CholeskyCov -> "cholesky_factor"
-  | Correlation -> "corr_matrix"
-  | Covariance -> "cov_matrix"
+  | Program.Ordered -> Some "ordered"
+  | PositiveOrdered -> Some "positive_ordered"
+  | Simplex -> Some "simplex"
+  | UnitVector -> Some "unit_vector"
+  | CholeskyCorr -> Some "cholesky_factor_corr"
+  | CholeskyCov -> Some "cholesky_factor"
+  | Correlation -> Some "corr_matrix"
+  | Covariance -> Some "cov_matrix"
   | Lower _ -> (
     match c with
-    | Check -> "greater_or_equal"
-    | Constrain | Unconstrain -> "lb" )
+    | Check -> Some "greater_or_equal"
+    | Constrain | Unconstrain -> Some "lb" )
   | Upper _ -> (
-    match c with Check -> "less_or_equal" | Constrain | Unconstrain -> "ub" )
+    match c with
+    | Check -> Some "less_or_equal"
+    | Constrain | Unconstrain -> Some "ub" )
   | LowerUpper _ -> (
     match c with
     | Check ->
         raise_s
           [%message "LowerUpper is really two other checks tied together"]
-    | Constrain | Unconstrain -> "lub" )
+    | Constrain | Unconstrain -> Some "lub" )
   | Offset _ | Multiplier _ | OffsetMultiplier _ -> (
-    match c with Check -> "" | Constrain | Unconstrain -> "offset_multiplier" )
-  | Identity -> ""
+    match c with
+    | Check -> None
+    | Constrain | Unconstrain -> Some "offset_multiplier" )
+  | Identity -> None
 
 let constrain_constraint_to_string t (c : constrainaction) =
   match t with
-  | Program.CholeskyCorr -> "cholesky_corr"
+  | Program.CholeskyCorr -> Some "cholesky_corr"
   | _ -> check_constraint_to_string t c
 
 let constraint_forl = function
@@ -350,8 +354,8 @@ let remove_possibly_exn pst action loc =
           "Error extracting sizedtype" ~action ~loc:(loc : Location_span.t)]
 
 let constrain_decl st dconstrain t decl_id decl_var smeta =
-  match Option.map ~f:(constrain_constraint_to_string t) dconstrain with
-  | None | Some "" -> []
+  match Option.bind ~f:(constrain_constraint_to_string t) dconstrain with
+  | None -> []
   | Some constraint_str ->
       let dc = Option.value_exn dconstrain in
       let extra_args =
@@ -398,15 +402,17 @@ let rec check_decl var decl_type' decl_id decl_trans smeta adlevel =
   | LowerUpper (lb, ub) ->
       check_decl var decl_type' decl_id (Lower lb) smeta adlevel
       @ check_decl var decl_type' decl_id (Upper ub) smeta adlevel
-  | _ ->
-      let fn = check_constraint_to_string decl_trans Check in
-      let check_id id =
-        let id_str = Expr.Helpers.str (Fmt.strf "%a" Expr.Typed.pp id) in
-        let args = extract_transform_args id decl_trans in
-        Stmt.Helpers.internal_nrfunapp (FnCheck fn) (id_str :: id :: args)
-          smeta
-      in
-      [(constraint_forl decl_trans) decl_type check_id var smeta]
+  | _ -> (
+    match check_constraint_to_string decl_trans Check with
+    | Some fn ->
+        let check_id id =
+          let id_str = Expr.Helpers.str (Fmt.strf "%a" Expr.Typed.pp id) in
+          let args = extract_transform_args id decl_trans in
+          Stmt.Helpers.internal_nrfunapp (FnCheck fn) (id_str :: id :: args)
+            smeta
+        in
+        [(constraint_forl decl_trans) decl_type check_id var smeta]
+    | None -> [] )
 
 let check_sizedtype name =
   let check x = function

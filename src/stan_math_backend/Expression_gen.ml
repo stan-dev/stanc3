@@ -420,10 +420,14 @@ and pp_compiler_internal_fn ad ut f ppf es =
   | FnConstrain flavor -> pp_constrain_funapp "constrain" flavor ppf es
   | FnUnconstrain flavor -> pp_constrain_funapp "free" flavor ppf es
   | FnReadData -> read_data ut ppf es
-  | FnReadParam constraint_string ->
-      let constraint_suffix_opt, jacobian_param_opt =
-        if String.is_empty constraint_string then (None, None)
-        else (Some ("_constrain_" ^ constraint_string), Some ", jacobian__")
+  | FnReadParam constraint_opt ->
+      let constraint_suffix_opt =
+        Option.map
+          ~f:(fun constraint_string -> "_constrain_" ^ constraint_string)
+          constraint_opt
+      in
+      let jacobian_param_opt =
+        Option.map ~f:(fun _ -> ", jacobian__") constraint_opt
       in
       pf ppf "@[<hov 2>in__.template read%a<%a%a>(@,%a)@]"
         (Fmt.option Fmt.string) constraint_suffix_opt pp_unsizedtype_local
