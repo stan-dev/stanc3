@@ -15,12 +15,13 @@ let pp_profile ppf (pp_body, name, body) =
   in
   pf ppf "{@;<1 2>@[<v>%s@;@;%a@]@,}" profile pp_body body
 
-let rec contains_eigen = function
+let rec contains_eigen (ut : UnsizedType.t) : bool = 
+  match ut with
   | UnsizedType.UArray t -> contains_eigen t
   | UMatrix | URowVector | UVector -> true
   | UInt | UReal | UMathLibraryFunction | UFun _ -> false
 
-let pp_set_size ppf (decl_id, st, adtype) =
+let pp_set_size ppf (decl_id, st, adtype)  =
   (* TODO: generate optimal adtypes for expressions and declarations *)
   let real_nan =
     match adtype with
@@ -38,9 +39,11 @@ let pp_set_size ppf (decl_id, st, adtype) =
     | SMatrix (d1, d2) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d1 pp_expr d2
     | SArray (t, d) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d pp_size_ctor t
   in
-  pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_size_ctor st ;
-  if contains_eigen (SizedType.to_unsized st) then
-    pf ppf "@[<hov 2>stan::math::fill(%s, %s);@]@," decl_id real_nan
+  let print_fill ppf st =
+  match contains_eigen (SizedType.to_unsized st) with
+    | true -> pf ppf "stan::math::fill(%s, %s);" decl_id real_nan
+    | false -> () in
+    pf ppf "@[<hov 0>%s = %a;@,%a @]@," decl_id pp_size_ctor st print_fill st
 
 let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in

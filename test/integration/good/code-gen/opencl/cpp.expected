@@ -6159,33 +6159,25 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("p_real");
-    names__.emplace_back("p_real_array");
-    names__.emplace_back("p_matrix");
-    names__.emplace_back("p_vector");
-    names__.emplace_back("p_row_vector");
-    names__.emplace_back("y_p");
-    names__.emplace_back("transformed_param_real");
+    names__ = std::vector<std::string>{"p_real",
+    "p_real_array",
+    "p_matrix",
+    "p_vector",
+    "p_row_vector",
+    "y_p",
+    "transformed_param_real"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(d_int)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(d_int),
-                                             static_cast<size_t>(d_int)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(d_int)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(d_int)});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(d_int)},
+    std::vector<size_t>{static_cast<size_t>(d_int),
+                        static_cast<size_t>(d_int)},
+    std::vector<size_t>{static_cast<size_t>(d_int)},
+    std::vector<size_t>{static_cast<size_t>(d_int)},
+    std::vector<size_t>{},
+    std::vector<size_t>{}};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -6262,16 +6254,14 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_real_array\",\"type\":{\"name\":\"array\",\"length\":" << d_int << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << d_int << ",\"cols\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_row_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"transformed_param_real\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_real_array\",\"type\":{\"name\":\"array\",\"length\":" << d_int << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << d_int << ",\"cols\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_row_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"transformed_param_real\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_real_array\",\"type\":{\"name\":\"array\",\"length\":" << d_int << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << d_int << ",\"cols\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_row_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"transformed_param_real\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_real_array\",\"type\":{\"name\":\"array\",\"length\":" << d_int << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << d_int << ",\"cols\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_row_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"transformed_param_real\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -6918,33 +6908,25 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("p_real");
-    names__.emplace_back("p_real_array");
-    names__.emplace_back("p_matrix");
-    names__.emplace_back("p_vector");
-    names__.emplace_back("p_row_vector");
-    names__.emplace_back("y_p");
-    names__.emplace_back("transformed_param_real");
+    names__ = std::vector<std::string>{"p_real",
+    "p_real_array",
+    "p_matrix",
+    "p_vector",
+    "p_row_vector",
+    "y_p",
+    "transformed_param_real"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(d_int)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(d_int),
-                                             static_cast<size_t>(d_int)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(d_int)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(d_int)});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(d_int)},
+    std::vector<size_t>{static_cast<size_t>(d_int),
+                        static_cast<size_t>(d_int)},
+    std::vector<size_t>{static_cast<size_t>(d_int)},
+    std::vector<size_t>{static_cast<size_t>(d_int)},
+    std::vector<size_t>{},
+    std::vector<size_t>{}};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -7021,16 +7003,14 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_real_array\",\"type\":{\"name\":\"array\",\"length\":" << d_int << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << d_int << ",\"cols\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_row_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"transformed_param_real\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_real_array\",\"type\":{\"name\":\"array\",\"length\":" << d_int << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << d_int << ",\"cols\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_row_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"transformed_param_real\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_real_array\",\"type\":{\"name\":\"array\",\"length\":" << d_int << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << d_int << ",\"cols\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_row_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"transformed_param_real\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_real_array\",\"type\":{\"name\":\"array\",\"length\":" << d_int << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << d_int << ",\"cols\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_row_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"transformed_param_real\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
     } // get_unconstrained_sizedtypes() 
     
   

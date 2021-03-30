@@ -4,7 +4,7 @@ module Str = Re.Str
 
 let rec sizedtype_to_json (st : Expr.Typed.t SizedType.t) : Yojson.Basic.t =
   let emit_cpp_expr e =
-    Fmt.strf "<< %a >>" Expression_gen.pp_expr e
+    Fmt.strf "+ std::to_string(%a) +" Expression_gen.pp_expr e
     |> Str.global_replace (Str.regexp "[\n\r\t ]+") " "
   in
   match st with

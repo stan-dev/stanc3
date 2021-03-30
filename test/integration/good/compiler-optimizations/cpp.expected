@@ -698,27 +698,20 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("beta");
-    names__.emplace_back("gamma");
-    names__.emplace_back("xi");
-    names__.emplace_back("delta");
-    names__.emplace_back("y");
+    names__ = std::vector<std::string>{"beta",
+    "gamma",
+    "xi",
+    "delta",
+    "y"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N_t),
-                                             static_cast<size_t>(4)});
-    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(N_t), static_cast<size_t>(4)}};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -773,16 +766,14 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"xi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"delta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" << N_t << ",\"element_type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"xi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"delta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" << N_t << ",\"element_type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"transformed_parameters\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"xi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"delta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" << N_t << ",\"element_type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"xi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"delta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" << N_t << ",\"element_type\":{\"name\":\"array\",\"length\":" << 4 << ",\"element_type\":{\"name\":\"real\"}}},\"block\":\"transformed_parameters\"}]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -2939,31 +2930,23 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("mean_p");
-    names__.emplace_back("beta");
-    names__.emplace_back("phi");
-    names__.emplace_back("p");
-    names__.emplace_back("chi");
+    names__ = std::vector<std::string>{"mean_p",
+    "beta",
+    "phi",
+    "p",
+    "chi"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(max_age)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(nind),
-                                             static_cast<size_t>(n_occ_minus_1)
-                                             });
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(nind),
-                                             static_cast<size_t>(n_occ_minus_1)
-                                             });
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(nind),
-                                             static_cast<size_t>(n_occasions)});
-    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(max_age)},
+    std::vector<size_t>{static_cast<size_t>(nind),
+                        static_cast<size_t>(n_occ_minus_1)},
+    std::vector<size_t>{static_cast<size_t>(nind),
+                        static_cast<size_t>(n_occ_minus_1)},
+    std::vector<size_t>{static_cast<size_t>(nind),
+                        static_cast<size_t>(n_occasions)}};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -3048,16 +3031,14 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << max_age << "},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << max_age << "},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << max_age << "},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << max_age << "},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"}]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -4487,60 +4468,43 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("sigma");
-    names__.emplace_back("sigma_age");
-    names__.emplace_back("sigma_edu");
-    names__.emplace_back("sigma_state");
-    names__.emplace_back("sigma_region");
-    names__.emplace_back("sigma_age_edu");
-    names__.emplace_back("b_0");
-    names__.emplace_back("b_female");
-    names__.emplace_back("b_black");
-    names__.emplace_back("b_female_black");
-    names__.emplace_back("b_v_prev");
-    names__.emplace_back("b_age");
-    names__.emplace_back("b_edu");
-    names__.emplace_back("b_region");
-    names__.emplace_back("b_age_edu");
-    names__.emplace_back("b_hat");
+    names__ = std::vector<std::string>{"sigma",
+    "sigma_age",
+    "sigma_edu",
+    "sigma_state",
+    "sigma_region",
+    "sigma_age_edu",
+    "b_0",
+    "b_female",
+    "b_black",
+    "b_female_black",
+    "b_v_prev",
+    "b_age",
+    "b_edu",
+    "b_region",
+    "b_age_edu",
+    "b_hat"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(n_age)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(n_edu)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(n_region)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(n_age),
-                                             static_cast<size_t>(n_edu)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(n_state)});
-    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(n_age)},
+    std::vector<size_t>{static_cast<size_t>(n_edu)},
+    std::vector<size_t>{static_cast<size_t>(n_region)},
+    std::vector<size_t>{static_cast<size_t>(n_age),
+                        static_cast<size_t>(n_edu)},
+    std::vector<size_t>{static_cast<size_t>(n_state)}};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -4643,16 +4607,14 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_age\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_edu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_state\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_region\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_age_edu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_female\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_black\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_female_black\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_v_prev\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_age\",\"type\":{\"name\":\"vector\",\"length\":" << n_age << "},\"block\":\"parameters\"},{\"name\":\"b_edu\",\"type\":{\"name\":\"vector\",\"length\":" << n_edu << "},\"block\":\"parameters\"},{\"name\":\"b_region\",\"type\":{\"name\":\"vector\",\"length\":" << n_region << "},\"block\":\"parameters\"},{\"name\":\"b_age_edu\",\"type\":{\"name\":\"matrix\",\"rows\":" << n_age << ",\"cols\":" << n_edu << "},\"block\":\"parameters\"},{\"name\":\"b_hat\",\"type\":{\"name\":\"vector\",\"length\":" << n_state << "},\"block\":\"parameters\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_age\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_edu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_state\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_region\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_age_edu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_female\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_black\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_female_black\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_v_prev\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_age\",\"type\":{\"name\":\"vector\",\"length\":" << n_age << "},\"block\":\"parameters\"},{\"name\":\"b_edu\",\"type\":{\"name\":\"vector\",\"length\":" << n_edu << "},\"block\":\"parameters\"},{\"name\":\"b_region\",\"type\":{\"name\":\"vector\",\"length\":" << n_region << "},\"block\":\"parameters\"},{\"name\":\"b_age_edu\",\"type\":{\"name\":\"matrix\",\"rows\":" << n_age << ",\"cols\":" << n_edu << "},\"block\":\"parameters\"},{\"name\":\"b_hat\",\"type\":{\"name\":\"vector\",\"length\":" << n_state << "},\"block\":\"parameters\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_age\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_edu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_state\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_region\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_age_edu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_female\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_black\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_female_black\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_v_prev\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_age\",\"type\":{\"name\":\"vector\",\"length\":" << n_age << "},\"block\":\"parameters\"},{\"name\":\"b_edu\",\"type\":{\"name\":\"vector\",\"length\":" << n_edu << "},\"block\":\"parameters\"},{\"name\":\"b_region\",\"type\":{\"name\":\"vector\",\"length\":" << n_region << "},\"block\":\"parameters\"},{\"name\":\"b_age_edu\",\"type\":{\"name\":\"matrix\",\"rows\":" << n_age << ",\"cols\":" << n_edu << "},\"block\":\"parameters\"},{\"name\":\"b_hat\",\"type\":{\"name\":\"vector\",\"length\":" << n_state << "},\"block\":\"parameters\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_age\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_edu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_state\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_region\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_age_edu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_female\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_black\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_female_black\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_v_prev\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b_age\",\"type\":{\"name\":\"vector\",\"length\":" << n_age << "},\"block\":\"parameters\"},{\"name\":\"b_edu\",\"type\":{\"name\":\"vector\",\"length\":" << n_edu << "},\"block\":\"parameters\"},{\"name\":\"b_region\",\"type\":{\"name\":\"vector\",\"length\":" << n_region << "},\"block\":\"parameters\"},{\"name\":\"b_age_edu\",\"type\":{\"name\":\"matrix\",\"rows\":" << n_age << ",\"cols\":" << n_edu << "},\"block\":\"parameters\"},{\"name\":\"b_hat\",\"type\":{\"name\":\"vector\",\"length\":" << n_state << "},\"block\":\"parameters\"}]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -4948,13 +4910,12 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    
+    names__ = std::vector<std::string>{};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
     
+    dimss__ = std::vector<std::vector<size_t>>{};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -4991,16 +4952,14 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -5293,13 +5252,12 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    
+    names__ = std::vector<std::string>{};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
     
+    dimss__ = std::vector<std::vector<size_t>>{};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -5336,16 +5294,14 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -5836,20 +5792,18 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("mu");
-    names__.emplace_back("sigma");
-    names__.emplace_back("theta");
+    names__ = std::vector<std::string>{"mu",
+    "sigma",
+    "theta"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(2)});
     
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(2)});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
+                                                                   static_cast<size_t>(2)
+                                                                   },
+    std::vector<size_t>{static_cast<size_t>(2)},
+    std::vector<size_t>{}};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -5902,16 +5856,14 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"mu\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"mu\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"array\",\"length\":" << 2 << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -6306,20 +6258,16 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("mu");
-    names__.emplace_back("theta");
-    names__.emplace_back("tau");
+    names__ = std::vector<std::string>{"mu",
+    "theta",
+    "tau"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(J)});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(J)},
+    std::vector<size_t>{}};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -6366,16 +6314,14 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" << J << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" << J << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" << J << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" << J << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -7801,49 +7747,36 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("a");
-    names__.emplace_back("b");
-    names__.emplace_back("c");
-    names__.emplace_back("d");
-    names__.emplace_back("e");
-    names__.emplace_back("beta");
-    names__.emplace_back("sigma_a");
-    names__.emplace_back("sigma_b");
-    names__.emplace_back("sigma_c");
-    names__.emplace_back("sigma_d");
-    names__.emplace_back("sigma_e");
-    names__.emplace_back("y_hat");
+    names__ = std::vector<std::string>{"a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "beta",
+    "sigma_a",
+    "sigma_b",
+    "sigma_c",
+    "sigma_d",
+    "sigma_e",
+    "y_hat"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(n_age)});
     
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(n_edu)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(n_age_edu)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(n_state)});
-    
-    dimss__.emplace_back(std::vector<size_t>{
-                                             static_cast<size_t>(n_region_full)
-                                             });
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(5)});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N)});
-    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
+                                                                   static_cast<size_t>(n_age)
+                                                                   },
+    std::vector<size_t>{static_cast<size_t>(n_edu)},
+    std::vector<size_t>{static_cast<size_t>(n_age_edu)},
+    std::vector<size_t>{static_cast<size_t>(n_state)},
+    std::vector<size_t>{static_cast<size_t>(n_region_full)},
+    std::vector<size_t>{static_cast<size_t>(5)},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(N)}};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -7942,16 +7875,14 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"a\",\"type\":{\"name\":\"vector\",\"length\":" << n_age << "},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" << n_edu << "},\"block\":\"parameters\"},{\"name\":\"c\",\"type\":{\"name\":\"vector\",\"length\":" << n_age_edu << "},\"block\":\"parameters\"},{\"name\":\"d\",\"type\":{\"name\":\"vector\",\"length\":" << n_state << "},\"block\":\"parameters\"},{\"name\":\"e\",\"type\":{\"name\":\"vector\",\"length\":" << n_region_full << "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << 5 << "},\"block\":\"parameters\"},{\"name\":\"sigma_a\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_b\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_c\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_d\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_e\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"a\",\"type\":{\"name\":\"vector\",\"length\":" << n_age << "},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" << n_edu << "},\"block\":\"parameters\"},{\"name\":\"c\",\"type\":{\"name\":\"vector\",\"length\":" << n_age_edu << "},\"block\":\"parameters\"},{\"name\":\"d\",\"type\":{\"name\":\"vector\",\"length\":" << n_state << "},\"block\":\"parameters\"},{\"name\":\"e\",\"type\":{\"name\":\"vector\",\"length\":" << n_region_full << "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << 5 << "},\"block\":\"parameters\"},{\"name\":\"sigma_a\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_b\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_c\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_d\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_e\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"a\",\"type\":{\"name\":\"vector\",\"length\":" << n_age << "},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" << n_edu << "},\"block\":\"parameters\"},{\"name\":\"c\",\"type\":{\"name\":\"vector\",\"length\":" << n_age_edu << "},\"block\":\"parameters\"},{\"name\":\"d\",\"type\":{\"name\":\"vector\",\"length\":" << n_state << "},\"block\":\"parameters\"},{\"name\":\"e\",\"type\":{\"name\":\"vector\",\"length\":" << n_region_full << "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << 5 << "},\"block\":\"parameters\"},{\"name\":\"sigma_a\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_b\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_c\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_d\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_e\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"a\",\"type\":{\"name\":\"vector\",\"length\":" << n_age << "},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" << n_edu << "},\"block\":\"parameters\"},{\"name\":\"c\",\"type\":{\"name\":\"vector\",\"length\":" << n_age_edu << "},\"block\":\"parameters\"},{\"name\":\"d\",\"type\":{\"name\":\"vector\",\"length\":" << n_state << "},\"block\":\"parameters\"},{\"name\":\"e\",\"type\":{\"name\":\"vector\",\"length\":" << n_region_full << "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << 5 << "},\"block\":\"parameters\"},{\"name\":\"sigma_a\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_b\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_c\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_d\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_e\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"}]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -8711,49 +8642,34 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("tau_phi");
-    names__.emplace_back("phi_std_raw");
-    names__.emplace_back("sigma_phi");
-    names__.emplace_back("phi");
-    names__.emplace_back("beta0");
-    names__.emplace_back("beta1");
-    names__.emplace_back("tau_theta");
-    names__.emplace_back("sigma_theta");
-    names__.emplace_back("theta");
-    names__.emplace_back("theta_std");
-    names__.emplace_back("x");
-    names__.emplace_back("y");
+    names__ = std::vector<std::string>{"tau_phi",
+    "phi_std_raw",
+    "sigma_phi",
+    "phi",
+    "beta0",
+    "beta1",
+    "tau_theta",
+    "sigma_theta",
+    "theta",
+    "theta_std",
+    "x",
+    "y"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>{
-                                             static_cast<size_t>(phi_std_raw_1dim__)
-                                             });
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N)});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N)});
-    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(phi_std_raw_1dim__)},
+    std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(N)},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(N)},
+    std::vector<size_t>{static_cast<size_t>(N)},
+    std::vector<size_t>{static_cast<size_t>(N)},
+    std::vector<size_t>{static_cast<size_t>(N)}};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -8844,16 +8760,14 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"tau_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi_std_raw\",\"type\":{\"name\":\"vector\",\"length\":" << phi_std_raw_1dim__ << "},\"block\":\"parameters\"},{\"name\":\"sigma_phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"},{\"name\":\"beta0\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"beta1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tau_theta\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"sigma_theta\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"theta_std\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"tau_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi_std_raw\",\"type\":{\"name\":\"vector\",\"length\":" << phi_std_raw_1dim__ << "},\"block\":\"parameters\"},{\"name\":\"sigma_phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"},{\"name\":\"beta0\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"beta1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tau_theta\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"sigma_theta\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"theta_std\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"tau_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi_std_raw\",\"type\":{\"name\":\"vector\",\"length\":" << phi_std_raw_1dim__ << "},\"block\":\"parameters\"},{\"name\":\"sigma_phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"},{\"name\":\"beta0\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"beta1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tau_theta\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"sigma_theta\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"theta_std\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"tau_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi_std_raw\",\"type\":{\"name\":\"vector\",\"length\":" << phi_std_raw_1dim__ << "},\"block\":\"parameters\"},{\"name\":\"sigma_phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"},{\"name\":\"beta0\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"beta1\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"tau_theta\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"sigma_theta\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"theta\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"theta_std\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"generated_quantities\"},{\"name\":\"y\",\"type\":{\"name\":\"array\",\"length\":" << N << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"}]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -10917,43 +10831,31 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("mean_phi");
-    names__.emplace_back("mean_p");
-    names__.emplace_back("epsilon");
-    names__.emplace_back("sigma");
-    names__.emplace_back("phi");
-    names__.emplace_back("p");
-    names__.emplace_back("chi");
-    names__.emplace_back("mu");
-    names__.emplace_back("sigma2");
+    names__ = std::vector<std::string>{"mean_phi",
+    "mean_p",
+    "epsilon",
+    "sigma",
+    "phi",
+    "p",
+    "chi",
+    "mu",
+    "sigma2"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(nind)});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(nind),
-                                             static_cast<size_t>(n_occ_minus_1)
-                                             });
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(nind),
-                                             static_cast<size_t>(n_occ_minus_1)
-                                             });
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(nind),
-                                             static_cast<size_t>(n_occasions)});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(nind)},
+    std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(nind),
+                        static_cast<size_t>(n_occ_minus_1)},
+    std::vector<size_t>{static_cast<size_t>(nind),
+                        static_cast<size_t>(n_occ_minus_1)},
+    std::vector<size_t>{static_cast<size_t>(nind),
+                        static_cast<size_t>(n_occasions)},
+    std::vector<size_t>{},
+    std::vector<size_t>{}};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -11044,16 +10946,14 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"epsilon\",\"type\":{\"name\":\"vector\",\"length\":" << nind << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"epsilon\",\"type\":{\"name\":\"vector\",\"length\":" << nind << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"epsilon\",\"type\":{\"name\":\"vector\",\"length\":" << nind << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"epsilon\",\"type\":{\"name\":\"vector\",\"length\":" << nind << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -14592,63 +14492,46 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("mean_phi");
-    names__.emplace_back("mean_p");
-    names__.emplace_back("psi");
-    names__.emplace_back("beta");
-    names__.emplace_back("epsilon");
-    names__.emplace_back("sigma");
-    names__.emplace_back("phi");
-    names__.emplace_back("p");
-    names__.emplace_back("b");
-    names__.emplace_back("nu");
-    names__.emplace_back("chi");
-    names__.emplace_back("sigma2");
-    names__.emplace_back("Nsuper");
-    names__.emplace_back("N");
-    names__.emplace_back("B");
-    names__.emplace_back("z");
+    names__ = std::vector<std::string>{"mean_phi",
+    "mean_p",
+    "psi",
+    "beta",
+    "epsilon",
+    "sigma",
+    "phi",
+    "p",
+    "b",
+    "nu",
+    "chi",
+    "sigma2",
+    "Nsuper",
+    "N",
+    "B",
+    "z"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(n_occasions)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(M)});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(M),
-                                             static_cast<size_t>(phi_2dim__)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(M),
-                                             static_cast<size_t>(n_occasions)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(n_occasions)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(n_occasions)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(M),
-                                             static_cast<size_t>(n_occasions)});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(n_occasions)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(n_occasions)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(M),
-                                             static_cast<size_t>(n_occasions)});
-    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(n_occasions)},
+    std::vector<size_t>{static_cast<size_t>(M)},
+    std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(M),
+                        static_cast<size_t>(phi_2dim__)},
+    std::vector<size_t>{static_cast<size_t>(M),
+                        static_cast<size_t>(n_occasions)},
+    std::vector<size_t>{static_cast<size_t>(n_occasions)},
+    std::vector<size_t>{static_cast<size_t>(n_occasions)},
+    std::vector<size_t>{static_cast<size_t>(M),
+                        static_cast<size_t>(n_occasions)},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(n_occasions)},
+    std::vector<size_t>{static_cast<size_t>(n_occasions)},
+    std::vector<size_t>{static_cast<size_t>(M),
+                        static_cast<size_t>(n_occasions)}};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -14795,16 +14678,14 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"psi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"parameters\"},{\"name\":\"epsilon\",\"type\":{\"name\":\"vector\",\"length\":" << M << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << phi_2dim__ << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"nu\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"Nsuper\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"N\",\"type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"B\",\"type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}}},\"block\":\"generated_quantities\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"psi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"parameters\"},{\"name\":\"epsilon\",\"type\":{\"name\":\"vector\",\"length\":" << M << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << phi_2dim__ << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"nu\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"Nsuper\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"N\",\"type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"B\",\"type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}}},\"block\":\"generated_quantities\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"psi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"parameters\"},{\"name\":\"epsilon\",\"type\":{\"name\":\"vector\",\"length\":" << M << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << phi_2dim__ << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" << (n_occasions - 1) << "},\"block\":\"transformed_parameters\"},{\"name\":\"nu\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"Nsuper\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"N\",\"type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"B\",\"type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}}},\"block\":\"generated_quantities\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"psi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"parameters\"},{\"name\":\"epsilon\",\"type\":{\"name\":\"vector\",\"length\":" << M << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << phi_2dim__ << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" << (n_occasions - 1) << "},\"block\":\"transformed_parameters\"},{\"name\":\"nu\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"Nsuper\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"N\",\"type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"B\",\"type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}}},\"block\":\"generated_quantities\"}]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -15981,23 +15862,19 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("pi");
-    names__.emplace_back("theta");
-    names__.emplace_back("log_Pr_z");
+    names__ = std::vector<std::string>{"pi",
+    "theta",
+    "log_Pr_z"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(K)});
     
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(J),
-                                             static_cast<size_t>(K),
-                                             static_cast<size_t>(K)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(I),
-                                             static_cast<size_t>(K)});
-    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
+                                                                   static_cast<size_t>(K)
+                                                                   },
+    std::vector<size_t>{static_cast<size_t>(J), static_cast<size_t>(K),
+                        static_cast<size_t>(K)},
+    std::vector<size_t>{static_cast<size_t>(I), static_cast<size_t>(K)}};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -16072,16 +15949,14 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"pi\",\"type\":{\"name\":\"vector\",\"length\":" << K << "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" << J << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << K << "}}},\"block\":\"parameters\"},{\"name\":\"log_Pr_z\",\"type\":{\"name\":\"array\",\"length\":" << I << ",\"element_type\":{\"name\":\"vector\",\"length\":" << K << "}},\"block\":\"generated_quantities\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"pi\",\"type\":{\"name\":\"vector\",\"length\":" << K << "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" << J << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << K << "}}},\"block\":\"parameters\"},{\"name\":\"log_Pr_z\",\"type\":{\"name\":\"array\",\"length\":" << I << ",\"element_type\":{\"name\":\"vector\",\"length\":" << K << "}},\"block\":\"generated_quantities\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"pi\",\"type\":{\"name\":\"vector\",\"length\":" << (K - 1) << "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" << J << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (K - 1) << "}}},\"block\":\"parameters\"},{\"name\":\"log_Pr_z\",\"type\":{\"name\":\"array\",\"length\":" << I << ",\"element_type\":{\"name\":\"vector\",\"length\":" << K << "}},\"block\":\"generated_quantities\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"pi\",\"type\":{\"name\":\"vector\",\"length\":" << (K - 1) << "},\"block\":\"parameters\"},{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" << J << ",\"element_type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << (K - 1) << "}}},\"block\":\"parameters\"},{\"name\":\"log_Pr_z\",\"type\":{\"name\":\"array\",\"length\":" << I << ",\"element_type\":{\"name\":\"vector\",\"length\":" << K << "}},\"block\":\"generated_quantities\"}]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -16784,35 +16659,26 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("beta0");
-    names__.emplace_back("beta1");
-    names__.emplace_back("tau_theta");
-    names__.emplace_back("tau_phi");
-    names__.emplace_back("theta_std");
-    names__.emplace_back("phi_std_raw");
-    names__.emplace_back("sigma_phi");
-    names__.emplace_back("phi");
+    names__ = std::vector<std::string>{"beta0",
+    "beta1",
+    "tau_theta",
+    "tau_phi",
+    "theta_std",
+    "phi_std_raw",
+    "sigma_phi",
+    "phi"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N)});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N)});
-    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(N)},
+    std::vector<size_t>{static_cast<size_t>(N)},
+    std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(N)}};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -16879,16 +16745,14 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"beta0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau_theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta_std\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"phi_std_raw\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"sigma_phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"beta0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau_theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta_std\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"phi_std_raw\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"sigma_phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"beta0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau_theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta_std\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"phi_std_raw\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"sigma_phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"beta0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau_theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"theta_std\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"phi_std_raw\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"parameters\"},{\"name\":\"sigma_phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"}]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -19042,31 +18906,23 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("mean_p");
-    names__.emplace_back("beta");
-    names__.emplace_back("phi");
-    names__.emplace_back("p");
-    names__.emplace_back("chi");
+    names__ = std::vector<std::string>{"mean_p",
+    "beta",
+    "phi",
+    "p",
+    "chi"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(max_age)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(nind),
-                                             static_cast<size_t>(n_occ_minus_1)
-                                             });
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(nind),
-                                             static_cast<size_t>(n_occ_minus_1)
-                                             });
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(nind),
-                                             static_cast<size_t>(n_occasions)});
-    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(max_age)},
+    std::vector<size_t>{static_cast<size_t>(nind),
+                        static_cast<size_t>(n_occ_minus_1)},
+    std::vector<size_t>{static_cast<size_t>(nind),
+                        static_cast<size_t>(n_occ_minus_1)},
+    std::vector<size_t>{static_cast<size_t>(nind),
+                        static_cast<size_t>(n_occasions)}};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -19151,16 +19007,14 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << max_age << "},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << max_age << "},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << max_age << "},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << max_age << "},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"}]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -22602,62 +22456,44 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("mean_phi");
-    names__.emplace_back("mean_p");
-    names__.emplace_back("gamma");
-    names__.emplace_back("epsilon");
-    names__.emplace_back("sigma");
-    names__.emplace_back("phi");
-    names__.emplace_back("p");
-    names__.emplace_back("chi");
-    names__.emplace_back("sigma2");
-    names__.emplace_back("psi");
-    names__.emplace_back("b");
-    names__.emplace_back("Nsuper");
-    names__.emplace_back("N");
-    names__.emplace_back("B");
-    names__.emplace_back("z");
+    names__ = std::vector<std::string>{"mean_phi",
+    "mean_p",
+    "gamma",
+    "epsilon",
+    "sigma",
+    "phi",
+    "p",
+    "chi",
+    "sigma2",
+    "psi",
+    "b",
+    "Nsuper",
+    "N",
+    "B",
+    "z"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(n_occasions)});
-    
-    dimss__.emplace_back(std::vector<size_t>{
-                                             static_cast<size_t>(epsilon_1dim__)
-                                             });
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(M),
-                                             static_cast<size_t>(phi_2dim__)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(M),
-                                             static_cast<size_t>(n_occasions)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(M),
-                                             static_cast<size_t>(n_occasions)});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(n_occasions)});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(n_occasions)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(n_occasions)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(M),
-                                             static_cast<size_t>(n_occasions)});
-    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(n_occasions)},
+    std::vector<size_t>{static_cast<size_t>(epsilon_1dim__)},
+    std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(M),
+                        static_cast<size_t>(phi_2dim__)},
+    std::vector<size_t>{static_cast<size_t>(M),
+                        static_cast<size_t>(n_occasions)},
+    std::vector<size_t>{static_cast<size_t>(M),
+                        static_cast<size_t>(n_occasions)},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(n_occasions)},
+    std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(n_occasions)},
+    std::vector<size_t>{static_cast<size_t>(n_occasions)},
+    std::vector<size_t>{static_cast<size_t>(M),
+                        static_cast<size_t>(n_occasions)}};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -22796,16 +22632,14 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"parameters\"},{\"name\":\"epsilon\",\"type\":{\"name\":\"vector\",\"length\":" << epsilon_1dim__ << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << phi_2dim__ << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"psi\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"generated_quantities\"},{\"name\":\"Nsuper\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"N\",\"type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"B\",\"type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}}},\"block\":\"generated_quantities\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"parameters\"},{\"name\":\"epsilon\",\"type\":{\"name\":\"vector\",\"length\":" << epsilon_1dim__ << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << phi_2dim__ << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"psi\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"generated_quantities\"},{\"name\":\"Nsuper\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"N\",\"type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"B\",\"type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}}},\"block\":\"generated_quantities\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"parameters\"},{\"name\":\"epsilon\",\"type\":{\"name\":\"vector\",\"length\":" << epsilon_1dim__ << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << phi_2dim__ << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"psi\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"generated_quantities\"},{\"name\":\"Nsuper\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"N\",\"type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"B\",\"type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}}},\"block\":\"generated_quantities\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"gamma\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"parameters\"},{\"name\":\"epsilon\",\"type\":{\"name\":\"vector\",\"length\":" << epsilon_1dim__ << "},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << phi_2dim__ << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << M << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"psi\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"b\",\"type\":{\"name\":\"vector\",\"length\":" << n_occasions << "},\"block\":\"generated_quantities\"},{\"name\":\"Nsuper\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"N\",\"type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"B\",\"type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << M << ",\"element_type\":{\"name\":\"array\",\"length\":" << n_occasions << ",\"element_type\":{\"name\":\"int\"}}},\"block\":\"generated_quantities\"}]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -23095,13 +22929,12 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    
+    names__ = std::vector<std::string>{};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
     
+    dimss__ = std::vector<std::vector<size_t>>{};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -23138,16 +22971,14 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -23442,14 +23273,12 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("x");
+    names__ = std::vector<std::string>{"x"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
     
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{}};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -23486,16 +23315,14 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -23811,14 +23638,14 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("theta");
+    names__ = std::vector<std::string>{"theta"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(J)});
     
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
+                                                                   static_cast<size_t>(J)
+                                                                   }};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -23861,16 +23688,14 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" << J << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" << J << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" << J << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"theta\",\"type\":{\"name\":\"array\",\"length\":" << J << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"}]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -25802,31 +25627,23 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("mean_phi");
-    names__.emplace_back("mean_p");
-    names__.emplace_back("phi");
-    names__.emplace_back("p");
-    names__.emplace_back("chi");
+    names__ = std::vector<std::string>{"mean_phi",
+    "mean_p",
+    "phi",
+    "p",
+    "chi"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(nind),
-                                             static_cast<size_t>(n_occ_minus_1)
-                                             });
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(nind),
-                                             static_cast<size_t>(n_occ_minus_1)
-                                             });
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(nind),
-                                             static_cast<size_t>(n_occasions)});
-    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(nind),
+                        static_cast<size_t>(n_occ_minus_1)},
+    std::vector<size_t>{static_cast<size_t>(nind),
+                        static_cast<size_t>(n_occ_minus_1)},
+    std::vector<size_t>{static_cast<size_t>(nind),
+                        static_cast<size_t>(n_occasions)}};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -25905,16 +25722,14 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"mean_phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mean_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"p\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occ_minus_1 << "},\"block\":\"transformed_parameters\"},{\"name\":\"chi\",\"type\":{\"name\":\"matrix\",\"rows\":" << nind << ",\"cols\":" << n_occasions << "},\"block\":\"transformed_parameters\"}]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -26390,23 +26205,18 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("mu");
-    names__.emplace_back("tp");
-    names__.emplace_back("lbaz");
-    names__.emplace_back("lbar");
+    names__ = std::vector<std::string>{"mu",
+    "tp",
+    "lbaz",
+    "lbar"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{}};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -26445,16 +26255,14 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tp\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"lbaz\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"lbar\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tp\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"lbaz\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"lbar\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tp\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"lbaz\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"lbar\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"mu\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tp\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"lbaz\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"lbar\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -27347,39 +27155,28 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("alpha_occ");
-    names__.emplace_back("beta_occ");
-    names__.emplace_back("alpha_p");
-    names__.emplace_back("beta_p");
-    names__.emplace_back("logit_psi");
-    names__.emplace_back("logit_p");
-    names__.emplace_back("occ_fs");
-    names__.emplace_back("psi_con");
-    names__.emplace_back("z");
+    names__ = std::vector<std::string>{"alpha_occ",
+    "beta_occ",
+    "alpha_p",
+    "beta_p",
+    "logit_psi",
+    "logit_p",
+    "occ_fs",
+    "psi_con",
+    "z"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(R)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(R),
-                                             static_cast<size_t>(T)});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(R)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(R)});
-    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(R)},
+    std::vector<size_t>{static_cast<size_t>(R), static_cast<size_t>(T)},
+    std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(R)},
+    std::vector<size_t>{static_cast<size_t>(R)}};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -27458,16 +27255,14 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"alpha_occ\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta_occ\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"logit_psi\",\"type\":{\"name\":\"vector\",\"length\":" << R << "},\"block\":\"transformed_parameters\"},{\"name\":\"logit_p\",\"type\":{\"name\":\"matrix\",\"rows\":" << R << ",\"cols\":" << T << "},\"block\":\"transformed_parameters\"},{\"name\":\"occ_fs\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"psi_con\",\"type\":{\"name\":\"array\",\"length\":" << R << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << R << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"alpha_occ\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta_occ\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"logit_psi\",\"type\":{\"name\":\"vector\",\"length\":" << R << "},\"block\":\"transformed_parameters\"},{\"name\":\"logit_p\",\"type\":{\"name\":\"matrix\",\"rows\":" << R << ",\"cols\":" << T << "},\"block\":\"transformed_parameters\"},{\"name\":\"occ_fs\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"psi_con\",\"type\":{\"name\":\"array\",\"length\":" << R << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << R << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"alpha_occ\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta_occ\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"logit_psi\",\"type\":{\"name\":\"vector\",\"length\":" << R << "},\"block\":\"transformed_parameters\"},{\"name\":\"logit_p\",\"type\":{\"name\":\"matrix\",\"rows\":" << R << ",\"cols\":" << T << "},\"block\":\"transformed_parameters\"},{\"name\":\"occ_fs\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"psi_con\",\"type\":{\"name\":\"array\",\"length\":" << R << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << R << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"alpha_occ\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta_occ\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"beta_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"logit_psi\",\"type\":{\"name\":\"vector\",\"length\":" << R << "},\"block\":\"transformed_parameters\"},{\"name\":\"logit_p\",\"type\":{\"name\":\"matrix\",\"rows\":" << R << ",\"cols\":" << T << "},\"block\":\"transformed_parameters\"},{\"name\":\"occ_fs\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"psi_con\",\"type\":{\"name\":\"array\",\"length\":" << R << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"array\",\"length\":" << R << ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"}]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -28312,44 +28107,32 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("beta");
-    names__.emplace_back("eta1");
-    names__.emplace_back("eta2");
-    names__.emplace_back("mu_a1");
-    names__.emplace_back("mu_a2");
-    names__.emplace_back("sigma_a1");
-    names__.emplace_back("sigma_a2");
-    names__.emplace_back("sigma_y");
-    names__.emplace_back("a1");
-    names__.emplace_back("a2");
-    names__.emplace_back("y_hat");
+    names__ = std::vector<std::string>{"beta",
+    "eta1",
+    "eta2",
+    "mu_a1",
+    "mu_a2",
+    "sigma_a1",
+    "sigma_a2",
+    "sigma_y",
+    "a1",
+    "a2",
+    "y_hat"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(J)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(J)});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(J)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(J)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N)});
-    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(J)},
+    std::vector<size_t>{static_cast<size_t>(J)},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(J)},
+    std::vector<size_t>{static_cast<size_t>(J)},
+    std::vector<size_t>{static_cast<size_t>(N)}};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -28434,16 +28217,14 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta1\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"parameters\"},{\"name\":\"eta2\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"parameters\"},{\"name\":\"mu_a1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mu_a2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_a1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_a2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"a1\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"transformed_parameters\"},{\"name\":\"a2\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta1\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"parameters\"},{\"name\":\"eta2\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"parameters\"},{\"name\":\"mu_a1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mu_a2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_a1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_a2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"a1\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"transformed_parameters\"},{\"name\":\"a2\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta1\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"parameters\"},{\"name\":\"eta2\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"parameters\"},{\"name\":\"mu_a1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mu_a2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_a1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_a2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"a1\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"transformed_parameters\"},{\"name\":\"a2\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"eta1\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"parameters\"},{\"name\":\"eta2\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"parameters\"},{\"name\":\"mu_a1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mu_a2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_a1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_a2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"a1\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"transformed_parameters\"},{\"name\":\"a2\",\"type\":{\"name\":\"vector\",\"length\":" << J << "},\"block\":\"transformed_parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"}]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -29741,28 +29522,20 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("theta");
-    names__.emplace_back("phi");
-    names__.emplace_back("x_matrix");
-    names__.emplace_back("x_vector");
-    names__.emplace_back("x_cov");
+    names__ = std::vector<std::string>{"theta",
+    "phi",
+    "x_matrix",
+    "x_vector",
+    "x_cov"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(3),
-                                             static_cast<size_t>(2)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(2)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(2),
-                                             static_cast<size_t>(2)});
-    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(3), static_cast<size_t>(2)},
+    std::vector<size_t>{static_cast<size_t>(2)},
+    std::vector<size_t>{static_cast<size_t>(2), static_cast<size_t>(2)}};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -29834,16 +29607,14 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"x_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"x_vector\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"x_cov\",\"type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 2 << "},\"block\":\"parameters\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"x_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"x_vector\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"x_cov\",\"type\":{\"name\":\"matrix\",\"rows\":" << 2 << ",\"cols\":" << 2 << "},\"block\":\"parameters\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"x_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"x_vector\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"x_cov\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"theta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"x_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << 3 << ",\"cols\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"x_vector\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"x_cov\",\"type\":{\"name\":\"vector\",\"length\":" << 3 << "},\"block\":\"parameters\"}]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -30576,29 +30347,24 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("a");
-    names__.emplace_back("beta");
-    names__.emplace_back("mu_a");
-    names__.emplace_back("sigma_a");
-    names__.emplace_back("sigma_y");
-    names__.emplace_back("y_hat");
+    names__ = std::vector<std::string>{"a",
+    "beta",
+    "mu_a",
+    "sigma_a",
+    "sigma_y",
+    "y_hat"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(n_pair)});
     
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(2)});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(N)});
-    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
+                                                                   static_cast<size_t>(n_pair)
+                                                                   },
+    std::vector<size_t>{static_cast<size_t>(2)},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(N)}};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -30661,16 +30427,14 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"a\",\"type\":{\"name\":\"vector\",\"length\":" << n_pair << "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"mu_a\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_a\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"a\",\"type\":{\"name\":\"vector\",\"length\":" << n_pair << "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"mu_a\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_a\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"a\",\"type\":{\"name\":\"vector\",\"length\":" << n_pair << "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"mu_a\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_a\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"a\",\"type\":{\"name\":\"vector\",\"length\":" << n_pair << "},\"block\":\"parameters\"},{\"name\":\"beta\",\"type\":{\"name\":\"vector\",\"length\":" << 2 << "},\"block\":\"parameters\"},{\"name\":\"mu_a\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_a\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma_y\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"y_hat\",\"type\":{\"name\":\"vector\",\"length\":" << N << "},\"block\":\"transformed_parameters\"}]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -31567,33 +31331,24 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("alpha0");
-    names__.emplace_back("alpha1");
-    names__.emplace_back("alpha2");
-    names__.emplace_back("alpha12");
-    names__.emplace_back("tau");
-    names__.emplace_back("b");
-    names__.emplace_back("sigma");
+    names__ = std::vector<std::string>{"alpha0",
+    "alpha1",
+    "alpha2",
+    "alpha12",
+    "tau",
+    "b",
+    "sigma"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(I),
-                                             static_cast<size_t>(K)});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{static_cast<size_t>(I), static_cast<size_t>(K)},
+    std::vector<size_t>{}};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -31652,16 +31407,14 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"alpha0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha12\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"array\",\"length\":" << I << ",\"element_type\":{\"name\":\"vector\",\"length\":" << K << "}},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"alpha0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha12\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"array\",\"length\":" << I << ",\"element_type\":{\"name\":\"vector\",\"length\":" << K << "}},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"alpha0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha12\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"array\",\"length\":" << I << ",\"element_type\":{\"name\":\"vector\",\"length\":" << K << "}},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"alpha0\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha1\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha12\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"tau\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"b\",\"type\":{\"name\":\"array\",\"length\":" << I << ",\"element_type\":{\"name\":\"vector\",\"length\":" << K << "}},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
     } // get_unconstrained_sizedtypes() 
     
   
@@ -32216,14 +31969,12 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("x");
+    names__ = std::vector<std::string>{"x"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
     
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{}};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -32260,16 +32011,14 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"x\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"x\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"x\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"x\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"}]");
     } // get_unconstrained_sizedtypes() 
     
   

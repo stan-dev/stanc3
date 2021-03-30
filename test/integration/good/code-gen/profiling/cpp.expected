@@ -375,20 +375,16 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("rho");
-    names__.emplace_back("alpha");
-    names__.emplace_back("sigma");
+    names__ = std::vector<std::string>{"rho",
+    "alpha",
+    "sigma"};
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+    std::vector<size_t>{},
+    std::vector<size_t>{}};
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -429,16 +425,14 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
-    return s__.str();
+  inline std::string get_constrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
-    return s__.str();
+  inline std::string get_unconstrained_sizedtypes() const final {
+    
+    return std::string("[{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
     } // get_unconstrained_sizedtypes() 
     
   

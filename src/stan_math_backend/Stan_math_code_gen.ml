@@ -392,8 +392,11 @@ let pp_ctor ppf p =
       match decl_type with
       | Sized st ->
           Locations.pp_smeta ppf meta ;
-          if Set.mem data_idents decl_id then pp_validate_data ppf (decl_id, st) ;
-          pp_set_size ppf (decl_id, st, DataOnly)
+          let is_input_data = Set.mem data_idents decl_id in
+          (match is_input_data with 
+          | true -> pp_validate_data ppf (decl_id, st) ;
+          pp_set_size ppf (decl_id, st, DataOnly);
+          | false -> ())
       | Unsized _ -> () )
     | _ -> pp_statement ppf s
   in
@@ -440,7 +443,7 @@ let pp_model_private ppf {Program.prepare_data; _} =
   @param cv_attr Optional parameter to add method attributes.
   @param ppbody (?A pretty printer of the method's body)
  *)
-let pp_method ppf rt name params intro ?(outro = nop) ?(cv_attr = ["const"])
+let pp_method ppf rt name params intro ?(outro = nop) ?(cv_attr:string list = ["const"])
     ppbody =
   pf ppf "@[<v 2>inline %s %s(@[<hov>@,%a@]) %a " rt name
     (list ~sep:comma string) params (list ~sep:cut string) cv_attr ;
@@ -453,11 +456,12 @@ let pp_method ppf rt name params intro ?(outro = nop) ?(cv_attr = ["const"])
   @param ppf A pretty printer.
  *)
 let pp_get_param_names ppf {Program.output_vars; _} =
-  let add_param = fmt "names__.emplace_back(%S);" in
+  let add_param = fmt "%S" in
   pp_method ppf "void" "get_param_names" ["std::vector<std::string>& names__"]
     nop (fun ppf ->
-      pf ppf "names__.clear();@ " ;
-      (list ~sep:cut add_param) ppf (List.map ~f:fst output_vars) )
+      pf ppf "names__ = std::vector<std::string>{%a};" 
+      (list ~sep:comma add_param) (List.map ~f:fst output_vars) )
+      ~cv_attr:["const"]
 
 (** Print the `get_dims` method of the model class. *)
 let pp_get_dims ppf {Program.output_vars; _} =
@@ -469,23 +473,19 @@ let pp_get_dims ppf {Program.output_vars; _} =
       inner_dims
   in
   let pp_add_pack ppf dims =
-    pf ppf "dimss__.emplace_back(%a);@," pp_pack dims
+    pf ppf "%a" pp_pack dims
   in
-  let pp_output_var ppf =
-    (list ~sep:cut pp_add_pack)
-      ppf
-      List.(
-        map ~f:SizedType.get_dims
-          (map
-             ~f:(fun (_, {Program.out_constrained_st= st; _}) -> st)
-             output_vars))
+  let dim_list = List.(map ~f:(
+    fun (_, {Program.out_constrained_st= st; _}) -> st) output_vars
+    ) in
+  let pp_output_var ppf dims =
+    (list ~sep:comma pp_add_pack) ppf List.(map ~f:SizedType.get_dims dims)
   in
-  let params = ["std::vector<std::vector<size_t>>& dimss__"] in
-  let cv_attr = ["const"] in
-  pp_method ppf "void" "get_dims" params
-    (const string "dimss__.clear();")
-    (fun ppf -> pp_output_var ppf)
-    ~cv_attr
+  pp_method ppf "void" "get_dims" ["std::vector<std::vector<size_t>>& dimss__"]
+     nop
+     (fun ppf ->pf ppf "dimss__ = std::vector<std::vector<size_t>>{%a};" 
+      pp_output_var dim_list)
+    ~cv_attr:["const"]
 
 let pp_method_b ppf rt name params intro ?(outro = nop) ?(cv_attr = ["const"])
     body =
@@ -575,7 +575,6 @@ let pp_constrained_param_names ppf {Program.output_vars; _} =
     let dims = List.rev (SizedType.get_dims st) in
     pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
   in
-  let cv_attr = ["const"; "final"] in
   pp_method ppf "void" "constrained_param_names" params nop
     (fun ppf ->
       (list ~sep:cut pp_param_names) ppf paramvars ;
@@ -583,7 +582,7 @@ let pp_constrained_param_names ppf {Program.output_vars; _} =
         (list ~sep:cut pp_param_names, tparamvars) ;
       pf ppf "@,if (emit_generated_quantities__) %a@," pp_block
         (list ~sep:cut pp_param_names, gqvars) )
-    ~cv_attr
+    ~cv_attr:["const"; "final"]
 
 (* Print the `unconstrained_param_names` method of the model class.
   This is just a copy of constrained, I need to figure out which one is wrong
@@ -695,11 +694,9 @@ let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
  @param outvars The parameters to gather the sizes for.
  *)
 let pp_outvar_metadata ppf (method_name, outvars) =
-  let intro = const string "std::stringstream s__;" in
-  let outro ppf () = pf ppf "@ return s__.str();" in
   let json_str = Cpp_Json.out_var_interpolated_json_str outvars in
-  let ppbody ppf = pf ppf "s__ << %s;" json_str in
-  pp_method ppf "std::string" method_name [] intro ~outro ppbody
+  let ppbody ppf = pf ppf "return std::string(%s);" json_str in
+  pp_method ppf "std::string" method_name [] nop ppbody ~cv_attr:["const"]
 
 (** Print the `get_unconstrained_sizedtypes` method of the model class *)
 let pp_unconstrained_types ppf {Program.output_vars; _} =
