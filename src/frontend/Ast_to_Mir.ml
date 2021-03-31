@@ -9,9 +9,10 @@ let unwrap_return_exn = function
         [%message
           "Unexpected return type " (x : UnsizedType.returntype option)]
 
-let trans_fn_kind = function
-  | Ast.StanLib -> Fun_kind.StanLib
-  | UserDefined -> UserDefined
+let trans_fn_kind kind name =
+  match kind with
+  | Ast.StanLib -> Fun_kind.StanLib name
+  | UserDefined -> UserDefined name
 
 let without_underscores = String.filter ~f:(( <> ) '_')
 
@@ -44,7 +45,7 @@ let rec op_to_funapp op args =
   and loc = Ast.expr_loc_lub args
   and adlevel = Ast.expr_ad_lub args in
   Expr.
-    { Fixed.pattern= FunApp (StanLib, Operator.to_string op, trans_exprs args)
+    { Fixed.pattern= FunApp (StanLib (Operator.to_string op), trans_exprs args)
     ; meta= Expr.Typed.Meta.create ~type_ ~adlevel ~loc () }
 
 and trans_expr {Ast.expr; Ast.emeta} =
@@ -71,18 +72,12 @@ and trans_expr {Ast.expr; Ast.emeta} =
   | RealNumeral x -> Lit (Real, format_number x) |> ewrap
   | FunApp (fn_kind, {name; _}, args) | CondDistApp (fn_kind, {name; _}, args)
     ->
-      FunApp (trans_fn_kind fn_kind, name, trans_exprs args) |> ewrap
-  | GetLP | GetTarget -> FunApp (StanLib, "target", []) |> ewrap
+      FunApp (trans_fn_kind fn_kind name, trans_exprs args) |> ewrap
+  | GetLP | GetTarget -> FunApp (StanLib "target", []) |> ewrap
   | ArrayExpr eles ->
-      FunApp
-        (CompilerInternal, Internal_fun.to_string FnMakeArray, trans_exprs eles)
-      |> ewrap
+      FunApp (CompilerInternal FnMakeArray, trans_exprs eles) |> ewrap
   | RowVectorExpr eles ->
-      FunApp
-        ( CompilerInternal
-        , Internal_fun.to_string FnMakeRowVec
-        , trans_exprs eles )
-      |> ewrap
+      FunApp (CompilerInternal FnMakeRowVec, trans_exprs eles) |> ewrap
   | Indexed (lhs, indices) ->
       Indexed (trans_expr lhs, List.map ~f:trans_idx indices) |> ewrap
 
@@ -105,7 +100,7 @@ let trans_sizedtype = SizedType.map trans_expr
 
 let neg_inf =
   Expr.
-    { Fixed.pattern= FunApp (StanLib, Internal_fun.to_string FnNegInf, [])
+    { Fixed.pattern= FunApp (CompilerInternal FnNegInf, [])
     ; meta=
         Typed.Meta.{type_= UReal; loc= Location_span.empty; adlevel= DataOnly}
     }
@@ -198,45 +193,42 @@ let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
    They are only interpreted by trans_decl.*)
 type constrainaction = Check | Constrain | Unconstrain [@@deriving sexp]
 
-let constrainaction_fname c =
-  Internal_fun.to_string
-    ( match c with
-    | Check -> FnCheck
-    | Constrain -> FnConstrain
-    | Unconstrain -> FnUnconstrain )
-
 type decl_context =
   {dconstrain: constrainaction option; dadlevel: UnsizedType.autodifftype}
 
 let check_constraint_to_string t (c : constrainaction) =
   match t with
-  | Program.Ordered -> "ordered"
-  | PositiveOrdered -> "positive_ordered"
-  | Simplex -> "simplex"
-  | UnitVector -> "unit_vector"
-  | CholeskyCorr -> "cholesky_factor_corr"
-  | CholeskyCov -> "cholesky_factor"
-  | Correlation -> "corr_matrix"
-  | Covariance -> "cov_matrix"
+  | Program.Ordered -> Some "ordered"
+  | PositiveOrdered -> Some "positive_ordered"
+  | Simplex -> Some "simplex"
+  | UnitVector -> Some "unit_vector"
+  | CholeskyCorr -> Some "cholesky_factor_corr"
+  | CholeskyCov -> Some "cholesky_factor"
+  | Correlation -> Some "corr_matrix"
+  | Covariance -> Some "cov_matrix"
   | Lower _ -> (
     match c with
-    | Check -> "greater_or_equal"
-    | Constrain | Unconstrain -> "lb" )
+    | Check -> Some "greater_or_equal"
+    | Constrain | Unconstrain -> Some "lb" )
   | Upper _ -> (
-    match c with Check -> "less_or_equal" | Constrain | Unconstrain -> "ub" )
+    match c with
+    | Check -> Some "less_or_equal"
+    | Constrain | Unconstrain -> Some "ub" )
   | LowerUpper _ -> (
     match c with
     | Check ->
         raise_s
           [%message "LowerUpper is really two other checks tied together"]
-    | Constrain | Unconstrain -> "lub" )
+    | Constrain | Unconstrain -> Some "lub" )
   | Offset _ | Multiplier _ | OffsetMultiplier _ -> (
-    match c with Check -> "" | Constrain | Unconstrain -> "offset_multiplier" )
-  | Identity -> ""
+    match c with
+    | Check -> None
+    | Constrain | Unconstrain -> Some "offset_multiplier" )
+  | Identity -> None
 
 let constrain_constraint_to_string t (c : constrainaction) =
   match t with
-  | Program.CholeskyCorr -> "cholesky_corr"
+  | Program.CholeskyCorr -> Some "cholesky_corr"
   | _ -> check_constraint_to_string t c
 
 let constraint_forl = function
@@ -253,8 +245,7 @@ let same_shape decl_id decl_var id var meta =
     [ Stmt.
         { Fixed.pattern=
             NRFunApp
-              ( StanLib
-              , "check_matching_dims"
+              ( StanLib "check_matching_dims"
               , Expr.Helpers.
                   [str "constraint"; str decl_id; decl_var; str id; var] )
         ; meta } ]
@@ -363,24 +354,26 @@ let remove_possibly_exn pst action loc =
           "Error extracting sizedtype" ~action ~loc:(loc : Location_span.t)]
 
 let constrain_decl st dconstrain t decl_id decl_var smeta =
-  let mkstring = mkstring (Expr.Typed.loc_of decl_var) in
-  match Option.map ~f:(constrain_constraint_to_string t) dconstrain with
-  | None | Some "" -> []
+  match Option.bind ~f:(constrain_constraint_to_string t) dconstrain with
+  | None -> []
   | Some constraint_str ->
       let dc = Option.value_exn dconstrain in
-      let fname = constrainaction_fname dc in
       let extra_args =
         match dconstrain with
         | Some Constrain -> extra_constraint_args st t
         | _ -> []
       in
-      let args var =
-        (var :: mkstring constraint_str :: extract_transform_args var t)
-        @ extra_args
+      let args var = (var :: extract_transform_args var t) @ extra_args in
+      let internal_fun =
+        match dc with
+        | Check -> Internal_fun.FnCheck constraint_str
+        | Constrain -> FnConstrain constraint_str
+        | Unconstrain -> FnUnconstrain constraint_str
       in
       let constrainvar var =
         { var with
-          Expr.Fixed.pattern= FunApp (CompilerInternal, fname, args var) }
+          Expr.Fixed.pattern= FunApp (CompilerInternal internal_fun, args var)
+        }
       in
       let unconstrained_decls, decl_id, ut =
         let ut = SizedType.to_unsized (param_size t st) in
@@ -404,20 +397,22 @@ let constrain_decl st dconstrain t decl_id decl_var smeta =
 
 let rec check_decl var decl_type' decl_id decl_trans smeta adlevel =
   let decl_type = remove_possibly_exn decl_type' "check" smeta in
-  let chk fn var =
-    let check_id id =
-      let id_str = Expr.Helpers.str (Fmt.strf "%a" Expr.Typed.pp id) in
-      let args = extract_transform_args id decl_trans in
-      Stmt.Helpers.internal_nrfunapp FnCheck (fn :: id_str :: id :: args) smeta
-    in
-    [(constraint_forl decl_trans) decl_type check_id var smeta]
-  in
   match decl_trans with
-  | Identity | Offset _ | Multiplier _ | OffsetMultiplier (_, _) -> []
+  | Program.Identity | Offset _ | Multiplier _ | OffsetMultiplier (_, _) -> []
   | LowerUpper (lb, ub) ->
       check_decl var decl_type' decl_id (Lower lb) smeta adlevel
       @ check_decl var decl_type' decl_id (Upper ub) smeta adlevel
-  | _ -> chk (mkstring smeta (check_constraint_to_string decl_trans Check)) var
+  | _ -> (
+    match check_constraint_to_string decl_trans Check with
+    | Some fn ->
+        let check_id id =
+          let id_str = Expr.Helpers.str (Fmt.strf "%a" Expr.Typed.pp id) in
+          let args = extract_transform_args id decl_trans in
+          Stmt.Helpers.internal_nrfunapp (FnCheck fn) (id_str :: id :: args)
+            smeta
+        in
+        [(constraint_forl decl_trans) decl_type check_id var smeta]
+    | None -> [] )
 
 let check_sizedtype name =
   let check x = function
@@ -553,26 +548,26 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
         , rhs )
       |> swrap
   | Ast.NRFunApp (fn_kind, {name; _}, args) ->
-      NRFunApp (trans_fn_kind fn_kind, name, trans_exprs args) |> swrap
+      NRFunApp (trans_fn_kind fn_kind name, trans_exprs args) |> swrap
   | Ast.IncrementLogProb e | Ast.TargetPE e -> TargetPE (trans_expr e) |> swrap
   | Ast.Tilde {arg; distribution; args; truncation} ->
       let suffix =
         Stan_math_signatures.dist_name_suffix ud_dists distribution.name
       in
+      let name = distribution.name ^ Utils.unnormalized_suffix suffix in
       let kind =
         let possible_names =
           List.map ~f:(( ^ ) distribution.name) Utils.distribution_suffices
           |> String.Set.of_list
         in
         if List.exists ~f:(fun (n, _) -> Set.mem possible_names n) ud_dists
-        then Fun_kind.UserDefined
-        else StanLib
+        then Fun_kind.UserDefined name
+        else StanLib name
       in
-      let name = distribution.name ^ Utils.unnormalized_suffix suffix in
       let add_dist =
         Stmt.Fixed.Pattern.TargetPE
           Expr.
-            { Fixed.pattern= FunApp (kind, name, trans_exprs (arg :: args))
+            { Fixed.pattern= FunApp (kind, trans_exprs (arg :: args))
             ; meta=
                 Typed.Meta.create ~type_:UReal ~loc:mloc
                   ~adlevel:(Ast.expr_ad_lub (arg :: args))
@@ -580,17 +575,9 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       in
       truncate_dist ud_dists distribution arg args truncation @ swrap add_dist
   | Ast.Print ps ->
-      NRFunApp
-        ( CompilerInternal
-        , Internal_fun.to_string FnPrint
-        , trans_printables smeta ps )
-      |> swrap
+      NRFunApp (CompilerInternal FnPrint, trans_printables smeta ps) |> swrap
   | Ast.Reject ps ->
-      NRFunApp
-        ( CompilerInternal
-        , Internal_fun.to_string FnReject
-        , trans_printables smeta ps )
-      |> swrap
+      NRFunApp (CompilerInternal FnReject, trans_printables smeta ps) |> swrap
   | Ast.IfThenElse (cond, ifb, elseb) ->
       IfElse
         ( trans_expr cond
@@ -745,8 +732,7 @@ let trans_sizedtype_decl declc tr name =
           | Some Constrain, CholeskyCov ->
               [ { Stmt.Fixed.pattern=
                     NRFunApp
-                      ( StanLib
-                      , "check_greater_or_equal"
+                      ( StanLib "check_greater_or_equal"
                       , Expr.Helpers.
                           [ str ("cholesky_factor_cov " ^ name)
                           ; str
@@ -836,9 +822,15 @@ let trans_block ud_dists declc block prog =
   Option.value ~default:[] (get_block block prog)
   |> List.fold_right ~f ~init:([], [], [])
 
+let stmt_contains_check stmt =
+  let is_check = function
+    | Fun_kind.CompilerInternal (Internal_fun.FnCheck _) -> true
+    | _ -> false
+  in
+  Stmt.Helpers.contains_fn_kind is_check stmt
+
 let migrate_checks_to_end_of_block stmts =
-  let is_check = Stmt.Helpers.contains_fn FnCheck in
-  let checks, not_checks = List.partition_tf ~f:is_check stmts in
+  let checks, not_checks = List.partition_tf ~f:stmt_contains_check stmts in
   not_checks @ checks
 
 let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
@@ -916,7 +908,7 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
     txparam_gq
     |> List.partition3_map ~f:(function
          | {pattern= Decl _; _} as d -> `Fst d
-         | s when Stmt.Helpers.contains_fn FnCheck s -> `Snd s
+         | s when stmt_contains_check s -> `Snd s
          | s -> `Trd s )
   in
   let compiler_if_return cond =
@@ -926,7 +918,7 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
       ; meta= Location_span.empty }
   in
   let iexpr pattern = Expr.{pattern; Fixed.meta= Typed.Meta.empty} in
-  let fnot e = FunApp (StanLib, Operator.to_string PNot, [e]) |> iexpr in
+  let fnot e = FunApp (StanLib (Operator.to_string PNot), [e]) |> iexpr in
   let tparam_early_return =
     let to_var fv = iexpr (Var (Flag_vars.to_string fv)) in
     let v1 = to_var EmitTransformedParameters in

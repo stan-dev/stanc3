@@ -180,8 +180,7 @@ let pp_bool_expr ppf expr =
   | UReal -> pp_call ppf ("as_bool", pp_expr, [expr])
   | _ -> pp_expr ppf expr
 
-let rec pp_statement (ppf : Format.formatter)
-    (Stmt.Fixed.({pattern; meta}) as stmt) =
+let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
   (* ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) = *)
   let pp_stmt_list = list ~sep:cut pp_statement in
   ( match pattern with
@@ -189,9 +188,9 @@ let rec pp_statement (ppf : Format.formatter)
   | _ -> Locations.pp_smeta ppf meta ) ;
   match pattern with
   | Assignment
-      ((vident, _, []), ({pattern= FunApp (CompilerInternal, f, _); _} as rhs))
-    when f = Internal_fun.to_string FnReadData
-         || f = Internal_fun.to_string FnReadParam ->
+      ( (vident, _, [])
+      , ( { pattern= FunApp (CompilerInternal (FnReadData | FnReadParam _), _); _
+          } as rhs ) ) ->
       pf ppf "@[<hov 4>%s = %a;@]" vident pp_expr rhs
   | Assignment
       ((vident, _, []), ({meta= Expr.Typed.Meta.({type_= UInt; _}); _} as rhs))
@@ -214,20 +213,16 @@ let rec pp_statement (ppf : Format.formatter)
         in
         match e.pattern with
         | _ when UnsizedType.is_scalar_type (Expr.Typed.type_of e) -> e
-        | FunApp (CompilerInternal, _, _) -> e
+        | FunApp (CompilerInternal _, _) -> e
         | (Indexed ({Expr.Fixed.pattern= Var v; _}, _) | Var v)
           when v = assignee ->
             { e with
-              Expr.Fixed.pattern=
-                FunApp (CompilerInternal, "stan::model::deep_copy", [e]) }
+              Expr.Fixed.pattern= FunApp (CompilerInternal FnDeepCopy, [e]) }
         | _ -> recurse e
       in
       let rhs =
         match rhs.pattern with
-        | FunApp (CompilerInternal, f, _)
-          when f = Internal_fun.to_string FnConstrain
-               || f = Internal_fun.to_string FnUnconstrain ->
-            rhs
+        | FunApp (CompilerInternal (FnConstrain _ | FnUnconstrain _), _) -> rhs
         | _ -> maybe_deep_copy rhs
       in
       pf ppf "@[<hov 2>assign(@,%s,@ %a,@ %S%s%a@]);" assignee pp_expr rhs
@@ -235,38 +230,32 @@ let rec pp_statement (ppf : Format.formatter)
         (if List.length idcs = 0 then "" else ", ")
         pp_indexes idcs
   | TargetPE e -> pf ppf "@[<hov 2>lp_accum__.add(@,%a@]);" pp_expr e
-  | NRFunApp (CompilerInternal, fname, args)
-    when fname = Internal_fun.to_string FnPrint ->
+  | NRFunApp (CompilerInternal FnPrint, args) ->
       let pp_arg ppf a = pf ppf "stan_print(pstream__, %a);" pp_expr a in
       let args = args @ [Expr.Helpers.str "\n"] in
       pf ppf "if (pstream__) %a" pp_block (list ~sep:cut pp_arg, args)
-  | NRFunApp (CompilerInternal, fname, args)
-    when fname = Internal_fun.to_string FnReject ->
+  | NRFunApp (CompilerInternal FnReject, args) ->
       let err_strm = "errmsg_stream__" in
       let add_to_string ppf e = pf ppf "%s << %a;" err_strm pp_expr e in
       pf ppf "std::stringstream %s;@," err_strm ;
       pf ppf "%a@," (list ~sep:cut add_to_string) args ;
       pf ppf "throw std::domain_error(%s.str());" err_strm
-  | NRFunApp
-      (CompilerInternal, fname, {pattern= Lit (Str, check_name); _} :: args)
-    when fname = Internal_fun.to_string FnCheck ->
-      let args =
+  | NRFunApp (CompilerInternal (FnCheck check_name), args) ->
+      let function_arg =
         {Expr.Fixed.pattern= Var "function__"; meta= Expr.Typed.Meta.empty}
-        :: args
       in
-      pp_statement ppf
-        { pattern= NRFunApp (CompilerInternal, "check_" ^ check_name, args)
-        ; meta= stmt.meta }
-  | NRFunApp (CompilerInternal, fname, [var])
-    when fname = Internal_fun.to_string FnWriteParam ->
+      pf ppf "%s(@[<hov>%a@]);" ("check_" ^ check_name)
+        (list ~sep:comma pp_expr) (function_arg :: args)
+  | NRFunApp (CompilerInternal FnWriteParam, [var]) ->
       pf ppf "@[<hov 2>vars__.emplace_back(@,%a);@]" pp_expr var
-  | NRFunApp (CompilerInternal, fname, args) ->
+  | NRFunApp (CompilerInternal f, args) ->
+      let fname = Internal_fun.to_string f in
       let fname, extra_args = trans_math_fn fname in
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)
         (extra_args @ args)
-  | NRFunApp (StanLib, fname, args) ->
+  | NRFunApp (StanLib fname, args) ->
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr) args
-  | NRFunApp (UserDefined, fname, args) ->
+  | NRFunApp (UserDefined fname, args) ->
       pf ppf "%a;" pp_user_defined_fun (fname, args)
   | Break -> string ppf "break;"
   | Continue -> string ppf "continue;"
@@ -281,9 +270,9 @@ let rec pp_statement (ppf : Format.formatter)
   | For
       { body=
           { pattern=
-              Assignment (_, {pattern= FunApp (CompilerInternal, f, _); _}); _
-          } as body; _ }
-    when Internal_fun.of_string_opt f = Some FnReadParam ->
+              Assignment
+                (_, {pattern= FunApp (CompilerInternal (FnReadParam _), _); _}); _
+          } as body; _ } ->
       pp_statement ppf body
       (* Skip For loop part, just emit body due to the way FnReadParam emits *)
   | For {loopvar; lower; upper; body} ->

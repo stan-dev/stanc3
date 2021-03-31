@@ -81,7 +81,6 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       current_statement__ = 9;
       J = context__.vals_i("J")[(1 - 1)];
       current_statement__ = 9;
-      current_statement__ = 9;
       check_greater_or_equal(function__, "J", J, 0);
       current_statement__ = 10;
       validate_non_negative_index("y", "J", J);
@@ -103,7 +102,6 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       sigma = context__.vals_r("sigma");
       current_statement__ = 13;
       for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
-        current_statement__ = 13;
         current_statement__ = 13;
         check_greater_or_equal(function__, "sigma[sym1__]",
                                sigma[(sym1__ - 1)], 0);}
@@ -903,7 +901,6 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       current_statement__ = 9;
       J = context__.vals_i("J")[(1 - 1)];
       current_statement__ = 9;
-      current_statement__ = 9;
       check_greater_or_equal(function__, "J", J, 0);
       current_statement__ = 10;
       validate_non_negative_index("y", "J", J);
@@ -925,7 +922,6 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       sigma = context__.vals_r("sigma");
       current_statement__ = 13;
       for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
-        current_statement__ = 13;
         current_statement__ = 13;
         check_greater_or_equal(function__, "sigma[sym1__]",
                                sigma[(sym1__ - 1)], 0);}
@@ -4679,7 +4675,6 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 186;
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 186;
-      current_statement__ = 186;
       check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 187;
       context__.validate_dims("data initialization","M","int",
@@ -4688,7 +4683,6 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       current_statement__ = 187;
       M = context__.vals_i("M")[(1 - 1)];
-      current_statement__ = 187;
       current_statement__ = 187;
       check_greater_or_equal(function__, "M", M, 0);
       current_statement__ = 188;
@@ -4699,9 +4693,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 188;
       K = context__.vals_i("K")[(1 - 1)];
       current_statement__ = 188;
-      current_statement__ = 188;
       check_greater_or_equal(function__, "K", K, 0);
-      current_statement__ = 188;
       current_statement__ = 188;
       check_less_or_equal(function__, "K", K, (N * M));
       current_statement__ = 189;
@@ -4715,7 +4707,6 @@ class mother_model final : public model_base_crtp<mother_model> {
       d_int_1d_ar = context__.vals_i("d_int_1d_ar");
       current_statement__ = 190;
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 190;
         current_statement__ = 190;
         check_less_or_equal(function__, "d_int_1d_ar[sym1__]",
                             d_int_1d_ar[(sym1__ - 1)], N);}
@@ -4757,7 +4748,6 @@ class mother_model final : public model_base_crtp<mother_model> {
           current_statement__ = 194;
           for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
             current_statement__ = 194;
-            current_statement__ = 194;
             check_less_or_equal(function__,
                                 "d_int_3d_ar[sym1__, sym2__, sym3__]",
                                 d_int_3d_ar[(sym1__ - 1)][(sym2__ - 1)][
@@ -4770,9 +4760,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 195;
       J = context__.vals_r("J")[(1 - 1)];
       current_statement__ = 195;
-      current_statement__ = 195;
       check_greater_or_equal(function__, "J", J, -2.0);
-      current_statement__ = 195;
       current_statement__ = 195;
       check_less_or_equal(function__, "J", J, 2.0);
       current_statement__ = 196;
@@ -5027,7 +5015,6 @@ class mother_model final : public model_base_crtp<mother_model> {
             current_statement__ = 222;
             for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
               current_statement__ = 222;
-              current_statement__ = 222;
               check_greater_or_equal(function__,
                                      "d_ar_mat[sym1__, sym2__, sym3__, sym4__]",
                                      rvalue(d_ar_mat, "d_ar_mat",
@@ -5042,7 +5029,6 @@ class mother_model final : public model_base_crtp<mother_model> {
           for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
             current_statement__ = 222;
             for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
-              current_statement__ = 222;
               current_statement__ = 222;
               check_less_or_equal(function__,
                                   "d_ar_mat[sym1__, sym2__, sym3__, sym4__]",
@@ -5074,7 +5060,6 @@ class mother_model final : public model_base_crtp<mother_model> {
           pos__ = (pos__ + 1);}
       }
       current_statement__ = 224;
-      current_statement__ = 224;
       check_simplex(function__, "d_simplex", d_simplex);
       current_statement__ = 225;
       validate_non_negative_index("d_1d_simplex", "N", N);
@@ -5105,7 +5090,6 @@ class mother_model final : public model_base_crtp<mother_model> {
       }
       current_statement__ = 227;
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 227;
         current_statement__ = 227;
         check_simplex(function__, "d_1d_simplex[sym1__]",
                       d_1d_simplex[(sym1__ - 1)]);}
@@ -5153,7 +5137,6 @@ class mother_model final : public model_base_crtp<mother_model> {
           current_statement__ = 232;
           for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
             current_statement__ = 232;
-            current_statement__ = 232;
             check_simplex(function__, "d_3d_simplex[sym1__, sym2__, sym3__]",
                           d_3d_simplex[(sym1__ - 1)][(sym2__ - 1)][(sym3__ -
                                                                     1)]);}}}
@@ -5182,7 +5165,6 @@ class mother_model final : public model_base_crtp<mother_model> {
             pos__ = (pos__ + 1);}}
       }
       current_statement__ = 233;
-      current_statement__ = 233;
       check_cholesky_factor(function__, "d_cfcov_54", d_cfcov_54);
       current_statement__ = 234;
       context__.validate_dims("data initialization","d_cfcov_33","double",
@@ -5208,7 +5190,6 @@ class mother_model final : public model_base_crtp<mother_model> {
             current_statement__ = 234;
             pos__ = (pos__ + 1);}}
       }
-      current_statement__ = 234;
       current_statement__ = 234;
       check_cholesky_factor(function__, "d_cfcov_33", d_cfcov_33);
       current_statement__ = 235;
@@ -5241,7 +5222,6 @@ class mother_model final : public model_base_crtp<mother_model> {
       }
       current_statement__ = 236;
       for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        current_statement__ = 236;
         current_statement__ = 236;
         check_cholesky_factor(function__, "d_cfcov_33_ar[sym1__]",
                               d_cfcov_33_ar[(sym1__ - 1)]);}
@@ -6439,7 +6419,6 @@ class mother_model final : public model_base_crtp<mother_model> {
             current_statement__ = 296;
             for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
               current_statement__ = 296;
-              current_statement__ = 296;
               check_greater_or_equal(function__,
                                      "td_ar_mat[sym1__, sym2__, sym3__, sym4__]",
                                      rvalue(td_ar_mat, "td_ar_mat",
@@ -6455,7 +6434,6 @@ class mother_model final : public model_base_crtp<mother_model> {
             current_statement__ = 296;
             for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
               current_statement__ = 296;
-              current_statement__ = 296;
               check_less_or_equal(function__,
                                   "td_ar_mat[sym1__, sym2__, sym3__, sym4__]",
                                   rvalue(td_ar_mat, "td_ar_mat",
@@ -6463,11 +6441,9 @@ class mother_model final : public model_base_crtp<mother_model> {
                                       index_uni(sym3__), index_uni(sym4__)),
                                   1);}}}}
       current_statement__ = 298;
-      current_statement__ = 298;
       check_simplex(function__, "td_simplex", td_simplex);
       current_statement__ = 301;
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 301;
         current_statement__ = 301;
         check_simplex(function__, "td_1d_simplex[sym1__]",
                       td_1d_simplex[(sym1__ - 1)]);}
@@ -6478,15 +6454,12 @@ class mother_model final : public model_base_crtp<mother_model> {
           current_statement__ = 306;
           for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
             current_statement__ = 306;
-            current_statement__ = 306;
             check_simplex(function__,
                           "td_3d_simplex[sym1__, sym2__, sym3__]",
                           td_3d_simplex[(sym1__ - 1)][(sym2__ - 1)][(sym3__ -
                                                                     1)]);}}}
       current_statement__ = 307;
-      current_statement__ = 307;
       check_cholesky_factor(function__, "td_cfcov_54", td_cfcov_54);
-      current_statement__ = 308;
       current_statement__ = 308;
       check_cholesky_factor(function__, "td_cfcov_33", td_cfcov_33);
       current_statement__ = 500;
@@ -7010,7 +6983,6 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 24;
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         current_statement__ = 24;
-        current_statement__ = 24;
         check_greater_or_equal(function__, "tp_real_1d_ar[sym1__]",
                                tp_real_1d_ar[(sym1__ - 1)], 0);}
       current_statement__ = 25;
@@ -7020,14 +6992,12 @@ class mother_model final : public model_base_crtp<mother_model> {
           current_statement__ = 25;
           for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
             current_statement__ = 25;
-            current_statement__ = 25;
             check_greater_or_equal(function__,
                                    "tp_real_3d_ar[sym1__, sym2__, sym3__]",
                                    tp_real_3d_ar[(sym1__ - 1)][(sym2__ - 1)][
                                    (sym3__ - 1)], 0);}}}
       current_statement__ = 26;
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 26;
         current_statement__ = 26;
         check_less_or_equal(function__, "tp_vec[sym1__]",
                             tp_vec[(sym1__ - 1)], 0);}
@@ -7039,7 +7009,6 @@ class mother_model final : public model_base_crtp<mother_model> {
           for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
             current_statement__ = 32;
             for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
-              current_statement__ = 32;
               current_statement__ = 32;
               check_greater_or_equal(function__,
                                      "tp_ar_mat[sym1__, sym2__, sym3__, sym4__]",
@@ -7056,7 +7025,6 @@ class mother_model final : public model_base_crtp<mother_model> {
             current_statement__ = 32;
             for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
               current_statement__ = 32;
-              current_statement__ = 32;
               check_less_or_equal(function__,
                                   "tp_ar_mat[sym1__, sym2__, sym3__, sym4__]",
                                   rvalue(tp_ar_mat, "tp_ar_mat",
@@ -7064,11 +7032,9 @@ class mother_model final : public model_base_crtp<mother_model> {
                                       index_uni(sym3__), index_uni(sym4__)),
                                   1);}}}}
       current_statement__ = 33;
-      current_statement__ = 33;
       check_simplex(function__, "tp_simplex", tp_simplex);
       current_statement__ = 34;
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 34;
         current_statement__ = 34;
         check_simplex(function__, "tp_1d_simplex[sym1__]",
                       tp_1d_simplex[(sym1__ - 1)]);}
@@ -7079,20 +7045,16 @@ class mother_model final : public model_base_crtp<mother_model> {
           current_statement__ = 35;
           for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
             current_statement__ = 35;
-            current_statement__ = 35;
             check_simplex(function__,
                           "tp_3d_simplex[sym1__, sym2__, sym3__]",
                           tp_3d_simplex[(sym1__ - 1)][(sym2__ - 1)][(sym3__ -
                                                                     1)]);}}}
       current_statement__ = 36;
-      current_statement__ = 36;
       check_cholesky_factor(function__, "tp_cfcov_54", tp_cfcov_54);
-      current_statement__ = 37;
       current_statement__ = 37;
       check_cholesky_factor(function__, "tp_cfcov_33", tp_cfcov_33);
       current_statement__ = 38;
       for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        current_statement__ = 38;
         current_statement__ = 38;
         check_cholesky_factor(function__, "tp_cfcov_33_ar[sym1__]",
                               tp_cfcov_33_ar[(sym1__ - 1)]);}
@@ -7620,7 +7582,6 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 24;
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         current_statement__ = 24;
-        current_statement__ = 24;
         check_greater_or_equal(function__, "tp_real_1d_ar[sym1__]",
                                tp_real_1d_ar[(sym1__ - 1)], 0);}
       current_statement__ = 25;
@@ -7630,14 +7591,12 @@ class mother_model final : public model_base_crtp<mother_model> {
           current_statement__ = 25;
           for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
             current_statement__ = 25;
-            current_statement__ = 25;
             check_greater_or_equal(function__,
                                    "tp_real_3d_ar[sym1__, sym2__, sym3__]",
                                    tp_real_3d_ar[(sym1__ - 1)][(sym2__ - 1)][
                                    (sym3__ - 1)], 0);}}}
       current_statement__ = 26;
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 26;
         current_statement__ = 26;
         check_less_or_equal(function__, "tp_vec[sym1__]",
                             tp_vec[(sym1__ - 1)], 0);}
@@ -7649,7 +7608,6 @@ class mother_model final : public model_base_crtp<mother_model> {
           for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
             current_statement__ = 32;
             for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
-              current_statement__ = 32;
               current_statement__ = 32;
               check_greater_or_equal(function__,
                                      "tp_ar_mat[sym1__, sym2__, sym3__, sym4__]",
@@ -7666,7 +7624,6 @@ class mother_model final : public model_base_crtp<mother_model> {
             current_statement__ = 32;
             for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
               current_statement__ = 32;
-              current_statement__ = 32;
               check_less_or_equal(function__,
                                   "tp_ar_mat[sym1__, sym2__, sym3__, sym4__]",
                                   rvalue(tp_ar_mat, "tp_ar_mat",
@@ -7674,11 +7631,9 @@ class mother_model final : public model_base_crtp<mother_model> {
                                       index_uni(sym3__), index_uni(sym4__)),
                                   1);}}}}
       current_statement__ = 33;
-      current_statement__ = 33;
       check_simplex(function__, "tp_simplex", tp_simplex);
       current_statement__ = 34;
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 34;
         current_statement__ = 34;
         check_simplex(function__, "tp_1d_simplex[sym1__]",
                       tp_1d_simplex[(sym1__ - 1)]);}
@@ -7689,20 +7644,16 @@ class mother_model final : public model_base_crtp<mother_model> {
           current_statement__ = 35;
           for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
             current_statement__ = 35;
-            current_statement__ = 35;
             check_simplex(function__,
                           "tp_3d_simplex[sym1__, sym2__, sym3__]",
                           tp_3d_simplex[(sym1__ - 1)][(sym2__ - 1)][(sym3__ -
                                                                     1)]);}}}
       current_statement__ = 36;
-      current_statement__ = 36;
       check_cholesky_factor(function__, "tp_cfcov_54", tp_cfcov_54);
-      current_statement__ = 37;
       current_statement__ = 37;
       check_cholesky_factor(function__, "tp_cfcov_33", tp_cfcov_33);
       current_statement__ = 38;
       for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        current_statement__ = 38;
         current_statement__ = 38;
         check_cholesky_factor(function__, "tp_cfcov_33_ar[sym1__]",
                               tp_cfcov_33_ar[(sym1__ - 1)]);}
@@ -8052,7 +8003,6 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 76;
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         current_statement__ = 76;
-        current_statement__ = 76;
         check_greater_or_equal(function__, "gq_real_1d_ar[sym1__]",
                                gq_real_1d_ar[(sym1__ - 1)], 0);}
       current_statement__ = 77;
@@ -8062,14 +8012,12 @@ class mother_model final : public model_base_crtp<mother_model> {
           current_statement__ = 77;
           for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
             current_statement__ = 77;
-            current_statement__ = 77;
             check_greater_or_equal(function__,
                                    "gq_real_3d_ar[sym1__, sym2__, sym3__]",
                                    gq_real_3d_ar[(sym1__ - 1)][(sym2__ - 1)][
                                    (sym3__ - 1)], 0);}}}
       current_statement__ = 78;
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 78;
         current_statement__ = 78;
         check_less_or_equal(function__, "gq_vec[sym1__]",
                             gq_vec[(sym1__ - 1)], 1);}
@@ -8081,7 +8029,6 @@ class mother_model final : public model_base_crtp<mother_model> {
           for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
             current_statement__ = 84;
             for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
-              current_statement__ = 84;
               current_statement__ = 84;
               check_greater_or_equal(function__,
                                      "gq_ar_mat[sym1__, sym2__, sym3__, sym4__]",
@@ -8098,7 +8045,6 @@ class mother_model final : public model_base_crtp<mother_model> {
             current_statement__ = 84;
             for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
               current_statement__ = 84;
-              current_statement__ = 84;
               check_less_or_equal(function__,
                                   "gq_ar_mat[sym1__, sym2__, sym3__, sym4__]",
                                   rvalue(gq_ar_mat, "gq_ar_mat",
@@ -8106,11 +8052,9 @@ class mother_model final : public model_base_crtp<mother_model> {
                                       index_uni(sym3__), index_uni(sym4__)),
                                   1);}}}}
       current_statement__ = 85;
-      current_statement__ = 85;
       check_simplex(function__, "gq_simplex", gq_simplex);
       current_statement__ = 86;
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 86;
         current_statement__ = 86;
         check_simplex(function__, "gq_1d_simplex[sym1__]",
                       gq_1d_simplex[(sym1__ - 1)]);}
@@ -8121,20 +8065,16 @@ class mother_model final : public model_base_crtp<mother_model> {
           current_statement__ = 87;
           for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
             current_statement__ = 87;
-            current_statement__ = 87;
             check_simplex(function__,
                           "gq_3d_simplex[sym1__, sym2__, sym3__]",
                           gq_3d_simplex[(sym1__ - 1)][(sym2__ - 1)][(sym3__ -
                                                                     1)]);}}}
       current_statement__ = 88;
-      current_statement__ = 88;
       check_cholesky_factor(function__, "gq_cfcov_54", gq_cfcov_54);
-      current_statement__ = 89;
       current_statement__ = 89;
       check_cholesky_factor(function__, "gq_cfcov_33", gq_cfcov_33);
       current_statement__ = 90;
       for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        current_statement__ = 90;
         current_statement__ = 90;
         check_cholesky_factor(function__, "gq_cfcov_33_ar[sym1__]",
                               gq_cfcov_33_ar[(sym1__ - 1)]);}
@@ -10760,7 +10700,6 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       
       current_statement__ = 123;
       T = context__.vals_i("T")[(1 - 1)];
-      current_statement__ = 123;
       current_statement__ = 123;
       check_greater_or_equal(function__, "T", T, 1);
       current_statement__ = 124;
@@ -16537,7 +16476,6 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       current_statement__ = 18;
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 18;
-      current_statement__ = 18;
       check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 19;
       validate_non_negative_index("ts", "N", N);
@@ -16582,7 +16520,6 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         current_statement__ = 23;
         for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          current_statement__ = 23;
           current_statement__ = 23;
           check_greater_or_equal(function__, "y[sym1__, sym2__]",
                                  y[(sym1__ - 1)][(sym2__ - 1)], 0);}}
@@ -17406,7 +17343,6 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 176;
       k = context__.vals_i("k")[(1 - 1)];
       current_statement__ = 176;
-      current_statement__ = 176;
       check_greater_or_equal(function__, "k", k, 1);
       current_statement__ = 177;
       context__.validate_dims("data initialization","n","int",
@@ -17415,7 +17351,6 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       
       current_statement__ = 177;
       n = context__.vals_i("n")[(1 - 1)];
-      current_statement__ = 177;
       current_statement__ = 177;
       check_greater_or_equal(function__, "n", n, 0);
       current_statement__ = 178;
@@ -17599,9 +17534,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       y_r_d_td = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 194;
-      current_statement__ = 194;
       check_greater_or_equal(function__, "k_td", k_td, 1);
-      current_statement__ = 195;
       current_statement__ = 195;
       check_greater_or_equal(function__, "n_td", n_td, 0);
       current_statement__ = 209;
@@ -27525,7 +27458,6 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 37;
       n = context__.vals_i("n")[(1 - 1)];
       current_statement__ = 37;
-      current_statement__ = 37;
       check_greater_or_equal(function__, "n", n, 1);
       current_statement__ = 38;
       context__.validate_dims("data initialization","m","int",
@@ -27535,7 +27467,6 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 38;
       m = context__.vals_i("m")[(1 - 1)];
       current_statement__ = 38;
-      current_statement__ = 38;
       check_greater_or_equal(function__, "m", m, 1);
       current_statement__ = 39;
       context__.validate_dims("data initialization","k","int",
@@ -27544,7 +27475,6 @@ class transform_model final : public model_base_crtp<transform_model> {
       
       current_statement__ = 39;
       k = context__.vals_i("k")[(1 - 1)];
-      current_statement__ = 39;
       current_statement__ = 39;
       check_greater_or_equal(function__, "k", k, 1);
       current_statement__ = 40;
@@ -28190,7 +28120,6 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 19;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 19;
-        current_statement__ = 19;
         check_greater_or_equal(function__, "tp_1[sym1__]",
                                tp_1[(sym1__ - 1)],
                                rvalue(ds, "ds", index_uni(1), index_uni(1))[
@@ -28198,13 +28127,11 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 20;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 20;
-        current_statement__ = 20;
         check_less_or_equal(function__, "tp_2[sym1__]", tp_2[(sym1__ - 1)],
                             rvalue(ds, "ds", index_uni(1), index_uni(1))[
                             (sym1__ - 1)]);}
       current_statement__ = 21;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 21;
         current_statement__ = 21;
         check_greater_or_equal(function__, "tp_3[sym1__]",
                                tp_3[(sym1__ - 1)],
@@ -28213,26 +28140,22 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 21;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 21;
-        current_statement__ = 21;
         check_less_or_equal(function__, "tp_3[sym1__]", tp_3[(sym1__ - 1)],
                             rvalue(ds, "ds", index_uni(1), index_uni(2))[
                             (sym1__ - 1)]);}
       current_statement__ = 22;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 22;
-        current_statement__ = 22;
         check_greater_or_equal(function__, "tp_4[sym1__]",
                                tp_4[(sym1__ - 1)], 0);}
       current_statement__ = 22;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 22;
         current_statement__ = 22;
         check_less_or_equal(function__, "tp_4[sym1__]", tp_4[(sym1__ - 1)],
                             rvalue(ds, "ds", index_uni(1), index_uni(2))[
                             (sym1__ - 1)]);}
       current_statement__ = 23;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 23;
         current_statement__ = 23;
         check_greater_or_equal(function__, "tp_5[sym1__]",
                                tp_5[(sym1__ - 1)],
@@ -28241,14 +28164,12 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 23;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 23;
-        current_statement__ = 23;
         check_less_or_equal(function__, "tp_5[sym1__]", tp_5[(sym1__ - 1)], 1);
       }
       current_statement__ = 27;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 27;
         for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
-          current_statement__ = 27;
           current_statement__ = 27;
           check_greater_or_equal(function__, "tp_9[sym1__, sym2__]",
                                  tp_9[(sym1__ - 1)][(sym2__ - 1)],
@@ -28259,7 +28180,6 @@ class transform_model final : public model_base_crtp<transform_model> {
         current_statement__ = 27;
         for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
           current_statement__ = 27;
-          current_statement__ = 27;
           check_less_or_equal(function__, "tp_9[sym1__, sym2__]",
                               tp_9[(sym1__ - 1)][(sym2__ - 1)], 1);}}
       current_statement__ = 28;
@@ -28268,7 +28188,6 @@ class transform_model final : public model_base_crtp<transform_model> {
         for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
           current_statement__ = 28;
           for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
-            current_statement__ = 28;
             current_statement__ = 28;
             check_greater_or_equal(function__,
                                    "tp_10[sym1__, sym2__, sym3__]",
@@ -28281,7 +28200,6 @@ class transform_model final : public model_base_crtp<transform_model> {
           current_statement__ = 28;
           for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
             current_statement__ = 28;
-            current_statement__ = 28;
             check_less_or_equal(function__, "tp_10[sym1__, sym2__, sym3__]",
                                 tp_10[(sym1__ - 1)][(sym2__ - 1)][(sym3__ -
                                                                     1)],
@@ -28290,14 +28208,12 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 29;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 29;
-        current_statement__ = 29;
         check_greater_or_equal(function__, "tpv_1[sym1__]",
                                tpv_1[(sym1__ - 1)],
                                rvalue(dv, "dv", index_uni(1), index_uni(1))[
                                (sym1__ - 1)]);}
       current_statement__ = 29;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 29;
         current_statement__ = 29;
         check_less_or_equal(function__, "tpv_1[sym1__]", tpv_1[(sym1__ - 1)],
                             rvalue(dv, "dv", index_uni(1), index_uni(2))[
@@ -28306,7 +28222,6 @@ class transform_model final : public model_base_crtp<transform_model> {
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 30;
         for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
-          current_statement__ = 30;
           current_statement__ = 30;
           check_greater_or_equal(function__, "tpv_2[sym1__, sym2__]",
                                  tpv_2[(sym1__ - 1)][(sym2__ - 1)],
@@ -28319,7 +28234,6 @@ class transform_model final : public model_base_crtp<transform_model> {
           current_statement__ = 31;
           for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
             current_statement__ = 31;
-            current_statement__ = 31;
             check_less_or_equal(function__, "tpv_3[sym1__, sym2__, sym3__]",
                                 tpv_3[(sym1__ - 1)][(sym2__ - 1)][(sym3__ -
                                                                     1)],
@@ -28328,14 +28242,12 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 32;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 32;
-        current_statement__ = 32;
         check_greater_or_equal(function__, "tpr_1[sym1__]",
                                tpr_1[(sym1__ - 1)],
                                rvalue(dr, "dr", index_uni(1), index_uni(1))[
                                (sym1__ - 1)]);}
       current_statement__ = 32;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 32;
         current_statement__ = 32;
         check_less_or_equal(function__, "tpr_1[sym1__]", tpr_1[(sym1__ - 1)],
                             rvalue(dr, "dr", index_uni(1), index_uni(2))[
@@ -28344,7 +28256,6 @@ class transform_model final : public model_base_crtp<transform_model> {
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 33;
         for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
-          current_statement__ = 33;
           current_statement__ = 33;
           check_greater_or_equal(function__, "tpr_2[sym1__, sym2__]",
                                  tpr_2[(sym1__ - 1)][(sym2__ - 1)],
@@ -28357,7 +28268,6 @@ class transform_model final : public model_base_crtp<transform_model> {
           current_statement__ = 34;
           for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
             current_statement__ = 34;
-            current_statement__ = 34;
             check_less_or_equal(function__, "tpr_3[sym1__, sym2__, sym3__]",
                                 tpr_3[(sym1__ - 1)][(sym2__ - 1)][(sym3__ -
                                                                     1)],
@@ -28367,7 +28277,6 @@ class transform_model final : public model_base_crtp<transform_model> {
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 35;
         for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
-          current_statement__ = 35;
           current_statement__ = 35;
           check_greater_or_equal(function__, "tpm_1[sym1__, sym2__]",
                                  rvalue(tpm_1, "tpm_1",
@@ -28381,7 +28290,6 @@ class transform_model final : public model_base_crtp<transform_model> {
         for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
           current_statement__ = 36;
           for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
-            current_statement__ = 36;
             current_statement__ = 36;
             check_less_or_equal(function__, "tpm_2[sym1__, sym2__, sym3__]",
                                 rvalue(tpm_2, "tpm_2",
@@ -28825,7 +28733,6 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 19;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 19;
-        current_statement__ = 19;
         check_greater_or_equal(function__, "tp_1[sym1__]",
                                tp_1[(sym1__ - 1)],
                                rvalue(ds, "ds", index_uni(1), index_uni(1))[
@@ -28833,13 +28740,11 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 20;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 20;
-        current_statement__ = 20;
         check_less_or_equal(function__, "tp_2[sym1__]", tp_2[(sym1__ - 1)],
                             rvalue(ds, "ds", index_uni(1), index_uni(1))[
                             (sym1__ - 1)]);}
       current_statement__ = 21;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 21;
         current_statement__ = 21;
         check_greater_or_equal(function__, "tp_3[sym1__]",
                                tp_3[(sym1__ - 1)],
@@ -28848,26 +28753,22 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 21;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 21;
-        current_statement__ = 21;
         check_less_or_equal(function__, "tp_3[sym1__]", tp_3[(sym1__ - 1)],
                             rvalue(ds, "ds", index_uni(1), index_uni(2))[
                             (sym1__ - 1)]);}
       current_statement__ = 22;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 22;
-        current_statement__ = 22;
         check_greater_or_equal(function__, "tp_4[sym1__]",
                                tp_4[(sym1__ - 1)], 0);}
       current_statement__ = 22;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 22;
         current_statement__ = 22;
         check_less_or_equal(function__, "tp_4[sym1__]", tp_4[(sym1__ - 1)],
                             rvalue(ds, "ds", index_uni(1), index_uni(2))[
                             (sym1__ - 1)]);}
       current_statement__ = 23;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 23;
         current_statement__ = 23;
         check_greater_or_equal(function__, "tp_5[sym1__]",
                                tp_5[(sym1__ - 1)],
@@ -28876,14 +28777,12 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 23;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 23;
-        current_statement__ = 23;
         check_less_or_equal(function__, "tp_5[sym1__]", tp_5[(sym1__ - 1)], 1);
       }
       current_statement__ = 27;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 27;
         for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
-          current_statement__ = 27;
           current_statement__ = 27;
           check_greater_or_equal(function__, "tp_9[sym1__, sym2__]",
                                  tp_9[(sym1__ - 1)][(sym2__ - 1)],
@@ -28894,7 +28793,6 @@ class transform_model final : public model_base_crtp<transform_model> {
         current_statement__ = 27;
         for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
           current_statement__ = 27;
-          current_statement__ = 27;
           check_less_or_equal(function__, "tp_9[sym1__, sym2__]",
                               tp_9[(sym1__ - 1)][(sym2__ - 1)], 1);}}
       current_statement__ = 28;
@@ -28903,7 +28801,6 @@ class transform_model final : public model_base_crtp<transform_model> {
         for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
           current_statement__ = 28;
           for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
-            current_statement__ = 28;
             current_statement__ = 28;
             check_greater_or_equal(function__,
                                    "tp_10[sym1__, sym2__, sym3__]",
@@ -28916,7 +28813,6 @@ class transform_model final : public model_base_crtp<transform_model> {
           current_statement__ = 28;
           for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
             current_statement__ = 28;
-            current_statement__ = 28;
             check_less_or_equal(function__, "tp_10[sym1__, sym2__, sym3__]",
                                 tp_10[(sym1__ - 1)][(sym2__ - 1)][(sym3__ -
                                                                     1)],
@@ -28925,14 +28821,12 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 29;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 29;
-        current_statement__ = 29;
         check_greater_or_equal(function__, "tpv_1[sym1__]",
                                tpv_1[(sym1__ - 1)],
                                rvalue(dv, "dv", index_uni(1), index_uni(1))[
                                (sym1__ - 1)]);}
       current_statement__ = 29;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 29;
         current_statement__ = 29;
         check_less_or_equal(function__, "tpv_1[sym1__]", tpv_1[(sym1__ - 1)],
                             rvalue(dv, "dv", index_uni(1), index_uni(2))[
@@ -28941,7 +28835,6 @@ class transform_model final : public model_base_crtp<transform_model> {
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 30;
         for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
-          current_statement__ = 30;
           current_statement__ = 30;
           check_greater_or_equal(function__, "tpv_2[sym1__, sym2__]",
                                  tpv_2[(sym1__ - 1)][(sym2__ - 1)],
@@ -28954,7 +28847,6 @@ class transform_model final : public model_base_crtp<transform_model> {
           current_statement__ = 31;
           for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
             current_statement__ = 31;
-            current_statement__ = 31;
             check_less_or_equal(function__, "tpv_3[sym1__, sym2__, sym3__]",
                                 tpv_3[(sym1__ - 1)][(sym2__ - 1)][(sym3__ -
                                                                     1)],
@@ -28963,14 +28855,12 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 32;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 32;
-        current_statement__ = 32;
         check_greater_or_equal(function__, "tpr_1[sym1__]",
                                tpr_1[(sym1__ - 1)],
                                rvalue(dr, "dr", index_uni(1), index_uni(1))[
                                (sym1__ - 1)]);}
       current_statement__ = 32;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 32;
         current_statement__ = 32;
         check_less_or_equal(function__, "tpr_1[sym1__]", tpr_1[(sym1__ - 1)],
                             rvalue(dr, "dr", index_uni(1), index_uni(2))[
@@ -28979,7 +28869,6 @@ class transform_model final : public model_base_crtp<transform_model> {
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 33;
         for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
-          current_statement__ = 33;
           current_statement__ = 33;
           check_greater_or_equal(function__, "tpr_2[sym1__, sym2__]",
                                  tpr_2[(sym1__ - 1)][(sym2__ - 1)],
@@ -28992,7 +28881,6 @@ class transform_model final : public model_base_crtp<transform_model> {
           current_statement__ = 34;
           for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
             current_statement__ = 34;
-            current_statement__ = 34;
             check_less_or_equal(function__, "tpr_3[sym1__, sym2__, sym3__]",
                                 tpr_3[(sym1__ - 1)][(sym2__ - 1)][(sym3__ -
                                                                     1)],
@@ -29002,7 +28890,6 @@ class transform_model final : public model_base_crtp<transform_model> {
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 35;
         for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
-          current_statement__ = 35;
           current_statement__ = 35;
           check_greater_or_equal(function__, "tpm_1[sym1__, sym2__]",
                                  rvalue(tpm_1, "tpm_1",
@@ -29016,7 +28903,6 @@ class transform_model final : public model_base_crtp<transform_model> {
         for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
           current_statement__ = 36;
           for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
-            current_statement__ = 36;
             current_statement__ = 36;
             check_less_or_equal(function__, "tpm_2[sym1__, sym2__, sym3__]",
                                 rvalue(tpm_2, "tpm_2",
