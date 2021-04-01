@@ -75,7 +75,7 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       pos__ = 1;
       current_statement__ = 9;
       context__.validate_dims("data initialization","J","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       J = std::numeric_limits<int>::min();
       
       current_statement__ = 9;
@@ -86,7 +86,7 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       validate_non_negative_index("y", "J", J);
       current_statement__ = 11;
       context__.validate_dims("data initialization","y","double",
-          context__.to_vec(J));
+           std::vector<size_t>{static_cast<size_t>(J)});
       y = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 11;
@@ -95,8 +95,9 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       validate_non_negative_index("sigma", "J", J);
       current_statement__ = 13;
       context__.validate_dims("data initialization","sigma","double",
-          context__.to_vec(J));
+           std::vector<size_t>{static_cast<size_t>(J)});
       sigma = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 13;
       sigma = context__.vals_r("sigma");
@@ -114,17 +115,8 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 0U;
+    num_params_r__ = 1 + 1 + J;
     
-    try {
-      num_params_r__ += 1;
-      num_params_r__ += 1;
-      num_params_r__ += J;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
@@ -549,7 +541,7 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
       pos__ = 1;
       current_statement__ = 2;
       context__.validate_dims("data initialization","good_model","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       good_model = std::numeric_limits<int>::min();
       
       current_statement__ = 2;
@@ -559,15 +551,8 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 0U;
+    num_params_r__ = 1;
     
-    try {
-      num_params_r__ += 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
@@ -895,7 +880,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       pos__ = 1;
       current_statement__ = 9;
       context__.validate_dims("data initialization","J","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       J = std::numeric_limits<int>::min();
       
       current_statement__ = 9;
@@ -906,7 +891,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       validate_non_negative_index("y", "J", J);
       current_statement__ = 11;
       context__.validate_dims("data initialization","y","double",
-          context__.to_vec(J));
+           std::vector<size_t>{static_cast<size_t>(J)});
       y = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 11;
@@ -915,8 +900,9 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       validate_non_negative_index("sigma", "J", J);
       current_statement__ = 13;
       context__.validate_dims("data initialization","sigma","double",
-          context__.to_vec(J));
+           std::vector<size_t>{static_cast<size_t>(J)});
       sigma = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 13;
       sigma = context__.vals_r("sigma");
@@ -934,17 +920,8 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 0U;
+    num_params_r__ = 1 + 1 + J;
     
-    try {
-      num_params_r__ += 1;
-      num_params_r__ += 1;
-      num_params_r__ += J;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
@@ -1379,15 +1356,8 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 0U;
+    num_params_r__ = 3;
     
-    try {
-      num_params_r__ += 3;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
@@ -1416,12 +1386,14 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
       std::vector<std::vector<local_scalar_t__>> y;
       y = std::vector<std::vector<local_scalar_t__>>(3, std::vector<local_scalar_t__>(3, DUMMY_VAR__));
       
+      
       current_statement__ = 2;
       assign(y, std::vector<std::vector<local_scalar_t__>>{
         stan::math::promote_scalar<local_scalar_t__>(x), xx, xx},
         "assigning variable y");
       std::vector<std::vector<local_scalar_t__>> w;
       w = std::vector<std::vector<local_scalar_t__>>(3, std::vector<local_scalar_t__>(3, DUMMY_VAR__));
+      
       
       current_statement__ = 3;
       assign(w, std::vector<std::vector<local_scalar_t__>>{
@@ -1432,6 +1404,7 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
         "assigning variable w");
       std::vector<std::vector<local_scalar_t__>> td_arr33;
       td_arr33 = std::vector<std::vector<local_scalar_t__>>(3, std::vector<local_scalar_t__>(3, DUMMY_VAR__));
+      
       
       current_statement__ = 4;
       assign(td_arr33, std::vector<std::vector<double>>{std::vector<double>{
@@ -1482,11 +1455,14 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
       std::vector<std::vector<double>> y;
       y = std::vector<std::vector<double>>(3, std::vector<double>(3, std::numeric_limits<double>::quiet_NaN()));
       
+      
       std::vector<std::vector<double>> w;
       w = std::vector<std::vector<double>>(3, std::vector<double>(3, std::numeric_limits<double>::quiet_NaN()));
       
+      
       std::vector<std::vector<double>> td_arr33;
       td_arr33 = std::vector<std::vector<double>>(3, std::vector<double>(3, std::numeric_limits<double>::quiet_NaN()));
+      
       
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         vars__.emplace_back(xx[(sym1__ - 1)]);}
@@ -2953,6 +2929,7 @@ foo_1(const int& a, std::ostream* pstream__) {
       std::vector<std::vector<int>> vs;
       vs = std::vector<std::vector<int>>(2, std::vector<int>(3, std::numeric_limits<int>::min()));
       
+      
       int z;
       z = std::numeric_limits<int>::min();
       
@@ -4294,6 +4271,7 @@ foo_6(std::ostream* pstream__) {
     std::vector<std::vector<local_scalar_t__>> c;
     c = std::vector<std::vector<local_scalar_t__>>(20, std::vector<local_scalar_t__>(30, DUMMY_VAR__));
     
+    
     std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> ar_mat;
     ar_mat = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(60, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(70, Eigen::Matrix<local_scalar_t__, -1, -1>(40, 50)));
     stan::math::fill(ar_mat, DUMMY_VAR__);
@@ -4669,7 +4647,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       pos__ = 1;
       current_statement__ = 186;
       context__.validate_dims("data initialization","N","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       
       current_statement__ = 186;
@@ -4678,7 +4656,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       check_greater_or_equal(function__, "N", N, 0);
       current_statement__ = 187;
       context__.validate_dims("data initialization","M","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       M = std::numeric_limits<int>::min();
       
       current_statement__ = 187;
@@ -4687,7 +4665,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       check_greater_or_equal(function__, "M", M, 0);
       current_statement__ = 188;
       context__.validate_dims("data initialization","K","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       K = std::numeric_limits<int>::min();
       
       current_statement__ = 188;
@@ -4700,7 +4678,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_int_1d_ar", "N", N);
       current_statement__ = 190;
       context__.validate_dims("data initialization","d_int_1d_ar","int",
-          context__.to_vec(N));
+           std::vector<size_t>{static_cast<size_t>(N)});
       d_int_1d_ar = std::vector<int>(N, std::numeric_limits<int>::min());
       
       current_statement__ = 190;
@@ -4718,8 +4696,10 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_int_3d_ar", "K", K);
       current_statement__ = 194;
       context__.validate_dims("data initialization","d_int_3d_ar","int",
-          context__.to_vec(N, M, K));
+           std::vector<size_t>{static_cast<size_t>(N),
+            static_cast<size_t>(M), static_cast<size_t>(K)});
       d_int_3d_ar = std::vector<std::vector<std::vector<int>>>(N, std::vector<std::vector<int>>(M, std::vector<int>(K, std::numeric_limits<int>::min())));
+      
       
       {
         std::vector<int> d_int_3d_ar_flat__;
@@ -4754,7 +4734,7 @@ class mother_model final : public model_base_crtp<mother_model> {
                                 (sym3__ - 1)], N);}}}
       current_statement__ = 195;
       context__.validate_dims("data initialization","J","double",
-          context__.to_vec());
+           std::vector<size_t>{});
       J = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 195;
@@ -4767,8 +4747,9 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_real_1d_ar", "N", N);
       current_statement__ = 197;
       context__.validate_dims("data initialization","d_real_1d_ar","double",
-          context__.to_vec(N));
+           std::vector<size_t>{static_cast<size_t>(N)});
       d_real_1d_ar = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 197;
       d_real_1d_ar = context__.vals_r("d_real_1d_ar");
@@ -4780,8 +4761,10 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_real_3d_ar", "K", K);
       current_statement__ = 201;
       context__.validate_dims("data initialization","d_real_3d_ar","double",
-          context__.to_vec(N, M, K));
+           std::vector<size_t>{static_cast<size_t>(N),
+            static_cast<size_t>(M), static_cast<size_t>(K)});
       d_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, std::numeric_limits<double>::quiet_NaN())));
+      
       
       {
         std::vector<local_scalar_t__> d_real_3d_ar_flat__;
@@ -4807,7 +4790,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_vec", "N", N);
       current_statement__ = 203;
       context__.validate_dims("data initialization","d_vec","double",
-          context__.to_vec(N));
+           std::vector<size_t>{static_cast<size_t>(N)});
       d_vec__ = Eigen::Matrix<double, -1, 1>(N);
       new (&d_vec) Eigen::Map<Eigen::Matrix<double, -1, 1>>(d_vec__.data(), N);
       stan::math::fill(d_vec, std::numeric_limits<double>::quiet_NaN());
@@ -4832,7 +4815,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_1d_vec", "N", N);
       current_statement__ = 206;
       context__.validate_dims("data initialization","d_1d_vec","double",
-          context__.to_vec(N, N));
+           std::vector<size_t>{static_cast<size_t>(N),
+            static_cast<size_t>(N)});
       d_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       stan::math::fill(d_1d_vec, std::numeric_limits<double>::quiet_NaN());
       
@@ -4863,7 +4847,9 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_3d_vec", "N", N);
       current_statement__ = 211;
       context__.validate_dims("data initialization","d_3d_vec","double",
-          context__.to_vec(N, M, K, N));
+           std::vector<size_t>{static_cast<size_t>(N),
+            static_cast<size_t>(M), static_cast<size_t>(K),
+            static_cast<size_t>(N)});
       d_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       stan::math::fill(d_3d_vec, std::numeric_limits<double>::quiet_NaN());
       
@@ -4894,7 +4880,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_row_vec", "N", N);
       current_statement__ = 213;
       context__.validate_dims("data initialization","d_row_vec","double",
-          context__.to_vec(N));
+           std::vector<size_t>{static_cast<size_t>(N)});
       d_row_vec__ = Eigen::Matrix<double, 1, -1>(N);
       new (&d_row_vec) Eigen::Map<Eigen::Matrix<double, 1, -1>>(d_row_vec__.data(), N);
       stan::math::fill(d_row_vec, std::numeric_limits<double>::quiet_NaN());
@@ -4919,9 +4905,11 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_1d_row_vec", "N", N);
       current_statement__ = 216;
       context__.validate_dims("data initialization","d_1d_row_vec","double",
-          context__.to_vec(N, N));
+           std::vector<size_t>{static_cast<size_t>(N),
+            static_cast<size_t>(N)});
       d_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
       stan::math::fill(d_1d_row_vec, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> d_1d_row_vec_flat__;
@@ -4950,9 +4938,12 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_3d_row_vec", "N", N);
       current_statement__ = 221;
       context__.validate_dims("data initialization","d_3d_row_vec","double",
-          context__.to_vec(N, M, K, N));
+           std::vector<size_t>{static_cast<size_t>(N),
+            static_cast<size_t>(M), static_cast<size_t>(K),
+            static_cast<size_t>(N)});
       d_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
       stan::math::fill(d_3d_row_vec, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> d_3d_row_vec_flat__;
@@ -4979,7 +4970,9 @@ class mother_model final : public model_base_crtp<mother_model> {
       }
       current_statement__ = 222;
       context__.validate_dims("data initialization","d_ar_mat","double",
-          context__.to_vec(4, 5, 2, 3));
+           std::vector<size_t>{static_cast<size_t>(4),
+            static_cast<size_t>(5), static_cast<size_t>(2),
+            static_cast<size_t>(3)});
       d_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
       stan::math::fill(d_ar_mat, std::numeric_limits<double>::quiet_NaN());
       
@@ -5040,7 +5033,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_simplex", "N", N);
       current_statement__ = 224;
       context__.validate_dims("data initialization","d_simplex","double",
-          context__.to_vec(N));
+           std::vector<size_t>{static_cast<size_t>(N)});
       d_simplex__ = Eigen::Matrix<double, -1, 1>(N);
       new (&d_simplex) Eigen::Map<Eigen::Matrix<double, -1, 1>>(d_simplex__.data(), N);
       stan::math::fill(d_simplex, std::numeric_limits<double>::quiet_NaN());
@@ -5067,9 +5060,11 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_1d_simplex", "N", N);
       current_statement__ = 227;
       context__.validate_dims("data initialization","d_1d_simplex","double",
-          context__.to_vec(N, N));
+           std::vector<size_t>{static_cast<size_t>(N),
+            static_cast<size_t>(N)});
       d_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       stan::math::fill(d_1d_simplex, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> d_1d_simplex_flat__;
@@ -5103,9 +5098,12 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_3d_simplex", "N", N);
       current_statement__ = 232;
       context__.validate_dims("data initialization","d_3d_simplex","double",
-          context__.to_vec(N, M, K, N));
+           std::vector<size_t>{static_cast<size_t>(N),
+            static_cast<size_t>(M), static_cast<size_t>(K),
+            static_cast<size_t>(N)});
       d_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       stan::math::fill(d_3d_simplex, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> d_3d_simplex_flat__;
@@ -5142,7 +5140,8 @@ class mother_model final : public model_base_crtp<mother_model> {
                                                                     1)]);}}}
       current_statement__ = 233;
       context__.validate_dims("data initialization","d_cfcov_54","double",
-          context__.to_vec(5, 4));
+           std::vector<size_t>{static_cast<size_t>(5),
+            static_cast<size_t>(4)});
       d_cfcov_54__ = Eigen::Matrix<double, -1, -1>(5, 4);
       new (&d_cfcov_54) Eigen::Map<Eigen::Matrix<double, -1, -1>>(d_cfcov_54__.data(), 5, 4);
       stan::math::fill(d_cfcov_54, std::numeric_limits<double>::quiet_NaN());
@@ -5168,7 +5167,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       check_cholesky_factor(function__, "d_cfcov_54", d_cfcov_54);
       current_statement__ = 234;
       context__.validate_dims("data initialization","d_cfcov_33","double",
-          context__.to_vec(3, 3));
+           std::vector<size_t>{static_cast<size_t>(3),
+            static_cast<size_t>(3)});
       d_cfcov_33__ = Eigen::Matrix<double, -1, -1>(3, 3);
       new (&d_cfcov_33) Eigen::Map<Eigen::Matrix<double, -1, -1>>(d_cfcov_33__.data(), 3, 3);
       stan::math::fill(d_cfcov_33, std::numeric_limits<double>::quiet_NaN());
@@ -5196,9 +5196,11 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_cfcov_33_ar", "K", K);
       current_statement__ = 236;
       context__.validate_dims("data initialization","d_cfcov_33_ar","double",
-          context__.to_vec(K, 3, 3));
+           std::vector<size_t>{static_cast<size_t>(K),
+            static_cast<size_t>(3), static_cast<size_t>(3)});
       d_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
       stan::math::fill(d_cfcov_33_ar, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> d_cfcov_33_ar_flat__;
@@ -5227,7 +5229,7 @@ class mother_model final : public model_base_crtp<mother_model> {
                               d_cfcov_33_ar[(sym1__ - 1)]);}
       current_statement__ = 237;
       context__.validate_dims("data initialization","d_int","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       d_int = std::numeric_limits<int>::min();
       
       current_statement__ = 237;
@@ -5236,7 +5238,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_int_array", "d_int", d_int);
       current_statement__ = 239;
       context__.validate_dims("data initialization","d_int_array","int",
-          context__.to_vec(d_int));
+           std::vector<size_t>{static_cast<size_t>(d_int)});
       d_int_array = std::vector<int>(d_int, std::numeric_limits<int>::min());
       
       current_statement__ = 239;
@@ -5245,8 +5247,10 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_int_array_2d", "d_int", d_int);
       current_statement__ = 241;
       context__.validate_dims("data initialization","d_int_array_2d","int",
-          context__.to_vec(d_int, 2));
+           std::vector<size_t>{static_cast<size_t>(d_int),
+            static_cast<size_t>(2)});
       d_int_array_2d = std::vector<std::vector<int>>(d_int, std::vector<int>(2, std::numeric_limits<int>::min()));
+      
       
       {
         std::vector<int> d_int_array_2d_flat__;
@@ -5269,8 +5273,10 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_int_array_3d", "d_int", d_int);
       current_statement__ = 243;
       context__.validate_dims("data initialization","d_int_array_3d","int",
-          context__.to_vec(d_int, 2, 3));
+           std::vector<size_t>{static_cast<size_t>(d_int),
+            static_cast<size_t>(2), static_cast<size_t>(3)});
       d_int_array_3d = std::vector<std::vector<std::vector<int>>>(d_int, std::vector<std::vector<int>>(2, std::vector<int>(3, std::numeric_limits<int>::min())));
+      
       
       {
         std::vector<int> d_int_array_3d_flat__;
@@ -5294,7 +5300,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       }
       current_statement__ = 244;
       context__.validate_dims("data initialization","d_real","double",
-          context__.to_vec());
+           std::vector<size_t>{});
       d_real = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 244;
@@ -5303,8 +5309,9 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_real_array", "d_int", d_int);
       current_statement__ = 246;
       context__.validate_dims("data initialization","d_real_array","double",
-          context__.to_vec(d_int));
+           std::vector<size_t>{static_cast<size_t>(d_int)});
       d_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 246;
       d_real_array = context__.vals_r("d_real_array");
@@ -5312,8 +5319,11 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_real_array_2d", "d_int", d_int);
       current_statement__ = 248;
       context__.validate_dims("data initialization","d_real_array_2d",
-          "double",context__.to_vec(d_int, 2));
+          "double",
+           std::vector<size_t>{static_cast<size_t>(d_int),
+            static_cast<size_t>(2)});
       d_real_array_2d = std::vector<std::vector<double>>(d_int, std::vector<double>(2, std::numeric_limits<double>::quiet_NaN()));
+      
       
       {
         std::vector<local_scalar_t__> d_real_array_2d_flat__;
@@ -5336,8 +5346,11 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_real_array_3d", "d_int", d_int);
       current_statement__ = 250;
       context__.validate_dims("data initialization","d_real_array_3d",
-          "double",context__.to_vec(d_int, 2, 3));
+          "double",
+           std::vector<size_t>{static_cast<size_t>(d_int),
+            static_cast<size_t>(2), static_cast<size_t>(3)});
       d_real_array_3d = std::vector<std::vector<std::vector<double>>>(d_int, std::vector<std::vector<double>>(2, std::vector<double>(3, std::numeric_limits<double>::quiet_NaN())));
+      
       
       {
         std::vector<local_scalar_t__> d_real_array_3d_flat__;
@@ -5365,7 +5378,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_matrix", "d_int", d_int);
       current_statement__ = 253;
       context__.validate_dims("data initialization","d_matrix","double",
-          context__.to_vec(d_int, d_int));
+           std::vector<size_t>{static_cast<size_t>(d_int),
+            static_cast<size_t>(d_int)});
       d_matrix__ = Eigen::Matrix<double, -1, -1>(d_int, d_int);
       new (&d_matrix) Eigen::Map<Eigen::Matrix<double, -1, -1>>(d_matrix__.data(), d_int, d_int);
       stan::math::fill(d_matrix, std::numeric_limits<double>::quiet_NaN());
@@ -5395,9 +5409,12 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_matrix_array", "d_int", d_int);
       current_statement__ = 257;
       context__.validate_dims("data initialization","d_matrix_array",
-          "double",context__.to_vec(d_int, d_int, d_int));
+          "double",
+           std::vector<size_t>{static_cast<size_t>(d_int),
+            static_cast<size_t>(d_int), static_cast<size_t>(d_int)});
       d_matrix_array = std::vector<Eigen::Matrix<double, -1, -1>>(d_int, Eigen::Matrix<double, -1, -1>(d_int, d_int));
       stan::math::fill(d_matrix_array, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> d_matrix_array_flat__;
@@ -5427,9 +5444,13 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_matrix_array_2d", "d_int", d_int);
       current_statement__ = 261;
       context__.validate_dims("data initialization","d_matrix_array_2d",
-          "double",context__.to_vec(d_int, 2, d_int, d_int));
+          "double",
+           std::vector<size_t>{static_cast<size_t>(d_int),
+            static_cast<size_t>(2), static_cast<size_t>(d_int),
+            static_cast<size_t>(d_int)});
       d_matrix_array_2d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(d_int, std::vector<Eigen::Matrix<double, -1, -1>>(2, Eigen::Matrix<double, -1, -1>(d_int, d_int)));
       stan::math::fill(d_matrix_array_2d, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> d_matrix_array_2d_flat__;
@@ -5463,9 +5484,13 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_matrix_array_3d", "d_int", d_int);
       current_statement__ = 265;
       context__.validate_dims("data initialization","d_matrix_array_3d",
-          "double",context__.to_vec(d_int, 2, 3, d_int, d_int));
+          "double",
+           std::vector<size_t>{static_cast<size_t>(d_int),
+            static_cast<size_t>(2), static_cast<size_t>(3),
+            static_cast<size_t>(d_int), static_cast<size_t>(d_int)});
       d_matrix_array_3d = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>>(d_int, std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(2, std::vector<Eigen::Matrix<double, -1, -1>>(3, Eigen::Matrix<double, -1, -1>(d_int, d_int))));
       stan::math::fill(d_matrix_array_3d, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> d_matrix_array_3d_flat__;
@@ -5498,7 +5523,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_vector", "d_int", d_int);
       current_statement__ = 267;
       context__.validate_dims("data initialization","d_vector","double",
-          context__.to_vec(d_int));
+           std::vector<size_t>{static_cast<size_t>(d_int)});
       d_vector__ = Eigen::Matrix<double, -1, 1>(d_int);
       new (&d_vector) Eigen::Map<Eigen::Matrix<double, -1, 1>>(d_vector__.data(), d_int);
       stan::math::fill(d_vector, std::numeric_limits<double>::quiet_NaN());
@@ -5523,9 +5548,12 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_vector_array", "d_int", d_int);
       current_statement__ = 270;
       context__.validate_dims("data initialization","d_vector_array",
-          "double",context__.to_vec(d_int, d_int));
+          "double",
+           std::vector<size_t>{static_cast<size_t>(d_int),
+            static_cast<size_t>(d_int)});
       d_vector_array = std::vector<Eigen::Matrix<double, -1, 1>>(d_int, Eigen::Matrix<double, -1, 1>(d_int));
       stan::math::fill(d_vector_array, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> d_vector_array_flat__;
@@ -5550,9 +5578,12 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_vector_array_2d", "d_int", d_int);
       current_statement__ = 273;
       context__.validate_dims("data initialization","d_vector_array_2d",
-          "double",context__.to_vec(d_int, 2, d_int));
+          "double",
+           std::vector<size_t>{static_cast<size_t>(d_int),
+            static_cast<size_t>(2), static_cast<size_t>(d_int)});
       d_vector_array_2d = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(d_int, std::vector<Eigen::Matrix<double, -1, 1>>(2, Eigen::Matrix<double, -1, 1>(d_int)));
       stan::math::fill(d_vector_array_2d, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> d_vector_array_2d_flat__;
@@ -5581,9 +5612,13 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_vector_array_3d", "d_int", d_int);
       current_statement__ = 276;
       context__.validate_dims("data initialization","d_vector_array_3d",
-          "double",context__.to_vec(d_int, 2, 3, d_int));
+          "double",
+           std::vector<size_t>{static_cast<size_t>(d_int),
+            static_cast<size_t>(2), static_cast<size_t>(3),
+            static_cast<size_t>(d_int)});
       d_vector_array_3d = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(d_int, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(2, std::vector<Eigen::Matrix<double, -1, 1>>(3, Eigen::Matrix<double, -1, 1>(d_int))));
       stan::math::fill(d_vector_array_3d, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> d_vector_array_3d_flat__;
@@ -5613,10 +5648,11 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_row_vector", "d_int", d_int);
       current_statement__ = 278;
       context__.validate_dims("data initialization","d_row_vector","double",
-          context__.to_vec(d_int));
+           std::vector<size_t>{static_cast<size_t>(d_int)});
       d_row_vector__ = Eigen::Matrix<double, 1, -1>(d_int);
       new (&d_row_vector) Eigen::Map<Eigen::Matrix<double, 1, -1>>(d_row_vector__.data(), d_int);
       stan::math::fill(d_row_vector, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> d_row_vector_flat__;
@@ -5638,9 +5674,12 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_row_vector_array", "d_int", d_int);
       current_statement__ = 281;
       context__.validate_dims("data initialization","d_row_vector_array",
-          "double",context__.to_vec(d_int, d_int));
+          "double",
+           std::vector<size_t>{static_cast<size_t>(d_int),
+            static_cast<size_t>(d_int)});
       d_row_vector_array = std::vector<Eigen::Matrix<double, 1, -1>>(d_int, Eigen::Matrix<double, 1, -1>(d_int));
       stan::math::fill(d_row_vector_array, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> d_row_vector_array_flat__;
@@ -5666,9 +5705,12 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_row_vector_array_2d", "d_int", d_int);
       current_statement__ = 284;
       context__.validate_dims("data initialization","d_row_vector_array_2d",
-          "double",context__.to_vec(d_int, 2, d_int));
+          "double",
+           std::vector<size_t>{static_cast<size_t>(d_int),
+            static_cast<size_t>(2), static_cast<size_t>(d_int)});
       d_row_vector_array_2d = std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(d_int, std::vector<Eigen::Matrix<double, 1, -1>>(2, Eigen::Matrix<double, 1, -1>(d_int)));
       stan::math::fill(d_row_vector_array_2d, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> d_row_vector_array_2d_flat__;
@@ -5697,9 +5739,13 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("d_row_vector_array_3d", "d_int", d_int);
       current_statement__ = 287;
       context__.validate_dims("data initialization","d_row_vector_array_3d",
-          "double",context__.to_vec(d_int, 2, 3, d_int));
+          "double",
+           std::vector<size_t>{static_cast<size_t>(d_int),
+            static_cast<size_t>(2), static_cast<size_t>(3),
+            static_cast<size_t>(d_int)});
       d_row_vector_array_3d = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(d_int, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(2, std::vector<Eigen::Matrix<double, 1, -1>>(3, Eigen::Matrix<double, 1, -1>(d_int))));
       stan::math::fill(d_row_vector_array_3d, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> d_row_vector_array_3d_flat__;
@@ -5774,6 +5820,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       td_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       stan::math::fill(td_1d_simplex, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 302;
       validate_non_negative_index("td_3d_simplex", "N", N);
       current_statement__ = 303;
@@ -5785,6 +5832,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 306;
       td_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       stan::math::fill(td_3d_simplex, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 307;
       td_cfcov_54__ = Eigen::Matrix<double, -1, -1>(5, 5);
@@ -5815,8 +5863,10 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 313;
       x_r = std::vector<std::vector<double>>(0, std::vector<double>(0, std::numeric_limits<double>::quiet_NaN()));
       
+      
       current_statement__ = 314;
       x_i = std::vector<std::vector<int>>(0, std::vector<int>(0, std::numeric_limits<int>::min()));
+      
       
       current_statement__ = 315;
       td_int = (primitive_value(1) || primitive_value(2));
@@ -5891,6 +5941,7 @@ class mother_model final : public model_base_crtp<mother_model> {
         blocked_tdata_vs = Eigen::Matrix<double, 1, -1>(2);
         stan::math::fill(blocked_tdata_vs, std::numeric_limits<double>::quiet_NaN());
         
+        
         current_statement__ = 347;
         for (int sym1__ = 1; sym1__ <= stan::math::size(blocked_tdata_vs);
              ++sym1__) {
@@ -5942,11 +5993,13 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 357;
       arr_mul_ind = std::vector<std::vector<int>>(2, std::vector<int>(2, std::numeric_limits<int>::min()));
       
+      
       current_statement__ = 358;
       assign(arr_mul_ind, std::vector<int>{1, 1},
         "assigning variable arr_mul_ind", index_uni(1), index_min_max(1, 2));
       current_statement__ = 359;
       x_mul_ind = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 359;
       assign(x_mul_ind, std::vector<int>{1, 2},
@@ -5960,17 +6013,20 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 362;
       transformed_data_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 363;
       validate_non_negative_index("transformed_data_real_array_2d", "d_int",
                                   d_int);
       current_statement__ = 364;
       transformed_data_real_array_2d = std::vector<std::vector<double>>(d_int, std::vector<double>(2, std::numeric_limits<double>::quiet_NaN()));
       
+      
       current_statement__ = 365;
       validate_non_negative_index("transformed_data_real_array_3d", "d_int",
                                   d_int);
       current_statement__ = 366;
       transformed_data_real_array_3d = std::vector<std::vector<std::vector<double>>>(d_int, std::vector<std::vector<double>>(2, std::vector<double>(3, std::numeric_limits<double>::quiet_NaN())));
+      
       
       current_statement__ = 367;
       validate_non_negative_index("transformed_data_matrix", "d_int", d_int);
@@ -5980,6 +6036,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       transformed_data_matrix__ = Eigen::Matrix<double, -1, -1>(d_int, d_int);
       new (&transformed_data_matrix) Eigen::Map<Eigen::Matrix<double, -1, -1>>(transformed_data_matrix__.data(), d_int, d_int);
       stan::math::fill(transformed_data_matrix, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 370;
       validate_non_negative_index("transformed_data_matrix_array", "d_int",
@@ -5994,6 +6051,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       transformed_data_matrix_array = std::vector<Eigen::Matrix<double, -1, -1>>(d_int, Eigen::Matrix<double, -1, -1>(d_int, d_int));
       stan::math::fill(transformed_data_matrix_array, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 374;
       validate_non_negative_index("transformed_data_matrix_array_2d",
                                   "d_int", d_int);
@@ -6006,6 +6064,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 377;
       transformed_data_matrix_array_2d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(d_int, std::vector<Eigen::Matrix<double, -1, -1>>(2, Eigen::Matrix<double, -1, -1>(d_int, d_int)));
       stan::math::fill(transformed_data_matrix_array_2d, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 378;
       validate_non_negative_index("transformed_data_matrix_array_3d",
@@ -6020,12 +6079,14 @@ class mother_model final : public model_base_crtp<mother_model> {
       transformed_data_matrix_array_3d = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>>(d_int, std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(2, std::vector<Eigen::Matrix<double, -1, -1>>(3, Eigen::Matrix<double, -1, -1>(d_int, d_int))));
       stan::math::fill(transformed_data_matrix_array_3d, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 382;
       validate_non_negative_index("transformed_data_vector", "d_int", d_int);
       current_statement__ = 383;
       transformed_data_vector__ = Eigen::Matrix<double, -1, 1>(d_int);
       new (&transformed_data_vector) Eigen::Map<Eigen::Matrix<double, -1, 1>>(transformed_data_vector__.data(), d_int);
       stan::math::fill(transformed_data_vector, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 384;
       validate_non_negative_index("transformed_data_vector_array", "d_int",
@@ -6037,6 +6098,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       transformed_data_vector_array = std::vector<Eigen::Matrix<double, -1, 1>>(d_int, Eigen::Matrix<double, -1, 1>(d_int));
       stan::math::fill(transformed_data_vector_array, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 387;
       validate_non_negative_index("transformed_data_vector_array_2d",
                                   "d_int", d_int);
@@ -6046,6 +6108,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 389;
       transformed_data_vector_array_2d = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(d_int, std::vector<Eigen::Matrix<double, -1, 1>>(2, Eigen::Matrix<double, -1, 1>(d_int)));
       stan::math::fill(transformed_data_vector_array_2d, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 390;
       validate_non_negative_index("transformed_data_vector_array_3d",
@@ -6057,6 +6120,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       transformed_data_vector_array_3d = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(d_int, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(2, std::vector<Eigen::Matrix<double, -1, 1>>(3, Eigen::Matrix<double, -1, 1>(d_int))));
       stan::math::fill(transformed_data_vector_array_3d, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 393;
       validate_non_negative_index("transformed_data_row_vector", "d_int",
                                   d_int);
@@ -6064,6 +6128,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       transformed_data_row_vector__ = Eigen::Matrix<double, 1, -1>(d_int);
       new (&transformed_data_row_vector) Eigen::Map<Eigen::Matrix<double, 1, -1>>(transformed_data_row_vector__.data(), d_int);
       stan::math::fill(transformed_data_row_vector, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 395;
       validate_non_negative_index("transformed_data_row_vector_array",
@@ -6075,6 +6140,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       transformed_data_row_vector_array = std::vector<Eigen::Matrix<double, 1, -1>>(d_int, Eigen::Matrix<double, 1, -1>(d_int));
       stan::math::fill(transformed_data_row_vector_array, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 398;
       validate_non_negative_index("transformed_data_row_vector_array_2d",
                                   "d_int", d_int);
@@ -6085,6 +6151,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       transformed_data_row_vector_array_2d = std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(d_int, std::vector<Eigen::Matrix<double, 1, -1>>(2, Eigen::Matrix<double, 1, -1>(d_int)));
       stan::math::fill(transformed_data_row_vector_array_2d, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 401;
       validate_non_negative_index("transformed_data_row_vector_array_3d",
                                   "d_int", d_int);
@@ -6094,6 +6161,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 403;
       transformed_data_row_vector_array_3d = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(d_int, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(2, std::vector<Eigen::Matrix<double, 1, -1>>(3, Eigen::Matrix<double, 1, -1>(d_int))));
       stan::math::fill(transformed_data_row_vector_array_3d, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 404;
       transformed_data_real = pow(d_int, d_int);
@@ -6635,37 +6703,13 @@ class mother_model final : public model_base_crtp<mother_model> {
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 0U;
+    num_params_r__ = 1 + 1 + 1 + 5 + 5 + 5 + N + (N * M * K) + N + (N * N)
+       + (N * M * K * N) + N + (N * N) + (N * M * K * N) + (4 * 5 * 2 * 3)
+       + (N - 1) + (N * (N - 1)) + (N * M * K * (N - 1))
+       + ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4))
+       + ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3))
+       + (K * ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3))) + 2 + 2;
     
-    try {
-      num_params_r__ += 1;
-      num_params_r__ += 1;
-      num_params_r__ += 1;
-      num_params_r__ += 5;
-      num_params_r__ += 5;
-      num_params_r__ += 5;
-      num_params_r__ += N;
-      num_params_r__ += N * M * K;
-      num_params_r__ += N;
-      num_params_r__ += N * N;
-      num_params_r__ += N * M * K * N;
-      num_params_r__ += N;
-      num_params_r__ += N * N;
-      num_params_r__ += N * M * K * N;
-      num_params_r__ += 4 * 5 * 2 * 3;
-      num_params_r__ += (N - 1);
-      num_params_r__ += N * (N - 1);
-      num_params_r__ += N * M * K * (N - 1);
-      num_params_r__ += ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4));
-      num_params_r__ += ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3));
-      num_params_r__ += K * ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3));
-      num_params_r__ += 2;
-      num_params_r__ += 2;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
@@ -6729,6 +6773,7 @@ class mother_model final : public model_base_crtp<mother_model> {
                        0, lp__, N);
       std::vector<std::vector<std::vector<local_scalar_t__>>> p_real_3d_ar;
       p_real_3d_ar = std::vector<std::vector<std::vector<local_scalar_t__>>>(N, std::vector<std::vector<local_scalar_t__>>(M, std::vector<local_scalar_t__>(K, DUMMY_VAR__)));
+      
       
       current_statement__ = 8;
       p_real_3d_ar = in__.template read_constrain_lb<std::vector<std::vector<std::vector<local_scalar_t__>>>, jacobian__>(
@@ -6841,6 +6886,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       
       std::vector<std::vector<std::vector<local_scalar_t__>>> tp_real_3d_ar;
       tp_real_3d_ar = std::vector<std::vector<std::vector<local_scalar_t__>>>(N, std::vector<std::vector<local_scalar_t__>>(M, std::vector<local_scalar_t__>(K, DUMMY_VAR__)));
+      
       
       Eigen::Matrix<local_scalar_t__, -1, 1> tp_vec;
       tp_vec = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
@@ -7221,11 +7267,13 @@ class mother_model final : public model_base_crtp<mother_model> {
       std::vector<double> offset_multiplier;
       offset_multiplier = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 4;
       offset_multiplier = in__.template read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
                             1, 2, lp__, 5);
       std::vector<double> no_offset_multiplier;
       no_offset_multiplier = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 5;
       no_offset_multiplier = in__.template read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
@@ -7233,17 +7281,20 @@ class mother_model final : public model_base_crtp<mother_model> {
       std::vector<double> offset_no_multiplier;
       offset_no_multiplier = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 6;
       offset_no_multiplier = in__.template read_constrain_offset_multiplier<std::vector<local_scalar_t__>, jacobian__>(
                                3, 1, lp__, 5);
       std::vector<double> p_real_1d_ar;
       p_real_1d_ar = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 7;
       p_real_1d_ar = in__.template read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(
                        0, lp__, N);
       std::vector<std::vector<std::vector<double>>> p_real_3d_ar;
       p_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, std::numeric_limits<double>::quiet_NaN())));
+      
       
       current_statement__ = 8;
       p_real_3d_ar = in__.template read_constrain_lb<std::vector<std::vector<std::vector<local_scalar_t__>>>, jacobian__>(
@@ -7280,12 +7331,14 @@ class mother_model final : public model_base_crtp<mother_model> {
       p_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
       stan::math::fill(p_1d_row_vec, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 13;
       p_1d_row_vec = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
                        N, N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> p_3d_row_vec;
       p_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
       stan::math::fill(p_3d_row_vec, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 14;
       p_3d_row_vec = in__.template read<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>>(
@@ -7308,12 +7361,14 @@ class mother_model final : public model_base_crtp<mother_model> {
       p_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       stan::math::fill(p_1d_simplex, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 17;
       p_1d_simplex = in__.template read_constrain_simplex<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
                        lp__, N, N);
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_simplex;
       p_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       stan::math::fill(p_3d_simplex, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 18;
       p_3d_simplex = in__.template read_constrain_simplex<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>, jacobian__>(
@@ -7336,6 +7391,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       p_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
       stan::math::fill(p_cfcov_33_ar, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 21;
       p_cfcov_33_ar = in__.template read_constrain_cholesky_factor_cov<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
                         lp__, K, 3, 3);
@@ -7354,8 +7410,10 @@ class mother_model final : public model_base_crtp<mother_model> {
       std::vector<double> tp_real_1d_ar;
       tp_real_1d_ar = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
+      
       std::vector<std::vector<std::vector<double>>> tp_real_3d_ar;
       tp_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, std::numeric_limits<double>::quiet_NaN())));
+      
       
       Eigen::Matrix<double, -1, 1> tp_vec;
       tp_vec = Eigen::Matrix<double, -1, 1>(N);
@@ -7377,9 +7435,11 @@ class mother_model final : public model_base_crtp<mother_model> {
       tp_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
       stan::math::fill(tp_1d_row_vec, std::numeric_limits<double>::quiet_NaN());
       
+      
       std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> tp_3d_row_vec;
       tp_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
       stan::math::fill(tp_3d_row_vec, std::numeric_limits<double>::quiet_NaN());
+      
       
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> tp_ar_mat;
       tp_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
@@ -7393,9 +7453,11 @@ class mother_model final : public model_base_crtp<mother_model> {
       tp_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       stan::math::fill(tp_1d_simplex, std::numeric_limits<double>::quiet_NaN());
       
+      
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> tp_3d_simplex;
       tp_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       stan::math::fill(tp_3d_simplex, std::numeric_limits<double>::quiet_NaN());
+      
       
       Eigen::Matrix<double, -1, -1> tp_cfcov_54;
       tp_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
@@ -7408,6 +7470,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       std::vector<Eigen::Matrix<double, -1, -1>> tp_cfcov_33_ar;
       tp_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
       stan::math::fill(tp_cfcov_33_ar, std::numeric_limits<double>::quiet_NaN());
+      
       
       Eigen::Matrix<double, -1, 1> theta_p;
       theta_p = Eigen::Matrix<double, -1, 1>(2);
@@ -7746,8 +7809,10 @@ class mother_model final : public model_base_crtp<mother_model> {
       std::vector<double> gq_real_1d_ar;
       gq_real_1d_ar = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
+      
       std::vector<std::vector<std::vector<double>>> gq_real_3d_ar;
       gq_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, std::numeric_limits<double>::quiet_NaN())));
+      
       
       Eigen::Matrix<double, -1, 1> gq_vec;
       gq_vec = Eigen::Matrix<double, -1, 1>(N);
@@ -7769,9 +7834,11 @@ class mother_model final : public model_base_crtp<mother_model> {
       gq_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
       stan::math::fill(gq_1d_row_vec, std::numeric_limits<double>::quiet_NaN());
       
+      
       std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> gq_3d_row_vec;
       gq_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
       stan::math::fill(gq_3d_row_vec, std::numeric_limits<double>::quiet_NaN());
+      
       
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> gq_ar_mat;
       gq_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
@@ -7785,9 +7852,11 @@ class mother_model final : public model_base_crtp<mother_model> {
       gq_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       stan::math::fill(gq_1d_simplex, std::numeric_limits<double>::quiet_NaN());
       
+      
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> gq_3d_simplex;
       gq_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       stan::math::fill(gq_3d_simplex, std::numeric_limits<double>::quiet_NaN());
+      
       
       Eigen::Matrix<double, -1, -1> gq_cfcov_54;
       gq_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
@@ -7801,6 +7870,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       gq_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
       stan::math::fill(gq_cfcov_33_ar, std::numeric_limits<double>::quiet_NaN());
       
+      
       std::vector<int> indices;
       indices = std::vector<int>(3, std::numeric_limits<int>::min());
       
@@ -7809,6 +7879,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       std::vector<Eigen::Matrix<double, -1, -1>> indexing_mat;
       indexing_mat = std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(3, 4));
       stan::math::fill(indexing_mat, std::numeric_limits<double>::quiet_NaN());
+      
       
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res1;
       idx_res1 = std::vector<Eigen::Matrix<double, -1, -1>>(3, Eigen::Matrix<double, -1, -1>(3, 4));
@@ -8248,10 +8319,12 @@ class mother_model final : public model_base_crtp<mother_model> {
       std::vector<double> offset_multiplier;
       offset_multiplier = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 4;
       offset_multiplier = context__.vals_r("offset_multiplier");
       std::vector<double> offset_multiplier_free__;
       offset_multiplier_free__ = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 4;
       for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
@@ -8263,10 +8336,12 @@ class mother_model final : public model_base_crtp<mother_model> {
       std::vector<double> no_offset_multiplier;
       no_offset_multiplier = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 5;
       no_offset_multiplier = context__.vals_r("no_offset_multiplier");
       std::vector<double> no_offset_multiplier_free__;
       no_offset_multiplier_free__ = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 5;
       for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
@@ -8279,10 +8354,12 @@ class mother_model final : public model_base_crtp<mother_model> {
       std::vector<double> offset_no_multiplier;
       offset_no_multiplier = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 6;
       offset_no_multiplier = context__.vals_r("offset_no_multiplier");
       std::vector<double> offset_no_multiplier_free__;
       offset_no_multiplier_free__ = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 6;
       for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
@@ -8295,10 +8372,12 @@ class mother_model final : public model_base_crtp<mother_model> {
       std::vector<double> p_real_1d_ar;
       p_real_1d_ar = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 7;
       p_real_1d_ar = context__.vals_r("p_real_1d_ar");
       std::vector<double> p_real_1d_ar_free__;
       p_real_1d_ar_free__ = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 7;
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -8308,6 +8387,7 @@ class mother_model final : public model_base_crtp<mother_model> {
           "assigning variable p_real_1d_ar_free__", index_uni(sym1__));}
       std::vector<std::vector<std::vector<double>>> p_real_3d_ar;
       p_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, std::numeric_limits<double>::quiet_NaN())));
+      
       
       {
         std::vector<local_scalar_t__> p_real_3d_ar_flat__;
@@ -8331,6 +8411,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       }
       std::vector<std::vector<std::vector<double>>> p_real_3d_ar_free__;
       p_real_3d_ar_free__ = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, std::numeric_limits<double>::quiet_NaN())));
+      
       
       current_statement__ = 8;
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -8367,6 +8448,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       Eigen::Matrix<double, -1, 1> p_vec_free__;
       p_vec_free__ = Eigen::Matrix<double, -1, 1>(N);
       stan::math::fill(p_vec_free__, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 9;
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -8443,6 +8525,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       p_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
       stan::math::fill(p_1d_row_vec, std::numeric_limits<double>::quiet_NaN());
       
+      
       {
         std::vector<local_scalar_t__> p_1d_row_vec_flat__;
         current_statement__ = 13;
@@ -8463,6 +8546,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> p_3d_row_vec;
       p_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
       stan::math::fill(p_3d_row_vec, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> p_3d_row_vec_flat__;
@@ -8518,6 +8602,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       p_ar_mat_free__ = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
       stan::math::fill(p_ar_mat_free__, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 15;
       for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
         current_statement__ = 15;
@@ -8559,12 +8644,14 @@ class mother_model final : public model_base_crtp<mother_model> {
       p_simplex_free__ = Eigen::Matrix<double, -1, 1>((N - 1));
       stan::math::fill(p_simplex_free__, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 16;
       assign(p_simplex_free__, stan::math::simplex_free(p_simplex),
         "assigning variable p_simplex_free__");
       std::vector<Eigen::Matrix<double, -1, 1>> p_1d_simplex;
       p_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       stan::math::fill(p_1d_simplex, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> p_1d_simplex_flat__;
@@ -8588,6 +8675,7 @@ class mother_model final : public model_base_crtp<mother_model> {
         (N - 1)));
       stan::math::fill(p_1d_simplex_free__, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 17;
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         current_statement__ = 17;
@@ -8597,6 +8685,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_simplex;
       p_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
       stan::math::fill(p_3d_simplex, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> p_3d_simplex_flat__;
@@ -8625,6 +8714,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       p_3d_simplex_free__ = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(
         (N - 1)))));
       stan::math::fill(p_3d_simplex_free__, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 18;
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -8667,6 +8757,7 @@ class mother_model final : public model_base_crtp<mother_model> {
                                                          ((5 - 4) * 4)));
       stan::math::fill(p_cfcov_54_free__, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 19;
       assign(p_cfcov_54_free__, stan::math::cholesky_factor_free(p_cfcov_54),
         "assigning variable p_cfcov_54_free__");
@@ -8697,12 +8788,14 @@ class mother_model final : public model_base_crtp<mother_model> {
                                                          ((3 - 3) * 3)));
       stan::math::fill(p_cfcov_33_free__, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 20;
       assign(p_cfcov_33_free__, stan::math::cholesky_factor_free(p_cfcov_33),
         "assigning variable p_cfcov_33_free__");
       std::vector<Eigen::Matrix<double, -1, -1>> p_cfcov_33_ar;
       p_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
       stan::math::fill(p_cfcov_33_ar, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> p_cfcov_33_ar_flat__;
@@ -8728,6 +8821,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       p_cfcov_33_ar_free__ = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(
         ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3))));
       stan::math::fill(p_cfcov_33_ar_free__, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 21;
       for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
@@ -10695,7 +10789,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       pos__ = 1;
       current_statement__ = 123;
       context__.validate_dims("data initialization","T","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       T = std::numeric_limits<int>::min();
       
       current_statement__ = 123;
@@ -10704,14 +10798,14 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       check_greater_or_equal(function__, "T", T, 1);
       current_statement__ = 124;
       context__.validate_dims("data initialization","y0_d","double",
-          context__.to_vec(2));
+           std::vector<size_t>{static_cast<size_t>(2)});
       y0_d = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 124;
       y0_d = context__.vals_r("y0_d");
       current_statement__ = 125;
       context__.validate_dims("data initialization","t0","double",
-          context__.to_vec());
+           std::vector<size_t>{});
       t0 = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 125;
@@ -10720,52 +10814,55 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       validate_non_negative_index("ts", "T", T);
       current_statement__ = 127;
       context__.validate_dims("data initialization","ts","double",
-          context__.to_vec(T));
+           std::vector<size_t>{static_cast<size_t>(T)});
       ts = std::vector<double>(T, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 127;
       ts = context__.vals_r("ts");
       current_statement__ = 128;
       context__.validate_dims("data initialization","theta_d","double",
-          context__.to_vec(1));
+           std::vector<size_t>{static_cast<size_t>(1)});
       theta_d = std::vector<double>(1, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 128;
       theta_d = context__.vals_r("theta_d");
       current_statement__ = 129;
       context__.validate_dims("data initialization","x","double",
-          context__.to_vec(0));
+           std::vector<size_t>{static_cast<size_t>(0)});
       x = std::vector<double>(0, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 129;
       x = context__.vals_r("x");
       current_statement__ = 130;
       context__.validate_dims("data initialization","x_int","int",
-          context__.to_vec(0));
+           std::vector<size_t>{static_cast<size_t>(0)});
       x_int = std::vector<int>(0, std::numeric_limits<int>::min());
       
       current_statement__ = 130;
       x_int = context__.vals_i("x_int");
       current_statement__ = 131;
       context__.validate_dims("data initialization","x_d_r","double",
-          context__.to_vec(0));
+           std::vector<size_t>{static_cast<size_t>(0)});
       x_d_r = std::vector<double>(0, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 131;
       x_d_r = context__.vals_r("x_d_r");
       current_statement__ = 132;
       context__.validate_dims("data initialization","x_d_i","int",
-          context__.to_vec(0));
+           std::vector<size_t>{static_cast<size_t>(0)});
       x_d_i = std::vector<int>(0, std::numeric_limits<int>::min());
       
       current_statement__ = 132;
       x_d_i = context__.vals_i("x_d_i");
       current_statement__ = 133;
       context__.validate_dims("data initialization","shared_params_d",
-          "double",context__.to_vec(3));
+          "double", std::vector<size_t>{static_cast<size_t>(3)});
       shared_params_d__ = Eigen::Matrix<double, -1, 1>(3);
       new (&shared_params_d) Eigen::Map<Eigen::Matrix<double, -1, 1>>(shared_params_d__.data(), 3);
       stan::math::fill(shared_params_d, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> shared_params_d_flat__;
@@ -10783,9 +10880,11 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       }
       current_statement__ = 134;
       context__.validate_dims("data initialization","job_params_d","double",
-          context__.to_vec(3, 3));
+           std::vector<size_t>{static_cast<size_t>(3),
+            static_cast<size_t>(3)});
       job_params_d = std::vector<Eigen::Matrix<double, -1, 1>>(3, Eigen::Matrix<double, -1, 1>(3));
       stan::math::fill(job_params_d, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> job_params_d_flat__;
@@ -10806,8 +10905,10 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       }
       current_statement__ = 135;
       context__.validate_dims("data initialization","data_r","double",
-          context__.to_vec(3, 3));
+           std::vector<size_t>{static_cast<size_t>(3),
+            static_cast<size_t>(3)});
       data_r = std::vector<std::vector<double>>(3, std::vector<double>(3, std::numeric_limits<double>::quiet_NaN()));
+      
       
       {
         std::vector<local_scalar_t__> data_r_flat__;
@@ -10828,8 +10929,10 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       }
       current_statement__ = 136;
       context__.validate_dims("data initialization","data_i","int",
-          context__.to_vec(3, 3));
+           std::vector<size_t>{static_cast<size_t>(3),
+            static_cast<size_t>(3)});
       data_i = std::vector<std::vector<int>>(3, std::vector<int>(3, std::numeric_limits<int>::min()));
+      
       
       {
         std::vector<int> data_i_flat__;
@@ -10859,21 +10962,8 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 0U;
+    num_params_r__ = 2 + 1 + 1 + 2 + 3 + (3 * 3) + 1;
     
-    try {
-      num_params_r__ += 2;
-      num_params_r__ += 1;
-      num_params_r__ += 1;
-      num_params_r__ += 2;
-      num_params_r__ += 3;
-      num_params_r__ += 3 * 3;
-      num_params_r__ += 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
@@ -11050,6 +11140,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
         validate_non_negative_index("y_hat", "T", T);
         std::vector<std::vector<local_scalar_t__>> y_hat;
         y_hat = std::vector<std::vector<local_scalar_t__>>(T, std::vector<local_scalar_t__>(2, DUMMY_VAR__));
+        
         
         current_statement__ = 82;
         assign(y_hat,
@@ -11241,6 +11332,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       std::vector<double> theta_p;
       theta_p = std::vector<double>(1, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 2;
       theta_p = in__.template read<std::vector<local_scalar_t__>>(1);
       std::vector<double> x_p;
@@ -11258,12 +11350,14 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       shared_params_p = Eigen::Matrix<double, -1, 1>(3);
       stan::math::fill(shared_params_p, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 5;
       shared_params_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                           3);
       std::vector<Eigen::Matrix<double, -1, 1>> job_params_p;
       job_params_p = std::vector<Eigen::Matrix<double, -1, 1>>(3, Eigen::Matrix<double, -1, 1>(3));
       stan::math::fill(job_params_p, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 6;
       job_params_p = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
@@ -11426,6 +11520,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       } 
       std::vector<std::vector<double>> y_hat;
       y_hat = std::vector<std::vector<double>>(T, std::vector<double>(2, std::numeric_limits<double>::quiet_NaN()));
+      
       
       current_statement__ = 33;
       assign(y_hat,
@@ -11670,6 +11765,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       std::vector<double> theta_p;
       theta_p = std::vector<double>(1, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 2;
       theta_p = context__.vals_r("theta_p");
       std::vector<double> x_p;
@@ -11699,6 +11795,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       shared_params_p = Eigen::Matrix<double, -1, 1>(3);
       stan::math::fill(shared_params_p, std::numeric_limits<double>::quiet_NaN());
       
+      
       {
         std::vector<local_scalar_t__> shared_params_p_flat__;
         current_statement__ = 5;
@@ -11716,6 +11813,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       std::vector<Eigen::Matrix<double, -1, 1>> job_params_p;
       job_params_p = std::vector<Eigen::Matrix<double, -1, 1>>(3, Eigen::Matrix<double, -1, 1>(3));
       stan::math::fill(job_params_p, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> job_params_p_flat__;
@@ -13000,21 +13098,21 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       pos__ = 1;
       current_statement__ = 601;
       context__.validate_dims("data initialization","N","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       
       current_statement__ = 601;
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 602;
       context__.validate_dims("data initialization","id","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       id = std::numeric_limits<int>::min();
       
       current_statement__ = 602;
       id = context__.vals_i("id")[(1 - 1)];
       current_statement__ = 603;
       context__.validate_dims("data initialization","rd","double",
-          context__.to_vec());
+           std::vector<size_t>{});
       rd = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 603;
@@ -13023,7 +13121,7 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       validate_non_negative_index("rad", "N", N);
       current_statement__ = 605;
       context__.validate_dims("data initialization","rad","double",
-          context__.to_vec(N));
+           std::vector<size_t>{static_cast<size_t>(N)});
       rad = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 605;
@@ -13032,7 +13130,7 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       validate_non_negative_index("vd", "N", N);
       current_statement__ = 607;
       context__.validate_dims("data initialization","vd","double",
-          context__.to_vec(N));
+           std::vector<size_t>{static_cast<size_t>(N)});
       vd__ = Eigen::Matrix<double, -1, 1>(N);
       new (&vd) Eigen::Map<Eigen::Matrix<double, -1, 1>>(vd__.data(), N);
       stan::math::fill(vd, std::numeric_limits<double>::quiet_NaN());
@@ -13118,17 +13216,8 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 0U;
+    num_params_r__ = 1 + N + N;
     
-    try {
-      num_params_r__ += 1;
-      num_params_r__ += N;
-      num_params_r__ += N;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
@@ -16470,7 +16559,7 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       pos__ = 1;
       current_statement__ = 18;
       context__.validate_dims("data initialization","N","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       
       current_statement__ = 18;
@@ -16481,15 +16570,16 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       validate_non_negative_index("ts", "N", N);
       current_statement__ = 20;
       context__.validate_dims("data initialization","ts","double",
-          context__.to_vec(N));
+           std::vector<size_t>{static_cast<size_t>(N)});
       ts = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 20;
       ts = context__.vals_r("ts");
       current_statement__ = 21;
       context__.validate_dims("data initialization","y_init","double",
-          context__.to_vec(2));
+           std::vector<size_t>{static_cast<size_t>(2)});
       y_init = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 21;
       y_init = context__.vals_r("y_init");
@@ -16497,8 +16587,10 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       validate_non_negative_index("y", "N", N);
       current_statement__ = 23;
       context__.validate_dims("data initialization","y","double",
-          context__.to_vec(N, 2));
+           std::vector<size_t>{static_cast<size_t>(N),
+            static_cast<size_t>(2)});
       y = std::vector<std::vector<double>>(N, std::vector<double>(2, std::numeric_limits<double>::quiet_NaN()));
+      
       
       {
         std::vector<local_scalar_t__> y_flat__;
@@ -16530,20 +16622,8 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 0U;
+    num_params_r__ = 1 + 1 + 1 + 1 + 2 + 2;
     
-    try {
-      num_params_r__ += 1;
-      num_params_r__ += 1;
-      num_params_r__ += 1;
-      num_params_r__ += 1;
-      num_params_r__ += 2;
-      num_params_r__ += 2;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
@@ -16602,6 +16682,7 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
                 0, lp__, 2);
       std::vector<std::vector<local_scalar_t__>> z;
       z = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(2, DUMMY_VAR__));
+      
       
       current_statement__ = 7;
       assign(z,
@@ -16696,17 +16777,20 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       std::vector<double> z_init;
       z_init = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 5;
       z_init = in__.template read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(
                  0, lp__, 2);
       std::vector<double> sigma;
       sigma = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 6;
       sigma = in__.template read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(
                 0, lp__, 2);
       std::vector<std::vector<double>> z;
       z = std::vector<std::vector<double>>(N, std::vector<double>(2, std::numeric_limits<double>::quiet_NaN()));
+      
       
       vars__.emplace_back(alpha);
       vars__.emplace_back(beta);
@@ -16800,10 +16884,12 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       std::vector<double> z_init;
       z_init = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 5;
       z_init = context__.vals_r("z_init");
       std::vector<double> z_init_free__;
       z_init_free__ = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 5;
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
@@ -16813,10 +16899,12 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       std::vector<double> sigma;
       sigma = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 6;
       sigma = context__.vals_r("sigma");
       std::vector<double> sigma_free__;
       sigma_free__ = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 6;
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
@@ -17337,7 +17425,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       pos__ = 1;
       current_statement__ = 176;
       context__.validate_dims("data initialization","k","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       k = std::numeric_limits<int>::min();
       
       current_statement__ = 176;
@@ -17346,7 +17434,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       check_greater_or_equal(function__, "k", k, 1);
       current_statement__ = 177;
       context__.validate_dims("data initialization","n","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       n = std::numeric_limits<int>::min();
       
       current_statement__ = 177;
@@ -17359,7 +17447,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("X_d", "k", k);
       current_statement__ = 180;
       context__.validate_dims("data initialization","X_d","double",
-          context__.to_vec(n, k));
+           std::vector<size_t>{static_cast<size_t>(n),
+            static_cast<size_t>(k)});
       X_d__ = Eigen::Matrix<double, -1, -1>(n, k);
       new (&X_d) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_d__.data(), n, k);
       stan::math::fill(X_d, std::numeric_limits<double>::quiet_NaN());
@@ -17386,7 +17475,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("X_d_a", "k", k);
       current_statement__ = 183;
       context__.validate_dims("data initialization","X_d_a","double",
-          context__.to_vec(2, n, k));
+           std::vector<size_t>{static_cast<size_t>(2),
+            static_cast<size_t>(n), static_cast<size_t>(k)});
       X_d_a = std::vector<Eigen::Matrix<double, -1, -1>>(2, Eigen::Matrix<double, -1, -1>(n, k));
       stan::math::fill(X_d_a, std::numeric_limits<double>::quiet_NaN());
       
@@ -17414,7 +17504,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("y_v_d", "n", n);
       current_statement__ = 185;
       context__.validate_dims("data initialization","y_v_d","double",
-          context__.to_vec(n));
+           std::vector<size_t>{static_cast<size_t>(n)});
       y_v_d__ = Eigen::Matrix<double, -1, 1>(n);
       new (&y_v_d) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y_v_d__.data(), n);
       stan::math::fill(y_v_d, std::numeric_limits<double>::quiet_NaN());
@@ -17437,7 +17527,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("X_rv_d", "n", n);
       current_statement__ = 187;
       context__.validate_dims("data initialization","X_rv_d","double",
-          context__.to_vec(n));
+           std::vector<size_t>{static_cast<size_t>(n)});
       X_rv_d__ = Eigen::Matrix<double, 1, -1>(n);
       new (&X_rv_d) Eigen::Map<Eigen::Matrix<double, 1, -1>>(X_rv_d__.data(), n);
       stan::math::fill(X_rv_d, std::numeric_limits<double>::quiet_NaN());
@@ -17460,7 +17550,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("y_vi_d", "n", n);
       current_statement__ = 189;
       context__.validate_dims("data initialization","y_vi_d","int",
-          context__.to_vec(n));
+           std::vector<size_t>{static_cast<size_t>(n)});
       y_vi_d = std::vector<int>(n, std::numeric_limits<int>::min());
       
       current_statement__ = 189;
@@ -17469,21 +17559,21 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("y2_vi_d", "n", n);
       current_statement__ = 191;
       context__.validate_dims("data initialization","y2_vi_d","int",
-          context__.to_vec(n));
+           std::vector<size_t>{static_cast<size_t>(n)});
       y2_vi_d = std::vector<int>(n, std::numeric_limits<int>::min());
       
       current_statement__ = 191;
       y2_vi_d = context__.vals_i("y2_vi_d");
       current_statement__ = 192;
       context__.validate_dims("data initialization","y_s_d","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       y_s_d = std::numeric_limits<int>::min();
       
       current_statement__ = 192;
       y_s_d = context__.vals_i("y_s_d")[(1 - 1)];
       current_statement__ = 193;
       context__.validate_dims("data initialization","y_r_d","double",
-          context__.to_vec());
+           std::vector<size_t>{});
       y_r_d = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 193;
@@ -17558,23 +17648,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 0U;
+    num_params_r__ = k + k + k + 1 + 1 + 1 + (n * k) + (n * k) + n;
     
-    try {
-      num_params_r__ += k;
-      num_params_r__ += k;
-      num_params_r__ += k;
-      num_params_r__ += 1;
-      num_params_r__ += 1;
-      num_params_r__ += 1;
-      num_params_r__ += n * k;
-      num_params_r__ += n * k;
-      num_params_r__ += n;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
@@ -18781,14 +18856,14 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
       pos__ = 1;
       current_statement__ = 3;
       context__.validate_dims("data initialization","nt","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       nt = std::numeric_limits<int>::min();
       
       current_statement__ = 3;
       nt = context__.vals_i("nt")[(1 - 1)];
       current_statement__ = 4;
       context__.validate_dims("data initialization","NS","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       NS = std::numeric_limits<int>::min();
       
       current_statement__ = 4;
@@ -18802,16 +18877,8 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 0U;
+    num_params_r__ = (nt * ((2 * (2 - 1)) / 2)) + NS;
     
-    try {
-      num_params_r__ += nt * ((2 * (2 - 1)) / 2);
-      num_params_r__ += NS;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
@@ -18960,6 +19027,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
       L_Omega_free__ = std::vector<Eigen::Matrix<double, -1, 1>>(nt, Eigen::Matrix<double, -1, 1>(
         ((2 * (2 - 1)) / 2)));
       stan::math::fill(L_Omega_free__, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 1;
       for (int sym1__ = 1; sym1__ <= nt; ++sym1__) {
@@ -19424,17 +19492,8 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 0U;
+    num_params_r__ = N + N + N;
     
-    try {
-      num_params_r__ += N;
-      num_params_r__ += N;
-      num_params_r__ += N;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
@@ -21006,30 +21065,10 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 0U;
+    num_params_r__ = (N * N * N * N) + (N * N * N) + (N * N * N) + (N * N)
+       + (N * N * N) + (N * N) + (N * N) + N + (N * N * N * N) + (N * N * N)
+       + (N * N * N) + (N * N) + (N * N * N) + (N * N) + (N * N) + N;
     
-    try {
-      num_params_r__ += N * N * N * N;
-      num_params_r__ += N * N * N;
-      num_params_r__ += N * N * N;
-      num_params_r__ += N * N;
-      num_params_r__ += N * N * N;
-      num_params_r__ += N * N;
-      num_params_r__ += N * N;
-      num_params_r__ += N;
-      num_params_r__ += N * N * N * N;
-      num_params_r__ += N * N * N;
-      num_params_r__ += N * N * N;
-      num_params_r__ += N * N;
-      num_params_r__ += N * N * N;
-      num_params_r__ += N * N;
-      num_params_r__ += N * N;
-      num_params_r__ += N;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
@@ -21073,6 +21112,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
              N, N, N);
       std::vector<std::vector<local_scalar_t__>> a5;
       a5 = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__));
+      
       
       current_statement__ = 4;
       a5 = in__.template read<std::vector<std::vector<local_scalar_t__>>>(N,
@@ -21126,6 +21166,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
              N, N, N);
       std::vector<std::vector<local_scalar_t__>> y5;
       y5 = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__));
+      
       
       current_statement__ = 12;
       y5 = in__.template read<std::vector<std::vector<local_scalar_t__>>>(N,
@@ -21246,6 +21287,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
       std::vector<std::vector<double>> a5;
       a5 = std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN()));
       
+      
       current_statement__ = 4;
       a5 = in__.template read<std::vector<std::vector<local_scalar_t__>>>(N,
              N);
@@ -21298,6 +21340,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
              N, N, N);
       std::vector<std::vector<double>> y5;
       y5 = std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN()));
+      
       
       current_statement__ = 12;
       y5 = in__.template read<std::vector<std::vector<local_scalar_t__>>>(N,
@@ -21506,6 +21549,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
       std::vector<std::vector<double>> a5;
       a5 = std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN()));
       
+      
       {
         std::vector<local_scalar_t__> a5_flat__;
         current_statement__ = 4;
@@ -21668,6 +21712,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
       }
       std::vector<std::vector<double>> y5;
       y5 = std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN()));
+      
       
       {
         std::vector<local_scalar_t__> y5_flat__;
@@ -23975,6 +24020,7 @@ r(std::ostream* pstream__) {
     std::vector<std::vector<local_scalar_t__>> y5d;
     y5d = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__));
     
+    
     current_statement__ = 239;
     validate_non_negative_index("y6d", "N", N);
     current_statement__ = 240;
@@ -24045,6 +24091,7 @@ r(std::ostream* pstream__) {
     std::vector<std::vector<int>> y15d;
     y15d = std::vector<std::vector<int>>(N, std::vector<int>(N, std::numeric_limits<int>::min()));
     
+    
     current_statement__ = 266;
     validate_non_negative_index("y16d", "N", N);
     current_statement__ = 267;
@@ -24054,6 +24101,7 @@ r(std::ostream* pstream__) {
     std::vector<std::vector<std::vector<int>>> y16d;
     y16d = std::vector<std::vector<std::vector<int>>>(N, std::vector<std::vector<int>>(N, std::vector<int>(N, std::numeric_limits<int>::min())));
     
+    
     current_statement__ = 270;
     validate_non_negative_index("y17d", "N", N);
     current_statement__ = 271;
@@ -24062,6 +24110,7 @@ r(std::ostream* pstream__) {
     validate_non_negative_index("y17d", "N", N);
     std::vector<std::vector<std::vector<local_scalar_t__>>> y17d;
     y17d = std::vector<std::vector<std::vector<local_scalar_t__>>>(N, std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__)));
+    
     
     current_statement__ = 274;
     validate_non_negative_index("y1", "N", N);
@@ -24100,6 +24149,7 @@ r(std::ostream* pstream__) {
     validate_non_negative_index("y5", "N", N);
     std::vector<std::vector<local_scalar_t__>> y5;
     y5 = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__));
+    
     
     current_statement__ = 289;
     validate_non_negative_index("y6", "N", N);
@@ -24164,6 +24214,7 @@ r(std::ostream* pstream__) {
     validate_non_negative_index("y17", "N", N);
     std::vector<std::vector<std::vector<local_scalar_t__>>> y17;
     y17 = std::vector<std::vector<std::vector<local_scalar_t__>>>(N, std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__)));
+    
     
     local_scalar_t__ t1;
     t1 = DUMMY_VAR__;
@@ -24395,7 +24446,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       pos__ = 1;
       current_statement__ = 67;
       context__.validate_dims("data initialization","N","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       
       current_statement__ = 67;
@@ -24404,7 +24455,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       validate_non_negative_index("y1d", "N", N);
       current_statement__ = 69;
       context__.validate_dims("data initialization","y1d","double",
-          context__.to_vec(N));
+           std::vector<size_t>{static_cast<size_t>(N)});
       y1d = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 69;
@@ -24415,7 +24466,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       validate_non_negative_index("y2d", "N", N);
       current_statement__ = 72;
       context__.validate_dims("data initialization","y2d","double",
-          context__.to_vec(N, N));
+           std::vector<size_t>{static_cast<size_t>(N),
+            static_cast<size_t>(N)});
       y2d = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       stan::math::fill(y2d, std::numeric_limits<double>::quiet_NaN());
       
@@ -24441,7 +24493,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       validate_non_negative_index("y3d", "N", N);
       current_statement__ = 75;
       context__.validate_dims("data initialization","y3d","double",
-          context__.to_vec(N, N));
+           std::vector<size_t>{static_cast<size_t>(N),
+            static_cast<size_t>(N)});
       y3d = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
       stan::math::fill(y3d, std::numeric_limits<double>::quiet_NaN());
       
@@ -24469,7 +24522,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       validate_non_negative_index("y4d", "N", N);
       current_statement__ = 79;
       context__.validate_dims("data initialization","y4d","double",
-          context__.to_vec(N, N, N));
+           std::vector<size_t>{static_cast<size_t>(N),
+            static_cast<size_t>(N), static_cast<size_t>(N)});
       y4d = std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N));
       stan::math::fill(y4d, std::numeric_limits<double>::quiet_NaN());
       
@@ -24499,8 +24553,10 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       validate_non_negative_index("y5d", "N", N);
       current_statement__ = 82;
       context__.validate_dims("data initialization","y5d","double",
-          context__.to_vec(N, N));
+           std::vector<size_t>{static_cast<size_t>(N),
+            static_cast<size_t>(N)});
       y5d = std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN()));
+      
       
       {
         std::vector<local_scalar_t__> y5d_flat__;
@@ -24526,7 +24582,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       validate_non_negative_index("y6d", "N", N);
       current_statement__ = 86;
       context__.validate_dims("data initialization","y6d","double",
-          context__.to_vec(N, N, N));
+           std::vector<size_t>{static_cast<size_t>(N),
+            static_cast<size_t>(N), static_cast<size_t>(N)});
       y6d = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(N, std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N)));
       stan::math::fill(y6d, std::numeric_limits<double>::quiet_NaN());
       
@@ -24558,7 +24615,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       validate_non_negative_index("y7d", "N", N);
       current_statement__ = 90;
       context__.validate_dims("data initialization","y7d","double",
-          context__.to_vec(N, N, N));
+           std::vector<size_t>{static_cast<size_t>(N),
+            static_cast<size_t>(N), static_cast<size_t>(N)});
       y7d = std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(N, std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N)));
       stan::math::fill(y7d, std::numeric_limits<double>::quiet_NaN());
       
@@ -24592,7 +24650,9 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       validate_non_negative_index("y8d", "N", N);
       current_statement__ = 95;
       context__.validate_dims("data initialization","y8d","double",
-          context__.to_vec(N, N, N, N));
+           std::vector<size_t>{static_cast<size_t>(N),
+            static_cast<size_t>(N), static_cast<size_t>(N),
+            static_cast<size_t>(N)});
       y8d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(N, std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N)));
       stan::math::fill(y8d, std::numeric_limits<double>::quiet_NaN());
       
@@ -24621,7 +24681,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       }
       current_statement__ = 96;
       context__.validate_dims("data initialization","y9d","double",
-          context__.to_vec());
+           std::vector<size_t>{});
       y9d = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 96;
@@ -24630,7 +24690,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       validate_non_negative_index("y10d", "N", N);
       current_statement__ = 98;
       context__.validate_dims("data initialization","y10d","double",
-          context__.to_vec(N));
+           std::vector<size_t>{static_cast<size_t>(N)});
       y10d__ = Eigen::Matrix<double, -1, 1>(N);
       new (&y10d) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y10d__.data(), N);
       stan::math::fill(y10d, std::numeric_limits<double>::quiet_NaN());
@@ -24653,7 +24713,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       validate_non_negative_index("y11d", "N", N);
       current_statement__ = 100;
       context__.validate_dims("data initialization","y11d","double",
-          context__.to_vec(N));
+           std::vector<size_t>{static_cast<size_t>(N)});
       y11d__ = Eigen::Matrix<double, 1, -1>(N);
       new (&y11d) Eigen::Map<Eigen::Matrix<double, 1, -1>>(y11d__.data(), N);
       stan::math::fill(y11d, std::numeric_limits<double>::quiet_NaN());
@@ -24678,7 +24738,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       validate_non_negative_index("y12d", "N", N);
       current_statement__ = 103;
       context__.validate_dims("data initialization","y12d","double",
-          context__.to_vec(N, N));
+           std::vector<size_t>{static_cast<size_t>(N),
+            static_cast<size_t>(N)});
       y12d__ = Eigen::Matrix<double, -1, -1>(N, N);
       new (&y12d) Eigen::Map<Eigen::Matrix<double, -1, -1>>(y12d__.data(), N, N);
       stan::math::fill(y12d, std::numeric_limits<double>::quiet_NaN());
@@ -24701,7 +24762,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       }
       current_statement__ = 104;
       context__.validate_dims("data initialization","y13d","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       y13d = std::numeric_limits<int>::min();
       
       current_statement__ = 104;
@@ -24710,7 +24771,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       validate_non_negative_index("y14d", "N", N);
       current_statement__ = 106;
       context__.validate_dims("data initialization","y14d","int",
-          context__.to_vec(N));
+           std::vector<size_t>{static_cast<size_t>(N)});
       y14d = std::vector<int>(N, std::numeric_limits<int>::min());
       
       current_statement__ = 106;
@@ -24721,8 +24782,10 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       validate_non_negative_index("y15d", "N", N);
       current_statement__ = 109;
       context__.validate_dims("data initialization","y15d","int",
-          context__.to_vec(N, N));
+           std::vector<size_t>{static_cast<size_t>(N),
+            static_cast<size_t>(N)});
       y15d = std::vector<std::vector<int>>(N, std::vector<int>(N, std::numeric_limits<int>::min()));
+      
       
       {
         std::vector<int> y15d_flat__;
@@ -24748,8 +24811,10 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       validate_non_negative_index("y16d", "N", N);
       current_statement__ = 113;
       context__.validate_dims("data initialization","y16d","int",
-          context__.to_vec(N, N, N));
+           std::vector<size_t>{static_cast<size_t>(N),
+            static_cast<size_t>(N), static_cast<size_t>(N)});
       y16d = std::vector<std::vector<std::vector<int>>>(N, std::vector<std::vector<int>>(N, std::vector<int>(N, std::numeric_limits<int>::min())));
+      
       
       {
         std::vector<int> y16d_flat__;
@@ -24779,8 +24844,10 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       validate_non_negative_index("y17d", "N", N);
       current_statement__ = 117;
       context__.validate_dims("data initialization","y17d","double",
-          context__.to_vec(N, N, N));
+           std::vector<size_t>{static_cast<size_t>(N),
+            static_cast<size_t>(N), static_cast<size_t>(N)});
       y17d = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN())));
+      
       
       {
         std::vector<local_scalar_t__> y17d_flat__;
@@ -24994,27 +25061,10 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 0U;
+    num_params_r__ = N + (N * N) + (N * N) + (N * N * N) + (N * N)
+       + (N * N * N) + (N * N * N) + (N * N * N * N) + 1 + N + N + (N * N)
+       + (N * N * N);
     
-    try {
-      num_params_r__ += N;
-      num_params_r__ += N * N;
-      num_params_r__ += N * N;
-      num_params_r__ += N * N * N;
-      num_params_r__ += N * N;
-      num_params_r__ += N * N * N;
-      num_params_r__ += N * N * N;
-      num_params_r__ += N * N * N * N;
-      num_params_r__ += 1;
-      num_params_r__ += N;
-      num_params_r__ += N;
-      num_params_r__ += N * N;
-      num_params_r__ += N * N * N;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
@@ -25063,6 +25113,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
              N, N, N);
       std::vector<std::vector<local_scalar_t__>> y5;
       y5 = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__));
+      
       
       current_statement__ = 5;
       y5 = in__.template read<std::vector<std::vector<local_scalar_t__>>>(N,
@@ -25113,6 +25164,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       y12 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, N);
       std::vector<std::vector<std::vector<local_scalar_t__>>> y17;
       y17 = std::vector<std::vector<std::vector<local_scalar_t__>>>(N, std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__)));
+      
       
       current_statement__ = 13;
       y17 = in__.template read<std::vector<std::vector<std::vector<local_scalar_t__>>>>(
@@ -25317,6 +25369,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       std::vector<std::vector<double>> y5;
       y5 = std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN()));
       
+      
       current_statement__ = 5;
       y5 = in__.template read<std::vector<std::vector<local_scalar_t__>>>(N,
              N);
@@ -25366,6 +25419,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       y12 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, N);
       std::vector<std::vector<std::vector<double>>> y17;
       y17 = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN())));
+      
       
       current_statement__ = 13;
       y17 = in__.template read<std::vector<std::vector<std::vector<local_scalar_t__>>>>(
@@ -25680,6 +25734,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       std::vector<std::vector<double>> y5;
       y5 = std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN()));
       
+      
       {
         std::vector<local_scalar_t__> y5_flat__;
         current_statement__ = 5;
@@ -25834,6 +25889,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       }
       std::vector<std::vector<std::vector<double>>> y17;
       y17 = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN())));
+      
       
       {
         std::vector<local_scalar_t__> y17_flat__;
@@ -26663,13 +26719,6 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
     }
     num_params_r__ = 0U;
     
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
@@ -26970,7 +27019,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
       pos__ = 1;
       current_statement__ = 7;
       context__.validate_dims("data initialization","t","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       t = std::numeric_limits<int>::min();
       
       current_statement__ = 7;
@@ -26980,15 +27029,8 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 0U;
+    num_params_r__ = 1;
     
-    try {
-      num_params_r__ += 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
@@ -27452,7 +27494,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       pos__ = 1;
       current_statement__ = 37;
       context__.validate_dims("data initialization","n","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       n = std::numeric_limits<int>::min();
       
       current_statement__ = 37;
@@ -27461,7 +27503,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_greater_or_equal(function__, "n", n, 1);
       current_statement__ = 38;
       context__.validate_dims("data initialization","m","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       m = std::numeric_limits<int>::min();
       
       current_statement__ = 38;
@@ -27470,7 +27512,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_greater_or_equal(function__, "m", m, 1);
       current_statement__ = 39;
       context__.validate_dims("data initialization","k","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       k = std::numeric_limits<int>::min();
       
       current_statement__ = 39;
@@ -27485,8 +27527,10 @@ class transform_model final : public model_base_crtp<transform_model> {
       validate_non_negative_index("ds", "k", k);
       current_statement__ = 43;
       context__.validate_dims("data initialization","ds","double",
-          context__.to_vec(n, m, k));
+           std::vector<size_t>{static_cast<size_t>(n),
+            static_cast<size_t>(m), static_cast<size_t>(k)});
       ds = std::vector<std::vector<std::vector<double>>>(n, std::vector<std::vector<double>>(m, std::vector<double>(k, std::numeric_limits<double>::quiet_NaN())));
+      
       
       {
         std::vector<local_scalar_t__> ds_flat__;
@@ -27516,7 +27560,8 @@ class transform_model final : public model_base_crtp<transform_model> {
       validate_non_negative_index("dv", "k", k);
       current_statement__ = 47;
       context__.validate_dims("data initialization","dv","double",
-          context__.to_vec(n, m, k));
+           std::vector<size_t>{static_cast<size_t>(n),
+            static_cast<size_t>(m), static_cast<size_t>(k)});
       dv = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(n, std::vector<Eigen::Matrix<double, -1, 1>>(m, Eigen::Matrix<double, -1, 1>(k)));
       stan::math::fill(dv, std::numeric_limits<double>::quiet_NaN());
       
@@ -27548,7 +27593,8 @@ class transform_model final : public model_base_crtp<transform_model> {
       validate_non_negative_index("dr", "k", k);
       current_statement__ = 51;
       context__.validate_dims("data initialization","dr","double",
-          context__.to_vec(n, m, k));
+           std::vector<size_t>{static_cast<size_t>(n),
+            static_cast<size_t>(m), static_cast<size_t>(k)});
       dr = std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(n, std::vector<Eigen::Matrix<double, 1, -1>>(m, Eigen::Matrix<double, 1, -1>(k)));
       stan::math::fill(dr, std::numeric_limits<double>::quiet_NaN());
       
@@ -27580,7 +27626,8 @@ class transform_model final : public model_base_crtp<transform_model> {
       validate_non_negative_index("dm", "k", k);
       current_statement__ = 55;
       context__.validate_dims("data initialization","dm","double",
-          context__.to_vec(n, m, k));
+           std::vector<size_t>{static_cast<size_t>(n),
+            static_cast<size_t>(m), static_cast<size_t>(k)});
       dm = std::vector<Eigen::Matrix<double, -1, -1>>(n, Eigen::Matrix<double, -1, -1>(m, k));
       stan::math::fill(dm, std::numeric_limits<double>::quiet_NaN());
       
@@ -27729,32 +27776,10 @@ class transform_model final : public model_base_crtp<transform_model> {
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 0U;
+    num_params_r__ = k + k + k + k + k + k + k + k + (m * k) + (n * m * k)
+       + k + (m * k) + (n * m * k) + k + (m * k) + (n * m * k) + (m * k)
+       + (n * m * k);
     
-    try {
-      num_params_r__ += k;
-      num_params_r__ += k;
-      num_params_r__ += k;
-      num_params_r__ += k;
-      num_params_r__ += k;
-      num_params_r__ += k;
-      num_params_r__ += k;
-      num_params_r__ += k;
-      num_params_r__ += m * k;
-      num_params_r__ += n * m * k;
-      num_params_r__ += k;
-      num_params_r__ += m * k;
-      num_params_r__ += n * m * k;
-      num_params_r__ += k;
-      num_params_r__ += m * k;
-      num_params_r__ += n * m * k;
-      num_params_r__ += m * k;
-      num_params_r__ += n * m * k;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
@@ -27858,6 +27883,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       std::vector<std::vector<local_scalar_t__>> p_9;
       p_9 = std::vector<std::vector<local_scalar_t__>>(m, std::vector<local_scalar_t__>(k, DUMMY_VAR__));
       
+      
       current_statement__ = 9;
       p_9 = in__.template read_constrain_lub<std::vector<std::vector<local_scalar_t__>>, jacobian__>(
               rvalue(ds, "ds", index_uni(1)), 1, lp__, m, k);
@@ -27866,6 +27892,7 @@ class transform_model final : public model_base_crtp<transform_model> {
                           rvalue(ds, "ds", index_uni(1)));
       std::vector<std::vector<std::vector<local_scalar_t__>>> p_10;
       p_10 = std::vector<std::vector<std::vector<local_scalar_t__>>>(n, std::vector<std::vector<local_scalar_t__>>(m, std::vector<local_scalar_t__>(k, DUMMY_VAR__)));
+      
       
       current_statement__ = 10;
       p_10 = in__.template read_constrain_lub<std::vector<std::vector<std::vector<local_scalar_t__>>>, jacobian__>(
@@ -28030,6 +28057,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       std::vector<std::vector<local_scalar_t__>> tp_9;
       tp_9 = std::vector<std::vector<local_scalar_t__>>(m, std::vector<local_scalar_t__>(k, DUMMY_VAR__));
       
+      
       current_statement__ = 27;
       assign(tp_9, p_9, "assigning variable tp_9");
       current_statement__ = 27;
@@ -28037,6 +28065,7 @@ class transform_model final : public model_base_crtp<transform_model> {
                           rvalue(ds, "ds", index_uni(1)));
       std::vector<std::vector<std::vector<local_scalar_t__>>> tp_10;
       tp_10 = std::vector<std::vector<std::vector<local_scalar_t__>>>(n, std::vector<std::vector<local_scalar_t__>>(m, std::vector<local_scalar_t__>(k, DUMMY_VAR__)));
+      
       
       current_statement__ = 28;
       assign(tp_10, p_10, "assigning variable tp_10");
@@ -28413,6 +28442,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       std::vector<std::vector<double>> p_9;
       p_9 = std::vector<std::vector<double>>(m, std::vector<double>(k, std::numeric_limits<double>::quiet_NaN()));
       
+      
       current_statement__ = 9;
       p_9 = in__.template read_constrain_lub<std::vector<std::vector<local_scalar_t__>>, jacobian__>(
               rvalue(ds, "ds", index_uni(1)), 1, lp__, m, k);
@@ -28421,6 +28451,7 @@ class transform_model final : public model_base_crtp<transform_model> {
                           rvalue(ds, "ds", index_uni(1)));
       std::vector<std::vector<std::vector<double>>> p_10;
       p_10 = std::vector<std::vector<std::vector<double>>>(n, std::vector<std::vector<double>>(m, std::vector<double>(k, std::numeric_limits<double>::quiet_NaN())));
+      
       
       current_statement__ = 10;
       p_10 = in__.template read_constrain_lub<std::vector<std::vector<std::vector<local_scalar_t__>>>, jacobian__>(
@@ -28539,8 +28570,10 @@ class transform_model final : public model_base_crtp<transform_model> {
       std::vector<std::vector<double>> tp_9;
       tp_9 = std::vector<std::vector<double>>(m, std::vector<double>(k, std::numeric_limits<double>::quiet_NaN()));
       
+      
       std::vector<std::vector<std::vector<double>>> tp_10;
       tp_10 = std::vector<std::vector<std::vector<double>>>(n, std::vector<std::vector<double>>(m, std::vector<double>(k, std::numeric_limits<double>::quiet_NaN())));
+      
       
       Eigen::Matrix<double, -1, 1> tpv_1;
       tpv_1 = Eigen::Matrix<double, -1, 1>(k);
@@ -29006,6 +29039,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       std::vector<double> p_1_free__;
       p_1_free__ = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 1;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 1;
@@ -29023,6 +29057,7 @@ class transform_model final : public model_base_crtp<transform_model> {
                           rvalue(ds, "ds", index_uni(1), index_uni(1)));
       std::vector<double> p_2_free__;
       p_2_free__ = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 2;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
@@ -29045,6 +29080,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       std::vector<double> p_3_free__;
       p_3_free__ = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 3;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 3;
@@ -29064,6 +29100,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       std::vector<double> p_4_free__;
       p_4_free__ = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 4;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 4;
@@ -29081,6 +29118,7 @@ class transform_model final : public model_base_crtp<transform_model> {
                           rvalue(ds, "ds", index_uni(1), index_uni(1)));
       std::vector<double> p_5_free__;
       p_5_free__ = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 5;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
@@ -29100,6 +29138,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       std::vector<double> p_6_free__;
       p_6_free__ = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 6;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 6;
@@ -29117,6 +29156,7 @@ class transform_model final : public model_base_crtp<transform_model> {
                           rvalue(ds, "ds", index_uni(1), index_uni(1)));
       std::vector<double> p_7_free__;
       p_7_free__ = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 7;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
@@ -29139,6 +29179,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       std::vector<double> p_8_free__;
       p_8_free__ = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 8;
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         current_statement__ = 8;
@@ -29149,6 +29190,7 @@ class transform_model final : public model_base_crtp<transform_model> {
           "assigning variable p_8_free__", index_uni(sym1__));}
       std::vector<std::vector<double>> p_9;
       p_9 = std::vector<std::vector<double>>(m, std::vector<double>(k, std::numeric_limits<double>::quiet_NaN()));
+      
       
       {
         std::vector<local_scalar_t__> p_9_flat__;
@@ -29172,6 +29214,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       std::vector<std::vector<double>> p_9_free__;
       p_9_free__ = std::vector<std::vector<double>>(m, std::vector<double>(k, std::numeric_limits<double>::quiet_NaN()));
       
+      
       current_statement__ = 9;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 9;
@@ -29184,6 +29227,7 @@ class transform_model final : public model_base_crtp<transform_model> {
                                                index_uni(sym2__));}}
       std::vector<std::vector<std::vector<double>>> p_10;
       p_10 = std::vector<std::vector<std::vector<double>>>(n, std::vector<std::vector<double>>(m, std::vector<double>(k, std::numeric_limits<double>::quiet_NaN())));
+      
       
       {
         std::vector<local_scalar_t__> p_10_flat__;
@@ -29209,6 +29253,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "p_10", p_10, "upper", ds);
       std::vector<std::vector<std::vector<double>>> p_10_free__;
       p_10_free__ = std::vector<std::vector<std::vector<double>>>(n, std::vector<std::vector<double>>(m, std::vector<double>(k, std::numeric_limits<double>::quiet_NaN())));
+      
       
       current_statement__ = 10;
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
@@ -30386,14 +30431,14 @@ class truncate_model final : public model_base_crtp<truncate_model> {
       pos__ = 1;
       current_statement__ = 19;
       context__.validate_dims("data initialization","n","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       n = std::numeric_limits<int>::min();
       
       current_statement__ = 19;
       n = context__.vals_i("n")[(1 - 1)];
       current_statement__ = 20;
       context__.validate_dims("data initialization","x","double",
-          context__.to_vec());
+           std::vector<size_t>{});
       x = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 20;
@@ -30403,16 +30448,8 @@ class truncate_model final : public model_base_crtp<truncate_model> {
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 0U;
+    num_params_r__ = 1 + 1;
     
-    try {
-      num_params_r__ += 1;
-      num_params_r__ += 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
@@ -30868,15 +30905,8 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 0U;
+    num_params_r__ = 1;
     
-    try {
-      num_params_r__ += 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
@@ -31228,15 +31258,8 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 0U;
+    num_params_r__ = 1;
     
-    try {
-      num_params_r__ += 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 

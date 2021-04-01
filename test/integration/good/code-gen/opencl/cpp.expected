@@ -808,8 +808,6 @@ class distributions_model final : public model_base_crtp<distributions_model> {
   matrix_cl<double> d_vector_opencl__; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> d_vector{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, 1, -1>> d_row_vector{nullptr, 0};
-  
-  
  
  public:
   ~distributions_model() { }
@@ -840,7 +838,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       pos__ = 1;
       current_statement__ = 756;
       context__.validate_dims("data initialization","d_int","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       d_int = std::numeric_limits<int>::min();
       
       current_statement__ = 756;
@@ -849,14 +847,14 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       validate_non_negative_index("d_int_array", "d_int", d_int);
       current_statement__ = 758;
       context__.validate_dims("data initialization","d_int_array","int",
-          context__.to_vec(d_int));
+           std::vector<size_t>{static_cast<size_t>(d_int)});
       d_int_array = std::vector<int>(d_int, std::numeric_limits<int>::min());
       
       current_statement__ = 758;
       d_int_array = context__.vals_i("d_int_array");
       current_statement__ = 759;
       context__.validate_dims("data initialization","d_real","double",
-          context__.to_vec());
+           std::vector<size_t>{});
       d_real = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 759;
@@ -865,8 +863,9 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       validate_non_negative_index("d_real_array", "d_int", d_int);
       current_statement__ = 761;
       context__.validate_dims("data initialization","d_real_array","double",
-          context__.to_vec(d_int));
+           std::vector<size_t>{static_cast<size_t>(d_int)});
       d_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 761;
       d_real_array = context__.vals_r("d_real_array");
@@ -874,7 +873,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       validate_non_negative_index("d_vector", "d_int", d_int);
       current_statement__ = 763;
       context__.validate_dims("data initialization","d_vector","double",
-          context__.to_vec(d_int));
+           std::vector<size_t>{static_cast<size_t>(d_int)});
       d_vector__ = Eigen::Matrix<double, -1, 1>(d_int);
       new (&d_vector) Eigen::Map<Eigen::Matrix<double, -1, 1>>(d_vector__.data(), d_int);
       stan::math::fill(d_vector, std::numeric_limits<double>::quiet_NaN());
@@ -897,10 +896,11 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       validate_non_negative_index("d_row_vector", "d_int", d_int);
       current_statement__ = 765;
       context__.validate_dims("data initialization","d_row_vector","double",
-          context__.to_vec(d_int));
+           std::vector<size_t>{static_cast<size_t>(d_int)});
       d_row_vector__ = Eigen::Matrix<double, 1, -1>(d_int);
       new (&d_row_vector) Eigen::Map<Eigen::Matrix<double, 1, -1>>(d_row_vector__.data(), d_int);
       stan::math::fill(d_row_vector, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> d_row_vector_flat__;
@@ -939,20 +939,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 0U;
+    num_params_r__ = 1 + d_int + (d_int * d_int) + d_int + d_int + 1;
     
-    try {
-      num_params_r__ += 1;
-      num_params_r__ += d_int;
-      num_params_r__ += d_int * d_int;
-      num_params_r__ += d_int;
-      num_params_r__ += d_int;
-      num_params_r__ += 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
@@ -3525,6 +3513,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       std::vector<double> p_real_array;
       p_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 2;
       p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
       Eigen::Matrix<double, -1, -1> p_matrix;
@@ -3544,6 +3533,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       Eigen::Matrix<double, 1, -1> p_row_vector;
       p_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
       stan::math::fill(p_row_vector, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 5;
       p_row_vector = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(
@@ -6079,6 +6069,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       std::vector<double> p_real_array;
       p_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 2;
       p_real_array = context__.vals_r("p_real_array");
       Eigen::Matrix<double, -1, -1> p_matrix;
@@ -6123,6 +6114,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       Eigen::Matrix<double, 1, -1> p_row_vector;
       p_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
       stan::math::fill(p_row_vector, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> p_row_vector_flat__;
@@ -6441,7 +6433,6 @@ class restricted_model final : public model_base_crtp<restricted_model> {
   matrix_cl<double> d_vector_opencl__; 
   Eigen::Map<Eigen::Matrix<double, -1, 1>> d_vector{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, 1, -1>> d_row_vector{nullptr, 0};
-  
  
  public:
   ~restricted_model() { }
@@ -6472,7 +6463,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       pos__ = 1;
       current_statement__ = 25;
       context__.validate_dims("data initialization","d_int","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       d_int = std::numeric_limits<int>::min();
       
       current_statement__ = 25;
@@ -6481,14 +6472,14 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       validate_non_negative_index("d_int_array", "d_int", d_int);
       current_statement__ = 27;
       context__.validate_dims("data initialization","d_int_array","int",
-          context__.to_vec(d_int));
+           std::vector<size_t>{static_cast<size_t>(d_int)});
       d_int_array = std::vector<int>(d_int, std::numeric_limits<int>::min());
       
       current_statement__ = 27;
       d_int_array = context__.vals_i("d_int_array");
       current_statement__ = 28;
       context__.validate_dims("data initialization","d_real","double",
-          context__.to_vec());
+           std::vector<size_t>{});
       d_real = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 28;
@@ -6497,8 +6488,9 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       validate_non_negative_index("d_real_array", "d_int", d_int);
       current_statement__ = 30;
       context__.validate_dims("data initialization","d_real_array","double",
-          context__.to_vec(d_int));
+           std::vector<size_t>{static_cast<size_t>(d_int)});
       d_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 30;
       d_real_array = context__.vals_r("d_real_array");
@@ -6506,7 +6498,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       validate_non_negative_index("d_vector", "d_int", d_int);
       current_statement__ = 32;
       context__.validate_dims("data initialization","d_vector","double",
-          context__.to_vec(d_int));
+           std::vector<size_t>{static_cast<size_t>(d_int)});
       d_vector__ = Eigen::Matrix<double, -1, 1>(d_int);
       new (&d_vector) Eigen::Map<Eigen::Matrix<double, -1, 1>>(d_vector__.data(), d_int);
       stan::math::fill(d_vector, std::numeric_limits<double>::quiet_NaN());
@@ -6529,10 +6521,11 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       validate_non_negative_index("d_row_vector", "d_int", d_int);
       current_statement__ = 34;
       context__.validate_dims("data initialization","d_row_vector","double",
-          context__.to_vec(d_int));
+           std::vector<size_t>{static_cast<size_t>(d_int)});
       d_row_vector__ = Eigen::Matrix<double, 1, -1>(d_int);
       new (&d_row_vector) Eigen::Map<Eigen::Matrix<double, 1, -1>>(d_row_vector__.data(), d_int);
       stan::math::fill(d_row_vector, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> d_row_vector_flat__;
@@ -6565,20 +6558,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 0U;
+    num_params_r__ = 1 + d_int + (d_int * d_int) + d_int + d_int + 1;
     
-    try {
-      num_params_r__ += 1;
-      num_params_r__ += d_int;
-      num_params_r__ += d_int * d_int;
-      num_params_r__ += d_int;
-      num_params_r__ += d_int;
-      num_params_r__ += 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
@@ -6720,6 +6701,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       std::vector<double> p_real_array;
       p_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 2;
       p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
       Eigen::Matrix<double, -1, -1> p_matrix;
@@ -6739,6 +6721,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       Eigen::Matrix<double, 1, -1> p_row_vector;
       p_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
       stan::math::fill(p_row_vector, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 5;
       p_row_vector = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(
@@ -6843,6 +6826,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       std::vector<double> p_real_array;
       p_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 2;
       p_real_array = context__.vals_r("p_real_array");
       Eigen::Matrix<double, -1, -1> p_matrix;
@@ -6887,6 +6871,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       Eigen::Matrix<double, 1, -1> p_row_vector;
       p_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
       stan::math::fill(p_row_vector, std::numeric_limits<double>::quiet_NaN());
+      
       
       {
         std::vector<local_scalar_t__> p_row_vector_flat__;

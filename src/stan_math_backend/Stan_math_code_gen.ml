@@ -354,11 +354,15 @@ let includes = "#include <stan/model/model_header.hpp>"
 let pp_validate_data ppf (name, st) =
   if String.is_suffix ~suffix:"__" name then ()
   else
+    let pp_stdvector ppf args =
+      let pp_cast ppf x = pf ppf "static_cast<size_t>(%a)" pp_expr x in
+      pf ppf "@[<hov 2> std::vector<size_t>{@,%a}@]" (list ~sep:comma pp_cast)
+        args
+    in
     pf ppf "@[<hov 4>context__.validate_dims(@,%S,@,%S,@,%S,@,%a);@]@ "
       "data initialization" name
       (stantype_prim_str (SizedType.to_unsized st))
-      pp_call
-      ("context__.to_vec", pp_expr, SizedType.get_dims st)
+      pp_stdvector (SizedType.get_dims st)
 
 (** Print the constructor of the model class.
  Read in data steps:
@@ -374,17 +378,6 @@ let pp_ctor ppf p =
   in
   pf ppf "%s(@[<hov 0>%a) : model_base_crtp(0) @]" p.Program.prog_name
     (list ~sep:comma string) params ;
-  let pp_mul ppf () = pf ppf " * " in
-  let pp_num_param ppf dims =
-    pf ppf "num_params_r__ += %a;" (list ~sep:pp_mul pp_expr) dims
-  in
-  let get_param_st = function
-    | _, {Program.out_block= Parameters; out_unconstrained_st= st; _} -> (
-      match SizedType.get_dims st with
-      | [] -> Some [Expr.Helpers.loop_bottom]
-      | ls -> Some ls )
-    | _ -> None
-  in
   let data_idents = List.map ~f:fst p.input_vars |> String.Set.of_list in
   let pp_stmt_topdecl_size_only ppf (Stmt.Fixed.({pattern; meta}) as s) =
     match pattern with
@@ -393,7 +386,7 @@ let pp_ctor ppf p =
       | Sized st ->
           Locations.pp_smeta ppf meta ;
           if Set.mem data_idents decl_id then pp_validate_data ppf (decl_id, st) ;
-          pp_set_data_size ppf (decl_id, st)
+          pp_assign_data ppf (decl_id, st)
       | Unsized _ -> () )
     | _ -> pp_statement ppf s
   in
@@ -412,34 +405,54 @@ let pp_ctor ppf p =
         pp_located_error ppf
           (pp_block, (list ~sep:cut pp_stmt_topdecl_size_only, prepare_data)) ;
         cut ppf () ;
-        pf ppf "num_params_r__ = 0U;@ " ;
-        pp_located_error ppf
-          ( pp_block
-          , ( list ~sep:cut pp_num_param
-            , List.filter_map ~f:get_param_st output_vars ) ) )
+        let get_param_st = function
+          | _, {Program.out_block= Parameters; out_unconstrained_st= st; _} -> (
+            match SizedType.get_dims st with
+            | [] -> Some [Expr.Helpers.loop_bottom]
+            | ls -> Some ls )
+          | _ -> None
+        in
+        let output_params = List.filter_map ~f:get_param_st output_vars in
+        let pp_mul ppf () = pf ppf " * " in
+        let pp_num_param ppf (dims : Expr.Typed.t list) =
+          match dims with
+          | [a] -> pf ppf "@[%a@]@," (list ~sep:pp_mul pp_expr) [a]
+          | _ -> pf ppf "@[(%a)@]@," (list ~sep:pp_mul pp_expr) dims
+        in
+        let pp_plus ppf () = pf ppf " + " in
+        let pp_set_params ppf pars =
+          (list ~sep:pp_plus pp_num_param) ppf pars
+        in
+        match output_params with
+        | [] -> pf ppf "num_params_r__ = 0U;@,"
+        | _ ->
+            pf ppf "@[<hov 2>num_params_r__ = %a;@]@," pp_set_params
+              output_params )
     , p )
 
 let rec top_level_decls Stmt.Fixed.({pattern; _}) =
   match pattern with
   | Decl d when d.decl_id <> "pos__" ->
-      [(d.decl_id, Type.to_unsized d.decl_type, UnsizedType.DataOnly)]
+      [(d.decl_id, Type.to_unsized d.decl_type)]
   | SList stmts -> List.concat_map ~f:top_level_decls stmts
   | _ -> []
 
 (** Print the private data members of the model class *)
 let pp_model_private ppf {Program.prepare_data; _} =
   let data_decls = List.concat_map ~f:top_level_decls prepare_data in
-  let get_eigen_types (name, ut, adtype) =
-    match ut with
-    | UnsizedType.URowVector | UVector | UMatrix -> Some (name, ut, adtype)
-    | _ -> None
+  (*Filter out Any data that is not an Eigen matrix*)
+  let get_eigen_map (name, ut) =
+    match (UnsizedType.is_eigen_type ut, Transform_Mir.is_opencl_var name) with
+    | true, false -> Some (name, ut)
+    | false, _ -> None
+    | true, _ -> None
   in
-  let just_eigen_decls = (List.filter_map ~f:get_eigen_types) data_decls in
+  let eigen_map_decls = (List.filter_map ~f:get_eigen_map) data_decls in
   pf ppf "%a @ %a"
     (list ~sep:cut pp_data_decl)
     data_decls
     (list ~sep:cut pp_map_decl)
-    just_eigen_decls
+    eigen_map_decls
 
 (** Print the signature and blocks of the model class methods.
   @param ppf A pretty printer

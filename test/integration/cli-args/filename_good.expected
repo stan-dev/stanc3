@@ -74,13 +74,6 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     }
     num_params_r__ = 0U;
     
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 

@@ -186,7 +186,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       pos__ = 1;
       current_statement__ = 1;
       context__.validate_dims("data initialization","N","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       
       current_statement__ = 1;
@@ -197,7 +197,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       validate_non_negative_index("m", "N", N);
       current_statement__ = 4;
       context__.validate_dims("data initialization","m","double",
-          context__.to_vec(N, N));
+           std::vector<size_t>{static_cast<size_t>(N),
+            static_cast<size_t>(N)});
       m__ = Eigen::Matrix<double, -1, -1>(N, N);
       new (&m) Eigen::Map<Eigen::Matrix<double, -1, -1>>(m__.data(), N, N);
       stan::math::fill(m, std::numeric_limits<double>::quiet_NaN());
@@ -225,13 +226,6 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     }
     num_params_r__ = 0U;
     
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 

@@ -89,7 +89,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       pos__ = 1;
       current_statement__ = 21;
       context__.validate_dims("data initialization","N","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       
       current_statement__ = 21;
@@ -100,7 +100,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       validate_non_negative_index("x", "N", N);
       current_statement__ = 23;
       context__.validate_dims("data initialization","x","double",
-          context__.to_vec(N));
+           std::vector<size_t>{static_cast<size_t>(N)});
       x = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 23;
@@ -109,7 +109,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       validate_non_negative_index("y", "N", N);
       current_statement__ = 25;
       context__.validate_dims("data initialization","y","double",
-          context__.to_vec(N));
+           std::vector<size_t>{static_cast<size_t>(N)});
       y__ = Eigen::Matrix<double, -1, 1>(N);
       new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y__.data(), N);
       stan::math::fill(y, std::numeric_limits<double>::quiet_NaN());
@@ -143,17 +143,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 0U;
+    num_params_r__ = 1 + 1 + 1;
     
-    try {
-      num_params_r__ += 1;
-      num_params_r__ += 1;
-      num_params_r__ += 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 

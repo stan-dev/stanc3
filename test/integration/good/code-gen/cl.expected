@@ -273,11 +273,6 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   Eigen::Map<Eigen::Matrix<double, -1, -1>> X_d_td{nullptr, 0, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> y_v_d_td{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, 1, -1>> X_rv_d_td{nullptr, 0};
-  
-  
-  
-  
-  
  
  public:
   ~optimize_glm_model() { }
@@ -308,7 +303,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       pos__ = 1;
       current_statement__ = 176;
       context__.validate_dims("data initialization","k","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       k = std::numeric_limits<int>::min();
       
       current_statement__ = 176;
@@ -317,7 +312,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       check_greater_or_equal(function__, "k", k, 1);
       current_statement__ = 177;
       context__.validate_dims("data initialization","n","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       n = std::numeric_limits<int>::min();
       
       current_statement__ = 177;
@@ -330,7 +325,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("X_d", "k", k);
       current_statement__ = 180;
       context__.validate_dims("data initialization","X_d","double",
-          context__.to_vec(n, k));
+           std::vector<size_t>{static_cast<size_t>(n),
+            static_cast<size_t>(k)});
       X_d__ = Eigen::Matrix<double, -1, -1>(n, k);
       new (&X_d) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_d__.data(), n, k);
       stan::math::fill(X_d, std::numeric_limits<double>::quiet_NaN());
@@ -357,7 +353,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("X_d_a", "k", k);
       current_statement__ = 183;
       context__.validate_dims("data initialization","X_d_a","double",
-          context__.to_vec(2, n, k));
+           std::vector<size_t>{static_cast<size_t>(2),
+            static_cast<size_t>(n), static_cast<size_t>(k)});
       X_d_a = std::vector<Eigen::Matrix<double, -1, -1>>(2, Eigen::Matrix<double, -1, -1>(n, k));
       stan::math::fill(X_d_a, std::numeric_limits<double>::quiet_NaN());
       
@@ -385,7 +382,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("y_v_d", "n", n);
       current_statement__ = 185;
       context__.validate_dims("data initialization","y_v_d","double",
-          context__.to_vec(n));
+           std::vector<size_t>{static_cast<size_t>(n)});
       y_v_d__ = Eigen::Matrix<double, -1, 1>(n);
       new (&y_v_d) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y_v_d__.data(), n);
       stan::math::fill(y_v_d, std::numeric_limits<double>::quiet_NaN());
@@ -408,7 +405,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("X_rv_d", "n", n);
       current_statement__ = 187;
       context__.validate_dims("data initialization","X_rv_d","double",
-          context__.to_vec(n));
+           std::vector<size_t>{static_cast<size_t>(n)});
       X_rv_d__ = Eigen::Matrix<double, 1, -1>(n);
       new (&X_rv_d) Eigen::Map<Eigen::Matrix<double, 1, -1>>(X_rv_d__.data(), n);
       stan::math::fill(X_rv_d, std::numeric_limits<double>::quiet_NaN());
@@ -431,7 +428,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("y_vi_d", "n", n);
       current_statement__ = 189;
       context__.validate_dims("data initialization","y_vi_d","int",
-          context__.to_vec(n));
+           std::vector<size_t>{static_cast<size_t>(n)});
       y_vi_d = std::vector<int>(n, std::numeric_limits<int>::min());
       
       current_statement__ = 189;
@@ -440,21 +437,21 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("y2_vi_d", "n", n);
       current_statement__ = 191;
       context__.validate_dims("data initialization","y2_vi_d","int",
-          context__.to_vec(n));
+           std::vector<size_t>{static_cast<size_t>(n)});
       y2_vi_d = std::vector<int>(n, std::numeric_limits<int>::min());
       
       current_statement__ = 191;
       y2_vi_d = context__.vals_i("y2_vi_d");
       current_statement__ = 192;
       context__.validate_dims("data initialization","y_s_d","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       y_s_d = std::numeric_limits<int>::min();
       
       current_statement__ = 192;
       y_s_d = context__.vals_i("y_s_d")[(1 - 1)];
       current_statement__ = 193;
       context__.validate_dims("data initialization","y_r_d","double",
-          context__.to_vec());
+           std::vector<size_t>{});
       y_r_d = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 193;
@@ -541,23 +538,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 0U;
+    num_params_r__ = k + k + k + 1 + 1 + 1 + (n * k) + (n * k) + n;
     
-    try {
-      num_params_r__ += k;
-      num_params_r__ += k;
-      num_params_r__ += k;
-      num_params_r__ += 1;
-      num_params_r__ += 1;
-      num_params_r__ += 1;
-      num_params_r__ += n * k;
-      num_params_r__ += n * k;
-      num_params_r__ += n;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
