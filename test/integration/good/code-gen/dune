@@ -21,6 +21,24 @@
  (action (diff mir.expected mir.output)))
 
 (rule
+ (targets transformed_mir.output)
+ (deps (package stanc) (:stanfiles mother.stan))
+ (action
+  (with-stdout-to %{targets}
+   (run %{bin:run_bin_on_args} "%{bin:stanc} --debug-transformed-mir" %{stanfiles}))))
+
+(rule
+ (targets transformed_mir_diff.output)
+ (deps mir.output transformed_mir.output)
+ (action
+  (with-stdout-to %{targets}
+   (bash "diff %{deps} || true"))))
+
+(alias
+ (name runtest)
+ (action (diff transformed_mir_diff.expected transformed_mir_diff.output)))
+
+(rule
  (targets cl.output)
  (deps (package stanc) (:stanfiles  optimize_glm.stan))
  (action
