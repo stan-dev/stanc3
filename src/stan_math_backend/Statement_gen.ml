@@ -218,60 +218,59 @@ and pp_block_s ppf body =
  *   of optionals with the the elements of the list holding the 
  *   selected subset of function arguments.
  *   For an example of this function see `pp_rng_in_td`.
- * @param getter A functor passed to subset_function returning a tuple 
+ * @param select A functor taking in a tuple of the same types as 
+ *  those in `FunApp`. This is passed to `subset_function` returning a tuple 
  *   of the subsetted function's types.
- * @param checker A functor that accepts a tuple returned by getter
+ * @param where A functor that accepts a tuple returned by select
  *   returning true or false. This is used to decide if a function's
  *   subsetted tuple should be returned.
  * @param pattern A pattern of fixed statements to recurse over.
  **)
-let rec query_stmt_function getter (checker : 'a -> sexp_bool)
+let rec query_stmt_functions select (where : 'a -> bool)
     Stmt.Fixed.({pattern; _}) =
-  let query_stmt_getter = query_stmt_function getter checker in
-  let query_expr_getter = query_expr_function getter checker in
+  let query_stmt = query_stmt_functions select where in
+  let query_expr = query_expr_functions select where in
   match pattern with
   | Assignment (((_ : string), (_ : UnsizedType.t), lhs), rhs) ->
-      let op_rhs = query_expr_getter rhs in
+      let op_rhs = query_expr rhs in
       let query_index ind =
         match ind with
         | Index.All -> [None]
-        | Single ind_expr -> query_expr_getter ind_expr
-        | Upfrom ind_expr -> query_expr_getter ind_expr
+        | Single ind_expr -> query_expr ind_expr
+        | Upfrom ind_expr -> query_expr ind_expr
         | Between (expr_top, expr_bottom) ->
-            List.concat_map ~f:query_expr_getter [expr_top; expr_bottom]
-        | MultiIndex exprs -> query_expr_getter exprs
+            List.concat_map ~f:query_expr [expr_top; expr_bottom]
+        | MultiIndex exprs -> query_expr exprs
       in
       List.concat [op_rhs; List.concat_map ~f:query_index lhs]
-  | TargetPE expr -> query_expr_getter expr
+  | TargetPE expr -> query_expr expr
   | NRFunApp (kind, name, exprs) -> (
-      let subset = subset_function getter (kind, name, exprs) in
-      let expr_gets = List.concat_map ~f:query_expr_getter exprs in
-      match checker subset with
+      let subset = subset_function select (kind, name, exprs) in
+      let expr_gets = List.concat_map ~f:query_expr exprs in
+      match where subset with
       | true -> List.concat [[Some subset]; expr_gets]
       | false -> expr_gets )
   | Break | Continue -> [None]
   | Return optional_expr -> (
-    match optional_expr with
-    | Some expr -> query_expr_getter expr
-    | None -> [None] )
+    match optional_expr with Some expr -> query_expr expr | None -> [None] )
   | Skip -> [None]
   | IfElse (predicate, true_stmt, op_false_stmt) -> (
-      let op_pred = query_expr_getter predicate in
-      let op_true = query_stmt_getter true_stmt in
+      let pred_query = query_expr predicate in
+      let true_query = query_stmt true_stmt in
       match op_false_stmt with
-      | Some stmt -> List.concat [query_stmt_getter stmt; op_true; op_pred]
-      | None -> List.concat [op_true; op_pred] )
+      | Some stmt -> List.concat [pred_query; true_query; query_stmt stmt]
+      | None -> List.concat [true_query; pred_query] )
   | While (expr, stmt) ->
-      let op_expr = query_expr_getter expr in
-      let op_stmt = query_stmt_getter stmt in
-      List.concat [op_expr; op_stmt]
+      let expr_query = query_expr expr in
+      let stmt_query = query_stmt stmt in
+      List.concat [expr_query; stmt_query]
   | For {lower; upper; body; _} ->
-      let op_lower = query_expr_getter lower in
-      let op_upper = query_expr_getter upper in
-      let op_body = query_stmt_getter body in
-      List.concat [op_lower; op_upper; op_body]
-  | Profile ((_ : string), stmt) -> List.concat_map ~f:query_stmt_getter stmt
-  | Block stmts -> List.concat_map ~f:query_stmt_getter stmts
-  | SList stmts -> List.concat_map ~f:query_stmt_getter stmts
+      let lower_query = query_expr lower in
+      let upper_query = query_expr upper in
+      let body_query = query_stmt body in
+      List.concat [lower_query; upper_query; body_query]
+  | Profile ((_ : string), stmt) -> List.concat_map ~f:query_stmt stmt
+  | Block stmts -> List.concat_map ~f:query_stmt stmts
+  | SList stmts -> List.concat_map ~f:query_stmt stmts
   (*A Decl's record does not hold functions*)
   | Decl _ -> [None]

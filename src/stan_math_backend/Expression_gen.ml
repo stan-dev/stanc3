@@ -587,37 +587,37 @@ let subset_function subsetter
 
 (** Query function expressions in expressions returning back a list of optionals 
  *    with each Some element holding the queried function types.
- * @param getter A functor passed to subset_function returning a
+ * @param select A functor passed to `subset_function` returning a
  *  tuple of the subsetted function's types.
- * @param checker A functor that accepts a tuple returned by getter
+ * @param where A functor that accepts a tuple returned by select
  *  and returns either true or false.
  *  This is used to decide if a function's subsetted tuple should be returned.
  * @param pattern A pattern of fixed expressions to recurse over.
  *)
-let rec query_expr_function getter (checker : 'a -> sexp_bool)
+let rec query_expr_functions select (where : 'a -> bool)
     Expr.Fixed.({pattern; _}) =
-  let get_query = query_expr_function getter checker in
+  let query_expr = query_expr_functions select where in
   match pattern with
   | FunApp (kind, name, exprs) -> (
-      let subset = subset_function getter (kind, name, exprs) in
-      match checker subset with
-      | true -> List.concat [[Some subset]; List.concat_map ~f:get_query exprs]
-      | false -> List.concat_map ~f:get_query exprs )
+      let subset = subset_function select (kind, name, exprs) in
+      match where subset with
+      | true -> List.concat [[Some subset]; List.concat_map ~f:query_expr exprs]
+      | false -> List.concat_map ~f:query_expr exprs )
   | TernaryIf (predicate, texpr, fexpr) ->
-      List.concat_map ~f:get_query [predicate; texpr; fexpr]
-  | EAnd (lhs, rhs) -> List.concat_map ~f:get_query [lhs; rhs]
-  | EOr (lhs, rhs) -> List.concat_map ~f:get_query [lhs; rhs]
+      List.concat_map ~f:query_expr [predicate; texpr; fexpr]
+  | EAnd (lhs, rhs) -> List.concat_map ~f:query_expr [lhs; rhs]
+  | EOr (lhs, rhs) -> List.concat_map ~f:query_expr [lhs; rhs]
   | Indexed (expr, indexed) ->
       let query_index ind =
         match ind with
         | Index.All -> [None]
-        | Single index_expr -> get_query index_expr
-        | Upfrom index_expr -> get_query index_expr
+        | Single index_expr -> query_expr index_expr
+        | Upfrom index_expr -> query_expr index_expr
         | Between (expr_top, expr_bottom) ->
-            List.concat_map ~f:get_query [expr_top; expr_bottom]
-        | MultiIndex exprs -> get_query exprs
+            List.concat_map ~f:query_expr [expr_top; expr_bottom]
+        | MultiIndex exprs -> query_expr exprs
       in
-      List.concat [get_query expr; List.concat_map ~f:query_index indexed]
+      List.concat [query_expr expr; List.concat_map ~f:query_index indexed]
   (*Vars and Literal types can't hold rngs*)
   | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
       [None]
