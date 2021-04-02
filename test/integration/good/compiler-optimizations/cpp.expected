@@ -728,6 +728,11 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     }
     } // transform_inits_impl() 
     
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
@@ -3016,6 +3021,11 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
     }
     } // transform_inits_impl() 
     
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
@@ -4607,6 +4617,11 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     }
     } // transform_inits_impl() 
     
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
@@ -5067,6 +5082,11 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
     }
     } // transform_inits_impl() 
     
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 4;
+    
+    } // is_rng_in_transform_data() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
@@ -5410,6 +5430,11 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 3;
+    
+    } // is_rng_in_transform_data() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
@@ -6023,6 +6048,11 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     }
     } // transform_inits_impl() 
     
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
@@ -6514,6 +6544,11 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
@@ -8051,6 +8086,11 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     }
     } // transform_inits_impl() 
     
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
@@ -8966,6 +9006,11 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
@@ -11194,6 +11239,11 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
@@ -14940,6 +14990,11 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     }
     } // transform_inits_impl() 
     
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
@@ -16528,6 +16583,11 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     }
     } // transform_inits_impl() 
     
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
@@ -17343,6 +17403,11 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
@@ -19648,6 +19713,11 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
@@ -23267,6 +23337,11 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     }
     } // transform_inits_impl() 
     
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
@@ -23759,6 +23834,11 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
     }
     } // transform_inits_impl() 
     
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 3;
+    
+    } // is_rng_in_transform_data() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
@@ -24104,6 +24184,11 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
@@ -24487,6 +24572,11 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
@@ -26494,6 +26584,11 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
     }
     } // transform_inits_impl() 
     
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
@@ -27080,6 +27175,11 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
@@ -28036,6 +28136,11 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
@@ -29028,6 +29133,11 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
@@ -30475,6 +30585,11 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     }
     } // transform_inits_impl() 
     
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
@@ -31327,6 +31442,11 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
@@ -32339,6 +32459,11 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     }
     } // transform_inits_impl() 
     
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
@@ -32986,6 +33111,11 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     

@@ -326,6 +326,11 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     }
     } // transform_inits_impl() 
     
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
@@ -678,6 +683,11 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
@@ -1151,6 +1161,11 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
     }
     } // transform_inits_impl() 
     
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
@@ -1580,6 +1595,11 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
@@ -9472,6 +9492,11 @@ class mother_model final : public model_base_crtp<mother_model> {
     }
     } // transform_inits_impl() 
     
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
@@ -12403,6 +12428,11 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
@@ -16749,6 +16779,11 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     }
     } // transform_inits_impl() 
     
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
@@ -17561,6 +17596,11 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
@@ -19213,6 +19253,11 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     }
     } // transform_inits_impl() 
     
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
@@ -19796,6 +19841,11 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
@@ -20396,6 +20446,11 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
@@ -22746,6 +22801,11 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
@@ -26908,6 +26968,11 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     }
     } // transform_inits_impl() 
     
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
@@ -27416,6 +27481,428 @@ stan::math::profile_map& get_stan_profile_data() {
 
 
 
+  $ ../../../../../install/default/bin/stanc --print-cpp rng_in_td.stan
+
+// Code generated by %%NAME%% %%VERSION%%
+#include <stan/model/model_header.hpp>
+namespace rng_in_td_model_namespace {
+
+using stan::io::dump;
+using stan::model::assign;
+using stan::model::index_uni;
+using stan::model::index_max;
+using stan::model::index_min;
+using stan::model::index_min_max;
+using stan::model::index_multi;
+using stan::model::index_omni;
+using stan::model::model_base_crtp;
+using stan::model::rvalue;
+using namespace stan::math;
+
+
+stan::math::profile_map profiles__;
+static constexpr std::array<const char*, 24> locations_array__ = 
+{" (found before start of program)",
+ " (in 'rng_in_td.stan', line 7, column 2 to column 55)",
+ " (in 'rng_in_td.stan', line 8, column 2 to line 9, column 58)",
+ " (in 'rng_in_td.stan', line 28, column 12 to column 37)",
+ " (in 'rng_in_td.stan', line 29, column 12 to column 68)",
+ " (in 'rng_in_td.stan', line 30, column 12 to column 65)",
+ " (in 'rng_in_td.stan', line 27, column 10 to line 31, column 11)",
+ " (in 'rng_in_td.stan', line 26, column 63 to line 32, column 9)",
+ " (in 'rng_in_td.stan', line 24, column 8 to line 32, column 9)",
+ " (in 'rng_in_td.stan', line 23, column 11 to line 33, column 7)",
+ " (in 'rng_in_td.stan', line 17, column 12 to column 37)",
+ " (in 'rng_in_td.stan', line 18, column 12 to column 68)",
+ " (in 'rng_in_td.stan', line 19, column 12 to column 65)",
+ " (in 'rng_in_td.stan', line 16, column 10 to line 20, column 11)",
+ " (in 'rng_in_td.stan', line 15, column 63 to line 21, column 9)",
+ " (in 'rng_in_td.stan', line 13, column 8 to line 21, column 9)",
+ " (in 'rng_in_td.stan', line 12, column 37 to line 22, column 7)",
+ " (in 'rng_in_td.stan', line 12, column 6 to line 33, column 7)",
+ " (in 'rng_in_td.stan', line 34, column 6 to column 12)",
+ " (in 'rng_in_td.stan', line 11, column 38 to line 35, column 5)",
+ " (in 'rng_in_td.stan', line 11, column 4 to line 35, column 5)",
+ " (in 'rng_in_td.stan', line 10, column 2 to line 36, column 3)",
+ " (in 'rng_in_td.stan', line 3, column 4 to column 44)",
+ " (in 'rng_in_td.stan', line 2, column 16 to line 4, column 3)"};
+
+
+template <typename RNG>
+double
+do_rng(RNG& base_rng__, std::ostream* pstream__) {
+  using local_scalar_t__ = double;
+  int current_statement__ = 0; 
+  static constexpr bool propto__ = true;
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
+  try {
+    current_statement__ = 22;
+    return normal_rng(0, normal_rng(1, 10, base_rng__), base_rng__);
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+
+struct do_rng_functor__ {
+template <typename RNG>
+double
+operator()(RNG& base_rng__, std::ostream* pstream__)  const 
+{
+return do_rng(base_rng__, pstream__);
+}
+};
+
+class rng_in_td_model final : public model_base_crtp<rng_in_td_model> {
+
+ private:
+  std::vector<double> xx;
+  std::vector<std::vector<double>> xxx;
+ 
+ public:
+  ~rng_in_td_model() { }
+  
+  inline std::string model_name() const final { return "rng_in_td_model"; }
+
+  inline std::vector<std::string> model_compile_info() const noexcept {
+    return std::vector<std::string>{"stanc_version = %%NAME%%3 %%VERSION%%", "stancflags = --print-cpp"};
+  }
+  
+  
+  rng_in_td_model(stan::io::var_context& context__,
+                  unsigned int random_seed__ = 0,
+                  std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
+    int current_statement__ = 0;
+    using local_scalar_t__ = double ;
+    boost::ecuyer1988 base_rng__ = 
+        stan::services::util::create_rng(random_seed__, 0);
+    (void) base_rng__;  // suppress unused var warning
+    static constexpr const char* function__ = "rng_in_td_model_namespace::rng_in_td_model";
+    (void) function__;  // suppress unused var warning
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    try {
+      int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
+      pos__ = 1;
+      current_statement__ = 1;
+      xx = std::vector<double>(3, std::numeric_limits<double>::quiet_NaN());
+      
+      current_statement__ = 1;
+      assign(xx, std::vector<int>{1, 2,
+        discrete_range_rng(1, 10, base_rng__)}, "assigning variable xx");
+      current_statement__ = 2;
+      xxx = std::vector<std::vector<double>>(2, std::vector<double>(2, std::numeric_limits<double>::quiet_NaN()));
+      
+      current_statement__ = 2;
+      assign(xxx, std::vector<std::vector<int>>{std::vector<int>{1,
+        discrete_range_rng(1, 10, base_rng__)}, std::vector<int>{3,
+        discrete_range_rng(1, 10, base_rng__)}}, "assigning variable xxx");
+      {
+        current_statement__ = 20;
+        while (discrete_range_rng(0, 10, base_rng__)) {
+          current_statement__ = 17;
+          if (discrete_range_rng(1, 10, base_rng__)) {
+            current_statement__ = 15;
+            for (int i = discrete_range_rng(1, 10, base_rng__);
+                 i <= add(binomial_rng(10, .3, base_rng__),
+                        discrete_range_rng(1, 10, base_rng__)); ++i) {
+              {
+                current_statement__ = 10;
+                assign(xx, normal_rng(0, 1, base_rng__),
+                  "assigning variable xx", index_uni(1));
+                current_statement__ = 11;
+                assign(xx,
+                  add(do_rng(base_rng__, pstream__),
+                    do_rng(base_rng__, pstream__)),
+                  "assigning variable xx", index_uni(discrete_range_rng(1,
+                                                       10, base_rng__)));
+                current_statement__ = 12;
+                assign(xxx, normal_rng(0, 1, base_rng__),
+                  "assigning variable xxx", index_uni(1),
+                                              index_uni(discrete_range_rng(1,
+                                                          10, base_rng__)));
+              }}
+          } else {
+            current_statement__ = 8;
+            for (int i = discrete_range_rng(1, 10, base_rng__);
+                 i <= add(binomial_rng(10, .3, base_rng__),
+                        discrete_range_rng(1, 10, base_rng__)); ++i) {
+              {
+                current_statement__ = 3;
+                assign(xx, normal_rng(0, 1, base_rng__),
+                  "assigning variable xx", index_uni(1));
+                current_statement__ = 4;
+                assign(xx,
+                  add(do_rng(base_rng__, pstream__),
+                    do_rng(base_rng__, pstream__)),
+                  "assigning variable xx", index_uni(discrete_range_rng(1,
+                                                       10, base_rng__)));
+                current_statement__ = 5;
+                assign(xxx, normal_rng(0, 1, base_rng__),
+                  "assigning variable xxx", index_uni(1),
+                                              index_uni(discrete_range_rng(1,
+                                                          10, base_rng__)));
+              }}
+          }
+          break;
+        }
+      }
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    num_params_r__ = 0U;
+    
+    try {
+      
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+  }
+  
+  template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
+  stan::require_vector_like_t<VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  inline stan::scalar_type_t<VecR> log_prob_impl(VecR& params_r__,
+                                                 VecI& params_i__,
+                                                 std::ostream* pstream__ = nullptr) const {
+    using T__ = stan::scalar_type_t<VecR>;
+    using local_scalar_t__ = T__;
+    T__ lp__(0.0);
+    stan::math::accumulator<T__> lp_accum__;
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    static constexpr const char* function__ = "rng_in_td_model_namespace::log_prob";
+    (void) function__;  // suppress unused var warning
+    
+    try {
+      
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    lp_accum__.add(lp__);
+    return lp_accum__.sum();
+    } // log_prob_impl() 
+    
+  template <typename RNG, typename VecR, typename VecI, typename VecVar, 
+  stan::require_vector_like_vt<std::is_floating_point, VecR>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr, 
+  stan::require_std_vector_vt<std::is_floating_point, VecVar>* = nullptr> 
+  inline void write_array_impl(RNG& base_rng__, VecR& params_r__,
+                               VecI& params_i__, VecVar& vars__,
+                               const bool emit_transformed_parameters__ = true,
+                               const bool emit_generated_quantities__ = true,
+                               std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    vars__.resize(0);
+    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    double lp__ = 0.0;
+    (void) lp__;  // dummy to suppress unused var warning
+    int current_statement__ = 0; 
+    stan::math::accumulator<double> lp_accum__;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    (void) DUMMY_VAR__;  // suppress unused var warning
+    static constexpr const char* function__ = "rng_in_td_model_namespace::write_array";
+    (void) function__;  // suppress unused var warning
+    
+    try {
+      if (logical_negation((primitive_value(emit_transformed_parameters__) ||
+            primitive_value(emit_generated_quantities__)))) {
+        return ;
+      } 
+      if (logical_negation(emit_generated_quantities__)) {
+        return ;
+      } 
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    } // write_array_impl() 
+    
+  template <typename VecVar, typename VecI, 
+  stan::require_std_vector_t<VecVar>* = nullptr, 
+  stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
+  inline void transform_inits_impl(const stan::io::var_context& context__,
+                                   VecI& params_i__, VecVar& vars__,
+                                   std::ostream* pstream__ = nullptr) const {
+    using local_scalar_t__ = double;
+    vars__.clear();
+    vars__.reserve(num_params_r__);
+    int current_statement__ = 0; 
+    
+    try {
+      int pos__;
+      pos__ = std::numeric_limits<int>::min();
+      
+      pos__ = 1;
+    } catch (const std::exception& e) {
+      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+    }
+    } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 23;
+    
+    } // is_rng_in_transform_data() 
+    
+  inline void get_param_names(std::vector<std::string>& names__) const {
+    
+    names__.clear();
+    
+    } // get_param_names() 
+    
+  inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
+    dimss__.clear();
+    
+    } // get_dims() 
+    
+  inline void constrained_param_names(
+                                      std::vector<std::string>& param_names__,
+                                      bool emit_transformed_parameters__ = true,
+                                      bool emit_generated_quantities__ = true) const
+    final {
+    
+    
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // constrained_param_names() 
+    
+  inline void unconstrained_param_names(
+                                        std::vector<std::string>& param_names__,
+                                        bool emit_transformed_parameters__ = true,
+                                        bool emit_generated_quantities__ = true) const
+    final {
+    
+    
+    if (emit_transformed_parameters__) {
+      
+    }
+    
+    if (emit_generated_quantities__) {
+      
+    }
+    
+    } // unconstrained_param_names() 
+    
+  inline std::string get_constrained_sizedtypes() const {
+    std::stringstream s__;
+    s__ << "[]";
+    return s__.str();
+    } // get_constrained_sizedtypes() 
+    
+  inline std::string get_unconstrained_sizedtypes() const {
+    std::stringstream s__;
+    s__ << "[]";
+    return s__.str();
+    } // get_unconstrained_sizedtypes() 
+    
+  
+    // Begin method overload boilerplate
+    template <typename RNG>
+    inline void write_array(RNG& base_rng,
+                            Eigen::Matrix<double,Eigen::Dynamic,1>& params_r,
+                            Eigen::Matrix<double,Eigen::Dynamic,1>& vars,
+                            const bool emit_transformed_parameters = true,
+                            const bool emit_generated_quantities = true,
+                            std::ostream* pstream = nullptr) const {
+      std::vector<double> vars_vec(vars.size());
+      std::vector<int> params_i;
+      write_array_impl(base_rng, params_r, params_i, vars_vec,
+          emit_transformed_parameters, emit_generated_quantities, pstream);
+      vars.resize(vars_vec.size());
+      for (int i = 0; i < vars.size(); ++i) {
+        vars.coeffRef(i) = vars_vec[i];
+      }
+    }
+
+    template <typename RNG>
+    inline void write_array(RNG& base_rng, std::vector<double>& params_r,
+                            std::vector<int>& params_i,
+                            std::vector<double>& vars,
+                            bool emit_transformed_parameters = true,
+                            bool emit_generated_quantities = true,
+                            std::ostream* pstream = nullptr) const {
+      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+    }
+
+    template <bool propto__, bool jacobian__, typename T_>
+    inline T_ log_prob(Eigen::Matrix<T_,Eigen::Dynamic,1>& params_r,
+                       std::ostream* pstream = nullptr) const {
+      Eigen::Matrix<int, -1, 1> params_i;
+      return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+    }
+
+    template <bool propto__, bool jacobian__, typename T__>
+    inline T__ log_prob(std::vector<T__>& params_r,
+                        std::vector<int>& params_i,
+                        std::ostream* pstream = nullptr) const {
+      return log_prob_impl<propto__, jacobian__>(params_r, params_i, pstream);
+    }
+
+
+    inline void transform_inits(const stan::io::var_context& context,
+                         Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
+                         std::ostream* pstream = nullptr) const final {
+      std::vector<double> params_r_vec(params_r.size());
+      std::vector<int> params_i;
+      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      params_r.resize(params_r_vec.size());
+      for (int i = 0; i < params_r.size(); ++i) {
+        params_r.coeffRef(i) = params_r_vec[i];
+      }
+    }
+    inline void transform_inits(const stan::io::var_context& context,
+                                std::vector<int>& params_i,
+                                std::vector<double>& vars,
+                                std::ostream* pstream = nullptr) const final {
+      transform_inits_impl(context, params_i, vars, pstream);
+    }
+
+};
+}
+using stan_model = rng_in_td_model_namespace::rng_in_td_model;
+
+#ifndef USING_R
+
+// Boilerplate
+stan::model::model_base& new_model(
+        stan::io::var_context& data_context,
+        unsigned int seed,
+        std::ostream* msg_stream) {
+  stan_model* m = new stan_model(data_context, seed, msg_stream);
+  return *m;
+}
+
+stan::math::profile_map& get_stan_profile_data() {
+  return rng_in_td_model_namespace::profiles__;
+}
+
+#endif
+
+
+
   $ ../../../../../install/default/bin/stanc --print-cpp single-argument-lpmf.stan
 
 // Code generated by %%NAME%% %%VERSION%%
@@ -27754,6 +28241,11 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
@@ -28128,6 +28620,11 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
@@ -31271,6 +31768,11 @@ class transform_model final : public model_base_crtp<transform_model> {
     }
     } // transform_inits_impl() 
     
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
@@ -32297,6 +32799,11 @@ class truncate_model final : public model_base_crtp<truncate_model> {
     }
     } // transform_inits_impl() 
     
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
@@ -32656,6 +33163,11 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
@@ -33029,6 +33541,11 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     

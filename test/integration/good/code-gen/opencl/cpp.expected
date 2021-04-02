@@ -6164,6 +6164,11 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     }
     } // transform_inits_impl() 
     
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
@@ -6929,6 +6934,11 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
+    
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     

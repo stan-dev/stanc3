@@ -213,3 +213,65 @@ and pp_block_s ppf body =
   match body.pattern with
   | Block ls -> pp_block ppf (list ~sep:cut pp_statement, ls)
   | _ -> pp_block ppf (pp_statement, body)
+
+(** Query function expressions in statements returning back a list
+ *   of optionals with the the elements of the list holding the 
+ *   selected subset of function arguments.
+ *   For an example of this function see `pp_rng_in_td`.
+ * @param getter A functor passed to subset_function returning a tuple 
+ *   of the subsetted function's types.
+ * @param checker A functor that accepts a tuple returned by getter
+ *   returning true or false. This is used to decide if a function's
+ *   subsetted tuple should be returned.
+ * @param pattern A pattern of fixed statements to recurse over.
+ **)
+let rec query_stmt_function getter (checker : 'a -> sexp_bool)
+    Stmt.Fixed.({pattern; _}) =
+  let query_stmt_getter = query_stmt_function getter checker in
+  let query_expr_getter = query_expr_function getter checker in
+  match pattern with
+  | Assignment (((_ : string), (_ : UnsizedType.t), lhs), rhs) ->
+      let op_rhs = query_expr_getter rhs in
+      let query_index ind =
+        match ind with
+        | Index.All -> [None]
+        | Single ind_expr -> query_expr_getter ind_expr
+        | Upfrom ind_expr -> query_expr_getter ind_expr
+        | Between (expr_top, expr_bottom) ->
+            List.concat_map ~f:query_expr_getter [expr_top; expr_bottom]
+        | MultiIndex exprs -> query_expr_getter exprs
+      in
+      List.concat [op_rhs; List.concat_map ~f:query_index lhs]
+  | TargetPE expr -> query_expr_getter expr
+  | NRFunApp (kind, name, exprs) -> (
+      let subset = subset_function getter (kind, name, exprs) in
+      let expr_gets = List.concat_map ~f:query_expr_getter exprs in
+      match checker subset with
+      | true -> List.concat [[Some subset]; expr_gets]
+      | false -> expr_gets )
+  | Break | Continue -> [None]
+  | Return optional_expr -> (
+    match optional_expr with
+    | Some expr -> query_expr_getter expr
+    | None -> [None] )
+  | Skip -> [None]
+  | IfElse (predicate, true_stmt, op_false_stmt) -> (
+      let op_pred = query_expr_getter predicate in
+      let op_true = query_stmt_getter true_stmt in
+      match op_false_stmt with
+      | Some stmt -> List.concat [query_stmt_getter stmt; op_true; op_pred]
+      | None -> List.concat [op_true; op_pred] )
+  | While (expr, stmt) ->
+      let op_expr = query_expr_getter expr in
+      let op_stmt = query_stmt_getter stmt in
+      List.concat [op_expr; op_stmt]
+  | For {lower; upper; body; _} ->
+      let op_lower = query_expr_getter lower in
+      let op_upper = query_expr_getter upper in
+      let op_body = query_stmt_getter body in
+      List.concat [op_lower; op_upper; op_body]
+  | Profile ((_ : string), stmt) -> List.concat_map ~f:query_stmt_getter stmt
+  | Block stmts -> List.concat_map ~f:query_stmt_getter stmts
+  | SList stmts -> List.concat_map ~f:query_stmt_getter stmts
+  (*A Decl's record does not hold functions*)
+  | Decl _ -> [None]

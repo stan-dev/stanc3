@@ -396,6 +396,11 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     }
     } // transform_inits_impl() 
     
+  inline bool is_rng_in_transform_data() const noexcept {
+    return 0;
+    
+    } // is_rng_in_transform_data() 
+    
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__.clear();
