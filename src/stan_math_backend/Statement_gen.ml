@@ -232,7 +232,6 @@ let rec query_stmt_functions select (where : 'a -> bool)
   let query_expr = query_expr_functions select where in
   match pattern with
   | Assignment (((_ : string), (_ : UnsizedType.t), lhs), rhs) ->
-      let op_rhs = query_expr rhs in
       let query_index ind =
         match ind with
         | Index.All -> [None]
@@ -242,7 +241,7 @@ let rec query_stmt_functions select (where : 'a -> bool)
             List.concat_map ~f:query_expr [expr_top; expr_bottom]
         | MultiIndex exprs -> query_expr exprs
       in
-      List.concat [op_rhs; List.concat_map ~f:query_index lhs]
+      List.concat [query_expr rhs; List.concat_map ~f:query_index lhs]
   | TargetPE expr -> query_expr expr
   | NRFunApp (kind, name, exprs) -> (
       let subset = subset_function select (kind, name, exprs) in
@@ -261,14 +260,9 @@ let rec query_stmt_functions select (where : 'a -> bool)
       | Some stmt -> List.concat [pred_query; true_query; query_stmt stmt]
       | None -> List.concat [true_query; pred_query] )
   | While (expr, stmt) ->
-      let expr_query = query_expr expr in
-      let stmt_query = query_stmt stmt in
-      List.concat [expr_query; stmt_query]
+      List.concat [query_expr expr; query_stmt stmt]
   | For {lower; upper; body; _} ->
-      let lower_query = query_expr lower in
-      let upper_query = query_expr upper in
-      let body_query = query_stmt body in
-      List.concat [lower_query; upper_query; body_query]
+      List.concat [query_expr lower; query_expr upper; query_stmt body]
   | Profile ((_ : string), stmt) -> List.concat_map ~f:query_stmt stmt
   | Block stmts -> List.concat_map ~f:query_stmt stmts
   | SList stmts -> List.concat_map ~f:query_stmt stmts
