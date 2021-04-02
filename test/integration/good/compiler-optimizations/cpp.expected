@@ -729,7 +729,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -3022,7 +3022,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -4618,7 +4618,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -5083,7 +5083,7 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 4;
+    return static_cast<bool>(4);
     
     } // is_rng_in_transform_data() 
     
@@ -5432,7 +5432,7 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 3;
+    return static_cast<bool>(3);
     
     } // is_rng_in_transform_data() 
     
@@ -6049,7 +6049,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -6546,7 +6546,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -8087,7 +8087,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -9008,7 +9008,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -11241,7 +11241,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -14991,7 +14991,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -16584,7 +16584,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -17405,7 +17405,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -19715,7 +19715,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -23338,7 +23338,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -23835,7 +23835,7 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 3;
+    return static_cast<bool>(3);
     
     } // is_rng_in_transform_data() 
     
@@ -24186,7 +24186,7 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -24574,7 +24574,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -26585,7 +26585,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -27177,7 +27177,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -28138,7 +28138,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -29135,7 +29135,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -30586,7 +30586,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -31444,7 +31444,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -32460,7 +32460,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -33113,7 +33113,7 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     

@@ -6165,7 +6165,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -6936,7 +6936,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     

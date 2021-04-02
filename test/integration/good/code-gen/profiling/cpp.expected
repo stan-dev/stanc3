@@ -397,7 +397,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     

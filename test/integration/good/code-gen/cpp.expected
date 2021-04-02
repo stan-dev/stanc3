@@ -327,7 +327,7 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -685,7 +685,7 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -1162,7 +1162,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -1597,7 +1597,7 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -9493,7 +9493,7 @@ class mother_model final : public model_base_crtp<mother_model> {
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -12430,7 +12430,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -16780,7 +16780,7 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -17598,7 +17598,7 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -19254,7 +19254,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -19843,7 +19843,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -20448,7 +20448,7 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -22803,7 +22803,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -26969,7 +26969,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -27757,7 +27757,7 @@ class rng_in_td_model final : public model_base_crtp<rng_in_td_model> {
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 23;
+    return static_cast<bool>(23);
     
     } // is_rng_in_transform_data() 
     
@@ -28243,7 +28243,7 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -28622,7 +28622,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -31769,7 +31769,7 @@ class transform_model final : public model_base_crtp<transform_model> {
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -32800,7 +32800,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -33165,7 +33165,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     
@@ -33543,7 +33543,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
     } // transform_inits_impl() 
     
   inline bool is_rng_in_transform_data() const noexcept {
-    return 0;
+    return static_cast<bool>(0);
     
     } // is_rng_in_transform_data() 
     

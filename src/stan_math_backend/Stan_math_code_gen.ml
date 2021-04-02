@@ -464,8 +464,10 @@ let pp_rng_in_td ppf {Program.prepare_data; _} =
   let rngs_list = List.concat_map ~f:query_getter prepare_data in
   let subset_rngs ff = match ff with Some _ -> true | None -> false in
   let count_rngs = List.length (List.filter ~f:subset_rngs rngs_list) in
-  let does_use_rng ppf () = pf ppf "return %i;" count_rngs in
-  pp_method ppf "bool" "is_rng_in_transform_data" [""] does_use_rng
+  let pp_count_rngs ppf () =
+    pf ppf "return static_cast<bool>(%i);" count_rngs
+  in
+  pp_method ppf "bool" "is_rng_in_transform_data" [""] pp_count_rngs
     (fun ppf -> pf ppf "")
     ~cv_attr:["const noexcept"]
 
