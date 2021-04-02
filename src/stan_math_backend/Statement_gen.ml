@@ -259,8 +259,7 @@ let rec query_stmt_functions select (where : 'a -> bool)
       match op_false_stmt with
       | Some stmt -> List.concat [pred_query; true_query; query_stmt stmt]
       | None -> List.concat [true_query; pred_query] )
-  | While (expr, stmt) ->
-      List.concat [query_expr expr; query_stmt stmt]
+  | While (expr, stmt) -> List.concat [query_expr expr; query_stmt stmt]
   | For {lower; upper; body; _} ->
       List.concat [query_expr lower; query_expr upper; query_stmt body]
   | Profile ((_ : string), stmt) -> List.concat_map ~f:query_stmt stmt
