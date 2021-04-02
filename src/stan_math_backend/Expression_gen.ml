@@ -574,21 +574,10 @@ let%expect_test "pp_expr11" =
        (FunApp (UserDefined, "poisson_rng", [dummy_locate (Lit (Int, "123"))]))) ;
   [%expect {| poisson_rng(123, base_rng__, pstream__) |}]
 
-(** Get a subset of a function expressions types
- * @param subsetter A function accepting a tuple of the types in
- *    a function expression and returning a subset of those types.
- * @param name name of function.
- * @param exprs A list of any subexpressions in the function expression.
- * @return a tuple of the subset returned by subsetter
- *)
-let subset_function subsetter
-    ((kind : Fun_kind.t), (name : string), (exprs : 'a Expr.Fixed.t list)) =
-  subsetter (kind, name, exprs)
-
 (** Query function expressions in expressions returning back a list of optionals 
  *    with each Some element holding the queried function types.
- * @param select A functor passed to `subset_function` returning a
- *  tuple of the subsetted function's types.
+ * @param select A functor taking in a tuple of the same types as 
+ *  those in `FunApp` and returning a subset of the `FunApp`'s types.
  * @param where A functor that accepts a tuple returned by select
  *  and returns either true or false.
  *  This is used to decide if a function's subsetted tuple should be returned.
@@ -599,7 +588,7 @@ let rec query_expr_functions select (where : 'a -> bool)
   let query_expr = query_expr_functions select where in
   match pattern with
   | FunApp (kind, name, exprs) -> (
-      let subset = subset_function select (kind, name, exprs) in
+      let subset = select (kind, name, exprs) in
       match where subset with
       | true -> List.concat [[Some subset]; List.concat_map ~f:query_expr exprs]
       | false -> List.concat_map ~f:query_expr exprs )

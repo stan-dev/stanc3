@@ -219,8 +219,7 @@ and pp_block_s ppf body =
  *   selected subset of function arguments.
  *   For an example of this function see `pp_rng_in_td`.
  * @param select A functor taking in a tuple of the same types as 
- *  those in `FunApp`. This is passed to `subset_function` returning a tuple 
- *   of the subsetted function's types.
+ *  those in `FunApp` and returning a subset of the `FunApp`'s types.
  * @param where A functor that accepts a tuple returned by select
  *   returning true or false. This is used to decide if a function's
  *   subsetted tuple should be returned.
@@ -244,7 +243,7 @@ let rec query_stmt_functions select (where : 'a -> bool)
       List.concat [query_expr rhs; List.concat_map ~f:query_index lhs]
   | TargetPE expr -> query_expr expr
   | NRFunApp (kind, name, exprs) -> (
-      let subset = subset_function select (kind, name, exprs) in
+      let subset = select (kind, name, exprs) in
       let expr_gets = List.concat_map ~f:query_expr exprs in
       match where subset with
       | true -> List.concat [[Some subset]; expr_gets]
