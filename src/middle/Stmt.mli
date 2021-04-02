@@ -7,7 +7,7 @@ module Fixed : sig
     type ('a, 'b) t =
       | Assignment of 'a lvalue * 'a
       | TargetPE of 'a
-      | NRFunApp of Internal_fun.t Fun_kind.t * 'a list
+      | NRFunApp of Fun_kind.t * 'a list
       | Break
       | Continue
       | Return of 'a option
@@ -123,10 +123,7 @@ module Helpers : sig
     Internal_fun.t -> 'a Fixed.First.t list -> 'b -> ('a, 'b) Fixed.t
 
   val contains_fn_kind :
-       (Internal_fun.t Fun_kind.t -> bool)
-    -> ?init:bool
-    -> ('a, 'b) Fixed.t
-    -> bool
+    (Fun_kind.t -> bool) -> ?init:bool -> ('a, 'b) Fixed.t -> bool
 
   val mkfor :
        Expr.Typed.t
