@@ -6,12 +6,19 @@ module Fixed : sig
     type litType = Int | Real | Str [@@deriving sexp, hash, compare]
 
     type 'a t =
+      (*A string representing an object. *)
       | Var of string
+      (*A literal value like 3, 4.3*)
       | Lit of litType * string
+      (*Function with name and arguments*)
       | FunApp of Fun_kind.t * string * 'a list
+      (*If else statement*)
       | TernaryIf of 'a * 'a * 'a
+      (*Logical and expression*)
       | EAnd of 'a * 'a
+      (*Logical or expression*)
       | EOr of 'a * 'a
+      (*The indexing pattern for accessing inner elements of an object*)
       | Indexed of 'a * 'a Index.t list
     [@@deriving sexp, hash, compare]
 
