@@ -3,7 +3,6 @@ import org.stan.Utils
 
 def utils = new org.stan.Utils()
 def skipExpressionTests = false
-
 /* Functions that runs a sh command and returns the stdout */
 def runShell(String command){
     def output = sh (returnStdout: true, script: "${command}").trim()
