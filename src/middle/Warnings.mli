@@ -12,3 +12,5 @@ val pp_warnings : ?printed_filename:string -> t list Fmt.t
 
 val deprecated : string -> Lexing.position * string -> unit
 (** Register that a deprecated language construct has been found. *)
+
+val add_warning : Location_span.t -> string -> unit

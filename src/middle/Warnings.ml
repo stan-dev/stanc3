@@ -18,6 +18,9 @@ let deprecated token (pos, message) =
   in
   warnings := (span, message) :: !warnings
 
+  let add_warning (span:Location_span.t) (message:string) =
+  warnings := (span, message) :: !warnings
+
 let pp ?printed_filename ppf (span, message) =
   let loc_str =
     if span = Location_span.empty then ""

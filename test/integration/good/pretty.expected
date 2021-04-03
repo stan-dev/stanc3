@@ -985,12 +985,6 @@ model {
   y ~ bernoulli_logit(x * beta_inferred + alpha_inferred);
 }
 
-Info: Found int division at 'bernoulli_logit_glm_old_performance.stan', line 10, column 19 to column 20:
-  j / M
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / M
-If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format bernoulli_logit_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -1019,12 +1013,6 @@ model {
   y ~ bernoulli_logit_glm(x, alpha_inferred, beta_inferred);
 }
 
-Info: Found int division at 'bernoulli_logit_glm_performance.stan', line 10, column 19 to column 20:
-  j / M
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / M
-If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format break-continue.stan
 functions {
   int foo(int a) {
@@ -3502,12 +3490,6 @@ model {
 
 }
 
-Info: Found int division at 'int_div_user.stan', line 7, column 6 to column 10:
-  a[1] / b[2]
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  a[1] * 1.0 / b[2]
-If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format int_fun.stan
 functions {
   int foo(int x) {
@@ -4187,12 +4169,6 @@ model {
   y ~ neg_binomial_2_log(x * beta_inferred + alpha_inferred, sigma);
 }
 
-Info: Found int division at 'neg_binomial_2_log_glm_old_performance.stan', line 11, column 19 to column 20:
-  j / M
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / M
-If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format neg_binomial_2_log_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -4222,12 +4198,6 @@ model {
   y ~ neg_binomial_2_log_glm(x, alpha_inferred, beta_inferred, sigma);
 }
 
-Info: Found int division at 'neg_binomial_2_log_glm_performance.stan', line 11, column 19 to column 20:
-  j / M
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / M
-If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format new-prob-fun-suffixes.stan
 parameters {
   real y;
@@ -4271,12 +4241,6 @@ model {
   y ~ normal(x * beta_inferred + alpha_inferred, sigma);
 }
 
-Info: Found int division at 'normal_id_glm_old_performance.stan', line 11, column 19 to column 20:
-  j / M
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / M
-If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format normal_id_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -4306,12 +4270,6 @@ model {
   y ~ normal_id_glm(x, alpha_inferred, beta_inferred, sigma);
 }
 
-Info: Found int division at 'normal_id_glm_performance.stan', line 11, column 19 to column 20:
-  j / M
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / M
-If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format nullary-unconflicted.stan
 parameters {
   real e;
@@ -4514,12 +4472,6 @@ model {
   y ~ poisson_log(x * beta_inferred + alpha_inferred);
 }
 
-Info: Found int division at 'poisson_log_glm_old_performance.stan', line 10, column 19 to column 20:
-  j / M
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / M
-If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format poisson_log_glm_performance.stan
 transformed data {
   int<lower=0> N = 50;
@@ -4548,12 +4500,6 @@ model {
   y ~ poisson_log_glm(x, alpha_inferred, beta_inferred);
 }
 
-Info: Found int division at 'poisson_log_glm_performance.stan', line 10, column 19 to column 20:
-  j / M
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / M
-If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format pound-comment-deprecated.stan
 data {
   int N;
@@ -5451,12 +5397,6 @@ model {
   y ~ normal(0, 1);
 }
 
-Info: Found int division at 'validate_division_good.stan', line 19, column 7 to column 8:
-  2 / 3
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  2.0 / 3
-If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format validate_division_int_warning.stan
 transformed data {
   real u;
@@ -5473,12 +5413,6 @@ model {
   y ~ normal(0, 1);
 }
 
-Info: Found int division at 'validate_division_int_warning.stan', line 7, column 6 to column 7:
-  j / k
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  j * 1.0 / k
-If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format validate_elt_division_good.stan
 transformed data {
   matrix[3, 3] m;
