@@ -203,7 +203,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       {
         std::vector<local_scalar_t__> m_flat__;
         current_statement__ = 4;
-        assign(m_flat__, context__.vals_r("m"), "assigning variable m_flat__");
+        m_flat__ = context__.vals_r("m");
         current_statement__ = 4;
         pos__ = 1;
         current_statement__ = 4;
@@ -242,7 +242,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -271,12 +271,13 @@ class simple_function_model final : public model_base_crtp<simple_function_model
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
-    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    constexpr bool jacobian__ = false;
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "simple_function_model_namespace::write_array";
     (void) function__;  // suppress unused var warning

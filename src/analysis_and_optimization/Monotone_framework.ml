@@ -29,8 +29,7 @@ let rec free_vars_expr (e : Expr.Typed.t) =
   match e.pattern with
   | Var x -> Set.Poly.singleton x
   | Lit (_, _) -> Set.Poly.empty
-  | FunApp (_, f, l) ->
-      Set.Poly.union_list (Set.Poly.singleton f :: List.map ~f:free_vars_expr l)
+  | FunApp (kind, l) -> free_vars_fnapp kind l
   | TernaryIf (e1, e2, e3) ->
       Set.Poly.union_list (List.map ~f:free_vars_expr [e1; e2; e3])
   | Indexed (e, l) ->
@@ -45,6 +44,13 @@ and free_vars_idx (i : Expr.Typed.t Index.t) =
   | Single e | Upfrom e | MultiIndex e -> free_vars_expr e
   | Between (e1, e2) -> Set.Poly.union (free_vars_expr e1) (free_vars_expr e2)
 
+and free_vars_fnapp kind l =
+  let arg_vars = List.map ~f:free_vars_expr l in
+  match kind with
+  | Fun_kind.UserDefined f ->
+      Set.Poly.union_list (Set.Poly.singleton f :: List.map ~f:free_vars_expr l)
+  | _ -> Set.Poly.union_list arg_vars
+
 (** Calculate the free (non-bound) variables in a statement *)
 let rec free_vars_stmt
     (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t) =
@@ -53,8 +59,7 @@ let rec free_vars_stmt
       free_vars_expr e
   | Assignment ((_, _, l), e) ->
       Set.Poly.union_list (free_vars_expr e :: List.map ~f:free_vars_idx l)
-  | NRFunApp (_, f, l) ->
-      Set.Poly.union_list (Set.Poly.singleton f :: List.map ~f:free_vars_expr l)
+  | NRFunApp (kind, l) -> free_vars_fnapp kind l
   | IfElse (e, b1, Some b2) ->
       Set.Poly.union_list
         [free_vars_expr e; free_vars_stmt b1.pattern; free_vars_stmt b2.pattern]
@@ -314,7 +319,7 @@ let constant_propagation_transfer
             | Decl {decl_id= s; _} | Assignment ((s, _, _ :: _), _) ->
                 Map.remove m s
             | TargetPE _
-             |NRFunApp (_, _, _)
+             |NRFunApp (_, _)
              |Break | Continue | Return _ | Skip
              |IfElse (_, _, _)
              |While (_, _)
@@ -373,7 +378,7 @@ let expression_propagation_transfer
                 in
                 Set.Poly.fold kills ~init:m ~f:kill_var
             | TargetPE _
-             |NRFunApp (_, _, _)
+             |NRFunApp (_, _)
              |Break | Continue | Return _ | Skip
              |IfElse (_, _, _)
              |While (_, _)
@@ -414,7 +419,7 @@ let copy_propagation_transfer (globals : string Set.Poly.t)
                 in
                 Set.Poly.fold kills ~init:m ~f:kill_var
             | TargetPE _
-             |NRFunApp (_, _, _)
+             |NRFunApp (_, _)
              |Break | Continue | Return _ | Skip
              |IfElse (_, _, _)
              |While (_, _)
@@ -435,11 +440,11 @@ let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Fixed.Pattern.t) =
   match s with
   | Assignment ((x, _, _), _) -> Set.Poly.singleton x
   | TargetPE _ -> Set.Poly.singleton "target"
-  | NRFunApp (_, s, _) when String.suffix s 3 = "_lp" ->
+  | NRFunApp ((UserDefined s | StanLib s), _) when String.suffix s 3 = "_lp" ->
       Set.Poly.singleton "target"
   | For {loopvar= x; _} -> Set.Poly.singleton x
   | Decl {decl_id= _; _}
-   |NRFunApp (_, _, _)
+   |NRFunApp (_, _)
    |Break | Continue | Return _ | Skip
    |IfElse (_, _, _)
    |While (_, _)
@@ -478,9 +483,10 @@ let reaching_definitions_transfer
          |For {loopvar= x; _} ->
             Set.filter p ~f:(fun (y, _) -> y = x)
         | TargetPE _ -> Set.filter p ~f:(fun (y, _) -> y = "target")
-        | NRFunApp (_, s, _) when String.suffix s 3 = "_lp" ->
+        | NRFunApp ((UserDefined s | StanLib s), _)
+          when String.suffix s 3 = "_lp" ->
             Set.filter p ~f:(fun (y, _) -> y = "target")
-        | NRFunApp (_, _, _)
+        | NRFunApp (_, _)
          |Break | Continue | Return _ | Skip
          |IfElse (_, _, _)
          |While (_, _)
@@ -523,7 +529,7 @@ let live_variables_transfer (never_kill : string Set.Poly.t)
         | Assignment ((x, _, []), _) | Decl {decl_id= x; _} ->
             Set.Poly.singleton x
         | TargetPE _
-         |NRFunApp (_, _, _)
+         |NRFunApp (_, _)
          |Break | Continue | Return _ | Skip
          |IfElse (_, _, _)
          |While (_, _)
@@ -542,7 +548,7 @@ let rec used_subexpressions_expr (e : Expr.Typed.t) =
     (Expr.Typed.Set.singleton e)
     ( match e.pattern with
     | Var _ | Lit (_, _) -> Expr.Typed.Set.empty
-    | FunApp (_, _, l) ->
+    | FunApp (_, l) ->
         Expr.Typed.Set.union_list (List.map ~f:used_subexpressions_expr l)
     | TernaryIf (e1, e2, e3) ->
         Expr.Typed.Set.union_list
@@ -580,7 +586,7 @@ let rec used_expressions_stmt_help f
         [ f e
         ; used_expressions_stmt_help f b1.pattern
         ; used_expressions_stmt_help f b2.pattern ]
-  | NRFunApp (_, _, l) -> Expr.Typed.Set.union_list (List.map ~f l)
+  | NRFunApp (_, l) -> Expr.Typed.Set.union_list (List.map ~f l)
   | Decl _ | Return None | Break | Continue | Skip -> Expr.Typed.Set.empty
   | IfElse (e, b, None) | While (e, b) ->
       Expr.Typed.Set.union (f e) (used_expressions_stmt_help f b.pattern)
@@ -614,7 +620,7 @@ let top_used_expressions_stmt_help f
         (Expr.Typed.Set.union_list
            (List.map ~f:(used_expressions_idx_help f) l))
   | While (e, _) | IfElse (e, _, _) -> f e
-  | NRFunApp (_, _, l) -> Expr.Typed.Set.union_list (List.map ~f l)
+  | NRFunApp (_, l) -> Expr.Typed.Set.union_list (List.map ~f l)
   | Profile _ | Block _ | SList _ | Decl _
    |Return None
    |Break | Continue | Skip ->
@@ -899,7 +905,7 @@ let rec declared_variables_stmt
   | Decl {decl_id= x; _} -> Set.Poly.singleton x
   | Assignment (_, _)
    |TargetPE _
-   |NRFunApp (_, _, _)
+   |NRFunApp (_, _)
    |Break | Continue | Return _ | Skip ->
       Set.Poly.empty
   | IfElse (_, b1, Some b2) ->
