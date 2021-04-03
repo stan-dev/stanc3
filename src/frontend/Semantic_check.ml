@@ -713,16 +713,18 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
                   Fmt.pf ppf "%a * 1.0 / %a" Pretty_printing.pp_expression x
                     Pretty_printing.pp_expression y
             in
-            let s = Fmt.strf
-              "@[<v>@[<hov 0>Info: Found int division:@]@   @[<hov \
-               2>%a@]@,@[<hov>%a@]@   @[<hov 2>%a@]@,@[<hov>%a@]@]"
-              Pretty_printing.pp_expression {expr; emeta} Fmt.text
-              "Values will be rounded towards zero. If rounding is not \
-               desired you can write the division as"
-              hint () Fmt.text
-              "If rounding is intended please use the integer division \
-               operator %/%." in
-               Warnings.add_warning x.emeta.loc s;
+            let s =
+              Fmt.strf
+                "@[<v>@[<hov 0>Info: Found int division:@]@   @[<hov \
+                 2>%a@]@,@[<hov>%a@]@   @[<hov 2>%a@]@,@[<hov>%a@]@]"
+                Pretty_printing.pp_expression {expr; emeta} Fmt.text
+                "Values will be rounded towards zero. If rounding is not \
+                 desired you can write the division as"
+                hint () Fmt.text
+                "If rounding is intended please use the integer division \
+                 operator %/%."
+            in
+            Warnings.add_warning x.emeta.loc s ;
             (x, y)
         | _ -> (x, y)
       in

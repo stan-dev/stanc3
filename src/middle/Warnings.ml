@@ -6,7 +6,7 @@ let warnings = ref []
 let init () = warnings := []
 let collect () = List.rev !warnings
 
-let add_warning (span:Location_span.t) (message:string) =
+let add_warning (span : Location_span.t) (message : string) =
   warnings := (span, message) :: !warnings
 
 let deprecated token (pos, message) =
