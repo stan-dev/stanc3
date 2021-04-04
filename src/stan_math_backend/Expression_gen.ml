@@ -593,8 +593,8 @@ let rec query_expr_functions select (where : 'a -> bool)
     Expr.Fixed.({pattern; _}) =
   let query_expr = query_expr_functions select where in
   match pattern with
-  | FunApp (kind, name, exprs) -> (
-      let subset = select (kind, name, exprs) in
+  | FunApp (kind, exprs) -> (
+      let subset = select (kind, exprs) in
       match where subset with
       | true -> List.concat [[Some subset]; List.concat_map ~f:query_expr exprs]
       | false -> List.concat_map ~f:query_expr exprs )

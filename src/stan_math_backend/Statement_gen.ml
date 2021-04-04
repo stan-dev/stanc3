@@ -236,8 +236,8 @@ let rec query_stmt_functions select (where : 'a -> bool)
       in
       List.concat [query_expr rhs; List.concat_map ~f:query_index lhs]
   | TargetPE expr -> query_expr expr
-  | NRFunApp (kind, name, exprs) -> (
-      let subset = select (kind, name, exprs) in
+  | NRFunApp (kind, exprs) -> (
+      let subset = select (kind, exprs) in
       let expr_gets = List.concat_map ~f:query_expr exprs in
       match where subset with
       | true -> List.concat [[Some subset]; expr_gets]

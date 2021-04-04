@@ -458,7 +458,11 @@ let check_suffix suff name = String.is_suffix name ~suffix:suff
  *  The list is recursivly queried for any functions ending in '_rng'
  *)
 let pp_rng_in_td ppf {Program.prepare_data; _} =
-  let get_name (_, name, _) = name in
+  let get_name (kind, _) =
+    match kind with
+    | Fun_kind.StanLib name | UserDefined name -> name
+    | CompilerInternal name -> Internal_fun.to_string name
+  in
   let query_getter = query_stmt_functions get_name (check_suffix "_rng") in
   let rngs_list = List.concat_map ~f:query_getter prepare_data in
   let subset_rngs iter = match iter with Some _ -> true | None -> false in
