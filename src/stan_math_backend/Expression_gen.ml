@@ -51,7 +51,7 @@ let rec local_scalar ut ad =
 let minus_one e =
   { e with
     Expr.Fixed.pattern=
-      FunApp (StanLib, Operator.to_string Minus, [e; Expr.Helpers.loop_bottom])
+      FunApp (StanLib (Operator.to_string Minus), [e; Expr.Helpers.loop_bottom])
   }
 
 let is_single_index = function Index.Single _ -> true | _ -> false
@@ -290,7 +290,7 @@ and gen_fun_app ppf fname es =
       | {Expr.Fixed.pattern= Var name; meta= {Expr.Typed.Meta.type_= UFun _; _}}
         as e ->
           { e with
-            pattern= FunApp (StanLib, name ^ functor_suffix_select fname, [])
+            pattern= FunApp (StanLib (name ^ functor_suffix_select fname), [])
           }
       | e -> e
     in
@@ -323,7 +323,10 @@ and gen_fun_app ppf fname es =
         , "integrate_ode_rk45"
         , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl ) ->
           (fname, f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl)
-      | true, x, {pattern= FunApp (_, f, _); _} :: grainsize :: container :: tl
+      | ( true
+        , x
+        , {pattern= FunApp ((UserDefined f | StanLib f), _); _}
+          :: grainsize :: container :: tl )
         when Stan_math_signatures.is_reduce_sum_fn x ->
           let chop_functor_suffix =
             String.chop_suffix_exn ~suffix:reduce_sum_functor_suffix
@@ -351,7 +354,9 @@ and gen_fun_app ppf fname es =
       | true, x, f :: y0 :: t0 :: ts :: tl
         when Stan_math_signatures.is_variadic_ode_fn x ->
           (fname, f :: y0 :: t0 :: ts :: msgs :: tl)
-      | true, "map_rect", {pattern= FunApp (_, f, _); _} :: tl ->
+      | ( true
+        , "map_rect"
+        , {pattern= FunApp ((UserDefined f | StanLib f), _); _} :: tl ) ->
           let next_map_rect_id = Hashtbl.length map_rect_calls + 1 in
           Hashtbl.add_exn map_rect_calls ~key:next_map_rect_id ~data:f ;
           (strf "%s<%d, %s>" fname next_map_rect_id f, tl @ [msgs])
@@ -370,8 +375,8 @@ and gen_fun_app ppf fname es =
   in
   pf ppf "@[<hov 2>%a@]" pp es
 
-and pp_constrain_funapp constrain_or_un_str ppf = function
-  | var :: {Expr.Fixed.pattern= Lit (Str, constraint_flavor); _} :: args ->
+and pp_constrain_funapp constrain_or_un_str constraint_flavor ppf = function
+  | var :: args ->
       pf ppf "@[<hov 2>stan::math::%s_%s(@,%a@])" constraint_flavor
         constrain_or_un_str (list ~sep:comma pp_expr) (var :: args)
   | es -> raise_s [%message "Bad constraint " (es : Expr.Typed.t list)]
@@ -390,15 +395,15 @@ and pp_compiler_internal_fn ad ut f ppf es =
       (list ~sep:comma (pp_promoted ad ut))
       es
   in
-  match Internal_fun.of_string_opt f with
-  | Some FnMakeArray ->
+  match f with
+  | Internal_fun.FnMakeArray ->
       let ut =
         match ut with
         | UnsizedType.UArray ut -> ut
         | _ -> raise_s [%message "Array literal must have array type"]
       in
       pp_array_literal ut ppf es
-  | Some FnMakeRowVec -> (
+  | FnMakeRowVec -> (
     match ut with
     | UnsizedType.URowVector ->
         let st = local_scalar ut (promote_adtype es) in
@@ -412,25 +417,32 @@ and pp_compiler_internal_fn ad ut f ppf es =
         raise_s
           [%message
             "Unexpected type for row vector literal" (ut : UnsizedType.t)] )
-  | Some FnConstrain -> pp_constrain_funapp "constrain" ppf es
-  | Some FnUnconstrain -> pp_constrain_funapp "free" ppf es
-  | Some FnReadData -> read_data ut ppf es
-  | Some FnReadParam -> (
-    match es with
-    | {Expr.Fixed.pattern= Lit (Str, base_type); _} :: dims ->
-        pf ppf "@[<hov 2>in__.%s(@,%a)@]" base_type (list ~sep:comma pp_expr)
-          dims
-    | _ -> raise_s [%message "emit ReadParam with " (es : Expr.Typed.t list)] )
-  | _ -> gen_fun_app ppf f es
+  | FnConstrain flavor -> pp_constrain_funapp "constrain" flavor ppf es
+  | FnUnconstrain flavor -> pp_constrain_funapp "free" flavor ppf es
+  | FnReadData -> read_data ut ppf es
+  | FnReadParam constraint_opt ->
+      let constraint_suffix_opt =
+        Option.map
+          ~f:(fun constraint_string -> "_constrain_" ^ constraint_string)
+          constraint_opt
+      in
+      let jacobian_param_opt =
+        Option.map ~f:(fun _ -> ", jacobian__") constraint_opt
+      in
+      pf ppf "@[<hov 2>in__.template read%a<%a%a>(@,%a)@]"
+        (Fmt.option Fmt.string) constraint_suffix_opt pp_unsizedtype_local
+        (UnsizedType.AutoDiffable, ut)
+        (Fmt.option Fmt.string) jacobian_param_opt (list ~sep:comma pp_expr) es
+  | FnDeepCopy -> gen_fun_app ppf "stan::model::deep_copy" es
+  | _ -> gen_fun_app ppf (Internal_fun.to_string f) es
 
 and pp_promoted ad ut ppf e =
   match e with
   | Expr.({Fixed.meta= {Typed.Meta.type_; adlevel; _}; _})
     when type_ = ut && adlevel = ad ->
       pp_expr ppf e
-  | {pattern= FunApp (CompilerInternal, f, es); _}
-    when Internal_fun.of_string_opt f = Some FnMakeArray ->
-      pp_compiler_internal_fn ad ut f ppf es
+  | {pattern= FunApp (CompilerInternal Internal_fun.FnMakeArray, es); _} ->
+      pp_compiler_internal_fn ad ut Internal_fun.FnMakeArray ppf es
   | _ ->
       pf ppf "stan::math::promote_scalar<%s>(@[<hov>%a@])" (local_scalar ut ad)
         pp_expr e
@@ -466,22 +478,20 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
   | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> pf ppf "%s" s
   | FunApp
-      ( StanLib
-      , op
+      ( StanLib op
       , [ { meta= {type_= URowVector; _}
-          ; pattern= FunApp (CompilerInternal, f, es) } ] )
-    when Operator.(Some Transpose = of_string_opt op)
-         && Internal_fun.(Some FnMakeRowVec = of_string_opt f) ->
+          ; pattern= FunApp (CompilerInternal FnMakeRowVec, es) } ] )
+    when Operator.(Some Transpose = of_string_opt op) ->
       let st = local_scalar UVector (promote_adtype es) in
       if List.is_empty es then pf ppf "Eigen::Matrix<%s,-1,1>(0)" st
       else
         pf ppf "(Eigen::Matrix<%s,-1,1>(%d) <<@ %a).finished()" st
           (List.length es) (list ~sep:comma pp_expr) es
-  | FunApp (StanLib, f, es) -> gen_fun_app ppf f es
-  | FunApp (CompilerInternal, f, es) ->
-      pp_compiler_internal_fn meta.adlevel meta.type_
-        (stan_namespace_qualify f) ppf es
-  | FunApp (UserDefined, f, es) -> pp_user_defined_fun ppf (f, es)
+  | FunApp (StanLib f, es) -> gen_fun_app ppf f es
+  | FunApp (CompilerInternal f, es) ->
+      pp_compiler_internal_fn meta.adlevel meta.type_ f ppf es
+      (* stan_namespace_qualify?  *)
+  | FunApp (UserDefined f, es) -> pp_user_defined_fun ppf (f, es)
   | EAnd (e1, e2) -> pp_logical_op ppf "&&" e1 e2
   | EOr (e1, e2) -> pp_logical_op ppf "||" e1 e2
   | TernaryIf (ec, et, ef) ->
@@ -496,11 +506,8 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
   | Indexed (e, []) -> pp_expr ppf e
   | Indexed (e, idx) -> (
     match e.pattern with
-    | FunApp (CompilerInternal, f, _)
-      when Some Internal_fun.FnReadParam = Internal_fun.of_string_opt f ->
-        pp_expr ppf e
-    | FunApp (CompilerInternal, f, _)
-      when Some Internal_fun.FnReadData = Internal_fun.of_string_opt f ->
+    | FunApp (CompilerInternal (FnReadParam _), _) -> pp_expr ppf e
+    | FunApp (CompilerInternal FnReadData, _) ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
     | _
       when List.for_all ~f:dont_need_range_check idx
@@ -537,20 +544,19 @@ let%expect_test "pp_expr4" =
   [%expect {| 112 |}]
 
 let%expect_test "pp_expr5" =
-  printf "%s" (pp_unlocated (FunApp (StanLib, "pi", []))) ;
+  printf "%s" (pp_unlocated (FunApp (StanLib "pi", []))) ;
   [%expect {| stan::math::pi() |}]
 
 let%expect_test "pp_expr6" =
   printf "%s"
-    (pp_unlocated (FunApp (StanLib, "sqrt", [dummy_locate (Lit (Int, "123"))]))) ;
+    (pp_unlocated (FunApp (StanLib "sqrt", [dummy_locate (Lit (Int, "123"))]))) ;
   [%expect {| stan::math::sqrt(123) |}]
 
 let%expect_test "pp_expr7" =
   printf "%s"
     (pp_unlocated
        (FunApp
-          ( StanLib
-          , "atan"
+          ( StanLib "atan"
           , [dummy_locate (Lit (Int, "123")); dummy_locate (Lit (Real, "1.2"))]
           ))) ;
   [%expect {| stan::math::atan(123, 1.2) |}]
@@ -571,7 +577,7 @@ let%expect_test "pp_expr10" =
 let%expect_test "pp_expr11" =
   printf "%s"
     (pp_unlocated
-       (FunApp (UserDefined, "poisson_rng", [dummy_locate (Lit (Int, "123"))]))) ;
+       (FunApp (UserDefined "poisson_rng", [dummy_locate (Lit (Int, "123"))]))) ;
   [%expect {| poisson_rng(123, base_rng__, pstream__) |}]
 
 (** Query function expressions in expressions returning back a list of optionals 
