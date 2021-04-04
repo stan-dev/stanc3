@@ -10,7 +10,7 @@ module Fixed = struct
     type ('a, 'b) t =
       | Assignment of 'a lvalue * 'a
       | TargetPE of 'a
-      | NRFunApp of Internal_fun.t Fun_kind.t * 'a list
+      | NRFunApp of Fun_kind.t * 'a list
       | Break
       | Continue
       | Return of 'a option

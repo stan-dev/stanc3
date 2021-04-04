@@ -29,13 +29,7 @@ let rec free_vars_expr (e : Expr.Typed.t) =
   match e.pattern with
   | Var x -> Set.Poly.singleton x
   | Lit (_, _) -> Set.Poly.empty
-  | FunApp (kind, l) -> (
-      let arg_vars = List.map ~f:free_vars_expr l in
-      match kind with
-      | UserDefined f ->
-          Set.Poly.union_list
-            (Set.Poly.singleton f :: List.map ~f:free_vars_expr l)
-      | _ -> Set.Poly.union_list arg_vars )
+  | FunApp (kind, l) -> free_vars_fnapp kind l
   | TernaryIf (e1, e2, e3) ->
       Set.Poly.union_list (List.map ~f:free_vars_expr [e1; e2; e3])
   | Indexed (e, l) ->
@@ -50,6 +44,13 @@ and free_vars_idx (i : Expr.Typed.t Index.t) =
   | Single e | Upfrom e | MultiIndex e -> free_vars_expr e
   | Between (e1, e2) -> Set.Poly.union (free_vars_expr e1) (free_vars_expr e2)
 
+and free_vars_fnapp kind l =
+  let arg_vars = List.map ~f:free_vars_expr l in
+  match kind with
+  | Fun_kind.UserDefined f ->
+      Set.Poly.union_list (Set.Poly.singleton f :: List.map ~f:free_vars_expr l)
+  | _ -> Set.Poly.union_list arg_vars
+
 (** Calculate the free (non-bound) variables in a statement *)
 let rec free_vars_stmt
     (s : (Expr.Typed.t, Stmt.Located.t) Stmt.Fixed.Pattern.t) =
@@ -58,13 +59,7 @@ let rec free_vars_stmt
       free_vars_expr e
   | Assignment ((_, _, l), e) ->
       Set.Poly.union_list (free_vars_expr e :: List.map ~f:free_vars_idx l)
-  | NRFunApp (kind, l) -> (
-      let arg_vars = List.map ~f:free_vars_expr l in
-      match kind with
-      | UserDefined f ->
-          Set.Poly.union_list
-            (Set.Poly.singleton f :: List.map ~f:free_vars_expr l)
-      | _ -> Set.Poly.union_list arg_vars )
+  | NRFunApp (kind, l) -> free_vars_fnapp kind l
   | IfElse (e, b1, Some b2) ->
       Set.Poly.union_list
         [free_vars_expr e; free_vars_stmt b1.pattern; free_vars_stmt b2.pattern]

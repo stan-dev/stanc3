@@ -235,21 +235,18 @@ let rec inline_function_expression propto adt fim
       | CompilerInternal _ ->
           (d_list, s_list, {e with pattern= FunApp (kind, es)})
       | UserDefined fname | StanLib fname -> (
-          let s =
+          let fname =
             if propto then fname
             else Middle.Utils.stdlib_distribution_name fname
           in
-          match Map.find fim s with
+          match Map.find fim fname with
           | None ->
-              ( d_list
-              , s_list
-              , { e with
-                  pattern=
-                    FunApp
-                      ( ( match kind with
-                        | UserDefined _ -> UserDefined s
-                        | _ -> StanLib s )
-                      , es ) } )
+              let fun_kind =
+                match kind with
+                | Fun_kind.UserDefined _ -> Fun_kind.UserDefined fname
+                | _ -> StanLib fname
+              in
+              (d_list, s_list, {e with pattern= FunApp (fun_kind, es)})
           | Some (rt, args, b) ->
               let x = Gensym.generate ~prefix:"inline_" () in
               let handle = handle_early_returns (Some x) in

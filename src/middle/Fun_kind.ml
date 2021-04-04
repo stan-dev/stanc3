@@ -1,8 +1,8 @@
 open Core_kernel
 
-type 'internal t =
+type t =
   | StanLib of string
-  | CompilerInternal of 'internal
+  | CompilerInternal of Internal_fun.t
   | UserDefined of string
 [@@deriving compare, sexp, hash]
 

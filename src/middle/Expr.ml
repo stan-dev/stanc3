@@ -10,7 +10,7 @@ module Fixed = struct
     type 'a t =
       | Var of string
       | Lit of litType * string
-      | FunApp of Internal_fun.t Fun_kind.t * 'a list
+      | FunApp of Fun_kind.t * 'a list
       | TernaryIf of 'a * 'a * 'a
       | EAnd of 'a * 'a
       | EOr of 'a * 'a
@@ -113,8 +113,8 @@ module Labelled = struct
   let adlevel_of Fixed.({meta= Meta.({adlevel; _}); _}) = adlevel
   let loc_of Fixed.({meta= Meta.({loc; _}); _}) = loc
 
-  (** Traverse a typed expression adding unique labels using locally mutable 
-      state 
+  (** Traverse a typed expression adding unique labels using locally mutable
+      state
   *)
   let label ?(init = Label.Int_label.init) (expr : Typed.t) : t =
     let lbl = ref init in
