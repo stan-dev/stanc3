@@ -837,6 +837,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       current_statement__ = 756;
       context__.validate_dims("data initialization","d_int","int",
            std::vector<size_t>{});
+      d_int = std::numeric_limits<int>::min(); 
       
       current_statement__ = 756;
       d_int = context__.vals_i("d_int")[(1 - 1)];
@@ -845,12 +846,15 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       current_statement__ = 758;
       context__.validate_dims("data initialization","d_int_array","int",
            std::vector<size_t>{static_cast<size_t>(d_int)});
+      d_int_array = std::vector<int>(d_int, std::numeric_limits<int>::min());
+       
       
       current_statement__ = 758;
       d_int_array = context__.vals_i("d_int_array");
       current_statement__ = 759;
       context__.validate_dims("data initialization","d_real","double",
            std::vector<size_t>{});
+      d_real = std::numeric_limits<double>::quiet_NaN(); 
       
       current_statement__ = 759;
       d_real = context__.vals_r("d_real")[(1 - 1)];
@@ -859,6 +863,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       current_statement__ = 761;
       context__.validate_dims("data initialization","d_real_array","double",
            std::vector<size_t>{static_cast<size_t>(d_int)});
+      d_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
+       
       
       current_statement__ = 761;
       d_real_array = context__.vals_r("d_real_array");
@@ -867,6 +873,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       current_statement__ = 763;
       context__.validate_dims("data initialization","d_vector","double",
            std::vector<size_t>{static_cast<size_t>(d_int)});
+      d_vector = Eigen::Matrix<double, -1, 1>(d_int); 
       
       {
         std::vector<local_scalar_t__> d_vector_flat__;
@@ -888,6 +895,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       current_statement__ = 765;
       context__.validate_dims("data initialization","d_row_vector","double",
            std::vector<size_t>{static_cast<size_t>(d_int)});
+      d_row_vector = Eigen::Matrix<double, 1, -1>(d_int); 
       
       {
         std::vector<local_scalar_t__> d_row_vector_flat__;
@@ -6459,6 +6467,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       current_statement__ = 25;
       context__.validate_dims("data initialization","d_int","int",
            std::vector<size_t>{});
+      d_int = std::numeric_limits<int>::min(); 
       
       current_statement__ = 25;
       d_int = context__.vals_i("d_int")[(1 - 1)];
@@ -6467,12 +6476,15 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       current_statement__ = 27;
       context__.validate_dims("data initialization","d_int_array","int",
            std::vector<size_t>{static_cast<size_t>(d_int)});
+      d_int_array = std::vector<int>(d_int, std::numeric_limits<int>::min());
+       
       
       current_statement__ = 27;
       d_int_array = context__.vals_i("d_int_array");
       current_statement__ = 28;
       context__.validate_dims("data initialization","d_real","double",
            std::vector<size_t>{});
+      d_real = std::numeric_limits<double>::quiet_NaN(); 
       
       current_statement__ = 28;
       d_real = context__.vals_r("d_real")[(1 - 1)];
@@ -6481,6 +6493,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       current_statement__ = 30;
       context__.validate_dims("data initialization","d_real_array","double",
            std::vector<size_t>{static_cast<size_t>(d_int)});
+      d_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
+       
       
       current_statement__ = 30;
       d_real_array = context__.vals_r("d_real_array");
@@ -6489,6 +6503,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       current_statement__ = 32;
       context__.validate_dims("data initialization","d_vector","double",
            std::vector<size_t>{static_cast<size_t>(d_int)});
+      d_vector = Eigen::Matrix<double, -1, 1>(d_int); 
       
       {
         std::vector<local_scalar_t__> d_vector_flat__;
@@ -6510,6 +6525,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       current_statement__ = 34;
       context__.validate_dims("data initialization","d_row_vector","double",
            std::vector<size_t>{static_cast<size_t>(d_int)});
+      d_row_vector = Eigen::Matrix<double, 1, -1>(d_int); 
       
       {
         std::vector<local_scalar_t__> d_row_vector_flat__;
