@@ -46,8 +46,6 @@ let pp_set_size ppf (decl_id, st, adtype) =
   in
   pf ppf "@[<hov 0>%s = %a;@,%a @]@," decl_id pp_size_ctor st print_fill st
 
-
-
 let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in
   strf "@[<v>%a@]" pp_set_size
@@ -61,8 +59,8 @@ let%expect_test "set size mat array" =
 (** [pp_for_loop ppf (loopvar, lower, upper, pp_body, body)] tries to
     pretty print a for-loop from lower to upper given some loopvar.*)
 let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
-  pf ppf "@[for (@[int %s = %a;@ %s <= %a;@ ++%s@])" loopvar pp_expr
-    lower loopvar pp_expr upper loopvar ;
+  pf ppf "@[for (@[int %s = %a;@ %s <= %a;@ ++%s@])" loopvar pp_expr lower
+    loopvar pp_expr upper loopvar ;
   pf ppf " %a@]" pp_body body
 
 let rec integer_el_type = function

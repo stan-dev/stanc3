@@ -389,7 +389,7 @@ let pp_ctor ppf p =
           match is_input_data with
           | true ->
               pp_validate_data ppf (decl_id, st) ;
-              pp_set_size ppf (decl_id, st, DataOnly);
+              pp_set_size ppf (decl_id, st, DataOnly)
           | false -> () )
       | Unsized _ -> () )
     | _ -> pp_statement ppf s
@@ -499,8 +499,8 @@ let pp_get_dims ppf {Program.output_vars; _} =
     ["std::vector<std::vector<size_t>>& dimss__"]
     nop
     (fun ppf ->
-      pf ppf "@[<hov 2>dimss__ = std::vector<std::vector<size_t>>{%a};@]@," pp_output_var
-        dim_list )
+      pf ppf "@[<hov 2>dimss__ = std::vector<std::vector<size_t>>{%a};@]@,"
+        pp_output_var dim_list )
     ~cv_attr:["const"]
 
 let pp_method_b ppf rt name params intro ?(outro = nop) ?(cv_attr = ["const"])
