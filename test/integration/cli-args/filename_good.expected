@@ -59,8 +59,10 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
       
       pos__ = 1;
       current_statement__ = 1;
+      p = std::numeric_limits<double>::quiet_NaN(); 
       
       current_statement__ = 2;
+      q = std::numeric_limits<double>::quiet_NaN(); 
       
       current_statement__ = 2;
       q = (p + 5);

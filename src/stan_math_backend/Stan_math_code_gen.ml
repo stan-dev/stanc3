@@ -389,8 +389,7 @@ let pp_ctor ppf p =
           match is_input_data with
           | true ->
               pp_validate_data ppf (decl_id, st) ;
-              pp_set_size ppf (decl_id, st, DataOnly)
-          | false -> () )
+          | false -> pp_set_size ppf (decl_id, st, DataOnly) )
       | Unsized _ -> () )
     | _ -> pp_statement ppf s
   in
