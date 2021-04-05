@@ -7,6 +7,7 @@ type t =
   | FnNegInf
   (* In AST_to_MIR being used as StanLib *)
   | FnReadData
+  | FnReadUnconstrainData of string option
   (* XXX move these to a backend specific file?*)
   | FnReadParam of string option
   | FnWriteParam

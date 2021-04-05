@@ -202,36 +202,52 @@ let transform_args = function
   | transform ->
       Program.fold_transformation (fun args arg -> args @ [arg]) [] transform
 
+(*
+  Get the dimension expressions that are expected by constrain/unconstrain
+  functions for a sized type.
+
+  For constrains that return square / lower triangular matrices the C++
+  only wants one of the matrix dimensions.
+*)
+let read_constrain_dims constrain_transform st =
+  let rec constrain_get_dims st =
+    match st with
+    | SizedType.SInt | SReal -> []
+    | SVector d | SRowVector d -> [d]
+    | SMatrix (_, dim2) -> [dim2]
+    | SArray (t, dim) -> dim :: constrain_get_dims t
+  in
+  match constrain_transform with
+  | Program.CholeskyCorr | Correlation | Covariance -> constrain_get_dims st
+  | _ -> SizedType.get_dims st
+
+let data_unconstrain_read smeta
+    (decl_id, Program.({out_constrained_st= cst; out_trans; _})) =
+  let ut = SizedType.to_unsized cst in
+  let emeta =
+    Expr.Typed.Meta.create ~loc:smeta ~type_:ut ~adlevel:AutoDiffable ()
+  in
+  let transform_args = transform_args out_trans in
+  let read =
+    Expr.(
+      Helpers.(
+        internal_funapp
+          (FnReadUnconstrainData (constraint_to_string out_trans Unconstrain))
+          (transform_args @ read_constrain_dims out_trans cst))
+        Typed.Meta.{emeta with type_= ut})
+  in
+  Stmt.Fixed.
+    {pattern= Pattern.Assignment ((decl_id, ut, []), read); meta= smeta}
+
 let param_read smeta
     (decl_id, Program.({out_constrained_st= cst; out_block; out_trans; _})) =
   if not (out_block = Parameters) then []
   else
     let ut = SizedType.to_unsized cst in
-    let decl_var =
-      Expr.Fixed.
-        { pattern= Var decl_id
-        ; meta=
-            Expr.Typed.Meta.create ~loc:smeta ~type_:ut ~adlevel:AutoDiffable
-              () }
+    let emeta =
+      Expr.Typed.Meta.create ~loc:smeta ~type_:ut ~adlevel:AutoDiffable ()
     in
     let transform_args = transform_args out_trans in
-    (*
-      For constrains that return square / lower triangular matrices the C++
-      only wants one of the matrix dimensions.
-    *)
-    let rec constrain_get_dims st =
-      match st with
-      | SizedType.SInt | SReal -> []
-      | SVector d | SRowVector d -> [d]
-      | SMatrix (_, dim2) -> [dim2]
-      | SArray (t, dim) -> dim :: constrain_get_dims t
-    in
-    let read_constrain_dims constrain_transform st =
-      match constrain_transform with
-      | Program.CholeskyCorr | Correlation | Covariance ->
-          constrain_get_dims st
-      | _ -> SizedType.get_dims st
-    in
     let read =
       Expr.(
         Helpers.(
@@ -239,9 +255,9 @@ let param_read smeta
             (FnReadParam (constraint_to_string out_trans Constrain))
             ( transform_args
             @ ( if out_trans = Identity then []
-              else [{decl_var with pattern= Var "lp__"}] )
+              else [{Expr.Fixed.pattern= Var "lp__"; meta= emeta}] )
             @ read_constrain_dims out_trans cst ))
-          Typed.Meta.{decl_var.meta with type_= ut})
+          Typed.Meta.{emeta with type_= ut})
     in
     [ Stmt.Fixed.
         {pattern= Pattern.Assignment ((decl_id, ut, []), read); meta= smeta} ]
@@ -395,6 +411,25 @@ let gen_write_unconstrained (decl_id, sizedtype) =
   in
   Stmt.Helpers.for_eigen sizedtype writefn expr Location_span.empty
 
+(* Statements to read and unconstrain a parameter then write it back *)
+let data_unconstrain_transform smeta (decl_id, outvar) =
+  if not (outvar.Program.out_block = Parameters) then []
+  else
+    (* This renames the variable v to v_free__ for clarity *)
+    let decl_id =
+      if outvar.Program.out_trans = Identity then decl_id
+      else decl_id ^ "_free__"
+    in
+    [ Stmt.Fixed.
+        { pattern=
+            Decl
+              { decl_adtype= UnsizedType.AutoDiffable
+              ; decl_id
+              ; decl_type= Type.Sized outvar.Program.out_unconstrained_st }
+        ; meta= smeta }
+    ; data_unconstrain_read smeta (decl_id, outvar)
+    ; gen_write_unconstrained (decl_id, outvar.Program.out_unconstrained_st) ]
+
 let rec contains_var_expr is_vident accum Expr.Fixed.({pattern; _}) =
   accum
   ||
@@ -528,23 +563,6 @@ let trans_prog (p : Program.Typed.t) =
     |> List.map ~f:(fun pattern ->
            Stmt.Fixed.{pattern; meta= Location_span.empty} )
   in
-  let get_pname_cst = function
-    | name, {Program.out_block= Parameters; out_constrained_st; _} ->
-        Some (name, out_constrained_st)
-    | _ -> None
-  in
-  let get_pname_ust = function
-    | ( name
-      , { Program.out_block= Parameters
-        ; out_unconstrained_st
-        ; out_trans= Identity; _ } ) ->
-        Some (name, out_unconstrained_st)
-    | name, {Program.out_block= Parameters; out_unconstrained_st; _} ->
-        Some (name ^ "_free__", out_unconstrained_st)
-    | _ -> None
-  in
-  let constrained_params = List.filter_map ~f:get_pname_cst p.output_vars in
-  let free_params = List.filter_map ~f:get_pname_ust p.output_vars in
   let param_writes, tparam_writes, gq_writes =
     List.map p.output_vars
       ~f:(fun (name, {out_constrained_st= st; out_block; _}) ->
@@ -667,8 +685,16 @@ let trans_prog (p : Program.Typed.t) =
         @ to_matrix_cl_stmts
     ; transform_inits=
         init_pos
-        @ (p.transform_inits |> add_reads constrained_params data_read)
-        @ List.map ~f:gen_write_unconstrained free_params
+        @ List.concat_map
+            ~f:(data_unconstrain_transform Location_span.empty)
+            (List.filter
+               ~f:(fun (_, ov) -> ov.Program.out_block = Parameters)
+               p.output_vars)
+        (* This would let us generate code by adding it to existing declarations, but those
+           declarations would not be doing anything before we added to them, so I think the
+           map approach makes more sense *)
+        (* @ ( p.transform_inits
+         *   |> add_reads p.output_vars data_unconstrain_transform ) *)
     ; generate_quantities }
   in
   Program.(

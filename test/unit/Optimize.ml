@@ -2328,18 +2328,6 @@ model {
         if(PNot__(emit_generated_quantities__)) return;
       }
 
-      transform_inits {
-        data matrix[3, 2] x_matrix;
-        data matrix[2, 4] y_matrix;
-        data matrix[4, 2] z_matrix;
-        data vector[2] x_vector;
-        data vector[3] y_vector;
-        data matrix[2, 2] x_cov;
-        data vector[3] x_cov_free__;
-        x_cov_free__ = (FnUnconstrain cov_matrix)__(x_cov);
-        data real theta_u;
-        data real phi_u;
-      }
 
       output_vars {
         parameters matrix[3, 2] x_matrix; //matrix[3, 2]
@@ -3187,9 +3175,6 @@ let%expect_test "adlevel_optimization" =
         if(PNot__(emit_generated_quantities__)) return;
       }
 
-      transform_inits {
-        data real w;
-      }
 
       output_vars {
         parameters real w; //real
@@ -3388,9 +3373,6 @@ let%expect_test "adlevel_optimization 2" =
         if(PNot__(emit_generated_quantities__)) return;
       }
 
-      transform_inits {
-        data real w;
-      }
 
       output_vars {
         parameters real w; //real

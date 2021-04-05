@@ -274,41 +274,23 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      double mu;
-      mu = std::numeric_limits<double>::quiet_NaN();
+      local_scalar_t__ mu;
+      mu = DUMMY_VAR__;
       
-      current_statement__ = 1;
-      mu = context__.vals_r("mu")[(1 - 1)];
-      double tau;
-      tau = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 2;
-      tau = context__.vals_r("tau")[(1 - 1)];
-      double tau_free__;
-      tau_free__ = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 2;
-      tau_free__ = stan::math::lb_free(tau, 0);
-      Eigen::Matrix<double, -1, 1> theta_tilde;
-      theta_tilde = Eigen::Matrix<double, -1, 1>(J);
-      stan::math::fill(theta_tilde, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> theta_tilde_flat__;
-        current_statement__ = 3;
-        theta_tilde_flat__ = context__.vals_r("theta_tilde");
-        current_statement__ = 3;
-        pos__ = 1;
-        current_statement__ = 3;
-        for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
-          current_statement__ = 3;
-          assign(theta_tilde, theta_tilde_flat__[(pos__ - 1)],
-            "assigning variable theta_tilde", index_uni(sym1__));
-          current_statement__ = 3;
-          pos__ = (pos__ + 1);}
-      }
+      mu = deserializer.read<local_scalar_t__>();
       vars__.emplace_back(mu);
+      local_scalar_t__ tau_free__;
+      tau_free__ = DUMMY_VAR__;
+      
+      tau_free__ = deserializer.read_free_lb<local_scalar_t__>(0);
       vars__.emplace_back(tau_free__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> theta_tilde;
+      theta_tilde = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
+      stan::math::fill(theta_tilde, DUMMY_VAR__);
+      
+      assign(theta_tilde,
+        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J),
+        "assigning variable theta_tilde");
       for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
         vars__.emplace_back(theta_tilde[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
@@ -659,11 +641,10 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      double bar;
-      bar = std::numeric_limits<double>::quiet_NaN();
+      local_scalar_t__ bar;
+      bar = DUMMY_VAR__;
       
-      current_statement__ = 1;
-      bar = context__.vals_r("bar")[(1 - 1)];
+      bar = deserializer.read<local_scalar_t__>();
       vars__.emplace_back(bar);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1092,41 +1073,23 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      double mu;
-      mu = std::numeric_limits<double>::quiet_NaN();
+      local_scalar_t__ mu;
+      mu = DUMMY_VAR__;
       
-      current_statement__ = 1;
-      mu = context__.vals_r("mu")[(1 - 1)];
-      double tau;
-      tau = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 2;
-      tau = context__.vals_r("tau")[(1 - 1)];
-      double tau_free__;
-      tau_free__ = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 2;
-      tau_free__ = stan::math::lb_free(tau, 0);
-      Eigen::Matrix<double, -1, 1> theta_tilde;
-      theta_tilde = Eigen::Matrix<double, -1, 1>(J);
-      stan::math::fill(theta_tilde, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> theta_tilde_flat__;
-        current_statement__ = 3;
-        theta_tilde_flat__ = context__.vals_r("theta_tilde");
-        current_statement__ = 3;
-        pos__ = 1;
-        current_statement__ = 3;
-        for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
-          current_statement__ = 3;
-          assign(theta_tilde, theta_tilde_flat__[(pos__ - 1)],
-            "assigning variable theta_tilde", index_uni(sym1__));
-          current_statement__ = 3;
-          pos__ = (pos__ + 1);}
-      }
+      mu = deserializer.read<local_scalar_t__>();
       vars__.emplace_back(mu);
+      local_scalar_t__ tau_free__;
+      tau_free__ = DUMMY_VAR__;
+      
+      tau_free__ = deserializer.read_free_lb<local_scalar_t__>(0);
       vars__.emplace_back(tau_free__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> theta_tilde;
+      theta_tilde = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
+      stan::math::fill(theta_tilde, DUMMY_VAR__);
+      
+      assign(theta_tilde,
+        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J),
+        "assigning variable theta_tilde");
       for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
         vars__.emplace_back(theta_tilde[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
@@ -1547,11 +1510,11 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      std::vector<double> xx;
-      xx = std::vector<double>(3, std::numeric_limits<double>::quiet_NaN());
+      std::vector<local_scalar_t__> xx;
+      xx = std::vector<local_scalar_t__>(3, DUMMY_VAR__);
       
-      current_statement__ = 1;
-      xx = context__.vals_r("xx");
+      assign(xx, deserializer.read<std::vector<local_scalar_t__>>(3),
+        "assigning variable xx");
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         vars__.emplace_back(xx[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
@@ -8184,579 +8147,91 @@ class mother_model final : public model_base_crtp<mother_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      double p_real;
-      p_real = std::numeric_limits<double>::quiet_NaN();
+      local_scalar_t__ p_real;
+      p_real = DUMMY_VAR__;
       
-      current_statement__ = 1;
-      p_real = context__.vals_r("p_real")[(1 - 1)];
-      double p_upper;
-      p_upper = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 2;
-      p_upper = context__.vals_r("p_upper")[(1 - 1)];
-      double p_upper_free__;
-      p_upper_free__ = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 2;
-      p_upper_free__ = stan::math::lb_free(p_upper, p_real);
-      double p_lower;
-      p_lower = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 3;
-      p_lower = context__.vals_r("p_lower")[(1 - 1)];
-      double p_lower_free__;
-      p_lower_free__ = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 3;
-      p_lower_free__ = stan::math::ub_free(p_lower, p_upper);
-      std::vector<double> offset_multiplier;
-      offset_multiplier = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 4;
-      offset_multiplier = context__.vals_r("offset_multiplier");
-      std::vector<double> offset_multiplier_free__;
-      offset_multiplier_free__ = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 4;
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        current_statement__ = 4;
-        assign(offset_multiplier_free__,
-          stan::math::offset_multiplier_free(offset_multiplier[(sym1__ - 1)],
-            1, 2),
-          "assigning variable offset_multiplier_free__", index_uni(sym1__));}
-      std::vector<double> no_offset_multiplier;
-      no_offset_multiplier = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 5;
-      no_offset_multiplier = context__.vals_r("no_offset_multiplier");
-      std::vector<double> no_offset_multiplier_free__;
-      no_offset_multiplier_free__ = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 5;
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        current_statement__ = 5;
-        assign(no_offset_multiplier_free__,
-          stan::math::offset_multiplier_free(
-            no_offset_multiplier[(sym1__ - 1)], 0, 2),
-          "assigning variable no_offset_multiplier_free__", index_uni(sym1__));
-      }
-      std::vector<double> offset_no_multiplier;
-      offset_no_multiplier = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 6;
-      offset_no_multiplier = context__.vals_r("offset_no_multiplier");
-      std::vector<double> offset_no_multiplier_free__;
-      offset_no_multiplier_free__ = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        current_statement__ = 6;
-        assign(offset_no_multiplier_free__,
-          stan::math::offset_multiplier_free(
-            offset_no_multiplier[(sym1__ - 1)], 3, 1),
-          "assigning variable offset_no_multiplier_free__", index_uni(sym1__));
-      }
-      std::vector<double> p_real_1d_ar;
-      p_real_1d_ar = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 7;
-      p_real_1d_ar = context__.vals_r("p_real_1d_ar");
-      std::vector<double> p_real_1d_ar_free__;
-      p_real_1d_ar_free__ = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 7;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 7;
-        assign(p_real_1d_ar_free__,
-          stan::math::lb_free(p_real_1d_ar[(sym1__ - 1)], 0),
-          "assigning variable p_real_1d_ar_free__", index_uni(sym1__));}
-      std::vector<std::vector<std::vector<double>>> p_real_3d_ar;
-      p_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, std::numeric_limits<double>::quiet_NaN())));
-      
-      {
-        std::vector<local_scalar_t__> p_real_3d_ar_flat__;
-        current_statement__ = 8;
-        p_real_3d_ar_flat__ = context__.vals_r("p_real_3d_ar");
-        current_statement__ = 8;
-        pos__ = 1;
-        current_statement__ = 8;
-        for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-          current_statement__ = 8;
-          for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-            current_statement__ = 8;
-            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-              current_statement__ = 8;
-              assign(p_real_3d_ar, p_real_3d_ar_flat__[(pos__ - 1)],
-                "assigning variable p_real_3d_ar", index_uni(sym3__),
-                                                     index_uni(sym2__),
-                                                     index_uni(sym1__));
-              current_statement__ = 8;
-              pos__ = (pos__ + 1);}}}
-      }
-      std::vector<std::vector<std::vector<double>>> p_real_3d_ar_free__;
-      p_real_3d_ar_free__ = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, std::numeric_limits<double>::quiet_NaN())));
-      
-      current_statement__ = 8;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 8;
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 8;
-          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 8;
-            assign(p_real_3d_ar_free__,
-              stan::math::lb_free(
-                p_real_3d_ar[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)], 0),
-              "assigning variable p_real_3d_ar_free__", index_uni(sym1__),
-                                                          index_uni(sym2__),
-                                                          index_uni(sym3__));
-          }}}
-      Eigen::Matrix<double, -1, 1> p_vec;
-      p_vec = Eigen::Matrix<double, -1, 1>(N);
-      stan::math::fill(p_vec, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> p_vec_flat__;
-        current_statement__ = 9;
-        p_vec_flat__ = context__.vals_r("p_vec");
-        current_statement__ = 9;
-        pos__ = 1;
-        current_statement__ = 9;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 9;
-          assign(p_vec, p_vec_flat__[(pos__ - 1)],
-            "assigning variable p_vec", index_uni(sym1__));
-          current_statement__ = 9;
-          pos__ = (pos__ + 1);}
-      }
-      Eigen::Matrix<double, -1, 1> p_vec_free__;
-      p_vec_free__ = Eigen::Matrix<double, -1, 1>(N);
-      stan::math::fill(p_vec_free__, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 9;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 9;
-        assign(p_vec_free__, stan::math::lb_free(p_vec[(sym1__ - 1)], 0),
-          "assigning variable p_vec_free__", index_uni(sym1__));}
-      std::vector<Eigen::Matrix<double, -1, 1>> p_1d_vec;
-      p_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
-      stan::math::fill(p_1d_vec, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> p_1d_vec_flat__;
-        current_statement__ = 10;
-        p_1d_vec_flat__ = context__.vals_r("p_1d_vec");
-        current_statement__ = 10;
-        pos__ = 1;
-        current_statement__ = 10;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 10;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 10;
-            assign(p_1d_vec, p_1d_vec_flat__[(pos__ - 1)],
-              "assigning variable p_1d_vec", index_uni(sym2__),
-                                               index_uni(sym1__));
-            current_statement__ = 10;
-            pos__ = (pos__ + 1);}}
-      }
-      std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_vec;
-      p_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
-      stan::math::fill(p_3d_vec, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> p_3d_vec_flat__;
-        current_statement__ = 11;
-        p_3d_vec_flat__ = context__.vals_r("p_3d_vec");
-        current_statement__ = 11;
-        pos__ = 1;
-        current_statement__ = 11;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 11;
-          for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-            current_statement__ = 11;
-            for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-              current_statement__ = 11;
-              for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-                current_statement__ = 11;
-                assign(p_3d_vec, p_3d_vec_flat__[(pos__ - 1)],
-                  "assigning variable p_3d_vec", index_uni(sym4__),
-                                                   index_uni(sym3__),
-                                                   index_uni(sym2__),
-                                                   index_uni(sym1__));
-                current_statement__ = 11;
-                pos__ = (pos__ + 1);}}}}
-      }
-      Eigen::Matrix<double, 1, -1> p_row_vec;
-      p_row_vec = Eigen::Matrix<double, 1, -1>(N);
-      stan::math::fill(p_row_vec, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> p_row_vec_flat__;
-        current_statement__ = 12;
-        p_row_vec_flat__ = context__.vals_r("p_row_vec");
-        current_statement__ = 12;
-        pos__ = 1;
-        current_statement__ = 12;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 12;
-          assign(p_row_vec, p_row_vec_flat__[(pos__ - 1)],
-            "assigning variable p_row_vec", index_uni(sym1__));
-          current_statement__ = 12;
-          pos__ = (pos__ + 1);}
-      }
-      std::vector<Eigen::Matrix<double, 1, -1>> p_1d_row_vec;
-      p_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
-      stan::math::fill(p_1d_row_vec, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> p_1d_row_vec_flat__;
-        current_statement__ = 13;
-        p_1d_row_vec_flat__ = context__.vals_r("p_1d_row_vec");
-        current_statement__ = 13;
-        pos__ = 1;
-        current_statement__ = 13;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 13;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 13;
-            assign(p_1d_row_vec, p_1d_row_vec_flat__[(pos__ - 1)],
-              "assigning variable p_1d_row_vec", index_uni(sym2__),
-                                                   index_uni(sym1__));
-            current_statement__ = 13;
-            pos__ = (pos__ + 1);}}
-      }
-      std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> p_3d_row_vec;
-      p_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
-      stan::math::fill(p_3d_row_vec, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> p_3d_row_vec_flat__;
-        current_statement__ = 14;
-        p_3d_row_vec_flat__ = context__.vals_r("p_3d_row_vec");
-        current_statement__ = 14;
-        pos__ = 1;
-        current_statement__ = 14;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 14;
-          for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-            current_statement__ = 14;
-            for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-              current_statement__ = 14;
-              for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-                current_statement__ = 14;
-                assign(p_3d_row_vec, p_3d_row_vec_flat__[(pos__ - 1)],
-                  "assigning variable p_3d_row_vec", index_uni(sym4__),
-                                                       index_uni(sym3__),
-                                                       index_uni(sym2__),
-                                                       index_uni(sym1__));
-                current_statement__ = 14;
-                pos__ = (pos__ + 1);}}}}
-      }
-      std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> p_ar_mat;
-      p_ar_mat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
-      stan::math::fill(p_ar_mat, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> p_ar_mat_flat__;
-        current_statement__ = 15;
-        p_ar_mat_flat__ = context__.vals_r("p_ar_mat");
-        current_statement__ = 15;
-        pos__ = 1;
-        current_statement__ = 15;
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 15;
-          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            current_statement__ = 15;
-            for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-              current_statement__ = 15;
-              for (int sym4__ = 1; sym4__ <= 4; ++sym4__) {
-                current_statement__ = 15;
-                assign(p_ar_mat, p_ar_mat_flat__[(pos__ - 1)],
-                  "assigning variable p_ar_mat", index_uni(sym4__),
-                                                   index_uni(sym3__),
-                                                   index_uni(sym2__),
-                                                   index_uni(sym1__));
-                current_statement__ = 15;
-                pos__ = (pos__ + 1);}}}}
-      }
-      std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> p_ar_mat_free__;
-      p_ar_mat_free__ = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(2, 3)));
-      stan::math::fill(p_ar_mat_free__, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 15;
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        current_statement__ = 15;
-        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
-          current_statement__ = 15;
-          for (int sym3__ = 1; sym3__ <= 2; ++sym3__) {
-            current_statement__ = 15;
-            for (int sym4__ = 1; sym4__ <= 3; ++sym4__) {
-              current_statement__ = 15;
-              assign(p_ar_mat_free__,
-                stan::math::lub_free(
-                  rvalue(p_ar_mat, "p_ar_mat",
-                    index_uni(sym1__), index_uni(sym2__), index_uni(sym3__),
-                      index_uni(sym4__)), 0, 1),
-                "assigning variable p_ar_mat_free__", index_uni(sym1__),
-                                                        index_uni(sym2__),
-                                                        index_uni(sym3__),
-                                                        index_uni(sym4__));}}
-        }}
-      Eigen::Matrix<double, -1, 1> p_simplex;
-      p_simplex = Eigen::Matrix<double, -1, 1>(N);
-      stan::math::fill(p_simplex, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> p_simplex_flat__;
-        current_statement__ = 16;
-        p_simplex_flat__ = context__.vals_r("p_simplex");
-        current_statement__ = 16;
-        pos__ = 1;
-        current_statement__ = 16;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 16;
-          assign(p_simplex, p_simplex_flat__[(pos__ - 1)],
-            "assigning variable p_simplex", index_uni(sym1__));
-          current_statement__ = 16;
-          pos__ = (pos__ + 1);}
-      }
-      Eigen::Matrix<double, -1, 1> p_simplex_free__;
-      p_simplex_free__ = Eigen::Matrix<double, -1, 1>((N - 1));
-      stan::math::fill(p_simplex_free__, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 16;
-      assign(p_simplex_free__, stan::math::simplex_free(p_simplex),
-        "assigning variable p_simplex_free__");
-      std::vector<Eigen::Matrix<double, -1, 1>> p_1d_simplex;
-      p_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
-      stan::math::fill(p_1d_simplex, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> p_1d_simplex_flat__;
-        current_statement__ = 17;
-        p_1d_simplex_flat__ = context__.vals_r("p_1d_simplex");
-        current_statement__ = 17;
-        pos__ = 1;
-        current_statement__ = 17;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 17;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 17;
-            assign(p_1d_simplex, p_1d_simplex_flat__[(pos__ - 1)],
-              "assigning variable p_1d_simplex", index_uni(sym2__),
-                                                   index_uni(sym1__));
-            current_statement__ = 17;
-            pos__ = (pos__ + 1);}}
-      }
-      std::vector<Eigen::Matrix<double, -1, 1>> p_1d_simplex_free__;
-      p_1d_simplex_free__ = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(
-        (N - 1)));
-      stan::math::fill(p_1d_simplex_free__, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 17;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 17;
-        assign(p_1d_simplex_free__,
-          stan::math::simplex_free(p_1d_simplex[(sym1__ - 1)]),
-          "assigning variable p_1d_simplex_free__", index_uni(sym1__));}
-      std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_simplex;
-      p_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
-      stan::math::fill(p_3d_simplex, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> p_3d_simplex_flat__;
-        current_statement__ = 18;
-        p_3d_simplex_flat__ = context__.vals_r("p_3d_simplex");
-        current_statement__ = 18;
-        pos__ = 1;
-        current_statement__ = 18;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 18;
-          for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-            current_statement__ = 18;
-            for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-              current_statement__ = 18;
-              for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-                current_statement__ = 18;
-                assign(p_3d_simplex, p_3d_simplex_flat__[(pos__ - 1)],
-                  "assigning variable p_3d_simplex", index_uni(sym4__),
-                                                       index_uni(sym3__),
-                                                       index_uni(sym2__),
-                                                       index_uni(sym1__));
-                current_statement__ = 18;
-                pos__ = (pos__ + 1);}}}}
-      }
-      std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> p_3d_simplex_free__;
-      p_3d_simplex_free__ = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(
-        (N - 1)))));
-      stan::math::fill(p_3d_simplex_free__, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 18;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 18;
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          current_statement__ = 18;
-          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
-            current_statement__ = 18;
-            assign(p_3d_simplex_free__,
-              stan::math::simplex_free(
-                p_3d_simplex[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]),
-              "assigning variable p_3d_simplex_free__", index_uni(sym1__),
-                                                          index_uni(sym2__),
-                                                          index_uni(sym3__));
-          }}}
-      Eigen::Matrix<double, -1, -1> p_cfcov_54;
-      p_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
-      stan::math::fill(p_cfcov_54, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> p_cfcov_54_flat__;
-        current_statement__ = 19;
-        p_cfcov_54_flat__ = context__.vals_r("p_cfcov_54");
-        current_statement__ = 19;
-        pos__ = 1;
-        current_statement__ = 19;
-        for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-          current_statement__ = 19;
-          for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
-            current_statement__ = 19;
-            assign(p_cfcov_54, p_cfcov_54_flat__[(pos__ - 1)],
-              "assigning variable p_cfcov_54", index_uni(sym2__),
-                                                 index_uni(sym1__));
-            current_statement__ = 19;
-            pos__ = (pos__ + 1);}}
-      }
-      Eigen::Matrix<double, -1, 1> p_cfcov_54_free__;
-      p_cfcov_54_free__ = Eigen::Matrix<double, -1, 1>(((((4 * (4 - 1)) / 2)
-                                                          + 4) +
-                                                         ((5 - 4) * 4)));
-      stan::math::fill(p_cfcov_54_free__, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 19;
-      assign(p_cfcov_54_free__, stan::math::cholesky_factor_free(p_cfcov_54),
-        "assigning variable p_cfcov_54_free__");
-      Eigen::Matrix<double, -1, -1> p_cfcov_33;
-      p_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
-      stan::math::fill(p_cfcov_33, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> p_cfcov_33_flat__;
-        current_statement__ = 20;
-        p_cfcov_33_flat__ = context__.vals_r("p_cfcov_33");
-        current_statement__ = 20;
-        pos__ = 1;
-        current_statement__ = 20;
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 20;
-          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            current_statement__ = 20;
-            assign(p_cfcov_33, p_cfcov_33_flat__[(pos__ - 1)],
-              "assigning variable p_cfcov_33", index_uni(sym2__),
-                                                 index_uni(sym1__));
-            current_statement__ = 20;
-            pos__ = (pos__ + 1);}}
-      }
-      Eigen::Matrix<double, -1, 1> p_cfcov_33_free__;
-      p_cfcov_33_free__ = Eigen::Matrix<double, -1, 1>(((((3 * (3 - 1)) / 2)
-                                                          + 3) +
-                                                         ((3 - 3) * 3)));
-      stan::math::fill(p_cfcov_33_free__, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 20;
-      assign(p_cfcov_33_free__, stan::math::cholesky_factor_free(p_cfcov_33),
-        "assigning variable p_cfcov_33_free__");
-      std::vector<Eigen::Matrix<double, -1, -1>> p_cfcov_33_ar;
-      p_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
-      stan::math::fill(p_cfcov_33_ar, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> p_cfcov_33_ar_flat__;
-        current_statement__ = 21;
-        p_cfcov_33_ar_flat__ = context__.vals_r("p_cfcov_33_ar");
-        current_statement__ = 21;
-        pos__ = 1;
-        current_statement__ = 21;
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 21;
-          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            current_statement__ = 21;
-            for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
-              current_statement__ = 21;
-              assign(p_cfcov_33_ar, p_cfcov_33_ar_flat__[(pos__ - 1)],
-                "assigning variable p_cfcov_33_ar", index_uni(sym3__),
-                                                      index_uni(sym2__),
-                                                      index_uni(sym1__));
-              current_statement__ = 21;
-              pos__ = (pos__ + 1);}}}
-      }
-      std::vector<Eigen::Matrix<double, -1, 1>> p_cfcov_33_ar_free__;
-      p_cfcov_33_ar_free__ = std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(
-        ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3))));
-      stan::math::fill(p_cfcov_33_ar_free__, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 21;
-      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        current_statement__ = 21;
-        assign(p_cfcov_33_ar_free__,
-          stan::math::cholesky_factor_free(p_cfcov_33_ar[(sym1__ - 1)]),
-          "assigning variable p_cfcov_33_ar_free__", index_uni(sym1__));}
-      Eigen::Matrix<double, -1, 1> x_p;
-      x_p = Eigen::Matrix<double, -1, 1>(2);
-      stan::math::fill(x_p, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> x_p_flat__;
-        current_statement__ = 22;
-        x_p_flat__ = context__.vals_r("x_p");
-        current_statement__ = 22;
-        pos__ = 1;
-        current_statement__ = 22;
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          current_statement__ = 22;
-          assign(x_p, x_p_flat__[(pos__ - 1)],
-            "assigning variable x_p", index_uni(sym1__));
-          current_statement__ = 22;
-          pos__ = (pos__ + 1);}
-      }
-      Eigen::Matrix<double, -1, 1> y_p;
-      y_p = Eigen::Matrix<double, -1, 1>(2);
-      stan::math::fill(y_p, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> y_p_flat__;
-        current_statement__ = 23;
-        y_p_flat__ = context__.vals_r("y_p");
-        current_statement__ = 23;
-        pos__ = 1;
-        current_statement__ = 23;
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          current_statement__ = 23;
-          assign(y_p, y_p_flat__[(pos__ - 1)],
-            "assigning variable y_p", index_uni(sym1__));
-          current_statement__ = 23;
-          pos__ = (pos__ + 1);}
-      }
+      p_real = deserializer.read<local_scalar_t__>();
       vars__.emplace_back(p_real);
+      local_scalar_t__ p_upper_free__;
+      p_upper_free__ = DUMMY_VAR__;
+      
+      p_upper_free__ = deserializer.read_free_lb<local_scalar_t__>(p_real);
       vars__.emplace_back(p_upper_free__);
+      local_scalar_t__ p_lower_free__;
+      p_lower_free__ = DUMMY_VAR__;
+      
+      p_lower_free__ = deserializer.read_free_ub<local_scalar_t__>(p_upper);
       vars__.emplace_back(p_lower_free__);
+      std::vector<local_scalar_t__> offset_multiplier_free__;
+      offset_multiplier_free__ = std::vector<local_scalar_t__>(5, DUMMY_VAR__);
+      
+      assign(offset_multiplier_free__,
+        deserializer.read_free_offset_multiplier<std::vector<local_scalar_t__>>(
+          1, 2, 5), "assigning variable offset_multiplier_free__");
       for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
         vars__.emplace_back(offset_multiplier_free__[(sym1__ - 1)]);}
+      std::vector<local_scalar_t__> no_offset_multiplier_free__;
+      no_offset_multiplier_free__ = std::vector<local_scalar_t__>(5, DUMMY_VAR__);
+      
+      assign(no_offset_multiplier_free__,
+        deserializer.read_free_offset_multiplier<std::vector<local_scalar_t__>>(
+          0, 2, 5), "assigning variable no_offset_multiplier_free__");
       for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
         vars__.emplace_back(no_offset_multiplier_free__[(sym1__ - 1)]);}
+      std::vector<local_scalar_t__> offset_no_multiplier_free__;
+      offset_no_multiplier_free__ = std::vector<local_scalar_t__>(5, DUMMY_VAR__);
+      
+      assign(offset_no_multiplier_free__,
+        deserializer.read_free_offset_multiplier<std::vector<local_scalar_t__>>(
+          3, 1, 5), "assigning variable offset_no_multiplier_free__");
       for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
         vars__.emplace_back(offset_no_multiplier_free__[(sym1__ - 1)]);}
+      std::vector<local_scalar_t__> p_real_1d_ar_free__;
+      p_real_1d_ar_free__ = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      
+      assign(p_real_1d_ar_free__,
+        deserializer.read_free_lb<std::vector<local_scalar_t__>>(0, N),
+        "assigning variable p_real_1d_ar_free__");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         vars__.emplace_back(p_real_1d_ar_free__[(sym1__ - 1)]);}
+      std::vector<std::vector<std::vector<local_scalar_t__>>> p_real_3d_ar_free__;
+      p_real_3d_ar_free__ = std::vector<std::vector<std::vector<local_scalar_t__>>>(N, std::vector<std::vector<local_scalar_t__>>(M, std::vector<local_scalar_t__>(K, DUMMY_VAR__)));
+      
+      assign(p_real_3d_ar_free__,
+        deserializer.read_free_lb<std::vector<std::vector<std::vector<local_scalar_t__>>>>(
+          0, N, M, K), "assigning variable p_real_3d_ar_free__");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
             vars__.emplace_back(
               p_real_3d_ar_free__[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]);
           }}}
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_vec_free__;
+      p_vec_free__ = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
+      stan::math::fill(p_vec_free__, DUMMY_VAR__);
+      
+      assign(p_vec_free__,
+        deserializer.read_free_lb<Eigen::Matrix<local_scalar_t__, -1, 1>>(0,
+          N), "assigning variable p_vec_free__");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         vars__.emplace_back(p_vec_free__[(sym1__ - 1)]);}
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_1d_vec;
+      p_1d_vec = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
+      stan::math::fill(p_1d_vec, DUMMY_VAR__);
+      
+      assign(p_1d_vec,
+        deserializer.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+          N, N), "assigning variable p_1d_vec");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.emplace_back(p_1d_vec[(sym1__ - 1)][(sym2__ - 1)]);}}
+      std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> p_3d_vec;
+      p_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
+      stan::math::fill(p_3d_vec, DUMMY_VAR__);
+      
+      assign(p_3d_vec,
+        deserializer.read<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>>(
+          N, M, K, N), "assigning variable p_3d_vec");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
@@ -8764,11 +8239,32 @@ class mother_model final : public model_base_crtp<mother_model> {
               vars__.emplace_back(
                 p_3d_vec[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)][(sym4__ -
                                                                     1)]);}}}}
+      Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vec;
+      p_row_vec = Eigen::Matrix<local_scalar_t__, 1, -1>(N);
+      stan::math::fill(p_row_vec, DUMMY_VAR__);
+      
+      assign(p_row_vec,
+        deserializer.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(N),
+        "assigning variable p_row_vec");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         vars__.emplace_back(p_row_vec[(sym1__ - 1)]);}
+      std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> p_1d_row_vec;
+      p_1d_row_vec = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
+      stan::math::fill(p_1d_row_vec, DUMMY_VAR__);
+      
+      assign(p_1d_row_vec,
+        deserializer.read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
+          N, N), "assigning variable p_1d_row_vec");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.emplace_back(p_1d_row_vec[(sym1__ - 1)][(sym2__ - 1)]);}}
+      std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>> p_3d_row_vec;
+      p_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(K, Eigen::Matrix<local_scalar_t__, 1, -1>(N))));
+      stan::math::fill(p_3d_row_vec, DUMMY_VAR__);
+      
+      assign(p_3d_row_vec,
+        deserializer.read<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>>(
+          N, M, K, N), "assigning variable p_3d_row_vec");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
@@ -8776,6 +8272,13 @@ class mother_model final : public model_base_crtp<mother_model> {
               vars__.emplace_back(
                 p_3d_row_vec[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)][
                 (sym4__ - 1)]);}}}}
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> p_ar_mat_free__;
+      p_ar_mat_free__ = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(4, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(5, Eigen::Matrix<local_scalar_t__, -1, -1>(2, 3)));
+      stan::math::fill(p_ar_mat_free__, DUMMY_VAR__);
+      
+      assign(p_ar_mat_free__,
+        deserializer.read_free_lub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
+          0, 1, 4, 5, 2, 3), "assigning variable p_ar_mat_free__");
       for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
@@ -8784,12 +8287,35 @@ class mother_model final : public model_base_crtp<mother_model> {
                 rvalue(p_ar_mat_free__, "p_ar_mat_free__",
                   index_uni(sym1__), index_uni(sym2__), index_uni(sym4__),
                     index_uni(sym3__)));}}}}
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_simplex_free__;
+      p_simplex_free__ = Eigen::Matrix<local_scalar_t__, -1, 1>((N - 1));
+      stan::math::fill(p_simplex_free__, DUMMY_VAR__);
+      
+      assign(p_simplex_free__,
+        deserializer.read_free_simplex<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+          N), "assigning variable p_simplex_free__");
       for (int sym1__ = 1; sym1__ <= (N - 1); ++sym1__) {
         vars__.emplace_back(p_simplex_free__[(sym1__ - 1)]);}
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_1d_simplex_free__;
+      p_1d_simplex_free__ = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(
+        (N - 1)));
+      stan::math::fill(p_1d_simplex_free__, DUMMY_VAR__);
+      
+      assign(p_1d_simplex_free__,
+        deserializer.read_free_simplex<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+          N, N), "assigning variable p_1d_simplex_free__");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= (N - 1); ++sym2__) {
           vars__.emplace_back(
             p_1d_simplex_free__[(sym1__ - 1)][(sym2__ - 1)]);}}
+      std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> p_3d_simplex_free__;
+      p_3d_simplex_free__ = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(
+        (N - 1)))));
+      stan::math::fill(p_3d_simplex_free__, DUMMY_VAR__);
+      
+      assign(p_3d_simplex_free__,
+        deserializer.read_free_simplex<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>>(
+          N, M, K, N), "assigning variable p_3d_simplex_free__");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
@@ -8797,19 +8323,65 @@ class mother_model final : public model_base_crtp<mother_model> {
               vars__.emplace_back(
                 p_3d_simplex_free__[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)][
                 (sym4__ - 1)]);}}}}
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_cfcov_54_free__;
+      p_cfcov_54_free__ = Eigen::Matrix<local_scalar_t__, -1, 1>(((((4 *
+                                                                    (4 - 1))
+                                                                    / 2) + 4)
+                                                                   +
+                                                                   ((5 - 4) *
+                                                                    4)));
+      stan::math::fill(p_cfcov_54_free__, DUMMY_VAR__);
+      
+      assign(p_cfcov_54_free__,
+        deserializer.read_free_cholesky_factor_cov<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+          5, 4), "assigning variable p_cfcov_54_free__");
       for (int sym1__ = 1;
            sym1__ <= ((((4 * (4 - 1)) / 2) + 4) + ((5 - 4) * 4)); ++sym1__) {
         vars__.emplace_back(p_cfcov_54_free__[(sym1__ - 1)]);}
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_cfcov_33_free__;
+      p_cfcov_33_free__ = Eigen::Matrix<local_scalar_t__, -1, 1>(((((3 *
+                                                                    (3 - 1))
+                                                                    / 2) + 3)
+                                                                   +
+                                                                   ((3 - 3) *
+                                                                    3)));
+      stan::math::fill(p_cfcov_33_free__, DUMMY_VAR__);
+      
+      assign(p_cfcov_33_free__,
+        deserializer.read_free_cholesky_factor_cov<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+          3, 3), "assigning variable p_cfcov_33_free__");
       for (int sym1__ = 1;
            sym1__ <= ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)); ++sym1__) {
         vars__.emplace_back(p_cfcov_33_free__[(sym1__ - 1)]);}
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_cfcov_33_ar_free__;
+      p_cfcov_33_ar_free__ = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(
+        ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3))));
+      stan::math::fill(p_cfcov_33_ar_free__, DUMMY_VAR__);
+      
+      assign(p_cfcov_33_ar_free__,
+        deserializer.read_free_cholesky_factor_cov<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
+          K, 3, 3), "assigning variable p_cfcov_33_ar_free__");
       for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
         for (int sym2__ = 1;
              sym2__ <= ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3)); ++sym2__) {
           vars__.emplace_back(
             p_cfcov_33_ar_free__[(sym1__ - 1)][(sym2__ - 1)]);}}
+      Eigen::Matrix<local_scalar_t__, -1, 1> x_p;
+      x_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      stan::math::fill(x_p, DUMMY_VAR__);
+      
+      assign(x_p,
+        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2),
+        "assigning variable x_p");
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         vars__.emplace_back(x_p[(sym1__ - 1)]);}
+      Eigen::Matrix<local_scalar_t__, -1, 1> y_p;
+      y_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      stan::math::fill(y_p, DUMMY_VAR__);
+      
+      assign(y_p,
+        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2),
+        "assigning variable y_p");
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         vars__.emplace_back(y_p[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
@@ -11624,96 +11196,59 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      std::vector<double> y0_p;
-      y0_p = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
+      std::vector<local_scalar_t__> y0_p;
+      y0_p = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
       
-      current_statement__ = 1;
-      y0_p = context__.vals_r("y0_p");
-      std::vector<double> theta_p;
-      theta_p = std::vector<double>(1, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 2;
-      theta_p = context__.vals_r("theta_p");
-      std::vector<double> x_p;
-      x_p = std::vector<double>(1, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 3;
-      x_p = context__.vals_r("x_p");
-      Eigen::Matrix<double, -1, 1> x_p_v;
-      x_p_v = Eigen::Matrix<double, -1, 1>(2);
-      stan::math::fill(x_p_v, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> x_p_v_flat__;
-        current_statement__ = 4;
-        x_p_v_flat__ = context__.vals_r("x_p_v");
-        current_statement__ = 4;
-        pos__ = 1;
-        current_statement__ = 4;
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          current_statement__ = 4;
-          assign(x_p_v, x_p_v_flat__[(pos__ - 1)],
-            "assigning variable x_p_v", index_uni(sym1__));
-          current_statement__ = 4;
-          pos__ = (pos__ + 1);}
-      }
-      Eigen::Matrix<double, -1, 1> shared_params_p;
-      shared_params_p = Eigen::Matrix<double, -1, 1>(3);
-      stan::math::fill(shared_params_p, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> shared_params_p_flat__;
-        current_statement__ = 5;
-        shared_params_p_flat__ = context__.vals_r("shared_params_p");
-        current_statement__ = 5;
-        pos__ = 1;
-        current_statement__ = 5;
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 5;
-          assign(shared_params_p, shared_params_p_flat__[(pos__ - 1)],
-            "assigning variable shared_params_p", index_uni(sym1__));
-          current_statement__ = 5;
-          pos__ = (pos__ + 1);}
-      }
-      std::vector<Eigen::Matrix<double, -1, 1>> job_params_p;
-      job_params_p = std::vector<Eigen::Matrix<double, -1, 1>>(3, Eigen::Matrix<double, -1, 1>(3));
-      stan::math::fill(job_params_p, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> job_params_p_flat__;
-        current_statement__ = 6;
-        job_params_p_flat__ = context__.vals_r("job_params_p");
-        current_statement__ = 6;
-        pos__ = 1;
-        current_statement__ = 6;
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 6;
-          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            current_statement__ = 6;
-            assign(job_params_p, job_params_p_flat__[(pos__ - 1)],
-              "assigning variable job_params_p", index_uni(sym2__),
-                                                   index_uni(sym1__));
-            current_statement__ = 6;
-            pos__ = (pos__ + 1);}}
-      }
-      double x_r;
-      x_r = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 7;
-      x_r = context__.vals_r("x_r")[(1 - 1)];
+      assign(y0_p, deserializer.read<std::vector<local_scalar_t__>>(2),
+        "assigning variable y0_p");
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         vars__.emplace_back(y0_p[(sym1__ - 1)]);}
+      std::vector<local_scalar_t__> theta_p;
+      theta_p = std::vector<local_scalar_t__>(1, DUMMY_VAR__);
+      
+      assign(theta_p, deserializer.read<std::vector<local_scalar_t__>>(1),
+        "assigning variable theta_p");
       for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
         vars__.emplace_back(theta_p[(sym1__ - 1)]);}
+      std::vector<local_scalar_t__> x_p;
+      x_p = std::vector<local_scalar_t__>(1, DUMMY_VAR__);
+      
+      assign(x_p, deserializer.read<std::vector<local_scalar_t__>>(1),
+        "assigning variable x_p");
       for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
         vars__.emplace_back(x_p[(sym1__ - 1)]);}
+      Eigen::Matrix<local_scalar_t__, -1, 1> x_p_v;
+      x_p_v = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      stan::math::fill(x_p_v, DUMMY_VAR__);
+      
+      assign(x_p_v,
+        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2),
+        "assigning variable x_p_v");
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         vars__.emplace_back(x_p_v[(sym1__ - 1)]);}
+      Eigen::Matrix<local_scalar_t__, -1, 1> shared_params_p;
+      shared_params_p = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
+      stan::math::fill(shared_params_p, DUMMY_VAR__);
+      
+      assign(shared_params_p,
+        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(3),
+        "assigning variable shared_params_p");
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         vars__.emplace_back(shared_params_p[(sym1__ - 1)]);}
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> job_params_p;
+      job_params_p = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(3, Eigen::Matrix<local_scalar_t__, -1, 1>(3));
+      stan::math::fill(job_params_p, DUMMY_VAR__);
+      
+      assign(job_params_p,
+        deserializer.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+          3, 3), "assigning variable job_params_p");
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
           vars__.emplace_back(job_params_p[(sym1__ - 1)][(sym2__ - 1)]);}}
+      local_scalar_t__ x_r;
+      x_r = DUMMY_VAR__;
+      
+      x_r = deserializer.read<local_scalar_t__>();
       vars__.emplace_back(x_r);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -16021,37 +15556,24 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      double r;
-      r = std::numeric_limits<double>::quiet_NaN();
+      local_scalar_t__ r;
+      r = DUMMY_VAR__;
       
-      current_statement__ = 1;
-      r = context__.vals_r("r")[(1 - 1)];
-      std::vector<double> ra;
-      ra = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 2;
-      ra = context__.vals_r("ra");
-      Eigen::Matrix<double, -1, 1> v;
-      v = Eigen::Matrix<double, -1, 1>(N);
-      stan::math::fill(v, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> v_flat__;
-        current_statement__ = 3;
-        v_flat__ = context__.vals_r("v");
-        current_statement__ = 3;
-        pos__ = 1;
-        current_statement__ = 3;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 3;
-          assign(v, v_flat__[(pos__ - 1)],
-            "assigning variable v", index_uni(sym1__));
-          current_statement__ = 3;
-          pos__ = (pos__ + 1);}
-      }
+      r = deserializer.read<local_scalar_t__>();
       vars__.emplace_back(r);
+      std::vector<local_scalar_t__> ra;
+      ra = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      
+      assign(ra, deserializer.read<std::vector<local_scalar_t__>>(N),
+        "assigning variable ra");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         vars__.emplace_back(ra[(sym1__ - 1)]);}
+      Eigen::Matrix<local_scalar_t__, -1, 1> v;
+      v = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
+      stan::math::fill(v, DUMMY_VAR__);
+      
+      assign(v, deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N),
+        "assigning variable v");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         vars__.emplace_back(v[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
@@ -16716,78 +16238,40 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      double alpha;
-      alpha = std::numeric_limits<double>::quiet_NaN();
+      local_scalar_t__ alpha_free__;
+      alpha_free__ = DUMMY_VAR__;
       
-      current_statement__ = 1;
-      alpha = context__.vals_r("alpha")[(1 - 1)];
-      double alpha_free__;
-      alpha_free__ = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 1;
-      alpha_free__ = stan::math::lb_free(alpha, 0);
-      double beta;
-      beta = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 2;
-      beta = context__.vals_r("beta")[(1 - 1)];
-      double beta_free__;
-      beta_free__ = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 2;
-      beta_free__ = stan::math::lb_free(beta, 0);
-      double gamma;
-      gamma = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 3;
-      gamma = context__.vals_r("gamma")[(1 - 1)];
-      double gamma_free__;
-      gamma_free__ = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 3;
-      gamma_free__ = stan::math::lb_free(gamma, 0);
-      double delta;
-      delta = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 4;
-      delta = context__.vals_r("delta")[(1 - 1)];
-      double delta_free__;
-      delta_free__ = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 4;
-      delta_free__ = stan::math::lb_free(delta, 0);
-      std::vector<double> z_init;
-      z_init = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 5;
-      z_init = context__.vals_r("z_init");
-      std::vector<double> z_init_free__;
-      z_init_free__ = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 5;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 5;
-        assign(z_init_free__, stan::math::lb_free(z_init[(sym1__ - 1)], 0),
-          "assigning variable z_init_free__", index_uni(sym1__));}
-      std::vector<double> sigma;
-      sigma = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 6;
-      sigma = context__.vals_r("sigma");
-      std::vector<double> sigma_free__;
-      sigma_free__ = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        current_statement__ = 6;
-        assign(sigma_free__, stan::math::lb_free(sigma[(sym1__ - 1)], 0),
-          "assigning variable sigma_free__", index_uni(sym1__));}
+      alpha_free__ = deserializer.read_free_lb<local_scalar_t__>(0);
       vars__.emplace_back(alpha_free__);
+      local_scalar_t__ beta_free__;
+      beta_free__ = DUMMY_VAR__;
+      
+      beta_free__ = deserializer.read_free_lb<local_scalar_t__>(0);
       vars__.emplace_back(beta_free__);
+      local_scalar_t__ gamma_free__;
+      gamma_free__ = DUMMY_VAR__;
+      
+      gamma_free__ = deserializer.read_free_lb<local_scalar_t__>(0);
       vars__.emplace_back(gamma_free__);
+      local_scalar_t__ delta_free__;
+      delta_free__ = DUMMY_VAR__;
+      
+      delta_free__ = deserializer.read_free_lb<local_scalar_t__>(0);
       vars__.emplace_back(delta_free__);
+      std::vector<local_scalar_t__> z_init_free__;
+      z_init_free__ = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
+      
+      assign(z_init_free__,
+        deserializer.read_free_lb<std::vector<local_scalar_t__>>(0, 2),
+        "assigning variable z_init_free__");
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         vars__.emplace_back(z_init_free__[(sym1__ - 1)]);}
+      std::vector<local_scalar_t__> sigma_free__;
+      sigma_free__ = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
+      
+      assign(sigma_free__,
+        deserializer.read_free_lb<std::vector<local_scalar_t__>>(0, 2),
+        "assigning variable sigma_free__");
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         vars__.emplace_back(sigma_free__[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
@@ -18268,157 +17752,78 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      Eigen::Matrix<double, -1, 1> alpha_v;
-      alpha_v = Eigen::Matrix<double, -1, 1>(k);
-      stan::math::fill(alpha_v, std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<local_scalar_t__, -1, 1> alpha_v;
+      alpha_v = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
+      stan::math::fill(alpha_v, DUMMY_VAR__);
       
-      {
-        std::vector<local_scalar_t__> alpha_v_flat__;
-        current_statement__ = 1;
-        alpha_v_flat__ = context__.vals_r("alpha_v");
-        current_statement__ = 1;
-        pos__ = 1;
-        current_statement__ = 1;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 1;
-          assign(alpha_v, alpha_v_flat__[(pos__ - 1)],
-            "assigning variable alpha_v", index_uni(sym1__));
-          current_statement__ = 1;
-          pos__ = (pos__ + 1);}
-      }
-      Eigen::Matrix<double, -1, 1> beta;
-      beta = Eigen::Matrix<double, -1, 1>(k);
-      stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> beta_flat__;
-        current_statement__ = 2;
-        beta_flat__ = context__.vals_r("beta");
-        current_statement__ = 2;
-        pos__ = 1;
-        current_statement__ = 2;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 2;
-          assign(beta, beta_flat__[(pos__ - 1)],
-            "assigning variable beta", index_uni(sym1__));
-          current_statement__ = 2;
-          pos__ = (pos__ + 1);}
-      }
-      Eigen::Matrix<double, -1, 1> cuts;
-      cuts = Eigen::Matrix<double, -1, 1>(k);
-      stan::math::fill(cuts, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> cuts_flat__;
-        current_statement__ = 3;
-        cuts_flat__ = context__.vals_r("cuts");
-        current_statement__ = 3;
-        pos__ = 1;
-        current_statement__ = 3;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 3;
-          assign(cuts, cuts_flat__[(pos__ - 1)],
-            "assigning variable cuts", index_uni(sym1__));
-          current_statement__ = 3;
-          pos__ = (pos__ + 1);}
-      }
-      double sigma;
-      sigma = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 4;
-      sigma = context__.vals_r("sigma")[(1 - 1)];
-      double sigma_free__;
-      sigma_free__ = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 4;
-      sigma_free__ = stan::math::lb_free(sigma, 0);
-      double alpha;
-      alpha = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 5;
-      alpha = context__.vals_r("alpha")[(1 - 1)];
-      double phi;
-      phi = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 6;
-      phi = context__.vals_r("phi")[(1 - 1)];
-      Eigen::Matrix<double, -1, -1> X_p;
-      X_p = Eigen::Matrix<double, -1, -1>(n, k);
-      stan::math::fill(X_p, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> X_p_flat__;
-        current_statement__ = 7;
-        X_p_flat__ = context__.vals_r("X_p");
-        current_statement__ = 7;
-        pos__ = 1;
-        current_statement__ = 7;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 7;
-          for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-            current_statement__ = 7;
-            assign(X_p, X_p_flat__[(pos__ - 1)],
-              "assigning variable X_p", index_uni(sym2__), index_uni(sym1__));
-            current_statement__ = 7;
-            pos__ = (pos__ + 1);}}
-      }
-      Eigen::Matrix<double, -1, -1> beta_m;
-      beta_m = Eigen::Matrix<double, -1, -1>(n, k);
-      stan::math::fill(beta_m, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> beta_m_flat__;
-        current_statement__ = 8;
-        beta_m_flat__ = context__.vals_r("beta_m");
-        current_statement__ = 8;
-        pos__ = 1;
-        current_statement__ = 8;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 8;
-          for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-            current_statement__ = 8;
-            assign(beta_m, beta_m_flat__[(pos__ - 1)],
-              "assigning variable beta_m", index_uni(sym2__),
-                                             index_uni(sym1__));
-            current_statement__ = 8;
-            pos__ = (pos__ + 1);}}
-      }
-      Eigen::Matrix<double, 1, -1> X_rv_p;
-      X_rv_p = Eigen::Matrix<double, 1, -1>(n);
-      stan::math::fill(X_rv_p, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> X_rv_p_flat__;
-        current_statement__ = 9;
-        X_rv_p_flat__ = context__.vals_r("X_rv_p");
-        current_statement__ = 9;
-        pos__ = 1;
-        current_statement__ = 9;
-        for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-          current_statement__ = 9;
-          assign(X_rv_p, X_rv_p_flat__[(pos__ - 1)],
-            "assigning variable X_rv_p", index_uni(sym1__));
-          current_statement__ = 9;
-          pos__ = (pos__ + 1);}
-      }
+      assign(alpha_v,
+        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k),
+        "assigning variable alpha_v");
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.emplace_back(alpha_v[(sym1__ - 1)]);}
+      Eigen::Matrix<local_scalar_t__, -1, 1> beta;
+      beta = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
+      stan::math::fill(beta, DUMMY_VAR__);
+      
+      assign(beta,
+        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k),
+        "assigning variable beta");
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.emplace_back(beta[(sym1__ - 1)]);}
+      Eigen::Matrix<local_scalar_t__, -1, 1> cuts;
+      cuts = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
+      stan::math::fill(cuts, DUMMY_VAR__);
+      
+      assign(cuts,
+        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k),
+        "assigning variable cuts");
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.emplace_back(cuts[(sym1__ - 1)]);}
+      local_scalar_t__ sigma_free__;
+      sigma_free__ = DUMMY_VAR__;
+      
+      sigma_free__ = deserializer.read_free_lb<local_scalar_t__>(0);
       vars__.emplace_back(sigma_free__);
+      local_scalar_t__ alpha;
+      alpha = DUMMY_VAR__;
+      
+      alpha = deserializer.read<local_scalar_t__>();
       vars__.emplace_back(alpha);
+      local_scalar_t__ phi;
+      phi = DUMMY_VAR__;
+      
+      phi = deserializer.read<local_scalar_t__>();
       vars__.emplace_back(phi);
+      Eigen::Matrix<local_scalar_t__, -1, -1> X_p;
+      X_p = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
+      stan::math::fill(X_p, DUMMY_VAR__);
+      
+      assign(X_p,
+        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, k),
+        "assigning variable X_p");
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
           vars__.emplace_back(
             rvalue(X_p, "X_p", index_uni(sym2__), index_uni(sym1__)));}}
+      Eigen::Matrix<local_scalar_t__, -1, -1> beta_m;
+      beta_m = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
+      stan::math::fill(beta_m, DUMMY_VAR__);
+      
+      assign(beta_m,
+        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, k),
+        "assigning variable beta_m");
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
           vars__.emplace_back(
             rvalue(beta_m, "beta_m", index_uni(sym2__), index_uni(sym1__)));}
       }
+      Eigen::Matrix<local_scalar_t__, 1, -1> X_rv_p;
+      X_rv_p = Eigen::Matrix<local_scalar_t__, 1, -1>(n);
+      stan::math::fill(X_rv_p, DUMMY_VAR__);
+      
+      assign(X_rv_p,
+        deserializer.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(n),
+        "assigning variable X_rv_p");
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         vars__.emplace_back(X_rv_p[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
@@ -18878,74 +18283,26 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      std::vector<Eigen::Matrix<double, -1, -1>> L_Omega;
-      L_Omega = std::vector<Eigen::Matrix<double, -1, -1>>(nt, Eigen::Matrix<double, -1, -1>(2, 2));
-      stan::math::fill(L_Omega, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> L_Omega_flat__;
-        current_statement__ = 1;
-        L_Omega_flat__ = context__.vals_r("L_Omega");
-        current_statement__ = 1;
-        pos__ = 1;
-        current_statement__ = 1;
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          current_statement__ = 1;
-          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            current_statement__ = 1;
-            for (int sym3__ = 1; sym3__ <= nt; ++sym3__) {
-              current_statement__ = 1;
-              assign(L_Omega, L_Omega_flat__[(pos__ - 1)],
-                "assigning variable L_Omega", index_uni(sym3__),
-                                                index_uni(sym2__),
-                                                index_uni(sym1__));
-              current_statement__ = 1;
-              pos__ = (pos__ + 1);}}}
-      }
-      std::vector<Eigen::Matrix<double, -1, 1>> L_Omega_free__;
-      L_Omega_free__ = std::vector<Eigen::Matrix<double, -1, 1>>(nt, Eigen::Matrix<double, -1, 1>(
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> L_Omega_free__;
+      L_Omega_free__ = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(nt, Eigen::Matrix<local_scalar_t__, -1, 1>(
         ((2 * (2 - 1)) / 2)));
-      stan::math::fill(L_Omega_free__, std::numeric_limits<double>::quiet_NaN());
+      stan::math::fill(L_Omega_free__, DUMMY_VAR__);
       
-      current_statement__ = 1;
-      for (int sym1__ = 1; sym1__ <= nt; ++sym1__) {
-        current_statement__ = 1;
-        assign(L_Omega_free__,
-          stan::math::cholesky_corr_free(L_Omega[(sym1__ - 1)]),
-          "assigning variable L_Omega_free__", index_uni(sym1__));}
-      Eigen::Matrix<double, -1, 1> z1;
-      z1 = Eigen::Matrix<double, -1, 1>(NS);
-      stan::math::fill(z1, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> z1_flat__;
-        current_statement__ = 2;
-        z1_flat__ = context__.vals_r("z1");
-        current_statement__ = 2;
-        pos__ = 1;
-        current_statement__ = 2;
-        for (int sym1__ = 1; sym1__ <= NS; ++sym1__) {
-          current_statement__ = 2;
-          assign(z1, z1_flat__[(pos__ - 1)],
-            "assigning variable z1", index_uni(sym1__));
-          current_statement__ = 2;
-          pos__ = (pos__ + 1);}
-      }
-      Eigen::Matrix<double, -1, 1> z1_free__;
-      z1_free__ = Eigen::Matrix<double, -1, 1>(NS);
-      stan::math::fill(z1_free__, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= NS; ++sym1__) {
-        current_statement__ = 2;
-        assign(z1_free__,
-          stan::math::lb_free(z1[(sym1__ - 1)],
-            rvalue(L_Omega, "L_Omega",
-              index_uni(1), index_uni(1), index_uni(2))),
-          "assigning variable z1_free__", index_uni(sym1__));}
+      assign(L_Omega_free__,
+        deserializer.read_free_cholesky_factor_corr<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
+          nt, 2), "assigning variable L_Omega_free__");
       for (int sym1__ = 1; sym1__ <= nt; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= ((2 * (2 - 1)) / 2); ++sym2__) {
           vars__.emplace_back(L_Omega_free__[(sym1__ - 1)][(sym2__ - 1)]);}}
+      Eigen::Matrix<local_scalar_t__, -1, 1> z1_free__;
+      z1_free__ = Eigen::Matrix<local_scalar_t__, -1, 1>(NS);
+      stan::math::fill(z1_free__, DUMMY_VAR__);
+      
+      assign(z1_free__,
+        deserializer.read_free_lb<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+          rvalue(L_Omega, "L_Omega",
+            index_uni(1), index_uni(1), index_uni(2)), NS),
+        "assigning variable z1_free__");
       for (int sym1__ = 1; sym1__ <= NS; ++sym1__) {
         vars__.emplace_back(z1_free__[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
@@ -19510,25 +18867,25 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      std::vector<double> y1;
-      y1 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      std::vector<local_scalar_t__> y1;
+      y1 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       
-      current_statement__ = 1;
-      y1 = context__.vals_r("y1");
-      std::vector<double> y2;
-      y2 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 2;
-      y2 = context__.vals_r("y2");
-      std::vector<double> y3;
-      y3 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 3;
-      y3 = context__.vals_r("y3");
+      assign(y1, deserializer.read<std::vector<local_scalar_t__>>(N),
+        "assigning variable y1");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         vars__.emplace_back(y1[(sym1__ - 1)]);}
+      std::vector<local_scalar_t__> y2;
+      y2 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      
+      assign(y2, deserializer.read<std::vector<local_scalar_t__>>(N),
+        "assigning variable y2");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         vars__.emplace_back(y2[(sym1__ - 1)]);}
+      std::vector<local_scalar_t__> y3;
+      y3 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      
+      assign(y3, deserializer.read<std::vector<local_scalar_t__>>(N),
+        "assigning variable y3");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         vars__.emplace_back(y3[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
@@ -21372,332 +20729,13 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> a8;
-      a8 = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(N, std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N)));
-      stan::math::fill(a8, std::numeric_limits<double>::quiet_NaN());
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> a8;
+      a8 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
+      stan::math::fill(a8, DUMMY_VAR__);
       
-      {
-        std::vector<local_scalar_t__> a8_flat__;
-        current_statement__ = 1;
-        a8_flat__ = context__.vals_r("a8");
-        current_statement__ = 1;
-        pos__ = 1;
-        current_statement__ = 1;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 1;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 1;
-            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-              current_statement__ = 1;
-              for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-                current_statement__ = 1;
-                assign(a8, a8_flat__[(pos__ - 1)],
-                  "assigning variable a8", index_uni(sym4__),
-                                             index_uni(sym3__),
-                                             index_uni(sym2__),
-                                             index_uni(sym1__));
-                current_statement__ = 1;
-                pos__ = (pos__ + 1);}}}}
-      }
-      std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> a7;
-      a7 = std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(N, std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N)));
-      stan::math::fill(a7, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> a7_flat__;
-        current_statement__ = 2;
-        a7_flat__ = context__.vals_r("a7");
-        current_statement__ = 2;
-        pos__ = 1;
-        current_statement__ = 2;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 2;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 2;
-            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-              current_statement__ = 2;
-              assign(a7, a7_flat__[(pos__ - 1)],
-                "assigning variable a7", index_uni(sym3__),
-                                           index_uni(sym2__),
-                                           index_uni(sym1__));
-              current_statement__ = 2;
-              pos__ = (pos__ + 1);}}}
-      }
-      std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> a6;
-      a6 = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(N, std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N)));
-      stan::math::fill(a6, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> a6_flat__;
-        current_statement__ = 3;
-        a6_flat__ = context__.vals_r("a6");
-        current_statement__ = 3;
-        pos__ = 1;
-        current_statement__ = 3;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 3;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 3;
-            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-              current_statement__ = 3;
-              assign(a6, a6_flat__[(pos__ - 1)],
-                "assigning variable a6", index_uni(sym3__),
-                                           index_uni(sym2__),
-                                           index_uni(sym1__));
-              current_statement__ = 3;
-              pos__ = (pos__ + 1);}}}
-      }
-      std::vector<std::vector<double>> a5;
-      a5 = std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN()));
-      
-      {
-        std::vector<local_scalar_t__> a5_flat__;
-        current_statement__ = 4;
-        a5_flat__ = context__.vals_r("a5");
-        current_statement__ = 4;
-        pos__ = 1;
-        current_statement__ = 4;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 4;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 4;
-            assign(a5, a5_flat__[(pos__ - 1)],
-              "assigning variable a5", index_uni(sym2__), index_uni(sym1__));
-            current_statement__ = 4;
-            pos__ = (pos__ + 1);}}
-      }
-      std::vector<Eigen::Matrix<double, -1, -1>> a4;
-      a4 = std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N));
-      stan::math::fill(a4, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> a4_flat__;
-        current_statement__ = 5;
-        a4_flat__ = context__.vals_r("a4");
-        current_statement__ = 5;
-        pos__ = 1;
-        current_statement__ = 5;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 5;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 5;
-            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-              current_statement__ = 5;
-              assign(a4, a4_flat__[(pos__ - 1)],
-                "assigning variable a4", index_uni(sym3__),
-                                           index_uni(sym2__),
-                                           index_uni(sym1__));
-              current_statement__ = 5;
-              pos__ = (pos__ + 1);}}}
-      }
-      std::vector<Eigen::Matrix<double, 1, -1>> a3;
-      a3 = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
-      stan::math::fill(a3, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> a3_flat__;
-        current_statement__ = 6;
-        a3_flat__ = context__.vals_r("a3");
-        current_statement__ = 6;
-        pos__ = 1;
-        current_statement__ = 6;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 6;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 6;
-            assign(a3, a3_flat__[(pos__ - 1)],
-              "assigning variable a3", index_uni(sym2__), index_uni(sym1__));
-            current_statement__ = 6;
-            pos__ = (pos__ + 1);}}
-      }
-      std::vector<Eigen::Matrix<double, -1, 1>> a2;
-      a2 = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
-      stan::math::fill(a2, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> a2_flat__;
-        current_statement__ = 7;
-        a2_flat__ = context__.vals_r("a2");
-        current_statement__ = 7;
-        pos__ = 1;
-        current_statement__ = 7;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 7;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 7;
-            assign(a2, a2_flat__[(pos__ - 1)],
-              "assigning variable a2", index_uni(sym2__), index_uni(sym1__));
-            current_statement__ = 7;
-            pos__ = (pos__ + 1);}}
-      }
-      std::vector<double> a1;
-      a1 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 8;
-      a1 = context__.vals_r("a1");
-      std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> y8;
-      y8 = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(N, std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N)));
-      stan::math::fill(y8, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> y8_flat__;
-        current_statement__ = 9;
-        y8_flat__ = context__.vals_r("y8");
-        current_statement__ = 9;
-        pos__ = 1;
-        current_statement__ = 9;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 9;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 9;
-            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-              current_statement__ = 9;
-              for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-                current_statement__ = 9;
-                assign(y8, y8_flat__[(pos__ - 1)],
-                  "assigning variable y8", index_uni(sym4__),
-                                             index_uni(sym3__),
-                                             index_uni(sym2__),
-                                             index_uni(sym1__));
-                current_statement__ = 9;
-                pos__ = (pos__ + 1);}}}}
-      }
-      std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> y7;
-      y7 = std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(N, std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N)));
-      stan::math::fill(y7, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> y7_flat__;
-        current_statement__ = 10;
-        y7_flat__ = context__.vals_r("y7");
-        current_statement__ = 10;
-        pos__ = 1;
-        current_statement__ = 10;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 10;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 10;
-            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-              current_statement__ = 10;
-              assign(y7, y7_flat__[(pos__ - 1)],
-                "assigning variable y7", index_uni(sym3__),
-                                           index_uni(sym2__),
-                                           index_uni(sym1__));
-              current_statement__ = 10;
-              pos__ = (pos__ + 1);}}}
-      }
-      std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> y6;
-      y6 = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(N, std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N)));
-      stan::math::fill(y6, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> y6_flat__;
-        current_statement__ = 11;
-        y6_flat__ = context__.vals_r("y6");
-        current_statement__ = 11;
-        pos__ = 1;
-        current_statement__ = 11;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 11;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 11;
-            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-              current_statement__ = 11;
-              assign(y6, y6_flat__[(pos__ - 1)],
-                "assigning variable y6", index_uni(sym3__),
-                                           index_uni(sym2__),
-                                           index_uni(sym1__));
-              current_statement__ = 11;
-              pos__ = (pos__ + 1);}}}
-      }
-      std::vector<std::vector<double>> y5;
-      y5 = std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN()));
-      
-      {
-        std::vector<local_scalar_t__> y5_flat__;
-        current_statement__ = 12;
-        y5_flat__ = context__.vals_r("y5");
-        current_statement__ = 12;
-        pos__ = 1;
-        current_statement__ = 12;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 12;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 12;
-            assign(y5, y5_flat__[(pos__ - 1)],
-              "assigning variable y5", index_uni(sym2__), index_uni(sym1__));
-            current_statement__ = 12;
-            pos__ = (pos__ + 1);}}
-      }
-      std::vector<Eigen::Matrix<double, -1, -1>> y4;
-      y4 = std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N));
-      stan::math::fill(y4, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> y4_flat__;
-        current_statement__ = 13;
-        y4_flat__ = context__.vals_r("y4");
-        current_statement__ = 13;
-        pos__ = 1;
-        current_statement__ = 13;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 13;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 13;
-            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-              current_statement__ = 13;
-              assign(y4, y4_flat__[(pos__ - 1)],
-                "assigning variable y4", index_uni(sym3__),
-                                           index_uni(sym2__),
-                                           index_uni(sym1__));
-              current_statement__ = 13;
-              pos__ = (pos__ + 1);}}}
-      }
-      std::vector<Eigen::Matrix<double, 1, -1>> y3;
-      y3 = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
-      stan::math::fill(y3, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> y3_flat__;
-        current_statement__ = 14;
-        y3_flat__ = context__.vals_r("y3");
-        current_statement__ = 14;
-        pos__ = 1;
-        current_statement__ = 14;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 14;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 14;
-            assign(y3, y3_flat__[(pos__ - 1)],
-              "assigning variable y3", index_uni(sym2__), index_uni(sym1__));
-            current_statement__ = 14;
-            pos__ = (pos__ + 1);}}
-      }
-      std::vector<Eigen::Matrix<double, -1, 1>> y2;
-      y2 = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
-      stan::math::fill(y2, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> y2_flat__;
-        current_statement__ = 15;
-        y2_flat__ = context__.vals_r("y2");
-        current_statement__ = 15;
-        pos__ = 1;
-        current_statement__ = 15;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 15;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 15;
-            assign(y2, y2_flat__[(pos__ - 1)],
-              "assigning variable y2", index_uni(sym2__), index_uni(sym1__));
-            current_statement__ = 15;
-            pos__ = (pos__ + 1);}}
-      }
-      std::vector<double> y1;
-      y1 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 16;
-      y1 = context__.vals_r("y1");
+      assign(a8,
+        deserializer.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
+          N, N, N, N), "assigning variable a8");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
@@ -21706,33 +20744,86 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
                 rvalue(a8, "a8",
                   index_uni(sym1__), index_uni(sym2__), index_uni(sym4__),
                     index_uni(sym3__)));}}}}
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> a7;
+      a7 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N)));
+      stan::math::fill(a7, DUMMY_VAR__);
+      
+      assign(a7,
+        deserializer.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
+          N, N, N), "assigning variable a7");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
             vars__.emplace_back(
               a7[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]);}}}
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> a6;
+      a6 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N)));
+      stan::math::fill(a6, DUMMY_VAR__);
+      
+      assign(a6,
+        deserializer.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
+          N, N, N), "assigning variable a6");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
             vars__.emplace_back(
               a6[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]);}}}
+      std::vector<std::vector<local_scalar_t__>> a5;
+      a5 = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__));
+      
+      assign(a5,
+        deserializer.read<std::vector<std::vector<local_scalar_t__>>>(N, N),
+        "assigning variable a5");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.emplace_back(a5[(sym1__ - 1)][(sym2__ - 1)]);}}
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> a4;
+      a4 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N));
+      stan::math::fill(a4, DUMMY_VAR__);
+      
+      assign(a4,
+        deserializer.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
+          N, N, N), "assigning variable a4");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
             vars__.emplace_back(
               rvalue(a4, "a4",
                 index_uni(sym1__), index_uni(sym3__), index_uni(sym2__)));}}}
+      std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> a3;
+      a3 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
+      stan::math::fill(a3, DUMMY_VAR__);
+      
+      assign(a3,
+        deserializer.read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
+          N, N), "assigning variable a3");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.emplace_back(a3[(sym1__ - 1)][(sym2__ - 1)]);}}
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> a2;
+      a2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
+      stan::math::fill(a2, DUMMY_VAR__);
+      
+      assign(a2,
+        deserializer.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+          N, N), "assigning variable a2");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.emplace_back(a2[(sym1__ - 1)][(sym2__ - 1)]);}}
+      std::vector<local_scalar_t__> a1;
+      a1 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      
+      assign(a1, deserializer.read<std::vector<local_scalar_t__>>(N),
+        "assigning variable a1");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         vars__.emplace_back(a1[(sym1__ - 1)]);}
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> y8;
+      y8 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
+      stan::math::fill(y8, DUMMY_VAR__);
+      
+      assign(y8,
+        deserializer.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
+          N, N, N, N), "assigning variable y8");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
@@ -21741,31 +20832,77 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
                 rvalue(y8, "y8",
                   index_uni(sym1__), index_uni(sym2__), index_uni(sym4__),
                     index_uni(sym3__)));}}}}
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> y7;
+      y7 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N)));
+      stan::math::fill(y7, DUMMY_VAR__);
+      
+      assign(y7,
+        deserializer.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
+          N, N, N), "assigning variable y7");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
             vars__.emplace_back(
               y7[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]);}}}
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> y6;
+      y6 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N)));
+      stan::math::fill(y6, DUMMY_VAR__);
+      
+      assign(y6,
+        deserializer.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
+          N, N, N), "assigning variable y6");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
             vars__.emplace_back(
               y6[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]);}}}
+      std::vector<std::vector<local_scalar_t__>> y5;
+      y5 = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__));
+      
+      assign(y5,
+        deserializer.read<std::vector<std::vector<local_scalar_t__>>>(N, N),
+        "assigning variable y5");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.emplace_back(y5[(sym1__ - 1)][(sym2__ - 1)]);}}
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> y4;
+      y4 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N));
+      stan::math::fill(y4, DUMMY_VAR__);
+      
+      assign(y4,
+        deserializer.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
+          N, N, N), "assigning variable y4");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
             vars__.emplace_back(
               rvalue(y4, "y4",
                 index_uni(sym1__), index_uni(sym3__), index_uni(sym2__)));}}}
+      std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> y3;
+      y3 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
+      stan::math::fill(y3, DUMMY_VAR__);
+      
+      assign(y3,
+        deserializer.read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
+          N, N), "assigning variable y3");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.emplace_back(y3[(sym1__ - 1)][(sym2__ - 1)]);}}
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> y2;
+      y2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
+      stan::math::fill(y2, DUMMY_VAR__);
+      
+      assign(y2,
+        deserializer.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+          N, N), "assigning variable y2");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.emplace_back(y2[(sym1__ - 1)][(sym2__ - 1)]);}}
+      std::vector<local_scalar_t__> y1;
+      y1 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      
+      assign(y1, deserializer.read<std::vector<local_scalar_t__>>(N),
+        "assigning variable y1");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         vars__.emplace_back(y1[(sym1__ - 1)]);}
     } catch (const std::exception& e) {
@@ -25546,280 +24683,86 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      std::vector<double> y1;
-      y1 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      std::vector<local_scalar_t__> y1;
+      y1 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       
-      current_statement__ = 1;
-      y1 = context__.vals_r("y1");
-      std::vector<Eigen::Matrix<double, -1, 1>> y2;
-      y2 = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
-      stan::math::fill(y2, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> y2_flat__;
-        current_statement__ = 2;
-        y2_flat__ = context__.vals_r("y2");
-        current_statement__ = 2;
-        pos__ = 1;
-        current_statement__ = 2;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 2;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 2;
-            assign(y2, y2_flat__[(pos__ - 1)],
-              "assigning variable y2", index_uni(sym2__), index_uni(sym1__));
-            current_statement__ = 2;
-            pos__ = (pos__ + 1);}}
-      }
-      std::vector<Eigen::Matrix<double, 1, -1>> y3;
-      y3 = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
-      stan::math::fill(y3, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> y3_flat__;
-        current_statement__ = 3;
-        y3_flat__ = context__.vals_r("y3");
-        current_statement__ = 3;
-        pos__ = 1;
-        current_statement__ = 3;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 3;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 3;
-            assign(y3, y3_flat__[(pos__ - 1)],
-              "assigning variable y3", index_uni(sym2__), index_uni(sym1__));
-            current_statement__ = 3;
-            pos__ = (pos__ + 1);}}
-      }
-      std::vector<Eigen::Matrix<double, -1, -1>> y4;
-      y4 = std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N));
-      stan::math::fill(y4, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> y4_flat__;
-        current_statement__ = 4;
-        y4_flat__ = context__.vals_r("y4");
-        current_statement__ = 4;
-        pos__ = 1;
-        current_statement__ = 4;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 4;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 4;
-            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-              current_statement__ = 4;
-              assign(y4, y4_flat__[(pos__ - 1)],
-                "assigning variable y4", index_uni(sym3__),
-                                           index_uni(sym2__),
-                                           index_uni(sym1__));
-              current_statement__ = 4;
-              pos__ = (pos__ + 1);}}}
-      }
-      std::vector<std::vector<double>> y5;
-      y5 = std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN()));
-      
-      {
-        std::vector<local_scalar_t__> y5_flat__;
-        current_statement__ = 5;
-        y5_flat__ = context__.vals_r("y5");
-        current_statement__ = 5;
-        pos__ = 1;
-        current_statement__ = 5;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 5;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 5;
-            assign(y5, y5_flat__[(pos__ - 1)],
-              "assigning variable y5", index_uni(sym2__), index_uni(sym1__));
-            current_statement__ = 5;
-            pos__ = (pos__ + 1);}}
-      }
-      std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> y6;
-      y6 = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(N, std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N)));
-      stan::math::fill(y6, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> y6_flat__;
-        current_statement__ = 6;
-        y6_flat__ = context__.vals_r("y6");
-        current_statement__ = 6;
-        pos__ = 1;
-        current_statement__ = 6;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 6;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 6;
-            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-              current_statement__ = 6;
-              assign(y6, y6_flat__[(pos__ - 1)],
-                "assigning variable y6", index_uni(sym3__),
-                                           index_uni(sym2__),
-                                           index_uni(sym1__));
-              current_statement__ = 6;
-              pos__ = (pos__ + 1);}}}
-      }
-      std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> y7;
-      y7 = std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(N, std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N)));
-      stan::math::fill(y7, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> y7_flat__;
-        current_statement__ = 7;
-        y7_flat__ = context__.vals_r("y7");
-        current_statement__ = 7;
-        pos__ = 1;
-        current_statement__ = 7;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 7;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 7;
-            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-              current_statement__ = 7;
-              assign(y7, y7_flat__[(pos__ - 1)],
-                "assigning variable y7", index_uni(sym3__),
-                                           index_uni(sym2__),
-                                           index_uni(sym1__));
-              current_statement__ = 7;
-              pos__ = (pos__ + 1);}}}
-      }
-      std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> y8;
-      y8 = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(N, std::vector<Eigen::Matrix<double, -1, -1>>(N, Eigen::Matrix<double, -1, -1>(N, N)));
-      stan::math::fill(y8, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> y8_flat__;
-        current_statement__ = 8;
-        y8_flat__ = context__.vals_r("y8");
-        current_statement__ = 8;
-        pos__ = 1;
-        current_statement__ = 8;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 8;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 8;
-            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-              current_statement__ = 8;
-              for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-                current_statement__ = 8;
-                assign(y8, y8_flat__[(pos__ - 1)],
-                  "assigning variable y8", index_uni(sym4__),
-                                             index_uni(sym3__),
-                                             index_uni(sym2__),
-                                             index_uni(sym1__));
-                current_statement__ = 8;
-                pos__ = (pos__ + 1);}}}}
-      }
-      double y9;
-      y9 = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 9;
-      y9 = context__.vals_r("y9")[(1 - 1)];
-      Eigen::Matrix<double, -1, 1> y10;
-      y10 = Eigen::Matrix<double, -1, 1>(N);
-      stan::math::fill(y10, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> y10_flat__;
-        current_statement__ = 10;
-        y10_flat__ = context__.vals_r("y10");
-        current_statement__ = 10;
-        pos__ = 1;
-        current_statement__ = 10;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 10;
-          assign(y10, y10_flat__[(pos__ - 1)],
-            "assigning variable y10", index_uni(sym1__));
-          current_statement__ = 10;
-          pos__ = (pos__ + 1);}
-      }
-      Eigen::Matrix<double, 1, -1> y11;
-      y11 = Eigen::Matrix<double, 1, -1>(N);
-      stan::math::fill(y11, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> y11_flat__;
-        current_statement__ = 11;
-        y11_flat__ = context__.vals_r("y11");
-        current_statement__ = 11;
-        pos__ = 1;
-        current_statement__ = 11;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 11;
-          assign(y11, y11_flat__[(pos__ - 1)],
-            "assigning variable y11", index_uni(sym1__));
-          current_statement__ = 11;
-          pos__ = (pos__ + 1);}
-      }
-      Eigen::Matrix<double, -1, -1> y12;
-      y12 = Eigen::Matrix<double, -1, -1>(N, N);
-      stan::math::fill(y12, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> y12_flat__;
-        current_statement__ = 12;
-        y12_flat__ = context__.vals_r("y12");
-        current_statement__ = 12;
-        pos__ = 1;
-        current_statement__ = 12;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 12;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 12;
-            assign(y12, y12_flat__[(pos__ - 1)],
-              "assigning variable y12", index_uni(sym2__), index_uni(sym1__));
-            current_statement__ = 12;
-            pos__ = (pos__ + 1);}}
-      }
-      std::vector<std::vector<std::vector<double>>> y17;
-      y17 = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(N, std::vector<double>(N, std::numeric_limits<double>::quiet_NaN())));
-      
-      {
-        std::vector<local_scalar_t__> y17_flat__;
-        current_statement__ = 13;
-        y17_flat__ = context__.vals_r("y17");
-        current_statement__ = 13;
-        pos__ = 1;
-        current_statement__ = 13;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 13;
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 13;
-            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-              current_statement__ = 13;
-              assign(y17, y17_flat__[(pos__ - 1)],
-                "assigning variable y17", index_uni(sym3__),
-                                            index_uni(sym2__),
-                                            index_uni(sym1__));
-              current_statement__ = 13;
-              pos__ = (pos__ + 1);}}}
-      }
+      assign(y1, deserializer.read<std::vector<local_scalar_t__>>(N),
+        "assigning variable y1");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         vars__.emplace_back(y1[(sym1__ - 1)]);}
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> y2;
+      y2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
+      stan::math::fill(y2, DUMMY_VAR__);
+      
+      assign(y2,
+        deserializer.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+          N, N), "assigning variable y2");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.emplace_back(y2[(sym1__ - 1)][(sym2__ - 1)]);}}
+      std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> y3;
+      y3 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
+      stan::math::fill(y3, DUMMY_VAR__);
+      
+      assign(y3,
+        deserializer.read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
+          N, N), "assigning variable y3");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.emplace_back(y3[(sym1__ - 1)][(sym2__ - 1)]);}}
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> y4;
+      y4 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N));
+      stan::math::fill(y4, DUMMY_VAR__);
+      
+      assign(y4,
+        deserializer.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
+          N, N, N), "assigning variable y4");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
             vars__.emplace_back(
               rvalue(y4, "y4",
                 index_uni(sym1__), index_uni(sym3__), index_uni(sym2__)));}}}
+      std::vector<std::vector<local_scalar_t__>> y5;
+      y5 = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__));
+      
+      assign(y5,
+        deserializer.read<std::vector<std::vector<local_scalar_t__>>>(N, N),
+        "assigning variable y5");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.emplace_back(y5[(sym1__ - 1)][(sym2__ - 1)]);}}
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> y6;
+      y6 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N)));
+      stan::math::fill(y6, DUMMY_VAR__);
+      
+      assign(y6,
+        deserializer.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
+          N, N, N), "assigning variable y6");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
             vars__.emplace_back(
               y6[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]);}}}
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> y7;
+      y7 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N)));
+      stan::math::fill(y7, DUMMY_VAR__);
+      
+      assign(y7,
+        deserializer.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
+          N, N, N), "assigning variable y7");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
             vars__.emplace_back(
               y7[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]);}}}
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> y8;
+      y8 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
+      stan::math::fill(y8, DUMMY_VAR__);
+      
+      assign(y8,
+        deserializer.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
+          N, N, N, N), "assigning variable y8");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
@@ -25828,15 +24771,46 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
                 rvalue(y8, "y8",
                   index_uni(sym1__), index_uni(sym2__), index_uni(sym4__),
                     index_uni(sym3__)));}}}}
+      local_scalar_t__ y9;
+      y9 = DUMMY_VAR__;
+      
+      y9 = deserializer.read<local_scalar_t__>();
       vars__.emplace_back(y9);
+      Eigen::Matrix<local_scalar_t__, -1, 1> y10;
+      y10 = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
+      stan::math::fill(y10, DUMMY_VAR__);
+      
+      assign(y10,
+        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N),
+        "assigning variable y10");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         vars__.emplace_back(y10[(sym1__ - 1)]);}
+      Eigen::Matrix<local_scalar_t__, 1, -1> y11;
+      y11 = Eigen::Matrix<local_scalar_t__, 1, -1>(N);
+      stan::math::fill(y11, DUMMY_VAR__);
+      
+      assign(y11,
+        deserializer.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(N),
+        "assigning variable y11");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         vars__.emplace_back(y11[(sym1__ - 1)]);}
+      Eigen::Matrix<local_scalar_t__, -1, -1> y12;
+      y12 = Eigen::Matrix<local_scalar_t__, -1, -1>(N, N);
+      stan::math::fill(y12, DUMMY_VAR__);
+      
+      assign(y12,
+        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, N),
+        "assigning variable y12");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.emplace_back(
             rvalue(y12, "y12", index_uni(sym2__), index_uni(sym1__)));}}
+      std::vector<std::vector<std::vector<local_scalar_t__>>> y17;
+      y17 = std::vector<std::vector<std::vector<local_scalar_t__>>>(N, std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__)));
+      
+      assign(y17,
+        deserializer.read<std::vector<std::vector<std::vector<local_scalar_t__>>>>(
+          N, N, N), "assigning variable y17");
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
@@ -27046,16 +26020,10 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      double x;
-      x = std::numeric_limits<double>::quiet_NaN();
+      local_scalar_t__ x_free__;
+      x_free__ = DUMMY_VAR__;
       
-      current_statement__ = 1;
-      x = context__.vals_r("x")[(1 - 1)];
-      double x_free__;
-      x_free__ = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 1;
-      x_free__ = stan::math::lb_free(x, 0);
+      x_free__ = deserializer.read_free_lb<local_scalar_t__>(0);
       vars__.emplace_back(x_free__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -28930,603 +27898,189 @@ class transform_model final : public model_base_crtp<transform_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      std::vector<double> p_1;
-      p_1 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
+      std::vector<local_scalar_t__> p_1_free__;
+      p_1_free__ = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       
-      current_statement__ = 1;
-      p_1 = context__.vals_r("p_1");
-      current_statement__ = 1;
-      check_matching_dims("constraint", "p_1", p_1, "lower",
-                          rvalue(ds, "ds", index_uni(1), index_uni(1)));
-      std::vector<double> p_1_free__;
-      p_1_free__ = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 1;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 1;
-        assign(p_1_free__,
-          stan::math::lb_free(p_1[(sym1__ - 1)],
-            rvalue(ds, "ds", index_uni(1), index_uni(1))[(sym1__ - 1)]),
-          "assigning variable p_1_free__", index_uni(sym1__));}
-      std::vector<double> p_2;
-      p_2 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 2;
-      p_2 = context__.vals_r("p_2");
-      current_statement__ = 2;
-      check_matching_dims("constraint", "p_2", p_2, "upper",
-                          rvalue(ds, "ds", index_uni(1), index_uni(1)));
-      std::vector<double> p_2_free__;
-      p_2_free__ = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 2;
-        assign(p_2_free__,
-          stan::math::ub_free(p_2[(sym1__ - 1)],
-            rvalue(ds, "ds", index_uni(1), index_uni(1))[(sym1__ - 1)]),
-          "assigning variable p_2_free__", index_uni(sym1__));}
-      std::vector<double> p_3;
-      p_3 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 3;
-      p_3 = context__.vals_r("p_3");
-      current_statement__ = 3;
-      check_matching_dims("constraint", "p_3", p_3, "lower",
-                          rvalue(ds, "ds", index_uni(1), index_uni(1)));
-      current_statement__ = 3;
-      check_matching_dims("constraint", "p_3", p_3, "upper",
-                          rvalue(ds, "ds", index_uni(1), index_uni(2)));
-      std::vector<double> p_3_free__;
-      p_3_free__ = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 3;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 3;
-        assign(p_3_free__,
-          stan::math::lub_free(p_3[(sym1__ - 1)],
-            rvalue(ds, "ds", index_uni(1), index_uni(1))[(sym1__ - 1)],
-            rvalue(ds, "ds", index_uni(1), index_uni(2))[(sym1__ - 1)]),
-          "assigning variable p_3_free__", index_uni(sym1__));}
-      std::vector<double> p_4;
-      p_4 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 4;
-      p_4 = context__.vals_r("p_4");
-      current_statement__ = 4;
-      check_matching_dims("constraint", "p_4", p_4, "upper",
-                          rvalue(ds, "ds", index_uni(1), index_uni(2)));
-      std::vector<double> p_4_free__;
-      p_4_free__ = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 4;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 4;
-        assign(p_4_free__,
-          stan::math::lub_free(p_4[(sym1__ - 1)], 0,
-            rvalue(ds, "ds", index_uni(1), index_uni(2))[(sym1__ - 1)]),
-          "assigning variable p_4_free__", index_uni(sym1__));}
-      std::vector<double> p_5;
-      p_5 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 5;
-      p_5 = context__.vals_r("p_5");
-      current_statement__ = 5;
-      check_matching_dims("constraint", "p_5", p_5, "lower",
-                          rvalue(ds, "ds", index_uni(1), index_uni(1)));
-      std::vector<double> p_5_free__;
-      p_5_free__ = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 5;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 5;
-        assign(p_5_free__,
-          stan::math::lub_free(p_5[(sym1__ - 1)],
-            rvalue(ds, "ds", index_uni(1), index_uni(1))[(sym1__ - 1)], 1),
-          "assigning variable p_5_free__", index_uni(sym1__));}
-      std::vector<double> p_6;
-      p_6 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 6;
-      p_6 = context__.vals_r("p_6");
-      current_statement__ = 6;
-      check_matching_dims("constraint", "p_6", p_6, "offset",
-                          rvalue(ds, "ds", index_uni(1), index_uni(1)));
-      std::vector<double> p_6_free__;
-      p_6_free__ = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 6;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 6;
-        assign(p_6_free__,
-          stan::math::offset_multiplier_free(p_6[(sym1__ - 1)],
-            rvalue(ds, "ds", index_uni(1), index_uni(1))[(sym1__ - 1)], 1),
-          "assigning variable p_6_free__", index_uni(sym1__));}
-      std::vector<double> p_7;
-      p_7 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 7;
-      p_7 = context__.vals_r("p_7");
-      current_statement__ = 7;
-      check_matching_dims("constraint", "p_7", p_7, "multiplier",
-                          rvalue(ds, "ds", index_uni(1), index_uni(1)));
-      std::vector<double> p_7_free__;
-      p_7_free__ = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 7;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 7;
-        assign(p_7_free__,
-          stan::math::offset_multiplier_free(p_7[(sym1__ - 1)], 0,
-            rvalue(ds, "ds", index_uni(1), index_uni(1))[(sym1__ - 1)]),
-          "assigning variable p_7_free__", index_uni(sym1__));}
-      std::vector<double> p_8;
-      p_8 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 8;
-      p_8 = context__.vals_r("p_8");
-      current_statement__ = 8;
-      check_matching_dims("constraint", "p_8", p_8, "offset",
-                          rvalue(ds, "ds", index_uni(1), index_uni(1)));
-      current_statement__ = 8;
-      check_matching_dims("constraint", "p_8", p_8, "multiplier",
-                          rvalue(ds, "ds", index_uni(1), index_uni(2)));
-      std::vector<double> p_8_free__;
-      p_8_free__ = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 8;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 8;
-        assign(p_8_free__,
-          stan::math::offset_multiplier_free(p_8[(sym1__ - 1)],
-            rvalue(ds, "ds", index_uni(1), index_uni(1))[(sym1__ - 1)],
-            rvalue(ds, "ds", index_uni(1), index_uni(2))[(sym1__ - 1)]),
-          "assigning variable p_8_free__", index_uni(sym1__));}
-      std::vector<std::vector<double>> p_9;
-      p_9 = std::vector<std::vector<double>>(m, std::vector<double>(k, std::numeric_limits<double>::quiet_NaN()));
-      
-      {
-        std::vector<local_scalar_t__> p_9_flat__;
-        current_statement__ = 9;
-        p_9_flat__ = context__.vals_r("p_9");
-        current_statement__ = 9;
-        pos__ = 1;
-        current_statement__ = 9;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 9;
-          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-            current_statement__ = 9;
-            assign(p_9, p_9_flat__[(pos__ - 1)],
-              "assigning variable p_9", index_uni(sym2__), index_uni(sym1__));
-            current_statement__ = 9;
-            pos__ = (pos__ + 1);}}
-      }
-      current_statement__ = 9;
-      check_matching_dims("constraint", "p_9", p_9, "lower",
-                          rvalue(ds, "ds", index_uni(1)));
-      std::vector<std::vector<double>> p_9_free__;
-      p_9_free__ = std::vector<std::vector<double>>(m, std::vector<double>(k, std::numeric_limits<double>::quiet_NaN()));
-      
-      current_statement__ = 9;
-      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
-        current_statement__ = 9;
-        for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
-          current_statement__ = 9;
-          assign(p_9_free__,
-            stan::math::lub_free(p_9[(sym1__ - 1)][(sym2__ - 1)],
-              rvalue(ds, "ds", index_uni(1))[(sym1__ - 1)][(sym2__ - 1)], 1),
-            "assigning variable p_9_free__", index_uni(sym1__),
-                                               index_uni(sym2__));}}
-      std::vector<std::vector<std::vector<double>>> p_10;
-      p_10 = std::vector<std::vector<std::vector<double>>>(n, std::vector<std::vector<double>>(m, std::vector<double>(k, std::numeric_limits<double>::quiet_NaN())));
-      
-      {
-        std::vector<local_scalar_t__> p_10_flat__;
-        current_statement__ = 10;
-        p_10_flat__ = context__.vals_r("p_10");
-        current_statement__ = 10;
-        pos__ = 1;
-        current_statement__ = 10;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 10;
-          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-            current_statement__ = 10;
-            for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
-              current_statement__ = 10;
-              assign(p_10, p_10_flat__[(pos__ - 1)],
-                "assigning variable p_10", index_uni(sym3__),
-                                             index_uni(sym2__),
-                                             index_uni(sym1__));
-              current_statement__ = 10;
-              pos__ = (pos__ + 1);}}}
-      }
-      current_statement__ = 10;
-      check_matching_dims("constraint", "p_10", p_10, "upper", ds);
-      std::vector<std::vector<std::vector<double>>> p_10_free__;
-      p_10_free__ = std::vector<std::vector<std::vector<double>>>(n, std::vector<std::vector<double>>(m, std::vector<double>(k, std::numeric_limits<double>::quiet_NaN())));
-      
-      current_statement__ = 10;
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 10;
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          current_statement__ = 10;
-          for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
-            current_statement__ = 10;
-            assign(p_10_free__,
-              stan::math::lub_free(
-                p_10[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)], 0,
-                ds[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]),
-              "assigning variable p_10_free__", index_uni(sym1__),
-                                                  index_uni(sym2__),
-                                                  index_uni(sym3__));}}}
-      Eigen::Matrix<double, -1, 1> pv_1;
-      pv_1 = Eigen::Matrix<double, -1, 1>(k);
-      stan::math::fill(pv_1, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> pv_1_flat__;
-        current_statement__ = 11;
-        pv_1_flat__ = context__.vals_r("pv_1");
-        current_statement__ = 11;
-        pos__ = 1;
-        current_statement__ = 11;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 11;
-          assign(pv_1, pv_1_flat__[(pos__ - 1)],
-            "assigning variable pv_1", index_uni(sym1__));
-          current_statement__ = 11;
-          pos__ = (pos__ + 1);}
-      }
-      current_statement__ = 11;
-      check_matching_dims("constraint", "pv_1", pv_1, "lower",
-                          rvalue(dv, "dv", index_uni(1), index_uni(1)));
-      current_statement__ = 11;
-      check_matching_dims("constraint", "pv_1", pv_1, "upper",
-                          rvalue(dv, "dv", index_uni(1), index_uni(2)));
-      Eigen::Matrix<double, -1, 1> pv_1_free__;
-      pv_1_free__ = Eigen::Matrix<double, -1, 1>(k);
-      stan::math::fill(pv_1_free__, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 11;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 11;
-        assign(pv_1_free__,
-          stan::math::lub_free(pv_1[(sym1__ - 1)],
-            rvalue(dv, "dv", index_uni(1), index_uni(1))[(sym1__ - 1)],
-            rvalue(dv, "dv", index_uni(1), index_uni(2))[(sym1__ - 1)]),
-          "assigning variable pv_1_free__", index_uni(sym1__));}
-      std::vector<Eigen::Matrix<double, -1, 1>> pv_2;
-      pv_2 = std::vector<Eigen::Matrix<double, -1, 1>>(m, Eigen::Matrix<double, -1, 1>(k));
-      stan::math::fill(pv_2, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> pv_2_flat__;
-        current_statement__ = 12;
-        pv_2_flat__ = context__.vals_r("pv_2");
-        current_statement__ = 12;
-        pos__ = 1;
-        current_statement__ = 12;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 12;
-          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-            current_statement__ = 12;
-            assign(pv_2, pv_2_flat__[(pos__ - 1)],
-              "assigning variable pv_2", index_uni(sym2__), index_uni(sym1__));
-            current_statement__ = 12;
-            pos__ = (pos__ + 1);}}
-      }
-      current_statement__ = 12;
-      check_matching_dims("constraint", "pv_2", pv_2, "lower",
-                          rvalue(dv, "dv", index_uni(1)));
-      std::vector<Eigen::Matrix<double, -1, 1>> pv_2_free__;
-      pv_2_free__ = std::vector<Eigen::Matrix<double, -1, 1>>(m, Eigen::Matrix<double, -1, 1>(k));
-      stan::math::fill(pv_2_free__, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 12;
-      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
-        current_statement__ = 12;
-        for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
-          current_statement__ = 12;
-          assign(pv_2_free__,
-            stan::math::lb_free(pv_2[(sym1__ - 1)][(sym2__ - 1)],
-              rvalue(dv, "dv", index_uni(1))[(sym1__ - 1)][(sym2__ - 1)]),
-            "assigning variable pv_2_free__", index_uni(sym1__),
-                                                index_uni(sym2__));}}
-      std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> pv_3;
-      pv_3 = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(n, std::vector<Eigen::Matrix<double, -1, 1>>(m, Eigen::Matrix<double, -1, 1>(k)));
-      stan::math::fill(pv_3, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> pv_3_flat__;
-        current_statement__ = 13;
-        pv_3_flat__ = context__.vals_r("pv_3");
-        current_statement__ = 13;
-        pos__ = 1;
-        current_statement__ = 13;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 13;
-          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-            current_statement__ = 13;
-            for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
-              current_statement__ = 13;
-              assign(pv_3, pv_3_flat__[(pos__ - 1)],
-                "assigning variable pv_3", index_uni(sym3__),
-                                             index_uni(sym2__),
-                                             index_uni(sym1__));
-              current_statement__ = 13;
-              pos__ = (pos__ + 1);}}}
-      }
-      current_statement__ = 13;
-      check_matching_dims("constraint", "pv_3", pv_3, "upper", dv);
-      std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> pv_3_free__;
-      pv_3_free__ = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(n, std::vector<Eigen::Matrix<double, -1, 1>>(m, Eigen::Matrix<double, -1, 1>(k)));
-      stan::math::fill(pv_3_free__, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 13;
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 13;
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          current_statement__ = 13;
-          for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
-            current_statement__ = 13;
-            assign(pv_3_free__,
-              stan::math::ub_free(
-                pv_3[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)],
-                dv[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]),
-              "assigning variable pv_3_free__", index_uni(sym1__),
-                                                  index_uni(sym2__),
-                                                  index_uni(sym3__));}}}
-      Eigen::Matrix<double, 1, -1> pr_1;
-      pr_1 = Eigen::Matrix<double, 1, -1>(k);
-      stan::math::fill(pr_1, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> pr_1_flat__;
-        current_statement__ = 14;
-        pr_1_flat__ = context__.vals_r("pr_1");
-        current_statement__ = 14;
-        pos__ = 1;
-        current_statement__ = 14;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 14;
-          assign(pr_1, pr_1_flat__[(pos__ - 1)],
-            "assigning variable pr_1", index_uni(sym1__));
-          current_statement__ = 14;
-          pos__ = (pos__ + 1);}
-      }
-      current_statement__ = 14;
-      check_matching_dims("constraint", "pr_1", pr_1, "lower",
-                          rvalue(dr, "dr", index_uni(1), index_uni(1)));
-      current_statement__ = 14;
-      check_matching_dims("constraint", "pr_1", pr_1, "upper",
-                          rvalue(dr, "dr", index_uni(1), index_uni(2)));
-      Eigen::Matrix<double, 1, -1> pr_1_free__;
-      pr_1_free__ = Eigen::Matrix<double, 1, -1>(k);
-      stan::math::fill(pr_1_free__, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 14;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 14;
-        assign(pr_1_free__,
-          stan::math::lub_free(pr_1[(sym1__ - 1)],
-            rvalue(dr, "dr", index_uni(1), index_uni(1))[(sym1__ - 1)],
-            rvalue(dr, "dr", index_uni(1), index_uni(2))[(sym1__ - 1)]),
-          "assigning variable pr_1_free__", index_uni(sym1__));}
-      std::vector<Eigen::Matrix<double, 1, -1>> pr_2;
-      pr_2 = std::vector<Eigen::Matrix<double, 1, -1>>(m, Eigen::Matrix<double, 1, -1>(k));
-      stan::math::fill(pr_2, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> pr_2_flat__;
-        current_statement__ = 15;
-        pr_2_flat__ = context__.vals_r("pr_2");
-        current_statement__ = 15;
-        pos__ = 1;
-        current_statement__ = 15;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 15;
-          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-            current_statement__ = 15;
-            assign(pr_2, pr_2_flat__[(pos__ - 1)],
-              "assigning variable pr_2", index_uni(sym2__), index_uni(sym1__));
-            current_statement__ = 15;
-            pos__ = (pos__ + 1);}}
-      }
-      current_statement__ = 15;
-      check_matching_dims("constraint", "pr_2", pr_2, "lower",
-                          rvalue(dr, "dr", index_uni(1)));
-      std::vector<Eigen::Matrix<double, 1, -1>> pr_2_free__;
-      pr_2_free__ = std::vector<Eigen::Matrix<double, 1, -1>>(m, Eigen::Matrix<double, 1, -1>(k));
-      stan::math::fill(pr_2_free__, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 15;
-      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
-        current_statement__ = 15;
-        for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
-          current_statement__ = 15;
-          assign(pr_2_free__,
-            stan::math::lb_free(pr_2[(sym1__ - 1)][(sym2__ - 1)],
-              rvalue(dr, "dr", index_uni(1))[(sym1__ - 1)][(sym2__ - 1)]),
-            "assigning variable pr_2_free__", index_uni(sym1__),
-                                                index_uni(sym2__));}}
-      std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> pr_3;
-      pr_3 = std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(n, std::vector<Eigen::Matrix<double, 1, -1>>(m, Eigen::Matrix<double, 1, -1>(k)));
-      stan::math::fill(pr_3, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> pr_3_flat__;
-        current_statement__ = 16;
-        pr_3_flat__ = context__.vals_r("pr_3");
-        current_statement__ = 16;
-        pos__ = 1;
-        current_statement__ = 16;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 16;
-          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-            current_statement__ = 16;
-            for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
-              current_statement__ = 16;
-              assign(pr_3, pr_3_flat__[(pos__ - 1)],
-                "assigning variable pr_3", index_uni(sym3__),
-                                             index_uni(sym2__),
-                                             index_uni(sym1__));
-              current_statement__ = 16;
-              pos__ = (pos__ + 1);}}}
-      }
-      current_statement__ = 16;
-      check_matching_dims("constraint", "pr_3", pr_3, "upper", dr);
-      std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> pr_3_free__;
-      pr_3_free__ = std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(n, std::vector<Eigen::Matrix<double, 1, -1>>(m, Eigen::Matrix<double, 1, -1>(k)));
-      stan::math::fill(pr_3_free__, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 16;
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 16;
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          current_statement__ = 16;
-          for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
-            current_statement__ = 16;
-            assign(pr_3_free__,
-              stan::math::ub_free(
-                pr_3[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)],
-                dr[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]),
-              "assigning variable pr_3_free__", index_uni(sym1__),
-                                                  index_uni(sym2__),
-                                                  index_uni(sym3__));}}}
-      Eigen::Matrix<double, -1, -1> pm_1;
-      pm_1 = Eigen::Matrix<double, -1, -1>(m, k);
-      stan::math::fill(pm_1, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> pm_1_flat__;
-        current_statement__ = 17;
-        pm_1_flat__ = context__.vals_r("pm_1");
-        current_statement__ = 17;
-        pos__ = 1;
-        current_statement__ = 17;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 17;
-          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-            current_statement__ = 17;
-            assign(pm_1, pm_1_flat__[(pos__ - 1)],
-              "assigning variable pm_1", index_uni(sym2__), index_uni(sym1__));
-            current_statement__ = 17;
-            pos__ = (pos__ + 1);}}
-      }
-      current_statement__ = 17;
-      check_matching_dims("constraint", "pm_1", pm_1, "lower",
-                          rvalue(dm, "dm", index_uni(1)));
-      Eigen::Matrix<double, -1, -1> pm_1_free__;
-      pm_1_free__ = Eigen::Matrix<double, -1, -1>(m, k);
-      stan::math::fill(pm_1_free__, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 17;
-      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
-        current_statement__ = 17;
-        for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
-          current_statement__ = 17;
-          assign(pm_1_free__,
-            stan::math::lb_free(
-              rvalue(pm_1, "pm_1", index_uni(sym1__), index_uni(sym2__)),
-              rvalue(rvalue(dm, "dm", index_uni(1)), "dm[1]",
-                index_uni(sym1__), index_uni(sym2__))),
-            "assigning variable pm_1_free__", index_uni(sym1__),
-                                                index_uni(sym2__));}}
-      std::vector<Eigen::Matrix<double, -1, -1>> pm_2;
-      pm_2 = std::vector<Eigen::Matrix<double, -1, -1>>(n, Eigen::Matrix<double, -1, -1>(m, k));
-      stan::math::fill(pm_2, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> pm_2_flat__;
-        current_statement__ = 18;
-        pm_2_flat__ = context__.vals_r("pm_2");
-        current_statement__ = 18;
-        pos__ = 1;
-        current_statement__ = 18;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 18;
-          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-            current_statement__ = 18;
-            for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
-              current_statement__ = 18;
-              assign(pm_2, pm_2_flat__[(pos__ - 1)],
-                "assigning variable pm_2", index_uni(sym3__),
-                                             index_uni(sym2__),
-                                             index_uni(sym1__));
-              current_statement__ = 18;
-              pos__ = (pos__ + 1);}}}
-      }
-      current_statement__ = 18;
-      check_matching_dims("constraint", "pm_2", pm_2, "upper", dm);
-      std::vector<Eigen::Matrix<double, -1, -1>> pm_2_free__;
-      pm_2_free__ = std::vector<Eigen::Matrix<double, -1, -1>>(n, Eigen::Matrix<double, -1, -1>(m, k));
-      stan::math::fill(pm_2_free__, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 18;
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        current_statement__ = 18;
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          current_statement__ = 18;
-          for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
-            current_statement__ = 18;
-            assign(pm_2_free__,
-              stan::math::ub_free(
-                rvalue(pm_2, "pm_2",
-                  index_uni(sym1__), index_uni(sym2__), index_uni(sym3__)),
-                rvalue(dm, "dm",
-                  index_uni(sym1__), index_uni(sym2__), index_uni(sym3__))),
-              "assigning variable pm_2_free__", index_uni(sym1__),
-                                                  index_uni(sym2__),
-                                                  index_uni(sym3__));}}}
+      assign(p_1_free__,
+        deserializer.read_free_lb<std::vector<local_scalar_t__>>(
+          rvalue(ds, "ds", index_uni(1), index_uni(1)), k),
+        "assigning variable p_1_free__");
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.emplace_back(p_1_free__[(sym1__ - 1)]);}
+      std::vector<local_scalar_t__> p_2_free__;
+      p_2_free__ = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
+      
+      assign(p_2_free__,
+        deserializer.read_free_ub<std::vector<local_scalar_t__>>(
+          rvalue(ds, "ds", index_uni(1), index_uni(1)), k),
+        "assigning variable p_2_free__");
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.emplace_back(p_2_free__[(sym1__ - 1)]);}
+      std::vector<local_scalar_t__> p_3_free__;
+      p_3_free__ = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
+      
+      assign(p_3_free__,
+        deserializer.read_free_lub<std::vector<local_scalar_t__>>(
+          rvalue(ds, "ds", index_uni(1), index_uni(1)),
+          rvalue(ds, "ds", index_uni(1), index_uni(2)), k),
+        "assigning variable p_3_free__");
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.emplace_back(p_3_free__[(sym1__ - 1)]);}
+      std::vector<local_scalar_t__> p_4_free__;
+      p_4_free__ = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
+      
+      assign(p_4_free__,
+        deserializer.read_free_lub<std::vector<local_scalar_t__>>(0,
+          rvalue(ds, "ds", index_uni(1), index_uni(2)), k),
+        "assigning variable p_4_free__");
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.emplace_back(p_4_free__[(sym1__ - 1)]);}
+      std::vector<local_scalar_t__> p_5_free__;
+      p_5_free__ = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
+      
+      assign(p_5_free__,
+        deserializer.read_free_lub<std::vector<local_scalar_t__>>(
+          rvalue(ds, "ds", index_uni(1), index_uni(1)), 1, k),
+        "assigning variable p_5_free__");
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.emplace_back(p_5_free__[(sym1__ - 1)]);}
+      std::vector<local_scalar_t__> p_6_free__;
+      p_6_free__ = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
+      
+      assign(p_6_free__,
+        deserializer.read_free_offset_multiplier<std::vector<local_scalar_t__>>(
+          rvalue(ds, "ds", index_uni(1), index_uni(1)), 1, k),
+        "assigning variable p_6_free__");
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.emplace_back(p_6_free__[(sym1__ - 1)]);}
+      std::vector<local_scalar_t__> p_7_free__;
+      p_7_free__ = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
+      
+      assign(p_7_free__,
+        deserializer.read_free_offset_multiplier<std::vector<local_scalar_t__>>(
+          0, rvalue(ds, "ds", index_uni(1), index_uni(1)), k),
+        "assigning variable p_7_free__");
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.emplace_back(p_7_free__[(sym1__ - 1)]);}
+      std::vector<local_scalar_t__> p_8_free__;
+      p_8_free__ = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
+      
+      assign(p_8_free__,
+        deserializer.read_free_offset_multiplier<std::vector<local_scalar_t__>>(
+          rvalue(ds, "ds", index_uni(1), index_uni(1)),
+          rvalue(ds, "ds", index_uni(1), index_uni(2)), k),
+        "assigning variable p_8_free__");
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.emplace_back(p_8_free__[(sym1__ - 1)]);}
+      std::vector<std::vector<local_scalar_t__>> p_9_free__;
+      p_9_free__ = std::vector<std::vector<local_scalar_t__>>(m, std::vector<local_scalar_t__>(k, DUMMY_VAR__));
+      
+      assign(p_9_free__,
+        deserializer.read_free_lub<std::vector<std::vector<local_scalar_t__>>>(
+          rvalue(ds, "ds", index_uni(1)), 1, m, k),
+        "assigning variable p_9_free__");
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
           vars__.emplace_back(p_9_free__[(sym1__ - 1)][(sym2__ - 1)]);}}
+      std::vector<std::vector<std::vector<local_scalar_t__>>> p_10_free__;
+      p_10_free__ = std::vector<std::vector<std::vector<local_scalar_t__>>>(n, std::vector<std::vector<local_scalar_t__>>(m, std::vector<local_scalar_t__>(k, DUMMY_VAR__)));
+      
+      assign(p_10_free__,
+        deserializer.read_free_lub<std::vector<std::vector<std::vector<local_scalar_t__>>>>(
+          0, ds, n, m, k), "assigning variable p_10_free__");
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
             vars__.emplace_back(
               p_10_free__[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]);}}}
+      Eigen::Matrix<local_scalar_t__, -1, 1> pv_1_free__;
+      pv_1_free__ = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
+      stan::math::fill(pv_1_free__, DUMMY_VAR__);
+      
+      assign(pv_1_free__,
+        deserializer.read_free_lub<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+          rvalue(dv, "dv", index_uni(1), index_uni(1)),
+          rvalue(dv, "dv", index_uni(1), index_uni(2)), k),
+        "assigning variable pv_1_free__");
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.emplace_back(pv_1_free__[(sym1__ - 1)]);}
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> pv_2_free__;
+      pv_2_free__ = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(m, Eigen::Matrix<local_scalar_t__, -1, 1>(k));
+      stan::math::fill(pv_2_free__, DUMMY_VAR__);
+      
+      assign(pv_2_free__,
+        deserializer.read_free_lb<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+          rvalue(dv, "dv", index_uni(1)), m, k),
+        "assigning variable pv_2_free__");
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
           vars__.emplace_back(pv_2_free__[(sym1__ - 1)][(sym2__ - 1)]);}}
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> pv_3_free__;
+      pv_3_free__ = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(n, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(m, Eigen::Matrix<local_scalar_t__, -1, 1>(k)));
+      stan::math::fill(pv_3_free__, DUMMY_VAR__);
+      
+      assign(pv_3_free__,
+        deserializer.read_free_ub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
+          dv, n, m, k), "assigning variable pv_3_free__");
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
             vars__.emplace_back(
               pv_3_free__[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]);}}}
+      Eigen::Matrix<local_scalar_t__, 1, -1> pr_1_free__;
+      pr_1_free__ = Eigen::Matrix<local_scalar_t__, 1, -1>(k);
+      stan::math::fill(pr_1_free__, DUMMY_VAR__);
+      
+      assign(pr_1_free__,
+        deserializer.read_free_lub<Eigen::Matrix<local_scalar_t__, 1, -1>>(
+          rvalue(dr, "dr", index_uni(1), index_uni(1)),
+          rvalue(dr, "dr", index_uni(1), index_uni(2)), k),
+        "assigning variable pr_1_free__");
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.emplace_back(pr_1_free__[(sym1__ - 1)]);}
+      std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> pr_2_free__;
+      pr_2_free__ = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(m, Eigen::Matrix<local_scalar_t__, 1, -1>(k));
+      stan::math::fill(pr_2_free__, DUMMY_VAR__);
+      
+      assign(pr_2_free__,
+        deserializer.read_free_lb<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
+          rvalue(dr, "dr", index_uni(1)), m, k),
+        "assigning variable pr_2_free__");
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
           vars__.emplace_back(pr_2_free__[(sym1__ - 1)][(sym2__ - 1)]);}}
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> pr_3_free__;
+      pr_3_free__ = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(n, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(m, Eigen::Matrix<local_scalar_t__, 1, -1>(k)));
+      stan::math::fill(pr_3_free__, DUMMY_VAR__);
+      
+      assign(pr_3_free__,
+        deserializer.read_free_ub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
+          dr, n, m, k), "assigning variable pr_3_free__");
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= k; ++sym3__) {
             vars__.emplace_back(
               pr_3_free__[(sym1__ - 1)][(sym2__ - 1)][(sym3__ - 1)]);}}}
+      Eigen::Matrix<local_scalar_t__, -1, -1> pm_1_free__;
+      pm_1_free__ = Eigen::Matrix<local_scalar_t__, -1, -1>(m, k);
+      stan::math::fill(pm_1_free__, DUMMY_VAR__);
+      
+      assign(pm_1_free__,
+        deserializer.read_free_lb<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+          rvalue(dm, "dm", index_uni(1)), m, k),
+        "assigning variable pm_1_free__");
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
           vars__.emplace_back(
             rvalue(pm_1_free__, "pm_1_free__",
               index_uni(sym2__), index_uni(sym1__)));}}
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> pm_2_free__;
+      pm_2_free__ = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, Eigen::Matrix<local_scalar_t__, -1, -1>(m, k));
+      stan::math::fill(pm_2_free__, DUMMY_VAR__);
+      
+      assign(pm_2_free__,
+        deserializer.read_free_ub<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
+          dm, n, m, k), "assigning variable pm_2_free__");
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= m; ++sym3__) {
@@ -30535,22 +29089,15 @@ class truncate_model final : public model_base_crtp<truncate_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      double m;
-      m = std::numeric_limits<double>::quiet_NaN();
+      local_scalar_t__ m;
+      m = DUMMY_VAR__;
       
-      current_statement__ = 1;
-      m = context__.vals_r("m")[(1 - 1)];
-      double y;
-      y = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 2;
-      y = context__.vals_r("y")[(1 - 1)];
-      double y_free__;
-      y_free__ = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 2;
-      y_free__ = stan::math::lb_free(y, 0);
+      m = deserializer.read<local_scalar_t__>();
       vars__.emplace_back(m);
+      local_scalar_t__ y_free__;
+      y_free__ = DUMMY_VAR__;
+      
+      y_free__ = deserializer.read_free_lb<local_scalar_t__>(0);
       vars__.emplace_back(y_free__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -30907,11 +29454,10 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      double x;
-      x = std::numeric_limits<double>::quiet_NaN();
+      local_scalar_t__ x;
+      x = DUMMY_VAR__;
       
-      current_statement__ = 1;
-      x = context__.vals_r("x")[(1 - 1)];
+      x = deserializer.read<local_scalar_t__>();
       vars__.emplace_back(x);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -31268,16 +29814,10 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      double x;
-      x = std::numeric_limits<double>::quiet_NaN();
+      local_scalar_t__ x_free__;
+      x_free__ = DUMMY_VAR__;
       
-      current_statement__ = 1;
-      x = context__.vals_r("x")[(1 - 1)];
-      double x_free__;
-      x_free__ = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 1;
-      x_free__ = stan::math::lb_free(x, 0);
+      x_free__ = deserializer.read_free_lb<local_scalar_t__>(0);
       vars__.emplace_back(x_free__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

@@ -226,11 +226,6 @@ let check_constraint_to_string t (c : constrainaction) =
     | Constrain | Unconstrain -> Some "offset_multiplier" )
   | Identity -> None
 
-let constrain_constraint_to_string t (c : constrainaction) =
-  match t with
-  | Program.CholeskyCorr -> Some "cholesky_corr"
-  | _ -> check_constraint_to_string t c
-
 let constraint_forl = function
   | Program.Identity | Offset _ | Multiplier _ | OffsetMultiplier _ | Lower _
    |Upper _ | LowerUpper _ ->
@@ -290,15 +285,6 @@ let extract_transform_args var = function
    |PositiveOrdered | Simplex | UnitVector | Identity ->
       []
 
-let extra_constraint_args st = function
-  | Program.Lower _ | Upper _ | Offset _ | Multiplier _ | LowerUpper _
-   |OffsetMultiplier _ | Ordered | PositiveOrdered | Simplex | UnitVector
-   |Identity ->
-      []
-  | Covariance | Correlation | CholeskyCorr ->
-      [List.hd_exn (SizedType.dims_of st)]
-  | CholeskyCov -> SizedType.dims_of st
-
 let param_size transform sizedtype =
   let rec shrink_eigen f st =
     match st with
@@ -352,48 +338,6 @@ let remove_possibly_exn pst action loc =
       raise_s
         [%message
           "Error extracting sizedtype" ~action ~loc:(loc : Location_span.t)]
-
-let constrain_decl st dconstrain t decl_id decl_var smeta =
-  match Option.bind ~f:(constrain_constraint_to_string t) dconstrain with
-  | None -> []
-  | Some constraint_str ->
-      let dc = Option.value_exn dconstrain in
-      let extra_args =
-        match dconstrain with
-        | Some Constrain -> extra_constraint_args st t
-        | _ -> []
-      in
-      let args var = (var :: extract_transform_args var t) @ extra_args in
-      let internal_fun =
-        match dc with
-        | Check -> Internal_fun.FnCheck constraint_str
-        | Constrain -> FnConstrain constraint_str
-        | Unconstrain -> FnUnconstrain constraint_str
-      in
-      let constrainvar var =
-        { var with
-          Expr.Fixed.pattern= FunApp (CompilerInternal internal_fun, args var)
-        }
-      in
-      let unconstrained_decls, decl_id, ut =
-        let ut = SizedType.to_unsized (param_size t st) in
-        match dconstrain with
-        | Some Unconstrain when t <> Identity ->
-            ( [ Stmt.Fixed.
-                  { pattern=
-                      Decl
-                        { decl_adtype= DataOnly
-                        ; decl_id= decl_id ^ "_free__"
-                        ; decl_type= Sized (param_size t st) }
-                  ; meta= smeta } ]
-            , decl_id ^ "_free__"
-            , ut )
-        | _ -> ([], decl_id, SizedType.to_unsized st)
-      in
-      unconstrained_decls
-      @ [ (constraint_forl t) st
-            (Stmt.Helpers.assign_indexed ut decl_id smeta constrainvar)
-            decl_var smeta ]
 
 let rec check_decl var decl_type' decl_id decl_trans smeta adlevel =
   let decl_type = remove_possibly_exn decl_type' "check" smeta in
@@ -801,12 +745,12 @@ let trans_block ud_dists declc block prog =
           if Utils.is_user_ident decl_id then
             let constrain_checks =
               match declc.dconstrain with
-              | Some Constrain ->
+              | Some Constrain | Some Unconstrain ->
                   check_transform_shape decl_id decl_var smeta.loc transform
-              | Some Unconstrain ->
-                  check_transform_shape decl_id decl_var smeta.loc transform
-                  @ constrain_decl type_ declc.dconstrain transform decl_id
-                      decl_var smeta.loc
+              (* | Some Unconstrain ->
+               *     check_transform_shape decl_id decl_var smeta.loc transform
+               *     @ constrain_decl type_ declc.dconstrain transform decl_id
+               *         decl_var smeta.loc *)
               | Some Check ->
                   check_transform_shape decl_id decl_var smeta.loc transform
                   @ check_decl decl_var (Sized type_) decl_id transform
@@ -863,9 +807,11 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
       {dconstrain= Some Constrain; dadlevel= AutoDiffable}
       Parameters p
   in
-  let _, _, transform_inits =
-    trans_block ud_dists {declc with dconstrain= Some Unconstrain} Parameters p
-  in
+  (* let _, _, transform_inits =
+   *   trans_block ud_dists {declc with dconstrain= Some Unconstrain} Parameters p
+   * in *)
+  (* Backends will add to transform_inits as needed *)
+  let transform_inits = [] in
   let out_param, paramsizes, param_gq =
     trans_block ud_dists {declc with dconstrain= Some Constrain} Parameters p
   in
