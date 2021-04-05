@@ -55,14 +55,12 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      pos__ = std::numeric_limits<int>::min(); 
       
       pos__ = 1;
       current_statement__ = 1;
-      p = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
-      q = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
       q = (p + 5);
@@ -73,13 +71,6 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     }
     num_params_r__ = 0U;
     
-    try {
-      
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
@@ -160,7 +151,7 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      pos__ = std::numeric_limits<int>::min(); 
       
       pos__ = 1;
     } catch (const std::exception& e) {
@@ -173,11 +164,13 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
   inline void get_param_names(std::vector<std::string>& names__) const {
     
     names__ = std::vector<std::string>{};
+    
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
     dimss__ = std::vector<std::vector<size_t>>{};
+    
     } // get_dims() 
     
   inline void constrained_param_names(
@@ -214,14 +207,16 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     
     } // unconstrained_param_names() 
     
-  inline std::string get_constrained_sizedtypes() const final {
+  inline std::string get_constrained_sizedtypes() const {
     
     return std::string("[]");
+    
     } // get_constrained_sizedtypes() 
     
-  inline std::string get_unconstrained_sizedtypes() const final {
+  inline std::string get_unconstrained_sizedtypes() const {
     
     return std::string("[]");
+    
     } // get_unconstrained_sizedtypes() 
     
   
@@ -233,14 +228,13 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      std::vector<double> vars_vec(vars.size());
+      std::vector<double> vars_vec;
+      vars_vec.reserve(vars.size());
       std::vector<int> params_i;
       write_array_impl(base_rng, params_r, params_i, vars_vec,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars.resize(vars_vec.size());
-      for (int i = 0; i < vars.size(); ++i) {
-        vars.coeffRef(i) = vars_vec[i];
-      }
+      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
+        vars_vec.data(), vars_vec.size());
     }
 
     template <typename RNG>
@@ -250,7 +244,8 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      write_array_impl(base_rng, params_r, params_i, vars,
+       emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -271,13 +266,12 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
                          std::ostream* pstream = nullptr) const final {
-      std::vector<double> params_r_vec(params_r.size());
+      std::vector<double> params_r_vec;
+      params_r_vec.reserve(params_r.size());
       std::vector<int> params_i;
       transform_inits_impl(context, params_i, params_r_vec, pstream);
-      params_r.resize(params_r_vec.size());
-      for (int i = 0; i < params_r.size(); ++i) {
-        params_r.coeffRef(i) = params_r_vec[i];
-      }
+      params_r = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
+        params_r_vec.data(), params_r_vec.size());
     }
     inline void transform_inits(const stan::io::var_context& context,
                                 std::vector<int>& params_i,

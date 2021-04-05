@@ -15,13 +15,13 @@ let pp_profile ppf (pp_body, name, body) =
   in
   pf ppf "{@;<1 2>@[<v>%s@;@;%a@]@,}" profile pp_body body
 
-let rec contains_eigen (ut : UnsizedType.t) : bool = 
+let rec contains_eigen (ut : UnsizedType.t) : bool =
   match ut with
   | UnsizedType.UArray t -> contains_eigen t
   | UMatrix | URowVector | UVector -> true
   | UInt | UReal | UMathLibraryFunction | UFun _ -> false
 
-let pp_set_size ppf (decl_id, st, adtype)  =
+let pp_set_size ppf (decl_id, st, adtype) =
   (* TODO: generate optimal adtypes for expressions and declarations *)
   let real_nan =
     match adtype with
@@ -40,10 +40,13 @@ let pp_set_size ppf (decl_id, st, adtype)  =
     | SArray (t, d) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d pp_size_ctor t
   in
   let print_fill ppf st =
-  match contains_eigen (SizedType.to_unsized st) with
+    match contains_eigen (SizedType.to_unsized st) with
     | true -> pf ppf "stan::math::fill(%s, %s);" decl_id real_nan
-    | false -> () in
-    pf ppf "@[<hov 0>%s = %a;@,%a @]@," decl_id pp_size_ctor st print_fill st
+    | false -> ()
+  in
+  pf ppf "@[<hov 0>%s = %a;@,%a @]@," decl_id pp_size_ctor st print_fill st
+
+
 
 let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in
@@ -58,7 +61,7 @@ let%expect_test "set size mat array" =
 (** [pp_for_loop ppf (loopvar, lower, upper, pp_body, body)] tries to
     pretty print a for-loop from lower to upper given some loopvar.*)
 let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
-  pf ppf "@[<hov>for (@[<hov>int %s = %a;@ %s <= %a;@ ++%s@])" loopvar pp_expr
+  pf ppf "@[for (@[int %s = %a;@ %s <= %a;@ ++%s@])" loopvar pp_expr
     lower loopvar pp_expr upper loopvar ;
   pf ppf " %a@]" pp_body body
 
