@@ -56,6 +56,7 @@ let replace_cpp_expr s =
   |> Str.global_replace (Str.regexp {|"|}) {|\"|}
   |> Str.global_replace (Str.regexp {|\\"\+|}) {|" +|}
   |> Str.global_replace (Str.regexp {|\+\\"|}) {|+ "|}
+  |> Str.global_replace (Str.regexp {|\\n|}) {||}
 
 let wrap_in_quotes s = "\"" ^ s ^ "\""
 
