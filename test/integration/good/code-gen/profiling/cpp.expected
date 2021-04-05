@@ -94,7 +94,6 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       current_statement__ = 21;
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 21;
-      current_statement__ = 21;
       check_greater_or_equal(function__, "N", N, 1);
       current_statement__ = 22;
       validate_non_negative_index("x", "N", N);

@@ -25,8 +25,8 @@ let%expect_test "map_rec_stmt_loc" =
       |}
   in
   let f = function
-    | Stmt.Fixed.Pattern.NRFunApp (CompilerInternal, "FnPrint__", [s]) ->
-        Stmt.Fixed.Pattern.NRFunApp (CompilerInternal, "FnPrint__", [s; s])
+    | Stmt.Fixed.Pattern.NRFunApp (CompilerInternal FnPrint, [s]) ->
+        Stmt.Fixed.Pattern.NRFunApp (CompilerInternal FnPrint, [s; s])
     | x -> x
   in
   let mir = Program.map Fn.id (map_rec_stmt_loc f) mir in
@@ -66,9 +66,8 @@ let%expect_test "map_rec_state_stmt_loc" =
       |}
   in
   let f i = function
-    | Stmt.Fixed.Pattern.NRFunApp (CompilerInternal, "FnPrint__", [s]) ->
-        Stmt.Fixed.Pattern.
-          (NRFunApp (CompilerInternal, "FnPrint__", [s; s]), i + 1)
+    | Stmt.Fixed.Pattern.NRFunApp (CompilerInternal FnPrint, [s]) ->
+        Stmt.Fixed.Pattern.(NRFunApp (CompilerInternal FnPrint, [s; s]), i + 1)
     | x -> (x, i)
   in
   let mir_stmt, num =
@@ -253,12 +252,12 @@ let%expect_test "list collapsing" =
          (((pattern
             (Block
              (((pattern
-                (NRFunApp CompilerInternal FnPrint__
+                (NRFunApp (CompilerInternal FnPrint)
                  (((pattern (Var x))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                (meta <opaque>))
               ((pattern
-                (NRFunApp CompilerInternal FnPrint__
+                (NRFunApp (CompilerInternal FnPrint)
                  (((pattern (Var y))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta <opaque>)))))
@@ -271,7 +270,7 @@ let%expect_test "list collapsing" =
              (((pattern
                 (Return
                  (((pattern
-                    (FunApp StanLib Pow__
+                    (FunApp (StanLib Pow__)
                      (((pattern (Var z))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 2))
@@ -305,16 +304,16 @@ let%expect_test "list collapsing" =
                ((pattern
                  (Block
                   (((pattern
-                     (NRFunApp CompilerInternal FnPrint__
+                     (NRFunApp (CompilerInternal FnPrint)
                       (((pattern (Lit Int 3))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                     (meta <opaque>))
                    ((pattern
-                     (NRFunApp CompilerInternal FnPrint__
+                     (NRFunApp (CompilerInternal FnPrint)
                       (((pattern
-                         (FunApp CompilerInternal FnMakeRowVec__
+                         (FunApp (CompilerInternal FnMakeRowVec)
                           (((pattern
-                             (FunApp CompilerInternal FnMakeRowVec__
+                             (FunApp (CompilerInternal FnMakeRowVec)
                               (((pattern (Lit Int 3))
                                 (meta
                                  ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -325,7 +324,7 @@ let%expect_test "list collapsing" =
                              ((type_ URowVector) (loc <opaque>)
                               (adlevel DataOnly))))
                            ((pattern
-                             (FunApp CompilerInternal FnMakeRowVec__
+                             (FunApp (CompilerInternal FnMakeRowVec)
                               (((pattern (Lit Int 4))
                                 (meta
                                  ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -372,7 +371,7 @@ let%expect_test "list collapsing" =
                    ((pattern
                      (Assignment (inline_sym3__ UReal ())
                       ((pattern
-                        (FunApp StanLib Pow__
+                        (FunApp (StanLib Pow__)
                          (((pattern (Lit Int 53))
                            (meta
                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -385,7 +384,7 @@ let%expect_test "list collapsing" =
                 (meta <opaque>)))))
             (meta <opaque>))
            ((pattern
-             (NRFunApp CompilerInternal FnReject__
+             (NRFunApp (CompilerInternal FnReject)
               (((pattern (Var inline_sym3__))
                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta <opaque>)))))
@@ -401,7 +400,7 @@ let%expect_test "list collapsing" =
        ((pattern
          (IfElse
           ((pattern
-            (FunApp StanLib PNot__
+            (FunApp (StanLib PNot__)
              (((pattern
                 (EOr
                  ((pattern (Var emit_transformed_parameters__))
@@ -415,7 +414,7 @@ let%expect_test "list collapsing" =
        ((pattern
          (IfElse
           ((pattern
-            (FunApp StanLib PNot__
+            (FunApp (StanLib PNot__)
              (((pattern (Var emit_generated_quantities__))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -2337,7 +2336,7 @@ model {
         data vector[3] y_vector;
         data matrix[2, 2] x_cov;
         data vector[3] x_cov_free__;
-        x_cov_free__ = FnUnconstrain__(x_cov, "cov_matrix");
+        x_cov_free__ = (FnUnconstrain cov_matrix)__(x_cov);
         data real theta_u;
         data real phi_u;
       }
@@ -3051,7 +3050,7 @@ let%expect_test "block fixing" =
         (((pattern
            (IfElse
             ((pattern
-              (FunApp StanLib PNot__
+              (FunApp (StanLib PNot__)
                (((pattern
                   (EOr
                    ((pattern (Var emit_transformed_parameters__))
@@ -3065,7 +3064,7 @@ let%expect_test "block fixing" =
          ((pattern
            (IfElse
             ((pattern
-              (FunApp StanLib PNot__
+              (FunApp (StanLib PNot__)
                (((pattern (Var emit_generated_quantities__))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -3250,7 +3249,7 @@ let%expect_test "adlevel_optimization expressions" =
            ((pattern
              (IfElse
               ((pattern
-                (FunApp StanLib Greater__
+                (FunApp (StanLib Greater__)
                  (((pattern (Lit Int 1))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern (Lit Int 2))
@@ -3259,7 +3258,7 @@ let%expect_test "adlevel_optimization expressions" =
               ((pattern
                 (Assignment (y UReal ())
                  ((pattern
-                   (FunApp StanLib Plus__
+                   (FunApp (StanLib Plus__)
                     (((pattern (Var y))
                       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                      ((pattern (Var x))
@@ -3269,7 +3268,7 @@ let%expect_test "adlevel_optimization expressions" =
               (((pattern
                  (Assignment (y UReal ())
                   ((pattern
-                    (FunApp StanLib Plus__
+                    (FunApp (StanLib Plus__)
                      (((pattern (Var y))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern (Var w))
@@ -3280,7 +3279,7 @@ let%expect_test "adlevel_optimization expressions" =
            ((pattern
              (IfElse
               ((pattern
-                (FunApp StanLib Greater__
+                (FunApp (StanLib Greater__)
                  (((pattern (Lit Int 2))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern (Lit Int 1))
@@ -3296,7 +3295,7 @@ let%expect_test "adlevel_optimization expressions" =
            ((pattern
              (IfElse
               ((pattern
-                (FunApp StanLib Greater__
+                (FunApp (StanLib Greater__)
                  (((pattern (Lit Int 3))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern (Lit Int 1))
@@ -3310,12 +3309,12 @@ let%expect_test "adlevel_optimization expressions" =
               ()))
             (meta <opaque>))
            ((pattern
-             (NRFunApp CompilerInternal FnPrint__
+             (NRFunApp (CompilerInternal FnPrint)
               (((pattern (Var z))
                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta <opaque>))
            ((pattern
-             (NRFunApp CompilerInternal FnPrint__
+             (NRFunApp (CompilerInternal FnPrint)
               (((pattern (Var z_data))
                 (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
             (meta <opaque>)))))

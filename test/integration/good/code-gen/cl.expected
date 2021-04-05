@@ -303,7 +303,6 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 176;
       k = context__.vals_i("k")[(1 - 1)];
       current_statement__ = 176;
-      current_statement__ = 176;
       check_greater_or_equal(function__, "k", k, 1);
       current_statement__ = 177;
       context__.validate_dims("data initialization","n","int",
@@ -312,7 +311,6 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       
       current_statement__ = 177;
       n = context__.vals_i("n")[(1 - 1)];
-      current_statement__ = 177;
       current_statement__ = 177;
       check_greater_or_equal(function__, "n", n, 0);
       current_statement__ = 178;
@@ -487,9 +485,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 208;
       
       current_statement__ = 194;
-      current_statement__ = 194;
       check_greater_or_equal(function__, "k_td", k_td, 1);
-      current_statement__ = 195;
       current_statement__ = 195;
       check_greater_or_equal(function__, "n_td", n_td, 0);
       current_statement__ = 209;

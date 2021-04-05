@@ -22,12 +22,12 @@ let extract_factors_statement stmt =
   match stmt with
   | Stmt.Fixed.Pattern.TargetPE e ->
       List.map (summation_terms e) ~f:(fun x -> TargetTerm x)
-  | NRFunApp (_, f, _) when Internal_fun.of_string_opt f = Some FnReject ->
-      [Reject]
-  | NRFunApp (_, s, args) when String.suffix s 3 = "_lp" ->
+  | NRFunApp (CompilerInternal FnReject, _) -> [Reject]
+  | NRFunApp ((UserDefined s | StanLib s), args) when String.suffix s 3 = "_lp"
+    ->
       [LPFunction (s, args)]
   | Assignment (_, _)
-   |NRFunApp (_, _, _)
+   |NRFunApp (_, _)
    |Break | Continue | Return _ | Skip
    |IfElse (_, _, _)
    |While (_, _)

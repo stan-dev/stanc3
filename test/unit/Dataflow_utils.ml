@@ -70,9 +70,9 @@ let%expect_test "Loop test" =
           (end_loc
            ((filename string) (line_num 4) (col_num 23) (included_from ()))))))
        (5
-        ((NRFunApp CompilerInternal FnPrint__
+        ((NRFunApp (CompilerInternal FnPrint)
           (((pattern
-             (FunApp StanLib Plus__
+             (FunApp (StanLib Plus__)
               (((pattern (Lit Int 3))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                ((pattern (Lit Int 4))
@@ -191,7 +191,7 @@ let%expect_test "Statement label map example" =
        (5
         (IfElse
          ((pattern
-           (FunApp StanLib Less__
+           (FunApp (StanLib Less__)
             (((pattern (Var i))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Lit Int 0))
@@ -200,7 +200,7 @@ let%expect_test "Statement label map example" =
          6 (8)))
        (6 (Block (7)))
        (7
-        (NRFunApp CompilerInternal FnPrint__
+        (NRFunApp (CompilerInternal FnPrint)
          (((pattern (Var i))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (8 (Block (9)))
@@ -217,7 +217,7 @@ let%expect_test "Statement label map example" =
        (11
         (IfElse
          ((pattern
-           (FunApp StanLib Greater__
+           (FunApp (StanLib Greater__)
             (((pattern (Var j))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Lit Int 9))
@@ -230,18 +230,18 @@ let%expect_test "Statement label map example" =
          ((pattern
            (EAnd
             ((pattern
-              (FunApp StanLib Greater__
+              (FunApp (StanLib Greater__)
                (((pattern (Var j))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                 ((pattern (Lit Int 8))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
             ((pattern
-              (FunApp StanLib Less__
+              (FunApp (StanLib Less__)
                (((pattern (Var i))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                 ((pattern
-                  (FunApp StanLib PMinus__
+                  (FunApp (StanLib PMinus__)
                    (((pattern (Lit Int 1))
                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -252,7 +252,7 @@ let%expect_test "Statement label map example" =
        (17
         (IfElse
          ((pattern
-           (FunApp StanLib Greater__
+           (FunApp (StanLib Greater__)
             (((pattern (Var j))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Lit Int 5))
@@ -261,18 +261,18 @@ let%expect_test "Statement label map example" =
          18 (20)))
        (18 (Block (19))) (19 Continue) (20 (Block (21)))
        (21
-        (NRFunApp CompilerInternal FnPrint__
+        (NRFunApp (CompilerInternal FnPrint)
          (((pattern (Lit Str Badger))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
           ((pattern
-            (FunApp StanLib Plus__
+            (FunApp (StanLib Plus__)
              (((pattern (Var i))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((pattern (Var j))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (22
-        (NRFunApp CompilerInternal FnPrint__
+        (NRFunApp (CompilerInternal FnPrint)
          (((pattern (Lit Str Fin))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))))
     |}]
@@ -372,7 +372,7 @@ let%expect_test "Statement label map example 3" =
           (end_loc
            ((filename string) (line_num 3) (col_num 19) (included_from ()))))))
        (6
-        ((NRFunApp CompilerInternal FnPrint__
+        ((NRFunApp (CompilerInternal FnPrint)
           (((pattern (Lit Str exit))
             (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
          ((begin_loc

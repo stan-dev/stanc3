@@ -51,17 +51,17 @@ let%expect_test "Prefix-Op-Example" =
            ((pattern
              (IfElse
               ((pattern
-                (FunApp StanLib Less__
+                (FunApp (StanLib Less__)
                  (((pattern (Var i))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern
-                    (FunApp StanLib PMinus__
+                    (FunApp (StanLib PMinus__)
                      (((pattern (Lit Int 1))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (NRFunApp CompilerInternal FnPrint__
+                (NRFunApp (CompilerInternal FnPrint)
                  (((pattern (Lit Str Badger))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
                (meta <opaque>))
@@ -117,7 +117,7 @@ let%expect_test "gen quant" =
     (((pattern
        (IfElse
         ((pattern
-          (FunApp StanLib PNot__
+          (FunApp (StanLib PNot__)
            (((pattern
               (EOr
                ((pattern (Var emit_transformed_parameters__))
@@ -131,7 +131,7 @@ let%expect_test "gen quant" =
      ((pattern
        (IfElse
         ((pattern
-          (FunApp StanLib PNot__
+          (FunApp (StanLib PNot__)
            (((pattern (Var emit_generated_quantities__))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -184,12 +184,9 @@ let%expect_test "gen quant" =
                          ((pattern
                            (Block
                             (((pattern
-                               (NRFunApp CompilerInternal FnCheck__
-                                (((pattern (Lit Str greater_or_equal))
-                                  (meta
-                                   ((type_ UReal) (loc <opaque>)
-                                    (adlevel DataOnly))))
-                                 ((pattern
+                               (NRFunApp
+                                (CompilerInternal (FnCheck greater_or_equal))
+                                (((pattern
                                    (Lit Str "mat[sym1__, sym2__, sym3__]"))
                                   (meta
                                    ((type_ UInt) (loc <opaque>)

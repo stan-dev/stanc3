@@ -511,7 +511,7 @@ ode_integrate(std::ostream* pstream__) {
              integrate_ode_bdf(integrand_ode_functor__(), rep_array(0.0, 1), 1E-5,
   rep_array((1.0 - 1E-5), 1), rep_array(0.0, 0), rep_array(0.0, 0), x_i,
   pstream__),
-             "integrate_ode_bdf(integrand_ode, rep_array(0.0, 1), 1E-5,\n                  rep_array((1.0 - 1E-5), 1), rep_array(0.0, 0),\n                  rep_array(0.0, 0), x_i)",
+             "integrate_ode_bdf(integrand_ode, rep_array(0.0, 1), 1E-5,\nrep_array((1.0 - 1E-5), 1), rep_array(0.0, 0), rep_array(0.0, 0),\nx_i)",
              index_uni(1), index_uni(1));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
