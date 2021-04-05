@@ -1599,6 +1599,26 @@ let () =
   add_unqualified ("quad_form_sym", ReturnType UMatrix, [UMatrix; UMatrix]) ;
   add_unqualified ("quad_form_diag", ReturnType UMatrix, [UMatrix; UVector]) ;
   add_unqualified ("quad_form_diag", ReturnType UMatrix, [UMatrix; URowVector]) ;
+  add_qualified
+    ( "quantile"
+    , ReturnType UReal
+    , [(DataOnly, UArray UReal); (DataOnly, UReal)] ) ;
+  add_qualified
+    ( "quantile"
+    , ReturnType (UArray UReal)
+    , [(DataOnly, UArray UReal); (DataOnly, UArray UReal)] ) ;
+  add_qualified
+    ("quantile", ReturnType UReal, [(DataOnly, UVector); (DataOnly, UReal)]) ;
+  add_qualified
+    ( "quantile"
+    , ReturnType (UArray UReal)
+    , [(DataOnly, UVector); (DataOnly, UArray UReal)] ) ;
+  add_qualified
+    ("quantile", ReturnType UReal, [(DataOnly, URowVector); (DataOnly, UReal)]) ;
+  add_qualified
+    ( "quantile"
+    , ReturnType (UArray UReal)
+    , [(DataOnly, URowVector); (DataOnly, UArray UReal)] ) ;
   add_unqualified ("rank", ReturnType UInt, [UArray UInt; UInt]) ;
   add_unqualified ("rank", ReturnType UInt, [UArray UReal; UInt]) ;
   add_unqualified ("rank", ReturnType UInt, [UVector; UInt]) ;
