@@ -265,8 +265,7 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
                                    VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__;
-    vars__.reserve(params_r__.size());
+    std::decay_t<VecVar> vars__(params_r__.size(), 0);
     stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> serializer(vars__);
     int current_statement__ = 0;
@@ -631,8 +630,7 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
                                    VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__;
-    vars__.reserve(params_r__.size());
+    std::decay_t<VecVar> vars__(params_r__.size(), 0);
     stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> serializer(vars__);
     int current_statement__ = 0;
@@ -1072,8 +1070,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
                                    VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__;
-    vars__.reserve(params_r__.size());
+    std::decay_t<VecVar> vars__(params_r__.size(), 0);
     stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> serializer(vars__);
     int current_statement__ = 0;
@@ -1508,8 +1505,7 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
                                    VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__;
-    vars__.reserve(params_r__.size());
+    std::decay_t<VecVar> vars__(params_r__.size(), 0);
     stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> serializer(vars__);
     int current_statement__ = 0;
@@ -8153,8 +8149,7 @@ class mother_model final : public model_base_crtp<mother_model> {
                                    VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__;
-    vars__.reserve(params_r__.size());
+    std::decay_t<VecVar> vars__(params_r__.size(), 0);
     stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> serializer(vars__);
     int current_statement__ = 0;
@@ -11052,8 +11047,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
                                    VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__;
-    vars__.reserve(params_r__.size());
+    std::decay_t<VecVar> vars__(params_r__.size(), 0);
     stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> serializer(vars__);
     int current_statement__ = 0;
@@ -15386,8 +15380,7 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
                                    VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__;
-    vars__.reserve(params_r__.size());
+    std::decay_t<VecVar> vars__(params_r__.size(), 0);
     stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> serializer(vars__);
     int current_statement__ = 0;
@@ -16066,8 +16059,7 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
                                    VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__;
-    vars__.reserve(params_r__.size());
+    std::decay_t<VecVar> vars__(params_r__.size(), 0);
     stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> serializer(vars__);
     int current_statement__ = 0;
@@ -17566,8 +17558,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                                    VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__;
-    vars__.reserve(params_r__.size());
+    std::decay_t<VecVar> vars__(params_r__.size(), 0);
     stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> serializer(vars__);
     int current_statement__ = 0;
@@ -18052,8 +18043,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
                                    VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__;
-    vars__.reserve(params_r__.size());
+    std::decay_t<VecVar> vars__(params_r__.size(), 0);
     stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> serializer(vars__);
     int current_statement__ = 0;
@@ -18635,8 +18625,7 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
                                    VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__;
-    vars__.reserve(params_r__.size());
+    std::decay_t<VecVar> vars__(params_r__.size(), 0);
     stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> serializer(vars__);
     int current_statement__ = 0;
@@ -20493,8 +20482,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
                                    VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__;
-    vars__.reserve(params_r__.size());
+    std::decay_t<VecVar> vars__(params_r__.size(), 0);
     stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> serializer(vars__);
     int current_statement__ = 0;
@@ -24328,8 +24316,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
                                    VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__;
-    vars__.reserve(params_r__.size());
+    std::decay_t<VecVar> vars__(params_r__.size(), 0);
     stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> serializer(vars__);
     int current_statement__ = 0;
@@ -25224,8 +25211,7 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
                                    VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__;
-    vars__.reserve(params_r__.size());
+    std::decay_t<VecVar> vars__(params_r__.size(), 0);
     stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> serializer(vars__);
     int current_statement__ = 0;
@@ -25593,8 +25579,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
                                    VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__;
-    vars__.reserve(params_r__.size());
+    std::decay_t<VecVar> vars__(params_r__.size(), 0);
     stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> serializer(vars__);
     int current_statement__ = 0;
@@ -27480,8 +27465,7 @@ class transform_model final : public model_base_crtp<transform_model> {
                                    VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__;
-    vars__.reserve(params_r__.size());
+    std::decay_t<VecVar> vars__(params_r__.size(), 0);
     stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> serializer(vars__);
     int current_statement__ = 0;
@@ -28558,8 +28542,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
                                    VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__;
-    vars__.reserve(params_r__.size());
+    std::decay_t<VecVar> vars__(params_r__.size(), 0);
     stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> serializer(vars__);
     int current_statement__ = 0;
@@ -28928,8 +28911,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
                                    VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__;
-    vars__.reserve(params_r__.size());
+    std::decay_t<VecVar> vars__(params_r__.size(), 0);
     stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> serializer(vars__);
     int current_statement__ = 0;
@@ -29297,8 +29279,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
                                    VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__;
-    vars__.reserve(params_r__.size());
+    std::decay_t<VecVar> vars__(params_r__.size(), 0);
     stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> serializer(vars__);
     int current_statement__ = 0;

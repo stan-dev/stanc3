@@ -154,8 +154,7 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
                                    VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__;
-    vars__.reserve(params_r__.size());
+    std::decay_t<VecVar> vars__(params_r__.size(), 0);
     stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
     stan::io::serializer<local_scalar_t__> serializer(vars__);
     int current_statement__ = 0;

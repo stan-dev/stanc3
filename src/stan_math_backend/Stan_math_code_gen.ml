@@ -652,8 +652,8 @@ let pp_transform_inits_impl ppf {Program.transform_inits; _} =
   in
   let intro ppf () =
     pf ppf "%a" (list ~sep:cut string)
-      [ "using local_scalar_t__ = double;"; "std::decay_t<VecVar> vars__;"
-      ; "vars__.reserve(params_r__.size());"
+      [ "using local_scalar_t__ = double;"
+      ; "std::decay_t<VecVar> vars__(params_r__.size(), 0);"
       ; "stan::io::deserializer<local_scalar_t__> deserializer(params_r__, \
          params_i__);"
       ; "stan::io::serializer<local_scalar_t__> serializer(vars__);"
