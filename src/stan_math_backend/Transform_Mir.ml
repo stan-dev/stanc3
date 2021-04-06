@@ -375,6 +375,14 @@ let add_reads vars mkread stmts =
   List.concat_map ~f:add_read_to_decl stmts
 
 let gen_write (decl_id, sizedtype) =
+
+  (* let decl_var =
+   *   { Expr.Fixed.pattern= Var decl_id
+   *   ; meta= Expr.Typed.Meta.{loc= Location_span.empty; type_= SizedType.to_unsized sizedtype; adlevel= DataOnly} }
+   * in
+   * Stmt.Helpers.internal_nrfunapp (FnWriteParam true) [decl_var]
+   *   Location_span.empty *)
+
   let bodyfn var =
     Stmt.Helpers.internal_nrfunapp (FnWriteParam false) [var]
       Location_span.empty
