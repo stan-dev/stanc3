@@ -166,7 +166,9 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
       in
       pf ppf "%s(@[<hov>%a@]);" ("check_" ^ check_name)
         (list ~sep:comma pp_expr) (function_arg :: args)
-  | NRFunApp (CompilerInternal FnWriteParam, [var]) ->
+  | NRFunApp (CompilerInternal (FnWriteParam true), [var]) ->
+      pf ppf "@[<hov 2>serializer.write(@,%a);@]" pp_expr var
+  | NRFunApp (CompilerInternal (FnWriteParam false), [var]) ->
       pf ppf "@[<hov 2>vars__.emplace_back(@,%a);@]" pp_expr var
   | NRFunApp (CompilerInternal f, args) ->
       let fname = Internal_fun.to_string f in

@@ -6068,54 +6068,17 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      local_scalar_t__ p_real;
-      p_real = DUMMY_VAR__;
-      
-      p_real = deserializer.read<local_scalar_t__>();
-      vars__.emplace_back(p_real);
-      std::vector<local_scalar_t__> p_real_array;
-      p_real_array = std::vector<local_scalar_t__>(d_int, DUMMY_VAR__);
-      
-      assign(p_real_array,
-        deserializer.read<std::vector<local_scalar_t__>>(d_int),
-        "assigning variable p_real_array");
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_real_array[(sym1__ - 1)]);}
-      Eigen::Matrix<local_scalar_t__, -1, -1> p_matrix;
-      p_matrix = Eigen::Matrix<local_scalar_t__, -1, -1>(d_int, d_int);
-      stan::math::fill(p_matrix, DUMMY_VAR__);
-      
-      assign(p_matrix,
+      serializer.write(deserializer.read<local_scalar_t__>());
+      serializer.write(
+        deserializer.read<std::vector<local_scalar_t__>>(d_int));
+      serializer.write(
         deserializer.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(d_int,
-          d_int), "assigning variable p_matrix");
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
-          vars__.emplace_back(
-            rvalue(p_matrix, "p_matrix",
-              index_uni(sym2__), index_uni(sym1__)));}}
-      Eigen::Matrix<local_scalar_t__, -1, 1> p_vector;
-      p_vector = Eigen::Matrix<local_scalar_t__, -1, 1>(d_int);
-      stan::math::fill(p_vector, DUMMY_VAR__);
-      
-      assign(p_vector,
-        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(d_int),
-        "assigning variable p_vector");
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_vector[(sym1__ - 1)]);}
-      Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vector;
-      p_row_vector = Eigen::Matrix<local_scalar_t__, 1, -1>(d_int);
-      stan::math::fill(p_row_vector, DUMMY_VAR__);
-      
-      assign(p_row_vector,
-        deserializer.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(d_int),
-        "assigning variable p_row_vector");
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_row_vector[(sym1__ - 1)]);}
-      local_scalar_t__ y_p;
-      y_p = DUMMY_VAR__;
-      
-      y_p = deserializer.read<local_scalar_t__>();
-      vars__.emplace_back(y_p);
+          d_int));
+      serializer.write(
+        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(d_int));
+      serializer.write(
+        deserializer.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(d_int));
+      serializer.write(deserializer.read<local_scalar_t__>());
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -6805,54 +6768,17 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      local_scalar_t__ p_real;
-      p_real = DUMMY_VAR__;
-      
-      p_real = deserializer.read<local_scalar_t__>();
-      vars__.emplace_back(p_real);
-      std::vector<local_scalar_t__> p_real_array;
-      p_real_array = std::vector<local_scalar_t__>(d_int, DUMMY_VAR__);
-      
-      assign(p_real_array,
-        deserializer.read<std::vector<local_scalar_t__>>(d_int),
-        "assigning variable p_real_array");
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_real_array[(sym1__ - 1)]);}
-      Eigen::Matrix<local_scalar_t__, -1, -1> p_matrix;
-      p_matrix = Eigen::Matrix<local_scalar_t__, -1, -1>(d_int, d_int);
-      stan::math::fill(p_matrix, DUMMY_VAR__);
-      
-      assign(p_matrix,
+      serializer.write(deserializer.read<local_scalar_t__>());
+      serializer.write(
+        deserializer.read<std::vector<local_scalar_t__>>(d_int));
+      serializer.write(
         deserializer.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(d_int,
-          d_int), "assigning variable p_matrix");
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
-          vars__.emplace_back(
-            rvalue(p_matrix, "p_matrix",
-              index_uni(sym2__), index_uni(sym1__)));}}
-      Eigen::Matrix<local_scalar_t__, -1, 1> p_vector;
-      p_vector = Eigen::Matrix<local_scalar_t__, -1, 1>(d_int);
-      stan::math::fill(p_vector, DUMMY_VAR__);
-      
-      assign(p_vector,
-        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(d_int),
-        "assigning variable p_vector");
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_vector[(sym1__ - 1)]);}
-      Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vector;
-      p_row_vector = Eigen::Matrix<local_scalar_t__, 1, -1>(d_int);
-      stan::math::fill(p_row_vector, DUMMY_VAR__);
-      
-      assign(p_row_vector,
-        deserializer.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(d_int),
-        "assigning variable p_row_vector");
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_row_vector[(sym1__ - 1)]);}
-      local_scalar_t__ y_p;
-      y_p = DUMMY_VAR__;
-      
-      y_p = deserializer.read<local_scalar_t__>();
-      vars__.emplace_back(y_p);
+          d_int));
+      serializer.write(
+        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(d_int));
+      serializer.write(
+        deserializer.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(d_int));
+      serializer.write(deserializer.read<local_scalar_t__>());
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return

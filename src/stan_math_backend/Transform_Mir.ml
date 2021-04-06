@@ -221,23 +221,17 @@ let read_constrain_dims constrain_transform st =
   | Program.CholeskyCorr | Correlation | Covariance -> constrain_get_dims st
   | _ -> SizedType.get_dims st
 
-let data_unconstrain_read smeta
-    (decl_id, Program.({out_constrained_st= cst; out_trans; _})) =
+let data_unconstrain_read loc Program.({out_constrained_st= cst; out_trans; _})
+    =
   let ut = SizedType.to_unsized cst in
-  let emeta =
-    Expr.Typed.Meta.create ~loc:smeta ~type_:ut ~adlevel:AutoDiffable ()
-  in
+  let emeta = Expr.Typed.Meta.create ~loc ~type_:ut ~adlevel:AutoDiffable () in
   let transform_args = transform_args out_trans in
-  let read =
-    Expr.(
-      Helpers.(
-        internal_funapp
-          (FnReadUnconstrainData (constraint_to_string out_trans Unconstrain))
-          (transform_args @ read_constrain_dims out_trans cst))
-        Typed.Meta.{emeta with type_= ut})
-  in
-  Stmt.Fixed.
-    {pattern= Pattern.Assignment ((decl_id, ut, []), read); meta= smeta}
+  Expr.(
+    Helpers.(
+      internal_funapp
+        (FnReadUnconstrainData (constraint_to_string out_trans Unconstrain))
+        (transform_args @ read_constrain_dims out_trans cst))
+      Typed.Meta.{emeta with type_= ut})
 
 let param_read smeta
     (decl_id, Program.({out_constrained_st= cst; out_block; out_trans; _})) =
@@ -382,7 +376,8 @@ let add_reads vars mkread stmts =
 
 let gen_write (decl_id, sizedtype) =
   let bodyfn var =
-    Stmt.Helpers.internal_nrfunapp FnWriteParam [var] Location_span.empty
+    Stmt.Helpers.internal_nrfunapp (FnWriteParam false) [var]
+      Location_span.empty
   in
   let meta =
     {Expr.Typed.Meta.empty with type_= SizedType.to_unsized sizedtype}
@@ -390,45 +385,52 @@ let gen_write (decl_id, sizedtype) =
   let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
   Stmt.Helpers.for_scalar_inv sizedtype bodyfn expr Location_span.empty
 
-let gen_write_unconstrained (decl_id, sizedtype) =
-  let bodyfn var =
-    let var =
-      match var.Expr.Fixed.pattern with
-      | Indexed ({pattern= Indexed (expr, idcs1); _}, idcs2) ->
-          {var with pattern= Indexed (expr, idcs1 @ idcs2)}
-      | _ -> var
-    in
-    Stmt.Helpers.internal_nrfunapp FnWriteParam [var] Location_span.empty
-  in
-  let meta =
-    {Expr.Typed.Meta.empty with type_= SizedType.to_unsized sizedtype}
-  in
-  let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
-  let writefn var =
-    Stmt.Helpers.for_scalar_inv
-      (SizedType.inner_type sizedtype)
-      bodyfn var Location_span.empty
-  in
-  Stmt.Helpers.for_eigen sizedtype writefn expr Location_span.empty
+(* let gen_write_unconstrained (decl_id, sizedtype) =
+ *   let bodyfn var =
+ *     let var =
+ *       match var.Expr.Fixed.pattern with
+ *       | Indexed ({pattern= Indexed (expr, idcs1); _}, idcs2) ->
+ *           {var with pattern= Indexed (expr, idcs1 @ idcs2)}
+ *       | _ -> var
+ *     in
+ *     Stmt.Helpers.internal_nrfunapp (FnWriteParam false) [var] Location_span.empty
+ *   in
+ *   let meta =
+ *     {Expr.Typed.Meta.empty with type_= SizedType.to_unsized sizedtype}
+ *   in
+ *   let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
+ *   let writefn var =
+ *     Stmt.Helpers.for_scalar_inv
+ *       (SizedType.inner_type sizedtype)
+ *       bodyfn var Location_span.empty
+ *   in
+ *   Stmt.Helpers.for_eigen sizedtype writefn expr Location_span.empty *)
 
 (* Statements to read and unconstrain a parameter then write it back *)
-let data_unconstrain_transform smeta (decl_id, outvar) =
+let data_unconstrain_transform smeta outvar =
   if not (outvar.Program.out_block = Parameters) then []
   else
     (* This renames the variable v to v_free__ for clarity *)
-    let decl_id =
-      if outvar.Program.out_trans = Identity then decl_id
-      else decl_id ^ "_free__"
-    in
+    (* let decl_id =
+     *   if outvar.Program.out_trans = Identity then decl_id
+     *   else decl_id ^ "_free__"
+     * in *)
     [ Stmt.Fixed.
         { pattern=
-            Decl
-              { decl_adtype= UnsizedType.AutoDiffable
-              ; decl_id
-              ; decl_type= Type.Sized outvar.Program.out_unconstrained_st }
-        ; meta= smeta }
-    ; data_unconstrain_read smeta (decl_id, outvar)
-    ; gen_write_unconstrained (decl_id, outvar.Program.out_unconstrained_st) ]
+            NRFunApp
+              ( Fun_kind.CompilerInternal (Internal_fun.FnWriteParam true)
+              , [data_unconstrain_read smeta outvar] )
+        ; meta= smeta } ]
+
+(* [ Stmt.Fixed.
+     *     { pattern=
+     *         Decl
+     *           { decl_adtype= UnsizedType.AutoDiffable
+     *           ; decl_id
+     *           ; decl_type= Type.Sized outvar.Program.out_unconstrained_st }
+     *     ; meta= smeta }
+     * ; data_unconstrain_read smeta (decl_id, outvar)
+     * ; gen_write_unconstrained (decl_id, outvar.Program.out_unconstrained_st) ] *)
 
 let rec contains_var_expr is_vident accum Expr.Fixed.({pattern; _}) =
   accum
@@ -686,7 +688,8 @@ let trans_prog (p : Program.Typed.t) =
     ; transform_inits=
         init_pos
         @ List.concat_map
-            ~f:(data_unconstrain_transform Location_span.empty)
+            ~f:(fun (_, outvar) ->
+              data_unconstrain_transform Location_span.empty outvar )
             (List.filter
                ~f:(fun (_, ov) -> ov.Program.out_block = Parameters)
                p.output_vars)

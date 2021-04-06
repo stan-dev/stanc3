@@ -335,21 +335,9 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      local_scalar_t__ rho_free__;
-      rho_free__ = DUMMY_VAR__;
-      
-      rho_free__ = deserializer.read_free_lb<local_scalar_t__>(0);
-      vars__.emplace_back(rho_free__);
-      local_scalar_t__ alpha_free__;
-      alpha_free__ = DUMMY_VAR__;
-      
-      alpha_free__ = deserializer.read_free_lb<local_scalar_t__>(0);
-      vars__.emplace_back(alpha_free__);
-      local_scalar_t__ sigma_free__;
-      sigma_free__ = DUMMY_VAR__;
-      
-      sigma_free__ = deserializer.read_free_lb<local_scalar_t__>(0);
-      vars__.emplace_back(sigma_free__);
+      serializer.write(deserializer.read_free_lb<local_scalar_t__>(0));
+      serializer.write(deserializer.read_free_lb<local_scalar_t__>(0));
+      serializer.write(deserializer.read_free_lb<local_scalar_t__>(0));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
