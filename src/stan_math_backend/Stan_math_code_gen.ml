@@ -641,24 +641,30 @@ let pp_unconstrained_param_names ppf {Program.output_vars; _} =
     ~cv_attr
 
 (** Print the `transform_inits` method of the model class *)
-let pp_transform_inits ppf {Program.transform_inits; _} =
+let pp_transform_inits_impl ppf {Program.transform_inits; _} =
   pf ppf
     "template <typename VecVar, typename VecI, @ \
      stan::require_std_vector_t<VecVar>* = nullptr, @ \
      stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> @ " ;
   let params =
-    [ "const stan::io::var_context& context__"; "VecI& params_i__"
-    ; "VecVar& vars__"; "std::ostream* pstream__ = nullptr" ]
+    [ "VecVar& params_r__"; "VecI& params_i__"; "VecVar& out_vars__"
+    ; "std::ostream* pstream__ = nullptr" ]
   in
   let intro ppf () =
-    pf ppf
-      "using local_scalar_t__ = \
-       double;@,vars__.clear();@,vars__.reserve(num_params_r__);@ int \
-       current_statement__ = 0; "
+    pf ppf "%a" (list ~sep:cut string)
+      [ "using local_scalar_t__ = double;"; "std::decay_t<VecVar> vars__;"
+      ; "vars__.reserve(params_r__.size());"
+      ; "stan::io::deserializer<local_scalar_t__> deserializer(params_r__, \
+         params_i__);"
+      ; "stan::io::serializer<local_scalar_t__> serializer(vars__);"
+      ; "int current_statement__ = 0;"
+      ; "local_scalar_t__ \
+         DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ]
   in
   let cv_attr = ["const"] in
+  let outro ppf () = pf ppf "@,@[out_vars__ = vars__;@]" in
   pp_method_b ppf "void" "transform_inits_impl" params intro transform_inits
-    ~cv_attr
+    ~cv_attr ~outro
 
 (** Print the `log_prob` method of the model class *)
 let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
@@ -769,26 +775,51 @@ let pp_overloads ppf () =
                          std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r.resize(params_r_vec.size());
       for (int i = 0; i < params_r.size(); ++i) {
         params_r.coeffRef(i) = params_r_vec[i];
       }
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 |}
+
+(** Print the `get_constrained_sizedtypes` method of the model class *)
+let pp_transform_inits ppf {Program.output_vars; _} =
+  let params =
+    [ "const stan::io::var_context& context"; "std::vector<int>& params_i"
+    ; "std::vector<double>& vars"; "std::ostream* pstream__ = nullptr" ]
+  in
+  let get_names ppf () =
+    let add_param = fmt "%S" in
+    pf ppf
+      "@[<hov 2>std::vector<std::string> names__ = \
+       std::vector<std::string>{%a};@]@,"
+      (list ~sep:comma add_param)
+      (List.map ~f:fst output_vars)
+  in
+  let intro ppf =
+    pf ppf
+      "%a std::vector<double> params_r_flat__;\n\
+      \    for (auto&& param_name__ : names__) {\n\
+      \      auto param_vec__ = context.vals_r(param_name__);\n\
+      \      for (auto&& param_val__ : param_vec__) {\n\
+      \        params_r_flat__.push_back(param_val__);\n\
+      \      }\n\
+      \    }"
+      get_names
+  in
+  let ppbody ppf =
+    pf ppf "transform_inits_impl(params_r_flat__, params_i, vars, pstream__);"
+  in
+  let cv_attr = ["const"] in
+  pp_method ppf "void" "transform_inits" params intro ppbody ~cv_attr
 
 (** Print the public parts of the model class *)
 let pp_model_public ppf p =
   pf ppf "@ %a" pp_ctor p ;
   pf ppf "@ %a" pp_log_prob p ;
   pf ppf "@ %a" pp_write_array p ;
-  pf ppf "@ %a" pp_transform_inits p ;
+  pf ppf "@ %a" pp_transform_inits_impl p ;
   (* Begin metadata methods *)
   pf ppf "@ %a" pp_get_param_names p ;
   (* Post-data metadata methods *)
@@ -798,7 +829,8 @@ let pp_model_public ppf p =
   pf ppf "@ %a" pp_constrained_types p ;
   pf ppf "@ %a" pp_unconstrained_types p ;
   (* Boilerplate *)
-  pf ppf "@ %a" pp_overloads ()
+  pf ppf "@ %a" pp_overloads () ;
+  pf ppf "@ %a" pp_transform_inits p
 
 let model_prefix = "model_"
 

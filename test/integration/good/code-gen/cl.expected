@@ -1369,13 +1369,16 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    std::decay_t<VecVar> vars__;
+    vars__.reserve(params_r__.size());
+    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
@@ -1461,6 +1464,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
+    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -1660,19 +1664,29 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                          std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r.resize(params_r_vec.size());
       for (int i = 0; i < params_r.size(); ++i) {
         params_r.coeffRef(i) = params_r_vec[i];
       }
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    std::vector<std::string> names__ = std::vector<std::string>{"alpha_v",
+      "beta", "cuts", "sigma", "alpha", "phi", "X_p", "beta_m", "X_rv_p"};
+     std::vector<double> params_r_flat__;
+    for (auto&& param_name__ : names__) {
+      auto param_vec__ = context.vals_r(param_name__);
+      for (auto&& param_val__ : param_vec__) {
+        params_r_flat__.push_back(param_val__);
+      }
+    }
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 using stan_model = optimize_glm_model_namespace::optimize_glm_model;

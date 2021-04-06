@@ -261,13 +261,16 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    std::decay_t<VecVar> vars__;
+    vars__.reserve(params_r__.size());
+    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
@@ -298,6 +301,7 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
+    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -432,19 +436,29 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
                          std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r.resize(params_r_vec.size());
       for (int i = 0; i < params_r.size(); ++i) {
         params_r.coeffRef(i) = params_r_vec[i];
       }
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    std::vector<std::string> names__ = std::vector<std::string>{"mu", "tau",
+      "theta_tilde", "theta"};
+     std::vector<double> params_r_flat__;
+    for (auto&& param_name__ : names__) {
+      auto param_vec__ = context.vals_r(param_name__);
+      for (auto&& param_val__ : param_vec__) {
+        params_r_flat__.push_back(param_val__);
+      }
+    }
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 using stan_model = _8_schools_ncp_model_namespace::_8_schools_ncp_model;
@@ -628,13 +642,16 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    std::decay_t<VecVar> vars__;
+    vars__.reserve(params_r__.size());
+    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
@@ -651,6 +668,7 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
+    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -760,19 +778,28 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
                          std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r.resize(params_r_vec.size());
       for (int i = 0; i < params_r.size(); ++i) {
         params_r.coeffRef(i) = params_r_vec[i];
       }
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    std::vector<std::string> names__ = std::vector<std::string>{"bar"};
+     std::vector<double> params_r_flat__;
+    for (auto&& param_name__ : names__) {
+      auto param_vec__ = context.vals_r(param_name__);
+      for (auto&& param_val__ : param_vec__) {
+        params_r_flat__.push_back(param_val__);
+      }
+    }
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 
@@ -1060,13 +1087,16 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    std::decay_t<VecVar> vars__;
+    vars__.reserve(params_r__.size());
+    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
@@ -1097,6 +1127,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
+    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -1231,19 +1262,29 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
                          std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r.resize(params_r_vec.size());
       for (int i = 0; i < params_r.size(); ++i) {
         params_r.coeffRef(i) = params_r_vec[i];
       }
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    std::vector<std::string> names__ = std::vector<std::string>{"mu", "tau",
+      "theta_tilde", "theta"};
+     std::vector<double> params_r_flat__;
+    for (auto&& param_name__ : names__) {
+      auto param_vec__ = context.vals_r(param_name__);
+      for (auto&& param_val__ : param_vec__) {
+        params_r_flat__.push_back(param_val__);
+      }
+    }
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 
@@ -1497,13 +1538,16 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    std::decay_t<VecVar> vars__;
+    vars__.reserve(params_r__.size());
+    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
@@ -1522,6 +1566,7 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
+    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -1689,19 +1734,29 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
                          std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r.resize(params_r_vec.size());
       for (int i = 0; i < params_r.size(); ++i) {
         params_r.coeffRef(i) = params_r_vec[i];
       }
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    std::vector<std::string> names__ = std::vector<std::string>{"xx", "y",
+      "w", "td_arr33"};
+     std::vector<double> params_r_flat__;
+    for (auto&& param_name__ : names__) {
+      auto param_vec__ = context.vals_r(param_name__);
+      for (auto&& param_val__ : param_vec__) {
+        params_r_flat__.push_back(param_val__);
+      }
+    }
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 
@@ -8134,13 +8189,16 @@ class mother_model final : public model_base_crtp<mother_model> {
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    std::decay_t<VecVar> vars__;
+    vars__.reserve(params_r__.size());
+    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
@@ -8389,6 +8447,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
+    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -9725,19 +9784,43 @@ class mother_model final : public model_base_crtp<mother_model> {
                          std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r.resize(params_r_vec.size());
       for (int i = 0; i < params_r.size(); ++i) {
         params_r.coeffRef(i) = params_r_vec[i];
       }
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    std::vector<std::string> names__ = std::vector<std::string>{"p_real",
+      "p_upper", "p_lower", "offset_multiplier", "no_offset_multiplier",
+      "offset_no_multiplier", "p_real_1d_ar", "p_real_3d_ar", "p_vec",
+      "p_1d_vec", "p_3d_vec", "p_row_vec", "p_1d_row_vec", "p_3d_row_vec",
+      "p_ar_mat", "p_simplex", "p_1d_simplex", "p_3d_simplex", "p_cfcov_54",
+      "p_cfcov_33", "p_cfcov_33_ar", "x_p", "y_p", "tp_real_1d_ar",
+      "tp_real_3d_ar", "tp_vec", "tp_1d_vec", "tp_3d_vec", "tp_row_vec",
+      "tp_1d_row_vec", "tp_3d_row_vec", "tp_ar_mat", "tp_simplex",
+      "tp_1d_simplex", "tp_3d_simplex", "tp_cfcov_54", "tp_cfcov_33",
+      "tp_cfcov_33_ar", "theta_p", "tp_real", "gq_r1", "gq_r2",
+      "gq_real_1d_ar", "gq_real_3d_ar", "gq_vec", "gq_1d_vec", "gq_3d_vec",
+      "gq_row_vec", "gq_1d_row_vec", "gq_3d_row_vec", "gq_ar_mat",
+      "gq_simplex", "gq_1d_simplex", "gq_3d_simplex", "gq_cfcov_54",
+      "gq_cfcov_33", "gq_cfcov_33_ar", "indices", "indexing_mat", "idx_res1",
+      "idx_res2", "idx_res3", "idx_res11", "idx_res21", "idx_res31",
+      "idx_res4", "idx_res5"};
+     std::vector<double> params_r_flat__;
+    for (auto&& param_name__ : names__) {
+      auto param_vec__ = context.vals_r(param_name__);
+      for (auto&& param_val__ : param_vec__) {
+        params_r_flat__.push_back(param_val__);
+      }
+    }
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 using stan_model = mother_model_namespace::mother_model;
@@ -11183,13 +11266,16 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    std::decay_t<VecVar> vars__;
+    vars__.reserve(params_r__.size());
+    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
@@ -11255,6 +11341,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
+    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -11596,19 +11683,32 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
                          std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r.resize(params_r_vec.size());
       for (int i = 0; i < params_r.size(); ++i) {
         params_r.coeffRef(i) = params_r_vec[i];
       }
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    std::vector<std::string> names__ = std::vector<std::string>{"y0_p",
+      "theta_p", "x_p", "x_p_v", "shared_params_p", "job_params_p", "x_r",
+      "abc1_p", "abc2_p", "abc3_p", "y_hat_tp1", "y_hat_tp2", "y_hat_tp3",
+      "theta_p_as", "x_v", "y_v", "y_p", "y_hat", "y_1d", "z_1d", "abc1_gq",
+      "abc2_gq", "y_hat_gq", "yy_hat_gq", "theta_dbl"};
+     std::vector<double> params_r_flat__;
+    for (auto&& param_name__ : names__) {
+      auto param_vec__ = context.vals_r(param_name__);
+      for (auto&& param_val__ : param_vec__) {
+        params_r_flat__.push_back(param_val__);
+      }
+    }
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 using stan_model = motherHOF_model_namespace::motherHOF_model;
@@ -15543,13 +15643,16 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    std::decay_t<VecVar> vars__;
+    vars__.reserve(params_r__.size());
+    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
@@ -15581,6 +15684,7 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
+    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -15744,19 +15848,29 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
                          std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r.resize(params_r_vec.size());
       for (int i = 0; i < params_r.size(); ++i) {
         params_r.coeffRef(i) = params_r_vec[i];
       }
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    std::vector<std::string> names__ = std::vector<std::string>{"r", "ra",
+      "v", "z", "zg"};
+     std::vector<double> params_r_flat__;
+    for (auto&& param_name__ : names__) {
+      auto param_vec__ = context.vals_r(param_name__);
+      for (auto&& param_val__ : param_vec__) {
+        params_r_flat__.push_back(param_val__);
+      }
+    }
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 
@@ -16225,13 +16339,16 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    std::decay_t<VecVar> vars__;
+    vars__.reserve(params_r__.size());
+    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
@@ -16279,6 +16396,7 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
+    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -16441,19 +16559,29 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
                          std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r.resize(params_r_vec.size());
       for (int i = 0; i < params_r.size(); ++i) {
         params_r.coeffRef(i) = params_r_vec[i];
       }
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    std::vector<std::string> names__ = std::vector<std::string>{"alpha",
+      "beta", "gamma", "delta", "z_init", "sigma", "z"};
+     std::vector<double> params_r_flat__;
+    for (auto&& param_name__ : names__) {
+      auto param_vec__ = context.vals_r(param_name__);
+      for (auto&& param_val__ : param_vec__) {
+        params_r_flat__.push_back(param_val__);
+      }
+    }
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 
@@ -17739,13 +17867,16 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    std::decay_t<VecVar> vars__;
+    vars__.reserve(params_r__.size());
+    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
@@ -17831,6 +17962,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
+    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -18030,19 +18162,29 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                          std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r.resize(params_r_vec.size());
       for (int i = 0; i < params_r.size(); ++i) {
         params_r.coeffRef(i) = params_r_vec[i];
       }
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    std::vector<std::string> names__ = std::vector<std::string>{"alpha_v",
+      "beta", "cuts", "sigma", "alpha", "phi", "X_p", "beta_m", "X_rv_p"};
+     std::vector<double> params_r_flat__;
+    for (auto&& param_name__ : names__) {
+      auto param_vec__ = context.vals_r(param_name__);
+      for (auto&& param_val__ : param_vec__) {
+        params_r_flat__.push_back(param_val__);
+      }
+    }
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 using stan_model = optimize_glm_model_namespace::optimize_glm_model;
@@ -18270,13 +18412,16 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    std::decay_t<VecVar> vars__;
+    vars__.reserve(params_r__.size());
+    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
@@ -18310,6 +18455,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
+    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -18447,19 +18593,29 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
                          std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r.resize(params_r_vec.size());
       for (int i = 0; i < params_r.size(); ++i) {
         params_r.coeffRef(i) = params_r_vec[i];
       }
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    std::vector<std::string> names__ = std::vector<std::string>{"L_Omega",
+      "z1"};
+     std::vector<double> params_r_flat__;
+    for (auto&& param_name__ : names__) {
+      auto param_vec__ = context.vals_r(param_name__);
+      for (auto&& param_val__ : param_vec__) {
+        params_r_flat__.push_back(param_val__);
+      }
+    }
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 using stan_model = param_constraint_model_namespace::param_constraint_model;
@@ -18854,13 +19010,16 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    std::decay_t<VecVar> vars__;
+    vars__.reserve(params_r__.size());
+    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
@@ -18893,6 +19052,7 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
+    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -19030,19 +19190,29 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
                          std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r.resize(params_r_vec.size());
       for (int i = 0; i < params_r.size(); ++i) {
         params_r.coeffRef(i) = params_r_vec[i];
       }
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    std::vector<std::string> names__ = std::vector<std::string>{"y1", "y2",
+      "y3"};
+     std::vector<double> params_r_flat__;
+    for (auto&& param_name__ : names__) {
+      auto param_vec__ = context.vals_r(param_name__);
+      for (auto&& param_val__ : param_vec__) {
+        params_r_flat__.push_back(param_val__);
+      }
+    }
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 using stan_model = reduce_sum_m1_model_namespace::reduce_sum_m1_model;
@@ -20716,13 +20886,16 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    std::decay_t<VecVar> vars__;
+    vars__.reserve(params_r__.size());
+    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
@@ -20910,6 +21083,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
+    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -21358,19 +21532,30 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
                          std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r.resize(params_r_vec.size());
       for (int i = 0; i < params_r.size(); ++i) {
         params_r.coeffRef(i) = params_r_vec[i];
       }
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    std::vector<std::string> names__ = std::vector<std::string>{"a8", "a7",
+      "a6", "a5", "a4", "a3", "a2", "a1", "y8", "y7", "y6", "y5", "y4", "y3",
+      "y2", "y1"};
+     std::vector<double> params_r_flat__;
+    for (auto&& param_name__ : names__) {
+      auto param_vec__ = context.vals_r(param_name__);
+      for (auto&& param_val__ : param_vec__) {
+        params_r_flat__.push_back(param_val__);
+      }
+    }
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 using stan_model = reduce_sum_m2_model_namespace::reduce_sum_m2_model;
@@ -24670,13 +24855,16 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    std::decay_t<VecVar> vars__;
+    vars__.reserve(params_r__.size());
+    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
@@ -24821,6 +25009,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
+    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -25295,19 +25484,32 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
                          std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r.resize(params_r_vec.size());
       for (int i = 0; i < params_r.size(); ++i) {
         params_r.coeffRef(i) = params_r_vec[i];
       }
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    std::vector<std::string> names__ = std::vector<std::string>{"y1", "y2",
+      "y3", "y4", "y5", "y6", "y7", "y8", "y9", "y10", "y11", "y12", "y17",
+      "t1", "t1a", "t2", "t3", "t4", "t5", "t6", "t7", "t8", "t9", "t10",
+      "t11", "t12", "tg1", "tg2", "tg3", "tg4", "tg5", "tg6", "tg7", "tg8",
+      "tg9", "tg10", "tg11", "tg12", "tgs"};
+     std::vector<double> params_r_flat__;
+    for (auto&& param_name__ : names__) {
+      auto param_vec__ = context.vals_r(param_name__);
+      for (auto&& param_val__ : param_vec__) {
+        params_r_flat__.push_back(param_val__);
+      }
+    }
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 using stan_model = reduce_sum_m3_model_namespace::reduce_sum_m3_model;
@@ -25651,13 +25853,16 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    std::decay_t<VecVar> vars__;
+    vars__.reserve(params_r__.size());
+    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
@@ -25669,6 +25874,7 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
+    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -25777,19 +25983,28 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
                          std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r.resize(params_r_vec.size());
       for (int i = 0; i < params_r.size(); ++i) {
         params_r.coeffRef(i) = params_r_vec[i];
       }
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    std::vector<std::string> names__ = std::vector<std::string>{};
+     std::vector<double> params_r_flat__;
+    for (auto&& param_name__ : names__) {
+      auto param_vec__ = context.vals_r(param_name__);
+      for (auto&& param_val__ : param_vec__) {
+        params_r_flat__.push_back(param_val__);
+      }
+    }
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 
@@ -26007,13 +26222,16 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    std::decay_t<VecVar> vars__;
+    vars__.reserve(params_r__.size());
+    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
@@ -26030,6 +26248,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
+    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -26139,19 +26358,28 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
                          std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r.resize(params_r_vec.size());
       for (int i = 0; i < params_r.size(); ++i) {
         params_r.coeffRef(i) = params_r_vec[i];
       }
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    std::vector<std::string> names__ = std::vector<std::string>{"x"};
+     std::vector<double> params_r_flat__;
+    for (auto&& param_name__ : names__) {
+      auto param_vec__ = context.vals_r(param_name__);
+      for (auto&& param_val__ : param_vec__) {
+        params_r_flat__.push_back(param_val__);
+      }
+    }
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 using stan_model = tilde_block_model_namespace::tilde_block_model;
@@ -27885,13 +28113,16 @@ class transform_model final : public model_base_crtp<transform_model> {
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    std::decay_t<VecVar> vars__;
+    vars__.reserve(params_r__.size());
+    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
@@ -28092,6 +28323,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
+    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -28758,19 +28990,33 @@ class transform_model final : public model_base_crtp<transform_model> {
                          std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r.resize(params_r_vec.size());
       for (int i = 0; i < params_r.size(); ++i) {
         params_r.coeffRef(i) = params_r_vec[i];
       }
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    std::vector<std::string> names__ = std::vector<std::string>{"p_1", "p_2",
+      "p_3", "p_4", "p_5", "p_6", "p_7", "p_8", "p_9", "p_10", "pv_1",
+      "pv_2", "pv_3", "pr_1", "pr_2", "pr_3", "pm_1", "pm_2", "tp_1", "tp_2",
+      "tp_3", "tp_4", "tp_5", "tp_6", "tp_7", "tp_8", "tp_9", "tp_10",
+      "tpv_1", "tpv_2", "tpv_3", "tpr_1", "tpr_2", "tpr_3", "tpm_1",
+      "tpm_2"};
+     std::vector<double> params_r_flat__;
+    for (auto&& param_name__ : names__) {
+      auto param_vec__ = context.vals_r(param_name__);
+      for (auto&& param_val__ : param_vec__) {
+        params_r_flat__.push_back(param_val__);
+      }
+    }
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 using stan_model = transform_model_namespace::transform_model;
@@ -29076,13 +29322,16 @@ class truncate_model final : public model_base_crtp<truncate_model> {
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    std::decay_t<VecVar> vars__;
+    vars__.reserve(params_r__.size());
+    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
@@ -29104,6 +29353,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
+    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -29218,19 +29468,28 @@ class truncate_model final : public model_base_crtp<truncate_model> {
                          std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r.resize(params_r_vec.size());
       for (int i = 0; i < params_r.size(); ++i) {
         params_r.coeffRef(i) = params_r_vec[i];
       }
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    std::vector<std::string> names__ = std::vector<std::string>{"m", "y"};
+     std::vector<double> params_r_flat__;
+    for (auto&& param_name__ : names__) {
+      auto param_vec__ = context.vals_r(param_name__);
+      for (auto&& param_val__ : param_vec__) {
+        params_r_flat__.push_back(param_val__);
+      }
+    }
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 using stan_model = truncate_model_namespace::truncate_model;
@@ -29441,13 +29700,16 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    std::decay_t<VecVar> vars__;
+    vars__.reserve(params_r__.size());
+    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
@@ -29464,6 +29726,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
+    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -29573,19 +29836,28 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
                          std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r.resize(params_r_vec.size());
       for (int i = 0; i < params_r.size(); ++i) {
         params_r.coeffRef(i) = params_r_vec[i];
       }
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    std::vector<std::string> names__ = std::vector<std::string>{"x"};
+     std::vector<double> params_r_flat__;
+    for (auto&& param_name__ : names__) {
+      auto param_vec__ = context.vals_r(param_name__);
+      for (auto&& param_val__ : param_vec__) {
+        params_r_flat__.push_back(param_val__);
+      }
+    }
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 
@@ -29801,13 +30073,16 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& out_vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    std::decay_t<VecVar> vars__;
+    vars__.reserve(params_r__.size());
+    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
@@ -29824,6 +30099,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
+    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -29933,19 +30209,28 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
                          std::ostream* pstream = nullptr) const final {
       std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r.resize(params_r_vec.size());
       for (int i = 0; i < params_r.size(); ++i) {
         params_r.coeffRef(i) = params_r_vec[i];
       }
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    std::vector<std::string> names__ = std::vector<std::string>{"x"};
+     std::vector<double> params_r_flat__;
+    for (auto&& param_name__ : names__) {
+      auto param_vec__ = context.vals_r(param_name__);
+      for (auto&& param_val__ : param_vec__) {
+        params_r_flat__.push_back(param_val__);
+      }
+    }
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 using stan_model = user_constrain_model_namespace::user_constrain_model;
