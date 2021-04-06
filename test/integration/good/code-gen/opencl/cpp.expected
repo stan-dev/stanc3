@@ -3498,8 +3498,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -3550,19 +3550,12 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       double transformed_param_real;
       transformed_param_real = std::numeric_limits<double>::quiet_NaN();
       
-      vars__.emplace_back(p_real);
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_real_array[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
-          vars__.emplace_back(
-            rvalue(p_matrix, "p_matrix",
-              index_uni(sym2__), index_uni(sym1__)));}}
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_vector[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_row_vector[(sym1__ - 1)]);}
-      vars__.emplace_back(y_p);
+      out__.write(p_real);
+      out__.write(p_real_array);
+      out__.write(p_matrix);
+      out__.write(p_vector);
+      out__.write(p_row_vector);
+      out__.write(y_p);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -6037,7 +6030,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
                                  to_matrix_cl(p_row_vector),
                                  to_matrix_cl(p_row_vector));
       if (emit_transformed_parameters__) {
-        vars__.emplace_back(transformed_param_real);
+        out__.write(transformed_param_real);
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -6053,12 +6046,11 @@ class distributions_model final : public model_base_crtp<distributions_model> {
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
-                                   VecVar& out_vars__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__(params_r__.size(), 0);
-    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
@@ -6067,23 +6059,18 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      serializer.write(deserializer.read<local_scalar_t__>());
-      serializer.write(
-        deserializer.read<std::vector<local_scalar_t__>>(d_int));
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(d_int,
-          d_int));
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(d_int));
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(d_int));
-      serializer.write(deserializer.read<local_scalar_t__>());
+      out__.write(in__.read<local_scalar_t__>());
+      out__.write(in__.read<std::vector<local_scalar_t__>>(d_int));
+      out__.write(
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(d_int, d_int));
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(d_int));
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(d_int));
+      out__.write(in__.read<local_scalar_t__>());
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -6229,6 +6216,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      vars.resize(params_r.size());
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -6263,16 +6251,19 @@ class distributions_model final : public model_base_crtp<distributions_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    std::vector<std::string> names__ = std::vector<std::string>{"p_real",
+    const std::array<std::string, 7> names__ = std::array<std::string, 7>{"p_real",
       "p_real_array", "p_matrix", "p_vector", "p_row_vector", "y_p",
       "transformed_param_real"};
+    
      std::vector<double> params_r_flat__;
-    for (auto&& param_name__ : names__) {
-      auto param_vec__ = context.vals_r(param_name__);
-      for (auto&& param_val__ : param_vec__) {
-        params_r_flat__.push_back(param_val__);
-      }
-    }
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
@@ -6628,8 +6619,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -6680,19 +6671,12 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       double transformed_param_real;
       transformed_param_real = std::numeric_limits<double>::quiet_NaN();
       
-      vars__.emplace_back(p_real);
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_real_array[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
-          vars__.emplace_back(
-            rvalue(p_matrix, "p_matrix",
-              index_uni(sym2__), index_uni(sym1__)));}}
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_vector[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_row_vector[(sym1__ - 1)]);}
-      vars__.emplace_back(y_p);
+      out__.write(p_real);
+      out__.write(p_real_array);
+      out__.write(p_matrix);
+      out__.write(p_vector);
+      out__.write(p_row_vector);
+      out__.write(y_p);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -6736,7 +6720,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       transformed_param_real = uniform_lpdf<false>(d_vector_opencl__, p_real,
                                  p_real);
       if (emit_transformed_parameters__) {
-        vars__.emplace_back(transformed_param_real);
+        out__.write(transformed_param_real);
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -6752,12 +6736,11 @@ class restricted_model final : public model_base_crtp<restricted_model> {
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
-                                   VecVar& out_vars__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__(params_r__.size(), 0);
-    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
@@ -6766,23 +6749,18 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      serializer.write(deserializer.read<local_scalar_t__>());
-      serializer.write(
-        deserializer.read<std::vector<local_scalar_t__>>(d_int));
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(d_int,
-          d_int));
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(d_int));
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(d_int));
-      serializer.write(deserializer.read<local_scalar_t__>());
+      out__.write(in__.read<local_scalar_t__>());
+      out__.write(in__.read<std::vector<local_scalar_t__>>(d_int));
+      out__.write(
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(d_int, d_int));
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(d_int));
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(d_int));
+      out__.write(in__.read<local_scalar_t__>());
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -6928,6 +6906,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      vars.resize(params_r.size());
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -6962,16 +6941,19 @@ class restricted_model final : public model_base_crtp<restricted_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    std::vector<std::string> names__ = std::vector<std::string>{"p_real",
+    const std::array<std::string, 7> names__ = std::array<std::string, 7>{"p_real",
       "p_real_array", "p_matrix", "p_vector", "p_row_vector", "y_p",
       "transformed_param_real"};
+    
      std::vector<double> params_r_flat__;
-    for (auto&& param_name__ : names__) {
-      auto param_vec__ = context.vals_r(param_name__);
-      for (auto&& param_val__ : param_vec__) {
-        params_r_flat__.push_back(param_val__);
-      }
-    }
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     

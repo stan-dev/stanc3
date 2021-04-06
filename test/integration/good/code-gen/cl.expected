@@ -1266,8 +1266,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -1332,26 +1332,15 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       
       current_statement__ = 9;
       X_rv_p = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(n);
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(alpha_v[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(beta[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(cuts[(sym1__ - 1)]);}
-      vars__.emplace_back(sigma);
-      vars__.emplace_back(alpha);
-      vars__.emplace_back(phi);
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-          vars__.emplace_back(
-            rvalue(X_p, "X_p", index_uni(sym2__), index_uni(sym1__)));}}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-          vars__.emplace_back(
-            rvalue(beta_m, "beta_m", index_uni(sym2__), index_uni(sym1__)));}
-      }
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        vars__.emplace_back(X_rv_p[(sym1__ - 1)]);}
+      out__.write(alpha_v);
+      out__.write(beta);
+      out__.write(cuts);
+      out__.write(sigma);
+      out__.write(alpha);
+      out__.write(phi);
+      out__.write(X_p);
+      out__.write(beta_m);
+      out__.write(X_rv_p);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -1370,12 +1359,11 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
-                                   VecVar& out_vars__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__(params_r__.size(), 0);
-    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
@@ -1384,27 +1372,20 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k));
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k));
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k));
-      serializer.write(deserializer.read_free_lb<local_scalar_t__>(0));
-      serializer.write(deserializer.read<local_scalar_t__>());
-      serializer.write(deserializer.read<local_scalar_t__>());
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, k));
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, k));
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(n));
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k));
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k));
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k));
+      out__.write(in__.read_free_lb<local_scalar_t__>(0));
+      out__.write(in__.read<local_scalar_t__>());
+      out__.write(in__.read<local_scalar_t__>());
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, k));
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, k));
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(n));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -1581,6 +1562,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      vars.resize(params_r.size());
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -1615,15 +1597,18 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    std::vector<std::string> names__ = std::vector<std::string>{"alpha_v",
+    const std::array<std::string, 9> names__ = std::array<std::string, 9>{"alpha_v",
       "beta", "cuts", "sigma", "alpha", "phi", "X_p", "beta_m", "X_rv_p"};
+    
      std::vector<double> params_r_flat__;
-    for (auto&& param_name__ : names__) {
-      auto param_vec__ = context.vals_r(param_name__);
-      for (auto&& param_val__ : param_vec__) {
-        params_r_flat__.push_back(param_val__);
-      }
-    }
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     

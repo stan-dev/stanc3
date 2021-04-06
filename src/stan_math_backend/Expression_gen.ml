@@ -426,7 +426,7 @@ and pp_compiler_internal_fn ad ut f ppf es =
           ~f:(fun constraint_string -> "_free_" ^ constraint_string)
           constraint_opt
       in
-      pf ppf "@[<hov 2>deserializer.read%a<%a>(@,%a)@]" (Fmt.option Fmt.string)
+      pf ppf "@[<hov 2>in__.read%a<%a>(@,%a)@]" (Fmt.option Fmt.string)
         free_suffix_opt pp_unsizedtype_local
         (UnsizedType.AutoDiffable, ut)
         (list ~sep:comma pp_expr) es

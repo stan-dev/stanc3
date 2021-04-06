@@ -198,8 +198,8 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -233,10 +233,9 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       theta = Eigen::Matrix<double, -1, 1>(J);
       stan::math::fill(theta, std::numeric_limits<double>::quiet_NaN());
       
-      vars__.emplace_back(mu);
-      vars__.emplace_back(tau);
-      for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
-        vars__.emplace_back(theta_tilde[(sym1__ - 1)]);}
+      out__.write(mu);
+      out__.write(tau);
+      out__.write(theta_tilde);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -245,8 +244,7 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       assign(theta, add(mu, multiply(tau, theta_tilde)),
         "assigning variable theta");
       if (emit_transformed_parameters__) {
-        for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
-          vars__.emplace_back(theta[(sym1__ - 1)]);}
+        out__.write(theta);
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -262,12 +260,11 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
-                                   VecVar& out_vars__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__(params_r__.size(), 0);
-    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
@@ -276,16 +273,14 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      serializer.write(deserializer.read<local_scalar_t__>());
-      serializer.write(deserializer.read_free_lb<local_scalar_t__>(0));
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J));
+      out__.write(in__.read<local_scalar_t__>());
+      out__.write(in__.read_free_lb<local_scalar_t__>(0));
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -397,6 +392,7 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      vars.resize(params_r.size());
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -431,15 +427,18 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    std::vector<std::string> names__ = std::vector<std::string>{"mu", "tau",
-      "theta_tilde", "theta"};
+    const std::array<std::string, 4> names__ = std::array<std::string, 4>{"mu",
+      "tau", "theta_tilde", "theta"};
+    
      std::vector<double> params_r_flat__;
-    for (auto&& param_name__ : names__) {
-      auto param_vec__ = context.vals_r(param_name__);
-      for (auto&& param_val__ : param_vec__) {
-        params_r_flat__.push_back(param_val__);
-      }
-    }
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
@@ -590,8 +589,8 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -608,7 +607,7 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
       
       current_statement__ = 1;
       bar = in__.template read<local_scalar_t__>();
-      vars__.emplace_back(bar);
+      out__.write(bar);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -627,12 +626,11 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
-                                   VecVar& out_vars__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__(params_r__.size(), 0);
-    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
@@ -641,13 +639,12 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      serializer.write(deserializer.read<local_scalar_t__>());
+      out__.write(in__.read<local_scalar_t__>());
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -734,6 +731,7 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      vars.resize(params_r.size());
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -768,14 +766,17 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    std::vector<std::string> names__ = std::vector<std::string>{"bar"};
+    const std::array<std::string, 1> names__ = std::array<std::string, 1>{"bar"};
+    
      std::vector<double> params_r_flat__;
-    for (auto&& param_name__ : names__) {
-      auto param_vec__ = context.vals_r(param_name__);
-      for (auto&& param_val__ : param_vec__) {
-        params_r_flat__.push_back(param_val__);
-      }
-    }
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
@@ -1003,8 +1004,8 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -1038,10 +1039,9 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       theta = Eigen::Matrix<double, -1, 1>(J);
       stan::math::fill(theta, std::numeric_limits<double>::quiet_NaN());
       
-      vars__.emplace_back(mu);
-      vars__.emplace_back(tau);
-      for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
-        vars__.emplace_back(theta_tilde[(sym1__ - 1)]);}
+      out__.write(mu);
+      out__.write(tau);
+      out__.write(theta_tilde);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -1050,8 +1050,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       assign(theta, add(mu, multiply(tau, theta_tilde)),
         "assigning variable theta");
       if (emit_transformed_parameters__) {
-        for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
-          vars__.emplace_back(theta[(sym1__ - 1)]);}
+        out__.write(theta);
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -1067,12 +1066,11 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
-                                   VecVar& out_vars__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__(params_r__.size(), 0);
-    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
@@ -1081,16 +1079,14 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      serializer.write(deserializer.read<local_scalar_t__>());
-      serializer.write(deserializer.read_free_lb<local_scalar_t__>(0));
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J));
+      out__.write(in__.read<local_scalar_t__>());
+      out__.write(in__.read_free_lb<local_scalar_t__>(0));
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -1202,6 +1198,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      vars.resize(params_r.size());
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -1236,15 +1233,18 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    std::vector<std::string> names__ = std::vector<std::string>{"mu", "tau",
-      "theta_tilde", "theta"};
+    const std::array<std::string, 4> names__ = std::array<std::string, 4>{"mu",
+      "tau", "theta_tilde", "theta"};
+    
      std::vector<double> params_r_flat__;
-    for (auto&& param_name__ : names__) {
-      auto param_vec__ = context.vals_r(param_name__);
-      for (auto&& param_val__ : param_vec__) {
-        params_r_flat__.push_back(param_val__);
-      }
-    }
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
@@ -1424,8 +1424,8 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -1451,8 +1451,7 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
       std::vector<std::vector<double>> td_arr33;
       td_arr33 = std::vector<std::vector<double>>(3, std::vector<double>(3, std::numeric_limits<double>::quiet_NaN()));
       
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        vars__.emplace_back(xx[(sym1__ - 1)]);}
+      out__.write(xx);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -1478,15 +1477,9 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
         stan::math::promote_scalar<double>(3)}},
         "assigning variable td_arr33");
       if (emit_transformed_parameters__) {
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            vars__.emplace_back(y[(sym2__ - 1)][(sym1__ - 1)]);}}
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            vars__.emplace_back(w[(sym2__ - 1)][(sym1__ - 1)]);}}
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            vars__.emplace_back(td_arr33[(sym2__ - 1)][(sym1__ - 1)]);}}
+        out__.write(y);
+        out__.write(w);
+        out__.write(td_arr33);
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -1502,12 +1495,11 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
-                                   VecVar& out_vars__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__(params_r__.size(), 0);
-    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
@@ -1516,13 +1508,12 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      serializer.write(deserializer.read<std::vector<local_scalar_t__>>(3));
+      out__.write(in__.read<std::vector<local_scalar_t__>>(3));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -1667,6 +1658,7 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      vars.resize(params_r.size());
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -1701,15 +1693,18 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    std::vector<std::string> names__ = std::vector<std::string>{"xx", "y",
-      "w", "td_arr33"};
+    const std::array<std::string, 4> names__ = std::array<std::string, 4>{"xx",
+      "y", "w", "td_arr33"};
+    
      std::vector<double> params_r_flat__;
-    for (auto&& param_name__ : names__) {
-      auto param_vec__ = context.vals_r(param_name__);
-      for (auto&& param_val__ : param_vec__) {
-        params_r_flat__.push_back(param_val__);
-      }
-    }
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
@@ -7126,8 +7121,8 @@ class mother_model final : public model_base_crtp<mother_model> {
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -7354,86 +7349,29 @@ class mother_model final : public model_base_crtp<mother_model> {
       double tp_real;
       tp_real = std::numeric_limits<double>::quiet_NaN();
       
-      vars__.emplace_back(p_real);
-      vars__.emplace_back(p_upper);
-      vars__.emplace_back(p_lower);
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        vars__.emplace_back(offset_multiplier[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        vars__.emplace_back(no_offset_multiplier[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        vars__.emplace_back(offset_no_multiplier[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(p_real_1d_ar[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            vars__.emplace_back(
-              p_real_3d_ar[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(p_vec[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.emplace_back(p_1d_vec[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-              vars__.emplace_back(
-                p_3d_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][(sym1__ -
-                                                                    1)]);}}}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(p_row_vec[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.emplace_back(p_1d_row_vec[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-              vars__.emplace_back(
-                p_3d_row_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][
-                (sym1__ - 1)]);}}}}
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= 4; ++sym4__) {
-              vars__.emplace_back(
-                rvalue(p_ar_mat, "p_ar_mat",
-                  index_uni(sym4__), index_uni(sym3__), index_uni(sym2__),
-                    index_uni(sym1__)));}}}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(p_simplex[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.emplace_back(p_1d_simplex[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-              vars__.emplace_back(
-                p_3d_simplex[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][
-                (sym1__ - 1)]);}}}}
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
-          vars__.emplace_back(
-            rvalue(p_cfcov_54, "p_cfcov_54",
-              index_uni(sym2__), index_uni(sym1__)));}}
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          vars__.emplace_back(
-            rvalue(p_cfcov_33, "p_cfcov_33",
-              index_uni(sym2__), index_uni(sym1__)));}}
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
-            vars__.emplace_back(
-              rvalue(p_cfcov_33_ar, "p_cfcov_33_ar",
-                index_uni(sym3__), index_uni(sym2__), index_uni(sym1__)));}}}
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        vars__.emplace_back(x_p[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        vars__.emplace_back(y_p[(sym1__ - 1)]);}
+      out__.write(p_real);
+      out__.write(p_upper);
+      out__.write(p_lower);
+      out__.write(offset_multiplier);
+      out__.write(no_offset_multiplier);
+      out__.write(offset_no_multiplier);
+      out__.write(p_real_1d_ar);
+      out__.write(p_real_3d_ar);
+      out__.write(p_vec);
+      out__.write(p_1d_vec);
+      out__.write(p_3d_vec);
+      out__.write(p_row_vec);
+      out__.write(p_1d_row_vec);
+      out__.write(p_3d_row_vec);
+      out__.write(p_ar_mat);
+      out__.write(p_simplex);
+      out__.write(p_1d_simplex);
+      out__.write(p_3d_simplex);
+      out__.write(p_cfcov_54);
+      out__.write(p_cfcov_33);
+      out__.write(p_cfcov_33_ar);
+      out__.write(x_p);
+      out__.write(y_p);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -7596,77 +7534,23 @@ class mother_model final : public model_base_crtp<mother_model> {
         check_cholesky_factor(function__, "tp_cfcov_33_ar[sym1__]",
                               tp_cfcov_33_ar[(sym1__ - 1)]);}
       if (emit_transformed_parameters__) {
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          vars__.emplace_back(tp_real_1d_ar[(sym1__ - 1)]);}
-        for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-              vars__.emplace_back(
-                tp_real_3d_ar[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          vars__.emplace_back(tp_vec[(sym1__ - 1)]);}
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            vars__.emplace_back(tp_1d_vec[(sym2__ - 1)][(sym1__ - 1)]);}}
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-              for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-                vars__.emplace_back(
-                  tp_3d_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][
-                  (sym1__ - 1)]);}}}}
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          vars__.emplace_back(tp_row_vec[(sym1__ - 1)]);}
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            vars__.emplace_back(tp_1d_row_vec[(sym2__ - 1)][(sym1__ - 1)]);}}
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-              for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-                vars__.emplace_back(
-                  tp_3d_row_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][
-                  (sym1__ - 1)]);}}}}
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-              for (int sym4__ = 1; sym4__ <= 4; ++sym4__) {
-                vars__.emplace_back(
-                  rvalue(tp_ar_mat, "tp_ar_mat",
-                    index_uni(sym4__), index_uni(sym3__), index_uni(sym2__),
-                      index_uni(sym1__)));}}}}
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          vars__.emplace_back(tp_simplex[(sym1__ - 1)]);}
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            vars__.emplace_back(tp_1d_simplex[(sym2__ - 1)][(sym1__ - 1)]);}}
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-              for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-                vars__.emplace_back(
-                  tp_3d_simplex[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][
-                  (sym1__ - 1)]);}}}}
-        for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
-            vars__.emplace_back(
-              rvalue(tp_cfcov_54, "tp_cfcov_54",
-                index_uni(sym2__), index_uni(sym1__)));}}
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            vars__.emplace_back(
-              rvalue(tp_cfcov_33, "tp_cfcov_33",
-                index_uni(sym2__), index_uni(sym1__)));}}
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
-              vars__.emplace_back(
-                rvalue(tp_cfcov_33_ar, "tp_cfcov_33_ar",
-                  index_uni(sym3__), index_uni(sym2__), index_uni(sym1__)));}
-          }}
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          vars__.emplace_back(theta_p[(sym1__ - 1)]);}
-        vars__.emplace_back(tp_real);
+        out__.write(tp_real_1d_ar);
+        out__.write(tp_real_3d_ar);
+        out__.write(tp_vec);
+        out__.write(tp_1d_vec);
+        out__.write(tp_3d_vec);
+        out__.write(tp_row_vec);
+        out__.write(tp_1d_row_vec);
+        out__.write(tp_3d_row_vec);
+        out__.write(tp_ar_mat);
+        out__.write(tp_simplex);
+        out__.write(tp_1d_simplex);
+        out__.write(tp_3d_simplex);
+        out__.write(tp_cfcov_54);
+        out__.write(tp_cfcov_33);
+        out__.write(tp_cfcov_33_ar);
+        out__.write(theta_p);
+        out__.write(tp_real);
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -8016,125 +7900,33 @@ class mother_model final : public model_base_crtp<mother_model> {
         current_statement__ = 90;
         check_cholesky_factor(function__, "gq_cfcov_33_ar[sym1__]",
                               gq_cfcov_33_ar[(sym1__ - 1)]);}
-      vars__.emplace_back(gq_r1);
-      vars__.emplace_back(gq_r2);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(gq_real_1d_ar[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            vars__.emplace_back(
-              gq_real_3d_ar[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(gq_vec[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.emplace_back(gq_1d_vec[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-              vars__.emplace_back(
-                gq_3d_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][(sym1__ -
-                                                                    1)]);}}}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(gq_row_vec[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.emplace_back(gq_1d_row_vec[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-              vars__.emplace_back(
-                gq_3d_row_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][
-                (sym1__ - 1)]);}}}}
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= 4; ++sym4__) {
-              vars__.emplace_back(
-                rvalue(gq_ar_mat, "gq_ar_mat",
-                  index_uni(sym4__), index_uni(sym3__), index_uni(sym2__),
-                    index_uni(sym1__)));}}}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(gq_simplex[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.emplace_back(gq_1d_simplex[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-              vars__.emplace_back(
-                gq_3d_simplex[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][
-                (sym1__ - 1)]);}}}}
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
-          vars__.emplace_back(
-            rvalue(gq_cfcov_54, "gq_cfcov_54",
-              index_uni(sym2__), index_uni(sym1__)));}}
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          vars__.emplace_back(
-            rvalue(gq_cfcov_33, "gq_cfcov_33",
-              index_uni(sym2__), index_uni(sym1__)));}}
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
-            vars__.emplace_back(
-              rvalue(gq_cfcov_33_ar, "gq_cfcov_33_ar",
-                index_uni(sym3__), index_uni(sym2__), index_uni(sym1__)));}}}
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        vars__.emplace_back(indices[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-            vars__.emplace_back(
-              rvalue(indexing_mat, "indexing_mat",
-                index_uni(sym3__), index_uni(sym2__), index_uni(sym1__)));}}}
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
-            vars__.emplace_back(
-              rvalue(idx_res1, "idx_res1",
-                index_uni(sym3__), index_uni(sym2__), index_uni(sym1__)));}}}
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-            vars__.emplace_back(
-              rvalue(idx_res2, "idx_res2",
-                index_uni(sym3__), index_uni(sym2__), index_uni(sym1__)));}}}
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
-            vars__.emplace_back(
-              rvalue(idx_res3, "idx_res3",
-                index_uni(sym3__), index_uni(sym2__), index_uni(sym1__)));}}}
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
-            vars__.emplace_back(
-              rvalue(idx_res11, "idx_res11",
-                index_uni(sym3__), index_uni(sym2__), index_uni(sym1__)));}}}
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
-            vars__.emplace_back(
-              rvalue(idx_res21, "idx_res21",
-                index_uni(sym3__), index_uni(sym2__), index_uni(sym1__)));}}}
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
-            vars__.emplace_back(
-              rvalue(idx_res31, "idx_res31",
-                index_uni(sym3__), index_uni(sym2__), index_uni(sym1__)));}}}
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          vars__.emplace_back(idx_res4[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          vars__.emplace_back(idx_res5[(sym2__ - 1)][(sym1__ - 1)]);}}
+      out__.write(gq_r1);
+      out__.write(gq_r2);
+      out__.write(gq_real_1d_ar);
+      out__.write(gq_real_3d_ar);
+      out__.write(gq_vec);
+      out__.write(gq_1d_vec);
+      out__.write(gq_3d_vec);
+      out__.write(gq_row_vec);
+      out__.write(gq_1d_row_vec);
+      out__.write(gq_3d_row_vec);
+      out__.write(gq_ar_mat);
+      out__.write(gq_simplex);
+      out__.write(gq_1d_simplex);
+      out__.write(gq_3d_simplex);
+      out__.write(gq_cfcov_54);
+      out__.write(gq_cfcov_33);
+      out__.write(gq_cfcov_33_ar);
+      out__.write(indices);
+      out__.write(indexing_mat);
+      out__.write(idx_res1);
+      out__.write(idx_res2);
+      out__.write(idx_res3);
+      out__.write(idx_res11);
+      out__.write(idx_res21);
+      out__.write(idx_res31);
+      out__.write(idx_res4);
+      out__.write(idx_res5);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -8146,12 +7938,11 @@ class mother_model final : public model_base_crtp<mother_model> {
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
-                                   VecVar& out_vars__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__(params_r__.size(), 0);
-    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
@@ -8160,71 +7951,62 @@ class mother_model final : public model_base_crtp<mother_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      serializer.write(deserializer.read<local_scalar_t__>());
-      serializer.write(deserializer.read_free_lb<local_scalar_t__>(p_real));
-      serializer.write(deserializer.read_free_ub<local_scalar_t__>(p_upper));
-      serializer.write(
-        deserializer.read_free_offset_multiplier<std::vector<local_scalar_t__>>(
-          1, 2, 5));
-      serializer.write(
-        deserializer.read_free_offset_multiplier<std::vector<local_scalar_t__>>(
-          0, 2, 5));
-      serializer.write(
-        deserializer.read_free_offset_multiplier<std::vector<local_scalar_t__>>(
-          3, 1, 5));
-      serializer.write(
-        deserializer.read_free_lb<std::vector<local_scalar_t__>>(0, N));
-      serializer.write(
-        deserializer.read_free_lb<std::vector<std::vector<std::vector<local_scalar_t__>>>>(
+      out__.write(in__.read<local_scalar_t__>());
+      out__.write(in__.read_free_lb<local_scalar_t__>(p_real));
+      out__.write(in__.read_free_ub<local_scalar_t__>(p_upper));
+      out__.write(
+        in__.read_free_offset_multiplier<std::vector<local_scalar_t__>>(1, 2,
+          5));
+      out__.write(
+        in__.read_free_offset_multiplier<std::vector<local_scalar_t__>>(0, 2,
+          5));
+      out__.write(
+        in__.read_free_offset_multiplier<std::vector<local_scalar_t__>>(3, 1,
+          5));
+      out__.write(in__.read_free_lb<std::vector<local_scalar_t__>>(0, N));
+      out__.write(
+        in__.read_free_lb<std::vector<std::vector<std::vector<local_scalar_t__>>>>(
           0, N, M, K));
-      serializer.write(
-        deserializer.read_free_lb<Eigen::Matrix<local_scalar_t__, -1, 1>>(0,
-          N));
-      serializer.write(
-        deserializer.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-          N, N));
-      serializer.write(
-        deserializer.read<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>>(
+      out__.write(
+        in__.read_free_lb<Eigen::Matrix<local_scalar_t__, -1, 1>>(0, N));
+      out__.write(
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, N));
+      out__.write(
+        in__.read<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>>(
           N, M, K, N));
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(N));
-      serializer.write(
-        deserializer.read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
-          N, N));
-      serializer.write(
-        deserializer.read<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>>(
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(N));
+      out__.write(
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, N));
+      out__.write(
+        in__.read<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>>(
           N, M, K, N));
-      serializer.write(
-        deserializer.read_free_lub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
+      out__.write(
+        in__.read_free_lub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
           0, 1, 4, 5, 2, 3));
-      serializer.write(
-        deserializer.read_free_simplex<Eigen::Matrix<local_scalar_t__, -1, 1>>(
-          N));
-      serializer.write(
-        deserializer.read_free_simplex<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+      out__.write(
+        in__.read_free_simplex<Eigen::Matrix<local_scalar_t__, -1, 1>>(N));
+      out__.write(
+        in__.read_free_simplex<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
           N, N));
-      serializer.write(
-        deserializer.read_free_simplex<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>>(
+      out__.write(
+        in__.read_free_simplex<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>>(
           N, M, K, N));
-      serializer.write(
-        deserializer.read_free_cholesky_factor_cov<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+      out__.write(
+        in__.read_free_cholesky_factor_cov<Eigen::Matrix<local_scalar_t__, -1, -1>>(
           5, 4));
-      serializer.write(
-        deserializer.read_free_cholesky_factor_cov<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+      out__.write(
+        in__.read_free_cholesky_factor_cov<Eigen::Matrix<local_scalar_t__, -1, -1>>(
           3, 3));
-      serializer.write(
-        deserializer.read_free_cholesky_factor_cov<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
+      out__.write(
+        in__.read_free_cholesky_factor_cov<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
           K, 3, 3));
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2));
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2));
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2));
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -9538,6 +9320,7 @@ class mother_model final : public model_base_crtp<mother_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      vars.resize(params_r.size());
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -9572,7 +9355,7 @@ class mother_model final : public model_base_crtp<mother_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    std::vector<std::string> names__ = std::vector<std::string>{"p_real",
+    const std::array<std::string, 67> names__ = std::array<std::string, 67>{"p_real",
       "p_upper", "p_lower", "offset_multiplier", "no_offset_multiplier",
       "offset_no_multiplier", "p_real_1d_ar", "p_real_3d_ar", "p_vec",
       "p_1d_vec", "p_3d_vec", "p_row_vec", "p_1d_row_vec", "p_3d_row_vec",
@@ -9588,13 +9371,16 @@ class mother_model final : public model_base_crtp<mother_model> {
       "gq_cfcov_33", "gq_cfcov_33_ar", "indices", "indexing_mat", "idx_res1",
       "idx_res2", "idx_res3", "idx_res11", "idx_res21", "idx_res31",
       "idx_res4", "idx_res5"};
+    
      std::vector<double> params_r_flat__;
-    for (auto&& param_name__ : names__) {
-      auto param_vec__ = context.vals_r(param_name__);
-      for (auto&& param_val__ : param_vec__) {
-        params_r_flat__.push_back(param_val__);
-      }
-    }
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
@@ -10614,8 +10400,8 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -10704,20 +10490,13 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       y_p = Eigen::Matrix<double, -1, 1>(2);
       stan::math::fill(y_p, std::numeric_limits<double>::quiet_NaN());
       
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        vars__.emplace_back(y0_p[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        vars__.emplace_back(theta_p[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        vars__.emplace_back(x_p[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        vars__.emplace_back(x_p_v[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        vars__.emplace_back(shared_params_p[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          vars__.emplace_back(job_params_p[(sym2__ - 1)][(sym1__ - 1)]);}}
-      vars__.emplace_back(x_r);
+      out__.write(y0_p);
+      out__.write(theta_p);
+      out__.write(x_p);
+      out__.write(x_p_v);
+      out__.write(shared_params_p);
+      out__.write(job_params_p);
+      out__.write(x_r);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -10797,23 +10576,16 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
         algebra_solver_newton(algebra_system_functor__(), x_p_v, y_p, x_d_r,
           x_d_i, pstream__, 0.01, 0.01, 10), "assigning variable theta_p_as");
       if (emit_transformed_parameters__) {
-        vars__.emplace_back(abc1_p);
-        vars__.emplace_back(abc2_p);
-        vars__.emplace_back(abc3_p);
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          vars__.emplace_back(y_hat_tp1[(sym1__ - 1)]);}
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          vars__.emplace_back(y_hat_tp2[(sym1__ - 1)]);}
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          vars__.emplace_back(y_hat_tp3[(sym1__ - 1)]);}
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          vars__.emplace_back(theta_p_as[(sym1__ - 1)]);}
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          vars__.emplace_back(x_v[(sym1__ - 1)]);}
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          vars__.emplace_back(y_v[(sym1__ - 1)]);}
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          vars__.emplace_back(y_p[(sym1__ - 1)]);}
+        out__.write(abc1_p);
+        out__.write(abc2_p);
+        out__.write(abc3_p);
+        out__.write(y_hat_tp1);
+        out__.write(y_hat_tp2);
+        out__.write(y_hat_tp3);
+        out__.write(theta_p_as);
+        out__.write(x_v);
+        out__.write(y_v);
+        out__.write(y_p);
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -11020,19 +10792,14 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       assign(theta_dbl,
         algebra_solver_newton(algebra_system_functor__(), x_p_v, y_p, x_d_r,
           x_d_i, pstream__, 0.01, 0.01, 10), "assigning variable theta_dbl");
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= T; ++sym2__) {
-          vars__.emplace_back(y_hat[(sym2__ - 1)][(sym1__ - 1)]);}}
-      vars__.emplace_back(y_1d);
-      vars__.emplace_back(z_1d);
-      vars__.emplace_back(abc1_gq);
-      vars__.emplace_back(abc2_gq);
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        vars__.emplace_back(y_hat_gq[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        vars__.emplace_back(yy_hat_gq[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        vars__.emplace_back(theta_dbl[(sym1__ - 1)]);}
+      out__.write(y_hat);
+      out__.write(y_1d);
+      out__.write(z_1d);
+      out__.write(abc1_gq);
+      out__.write(abc2_gq);
+      out__.write(y_hat_gq);
+      out__.write(yy_hat_gq);
+      out__.write(theta_dbl);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -11044,12 +10811,11 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
-                                   VecVar& out_vars__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__(params_r__.size(), 0);
-    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
@@ -11058,23 +10824,19 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      serializer.write(deserializer.read<std::vector<local_scalar_t__>>(2));
-      serializer.write(deserializer.read<std::vector<local_scalar_t__>>(1));
-      serializer.write(deserializer.read<std::vector<local_scalar_t__>>(1));
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2));
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(3));
-      serializer.write(
-        deserializer.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-          3, 3));
-      serializer.write(deserializer.read<local_scalar_t__>());
+      out__.write(in__.read<std::vector<local_scalar_t__>>(2));
+      out__.write(in__.read<std::vector<local_scalar_t__>>(1));
+      out__.write(in__.read<std::vector<local_scalar_t__>>(1));
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2));
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(3));
+      out__.write(
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(3, 3));
+      out__.write(in__.read<local_scalar_t__>());
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -11393,6 +11155,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      vars.resize(params_r.size());
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -11427,18 +11190,21 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    std::vector<std::string> names__ = std::vector<std::string>{"y0_p",
+    const std::array<std::string, 25> names__ = std::array<std::string, 25>{"y0_p",
       "theta_p", "x_p", "x_p_v", "shared_params_p", "job_params_p", "x_r",
       "abc1_p", "abc2_p", "abc3_p", "y_hat_tp1", "y_hat_tp2", "y_hat_tp3",
       "theta_p_as", "x_v", "y_v", "y_p", "y_hat", "y_1d", "z_1d", "abc1_gq",
       "abc2_gq", "y_hat_gq", "yy_hat_gq", "theta_dbl"};
+    
      std::vector<double> params_r_flat__;
-    for (auto&& param_name__ : names__) {
-      auto param_vec__ = context.vals_r(param_name__);
-      for (auto&& param_val__ : param_vec__) {
-        params_r_flat__.push_back(param_val__);
-      }
-    }
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
@@ -13923,8 +13689,8 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -13956,11 +13722,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       z = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
       stan::math::fill(z, std::numeric_limits<double>::quiet_NaN());
       
-      vars__.emplace_back(r);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(ra[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(v[(sym1__ - 1)]);}
+      out__.write(r);
+      out__.write(ra);
+      out__.write(v);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -14659,9 +14423,7 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       assign(z, ode_rk45(f_odefunctor__(), v, r, ra, pstream__, r, v),
         "assigning variable z");
       if (emit_transformed_parameters__) {
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            vars__.emplace_back(z[(sym2__ - 1)][(sym1__ - 1)]);}}
+        out__.write(z);
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -15363,9 +15125,7 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       current_statement__ = 399;
       assign(zg, ode_bdf(f_odefunctor__(), v, r, ra, pstream__, r, v),
         "assigning variable zg");
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.emplace_back(zg[(sym2__ - 1)][(sym1__ - 1)]);}}
+      out__.write(zg);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -15377,12 +15137,11 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
-                                   VecVar& out_vars__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__(params_r__.size(), 0);
-    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
@@ -15391,16 +15150,14 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      serializer.write(deserializer.read<local_scalar_t__>());
-      serializer.write(deserializer.read<std::vector<local_scalar_t__>>(N));
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N));
+      out__.write(in__.read<local_scalar_t__>());
+      out__.write(in__.read<std::vector<local_scalar_t__>>(N));
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -15541,6 +15298,7 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      vars.resize(params_r.size());
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -15575,15 +15333,18 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    std::vector<std::string> names__ = std::vector<std::string>{"r", "ra",
-      "v", "z", "zg"};
+    const std::array<std::string, 5> names__ = std::array<std::string, 5>{"r",
+      "ra", "v", "z", "zg"};
+    
      std::vector<double> params_r_flat__;
-    for (auto&& param_name__ : names__) {
-      auto param_vec__ = context.vals_r(param_name__);
-      for (auto&& param_val__ : param_vec__) {
-        params_r_flat__.push_back(param_val__);
-      }
-    }
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
@@ -15967,8 +15728,8 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -16019,14 +15780,12 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       std::vector<std::vector<double>> z;
       z = std::vector<std::vector<double>>(N, std::vector<double>(2, std::numeric_limits<double>::quiet_NaN()));
       
-      vars__.emplace_back(alpha);
-      vars__.emplace_back(beta);
-      vars__.emplace_back(gamma);
-      vars__.emplace_back(delta);
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        vars__.emplace_back(z_init[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        vars__.emplace_back(sigma[(sym1__ - 1)]);}
+      out__.write(alpha);
+      out__.write(beta);
+      out__.write(gamma);
+      out__.write(delta);
+      out__.write(z_init);
+      out__.write(sigma);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -16038,9 +15797,7 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
           rep_array(0.0, 0), rep_array(0, 0), pstream__, 1e-5, 1e-3, 5e2),
         "assigning variable z");
       if (emit_transformed_parameters__) {
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            vars__.emplace_back(z[(sym2__ - 1)][(sym1__ - 1)]);}}
+        out__.write(z);
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -16056,12 +15813,11 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
-                                   VecVar& out_vars__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__(params_r__.size(), 0);
-    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
@@ -16070,20 +15826,17 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      serializer.write(deserializer.read_free_lb<local_scalar_t__>(0));
-      serializer.write(deserializer.read_free_lb<local_scalar_t__>(0));
-      serializer.write(deserializer.read_free_lb<local_scalar_t__>(0));
-      serializer.write(deserializer.read_free_lb<local_scalar_t__>(0));
-      serializer.write(
-        deserializer.read_free_lb<std::vector<local_scalar_t__>>(0, 2));
-      serializer.write(
-        deserializer.read_free_lb<std::vector<local_scalar_t__>>(0, 2));
+      out__.write(in__.read_free_lb<local_scalar_t__>(0));
+      out__.write(in__.read_free_lb<local_scalar_t__>(0));
+      out__.write(in__.read_free_lb<local_scalar_t__>(0));
+      out__.write(in__.read_free_lb<local_scalar_t__>(0));
+      out__.write(in__.read_free_lb<std::vector<local_scalar_t__>>(0, 2));
+      out__.write(in__.read_free_lb<std::vector<local_scalar_t__>>(0, 2));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -16223,6 +15976,7 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      vars.resize(params_r.size());
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -16257,15 +16011,18 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    std::vector<std::string> names__ = std::vector<std::string>{"alpha",
+    const std::array<std::string, 7> names__ = std::array<std::string, 7>{"alpha",
       "beta", "gamma", "delta", "z_init", "sigma", "z"};
+    
      std::vector<double> params_r_flat__;
-    for (auto&& param_name__ : names__) {
-      auto param_vec__ = context.vals_r(param_name__);
-      for (auto&& param_val__ : param_vec__) {
-        params_r_flat__.push_back(param_val__);
-      }
-    }
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
@@ -17451,8 +17208,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -17517,26 +17274,15 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       
       current_statement__ = 9;
       X_rv_p = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(n);
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(alpha_v[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(beta[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(cuts[(sym1__ - 1)]);}
-      vars__.emplace_back(sigma);
-      vars__.emplace_back(alpha);
-      vars__.emplace_back(phi);
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-          vars__.emplace_back(
-            rvalue(X_p, "X_p", index_uni(sym2__), index_uni(sym1__)));}}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-          vars__.emplace_back(
-            rvalue(beta_m, "beta_m", index_uni(sym2__), index_uni(sym1__)));}
-      }
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        vars__.emplace_back(X_rv_p[(sym1__ - 1)]);}
+      out__.write(alpha_v);
+      out__.write(beta);
+      out__.write(cuts);
+      out__.write(sigma);
+      out__.write(alpha);
+      out__.write(phi);
+      out__.write(X_p);
+      out__.write(beta_m);
+      out__.write(X_rv_p);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -17555,12 +17301,11 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
-                                   VecVar& out_vars__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__(params_r__.size(), 0);
-    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
@@ -17569,27 +17314,20 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k));
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k));
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k));
-      serializer.write(deserializer.read_free_lb<local_scalar_t__>(0));
-      serializer.write(deserializer.read<local_scalar_t__>());
-      serializer.write(deserializer.read<local_scalar_t__>());
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, k));
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, k));
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(n));
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k));
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k));
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k));
+      out__.write(in__.read_free_lb<local_scalar_t__>(0));
+      out__.write(in__.read<local_scalar_t__>());
+      out__.write(in__.read<local_scalar_t__>());
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, k));
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, k));
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(n));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -17766,6 +17504,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      vars.resize(params_r.size());
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -17800,15 +17539,18 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    std::vector<std::string> names__ = std::vector<std::string>{"alpha_v",
+    const std::array<std::string, 9> names__ = std::array<std::string, 9>{"alpha_v",
       "beta", "cuts", "sigma", "alpha", "phi", "X_p", "beta_m", "X_rv_p"};
+    
      std::vector<double> params_r_flat__;
-    for (auto&& param_name__ : names__) {
-      auto param_vec__ = context.vals_r(param_name__);
-      for (auto&& param_val__ : param_vec__) {
-        params_r_flat__.push_back(param_val__);
-      }
-    }
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
@@ -17986,8 +17728,8 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -18014,14 +17756,8 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
       z1 = in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
              rvalue(L_Omega, "L_Omega",
                index_uni(1), index_uni(1), index_uni(2)), lp__, NS);
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= nt; ++sym3__) {
-            vars__.emplace_back(
-              rvalue(L_Omega, "L_Omega",
-                index_uni(sym3__), index_uni(sym2__), index_uni(sym1__)));}}}
-      for (int sym1__ = 1; sym1__ <= NS; ++sym1__) {
-        vars__.emplace_back(z1[(sym1__ - 1)]);}
+      out__.write(L_Omega);
+      out__.write(z1);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -18040,12 +17776,11 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
-                                   VecVar& out_vars__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__(params_r__.size(), 0);
-    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
@@ -18054,11 +17789,11 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      serializer.write(
-        deserializer.read_free_cholesky_factor_corr<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
+      out__.write(
+        in__.read_free_cholesky_factor_corr<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
           nt, 2));
-      serializer.write(
-        deserializer.read_free_lb<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+      out__.write(
+        in__.read_free_lb<Eigen::Matrix<local_scalar_t__, -1, 1>>(
           rvalue(L_Omega, "L_Omega",
             index_uni(1), index_uni(1), index_uni(2)), NS));
     } catch (const std::exception& e) {
@@ -18066,7 +17801,6 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -18181,6 +17915,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      vars.resize(params_r.size());
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -18215,15 +17950,18 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    std::vector<std::string> names__ = std::vector<std::string>{"L_Omega",
+    const std::array<std::string, 2> names__ = std::array<std::string, 2>{"L_Omega",
       "z1"};
+    
      std::vector<double> params_r_flat__;
-    for (auto&& param_name__ : names__) {
-      auto param_vec__ = context.vals_r(param_name__);
-      for (auto&& param_val__ : param_vec__) {
-        params_r_flat__.push_back(param_val__);
-      }
-    }
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
@@ -18570,8 +18308,8 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -18598,12 +18336,9 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
       
       current_statement__ = 3;
       y3 = in__.template read<std::vector<local_scalar_t__>>(N);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(y1[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(y2[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(y3[(sym1__ - 1)]);}
+      out__.write(y1);
+      out__.write(y2);
+      out__.write(y3);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -18622,12 +18357,11 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
-                                   VecVar& out_vars__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__(params_r__.size(), 0);
-    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
@@ -18636,15 +18370,14 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      serializer.write(deserializer.read<std::vector<local_scalar_t__>>(N));
-      serializer.write(deserializer.read<std::vector<local_scalar_t__>>(N));
-      serializer.write(deserializer.read<std::vector<local_scalar_t__>>(N));
+      out__.write(in__.read<std::vector<local_scalar_t__>>(N));
+      out__.write(in__.read<std::vector<local_scalar_t__>>(N));
+      out__.write(in__.read<std::vector<local_scalar_t__>>(N));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -18759,6 +18492,7 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      vars.resize(params_r.size());
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -18793,15 +18527,18 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    std::vector<std::string> names__ = std::vector<std::string>{"y1", "y2",
-      "y3"};
+    const std::array<std::string, 3> names__ = std::array<std::string, 3>{"y1",
+      "y2", "y3"};
+    
      std::vector<double> params_r_flat__;
-    for (auto&& param_name__ : names__) {
-      auto param_vec__ = context.vals_r(param_name__);
-      for (auto&& param_val__ : param_vec__) {
-        params_r_flat__.push_back(param_val__);
-      }
-    }
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
@@ -20272,8 +20009,8 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -20391,76 +20128,22 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
       
       current_statement__ = 16;
       y1 = in__.template read<std::vector<local_scalar_t__>>(N);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-              vars__.emplace_back(
-                rvalue(a8, "a8",
-                  index_uni(sym4__), index_uni(sym3__), index_uni(sym2__),
-                    index_uni(sym1__)));}}}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            vars__.emplace_back(
-              a7[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            vars__.emplace_back(
-              a6[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.emplace_back(a5[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            vars__.emplace_back(
-              rvalue(a4, "a4",
-                index_uni(sym3__), index_uni(sym2__), index_uni(sym1__)));}}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.emplace_back(a3[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.emplace_back(a2[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(a1[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-              vars__.emplace_back(
-                rvalue(y8, "y8",
-                  index_uni(sym4__), index_uni(sym3__), index_uni(sym2__),
-                    index_uni(sym1__)));}}}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            vars__.emplace_back(
-              y7[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            vars__.emplace_back(
-              y6[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.emplace_back(y5[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            vars__.emplace_back(
-              rvalue(y4, "y4",
-                index_uni(sym3__), index_uni(sym2__), index_uni(sym1__)));}}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.emplace_back(y3[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.emplace_back(y2[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(y1[(sym1__ - 1)]);}
+      out__.write(a8);
+      out__.write(a7);
+      out__.write(a6);
+      out__.write(a5);
+      out__.write(a4);
+      out__.write(a3);
+      out__.write(a2);
+      out__.write(a1);
+      out__.write(y8);
+      out__.write(y7);
+      out__.write(y6);
+      out__.write(y5);
+      out__.write(y4);
+      out__.write(y3);
+      out__.write(y2);
+      out__.write(y1);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -20479,12 +20162,11 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
-                                   VecVar& out_vars__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__(params_r__.size(), 0);
-    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
@@ -20493,54 +20175,49 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      serializer.write(
-        deserializer.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
+      out__.write(
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
           N, N, N, N));
-      serializer.write(
-        deserializer.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
+      out__.write(
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
           N, N, N));
-      serializer.write(
-        deserializer.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
+      out__.write(
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
           N, N, N));
-      serializer.write(
-        deserializer.read<std::vector<std::vector<local_scalar_t__>>>(N, N));
-      serializer.write(
-        deserializer.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
-          N, N, N));
-      serializer.write(
-        deserializer.read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
-          N, N));
-      serializer.write(
-        deserializer.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-          N, N));
-      serializer.write(deserializer.read<std::vector<local_scalar_t__>>(N));
-      serializer.write(
-        deserializer.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
+      out__.write(
+        in__.read<std::vector<std::vector<local_scalar_t__>>>(N, N));
+      out__.write(
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, N,
+          N));
+      out__.write(
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, N));
+      out__.write(
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, N));
+      out__.write(in__.read<std::vector<local_scalar_t__>>(N));
+      out__.write(
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
           N, N, N, N));
-      serializer.write(
-        deserializer.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
+      out__.write(
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
           N, N, N));
-      serializer.write(
-        deserializer.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
+      out__.write(
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
           N, N, N));
-      serializer.write(
-        deserializer.read<std::vector<std::vector<local_scalar_t__>>>(N, N));
-      serializer.write(
-        deserializer.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
-          N, N, N));
-      serializer.write(
-        deserializer.read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
-          N, N));
-      serializer.write(
-        deserializer.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-          N, N));
-      serializer.write(deserializer.read<std::vector<local_scalar_t__>>(N));
+      out__.write(
+        in__.read<std::vector<std::vector<local_scalar_t__>>>(N, N));
+      out__.write(
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, N,
+          N));
+      out__.write(
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, N));
+      out__.write(
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, N));
+      out__.write(in__.read<std::vector<local_scalar_t__>>(N));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -20966,6 +20643,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      vars.resize(params_r.size());
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -21000,16 +20678,19 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    std::vector<std::string> names__ = std::vector<std::string>{"a8", "a7",
-      "a6", "a5", "a4", "a3", "a2", "a1", "y8", "y7", "y6", "y5", "y4", "y3",
-      "y2", "y1"};
+    const std::array<std::string, 16> names__ = std::array<std::string, 16>{"a8",
+      "a7", "a6", "a5", "a4", "a3", "a2", "a1", "y8", "y7", "y6", "y5", "y4",
+      "y3", "y2", "y1"};
+    
      std::vector<double> params_r_flat__;
-    for (auto&& param_name__ : names__) {
-      auto param_vec__ = context.vals_r(param_name__);
-      for (auto&& param_val__ : param_vec__) {
-        params_r_flat__.push_back(param_val__);
-      }
-    }
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
@@ -23992,8 +23673,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -24087,55 +23768,19 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       current_statement__ = 13;
       y17 = in__.template read<std::vector<std::vector<std::vector<local_scalar_t__>>>>(
               N, N, N);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(y1[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.emplace_back(y2[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.emplace_back(y3[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            vars__.emplace_back(
-              rvalue(y4, "y4",
-                index_uni(sym3__), index_uni(sym2__), index_uni(sym1__)));}}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.emplace_back(y5[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            vars__.emplace_back(
-              y6[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            vars__.emplace_back(
-              y7[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
-              vars__.emplace_back(
-                rvalue(y8, "y8",
-                  index_uni(sym4__), index_uni(sym3__), index_uni(sym2__),
-                    index_uni(sym1__)));}}}}
-      vars__.emplace_back(y9);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(y10[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(y11[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          vars__.emplace_back(
-            rvalue(y12, "y12", index_uni(sym2__), index_uni(sym1__)));}}
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
-            vars__.emplace_back(
-              y17[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
+      out__.write(y1);
+      out__.write(y2);
+      out__.write(y3);
+      out__.write(y4);
+      out__.write(y5);
+      out__.write(y6);
+      out__.write(y7);
+      out__.write(y8);
+      out__.write(y9);
+      out__.write(y10);
+      out__.write(y11);
+      out__.write(y12);
+      out__.write(y17);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -24276,32 +23921,32 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       tgs = reduce_sum<s_rsfunctor__>(y1d, 1, pstream__, y13d, y9d, y10d,
               y11d, y12d, y14d, y1d, y2d, y3d, y4d, y15d, y5d, y6d, y7d, y8d,
               y16d, y17);
-      vars__.emplace_back(t1);
-      vars__.emplace_back(t1a);
-      vars__.emplace_back(t2);
-      vars__.emplace_back(t3);
-      vars__.emplace_back(t4);
-      vars__.emplace_back(t5);
-      vars__.emplace_back(t6);
-      vars__.emplace_back(t7);
-      vars__.emplace_back(t8);
-      vars__.emplace_back(t9);
-      vars__.emplace_back(t10);
-      vars__.emplace_back(t11);
-      vars__.emplace_back(t12);
-      vars__.emplace_back(tg1);
-      vars__.emplace_back(tg2);
-      vars__.emplace_back(tg3);
-      vars__.emplace_back(tg4);
-      vars__.emplace_back(tg5);
-      vars__.emplace_back(tg6);
-      vars__.emplace_back(tg7);
-      vars__.emplace_back(tg8);
-      vars__.emplace_back(tg9);
-      vars__.emplace_back(tg10);
-      vars__.emplace_back(tg11);
-      vars__.emplace_back(tg12);
-      vars__.emplace_back(tgs);
+      out__.write(t1);
+      out__.write(t1a);
+      out__.write(t2);
+      out__.write(t3);
+      out__.write(t4);
+      out__.write(t5);
+      out__.write(t6);
+      out__.write(t7);
+      out__.write(t8);
+      out__.write(t9);
+      out__.write(t10);
+      out__.write(t11);
+      out__.write(t12);
+      out__.write(tg1);
+      out__.write(tg2);
+      out__.write(tg3);
+      out__.write(tg4);
+      out__.write(tg5);
+      out__.write(tg6);
+      out__.write(tg7);
+      out__.write(tg8);
+      out__.write(tg9);
+      out__.write(tg10);
+      out__.write(tg11);
+      out__.write(tg12);
+      out__.write(tgs);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -24313,12 +23958,11 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
-                                   VecVar& out_vars__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__(params_r__.size(), 0);
-    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
@@ -24327,43 +23971,37 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      serializer.write(deserializer.read<std::vector<local_scalar_t__>>(N));
-      serializer.write(
-        deserializer.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-          N, N));
-      serializer.write(
-        deserializer.read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
-          N, N));
-      serializer.write(
-        deserializer.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
+      out__.write(in__.read<std::vector<local_scalar_t__>>(N));
+      out__.write(
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, N));
+      out__.write(
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, N));
+      out__.write(
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, N,
+          N));
+      out__.write(
+        in__.read<std::vector<std::vector<local_scalar_t__>>>(N, N));
+      out__.write(
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
           N, N, N));
-      serializer.write(
-        deserializer.read<std::vector<std::vector<local_scalar_t__>>>(N, N));
-      serializer.write(
-        deserializer.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
+      out__.write(
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
           N, N, N));
-      serializer.write(
-        deserializer.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
-          N, N, N));
-      serializer.write(
-        deserializer.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
+      out__.write(
+        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
           N, N, N, N));
-      serializer.write(deserializer.read<local_scalar_t__>());
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N));
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(N));
-      serializer.write(
-        deserializer.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, N));
-      serializer.write(
-        deserializer.read<std::vector<std::vector<std::vector<local_scalar_t__>>>>(
-          N, N, N));
+      out__.write(in__.read<local_scalar_t__>());
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N));
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(N));
+      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, N));
+      out__.write(
+        in__.read<std::vector<std::vector<std::vector<local_scalar_t__>>>>(N,
+          N, N));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -24815,6 +24453,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      vars.resize(params_r.size());
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -24849,18 +24488,21 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    std::vector<std::string> names__ = std::vector<std::string>{"y1", "y2",
-      "y3", "y4", "y5", "y6", "y7", "y8", "y9", "y10", "y11", "y12", "y17",
-      "t1", "t1a", "t2", "t3", "t4", "t5", "t6", "t7", "t8", "t9", "t10",
-      "t11", "t12", "tg1", "tg2", "tg3", "tg4", "tg5", "tg6", "tg7", "tg8",
-      "tg9", "tg10", "tg11", "tg12", "tgs"};
+    const std::array<std::string, 39> names__ = std::array<std::string, 39>{"y1",
+      "y2", "y3", "y4", "y5", "y6", "y7", "y8", "y9", "y10", "y11", "y12",
+      "y17", "t1", "t1a", "t2", "t3", "t4", "t5", "t6", "t7", "t8", "t9",
+      "t10", "t11", "t12", "tg1", "tg2", "tg3", "tg4", "tg5", "tg6", "tg7",
+      "tg8", "tg9", "tg10", "tg11", "tg12", "tgs"};
+    
      std::vector<double> params_r_flat__;
-    for (auto&& param_name__ : names__) {
-      auto param_vec__ = context.vals_r(param_name__);
-      for (auto&& param_val__ : param_vec__) {
-        params_r_flat__.push_back(param_val__);
-      }
-    }
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
@@ -25177,8 +24819,8 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -25208,12 +24850,11 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
-                                   VecVar& out_vars__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__(params_r__.size(), 0);
-    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
@@ -25227,7 +24868,6 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -25313,6 +24953,7 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      vars.resize(params_r.size());
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -25347,14 +24988,17 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    std::vector<std::string> names__ = std::vector<std::string>{};
+    const std::array<std::string, 0> names__ = std::array<std::string, 0>{};
+    
      std::vector<double> params_r_flat__;
-    for (auto&& param_name__ : names__) {
-      auto param_vec__ = context.vals_r(param_name__);
-      for (auto&& param_val__ : param_vec__) {
-        params_r_flat__.push_back(param_val__);
-      }
-    }
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
@@ -25538,8 +25182,8 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -25557,7 +25201,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
       current_statement__ = 1;
       x = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
             lp__);
-      vars__.emplace_back(x);
+      out__.write(x);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -25576,12 +25220,11 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
-                                   VecVar& out_vars__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__(params_r__.size(), 0);
-    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
@@ -25590,13 +25233,12 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      serializer.write(deserializer.read_free_lb<local_scalar_t__>(0));
+      out__.write(in__.read_free_lb<local_scalar_t__>(0));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -25683,6 +25325,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      vars.resize(params_r.size());
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -25717,14 +25360,17 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    std::vector<std::string> names__ = std::vector<std::string>{"x"};
+    const std::array<std::string, 1> names__ = std::array<std::string, 1>{"x"};
+    
      std::vector<double> params_r_flat__;
-    for (auto&& param_name__ : names__) {
-      auto param_vec__ = context.vals_r(param_name__);
-      for (auto&& param_val__ : param_vec__) {
-        params_r_flat__.push_back(param_val__);
-      }
-    }
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
@@ -26796,8 +26442,8 @@ class transform_model final : public model_base_crtp<transform_model> {
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -27053,60 +26699,24 @@ class transform_model final : public model_base_crtp<transform_model> {
       tpm_2 = std::vector<Eigen::Matrix<double, -1, -1>>(n, Eigen::Matrix<double, -1, -1>(m, k));
       stan::math::fill(tpm_2, std::numeric_limits<double>::quiet_NaN());
       
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(p_1[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(p_2[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(p_3[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(p_4[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(p_5[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(p_6[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(p_7[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(p_8[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          vars__.emplace_back(p_9[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
-            vars__.emplace_back(
-              p_10[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(pv_1[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          vars__.emplace_back(pv_2[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
-            vars__.emplace_back(
-              pv_3[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(pr_1[(sym1__ - 1)]);}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          vars__.emplace_back(pr_2[(sym2__ - 1)][(sym1__ - 1)]);}}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
-            vars__.emplace_back(
-              pr_3[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          vars__.emplace_back(
-            rvalue(pm_1, "pm_1", index_uni(sym2__), index_uni(sym1__)));}}
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
-            vars__.emplace_back(
-              rvalue(pm_2, "pm_2",
-                index_uni(sym3__), index_uni(sym2__), index_uni(sym1__)));}}}
+      out__.write(p_1);
+      out__.write(p_2);
+      out__.write(p_3);
+      out__.write(p_4);
+      out__.write(p_5);
+      out__.write(p_6);
+      out__.write(p_7);
+      out__.write(p_8);
+      out__.write(p_9);
+      out__.write(p_10);
+      out__.write(pv_1);
+      out__.write(pv_2);
+      out__.write(pv_3);
+      out__.write(pr_1);
+      out__.write(pr_2);
+      out__.write(pr_3);
+      out__.write(pm_1);
+      out__.write(pm_2);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -27391,62 +27001,24 @@ class transform_model final : public model_base_crtp<transform_model> {
                                   index_uni(sym1__), index_uni(sym2__),
                                     index_uni(sym3__)));}}}
       if (emit_transformed_parameters__) {
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          vars__.emplace_back(tp_1[(sym1__ - 1)]);}
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          vars__.emplace_back(tp_2[(sym1__ - 1)]);}
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          vars__.emplace_back(tp_3[(sym1__ - 1)]);}
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          vars__.emplace_back(tp_4[(sym1__ - 1)]);}
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          vars__.emplace_back(tp_5[(sym1__ - 1)]);}
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          vars__.emplace_back(tp_6[(sym1__ - 1)]);}
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          vars__.emplace_back(tp_7[(sym1__ - 1)]);}
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          vars__.emplace_back(tp_8[(sym1__ - 1)]);}
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-            vars__.emplace_back(tp_9[(sym2__ - 1)][(sym1__ - 1)]);}}
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
-              vars__.emplace_back(
-                tp_10[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          vars__.emplace_back(tpv_1[(sym1__ - 1)]);}
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-            vars__.emplace_back(tpv_2[(sym2__ - 1)][(sym1__ - 1)]);}}
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
-              vars__.emplace_back(
-                tpv_3[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          vars__.emplace_back(tpr_1[(sym1__ - 1)]);}
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-            vars__.emplace_back(tpr_2[(sym2__ - 1)][(sym1__ - 1)]);}}
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
-              vars__.emplace_back(
-                tpr_3[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);}}}
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-            vars__.emplace_back(
-              rvalue(tpm_1, "tpm_1", index_uni(sym2__), index_uni(sym1__)));}
-        }
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-            for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
-              vars__.emplace_back(
-                rvalue(tpm_2, "tpm_2",
-                  index_uni(sym3__), index_uni(sym2__), index_uni(sym1__)));}
-          }}
+        out__.write(tp_1);
+        out__.write(tp_2);
+        out__.write(tp_3);
+        out__.write(tp_4);
+        out__.write(tp_5);
+        out__.write(tp_6);
+        out__.write(tp_7);
+        out__.write(tp_8);
+        out__.write(tp_9);
+        out__.write(tp_10);
+        out__.write(tpv_1);
+        out__.write(tpv_2);
+        out__.write(tpv_3);
+        out__.write(tpr_1);
+        out__.write(tpr_2);
+        out__.write(tpr_3);
+        out__.write(tpm_1);
+        out__.write(tpm_2);
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -27462,12 +27034,11 @@ class transform_model final : public model_base_crtp<transform_model> {
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
-                                   VecVar& out_vars__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__(params_r__.size(), 0);
-    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
@@ -27476,70 +27047,69 @@ class transform_model final : public model_base_crtp<transform_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      serializer.write(
-        deserializer.read_free_lb<std::vector<local_scalar_t__>>(
+      out__.write(
+        in__.read_free_lb<std::vector<local_scalar_t__>>(
           rvalue(ds, "ds", index_uni(1), index_uni(1)), k));
-      serializer.write(
-        deserializer.read_free_ub<std::vector<local_scalar_t__>>(
+      out__.write(
+        in__.read_free_ub<std::vector<local_scalar_t__>>(
           rvalue(ds, "ds", index_uni(1), index_uni(1)), k));
-      serializer.write(
-        deserializer.read_free_lub<std::vector<local_scalar_t__>>(
+      out__.write(
+        in__.read_free_lub<std::vector<local_scalar_t__>>(
           rvalue(ds, "ds", index_uni(1), index_uni(1)),
           rvalue(ds, "ds", index_uni(1), index_uni(2)), k));
-      serializer.write(
-        deserializer.read_free_lub<std::vector<local_scalar_t__>>(0,
+      out__.write(
+        in__.read_free_lub<std::vector<local_scalar_t__>>(0,
           rvalue(ds, "ds", index_uni(1), index_uni(2)), k));
-      serializer.write(
-        deserializer.read_free_lub<std::vector<local_scalar_t__>>(
+      out__.write(
+        in__.read_free_lub<std::vector<local_scalar_t__>>(
           rvalue(ds, "ds", index_uni(1), index_uni(1)), 1, k));
-      serializer.write(
-        deserializer.read_free_offset_multiplier<std::vector<local_scalar_t__>>(
+      out__.write(
+        in__.read_free_offset_multiplier<std::vector<local_scalar_t__>>(
           rvalue(ds, "ds", index_uni(1), index_uni(1)), 1, k));
-      serializer.write(
-        deserializer.read_free_offset_multiplier<std::vector<local_scalar_t__>>(
-          0, rvalue(ds, "ds", index_uni(1), index_uni(1)), k));
-      serializer.write(
-        deserializer.read_free_offset_multiplier<std::vector<local_scalar_t__>>(
+      out__.write(
+        in__.read_free_offset_multiplier<std::vector<local_scalar_t__>>(0,
+          rvalue(ds, "ds", index_uni(1), index_uni(1)), k));
+      out__.write(
+        in__.read_free_offset_multiplier<std::vector<local_scalar_t__>>(
           rvalue(ds, "ds", index_uni(1), index_uni(1)),
           rvalue(ds, "ds", index_uni(1), index_uni(2)), k));
-      serializer.write(
-        deserializer.read_free_lub<std::vector<std::vector<local_scalar_t__>>>(
+      out__.write(
+        in__.read_free_lub<std::vector<std::vector<local_scalar_t__>>>(
           rvalue(ds, "ds", index_uni(1)), 1, m, k));
-      serializer.write(
-        deserializer.read_free_lub<std::vector<std::vector<std::vector<local_scalar_t__>>>>(
+      out__.write(
+        in__.read_free_lub<std::vector<std::vector<std::vector<local_scalar_t__>>>>(
           0, ds, n, m, k));
-      serializer.write(
-        deserializer.read_free_lub<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+      out__.write(
+        in__.read_free_lub<Eigen::Matrix<local_scalar_t__, -1, 1>>(
           rvalue(dv, "dv", index_uni(1), index_uni(1)),
           rvalue(dv, "dv", index_uni(1), index_uni(2)), k));
-      serializer.write(
-        deserializer.read_free_lb<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+      out__.write(
+        in__.read_free_lb<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
           rvalue(dv, "dv", index_uni(1)), m, k));
-      serializer.write(
-        deserializer.read_free_ub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
+      out__.write(
+        in__.read_free_ub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
           dv, n, m, k));
-      serializer.write(
-        deserializer.read_free_lub<Eigen::Matrix<local_scalar_t__, 1, -1>>(
+      out__.write(
+        in__.read_free_lub<Eigen::Matrix<local_scalar_t__, 1, -1>>(
           rvalue(dr, "dr", index_uni(1), index_uni(1)),
           rvalue(dr, "dr", index_uni(1), index_uni(2)), k));
-      serializer.write(
-        deserializer.read_free_lb<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
+      out__.write(
+        in__.read_free_lb<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
           rvalue(dr, "dr", index_uni(1)), m, k));
-      serializer.write(
-        deserializer.read_free_ub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
+      out__.write(
+        in__.read_free_ub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
           dr, n, m, k));
-      serializer.write(
-        deserializer.read_free_lb<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+      out__.write(
+        in__.read_free_lb<Eigen::Matrix<local_scalar_t__, -1, -1>>(
           rvalue(dm, "dm", index_uni(1)), m, k));
-      serializer.write(
-        deserializer.read_free_ub<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
+      out__.write(
+        in__.read_free_ub<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
           dm, n, m, k));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -28183,6 +27753,7 @@ class transform_model final : public model_base_crtp<transform_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      vars.resize(params_r.size());
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -28217,19 +27788,22 @@ class transform_model final : public model_base_crtp<transform_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    std::vector<std::string> names__ = std::vector<std::string>{"p_1", "p_2",
-      "p_3", "p_4", "p_5", "p_6", "p_7", "p_8", "p_9", "p_10", "pv_1",
+    const std::array<std::string, 36> names__ = std::array<std::string, 36>{"p_1",
+      "p_2", "p_3", "p_4", "p_5", "p_6", "p_7", "p_8", "p_9", "p_10", "pv_1",
       "pv_2", "pv_3", "pr_1", "pr_2", "pr_3", "pm_1", "pm_2", "tp_1", "tp_2",
       "tp_3", "tp_4", "tp_5", "tp_6", "tp_7", "tp_8", "tp_9", "tp_10",
       "tpv_1", "tpv_2", "tpv_3", "tpr_1", "tpr_2", "tpr_3", "tpm_1",
       "tpm_2"};
+    
      std::vector<double> params_r_flat__;
-    for (auto&& param_name__ : names__) {
-      auto param_vec__ = context.vals_r(param_name__);
-      for (auto&& param_val__ : param_vec__) {
-        params_r_flat__.push_back(param_val__);
-      }
-    }
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
@@ -28495,8 +28069,8 @@ class truncate_model final : public model_base_crtp<truncate_model> {
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -28519,8 +28093,8 @@ class truncate_model final : public model_base_crtp<truncate_model> {
       current_statement__ = 2;
       y = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
             lp__);
-      vars__.emplace_back(m);
-      vars__.emplace_back(y);
+      out__.write(m);
+      out__.write(y);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -28539,12 +28113,11 @@ class truncate_model final : public model_base_crtp<truncate_model> {
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
-                                   VecVar& out_vars__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__(params_r__.size(), 0);
-    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
@@ -28553,14 +28126,13 @@ class truncate_model final : public model_base_crtp<truncate_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      serializer.write(deserializer.read<local_scalar_t__>());
-      serializer.write(deserializer.read_free_lb<local_scalar_t__>(0));
+      out__.write(in__.read<local_scalar_t__>());
+      out__.write(in__.read_free_lb<local_scalar_t__>(0));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -28652,6 +28224,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      vars.resize(params_r.size());
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -28686,14 +28259,18 @@ class truncate_model final : public model_base_crtp<truncate_model> {
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    std::vector<std::string> names__ = std::vector<std::string>{"m", "y"};
+    const std::array<std::string, 2> names__ = std::array<std::string, 2>{"m",
+      "y"};
+    
      std::vector<double> params_r_flat__;
-    for (auto&& param_name__ : names__) {
-      auto param_vec__ = context.vals_r(param_name__);
-      for (auto&& param_val__ : param_vec__) {
-        params_r_flat__.push_back(param_val__);
-      }
-    }
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
@@ -28871,8 +28448,8 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -28889,7 +28466,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
       
       current_statement__ = 1;
       x = in__.template read<local_scalar_t__>();
-      vars__.emplace_back(x);
+      out__.write(x);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -28908,12 +28485,11 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
-                                   VecVar& out_vars__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__(params_r__.size(), 0);
-    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
@@ -28922,13 +28498,12 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      serializer.write(deserializer.read<local_scalar_t__>());
+      out__.write(in__.read<local_scalar_t__>());
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -29015,6 +28590,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      vars.resize(params_r.size());
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -29049,14 +28625,17 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    std::vector<std::string> names__ = std::vector<std::string>{"x"};
+    const std::array<std::string, 1> names__ = std::array<std::string, 1>{"x"};
+    
      std::vector<double> params_r_flat__;
-    for (auto&& param_name__ : names__) {
-      auto param_vec__ = context.vals_r(param_name__);
-      for (auto&& param_val__ : param_vec__) {
-        params_r_flat__.push_back(param_val__);
-      }
-    }
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     
@@ -29238,8 +28817,8 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -29257,7 +28836,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
       current_statement__ = 1;
       x = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
             lp__);
-      vars__.emplace_back(x);
+      out__.write(x);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -29276,12 +28855,11 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
   inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
-                                   VecVar& out_vars__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    std::decay_t<VecVar> vars__(params_r__.size(), 0);
-    stan::io::deserializer<local_scalar_t__> deserializer(params_r__, params_i__);
-    stan::io::serializer<local_scalar_t__> serializer(vars__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
@@ -29290,13 +28868,12 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      serializer.write(deserializer.read_free_lb<local_scalar_t__>(0));
+      out__.write(in__.read_free_lb<local_scalar_t__>(0));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    out_vars__ = vars__;
     } // transform_inits_impl() 
     
   inline void get_param_names(std::vector<std::string>& names__) const {
@@ -29383,6 +28960,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      vars.resize(params_r.size());
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -29417,14 +28995,17 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    std::vector<std::string> names__ = std::vector<std::string>{"x"};
+    const std::array<std::string, 1> names__ = std::array<std::string, 1>{"x"};
+    
      std::vector<double> params_r_flat__;
-    for (auto&& param_name__ : names__) {
-      auto param_vec__ = context.vals_r(param_name__);
-      for (auto&& param_val__ : param_vec__) {
-        params_r_flat__.push_back(param_val__);
-      }
-    }
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
     transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
     } // transform_inits() 
     

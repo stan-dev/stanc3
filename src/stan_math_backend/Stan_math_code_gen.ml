@@ -509,8 +509,9 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
   in
   let intro ppf () =
     pf ppf "%a@ %a@ %a" (list ~sep:cut string)
-      [ "using local_scalar_t__ = double;"; "vars__.resize(0);"
+      [ "using local_scalar_t__ = double;"
       ; "stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);"
+      ; "stan::io::serializer<local_scalar_t__> out__(vars__);"
       ; "double lp__ = 0.0;"
       ; "(void) lp__;  // dummy to suppress unused var warning"
       ; "int current_statement__ = 0; "
@@ -647,24 +648,21 @@ let pp_transform_inits_impl ppf {Program.transform_inits; _} =
      stan::require_std_vector_t<VecVar>* = nullptr, @ \
      stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> @ " ;
   let params =
-    [ "VecVar& params_r__"; "VecI& params_i__"; "VecVar& out_vars__"
+    [ "VecVar& params_r__"; "VecI& params_i__"; "VecVar& vars__"
     ; "std::ostream* pstream__ = nullptr" ]
   in
   let intro ppf () =
     pf ppf "%a" (list ~sep:cut string)
       [ "using local_scalar_t__ = double;"
-      ; "std::decay_t<VecVar> vars__(params_r__.size(), 0);"
-      ; "stan::io::deserializer<local_scalar_t__> deserializer(params_r__, \
-         params_i__);"
-      ; "stan::io::serializer<local_scalar_t__> serializer(vars__);"
+      ; "stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);"
+      ; "stan::io::serializer<local_scalar_t__> out__(vars__);"
       ; "int current_statement__ = 0;"
       ; "local_scalar_t__ \
          DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ]
   in
   let cv_attr = ["const"] in
-  let outro ppf () = pf ppf "@,@[out_vars__ = vars__;@]" in
   pp_method_b ppf "void" "transform_inits_impl" params intro transform_inits
-    ~cv_attr ~outro
+    ~cv_attr
 
 (** Print the `log_prob` method of the model class *)
 let pp_log_prob ppf Program.({prog_name; log_prob; _}) =
@@ -752,6 +750,7 @@ let pp_overloads ppf () =
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      vars.resize(params_r.size());
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -789,30 +788,31 @@ let pp_transform_inits ppf {Program.output_vars; _} =
     [ "const stan::io::var_context& context"; "std::vector<int>& params_i"
     ; "std::vector<double>& vars"; "std::ostream* pstream__ = nullptr" ]
   in
+  let list_len = List.length output_vars in
   let get_names ppf () =
     let add_param = fmt "%S" in
     pf ppf
-      "@[<hov 2>std::vector<std::string> names__ = \
-       std::vector<std::string>{%a};@]@,"
+      "@[<hov 2>const std::array<std::string, %i> names__ = \
+       std::array<std::string, %i>{%a};@]@,"
+      list_len list_len
       (list ~sep:comma add_param)
       (List.map ~f:fst output_vars)
   in
-  let intro ppf =
-    pf ppf
-      "%a std::vector<double> params_r_flat__;\n\
-      \    for (auto&& param_name__ : names__) {\n\
-      \      auto param_vec__ = context.vals_r(param_name__);\n\
-      \      for (auto&& param_val__ : param_vec__) {\n\
-      \        params_r_flat__.push_back(param_val__);\n\
-      \      }\n\
-      \    }"
-      get_names
-  in
-  let ppbody ppf =
-    pf ppf "transform_inits_impl(params_r_flat__, params_i, vars, pstream__);"
+  let pp_body ppf =
+    pf ppf "%a" (list ~sep:cut string)
+      [ " std::vector<double> params_r_flat__;"
+      ; " for (auto&& param_name__ : names__) {"
+      ; "   const auto param_vec__ = context.vals_r(param_name__);"
+      ; "   params_r_flat__.reserve(params_r_flat__.size() + \
+         param_vec__.size());"; "   for (auto&& param_val__ : param_vec__) {"
+      ; "     params_r_flat__.push_back(param_val__);"; "   }"; " }"
+      ; "vars.resize(params_r_flat__.size());"
+      ; "transform_inits_impl(params_r_flat__, params_i, vars, pstream__);" ]
   in
   let cv_attr = ["const"] in
-  pp_method ppf "void" "transform_inits" params intro ppbody ~cv_attr
+  pp_method ppf "void" "transform_inits" params get_names
+    (fun ppf -> pp_body ppf)
+    ~cv_attr
 
 (** Print the public parts of the model class *)
 let pp_model_public ppf p =
