@@ -15,7 +15,8 @@ let pp_profile ppf (pp_body, name, body) =
   in
   pf ppf "{@;<1 2>@[<v>%s@;@;%a@]@,}" profile pp_body body
 
-let rec contains_eigen = function
+let rec contains_eigen (ut : UnsizedType.t) : bool =
+  match ut with
   | UnsizedType.UArray t -> contains_eigen t
   | UMatrix | URowVector | UVector -> true
   | UInt | UReal | UMathLibraryFunction | UFun _ -> false
@@ -26,10 +27,11 @@ let rec contains_eigen = function
   * dimensions. Transformed data must be filled as incorrect slices could lead
   * to elements of objects in transform data not being set by the user.
   *)
-let pp_filler ppf (decl_id, st, nan_type) =
-  match contains_eigen (SizedType.to_unsized st) with
-  | false -> ()
-  | true -> pf ppf "@[<hov 2>stan::math::fill(%s, %s);@]@," decl_id nan_type
+let pp_filler ppf (decl_id, st, nan_type, needs_filled) =
+  match (needs_filled, contains_eigen (SizedType.to_unsized st)) with
+  | true, true ->
+      pf ppf "@[<hov 2>stan::math::fill(%s, %s);@]@," decl_id nan_type
+  | _ -> ()
 
 (*Pretty print a sized type*)
 let pp_st ppf (st, adtype) =
@@ -65,7 +67,7 @@ let pp_assign_sized ppf (decl_id, st, adtype) =
     pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_initialize (st, adtype)
   in
   pf ppf "@[%a%a@]@," pp_assign (decl_id, st, adtype) pp_filler
-    (decl_id, st, init_nan)
+    (decl_id, st, init_nan, true)
 
 let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in
@@ -74,8 +76,7 @@ let%expect_test "set size mat array" =
   |> print_endline ;
   [%expect
     {|
-      d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3)));
-      stan::math::fill(d, std::numeric_limits<double>::quiet_NaN()); |}]
+      d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3))); |}]
 
 (* Initialize Data and Transformed Data 
  * This function is used in the model's constructor to
@@ -86,7 +87,8 @@ let%expect_test "set size mat array" =
  * @param decl_id The name of the model class member
  * @param st The type of the class member
  *)
-let pp_assign_data ppf ((decl_id, st) : string * Expr.Typed.t SizedType.t) =
+let pp_assign_data ppf
+    ((decl_id, st, needs_filled) : string * Expr.Typed.t SizedType.t * bool) =
   let init_nan = nan_type (st, DataOnly) in
   let pp_assign ppf (decl_id, st) =
     match st with
@@ -106,12 +108,13 @@ let pp_assign_data ppf ((decl_id, st) : string * Expr.Typed.t SizedType.t) =
     | _ -> ()
   in
   pf ppf "@[%a%a%a@]@," pp_assign (decl_id, st) pp_placement_new (decl_id, st)
-    pp_filler (decl_id, st, init_nan)
+    pp_filler
+    (decl_id, st, init_nan, needs_filled)
 
 let%expect_test "set size map int array" =
   let int = Expr.Helpers.int in
   strf "@[<v>%a@]" pp_assign_data
-    ("darrmat", SArray (SArray (SInt, int 4), int 5))
+    ("darrmat", SArray (SArray (SInt, int 4), int 5), false)
   |> print_endline ;
   [%expect
     {|
@@ -120,7 +123,7 @@ let%expect_test "set size map int array" =
 let%expect_test "set size map mat array" =
   let int = Expr.Helpers.int in
   strf "@[<v>%a@]" pp_assign_data
-    ("darrmat", SArray (SArray (SMatrix (int 2, int 3), int 4), int 5))
+    ("darrmat", SArray (SArray (SMatrix (int 2, int 3), int 4), int 5), true)
   |> print_endline ;
   [%expect
     {|
@@ -129,7 +132,7 @@ let%expect_test "set size map mat array" =
 
 let%expect_test "set size map mat" =
   let int = Expr.Helpers.int in
-  strf "@[<v>%a@]" pp_assign_data ("dmat", SMatrix (int 2, int 3))
+  strf "@[<v>%a@]" pp_assign_data ("dmat", SMatrix (int 2, int 3), false)
   |> print_endline ;
   [%expect
     {|
@@ -138,15 +141,15 @@ let%expect_test "set size map mat" =
     stan::math::fill(dmat, std::numeric_limits<double>::quiet_NaN()); |}]
 
 let%expect_test "set size map int" =
-  strf "@[<v>%a@]" pp_assign_data ("dint", SInt) |> print_endline ;
+  strf "@[<v>%a@]" pp_assign_data ("dint", SInt, true) |> print_endline ;
   [%expect {|
   dint = std::numeric_limits<int>::min(); |}]
 
 (** [pp_for_loop ppf (loopvar, lower, upper, pp_body, body)] tries to
     pretty print a for-loop from lower to upper given some loopvar.*)
 let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
-  pf ppf "@[<hov>for (@[<hov>int %s = %a;@ %s <= %a;@ ++%s@])" loopvar pp_expr
-    lower loopvar pp_expr upper loopvar ;
+  pf ppf "@[for (@[int %s = %a;@ %s <= %a;@ ++%s@])" loopvar pp_expr lower
+    loopvar pp_expr upper loopvar ;
   pf ppf " %a@]" pp_body body
 
 let rec integer_el_type = function
