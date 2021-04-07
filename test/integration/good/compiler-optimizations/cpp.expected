@@ -588,10 +588,26 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      local_scalar_t__ beta;
+      beta = DUMMY_VAR__;
+      
       lcm_sym5__ = in__.read_free_lb<local_scalar_t__>(0);
+      beta = lcm_sym5__;
       out__.write(lcm_sym5__);
+      local_scalar_t__ gamma;
+      gamma = DUMMY_VAR__;
+      
+      gamma = lcm_sym5__;
       out__.write(lcm_sym5__);
+      local_scalar_t__ xi;
+      xi = DUMMY_VAR__;
+      
+      xi = lcm_sym5__;
       out__.write(lcm_sym5__);
+      local_scalar_t__ delta;
+      delta = DUMMY_VAR__;
+      
+      delta = lcm_sym5__;
       out__.write(lcm_sym5__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2642,10 +2658,21 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      out__.write(in__.read_free_lub<local_scalar_t__>(0, 1));
-      out__.write(
+      local_scalar_t__ mean_p;
+      mean_p = DUMMY_VAR__;
+      
+      lcm_sym46__ = in__.read_free_lub<local_scalar_t__>(0, 1);
+      mean_p = lcm_sym46__;
+      out__.write(lcm_sym46__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> beta;
+      beta = Eigen::Matrix<local_scalar_t__, -1, 1>(max_age);
+      stan::math::fill(beta, DUMMY_VAR__);
+      
+      assign(lcm_sym47__,
         in__.read_free_lub<Eigen::Matrix<local_scalar_t__, -1, 1>>(0, 1,
-          max_age));
+          max_age), "assigning variable lcm_sym47__");
+      assign(beta, lcm_sym47__, "assigning variable beta");
+      out__.write(lcm_sym47__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -3821,27 +3848,108 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      local_scalar_t__ sigma;
+      sigma = DUMMY_VAR__;
+      
       lcm_sym7__ = in__.read_free_lb<local_scalar_t__>(0);
+      sigma = lcm_sym7__;
       out__.write(lcm_sym7__);
+      local_scalar_t__ sigma_age;
+      sigma_age = DUMMY_VAR__;
+      
+      sigma_age = lcm_sym7__;
       out__.write(lcm_sym7__);
+      local_scalar_t__ sigma_edu;
+      sigma_edu = DUMMY_VAR__;
+      
+      sigma_edu = lcm_sym7__;
       out__.write(lcm_sym7__);
+      local_scalar_t__ sigma_state;
+      sigma_state = DUMMY_VAR__;
+      
+      sigma_state = lcm_sym7__;
       out__.write(lcm_sym7__);
+      local_scalar_t__ sigma_region;
+      sigma_region = DUMMY_VAR__;
+      
+      sigma_region = lcm_sym7__;
       out__.write(lcm_sym7__);
+      local_scalar_t__ sigma_age_edu;
+      sigma_age_edu = DUMMY_VAR__;
+      
+      sigma_age_edu = lcm_sym7__;
       out__.write(lcm_sym7__);
+      local_scalar_t__ b_0;
+      b_0 = DUMMY_VAR__;
+      
       lcm_sym1__ = in__.read<local_scalar_t__>();
+      b_0 = lcm_sym1__;
       out__.write(lcm_sym1__);
+      local_scalar_t__ b_female;
+      b_female = DUMMY_VAR__;
+      
+      b_female = lcm_sym1__;
       out__.write(lcm_sym1__);
+      local_scalar_t__ b_black;
+      b_black = DUMMY_VAR__;
+      
+      b_black = lcm_sym1__;
       out__.write(lcm_sym1__);
+      local_scalar_t__ b_female_black;
+      b_female_black = DUMMY_VAR__;
+      
+      b_female_black = lcm_sym1__;
       out__.write(lcm_sym1__);
+      local_scalar_t__ b_v_prev;
+      b_v_prev = DUMMY_VAR__;
+      
+      b_v_prev = lcm_sym1__;
       out__.write(lcm_sym1__);
-      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_age));
-      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_edu));
-      out__.write(
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_region));
-      out__.write(
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n_age, n_edu));
-      out__.write(
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_state));
+      Eigen::Matrix<local_scalar_t__, -1, 1> b_age;
+      b_age = Eigen::Matrix<local_scalar_t__, -1, 1>(n_age);
+      stan::math::fill(b_age, DUMMY_VAR__);
+      
+      assign(lcm_sym2__,
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_age),
+        "assigning variable lcm_sym2__");
+      assign(b_age, lcm_sym2__, "assigning variable b_age");
+      out__.write(lcm_sym2__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> b_edu;
+      b_edu = Eigen::Matrix<local_scalar_t__, -1, 1>(n_edu);
+      stan::math::fill(b_edu, DUMMY_VAR__);
+      
+      assign(lcm_sym4__,
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_edu),
+        "assigning variable lcm_sym4__");
+      assign(b_edu, lcm_sym4__, "assigning variable b_edu");
+      out__.write(lcm_sym4__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> b_region;
+      b_region = Eigen::Matrix<local_scalar_t__, -1, 1>(n_region);
+      stan::math::fill(b_region, DUMMY_VAR__);
+      
+      assign(lcm_sym5__,
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_region),
+        "assigning variable lcm_sym5__");
+      assign(b_region, lcm_sym5__, "assigning variable b_region");
+      out__.write(lcm_sym5__);
+      Eigen::Matrix<local_scalar_t__, -1, -1> b_age_edu;
+      b_age_edu = Eigen::Matrix<local_scalar_t__, -1, -1>(n_age, n_edu);
+      stan::math::fill(b_age_edu, DUMMY_VAR__);
+      
+      assign(lcm_sym3__,
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n_age, n_edu),
+        "assigning variable lcm_sym3__");
+      assign(b_age_edu, lcm_sym3__, "assigning variable b_age_edu");
+      out__.write(lcm_sym3__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> b_hat;
+      b_hat = Eigen::Matrix<local_scalar_t__, -1, 1>(n_state);
+      stan::math::fill(b_hat, DUMMY_VAR__);
+      
+      assign(lcm_sym6__,
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_state),
+        "assigning variable lcm_sym6__");
+      assign(b_hat, lcm_sym6__, "assigning variable b_hat");
+      out__.write(lcm_sym6__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -5138,10 +5246,29 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      out__.write(
-        in__.read_free_ordered<Eigen::Matrix<local_scalar_t__, -1, 1>>(2));
-      out__.write(in__.read_free_lb<std::vector<local_scalar_t__>>(0, 2));
-      out__.write(in__.read_free_lub<local_scalar_t__>(0, 1));
+      Eigen::Matrix<local_scalar_t__, -1, 1> mu;
+      mu = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      stan::math::fill(mu, DUMMY_VAR__);
+      
+      assign(lcm_sym3__,
+        in__.read_free_ordered<Eigen::Matrix<local_scalar_t__, -1, 1>>(2),
+        "assigning variable lcm_sym3__");
+      assign(mu, lcm_sym3__, "assigning variable mu");
+      out__.write(lcm_sym3__);
+      std::vector<local_scalar_t__> sigma;
+      sigma = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
+      
+      assign(lcm_sym1__,
+        in__.read_free_lb<std::vector<local_scalar_t__>>(0, 2),
+        "assigning variable lcm_sym1__");
+      assign(sigma, lcm_sym1__, "assigning variable sigma");
+      out__.write(lcm_sym1__);
+      local_scalar_t__ theta;
+      theta = DUMMY_VAR__;
+      
+      lcm_sym2__ = in__.read_free_lub<local_scalar_t__>(0, 1);
+      theta = lcm_sym2__;
+      out__.write(lcm_sym2__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -5590,9 +5717,25 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      out__.write(in__.read<local_scalar_t__>());
-      out__.write(in__.read<std::vector<local_scalar_t__>>(J));
-      out__.write(in__.read_free_lb<local_scalar_t__>(0));
+      local_scalar_t__ mu;
+      mu = DUMMY_VAR__;
+      
+      lcm_sym1__ = in__.read<local_scalar_t__>();
+      mu = lcm_sym1__;
+      out__.write(lcm_sym1__);
+      std::vector<local_scalar_t__> theta;
+      theta = std::vector<local_scalar_t__>(J, DUMMY_VAR__);
+      
+      assign(lcm_sym2__, in__.read<std::vector<local_scalar_t__>>(J),
+        "assigning variable lcm_sym2__");
+      assign(theta, lcm_sym2__, "assigning variable theta");
+      out__.write(lcm_sym2__);
+      local_scalar_t__ tau;
+      tau = DUMMY_VAR__;
+      
+      lcm_sym3__ = in__.read_free_lb<local_scalar_t__>(0);
+      tau = lcm_sym3__;
+      out__.write(lcm_sym3__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -6719,20 +6862,85 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_age));
-      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_edu));
-      out__.write(
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_age_edu));
-      out__.write(
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_state));
-      out__.write(
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_region_full));
-      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(5));
+      Eigen::Matrix<local_scalar_t__, -1, 1> a;
+      a = Eigen::Matrix<local_scalar_t__, -1, 1>(n_age);
+      stan::math::fill(a, DUMMY_VAR__);
+      
+      assign(lcm_sym1__,
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_age),
+        "assigning variable lcm_sym1__");
+      assign(a, lcm_sym1__, "assigning variable a");
+      out__.write(lcm_sym1__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> b;
+      b = Eigen::Matrix<local_scalar_t__, -1, 1>(n_edu);
+      stan::math::fill(b, DUMMY_VAR__);
+      
+      assign(lcm_sym3__,
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_edu),
+        "assigning variable lcm_sym3__");
+      assign(b, lcm_sym3__, "assigning variable b");
+      out__.write(lcm_sym3__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> c;
+      c = Eigen::Matrix<local_scalar_t__, -1, 1>(n_age_edu);
+      stan::math::fill(c, DUMMY_VAR__);
+      
+      assign(lcm_sym2__,
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_age_edu),
+        "assigning variable lcm_sym2__");
+      assign(c, lcm_sym2__, "assigning variable c");
+      out__.write(lcm_sym2__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> d;
+      d = Eigen::Matrix<local_scalar_t__, -1, 1>(n_state);
+      stan::math::fill(d, DUMMY_VAR__);
+      
+      assign(lcm_sym5__,
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_state),
+        "assigning variable lcm_sym5__");
+      assign(d, lcm_sym5__, "assigning variable d");
+      out__.write(lcm_sym5__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> e;
+      e = Eigen::Matrix<local_scalar_t__, -1, 1>(n_region_full);
+      stan::math::fill(e, DUMMY_VAR__);
+      
+      assign(lcm_sym4__,
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_region_full),
+        "assigning variable lcm_sym4__");
+      assign(e, lcm_sym4__, "assigning variable e");
+      out__.write(lcm_sym4__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> beta;
+      beta = Eigen::Matrix<local_scalar_t__, -1, 1>(5);
+      stan::math::fill(beta, DUMMY_VAR__);
+      
+      assign(lcm_sym6__,
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(5),
+        "assigning variable lcm_sym6__");
+      assign(beta, lcm_sym6__, "assigning variable beta");
+      out__.write(lcm_sym6__);
+      local_scalar_t__ sigma_a;
+      sigma_a = DUMMY_VAR__;
+      
       lcm_sym7__ = in__.read_free_lub<local_scalar_t__>(0, 100);
+      sigma_a = lcm_sym7__;
       out__.write(lcm_sym7__);
+      local_scalar_t__ sigma_b;
+      sigma_b = DUMMY_VAR__;
+      
+      sigma_b = lcm_sym7__;
       out__.write(lcm_sym7__);
+      local_scalar_t__ sigma_c;
+      sigma_c = DUMMY_VAR__;
+      
+      sigma_c = lcm_sym7__;
       out__.write(lcm_sym7__);
+      local_scalar_t__ sigma_d;
+      sigma_d = DUMMY_VAR__;
+      
+      sigma_d = lcm_sym7__;
       out__.write(lcm_sym7__);
+      local_scalar_t__ sigma_e;
+      sigma_e = DUMMY_VAR__;
+      
+      sigma_e = lcm_sym7__;
       out__.write(lcm_sym7__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -7550,9 +7758,21 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      out__.write(in__.read_free_lb<local_scalar_t__>(0));
-      out__.write(
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>((N - 1)));
+      local_scalar_t__ tau_phi;
+      tau_phi = DUMMY_VAR__;
+      
+      lcm_sym2__ = in__.read_free_lb<local_scalar_t__>(0);
+      tau_phi = lcm_sym2__;
+      out__.write(lcm_sym2__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> phi_std_raw;
+      phi_std_raw = Eigen::Matrix<local_scalar_t__, -1, 1>((N - 1));
+      stan::math::fill(phi_std_raw, DUMMY_VAR__);
+      
+      assign(lcm_sym1__,
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>((N - 1)),
+        "assigning variable lcm_sym1__");
+      assign(phi_std_raw, lcm_sym1__, "assigning variable phi_std_raw");
+      out__.write(lcm_sym1__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -9571,11 +9791,32 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      local_scalar_t__ mean_phi;
+      mean_phi = DUMMY_VAR__;
+      
       lcm_sym47__ = in__.read_free_lub<local_scalar_t__>(0, 1);
+      mean_phi = lcm_sym47__;
       out__.write(lcm_sym47__);
+      local_scalar_t__ mean_p;
+      mean_p = DUMMY_VAR__;
+      
+      mean_p = lcm_sym47__;
       out__.write(lcm_sym47__);
-      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(nind));
-      out__.write(in__.read_free_lub<local_scalar_t__>(0, 5));
+      Eigen::Matrix<local_scalar_t__, -1, 1> epsilon;
+      epsilon = Eigen::Matrix<local_scalar_t__, -1, 1>(nind);
+      stan::math::fill(epsilon, DUMMY_VAR__);
+      
+      assign(lcm_sym46__,
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(nind),
+        "assigning variable lcm_sym46__");
+      assign(epsilon, lcm_sym46__, "assigning variable epsilon");
+      out__.write(lcm_sym46__);
+      local_scalar_t__ sigma;
+      sigma = DUMMY_VAR__;
+      
+      lcm_sym48__ = in__.read_free_lub<local_scalar_t__>(0, 5);
+      sigma = lcm_sym48__;
+      out__.write(lcm_sym48__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -12931,15 +13172,46 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      local_scalar_t__ mean_phi;
+      mean_phi = DUMMY_VAR__;
+      
       lcm_sym118__ = in__.read_free_lub<local_scalar_t__>(0, 1);
+      mean_phi = lcm_sym118__;
       out__.write(lcm_sym118__);
+      local_scalar_t__ mean_p;
+      mean_p = DUMMY_VAR__;
+      
+      mean_p = lcm_sym118__;
       out__.write(lcm_sym118__);
+      local_scalar_t__ psi;
+      psi = DUMMY_VAR__;
+      
+      psi = lcm_sym118__;
       out__.write(lcm_sym118__);
-      out__.write(
+      Eigen::Matrix<local_scalar_t__, -1, 1> beta;
+      beta = Eigen::Matrix<local_scalar_t__, -1, 1>(n_occasions);
+      stan::math::fill(beta, DUMMY_VAR__);
+      
+      assign(lcm_sym117__,
         in__.read_free_lb<Eigen::Matrix<local_scalar_t__, -1, 1>>(0,
-          n_occasions));
-      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(M));
-      out__.write(in__.read_free_lub<local_scalar_t__>(0, 5));
+          n_occasions), "assigning variable lcm_sym117__");
+      assign(beta, lcm_sym117__, "assigning variable beta");
+      out__.write(lcm_sym117__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> epsilon;
+      epsilon = Eigen::Matrix<local_scalar_t__, -1, 1>(M);
+      stan::math::fill(epsilon, DUMMY_VAR__);
+      
+      assign(lcm_sym116__,
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(M),
+        "assigning variable lcm_sym116__");
+      assign(epsilon, lcm_sym116__, "assigning variable epsilon");
+      out__.write(lcm_sym116__);
+      local_scalar_t__ sigma;
+      sigma = DUMMY_VAR__;
+      
+      lcm_sym119__ = in__.read_free_lub<local_scalar_t__>(0, 5);
+      sigma = lcm_sym119__;
+      out__.write(lcm_sym119__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -14003,11 +14275,25 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      out__.write(
-        in__.read_free_simplex<Eigen::Matrix<local_scalar_t__, -1, 1>>(K));
-      out__.write(
+      Eigen::Matrix<local_scalar_t__, -1, 1> pi;
+      pi = Eigen::Matrix<local_scalar_t__, -1, 1>((K - 1));
+      stan::math::fill(pi, DUMMY_VAR__);
+      
+      assign(lcm_sym2__,
+        in__.read_free_simplex<Eigen::Matrix<local_scalar_t__, -1, 1>>(K),
+        "assigning variable lcm_sym2__");
+      assign(pi, lcm_sym2__, "assigning variable pi");
+      out__.write(lcm_sym2__);
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> theta;
+      theta = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(J, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(
+        (K - 1))));
+      stan::math::fill(theta, DUMMY_VAR__);
+      
+      assign(lcm_sym1__,
         in__.read_free_simplex<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
-          J, K, K));
+          J, K, K), "assigning variable lcm_sym1__");
+      assign(theta, lcm_sym1__, "assigning variable theta");
+      out__.write(lcm_sym1__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -14687,16 +14973,42 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      local_scalar_t__ beta0;
+      beta0 = DUMMY_VAR__;
+      
       lcm_sym1__ = in__.read<local_scalar_t__>();
+      beta0 = lcm_sym1__;
       out__.write(lcm_sym1__);
+      local_scalar_t__ beta1;
+      beta1 = DUMMY_VAR__;
+      
+      beta1 = lcm_sym1__;
       out__.write(lcm_sym1__);
+      local_scalar_t__ tau_theta;
+      tau_theta = DUMMY_VAR__;
+      
       lcm_sym3__ = in__.read_free_lb<local_scalar_t__>(0);
+      tau_theta = lcm_sym3__;
       out__.write(lcm_sym3__);
+      local_scalar_t__ tau_phi;
+      tau_phi = DUMMY_VAR__;
+      
+      tau_phi = lcm_sym3__;
       out__.write(lcm_sym3__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> theta_std;
+      theta_std = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
+      stan::math::fill(theta_std, DUMMY_VAR__);
+      
       assign(lcm_sym2__,
         in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N),
         "assigning variable lcm_sym2__");
+      assign(theta_std, lcm_sym2__, "assigning variable theta_std");
       out__.write(lcm_sym2__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> phi_std_raw;
+      phi_std_raw = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
+      stan::math::fill(phi_std_raw, DUMMY_VAR__);
+      
+      assign(phi_std_raw, lcm_sym2__, "assigning variable phi_std_raw");
       out__.write(lcm_sym2__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -16765,10 +17077,21 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      out__.write(in__.read_free_lub<local_scalar_t__>(0, 1));
-      out__.write(
+      local_scalar_t__ mean_p;
+      mean_p = DUMMY_VAR__;
+      
+      lcm_sym46__ = in__.read_free_lub<local_scalar_t__>(0, 1);
+      mean_p = lcm_sym46__;
+      out__.write(lcm_sym46__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> beta;
+      beta = Eigen::Matrix<local_scalar_t__, -1, 1>(max_age);
+      stan::math::fill(beta, DUMMY_VAR__);
+      
+      assign(lcm_sym47__,
         in__.read_free_lub<Eigen::Matrix<local_scalar_t__, -1, 1>>(0, 1,
-          max_age));
+          max_age), "assigning variable lcm_sym47__");
+      assign(beta, lcm_sym47__, "assigning variable beta");
+      out__.write(lcm_sym47__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -20045,15 +20368,41 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      local_scalar_t__ mean_phi;
+      mean_phi = DUMMY_VAR__;
+      
       lcm_sym130__ = in__.read_free_lub<local_scalar_t__>(0, 1);
+      mean_phi = lcm_sym130__;
       out__.write(lcm_sym130__);
+      local_scalar_t__ mean_p;
+      mean_p = DUMMY_VAR__;
+      
+      mean_p = lcm_sym130__;
       out__.write(lcm_sym130__);
-      out__.write(
+      Eigen::Matrix<local_scalar_t__, -1, 1> gamma;
+      gamma = Eigen::Matrix<local_scalar_t__, -1, 1>(n_occasions);
+      stan::math::fill(gamma, DUMMY_VAR__);
+      
+      assign(lcm_sym131__,
         in__.read_free_lub<Eigen::Matrix<local_scalar_t__, -1, 1>>(0, 1,
-          n_occasions));
-      out__.write(
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>((n_occasions - 1)));
-      out__.write(in__.read_free_lub<local_scalar_t__>(0, 5));
+          n_occasions), "assigning variable lcm_sym131__");
+      assign(gamma, lcm_sym131__, "assigning variable gamma");
+      out__.write(lcm_sym131__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> epsilon;
+      epsilon = Eigen::Matrix<local_scalar_t__, -1, 1>((n_occasions - 1));
+      stan::math::fill(epsilon, DUMMY_VAR__);
+      
+      assign(lcm_sym129__,
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>((n_occasions - 1)),
+        "assigning variable lcm_sym129__");
+      assign(epsilon, lcm_sym129__, "assigning variable epsilon");
+      out__.write(lcm_sym129__);
+      local_scalar_t__ sigma;
+      sigma = DUMMY_VAR__;
+      
+      lcm_sym132__ = in__.read_free_lub<local_scalar_t__>(0, 5);
+      sigma = lcm_sym132__;
+      out__.write(lcm_sym132__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -20919,7 +21268,12 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      out__.write(in__.read<local_scalar_t__>());
+      local_scalar_t__ x;
+      x = DUMMY_VAR__;
+      
+      lcm_sym1__ = in__.read<local_scalar_t__>();
+      x = lcm_sym1__;
+      out__.write(lcm_sym1__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -21283,7 +21637,13 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      out__.write(in__.read<std::vector<local_scalar_t__>>(J));
+      std::vector<local_scalar_t__> theta;
+      theta = std::vector<local_scalar_t__>(J, DUMMY_VAR__);
+      
+      assign(lcm_sym1__, in__.read<std::vector<local_scalar_t__>>(J),
+        "assigning variable lcm_sym1__");
+      assign(theta, lcm_sym1__, "assigning variable theta");
+      out__.write(lcm_sym1__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -23139,8 +23499,16 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      local_scalar_t__ mean_phi;
+      mean_phi = DUMMY_VAR__;
+      
       lcm_sym46__ = in__.read_free_lub<local_scalar_t__>(0, 1);
+      mean_phi = lcm_sym46__;
       out__.write(lcm_sym46__);
+      local_scalar_t__ mean_p;
+      mean_p = DUMMY_VAR__;
+      
+      mean_p = lcm_sym46__;
       out__.write(lcm_sym46__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -23740,7 +24108,12 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      out__.write(in__.read<local_scalar_t__>());
+      local_scalar_t__ mu;
+      mu = DUMMY_VAR__;
+      
+      lcm_sym40__ = in__.read<local_scalar_t__>();
+      mu = lcm_sym40__;
+      out__.write(lcm_sym40__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -24626,10 +24999,26 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      local_scalar_t__ alpha_occ;
+      alpha_occ = DUMMY_VAR__;
+      
       lcm_sym1__ = in__.read<local_scalar_t__>();
+      alpha_occ = lcm_sym1__;
       out__.write(lcm_sym1__);
+      local_scalar_t__ beta_occ;
+      beta_occ = DUMMY_VAR__;
+      
+      beta_occ = lcm_sym1__;
       out__.write(lcm_sym1__);
+      local_scalar_t__ alpha_p;
+      alpha_p = DUMMY_VAR__;
+      
+      alpha_p = lcm_sym1__;
       out__.write(lcm_sym1__);
+      local_scalar_t__ beta_p;
+      beta_p = DUMMY_VAR__;
+      
+      beta_p = lcm_sym1__;
       out__.write(lcm_sym1__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -25454,18 +25843,52 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      local_scalar_t__ beta;
+      beta = DUMMY_VAR__;
+      
       lcm_sym1__ = in__.read<local_scalar_t__>();
+      beta = lcm_sym1__;
       out__.write(lcm_sym1__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> eta1;
+      eta1 = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
+      stan::math::fill(eta1, DUMMY_VAR__);
+      
       assign(lcm_sym2__,
         in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J),
         "assigning variable lcm_sym2__");
+      assign(eta1, lcm_sym2__, "assigning variable eta1");
       out__.write(lcm_sym2__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> eta2;
+      eta2 = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
+      stan::math::fill(eta2, DUMMY_VAR__);
+      
+      assign(eta2, lcm_sym2__, "assigning variable eta2");
       out__.write(lcm_sym2__);
+      local_scalar_t__ mu_a1;
+      mu_a1 = DUMMY_VAR__;
+      
+      mu_a1 = lcm_sym1__;
       out__.write(lcm_sym1__);
+      local_scalar_t__ mu_a2;
+      mu_a2 = DUMMY_VAR__;
+      
+      mu_a2 = lcm_sym1__;
       out__.write(lcm_sym1__);
+      local_scalar_t__ sigma_a1;
+      sigma_a1 = DUMMY_VAR__;
+      
       lcm_sym3__ = in__.read_free_lub<local_scalar_t__>(0, 100);
+      sigma_a1 = lcm_sym3__;
       out__.write(lcm_sym3__);
+      local_scalar_t__ sigma_a2;
+      sigma_a2 = DUMMY_VAR__;
+      
+      sigma_a2 = lcm_sym3__;
       out__.write(lcm_sym3__);
+      local_scalar_t__ sigma_y;
+      sigma_y = DUMMY_VAR__;
+      
+      sigma_y = lcm_sym3__;
       out__.write(lcm_sym3__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -26648,13 +27071,44 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      local_scalar_t__ theta;
+      theta = DUMMY_VAR__;
+      
       lcm_sym39__ = in__.read<local_scalar_t__>();
+      theta = lcm_sym39__;
       out__.write(lcm_sym39__);
+      local_scalar_t__ phi;
+      phi = DUMMY_VAR__;
+      
+      phi = lcm_sym39__;
       out__.write(lcm_sym39__);
-      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(3, 2));
-      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2));
-      out__.write(
-        in__.read_free_cov_matrix<Eigen::Matrix<local_scalar_t__, -1, -1>>(2));
+      Eigen::Matrix<local_scalar_t__, -1, -1> x_matrix;
+      x_matrix = Eigen::Matrix<local_scalar_t__, -1, -1>(3, 2);
+      stan::math::fill(x_matrix, DUMMY_VAR__);
+      
+      assign(lcm_sym41__,
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(3, 2),
+        "assigning variable lcm_sym41__");
+      assign(x_matrix, lcm_sym41__, "assigning variable x_matrix");
+      out__.write(lcm_sym41__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> x_vector;
+      x_vector = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      stan::math::fill(x_vector, DUMMY_VAR__);
+      
+      assign(lcm_sym40__,
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2),
+        "assigning variable lcm_sym40__");
+      assign(x_vector, lcm_sym40__, "assigning variable x_vector");
+      out__.write(lcm_sym40__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> x_cov;
+      x_cov = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
+      stan::math::fill(x_cov, DUMMY_VAR__);
+      
+      assign(lcm_sym42__,
+        in__.read_free_cov_matrix<Eigen::Matrix<local_scalar_t__, -1, -1>>(2),
+        "assigning variable lcm_sym42__");
+      assign(x_cov, lcm_sym42__, "assigning variable x_cov");
+      out__.write(lcm_sym42__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -27380,11 +27834,40 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_pair));
-      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2));
-      out__.write(in__.read<local_scalar_t__>());
+      Eigen::Matrix<local_scalar_t__, -1, 1> a;
+      a = Eigen::Matrix<local_scalar_t__, -1, 1>(n_pair);
+      stan::math::fill(a, DUMMY_VAR__);
+      
+      assign(lcm_sym2__,
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_pair),
+        "assigning variable lcm_sym2__");
+      assign(a, lcm_sym2__, "assigning variable a");
+      out__.write(lcm_sym2__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> beta;
+      beta = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      stan::math::fill(beta, DUMMY_VAR__);
+      
+      assign(lcm_sym3__,
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2),
+        "assigning variable lcm_sym3__");
+      assign(beta, lcm_sym3__, "assigning variable beta");
+      out__.write(lcm_sym3__);
+      local_scalar_t__ mu_a;
+      mu_a = DUMMY_VAR__;
+      
+      lcm_sym1__ = in__.read<local_scalar_t__>();
+      mu_a = lcm_sym1__;
+      out__.write(lcm_sym1__);
+      local_scalar_t__ sigma_a;
+      sigma_a = DUMMY_VAR__;
+      
       lcm_sym4__ = in__.read_free_lub<local_scalar_t__>(0, 100);
+      sigma_a = lcm_sym4__;
       out__.write(lcm_sym4__);
+      local_scalar_t__ sigma_y;
+      sigma_y = DUMMY_VAR__;
+      
+      sigma_y = lcm_sym4__;
       out__.write(lcm_sym4__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -28078,14 +28561,42 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
+      local_scalar_t__ alpha0;
+      alpha0 = DUMMY_VAR__;
+      
       lcm_sym1__ = in__.read<local_scalar_t__>();
+      alpha0 = lcm_sym1__;
       out__.write(lcm_sym1__);
+      local_scalar_t__ alpha1;
+      alpha1 = DUMMY_VAR__;
+      
+      alpha1 = lcm_sym1__;
       out__.write(lcm_sym1__);
+      local_scalar_t__ alpha2;
+      alpha2 = DUMMY_VAR__;
+      
+      alpha2 = lcm_sym1__;
       out__.write(lcm_sym1__);
+      local_scalar_t__ alpha12;
+      alpha12 = DUMMY_VAR__;
+      
+      alpha12 = lcm_sym1__;
       out__.write(lcm_sym1__);
-      out__.write(in__.read_free_lb<local_scalar_t__>(0));
-      out__.write(
-        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(I, 8));
+      local_scalar_t__ tau;
+      tau = DUMMY_VAR__;
+      
+      lcm_sym3__ = in__.read_free_lb<local_scalar_t__>(0);
+      tau = lcm_sym3__;
+      out__.write(lcm_sym3__);
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> b;
+      b = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(I, Eigen::Matrix<local_scalar_t__, -1, 1>(8));
+      stan::math::fill(b, DUMMY_VAR__);
+      
+      assign(lcm_sym2__,
+        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(I, 8),
+        "assigning variable lcm_sym2__");
+      assign(b, lcm_sym2__, "assigning variable b");
+      out__.write(lcm_sym2__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return

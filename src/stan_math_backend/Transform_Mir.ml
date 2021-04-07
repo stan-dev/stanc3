@@ -419,7 +419,7 @@ let gen_write (decl_id, sizedtype) =
  *   Stmt.Helpers.for_eigen sizedtype writefn expr Location_span.empty *)
 
 (* Statements to read and unconstrain a parameter then write it back *)
-let data_unconstrain_transform smeta outvar =
+let data_unconstrain_transform smeta (decl_id, outvar) =
   if not (outvar.Program.out_block = Parameters) then []
   else
     (* This renames the variable v to v_free__ for clarity *)
@@ -427,22 +427,29 @@ let data_unconstrain_transform smeta outvar =
      *   if outvar.Program.out_trans = Identity then decl_id
      *   else decl_id ^ "_free__"
      * in *)
+    
+    (* [ Stmt.Fixed.
+     *     { pattern=
+     *         NRFunApp
+     *           ( Fun_kind.CompilerInternal (Internal_fun.FnWriteParam true)
+     *           , [data_unconstrain_read smeta outvar] )
+     *     ; meta= smeta } ] *)
     [ Stmt.Fixed.
         { pattern=
-            NRFunApp
-              ( Fun_kind.CompilerInternal (Internal_fun.FnWriteParam true)
-              , [data_unconstrain_read smeta outvar] )
-        ; meta= smeta } ]
-
-(* [ Stmt.Fixed.
-     *     { pattern=
-     *         Decl
-     *           { decl_adtype= UnsizedType.AutoDiffable
-     *           ; decl_id
-     *           ; decl_type= Type.Sized outvar.Program.out_unconstrained_st }
-     *     ; meta= smeta }
-     * ; data_unconstrain_read smeta (decl_id, outvar)
-     * ; gen_write_unconstrained (decl_id, outvar.Program.out_unconstrained_st) ] *)
+            Decl
+              { decl_adtype= UnsizedType.AutoDiffable
+              ; decl_id
+              ; decl_type= Type.Sized outvar.Program.out_unconstrained_st }
+        ; meta= smeta }
+    ; Stmt.Fixed.
+        { pattern=
+            Assignment
+              ( ( decl_id
+                , SizedType.to_unsized outvar.Program.out_unconstrained_st
+                , [] )
+              , data_unconstrain_read smeta outvar )
+        ; meta= smeta }
+    ; gen_write (decl_id, outvar.Program.out_unconstrained_st) ]
 
 let rec contains_var_expr is_vident accum Expr.Fixed.({pattern; _}) =
   accum
@@ -700,8 +707,7 @@ let trans_prog (p : Program.Typed.t) =
     ; transform_inits=
         init_pos
         @ List.concat_map
-            ~f:(fun (_, outvar) ->
-              data_unconstrain_transform Location_span.empty outvar )
+            ~f:(data_unconstrain_transform Location_span.empty)
             (List.filter
                ~f:(fun (_, ov) -> ov.Program.out_block = Parameters)
                p.output_vars)

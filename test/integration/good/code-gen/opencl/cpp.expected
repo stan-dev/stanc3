@@ -6059,13 +6059,46 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      out__.write(in__.read<local_scalar_t__>());
-      out__.write(in__.read<std::vector<local_scalar_t__>>(d_int));
-      out__.write(
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(d_int, d_int));
-      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(d_int));
-      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(d_int));
-      out__.write(in__.read<local_scalar_t__>());
+      local_scalar_t__ p_real;
+      p_real = DUMMY_VAR__;
+      
+      p_real = in__.read<local_scalar_t__>();
+      out__.write(p_real);
+      std::vector<local_scalar_t__> p_real_array;
+      p_real_array = std::vector<local_scalar_t__>(d_int, DUMMY_VAR__);
+      
+      assign(p_real_array, in__.read<std::vector<local_scalar_t__>>(d_int),
+        "assigning variable p_real_array");
+      out__.write(p_real_array);
+      Eigen::Matrix<local_scalar_t__, -1, -1> p_matrix;
+      p_matrix = Eigen::Matrix<local_scalar_t__, -1, -1>(d_int, d_int);
+      stan::math::fill(p_matrix, DUMMY_VAR__);
+      
+      assign(p_matrix,
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(d_int, d_int),
+        "assigning variable p_matrix");
+      out__.write(p_matrix);
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_vector;
+      p_vector = Eigen::Matrix<local_scalar_t__, -1, 1>(d_int);
+      stan::math::fill(p_vector, DUMMY_VAR__);
+      
+      assign(p_vector,
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(d_int),
+        "assigning variable p_vector");
+      out__.write(p_vector);
+      Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vector;
+      p_row_vector = Eigen::Matrix<local_scalar_t__, 1, -1>(d_int);
+      stan::math::fill(p_row_vector, DUMMY_VAR__);
+      
+      assign(p_row_vector,
+        in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(d_int),
+        "assigning variable p_row_vector");
+      out__.write(p_row_vector);
+      local_scalar_t__ y_p;
+      y_p = DUMMY_VAR__;
+      
+      y_p = in__.read<local_scalar_t__>();
+      out__.write(y_p);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -6749,13 +6782,46 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      out__.write(in__.read<local_scalar_t__>());
-      out__.write(in__.read<std::vector<local_scalar_t__>>(d_int));
-      out__.write(
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(d_int, d_int));
-      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(d_int));
-      out__.write(in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(d_int));
-      out__.write(in__.read<local_scalar_t__>());
+      local_scalar_t__ p_real;
+      p_real = DUMMY_VAR__;
+      
+      p_real = in__.read<local_scalar_t__>();
+      out__.write(p_real);
+      std::vector<local_scalar_t__> p_real_array;
+      p_real_array = std::vector<local_scalar_t__>(d_int, DUMMY_VAR__);
+      
+      assign(p_real_array, in__.read<std::vector<local_scalar_t__>>(d_int),
+        "assigning variable p_real_array");
+      out__.write(p_real_array);
+      Eigen::Matrix<local_scalar_t__, -1, -1> p_matrix;
+      p_matrix = Eigen::Matrix<local_scalar_t__, -1, -1>(d_int, d_int);
+      stan::math::fill(p_matrix, DUMMY_VAR__);
+      
+      assign(p_matrix,
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(d_int, d_int),
+        "assigning variable p_matrix");
+      out__.write(p_matrix);
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_vector;
+      p_vector = Eigen::Matrix<local_scalar_t__, -1, 1>(d_int);
+      stan::math::fill(p_vector, DUMMY_VAR__);
+      
+      assign(p_vector,
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(d_int),
+        "assigning variable p_vector");
+      out__.write(p_vector);
+      Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vector;
+      p_row_vector = Eigen::Matrix<local_scalar_t__, 1, -1>(d_int);
+      stan::math::fill(p_row_vector, DUMMY_VAR__);
+      
+      assign(p_row_vector,
+        in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(d_int),
+        "assigning variable p_row_vector");
+      out__.write(p_row_vector);
+      local_scalar_t__ y_p;
+      y_p = DUMMY_VAR__;
+      
+      y_p = in__.read<local_scalar_t__>();
+      out__.write(y_p);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
