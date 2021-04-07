@@ -10,7 +10,7 @@ type t =
   | FnReadUnconstrainData of string option
   (* XXX move these to a backend specific file?*)
   | FnReadParam of string option
-  | FnWriteParam of bool
+  | FnWriteParam
   | FnValidateSize
   | FnValidateSizeSimplex
   | FnValidateSizeUnitVector

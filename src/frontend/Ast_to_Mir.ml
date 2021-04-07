@@ -747,10 +747,6 @@ let trans_block ud_dists declc block prog =
               match declc.dconstrain with
               | Some Constrain | Some Unconstrain ->
                   check_transform_shape decl_id decl_var smeta.loc transform
-              (* | Some Unconstrain ->
-               *     check_transform_shape decl_id decl_var smeta.loc transform
-               *     @ constrain_decl type_ declc.dconstrain transform decl_id
-               *         decl_var smeta.loc *)
               | Some Check ->
                   check_transform_shape decl_id decl_var smeta.loc transform
                   @ check_decl decl_var (Sized type_) decl_id transform
@@ -807,9 +803,6 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
       {dconstrain= Some Constrain; dadlevel= AutoDiffable}
       Parameters p
   in
-  (* let _, _, transform_inits =
-   *   trans_block ud_dists {declc with dconstrain= Some Unconstrain} Parameters p
-   * in *)
   (* Backends will add to transform_inits as needed *)
   let transform_inits = [] in
   let out_param, paramsizes, param_gq =

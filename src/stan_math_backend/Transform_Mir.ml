@@ -383,57 +383,12 @@ let gen_write (decl_id, sizedtype) =
           ; type_= SizedType.to_unsized sizedtype
           ; adlevel= DataOnly } }
   in
-  Stmt.Helpers.internal_nrfunapp (FnWriteParam true) [decl_var]
-    Location_span.empty
+  Stmt.Helpers.internal_nrfunapp FnWriteParam [decl_var] Location_span.empty
 
-(*
-  let bodyfn var =
-    Stmt.Helpers.internal_nrfunapp (FnWriteParam false) [var]
-      Location_span.empty
-  in
-  let meta =
-    {Expr.Typed.Meta.empty with type_= SizedType.to_unsized sizedtype}
-  in
-  let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
-  Stmt.Helpers.for_scalar_inv sizedtype bodyfn expr Location_span.empty
-*)
-(* let gen_write_unconstrained (decl_id, sizedtype) =
- *   let bodyfn var =
- *     let var =
- *       match var.Expr.Fixed.pattern with
- *       | Indexed ({pattern= Indexed (expr, idcs1); _}, idcs2) ->
- *           {var with pattern= Indexed (expr, idcs1 @ idcs2)}
- *       | _ -> var
- *     in
- *     Stmt.Helpers.internal_nrfunapp (FnWriteParam false) [var] Location_span.empty
- *   in
- *   let meta =
- *     {Expr.Typed.Meta.empty with type_= SizedType.to_unsized sizedtype}
- *   in
- *   let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
- *   let writefn var =
- *     Stmt.Helpers.for_scalar_inv
- *       (SizedType.inner_type sizedtype)
- *       bodyfn var Location_span.empty
- *   in
- *   Stmt.Helpers.for_eigen sizedtype writefn expr Location_span.empty *)
-
-(* Statements to read and unconstrain a parameter then write it back *)
+(* Statements to read, unconstrain and assign a parameter then write it back *)
 let data_unconstrain_transform smeta (decl_id, outvar) =
   if not (outvar.Program.out_block = Parameters) then []
   else
-    (* This renames the variable v to v_free__ for clarity *)
-    (* let decl_id =
-     *   if outvar.Program.out_trans = Identity then decl_id
-     *   else decl_id ^ "_free__"
-     * in *)
-    
-    (* [ Stmt.Fixed.
-     *     { pattern=
-     *         NRFunApp
-     *           ( Fun_kind.CompilerInternal (Internal_fun.FnWriteParam true)
-     *           , [data_unconstrain_read smeta outvar] )
-     *     ; meta= smeta } ] *)
     [ Stmt.Fixed.
         { pattern=
             Decl
