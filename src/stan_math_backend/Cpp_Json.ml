@@ -50,7 +50,7 @@ let%expect_test "outvar to json pretty" =
   } |}]
 
 (*Adds a backslash to all the inner quotes and then
-  unblash the ones near a plus*)
+  unslash the ones near a plus*)
 let replace_cpp_expr s =
   s
   |> Str.global_replace (Str.regexp {|"|}) {|\"|}
