@@ -76,7 +76,8 @@ let%expect_test "set size mat array" =
   |> print_endline ;
   [%expect
     {|
-      d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3))); |}]
+      d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3)));
+      stan::math::fill(d, std::numeric_limits<double>::quiet_NaN()); |}]
 
 (* Initialize Data and Transformed Data 
  * This function is used in the model's constructor to
@@ -137,8 +138,7 @@ let%expect_test "set size map mat" =
   [%expect
     {|
     dmat__ = Eigen::Matrix<double, -1, -1>(2, 3);
-    new (&dmat) Eigen::Map<Eigen::Matrix<double, -1, -1>>(dmat__.data(), 2, 3);
-    stan::math::fill(dmat, std::numeric_limits<double>::quiet_NaN()); |}]
+    new (&dmat) Eigen::Map<Eigen::Matrix<double, -1, -1>>(dmat__.data(), 2, 3); |}]
 
 let%expect_test "set size map int" =
   strf "@[<v>%a@]" pp_assign_data ("dint", SInt, true) |> print_endline ;
