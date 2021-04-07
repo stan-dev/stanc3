@@ -14194,128 +14194,128 @@
       (decl_type (Sized SReal))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_real))
         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_upper))
         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_lower))
         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var offset_multiplier))
         (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var no_offset_multiplier))
         (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var offset_no_multiplier))
         (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_real_1d_ar))
         (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_real_3d_ar))
         (meta
          ((type_ (UArray (UArray (UArray UReal)))) (loc <opaque>)
           (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_vec))
         (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_1d_vec))
         (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_3d_vec))
         (meta
          ((type_ (UArray (UArray (UArray UVector)))) (loc <opaque>)
           (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_row_vec))
         (meta ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_1d_row_vec))
         (meta
          ((type_ (UArray URowVector)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_3d_row_vec))
         (meta
          ((type_ (UArray (UArray (UArray URowVector)))) (loc <opaque>)
           (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_ar_mat))
         (meta
          ((type_ (UArray (UArray UMatrix))) (loc <opaque>)
           (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_simplex))
         (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_1d_simplex))
         (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_3d_simplex))
         (meta
          ((type_ (UArray (UArray (UArray UVector)))) (loc <opaque>)
           (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_cfcov_54))
         (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_cfcov_33))
         (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_cfcov_33_ar))
         (meta ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var x_p))
         (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var y_p))
         (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
@@ -15252,103 +15252,103 @@
       ((pattern
         (Block
          (((pattern
-            (NRFunApp (CompilerInternal (FnWriteParam true))
+            (NRFunApp (CompilerInternal FnWriteParam)
              (((pattern (Var tp_real_1d_ar))
                (meta
                 ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
            (meta <opaque>))
           ((pattern
-            (NRFunApp (CompilerInternal (FnWriteParam true))
+            (NRFunApp (CompilerInternal FnWriteParam)
              (((pattern (Var tp_real_3d_ar))
                (meta
                 ((type_ (UArray (UArray (UArray UReal)))) (loc <opaque>)
                  (adlevel DataOnly)))))))
            (meta <opaque>))
           ((pattern
-            (NRFunApp (CompilerInternal (FnWriteParam true))
+            (NRFunApp (CompilerInternal FnWriteParam)
              (((pattern (Var tp_vec))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
            (meta <opaque>))
           ((pattern
-            (NRFunApp (CompilerInternal (FnWriteParam true))
+            (NRFunApp (CompilerInternal FnWriteParam)
              (((pattern (Var tp_1d_vec))
                (meta
                 ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly)))))))
            (meta <opaque>))
           ((pattern
-            (NRFunApp (CompilerInternal (FnWriteParam true))
+            (NRFunApp (CompilerInternal FnWriteParam)
              (((pattern (Var tp_3d_vec))
                (meta
                 ((type_ (UArray (UArray (UArray UVector)))) (loc <opaque>)
                  (adlevel DataOnly)))))))
            (meta <opaque>))
           ((pattern
-            (NRFunApp (CompilerInternal (FnWriteParam true))
+            (NRFunApp (CompilerInternal FnWriteParam)
              (((pattern (Var tp_row_vec))
                (meta ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
            (meta <opaque>))
           ((pattern
-            (NRFunApp (CompilerInternal (FnWriteParam true))
+            (NRFunApp (CompilerInternal FnWriteParam)
              (((pattern (Var tp_1d_row_vec))
                (meta
                 ((type_ (UArray URowVector)) (loc <opaque>)
                  (adlevel DataOnly)))))))
            (meta <opaque>))
           ((pattern
-            (NRFunApp (CompilerInternal (FnWriteParam true))
+            (NRFunApp (CompilerInternal FnWriteParam)
              (((pattern (Var tp_3d_row_vec))
                (meta
                 ((type_ (UArray (UArray (UArray URowVector)))) (loc <opaque>)
                  (adlevel DataOnly)))))))
            (meta <opaque>))
           ((pattern
-            (NRFunApp (CompilerInternal (FnWriteParam true))
+            (NRFunApp (CompilerInternal FnWriteParam)
              (((pattern (Var tp_ar_mat))
                (meta
                 ((type_ (UArray (UArray UMatrix))) (loc <opaque>)
                  (adlevel DataOnly)))))))
            (meta <opaque>))
           ((pattern
-            (NRFunApp (CompilerInternal (FnWriteParam true))
+            (NRFunApp (CompilerInternal FnWriteParam)
              (((pattern (Var tp_simplex))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
            (meta <opaque>))
           ((pattern
-            (NRFunApp (CompilerInternal (FnWriteParam true))
+            (NRFunApp (CompilerInternal FnWriteParam)
              (((pattern (Var tp_1d_simplex))
                (meta
                 ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly)))))))
            (meta <opaque>))
           ((pattern
-            (NRFunApp (CompilerInternal (FnWriteParam true))
+            (NRFunApp (CompilerInternal FnWriteParam)
              (((pattern (Var tp_3d_simplex))
                (meta
                 ((type_ (UArray (UArray (UArray UVector)))) (loc <opaque>)
                  (adlevel DataOnly)))))))
            (meta <opaque>))
           ((pattern
-            (NRFunApp (CompilerInternal (FnWriteParam true))
+            (NRFunApp (CompilerInternal FnWriteParam)
              (((pattern (Var tp_cfcov_54))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
            (meta <opaque>))
           ((pattern
-            (NRFunApp (CompilerInternal (FnWriteParam true))
+            (NRFunApp (CompilerInternal FnWriteParam)
              (((pattern (Var tp_cfcov_33))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
            (meta <opaque>))
           ((pattern
-            (NRFunApp (CompilerInternal (FnWriteParam true))
+            (NRFunApp (CompilerInternal FnWriteParam)
              (((pattern (Var tp_cfcov_33_ar))
                (meta
                 ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly)))))))
            (meta <opaque>))
           ((pattern
-            (NRFunApp (CompilerInternal (FnWriteParam true))
+            (NRFunApp (CompilerInternal FnWriteParam)
              (((pattern (Var theta_p))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
            (meta <opaque>))
           ((pattern
-            (NRFunApp (CompilerInternal (FnWriteParam true))
+            (NRFunApp (CompilerInternal FnWriteParam)
              (((pattern (Var tp_real))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
            (meta <opaque>)))))
@@ -17001,149 +17001,149 @@
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var gq_r1))
         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var gq_r2))
         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var gq_real_1d_ar))
         (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var gq_real_3d_ar))
         (meta
          ((type_ (UArray (UArray (UArray UReal)))) (loc <opaque>)
           (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var gq_vec))
         (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var gq_1d_vec))
         (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var gq_3d_vec))
         (meta
          ((type_ (UArray (UArray (UArray UVector)))) (loc <opaque>)
           (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var gq_row_vec))
         (meta ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var gq_1d_row_vec))
         (meta
          ((type_ (UArray URowVector)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var gq_3d_row_vec))
         (meta
          ((type_ (UArray (UArray (UArray URowVector)))) (loc <opaque>)
           (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var gq_ar_mat))
         (meta
          ((type_ (UArray (UArray UMatrix))) (loc <opaque>)
           (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var gq_simplex))
         (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var gq_1d_simplex))
         (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var gq_3d_simplex))
         (meta
          ((type_ (UArray (UArray (UArray UVector)))) (loc <opaque>)
           (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var gq_cfcov_54))
         (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var gq_cfcov_33))
         (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var gq_cfcov_33_ar))
         (meta ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var indices))
         (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var indexing_mat))
         (meta ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var idx_res1))
         (meta ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var idx_res2))
         (meta ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var idx_res3))
         (meta ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var idx_res11))
         (meta ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var idx_res21))
         (meta ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var idx_res31))
         (meta ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var idx_res4))
         (meta
          ((type_ (UArray URowVector)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var idx_res5))
         (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))))
@@ -17166,7 +17166,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_real))
         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
@@ -17183,7 +17183,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_upper))
         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
@@ -17200,7 +17200,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_lower))
         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
@@ -17226,7 +17226,7 @@
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var offset_multiplier))
         (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
@@ -17252,7 +17252,7 @@
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var no_offset_multiplier))
         (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
@@ -17278,7 +17278,7 @@
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var offset_no_multiplier))
         (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
@@ -17301,7 +17301,7 @@
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_real_1d_ar))
         (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
@@ -17336,7 +17336,7 @@
          (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_real_3d_ar))
         (meta
          ((type_ (UArray (UArray (UArray UReal)))) (loc <opaque>)
@@ -17361,7 +17361,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_vec))
         (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
@@ -17388,7 +17388,7 @@
         ((type_ (UArray UVector)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_1d_vec))
         (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
@@ -17426,7 +17426,7 @@
          (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_3d_vec))
         (meta
          ((type_ (UArray (UArray (UArray UVector)))) (loc <opaque>)
@@ -17449,7 +17449,7 @@
        (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_row_vec))
         (meta ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
@@ -17476,7 +17476,7 @@
         ((type_ (UArray URowVector)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_1d_row_vec))
         (meta
          ((type_ (UArray URowVector)) (loc <opaque>) (adlevel DataOnly)))))))
@@ -17515,7 +17515,7 @@
          (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_3d_row_vec))
         (meta
          ((type_ (UArray (UArray (UArray URowVector)))) (loc <opaque>)
@@ -17558,7 +17558,7 @@
          (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_ar_mat))
         (meta
          ((type_ (UArray (UArray UMatrix))) (loc <opaque>)
@@ -17586,7 +17586,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_simplex))
         (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
@@ -17618,7 +17618,7 @@
         ((type_ (UArray UVector)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_1d_simplex))
         (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
@@ -17661,7 +17661,7 @@
          (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_3d_simplex))
         (meta
          ((type_ (UArray (UArray (UArray UVector)))) (loc <opaque>)
@@ -17728,7 +17728,7 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_cfcov_54))
         (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
@@ -17793,7 +17793,7 @@
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_cfcov_33))
         (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
@@ -17868,7 +17868,7 @@
         ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var p_cfcov_33_ar))
         (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
@@ -17889,7 +17889,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var x_p))
         (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
@@ -17910,7 +17910,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (CompilerInternal (FnWriteParam true))
+     (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var y_p))
         (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))))

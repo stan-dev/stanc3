@@ -83,13 +83,13 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      pos__ = std::numeric_limits<int>::min(); 
       
       pos__ = 1;
       current_statement__ = 21;
       context__.validate_dims("data initialization","N","int",
-          context__.to_vec());
-      N = std::numeric_limits<int>::min();
+           std::vector<size_t>{});
+      N = std::numeric_limits<int>::min(); 
       
       current_statement__ = 21;
       N = context__.vals_i("N")[(1 - 1)];
@@ -99,8 +99,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       validate_non_negative_index("x", "N", N);
       current_statement__ = 23;
       context__.validate_dims("data initialization","x","double",
-          context__.to_vec(N));
-      x = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+           std::vector<size_t>{static_cast<size_t>(N)});
+      x = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN()); 
       
       current_statement__ = 23;
       x = context__.vals_r("x");
@@ -108,9 +108,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       validate_non_negative_index("y", "N", N);
       current_statement__ = 25;
       context__.validate_dims("data initialization","y","double",
-          context__.to_vec(N));
-      y = Eigen::Matrix<double, -1, 1>(N);
-      stan::math::fill(y, std::numeric_limits<double>::quiet_NaN());
+           std::vector<size_t>{static_cast<size_t>(N)});
+      y = Eigen::Matrix<double, -1, 1>(N); 
       
       {
         std::vector<local_scalar_t__> y_flat__;
@@ -124,10 +123,11 @@ class simple_function_model final : public model_base_crtp<simple_function_model
           assign(y, y_flat__[(pos__ - 1)],
             "assigning variable y", index_uni(sym1__));
           current_statement__ = 25;
-          pos__ = (pos__ + 1);}
+          pos__ = (pos__ + 1);
+        }
       }
       current_statement__ = 26;
-      sum_y = std::numeric_limits<double>::quiet_NaN();
+      sum_y = std::numeric_limits<double>::quiet_NaN(); 
       
       current_statement__ = 28;
       {
@@ -141,17 +141,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 0U;
+    num_params_r__ = 1 + 1 + 1;
     
-    try {
-      num_params_r__ += 1;
-      num_params_r__ += 1;
-      num_params_r__ += 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
@@ -173,19 +164,19 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     
     try {
       local_scalar_t__ rho;
-      rho = DUMMY_VAR__;
+      rho = DUMMY_VAR__; 
       
       current_statement__ = 1;
       rho = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
               lp__);
       local_scalar_t__ alpha;
-      alpha = DUMMY_VAR__;
+      alpha = DUMMY_VAR__; 
       
       current_statement__ = 2;
       alpha = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
       local_scalar_t__ sigma;
-      sigma = DUMMY_VAR__;
+      sigma = DUMMY_VAR__; 
       
       current_statement__ = 3;
       sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
@@ -197,7 +188,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         validate_non_negative_index("cov", "N", N);
         Eigen::Matrix<local_scalar_t__, -1, -1> cov;
         cov = Eigen::Matrix<local_scalar_t__, -1, -1>(N, N);
-        stan::math::fill(cov, DUMMY_VAR__);
+        stan::math::fill(cov, DUMMY_VAR__); 
         
         current_statement__ = 7;
         validate_non_negative_index("L_cov", "N", N);
@@ -205,7 +196,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         validate_non_negative_index("L_cov", "N", N);
         Eigen::Matrix<local_scalar_t__, -1, -1> L_cov;
         L_cov = Eigen::Matrix<local_scalar_t__, -1, -1>(N, N);
-        stan::math::fill(L_cov, DUMMY_VAR__);
+        stan::math::fill(L_cov, DUMMY_VAR__); 
         
         current_statement__ = 11;
         {
@@ -282,19 +273,19 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     
     try {
       double rho;
-      rho = std::numeric_limits<double>::quiet_NaN();
+      rho = std::numeric_limits<double>::quiet_NaN(); 
       
       current_statement__ = 1;
       rho = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
               lp__);
       double alpha;
-      alpha = std::numeric_limits<double>::quiet_NaN();
+      alpha = std::numeric_limits<double>::quiet_NaN(); 
       
       current_statement__ = 2;
       alpha = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
       double sigma;
-      sigma = std::numeric_limits<double>::quiet_NaN();
+      sigma = std::numeric_limits<double>::quiet_NaN(); 
       
       current_statement__ = 3;
       sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
@@ -330,21 +321,21 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      pos__ = std::numeric_limits<int>::min(); 
       
       pos__ = 1;
       local_scalar_t__ rho;
-      rho = DUMMY_VAR__;
+      rho = DUMMY_VAR__; 
       
       rho = in__.read_free_lb<local_scalar_t__>(0);
       out__.write(rho);
       local_scalar_t__ alpha;
-      alpha = DUMMY_VAR__;
+      alpha = DUMMY_VAR__; 
       
       alpha = in__.read_free_lb<local_scalar_t__>(0);
       out__.write(alpha);
       local_scalar_t__ sigma;
-      sigma = DUMMY_VAR__;
+      sigma = DUMMY_VAR__; 
       
       sigma = in__.read_free_lb<local_scalar_t__>(0);
       out__.write(sigma);
@@ -357,19 +348,14 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("rho");
-    names__.emplace_back("alpha");
-    names__.emplace_back("sigma");
+    names__ = std::vector<std::string>{"rho", "alpha", "sigma"};
+    
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+      std::vector<size_t>{}, std::vector<size_t>{}};
     
     } // get_dims() 
     
@@ -412,15 +398,15 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
-    return s__.str();
+    
+    return std::string("[{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
+    
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]";
-    return s__.str();
+    
+    return std::string("[{\"name\":\"rho\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"}]");
+    
     } // get_unconstrained_sizedtypes() 
     
   
@@ -432,14 +418,13 @@ class simple_function_model final : public model_base_crtp<simple_function_model
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      std::vector<double> vars_vec(vars.size());
+      std::vector<double> vars_vec;
+      vars_vec.reserve(vars.size());
       std::vector<int> params_i;
       write_array_impl(base_rng, params_r, params_i, vars_vec,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars.resize(vars_vec.size());
-      for (int i = 0; i < vars.size(); ++i) {
-        vars.coeffRef(i) = vars_vec[i];
-      }
+      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
+        vars_vec.data(), vars_vec.size());
     }
 
     template <typename RNG>
@@ -471,13 +456,12 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
                          std::ostream* pstream = nullptr) const final {
-      std::vector<double> params_r_vec(params_r.size());
+      std::vector<double> params_r_vec;
+      params_r_vec.reserve(params_r.size());
       std::vector<int> params_i;
       transform_inits(context, params_i, params_r_vec, pstream);
-      params_r.resize(params_r_vec.size());
-      for (int i = 0; i < params_r.size(); ++i) {
-        params_r.coeffRef(i) = params_r_vec[i];
-      }
+      params_r = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
+        params_r_vec.data(), params_r_vec.size());
     }
 
   inline void transform_inits(const stan::io::var_context& context,
