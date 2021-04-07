@@ -390,7 +390,7 @@ let pp_ctor ppf p =
           | true ->
               pp_validate_data ppf (decl_id, st) ;
               pp_assign_data ppf (decl_id, st, false)
-          | false -> pp_assign_data ppf (decl_id, st, false) )
+          | false -> pp_assign_data ppf (decl_id, st, true) )
       | Unsized _ -> () )
     | _ -> pp_statement ppf s
   in

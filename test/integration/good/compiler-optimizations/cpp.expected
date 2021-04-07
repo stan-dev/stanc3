@@ -8211,7 +8211,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       current_statement__ = 37;
       log_E__ = Eigen::Matrix<double, -1, 1>(N);
       new (&log_E) Eigen::Map<Eigen::Matrix<double, -1, 1>>(log_E__.data(), N);
-      
+      stan::math::fill(log_E, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 37;
       assign(log_E, stan::math::log(E), "assigning variable log_E");
@@ -30964,6 +30964,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       current_statement__ = 28;
       x1x2__ = Eigen::Matrix<double, -1, 1>(I);
       new (&x1x2) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x1x2__.data(), I);
+      stan::math::fill(x1x2, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 29;
       K = 8;

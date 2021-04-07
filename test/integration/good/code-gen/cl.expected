@@ -476,21 +476,21 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 198;
       X_d_td__ = Eigen::Matrix<double, -1, -1>(n, k);
       new (&X_d_td) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_d_td__.data(), n, k);
-      
+      stan::math::fill(X_d_td, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 199;
       validate_non_negative_index("y_v_d_td", "n", n);
       current_statement__ = 200;
       y_v_d_td__ = Eigen::Matrix<double, -1, 1>(n);
       new (&y_v_d_td) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y_v_d_td__.data(), n);
-      
+      stan::math::fill(y_v_d_td, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 201;
       validate_non_negative_index("X_rv_d_td", "n", n);
       current_statement__ = 202;
       X_rv_d_td__ = Eigen::Matrix<double, 1, -1>(n);
       new (&X_rv_d_td) Eigen::Map<Eigen::Matrix<double, 1, -1>>(X_rv_d_td__.data(), n);
-      
+      stan::math::fill(X_rv_d_td, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 203;
       validate_non_negative_index("y_vi_d_td", "n", n);
