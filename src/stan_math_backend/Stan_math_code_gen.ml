@@ -446,12 +446,11 @@ let pp_model_private ppf {Program.prepare_data; _} =
   let data_decls = List.concat_map ~f:top_level_decls prepare_data in
   (*Filter out Any data that is not an Eigen matrix*)
   let get_eigen_map (name, ut) =
-    match (UnsizedType.is_eigen_type ut, Transform_Mir.is_opencl_var name) with
-    | true, false -> Some (name, ut)
-    | false, _ -> None
-    | true, _ -> None
+    if UnsizedType.is_eigen_type ut && not (Transform_Mir.is_opencl_var name)
+    then true
+    else false
   in
-  let eigen_map_decls = (List.filter_map ~f:get_eigen_map) data_decls in
+  let eigen_map_decls = (List.filter ~f:get_eigen_map) data_decls in
   pf ppf "%a @ %a"
     (list ~sep:cut pp_data_decl)
     data_decls

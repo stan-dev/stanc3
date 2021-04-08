@@ -43,7 +43,6 @@ let pp_ut ppf (ut, adtype) = pf ppf "%a" pp_unsizedtype_local (adtype, ut)
 let nan_type (st, adtype) =
   match (adtype, st) with
   | UnsizedType.AutoDiffable, _ -> "DUMMY_VAR__"
-  | DataOnly, SizedType.SInt -> "std::numeric_limits<int>::quiet_NaN()"
   | DataOnly, _ -> "std::numeric_limits<double>::quiet_NaN()"
 
 (*Pretty printer for the right hand side of expressions to initialize objects.
@@ -194,10 +193,10 @@ let pp_map_decl ppf (vident, ut) =
       pf ppf "Eigen::Map<Eigen::Matrix<%s, -1, 1>> %s{nullptr, 0};" scalar
         vident
   | x ->
-      let bad_type = Fmt.strf "%a" pp_ut (x, DataOnly) in
       raise_s
         [%message
-          "Error during Map data construction for " vident " of type " bad_type
+          "Error during Map data construction for " vident " of type "
+            (x : UnsizedType.t)
             ". This should never happen, if you see this please file a bug \
              report."]
 
