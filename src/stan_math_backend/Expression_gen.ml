@@ -420,14 +420,8 @@ and pp_compiler_internal_fn ad ut f ppf es =
   | FnConstrain flavor -> pp_constrain_funapp "constrain" flavor ppf es
   | FnUnconstrain flavor -> pp_constrain_funapp "free" flavor ppf es
   | FnReadData -> read_data ut ppf es
-  | FnReadUnconstrainData constraint_opt ->
-      let free_suffix_opt =
-        Option.map
-          ~f:(fun constraint_string -> "_free_" ^ constraint_string)
-          constraint_opt
-      in
-      pf ppf "@[<hov 2>in__.read%a<%a>(@,%a)@]" (Fmt.option Fmt.string)
-        free_suffix_opt pp_unsizedtype_local
+  | FnReadDataSerializer ->
+      pf ppf "@[<hov 2>in__.read<%a>(@,%a)@]" pp_unsizedtype_local
         (UnsizedType.AutoDiffable, ut)
         (list ~sep:comma pp_expr) es
   | FnReadParam constraint_opt ->

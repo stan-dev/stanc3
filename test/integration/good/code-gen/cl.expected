@@ -1387,8 +1387,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       local_scalar_t__ sigma;
       sigma = DUMMY_VAR__; 
       
-      sigma = in__.read_free_lb<local_scalar_t__>(0);
-      out__.write(sigma);
+      sigma = in__.read<local_scalar_t__>(0);
+      out__.write_free_lb(0, sigma);
       local_scalar_t__ alpha;
       alpha = DUMMY_VAR__; 
       
