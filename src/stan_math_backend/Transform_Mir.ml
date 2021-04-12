@@ -221,16 +221,12 @@ let read_constrain_dims constrain_transform st =
   | Program.CholeskyCorr | Correlation | Covariance -> constrain_get_dims st
   | _ -> SizedType.get_dims st
 
-let data_serializer_read loc Program.({out_constrained_st= cst; out_trans; _})
-    =
-  let ut = SizedType.to_unsized cst in
+let data_serializer_read loc outvar =
+  let ut = SizedType.to_unsized outvar.Program.out_constrained_st in
   let emeta = Expr.Typed.Meta.create ~loc ~type_:ut ~adlevel:AutoDiffable () in
-  let transform_args = transform_args out_trans in
   Expr.(
     Helpers.(
-      internal_funapp FnReadDataSerializer
-        (transform_args @ read_constrain_dims out_trans cst))
-      Typed.Meta.{emeta with type_= ut})
+      internal_funapp FnReadDataSerializer [] Typed.Meta.{emeta with type_= ut}))
 
 (* let data_unconstrain_read loc Program.({out_constrained_st= cst; out_trans; _})
  *     =
