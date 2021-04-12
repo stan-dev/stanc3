@@ -221,12 +221,22 @@ let read_constrain_dims constrain_transform st =
   | Program.CholeskyCorr | Correlation | Covariance -> constrain_get_dims st
   | _ -> SizedType.get_dims st
 
+(* let data_serializer_read loc Program.({out_constrained_st= cst; out_trans; _})
+ *   =
+ *   let ut = SizedType.to_unsized cst in
+ *   let emeta = Expr.Typed.Meta.create ~loc ~type_:ut ~adlevel:AutoDiffable () in
+ *   let transform_args = transform_args out_trans in
+ *   Expr.Fixed.{
+ *     meta = {emeta with type_= ut}
+ *   ; pattern = Pattern.FunApp (CompilerInternal (FnReadDataSerializer ), transform_args @ read_constrain_dims out_trans cst)
+ *   } *)
+
 let data_serializer_read loc outvar =
   let ut = SizedType.to_unsized outvar.Program.out_constrained_st in
   let emeta = Expr.Typed.Meta.create ~loc ~type_:ut ~adlevel:AutoDiffable () in
   Expr.(
-    Helpers.(
-      internal_funapp FnReadDataSerializer [] Typed.Meta.{emeta with type_= ut}))
+    Helpers.(internal_funapp FnReadDataSerializer [])
+      Typed.Meta.{emeta with type_= ut})
 
 (* let data_unconstrain_read loc Program.({out_constrained_st= cst; out_trans; _})
  *     =
@@ -249,16 +259,22 @@ let param_read smeta
       Expr.Typed.Meta.create ~loc:smeta ~type_:ut ~adlevel:AutoDiffable ()
     in
     let transform_args = transform_args out_trans in
+    let constrain_string_opt = constraint_to_string out_trans Constrain in
+    let constrain_opt =
+      Option.map ~f:(fun s -> (s, transform_args)) constrain_string_opt
+    in
+    let dims = read_constrain_dims out_trans cst in
     let read =
       Expr.(
         Helpers.(
           internal_funapp
-            (FnReadParam (constraint_to_string out_trans Constrain))
-            ( transform_args
-            @ ( if out_trans = Identity then []
-              else [{Expr.Fixed.pattern= Var "lp__"; meta= emeta}] )
-            @ read_constrain_dims out_trans cst ))
-          Typed.Meta.{emeta with type_= ut})
+            (FnReadParam {constrain_opt; dims})
+            []
+            (* ( transform_args
+             * @ ( if out_trans = Identity then []
+             *   else [{Expr.Fixed.pattern= Var "lp__"; meta= emeta}] )
+             * @ read_constrain_dims out_trans cst )) *)
+            Typed.Meta.{emeta with type_= ut}))
     in
     [ Stmt.Fixed.
         {pattern= Pattern.Assignment ((decl_id, ut, []), read); meta= smeta} ]
@@ -391,18 +407,18 @@ let gen_write ?(unconstrain = false)
           ; type_= SizedType.to_unsized out_constrained_st
           ; adlevel= DataOnly } }
   in
-  let constraint_opt =
+  let unconstrain_string_opt =
     if unconstrain then constraint_to_string out_trans Unconstrain else None
   in
-  let extra_args =
-    if Option.is_some constraint_opt then
-      transform_args out_trans
-      @ read_constrain_dims out_trans out_constrained_st
-    else []
+  let unconstrain_opt =
+    Option.map unconstrain_string_opt ~f:(fun s ->
+        ( s
+        , transform_args out_trans
+          @ read_constrain_dims out_trans out_constrained_st ) )
   in
-  Stmt.Helpers.internal_nrfunapp (FnWriteParam constraint_opt)
-    (extra_args @ [decl_var])
-    Location_span.empty
+  Stmt.Helpers.internal_nrfunapp
+    (FnWriteParam {unconstrain_opt; var= decl_var})
+    [] Location_span.empty
 
 (* Statements to read, unconstrain and assign a parameter then write it back *)
 let data_unconstrain_transform smeta (decl_id, outvar) =

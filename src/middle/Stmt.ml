@@ -10,7 +10,7 @@ module Fixed = struct
     type ('a, 'b) t =
       | Assignment of 'a lvalue * 'a
       | TargetPE of 'a
-      | NRFunApp of Fun_kind.t * 'a list
+      | NRFunApp of 'a Fun_kind.t * 'a list
       | Break
       | Continue
       | Return of 'a option
@@ -37,7 +37,7 @@ module Fixed = struct
       | TargetPE expr ->
           Fmt.pf ppf {|@[<h>%a +=@ %a;@]|} pp_keyword "target" pp_e expr
       | NRFunApp (kind, args) ->
-          Fmt.pf ppf {|@[%a%a;@]|} Fun_kind.pp kind
+          Fmt.pf ppf {|@[%a%a;@]|} (Fun_kind.pp pp_e) kind
             Fmt.(list pp_e ~sep:comma |> parens)
             args
       | Break -> pp_keyword ppf "break;"
