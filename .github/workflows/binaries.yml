@@ -1,0 +1,170 @@
+name: Build binaries
+
+on: 
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to use for building binaries'
+        required: true
+        default: 'master'
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    container:
+      image: ocaml/opam2:alpine-3.9-ocaml-4.07
+      options: --user root
+    steps:    
+      - name: Checkout stanc3
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: opam caching
+        id: opam-cache
+        uses: actions/cache@v2
+        with:
+          path: "~/.opam"
+          key: linux-stanc-binary-4.07
+
+      - name: Install dependencies
+        run: |
+          sudo apk update
+          sudo apk add build-base bzip2 git tar curl ca-certificates openssl m4 bash
+          opam init --disable-sandboxing -y
+          opam switch 4.07.0 || opam switch create 4.07.0
+          eval $(opam env)
+          opam repo add internet https://opam.ocaml.org
+          opam update
+          bash -x scripts/install_build_deps.sh
+
+      - name: Build static Linux binaries
+        run: |
+          eval $(opam env)
+          dune subst
+          dune build @install --profile static
+          mv _build/default/src/stanc/stanc.exe linux-stanc
+          mv _build/default/src/stan2tfp/stan2tfp.exe linux-stan2tfp
+      
+      - name: Upload Linux stanc
+        uses: actions/upload-artifact@v2
+        with:
+          name: linux-stanc
+          path: linux-stanc            
+
+      - name: Upload Linux stan2tfp
+        uses: actions/upload-artifact@v2
+        with:
+          name: linux-stan2tfp
+          path: linux-stan2tfp
+
+  windows:
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:bionic
+      options: --user root
+    steps:    
+      - name: Checkout stanc3
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: opam caching
+        id: opam-cache
+        uses: actions/cache@v2
+        with:
+          path: "~/.opam"
+          key: windows-stanc-binary-4.07
+
+      - name: Install dependencies
+        run: |
+          apt-get update -qq
+          apt-get install -y --no-install-recommends ca-certificates rsync git build-essential m4 sudo \
+          unzip pkg-config libpcre3-dev mingw-w64 gcc wget gawk bubblewrap
+          wget https://github.com/ocaml/opam/releases/download/2.0.4/opam-2.0.4-x86_64-linux
+          sudo install opam-2.0.4-x86_64-linux /usr/local/bin/opam
+          opam init --comp 4.02.3 --disable-sandboxing -y
+          eval $(opam env)
+          opam switch 4.07.0 || opam switch create 4.07.0
+          eval $(opam env)
+          opam update
+          bash -x scripts/install_build_deps_windows.sh
+          eval $(opam env)
+          opam install -y js_of_ocaml-compiler.3.4.0 js_of_ocaml-ppx.3.4.0 js_of_ocaml.3.4.0
+
+      - name: Build Windows binaries
+        run: |
+          eval $(opam env)
+          dune subst
+          dune build -x windows
+          mv _build/default.windows/src/stanc/stanc.exe windows-stanc
+          mv _build/default.windows/src/stan2tfp/stan2tfp.exe windows-stan2tfp
+
+      - name: Build stanc.js
+        run: |
+          eval $(opam env)
+          dune subst    
+          dune build --profile release src/stancjs
+          mv _build/default/src/stancjs/stancjs.bc.js stanc.js
+
+      - name: Upload Windows stanc
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows-stanc
+          path: windows-stanc
+
+      - name: Upload Windows stan2tfp
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows-stan2tfp
+          path: windows-stan2tfp
+
+      - name: Upload stanc.js
+        uses: actions/upload-artifact@v2
+        with:
+          name: stanc.js
+          path: stanc.js
+  mac:
+    runs-on: macOS-latest
+    steps:    
+      - name: Checkout stanc3
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: opam caching
+        id: opam-cache
+        uses: actions/cache@v2
+        with:
+          path: "~/.opam"
+          key: macOS-stanc-binary-4.07
+
+      - name: Install dependencies
+        run: |
+          brew install gpatch
+          brew install opam
+          opam init --disable-sandboxing -y
+          eval $(opam env)
+          opam switch 4.07.0 || opam switch create 4.07.0          
+          eval $(opam env)
+          bash -x scripts/install_build_deps.sh
+
+      - name: Build MacOS binaries
+        run: |
+          eval $(opam env)
+          dune subst
+          dune build @install
+          mv _build/default/src/stanc/stanc.exe mac-stanc
+          mv _build/default/src/stan2tfp/stan2tfp.exe mac-stan2tfp
+      
+      - name: Upload MacOS binaries
+        uses: actions/upload-artifact@v2
+        with:
+          name: mac-stanc
+          path: mac-stanc
+
+      - name: Upload MacOS binaries
+        uses: actions/upload-artifact@v2
+        with:
+          name: mac-stan2tfp
+          path: mac-stan2tfp

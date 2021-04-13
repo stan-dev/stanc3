@@ -8,22 +8,25 @@ let pp_call ppf (name, pp_arg, args) =
   pf ppf "%s(@[<hov>%a@])" name (list ~sep:comma pp_arg) args
 
 let pp_call_str ppf (name, args) = pp_call ppf (name, string, args)
-let pystring_of_operator = function x -> strf "%a" Operator.pp x
+
+let pystring_of_operator = function
+  | Operator.IntDivide -> "//"
+  | Operator.Pow -> "**"
+  | x -> strf "%a" Operator.pp x
 
 let rec pp_expr ppf {Expr.Fixed.pattern; _} =
   match pattern with
   | Var ident -> string ppf ident
   | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> pf ppf "tf__.cast(%s, tf__.float64)" s
-  | FunApp (StanLib, f, obs :: dist_params)
+  | FunApp (StanLib f, obs :: dist_params)
     when f = Transform_mir.dist_prefix ^ "CholeskyLKJ" ->
       pf ppf "%s(@[<hov>(%a).shape[0], %a@]).log_prob(%a)" f pp_expr obs
         (list ~sep:comma pp_expr) dist_params pp_expr obs
-  | FunApp (StanLib, f, obs :: dist_params)
+  | FunApp (StanLib f, obs :: dist_params)
     when String.is_prefix ~prefix:Transform_mir.dist_prefix f ->
       pf ppf "%a.log_prob(%a)" pp_call (f, pp_expr, dist_params) pp_expr obs
-  | FunApp (StanLib, f, args) when Operator.of_string_opt f |> Option.is_some
-  -> (
+  | FunApp (StanLib f, args) when Operator.of_string_opt f |> Option.is_some -> (
     match
       ( Operator.of_string_opt f |> Option.value_exn |> pystring_of_operator
       , args )
@@ -32,7 +35,13 @@ let rec pp_expr ppf {Expr.Fixed.pattern; _} =
     | op, [unary] -> pf ppf "%s%a" op pp_paren unary
     | op, args ->
         raise_s [%message "Need to implement" op (args : Expr.Typed.t list)] )
-  | FunApp (_, fname, args) -> pp_call ppf (fname, pp_expr, args)
+  | FunApp ((UserDefined fname | StanLib fname), args) ->
+      pp_call ppf (fname, pp_expr, args)
+  | FunApp (CompilerInternal _, _) as e ->
+      raise_s
+        [%message
+          "Not implemented CompilerInternal "
+            (e : Expr.Typed.Meta.t Expr.Fixed.t Expr.Fixed.Pattern.t)]
   | TernaryIf (cond, iftrue, iffalse) ->
       pf ppf "%a if %a else %a" pp_paren iftrue pp_paren cond pp_paren iffalse
   | EAnd (a, b) -> pf ppf "%a and %a" pp_paren a pp_paren b
@@ -46,34 +55,31 @@ let rec pp_expr ppf {Expr.Fixed.pattern; _} =
        * tf.strided_slice
 *)
       raise_s [%message "Multi-indices not supported yet"]
-  | Indexed (obj, indices) ->
-      let pp_indexed ppf = function
-        | [] -> ()
-        | indices -> pf ppf "[%a]" (list ~sep:comma (Index.pp pp_expr)) indices
-      in
-      pf ppf "%a%a" pp_expr obj pp_indexed indices
+  | Indexed (obj, indices) -> pf ppf "%a%a" pp_expr obj pp_indices indices
+
+and pp_indices ppf = function
+  | [] -> ()
+  | indices -> pf ppf "[%a]" (list ~sep:comma (Index.pp pp_expr)) indices
 
 and pp_paren ppf expr =
   match expr.Expr.Fixed.pattern with
   | TernaryIf _ | EAnd _ | EOr _ -> pf ppf "(%a)" pp_expr expr
-  | FunApp (StanLib, f, _) when Operator.of_string_opt f |> Option.is_some ->
+  | FunApp (StanLib f, _) when Operator.of_string_opt f |> Option.is_some ->
       pf ppf "(%a)" pp_expr expr
   | _ -> pp_expr ppf expr
 
 let rec pp_stmt ppf s =
-  let fake_expr pattern = {Expr.Fixed.pattern; meta= Expr.Typed.Meta.empty} in
   match s.Stmt.Fixed.pattern with
   | Assignment ((lhs, _, indices), rhs) ->
-      let indexed = fake_expr (Indexed (fake_expr (Var lhs), indices)) in
-      pf ppf "%a = %a" pp_expr indexed pp_expr rhs
+      pf ppf "%s%a = %a" lhs pp_indices indices pp_expr rhs
   | TargetPE rhs -> pf ppf "target += tf__.reduce_sum(%a)" pp_expr rhs
-  | NRFunApp (StanLib, f, args) | NRFunApp (UserDefined, f, args) ->
+  | NRFunApp (StanLib f, args) | NRFunApp (UserDefined f, args) ->
       pp_call ppf (f, pp_expr, args)
   | Break -> pf ppf "break"
   | Continue -> pf ppf "continue"
   | Return rhs ->
       pf ppf "return %a" (option ~none:(const string "None") pp_expr) rhs
-  | Block ls | SList ls -> (list ~sep:cut pp_stmt) ppf ls
+  | Profile (_, ls) | Block ls | SList ls -> (list ~sep:cut pp_stmt) ppf ls
   | Skip -> ()
   (* | Decl {decl_adtype= AutoDiffable; decl_id; _} ->
    *     pf ppf "%s = tf.Variable(0, name=%S, dtype=np.float64)" decl_id decl_id *)
@@ -82,7 +88,7 @@ let rec pp_stmt ppf s =
      their arguments. I think these functions need to be named and
      defined inline in general because lambdas are limited.
   *)
-  | IfElse (_, _, _) | While (_, _) | For _ | NRFunApp (CompilerInternal, _, _)
+  | IfElse (_, _, _) | While (_, _) | For _ | NRFunApp (CompilerInternal _, _)
     ->
       raise_s [%message "Not implemented" (s : Stmt.Located.t)]
 
@@ -190,7 +196,9 @@ let get_params p =
 
 let pp_shapes ppf p =
   let pp_shape ppf (_, {Program.out_unconstrained_st; _}) =
-    pf ppf "(nchains__, @[<hov>%a@])" (list ~sep:comma pp_expr)
+    let cast_expr ppf e = pf ppf "tf__.cast(%a, tf__.int32)" pp_expr e in
+    pf ppf "(nchains__, @[<hov>%a@])"
+      (list ~sep:comma cast_expr)
       (SizedType.get_dims out_unconstrained_st)
   in
   let ppbody ppf =
@@ -207,10 +215,7 @@ let pp_bijector ppf trans =
     | Lower lb -> [("Exp", []); ("Shift", [lb])]
     | Upper ub ->
         [("Exp", []); ("Scale", [Expr.Helpers.float (-1.)]); ("Shift", [ub])]
-    | LowerUpper (lb, ub) ->
-        [ ("Sigmoid", [])
-        ; ("Scale", [Expr.Helpers.binop ub Operator.Minus lb])
-        ; ("Shift", [lb]) ]
+    | LowerUpper (lb, ub) -> [("Sigmoid", [lb; ub])]
     | Offset o -> [("Shift", [o])]
     | Multiplier m -> [("Scale", [m])]
     | OffsetMultiplier (o, m) -> [("Scale", [m]); ("Shift", [o])]
@@ -256,10 +261,13 @@ let pp_methods ppf p =
   pf ppf "@ %a" pp_param_names p
 
 let pp_fundef ppf {Program.fdname; fdargs; fdbody; _} =
+  let no_body_default : Stmt.Located.t =
+    {pattern= Stmt.Fixed.Pattern.Skip; meta= Location_span.empty}
+  in
   pp_method ppf fdname
     (List.map ~f:(fun (_, name, _) -> name) fdargs)
     []
-    (fun ppf -> pp_stmt ppf fdbody)
+    (fun ppf -> pp_stmt ppf (Option.value ~default:no_body_default fdbody))
 
 let imports =
   {|
@@ -272,7 +280,7 @@ from tensorflow.python.ops.parallel_for import pfor as pfor__
 |}
 
 let pp_prog ppf (p : Program.Typed.t) =
-  pf ppf "%s@,@,%a@,class %s(tfd__.Distribution):@,@[<v 2>%a@]" imports
+  pf ppf "@[<v>%s@,%a@,class %s(tfd__.Distribution):@,@[<v 2>%a@]@]" imports
     (list ~sep:cut pp_fundef) p.functions_block p.prog_name pp_methods p ;
   pf ppf "@ model = %s" p.prog_name
 

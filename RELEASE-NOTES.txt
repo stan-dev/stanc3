@@ -1,0 +1,150 @@
+STANC3 RELEASE NOTES
+======================================================================
+
+v2.26.1 (15 February 2021)
+======================================================================
+
+- Fixed issue with not allowing user-defined _lp functions with a void return type in transformed parameters block.
+
+v2.26.0 (26 January 2021)
+======================================================================
+
+ - Added deprecated functions warnings to regular use, and replace in canonicalizer.(#726)
+ - Added a small readme for dockerfiles usage locally.(#738)
+ - Added `matrix chol2inv(matrix)`.(#740)
+ - Added a Github Actions job to build binaries.(#747)
+ - Modified code-generation for user-defined functions to accept Eigen expressions.(#752)
+ - Added OpenCL support for: bernoulli_lpmf, bernoulli_logit_lpmf, beta_lpdf, beta_proportion_lpdf, binomial_lpmf, cauchy_lpdf, chi_square_lpdf, double_exponential_lpdf, exp_mod_normal_lpdf, exponential_lpdf, frechet_lpdf, gamma_lpdf, gumbel_lpdf, inv_chi_square_lpdf, inv_gamma_lpdf, logistic_lpdf, lognormal_lpdf, neg_binomial_lpmf, neg_binomial_2_lpmf, neg_binomial_2_log_lpmf, normal_lpdf, pareto_lpdf, pareto_type_2_lpdf, poisson_lpmf, poisson_log_lpmf, rayleigh_lpdf, scaled_inv_chi_square_lpdf, skew_normal_lpdf, std_normal_lpdf, student_t_lpdf, uniform_lpdf, weibull_lpdf
+ - Allowed `write_array()`, `log_prob()`, and `transform_inits()` to avoid a vector copy and read/write(#761)
+ - Added the discrete_range distribution.(#763)
+ - Use Eigen comma initializer to avoid copy in vector construction.(#766)
+ - Allowed calling lp functions in transformed parameters block.(#767)
+ - Fixed multi-dim indexing bug.(#768)
+ - Moved the reported location of parsing errors closer to the problematic section.(#771)
+ - Fixed a optimization bug in handling of unnormalized distributions.(#778)
+ - Added profiling to the Stan language.(#794)
+ - Added `linspaced_int_array()`(#796)
+
+v2.25.0 (26 October 2020)
+======================================================================
+
+- Improved parser error message on missing semicolon in the data or parameters block.
+- Expanded OpenCL (GPU) support for GLMs to now handle parameters for any argument.
+- Fix parameter unconstraining bug when the constraints depend on other constrained parameters.
+- "offset, "multiplier," "lower," and "upper" are no longer reserved keywords and can be used in the names of identifiers.
+- Extended `elt_multiply` (`.*`) and `elt_divide` (`./`) to cases where both inputs are scalars.
+- Added support for unnormalized distributions for the `target +=` sytnax.
+- Changed the MIR to represent function declarations as Options.
+- Variable names are now allowed that shadow math function names.
+- Fixed a bug with not recognizing transformed parameters in pedantic mode
+- Added vectorised binary functions:
+    - bessel_first_kind
+    - beta
+    - binary_log_loss
+    - binomial_coefficient_log
+    - choose
+    - falling_factorial
+    - fdim
+    - fmax
+    - fmin
+    - fmod
+    - gamma_p
+    - gamma_q
+    - hypot
+    - lbeta
+    - ldexp
+    - lmgamma
+    - log_diff_exp
+    - log_falling_factorial
+    - log_inv_logit_diff
+    - log_modified_bessel_first_kind
+    - log_rising_factorial
+    - modified_bessel_first_kind
+    - modified_bessel_second_kind
+    - lmultiply
+    - multiply_log
+    - owens_t
+    - rising_factorial
+
+Code contributions were made by @andrjohns @nhuurre @rok-cesnovar @rybern and @seantalts 
+
+v2.24.1 (11 August 2020)
+======================================================================
+
+Bugfixes:
+
+- added using std::pow to generated code
+- fixed code generation for pow()
+- added data quantifier to linspaced_* signatures
+- fixed code generation for empty matrices
+
+v2.24.0 (28 July 2020)
+======================================================================
+
+New functions: 
+   `algebra_solver_newton`
+
+   `matrix hmm_hidden_state_prob(matrix, matrix, vector)`
+   `int[] hmm_latent_rng(matrix, matrix, vector)`
+   `real hmm_marginal(matrix, matrix, vector)`
+    
+   `T lambert_w0(T)`, for any T
+   `T lambert_w1(T)`, for any T
+    
+   `matrix matrix_power(matrix, int)`
+   
+   `real multinomial_logit_log(int[], vector)`
+   `real multinomial_logit_lpmf(int[], vector)`
+   `int[] multinomial_logit_rng(vector, int)`
+    
+   `ode_adams`, `ode_adams_tol`
+   `ode_bdf`, `ode_bdf_tol`
+   `ode_rk45`, `ode_rk45_tol`
+
+   `T pow(int, T)`
+   `T pow(real, T)`
+   `T pow(T, int)`
+   `T pow(T, real) `
+    (previously only real pow(real, real) was available)
+
+   `T reverse(T)`, where T is vector, row_vector or an array of any type
+   
+   `matrix identity_matrix(int)`
+   `real[] linspaced_array(int, real, real); row_vector linspaced_row_vector(int, real, real); vector linspaced_vector(int, real, real)`
+   `int[] one_hot_int_array(int, int); real[] one_hot_array(int, int); row_vector one_hot_row_vector(int, int); vector one_hot_vector(int, int)`
+   `int[] ones_int_array(int); real[] ones_array(int); row_vector ones_row_vector(int); vector ones_vector(int)`
+   `vector uniform_simplex(int)`
+   `int[] zeros_int_array(int); real[] zeros_array(int); row_vector zeros_row_vector(int); vector zeros_vector(int)`
+
+
+New features:
+
+- pedantic mode
+- experimental optimization mode
+- new integer division operator `%/%`
+- non-scalar values are now allowed in lower, upper, offset and multiplier
+- integrate_ode_* functions are now deprecated
+- data-only restricted functions now work with parameters in generated quantities
+- improved out-of-bounds messages for vectors, matrices
+- added checks for invalid literals
+- `--allow_undefined` and `--include_paths` are deprecated in favor of `--allow-undefined` and `--include-paths`
+- cleaned up the generated model C++ code: model is now final, using statements instead of typedef, better use of inline, use of `.clear()` instead of `.resize(0)`, remove unnecessary functions
+- cleaned up the OCaml code: better use of helper functions, removed duplicate functions, better exception messages, replace imperative code for handling Stan Math signatures
+- size expressions for parameters and generated quantities are now only evaluated once
+- better handle model names that are not C++ friendly (start with numbers, have non-alphanumeric characters)
+
+Bugfixes:
+- changed the loop index type to int to prevent issues when using it in expressions with signed numbers
+- integer arrays now initialize to the smallest representable integer
+- var arrays initialize with a prebuilt dummy var, to not creat new varis
+- all map_rect calls are registered when using MPI
+- _lpdf/_lpmf functions are now used instead of *_log when generating code for the tilde statements
+- single argument distribution do not require the vertical bar anymore (e.g. std_normal_lpdf(x|))
+- fixed a bug that caused tilde statements to conflict with userdef functions
+- rng functions are no longer allowed in size declarations
+- fixed the _lpdf functor struct so that UDF with _log and int argument now compile
+- fixed array literal type-checking 
+- fixed the error messages for missing input (line number is now displayed properly)
+- fixed indexing in transform_init()
+- fixed emitting generated quantities only (for gq_writer)
+- fixed debug data generator for constrained matrix types and added array value bounds

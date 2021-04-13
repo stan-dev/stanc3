@@ -26,6 +26,19 @@ let unsized_array_depth unsized_ty =
   in
   aux 0 unsized_ty
 
+let count_dims unsized_ty =
+  let rec aux dims = function
+    | UArray t -> aux (dims + 1) t
+    | UMatrix -> dims + 2
+    | UVector | URowVector -> dims + 1
+    | _ -> dims
+  in
+  aux 0 unsized_ty
+
+let rec unwind_array_type = function
+  | UArray ut -> ( match unwind_array_type ut with ut2, d -> (ut2, d + 1) )
+  | ut -> (ut, 0)
+
 let rec pp ppf = function
   | UInt -> pp_keyword ppf "int"
   | UReal -> pp_keyword ppf "real"
@@ -33,9 +46,9 @@ let rec pp ppf = function
   | URowVector -> pp_keyword ppf "row_vector"
   | UMatrix -> pp_keyword ppf "matrix"
   | UArray ut ->
-      let ty, depth = unsized_array_depth ut in
-      let commas = String.make depth ',' in
-      Fmt.pf ppf "%a[%s]" pp ty commas
+      let ut2, d = unwind_array_type ut in
+      let array_str = "[" ^ String.make d ',' ^ "]" in
+      Fmt.pf ppf "array%s %a" array_str pp ut2
   | UFun (argtypes, rt) ->
       Fmt.pf ppf {|@[<h>(%a) => %a@]|}
         Fmt.(list pp_fun_arg ~sep:comma)
@@ -56,6 +69,12 @@ and pp_returntype ppf = function
 let autodifftype_can_convert at1 at2 =
   match (at1, at2) with DataOnly, AutoDiffable -> false | _ -> true
 
+let rec lub_ad_type = function
+  | [] -> DataOnly
+  | x :: xs ->
+      let y = lub_ad_type xs in
+      if compare_autodifftype x y < 0 then y else x
+
 let check_of_same_type_mod_conv name t1 t2 =
   if String.is_prefix name ~prefix:"assign_" then t1 = t2
   else
@@ -63,6 +82,7 @@ let check_of_same_type_mod_conv name t1 t2 =
     | UReal, UInt -> true
     | UFun (l1, rt1), UFun (l2, rt2) ->
         rt1 = rt2
+        && List.length l1 = List.length l2
         && List.for_all
              ~f:(fun x -> x = true)
              (List.map2_exn
@@ -106,15 +126,22 @@ let is_real_type = function
   | _ -> false
 
 let rec is_autodiffable = function
-  | UReal | UVector | URowVector | UMatrix ->
-    true
-  |UArray t ->
-    is_autodiffable t
+  | UReal | UVector | URowVector | UMatrix -> true
+  | UArray t -> is_autodiffable t
   | _ -> false
 
 let is_scalar_type = function UReal | UInt -> true | _ -> false
 let is_int_type = function UInt | UArray UInt -> true | _ -> false
+
+let is_eigen_type = function
+  | UVector | URowVector | UMatrix -> true
+  | _ -> false
+
 let is_fun_type = function UFun _ -> true | _ -> false
+
+(** Detect if type contains an integer *)
+let rec contains_int ut =
+  match ut with UInt -> true | UArray ut -> contains_int ut | _ -> false
 
 let rec is_indexing_matrix = function
   | UArray t, _ :: idcs -> is_indexing_matrix (t, idcs)

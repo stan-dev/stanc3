@@ -3,65 +3,88 @@ open Middle
 
 let use_opencl = ref false
 
-let opencl_triggers =
+let opencl_trigger_restrictions =
   String.Map.of_alist_exn
-    [ ( "normal_id_glm_lpdf"
-      , ( [0; 1]
-        , [ (* Array of conditions under which to move to OpenCL *)
-            ([1], (* Argument 1 is data *)
-                  [(1, UnsizedType.UMatrix)])
-          (* Argument 1 is a matrix *)
-           ] ) )
+    [ ( "bernoulli_lpmf"
+      , [ [ (0, UnsizedType.DataOnly, UnsizedType.UArray UnsizedType.UInt)
+          ; (1, UnsizedType.DataOnly, UnsizedType.UReal) ] ] )
     ; ( "bernoulli_logit_glm_lpmf"
-      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
+      , [ (* Array of conditions under which we do not want to move to OpenCL *)
+          [(1, UnsizedType.DataOnly, UnsizedType.URowVector)]
+        (* Argument 1 (0-based indexing) is a row vector *)
+         ] )
     ; ( "categorical_logit_glm_lpmf"
-      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
+      , [[(1, UnsizedType.DataOnly, UnsizedType.URowVector)]] )
+    ; ( "exponential_lpdf"
+      , [ [ (0, UnsizedType.AutoDiffable, UnsizedType.UVector)
+          ; (1, UnsizedType.DataOnly, UnsizedType.UReal) ] ] )
     ; ( "neg_binomial_2_log_glm_lpmf"
-      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
+      , [[(1, UnsizedType.DataOnly, UnsizedType.URowVector)]] )
+    ; ( "normal_id_glm_lpdf"
+      , [[(1, UnsizedType.DataOnly, UnsizedType.URowVector)]] )
     ; ( "ordered_logistic_glm_lpmf"
-      , ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]) )
-    ; ("poisson_log_glm_lpmf", ([0; 1], [([1], [(1, UnsizedType.UMatrix)])]))
-    ]
+      , [[(1, UnsizedType.DataOnly, UnsizedType.URowVector)]] )
+    ; ( "poisson_log_glm_lpmf"
+      , [[(1, UnsizedType.DataOnly, UnsizedType.URowVector)]] )
+    ; ( "std_normal_lpdf"
+      , [[(0, UnsizedType.AutoDiffable, UnsizedType.UVector)]] )
+    ; ( "uniform_lpdf"
+      , [ [ (0, UnsizedType.AutoDiffable, UnsizedType.UVector)
+          ; (1, UnsizedType.DataOnly, UnsizedType.UReal)
+          ; (1, UnsizedType.DataOnly, UnsizedType.UReal) ] ] ) ]
+
+let opencl_supported_functions =
+  [ "bernoulli_lpmf"; "bernoulli_logit_lpmf"; "bernoulli_logit_glm_lpmf"
+  ; "beta_lpdf"; "beta_proportion_lpdf"; "binomial_lpmf"
+  ; "categorical_logit_glm_lpmf"; "cauchy_lpdf"; "chi_square_lpdf"
+  ; "double_exponential_lpdf"; "exp_mod_normal_lpdf"; "exponential_lpdf"
+  ; "frechet_lpdf"; "gamma_lpdf"; "gumbel_lpdf"; "inv_chi_square_lpdf"
+  ; "inv_gamma_lpdf"; "logistic_lpdf"; "lognormal_lpdf"; "neg_binomial_lpmf"
+  ; "neg_binomial_2_lpmf"; "neg_binomial_2_log_lpmf"
+  ; "neg_binomial_2_log_glm_lpmf"; "normal_lpdf"; "normal_id_glm_lpdf"
+  ; "ordered_logistic_glm_lpmf"; "pareto_lpdf"; "pareto_type_2_lpdf"
+  ; "poisson_lpmf"; "poisson_log_lpmf"; "poisson_log_glm_lpmf"; "rayleigh_lpdf"
+  ; "scaled_inv_chi_square_lpdf"; "skew_normal_lpdf"; "std_normal_lpdf"
+  ; "student_t_lpdf"; "uniform_lpdf"; "weibull_lpdf" ]
+  |> String.Set.of_list
 
 let opencl_suffix = "_opencl__"
 
 let to_matrix_cl e =
-  Expr.Fixed.{e with pattern= FunApp (StanLib, "to_matrix_cl", [e])}
+  Expr.Fixed.{e with pattern= FunApp (StanLib "to_matrix_cl", [e])}
 
 let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
     =
   let is_avail = List.mem available_cl_vars ~equal:( = ) in
-  let to_cl (Expr.Fixed.({pattern; _}) as e) =
-    match pattern with
-    | Var s when is_avail s ->
+  let to_cl (Expr.Fixed.({pattern; meta= {Expr.Typed.Meta.type_; _}}) as e) =
+    match (pattern, type_) with
+    | Var s, _ when is_avail s ->
         Expr.Fixed.{e with pattern= Var (s ^ opencl_suffix)}
-    | _ -> to_matrix_cl e
+    | _, UnsizedType.(UInt | UReal) -> e
+    | _, _ -> to_matrix_cl e
   in
-  let move_cl_args cl_args index arg =
-    if List.mem ~equal:( = ) cl_args index then to_cl arg else arg
+  let check_type args (i, ad, t) =
+    let arg = List.nth_exn args i in
+    Expr.Typed.type_of arg = t
+    && UnsizedType.autodifftype_can_convert (Expr.Typed.adlevel_of arg) ad
   in
-  let check_type args (i, t) = Expr.Typed.type_of (List.nth_exn args i) = t in
-  let check_if_data args ind =
-    let Expr.Fixed.({pattern; _}) = List.nth_exn args ind in
-    match pattern with Var s when is_avail s -> true | _ -> false
+  let is_restricted args =
+    List.exists ~f:(List.for_all ~f:(check_type args))
   in
-  let req_met args (data_arg, type_arg) =
-    List.for_all ~f:(check_if_data args) data_arg
-    && List.for_all ~f:(check_type args) type_arg
+  let maybe_map_args args req_args =
+    match req_args with
+    | Some x when is_restricted args x -> args
+    | None | Some _ -> List.map args ~f:to_cl
   in
-  let any_req_met args req_args = List.exists ~f:(req_met args) req_args in
-  let maybe_map_args args (cl_args, req_args) =
-    match any_req_met args req_args with
-    | true -> List.mapi args ~f:(move_cl_args cl_args)
-    | false -> args
-  in
-  let trim_propto f =
-    String.substr_replace_all ~pattern:"_propto_" ~with_:"_" f
+  let is_fn_opencl_supported f =
+    Set.mem opencl_supported_functions (Utils.stdlib_distribution_name f)
   in
   match pattern with
-  | FunApp (StanLib, f, args) when Map.mem opencl_triggers (trim_propto f) ->
-      let trigger = Map.find_exn opencl_triggers (trim_propto f) in
-      {e with pattern= FunApp (StanLib, f, maybe_map_args args trigger)}
+  | FunApp (StanLib f, args) when is_fn_opencl_supported f ->
+      let trigger =
+        Map.find opencl_trigger_restrictions (Utils.stdlib_distribution_name f)
+      in
+      {e with pattern= FunApp (StanLib f, maybe_map_args args trigger)}
   | x ->
       { e with
         pattern=
@@ -138,57 +161,90 @@ let data_read smeta (decl_id, st) =
           ; Stmt.Helpers.for_scalar_inv st bodyfn decl_var smeta ]
         |> swrap ]
 
-let rec base_ut_to_string = function
-  | UnsizedType.UMatrix -> "matrix"
-  | UVector -> "vector"
-  | URowVector -> "row_vector"
-  | UReal -> "scalar"
-  | UInt -> "integer"
-  | UArray t -> base_ut_to_string t
-  | t ->
-      raise_s
-        [%message "Another place where it's weird to get " (t : UnsizedType.t)]
+type constrainaction = Check | Constrain | Unconstrain [@@deriving sexp]
+
+let constraint_to_string t (c : constrainaction) =
+  match t with
+  | Program.Ordered -> Some "ordered"
+  | PositiveOrdered -> Some "positive_ordered"
+  | Simplex -> Some "simplex"
+  | UnitVector -> Some "unit_vector"
+  | CholeskyCorr -> Some "cholesky_factor_corr"
+  | CholeskyCov -> Some "cholesky_factor_cov"
+  | Correlation -> Some "corr_matrix"
+  | Covariance -> Some "cov_matrix"
+  | Lower _ -> (
+    match c with
+    | Check -> Some "greater_or_equal"
+    | Constrain | Unconstrain -> Some "lb" )
+  | Upper _ -> (
+    match c with
+    | Check -> Some "less_or_equal"
+    | Constrain | Unconstrain -> Some "ub" )
+  | LowerUpper _ -> (
+    match c with
+    | Check ->
+        raise_s
+          [%message "LowerUpper is really two other checks tied together"]
+    | Constrain | Unconstrain -> Some "lub" )
+  | Offset _ | Multiplier _ | OffsetMultiplier _ -> (
+    match c with
+    | Check -> None
+    | Constrain | Unconstrain -> Some "offset_multiplier" )
+  | Identity -> None
+
+let default_multiplier = 1
+let default_offset = 0
+
+let transform_args = function
+  | Program.Offset offset -> [offset; Expr.Helpers.int default_multiplier]
+  | Multiplier multiplier -> [Expr.Helpers.int default_offset; multiplier]
+  | transform ->
+      Program.fold_transformation (fun args arg -> args @ [arg]) [] transform
 
 let param_read smeta
-    ( decl_id
-    , Program.({ out_constrained_st= cst
-               ; out_unconstrained_st= ucst
-               ; out_block; _ }) ) =
+    (decl_id, Program.({out_constrained_st= cst; out_block; out_trans; _})) =
   if not (out_block = Parameters) then []
   else
-    let decl_id, decl =
-      match cst = ucst with
-      | true -> (decl_id, [])
-      | false ->
-          let decl_id = decl_id ^ "_in__" in
-          let d =
-            Stmt.Fixed.Pattern.Decl
-              {decl_adtype= AutoDiffable; decl_id; decl_type= Sized ucst}
-          in
-          (decl_id, [Stmt.Fixed.{meta= smeta; pattern= d}])
+    let ut = SizedType.to_unsized cst in
+    let decl_var =
+      Expr.Fixed.
+        { pattern= Var decl_id
+        ; meta=
+            Expr.Typed.Meta.create ~loc:smeta ~type_:ut ~adlevel:AutoDiffable
+              () }
     in
-    let unconstrained_decl_var =
-      let meta =
-        Expr.Typed.Meta.create ~loc:smeta
-          ~type_:SizedType.(to_unsized cst)
-          ~adlevel:AutoDiffable ()
-      in
-      Expr.Fixed.{meta; pattern= Var decl_id}
+    let transform_args = transform_args out_trans in
+    (*
+      For constrains that return square / lower triangular matrices the C++
+      only wants one of the matrix dimensions.
+    *)
+    let rec constrain_get_dims st =
+      match st with
+      | SizedType.SInt | SReal -> []
+      | SVector d | SRowVector d -> [d]
+      | SMatrix (_, dim2) -> [dim2]
+      | SArray (t, dim) -> dim :: constrain_get_dims t
     in
-    let bodyfn var =
-      let readfnapp (var : Expr.Typed.t) =
-        Expr.(
-          Helpers.internal_funapp FnReadParam
-            ( { Fixed.pattern=
-                  Lit (Str, base_ut_to_string (SizedType.to_unsized ucst))
-              ; meta= Typed.Meta.empty }
-            :: SizedType.dims_of ucst )
-            Typed.Meta.{var.meta with type_= base_type ucst})
-      in
-      Stmt.Helpers.assign_indexed (SizedType.to_unsized cst) decl_id smeta
-        readfnapp var
+    let read_constrain_dims constrain_transform st =
+      match constrain_transform with
+      | Program.CholeskyCorr | Correlation | Covariance ->
+          constrain_get_dims st
+      | _ -> SizedType.get_dims st
     in
-    decl @ [Stmt.Helpers.for_eigen ucst bodyfn unconstrained_decl_var smeta]
+    let read =
+      Expr.(
+        Helpers.(
+          internal_funapp
+            (FnReadParam (constraint_to_string out_trans Constrain))
+            ( transform_args
+            @ ( if out_trans = Identity then []
+              else [{decl_var with pattern= Var "lp__"}] )
+            @ read_constrain_dims out_trans cst ))
+          Typed.Meta.{decl_var.meta with type_= ut})
+    in
+    [ Stmt.Fixed.
+        {pattern= Pattern.Assignment ((decl_id, ut, []), read); meta= smeta} ]
 
 let escape_name str =
   str
@@ -197,8 +253,10 @@ let escape_name str =
 
 let rec add_jacobians Stmt.Fixed.({meta= smeta; pattern}) =
   match pattern with
-  | Assignment (lhs, {pattern= FunApp (CompilerInternal, f, args); meta= emeta})
-    when Internal_fun.of_string_opt f = Some FnConstrain ->
+  | Assignment
+      ( lhs
+      , { pattern= FunApp (CompilerInternal (FnConstrain trans), args)
+        ; meta= emeta } ) ->
       let var n = Expr.{Fixed.pattern= Var n; meta= Typed.Meta.empty} in
       let assign rhs =
         Stmt.{Fixed.pattern= Assignment (lhs, rhs); meta= smeta}
@@ -208,11 +266,14 @@ let rec add_jacobians Stmt.Fixed.({meta= smeta; pattern}) =
             ( var "jacobian__"
             , assign
                 { Expr.Fixed.pattern=
-                    FunApp (CompilerInternal, f, args @ [var "lp__"])
+                    FunApp
+                      ( CompilerInternal (FnConstrain trans)
+                      , args @ [var "lp__"] )
                 ; meta= emeta }
             , Some
                 (assign
-                   { Expr.Fixed.pattern= FunApp (CompilerInternal, f, args)
+                   { Expr.Fixed.pattern=
+                       FunApp (CompilerInternal (FnConstrain trans), args)
                    ; meta= emeta }) )
       ; meta= smeta }
   | ptn ->
@@ -313,6 +374,27 @@ let gen_write (decl_id, sizedtype) =
   let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
   Stmt.Helpers.for_scalar_inv sizedtype bodyfn expr Location_span.empty
 
+let gen_write_unconstrained (decl_id, sizedtype) =
+  let bodyfn var =
+    let var =
+      match var.Expr.Fixed.pattern with
+      | Indexed ({pattern= Indexed (expr, idcs1); _}, idcs2) ->
+          {var with pattern= Indexed (expr, idcs1 @ idcs2)}
+      | _ -> var
+    in
+    Stmt.Helpers.internal_nrfunapp FnWriteParam [var] Location_span.empty
+  in
+  let meta =
+    {Expr.Typed.Meta.empty with type_= SizedType.to_unsized sizedtype}
+  in
+  let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
+  let writefn var =
+    Stmt.Helpers.for_scalar_inv
+      (SizedType.inner_type sizedtype)
+      bodyfn var Location_span.empty
+  in
+  Stmt.Helpers.for_eigen sizedtype writefn expr Location_span.empty
+
 let rec contains_var_expr is_vident accum Expr.Fixed.({pattern; _}) =
   accum
   ||
@@ -341,11 +423,12 @@ let constrain_in_params outvars stmts =
   in
   let rec change_constrain_target (Stmt.Fixed.({pattern; _}) as s) =
     match pattern with
-    | Assignment (_, {pattern= FunApp (CompilerInternal, f, args); _})
-      when ( Internal_fun.of_string_opt f = Some FnConstrain
-           || Internal_fun.of_string_opt f = Some FnUnconstrain )
-           && List.exists args
-                ~f:(contains_var_expr (Set.mem target_vars) false) ->
+    | Assignment
+        ( lval
+        , { pattern=
+              FunApp ((CompilerInternal (FnConstrain _) as kind), var :: args)
+          ; meta } )
+      when contains_var_expr (Set.mem target_vars) false var ->
         let rec change_var_expr (Expr.Fixed.({pattern; _}) as e) =
           match pattern with
           | Var vident when Set.mem target_vars vident ->
@@ -353,12 +436,13 @@ let constrain_in_params outvars stmts =
           | pattern ->
               {e with pattern= Expr.Fixed.Pattern.map change_var_expr pattern}
         in
-        let rec change_var_stmt s =
-          Stmt.Fixed.
-            { s with
-              pattern= Pattern.map change_var_expr change_var_stmt s.pattern }
-        in
-        change_var_stmt s
+        Stmt.Fixed.
+          { s with
+            pattern=
+              Assignment
+                ( lval
+                , {pattern= FunApp (kind, change_var_expr var :: args); meta}
+                ) }
     | pattern ->
         Stmt.Fixed.
           {s with pattern= Pattern.map Fn.id change_constrain_target pattern}
@@ -373,8 +457,8 @@ let rec map_fn_names s =
     let pattern =
       Expr.Fixed.(
         match e.pattern with
-        | FunApp (k, f, a) when Map.mem fn_name_map f ->
-            Pattern.FunApp (k, Map.find_exn fn_name_map f, a)
+        | FunApp (StanLib f, a) when Map.mem fn_name_map f ->
+            Pattern.FunApp (StanLib (Map.find_exn fn_name_map f), a)
         | expr -> Pattern.map map_fn_names_expr expr)
     in
     {e with pattern}
@@ -382,8 +466,8 @@ let rec map_fn_names s =
   let stmt =
     Stmt.Fixed.(
       match s.pattern with
-      | NRFunApp (k, f, a) when Map.mem fn_name_map f ->
-          Pattern.NRFunApp (k, Map.find_exn fn_name_map f, a)
+      | NRFunApp (StanLib f, a) when Map.mem fn_name_map f ->
+          Pattern.NRFunApp (StanLib (Map.find_exn fn_name_map f), a)
       | stmt -> Pattern.map map_fn_names_expr map_fn_names stmt)
   in
   {s with pattern= stmt}
@@ -417,7 +501,7 @@ let%expect_test "collect vars expr" =
   let args = List.map ~f:mkvar ["y"; "x_opencl__"; "z"; "w_opencl__"] in
   let fnapp =
     Expr.
-      {Fixed.pattern= FunApp (StanLib, "print", args); meta= Typed.Meta.empty}
+      {Fixed.pattern= FunApp (StanLib "print", args); meta= Typed.Meta.empty}
   in
   Stmt.Fixed.{pattern= TargetPE fnapp; meta= Location_span.empty}
   |> collect_opencl_vars |> String.Set.sexp_of_t |> print_s ;
@@ -427,75 +511,6 @@ let%expect_test "insert before" =
   let l = [1; 2; 3; 4; 5; 6] |> insert_before (( = ) 6) [999] in
   [%sexp (l : int list)] |> print_s ;
   [%expect {| (1 2 3 4 5 999 6) |}]
-
-let validate_sized decl_id meta transform st =
-  let check fn x =
-    Stmt.Helpers.internal_nrfunapp fn
-      Expr.Helpers.
-        [str decl_id; str (Fmt.strf "%a" Expression_gen.pp_expr x); x]
-      meta
-  in
-  let nrfunapp fname args =
-    Stmt.Fixed.{pattern= NRFunApp (CompilerInternal, fname, args); meta}
-  in
-  let rec dims_check = function
-    | SizedType.SInt | SReal -> []
-    | SArray (st, s) -> check FnValidateSize s :: dims_check st
-    | SVector s | SRowVector s ->
-        let fn =
-          match transform with
-          | Some Program.Simplex -> Internal_fun.FnValidateSizeSimplex
-          | Some UnitVector -> FnValidateSizeUnitVector
-          | _ -> FnValidateSize
-        in
-        [check fn s]
-    | SMatrix (rows, cols) ->
-        let validate_rows =
-          match transform with
-          | Some CholeskyCov ->
-              nrfunapp "check_greater_or_equal"
-                Expr.Helpers.
-                  [ str ("cholesky_factor_cov " ^ decl_id)
-                  ; str "num rows (must be greater or equal to num cols)"
-                  ; rows; cols ]
-          | _ -> check FnValidateSize rows
-        in
-        [validate_rows; check FnValidateSize cols]
-  in
-  dims_check st
-
-let rec add_validate_dims outvars stmts =
-  let transforms =
-    List.filter_map
-      ~f:(function
-        | decl_id, Program.({out_block= Parameters; out_trans; _}) ->
-            Some (decl_id, out_trans)
-        | _ -> None)
-      outvars
-    |> String.Map.of_alist_exn
-  in
-  let with_size_checks = function
-    | Stmt.Fixed.({pattern= Decl {decl_id; decl_type= Sized st; _}; meta}) as
-      decl ->
-        let tr = Map.find transforms decl_id in
-        validate_sized decl_id meta tr st @ [decl]
-    | stmt -> [validate_dims_stmt stmt]
-  in
-  List.concat_map ~f:with_size_checks stmts
-
-and validate_dims_stmt stmt =
-  let pattern =
-    match stmt.pattern with
-    | Stmt.Fixed.Pattern.Block s ->
-        Stmt.Fixed.Pattern.Block (add_validate_dims [] s)
-    | SList s -> SList (add_validate_dims [] s)
-    | While (a, b) -> While (a, validate_dims_stmt b)
-    | For f -> For {f with body= validate_dims_stmt f.body}
-    | IfElse (p, t, e) ->
-        IfElse (p, validate_dims_stmt t, Option.map ~f:validate_dims_stmt e)
-    | s -> s
-  in
-  {stmt with pattern}
 
 let map_prog_stmt_lists f (p : ('a, 'b) Program.t) =
   { p with
@@ -521,10 +536,8 @@ let trans_prog (p : Program.Typed.t) =
   let get_pname_ust = function
     | ( name
       , { Program.out_block= Parameters
-        ; out_constrained_st
-        ; out_unconstrained_st; _ } )
-      when SizedType.to_unsized out_constrained_st
-           = SizedType.to_unsized out_unconstrained_st ->
+        ; out_unconstrained_st
+        ; out_trans= Identity; _ } ) ->
         Some (name, out_unconstrained_st)
     | name, {Program.out_block= Parameters; out_unconstrained_st; _} ->
         Some (name ^ "_free__", out_unconstrained_st)
@@ -556,7 +569,7 @@ let trans_prog (p : Program.Typed.t) =
     match pattern with
     | IfElse
         ( { pattern=
-              FunApp (_, _, [{pattern= Var "emit_generated_quantities__"; _}]); _
+              FunApp (_, [{pattern= Var "emit_generated_quantities__"; _}]); _
           }
         , _
         , _ ) ->
@@ -566,7 +579,10 @@ let trans_prog (p : Program.Typed.t) =
   let translate_to_open_cl stmts =
     if !use_opencl then
       let decl Stmt.Fixed.({pattern; _}) =
-        match pattern with Decl d -> Some d.decl_id | _ -> None
+        match pattern with
+        | Decl {decl_type= Sized (SInt | SReal); _} -> None
+        | Decl {decl_id; _} -> Some decl_id
+        | _ -> None
       in
       let data_var_idents = List.filter_map ~f:decl p.prepare_data in
       let switch_expr = switch_expr_to_opencl data_var_idents in
@@ -578,24 +594,31 @@ let trans_prog (p : Program.Typed.t) =
       List.map stmts ~f:trans_stmt_to_opencl
     else stmts
   in
-  let functions_block =
-    List.map
-      ~f:(fun def -> {def with fdbody= validate_dims_stmt def.fdbody})
-      p.functions_block
+  let tparam_writes_cond =
+    match tparam_writes with
+    | [] -> []
+    | _ ->
+        [ Stmt.Fixed.
+            { pattern=
+                IfElse
+                  ( Expr.
+                      { Fixed.pattern= Var "emit_transformed_parameters__"
+                      ; meta= Typed.Meta.empty }
+                  , {pattern= SList tparam_writes; meta= Location_span.empty}
+                  , None )
+            ; meta= Location_span.empty } ]
   in
   let generate_quantities =
     ( p.generate_quantities
-    |> add_validate_dims p.output_vars
     |> add_reads p.output_vars param_read
     |> translate_to_open_cl
     |> constrain_in_params p.output_vars
     |> insert_before tparam_start param_writes
-    |> insert_before gq_start tparam_writes )
+    |> insert_before gq_start tparam_writes_cond )
     @ gq_writes
   in
   let log_prob =
     p.log_prob |> List.map ~f:add_jacobians
-    |> add_validate_dims p.output_vars
     |> add_reads p.output_vars param_read
     |> constrain_in_params p.output_vars
     |> translate_to_open_cl
@@ -636,19 +659,16 @@ let trans_prog (p : Program.Typed.t) =
   in
   let p =
     { p with
-      functions_block
-    ; log_prob
+      log_prob
     ; prog_name= escape_name p.prog_name
     ; prepare_data=
         init_pos
-        @ ( add_validate_dims [] p.prepare_data
-          |> add_reads p.input_vars data_read )
+        @ (p.prepare_data |> add_reads p.input_vars data_read)
         @ to_matrix_cl_stmts
     ; transform_inits=
         init_pos
-        @ ( add_validate_dims p.output_vars p.transform_inits
-          |> add_reads constrained_params data_read )
-        @ List.map ~f:gen_write free_params
+        @ (p.transform_inits |> add_reads constrained_params data_read)
+        @ List.map ~f:gen_write_unconstrained free_params
     ; generate_quantities }
   in
   Program.(

@@ -4,19 +4,16 @@ open Analysis_and_optimization.Dataflow_utils
 open Core_kernel
 open Analysis_and_optimization.Dataflow_types
 
-let semantic_check_program ast =
-  Option.value_exn
-    (Result.ok
-       (Semantic_check.semantic_check_program
-          (Option.value_exn (Result.ok ast))))
+let mir_of_string s =
+  Frontend_utils.typed_ast_of_string_exn s |> Ast_to_Mir.trans_prog ""
 
 (***********************************)
 (* Tests                           *)
 (***********************************)
 
 let%expect_test "Loop test" =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
+  let mir =
+    mir_of_string
       {|
       model {
         for (i in 1:2)
@@ -24,7 +21,6 @@ let%expect_test "Loop test" =
       }
       |}
   in
-  let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let block = Stmt.Fixed.Pattern.Block mir.log_prob in
   let statement_map =
     Stmt.Fixed.(
@@ -74,9 +70,9 @@ let%expect_test "Loop test" =
           (end_loc
            ((filename string) (line_num 4) (col_num 23) (included_from ()))))))
        (5
-        ((NRFunApp CompilerInternal FnPrint__
+        ((NRFunApp (CompilerInternal FnPrint)
           (((pattern
-             (FunApp StanLib Plus__
+             (FunApp (StanLib Plus__)
               (((pattern (Lit Int 3))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                ((pattern (Lit Int 4))
@@ -91,8 +87,8 @@ let%expect_test "Loop test" =
     |}]
 
 let%expect_test "Loop passthrough" =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
+  let mir =
+    mir_of_string
       {|
         model {
           if (1) {
@@ -119,7 +115,6 @@ let%expect_test "Loop passthrough" =
         }
       |}
   in
-  let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let block = Stmt.Fixed.Pattern.Block mir.log_prob in
   let statement_map =
     Stmt.Fixed.(
@@ -135,8 +130,8 @@ let%expect_test "Loop passthrough" =
     |}]
 
 let example1_program =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
+  let mir =
+    mir_of_string
       {|
         model
         {                                // 1
@@ -170,7 +165,6 @@ let example1_program =
         }
       |}
   in
-  let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let block = Stmt.Fixed.Pattern.Block mir.log_prob in
   Stmt.Fixed.{meta= Location_span.empty; pattern= block}
 
@@ -197,7 +191,7 @@ let%expect_test "Statement label map example" =
        (5
         (IfElse
          ((pattern
-           (FunApp StanLib Less__
+           (FunApp (StanLib Less__)
             (((pattern (Var i))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Lit Int 0))
@@ -206,7 +200,7 @@ let%expect_test "Statement label map example" =
          6 (8)))
        (6 (Block (7)))
        (7
-        (NRFunApp CompilerInternal FnPrint__
+        (NRFunApp (CompilerInternal FnPrint)
          (((pattern (Var i))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (8 (Block (9)))
@@ -223,7 +217,7 @@ let%expect_test "Statement label map example" =
        (11
         (IfElse
          ((pattern
-           (FunApp StanLib Greater__
+           (FunApp (StanLib Greater__)
             (((pattern (Var j))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Lit Int 9))
@@ -236,18 +230,18 @@ let%expect_test "Statement label map example" =
          ((pattern
            (EAnd
             ((pattern
-              (FunApp StanLib Greater__
+              (FunApp (StanLib Greater__)
                (((pattern (Var j))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                 ((pattern (Lit Int 8))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
             ((pattern
-              (FunApp StanLib Less__
+              (FunApp (StanLib Less__)
                (((pattern (Var i))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                 ((pattern
-                  (FunApp StanLib PMinus__
+                  (FunApp (StanLib PMinus__)
                    (((pattern (Lit Int 1))
                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -258,7 +252,7 @@ let%expect_test "Statement label map example" =
        (17
         (IfElse
          ((pattern
-           (FunApp StanLib Greater__
+           (FunApp (StanLib Greater__)
             (((pattern (Var j))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Lit Int 5))
@@ -267,18 +261,18 @@ let%expect_test "Statement label map example" =
          18 (20)))
        (18 (Block (19))) (19 Continue) (20 (Block (21)))
        (21
-        (NRFunApp CompilerInternal FnPrint__
+        (NRFunApp (CompilerInternal FnPrint)
          (((pattern (Lit Str Badger))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
           ((pattern
-            (FunApp StanLib Plus__
+            (FunApp (StanLib Plus__)
              (((pattern (Var i))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((pattern (Var j))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (22
-        (NRFunApp CompilerInternal FnPrint__
+        (NRFunApp (CompilerInternal FnPrint)
          (((pattern (Lit Str Fin))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))))
     |}]
@@ -317,8 +311,8 @@ let%test "Reconstructed recursive statement" =
   stmt = example1_program
 
 let example3_program =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
+  let mir =
+    mir_of_string
       {|
       model {
         while (42);
@@ -326,7 +320,6 @@ let example3_program =
       }
       |}
   in
-  let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let blocks =
     Stmt.Fixed.(
       Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
@@ -379,7 +372,7 @@ let%expect_test "Statement label map example 3" =
           (end_loc
            ((filename string) (line_num 3) (col_num 19) (included_from ()))))))
        (6
-        ((NRFunApp CompilerInternal FnPrint__
+        ((NRFunApp (CompilerInternal FnPrint)
           (((pattern (Lit Str exit))
             (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
          ((begin_loc
@@ -410,8 +403,8 @@ let%expect_test "Predecessor graph example 3" =
     |}]
 
 let example4_program =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
+  let mir =
+    mir_of_string
       {|
       model {
         for (i in 1:6) {
@@ -421,7 +414,6 @@ let example4_program =
       }
       |}
   in
-  let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let blocks =
     Stmt.Fixed.(
       Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])
@@ -512,8 +504,8 @@ let%expect_test "Predecessor graph example 4" =
     |}]
 
 let example5_program =
-  let ast =
-    Parse.parse_string Parser.Incremental.program
+  let mir =
+    mir_of_string
       {|
       model {
         for (i in 1:6) {
@@ -524,7 +516,6 @@ let example5_program =
       }
       |}
   in
-  let mir = Ast_to_Mir.trans_prog "" (semantic_check_program ast) in
   let blocks =
     Stmt.Fixed.(
       Pattern.SList [{pattern= Block mir.log_prob; meta= Location_span.empty}])

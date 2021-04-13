@@ -1,63 +1,9 @@
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format poisson_ccdf_log.stan
-data {
-  int d_int;
-  int d_int_array[d_int];
-  real d_real;
-  real d_real_array[d_int];
-  vector[d_int] d_vector;
-  row_vector[d_int] d_row_vector;
-}
-transformed data {
-  real transformed_data_real;
-  transformed_data_real = poisson_ccdf_log(d_int, d_int);
-  transformed_data_real = poisson_ccdf_log(d_int, d_real);
-  transformed_data_real = poisson_ccdf_log(d_int, d_vector);
-  transformed_data_real = poisson_ccdf_log(d_int, d_row_vector);
-  transformed_data_real = poisson_ccdf_log(d_int, d_real_array);
-  transformed_data_real = poisson_ccdf_log(d_int_array, d_int);
-  transformed_data_real = poisson_ccdf_log(d_int_array, d_real);
-  transformed_data_real = poisson_ccdf_log(d_int_array, d_vector);
-  transformed_data_real = poisson_ccdf_log(d_int_array, d_row_vector);
-  transformed_data_real = poisson_ccdf_log(d_int_array, d_real_array);
-}
-parameters {
-  real p_real;
-  real p_real_array[d_int];
-  vector[d_int] p_vector;
-  row_vector[d_int] p_row_vector;
-  real y_p;
-}
-transformed parameters {
-  real transformed_param_real;
-  transformed_param_real = poisson_ccdf_log(d_int, d_int);
-  transformed_param_real = poisson_ccdf_log(d_int, d_real);
-  transformed_param_real = poisson_ccdf_log(d_int, p_real);
-  transformed_param_real = poisson_ccdf_log(d_int, d_vector);
-  transformed_param_real = poisson_ccdf_log(d_int, p_vector);
-  transformed_param_real = poisson_ccdf_log(d_int, d_row_vector);
-  transformed_param_real = poisson_ccdf_log(d_int, p_row_vector);
-  transformed_param_real = poisson_ccdf_log(d_int, d_real_array);
-  transformed_param_real = poisson_ccdf_log(d_int, p_real_array);
-  transformed_param_real = poisson_ccdf_log(d_int_array, d_int);
-  transformed_param_real = poisson_ccdf_log(d_int_array, d_real);
-  transformed_param_real = poisson_ccdf_log(d_int_array, p_real);
-  transformed_param_real = poisson_ccdf_log(d_int_array, d_vector);
-  transformed_param_real = poisson_ccdf_log(d_int_array, p_vector);
-  transformed_param_real = poisson_ccdf_log(d_int_array, d_row_vector);
-  transformed_param_real = poisson_ccdf_log(d_int_array, p_row_vector);
-  transformed_param_real = poisson_ccdf_log(d_int_array, d_real_array);
-  transformed_param_real = poisson_ccdf_log(d_int_array, p_real_array);
-}
-model {
-  y_p ~ normal(0, 1);
-}
-
   $ ../../../../../../../../../install/default/bin/stanc --auto-format poisson_cdf.stan
 data {
   int d_int;
-  int d_int_array[d_int];
+  array[d_int] int d_int_array;
   real d_real;
-  real d_real_array[d_int];
+  array[d_int] real d_real_array;
   vector[d_int] d_vector;
   row_vector[d_int] d_row_vector;
 }
@@ -76,7 +22,7 @@ transformed data {
 }
 parameters {
   real p_real;
-  real p_real_array[d_int];
+  array[d_int] real p_real_array;
   vector[d_int] p_vector;
   row_vector[d_int] p_row_vector;
   real y_p;
@@ -106,109 +52,109 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format poisson_cdf_log.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format poisson_lccdf.stan
 data {
   int d_int;
-  int d_int_array[d_int];
+  array[d_int] int d_int_array;
   real d_real;
-  real d_real_array[d_int];
+  array[d_int] real d_real_array;
   vector[d_int] d_vector;
   row_vector[d_int] d_row_vector;
 }
 transformed data {
   real transformed_data_real;
-  transformed_data_real = poisson_cdf_log(d_int, d_int);
-  transformed_data_real = poisson_cdf_log(d_int, d_real);
-  transformed_data_real = poisson_cdf_log(d_int, d_vector);
-  transformed_data_real = poisson_cdf_log(d_int, d_row_vector);
-  transformed_data_real = poisson_cdf_log(d_int, d_real_array);
-  transformed_data_real = poisson_cdf_log(d_int_array, d_int);
-  transformed_data_real = poisson_cdf_log(d_int_array, d_real);
-  transformed_data_real = poisson_cdf_log(d_int_array, d_vector);
-  transformed_data_real = poisson_cdf_log(d_int_array, d_row_vector);
-  transformed_data_real = poisson_cdf_log(d_int_array, d_real_array);
+  transformed_data_real = poisson_lccdf(d_int| d_int);
+  transformed_data_real = poisson_lccdf(d_int| d_real);
+  transformed_data_real = poisson_lccdf(d_int| d_vector);
+  transformed_data_real = poisson_lccdf(d_int| d_row_vector);
+  transformed_data_real = poisson_lccdf(d_int| d_real_array);
+  transformed_data_real = poisson_lccdf(d_int_array| d_int);
+  transformed_data_real = poisson_lccdf(d_int_array| d_real);
+  transformed_data_real = poisson_lccdf(d_int_array| d_vector);
+  transformed_data_real = poisson_lccdf(d_int_array| d_row_vector);
+  transformed_data_real = poisson_lccdf(d_int_array| d_real_array);
 }
 parameters {
   real p_real;
-  real p_real_array[d_int];
+  array[d_int] real p_real_array;
   vector[d_int] p_vector;
   row_vector[d_int] p_row_vector;
   real y_p;
 }
 transformed parameters {
   real transformed_param_real;
-  transformed_param_real = poisson_cdf_log(d_int, d_int);
-  transformed_param_real = poisson_cdf_log(d_int, d_real);
-  transformed_param_real = poisson_cdf_log(d_int, p_real);
-  transformed_param_real = poisson_cdf_log(d_int, d_vector);
-  transformed_param_real = poisson_cdf_log(d_int, p_vector);
-  transformed_param_real = poisson_cdf_log(d_int, d_row_vector);
-  transformed_param_real = poisson_cdf_log(d_int, p_row_vector);
-  transformed_param_real = poisson_cdf_log(d_int, d_real_array);
-  transformed_param_real = poisson_cdf_log(d_int, p_real_array);
-  transformed_param_real = poisson_cdf_log(d_int_array, d_int);
-  transformed_param_real = poisson_cdf_log(d_int_array, d_real);
-  transformed_param_real = poisson_cdf_log(d_int_array, p_real);
-  transformed_param_real = poisson_cdf_log(d_int_array, d_vector);
-  transformed_param_real = poisson_cdf_log(d_int_array, p_vector);
-  transformed_param_real = poisson_cdf_log(d_int_array, d_row_vector);
-  transformed_param_real = poisson_cdf_log(d_int_array, p_row_vector);
-  transformed_param_real = poisson_cdf_log(d_int_array, d_real_array);
-  transformed_param_real = poisson_cdf_log(d_int_array, p_real_array);
+  transformed_param_real = poisson_lccdf(d_int| d_int);
+  transformed_param_real = poisson_lccdf(d_int| d_real);
+  transformed_param_real = poisson_lccdf(d_int| p_real);
+  transformed_param_real = poisson_lccdf(d_int| d_vector);
+  transformed_param_real = poisson_lccdf(d_int| p_vector);
+  transformed_param_real = poisson_lccdf(d_int| d_row_vector);
+  transformed_param_real = poisson_lccdf(d_int| p_row_vector);
+  transformed_param_real = poisson_lccdf(d_int| d_real_array);
+  transformed_param_real = poisson_lccdf(d_int| p_real_array);
+  transformed_param_real = poisson_lccdf(d_int_array| d_int);
+  transformed_param_real = poisson_lccdf(d_int_array| d_real);
+  transformed_param_real = poisson_lccdf(d_int_array| p_real);
+  transformed_param_real = poisson_lccdf(d_int_array| d_vector);
+  transformed_param_real = poisson_lccdf(d_int_array| p_vector);
+  transformed_param_real = poisson_lccdf(d_int_array| d_row_vector);
+  transformed_param_real = poisson_lccdf(d_int_array| p_row_vector);
+  transformed_param_real = poisson_lccdf(d_int_array| d_real_array);
+  transformed_param_real = poisson_lccdf(d_int_array| p_real_array);
 }
 model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format poisson_log.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format poisson_lcdf.stan
 data {
   int d_int;
-  int d_int_array[d_int];
+  array[d_int] int d_int_array;
   real d_real;
-  real d_real_array[d_int];
+  array[d_int] real d_real_array;
   vector[d_int] d_vector;
   row_vector[d_int] d_row_vector;
 }
 transformed data {
   real transformed_data_real;
-  transformed_data_real = poisson_log(d_int, d_int);
-  transformed_data_real = poisson_log(d_int, d_real);
-  transformed_data_real = poisson_log(d_int, d_vector);
-  transformed_data_real = poisson_log(d_int, d_row_vector);
-  transformed_data_real = poisson_log(d_int, d_real_array);
-  transformed_data_real = poisson_log(d_int_array, d_int);
-  transformed_data_real = poisson_log(d_int_array, d_real);
-  transformed_data_real = poisson_log(d_int_array, d_vector);
-  transformed_data_real = poisson_log(d_int_array, d_row_vector);
-  transformed_data_real = poisson_log(d_int_array, d_real_array);
+  transformed_data_real = poisson_lcdf(d_int| d_int);
+  transformed_data_real = poisson_lcdf(d_int| d_real);
+  transformed_data_real = poisson_lcdf(d_int| d_vector);
+  transformed_data_real = poisson_lcdf(d_int| d_row_vector);
+  transformed_data_real = poisson_lcdf(d_int| d_real_array);
+  transformed_data_real = poisson_lcdf(d_int_array| d_int);
+  transformed_data_real = poisson_lcdf(d_int_array| d_real);
+  transformed_data_real = poisson_lcdf(d_int_array| d_vector);
+  transformed_data_real = poisson_lcdf(d_int_array| d_row_vector);
+  transformed_data_real = poisson_lcdf(d_int_array| d_real_array);
 }
 parameters {
   real p_real;
-  real p_real_array[d_int];
+  array[d_int] real p_real_array;
   vector[d_int] p_vector;
   row_vector[d_int] p_row_vector;
   real y_p;
 }
 transformed parameters {
   real transformed_param_real;
-  transformed_param_real = poisson_log(d_int, d_int);
-  transformed_param_real = poisson_log(d_int, d_real);
-  transformed_param_real = poisson_log(d_int, p_real);
-  transformed_param_real = poisson_log(d_int, d_vector);
-  transformed_param_real = poisson_log(d_int, p_vector);
-  transformed_param_real = poisson_log(d_int, d_row_vector);
-  transformed_param_real = poisson_log(d_int, p_row_vector);
-  transformed_param_real = poisson_log(d_int, d_real_array);
-  transformed_param_real = poisson_log(d_int, p_real_array);
-  transformed_param_real = poisson_log(d_int_array, d_int);
-  transformed_param_real = poisson_log(d_int_array, d_real);
-  transformed_param_real = poisson_log(d_int_array, p_real);
-  transformed_param_real = poisson_log(d_int_array, d_vector);
-  transformed_param_real = poisson_log(d_int_array, p_vector);
-  transformed_param_real = poisson_log(d_int_array, d_row_vector);
-  transformed_param_real = poisson_log(d_int_array, p_row_vector);
-  transformed_param_real = poisson_log(d_int_array, d_real_array);
-  transformed_param_real = poisson_log(d_int_array, p_real_array);
+  transformed_param_real = poisson_lcdf(d_int| d_int);
+  transformed_param_real = poisson_lcdf(d_int| d_real);
+  transformed_param_real = poisson_lcdf(d_int| p_real);
+  transformed_param_real = poisson_lcdf(d_int| d_vector);
+  transformed_param_real = poisson_lcdf(d_int| p_vector);
+  transformed_param_real = poisson_lcdf(d_int| d_row_vector);
+  transformed_param_real = poisson_lcdf(d_int| p_row_vector);
+  transformed_param_real = poisson_lcdf(d_int| d_real_array);
+  transformed_param_real = poisson_lcdf(d_int| p_real_array);
+  transformed_param_real = poisson_lcdf(d_int_array| d_int);
+  transformed_param_real = poisson_lcdf(d_int_array| d_real);
+  transformed_param_real = poisson_lcdf(d_int_array| p_real);
+  transformed_param_real = poisson_lcdf(d_int_array| d_vector);
+  transformed_param_real = poisson_lcdf(d_int_array| p_vector);
+  transformed_param_real = poisson_lcdf(d_int_array| d_row_vector);
+  transformed_param_real = poisson_lcdf(d_int_array| p_row_vector);
+  transformed_param_real = poisson_lcdf(d_int_array| d_real_array);
+  transformed_param_real = poisson_lcdf(d_int_array| p_real_array);
 }
 model {
   y_p ~ normal(0, 1);
@@ -219,7 +165,7 @@ transformed data {
   int N = 2;
   int M = 3;
   int d_y = 1;
-  int d_y_a[N] = {1, 0};
+  array[N] int d_y_a = {1, 0};
   matrix[N, M] d_x_m = [[1, 2, 3], [4, 5, 6]];
   row_vector[M] d_x_rv = [1, 2, 3];
   vector[M] d_beta_v = [1, 2, 3]';
@@ -254,55 +200,109 @@ model {
   y_p ~ normal(0, 1);
 }
 
-  $ ../../../../../../../../../install/default/bin/stanc --auto-format poisson_log_log.stan
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format poisson_log_lpmf.stan
 data {
   int d_int;
-  int d_int_array[d_int];
+  array[d_int] int d_int_array;
   real d_real;
-  real d_real_array[d_int];
+  array[d_int] real d_real_array;
   vector[d_int] d_vector;
   row_vector[d_int] d_row_vector;
 }
 transformed data {
   real transformed_data_real;
-  transformed_data_real = poisson_log_log(d_int, d_int);
-  transformed_data_real = poisson_log_log(d_int, d_real);
-  transformed_data_real = poisson_log_log(d_int, d_vector);
-  transformed_data_real = poisson_log_log(d_int, d_row_vector);
-  transformed_data_real = poisson_log_log(d_int, d_real_array);
-  transformed_data_real = poisson_log_log(d_int_array, d_int);
-  transformed_data_real = poisson_log_log(d_int_array, d_real);
-  transformed_data_real = poisson_log_log(d_int_array, d_vector);
-  transformed_data_real = poisson_log_log(d_int_array, d_row_vector);
-  transformed_data_real = poisson_log_log(d_int_array, d_real_array);
+  transformed_data_real = poisson_log_lpmf(d_int| d_int);
+  transformed_data_real = poisson_log_lpmf(d_int| d_real);
+  transformed_data_real = poisson_log_lpmf(d_int| d_vector);
+  transformed_data_real = poisson_log_lpmf(d_int| d_row_vector);
+  transformed_data_real = poisson_log_lpmf(d_int| d_real_array);
+  transformed_data_real = poisson_log_lpmf(d_int_array| d_int);
+  transformed_data_real = poisson_log_lpmf(d_int_array| d_real);
+  transformed_data_real = poisson_log_lpmf(d_int_array| d_vector);
+  transformed_data_real = poisson_log_lpmf(d_int_array| d_row_vector);
+  transformed_data_real = poisson_log_lpmf(d_int_array| d_real_array);
 }
 parameters {
   real p_real;
-  real p_real_array[d_int];
+  array[d_int] real p_real_array;
   vector[d_int] p_vector;
   row_vector[d_int] p_row_vector;
   real y_p;
 }
 transformed parameters {
   real transformed_param_real;
-  transformed_param_real = poisson_log_log(d_int, d_int);
-  transformed_param_real = poisson_log_log(d_int, d_real);
-  transformed_param_real = poisson_log_log(d_int, p_real);
-  transformed_param_real = poisson_log_log(d_int, d_vector);
-  transformed_param_real = poisson_log_log(d_int, p_vector);
-  transformed_param_real = poisson_log_log(d_int, d_row_vector);
-  transformed_param_real = poisson_log_log(d_int, p_row_vector);
-  transformed_param_real = poisson_log_log(d_int, d_real_array);
-  transformed_param_real = poisson_log_log(d_int, p_real_array);
-  transformed_param_real = poisson_log_log(d_int_array, d_int);
-  transformed_param_real = poisson_log_log(d_int_array, d_real);
-  transformed_param_real = poisson_log_log(d_int_array, p_real);
-  transformed_param_real = poisson_log_log(d_int_array, d_vector);
-  transformed_param_real = poisson_log_log(d_int_array, p_vector);
-  transformed_param_real = poisson_log_log(d_int_array, d_row_vector);
-  transformed_param_real = poisson_log_log(d_int_array, p_row_vector);
-  transformed_param_real = poisson_log_log(d_int_array, d_real_array);
-  transformed_param_real = poisson_log_log(d_int_array, p_real_array);
+  transformed_param_real = poisson_log_lpmf(d_int| d_int);
+  transformed_param_real = poisson_log_lpmf(d_int| d_real);
+  transformed_param_real = poisson_log_lpmf(d_int| p_real);
+  transformed_param_real = poisson_log_lpmf(d_int| d_vector);
+  transformed_param_real = poisson_log_lpmf(d_int| p_vector);
+  transformed_param_real = poisson_log_lpmf(d_int| d_row_vector);
+  transformed_param_real = poisson_log_lpmf(d_int| p_row_vector);
+  transformed_param_real = poisson_log_lpmf(d_int| d_real_array);
+  transformed_param_real = poisson_log_lpmf(d_int| p_real_array);
+  transformed_param_real = poisson_log_lpmf(d_int_array| d_int);
+  transformed_param_real = poisson_log_lpmf(d_int_array| d_real);
+  transformed_param_real = poisson_log_lpmf(d_int_array| p_real);
+  transformed_param_real = poisson_log_lpmf(d_int_array| d_vector);
+  transformed_param_real = poisson_log_lpmf(d_int_array| p_vector);
+  transformed_param_real = poisson_log_lpmf(d_int_array| d_row_vector);
+  transformed_param_real = poisson_log_lpmf(d_int_array| p_row_vector);
+  transformed_param_real = poisson_log_lpmf(d_int_array| d_real_array);
+  transformed_param_real = poisson_log_lpmf(d_int_array| p_real_array);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+  $ ../../../../../../../../../install/default/bin/stanc --auto-format poisson_lpmf.stan
+data {
+  int d_int;
+  array[d_int] int d_int_array;
+  real d_real;
+  array[d_int] real d_real_array;
+  vector[d_int] d_vector;
+  row_vector[d_int] d_row_vector;
+}
+transformed data {
+  real transformed_data_real;
+  transformed_data_real = poisson_lpmf(d_int| d_int);
+  transformed_data_real = poisson_lpmf(d_int| d_real);
+  transformed_data_real = poisson_lpmf(d_int| d_vector);
+  transformed_data_real = poisson_lpmf(d_int| d_row_vector);
+  transformed_data_real = poisson_lpmf(d_int| d_real_array);
+  transformed_data_real = poisson_lpmf(d_int_array| d_int);
+  transformed_data_real = poisson_lpmf(d_int_array| d_real);
+  transformed_data_real = poisson_lpmf(d_int_array| d_vector);
+  transformed_data_real = poisson_lpmf(d_int_array| d_row_vector);
+  transformed_data_real = poisson_lpmf(d_int_array| d_real_array);
+}
+parameters {
+  real p_real;
+  array[d_int] real p_real_array;
+  vector[d_int] p_vector;
+  row_vector[d_int] p_row_vector;
+  real y_p;
+}
+transformed parameters {
+  real transformed_param_real;
+  transformed_param_real = poisson_lpmf(d_int| d_int);
+  transformed_param_real = poisson_lpmf(d_int| d_real);
+  transformed_param_real = poisson_lpmf(d_int| p_real);
+  transformed_param_real = poisson_lpmf(d_int| d_vector);
+  transformed_param_real = poisson_lpmf(d_int| p_vector);
+  transformed_param_real = poisson_lpmf(d_int| d_row_vector);
+  transformed_param_real = poisson_lpmf(d_int| p_row_vector);
+  transformed_param_real = poisson_lpmf(d_int| d_real_array);
+  transformed_param_real = poisson_lpmf(d_int| p_real_array);
+  transformed_param_real = poisson_lpmf(d_int_array| d_int);
+  transformed_param_real = poisson_lpmf(d_int_array| d_real);
+  transformed_param_real = poisson_lpmf(d_int_array| p_real);
+  transformed_param_real = poisson_lpmf(d_int_array| d_vector);
+  transformed_param_real = poisson_lpmf(d_int_array| p_vector);
+  transformed_param_real = poisson_lpmf(d_int_array| d_row_vector);
+  transformed_param_real = poisson_lpmf(d_int_array| p_row_vector);
+  transformed_param_real = poisson_lpmf(d_int_array| d_real_array);
+  transformed_param_real = poisson_lpmf(d_int_array| p_real_array);
 }
 model {
   y_p ~ normal(0, 1);

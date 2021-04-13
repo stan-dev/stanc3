@@ -1,6 +1,6 @@
   $ ../../../../../install/default/bin/stanc --auto-format eta_should_be_big.stan
 transformed data {
-  vector[2] y[2];
+  array[2] vector[2] y;
   vector[2] mu0;
   matrix[2, 2] sigma;
   y[1, 1] = 40000.0;
@@ -25,7 +25,7 @@ model {
 
   $ ../../../../../install/default/bin/stanc --auto-format eta_should_be_small.stan
 transformed data {
-  vector[2] y[2];
+  array[2] vector[2] y;
   vector[2] mu0;
   matrix[2, 2] sigma;
   y[1, 1] = 0.004;
@@ -71,7 +71,7 @@ data {
   int N;
   vector[N] p;
   int Ngrps;
-  int<lower=1, upper=Ngrps> grp_index[N];
+  array[N] int<lower=1, upper=Ngrps> grp_index;
 }
 parameters {
   vector<lower=0.0001, upper=100>[Ngrps] sigmaGrp;
@@ -89,8 +89,8 @@ model {
   $ ../../../../../install/default/bin/stanc --auto-format hier_logistic.stan
 data {
   int N;
-  int ids[N];
-  int y[N];
+  array[N] int ids;
+  array[N] int y;
   matrix[1000, 11] X;
 }
 parameters {
@@ -115,8 +115,8 @@ model {
   $ ../../../../../install/default/bin/stanc --auto-format hier_logistic_cp.stan
 data {
   int N;
-  int ids[N];
-  int y[N];
+  array[N] int ids;
+  array[N] int y;
   matrix[1000, 11] X;
 }
 transformed data {
@@ -124,7 +124,7 @@ transformed data {
   mean_group = rep_vector(0, 11);
 }
 parameters {
-  vector[11] beta[100];
+  array[100] vector[11] beta;
   vector<lower=0>[11] std;
   cholesky_factor_corr[11] L;
 }
@@ -142,7 +142,7 @@ model {
 
   $ ../../../../../install/default/bin/stanc --auto-format multivariate_no_constraint.stan
 transformed data {
-  vector[2] y[2];
+  array[2] vector[2] y;
   vector[2] mu0;
   matrix[2, 2] sigma;
   y[1, 1] = 4.0;
@@ -167,7 +167,7 @@ model {
 
   $ ../../../../../install/default/bin/stanc --auto-format multivariate_with_constraint.stan
 transformed data {
-  vector[2] y[2];
+  array[2] vector[2] y;
   vector[2] mu0;
   matrix[2, 2] sigma;
   y[1, 1] = 4.0;
@@ -192,7 +192,7 @@ model {
 
   $ ../../../../../install/default/bin/stanc --auto-format univariate_no_constraint.stan
 transformed data {
-  real y[2];
+  array[2] real y;
   real mu0;
   real sigma;
   y[1] = 1.6;
@@ -211,7 +211,7 @@ model {
 
   $ ../../../../../install/default/bin/stanc --auto-format univariate_with_constraint.stan
 transformed data {
-  real y[2];
+  array[2] real y;
   real mu0;
   real sigma;
   y[1] = 1.6;

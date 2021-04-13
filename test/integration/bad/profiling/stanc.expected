@@ -1,0 +1,65 @@
+  $ ../../../../../install/default/bin/stanc profile-bad1.stan
+Syntax error in 'profile-bad1.stan', line 2, column 12 to column 13, parsing error:
+   -------------------------------------------------
+     1:  transformed data {
+     2:      profile {
+                     ^
+     3:  
+     4:      }
+   -------------------------------------------------
+
+Expected profile name as string in parenthesis
+  $ ../../../../../install/default/bin/stanc profile-bad2.stan
+Syntax error in 'profile-bad2.stan', line 2, column 12 to column 13, parsing error:
+   -------------------------------------------------
+     1:  transformed data {
+     2:      profile() {
+                     ^
+     3:  
+     4:      }
+   -------------------------------------------------
+
+Expected profile name as string in parenthesis
+  $ ../../../../../install/default/bin/stanc profile-bad3.stan
+Syntax error in 'profile-bad3.stan', line 2, column 13 to column 18, parsing error:
+   -------------------------------------------------
+     1:  transformed data {
+     2:      profile( while {
+                      ^
+     3:  
+     4:      }
+   -------------------------------------------------
+
+Expected profile name as string in parenthesis
+  $ ../../../../../install/default/bin/stanc profile-bad4.stan
+Syntax error in 'profile-bad4.stan', line 2, column 13 to column 18, parsing error:
+   -------------------------------------------------
+     1:  transformed data {
+     2:      profile (while) {
+                      ^
+     3:  
+     4:      }
+   -------------------------------------------------
+
+Expected profile name as string in parenthesis
+  $ ../../../../../install/default/bin/stanc profile-bad5.stan
+Semantic error in 'profile-bad5.stan', line 2, column 9 to column 16:
+   -------------------------------------------------
+     1:  transformed data {
+     2:      real profile;
+                  ^
+     3:  }
+   -------------------------------------------------
+
+Identifier 'profile' clashes with reserved keyword.
+  $ ../../../../../install/default/bin/stanc profile-bad6.stan
+Semantic error in 'profile-bad6.stan', line 2, column 9 to column 16:
+   -------------------------------------------------
+     1:  functions {
+     2:      real profile(int i) {
+                  ^
+     3:          return i + 1.0;
+     4:      }
+   -------------------------------------------------
+
+Identifier 'profile' clashes with reserved keyword.

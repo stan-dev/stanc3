@@ -10,7 +10,7 @@ module Fixed = struct
     type ('a, 'b) t =
       | Assignment of 'a lvalue * 'a
       | TargetPE of 'a
-      | NRFunApp of Fun_kind.t * string * 'a list
+      | NRFunApp of Fun_kind.t * 'a list
       | Break
       | Continue
       | Return of 'a option
@@ -18,6 +18,7 @@ module Fixed = struct
       | IfElse of 'a * 'b * 'b option
       | While of 'a * 'b
       | For of {loopvar: string; lower: 'a; upper: 'a; body: 'b}
+      | Profile of string * 'b list
       | Block of 'b list
       | SList of 'b list
       | Decl of
@@ -35,8 +36,8 @@ module Fixed = struct
             (assignee, idcs) pp_e rhs
       | TargetPE expr ->
           Fmt.pf ppf {|@[<h>%a +=@ %a;@]|} pp_keyword "target" pp_e expr
-      | NRFunApp (_, name, args) ->
-          Fmt.pf ppf {|@[%s%a;@]|} name
+      | NRFunApp (kind, args) ->
+          Fmt.pf ppf {|@[%a%a;@]|} Fun_kind.pp kind
             Fmt.(list pp_e ~sep:comma |> parens)
             args
       | Break -> pp_keyword ppf "break;"
@@ -56,6 +57,10 @@ module Fixed = struct
       | For {loopvar; lower; upper; body} ->
           Fmt.pf ppf {|%a(%s in %a:%a) %a|} pp_builtin_syntax "for" loopvar
             pp_e lower pp_e upper pp_s body
+      | Profile (_, stmts) ->
+          Fmt.pf ppf {|{@;<1 2>@[<v>%a@]@;}|}
+            Fmt.(list pp_s ~sep:Fmt.cut)
+            stmts
       | Block stmts ->
           Fmt.pf ppf {|{@;<1 2>@[<v>%a@]@;}|}
             Fmt.(list pp_s ~sep:Fmt.cut)
@@ -172,7 +177,7 @@ module Labelled = struct
     | Fixed.Pattern.Break | Skip | Continue | Return None -> assocs
     | Return (Some e) | TargetPE e ->
         {assocs with exprs= Expr.Labelled.associate ~init:assocs.exprs e}
-    | NRFunApp (_, _, args) ->
+    | NRFunApp (_, args) ->
         { assocs with
           exprs=
             List.fold args ~init:assocs.exprs ~f:(fun accu x ->
@@ -199,7 +204,7 @@ module Labelled = struct
         in
         let assocs' = {assocs with exprs} in
         associate ~init:assocs' body
-    | Block xs | SList xs ->
+    | Profile (_, xs) | Block xs | SList xs ->
         List.fold ~f:(fun accu x -> associate ~init:accu x) ~init:assocs xs
 
   and associate_possibly_sized_type assocs = function
@@ -245,9 +250,7 @@ module Helpers = struct
         {body with Fixed.pattern= Block [decl; assign; body]}
 
   let internal_nrfunapp fn args meta =
-    { Fixed.pattern=
-        NRFunApp (CompilerInternal, Internal_fun.to_string fn, args)
-    ; meta }
+    {Fixed.pattern= NRFunApp (CompilerInternal fn, args); meta}
 
   (** [mkfor] returns a MIR For statement that iterates over the given expression
     [iteratee]. *)
@@ -284,21 +287,21 @@ module Helpers = struct
         let emeta' = {emeta with Expr.Typed.Meta.type_= UInt} in
         let rows =
           Expr.Fixed.
-            {meta= emeta'; pattern= FunApp (StanLib, "rows", [iteratee])}
+            {meta= emeta'; pattern= FunApp (StanLib "rows", [iteratee])}
         in
         mkfor rows (fun e -> for_each bodyfn e smeta) iteratee smeta
     | UArray _ -> mkfor (len iteratee) bodyfn iteratee smeta
     | UMathLibraryFunction | UFun _ ->
         raise_s [%message "can't iterate over " (iteratee : Expr.Typed.t)]
 
-  let contains_fn fn ?(init = false) stmt =
-    let fstr = Internal_fun.to_string fn in
+  let contains_fn_kind is_fn_kind ?(init = false) stmt =
     let rec aux accu Fixed.({pattern; _}) =
       match pattern with
-      | NRFunApp (_, fname, _) when fname = fstr -> true
+      | NRFunApp (kind, _) when is_fn_kind kind -> true
       | stmt_pattern ->
           Fixed.Pattern.fold_left ~init:accu stmt_pattern
-            ~f:(fun accu expr -> Expr.Helpers.contains_fn fn ~init:accu expr)
+            ~f:(fun accu expr ->
+              Expr.Helpers.contains_fn_kind is_fn_kind ~init:accu expr )
             ~g:aux
     in
     aux init stmt
@@ -338,9 +341,11 @@ module Helpers = struct
 
   (** Exactly like for_scalar, but iterating through array dimensions in the
   inverted order.*)
-  let for_scalar_inv st bodyfn var smeta =
+  let for_scalar_inv st bodyfn (var : Expr.Typed.t) smeta =
+    let var = {var with pattern= Indexed (var, [])} in
     let invert_index_order (Expr.Fixed.({pattern; _}) as e) =
       match pattern with
+      | Indexed (obj, []) -> obj
       | Indexed (obj, idxs) -> {e with pattern= Indexed (obj, List.rev idxs)}
       | _ -> e
     in

@@ -5,23 +5,26 @@ type t =
   | FnMakeArray
   | FnMakeRowVec
   | FnNegInf
+  (* In AST_to_MIR being used as StanLib *)
   | FnReadData
   (* XXX move these to a backend specific file?*)
-  | FnReadParam
+  | FnReadParam of string option
   | FnWriteParam
   | FnValidateSize
   | FnValidateSizeSimplex
   | FnValidateSizeUnitVector
-  | FnConstrain
-  | FnUnconstrain
-  | FnCheck
+  | FnConstrain of string
+  | FnUnconstrain of string
+  | FnCheck of string
   | FnPrint
   | FnReject
   | FnResizeToMatch
   | FnNaN
-[@@deriving sexp]
+  | FnDeepCopy
+[@@deriving sexp, hash, compare]
 
 let to_string x = Sexp.to_string (sexp_of_t x) ^ "__"
+let pp ppf internal = Fmt.string ppf (to_string internal)
 
 let of_string_opt x =
   try

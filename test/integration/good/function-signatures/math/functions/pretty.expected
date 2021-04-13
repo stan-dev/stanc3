@@ -23,6 +23,9 @@ model {
   y_p ~ normal(0, 1);
 }
 
+Warning in 'abs.stan', line 10, column 26: Use of the `abs` function with real-valued arguments is deprecated; use functions `fabs` instead.
+Warning in 'abs.stan', line 20, column 27: Use of the `abs` function with real-valued arguments is deprecated; use functions `fabs` instead.
+Warning in 'abs.stan', line 21, column 27: Use of the `abs` function with real-valued arguments is deprecated; use functions `fabs` instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format acos.stan
 data {
   int d_int;
@@ -321,6 +324,19 @@ model {
   y_p ~ normal(0, 1);
 }
 
+Warning in 'binomial_coefficient_log.stan', line 12, column 26: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+Warning in 'binomial_coefficient_log.stan', line 13, column 26: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+Warning in 'binomial_coefficient_log.stan', line 14, column 26: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+Warning in 'binomial_coefficient_log.stan', line 15, column 26: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+Warning in 'binomial_coefficient_log.stan', line 24, column 28: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+Warning in 'binomial_coefficient_log.stan', line 25, column 28: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+Warning in 'binomial_coefficient_log.stan', line 26, column 28: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+Warning in 'binomial_coefficient_log.stan', line 27, column 28: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+Warning in 'binomial_coefficient_log.stan', line 29, column 28: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+Warning in 'binomial_coefficient_log.stan', line 30, column 28: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+Warning in 'binomial_coefficient_log.stan', line 31, column 28: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+Warning in 'binomial_coefficient_log.stan', line 32, column 28: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+Warning in 'binomial_coefficient_log.stan', line 33, column 28: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format cbrt.stan
 data {
   int d_int;
@@ -961,6 +977,40 @@ model {
   y_p ~ normal(0, 1);
 }
 
+  $ ../../../../../../../install/default/bin/stanc --auto-format hmm_hidden_states_prob.stan
+data {
+  int N;
+  int K;
+  matrix[K, N] log_omega;
+  matrix[K, K] Gamma;
+  vector[K] rho;
+}
+transformed data {
+  matrix[K, N] prob = hmm_hidden_state_prob(log_omega, Gamma, rho);
+}
+parameters {
+  real y_p;
+}
+transformed parameters {
+  matrix[K, N] log_omega_v;
+  matrix[K, K] Gamma_v;
+  vector[K] rho_v;
+}
+model {
+  y_p ~ normal(0, 1);
+}
+generated quantities {
+  matrix[K, N] prob_gen;
+  prob_gen = hmm_hidden_state_prob(log_omega, Gamma, rho);
+  prob_gen = hmm_hidden_state_prob(log_omega_v, Gamma, rho);
+  prob_gen = hmm_hidden_state_prob(log_omega, Gamma_v, rho);
+  prob_gen = hmm_hidden_state_prob(log_omega, Gamma, rho_v);
+  prob_gen = hmm_hidden_state_prob(log_omega_v, Gamma_v, rho);
+  prob_gen = hmm_hidden_state_prob(log_omega_v, Gamma, rho_v);
+  prob_gen = hmm_hidden_state_prob(log_omega, Gamma_v, rho_v);
+  prob_gen = hmm_hidden_state_prob(log_omega_v, Gamma_v, rho_v);
+}
+
   $ ../../../../../../../install/default/bin/stanc --auto-format hypot.stan
 data {
   int d_int;
@@ -1030,6 +1080,19 @@ model {
   y_p ~ normal(0, 1);
 }
 
+Warning in 'if_else.stan', line 9, column 26: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'if_else.stan', line 10, column 26: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'if_else.stan', line 11, column 26: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'if_else.stan', line 12, column 26: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'if_else.stan', line 21, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'if_else.stan', line 22, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'if_else.stan', line 23, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'if_else.stan', line 24, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'if_else.stan', line 26, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'if_else.stan', line 27, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'if_else.stan', line 28, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'if_else.stan', line 29, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'if_else.stan', line 30, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format inc_beta.stan
 transformed data {
   real a;
@@ -1097,16 +1160,17 @@ model {
 
   $ ../../../../../../../install/default/bin/stanc --auto-format integrate_1d.stan
 functions {
-  real integrand(real x, real xc, real[] theta, real[] x_r, int[] x_i) {
+  real integrand(real x, real xc, array[] real theta, array[] real x_r,
+                 array[] int x_i) {
     return 0.0;
   }
 }
 transformed data {
-  real x_r[0];
-  int x_i[0];
+  array[0] real x_r;
+  array[0] int x_i;
 }
 parameters {
-  real x[1];
+  array[1] real x;
 }
 model {
   real y = integrate_1d(integrand, 0, 1, x, x_r, x_i);
@@ -1297,6 +1361,19 @@ model {
   y_p ~ normal(0, 1);
 }
 
+Warning in 'is_inf.stan', line 8, column 26: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_inf.stan', line 9, column 26: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_inf.stan', line 10, column 26: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_inf.stan', line 11, column 26: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_inf.stan', line 20, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_inf.stan', line 21, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_inf.stan', line 22, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_inf.stan', line 23, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_inf.stan', line 25, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_inf.stan', line 26, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_inf.stan', line 27, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_inf.stan', line 28, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_inf.stan', line 29, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format is_nan.stan
 data {
   int d_int;
@@ -1325,6 +1402,49 @@ transformed parameters {
   transformed_param_real = if_else(is_nan(d_real), d_real, p_real);
   transformed_param_real = if_else(is_nan(d_real), p_real, d_real);
   transformed_param_real = if_else(is_nan(d_real), p_real, p_real);
+}
+model {
+  y_p ~ normal(0, 1);
+}
+
+Warning in 'is_nan.stan', line 8, column 26: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_nan.stan', line 9, column 26: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_nan.stan', line 10, column 26: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_nan.stan', line 11, column 26: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_nan.stan', line 20, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_nan.stan', line 21, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_nan.stan', line 22, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_nan.stan', line 23, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_nan.stan', line 25, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_nan.stan', line 26, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_nan.stan', line 27, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_nan.stan', line 28, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'is_nan.stan', line 29, column 28: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+  $ ../../../../../../../install/default/bin/stanc --auto-format lambert.stan
+data {
+  int d_int;
+  real d_real;
+}
+transformed data {
+  int transformed_data_int;
+  real transformed_data_real;
+  transformed_data_real = lambert_w0(d_int);
+  transformed_data_real = lambert_w0(d_real);
+  transformed_data_real = lambert_wm1(d_int);
+  transformed_data_real = lambert_wm1(d_real);
+}
+parameters {
+  real p_real;
+  real y_p;
+}
+transformed parameters {
+  real transformed_param_real;
+  transformed_param_real = lambert_w0(d_int);
+  transformed_param_real = lambert_w0(d_real);
+  transformed_param_real = lambert_w0(p_real);
+  transformed_param_real = lambert_wm1(d_int);
+  transformed_param_real = lambert_wm1(d_real);
+  transformed_param_real = lambert_wm1(p_real);
 }
 model {
   y_p ~ normal(0, 1);
@@ -1716,16 +1836,16 @@ data {
   int N;
   int M;
   real d_real_theta;
-  real d_real_theta_arr[N];
+  array[N] real d_real_theta_arr;
   vector[N] d_vec_theta;
   row_vector[N] d_rowvec_theta;
   real d_real_lam_1;
   real d_real_lam_2;
-  real d_real_lam_arr[N];
+  array[N] real d_real_lam_arr;
   vector[N] d_vec_lam;
   row_vector[N] d_rowvec_lam;
-  vector[N] d_vec_lam_arr[M];
-  row_vector[N] d_rowvec_lam_arr[M];
+  array[M] vector[N] d_vec_lam_arr;
+  array[M] row_vector[N] d_rowvec_lam_arr;
   real y_p;
 }
 transformed data {
@@ -1749,16 +1869,16 @@ transformed data {
 }
 parameters {
   real p_real_theta;
-  real p_real_theta_arr[N];
+  array[N] real p_real_theta_arr;
   vector[N] p_vec_theta;
   row_vector[N] p_rowvec_theta;
   real p_real_lam_1;
   real p_real_lam_2;
-  real p_real_lam_arr[N];
+  array[N] real p_real_lam_arr;
   vector[N] p_vec_lam;
   row_vector[N] p_rowvec_lam;
-  vector[N] p_vec_lam_arr[M];
-  row_vector[N] p_rowvec_lam_arr[M];
+  array[M] vector[N] p_vec_lam_arr;
+  array[M] row_vector[N] p_rowvec_lam_arr;
 }
 transformed parameters {
   real transformed_param_real;
@@ -2045,6 +2165,19 @@ model {
   y_p ~ normal(0, 1);
 }
 
+Warning in 'multiply_log.stan', line 11, column 26: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+Warning in 'multiply_log.stan', line 12, column 26: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+Warning in 'multiply_log.stan', line 13, column 26: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+Warning in 'multiply_log.stan', line 14, column 26: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+Warning in 'multiply_log.stan', line 23, column 28: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+Warning in 'multiply_log.stan', line 24, column 28: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+Warning in 'multiply_log.stan', line 25, column 28: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+Warning in 'multiply_log.stan', line 26, column 28: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+Warning in 'multiply_log.stan', line 28, column 28: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+Warning in 'multiply_log.stan', line 29, column 28: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+Warning in 'multiply_log.stan', line 30, column 28: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+Warning in 'multiply_log.stan', line 31, column 28: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+Warning in 'multiply_log.stan', line 32, column 28: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
   $ ../../../../../../../install/default/bin/stanc --auto-format operators_int.stan
 data {
   int d_int;
@@ -2055,6 +2188,8 @@ transformed data {
   transformed_data_int = d_int - d_int;
   transformed_data_int = d_int * d_int;
   transformed_data_int = d_int / d_int;
+  transformed_data_int = d_int %/% d_int;
+  transformed_data_int = d_int % d_int;
   transformed_data_int = -d_int;
   transformed_data_int = +d_int;
 }
@@ -2067,6 +2202,8 @@ transformed parameters {
   transformed_param_real = d_int - d_int;
   transformed_param_real = d_int * d_int;
   transformed_param_real = d_int / d_int;
+  transformed_param_real = d_int %/% d_int;
+  transformed_param_real = d_int % d_int;
   transformed_param_real = -d_int;
   transformed_param_real = +d_int;
 }
@@ -2076,10 +2213,16 @@ model {
 
 Info: Found int division at 'operators_int.stan', line 10, column 25 to column 30:
   d_int / d_int
-Values will be rounded towards zero.
-Info: Found int division at 'operators_int.stan', line 24, column 27 to column 32:
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  d_int * 1.0 / d_int
+If rounding is intended please use the integer division operator %/%.
+Info: Found int division at 'operators_int.stan', line 26, column 27 to column 32:
   d_int / d_int
-Values will be rounded towards zero.
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  d_int * 1.0 / d_int
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../../../../install/default/bin/stanc --auto-format operators_real.stan
 data {
   int d_int;
@@ -2103,6 +2246,8 @@ transformed data {
   transformed_data_real = d_int / d_real;
   transformed_data_real = d_real / d_int;
   transformed_data_real = d_int / d_int;
+  transformed_data_real = d_int %/% d_int;
+  transformed_data_real = d_int % d_int;
   transformed_data_real = -d_real;
   transformed_data_real = -d_int;
   transformed_data_real = +d_real;
@@ -2145,6 +2290,8 @@ transformed parameters {
   transformed_param_real = d_real / d_int;
   transformed_param_real = d_int / d_real;
   transformed_param_real = d_int / d_int;
+  transformed_param_real = d_int %/% d_int;
+  transformed_param_real = d_int % d_int;
   transformed_param_real = p_real / d_real;
   transformed_param_real = p_real / d_int;
   transformed_param_real = d_real / p_real;
@@ -2163,10 +2310,16 @@ model {
 
 Info: Found int division at 'operators_real.stan', line 23, column 26 to column 31:
   d_int / d_int
-Values will be rounded towards zero.
-Info: Found int division at 'operators_real.stan', line 67, column 27 to column 32:
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  d_int * 1.0 / d_int
+If rounding is intended please use the integer division operator %/%.
+Info: Found int division at 'operators_real.stan', line 69, column 27 to column 32:
   d_int / d_int
-Values will be rounded towards zero.
+Values will be rounded towards zero. If rounding is not desired you can write
+the division as
+  d_int * 1.0 / d_int
+If rounding is intended please use the integer division operator %/%.
   $ ../../../../../../../install/default/bin/stanc --auto-format owens_t.stan
 data {
   int d_int;

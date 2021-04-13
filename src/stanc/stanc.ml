@@ -16,6 +16,8 @@ let usage = "Usage: " ^ name ^ " [option] ... <model_file.stan>"
 
 let model_file = ref ""
 let pretty_print_program = ref false
+let print_info_json = ref false
+let filename_for_msg = ref ""
 let canonicalize_program = ref false
 let print_model_cpp = ref false
 let dump_mir = ref false
@@ -76,8 +78,8 @@ let options =
          transformed it." )
     ; ( "--dump-stan-math-signatures"
       , Arg.Set dump_stan_math_sigs
-      , "\tDump out the list of supported type signatures for Stan Math backend."
-      )
+      , "\tDump out the list of supported type signatures for Stan Math \
+         backend." )
     ; ( "--warn-uninitialized"
       , Arg.Set warn_uninitialized
       , " Emit warnings about uninitialized variables to stderr. Currently an \
@@ -109,8 +111,8 @@ let options =
       , "\tApply level 1 compiler optimizations (only basic optimizations)." )
     ; ( "-O2"
       , Arg.Unit (fun () -> opt_lvl := Optimize.O2)
-      , "\tApply level 2 compiler optimizations (all optimizations which \
-         are not likely to have small numerical differences from the original \
+      , "\tApply level 2 compiler optimizations (all optimizations which are \
+         not likely to have small numerical differences from the original \
          program)." )
     ; ( "-O3"
       , Arg.Unit (fun () -> opt_lvl := Optimize.O3)
@@ -125,43 +127,90 @@ let options =
     ; ( "--print-cpp"
       , Arg.Set print_model_cpp
       , " If set, output the generated C++ Stan model class to stdout." )
-    ; ( "--allow_undefined"
+    ; ( "--allow-undefined"
       , Arg.Clear Semantic_check.check_that_all_functions_have_definition
       , " Do not fail if a function is declared but not defined" )
-    ; ( "--include_paths"
+    ; ( "--allow_undefined"
+      , Arg.Clear Semantic_check.check_that_all_functions_have_definition
+      , " Deprecated. Same as --allow-undefined." )
+    ; ( "--include-paths"
       , Arg.String
           (fun str ->
             Preprocessor.include_paths := String.split_on_chars ~on:[','] str
             )
       , " Takes a comma-separated list of directories that may contain a file \
          in an #include directive (default = \"\")" )
+    ; ( "--include_paths"
+      , Arg.String
+          (fun str ->
+            Preprocessor.include_paths :=
+              !Preprocessor.include_paths @ String.split_on_chars ~on:[','] str
+            )
+      , " Deprecated. Same as --include-paths." )
     ; ( "--use-opencl"
       , Arg.Set Transform_Mir.use_opencl
-      , " If set, try to use matrix_cl signatures." ) ]
+      , " If set, try to use matrix_cl signatures." )
+    ; ( "--standalone-functions"
+      , Arg.Set Stan_math_code_gen.standalone_functions
+      , " If set, the generated C++ will be the standalone functions C++ code."
+      )
+    ; ( "--filename-in-msg"
+      , Arg.Set_string filename_for_msg
+      , " Sets the filename used in compiler errors. Uses actual filename by \
+         default." )
+    ; ( "--info"
+      , Arg.Set print_info_json
+      , " If set, print information about the model." ) ]
+
+let print_deprecated_arg_warning =
+  (* is_prefix is used to also cover the --include-paths=... *)
+  let arg_is_used arg =
+    Array.mem ~equal:(fun x y -> String.is_prefix ~prefix:x y) Sys.argv arg
+  in
+  if arg_is_used "--allow_undefined" then
+    eprintf "--allow_undefined is deprecated. Please use --allow-undefined.\n" ;
+  if arg_is_used "--include_paths" then
+    eprintf "--include_paths is deprecated. Please use --include-paths.\n"
 
 let model_file_err () =
   Arg.usage options ("Please specify one model_file.\n\n" ^ usage) ;
   exit 127
 
-let model_file_start_char_err () =
-  eprintf "%s" "Model name must not start with a number or symbol other than underscore.\n";
-  exit 127
-
 let add_file filename =
   if !model_file = "" then model_file := filename else model_file_err ()
+
+(*
+      I am not using Fmt to print to stderr here because there was a pretty awful
+      bug where it would unpredictably fail to flush. It would flush when using
+      stdout or when trying to print some strings and not others. I tried using
+      Fmt.flush and various other hacks to no avail. So now I use Fmt to build a
+      string, and Out_channel to write it.
+ *)
+
+let pp_stderr formatter formatee =
+  Fmt.strf "%a" formatter formatee |> Out_channel.(output_string stderr)
 
 (** ad directives from the given file. *)
 let use_file filename =
   let ast =
-    if !canonicalize_program then
-      Canonicalize.repair_syntax
-        (Errors.without_warnings Frontend_utils.get_ast_or_exit filename)
-    else Frontend_utils.get_ast_or_exit filename
+    Frontend_utils.get_ast_or_exit filename
+      ~print_warnings:(not !canonicalize_program)
+  in
+  let ast =
+    if !canonicalize_program then Canonicalize.repair_syntax ast else ast
   in
   Debugging.ast_logger ast ;
   if !pretty_print_program then
     print_endline (Pretty_printing.pretty_print_program ast) ;
   let typed_ast = Frontend_utils.type_ast_or_exit ast in
+  if !print_info_json then (
+    print_endline (Info.info typed_ast) ;
+    exit 0 ) ;
+  let printed_filename =
+    match !filename_for_msg with "" -> None | s -> Some s
+  in
+  Warnings.pp_warnings Fmt.stderr ?printed_filename
+    (Deprecation_analysis.collect_warnings typed_ast) ;
   if !canonicalize_program then
     print_endline
       (Pretty_printing.pretty_print_typed_program
@@ -174,10 +223,12 @@ let use_file filename =
     if !dump_mir then
       Sexp.pp_hum Format.std_formatter [%sexp (mir : Middle.Program.Typed.t)] ;
     if !dump_mir_pretty then Program.Typed.pp Format.std_formatter mir ;
-    ( if !warn_pedantic then
-        Pedantic_analysis.print_warn_pedantic mir ) ;
-    ( if !warn_uninitialized then
-      Pedantic_analysis.print_warn_uninitialized mir ) ;
+    if !warn_pedantic then
+      Pedantic_analysis.warn_pedantic mir
+      |> pp_stderr (Warnings.pp_warnings ?printed_filename)
+    else if !warn_uninitialized then
+      Pedantic_analysis.warn_uninitialized mir
+      |> pp_stderr (Warnings.pp_warnings ?printed_filename) ;
     let tx_mir = Transform_Mir.trans_prog mir in
     if !dump_tx_mir then
       Sexp.pp_hum Format.std_formatter
@@ -186,7 +237,9 @@ let use_file filename =
     let opt_mir =
       if !opt_lvl <> Optimize.O0 then (
         let opt =
-          Optimize.optimization_suite ~settings:(Optimize.level_optimizations !opt_lvl) tx_mir
+          Optimize.optimization_suite
+            ~settings:(Optimize.level_optimizations !opt_lvl)
+            tx_mir
         in
         if !dump_opt_mir then
           Sexp.pp_hum Format.std_formatter
@@ -201,11 +254,17 @@ let use_file filename =
 
 let remove_dotstan s = String.drop_suffix s 5
 
-let model_name_check_regex = Str.regexp "^[a-zA-Z_].*$"
+let mangle =
+  String.concat_map ~f:(fun c ->
+      Char.(
+        if is_alphanum c || c = '_' then to_string c
+        else match c with '-' -> "_" | _ -> "x" ^ Int.to_string (to_int c)) )
 
 let main () =
   (* Parse the arguments. *)
   Arg.parse options add_file usage ;
+  print_deprecated_arg_warning ;
+  (* print_deprecated_arg_warning options; *)
   (* Deal with multiple modalities *)
   if !dump_stan_math_sigs then (
     Stan_math_signatures.pretty_print_all_math_sigs Format.std_formatter () ;
@@ -214,10 +273,10 @@ let main () =
   if !model_file = "" then model_file_err () ;
   if !Semantic_check.model_name = "" then
     Semantic_check.model_name :=
-      remove_dotstan List.(hd_exn (rev (String.split !model_file ~on:'/')))
-      ^ "_model" ;
-  if not (Str.string_match model_name_check_regex !Semantic_check.model_name 0) then
-    model_file_start_char_err () ;
+      mangle
+        (remove_dotstan List.(hd_exn (rev (String.split !model_file ~on:'/'))))
+      ^ "_model"
+  else Semantic_check.model_name := mangle !Semantic_check.model_name ;
   if !output_file = "" then output_file := remove_dotstan !model_file ^ ".hpp" ;
   use_file !model_file
 

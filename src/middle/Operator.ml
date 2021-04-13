@@ -7,11 +7,13 @@ type t =
   | PMinus
   | Times
   | Divide
+  | IntDivide
   | Modulo
   | LDivide
   | EltTimes
   | EltDivide
   | Pow
+  | EltPow
   | Or
   | And
   | Equals
@@ -29,11 +31,13 @@ let pp ppf = function
   | Minus | PMinus -> Fmt.pf ppf "-"
   | Times -> Fmt.pf ppf "*"
   | Divide -> Fmt.pf ppf "/"
+  | IntDivide -> Fmt.pf ppf "%%/%%"
   | Modulo -> Fmt.pf ppf "%%"
   | LDivide -> Fmt.pf ppf "\\"
   | EltTimes -> Fmt.pf ppf ".*"
   | EltDivide -> Fmt.pf ppf "./"
   | Pow -> Fmt.pf ppf "^"
+  | EltPow -> Fmt.pf ppf ".^"
   | Or -> Fmt.pf ppf "||"
   | And -> Fmt.pf ppf "&&"
   | Equals -> Fmt.pf ppf "=="
@@ -66,11 +70,13 @@ let stan_math_name = function
     *)
   | Divide -> "mdivide_right"
   (* | Divide -> "divide" *)
+  | IntDivide -> "divide"
   | Modulo -> "modulus"
   | LDivide -> "mdivide_left"
   | EltTimes -> "elt_multiply"
   | EltDivide -> "elt_divide"
   | Pow -> "pow"
+  | EltPow -> "pow"
   | Or -> "logical_or"
   | And -> "logical_and"
   | Equals -> "logical_eq"
