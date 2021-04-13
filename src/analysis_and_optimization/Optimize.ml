@@ -1118,7 +1118,7 @@ let level_optimizations (lvl : optimization_level) : optimization_settings =
       ; partial_evaluation= true
       ; lazy_code_motion= false
       ; optimize_ad_levels= true
-      ; preserve_stability= true }
+      ; preserve_stability= false }
   | Od -> all_optimizations
 
 let optimization_suite ?(settings = all_optimizations) mir =

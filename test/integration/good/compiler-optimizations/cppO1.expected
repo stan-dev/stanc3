@@ -895,10 +895,11 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
         t_next = (t_curr + 1);
         current_statement__ = 69;
         assign(chi,
-          ((1 - rvalue(phi, "phi", index_uni(i), index_uni(t_curr))) +
-            ((rvalue(phi, "phi", index_uni(i), index_uni(t_curr)) *
-               (1 - rvalue(p, "p", index_uni(i), index_uni((t_next - 1))))) *
-              rvalue(chi, "chi", index_uni(i), index_uni(t_next)))),
+          stan::math::fma(
+            (rvalue(phi, "phi", index_uni(i), index_uni(t_curr)) *
+              (1 - rvalue(p, "p", index_uni(i), index_uni((t_next - 1))))),
+            rvalue(chi, "chi", index_uni(i), index_uni(t_next)),
+            (1 - rvalue(phi, "phi", index_uni(i), index_uni(t_curr)))),
           "assigning variable chi", index_uni(i), index_uni(t_curr));
       }
     }
@@ -2295,9 +2296,9 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         for (int j = 1; j <= n_state; ++j) {
           current_statement__ = 33;
           assign(b_state_hat,
-            (rvalue(b_region, "b_region",
-               index_uni(rvalue(region, "region", index_uni(j)))) +
-              (b_v_prev * rvalue(v_prev, "v_prev", index_uni(j)))),
+            stan::math::fma(b_v_prev, rvalue(v_prev, "v_prev", index_uni(j)),
+              rvalue(b_region, "b_region",
+                index_uni(rvalue(region, "region", index_uni(j))))),
             "assigning variable b_state_hat", index_uni(j));
         }
         current_statement__ = 35;
@@ -2309,13 +2310,14 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
             stan::math::fmax(0,
               stan::math::fmin(1,
                 inv_logit(
-                  (((((((b_0 +
-                          (b_female * rvalue(female, "female", index_uni(i))))
-                         + (b_black * rvalue(black, "black", index_uni(i))))
-                        +
-                        ((b_female_black *
-                           rvalue(female, "female", index_uni(i))) *
-                          rvalue(black, "black", index_uni(i)))) +
+                  ((((stan::math::fma(
+                        (b_female_black *
+                          rvalue(female, "female", index_uni(i))),
+                        rvalue(black, "black", index_uni(i)),
+                        stan::math::fma(b_black,
+                          rvalue(black, "black", index_uni(i)),
+                          stan::math::fma(b_female,
+                            rvalue(female, "female", index_uni(i)), b_0))) +
                        rvalue(b_age, "b_age",
                          index_uni(rvalue(age, "age", index_uni(i))))) +
                       rvalue(b_edu, "b_edu",
@@ -5067,16 +5069,17 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       for (int i = 1; i <= N; ++i) {
         current_statement__ = 13;
         assign(y_hat,
-          (((((((((rvalue(beta, "beta", index_uni(1)) +
-                    (rvalue(beta, "beta", index_uni(2)) *
-                      rvalue(black, "black", index_uni(i)))) +
-                   (rvalue(beta, "beta", index_uni(3)) *
-                     rvalue(female, "female", index_uni(i)))) +
-                  ((rvalue(beta, "beta", index_uni(5)) *
-                     rvalue(female, "female", index_uni(i))) *
-                    rvalue(black, "black", index_uni(i)))) +
-                 (rvalue(beta, "beta", index_uni(4)) *
-                   rvalue(v_prev_full, "v_prev_full", index_uni(i)))) +
+          (((((stan::math::fma(rvalue(beta, "beta", index_uni(4)),
+                 rvalue(v_prev_full, "v_prev_full", index_uni(i)),
+                 stan::math::fma(
+                   (rvalue(beta, "beta", index_uni(5)) *
+                     rvalue(female, "female", index_uni(i))),
+                   rvalue(black, "black", index_uni(i)),
+                   stan::math::fma(rvalue(beta, "beta", index_uni(3)),
+                     rvalue(female, "female", index_uni(i)),
+                     stan::math::fma(rvalue(beta, "beta", index_uni(2)),
+                       rvalue(black, "black", index_uni(i)),
+                       rvalue(beta, "beta", index_uni(1)))))) +
                 rvalue(a, "a", index_uni(rvalue(age, "age", index_uni(i)))))
                + rvalue(b, "b", index_uni(rvalue(edu, "edu", index_uni(i)))))
               +
@@ -5239,16 +5242,17 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       for (int i = 1; i <= N; ++i) {
         current_statement__ = 13;
         assign(y_hat,
-          (((((((((rvalue(beta, "beta", index_uni(1)) +
-                    (rvalue(beta, "beta", index_uni(2)) *
-                      rvalue(black, "black", index_uni(i)))) +
-                   (rvalue(beta, "beta", index_uni(3)) *
-                     rvalue(female, "female", index_uni(i)))) +
-                  ((rvalue(beta, "beta", index_uni(5)) *
-                     rvalue(female, "female", index_uni(i))) *
-                    rvalue(black, "black", index_uni(i)))) +
-                 (rvalue(beta, "beta", index_uni(4)) *
-                   rvalue(v_prev_full, "v_prev_full", index_uni(i)))) +
+          (((((stan::math::fma(rvalue(beta, "beta", index_uni(4)),
+                 rvalue(v_prev_full, "v_prev_full", index_uni(i)),
+                 stan::math::fma(
+                   (rvalue(beta, "beta", index_uni(5)) *
+                     rvalue(female, "female", index_uni(i))),
+                   rvalue(black, "black", index_uni(i)),
+                   stan::math::fma(rvalue(beta, "beta", index_uni(3)),
+                     rvalue(female, "female", index_uni(i)),
+                     stan::math::fma(rvalue(beta, "beta", index_uni(2)),
+                       rvalue(black, "black", index_uni(i)),
+                       rvalue(beta, "beta", index_uni(1)))))) +
                 rvalue(a, "a", index_uni(rvalue(age, "age", index_uni(i)))))
                + rvalue(b, "b", index_uni(rvalue(edu, "edu", index_uni(i)))))
               +
@@ -6135,8 +6139,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
         current_statement__ = 25;
         assign(y,
           poisson_log_rng(
-            ((((rvalue(log_E, "log_E", index_uni(i)) + beta0) +
-                (beta1 * rvalue(x, "x", index_uni(i)))) +
+            ((stan::math::fma(beta1, rvalue(x, "x", index_uni(i)),
+                (rvalue(log_E, "log_E", index_uni(i)) + beta0)) +
                rvalue(phi, "phi", index_uni(i))) +
               rvalue(theta, "theta", index_uni(i))), base_rng__),
           "assigning variable y", index_uni(i));
@@ -6662,10 +6666,11 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
         t_next = (t_curr + 1);
         current_statement__ = 74;
         assign(chi,
-          ((1 - rvalue(phi, "phi", index_uni(i), index_uni(t_curr))) +
-            ((rvalue(phi, "phi", index_uni(i), index_uni(t_curr)) *
-               (1 - rvalue(p, "p", index_uni(i), index_uni((t_next - 1))))) *
-              rvalue(chi, "chi", index_uni(i), index_uni(t_next)))),
+          stan::math::fma(
+            (rvalue(phi, "phi", index_uni(i), index_uni(t_curr)) *
+              (1 - rvalue(p, "p", index_uni(i), index_uni((t_next - 1))))),
+            rvalue(chi, "chi", index_uni(i), index_uni(t_next)),
+            (1 - rvalue(phi, "phi", index_uni(i), index_uni(t_curr)))),
           "assigning variable chi", index_uni(i), index_uni(t_curr));
       }
     }
@@ -7851,10 +7856,11 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
         t_next = (t_curr + 1);
         current_statement__ = 115;
         assign(chi,
-          ((1 - rvalue(phi, "phi", index_uni(i), index_uni(t_curr))) +
-            ((rvalue(phi, "phi", index_uni(i), index_uni(t_curr)) *
-               (1 - rvalue(p, "p", index_uni(i), index_uni(t_next)))) *
-              rvalue(chi, "chi", index_uni(i), index_uni(t_next)))),
+          stan::math::fma(
+            (rvalue(phi, "phi", index_uni(i), index_uni(t_curr)) *
+              (1 - rvalue(p, "p", index_uni(i), index_uni(t_next)))),
+            rvalue(chi, "chi", index_uni(i), index_uni(t_next)),
+            (1 - rvalue(phi, "phi", index_uni(i), index_uni(t_curr)))),
           "assigning variable chi", index_uni(i), index_uni(t_curr));
       }
     }
@@ -8747,8 +8753,9 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
             current_statement__ = 36;
             assign(z,
               bernoulli_rng(
-                ((rvalue(z, "z", index_uni(i), index_uni((t - 1))) *
-                   rvalue(phi, "phi", index_uni(i), index_uni((t - 1)))) +
+                stan::math::fma(
+                  rvalue(z, "z", index_uni(i), index_uni((t - 1))),
+                  rvalue(phi, "phi", index_uni(i), index_uni((t - 1))),
                   (q * rvalue(nu, "nu", index_uni(t)))), base_rng__),
               "assigning variable z", index_uni(i), index_uni(t));
           }
@@ -10912,10 +10919,11 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
         t_next = (t_curr + 1);
         current_statement__ = 69;
         assign(chi,
-          ((1 - rvalue(phi, "phi", index_uni(i), index_uni(t_curr))) +
-            ((rvalue(phi, "phi", index_uni(i), index_uni(t_curr)) *
-               (1 - rvalue(p, "p", index_uni(i), index_uni((t_next - 1))))) *
-              rvalue(chi, "chi", index_uni(i), index_uni(t_next)))),
+          stan::math::fma(
+            (rvalue(phi, "phi", index_uni(i), index_uni(t_curr)) *
+              (1 - rvalue(p, "p", index_uni(i), index_uni((t_next - 1))))),
+            rvalue(chi, "chi", index_uni(i), index_uni(t_next)),
+            (1 - rvalue(phi, "phi", index_uni(i), index_uni(t_curr)))),
           "assigning variable chi", index_uni(i), index_uni(t_curr));
       }
     }
@@ -12094,10 +12102,11 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
         t_next = (t_curr + 1);
         current_statement__ = 106;
         assign(chi,
-          ((1 - rvalue(phi, "phi", index_uni(i), index_uni(t_curr))) +
-            ((rvalue(phi, "phi", index_uni(i), index_uni(t_curr)) *
-               (1 - rvalue(p, "p", index_uni(i), index_uni(t_next)))) *
-              rvalue(chi, "chi", index_uni(i), index_uni(t_next)))),
+          stan::math::fma(
+            (rvalue(phi, "phi", index_uni(i), index_uni(t_curr)) *
+              (1 - rvalue(p, "p", index_uni(i), index_uni(t_next)))),
+            rvalue(chi, "chi", index_uni(i), index_uni(t_next)),
+            (1 - rvalue(phi, "phi", index_uni(i), index_uni(t_curr)))),
           "assigning variable chi", index_uni(i), index_uni(t_curr));
       }
     }
@@ -12367,8 +12376,7 @@ seq_cprob(const T0__& gamma_arg__, std::ostream* pstream__) {
           log_residual_prob), "assigning variable log_cprob", index_uni(n));
       current_statement__ = 153;
       log_residual_prob = (log_residual_prob +
-                            stan::math::log(
-                              (1 - rvalue(gamma, "gamma", index_uni(n)))));
+                            log1m(rvalue(gamma, "gamma", index_uni(n))));
     }
     current_statement__ = 156;
     return stan::math::exp(log_cprob);
@@ -12959,8 +12967,9 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           current_statement__ = 24;
           q = (q * (1 - rvalue(z, "z", index_uni(i), index_uni((t - 1)))));
           current_statement__ = 25;
-          mu2 = ((rvalue(phi, "phi", index_uni(i), index_uni((t - 1))) *
-                   rvalue(z, "z", index_uni(i), index_uni((t - 1)))) +
+          mu2 = stan::math::fma(
+                  rvalue(phi, "phi", index_uni(i), index_uni((t - 1))),
+                  rvalue(z, "z", index_uni(i), index_uni((t - 1))),
                   (rvalue(gamma, "gamma", index_uni(t)) * q));
           current_statement__ = 26;
           assign(z, bernoulli_rng(mu2, base_rng__),
@@ -13549,13 +13558,15 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
         current_statement__ = 4;
         x = normal_rng(123, 1, base_rng__);
         current_statement__ = 5;
-        z = normal_rng(((stan::math::sqrt(j) * 2) + 1), 1, base_rng__);
+        z = normal_rng(stan::math::fma(stan::math::sqrt(j), 2, 1), 1,
+              base_rng__);
       }
       current_statement__ = 7;
       i = std::numeric_limits<double>::quiet_NaN(); 
       
       current_statement__ = 7;
-      i = normal_rng(((stan::math::sqrt(j) * 2) + 1), 1, base_rng__);
+      i = normal_rng(stan::math::fma(stan::math::sqrt(j), 2, 1), 1,
+            base_rng__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -14701,10 +14712,11 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
         t_next = (t_curr + 1);
         current_statement__ = 64;
         assign(chi,
-          ((1 - rvalue(phi, "phi", index_uni(i), index_uni(t_curr))) +
-            ((rvalue(phi, "phi", index_uni(i), index_uni(t_curr)) *
-               (1 - rvalue(p, "p", index_uni(i), index_uni((t_next - 1))))) *
-              rvalue(chi, "chi", index_uni(i), index_uni(t_next)))),
+          stan::math::fma(
+            (rvalue(phi, "phi", index_uni(i), index_uni(t_curr)) *
+              (1 - rvalue(p, "p", index_uni(i), index_uni((t_next - 1))))),
+            rvalue(chi, "chi", index_uni(i), index_uni(t_next)),
+            (1 - rvalue(phi, "phi", index_uni(i), index_uni(t_curr)))),
           "assigning variable chi", index_uni(i), index_uni(t_curr));
       }
     }
@@ -16389,7 +16401,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
           current_statement__ = 18;
           qT = prod(q);
           current_statement__ = 19;
-          assign(psi_con, ((psi * qT) / ((psi * qT) + (1 - psi))),
+          assign(psi_con, ((psi * qT) / stan::math::fma(psi, qT, (1 - psi))),
             "assigning variable psi_con", index_uni(i));
           current_statement__ = 20;
           assign(z,
@@ -16972,13 +16984,14 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       for (int i = 1; i <= N; ++i) {
         current_statement__ = 14;
         assign(y_hat,
-          ((((beta * rvalue(time, "time", index_uni(i))) *
-              rvalue(treatment, "treatment", index_uni(i))) +
-             rvalue(a1, "a1",
-               index_uni(rvalue(person, "person", index_uni(i))))) +
-            (rvalue(a2, "a2",
-               index_uni(rvalue(person, "person", index_uni(i)))) *
-              rvalue(time, "time", index_uni(i)))),
+          stan::math::fma(
+            rvalue(a2, "a2",
+              index_uni(rvalue(person, "person", index_uni(i)))),
+            rvalue(time, "time", index_uni(i)),
+            stan::math::fma((beta * rvalue(time, "time", index_uni(i))),
+              rvalue(treatment, "treatment", index_uni(i)),
+              rvalue(a1, "a1",
+                index_uni(rvalue(person, "person", index_uni(i)))))),
           "assigning variable y_hat", index_uni(i));
       }
       {
@@ -17110,13 +17123,14 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       for (int i = 1; i <= N; ++i) {
         current_statement__ = 14;
         assign(y_hat,
-          ((((beta * rvalue(time, "time", index_uni(i))) *
-              rvalue(treatment, "treatment", index_uni(i))) +
-             rvalue(a1, "a1",
-               index_uni(rvalue(person, "person", index_uni(i))))) +
-            (rvalue(a2, "a2",
-               index_uni(rvalue(person, "person", index_uni(i)))) *
-              rvalue(time, "time", index_uni(i)))),
+          stan::math::fma(
+            rvalue(a2, "a2",
+              index_uni(rvalue(person, "person", index_uni(i)))),
+            rvalue(time, "time", index_uni(i)),
+            stan::math::fma((beta * rvalue(time, "time", index_uni(i))),
+              rvalue(treatment, "treatment", index_uni(i)),
+              rvalue(a1, "a1",
+                index_uni(rvalue(person, "person", index_uni(i)))))),
           "assigning variable y_hat", index_uni(i));
       }
       if (emit_transformed_parameters__) {
@@ -17485,7 +17499,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 116> locations_array__ = 
+static constexpr std::array<const char*, 111> locations_array__ = 
 {" (found before start of program)",
  " (in 'optimizations.stan', line 20, column 4 to column 15)",
  " (in 'optimizations.stan', line 21, column 4 to column 13)",
@@ -17528,7 +17542,6 @@ static constexpr std::array<const char*, 116> locations_array__ =
  " (in 'optimizations.stan', line 60, column 6 to column 12)",
  " (in 'optimizations.stan', line 59, column 4 to line 60, column 12)",
  " (in 'optimizations.stan', line 61, column 4 to column 16)",
- " (in 'optimizations.stan', line 63, column 4 to column 12)",
  " (in 'optimizations.stan', line 64, column 4 to column 16)",
  " (in 'optimizations.stan', line 65, column 4 to column 16)",
  " (in 'optimizations.stan', line 66, column 4 to column 16)",
@@ -17543,11 +17556,9 @@ static constexpr std::array<const char*, 116> locations_array__ =
  " (in 'optimizations.stan', line 75, column 4 to column 16)",
  " (in 'optimizations.stan', line 78, column 4 to column 16)",
  " (in 'optimizations.stan', line 80, column 8 to column 19)",
- " (in 'optimizations.stan', line 81, column 8 to column 15)",
  " (in 'optimizations.stan', line 82, column 8 to column 20)",
  " (in 'optimizations.stan', line 79, column 4 to line 83, column 5)",
  " (in 'optimizations.stan', line 85, column 8 to column 20)",
- " (in 'optimizations.stan', line 86, column 8 to column 16)",
  " (in 'optimizations.stan', line 87, column 8 to column 20)",
  " (in 'optimizations.stan', line 84, column 4 to line 88, column 5)",
  " (in 'optimizations.stan', line 90, column 11 to column 23)",
@@ -17578,9 +17589,7 @@ static constexpr std::array<const char*, 116> locations_array__ =
  " (in 'optimizations.stan', line 128, column 4 to column 14)",
  " (in 'optimizations.stan', line 132, column 6 to column 21)",
  " (in 'optimizations.stan', line 129, column 4 to line 132, column 21)",
- " (in 'optimizations.stan', line 133, column 4 to column 17)",
  " (in 'optimizations.stan', line 134, column 4 to column 15)",
- " (in 'optimizations.stan', line 136, column 8 to column 22)",
  " (in 'optimizations.stan', line 137, column 8 to column 23)",
  " (in 'optimizations.stan', line 138, column 8 to column 24)",
  " (in 'optimizations.stan', line 135, column 21 to line 139, column 5)",
@@ -17614,12 +17623,12 @@ nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 106;
+    current_statement__ = 101;
     if (logical_gt(x, 342)) {
-      current_statement__ = 105;
+      current_statement__ = 100;
       return ;
     } 
-    current_statement__ = 107;
+    current_statement__ = 102;
     lp_accum__.add(y);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -17649,12 +17658,12 @@ rfun(const int& y, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 110;
+    current_statement__ = 105;
     if (logical_gt(y, 2)) {
-      current_statement__ = 109;
+      current_statement__ = 104;
       return (y + 24);
     } 
-    current_statement__ = 111;
+    current_statement__ = 106;
     return (y + 2);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -17680,9 +17689,9 @@ rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 113;
+    current_statement__ = 108;
     lp_accum__.add(2);
-    current_statement__ = 114;
+    current_statement__ = 109;
     return 24;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -17863,7 +17872,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         current_statement__ = 37;
         x = 3;
         current_statement__ = 38;
-        lp_accum__.add(x);
+        lp_accum__.add(3);
         current_statement__ = 40;
         if (logical_gt(theta, 2)) {
           current_statement__ = 39;
@@ -17872,96 +17881,90 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         current_statement__ = 41;
         lp_accum__.add(x);
         current_statement__ = 42;
-        x = 247;
+        lp_accum__.add(247);
         current_statement__ = 43;
-        lp_accum__.add(x);
-        current_statement__ = 44;
         x = 576;
-        current_statement__ = 45;
-        lp_accum__.add(x);
-        current_statement__ = 47;
+        current_statement__ = 44;
+        lp_accum__.add(576);
+        current_statement__ = 46;
         if (logical_gt(theta, 46)) {
-          current_statement__ = 46;
+          current_statement__ = 45;
           x = 5880;
         } 
-        current_statement__ = 48;
+        current_statement__ = 47;
         lp_accum__.add(x);
         double z;
         z = std::numeric_limits<double>::quiet_NaN(); 
         
-        current_statement__ = 50;
+        current_statement__ = 49;
         z = x;
-        current_statement__ = 51;
+        current_statement__ = 50;
         lp_accum__.add(x);
-        current_statement__ = 53;
+        current_statement__ = 52;
         if (logical_gt(theta, 46)) {
-          current_statement__ = 52;
+          current_statement__ = 51;
           z = x;
         } 
-        current_statement__ = 54;
+        current_statement__ = 53;
         lp_accum__.add(z);
-        current_statement__ = 55;
+        current_statement__ = 54;
         lp_accum__.add(2);
         {
           double y;
           y = std::numeric_limits<double>::quiet_NaN(); 
           
-          current_statement__ = 57;
-          y = 24;
-          current_statement__ = 58;
-          lp_accum__.add(y);
+          current_statement__ = 56;
+          lp_accum__.add(24);
         }
         {
           double y;
           y = std::numeric_limits<double>::quiet_NaN(); 
           
-          current_statement__ = 61;
-          y = 245;
-          current_statement__ = 62;
-          lp_accum__.add(y);
+          current_statement__ = 59;
+          lp_accum__.add(245);
         }
         {
-          current_statement__ = 64;
+          current_statement__ = 61;
           lp_accum__.add(2);
         }
-        current_statement__ = 68;
+        current_statement__ = 65;
         if (rfun_lp<false>(lp__, lp_accum__, pstream__)) {
           ;
         } else ;
-        current_statement__ = 70;
+        current_statement__ = 67;
         while (576) {
           break;
         }
-        current_statement__ = 72;
+        current_statement__ = 69;
         while (rfun_lp<false>(lp__, lp_accum__, pstream__)) {
           break;
         }
-        current_statement__ = 74;
+        current_statement__ = 71;
         for (int i = 31; i <= 225; ++i) { continue;}
-        current_statement__ = 76;
+        current_statement__ = 73;
         for (int i = 31; i <= 225; ++i) { break;}
-        current_statement__ = 78;
+        current_statement__ = 75;
         for (int i = rfun_lp<false>(lp__, lp_accum__, pstream__); i <= 225;
              ++i) {
           continue;
         }
-        current_statement__ = 80;
+        current_statement__ = 77;
         for (int i = rfun_lp<false>(lp__, lp_accum__, pstream__); i <= 225;
              ++i) {
           break;
         }
-        current_statement__ = 82;
+        current_statement__ = 79;
         for (int i = rfun_lp<false>(lp__, lp_accum__, pstream__); i <= 225;
              ++i) ;
         {
-          current_statement__ = 83;
+          current_statement__ = 80;
           lp_accum__.add(1);
-          current_statement__ = 84;
+          current_statement__ = 81;
           lp_accum__.add(24);
         }
         {
           {
-            current_statement__ = 86;
+            current_statement__ = 83;
             lp_accum__.add(1);
           }
         }
@@ -17969,41 +17972,37 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         temp = std::numeric_limits<double>::quiet_NaN(); 
         
         {
-          current_statement__ = 90;
+          current_statement__ = 87;
           if (pstream__) {
             stan_print(pstream__, "hello");
             stan_print(pstream__, "\n");
           }
         }
-        current_statement__ = 92;
-        temp = 4;
         double temp2;
         temp2 = std::numeric_limits<double>::quiet_NaN(); 
         
-        current_statement__ = 98;
+        current_statement__ = 93;
         for (int i = 2; i <= 3; ++i) {
-          current_statement__ = 94;
-          temp2 = 6;
-          current_statement__ = 95;
-          lp_accum__.add(temp);
-          current_statement__ = 96;
-          lp_accum__.add(temp2);
+          current_statement__ = 90;
+          lp_accum__.add(4);
+          current_statement__ = 91;
+          lp_accum__.add(6);
         }
         double dataonlyvar;
         dataonlyvar = std::numeric_limits<double>::quiet_NaN(); 
         
-        current_statement__ = 99;
+        current_statement__ = 94;
         dataonlyvar = 3;
-        current_statement__ = 100;
+        current_statement__ = 95;
         lp_accum__.add(dataonlyvar);
         local_scalar_t__ paramvar;
         paramvar = DUMMY_VAR__; 
         
         {
-          current_statement__ = 102;
+          current_statement__ = 97;
           paramvar = (theta * 34);
         }
-        current_statement__ = 104;
+        current_statement__ = 99;
         lp_accum__.add(paramvar);
       }
     } catch (const std::exception& e) {
@@ -18683,11 +18682,11 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       for (int i = 1; i <= N; ++i) {
         current_statement__ = 7;
         assign(y_hat,
-          ((rvalue(a, "a", index_uni(rvalue(pair, "pair", index_uni(i)))) +
-             (rvalue(beta, "beta", index_uni(1)) *
-               rvalue(treatment, "treatment", index_uni(i)))) +
-            (rvalue(beta, "beta", index_uni(2)) *
-              rvalue(pre_test, "pre_test", index_uni(i)))),
+          stan::math::fma(rvalue(beta, "beta", index_uni(2)),
+            rvalue(pre_test, "pre_test", index_uni(i)),
+            stan::math::fma(rvalue(beta, "beta", index_uni(1)),
+              rvalue(treatment, "treatment", index_uni(i)),
+              rvalue(a, "a", index_uni(rvalue(pair, "pair", index_uni(i)))))),
           "assigning variable y_hat", index_uni(i));
       }
       {
@@ -18782,11 +18781,11 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       for (int i = 1; i <= N; ++i) {
         current_statement__ = 7;
         assign(y_hat,
-          ((rvalue(a, "a", index_uni(rvalue(pair, "pair", index_uni(i)))) +
-             (rvalue(beta, "beta", index_uni(1)) *
-               rvalue(treatment, "treatment", index_uni(i)))) +
-            (rvalue(beta, "beta", index_uni(2)) *
-              rvalue(pre_test, "pre_test", index_uni(i)))),
+          stan::math::fma(rvalue(beta, "beta", index_uni(2)),
+            rvalue(pre_test, "pre_test", index_uni(i)),
+            stan::math::fma(rvalue(beta, "beta", index_uni(1)),
+              rvalue(treatment, "treatment", index_uni(i)),
+              rvalue(a, "a", index_uni(rvalue(pair, "pair", index_uni(i)))))),
           "assigning variable y_hat", index_uni(i));
       }
       if (emit_transformed_parameters__) {
@@ -19359,10 +19358,10 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
             binomial_logit_lpmf<propto__>(rvalue(n, "n", index_uni(i)),
               rvalue(N, "N", index_uni(i)),
               add(
-                (((alpha0 + (alpha1 * rvalue(x1, "x1", index_uni(i)))) +
-                   (alpha2 * rvalue(x2, "x2", index_uni(i)))) +
-                  (alpha12 * rvalue(x1x2, "x1x2", index_uni(i)))),
-                rvalue(b, "b", index_uni(i)))));
+                stan::math::fma(alpha12, rvalue(x1x2, "x1x2", index_uni(i)),
+                  stan::math::fma(alpha2, rvalue(x2, "x2", index_uni(i)),
+                    stan::math::fma(alpha1, rvalue(x1, "x1", index_uni(i)),
+                      alpha0))), rvalue(b, "b", index_uni(i)))));
         }
       }
     } catch (const std::exception& e) {
