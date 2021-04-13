@@ -17212,7 +17212,10 @@
     (meta <opaque>))
    ((pattern
      (Assignment (offset_multiplier (UArray UReal) ())
-      ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+      ((pattern
+        (FunApp (CompilerInternal FnReadDataSerializer)
+         (((pattern (Lit Int 5))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -17236,7 +17239,10 @@
     (meta <opaque>))
    ((pattern
      (Assignment (no_offset_multiplier (UArray UReal) ())
-      ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+      ((pattern
+        (FunApp (CompilerInternal FnReadDataSerializer)
+         (((pattern (Lit Int 5))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -17260,7 +17266,10 @@
     (meta <opaque>))
    ((pattern
      (Assignment (offset_no_multiplier (UArray UReal) ())
-      ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+      ((pattern
+        (FunApp (CompilerInternal FnReadDataSerializer)
+         (((pattern (Lit Int 5))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -17284,7 +17293,10 @@
     (meta <opaque>))
    ((pattern
      (Assignment (p_real_1d_ar (UArray UReal) ())
-      ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+      ((pattern
+        (FunApp (CompilerInternal FnReadDataSerializer)
+         (((pattern (Var N))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -17312,7 +17324,14 @@
     (meta <opaque>))
    ((pattern
      (Assignment (p_real_3d_ar (UArray (UArray (UArray UReal))) ())
-      ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+      ((pattern
+        (FunApp (CompilerInternal FnReadDataSerializer)
+         (((pattern (Var N))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var M))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var K))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta
         ((type_ (UArray (UArray (UArray UReal)))) (loc <opaque>)
          (adlevel AutoDiffable))))))
@@ -17342,7 +17361,10 @@
     (meta <opaque>))
    ((pattern
      (Assignment (p_vec UVector ())
-      ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+      ((pattern
+        (FunApp (CompilerInternal FnReadDataSerializer)
+         (((pattern (Var N))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -17367,7 +17389,12 @@
     (meta <opaque>))
    ((pattern
      (Assignment (p_1d_vec (UArray UVector) ())
-      ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+      ((pattern
+        (FunApp (CompilerInternal FnReadDataSerializer)
+         (((pattern (Var N))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var N))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta
         ((type_ (UArray UVector)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -17395,7 +17422,16 @@
     (meta <opaque>))
    ((pattern
      (Assignment (p_3d_vec (UArray (UArray (UArray UVector))) ())
-      ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+      ((pattern
+        (FunApp (CompilerInternal FnReadDataSerializer)
+         (((pattern (Var N))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var M))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var K))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var N))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta
         ((type_ (UArray (UArray (UArray UVector)))) (loc <opaque>)
          (adlevel AutoDiffable))))))
@@ -17417,7 +17453,10 @@
     (meta <opaque>))
    ((pattern
      (Assignment (p_row_vec URowVector ())
-      ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+      ((pattern
+        (FunApp (CompilerInternal FnReadDataSerializer)
+         (((pattern (Var N))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -17438,7 +17477,12 @@
     (meta <opaque>))
    ((pattern
      (Assignment (p_1d_row_vec (UArray URowVector) ())
-      ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+      ((pattern
+        (FunApp (CompilerInternal FnReadDataSerializer)
+         (((pattern (Var N))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var N))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta
         ((type_ (UArray URowVector)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -17467,7 +17511,16 @@
     (meta <opaque>))
    ((pattern
      (Assignment (p_3d_row_vec (UArray (UArray (UArray URowVector))) ())
-      ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+      ((pattern
+        (FunApp (CompilerInternal FnReadDataSerializer)
+         (((pattern (Var N))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var M))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var K))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var N))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta
         ((type_ (UArray (UArray (UArray URowVector)))) (loc <opaque>)
          (adlevel AutoDiffable))))))
@@ -17497,7 +17550,16 @@
     (meta <opaque>))
    ((pattern
      (Assignment (p_ar_mat (UArray (UArray UMatrix)) ())
-      ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+      ((pattern
+        (FunApp (CompilerInternal FnReadDataSerializer)
+         (((pattern (Lit Int 4))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 5))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 2))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 3))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta
         ((type_ (UArray (UArray UMatrix))) (loc <opaque>)
          (adlevel AutoDiffable))))))
@@ -17531,7 +17593,10 @@
     (meta <opaque>))
    ((pattern
      (Assignment (p_simplex UVector ())
-      ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+      ((pattern
+        (FunApp (CompilerInternal FnReadDataSerializer)
+         (((pattern (Var N))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -17554,7 +17619,12 @@
     (meta <opaque>))
    ((pattern
      (Assignment (p_1d_simplex (UArray UVector) ())
-      ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+      ((pattern
+        (FunApp (CompilerInternal FnReadDataSerializer)
+         (((pattern (Var N))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var N))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta
         ((type_ (UArray UVector)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -17586,7 +17656,16 @@
     (meta <opaque>))
    ((pattern
      (Assignment (p_3d_simplex (UArray (UArray (UArray UVector))) ())
-      ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+      ((pattern
+        (FunApp (CompilerInternal FnReadDataSerializer)
+         (((pattern (Var N))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var M))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var K))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var N))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta
         ((type_ (UArray (UArray (UArray UVector)))) (loc <opaque>)
          (adlevel AutoDiffable))))))
@@ -17618,7 +17697,12 @@
     (meta <opaque>))
    ((pattern
      (Assignment (p_cfcov_54 UVector ())
-      ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+      ((pattern
+        (FunApp (CompilerInternal FnReadDataSerializer)
+         (((pattern (Lit Int 5))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 4))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -17642,7 +17726,12 @@
     (meta <opaque>))
    ((pattern
      (Assignment (p_cfcov_33 UVector ())
-      ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+      ((pattern
+        (FunApp (CompilerInternal FnReadDataSerializer)
+         (((pattern (Lit Int 3))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 3))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -17669,7 +17758,14 @@
     (meta <opaque>))
    ((pattern
      (Assignment (p_cfcov_33_ar (UArray UVector) ())
-      ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+      ((pattern
+        (FunApp (CompilerInternal FnReadDataSerializer)
+         (((pattern (Var K))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 3))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 3))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta
         ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -17694,7 +17790,10 @@
     (meta <opaque>))
    ((pattern
      (Assignment (x_p UVector ())
-      ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+      ((pattern
+        (FunApp (CompilerInternal FnReadDataSerializer)
+         (((pattern (Lit Int 2))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -17712,7 +17811,10 @@
     (meta <opaque>))
    ((pattern
      (Assignment (y_p UVector ())
-      ((pattern (FunApp (CompilerInternal FnReadDataSerializer) ()))
+      ((pattern
+        (FunApp (CompilerInternal FnReadDataSerializer)
+         (((pattern (Lit Int 2))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
