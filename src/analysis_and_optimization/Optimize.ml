@@ -1100,7 +1100,7 @@ let settings_const b =
 let all_optimizations : optimization_settings = settings_const true
 let no_optimizations : optimization_settings = settings_const false
 
-type optimization_level = O0 | O1 | O2 | O3
+type optimization_level = O0 | O1 | Od
 
 let level_optimizations (lvl : optimization_level) : optimization_settings =
   match lvl with
@@ -1110,42 +1110,16 @@ let level_optimizations (lvl : optimization_level) : optimization_settings =
       ; static_loop_unrolling= false
       ; one_step_loop_unrolling= false
       ; list_collapsing= true
-      ; block_fixing= false
-      ; constant_propagation= true
-      ; expression_propagation= false
-      ; copy_propagation= true
-      ; dead_code_elimination= true
-      ; partial_evaluation= false
-      ; lazy_code_motion= false
-      ; optimize_ad_levels= false
-      ; preserve_stability= true }
-  | O2 ->
-      { function_inlining= false
-      ; static_loop_unrolling= false
-      ; one_step_loop_unrolling= false
-      ; list_collapsing= true
-      ; block_fixing= false
+      ; block_fixing= true
       ; constant_propagation= true
       ; expression_propagation= false
       ; copy_propagation= true
       ; dead_code_elimination= true
       ; partial_evaluation= true
       ; lazy_code_motion= false
-      ; optimize_ad_levels= false
-      ; preserve_stability= false }
-    | O3 -> { function_inlining= true
-    ; static_loop_unrolling= true
-    ; one_step_loop_unrolling= true
-    ; list_collapsing= true
-    ; block_fixing= false
-    ; constant_propagation= true
-    ; expression_propagation= true
-    ; copy_propagation= true
-    ; dead_code_elimination= true
-    ; partial_evaluation= true
-    ; lazy_code_motion= true
-    ; optimize_ad_levels= false
-    ; preserve_stability= false }
+      ; optimize_ad_levels= true
+      ; preserve_stability= true }
+  | Od -> all_optimizations
 
 let optimization_suite ?(settings = all_optimizations) mir =
   let preserve_stability = settings.preserve_stability in

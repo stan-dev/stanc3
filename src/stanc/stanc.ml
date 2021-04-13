@@ -109,16 +109,11 @@ let options =
     ; ( "-O1"
       , Arg.Unit (fun () -> opt_lvl := Optimize.O1)
       , "\tApply level 1 compiler optimizations (only basic optimizations)." )
-    ; ( "-O2"
-      , Arg.Unit (fun () -> opt_lvl := Optimize.O2)
-      , "\tApply level 2 compiler optimizations (all optimizations which are \
-         not likely to have small numerical differences from the original \
-         program)." )
-    ; ( "-O3"
-      , Arg.Unit (fun () -> opt_lvl := Optimize.O3)
+    ; ( "-Od"
+      , Arg.Unit (fun () -> opt_lvl := Optimize.Od)
       , "\tApply level 3 compiler optimizations (all optimizations)." )
     ; ( "--O"
-      , Arg.Unit (fun () -> opt_lvl := Optimize.O3)
+      , Arg.Unit (fun () -> opt_lvl := Optimize.Od)
       , "\tApply level 3 compiler optimizations (all optimizations)." )
     ; ( "--o"
       , Arg.Set_string output_file

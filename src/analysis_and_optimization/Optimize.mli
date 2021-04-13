@@ -78,7 +78,7 @@ type optimization_settings =
 val all_optimizations : optimization_settings
 val no_optimizations : optimization_settings
 
-type optimization_level = O0 | O1 | O2 | O3
+type optimization_level = O0 | O1 | Od
 
 val level_optimizations : optimization_level -> optimization_settings
 
