@@ -7,27 +7,27 @@ module Fixed = struct
   module First = Expr.Fixed
 
   module Pattern = struct
-    type ('a, 'b) t =
-      | Assignment of 'a lvalue * 'a
-      | TargetPE of 'a
-      | NRFunApp of Fun_kind.t * 'a list
+    type ('expr, 'exprs) t =
+      | Assignment of 'expr lvalue * 'expr
+      | TargetPE of 'expr
+      | NRFunApp of Fun_kind.t * 'expr list
       | Break
       | Continue
-      | Return of 'a option
+      | Return of 'expr option
       | Skip
-      | IfElse of 'a * 'b * 'b option
-      | While of 'a * 'b
-      | For of {loopvar: string; lower: 'a; upper: 'a; body: 'b}
-      | Profile of string * 'b list
-      | Block of 'b list
-      | SList of 'b list
+      | IfElse of 'expr * 'exprs * 'exprs option
+      | While of 'expr * 'exprs
+      | For of {loopvar: string; lower: 'expr; upper: 'expr; body: 'exprs}
+      | Profile of string * 'exprs list
+      | Block of 'exprs list
+      | SList of 'exprs list
       | Decl of
           { decl_adtype: UnsizedType.autodifftype
           ; decl_id: string
-          ; decl_type: 'a Type.t }
+          ; decl_type: 'expr Type.t }
     [@@deriving sexp, hash, map, fold, compare]
 
-    and 'a lvalue = string * UnsizedType.t * 'a Index.t list
+    and 'expr lvalue = string * UnsizedType.t * 'expr Index.t list
     [@@deriving sexp, hash, map, compare, fold]
 
     let pp pp_e pp_s ppf = function
@@ -71,7 +71,7 @@ module Fixed = struct
             (Type.pp pp_e) decl_type decl_id
 
     include Foldable.Make2 (struct
-      type nonrec ('a, 'b) t = ('a, 'b) t
+      type nonrec ('expr, 'exprs) t = ('expr, 'exprs) t
 
       let fold = fold
     end)

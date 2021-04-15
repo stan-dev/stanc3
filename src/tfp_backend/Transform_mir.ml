@@ -143,7 +143,7 @@ let trans_prog (p : Program.Typed.t) =
   in
   let rename_kwrds (s, e) = (add_suffix_to_kwrds s, e) in
   let rename_fdarg (e1, s, e2) = (e1, add_suffix_to_kwrds s, e2) in
-  let rename_func (s : 'a Program.fun_def) =
+  let rename_func (s : 'stmts Program.fun_def) =
     { s with
       fdname= add_suffix_to_kwrds s.fdname
     ; fdargs= List.map ~f:rename_fdarg s.fdargs }

@@ -1,6 +1,6 @@
 open Common
 
-type 'a t = Sized of 'a SizedType.t | Unsized of UnsizedType.t
+type 'dim_expr t = Sized of 'dim_expr SizedType.t | Unsized of UnsizedType.t
 [@@deriving sexp, compare, map, hash, fold]
 
 let pp pp_e ppf = function

@@ -1,13 +1,13 @@
 open Core_kernel
 open Common
 
-type 'a t =
+type 'dim_expr t =
   | SInt
   | SReal
-  | SVector of 'a
-  | SRowVector of 'a
-  | SMatrix of 'a * 'a
-  | SArray of 'a t * 'a
+  | SVector of 'dim_expr
+  | SRowVector of 'dim_expr
+  | SMatrix of 'dim_expr * 'dim_expr
+  | SArray of 'dim_expr t * 'dim_expr
 [@@deriving sexp, compare, map, hash, fold]
 
 let rec pp pp_e ppf = function

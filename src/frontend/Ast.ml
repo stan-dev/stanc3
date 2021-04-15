@@ -9,39 +9,41 @@ type identifier =
 [@@deriving sexp, hash, compare]
 
 (** Indices for array access *)
-type 'e index =
+type 'expr index =
   | All
-  | Single of 'e
-  | Upfrom of 'e
-  | Downfrom of 'e
-  | Between of 'e * 'e
+  | Single of 'expr
+  | Upfrom of 'expr
+  | Downfrom of 'expr
+  | Between of 'expr * 'expr
 [@@deriving sexp, hash, compare, map, fold]
 
 (** Front-end function kinds *)
 type fun_kind = StanLib | UserDefined [@@deriving compare, sexp, hash]
 
 (** Expression shapes (used for both typed and untyped expressions, where we
-    substitute untyped_expression or typed_expression for 'e *)
-type ('e, 'f) expression =
-  | TernaryIf of 'e * 'e * 'e
-  | BinOp of 'e * Operator.t * 'e
-  | PrefixOp of Operator.t * 'e
-  | PostfixOp of 'e * Operator.t
+    substitute untyped_expression or typed_expression for 'expr *)
+type ('expr, 'fun_kind) expression =
+  | TernaryIf of 'expr * 'expr * 'expr
+  | BinOp of 'expr * Operator.t * 'expr
+  | PrefixOp of Operator.t * 'expr
+  | PostfixOp of 'expr * Operator.t
   | Variable of identifier
   | IntNumeral of string
   | RealNumeral of string
-  | FunApp of 'f * identifier * 'e list
-  | CondDistApp of 'f * identifier * 'e list
+  | FunApp of 'fun_kind * identifier * 'expr list
+  | CondDistApp of 'fun_kind * identifier * 'expr list
   (* GetLP is deprecated *)
   | GetLP
   | GetTarget
-  | ArrayExpr of 'e list
-  | RowVectorExpr of 'e list
-  | Paren of 'e
-  | Indexed of 'e * 'e index list
+  | ArrayExpr of 'expr list
+  | RowVectorExpr of 'expr list
+  | Paren of 'expr
+  | Indexed of 'expr * 'expr index list
 [@@deriving sexp, hash, compare, map, fold]
 
-type ('m, 'f) expr_with = {expr: (('m, 'f) expr_with, 'f) expression; emeta: 'm}
+type ('meta_loc, 'fun_kind) expr_with =
+  { expr: (('meta_loc, 'fun_kind) expr_with, 'fun_kind) expression
+  ; emeta: 'meta_loc }
 [@@deriving sexp, compare, map, hash, fold]
 
 (** Untyped expressions, which have location_spans as meta-data *)
@@ -86,23 +88,24 @@ type assignmentoperator =
 [@@deriving sexp, hash, compare]
 
 (** Truncations *)
-type 'e truncation =
+type 'expr truncation =
   | NoTruncate
-  | TruncateUpFrom of 'e
-  | TruncateDownFrom of 'e
-  | TruncateBetween of 'e * 'e
+  | TruncateUpFrom of 'expr
+  | TruncateDownFrom of 'expr
+  | TruncateBetween of 'expr * 'expr
 [@@deriving sexp, hash, compare, map, fold]
 
 (** Things that can be printed *)
-type 'e printable = PString of string | PExpr of 'e
+type 'expr printable = PString of string | PExpr of 'expr
 [@@deriving sexp, compare, map, hash, fold]
 
-type ('l, 'e) lvalue =
+type ('assignee, 'expr) lvalue =
   | LVariable of identifier
-  | LIndexed of 'l * 'e index list
+  | LIndexed of 'assignee * 'expr index list
 [@@deriving sexp, hash, compare, map, fold]
 
-type ('e, 'm) lval_with = {lval: (('e, 'm) lval_with, 'e) lvalue; lmeta: 'm}
+type ('expr, 'meta_loc) lval_with =
+  {lval: (('expr, 'meta_loc) lval_with, 'expr) lvalue; lmeta: 'meta_loc}
 [@@deriving sexp, hash, compare, map, fold]
 
 type untyped_lval = (untyped_expression, located_meta) lval_with
@@ -112,44 +115,44 @@ type typed_lval = (typed_expression, typed_expr_meta) lval_with
 [@@deriving sexp, hash, compare, map, fold]
 
 (** Statement shapes, where we substitute untyped_expression and untyped_statement
-    for 'e and 's respectively to get untyped_statement and typed_expression and
+    for 'expr and 'stmt_lst respectively to get untyped_statement and typed_expression and
     typed_statement to get typed_statement    *)
-type ('e, 's, 'l, 'f) statement =
+type ('expr, 'stmt_lst, 'assignee, 'fun_kind) statement =
   | Assignment of
-      { assign_lhs: 'l
+      { assign_lhs: 'assignee
       ; assign_op: assignmentoperator
-      ; assign_rhs: 'e }
-  | NRFunApp of 'f * identifier * 'e list
-  | TargetPE of 'e
+      ; assign_rhs: 'expr }
+  | NRFunApp of 'fun_kind * identifier * 'expr list
+  | TargetPE of 'expr
   (* IncrementLogProb is deprecated *)
-  | IncrementLogProb of 'e
+  | IncrementLogProb of 'expr
   | Tilde of
-      { arg: 'e
+      { arg: 'expr
       ; distribution: identifier
-      ; args: 'e list
-      ; truncation: 'e truncation }
+      ; args: 'expr list
+      ; truncation: 'expr truncation }
   | Break
   | Continue
-  | Return of 'e
+  | Return of 'expr
   | ReturnVoid
-  | Print of 'e printable list
-  | Reject of 'e printable list
+  | Print of 'expr printable list
+  | Reject of 'expr printable list
   | Skip
-  | IfThenElse of 'e * 's * 's option
-  | While of 'e * 's
+  | IfThenElse of 'expr * 'stmt_lst * 'stmt_lst option
+  | While of 'expr * 'stmt_lst
   | For of
       { loop_variable: identifier
-      ; lower_bound: 'e
-      ; upper_bound: 'e
-      ; loop_body: 's }
-  | ForEach of identifier * 'e * 's
-  | Profile of string * 's list
-  | Block of 's list
+      ; lower_bound: 'expr
+      ; upper_bound: 'expr
+      ; loop_body: 'stmt_lst }
+  | ForEach of identifier * 'expr * 'stmt_lst
+  | Profile of string * 'stmt_lst list
+  | Block of 'stmt_lst list
   | VarDecl of
-      { decl_type: 'e Middle.Type.t
-      ; transformation: 'e Middle.Program.transformation
+      { decl_type: 'expr Middle.Type.t
+      ; transformation: 'expr Middle.Program.transformation
       ; identifier: identifier
-      ; initial_value: 'e option
+      ; initial_value: 'expr option
       ; is_global: bool }
   | FunDef of
       { returntype: Middle.UnsizedType.returntype
@@ -157,7 +160,7 @@ type ('e, 's, 'l, 'f) statement =
       ; arguments:
           (Middle.UnsizedType.autodifftype * Middle.UnsizedType.t * identifier)
           list
-      ; body: 's }
+      ; body: 'stmt_lst }
 [@@deriving sexp, hash, compare, map, fold]
 
 (** Statement return types which we will decorate statements with during type
@@ -175,8 +178,14 @@ type statement_returntype =
   | AnyReturnType
 [@@deriving sexp, hash, compare]
 
-type ('e, 'm, 'l, 'f) statement_with =
-  {stmt: ('e, ('e, 'm, 'l, 'f) statement_with, 'l, 'f) statement; smeta: 'm}
+type ('expr, 'meta_loc, 'assignee, 'fun_kind) statement_with =
+  { stmt:
+      ( 'expr
+      , ('expr, 'meta_loc, 'assignee, 'fun_kind) statement_with
+      , 'assignee
+      , 'fun_kind )
+      statement
+  ; smeta: 'meta_loc }
 [@@deriving sexp, compare, map, hash, fold]
 
 (** Untyped statements, which have location_spans as meta-data *)
@@ -205,15 +214,15 @@ let mk_typed_statement ~stmt ~loc ~return_type =
   {stmt; smeta= {loc; return_type}}
 
 (** Program shapes, where we obtain types of programs if we substitute typed or untyped
-    statements for 's *)
-type 's program =
-  { functionblock: 's list option
-  ; datablock: 's list option
-  ; transformeddatablock: 's list option
-  ; parametersblock: 's list option
-  ; transformedparametersblock: 's list option
-  ; modelblock: 's list option
-  ; generatedquantitiesblock: 's list option }
+    statements for 'stmt_lst *)
+type 'stmt_lst program =
+  { functionblock: 'stmt_lst list option
+  ; datablock: 'stmt_lst list option
+  ; transformeddatablock: 'stmt_lst list option
+  ; parametersblock: 'stmt_lst list option
+  ; transformedparametersblock: 'stmt_lst list option
+  ; modelblock: 'stmt_lst list option
+  ; generatedquantitiesblock: 'stmt_lst list option }
 [@@deriving sexp, hash, compare, map, fold]
 
 (** Untyped programs (before type checking) *)

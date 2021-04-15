@@ -4,8 +4,8 @@ open Core_kernel
 
 (* TODO: I'm sure this implementation could be made more efficient if that's necessary. There's no need for all the string comparison.
 We could just keep track of the count of the entry into the hash table and use that for comparison. *)
-type 'a state =
-  { table: (string, 'a) Hashtbl.t
+type 'value state =
+  { table: (string, 'value) Hashtbl.t
   ; stack: string Stack.t
   ; scopedepth: int ref
   ; readonly: (string, unit) Hashtbl.t

@@ -512,7 +512,7 @@ let%expect_test "insert before" =
   [%sexp (l : int list)] |> print_s ;
   [%expect {| (1 2 3 4 5 999 6) |}]
 
-let map_prog_stmt_lists f (p : ('a, 'b) Program.t) =
+let map_prog_stmt_lists f (p : ('stmt, 'stmts) Program.t) =
   { p with
     Program.prepare_data= f p.prepare_data
   ; log_prob= f p.log_prob

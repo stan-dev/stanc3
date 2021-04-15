@@ -107,7 +107,6 @@ let pp_bool_expr ppf expr =
   | _ -> pp_expr ppf expr
 
 let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
-  (* ({stmt; smeta} : (mtype_loc_ad, 'a) stmt_with) = *)
   let pp_stmt_list = list ~sep:cut pp_statement in
   ( match pattern with
   | Block _ | SList _ | Decl _ | Skip | Break | Continue -> ()
@@ -132,7 +131,7 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
        inside some function call - the function should get its own copy
        (in all cases???) *)
       let rec maybe_deep_copy e =
-        let recurse (e : 'a Expr.Fixed.t) =
+        let recurse (e : 'exprs Expr.Fixed.t) =
           { e with
             Expr.Fixed.pattern=
               Expr.Fixed.Pattern.map maybe_deep_copy e.pattern }

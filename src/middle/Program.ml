@@ -5,13 +5,13 @@ open Helpers
 type fun_arg_decl = (UnsizedType.autodifftype * string * UnsizedType.t) list
 [@@deriving sexp, hash, map]
 
-type 'a fun_def =
+type 'stmts fun_def =
   { fdrt: UnsizedType.t option
   ; fdname: string
   ; fdargs:
       (UnsizedType.autodifftype * string * UnsizedType.t) list
       (* If fdbody is None, this is a function declaration without body. *)
-  ; fdbody: 'a option
+  ; fdbody: 'stmts option
   ; fdloc: Location_span.t sexp_opaque [@compare.ignore] }
 [@@deriving compare, hash, map, sexp, map, fold]
 
@@ -19,14 +19,14 @@ type io_block = Parameters | TransformedParameters | GeneratedQuantities
 [@@deriving sexp, hash]
 
 (** Transformations (constraints) for global variable declarations *)
-type 'e transformation =
+type 'expr transformation =
   | Identity
-  | Lower of 'e
-  | Upper of 'e
-  | LowerUpper of 'e * 'e
-  | Offset of 'e
-  | Multiplier of 'e
-  | OffsetMultiplier of 'e * 'e
+  | Lower of 'expr
+  | Upper of 'expr
+  | LowerUpper of 'expr * 'expr
+  | Offset of 'expr
+  | Multiplier of 'expr
+  | OffsetMultiplier of 'expr * 'expr
   | Ordered
   | PositiveOrdered
   | Simplex
@@ -37,21 +37,25 @@ type 'e transformation =
   | Covariance
 [@@deriving sexp, compare, map, hash, fold]
 
-type 'e outvar =
-  { out_unconstrained_st: 'e SizedType.t
-  ; out_constrained_st: 'e SizedType.t
+type 'expr outvar =
+  { out_unconstrained_st: 'expr SizedType.t
+  ; out_constrained_st: 'expr SizedType.t
   ; out_block: io_block
-  ; out_trans: 'e transformation }
+  ; out_trans: 'expr transformation }
 [@@deriving sexp, map, hash, fold]
 
-type ('a, 'b) t =
-  { functions_block: 'b fun_def list
-  ; input_vars: (string * 'a SizedType.t) list
-  ; prepare_data: 'b list (* data & transformed data decls and statements *)
-  ; log_prob: 'b list (*assumes data & params are in scope and ready*)
-  ; generate_quantities: 'b list (* assumes data & params ready & in scope*)
-  ; transform_inits: 'b list
-  ; output_vars: (string * 'a outvar) list
+type ('stmt, 'stmts) t =
+  { functions_block: 'stmts fun_def list
+  ; input_vars: (string * 'stmt SizedType.t) list
+  ; prepare_data:
+      'stmts list
+      (* data & transformed data decls and statements *)
+  ; log_prob: 'stmts list (*assumes data & params are in scope and ready*)
+  ; generate_quantities:
+      'stmts list
+      (* assumes data & params ready & in scope*)
+  ; transform_inits: 'stmts list
+  ; output_vars: (string * 'stmt outvar) list
   ; prog_name: string
   ; prog_path: string }
 [@@deriving sexp, map, fold]

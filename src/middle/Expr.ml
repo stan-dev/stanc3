@@ -7,14 +7,14 @@ module Fixed = struct
   module Pattern = struct
     type litType = Int | Real | Str [@@deriving sexp, hash, compare]
 
-    type 'a t =
+    type 'exprs t =
       | Var of string
       | Lit of litType * string
-      | FunApp of Fun_kind.t * 'a list
-      | TernaryIf of 'a * 'a * 'a
-      | EAnd of 'a * 'a
-      | EOr of 'a * 'a
-      | Indexed of 'a * 'a Index.t list
+      | FunApp of Fun_kind.t * 'exprs list
+      | TernaryIf of 'exprs * 'exprs * 'exprs
+      | EAnd of 'exprs * 'exprs
+      | EOr of 'exprs * 'exprs
+      | Indexed of 'exprs * 'exprs Index.t list
     [@@deriving sexp, hash, map, compare, fold]
 
     let pp pp_e ppf = function
@@ -41,9 +41,10 @@ module Fixed = struct
       | EAnd (l, r) -> Fmt.pf ppf "%a && %a" pp_e l pp_e r
       | EOr (l, r) -> Fmt.pf ppf "%a || %a" pp_e l pp_e r
 
-    include Foldable.Make (struct type nonrec 'a t = 'a t
+    include Foldable.Make (struct
+      type nonrec 'exprs t = 'exprs t
 
-                                  let fold = fold
+      let fold = fold
     end)
   end
 
