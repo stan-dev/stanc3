@@ -7,7 +7,7 @@ module Fixed = struct
   module First = Expr.Fixed
 
   module Pattern = struct
-    type ('expr, 'exprs) t =
+    type ('expr, 'stmts) t =
       | Assignment of 'expr lvalue * 'expr
       | TargetPE of 'expr
       | NRFunApp of Fun_kind.t * 'expr list
@@ -15,12 +15,12 @@ module Fixed = struct
       | Continue
       | Return of 'expr option
       | Skip
-      | IfElse of 'expr * 'exprs * 'exprs option
-      | While of 'expr * 'exprs
-      | For of {loopvar: string; lower: 'expr; upper: 'expr; body: 'exprs}
-      | Profile of string * 'exprs list
-      | Block of 'exprs list
-      | SList of 'exprs list
+      | IfElse of 'expr * 'stmts * 'stmts option
+      | While of 'expr * 'stmts
+      | For of {loopvar: string; lower: 'expr; upper: 'expr; body: 'stmts}
+      | Profile of string * 'stmts list
+      | Block of 'stmts list
+      | SList of 'stmts list
       | Decl of
           { decl_adtype: UnsizedType.autodifftype
           ; decl_id: string
@@ -71,7 +71,7 @@ module Fixed = struct
             (Type.pp pp_e) decl_type decl_id
 
     include Foldable.Make2 (struct
-      type nonrec ('expr, 'exprs) t = ('expr, 'exprs) t
+      type nonrec ('expr, 'stmts) t = ('expr, 'stmts) t
 
       let fold = fold
     end)
