@@ -3,9 +3,10 @@ open Core_kernel
 open Common
 open Middle
 open Mir_utils
-
 let ( = ) = Stdlib.( = )
+let ( > ) = Stdlib.( > )
 let ( <> ) = Stdlib.( <> )
+
 
 let preserve_stability = false
 

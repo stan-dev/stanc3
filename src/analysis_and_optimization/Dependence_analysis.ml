@@ -6,6 +6,8 @@ open Dataflow_utils
 open Monotone_framework_sigs
 open Monotone_framework
 
+let ( = ) = Stdlib.( = )
+
 (***********************************)
 (* Dependency analysis & interface *)
 (***********************************)

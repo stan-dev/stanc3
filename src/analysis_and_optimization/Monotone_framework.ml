@@ -6,6 +6,12 @@ open Mir_utils
 open Middle
 
 let ( = ) = Stdlib.( = )
+let ( < ) = Stdlib.( < )
+let ( > ) = Stdlib.( > )
+let ( <> ) = Stdlib.( <> )
+let ( <= ) = Stdlib.( <= )
+let ( >= ) = Stdlib.( >= )
+
 
 let preserve_stability = false
 

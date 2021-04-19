@@ -6,6 +6,12 @@ open Mir_utils
 
 
 let ( = ) = Stdlib.( = )
+let ( < ) = Stdlib.( < )
+let ( > ) = Stdlib.( > )
+let ( <> ) = Stdlib.( <> )
+let ( <= ) = Stdlib.( <= )
+let ( >= ) = Stdlib.( >= )
+
 
 (*open Dataflow_utils*)
 open Dependence_analysis
