@@ -5,6 +5,13 @@ open Analysis_and_optimization
 open Middle
 open Js_of_ocaml
 
+let ( = ) = Stdlib.( = )
+let ( < ) = Stdlib.( < )
+let ( > ) = Stdlib.( > )
+let ( <> ) = Stdlib.( <> )
+let ( <= ) = Stdlib.( <= )
+let ( >= ) = Stdlib.( >= )
+
 let version = "%%NAME%% %%VERSION%%"
 
 let warn_uninitialized_msgs

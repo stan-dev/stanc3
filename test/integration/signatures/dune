@@ -1,10 +1,13 @@
 (rule
  (targets stan_math_sigs.output)
- (deps (package stanc))
+ (deps
+  (package stanc))
  (action
-  (with-stdout-to %{targets}
+  (with-stdout-to
+   %{targets}
    (run %{bin:stanc} --dump-stan-math-signatures))))
 
-(alias
- (name runtest)
- (action (diff stan_math_sigs.expected stan_math_sigs.output)))
+(rule
+ (alias runtest)
+ (action
+  (diff stan_math_sigs.expected stan_math_sigs.output)))

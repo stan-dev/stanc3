@@ -1,10 +1,15 @@
 (rule
  (targets stanc.output)
- (deps (package stanc) (:stanfiles (glob_files *.stan)))
+ (deps
+  (package stanc)
+  (:stanfiles
+   (glob_files *.stan)))
  (action
-  (with-stdout-to %{targets}
+  (with-stdout-to
+   %{targets}
    (run %{bin:run_bin_on_args} "%{bin:stanc} --name=foo " %{stanfiles}))))
 
-(alias
- (name runtest)
- (action (diff stanc.expected stanc.output)))
+(rule
+ (alias runtest)
+ (action
+  (diff stanc.expected stanc.output)))

@@ -189,7 +189,7 @@ return_type:
   | VOID
     { grammar_logger "return_type VOID" ; Void }
   | ut=unsized_type
-    {  grammar_logger "return_type unsized_type" ; ReturnType ut }
+    {  grammar_logger "return_type unsized_type" ; UnsizedType.ReturnType ut }
 
 arg_decl:
   | od=option(DATABLOCK) ut=unsized_type id=decl_identifier
@@ -372,38 +372,38 @@ top_var_decl_no_assign:
 
 sized_basic_type:
   | INT
-    { grammar_logger "INT_var_type" ; (SizedType.SInt, Identity) }
+    { grammar_logger "INT_var_type" ; (SizedType.SInt, Program.Identity) }
   | REAL
-    { grammar_logger "REAL_var_type" ; (SizedType.SReal, Identity) }
+    { grammar_logger "REAL_var_type" ; (SizedType.SReal, Program.Identity) }
   | VECTOR LBRACK e=expression RBRACK
-    { grammar_logger "VECTOR_var_type" ; (SizedType.SVector e, Identity) }
+    { grammar_logger "VECTOR_var_type" ; (SizedType.SVector e, Program.Identity) }
   | ROWVECTOR LBRACK e=expression RBRACK
-    { grammar_logger "ROWVECTOR_var_type" ; (SizedType.SRowVector e , Identity) }
+    { grammar_logger "ROWVECTOR_var_type" ; (SizedType.SRowVector e , Program.Identity) }
   | MATRIX LBRACK e1=expression COMMA e2=expression RBRACK
-    { grammar_logger "MATRIX_var_type" ; (SizedType.SMatrix (e1, e2), Identity) }
+    { grammar_logger "MATRIX_var_type" ; (SizedType.SMatrix (e1, e2), Program.Identity) }
 
 top_var_type:
   | INT r=range_constraint
-    { grammar_logger "INT_top_var_type" ; (SInt, r) }
+    { grammar_logger "INT_top_var_type" ; (SizedType.SInt, r) }
   | REAL c=type_constraint
-    { grammar_logger "REAL_top_var_type" ; (SReal, c) }
+    { grammar_logger "REAL_top_var_type" ; (SizedType.SReal, c) }
   | VECTOR c=type_constraint LBRACK e=expression RBRACK
-    { grammar_logger "VECTOR_top_var_type" ; (SVector e, c) }
+    { grammar_logger "VECTOR_top_var_type" ; (SizedType.SVector e, c) }
   | ROWVECTOR c=type_constraint LBRACK e=expression RBRACK
-    { grammar_logger "ROWVECTOR_top_var_type" ; (SRowVector e, c) }
+    { grammar_logger "ROWVECTOR_top_var_type" ; (SizedType.SRowVector e, c) }
   | MATRIX c=type_constraint LBRACK e1=expression COMMA e2=expression RBRACK
-    { grammar_logger "MATRIX_top_var_type" ; (SMatrix (e1, e2), c) }
+    { grammar_logger "MATRIX_top_var_type" ; (SizedType.SMatrix (e1, e2), c) }
   | ORDERED LBRACK e=expression RBRACK
-    { grammar_logger "ORDERED_top_var_type" ; (SVector e, Ordered) }
+    { grammar_logger "ORDERED_top_var_type" ; (SizedType.SVector e, Program.Ordered) }
   | POSITIVEORDERED LBRACK e=expression RBRACK
     {
       grammar_logger "POSITIVEORDERED_top_var_type" ;
       (SVector e, PositiveOrdered)
     }
   | SIMPLEX LBRACK e=expression RBRACK
-    { grammar_logger "SIMPLEX_top_var_type" ; (SVector e, Simplex) }
+    { grammar_logger "SIMPLEX_top_var_type" ; (SizedType.SVector e, Program.Simplex) }
   | UNITVECTOR LBRACK e=expression RBRACK
-    { grammar_logger "UNITVECTOR_top_var_type" ; (SVector e, UnitVector) }
+    { grammar_logger "UNITVECTOR_top_var_type" ; (SizedType.SVector e, Program.UnitVector) }
   | CHOLESKYFACTORCORR LBRACK e=expression RBRACK
     {
       grammar_logger "CHOLESKYFACTORCORR_top_var_type" ;
@@ -413,13 +413,13 @@ top_var_type:
     RBRACK
     {
       grammar_logger "CHOLESKYFACTORCOV_top_var_type" ;
-      match oe2 with Some (_,e2) -> ( SMatrix (e1, e2), CholeskyCov)
-                   | _           ->  (SMatrix (e1, e1),  CholeskyCov)
+      match oe2 with Some (_,e2) -> ( SizedType.SMatrix (e1, e2), Program.CholeskyCov)
+                   | _           ->  (SizedType.SMatrix (e1, e1),  Program.CholeskyCov)
     }
   | CORRMATRIX LBRACK e=expression RBRACK
-    { grammar_logger "CORRMATRIX_top_var_type" ; (SMatrix (e, e), Correlation) }
+    { grammar_logger "CORRMATRIX_top_var_type" ; (SizedType.SMatrix (e, e), Program.Correlation) }
   | COVMATRIX LBRACK e=expression RBRACK
-    { grammar_logger "COVMATRIX_top_var_type" ; (SMatrix (e, e), Covariance) }
+    { grammar_logger "COVMATRIX_top_var_type" ; (SizedType.SMatrix (e, e), Program.Covariance) }
 
 type_constraint:
   | r=range_constraint

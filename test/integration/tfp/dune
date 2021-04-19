@@ -1,54 +1,74 @@
 (rule
  (targets eight_schools.py.output)
- (deps (package stanc) (:stanfiles ../good/code-gen/eight_schools_ncp.stan))
+ (deps
+  (package stanc)
+  (:stanfiles ../good/code-gen/eight_schools_ncp.stan))
  (action
-  (with-stdout-to %{targets}
+  (with-stdout-to
+   %{targets}
    (run %{bin:stan2tfp} %{stanfiles}))))
 
-(alias
- (name runtest)
- (action (diff ./tfp_models/eight_schools.py eight_schools.py.output)))
+(rule
+ (alias runtest)
+ (action
+  (diff ./tfp_models/eight_schools.py eight_schools.py.output)))
 
 (rule
  (targets normal_lub.py.output)
- (deps (package stanc) (:stanfiles ./stan_models/normal_lub.stan))
+ (deps
+  (package stanc)
+  (:stanfiles ./stan_models/normal_lub.stan))
  (action
-  (with-stdout-to %{targets}
+  (with-stdout-to
+   %{targets}
    (run %{bin:stan2tfp} %{stanfiles}))))
 
-(alias
- (name runtest)
- (action (diff ./tfp_models/normal_lub.py normal_lub.py.output)))
+(rule
+ (alias runtest)
+ (action
+  (diff ./tfp_models/normal_lub.py normal_lub.py.output)))
 
 (rule
  (targets nested_expr.py.output)
- (deps (package stanc) (:stanfiles ./stan_models/nested_expr.stan))
+ (deps
+  (package stanc)
+  (:stanfiles ./stan_models/nested_expr.stan))
  (action
-  (with-stdout-to %{targets}
+  (with-stdout-to
+   %{targets}
    (run %{bin:stan2tfp} %{stanfiles}))))
 
-(alias
- (name runtest)
- (action (diff ./tfp_models/nested_expr.py nested_expr.py.output)))
+(rule
+ (alias runtest)
+ (action
+  (diff ./tfp_models/nested_expr.py nested_expr.py.output)))
 
 (rule
  (targets python_kwrds.py.output)
- (deps (package stanc) (:stanfiles ./stan_models/python_kwrds.stan))
+ (deps
+  (package stanc)
+  (:stanfiles ./stan_models/python_kwrds.stan))
  (action
-  (with-stdout-to %{targets}
+  (with-stdout-to
+   %{targets}
    (run %{bin:stan2tfp} %{stanfiles}))))
 
-(alias
- (name runtest)
- (action (diff ./tfp_models/python_kwrds.py python_kwrds.py.output)))
+(rule
+ (alias runtest)
+ (action
+  (diff ./tfp_models/python_kwrds.py python_kwrds.py.output)))
 
 (rule
  (targets transformed_data.py.output)
- (deps (package stanc) (:stanfiles ./stan_models/transformed_data.stan))
+ (deps
+  (package stanc)
+  (:stanfiles ./stan_models/transformed_data.stan))
  (action
-  (with-stdout-to %{targets}
+  (with-stdout-to
+   %{targets}
    (run %{bin:stan2tfp} %{stanfiles}))))
 
-(alias
- (name runtest) 
- (action (diff ./tfp_models/transformed_data.py transformed_data.py.output)))
+(rule
+ (alias runtest)
+ (action
+  (diff ./tfp_models/transformed_data.py transformed_data.py.output)))

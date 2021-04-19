@@ -1,46 +1,56 @@
 (library
-  (name frontend)
-  (libraries core_kernel re menhirLib fmt middle analysis_and_optimization)
-  (inline_tests)
-  (preprocess (pps ppx_jane ppx_deriving.fold ppx_deriving.map)))
+ (name frontend)
+ (libraries core_kernel re menhirLib fmt middle analysis_and_optimization)
+ (inline_tests)
+ (preprocess
+  (pps ppx_jane ppx_deriving.fold ppx_deriving.map)))
 
 (ocamllex lexer)
 
+(env
+ (dev
+  (flags (:standard -warn-error -3-9))))
+  
 (rule
  (targets parsing_errors.ml)
  (deps parser.mly parser.messages)
  (action
-  (with-stdout-to %{targets}
-   (run menhir
-    --explain
-    --strict
-    --unused-tokens parser.mly --compile-errors parser.messages))))
+  (with-stdout-to
+   %{targets}
+   (run menhir --explain --strict --unused-tokens parser.mly --compile-errors
+     parser.messages))))
 
 (menhir
  (modules parser)
  (flags :standard --table --strict --unused-tokens --fixed-exception))
 
 (rule
- (with-stdout-to parser_updated.messages
+ (with-stdout-to
+  parser_updated.messages
   (run menhir %{dep:parser.mly} --update-errors %{dep:parser.messages})))
 
 (rule
- (with-stdout-to parser_updated_trimmed.messages
+ (with-stdout-to
+  parser_updated_trimmed.messages
   (run %{dep:strip_redundant_parser_state.py} %{dep:parser_updated.messages})))
 
 (rule
  (targets parser_new.messages)
  (action
-   (with-stdout-to %{targets} (run menhir --list-errors %{dep:parser.mly}))))
+  (with-stdout-to
+   %{targets}
+   (run menhir --list-errors %{dep:parser.mly}))))
 
-(alias
- (name update_messages)
+(rule
+ (alias update_messages)
  (action
   (progn
-   (run %{dep:add_missing_messages.py} %{dep:parser.mly} %{dep:parser_new.messages} %{dep:parser_updated_trimmed.messages})
+   (run %{dep:add_missing_messages.py} %{dep:parser.mly}
+     %{dep:parser_new.messages} %{dep:parser_updated_trimmed.messages})
    (diff %{dep:parser.messages} %{dep:parser_updated_trimmed.messages}))))
 
-(alias
- (name runtest)
+(rule
+ (alias runtest)
  (action
-  (run menhir parser.mly --compare-errors %{dep:parser_new.messages} --compare-errors %{dep:parser.messages})))
+  (run menhir parser.mly --compare-errors %{dep:parser_new.messages}
+    --compare-errors %{dep:parser.messages})))
