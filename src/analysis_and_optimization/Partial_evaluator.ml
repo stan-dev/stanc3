@@ -4,6 +4,13 @@ open Core_kernel
 open Mir_utils
 open Middle
 
+let ( = ) = Stdlib.( = )
+let ( < ) = Stdlib.( < )
+let ( > ) = Stdlib.( > )
+let ( <> ) = Stdlib.( <> )
+let ( <= ) = Stdlib.( <= )
+let ( >= ) = Stdlib.( >= )
+
 let preserve_stability = false
 
 let is_int i Expr.Fixed.({pattern; _}) =

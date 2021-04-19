@@ -10,7 +10,7 @@ let pp_context_exn ppf {filename; line_num; col_num; _} =
   let open In_channel in
   let input = create filename in
   for _ = 1 to line_num - 3 do
-    ignore (input_line_exn input)
+    ignore (input_line_exn input : string)
   done ;
   let get_line num =
     if num > 0 then

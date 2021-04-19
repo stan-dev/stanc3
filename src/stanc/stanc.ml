@@ -6,6 +6,8 @@ open Stan_math_backend
 open Analysis_and_optimization
 open Middle
 
+let ( = ) = Stdlib.( = )
+
 (** The main program. *)
 let version = "%%NAME%%3 %%VERSION%%"
 

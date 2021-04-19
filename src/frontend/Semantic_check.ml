@@ -8,7 +8,13 @@ open Symbol_table
 open Middle
 open Ast
 open Errors
+
 module Validate = Common.Validation.Make (Semantic_error)
+
+
+let ( = ) = Stdlib.( = )
+let ( <> ) = Stdlib.( <> )
+let ( < ) = Stdlib.( < )
 
 (* There is a semantic checking function for each AST node that calls
    the checking functions for its children left to right. *)

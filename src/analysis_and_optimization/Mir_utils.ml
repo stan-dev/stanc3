@@ -4,6 +4,9 @@ open Middle.Program
 open Middle.Expr
 open Dataflow_types
 
+let ( = ) = Stdlib.( = )
+let ( <> ) = Stdlib.( <> )
+
 let rec fold_expr ~take_expr ~(init : 'c) (expr : Expr.Typed.t) : 'c =
   Expr.Fixed.Pattern.fold_left
     ~f:(fun a e -> fold_expr ~take_expr ~init:(take_expr a e) e)

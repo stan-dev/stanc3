@@ -4,6 +4,9 @@ open Dataflow_types
 open Dataflow_utils
 open Mir_utils
 
+
+let ( = ) = Stdlib.( = )
+
 (*open Dataflow_utils*)
 open Dependence_analysis
 

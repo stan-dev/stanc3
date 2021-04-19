@@ -1,6 +1,10 @@
 open Core_kernel
 open Middle
 
+let ( = ) = Stdlib.( = )
+let ( <> ) = Stdlib.( <> )
+let ( >= ) = Stdlib.( >= )
+
 (* XXX fix exn *)
 let unwrap_return_exn = function
   | Some (UnsizedType.ReturnType ut) -> ut

@@ -3,7 +3,7 @@ open Middle
 open Analysis_and_optimization.Dataflow_utils
 open Core_kernel
 open Analysis_and_optimization.Dataflow_types
-
+let ( = ) = Stdlib.( = )
 let mir_of_string s =
   Frontend_utils.typed_ast_of_string_exn s |> Ast_to_Mir.trans_prog ""
 

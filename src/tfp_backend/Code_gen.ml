@@ -2,6 +2,8 @@ open Core_kernel
 open Middle
 open Fmt
 
+let ( = ) = Stdlib.( = )
+
 let is_multi_index = function Index.MultiIndex _ -> true | _ -> false
 
 let pp_call ppf (name, pp_arg, args) =

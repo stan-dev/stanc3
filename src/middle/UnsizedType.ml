@@ -1,6 +1,8 @@
 open Core_kernel
 open Common.Helpers
 
+let ( = ) = Stdlib.( = )
+
 type t =
   | UInt
   | UReal

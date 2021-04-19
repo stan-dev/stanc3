@@ -1,5 +1,7 @@
 open Core_kernel
 
+let ( <> ) = Stdlib.( <> )
+
 (** Delimited locations *)
 
 type t = {begin_loc: Location.t; end_loc: Location.t}

@@ -1,5 +1,7 @@
 open! Core_kernel
 
+let ( = ) = Stdlib.( = )
+
 type t = Location_span.t * string
 
 let warnings = ref []

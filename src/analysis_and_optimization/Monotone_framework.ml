@@ -5,6 +5,8 @@ open Monotone_framework_sigs
 open Mir_utils
 open Middle
 
+let ( = ) = Stdlib.( = )
+
 let preserve_stability = false
 
 (** Debugging tool to print out MFP sets **)
@@ -109,6 +111,7 @@ let inverse_flowgraph_of_stmt ?(flatten_loops = false)
       let compare = Int.compare
       let hash = Int.hash
       let sexp_of_t = Int.sexp_of_t
+      let t_of_sexp = Int.t_of_sexp
       let initials = initials
       let successors = successors
     end
@@ -128,6 +131,7 @@ let reverse (type l) (module F : FLOWGRAPH with type labels = l) =
     let compare = F.compare
     let hash = F.hash
     let sexp_of_t = F.sexp_of_t
+    let t_of_sexp = F.t_of_sexp
     let initials = Set.of_map_keys (Map.filter F.successors ~f:Set.is_empty)
 
     let successors =

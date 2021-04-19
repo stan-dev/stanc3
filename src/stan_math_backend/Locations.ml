@@ -1,6 +1,8 @@
 open Core_kernel
 open Middle
 
+let ( <> ) = Stdlib.( <> )
+
 type state_t = Location_span.t list
 
 let no_span_num = 0

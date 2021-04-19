@@ -1,7 +1,7 @@
 (executable
  (name run_js_on_args)
  (public_name run_js_on_args)
- (libraries core_kernel)
+ (libraries core_kernel core)
  (modes exe)
 )
 
