@@ -392,8 +392,8 @@ let pp_ctor ppf p =
           match is_input_data with
           | true ->
               pp_validate_data ppf (decl_id, st) ;
-              pp_set_size ppf (decl_id, st, DataOnly, false)
-          | false -> pp_set_size ppf (decl_id, st, DataOnly, true) )
+              pp_assign_data ppf (decl_id, st, false)
+          | false -> pp_assign_data ppf (decl_id, st, true) )
       | Unsized _ -> () )
     | _ -> pp_statement ppf s
   in
@@ -440,14 +440,25 @@ let pp_ctor ppf p =
 let rec top_level_decls Stmt.Fixed.({pattern; _}) =
   match pattern with
   | Decl d when d.decl_id <> "pos__" ->
-      [(d.decl_id, Type.to_unsized d.decl_type, UnsizedType.DataOnly)]
+      [(d.decl_id, Type.to_unsized d.decl_type)]
   | SList stmts -> List.concat_map ~f:top_level_decls stmts
   | _ -> []
 
 (** Print the private data members of the model class *)
 let pp_model_private ppf {Program.prepare_data; _} =
   let data_decls = List.concat_map ~f:top_level_decls prepare_data in
-  pf ppf "%a" (list ~sep:cut pp_decl) data_decls
+  (*Filter out Any data that is not an Eigen matrix*)
+  let get_eigen_map (name, ut) =
+    if UnsizedType.is_eigen_type ut && not (Transform_Mir.is_opencl_var name)
+    then true
+    else false
+  in
+  let eigen_map_decls = (List.filter ~f:get_eigen_map) data_decls in
+  pf ppf "%a @ %a"
+    (list ~sep:cut pp_data_decl)
+    data_decls
+    (list ~sep:cut pp_map_decl)
+    eigen_map_decls
 
 (** Print the signature and blocks of the model class methods.
   @param ppf A pretty printer

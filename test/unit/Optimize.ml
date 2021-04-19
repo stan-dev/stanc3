@@ -254,12 +254,30 @@ let%expect_test "list collapsing" =
              (((pattern
                 (NRFunApp (CompilerInternal FnPrint)
                  (((pattern (Var x))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta
+                    ((type_ UInt)
+                     (loc
+                      ((begin_loc
+                        ((filename string) (line_num 4) (col_num 16)
+                         (included_from ())))
+                       (end_loc
+                        ((filename string) (line_num 4) (col_num 17)
+                         (included_from ())))))
+                     (adlevel DataOnly)))))))
                (meta <opaque>))
               ((pattern
                 (NRFunApp (CompilerInternal FnPrint)
                  (((pattern (Var y))
-                   (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
+                   (meta
+                    ((type_ UMatrix)
+                     (loc
+                      ((begin_loc
+                        ((filename string) (line_num 5) (col_num 16)
+                         (included_from ())))
+                       (end_loc
+                        ((filename string) (line_num 5) (col_num 17)
+                         (included_from ())))))
+                     (adlevel AutoDiffable)))))))
                (meta <opaque>)))))
            (meta <opaque>))))
         (fdloc <opaque>))
@@ -272,10 +290,37 @@ let%expect_test "list collapsing" =
                  (((pattern
                     (FunApp (StanLib Pow__)
                      (((pattern (Var z))
-                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                       (meta
+                        ((type_ UInt)
+                         (loc
+                          ((begin_loc
+                            ((filename string) (line_num 8) (col_num 17)
+                             (included_from ())))
+                           (end_loc
+                            ((filename string) (line_num 8) (col_num 18)
+                             (included_from ())))))
+                         (adlevel DataOnly))))
                       ((pattern (Lit Int 2))
-                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                       (meta
+                        ((type_ UInt)
+                         (loc
+                          ((begin_loc
+                            ((filename string) (line_num 8) (col_num 19)
+                             (included_from ())))
+                           (end_loc
+                            ((filename string) (line_num 8) (col_num 20)
+                             (included_from ())))))
+                         (adlevel DataOnly)))))))
+                   (meta
+                    ((type_ UReal)
+                     (loc
+                      ((begin_loc
+                        ((filename string) (line_num 8) (col_num 17)
+                         (included_from ())))
+                       (end_loc
+                        ((filename string) (line_num 8) (col_num 20)
+                         (included_from ())))))
+                     (adlevel DataOnly)))))))
                (meta <opaque>)))))
            (meta <opaque>))))
         (fdloc <opaque>))))
@@ -290,23 +335,53 @@ let%expect_test "list collapsing" =
            ((pattern
              (Assignment (inline_sym1__ UInt ())
               ((pattern (Lit Int 0))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+               (meta
+                ((type_ UInt)
+                 (loc
+                  ((begin_loc
+                    ((filename "") (line_num 0) (col_num 0) (included_from ())))
+                   (end_loc
+                    ((filename "") (line_num 0) (col_num 0) (included_from ())))))
+                 (adlevel DataOnly))))))
             (meta <opaque>))
            ((pattern
              (For (loopvar inline_sym2__)
               (lower
                ((pattern (Lit Int 1))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                (meta
+                 ((type_ UInt)
+                  (loc
+                   ((begin_loc
+                     ((filename "") (line_num 0) (col_num 0) (included_from ())))
+                    (end_loc
+                     ((filename "") (line_num 0) (col_num 0) (included_from ())))))
+                  (adlevel DataOnly)))))
               (upper
                ((pattern (Lit Int 1))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                (meta
+                 ((type_ UInt)
+                  (loc
+                   ((begin_loc
+                     ((filename "") (line_num 0) (col_num 0) (included_from ())))
+                    (end_loc
+                     ((filename "") (line_num 0) (col_num 0) (included_from ())))))
+                  (adlevel DataOnly)))))
               (body
                ((pattern
                  (Block
                   (((pattern
                      (NRFunApp (CompilerInternal FnPrint)
                       (((pattern (Lit Int 3))
-                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                        (meta
+                         ((type_ UInt)
+                          (loc
+                           ((begin_loc
+                             ((filename string) (line_num 12) (col_num 10)
+                              (included_from ())))
+                            (end_loc
+                             ((filename string) (line_num 12) (col_num 11)
+                              (included_from ())))))
+                          (adlevel DataOnly)))))))
                     (meta <opaque>))
                    ((pattern
                      (NRFunApp (CompilerInternal FnPrint)
@@ -316,26 +391,80 @@ let%expect_test "list collapsing" =
                              (FunApp (CompilerInternal FnMakeRowVec)
                               (((pattern (Lit Int 3))
                                 (meta
-                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                                 ((type_ UInt)
+                                  (loc
+                                   ((begin_loc
+                                     ((filename string) (line_num 12)
+                                      (col_num 15) (included_from ())))
+                                    (end_loc
+                                     ((filename string) (line_num 12)
+                                      (col_num 16) (included_from ())))))
+                                  (adlevel DataOnly))))
                                ((pattern (Lit Int 2))
                                 (meta
-                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                                 ((type_ UInt)
+                                  (loc
+                                   ((begin_loc
+                                     ((filename string) (line_num 12)
+                                      (col_num 17) (included_from ())))
+                                    (end_loc
+                                     ((filename string) (line_num 12)
+                                      (col_num 18) (included_from ())))))
+                                  (adlevel DataOnly)))))))
                             (meta
-                             ((type_ URowVector) (loc <opaque>)
+                             ((type_ URowVector)
+                              (loc
+                               ((begin_loc
+                                 ((filename string) (line_num 12) (col_num 14)
+                                  (included_from ())))
+                                (end_loc
+                                 ((filename string) (line_num 12) (col_num 19)
+                                  (included_from ())))))
                               (adlevel DataOnly))))
                            ((pattern
                              (FunApp (CompilerInternal FnMakeRowVec)
                               (((pattern (Lit Int 4))
                                 (meta
-                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                                 ((type_ UInt)
+                                  (loc
+                                   ((begin_loc
+                                     ((filename string) (line_num 12)
+                                      (col_num 21) (included_from ())))
+                                    (end_loc
+                                     ((filename string) (line_num 12)
+                                      (col_num 22) (included_from ())))))
+                                  (adlevel DataOnly))))
                                ((pattern (Lit Int 6))
                                 (meta
-                                 ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                                 ((type_ UInt)
+                                  (loc
+                                   ((begin_loc
+                                     ((filename string) (line_num 12)
+                                      (col_num 23) (included_from ())))
+                                    (end_loc
+                                     ((filename string) (line_num 12)
+                                      (col_num 24) (included_from ())))))
+                                  (adlevel DataOnly)))))))
                             (meta
-                             ((type_ URowVector) (loc <opaque>)
+                             ((type_ URowVector)
+                              (loc
+                               ((begin_loc
+                                 ((filename string) (line_num 12) (col_num 20)
+                                  (included_from ())))
+                                (end_loc
+                                 ((filename string) (line_num 12) (col_num 25)
+                                  (included_from ())))))
                               (adlevel DataOnly)))))))
                         (meta
-                         ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+                         ((type_ UMatrix)
+                          (loc
+                           ((begin_loc
+                             ((filename string) (line_num 12) (col_num 13)
+                              (included_from ())))
+                            (end_loc
+                             ((filename string) (line_num 12) (col_num 26)
+                              (included_from ())))))
+                          (adlevel DataOnly)))))))
                     (meta <opaque>)))))
                 (meta <opaque>)))))
             (meta <opaque>))
@@ -350,23 +479,53 @@ let%expect_test "list collapsing" =
            ((pattern
              (Assignment (inline_sym4__ UInt ())
               ((pattern (Lit Int 0))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+               (meta
+                ((type_ UInt)
+                 (loc
+                  ((begin_loc
+                    ((filename "") (line_num 0) (col_num 0) (included_from ())))
+                   (end_loc
+                    ((filename "") (line_num 0) (col_num 0) (included_from ())))))
+                 (adlevel DataOnly))))))
             (meta <opaque>))
            ((pattern
              (For (loopvar inline_sym5__)
               (lower
                ((pattern (Lit Int 1))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                (meta
+                 ((type_ UInt)
+                  (loc
+                   ((begin_loc
+                     ((filename "") (line_num 0) (col_num 0) (included_from ())))
+                    (end_loc
+                     ((filename "") (line_num 0) (col_num 0) (included_from ())))))
+                  (adlevel DataOnly)))))
               (upper
                ((pattern (Lit Int 1))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                (meta
+                 ((type_ UInt)
+                  (loc
+                   ((begin_loc
+                     ((filename "") (line_num 0) (col_num 0) (included_from ())))
+                    (end_loc
+                     ((filename "") (line_num 0) (col_num 0) (included_from ())))))
+                  (adlevel DataOnly)))))
               (body
                ((pattern
                  (Block
                   (((pattern
                      (Assignment (inline_sym4__ UInt ())
                       ((pattern (Lit Int 1))
-                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                       (meta
+                        ((type_ UInt)
+                         (loc
+                          ((begin_loc
+                            ((filename "") (line_num 0) (col_num 0)
+                             (included_from ())))
+                           (end_loc
+                            ((filename "") (line_num 0) (col_num 0)
+                             (included_from ())))))
+                         (adlevel DataOnly))))))
                     (meta <opaque>))
                    ((pattern
                      (Assignment (inline_sym3__ UReal ())
@@ -374,11 +533,36 @@ let%expect_test "list collapsing" =
                         (FunApp (StanLib Pow__)
                          (((pattern (Lit Int 53))
                            (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                            ((type_ UInt)
+                             (loc
+                              ((begin_loc
+                                ((filename string) (line_num 13) (col_num 17)
+                                 (included_from ())))
+                               (end_loc
+                                ((filename string) (line_num 13) (col_num 19)
+                                 (included_from ())))))
+                             (adlevel DataOnly))))
                           ((pattern (Lit Int 2))
                            (meta
-                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                            ((type_ UInt)
+                             (loc
+                              ((begin_loc
+                                ((filename string) (line_num 8) (col_num 19)
+                                 (included_from ())))
+                               (end_loc
+                                ((filename string) (line_num 8) (col_num 20)
+                                 (included_from ())))))
+                             (adlevel DataOnly)))))))
+                       (meta
+                        ((type_ UReal)
+                         (loc
+                          ((begin_loc
+                            ((filename string) (line_num 8) (col_num 17)
+                             (included_from ())))
+                           (end_loc
+                            ((filename string) (line_num 8) (col_num 20)
+                             (included_from ())))))
+                         (adlevel DataOnly))))))
                     (meta <opaque>))
                    ((pattern Break) (meta <opaque>)))))
                 (meta <opaque>)))))
@@ -386,14 +570,28 @@ let%expect_test "list collapsing" =
            ((pattern
              (NRFunApp (CompilerInternal FnReject)
               (((pattern (Var inline_sym3__))
-                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+                (meta
+                 ((type_ UReal)
+                  (loc
+                   ((begin_loc
+                     ((filename "") (line_num 0) (col_num 0) (included_from ())))
+                    (end_loc
+                     ((filename "") (line_num 0) (col_num 0) (included_from ())))))
+                  (adlevel AutoDiffable)))))))
             (meta <opaque>)))))
         (meta <opaque>))))
      (generate_quantities
       (((pattern
          (IfElse
           ((pattern (Var emit_transformed_parameters__))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+           (meta
+            ((type_ UInt)
+             (loc
+              ((begin_loc
+                ((filename "") (line_num 0) (col_num 0) (included_from ())))
+               (end_loc
+                ((filename "") (line_num 0) (col_num 0) (included_from ())))))
+             (adlevel DataOnly))))
           ((pattern Skip) (meta <opaque>))
           (((pattern (Block ())) (meta <opaque>)))))
         (meta <opaque>))
@@ -404,11 +602,43 @@ let%expect_test "list collapsing" =
              (((pattern
                 (EOr
                  ((pattern (Var emit_transformed_parameters__))
-                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                  (meta
+                   ((type_ UInt)
+                    (loc
+                     ((begin_loc
+                       ((filename "") (line_num 0) (col_num 0)
+                        (included_from ())))
+                      (end_loc
+                       ((filename "") (line_num 0) (col_num 0)
+                        (included_from ())))))
+                    (adlevel DataOnly))))
                  ((pattern (Var emit_generated_quantities__))
-                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                  (meta
+                   ((type_ UInt)
+                    (loc
+                     ((begin_loc
+                       ((filename "") (line_num 0) (col_num 0)
+                        (included_from ())))
+                      (end_loc
+                       ((filename "") (line_num 0) (col_num 0)
+                        (included_from ())))))
+                    (adlevel DataOnly))))))
+               (meta
+                ((type_ UInt)
+                 (loc
+                  ((begin_loc
+                    ((filename "") (line_num 0) (col_num 0) (included_from ())))
+                   (end_loc
+                    ((filename "") (line_num 0) (col_num 0) (included_from ())))))
+                 (adlevel DataOnly)))))))
+           (meta
+            ((type_ UInt)
+             (loc
+              ((begin_loc
+                ((filename "") (line_num 0) (col_num 0) (included_from ())))
+               (end_loc
+                ((filename "") (line_num 0) (col_num 0) (included_from ())))))
+             (adlevel DataOnly))))
           ((pattern (Return ())) (meta <opaque>)) ()))
         (meta <opaque>))
        ((pattern
@@ -416,8 +646,22 @@ let%expect_test "list collapsing" =
           ((pattern
             (FunApp (StanLib PNot__)
              (((pattern (Var emit_generated_quantities__))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+               (meta
+                ((type_ UInt)
+                 (loc
+                  ((begin_loc
+                    ((filename "") (line_num 0) (col_num 0) (included_from ())))
+                   (end_loc
+                    ((filename "") (line_num 0) (col_num 0) (included_from ())))))
+                 (adlevel DataOnly)))))))
+           (meta
+            ((type_ UInt)
+             (loc
+              ((begin_loc
+                ((filename "") (line_num 0) (col_num 0) (included_from ())))
+               (end_loc
+                ((filename "") (line_num 0) (col_num 0) (included_from ())))))
+             (adlevel DataOnly))))
           ((pattern (Return ())) (meta <opaque>)) ()))
         (meta <opaque>))))
      (transform_inits ()) (output_vars ()) (prog_name "") (prog_path ""))
@@ -3037,11 +3281,25 @@ let%expect_test "block fixing" =
         (((pattern
            (IfElse
             ((pattern (Lit Int 0))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             (meta
+              ((type_ UInt)
+               (loc
+                ((begin_loc
+                  ((filename "") (line_num 0) (col_num 0) (included_from ())))
+                 (end_loc
+                  ((filename "") (line_num 0) (col_num 0) (included_from ())))))
+               (adlevel DataOnly))))
             ((pattern
               (While
                ((pattern (Lit Int 0))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                (meta
+                 ((type_ UInt)
+                  (loc
+                   ((begin_loc
+                     ((filename "") (line_num 0) (col_num 0) (included_from ())))
+                    (end_loc
+                     ((filename "") (line_num 0) (col_num 0) (included_from ())))))
+                  (adlevel DataOnly))))
                ((pattern (Block ())) (meta <opaque>))))
              (meta <opaque>))
             ()))
@@ -3054,11 +3312,43 @@ let%expect_test "block fixing" =
                (((pattern
                   (EOr
                    ((pattern (Var emit_transformed_parameters__))
-                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                    (meta
+                     ((type_ UInt)
+                      (loc
+                       ((begin_loc
+                         ((filename "") (line_num 0) (col_num 0)
+                          (included_from ())))
+                        (end_loc
+                         ((filename "") (line_num 0) (col_num 0)
+                          (included_from ())))))
+                      (adlevel DataOnly))))
                    ((pattern (Var emit_generated_quantities__))
-                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                    (meta
+                     ((type_ UInt)
+                      (loc
+                       ((begin_loc
+                         ((filename "") (line_num 0) (col_num 0)
+                          (included_from ())))
+                        (end_loc
+                         ((filename "") (line_num 0) (col_num 0)
+                          (included_from ())))))
+                      (adlevel DataOnly))))))
+                 (meta
+                  ((type_ UInt)
+                   (loc
+                    ((begin_loc
+                      ((filename "") (line_num 0) (col_num 0) (included_from ())))
+                     (end_loc
+                      ((filename "") (line_num 0) (col_num 0) (included_from ())))))
+                   (adlevel DataOnly)))))))
+             (meta
+              ((type_ UInt)
+               (loc
+                ((begin_loc
+                  ((filename "") (line_num 0) (col_num 0) (included_from ())))
+                 (end_loc
+                  ((filename "") (line_num 0) (col_num 0) (included_from ())))))
+               (adlevel DataOnly))))
             ((pattern (Return ())) (meta <opaque>)) ()))
           (meta <opaque>))
          ((pattern
@@ -3066,8 +3356,22 @@ let%expect_test "block fixing" =
             ((pattern
               (FunApp (StanLib PNot__)
                (((pattern (Var emit_generated_quantities__))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 (meta
+                  ((type_ UInt)
+                   (loc
+                    ((begin_loc
+                      ((filename "") (line_num 0) (col_num 0) (included_from ())))
+                     (end_loc
+                      ((filename "") (line_num 0) (col_num 0) (included_from ())))))
+                   (adlevel DataOnly)))))))
+             (meta
+              ((type_ UInt)
+               (loc
+                ((begin_loc
+                  ((filename "") (line_num 0) (col_num 0) (included_from ())))
+                 (end_loc
+                  ((filename "") (line_num 0) (col_num 0) (included_from ())))))
+               (adlevel DataOnly))))
             ((pattern (Return ())) (meta <opaque>)) ()))
           (meta <opaque>))))
        (transform_inits ()) (output_vars ()) (prog_name "") (prog_path "")) |}]
@@ -3251,29 +3555,110 @@ let%expect_test "adlevel_optimization expressions" =
               ((pattern
                 (FunApp (StanLib Greater__)
                  (((pattern (Lit Int 1))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                   (meta
+                    ((type_ UInt)
+                     (loc
+                      ((begin_loc
+                        ((filename string) (line_num 11) (col_num 14)
+                         (included_from ())))
+                       (end_loc
+                        ((filename string) (line_num 11) (col_num 15)
+                         (included_from ())))))
+                     (adlevel DataOnly))))
                   ((pattern (Lit Int 2))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                   (meta
+                    ((type_ UInt)
+                     (loc
+                      ((begin_loc
+                        ((filename string) (line_num 11) (col_num 18)
+                         (included_from ())))
+                       (end_loc
+                        ((filename string) (line_num 11) (col_num 19)
+                         (included_from ())))))
+                     (adlevel DataOnly)))))))
+               (meta
+                ((type_ UInt)
+                 (loc
+                  ((begin_loc
+                    ((filename string) (line_num 11) (col_num 14)
+                     (included_from ())))
+                   (end_loc
+                    ((filename string) (line_num 11) (col_num 19)
+                     (included_from ())))))
+                 (adlevel DataOnly))))
               ((pattern
                 (Assignment (y UReal ())
                  ((pattern
                    (FunApp (StanLib Plus__)
                     (((pattern (Var y))
-                      (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                      (meta
+                       ((type_ UReal)
+                        (loc
+                         ((begin_loc
+                           ((filename string) (line_num 12) (col_num 16)
+                            (included_from ())))
+                          (end_loc
+                           ((filename string) (line_num 12) (col_num 17)
+                            (included_from ())))))
+                        (adlevel AutoDiffable))))
                      ((pattern (Var x))
-                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                  (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+                      (meta
+                       ((type_ UInt)
+                        (loc
+                         ((begin_loc
+                           ((filename string) (line_num 12) (col_num 20)
+                            (included_from ())))
+                          (end_loc
+                           ((filename string) (line_num 12) (col_num 21)
+                            (included_from ())))))
+                        (adlevel DataOnly)))))))
+                  (meta
+                   ((type_ UReal)
+                    (loc
+                     ((begin_loc
+                       ((filename string) (line_num 12) (col_num 16)
+                        (included_from ())))
+                      (end_loc
+                       ((filename string) (line_num 12) (col_num 21)
+                        (included_from ())))))
+                    (adlevel AutoDiffable))))))
                (meta <opaque>))
               (((pattern
                  (Assignment (y UReal ())
                   ((pattern
                     (FunApp (StanLib Plus__)
                      (((pattern (Var y))
-                       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                       (meta
+                        ((type_ UReal)
+                         (loc
+                          ((begin_loc
+                            ((filename string) (line_num 14) (col_num 16)
+                             (included_from ())))
+                           (end_loc
+                            ((filename string) (line_num 14) (col_num 17)
+                             (included_from ())))))
+                         (adlevel AutoDiffable))))
                       ((pattern (Var w))
-                       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
-                   (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+                       (meta
+                        ((type_ UReal)
+                         (loc
+                          ((begin_loc
+                            ((filename string) (line_num 14) (col_num 20)
+                             (included_from ())))
+                           (end_loc
+                            ((filename string) (line_num 14) (col_num 21)
+                             (included_from ())))))
+                         (adlevel AutoDiffable)))))))
+                   (meta
+                    ((type_ UReal)
+                     (loc
+                      ((begin_loc
+                        ((filename string) (line_num 14) (col_num 16)
+                         (included_from ())))
+                       (end_loc
+                        ((filename string) (line_num 14) (col_num 21)
+                         (included_from ())))))
+                     (adlevel AutoDiffable))))))
                 (meta <opaque>)))))
             (meta <opaque>))
            ((pattern
@@ -3281,14 +3666,50 @@ let%expect_test "adlevel_optimization expressions" =
               ((pattern
                 (FunApp (StanLib Greater__)
                  (((pattern (Lit Int 2))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                   (meta
+                    ((type_ UInt)
+                     (loc
+                      ((begin_loc
+                        ((filename string) (line_num 15) (col_num 14)
+                         (included_from ())))
+                       (end_loc
+                        ((filename string) (line_num 15) (col_num 15)
+                         (included_from ())))))
+                     (adlevel DataOnly))))
                   ((pattern (Lit Int 1))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                   (meta
+                    ((type_ UInt)
+                     (loc
+                      ((begin_loc
+                        ((filename string) (line_num 15) (col_num 18)
+                         (included_from ())))
+                       (end_loc
+                        ((filename string) (line_num 15) (col_num 19)
+                         (included_from ())))))
+                     (adlevel DataOnly)))))))
+               (meta
+                ((type_ UInt)
+                 (loc
+                  ((begin_loc
+                    ((filename string) (line_num 15) (col_num 14)
+                     (included_from ())))
+                   (end_loc
+                    ((filename string) (line_num 15) (col_num 19)
+                     (included_from ())))))
+                 (adlevel DataOnly))))
               ((pattern
                 (Assignment (z UReal ())
                  ((pattern (Var y))
-                  (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+                  (meta
+                   ((type_ UReal)
+                    (loc
+                     ((begin_loc
+                       ((filename string) (line_num 16) (col_num 16)
+                        (included_from ())))
+                      (end_loc
+                       ((filename string) (line_num 16) (col_num 17)
+                        (included_from ())))))
+                    (adlevel AutoDiffable))))))
                (meta <opaque>))
               ()))
             (meta <opaque>))
@@ -3297,26 +3718,80 @@ let%expect_test "adlevel_optimization expressions" =
               ((pattern
                 (FunApp (StanLib Greater__)
                  (((pattern (Lit Int 3))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                   (meta
+                    ((type_ UInt)
+                     (loc
+                      ((begin_loc
+                        ((filename string) (line_num 17) (col_num 14)
+                         (included_from ())))
+                       (end_loc
+                        ((filename string) (line_num 17) (col_num 15)
+                         (included_from ())))))
+                     (adlevel DataOnly))))
                   ((pattern (Lit Int 1))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                   (meta
+                    ((type_ UInt)
+                     (loc
+                      ((begin_loc
+                        ((filename string) (line_num 17) (col_num 18)
+                         (included_from ())))
+                       (end_loc
+                        ((filename string) (line_num 17) (col_num 19)
+                         (included_from ())))))
+                     (adlevel DataOnly)))))))
+               (meta
+                ((type_ UInt)
+                 (loc
+                  ((begin_loc
+                    ((filename string) (line_num 17) (col_num 14)
+                     (included_from ())))
+                   (end_loc
+                    ((filename string) (line_num 17) (col_num 19)
+                     (included_from ())))))
+                 (adlevel DataOnly))))
               ((pattern
                 (Assignment (z_data UReal ())
                  ((pattern (Var x))
-                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                  (meta
+                   ((type_ UInt)
+                    (loc
+                     ((begin_loc
+                       ((filename string) (line_num 18) (col_num 21)
+                        (included_from ())))
+                      (end_loc
+                       ((filename string) (line_num 18) (col_num 22)
+                        (included_from ())))))
+                    (adlevel DataOnly))))))
                (meta <opaque>))
               ()))
             (meta <opaque>))
            ((pattern
              (NRFunApp (CompilerInternal FnPrint)
               (((pattern (Var z))
-                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+                (meta
+                 ((type_ UReal)
+                  (loc
+                   ((begin_loc
+                     ((filename string) (line_num 19) (col_num 16)
+                      (included_from ())))
+                    (end_loc
+                     ((filename string) (line_num 19) (col_num 17)
+                      (included_from ())))))
+                  (adlevel AutoDiffable)))))))
             (meta <opaque>))
            ((pattern
              (NRFunApp (CompilerInternal FnPrint)
               (((pattern (Var z_data))
-                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                (meta
+                 ((type_ UReal)
+                  (loc
+                   ((begin_loc
+                     ((filename string) (line_num 20) (col_num 16)
+                      (included_from ())))
+                    (end_loc
+                     ((filename string) (line_num 20) (col_num 22)
+                      (included_from ())))))
+                  (adlevel DataOnly)))))))
             (meta <opaque>)))))
         (meta <opaque>))) |}]
 

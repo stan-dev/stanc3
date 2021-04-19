@@ -21,42 +21,128 @@ let rec contains_eigen (ut : UnsizedType.t) : bool =
   | UMatrix | URowVector | UVector -> true
   | UInt | UReal | UMathLibraryFunction | UFun _ -> false
 
-let pp_set_size ppf (decl_id, st, adtype, (needs_filled : bool)) =
-  (* TODO: generate optimal adtypes for expressions and declarations *)
-  let real_nan =
-    match adtype with
-    | UnsizedType.AutoDiffable -> "DUMMY_VAR__"
-    | DataOnly -> "std::numeric_limits<double>::quiet_NaN()"
+(*Fill only needs to happen for containers 
+  * Note: This should probably be moved into its own function as data
+  * does not need to be filled as we are promised user input data has the correct
+  * dimensions. Transformed data must be filled as incorrect slices could lead
+  * to elements of objects in transform data not being set by the user.
+  *)
+let pp_filler ppf (decl_id, st, nan_type, needs_filled) =
+  match (needs_filled, contains_eigen (SizedType.to_unsized st)) with
+  | true, true ->
+      pf ppf "@[<hov 2>stan::math::fill(%s, %s);@]@," decl_id nan_type
+  | _ -> ()
+
+(*Pretty print a sized type*)
+let pp_st ppf (st, adtype) =
+  pf ppf "%a" pp_unsizedtype_local (adtype, SizedType.to_unsized st)
+
+let pp_ut ppf (ut, adtype) = pf ppf "%a" pp_unsizedtype_local (adtype, ut)
+
+(*Get a string representing for the NaN type of the given type *)
+let nan_type (st, adtype) =
+  match (adtype, st) with
+  | UnsizedType.AutoDiffable, _ -> "DUMMY_VAR__"
+  | DataOnly, _ -> "std::numeric_limits<double>::quiet_NaN()"
+
+(*Pretty printer for the right hand side of expressions to initialize objects.
+ * For scalar types this sets the value to NaN and for containers initializes the memory.
+ *)
+let rec pp_initialize ppf (st, adtype) =
+  let init_nan = nan_type (st, adtype) in
+  match st with
+  | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
+  | SReal -> pf ppf "%s" init_nan
+  | SVector d | SRowVector d -> pf ppf "%a(%a)" pp_st (st, adtype) pp_expr d
+  | SMatrix (d1, d2) ->
+      pf ppf "%a(%a, %a)" pp_st (st, adtype) pp_expr d1 pp_expr d2
+  | SArray (t, d) ->
+      pf ppf "%a(%a, %a)" pp_st (st, adtype) pp_expr d pp_initialize (t, adtype)
+
+(*Initialize an object of a given size.*)
+let pp_assign_sized ppf (decl_id, st, adtype) =
+  let init_nan = nan_type (st, adtype) in
+  let pp_assign ppf (decl_id, st, adtype) =
+    pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_initialize (st, adtype)
   in
-  let rec pp_size_ctor ppf st =
-    let pp_st ppf st =
-      pf ppf "%a" pp_unsizedtype_local (adtype, SizedType.to_unsized st)
-    in
-    match st with
-    | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
-    | SReal -> pf ppf "%s" real_nan
-    | SVector d | SRowVector d -> pf ppf "%a(%a)" pp_st st pp_expr d
-    | SMatrix (d1, d2) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d1 pp_expr d2
-    | SArray (t, d) -> pf ppf "%a(%a, %a)" pp_st st pp_expr d pp_size_ctor t
-  in
-  let print_fill ppf st =
-    match (contains_eigen (SizedType.to_unsized st), needs_filled) with
-    | true, true -> pf ppf "stan::math::fill(%s, %s);" decl_id real_nan
-    | _, _ -> ()
-  in
-  pf ppf "@[<hov 0>%s = %a;@,%a @]@," decl_id pp_size_ctor st print_fill st
+  pf ppf "@[%a%a@]@," pp_assign (decl_id, st, adtype) pp_filler
+    (decl_id, st, init_nan, true)
 
 let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in
-  strf "@[<v>%a@]" pp_set_size
-    ( "d"
-    , SArray (SArray (SMatrix (int 2, int 3), int 4), int 5)
-    , DataOnly
-    , false )
+  strf "@[<v>%a@]" pp_assign_sized
+    ("d", SArray (SArray (SMatrix (int 2, int 3), int 4), int 5), DataOnly)
   |> print_endline ;
   [%expect
     {|
-      d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3))); |}]
+      d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3)));
+      stan::math::fill(d, std::numeric_limits<double>::quiet_NaN()); |}]
+
+(* Initialize Data and Transformed Data 
+ * This function is used in the model's constructor to
+ * 1. Initialize memory for the data and transformed data
+ * 2. If an Eigen type, place that memory into the class's Map
+ * 3. Set the initial values of that data to NaN.
+ * @param ppf A pretty printer
+ * @param decl_id The name of the model class member
+ * @param st The type of the class member
+ *)
+let pp_assign_data ppf
+    ((decl_id, st, needs_filled) : string * Expr.Typed.t SizedType.t * bool) =
+  let init_nan = nan_type (st, DataOnly) in
+  let pp_assign ppf (decl_id, st) =
+    match st with
+    | SizedType.SVector _ | SRowVector _ | SMatrix _ ->
+        pf ppf "@[<hov 2>%s__ = %a;@]@," decl_id pp_initialize (st, DataOnly)
+    | SInt | SReal | SArray _ ->
+        pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_initialize (st, DataOnly)
+  in
+  let pp_placement_new ppf (decl_id, st) =
+    match st with
+    | SizedType.SVector d | SRowVector d ->
+        pf ppf "@[<hov 2>new (&%s) Eigen::Map<%a>(%s__.data(), %a);@]@,"
+          decl_id pp_st (st, DataOnly) decl_id pp_expr d
+    | SMatrix (d1, d2) ->
+        pf ppf "@[<hov 2>new (&%s) Eigen::Map<%a>(%s__.data(), %a, %a);@]@,"
+          decl_id pp_st (st, DataOnly) decl_id pp_expr d1 pp_expr d2
+    | _ -> ()
+  in
+  pf ppf "@[%a%a%a@]@," pp_assign (decl_id, st) pp_placement_new (decl_id, st)
+    pp_filler
+    (decl_id, st, init_nan, needs_filled)
+
+let%expect_test "set size map int array" =
+  let int = Expr.Helpers.int in
+  strf "@[<v>%a@]" pp_assign_data
+    ("darrmat", SArray (SArray (SInt, int 4), int 5), false)
+  |> print_endline ;
+  [%expect
+    {|
+  darrmat = std::vector<std::vector<int>>(5, std::vector<int>(4, std::numeric_limits<int>::min())); |}]
+
+let%expect_test "set size map mat array" =
+  let int = Expr.Helpers.int in
+  strf "@[<v>%a@]" pp_assign_data
+    ("darrmat", SArray (SArray (SMatrix (int 2, int 3), int 4), int 5), true)
+  |> print_endline ;
+  [%expect
+    {|
+    darrmat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3)));
+    stan::math::fill(darrmat, std::numeric_limits<double>::quiet_NaN()); |}]
+
+let%expect_test "set size map mat" =
+  let int = Expr.Helpers.int in
+  strf "@[<v>%a@]" pp_assign_data ("dmat", SMatrix (int 2, int 3), false)
+  |> print_endline ;
+  [%expect
+    {|
+    dmat__ = Eigen::Matrix<double, -1, -1>(2, 3);
+    new (&dmat) Eigen::Map<Eigen::Matrix<double, -1, -1>>(dmat__.data(), 2, 3); |}]
+
+let%expect_test "set size map int" =
+  strf "@[<v>%a@]" pp_assign_data ("dint", SInt, true) |> print_endline ;
+  [%expect {|
+  dint = std::numeric_limits<int>::min(); |}]
 
 (** [pp_for_loop ppf (loopvar, lower, upper, pp_body, body)] tries to
     pretty print a for-loop from lower to upper given some loopvar.*)
@@ -70,7 +156,51 @@ let rec integer_el_type = function
   | SInt -> true
   | SArray (st, _) -> integer_el_type st
 
-let pp_decl ppf (vident, ut, adtype) =
+(* Print the private members of the model class
+ *   Accounting for types that can be moved to OpenCL.
+ * @param ppf A formatter
+ * @param vident name of the private member.
+ * @param ut The unsized type to print.
+ *)
+let pp_data_decl ppf (vident, ut) =
+  let opencl_check = (Transform_Mir.is_opencl_var vident, ut) in
+  let pp_type =
+    match opencl_check with
+    | _, UnsizedType.(UInt | UReal) | false, _ -> pp_unsizedtype_local
+    | true, UArray UInt -> fun ppf _ -> pf ppf "matrix_cl<int>"
+    | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>"
+  in
+  match (opencl_check, ut) with
+  | (false, _), ut -> (
+    match ut with
+    | UnsizedType.URowVector | UVector | UMatrix ->
+        pf ppf "%a %s__;" pp_type (DataOnly, ut) vident
+    | _ -> pf ppf "%a %s;" pp_type (DataOnly, ut) vident )
+  | (true, _), _ -> pf ppf "%a %s;" pp_type (DataOnly, ut) vident
+
+(*Create strings representing maps of Eigen types*)
+let pp_map_decl ppf (vident, ut) =
+  let scalar = local_scalar ut DataOnly in
+  match ut with
+  | UnsizedType.UInt | UReal -> ()
+  | UMatrix ->
+      pf ppf "Eigen::Map<Eigen::Matrix<%s, -1, -1>> %s{nullptr, 0, 0};" scalar
+        vident
+  | URowVector ->
+      pf ppf "Eigen::Map<Eigen::Matrix<%s, 1, -1>> %s{nullptr, 0};" scalar
+        vident
+  | UVector ->
+      pf ppf "Eigen::Map<Eigen::Matrix<%s, -1, 1>> %s{nullptr, 0};" scalar
+        vident
+  | x ->
+      raise_s
+        [%message
+          "Error during Map data construction for " vident " of type "
+            (x : UnsizedType.t)
+            ". This should never happen, if you see this please file a bug \
+             report."]
+
+let pp_unsized_decl ppf (vident, ut, adtype) =
   let pp_type =
     match (Transform_Mir.is_opencl_var vident, ut) with
     | _, UnsizedType.(UInt | UReal) | false, _ -> pp_unsizedtype_local
@@ -80,14 +210,14 @@ let pp_decl ppf (vident, ut, adtype) =
   pf ppf "%a %s;" pp_type (adtype, ut) vident
 
 let pp_sized_decl ppf (vident, st, adtype) =
-  pf ppf "%a@,%a" pp_decl
+  pf ppf "%a@,%a" pp_unsized_decl
     (vident, SizedType.to_unsized st, adtype)
-    pp_set_size (vident, st, adtype, true)
+    pp_assign_sized (vident, st, adtype)
 
-let pp_possibly_sized_decl ppf (vident, pst, adtype) =
+let pp_decl ppf (vident, pst, adtype) =
   match pst with
   | Type.Sized st -> pp_sized_decl ppf (vident, st, adtype)
-  | Unsized ut -> pp_decl ppf (vident, ut, adtype)
+  | Unsized ut -> pp_unsized_decl ppf (vident, ut, adtype)
 
 let math_fn_translations = function
   | Internal_fun.FnLength -> Some ("length", [])
@@ -207,7 +337,7 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
   | Block ls -> pp_block ppf (pp_stmt_list, ls)
   | SList ls -> pp_stmt_list ppf ls
   | Decl {decl_adtype; decl_id; decl_type} ->
-      pp_possibly_sized_decl ppf (decl_id, decl_type, decl_adtype)
+      pp_decl ppf (decl_id, decl_type, decl_adtype)
 
 and pp_block_s ppf body =
   match body.pattern with
