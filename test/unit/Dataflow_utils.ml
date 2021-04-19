@@ -54,10 +54,24 @@ let%expect_test "Loop test" =
         ((For (loopvar i)
           (lower
            ((pattern (Lit Int 1))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+            (meta
+             ((type_ UInt)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 3) (col_num 18) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 3) (col_num 19) (included_from ())))))
+              (adlevel DataOnly)))))
           (upper
            ((pattern (Lit Int 2))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+            (meta
+             ((type_ UInt)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 3) (col_num 20) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 3) (col_num 21) (included_from ())))))
+              (adlevel DataOnly)))))
           (body 4))
          ((begin_loc
            ((filename string) (line_num 3) (col_num 8) (included_from ())))
@@ -74,10 +88,35 @@ let%expect_test "Loop test" =
           (((pattern
              (FunApp (StanLib Plus__)
               (((pattern (Lit Int 3))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                (meta
+                 ((type_ UInt)
+                  (loc
+                   ((begin_loc
+                     ((filename string) (line_num 4) (col_num 16)
+                      (included_from ())))
+                    (end_loc
+                     ((filename string) (line_num 4) (col_num 17)
+                      (included_from ())))))
+                  (adlevel DataOnly))))
                ((pattern (Lit Int 4))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                (meta
+                 ((type_ UInt)
+                  (loc
+                   ((begin_loc
+                     ((filename string) (line_num 4) (col_num 20)
+                      (included_from ())))
+                    (end_loc
+                     ((filename string) (line_num 4) (col_num 21)
+                      (included_from ())))))
+                  (adlevel DataOnly)))))))
+            (meta
+             ((type_ UInt)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 4) (col_num 16) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 4) (col_num 21) (included_from ())))))
+              (adlevel DataOnly))))))
          ((begin_loc
            ((filename string) (line_num 4) (col_num 10) (included_from ())))
           (end_loc
@@ -187,31 +226,80 @@ let%expect_test "Statement label map example" =
        (4
         (Assignment (i UInt ())
          ((pattern (Lit Int 0))
-          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+          (meta
+           ((type_ UInt)
+            (loc
+             ((begin_loc
+               ((filename string) (line_num 5) (col_num 16) (included_from ())))
+              (end_loc
+               ((filename string) (line_num 5) (col_num 17) (included_from ())))))
+            (adlevel DataOnly))))))
        (5
         (IfElse
          ((pattern
            (FunApp (StanLib Less__)
             (((pattern (Var i))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              (meta
+               ((type_ UInt)
+                (loc
+                 ((begin_loc
+                   ((filename string) (line_num 6) (col_num 14) (included_from ())))
+                  (end_loc
+                   ((filename string) (line_num 6) (col_num 15) (included_from ())))))
+                (adlevel DataOnly))))
              ((pattern (Lit Int 0))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              (meta
+               ((type_ UInt)
+                (loc
+                 ((begin_loc
+                   ((filename string) (line_num 6) (col_num 18) (included_from ())))
+                  (end_loc
+                   ((filename string) (line_num 6) (col_num 19) (included_from ())))))
+                (adlevel DataOnly)))))))
+          (meta
+           ((type_ UInt)
+            (loc
+             ((begin_loc
+               ((filename string) (line_num 6) (col_num 14) (included_from ())))
+              (end_loc
+               ((filename string) (line_num 6) (col_num 19) (included_from ())))))
+            (adlevel DataOnly))))
          6 (8)))
        (6 (Block (7)))
        (7
         (NRFunApp (CompilerInternal FnPrint)
          (((pattern (Var i))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta
+            ((type_ UInt)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 8) (col_num 18) (included_from ())))
+               (end_loc
+                ((filename string) (line_num 8) (col_num 19) (included_from ())))))
+             (adlevel DataOnly)))))))
        (8 (Block (9)))
        (9
         (For (loopvar j)
          (lower
           ((pattern (Lit Int 1))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+           (meta
+            ((type_ UInt)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 11) (col_num 22) (included_from ())))
+               (end_loc
+                ((filename string) (line_num 11) (col_num 23) (included_from ())))))
+             (adlevel DataOnly)))))
          (upper
           ((pattern (Lit Int 10))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+           (meta
+            ((type_ UInt)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 11) (col_num 24) (included_from ())))
+               (end_loc
+                ((filename string) (line_num 11) (col_num 26) (included_from ())))))
+             (adlevel DataOnly)))))
          (body 10)))
        (10 (Block (11 14 17 22)))
        (11
@@ -219,10 +307,35 @@ let%expect_test "Statement label map example" =
          ((pattern
            (FunApp (StanLib Greater__)
             (((pattern (Var j))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              (meta
+               ((type_ UInt)
+                (loc
+                 ((begin_loc
+                   ((filename string) (line_num 13) (col_num 18)
+                    (included_from ())))
+                  (end_loc
+                   ((filename string) (line_num 13) (col_num 19)
+                    (included_from ())))))
+                (adlevel DataOnly))))
              ((pattern (Lit Int 9))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              (meta
+               ((type_ UInt)
+                (loc
+                 ((begin_loc
+                   ((filename string) (line_num 13) (col_num 22)
+                    (included_from ())))
+                  (end_loc
+                   ((filename string) (line_num 13) (col_num 23)
+                    (included_from ())))))
+                (adlevel DataOnly)))))))
+          (meta
+           ((type_ UInt)
+            (loc
+             ((begin_loc
+               ((filename string) (line_num 13) (col_num 18) (included_from ())))
+              (end_loc
+               ((filename string) (line_num 13) (col_num 23) (included_from ())))))
+            (adlevel DataOnly))))
          12 ()))
        (12 (Block (13))) (13 Break)
        (14
@@ -232,21 +345,87 @@ let%expect_test "Statement label map example" =
             ((pattern
               (FunApp (StanLib Greater__)
                (((pattern (Var j))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 (meta
+                  ((type_ UInt)
+                   (loc
+                    ((begin_loc
+                      ((filename string) (line_num 17) (col_num 18)
+                       (included_from ())))
+                     (end_loc
+                      ((filename string) (line_num 17) (col_num 19)
+                       (included_from ())))))
+                   (adlevel DataOnly))))
                 ((pattern (Lit Int 8))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 (meta
+                  ((type_ UInt)
+                   (loc
+                    ((begin_loc
+                      ((filename string) (line_num 17) (col_num 22)
+                       (included_from ())))
+                     (end_loc
+                      ((filename string) (line_num 17) (col_num 23)
+                       (included_from ())))))
+                   (adlevel DataOnly)))))))
+             (meta
+              ((type_ UInt)
+               (loc
+                ((begin_loc
+                  ((filename string) (line_num 17) (col_num 18) (included_from ())))
+                 (end_loc
+                  ((filename string) (line_num 17) (col_num 23) (included_from ())))))
+               (adlevel DataOnly))))
             ((pattern
               (FunApp (StanLib Less__)
                (((pattern (Var i))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 (meta
+                  ((type_ UInt)
+                   (loc
+                    ((begin_loc
+                      ((filename string) (line_num 17) (col_num 27)
+                       (included_from ())))
+                     (end_loc
+                      ((filename string) (line_num 17) (col_num 28)
+                       (included_from ())))))
+                   (adlevel DataOnly))))
                 ((pattern
                   (FunApp (StanLib PMinus__)
                    (((pattern (Lit Int 1))
-                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                     (meta
+                      ((type_ UInt)
+                       (loc
+                        ((begin_loc
+                          ((filename string) (line_num 17) (col_num 32)
+                           (included_from ())))
+                         (end_loc
+                          ((filename string) (line_num 17) (col_num 33)
+                           (included_from ())))))
+                       (adlevel DataOnly)))))))
+                 (meta
+                  ((type_ UInt)
+                   (loc
+                    ((begin_loc
+                      ((filename string) (line_num 17) (col_num 32)
+                       (included_from ())))
+                     (end_loc
+                      ((filename string) (line_num 17) (col_num 33)
+                       (included_from ())))))
+                   (adlevel DataOnly)))))))
+             (meta
+              ((type_ UInt)
+               (loc
+                ((begin_loc
+                  ((filename string) (line_num 17) (col_num 27) (included_from ())))
+                 (end_loc
+                  ((filename string) (line_num 17) (col_num 33) (included_from ())))))
+               (adlevel DataOnly))))))
+          (meta
+           ((type_ UInt)
+            (loc
+             ((begin_loc
+               ((filename string) (line_num 17) (col_num 18) (included_from ())))
+              (end_loc
+               ((filename string) (line_num 17) (col_num 33) (included_from ())))))
+            (adlevel DataOnly))))
          15 ()))
        (15 (Block (16))) (16 Continue)
        (17
@@ -254,27 +433,91 @@ let%expect_test "Statement label map example" =
          ((pattern
            (FunApp (StanLib Greater__)
             (((pattern (Var j))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              (meta
+               ((type_ UInt)
+                (loc
+                 ((begin_loc
+                   ((filename string) (line_num 21) (col_num 18)
+                    (included_from ())))
+                  (end_loc
+                   ((filename string) (line_num 21) (col_num 19)
+                    (included_from ())))))
+                (adlevel DataOnly))))
              ((pattern (Lit Int 5))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              (meta
+               ((type_ UInt)
+                (loc
+                 ((begin_loc
+                   ((filename string) (line_num 21) (col_num 22)
+                    (included_from ())))
+                  (end_loc
+                   ((filename string) (line_num 21) (col_num 23)
+                    (included_from ())))))
+                (adlevel DataOnly)))))))
+          (meta
+           ((type_ UInt)
+            (loc
+             ((begin_loc
+               ((filename string) (line_num 21) (col_num 18) (included_from ())))
+              (end_loc
+               ((filename string) (line_num 21) (col_num 23) (included_from ())))))
+            (adlevel DataOnly))))
          18 (20)))
        (18 (Block (19))) (19 Continue) (20 (Block (21)))
        (21
         (NRFunApp (CompilerInternal FnPrint)
          (((pattern (Lit Str Badger))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+           (meta
+            ((type_ UReal)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 26) (col_num 16) (included_from ())))
+               (end_loc
+                ((filename string) (line_num 26) (col_num 39) (included_from ())))))
+             (adlevel DataOnly))))
           ((pattern
             (FunApp (StanLib Plus__)
              (((pattern (Var i))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+               (meta
+                ((type_ UInt)
+                 (loc
+                  ((begin_loc
+                    ((filename string) (line_num 26) (col_num 32)
+                     (included_from ())))
+                   (end_loc
+                    ((filename string) (line_num 26) (col_num 33)
+                     (included_from ())))))
+                 (adlevel DataOnly))))
               ((pattern (Var j))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+               (meta
+                ((type_ UInt)
+                 (loc
+                  ((begin_loc
+                    ((filename string) (line_num 26) (col_num 36)
+                     (included_from ())))
+                   (end_loc
+                    ((filename string) (line_num 26) (col_num 37)
+                     (included_from ())))))
+                 (adlevel DataOnly)))))))
+           (meta
+            ((type_ UInt)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 26) (col_num 32) (included_from ())))
+               (end_loc
+                ((filename string) (line_num 26) (col_num 37) (included_from ())))))
+             (adlevel DataOnly)))))))
        (22
         (NRFunApp (CompilerInternal FnPrint)
          (((pattern (Lit Str Fin))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))))
+           (meta
+            ((type_ UReal)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 28) (col_num 14) (included_from ())))
+               (end_loc
+                ((filename string) (line_num 28) (col_num 27) (included_from ())))))
+             (adlevel DataOnly))))))))
     |}]
 
 let%expect_test "Predecessor graph example" =
@@ -359,7 +602,14 @@ let%expect_test "Statement label map example 3" =
        (4
         ((While
           ((pattern (Lit Int 42))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+           (meta
+            ((type_ UInt)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 3) (col_num 15) (included_from ())))
+               (end_loc
+                ((filename string) (line_num 3) (col_num 17) (included_from ())))))
+             (adlevel DataOnly))))
           5)
          ((begin_loc
            ((filename string) (line_num 3) (col_num 8) (included_from ())))
@@ -374,7 +624,14 @@ let%expect_test "Statement label map example 3" =
        (6
         ((NRFunApp (CompilerInternal FnPrint)
           (((pattern (Lit Str exit))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 4) (col_num 8) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 4) (col_num 22) (included_from ())))))
+              (adlevel DataOnly))))))
          ((begin_loc
            ((filename string) (line_num 4) (col_num 8) (included_from ())))
           (end_loc
@@ -453,10 +710,24 @@ let%expect_test "Statement label map example 4" =
         ((For (loopvar i)
           (lower
            ((pattern (Lit Int 1))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+            (meta
+             ((type_ UInt)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 3) (col_num 18) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 3) (col_num 19) (included_from ())))))
+              (adlevel DataOnly)))))
           (upper
            ((pattern (Lit Int 6))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+            (meta
+             ((type_ UInt)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 3) (col_num 20) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 3) (col_num 21) (included_from ())))))
+              (adlevel DataOnly)))))
           (body 5))
          ((begin_loc
            ((filename string) (line_num 3) (col_num 8) (included_from ())))
@@ -555,10 +826,24 @@ let%expect_test "Statement label map example 5" =
         ((For (loopvar i)
           (lower
            ((pattern (Lit Int 1))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+            (meta
+             ((type_ UInt)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 3) (col_num 18) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 3) (col_num 19) (included_from ())))))
+              (adlevel DataOnly)))))
           (upper
            ((pattern (Lit Int 6))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+            (meta
+             ((type_ UInt)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 3) (col_num 20) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 3) (col_num 21) (included_from ())))))
+              (adlevel DataOnly)))))
           (body 5))
          ((begin_loc
            ((filename string) (line_num 3) (col_num 8) (included_from ())))

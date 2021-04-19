@@ -102,7 +102,7 @@ type ('l, 'e) lvalue =
   | LIndexed of 'l * 'e index list
 [@@deriving sexp, hash, compare, map, fold]
 
-type ('e, 'm) lval_with = {lval: (('e, 'm) lval_with, 'e) lvalue; lmeta: 'm}
+type ('expr, 'meta_loc) lval_with = {lval: (('expr, 'meta_loc) lval_with, 'expr) lvalue; lmeta: 'meta_loc}
 [@@deriving sexp, hash, compare, map, fold]
 
 type untyped_lval = (untyped_expression, located_meta) lval_with
