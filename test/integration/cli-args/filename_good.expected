@@ -29,7 +29,8 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
 
  private:
   double p;
-  double q;
+  double q; 
+  
  
  public:
   ~filename_good_model() { }
@@ -55,14 +56,14 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min(); 
+      pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
       current_statement__ = 1;
-      p = std::numeric_limits<double>::quiet_NaN(); 
+      p = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
-      q = std::numeric_limits<double>::quiet_NaN(); 
+      q = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
       q = (p + 5);
@@ -154,7 +155,7 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min(); 
+      pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
     } catch (const std::exception& e) {
