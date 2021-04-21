@@ -111,10 +111,14 @@ let options =
       , "\tApply level 1 compiler optimizations (only basic optimizations)." )
     ; ( "-Od"
       , Arg.Unit (fun () -> opt_lvl := Optimize.Od)
-      , "\tApply level 3 compiler optimizations (all optimizations). Some of these are not thorougly tested and may not always improve a programs performance." )
+      , "\tApply level 3 compiler optimizations (all optimizations). Some of \
+         these are not thorougly tested and may not always improve a programs \
+         performance." )
     ; ( "--O"
       , Arg.Unit (fun () -> opt_lvl := Optimize.Od)
-      , "\tApply level 3 compiler optimizations (all optimizations). Some of these are not thorougly tested and may not always improve a programs performance." )
+      , "\tApply level 3 compiler optimizations (all optimizations). Some of \
+         these are not thorougly tested and may not always improve a programs \
+         performance." )
     ; ( "--o"
       , Arg.Set_string output_file
       , " Take the path to an output file for generated C++ code (default = \
