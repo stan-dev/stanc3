@@ -1,6 +1,6 @@
 open Core_kernel
 
-type t =
+type 'a t =
   | FnLength
   | FnMakeArray
   | FnMakeRowVec
@@ -9,8 +9,8 @@ type t =
   | FnReadData
   | FnReadDataSerializer
   (* XXX move these to a backend specific file?*)
-  | FnReadParam of string option
-  | FnWriteParam of string option
+  | FnReadParam of {constrain_opt: (string * 'a list) option; dims: 'a list}
+  | FnWriteParam of {unconstrain_opt: (string * 'a list) option; var: 'a}
   | FnValidateSize
   | FnValidateSizeSimplex
   | FnValidateSizeUnitVector
@@ -22,15 +22,27 @@ type t =
   | FnResizeToMatch
   | FnNaN
   | FnDeepCopy
-[@@deriving sexp, hash, compare]
+[@@deriving sexp, hash, compare, map, fold]
 
-let to_string x = Sexp.to_string (sexp_of_t x) ^ "__"
-let pp ppf internal = Fmt.string ppf (to_string internal)
+let to_string
+    ?(expr_to_string =
+      fun _ ->
+        raise
+          (Failure
+             "Should not be parsing expression from string in function renaming"))
+    x =
+  Sexp.to_string (sexp_of_t expr_to_string x) ^ "__"
 
-let of_string_opt x =
-  try
-    String.chop_suffix_exn ~suffix:"__" x
-    |> Sexp.of_string |> t_of_sexp |> Some
-  with
-  | Sexplib.Conv.Of_sexp_error _ -> None
-  | Invalid_argument _ -> None
+let pp (pp_expr : 'a Fmt.t) ppf internal =
+  Fmt.string ppf
+    (to_string
+       ~expr_to_string:(fun expr -> sexp_of_string (Fmt.strf "%a" pp_expr expr))
+       internal)
+
+(* let of_string_opt x =
+ *   try
+ *     String.chop_suffix_exn ~suffix:"__" x
+ *     |> Sexp.of_string |> t_of_sexp |> Some
+ *   with
+ *   | Sexplib.Conv.Of_sexp_error _ -> None
+ *   | Invalid_argument _ -> None *)

@@ -96,10 +96,9 @@ let math_fn_translations = function
   | FnValidateSizeUnitVector -> Some ("validate_unit_vector_index", [])
   | _ -> None
 
-let trans_math_fn fname =
+let trans_math_fn f =
   Option.(
-    value ~default:(fname, [])
-      (bind (Internal_fun.of_string_opt fname) ~f:math_fn_translations))
+    value ~default:(Internal_fun.to_string f, []) (math_fn_translations f))
 
 let pp_bool_expr ppf expr =
   match Expr.Typed.type_of expr with
@@ -172,17 +171,15 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
       in
       pf ppf "%s(@[<hov>%a@]);" ("check_" ^ check_name)
         (list ~sep:comma pp_expr) (function_arg :: args)
-  | NRFunApp (CompilerInternal (FnWriteParam constraint_opt), args) ->
-      let free_suffix_opt =
-        Option.map
-          ~f:(fun constraint_string -> "_free_" ^ constraint_string)
-          constraint_opt
-      in
-      pf ppf "@[<hov 2>out__.write%a(@,%a);@]" (Fmt.option Fmt.string)
-        free_suffix_opt (list ~sep:comma pp_expr) args
+  | NRFunApp (CompilerInternal (FnWriteParam {unconstrain_opt; var}), _) -> (
+    match unconstrain_opt with
+    | None -> pf ppf "@[<hov 2>out__.write(@,%a);@]" pp_expr var
+    | Some (unconstrain_string, unconstrain_args) ->
+        pf ppf "@[<hov 2>out__.write_free_%s(@,%a);@]" unconstrain_string
+          (list ~sep:comma pp_expr)
+          (unconstrain_args @ [var]) )
   | NRFunApp (CompilerInternal f, args) ->
-      let fname = Internal_fun.to_string f in
-      let fname, extra_args = trans_math_fn fname in
+      let fname, extra_args = trans_math_fn f in
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)
         (extra_args @ args)
   | NRFunApp (StanLib fname, args) ->

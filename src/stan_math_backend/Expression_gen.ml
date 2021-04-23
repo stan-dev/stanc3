@@ -424,19 +424,22 @@ and pp_compiler_internal_fn ad ut f ppf es =
       pf ppf "@[<hov 2>in__.read<%a>(@,%a)@]" pp_unsizedtype_local
         (UnsizedType.AutoDiffable, ut)
         (list ~sep:comma pp_expr) es
-  | FnReadParam constraint_opt ->
-      let constraint_suffix_opt =
-        Option.map
-          ~f:(fun constraint_string -> "_constrain_" ^ constraint_string)
-          constraint_opt
-      in
-      let jacobian_param_opt =
-        Option.map ~f:(fun _ -> ", jacobian__") constraint_opt
-      in
-      pf ppf "@[<hov 2>in__.template read%a<%a%a>(@,%a)@]"
-        (Fmt.option Fmt.string) constraint_suffix_opt pp_unsizedtype_local
-        (UnsizedType.AutoDiffable, ut)
-        (Fmt.option Fmt.string) jacobian_param_opt (list ~sep:comma pp_expr) es
+  | FnReadParam {constrain_opt; dims} -> (
+    match constrain_opt with
+    | None ->
+        pf ppf "@[<hov 2>in__.template read<%a>(@,%a)@]" pp_unsizedtype_local
+          (UnsizedType.AutoDiffable, ut)
+          (list ~sep:comma pp_expr) dims
+    | Some (constraint_string, constraint_args) ->
+        let lp =
+          Expr.Fixed.{pattern= Var "lp__"; meta= Expr.Typed.Meta.empty}
+        in
+        let args = constraint_args @ [lp] @ dims in
+        pf ppf
+          "@[<hov 2>in__.template read_constrain_%s<%a, jacobian__>(@,%a)@]"
+          constraint_string pp_unsizedtype_local
+          (UnsizedType.AutoDiffable, ut)
+          (list ~sep:comma pp_expr) args )
   | FnDeepCopy -> gen_fun_app ppf "stan::model::deep_copy" es
   | _ -> gen_fun_app ppf (Internal_fun.to_string f) es
 

@@ -10,7 +10,7 @@ module Fixed = struct
     type 'a t =
       | Var of string
       | Lit of litType * string
-      | FunApp of Fun_kind.t * 'a list
+      | FunApp of 'a Fun_kind.t * 'a list
       | TernaryIf of 'a * 'a * 'a
       | EAnd of 'a * 'a
       | EOr of 'a * 'a
@@ -27,7 +27,7 @@ module Fixed = struct
             (Option.value_exn (Operator.of_string_opt name))
             pp_e rhs
       | FunApp (fun_kind, args) ->
-          Fmt.pf ppf "%a(%a)" Fun_kind.pp fun_kind
+          Fmt.pf ppf "%a(%a)" (Fun_kind.pp pp_e) fun_kind
             Fmt.(list pp_e ~sep:Fmt.comma)
             args
       | TernaryIf (pred, texpr, fexpr) ->
