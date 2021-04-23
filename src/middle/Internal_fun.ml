@@ -47,10 +47,18 @@ let pp (pp_expr : 'a Fmt.t) ppf internal =
        ~expr_to_string:(fun expr -> sexp_of_string (Fmt.strf "%a" pp_expr expr))
        internal)
 
-(* let of_string_opt x =
- *   try
- *     String.chop_suffix_exn ~suffix:"__" x
- *     |> Sexp.of_string |> t_of_sexp |> Some
- *   with
- *   | Sexplib.Conv.Of_sexp_error _ -> None
- *   | Invalid_argument _ -> None *)
+(* Does this function call change state? Can we call it twice with the same results?
+
+   E.g., FnReadDataSerializer moves the serializer forward, so calling it again has
+   different results
+
+   Useful for optimizations
+*)
+let can_side_effect = function
+  | FnReadParam _ | FnReadData | FnReadDataSerializer | FnWriteParam _
+   |FnConstrain _ | FnValidateSize | FnValidateSizeSimplex
+   |FnValidateSizeUnitVector | FnUnconstrain _ ->
+      true
+  | FnLength | FnMakeArray | FnMakeRowVec | FnNegInf | FnPrint | FnReject
+   |FnResizeToMatch | FnNaN | FnDeepCopy | FnCheck _ ->
+      false

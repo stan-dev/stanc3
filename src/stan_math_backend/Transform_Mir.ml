@@ -236,34 +236,6 @@ let escape_name str =
   |> String.substr_replace_all ~pattern:"." ~with_:"_"
   |> String.substr_replace_all ~pattern:"-" ~with_:"_"
 
-let rec add_jacobians Stmt.Fixed.({meta= smeta; pattern}) =
-  match pattern with
-  | Assignment
-      ( lhs
-      , { pattern= FunApp (CompilerInternal (FnConstrain trans), args)
-        ; meta= emeta } ) ->
-      let var n = Expr.{Fixed.pattern= Var n; meta= Typed.Meta.empty} in
-      let assign rhs =
-        Stmt.{Fixed.pattern= Assignment (lhs, rhs); meta= smeta}
-      in
-      { Stmt.Fixed.pattern=
-          IfElse
-            ( var "jacobian__"
-            , assign
-                { Expr.Fixed.pattern=
-                    FunApp
-                      ( CompilerInternal (FnConstrain trans)
-                      , args @ [var "lp__"] )
-                ; meta= emeta }
-            , Some
-                (assign
-                   { Expr.Fixed.pattern=
-                       FunApp (CompilerInternal (FnConstrain trans), args)
-                   ; meta= emeta }) )
-      ; meta= smeta }
-  | ptn ->
-      Stmt.Fixed.{pattern= Pattern.map Fn.id add_jacobians ptn; meta= smeta}
-
 (* Make sure that all if-while-and-for bodies are safely wrapped in a block in such a way that we can insert a location update before.
    The blocks make sure that the program with the inserted location update is still well-formed C++ though.
    *)
@@ -396,6 +368,7 @@ let rec contains_var_expr is_vident accum Expr.Fixed.({pattern; _}) =
   | pattern ->
       Expr.Fixed.Pattern.fold (contains_var_expr is_vident) false pattern
 
+(* TODO *)
 (* When a parameter's unconstrained type and its constrained type are different,
    we generate a new variable "<param_name>_in__" and read into that. We now need
    to change the FnConstrain calls to constrain that variable and assign to the
@@ -593,7 +566,7 @@ let trans_prog (p : Program.Typed.t) =
     @ gq_writes
   in
   let log_prob =
-    p.log_prob |> List.map ~f:add_jacobians
+    p.log_prob
     |> add_reads p.output_vars param_read
     |> constrain_in_params p.output_vars
     |> translate_to_open_cl
