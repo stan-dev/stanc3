@@ -198,7 +198,7 @@ type decl_context =
 
 let check_constraint_to_string t (c : constrainaction) =
   match t with
-  | Program.Ordered -> Some "ordered"
+  | Transformation.Ordered -> Some "ordered"
   | PositiveOrdered -> Some "positive_ordered"
   | Simplex -> Some "simplex"
   | UnitVector -> Some "unit_vector"
@@ -227,7 +227,7 @@ let check_constraint_to_string t (c : constrainaction) =
   | Identity -> None
 
 let constraint_forl = function
-  | Program.Identity | Offset _ | Multiplier _ | OffsetMultiplier _ | Lower _
+  | Transformation.Identity | Offset _ | Multiplier _ | OffsetMultiplier _ | Lower _
    |Upper _ | LowerUpper _ ->
       Stmt.Helpers.for_scalar
   | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
@@ -246,7 +246,7 @@ let same_shape decl_id decl_var id var meta =
         ; meta } ]
 
 let check_transform_shape decl_id decl_var meta = function
-  | Program.Offset e -> same_shape decl_id decl_var "offset" e meta
+  | Transformation.Offset e -> same_shape decl_id decl_var "offset" e meta
   | Multiplier e -> same_shape decl_id decl_var "multiplier" e meta
   | Lower e -> same_shape decl_id decl_var "lower" e meta
   | Upper e -> same_shape decl_id decl_var "upper" e meta
@@ -275,7 +275,7 @@ let copy_indices indexed (var : Expr.Typed.t) =
           }
 
 let extract_transform_args var = function
-  | Program.Lower a | Upper a -> [copy_indices var a]
+  | Transformation.Lower a | Upper a -> [copy_indices var a]
   | Offset a ->
       [copy_indices var a; {a with Expr.Fixed.pattern= Lit (Int, "1")}]
   | Multiplier a -> [{a with pattern= Lit (Int, "0")}; copy_indices var a]
@@ -307,7 +307,7 @@ let param_size transform sizedtype =
     Expr.Helpers.(binop (binop k Times (binop k Minus (int 1))) Divide (int 2))
   in
   match transform with
-  | Program.Identity | Lower _ | Upper _
+  | Transformation.Identity | Lower _ | Upper _
    |LowerUpper (_, _)
    |Offset _ | Multiplier _
    |OffsetMultiplier (_, _)
@@ -342,7 +342,7 @@ let remove_possibly_exn pst action loc =
 let rec check_decl var decl_type' decl_id decl_trans smeta adlevel =
   let decl_type = remove_possibly_exn decl_type' "check" smeta in
   match decl_trans with
-  | Program.Identity | Offset _ | Multiplier _ | OffsetMultiplier (_, _) -> []
+  | Transformation.Identity | Offset _ | Multiplier _ | OffsetMultiplier (_, _) -> []
   | LowerUpper (lb, ub) ->
       check_decl var decl_type' decl_id (Lower lb) smeta adlevel
       @ check_decl var decl_type' decl_id (Upper ub) smeta adlevel
@@ -582,7 +582,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   | Ast.VarDecl
       {decl_type; transformation; identifier; initial_value; is_global= _} ->
       trans_decl declc smeta decl_type
-        (Program.map_transformation trans_expr transformation)
+        (Transformation.map_transformation trans_expr transformation)
         identifier initial_value
   | Ast.Block stmts -> Block (List.concat_map ~f:trans_stmt stmts) |> swrap
   | Ast.Profile (name, stmts) ->
@@ -658,7 +658,7 @@ let trans_sizedtype_decl declc tr name =
     | SVector s ->
         let fn =
           match (declc.dconstrain, tr) with
-          | Some Constrain, Program.Simplex ->
+          | Some Constrain, Transformation.Simplex ->
               Internal_fun.FnValidateSizeSimplex
           | Some Constrain, UnitVector -> FnValidateSizeUnitVector
           | _ -> FnValidateSize
@@ -705,7 +705,7 @@ let trans_block ud_dists declc block prog =
             ; is_global= true }
       ; smeta } ->
         let decl_id = identifier.Ast.name in
-        let transform = Program.map_transformation trans_expr transformation in
+        let transform = Transformation.map_transformation trans_expr transformation in
         let rhs = Option.map ~f:trans_expr initial_value in
         let size, type_ =
           trans_sizedtype_decl declc transform identifier.name type_

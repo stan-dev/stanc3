@@ -1,6 +1,7 @@
 open Core_kernel
 open Common
 open Helpers
+open Transformation
 
 type fun_arg_decl = (UnsizedType.autodifftype * string * UnsizedType.t) list
 [@@deriving sexp, hash, map]
@@ -17,25 +18,6 @@ type 'a fun_def =
 
 type io_block = Parameters | TransformedParameters | GeneratedQuantities
 [@@deriving sexp, hash]
-
-(** Transformations (constraints) for global variable declarations *)
-type 'e transformation =
-  | Identity
-  | Lower of 'e
-  | Upper of 'e
-  | LowerUpper of 'e * 'e
-  | Offset of 'e
-  | Multiplier of 'e
-  | OffsetMultiplier of 'e * 'e
-  | Ordered
-  | PositiveOrdered
-  | Simplex
-  | UnitVector
-  | CholeskyCorr
-  | CholeskyCov
-  | Correlation
-  | Covariance
-[@@deriving sexp, compare, map, hash, fold]
 
 type 'e outvar =
   { out_unconstrained_st: 'e SizedType.t

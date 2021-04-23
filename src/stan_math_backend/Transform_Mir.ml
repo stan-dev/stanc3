@@ -161,11 +161,9 @@ let data_read smeta (decl_id, st) =
           ; Stmt.Helpers.for_scalar_inv st bodyfn decl_var smeta ]
         |> swrap ]
 
-type constrainaction = Check | Constrain | Unconstrain [@@deriving sexp]
-
-let constraint_to_string t (c : constrainaction) =
+let constraint_to_string t =
   match t with
-  | Program.Ordered -> Some "ordered"
+  | Transformation.Ordered -> Some "ordered"
   | PositiveOrdered -> Some "positive_ordered"
   | Simplex -> Some "simplex"
   | UnitVector -> Some "unit_vector"
@@ -173,34 +171,28 @@ let constraint_to_string t (c : constrainaction) =
   | CholeskyCov -> Some "cholesky_factor_cov"
   | Correlation -> Some "corr_matrix"
   | Covariance -> Some "cov_matrix"
-  | Lower _ -> (
-    match c with
-    | Check -> Some "greater_or_equal"
-    | Constrain | Unconstrain -> Some "lb" )
-  | Upper _ -> (
-    match c with
-    | Check -> Some "less_or_equal"
-    | Constrain | Unconstrain -> Some "ub" )
-  | LowerUpper _ -> (
-    match c with
-    | Check ->
-        raise_s
-          [%message "LowerUpper is really two other checks tied together"]
-    | Constrain | Unconstrain -> Some "lub" )
-  | Offset _ | Multiplier _ | OffsetMultiplier _ -> (
-    match c with
-    | Check -> None
-    | Constrain | Unconstrain -> Some "offset_multiplier" )
+  | Lower _ -> Some "lb"
+  | Upper _ -> Some "ub"
+  | LowerUpper _ -> Some "lub"
+  | Offset _ | Multiplier _ | OffsetMultiplier _ -> Some "offset_multiplier"
   | Identity -> None
+
+(* let check_to_string = function
+ *   | Program.Lower _ -> Some "greater_or_equal"
+ *   | Upper _ -> Some "less_or_equal"
+ *   | LowerUpper _ ->
+ *     raise_s [%message "LowerUpper is really two other checks tied together"]
+ *   | Offset _ | Multiplier _ | OffsetMultiplier _ -> None
+ *   | t -> constraint_to_string t *)
 
 let default_multiplier = 1
 let default_offset = 0
 
 let transform_args = function
-  | Program.Offset offset -> [offset; Expr.Helpers.int default_multiplier]
+  | Transformation.Offset offset -> [offset; Expr.Helpers.int default_multiplier]
   | Multiplier multiplier -> [Expr.Helpers.int default_offset; multiplier]
   | transform ->
-      Program.fold_transformation (fun args arg -> args @ [arg]) [] transform
+      Transformation.fold_transformation (fun args arg -> args @ [arg]) [] transform
 
 (*
   Get the dimension expressions that are expected by constrain/unconstrain
@@ -218,7 +210,7 @@ let read_constrain_dims constrain_transform st =
     | SArray (t, dim) -> dim :: constrain_get_dims t
   in
   match constrain_transform with
-  | Program.CholeskyCorr | Correlation | Covariance -> constrain_get_dims st
+  | Transformation.CholeskyCorr | Correlation | Covariance -> constrain_get_dims st
   | _ -> SizedType.get_dims st
 
 let data_serializer_read loc Program.({out_constrained_st; out_trans; _}) =
@@ -255,7 +247,7 @@ let param_read smeta
       Expr.(
         Helpers.(
           internal_funapp
-            (FnReadParam (constraint_to_string out_trans Constrain))
+            (FnReadParam (constraint_to_string out_trans))
             ( transform_args
             @ ( if out_trans = Identity then []
               else [{Expr.Fixed.pattern= Var "lp__"; meta= emeta}] )
@@ -394,7 +386,7 @@ let gen_write ?(unconstrain = false)
           ; adlevel= DataOnly } }
   in
   let constraint_opt =
-    if unconstrain then constraint_to_string out_trans Unconstrain else None
+    if unconstrain then constraint_to_string out_trans else None
   in
   let extra_args =
     if Option.is_some constraint_opt then

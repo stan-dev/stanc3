@@ -147,7 +147,7 @@ type ('e, 's, 'l, 'f) statement =
   | Block of 's list
   | VarDecl of
       { decl_type: 'e Middle.Type.t
-      ; transformation: 'e Middle.Program.transformation
+      ; transformation: 'e Transformation.transformation
       ; identifier: identifier
       ; initial_value: 'e option
       ; is_global: bool }
