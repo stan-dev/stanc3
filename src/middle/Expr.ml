@@ -159,6 +159,7 @@ module Helpers = struct
     {Fixed.meta= Typed.Meta.empty; pattern= Lit (Real, string_of_float i)}
 
   let str i = {Fixed.meta= Typed.Meta.empty; pattern= Lit (Str, i)}
+  let variable v = {Fixed.meta= Typed.Meta.empty; pattern= Var v}
   let zero = int 0
   let one = int 1
 

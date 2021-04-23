@@ -227,8 +227,8 @@ let check_constraint_to_string t (c : constrainaction) =
   | Identity -> None
 
 let constraint_forl = function
-  | Transformation.Identity | Offset _ | Multiplier _ | OffsetMultiplier _ | Lower _
-   |Upper _ | LowerUpper _ ->
+  | Transformation.Identity | Offset _ | Multiplier _ | OffsetMultiplier _
+   |Lower _ | Upper _ | LowerUpper _ ->
       Stmt.Helpers.for_scalar
   | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
    |CholeskyCov | Correlation | Covariance ->
@@ -342,7 +342,9 @@ let remove_possibly_exn pst action loc =
 let rec check_decl var decl_type' decl_id decl_trans smeta adlevel =
   let decl_type = remove_possibly_exn decl_type' "check" smeta in
   match decl_trans with
-  | Transformation.Identity | Offset _ | Multiplier _ | OffsetMultiplier (_, _) -> []
+  | Transformation.Identity | Offset _ | Multiplier _ | OffsetMultiplier (_, _)
+    ->
+      []
   | LowerUpper (lb, ub) ->
       check_decl var decl_type' decl_id (Lower lb) smeta adlevel
       @ check_decl var decl_type' decl_id (Upper ub) smeta adlevel
@@ -705,7 +707,9 @@ let trans_block ud_dists declc block prog =
             ; is_global= true }
       ; smeta } ->
         let decl_id = identifier.Ast.name in
-        let transform = Transformation.map_transformation trans_expr transformation in
+        let transform =
+          Transformation.map_transformation trans_expr transformation
+        in
         let rhs = Option.map ~f:trans_expr initial_value in
         let size, type_ =
           trans_sizedtype_decl declc transform identifier.name type_

@@ -87,8 +87,7 @@ let transform_mismatch_constraint (constr : var_constraint)
   | Simplex -> trans <> Simplex
   | UnitVector -> trans <> UnitVector
   | CholeskyCorr -> trans <> CholeskyCorr
-  | CholeskyCov ->
-      trans <> CholeskyCov && trans <> CholeskyCorr
+  | CholeskyCov -> trans <> CholeskyCov && trans <> CholeskyCorr
   | Correlation -> trans <> Correlation
   | Covariance -> trans <> Covariance && trans <> Correlation
 

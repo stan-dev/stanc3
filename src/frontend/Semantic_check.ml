@@ -883,7 +883,9 @@ let semantic_check_transformation cf ut = function
       and ue2 =
         semantic_check_expression_of_scalar_or_type cf ut e2 "Upper bound"
       in
-      Validate.liftA2 (fun ue1 ue2 -> Transformation.LowerUpper (ue1, ue2)) ue1 ue2
+      Validate.liftA2
+        (fun ue1 ue2 -> Transformation.LowerUpper (ue1, ue2))
+        ue1 ue2
   | Offset e ->
       semantic_check_expression_of_scalar_or_type cf ut e "Offset"
       |> Validate.map ~f:(fun ue -> Transformation.Offset ue)

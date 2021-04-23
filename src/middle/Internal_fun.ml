@@ -1,6 +1,6 @@
 open Core_kernel
 
-type 'a t =
+type 'expr t =
   | FnLength
   | FnMakeArray
   | FnMakeRowVec
@@ -9,8 +9,13 @@ type 'a t =
   | FnReadData
   | FnReadDataSerializer
   (* XXX move these to a backend specific file?*)
-  | FnReadParam of {constrain_opt: (string * 'a list) option; dims: 'a list}
-  | FnWriteParam of {unconstrain_opt: (string * 'a list) option; var: 'a}
+  | FnReadParam of
+      { constrain: 'expr Transformation.transformation
+      ; dims: 'expr list }
+  | FnWriteParam of
+      { unconstrain_opt: 'expr Transformation.transformation option
+      ; dims: 'expr list
+      ; var: 'expr }
   | FnValidateSize
   | FnValidateSizeSimplex
   | FnValidateSizeUnitVector

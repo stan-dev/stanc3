@@ -161,22 +161,6 @@ let data_read smeta (decl_id, st) =
           ; Stmt.Helpers.for_scalar_inv st bodyfn decl_var smeta ]
         |> swrap ]
 
-let constraint_to_string t =
-  match t with
-  | Transformation.Ordered -> Some "ordered"
-  | PositiveOrdered -> Some "positive_ordered"
-  | Simplex -> Some "simplex"
-  | UnitVector -> Some "unit_vector"
-  | CholeskyCorr -> Some "cholesky_factor_corr"
-  | CholeskyCov -> Some "cholesky_factor_cov"
-  | Correlation -> Some "corr_matrix"
-  | Covariance -> Some "cov_matrix"
-  | Lower _ -> Some "lb"
-  | Upper _ -> Some "ub"
-  | LowerUpper _ -> Some "lub"
-  | Offset _ | Multiplier _ | OffsetMultiplier _ -> Some "offset_multiplier"
-  | Identity -> None
-
 (* let check_to_string = function
  *   | Program.Lower _ -> Some "greater_or_equal"
  *   | Upper _ -> Some "less_or_equal"
@@ -184,15 +168,6 @@ let constraint_to_string t =
  *     raise_s [%message "LowerUpper is really two other checks tied together"]
  *   | Offset _ | Multiplier _ | OffsetMultiplier _ -> None
  *   | t -> constraint_to_string t *)
-
-let default_multiplier = 1
-let default_offset = 0
-
-let transform_args = function
-  | Transformation.Offset offset -> [offset; Expr.Helpers.int default_multiplier]
-  | Multiplier multiplier -> [Expr.Helpers.int default_offset; multiplier]
-  | transform ->
-      Transformation.fold_transformation (fun args arg -> args @ [arg]) [] transform
 
 (*
   Get the dimension expressions that are expected by constrain/unconstrain
@@ -210,7 +185,8 @@ let read_constrain_dims constrain_transform st =
     | SArray (t, dim) -> dim :: constrain_get_dims t
   in
   match constrain_transform with
-  | Transformation.CholeskyCorr | Correlation | Covariance -> constrain_get_dims st
+  | Transformation.CholeskyCorr | Correlation | Covariance ->
+      constrain_get_dims st
   | _ -> SizedType.get_dims st
 
 let data_serializer_read loc Program.({out_constrained_st; out_trans; _}) =
@@ -242,17 +218,17 @@ let param_read smeta
     let emeta =
       Expr.Typed.Meta.create ~loc:smeta ~type_:ut ~adlevel:AutoDiffable ()
     in
-    let transform_args = transform_args out_trans in
-    let constrain_string_opt = constraint_to_string out_trans in
-    let constrain_opt =
-      Option.map ~f:(fun s -> (s, transform_args)) constrain_string_opt
-    in
+    (* let transform_args = transform_args out_trans in
+     * let constrain_string_opt = constraint_to_string out_trans in
+     * let constrain_opt =
+     *   Option.map ~f:(fun s -> (s, transform_args)) constrain_string_opt
+     * in *)
     let dims = read_constrain_dims out_trans cst in
     let read =
       Expr.(
         Helpers.(
           internal_funapp
-            (FnReadParam {constrain_opt; dims})
+            (FnReadParam {constrain= out_trans; dims})
             []
             (* ( transform_args
              * @ ( if out_trans = Identity then []
@@ -391,17 +367,12 @@ let gen_write ?(unconstrain = false)
           ; type_= SizedType.to_unsized out_constrained_st
           ; adlevel= DataOnly } }
   in
-  let unconstrain_string_opt =
-    if unconstrain then constraint_to_string out_trans else None
-  in
-  let unconstrain_opt =
-    Option.map unconstrain_string_opt ~f:(fun s ->
-        ( s
-        , transform_args out_trans
-          @ read_constrain_dims out_trans out_constrained_st ) )
-  in
+  let dims = read_constrain_dims out_trans out_constrained_st in
   Stmt.Helpers.internal_nrfunapp
-    (FnWriteParam {unconstrain_opt; var= decl_var})
+    (FnWriteParam
+       { unconstrain_opt= Option.some_if unconstrain out_trans
+       ; dims
+       ; var= decl_var })
     [] Location_span.empty
 
 (* Statements to read, unconstrain and assign a parameter then write it back *)
