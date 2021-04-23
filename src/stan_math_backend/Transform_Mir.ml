@@ -161,14 +161,6 @@ let data_read smeta (decl_id, st) =
           ; Stmt.Helpers.for_scalar_inv st bodyfn decl_var smeta ]
         |> swrap ]
 
-(* let check_to_string = function
- *   | Program.Lower _ -> Some "greater_or_equal"
- *   | Upper _ -> Some "less_or_equal"
- *   | LowerUpper _ ->
- *     raise_s [%message "LowerUpper is really two other checks tied together"]
- *   | Offset _ | Multiplier _ | OffsetMultiplier _ -> None
- *   | t -> constraint_to_string t *)
-
 (*
   Get the dimension expressions that are expected by constrain/unconstrain
   functions for a sized type.

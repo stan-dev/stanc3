@@ -174,18 +174,14 @@ let unquote s =
     String.drop_suffix (String.drop_prefix s 1) 1
   else s
 
-(* hack(sean): strings aren't real
-   XXX add UString to MIR and maybe AST.
-*)
-let mkstring loc s =
-  Expr.
-    { Fixed.pattern= Lit (Str, s)
-    ; meta= Typed.Meta.create ~type_:UReal ~loc ~adlevel:DataOnly () }
-
 let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
   List.map
     ~f:(function
-      | Ast.PString s -> mkstring mloc (unquote s)
+      | Ast.PString s ->
+          { (Expr.Helpers.str (unquote s)) with
+            meta=
+              Expr.Typed.Meta.create ~type_:UReal ~loc:mloc ~adlevel:DataOnly
+                () }
       | Ast.PExpr e -> trans_expr e)
     ps
 
@@ -195,36 +191,6 @@ type constrainaction = Check | Constrain | Unconstrain [@@deriving sexp]
 
 type decl_context =
   {dconstrain: constrainaction option; dadlevel: UnsizedType.autodifftype}
-
-let check_constraint_to_string t (c : constrainaction) =
-  match t with
-  | Transformation.Ordered -> Some "ordered"
-  | PositiveOrdered -> Some "positive_ordered"
-  | Simplex -> Some "simplex"
-  | UnitVector -> Some "unit_vector"
-  | CholeskyCorr -> Some "cholesky_factor_corr"
-  | CholeskyCov -> Some "cholesky_factor"
-  | Correlation -> Some "corr_matrix"
-  | Covariance -> Some "cov_matrix"
-  | Lower _ -> (
-    match c with
-    | Check -> Some "greater_or_equal"
-    | Constrain | Unconstrain -> Some "lb" )
-  | Upper _ -> (
-    match c with
-    | Check -> Some "less_or_equal"
-    | Constrain | Unconstrain -> Some "ub" )
-  | LowerUpper _ -> (
-    match c with
-    | Check ->
-        raise_s
-          [%message "LowerUpper is really two other checks tied together"]
-    | Constrain | Unconstrain -> Some "lub" )
-  | Offset _ | Multiplier _ | OffsetMultiplier _ -> (
-    match c with
-    | Check -> None
-    | Constrain | Unconstrain -> Some "offset_multiplier" )
-  | Identity -> None
 
 let constraint_forl = function
   | Transformation.Identity | Offset _ | Multiplier _ | OffsetMultiplier _
@@ -342,23 +308,19 @@ let remove_possibly_exn pst action loc =
 let rec check_decl var decl_type' decl_id decl_trans smeta adlevel =
   let decl_type = remove_possibly_exn decl_type' "check" smeta in
   match decl_trans with
-  | Transformation.Identity | Offset _ | Multiplier _ | OffsetMultiplier (_, _)
-    ->
-      []
-  | LowerUpper (lb, ub) ->
+  | Transformation.LowerUpper (lb, ub) ->
       check_decl var decl_type' decl_id (Lower lb) smeta adlevel
       @ check_decl var decl_type' decl_id (Upper ub) smeta adlevel
-  | _ -> (
-    match check_constraint_to_string decl_trans Check with
-    | Some fn ->
-        let check_id id =
-          let id_str = Expr.Helpers.str (Fmt.strf "%a" Expr.Typed.pp id) in
-          let args = extract_transform_args id decl_trans in
-          Stmt.Helpers.internal_nrfunapp (FnCheck fn) (id_str :: id :: args)
-            smeta
-        in
-        [(constraint_forl decl_trans) decl_type check_id var smeta]
-    | None -> [] )
+  | _ when Transformation.has_check decl_trans ->
+      let check_id id =
+        let var_name = Fmt.strf "%a" Expr.Typed.pp id in
+        let args = extract_transform_args id decl_trans in
+        Stmt.Helpers.internal_nrfunapp
+          (FnCheck {trans= decl_trans; var_name; var= id})
+          args smeta
+      in
+      [(constraint_forl decl_trans) decl_type check_id var smeta]
+  | _ -> []
 
 let check_sizedtype name =
   let check x = function

@@ -21,7 +21,10 @@ type 'expr t =
   | FnValidateSizeUnitVector
   | FnConstrain of string
   | FnUnconstrain of string
-  | FnCheck of string
+  | FnCheck of
+      { trans: 'expr Transformation.transformation
+      ; var_name: string
+      ; var: 'expr }
   | FnPrint
   | FnReject
   | FnResizeToMatch

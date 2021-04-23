@@ -165,12 +165,12 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
       pf ppf "std::stringstream %s;@," err_strm ;
       pf ppf "%a@," (list ~sep:cut add_to_string) args ;
       pf ppf "throw std::domain_error(%s.str());" err_strm
-  | NRFunApp (CompilerInternal (FnCheck check_name), args) ->
-      let function_arg =
-        {Expr.Fixed.pattern= Var "function__"; meta= Expr.Typed.Meta.empty}
-      in
-      pf ppf "%s(@[<hov>%a@]);" ("check_" ^ check_name)
-        (list ~sep:comma pp_expr) (function_arg :: args)
+  | NRFunApp (CompilerInternal (FnCheck {trans; var_name; var}), args) ->
+      Option.iter (check_to_string trans) ~f:(fun check_name ->
+          let function_arg = Expr.Helpers.variable "function__" in
+          pf ppf "%s(@[<hov>%a@]);" ("check_" ^ check_name)
+            (list ~sep:comma pp_expr)
+            (function_arg :: Expr.Helpers.str var_name :: var :: args) )
   | NRFunApp (CompilerInternal (FnWriteParam {unconstrain_opt; dims; var}), _)
   -> (
     match
@@ -182,7 +182,6 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
     (* Otherwise, use stan::io::serializer's write_free functions *)
     | Some trans, Some unconstrain_string ->
         let unconstrain_args = transform_args trans in
-        (* let lp = Middle.Expr.Helpers.variable "lp__" in *)
         pf ppf "@[<hov 2>out__.write_free_%s(@,%a);@]" unconstrain_string
           (list ~sep:comma pp_expr)
           (unconstrain_args @ dims @ [var]) )
