@@ -80,6 +80,7 @@ module Helpers : sig
   val int : int -> Typed.t
   val float : float -> Typed.t
   val str : string -> Typed.t
+  val variable : string -> Typed.t
   val zero : Typed.t
   val one : Typed.t
   val binop : Typed.t -> Operator.t -> Typed.t -> Typed.t

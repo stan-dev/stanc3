@@ -40,7 +40,8 @@ type bound_values =
   { lower: [`None | `Nonlit | `Lit of float]
   ; upper: [`None | `Nonlit | `Lit of float] }
 
-let trans_bounds_values (trans : Expr.Typed.t transformation) : bound_values =
+let trans_bounds_values (trans : Expr.Typed.t Transformation.transformation) :
+    bound_values =
   let bound_value e =
     match num_expr_value e with None -> `Nonlit | Some (f, _) -> `Lit f
   in
@@ -134,8 +135,7 @@ let map_rec_expr_state f state e =
 
 let rec map_rec_stmt_loc f stmt =
   let recurse = map_rec_stmt_loc f in
-  Stmt.Fixed.
-    {stmt with pattern= f (Pattern.map (fun x -> x) recurse stmt.pattern)}
+  Stmt.Fixed.{stmt with pattern= f (Pattern.map Fn.id recurse stmt.pattern)}
 
 let rec top_down_map_rec_stmt_loc f stmt =
   let recurse = top_down_map_rec_stmt_loc f in

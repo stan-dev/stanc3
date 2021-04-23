@@ -1,6 +1,6 @@
 open Core_kernel
 
-type 'a t =
+type 'expr t =
   | FnLength
   | FnMakeArray
   | FnMakeRowVec
@@ -9,14 +9,20 @@ type 'a t =
   | FnReadData
   | FnReadDataSerializer
   (* XXX move these to a backend specific file?*)
-  | FnReadParam of {constrain_opt: (string * 'a list) option; dims: 'a list}
-  | FnWriteParam of {unconstrain_opt: (string * 'a list) option; var: 'a}
+  | FnReadParam of
+      { constrain: 'expr Transformation.transformation
+      ; dims: 'expr list }
+  | FnWriteParam of
+      { unconstrain_opt: 'expr Transformation.transformation option
+      ; dims: 'expr list
+      ; var: 'expr }
   | FnValidateSize
   | FnValidateSizeSimplex
   | FnValidateSizeUnitVector
-  | FnConstrain of string
-  | FnUnconstrain of string
-  | FnCheck of string
+  | FnCheck of
+      { trans: 'expr Transformation.transformation
+      ; var_name: string
+      ; var: 'expr }
   | FnPrint
   | FnReject
   | FnResizeToMatch
@@ -39,10 +45,17 @@ let pp (pp_expr : 'a Fmt.t) ppf internal =
        ~expr_to_string:(fun expr -> sexp_of_string (Fmt.strf "%a" pp_expr expr))
        internal)
 
-(* let of_string_opt x =
- *   try
- *     String.chop_suffix_exn ~suffix:"__" x
- *     |> Sexp.of_string |> t_of_sexp |> Some
- *   with
- *   | Sexplib.Conv.Of_sexp_error _ -> None
- *   | Invalid_argument _ -> None *)
+(* Does this function call change state? Can we call it twice with the same results?
+
+   E.g., FnReadDataSerializer moves the serializer forward, so calling it again has
+   different results
+
+   Useful for optimizations
+*)
+let can_side_effect = function
+  | FnReadParam _ | FnReadData | FnReadDataSerializer | FnWriteParam _
+   |FnValidateSize | FnValidateSizeSimplex | FnValidateSizeUnitVector ->
+      true
+  | FnLength | FnMakeArray | FnMakeRowVec | FnNegInf | FnPrint | FnReject
+   |FnResizeToMatch | FnNaN | FnDeepCopy | FnCheck _ ->
+      false

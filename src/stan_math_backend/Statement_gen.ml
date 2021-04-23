@@ -275,11 +275,7 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
               Expr.Fixed.pattern= FunApp (CompilerInternal FnDeepCopy, [e]) }
         | _ -> recurse e
       in
-      let rhs =
-        match rhs.pattern with
-        | FunApp (CompilerInternal (FnConstrain _ | FnUnconstrain _), _) -> rhs
-        | _ -> maybe_deep_copy rhs
-      in
+      let rhs = maybe_deep_copy rhs in
       pf ppf "@[<hov 2>assign(@,%s,@ %a,@ %S%s%a@]);" assignee pp_expr rhs
         (strf "assigning variable %s" assignee)
         (if List.length idcs = 0 then "" else ", ")
@@ -295,19 +291,26 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
       pf ppf "std::stringstream %s;@," err_strm ;
       pf ppf "%a@," (list ~sep:cut add_to_string) args ;
       pf ppf "throw std::domain_error(%s.str());" err_strm
-  | NRFunApp (CompilerInternal (FnCheck check_name), args) ->
-      let function_arg =
-        {Expr.Fixed.pattern= Var "function__"; meta= Expr.Typed.Meta.empty}
-      in
-      pf ppf "%s(@[<hov>%a@]);" ("check_" ^ check_name)
-        (list ~sep:comma pp_expr) (function_arg :: args)
-  | NRFunApp (CompilerInternal (FnWriteParam {unconstrain_opt; var}), _) -> (
-    match unconstrain_opt with
-    | None -> pf ppf "@[<hov 2>out__.write(@,%a);@]" pp_expr var
-    | Some (unconstrain_string, unconstrain_args) ->
+  | NRFunApp (CompilerInternal (FnCheck {trans; var_name; var}), args) ->
+      Option.iter (check_to_string trans) ~f:(fun check_name ->
+          let function_arg = Expr.Helpers.variable "function__" in
+          pf ppf "%s(@[<hov>%a@]);" ("check_" ^ check_name)
+            (list ~sep:comma pp_expr)
+            (function_arg :: Expr.Helpers.str var_name :: var :: args) )
+  | NRFunApp (CompilerInternal (FnWriteParam {unconstrain_opt; dims; var}), _)
+  -> (
+    match
+      (unconstrain_opt, Option.bind ~f:constraint_to_string unconstrain_opt)
+    with
+    (* When the current block or this transformation doesn't require unconstraining,
+       use vanilla write *)
+    | None, _ | _, None -> pf ppf "@[<hov 2>out__.write(@,%a);@]" pp_expr var
+    (* Otherwise, use stan::io::serializer's write_free functions *)
+    | Some trans, Some unconstrain_string ->
+        let unconstrain_args = transform_args trans in
         pf ppf "@[<hov 2>out__.write_free_%s(@,%a);@]" unconstrain_string
           (list ~sep:comma pp_expr)
-          (unconstrain_args @ [var]) )
+          (unconstrain_args @ dims @ [var]) )
   | NRFunApp (CompilerInternal f, args) ->
       let fname, extra_args = trans_math_fn f in
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)

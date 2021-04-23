@@ -586,7 +586,14 @@ let rec used_expressions_stmt_help f
         [ f e
         ; used_expressions_stmt_help f b1.pattern
         ; used_expressions_stmt_help f b2.pattern ]
-  | NRFunApp (_, l) -> Expr.Typed.Set.union_list (List.map ~f l)
+  | NRFunApp (k, l) -> (
+      let arg_exprs = Expr.Typed.Set.union_list (List.map ~f l) in
+      match k with
+      | CompilerInternal internal ->
+          Expr.Typed.Set.union arg_exprs
+            (Expr.Typed.Set.union_list
+               (Internal_fun.fold (fun accum e -> f e :: accum) [] internal))
+      | _ -> arg_exprs )
   | Decl _ | Return None | Break | Continue | Skip -> Expr.Typed.Set.empty
   | IfElse (e, b, None) | While (e, b) ->
       Expr.Typed.Set.union (f e) (used_expressions_stmt_help f b.pattern)
