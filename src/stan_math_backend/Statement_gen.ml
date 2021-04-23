@@ -145,11 +145,7 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
               Expr.Fixed.pattern= FunApp (CompilerInternal FnDeepCopy, [e]) }
         | _ -> recurse e
       in
-      let rhs =
-        match rhs.pattern with
-        | FunApp (CompilerInternal (FnConstrain _ | FnUnconstrain _), _) -> rhs
-        | _ -> maybe_deep_copy rhs
-      in
+      let rhs = maybe_deep_copy rhs in
       pf ppf "@[<hov 2>assign(@,%s,@ %a,@ %S%s%a@]);" assignee pp_expr rhs
         (strf "assigning variable %s" assignee)
         (if List.length idcs = 0 then "" else ", ")

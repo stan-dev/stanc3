@@ -453,8 +453,6 @@ and pp_compiler_internal_fn ad ut f ppf es =
         raise_s
           [%message
             "Unexpected type for row vector literal" (ut : UnsizedType.t)] )
-  | FnConstrain flavor -> pp_constrain_funapp "constrain" flavor ppf es
-  | FnUnconstrain flavor -> pp_constrain_funapp "free" flavor ppf es
   | FnReadData -> read_data ut ppf es
   | FnReadDataSerializer ->
       pf ppf "@[<hov 2>in__.read<%a>(@,%a)@]" pp_unsizedtype_local

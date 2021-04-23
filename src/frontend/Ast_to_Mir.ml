@@ -187,10 +187,11 @@ let trans_printables mloc (ps : Ast.typed_expression Ast.printable list) =
 
 (* These types signal the context for a declaration during statement translation.
    They are only interpreted by trans_decl.*)
-type constrainaction = Check | Constrain | Unconstrain [@@deriving sexp]
+type transform_action = Check | Constrain | Unconstrain | IgnoreTransform
+[@@deriving sexp]
 
 type decl_context =
-  {dconstrain: constrainaction option; dadlevel: UnsizedType.autodifftype}
+  {transform_action: transform_action; dadlevel: UnsizedType.autodifftype}
 
 let constraint_forl = function
   | Transformation.Identity | Offset _ | Multiplier _ | OffsetMultiplier _
@@ -354,8 +355,8 @@ let check_sizedtype name =
       (ll, Type.Sized st)
   | Unsized ut -> ([], Unsized ut)
 
-let trans_decl {dconstrain; dadlevel} smeta decl_type transform identifier
-    initial_value =
+let trans_decl {transform_action; dadlevel} smeta decl_type transform
+    identifier initial_value =
   let decl_id = identifier.Ast.name in
   let rhs = Option.map ~f:trans_expr initial_value in
   let size_checks, dt = check_sizedtype identifier.name decl_type in
@@ -383,13 +384,13 @@ let trans_decl {dconstrain; dadlevel} smeta decl_type transform identifier
   in
   if Utils.is_user_ident decl_id then
     let constrain_checks =
-      match dconstrain with
-      | Some Constrain | Some Unconstrain ->
+      match transform_action with
+      | Constrain | Unconstrain ->
           raise_s [%message "This should never happen."]
-      | Some Check ->
+      | Check ->
           check_transform_shape decl_id decl_var smeta transform
           @ check_decl decl_var dt decl_id transform smeta dadlevel
-      | None -> []
+      | IgnoreTransform -> []
     in
     size_checks @ (decl :: rhs_assignment) @ constrain_checks
   else size_checks @ (decl :: rhs_assignment)
@@ -403,7 +404,9 @@ let unwrap_block_or_skip = function
 
 let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   let stmt_typed = ts.stmt and smeta = ts.smeta.loc in
-  let trans_stmt = trans_stmt ud_dists {declc with dconstrain= None} in
+  let trans_stmt =
+    trans_stmt ud_dists {declc with transform_action= IgnoreTransform}
+  in
   let trans_single_stmt s =
     match trans_stmt s with
     | [s] -> s
@@ -567,7 +570,7 @@ let trans_fun_def ud_dists (ts : Ast.typed_statement) =
           ; fdargs= List.map ~f:trans_arg arguments
           ; fdbody=
               trans_stmt ud_dists
-                {dconstrain= None; dadlevel= AutoDiffable}
+                {transform_action= IgnoreTransform; dadlevel= AutoDiffable}
                 body
               |> unwrap_block_or_skip
           ; fdloc= ts.smeta.loc } ]
@@ -621,10 +624,10 @@ let trans_sizedtype_decl declc tr name =
     | SizedType.(SInt | SReal) as t -> ([], t)
     | SVector s ->
         let fn =
-          match (declc.dconstrain, tr) with
-          | Some Constrain, Transformation.Simplex ->
+          match (declc.transform_action, tr) with
+          | Constrain, Transformation.Simplex ->
               Internal_fun.FnValidateSizeSimplex
-          | Some Constrain, UnitVector -> FnValidateSizeUnitVector
+          | Constrain, UnitVector -> FnValidateSizeUnitVector
           | _ -> FnValidateSize
         in
         let l, s = grab_size fn n s in
@@ -636,8 +639,8 @@ let trans_sizedtype_decl declc tr name =
         let l1, r = grab_size FnValidateSize n r in
         let l2, c = grab_size FnValidateSize (n + 1) c in
         let cf_cov =
-          match (declc.dconstrain, tr) with
-          | Some Constrain, CholeskyCov ->
+          match (declc.transform_action, tr) with
+          | Constrain, CholeskyCov ->
               [ { Stmt.Fixed.pattern=
                     NRFunApp
                       ( StanLib "check_greater_or_equal"
@@ -710,14 +713,14 @@ let trans_block ud_dists declc block prog =
         let stmts =
           if Utils.is_user_ident decl_id then
             let constrain_checks =
-              match declc.dconstrain with
-              | Some Constrain | Some Unconstrain ->
+              match declc.transform_action with
+              | Constrain | Unconstrain ->
                   check_transform_shape decl_id decl_var smeta.loc transform
-              | Some Check ->
+              | Check ->
                   check_transform_shape decl_id decl_var smeta.loc transform
                   @ check_decl decl_var (Sized type_) decl_id transform
                       smeta.loc declc.dadlevel
-              | None -> []
+              | IgnoreTransform -> []
             in
             (decl :: rhs_assignment) @ constrain_checks
           else decl :: rhs_assignment
@@ -762,38 +765,40 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
   let input_vars =
     map get_name_size datablock |> List.map ~f:(fun (n, st, _) -> (n, st))
   in
-  let declc = {dconstrain= None; dadlevel= DataOnly} in
-  let datab = map (trans_stmt {declc with dconstrain= Some Check}) datablock in
+  let declc = {transform_action= IgnoreTransform; dadlevel= DataOnly} in
+  let datab =
+    map (trans_stmt {declc with transform_action= Check}) datablock
+  in
   let _, _, param =
     trans_block ud_dists
-      {dconstrain= Some Constrain; dadlevel= AutoDiffable}
+      {transform_action= Constrain; dadlevel= AutoDiffable}
       Parameters p
   in
   (* Backends will add to transform_inits as needed *)
   let transform_inits = [] in
   let out_param, paramsizes, param_gq =
-    trans_block ud_dists {declc with dconstrain= Some Constrain} Parameters p
+    trans_block ud_dists {declc with transform_action= Constrain} Parameters p
   in
   let _, _, txparam =
     trans_block ud_dists
-      {dconstrain= Some Check; dadlevel= AutoDiffable}
+      {transform_action= Check; dadlevel= AutoDiffable}
       TransformedParameters p
   in
   let out_tparam, tparamsizes, txparam_gq =
     trans_block ud_dists
-      {declc with dconstrain= Some Check}
+      {declc with transform_action= Check}
       TransformedParameters p
   in
   let out_gq, gq_sizes, gq_stmts =
     trans_block ud_dists
-      {declc with dconstrain= Some Check}
+      {declc with transform_action= Check}
       GeneratedQuantities p
   in
   let output_vars = out_param @ out_tparam @ out_gq in
   let prepare_data =
     datab
     @ ( map
-          (trans_stmt {declc with dconstrain= Some Check})
+          (trans_stmt {declc with transform_action= Check})
           transformeddatablock
       |> migrate_checks_to_end_of_block )
     @ paramsizes @ tparamsizes @ gq_sizes

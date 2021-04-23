@@ -19,8 +19,6 @@ type 'expr t =
   | FnValidateSize
   | FnValidateSizeSimplex
   | FnValidateSizeUnitVector
-  | FnConstrain of string
-  | FnUnconstrain of string
   | FnCheck of
       { trans: 'expr Transformation.transformation
       ; var_name: string
@@ -56,8 +54,7 @@ let pp (pp_expr : 'a Fmt.t) ppf internal =
 *)
 let can_side_effect = function
   | FnReadParam _ | FnReadData | FnReadDataSerializer | FnWriteParam _
-   |FnConstrain _ | FnValidateSize | FnValidateSizeSimplex
-   |FnValidateSizeUnitVector | FnUnconstrain _ ->
+   |FnValidateSize | FnValidateSizeSimplex | FnValidateSizeUnitVector ->
       true
   | FnLength | FnMakeArray | FnMakeRowVec | FnNegInf | FnPrint | FnReject
    |FnResizeToMatch | FnNaN | FnDeepCopy | FnCheck _ ->
