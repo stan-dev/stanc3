@@ -59,3 +59,5 @@ let can_side_effect = function
   | FnLength | FnMakeArray | FnMakeRowVec | FnNegInf | FnPrint | FnReject
    |FnResizeToMatch | FnNaN | FnDeepCopy | FnCheck _ ->
       false
+
+let collect_exprs fn = fold (fun accum e -> e :: accum) [] fn

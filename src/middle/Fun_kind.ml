@@ -9,3 +9,5 @@ type 'e t =
 let pp pp_expr ppf = function
   | StanLib s | UserDefined s -> Fmt.string ppf s
   | CompilerInternal internal -> Internal_fun.pp pp_expr ppf internal
+
+let collect_exprs fn = fold (fun accum e -> e :: accum) [] fn
