@@ -9,9 +9,7 @@ type bound_values =
   { lower: [`None | `Nonlit | `Lit of float]
   ; upper: [`None | `Nonlit | `Lit of float] }
 
-val trans_bounds_values :
-  Expr.Typed.t Transformation.transformation -> bound_values
-
+val trans_bounds_values : Expr.Typed.t Transformation.t -> bound_values
 val is_dist : string -> bool
 val chop_dist_name : string -> string Option.t
 val top_var_declarations : Stmt.Located.t -> string Set.Poly.t
@@ -25,7 +23,7 @@ val data_set :
 val parameter_set :
      ?include_transformed:bool
   -> Program.Typed.t
-  -> (string * Expr.Typed.t Transformation.transformation) Set.Poly.t
+  -> (string * Expr.Typed.t Transformation.t) Set.Poly.t
 
 val parameter_names_set :
   ?include_transformed:bool -> Program.Typed.t -> string Set.Poly.t

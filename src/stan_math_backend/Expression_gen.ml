@@ -196,9 +196,7 @@ let transform_args = function
       [offset; Expr.Helpers.int default_multiplier]
   | Multiplier multiplier -> [Expr.Helpers.int default_offset; multiplier]
   | transform ->
-      Transformation.fold_transformation
-        (fun args arg -> args @ [arg])
-        [] transform
+      Transformation.fold (fun args arg -> args @ [arg]) [] transform
 
 let rec pp_index ppf = function
   | Index.All -> pf ppf "index_omni()"

@@ -1,7 +1,6 @@
 open Core_kernel
 open Common
 open Helpers
-open Transformation
 
 type fun_arg_decl = (UnsizedType.autodifftype * string * UnsizedType.t) list
 [@@deriving sexp, hash, map]
@@ -23,7 +22,7 @@ type 'e outvar =
   { out_unconstrained_st: 'e SizedType.t
   ; out_constrained_st: 'e SizedType.t
   ; out_block: io_block
-  ; out_trans: 'e transformation }
+  ; out_trans: 'e Transformation.t }
 [@@deriving sexp, map, hash, fold]
 
 type ('a, 'b) t =

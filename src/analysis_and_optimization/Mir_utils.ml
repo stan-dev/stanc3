@@ -40,8 +40,8 @@ type bound_values =
   { lower: [`None | `Nonlit | `Lit of float]
   ; upper: [`None | `Nonlit | `Lit of float] }
 
-let trans_bounds_values (trans : Expr.Typed.t Transformation.transformation) :
-    bound_values =
+let trans_bounds_values (trans : Expr.Typed.t Transformation.t) : bound_values
+    =
   let bound_value e =
     match num_expr_value e with None -> `Nonlit | Some (f, _) -> `Lit f
   in

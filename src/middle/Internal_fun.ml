@@ -9,20 +9,15 @@ type 'expr t =
   | FnReadData
   | FnReadDataSerializer
   (* XXX move these to a backend specific file?*)
-  | FnReadParam of
-      { constrain: 'expr Transformation.transformation
-      ; dims: 'expr list }
+  | FnReadParam of {constrain: 'expr Transformation.t; dims: 'expr list}
   | FnWriteParam of
-      { unconstrain_opt: 'expr Transformation.transformation option
+      { unconstrain_opt: 'expr Transformation.t option
       ; dims: 'expr list
       ; var: 'expr }
   | FnValidateSize
   | FnValidateSizeSimplex
   | FnValidateSizeUnitVector
-  | FnCheck of
-      { trans: 'expr Transformation.transformation
-      ; var_name: string
-      ; var: 'expr }
+  | FnCheck of {trans: 'expr Transformation.t; var_name: string; var: 'expr}
   | FnPrint
   | FnReject
   | FnResizeToMatch

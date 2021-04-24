@@ -223,8 +223,7 @@ let pp_bijector ppf trans =
     | Correlation -> [("CorrelationCholesky", []); ("CholeskyOuterProduct", [])]
     | _ ->
         raise_s
-          [%message
-            "Unsupported " (trans : Expr.Typed.t Transformation.transformation)]
+          [%message "Unsupported " (trans : Expr.Typed.t Transformation.t)]
   in
   match components with
   | [] -> pf ppf "tfb__.Identity()"

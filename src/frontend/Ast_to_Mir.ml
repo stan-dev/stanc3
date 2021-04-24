@@ -549,7 +549,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   | Ast.VarDecl
       {decl_type; transformation; identifier; initial_value; is_global= _} ->
       trans_decl declc smeta decl_type
-        (Transformation.map_transformation trans_expr transformation)
+        (Transformation.map trans_expr transformation)
         identifier initial_value
   | Ast.Block stmts -> Block (List.concat_map ~f:trans_stmt stmts) |> swrap
   | Ast.Profile (name, stmts) ->
@@ -672,9 +672,7 @@ let trans_block ud_dists declc block prog =
             ; is_global= true }
       ; smeta } ->
         let decl_id = identifier.Ast.name in
-        let transform =
-          Transformation.map_transformation trans_expr transformation
-        in
+        let transform = Transformation.map trans_expr transformation in
         let rhs = Option.map ~f:trans_expr initial_value in
         let size, type_ =
           trans_sizedtype_decl declc transform identifier.name type_

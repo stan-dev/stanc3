@@ -10,7 +10,7 @@ open Mir_utils
 type compiletime_val =
   | Opaque
   | Number of (float * string)
-  | Param of (string * Expr.Typed.t Transformation.transformation)
+  | Param of (string * Expr.Typed.t Transformation.t)
   | Data of string
 
 (* Info about a distribution occurrences that's useful for checking that
@@ -79,7 +79,7 @@ let bounds_out_of_range (range : range) (bounds : bound_values) : bool =
 (* Check for inconsistency between a distribution argument's constraint and the
    constraint transformation of a variable *)
 let transform_mismatch_constraint (constr : var_constraint)
-    (trans : Expr.Typed.t Transformation.transformation) : bool =
+    (trans : Expr.Typed.t Transformation.t) : bool =
   match constr with
   | Range range -> bounds_out_of_range range (trans_bounds_values trans)
   | Ordered -> trans <> Transformation.Ordered
