@@ -3378,3 +3378,17 @@ let%expect_test "adlevel_optimization 2" =
         parameters real w; //real
         transformed_parameters real w_trans; //real
       } |}]
+
+
+let%expect_test "Mapping acts recursively" =
+  let from = Expr.Helpers.variable "x" in
+  let into = Expr.Helpers.variable "y" in
+  let unpattern p = {Stmt.Fixed.pattern= p
+                    ; meta= Location_span.empty}
+  in
+  let s = Stmt.Fixed.Pattern.NRFunApp (CompilerInternal (FnWriteParam {var= from; dims= [from]; unconstrain_opt= None }), [from])
+  in
+  let m = Expr.Typed.Map.of_alist_exn [(from, into)] in
+  let s' = expr_subst_stmt_base m s in
+  Fmt.strf "@[<v>%a@]" Stmt.Located.pp (unpattern s') |> print_endline ;
+  [%expect {| (FnWriteParam(unconstrain_opt())(dims(y))(var y))__(y); |}]
