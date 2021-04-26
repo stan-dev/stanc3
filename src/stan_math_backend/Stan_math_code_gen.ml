@@ -874,7 +874,8 @@ let is_fun_used_with_variadic_fn variadic_fn_test p =
   let rec find_functors_expr accum Expr.Fixed.({pattern; _}) =
     String.Set.union accum
       ( match pattern with
-      | FunApp (StanLib x, {pattern= Var f; _} :: _) when variadic_fn_test x ->
+      | FunApp (StanLib (x, FnPure), {pattern= Var f; _} :: _)
+        when variadic_fn_test x ->
           String.Set.of_list [Utils.stdlib_distribution_name f]
       | x -> Expr.Fixed.Pattern.fold find_functors_expr accum x )
   in

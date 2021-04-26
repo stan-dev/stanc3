@@ -10,9 +10,11 @@ let unwrap_return_exn = function
           "Unexpected return type " (x : UnsizedType.returntype option)]
 
 let trans_fn_kind kind name =
+  let fname = Utils.stdlib_distribution_name name in
+  let suffix = Fun_kind.suffix_from_name name in
   match kind with
-  | Ast.StanLib -> Fun_kind.StanLib name
-  | UserDefined -> UserDefined name
+  | Ast.StanLib -> Fun_kind.StanLib (fname, suffix)
+  | UserDefined -> UserDefined (fname, suffix)
 
 let without_underscores = String.filter ~f:(( <> ) '_')
 
@@ -45,7 +47,8 @@ let rec op_to_funapp op args =
   and loc = Ast.expr_loc_lub args
   and adlevel = Ast.expr_ad_lub args in
   Expr.
-    { Fixed.pattern= FunApp (StanLib (Operator.to_string op), trans_exprs args)
+    { Fixed.pattern=
+        FunApp (StanLib (Operator.to_string op, FnPure), trans_exprs args)
     ; meta= Expr.Typed.Meta.create ~type_ ~adlevel ~loc () }
 
 and trans_expr {Ast.expr; Ast.emeta} =
@@ -73,7 +76,7 @@ and trans_expr {Ast.expr; Ast.emeta} =
   | FunApp (fn_kind, {name; _}, args) | CondDistApp (fn_kind, {name; _}, args)
     ->
       FunApp (trans_fn_kind fn_kind name, trans_exprs args) |> ewrap
-  | GetLP | GetTarget -> FunApp (StanLib "target", []) |> ewrap
+  | GetLP | GetTarget -> FunApp (StanLib ("target", FnTarget), []) |> ewrap
   | ArrayExpr eles ->
       FunApp (CompilerInternal FnMakeArray, trans_exprs eles) |> ewrap
   | RowVectorExpr eles ->
@@ -245,7 +248,7 @@ let same_shape decl_id decl_var id var meta =
     [ Stmt.
         { Fixed.pattern=
             NRFunApp
-              ( StanLib "check_matching_dims"
+              ( StanLib ("check_matching_dims", FnPure)
               , Expr.Helpers.
                   [str "constraint"; str decl_id; decl_var; str id; var] )
         ; meta } ]
@@ -554,15 +557,15 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       let suffix =
         Stan_math_signatures.dist_name_suffix ud_dists distribution.name
       in
-      let name = distribution.name ^ Utils.unnormalized_suffix suffix in
+      let name = distribution.name ^ suffix in
       let kind =
         let possible_names =
           List.map ~f:(( ^ ) distribution.name) Utils.distribution_suffices
           |> String.Set.of_list
         in
         if List.exists ~f:(fun (n, _) -> Set.mem possible_names n) ud_dists
-        then Fun_kind.UserDefined name
-        else StanLib name
+        then Fun_kind.UserDefined (name, FnLpdf true)
+        else StanLib (name, FnLpdf true)
       in
       let add_dist =
         Stmt.Fixed.Pattern.TargetPE
@@ -732,7 +735,7 @@ let trans_sizedtype_decl declc tr name =
           | Some Constrain, CholeskyCov ->
               [ { Stmt.Fixed.pattern=
                     NRFunApp
-                      ( StanLib "check_greater_or_equal"
+                      ( StanLib ("check_greater_or_equal", FnPure)
                       , Expr.Helpers.
                           [ str ("cholesky_factor_cov " ^ name)
                           ; str
@@ -918,7 +921,9 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
       ; meta= Location_span.empty }
   in
   let iexpr pattern = Expr.{pattern; Fixed.meta= Typed.Meta.empty} in
-  let fnot e = FunApp (StanLib (Operator.to_string PNot), [e]) |> iexpr in
+  let fnot e =
+    FunApp (StanLib (Operator.to_string PNot, FnPure), [e]) |> iexpr
+  in
   let tparam_early_return =
     let to_var fv = iexpr (Var (Flag_vars.to_string fv)) in
     let v1 = to_var EmitTransformedParameters in
