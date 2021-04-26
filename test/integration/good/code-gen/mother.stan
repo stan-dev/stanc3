@@ -474,7 +474,6 @@ transformed data {
 
   transformed_data_vector = d_vector .^ d_int;
   transformed_data_vector = d_vector .^ d_real;
-  transformed_data_vector = fma(d_real_1d_ar, d_real_1d_ar, d_real_1d_ar);
   transformed_data_vector = fma(d_vector, d_vector, d_vector);
   transformed_data_vector = fma(d_vector, d_vector, d_real);
   transformed_data_vector = fma(d_real, d_vector, d_real);

@@ -633,18 +633,7 @@ let add_ternary_vec name =
   add_unqualified (name, ReturnType UMatrix, [UMatrix; UMatrix; UMatrix]) ;
   add_unqualified (name, ReturnType UMatrix, [UReal; UMatrix; UReal]) ;
   add_unqualified (name, ReturnType UMatrix, [UReal; UMatrix; UMatrix]) ;
-  add_unqualified (name, ReturnType UMatrix, [UReal; UReal; UMatrix]) ;
-  add_unqualified (name, ReturnType UVector, [UArray UReal; UReal; UReal]) ;
-  add_unqualified
-    (name, ReturnType UVector, [UArray UReal; UArray UReal; UReal]) ;
-  add_unqualified
-    (name, ReturnType UVector, [UArray UReal; UReal; UArray UReal]) ;
-  add_unqualified
-    (name, ReturnType UVector, [UArray UReal; UArray UReal; UArray UReal]) ;
-  add_unqualified (name, ReturnType UVector, [UReal; UArray UReal; UReal]) ;
-  add_unqualified
-    (name, ReturnType UVector, [UReal; UArray UReal; UArray UReal]) ;
-  add_unqualified (name, ReturnType UVector, [UReal; UReal; UArray UReal])
+  add_unqualified (name, ReturnType UMatrix, [UReal; UReal; UMatrix])
 
 let for_all_vector_types s = List.iter ~f:s all_vector_types
 let for_vector_types s = List.iter ~f:s vector_types

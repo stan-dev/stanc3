@@ -5834,18 +5834,6 @@
      (Assignment (transformed_data_vector UVector ())
       ((pattern
         (FunApp (StanLib fma)
-         (((pattern (Var d_real_1d_ar))
-           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var d_real_1d_ar))
-           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var d_real_1d_ar))
-           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (transformed_data_vector UVector ())
-      ((pattern
-        (FunApp (StanLib fma)
          (((pattern (Var d_vector))
            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var d_vector))

@@ -1778,197 +1778,197 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 788> locations_array__ = 
+static constexpr std::array<const char*, 787> locations_array__ = 
 {" (found before start of program)",
- " (in 'mother.stan', line 556, column 2 to column 14)",
- " (in 'mother.stan', line 557, column 2 to column 29)",
- " (in 'mother.stan', line 558, column 2 to column 30)",
- " (in 'mother.stan', line 559, column 2 to column 52)",
- " (in 'mother.stan', line 560, column 2 to column 45)",
- " (in 'mother.stan', line 561, column 2 to column 41)",
- " (in 'mother.stan', line 562, column 2 to column 32)",
- " (in 'mother.stan', line 563, column 2 to column 36)",
- " (in 'mother.stan', line 564, column 2 to column 27)",
- " (in 'mother.stan', line 565, column 2 to column 24)",
- " (in 'mother.stan', line 566, column 2 to column 28)",
- " (in 'mother.stan', line 567, column 2 to column 26)",
- " (in 'mother.stan', line 568, column 2 to column 32)",
- " (in 'mother.stan', line 569, column 2 to column 36)",
- " (in 'mother.stan', line 570, column 2 to column 21)",
- " (in 'mother.stan', line 571, column 2 to column 45)",
- " (in 'mother.stan', line 572, column 2 to column 23)",
- " (in 'mother.stan', line 573, column 2 to column 29)",
- " (in 'mother.stan', line 574, column 2 to column 33)",
- " (in 'mother.stan', line 575, column 2 to column 38)",
- " (in 'mother.stan', line 576, column 2 to column 36)",
- " (in 'mother.stan', line 577, column 2 to column 42)",
+ " (in 'mother.stan', line 555, column 2 to column 14)",
+ " (in 'mother.stan', line 556, column 2 to column 29)",
+ " (in 'mother.stan', line 557, column 2 to column 30)",
+ " (in 'mother.stan', line 558, column 2 to column 52)",
+ " (in 'mother.stan', line 559, column 2 to column 45)",
+ " (in 'mother.stan', line 560, column 2 to column 41)",
+ " (in 'mother.stan', line 561, column 2 to column 32)",
+ " (in 'mother.stan', line 562, column 2 to column 36)",
+ " (in 'mother.stan', line 563, column 2 to column 27)",
+ " (in 'mother.stan', line 564, column 2 to column 24)",
+ " (in 'mother.stan', line 565, column 2 to column 28)",
+ " (in 'mother.stan', line 566, column 2 to column 26)",
+ " (in 'mother.stan', line 567, column 2 to column 32)",
+ " (in 'mother.stan', line 568, column 2 to column 36)",
+ " (in 'mother.stan', line 569, column 2 to column 21)",
+ " (in 'mother.stan', line 570, column 2 to column 45)",
+ " (in 'mother.stan', line 571, column 2 to column 23)",
+ " (in 'mother.stan', line 572, column 2 to column 29)",
+ " (in 'mother.stan', line 573, column 2 to column 33)",
+ " (in 'mother.stan', line 574, column 2 to column 38)",
+ " (in 'mother.stan', line 575, column 2 to column 36)",
+ " (in 'mother.stan', line 576, column 2 to column 42)",
+ " (in 'mother.stan', line 577, column 2 to column 16)",
  " (in 'mother.stan', line 578, column 2 to column 16)",
- " (in 'mother.stan', line 579, column 2 to column 16)",
- " (in 'mother.stan', line 582, column 2 to column 33)",
- " (in 'mother.stan', line 583, column 2 to column 37)",
- " (in 'mother.stan', line 584, column 2 to column 28)",
- " (in 'mother.stan', line 585, column 2 to column 25)",
- " (in 'mother.stan', line 586, column 2 to column 29)",
- " (in 'mother.stan', line 587, column 2 to column 27)",
- " (in 'mother.stan', line 588, column 2 to column 33)",
- " (in 'mother.stan', line 589, column 2 to column 37)",
- " (in 'mother.stan', line 590, column 2 to column 22)",
- " (in 'mother.stan', line 591, column 2 to column 46)",
- " (in 'mother.stan', line 592, column 2 to column 24)",
- " (in 'mother.stan', line 593, column 2 to column 30)",
- " (in 'mother.stan', line 594, column 2 to column 34)",
- " (in 'mother.stan', line 595, column 2 to column 39)",
- " (in 'mother.stan', line 596, column 2 to column 37)",
- " (in 'mother.stan', line 597, column 2 to column 43)",
- " (in 'mother.stan', line 598, column 2 to column 20)",
- " (in 'mother.stan', line 599, column 2 to column 15)",
+ " (in 'mother.stan', line 581, column 2 to column 33)",
+ " (in 'mother.stan', line 582, column 2 to column 37)",
+ " (in 'mother.stan', line 583, column 2 to column 28)",
+ " (in 'mother.stan', line 584, column 2 to column 25)",
+ " (in 'mother.stan', line 585, column 2 to column 29)",
+ " (in 'mother.stan', line 586, column 2 to column 27)",
+ " (in 'mother.stan', line 587, column 2 to column 33)",
+ " (in 'mother.stan', line 588, column 2 to column 37)",
+ " (in 'mother.stan', line 589, column 2 to column 22)",
+ " (in 'mother.stan', line 590, column 2 to column 46)",
+ " (in 'mother.stan', line 591, column 2 to column 24)",
+ " (in 'mother.stan', line 592, column 2 to column 30)",
+ " (in 'mother.stan', line 593, column 2 to column 34)",
+ " (in 'mother.stan', line 594, column 2 to column 39)",
+ " (in 'mother.stan', line 595, column 2 to column 37)",
+ " (in 'mother.stan', line 596, column 2 to column 43)",
+ " (in 'mother.stan', line 597, column 2 to column 20)",
+ " (in 'mother.stan', line 598, column 2 to column 15)",
+ " (in 'mother.stan', line 600, column 2 to column 31)",
  " (in 'mother.stan', line 601, column 2 to column 31)",
- " (in 'mother.stan', line 602, column 2 to column 31)",
+ " (in 'mother.stan', line 602, column 2 to column 23)",
  " (in 'mother.stan', line 603, column 2 to column 23)",
- " (in 'mother.stan', line 604, column 2 to column 23)",
- " (in 'mother.stan', line 606, column 2 to column 25)",
+ " (in 'mother.stan', line 605, column 2 to column 25)",
+ " (in 'mother.stan', line 606, column 2 to column 31)",
  " (in 'mother.stan', line 607, column 2 to column 31)",
- " (in 'mother.stan', line 608, column 2 to column 31)",
+ " (in 'mother.stan', line 609, column 2 to column 27)",
  " (in 'mother.stan', line 610, column 2 to column 27)",
- " (in 'mother.stan', line 611, column 2 to column 27)",
- " (in 'mother.stan', line 612, column 2 to column 33)",
- " (in 'mother.stan', line 614, column 2 to column 41)",
- " (in 'mother.stan', line 615, column 2 to column 36)",
- " (in 'mother.stan', line 621, column 10 to column 38)",
- " (in 'mother.stan', line 620, column 23 to line 621, column 39)",
- " (in 'mother.stan', line 620, column 8 to line 621, column 39)",
- " (in 'mother.stan', line 619, column 21 to line 621, column 40)",
- " (in 'mother.stan', line 619, column 6 to line 621, column 40)",
- " (in 'mother.stan', line 618, column 19 to line 621, column 41)",
- " (in 'mother.stan', line 618, column 4 to line 621, column 41)",
- " (in 'mother.stan', line 617, column 17 to line 621, column 42)",
- " (in 'mother.stan', line 617, column 2 to line 621, column 42)",
- " (in 'mother.stan', line 623, column 17 to column 45)",
- " (in 'mother.stan', line 623, column 2 to column 45)",
- " (in 'mother.stan', line 624, column 2 to column 29)",
+ " (in 'mother.stan', line 611, column 2 to column 33)",
+ " (in 'mother.stan', line 613, column 2 to column 41)",
+ " (in 'mother.stan', line 614, column 2 to column 36)",
+ " (in 'mother.stan', line 620, column 10 to column 38)",
+ " (in 'mother.stan', line 619, column 23 to line 620, column 39)",
+ " (in 'mother.stan', line 619, column 8 to line 620, column 39)",
+ " (in 'mother.stan', line 618, column 21 to line 620, column 40)",
+ " (in 'mother.stan', line 618, column 6 to line 620, column 40)",
+ " (in 'mother.stan', line 617, column 19 to line 620, column 41)",
+ " (in 'mother.stan', line 617, column 4 to line 620, column 41)",
+ " (in 'mother.stan', line 616, column 17 to line 620, column 42)",
+ " (in 'mother.stan', line 616, column 2 to line 620, column 42)",
+ " (in 'mother.stan', line 622, column 17 to column 45)",
+ " (in 'mother.stan', line 622, column 2 to column 45)",
+ " (in 'mother.stan', line 623, column 2 to column 29)",
+ " (in 'mother.stan', line 624, column 2 to column 31)",
  " (in 'mother.stan', line 625, column 2 to column 31)",
- " (in 'mother.stan', line 626, column 2 to column 31)",
- " (in 'mother.stan', line 628, column 2 to column 63)",
- " (in 'mother.stan', line 629, column 2 to column 79)",
- " (in 'mother.stan', line 630, column 2 to column 81)",
- " (in 'mother.stan', line 631, column 2 to column 65)",
- " (in 'mother.stan', line 632, column 2 to column 81)",
- " (in 'mother.stan', line 633, column 2 to column 67)",
- " (in 'mother.stan', line 634, column 2 to column 83)",
+ " (in 'mother.stan', line 627, column 2 to column 63)",
+ " (in 'mother.stan', line 628, column 2 to column 79)",
+ " (in 'mother.stan', line 629, column 2 to column 81)",
+ " (in 'mother.stan', line 630, column 2 to column 65)",
+ " (in 'mother.stan', line 631, column 2 to column 81)",
+ " (in 'mother.stan', line 632, column 2 to column 67)",
+ " (in 'mother.stan', line 633, column 2 to column 83)",
+ " (in 'mother.stan', line 635, column 2 to column 29)",
  " (in 'mother.stan', line 636, column 2 to column 29)",
- " (in 'mother.stan', line 637, column 2 to column 29)",
- " (in 'mother.stan', line 681, column 2 to column 32)",
- " (in 'mother.stan', line 682, column 2 to column 27)",
- " (in 'mother.stan', line 683, column 2 to column 35)",
- " (in 'mother.stan', line 684, column 2 to column 39)",
- " (in 'mother.stan', line 685, column 2 to column 28)",
- " (in 'mother.stan', line 686, column 2 to column 25)",
- " (in 'mother.stan', line 687, column 2 to column 29)",
- " (in 'mother.stan', line 688, column 2 to column 27)",
- " (in 'mother.stan', line 689, column 2 to column 33)",
- " (in 'mother.stan', line 690, column 2 to column 37)",
- " (in 'mother.stan', line 691, column 2 to column 46)",
- " (in 'mother.stan', line 692, column 2 to column 24)",
- " (in 'mother.stan', line 693, column 2 to column 30)",
- " (in 'mother.stan', line 694, column 2 to column 34)",
- " (in 'mother.stan', line 695, column 2 to column 39)",
- " (in 'mother.stan', line 696, column 2 to column 37)",
- " (in 'mother.stan', line 697, column 2 to column 43)",
- " (in 'mother.stan', line 698, column 2 to column 29)",
- " (in 'mother.stan', line 699, column 2 to column 31)",
+ " (in 'mother.stan', line 680, column 2 to column 32)",
+ " (in 'mother.stan', line 681, column 2 to column 27)",
+ " (in 'mother.stan', line 682, column 2 to column 35)",
+ " (in 'mother.stan', line 683, column 2 to column 39)",
+ " (in 'mother.stan', line 684, column 2 to column 28)",
+ " (in 'mother.stan', line 685, column 2 to column 25)",
+ " (in 'mother.stan', line 686, column 2 to column 29)",
+ " (in 'mother.stan', line 687, column 2 to column 27)",
+ " (in 'mother.stan', line 688, column 2 to column 33)",
+ " (in 'mother.stan', line 689, column 2 to column 37)",
+ " (in 'mother.stan', line 690, column 2 to column 46)",
+ " (in 'mother.stan', line 691, column 2 to column 24)",
+ " (in 'mother.stan', line 692, column 2 to column 30)",
+ " (in 'mother.stan', line 693, column 2 to column 34)",
+ " (in 'mother.stan', line 694, column 2 to column 39)",
+ " (in 'mother.stan', line 695, column 2 to column 37)",
+ " (in 'mother.stan', line 696, column 2 to column 43)",
+ " (in 'mother.stan', line 697, column 2 to column 29)",
+ " (in 'mother.stan', line 698, column 2 to column 31)",
+ " (in 'mother.stan', line 699, column 2 to column 27)",
  " (in 'mother.stan', line 700, column 2 to column 27)",
  " (in 'mother.stan', line 701, column 2 to column 27)",
- " (in 'mother.stan', line 702, column 2 to column 27)",
+ " (in 'mother.stan', line 702, column 2 to column 28)",
  " (in 'mother.stan', line 703, column 2 to column 28)",
  " (in 'mother.stan', line 704, column 2 to column 28)",
  " (in 'mother.stan', line 705, column 2 to column 28)",
- " (in 'mother.stan', line 706, column 2 to column 28)",
- " (in 'mother.stan', line 707, column 2 to column 24)",
- " (in 'mother.stan', line 709, column 2 to column 35)",
- " (in 'mother.stan', line 710, column 2 to column 31)",
+ " (in 'mother.stan', line 706, column 2 to column 24)",
+ " (in 'mother.stan', line 708, column 2 to column 35)",
+ " (in 'mother.stan', line 709, column 2 to column 31)",
+ " (in 'mother.stan', line 710, column 2 to column 23)",
  " (in 'mother.stan', line 711, column 2 to column 23)",
- " (in 'mother.stan', line 712, column 2 to column 23)",
- " (in 'mother.stan', line 713, column 2 to column 25)",
+ " (in 'mother.stan', line 712, column 2 to column 25)",
+ " (in 'mother.stan', line 713, column 2 to column 31)",
  " (in 'mother.stan', line 714, column 2 to column 31)",
- " (in 'mother.stan', line 715, column 2 to column 31)",
- " (in 'mother.stan', line 717, column 2 to column 35)",
+ " (in 'mother.stan', line 716, column 2 to column 35)",
+ " (in 'mother.stan', line 717, column 2 to column 31)",
  " (in 'mother.stan', line 718, column 2 to column 31)",
- " (in 'mother.stan', line 719, column 2 to column 31)",
+ " (in 'mother.stan', line 720, column 2 to column 27)",
  " (in 'mother.stan', line 721, column 2 to column 27)",
- " (in 'mother.stan', line 722, column 2 to column 27)",
- " (in 'mother.stan', line 723, column 2 to column 33)",
- " (in 'mother.stan', line 729, column 10 to column 38)",
- " (in 'mother.stan', line 728, column 23 to line 729, column 39)",
- " (in 'mother.stan', line 728, column 8 to line 729, column 39)",
- " (in 'mother.stan', line 727, column 21 to line 729, column 40)",
- " (in 'mother.stan', line 727, column 6 to line 729, column 40)",
- " (in 'mother.stan', line 726, column 19 to line 729, column 41)",
- " (in 'mother.stan', line 726, column 4 to line 729, column 41)",
- " (in 'mother.stan', line 725, column 17 to line 729, column 42)",
- " (in 'mother.stan', line 725, column 2 to line 729, column 42)",
- " (in 'mother.stan', line 731, column 17 to column 45)",
- " (in 'mother.stan', line 731, column 2 to column 45)",
- " (in 'mother.stan', line 737, column 8 to column 49)",
- " (in 'mother.stan', line 736, column 6 to line 737, column 49)",
- " (in 'mother.stan', line 735, column 4 to line 737, column 49)",
- " (in 'mother.stan', line 734, column 2 to line 737, column 49)",
- " (in 'mother.stan', line 742, column 6 to column 60)",
- " (in 'mother.stan', line 741, column 4 to line 742, column 60)",
- " (in 'mother.stan', line 740, column 2 to line 742, column 60)",
- " (in 'mother.stan', line 744, column 2 to column 45)",
- " (in 'mother.stan', line 745, column 64 to column 97)",
- " (in 'mother.stan', line 745, column 2 to column 97)",
- " (in 'mother.stan', line 750, column 6 to column 51)",
- " (in 'mother.stan', line 749, column 4 to line 750, column 51)",
- " (in 'mother.stan', line 748, column 2 to line 750, column 51)",
- " (in 'mother.stan', line 751, column 2 to column 39)",
- " (in 'mother.stan', line 753, column 58 to column 91)",
- " (in 'mother.stan', line 753, column 2 to column 91)",
- " (in 'mother.stan', line 759, column 8 to column 68)",
- " (in 'mother.stan', line 758, column 6 to line 759, column 68)",
- " (in 'mother.stan', line 757, column 4 to line 759, column 68)",
- " (in 'mother.stan', line 756, column 2 to line 759, column 68)",
- " (in 'mother.stan', line 760, column 2 to column 48)",
- " (in 'mother.stan', line 761, column 67 to column 100)",
- " (in 'mother.stan', line 761, column 2 to column 100)",
- " (in 'mother.stan', line 763, column 2 to column 36)",
- " (in 'mother.stan', line 764, column 2 to column 38)",
- " (in 'mother.stan', line 640, column 2 to column 16)",
- " (in 'mother.stan', line 641, column 2 to column 20)",
- " (in 'mother.stan', line 642, column 2 to column 29)",
- " (in 'mother.stan', line 643, column 2 to column 24)",
- " (in 'mother.stan', line 644, column 2 to column 23)",
- " (in 'mother.stan', line 645, column 2 to column 35)",
+ " (in 'mother.stan', line 722, column 2 to column 33)",
+ " (in 'mother.stan', line 728, column 10 to column 38)",
+ " (in 'mother.stan', line 727, column 23 to line 728, column 39)",
+ " (in 'mother.stan', line 727, column 8 to line 728, column 39)",
+ " (in 'mother.stan', line 726, column 21 to line 728, column 40)",
+ " (in 'mother.stan', line 726, column 6 to line 728, column 40)",
+ " (in 'mother.stan', line 725, column 19 to line 728, column 41)",
+ " (in 'mother.stan', line 725, column 4 to line 728, column 41)",
+ " (in 'mother.stan', line 724, column 17 to line 728, column 42)",
+ " (in 'mother.stan', line 724, column 2 to line 728, column 42)",
+ " (in 'mother.stan', line 730, column 17 to column 45)",
+ " (in 'mother.stan', line 730, column 2 to column 45)",
+ " (in 'mother.stan', line 736, column 8 to column 49)",
+ " (in 'mother.stan', line 735, column 6 to line 736, column 49)",
+ " (in 'mother.stan', line 734, column 4 to line 736, column 49)",
+ " (in 'mother.stan', line 733, column 2 to line 736, column 49)",
+ " (in 'mother.stan', line 741, column 6 to column 60)",
+ " (in 'mother.stan', line 740, column 4 to line 741, column 60)",
+ " (in 'mother.stan', line 739, column 2 to line 741, column 60)",
+ " (in 'mother.stan', line 743, column 2 to column 45)",
+ " (in 'mother.stan', line 744, column 64 to column 97)",
+ " (in 'mother.stan', line 744, column 2 to column 97)",
+ " (in 'mother.stan', line 749, column 6 to column 51)",
+ " (in 'mother.stan', line 748, column 4 to line 749, column 51)",
+ " (in 'mother.stan', line 747, column 2 to line 749, column 51)",
+ " (in 'mother.stan', line 750, column 2 to column 39)",
+ " (in 'mother.stan', line 752, column 58 to column 91)",
+ " (in 'mother.stan', line 752, column 2 to column 91)",
+ " (in 'mother.stan', line 758, column 8 to column 68)",
+ " (in 'mother.stan', line 757, column 6 to line 758, column 68)",
+ " (in 'mother.stan', line 756, column 4 to line 758, column 68)",
+ " (in 'mother.stan', line 755, column 2 to line 758, column 68)",
+ " (in 'mother.stan', line 759, column 2 to column 48)",
+ " (in 'mother.stan', line 760, column 67 to column 100)",
+ " (in 'mother.stan', line 760, column 2 to column 100)",
+ " (in 'mother.stan', line 762, column 2 to column 36)",
+ " (in 'mother.stan', line 763, column 2 to column 38)",
+ " (in 'mother.stan', line 639, column 2 to column 16)",
+ " (in 'mother.stan', line 640, column 2 to column 20)",
+ " (in 'mother.stan', line 641, column 2 to column 29)",
+ " (in 'mother.stan', line 642, column 2 to column 24)",
+ " (in 'mother.stan', line 643, column 2 to column 23)",
+ " (in 'mother.stan', line 644, column 2 to column 35)",
+ " (in 'mother.stan', line 646, column 2 to column 38)",
  " (in 'mother.stan', line 647, column 2 to column 38)",
- " (in 'mother.stan', line 648, column 2 to column 38)",
- " (in 'mother.stan', line 650, column 2 to column 41)",
- " (in 'mother.stan', line 652, column 4 to column 42)",
+ " (in 'mother.stan', line 649, column 2 to column 41)",
+ " (in 'mother.stan', line 651, column 4 to column 42)",
+ " (in 'mother.stan', line 652, column 4 to column 46)",
  " (in 'mother.stan', line 653, column 4 to column 46)",
- " (in 'mother.stan', line 654, column 4 to column 46)",
- " (in 'mother.stan', line 657, column 8 to column 68)",
+ " (in 'mother.stan', line 656, column 8 to column 68)",
+ " (in 'mother.stan', line 657, column 8 to column 76)",
  " (in 'mother.stan', line 658, column 8 to column 76)",
- " (in 'mother.stan', line 659, column 8 to column 76)",
- " (in 'mother.stan', line 660, column 8 to column 65)",
- " (in 'mother.stan', line 656, column 21 to line 661, column 7)",
- " (in 'mother.stan', line 656, column 6 to line 661, column 7)",
- " (in 'mother.stan', line 655, column 19 to line 662, column 5)",
- " (in 'mother.stan', line 655, column 4 to line 662, column 5)",
- " (in 'mother.stan', line 651, column 17 to line 663, column 3)",
- " (in 'mother.stan', line 651, column 2 to line 663, column 3)",
- " (in 'mother.stan', line 666, column 6 to column 47)",
- " (in 'mother.stan', line 665, column 19 to line 667, column 5)",
- " (in 'mother.stan', line 665, column 4 to line 667, column 5)",
- " (in 'mother.stan', line 664, column 17 to line 668, column 3)",
- " (in 'mother.stan', line 664, column 2 to line 668, column 3)",
- " (in 'mother.stan', line 670, column 4 to column 47)",
- " (in 'mother.stan', line 669, column 17 to line 671, column 3)",
- " (in 'mother.stan', line 669, column 2 to line 671, column 3)",
+ " (in 'mother.stan', line 659, column 8 to column 65)",
+ " (in 'mother.stan', line 655, column 21 to line 660, column 7)",
+ " (in 'mother.stan', line 655, column 6 to line 660, column 7)",
+ " (in 'mother.stan', line 654, column 19 to line 661, column 5)",
+ " (in 'mother.stan', line 654, column 4 to line 661, column 5)",
+ " (in 'mother.stan', line 650, column 17 to line 662, column 3)",
+ " (in 'mother.stan', line 650, column 2 to line 662, column 3)",
+ " (in 'mother.stan', line 665, column 6 to column 47)",
+ " (in 'mother.stan', line 664, column 19 to line 666, column 5)",
+ " (in 'mother.stan', line 664, column 4 to line 666, column 5)",
+ " (in 'mother.stan', line 663, column 17 to line 667, column 3)",
+ " (in 'mother.stan', line 663, column 2 to line 667, column 3)",
+ " (in 'mother.stan', line 669, column 4 to column 47)",
+ " (in 'mother.stan', line 668, column 17 to line 670, column 3)",
+ " (in 'mother.stan', line 668, column 2 to line 670, column 3)",
+ " (in 'mother.stan', line 671, column 2 to column 38)",
  " (in 'mother.stan', line 672, column 2 to column 38)",
  " (in 'mother.stan', line 673, column 2 to column 38)",
- " (in 'mother.stan', line 674, column 2 to column 38)",
+ " (in 'mother.stan', line 674, column 2 to column 39)",
  " (in 'mother.stan', line 675, column 2 to column 39)",
- " (in 'mother.stan', line 676, column 2 to column 39)",
- " (in 'mother.stan', line 678, column 2 to column 53)",
+ " (in 'mother.stan', line 677, column 2 to column 53)",
  " (in 'mother.stan', line 316, column 2 to column 17)",
  " (in 'mother.stan', line 317, column 2 to column 17)",
  " (in 'mother.stan', line 318, column 2 to column 28)",
@@ -2223,155 +2223,154 @@ static constexpr std::array<const char*, 788> locations_array__ =
  " (in 'mother.stan', line 473, column 2 to column 70)",
  " (in 'mother.stan', line 475, column 2 to column 46)",
  " (in 'mother.stan', line 476, column 2 to column 47)",
- " (in 'mother.stan', line 477, column 2 to column 74)",
- " (in 'mother.stan', line 478, column 2 to column 62)",
- " (in 'mother.stan', line 479, column 2 to column 60)",
+ " (in 'mother.stan', line 477, column 2 to column 62)",
+ " (in 'mother.stan', line 478, column 2 to column 60)",
+ " (in 'mother.stan', line 479, column 2 to column 58)",
  " (in 'mother.stan', line 480, column 2 to column 58)",
- " (in 'mother.stan', line 481, column 2 to column 58)",
- " (in 'mother.stan', line 482, column 2 to column 59)",
- " (in 'mother.stan', line 483, column 2 to column 64)",
- " (in 'mother.stan', line 484, column 2 to column 65)",
- " (in 'mother.stan', line 485, column 2 to column 64)",
- " (in 'mother.stan', line 486, column 2 to column 65)",
- " (in 'mother.stan', line 488, column 2 to column 46)",
- " (in 'mother.stan', line 489, column 2 to column 47)",
- " (in 'mother.stan', line 490, column 2 to column 58)",
- " (in 'mother.stan', line 491, column 2 to column 59)",
- " (in 'mother.stan', line 492, column 2 to column 64)",
- " (in 'mother.stan', line 493, column 2 to column 65)",
- " (in 'mother.stan', line 494, column 2 to column 64)",
- " (in 'mother.stan', line 495, column 2 to column 65)",
- " (in 'mother.stan', line 497, column 2 to column 49)",
- " (in 'mother.stan', line 498, column 2 to column 62)",
- " (in 'mother.stan', line 499, column 2 to column 60)",
- " (in 'mother.stan', line 500, column 2 to column 67)",
+ " (in 'mother.stan', line 481, column 2 to column 59)",
+ " (in 'mother.stan', line 482, column 2 to column 64)",
+ " (in 'mother.stan', line 483, column 2 to column 65)",
+ " (in 'mother.stan', line 484, column 2 to column 64)",
+ " (in 'mother.stan', line 485, column 2 to column 65)",
+ " (in 'mother.stan', line 487, column 2 to column 46)",
+ " (in 'mother.stan', line 488, column 2 to column 47)",
+ " (in 'mother.stan', line 489, column 2 to column 58)",
+ " (in 'mother.stan', line 490, column 2 to column 59)",
+ " (in 'mother.stan', line 491, column 2 to column 64)",
+ " (in 'mother.stan', line 492, column 2 to column 65)",
+ " (in 'mother.stan', line 493, column 2 to column 64)",
+ " (in 'mother.stan', line 494, column 2 to column 65)",
+ " (in 'mother.stan', line 496, column 2 to column 49)",
+ " (in 'mother.stan', line 497, column 2 to column 62)",
+ " (in 'mother.stan', line 498, column 2 to column 60)",
+ " (in 'mother.stan', line 499, column 2 to column 67)",
+ " (in 'mother.stan', line 500, column 2 to column 76)",
  " (in 'mother.stan', line 501, column 2 to column 76)",
- " (in 'mother.stan', line 502, column 2 to column 76)",
- " (in 'mother.stan', line 504, column 2 to column 54)",
- " (in 'mother.stan', line 505, column 2 to column 55)",
- " (in 'mother.stan', line 506, column 2 to column 66)",
- " (in 'mother.stan', line 507, column 2 to column 67)",
- " (in 'mother.stan', line 508, column 2 to column 72)",
- " (in 'mother.stan', line 509, column 2 to column 73)",
- " (in 'mother.stan', line 510, column 2 to column 72)",
- " (in 'mother.stan', line 511, column 2 to column 73)",
- " (in 'mother.stan', line 513, column 2 to column 54)",
- " (in 'mother.stan', line 514, column 2 to column 55)",
- " (in 'mother.stan', line 515, column 2 to column 66)",
- " (in 'mother.stan', line 516, column 2 to column 67)",
- " (in 'mother.stan', line 517, column 2 to column 72)",
- " (in 'mother.stan', line 518, column 2 to column 73)",
- " (in 'mother.stan', line 519, column 2 to column 72)",
- " (in 'mother.stan', line 520, column 2 to column 73)",
- " (in 'mother.stan', line 522, column 2 to column 61)",
- " (in 'mother.stan', line 523, column 2 to column 79)",
+ " (in 'mother.stan', line 503, column 2 to column 54)",
+ " (in 'mother.stan', line 504, column 2 to column 55)",
+ " (in 'mother.stan', line 505, column 2 to column 66)",
+ " (in 'mother.stan', line 506, column 2 to column 67)",
+ " (in 'mother.stan', line 507, column 2 to column 72)",
+ " (in 'mother.stan', line 508, column 2 to column 73)",
+ " (in 'mother.stan', line 509, column 2 to column 72)",
+ " (in 'mother.stan', line 510, column 2 to column 73)",
+ " (in 'mother.stan', line 512, column 2 to column 54)",
+ " (in 'mother.stan', line 513, column 2 to column 55)",
+ " (in 'mother.stan', line 514, column 2 to column 66)",
+ " (in 'mother.stan', line 515, column 2 to column 67)",
+ " (in 'mother.stan', line 516, column 2 to column 72)",
+ " (in 'mother.stan', line 517, column 2 to column 73)",
+ " (in 'mother.stan', line 518, column 2 to column 72)",
+ " (in 'mother.stan', line 519, column 2 to column 73)",
+ " (in 'mother.stan', line 521, column 2 to column 61)",
+ " (in 'mother.stan', line 522, column 2 to column 79)",
+ " (in 'mother.stan', line 523, column 2 to column 88)",
  " (in 'mother.stan', line 524, column 2 to column 88)",
- " (in 'mother.stan', line 525, column 2 to column 88)",
- " (in 'mother.stan', line 527, column 2 to column 46)",
- " (in 'mother.stan', line 528, column 2 to column 47)",
- " (in 'mother.stan', line 529, column 2 to column 62)",
- " (in 'mother.stan', line 530, column 2 to column 60)",
- " (in 'mother.stan', line 531, column 2 to column 58)",
- " (in 'mother.stan', line 532, column 2 to column 59)",
- " (in 'mother.stan', line 533, column 2 to column 64)",
- " (in 'mother.stan', line 534, column 2 to column 65)",
- " (in 'mother.stan', line 535, column 2 to column 64)",
- " (in 'mother.stan', line 536, column 2 to column 65)",
- " (in 'mother.stan', line 538, column 2 to column 46)",
- " (in 'mother.stan', line 539, column 2 to column 47)",
- " (in 'mother.stan', line 540, column 2 to column 58)",
- " (in 'mother.stan', line 541, column 2 to column 59)",
- " (in 'mother.stan', line 542, column 2 to column 64)",
- " (in 'mother.stan', line 543, column 2 to column 65)",
- " (in 'mother.stan', line 544, column 2 to column 64)",
- " (in 'mother.stan', line 545, column 2 to column 65)",
- " (in 'mother.stan', line 547, column 2 to column 49)",
- " (in 'mother.stan', line 548, column 2 to column 67)",
+ " (in 'mother.stan', line 526, column 2 to column 46)",
+ " (in 'mother.stan', line 527, column 2 to column 47)",
+ " (in 'mother.stan', line 528, column 2 to column 62)",
+ " (in 'mother.stan', line 529, column 2 to column 60)",
+ " (in 'mother.stan', line 530, column 2 to column 58)",
+ " (in 'mother.stan', line 531, column 2 to column 59)",
+ " (in 'mother.stan', line 532, column 2 to column 64)",
+ " (in 'mother.stan', line 533, column 2 to column 65)",
+ " (in 'mother.stan', line 534, column 2 to column 64)",
+ " (in 'mother.stan', line 535, column 2 to column 65)",
+ " (in 'mother.stan', line 537, column 2 to column 46)",
+ " (in 'mother.stan', line 538, column 2 to column 47)",
+ " (in 'mother.stan', line 539, column 2 to column 58)",
+ " (in 'mother.stan', line 540, column 2 to column 59)",
+ " (in 'mother.stan', line 541, column 2 to column 64)",
+ " (in 'mother.stan', line 542, column 2 to column 65)",
+ " (in 'mother.stan', line 543, column 2 to column 64)",
+ " (in 'mother.stan', line 544, column 2 to column 65)",
+ " (in 'mother.stan', line 546, column 2 to column 49)",
+ " (in 'mother.stan', line 547, column 2 to column 67)",
+ " (in 'mother.stan', line 548, column 2 to column 76)",
  " (in 'mother.stan', line 549, column 2 to column 76)",
- " (in 'mother.stan', line 550, column 2 to column 76)",
- " (in 'mother.stan', line 552, column 2 to column 26)",
- " (in 'mother.stan', line 553, column 2 to column 43)",
+ " (in 'mother.stan', line 551, column 2 to column 26)",
+ " (in 'mother.stan', line 552, column 2 to column 43)",
+ " (in 'mother.stan', line 561, column 29 to column 30)",
  " (in 'mother.stan', line 562, column 29 to column 30)",
- " (in 'mother.stan', line 563, column 29 to column 30)",
- " (in 'mother.stan', line 563, column 31 to column 32)",
- " (in 'mother.stan', line 563, column 33 to column 34)",
- " (in 'mother.stan', line 564, column 18 to column 19)",
+ " (in 'mother.stan', line 562, column 31 to column 32)",
+ " (in 'mother.stan', line 562, column 33 to column 34)",
+ " (in 'mother.stan', line 563, column 18 to column 19)",
+ " (in 'mother.stan', line 564, column 21 to column 22)",
+ " (in 'mother.stan', line 564, column 9 to column 10)",
  " (in 'mother.stan', line 565, column 21 to column 22)",
+ " (in 'mother.stan', line 565, column 23 to column 24)",
+ " (in 'mother.stan', line 565, column 25 to column 26)",
  " (in 'mother.stan', line 565, column 9 to column 10)",
- " (in 'mother.stan', line 566, column 21 to column 22)",
- " (in 'mother.stan', line 566, column 23 to column 24)",
- " (in 'mother.stan', line 566, column 25 to column 26)",
- " (in 'mother.stan', line 566, column 9 to column 10)",
+ " (in 'mother.stan', line 566, column 13 to column 14)",
+ " (in 'mother.stan', line 567, column 29 to column 30)",
  " (in 'mother.stan', line 567, column 13 to column 14)",
  " (in 'mother.stan', line 568, column 29 to column 30)",
+ " (in 'mother.stan', line 568, column 31 to column 32)",
+ " (in 'mother.stan', line 568, column 33 to column 34)",
  " (in 'mother.stan', line 568, column 13 to column 14)",
- " (in 'mother.stan', line 569, column 29 to column 30)",
- " (in 'mother.stan', line 569, column 31 to column 32)",
- " (in 'mother.stan', line 569, column 33 to column 34)",
- " (in 'mother.stan', line 569, column 13 to column 14)",
+ " (in 'mother.stan', line 571, column 10 to column 11)",
+ " (in 'mother.stan', line 572, column 26 to column 27)",
  " (in 'mother.stan', line 572, column 10 to column 11)",
  " (in 'mother.stan', line 573, column 26 to column 27)",
+ " (in 'mother.stan', line 573, column 28 to column 29)",
+ " (in 'mother.stan', line 573, column 30 to column 31)",
  " (in 'mother.stan', line 573, column 10 to column 11)",
- " (in 'mother.stan', line 574, column 26 to column 27)",
- " (in 'mother.stan', line 574, column 28 to column 29)",
- " (in 'mother.stan', line 574, column 30 to column 31)",
- " (in 'mother.stan', line 574, column 10 to column 11)",
+ " (in 'mother.stan', line 574, column 22 to column 23)",
  " (in 'mother.stan', line 575, column 22 to column 23)",
+ " (in 'mother.stan', line 576, column 39 to column 40)",
  " (in 'mother.stan', line 576, column 22 to column 23)",
- " (in 'mother.stan', line 577, column 39 to column 40)",
- " (in 'mother.stan', line 577, column 22 to column 23)",
+ " (in 'mother.stan', line 581, column 30 to column 31)",
  " (in 'mother.stan', line 582, column 30 to column 31)",
- " (in 'mother.stan', line 583, column 30 to column 31)",
- " (in 'mother.stan', line 583, column 32 to column 33)",
- " (in 'mother.stan', line 583, column 34 to column 35)",
- " (in 'mother.stan', line 584, column 18 to column 19)",
+ " (in 'mother.stan', line 582, column 32 to column 33)",
+ " (in 'mother.stan', line 582, column 34 to column 35)",
+ " (in 'mother.stan', line 583, column 18 to column 19)",
+ " (in 'mother.stan', line 584, column 22 to column 23)",
+ " (in 'mother.stan', line 584, column 9 to column 10)",
  " (in 'mother.stan', line 585, column 22 to column 23)",
+ " (in 'mother.stan', line 585, column 24 to column 25)",
+ " (in 'mother.stan', line 585, column 26 to column 27)",
  " (in 'mother.stan', line 585, column 9 to column 10)",
- " (in 'mother.stan', line 586, column 22 to column 23)",
- " (in 'mother.stan', line 586, column 24 to column 25)",
- " (in 'mother.stan', line 586, column 26 to column 27)",
- " (in 'mother.stan', line 586, column 9 to column 10)",
+ " (in 'mother.stan', line 586, column 13 to column 14)",
+ " (in 'mother.stan', line 587, column 30 to column 31)",
  " (in 'mother.stan', line 587, column 13 to column 14)",
  " (in 'mother.stan', line 588, column 30 to column 31)",
+ " (in 'mother.stan', line 588, column 32 to column 33)",
+ " (in 'mother.stan', line 588, column 34 to column 35)",
  " (in 'mother.stan', line 588, column 13 to column 14)",
- " (in 'mother.stan', line 589, column 30 to column 31)",
- " (in 'mother.stan', line 589, column 32 to column 33)",
- " (in 'mother.stan', line 589, column 34 to column 35)",
- " (in 'mother.stan', line 589, column 13 to column 14)",
+ " (in 'mother.stan', line 591, column 10 to column 11)",
+ " (in 'mother.stan', line 592, column 27 to column 28)",
  " (in 'mother.stan', line 592, column 10 to column 11)",
  " (in 'mother.stan', line 593, column 27 to column 28)",
+ " (in 'mother.stan', line 593, column 29 to column 30)",
+ " (in 'mother.stan', line 593, column 31 to column 32)",
  " (in 'mother.stan', line 593, column 10 to column 11)",
- " (in 'mother.stan', line 594, column 27 to column 28)",
- " (in 'mother.stan', line 594, column 29 to column 30)",
- " (in 'mother.stan', line 594, column 31 to column 32)",
- " (in 'mother.stan', line 594, column 10 to column 11)",
- " (in 'mother.stan', line 597, column 40 to column 41)",
+ " (in 'mother.stan', line 596, column 40 to column 41)",
+ " (in 'mother.stan', line 682, column 32 to column 33)",
  " (in 'mother.stan', line 683, column 32 to column 33)",
- " (in 'mother.stan', line 684, column 32 to column 33)",
- " (in 'mother.stan', line 684, column 34 to column 35)",
- " (in 'mother.stan', line 684, column 36 to column 37)",
- " (in 'mother.stan', line 685, column 18 to column 19)",
+ " (in 'mother.stan', line 683, column 34 to column 35)",
+ " (in 'mother.stan', line 683, column 36 to column 37)",
+ " (in 'mother.stan', line 684, column 18 to column 19)",
+ " (in 'mother.stan', line 685, column 22 to column 23)",
+ " (in 'mother.stan', line 685, column 9 to column 10)",
  " (in 'mother.stan', line 686, column 22 to column 23)",
+ " (in 'mother.stan', line 686, column 24 to column 25)",
+ " (in 'mother.stan', line 686, column 26 to column 27)",
  " (in 'mother.stan', line 686, column 9 to column 10)",
- " (in 'mother.stan', line 687, column 22 to column 23)",
- " (in 'mother.stan', line 687, column 24 to column 25)",
- " (in 'mother.stan', line 687, column 26 to column 27)",
- " (in 'mother.stan', line 687, column 9 to column 10)",
+ " (in 'mother.stan', line 687, column 13 to column 14)",
+ " (in 'mother.stan', line 688, column 30 to column 31)",
  " (in 'mother.stan', line 688, column 13 to column 14)",
  " (in 'mother.stan', line 689, column 30 to column 31)",
+ " (in 'mother.stan', line 689, column 32 to column 33)",
+ " (in 'mother.stan', line 689, column 34 to column 35)",
  " (in 'mother.stan', line 689, column 13 to column 14)",
- " (in 'mother.stan', line 690, column 30 to column 31)",
- " (in 'mother.stan', line 690, column 32 to column 33)",
- " (in 'mother.stan', line 690, column 34 to column 35)",
- " (in 'mother.stan', line 690, column 13 to column 14)",
+ " (in 'mother.stan', line 691, column 10 to column 11)",
+ " (in 'mother.stan', line 692, column 27 to column 28)",
  " (in 'mother.stan', line 692, column 10 to column 11)",
  " (in 'mother.stan', line 693, column 27 to column 28)",
+ " (in 'mother.stan', line 693, column 29 to column 30)",
+ " (in 'mother.stan', line 693, column 31 to column 32)",
  " (in 'mother.stan', line 693, column 10 to column 11)",
- " (in 'mother.stan', line 694, column 27 to column 28)",
- " (in 'mother.stan', line 694, column 29 to column 30)",
- " (in 'mother.stan', line 694, column 31 to column 32)",
- " (in 'mother.stan', line 694, column 10 to column 11)",
- " (in 'mother.stan', line 697, column 40 to column 41)",
+ " (in 'mother.stan', line 696, column 40 to column 41)",
  " (in 'mother.stan', line 13, column 16 to column 25)",
  " (in 'mother.stan', line 13, column 4 to column 25)",
  " (in 'mother.stan', line 14, column 4 to column 26)",
@@ -2581,12 +2580,12 @@ foo(const int& n, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 594;
+    current_statement__ = 593;
     if (logical_eq(n, 0)) {
-      current_statement__ = 593;
+      current_statement__ = 592;
       return 1;
     } 
-    current_statement__ = 595;
+    current_statement__ = 594;
     return (n * foo((n - 1), pstream__));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2627,15 +2626,15 @@ sho(const T0__& t, const std::vector<T1__>& y,
     std::vector<local_scalar_t__> dydt;
     dydt = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
     
-    current_statement__ = 598;
+    current_statement__ = 597;
     assign(dydt, rvalue(y, "y", index_uni(2)),
       "assigning variable dydt", index_uni(1));
-    current_statement__ = 599;
+    current_statement__ = 598;
     assign(dydt,
       (-rvalue(y, "y", index_uni(1)) -
         (rvalue(theta, "theta", index_uni(1)) * rvalue(y, "y", index_uni(2)))),
       "assigning variable dydt", index_uni(2));
-    current_statement__ = 600;
+    current_statement__ = 599;
     return dydt;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2666,7 +2665,7 @@ foo_bar0(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 602;
+    current_statement__ = 601;
     return 0.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2694,7 +2693,7 @@ foo_bar1(const T0__& x, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 604;
+    current_statement__ = 603;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2724,7 +2723,7 @@ foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 606;
+    current_statement__ = 605;
     return 2.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2752,7 +2751,7 @@ foo_lpmf(const int& y, const T1__& lambda, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 608;
+    current_statement__ = 607;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2781,7 +2780,7 @@ foo_lcdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 610;
+    current_statement__ = 609;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2810,7 +2809,7 @@ foo_lccdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 612;
+    current_statement__ = 611;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2841,7 +2840,7 @@ foo_rng(const T0__& mu, const T1__& sigma, RNG& base_rng__,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 614;
+    current_statement__ = 613;
     return normal_rng(mu, sigma, base_rng__);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2872,9 +2871,9 @@ unit_normal_lp(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 616;
+    current_statement__ = 615;
     lp_accum__.add(normal_log<false>(u, 0, 1));
-    current_statement__ = 617;
+    current_statement__ = 616;
     lp_accum__.add(uniform_lpdf<propto__>(u, -100, 100));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2904,34 +2903,34 @@ foo_1(const int& a, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 620;
+    current_statement__ = 619;
     while (1) {
       break;
     }
-    current_statement__ = 622;
+    current_statement__ = 621;
     while (0) {
       continue;
     }
-    current_statement__ = 624;
+    current_statement__ = 623;
     for (int i = 1; i <= 10; ++i) { break;}
-    current_statement__ = 626;
+    current_statement__ = 625;
     for (int i = 1; i <= 10; ++i) { continue;}
-    current_statement__ = 631;
+    current_statement__ = 630;
     while (1) {
       int b;
       b = std::numeric_limits<int>::min();
       
-      current_statement__ = 628;
+      current_statement__ = 627;
       b = 5;
       break;
     }
-    current_statement__ = 638;
+    current_statement__ = 637;
     while (1) {
-      current_statement__ = 636;
+      current_statement__ = 635;
       if (0) {
         break;
       } else {
-        current_statement__ = 634;
+        current_statement__ = 633;
         if (1) {
           break;
         } else {
@@ -2939,19 +2938,19 @@ foo_1(const int& a, std::ostream* pstream__) {
         }
       }
     }
-    current_statement__ = 641;
+    current_statement__ = 640;
     while (1) {
-      current_statement__ = 640;
+      current_statement__ = 639;
       while (0) {
         break;
       }
     }
-    current_statement__ = 645;
+    current_statement__ = 644;
     while (1) {
-      current_statement__ = 643;
+      current_statement__ = 642;
       for (int i = 1; i <= 10; ++i) { break;}
     }
-    current_statement__ = 660;
+    current_statement__ = 659;
     while (1) {
       std::vector<std::vector<int>> vs;
       vs = std::vector<std::vector<int>>(2, std::vector<int>(3, std::numeric_limits<int>::min()));
@@ -2960,51 +2959,51 @@ foo_1(const int& a, std::ostream* pstream__) {
       int z;
       z = std::numeric_limits<int>::min();
       
-      current_statement__ = 648;
+      current_statement__ = 647;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           std::vector<int> v;
-          current_statement__ = 648;
+          current_statement__ = 647;
           assign(v, vs[(sym1__ - 1)], "assigning variable v");
-          current_statement__ = 649;
+          current_statement__ = 648;
           z = 0;
           break;
         }
       }
-      current_statement__ = 651;
+      current_statement__ = 650;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           std::vector<int> v;
-          current_statement__ = 651;
+          current_statement__ = 650;
           assign(v, vs[(sym1__ - 1)], "assigning variable v");
-          current_statement__ = 652;
+          current_statement__ = 651;
           z = 0;
           continue;
         }
       }
-      current_statement__ = 654;
+      current_statement__ = 653;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           std::vector<int> v;
-          current_statement__ = 654;
+          current_statement__ = 653;
           assign(v, vs[(sym1__ - 1)], "assigning variable v");
-          current_statement__ = 655;
+          current_statement__ = 654;
           for (int sym1__ = 1; sym1__ <= stan::math::size(v); ++sym1__) {
             {
               int vv;
-              current_statement__ = 655;
+              current_statement__ = 654;
               vv = v[(sym1__ - 1)];
-              current_statement__ = 656;
+              current_statement__ = 655;
               z = 0;
               break;
             }
           }
-          current_statement__ = 658;
+          current_statement__ = 657;
           z = 1;
         }
       }
     }
-    current_statement__ = 670;
+    current_statement__ = 669;
     while (1) {
       local_scalar_t__ z;
       z = DUMMY_VAR__;
@@ -3013,40 +3012,40 @@ foo_1(const int& a, std::ostream* pstream__) {
       vs = Eigen::Matrix<local_scalar_t__, -1, -1>(2, 3);
       stan::math::fill(vs, DUMMY_VAR__);
       
-      current_statement__ = 663;
+      current_statement__ = 662;
       for (int sym1__ = 1; sym1__ <= rows(vs); ++sym1__) {
-        current_statement__ = 663;
+        current_statement__ = 662;
         for (int sym2__ = 1;
              sym2__ <= stan::math::size(rvalue(vs, "vs", index_uni(sym1__)));
              ++sym2__) {
           {
             local_scalar_t__ v;
-            current_statement__ = 663;
+            current_statement__ = 662;
             v = rvalue(vs, "vs", index_uni(sym1__), index_uni(sym2__));
-            current_statement__ = 664;
+            current_statement__ = 663;
             z = 0;
             break;
           }
         }
       }
-      current_statement__ = 666;
+      current_statement__ = 665;
       for (int sym1__ = 1; sym1__ <= rows(vs); ++sym1__) {
-        current_statement__ = 666;
+        current_statement__ = 665;
         for (int sym2__ = 1;
              sym2__ <= stan::math::size(rvalue(vs, "vs", index_uni(sym1__)));
              ++sym2__) {
           {
             local_scalar_t__ v;
-            current_statement__ = 666;
+            current_statement__ = 665;
             v = rvalue(vs, "vs", index_uni(sym1__), index_uni(sym2__));
-            current_statement__ = 667;
+            current_statement__ = 666;
             z = 3.1;
             continue;
           }
         }
       }
     }
-    current_statement__ = 680;
+    current_statement__ = 679;
     while (1) {
       local_scalar_t__ z;
       z = DUMMY_VAR__;
@@ -3055,30 +3054,30 @@ foo_1(const int& a, std::ostream* pstream__) {
       vs = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(vs, DUMMY_VAR__);
       
-      current_statement__ = 673;
+      current_statement__ = 672;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           local_scalar_t__ v;
-          current_statement__ = 673;
+          current_statement__ = 672;
           v = vs[(sym1__ - 1)];
-          current_statement__ = 674;
+          current_statement__ = 673;
           z = 0;
           break;
         }
       }
-      current_statement__ = 676;
+      current_statement__ = 675;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           local_scalar_t__ v;
-          current_statement__ = 676;
+          current_statement__ = 675;
           v = vs[(sym1__ - 1)];
-          current_statement__ = 677;
+          current_statement__ = 676;
           z = 3.2;
           continue;
         }
       }
     }
-    current_statement__ = 690;
+    current_statement__ = 689;
     while (1) {
       local_scalar_t__ z;
       z = DUMMY_VAR__;
@@ -3087,46 +3086,46 @@ foo_1(const int& a, std::ostream* pstream__) {
       vs = Eigen::Matrix<local_scalar_t__, 1, -1>(2);
       stan::math::fill(vs, DUMMY_VAR__);
       
-      current_statement__ = 683;
+      current_statement__ = 682;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           local_scalar_t__ v;
-          current_statement__ = 683;
+          current_statement__ = 682;
           v = vs[(sym1__ - 1)];
-          current_statement__ = 684;
+          current_statement__ = 683;
           z = 0;
           break;
         }
       }
-      current_statement__ = 686;
+      current_statement__ = 685;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           local_scalar_t__ v;
-          current_statement__ = 686;
+          current_statement__ = 685;
           v = vs[(sym1__ - 1)];
-          current_statement__ = 687;
+          current_statement__ = 686;
           z = 3.3;
           continue;
         }
       }
     }
-    current_statement__ = 698;
+    current_statement__ = 697;
     while (1) {
       int b;
       b = std::numeric_limits<int>::min();
       
-      current_statement__ = 692;
+      current_statement__ = 691;
       b = 5;
       {
         int c;
         c = std::numeric_limits<int>::min();
         
-        current_statement__ = 694;
+        current_statement__ = 693;
         c = 6;
         break;
       }
     }
-    current_statement__ = 699;
+    current_statement__ = 698;
     return 0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3159,17 +3158,17 @@ foo_2(const int& a, std::ostream* pstream__) {
     int y;
     y = std::numeric_limits<int>::min();
     
-    current_statement__ = 703;
+    current_statement__ = 702;
     for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
       {
         int v;
-        current_statement__ = 703;
+        current_statement__ = 702;
         v = vs[(sym1__ - 1)];
-        current_statement__ = 704;
+        current_statement__ = 703;
         y = v;
       }
     }
-    current_statement__ = 705;
+    current_statement__ = 704;
     return 0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3197,7 +3196,7 @@ foo_3(const T0__& t, const int& n, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 707;
+    current_statement__ = 706;
     return rep_array(t, n);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3226,7 +3225,7 @@ foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 709;
+    current_statement__ = 708;
     return (x + get_lp(lp__, lp_accum__));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3257,7 +3256,7 @@ foo_4(const T0__& x, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 711;
+    current_statement__ = 710;
     std::stringstream errmsg_stream__;
     errmsg_stream__ << "user-specified rejection";
     errmsg_stream__ << x;
@@ -3297,13 +3296,13 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
     local_scalar_t__ avg_scale;
     avg_scale = DUMMY_VAR__;
     
-    current_statement__ = 715;
+    current_statement__ = 714;
     abs_diff = stan::math::fabs((x - y));
-    current_statement__ = 716;
+    current_statement__ = 715;
     avg_scale = ((stan::math::fabs(x) + stan::math::fabs(y)) / 2);
-    current_statement__ = 718;
+    current_statement__ = 717;
     if (logical_gt((abs_diff / avg_scale), max_)) {
-      current_statement__ = 717;
+      current_statement__ = 716;
       std::stringstream errmsg_stream__;
       errmsg_stream__ << "user-specified rejection, difference above ";
       errmsg_stream__ << max_;
@@ -3313,9 +3312,9 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
       errmsg_stream__ << y;
       throw std::domain_error(errmsg_stream__.str());
     } 
-    current_statement__ = 720;
+    current_statement__ = 719;
     if (logical_lt((abs_diff / avg_scale), min_)) {
-      current_statement__ = 719;
+      current_statement__ = 718;
       std::stringstream errmsg_stream__;
       errmsg_stream__ << "user-specified rejection, difference below ";
       errmsg_stream__ << min_;
@@ -3325,7 +3324,7 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
       errmsg_stream__ << y;
       throw std::domain_error(errmsg_stream__.str());
     } 
-    current_statement__ = 721;
+    current_statement__ = 720;
     return (abs_diff / avg_scale);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3362,7 +3361,7 @@ foo_5(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 723;
+    current_statement__ = 722;
     return (Eigen::Matrix<double,-1,1>(3) << 1, 2, 3).finished();
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3401,7 +3400,7 @@ foo_five_args(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 725;
+    current_statement__ = 724;
     return x1;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3441,7 +3440,7 @@ foo_five_args_lp(const T0__& x1, const T1__& x2, const T2__& x3,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 727;
+    current_statement__ = 726;
     return x1;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3478,23 +3477,23 @@ covsqrt2corsqrt(const T0__& mat_arg__, const int& invert,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 729;
+    current_statement__ = 728;
     validate_non_negative_index("o", "rows(mat)", rows(mat));
-    current_statement__ = 730;
+    current_statement__ = 729;
     validate_non_negative_index("o", "cols(mat)", cols(mat));
     Eigen::Matrix<local_scalar_t__, -1, -1> o;
     o = Eigen::Matrix<local_scalar_t__, -1, -1>(rows(mat), cols(mat));
     stan::math::fill(o, DUMMY_VAR__);
     
-    current_statement__ = 732;
+    current_statement__ = 731;
     assign(o, mat, "assigning variable o");
-    current_statement__ = 733;
+    current_statement__ = 732;
     assign(o, stan::model::deep_copy(rvalue(o, "o", index_uni(2))),
       "assigning variable o", index_uni(1));
-    current_statement__ = 734;
+    current_statement__ = 733;
     assign(o, stan::model::deep_copy(rvalue(o, "o", index_min_max(1, 2))),
       "assigning variable o", index_min_max(3, 4));
-    current_statement__ = 735;
+    current_statement__ = 734;
     return o;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3541,7 +3540,7 @@ f0(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 737;
+    current_statement__ = 736;
     if (pstream__) {
       stan_print(pstream__, "hi");
       stan_print(pstream__, "\n");
@@ -3601,7 +3600,7 @@ f1(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 739;
+    current_statement__ = 738;
     return a1;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3658,7 +3657,7 @@ f2(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 741;
+    current_statement__ = 740;
     return a2;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3715,7 +3714,7 @@ f3(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 743;
+    current_statement__ = 742;
     return a3;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3774,7 +3773,7 @@ f4(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 745;
+    current_statement__ = 744;
     return a4;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3835,7 +3834,7 @@ f5(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 747;
+    current_statement__ = 746;
     return a5;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3896,7 +3895,7 @@ f6(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 749;
+    current_statement__ = 748;
     return a6;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3957,7 +3956,7 @@ f7(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 751;
+    current_statement__ = 750;
     return a7;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4018,7 +4017,7 @@ f8(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 753;
+    current_statement__ = 752;
     return a8;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4079,7 +4078,7 @@ f9(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 755;
+    current_statement__ = 754;
     return a9;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4140,7 +4139,7 @@ f10(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 757;
+    current_statement__ = 756;
     return a10;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4201,7 +4200,7 @@ f11(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 759;
+    current_statement__ = 758;
     return a11;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4262,7 +4261,7 @@ f12(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 761;
+    current_statement__ = 760;
     return a12;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4316,7 +4315,7 @@ foo_6(std::ostream* pstream__) {
     ar_mat = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(60, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(70, Eigen::Matrix<local_scalar_t__, -1, -1>(40, 50)));
     stan::math::fill(ar_mat, DUMMY_VAR__);
     
-    current_statement__ = 767;
+    current_statement__ = 766;
     assign(ar_mat, b,
       "assigning variable ar_mat", index_uni(1), index_uni(1), index_uni(1),
                                      index_uni(1));
@@ -4345,7 +4344,7 @@ matfoo(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 769;
+    current_statement__ = 768;
     return stan::math::to_matrix(std::vector<Eigen::Matrix<double, 1, -1>>{
         (Eigen::Matrix<double,1,-1>(10) << 1, 2, 3, 4, 5, 6, 7, 8, 9,
         10).finished(), (Eigen::Matrix<double,1,-1>(10) << 1, 2, 3, 4, 5, 6,
@@ -4376,7 +4375,7 @@ vecfoo(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 771;
+    current_statement__ = 770;
     return (Eigen::Matrix<double,-1,1>(10) << 1, 2, 3, 4, 5, 6, 7, 8, 9,
         10).finished();
   } catch (const std::exception& e) {
@@ -4409,9 +4408,9 @@ vecmufoo(const T0__& mu, std::ostream* pstream__) {
     l = Eigen::Matrix<local_scalar_t__, -1, 1>(10);
     stan::math::fill(l, DUMMY_VAR__);
     
-    current_statement__ = 773;
+    current_statement__ = 772;
     assign(l, multiply(mu, vecfoo(pstream__)), "assigning variable l");
-    current_statement__ = 774;
+    current_statement__ = 773;
     return l;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4444,11 +4443,11 @@ vecmubar(const T0__& mu, std::ostream* pstream__) {
     l = Eigen::Matrix<local_scalar_t__, -1, 1>(10);
     stan::math::fill(l, DUMMY_VAR__);
     
-    current_statement__ = 776;
+    current_statement__ = 775;
     assign(l,
       multiply(mu, (Eigen::Matrix<double,-1,1>(10) << 1, 2, 3, 4, 5, 6, 7, 8,
         9, 10).finished()), "assigning variable l");
-    current_statement__ = 777;
+    current_statement__ = 776;
     return rvalue(l, "l", index_multi(std::vector<int>{1, 2, 3, 4, 5}));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4488,15 +4487,15 @@ algebra_system(const T0__& x_arg__, const T1__& y_arg__,
     f_x = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
     stan::math::fill(f_x, DUMMY_VAR__);
     
-    current_statement__ = 780;
+    current_statement__ = 779;
     assign(f_x,
       (rvalue(x, "x", index_uni(1)) - rvalue(y, "y", index_uni(1))),
       "assigning variable f_x", index_uni(1));
-    current_statement__ = 781;
+    current_statement__ = 780;
     assign(f_x,
       (rvalue(x, "x", index_uni(2)) - rvalue(y, "y", index_uni(2))),
       "assigning variable f_x", index_uni(2));
-    current_statement__ = 782;
+    current_statement__ = 781;
     return f_x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4537,9 +4536,9 @@ binomialf(const T0__& phi_arg__, const T1__& theta_arg__,
     lpmf = Eigen::Matrix<local_scalar_t__, -1, 1>(1);
     stan::math::fill(lpmf, DUMMY_VAR__);
     
-    current_statement__ = 785;
+    current_statement__ = 784;
     assign(lpmf, 0.0, "assigning variable lpmf", index_uni(1));
-    current_statement__ = 786;
+    current_statement__ = 785;
     return lpmf;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6408,242 +6407,238 @@ class mother_model final : public model_base_crtp<mother_model> {
         "assigning variable transformed_data_vector");
       current_statement__ = 444;
       assign(transformed_data_vector,
-        stan::math::fma(d_real_1d_ar, d_real_1d_ar, d_real_1d_ar),
+        stan::math::fma(d_vector, d_vector, d_vector),
         "assigning variable transformed_data_vector");
       current_statement__ = 445;
       assign(transformed_data_vector,
-        stan::math::fma(d_vector, d_vector, d_vector),
+        stan::math::fma(d_vector, d_vector, d_real),
         "assigning variable transformed_data_vector");
       current_statement__ = 446;
       assign(transformed_data_vector,
-        stan::math::fma(d_vector, d_vector, d_real),
-        "assigning variable transformed_data_vector");
-      current_statement__ = 447;
-      assign(transformed_data_vector,
         stan::math::fma(d_real, d_vector, d_real),
         "assigning variable transformed_data_vector");
-      current_statement__ = 448;
+      current_statement__ = 447;
       assign(transformed_data_vector_array, pow(d_vector_array, d_int),
         "assigning variable transformed_data_vector_array");
-      current_statement__ = 449;
+      current_statement__ = 448;
       assign(transformed_data_vector_array, pow(d_vector_array, d_real),
         "assigning variable transformed_data_vector_array");
-      current_statement__ = 450;
+      current_statement__ = 449;
       assign(transformed_data_vector_array_2d, pow(d_vector_array_2d, d_int),
         "assigning variable transformed_data_vector_array_2d");
-      current_statement__ = 451;
+      current_statement__ = 450;
       assign(transformed_data_vector_array_2d,
         pow(d_vector_array_2d, d_real),
         "assigning variable transformed_data_vector_array_2d");
-      current_statement__ = 452;
+      current_statement__ = 451;
       assign(transformed_data_vector_array_3d, pow(d_vector_array_3d, d_int),
         "assigning variable transformed_data_vector_array_3d");
-      current_statement__ = 453;
+      current_statement__ = 452;
       assign(transformed_data_vector_array_3d,
         pow(d_vector_array_3d, d_real),
         "assigning variable transformed_data_vector_array_3d");
-      current_statement__ = 454;
+      current_statement__ = 453;
       assign(transformed_data_vector, pow(d_int, d_vector),
         "assigning variable transformed_data_vector");
-      current_statement__ = 455;
+      current_statement__ = 454;
       assign(transformed_data_vector, pow(d_real, d_vector),
         "assigning variable transformed_data_vector");
-      current_statement__ = 456;
+      current_statement__ = 455;
       assign(transformed_data_vector_array, pow(d_int, d_vector_array),
         "assigning variable transformed_data_vector_array");
-      current_statement__ = 457;
+      current_statement__ = 456;
       assign(transformed_data_vector_array, pow(d_real, d_vector_array),
         "assigning variable transformed_data_vector_array");
-      current_statement__ = 458;
+      current_statement__ = 457;
       assign(transformed_data_vector_array_2d, pow(d_int, d_vector_array_2d),
         "assigning variable transformed_data_vector_array_2d");
-      current_statement__ = 459;
+      current_statement__ = 458;
       assign(transformed_data_vector_array_2d,
         pow(d_real, d_vector_array_2d),
         "assigning variable transformed_data_vector_array_2d");
-      current_statement__ = 460;
+      current_statement__ = 459;
       assign(transformed_data_vector_array_3d, pow(d_int, d_vector_array_3d),
         "assigning variable transformed_data_vector_array_3d");
-      current_statement__ = 461;
+      current_statement__ = 460;
       assign(transformed_data_vector_array_3d,
         pow(d_real, d_vector_array_3d),
         "assigning variable transformed_data_vector_array_3d");
-      current_statement__ = 462;
+      current_statement__ = 461;
       assign(transformed_data_vector, pow(d_vector, d_vector),
         "assigning variable transformed_data_vector");
-      current_statement__ = 463;
+      current_statement__ = 462;
       assign(transformed_data_vector,
         stan::math::fma(d_vector, d_vector, d_vector),
         "assigning variable transformed_data_vector");
-      current_statement__ = 464;
+      current_statement__ = 463;
       assign(transformed_data_vector,
         stan::math::fma(d_vector, d_vector, d_real),
         "assigning variable transformed_data_vector");
-      current_statement__ = 465;
+      current_statement__ = 464;
       assign(transformed_data_vector_array,
         pow(d_vector_array, d_vector_array),
         "assigning variable transformed_data_vector_array");
-      current_statement__ = 466;
+      current_statement__ = 465;
       assign(transformed_data_vector_array_2d,
         pow(d_vector_array_2d, d_vector_array_2d),
         "assigning variable transformed_data_vector_array_2d");
-      current_statement__ = 467;
+      current_statement__ = 466;
       assign(transformed_data_vector_array_3d,
         pow(d_vector_array_3d, d_vector_array_3d),
         "assigning variable transformed_data_vector_array_3d");
-      current_statement__ = 468;
+      current_statement__ = 467;
       assign(transformed_data_row_vector, pow(d_row_vector, d_int),
         "assigning variable transformed_data_row_vector");
-      current_statement__ = 469;
+      current_statement__ = 468;
       assign(transformed_data_row_vector, pow(d_row_vector, d_real),
         "assigning variable transformed_data_row_vector");
-      current_statement__ = 470;
+      current_statement__ = 469;
       assign(transformed_data_row_vector_array,
         pow(d_row_vector_array, d_int),
         "assigning variable transformed_data_row_vector_array");
-      current_statement__ = 471;
+      current_statement__ = 470;
       assign(transformed_data_row_vector_array,
         pow(d_row_vector_array, d_real),
         "assigning variable transformed_data_row_vector_array");
-      current_statement__ = 472;
+      current_statement__ = 471;
       assign(transformed_data_row_vector_array_2d,
         pow(d_row_vector_array_2d, d_int),
         "assigning variable transformed_data_row_vector_array_2d");
-      current_statement__ = 473;
+      current_statement__ = 472;
       assign(transformed_data_row_vector_array_2d,
         pow(d_row_vector_array_2d, d_real),
         "assigning variable transformed_data_row_vector_array_2d");
-      current_statement__ = 474;
+      current_statement__ = 473;
       assign(transformed_data_row_vector_array_3d,
         pow(d_row_vector_array_3d, d_int),
         "assigning variable transformed_data_row_vector_array_3d");
-      current_statement__ = 475;
+      current_statement__ = 474;
       assign(transformed_data_row_vector_array_3d,
         pow(d_row_vector_array_3d, d_real),
         "assigning variable transformed_data_row_vector_array_3d");
-      current_statement__ = 476;
+      current_statement__ = 475;
       assign(transformed_data_row_vector, pow(d_int, d_row_vector),
         "assigning variable transformed_data_row_vector");
-      current_statement__ = 477;
+      current_statement__ = 476;
       assign(transformed_data_row_vector, pow(d_real, d_row_vector),
         "assigning variable transformed_data_row_vector");
-      current_statement__ = 478;
+      current_statement__ = 477;
       assign(transformed_data_row_vector_array,
         pow(d_int, d_row_vector_array),
         "assigning variable transformed_data_row_vector_array");
-      current_statement__ = 479;
+      current_statement__ = 478;
       assign(transformed_data_row_vector_array,
         pow(d_real, d_row_vector_array),
         "assigning variable transformed_data_row_vector_array");
-      current_statement__ = 480;
+      current_statement__ = 479;
       assign(transformed_data_row_vector_array_2d,
         pow(d_int, d_row_vector_array_2d),
         "assigning variable transformed_data_row_vector_array_2d");
-      current_statement__ = 481;
+      current_statement__ = 480;
       assign(transformed_data_row_vector_array_2d,
         pow(d_real, d_row_vector_array_2d),
         "assigning variable transformed_data_row_vector_array_2d");
-      current_statement__ = 482;
+      current_statement__ = 481;
       assign(transformed_data_row_vector_array_3d,
         pow(d_int, d_row_vector_array_3d),
         "assigning variable transformed_data_row_vector_array_3d");
-      current_statement__ = 483;
+      current_statement__ = 482;
       assign(transformed_data_row_vector_array_3d,
         pow(d_real, d_row_vector_array_3d),
         "assigning variable transformed_data_row_vector_array_3d");
-      current_statement__ = 484;
+      current_statement__ = 483;
       assign(transformed_data_row_vector, pow(d_row_vector, d_row_vector),
         "assigning variable transformed_data_row_vector");
-      current_statement__ = 485;
+      current_statement__ = 484;
       assign(transformed_data_row_vector_array,
         pow(d_row_vector_array, d_row_vector_array),
         "assigning variable transformed_data_row_vector_array");
-      current_statement__ = 486;
+      current_statement__ = 485;
       assign(transformed_data_row_vector_array_2d,
         pow(d_row_vector_array_2d, d_row_vector_array_2d),
         "assigning variable transformed_data_row_vector_array_2d");
-      current_statement__ = 487;
+      current_statement__ = 486;
       assign(transformed_data_row_vector_array_3d,
         pow(d_row_vector_array_3d, d_row_vector_array_3d),
         "assigning variable transformed_data_row_vector_array_3d");
-      current_statement__ = 488;
+      current_statement__ = 487;
       assign(transformed_data_matrix, pow(d_matrix, d_int),
         "assigning variable transformed_data_matrix");
-      current_statement__ = 489;
+      current_statement__ = 488;
       assign(transformed_data_matrix, pow(d_matrix, d_real),
         "assigning variable transformed_data_matrix");
-      current_statement__ = 490;
+      current_statement__ = 489;
       assign(transformed_data_matrix,
         stan::math::fma(d_matrix, d_matrix, d_matrix),
         "assigning variable transformed_data_matrix");
-      current_statement__ = 491;
+      current_statement__ = 490;
       assign(transformed_data_matrix,
         stan::math::fma(d_matrix, d_matrix, d_real),
         "assigning variable transformed_data_matrix");
-      current_statement__ = 492;
+      current_statement__ = 491;
       assign(transformed_data_matrix_array, pow(d_matrix_array, d_int),
         "assigning variable transformed_data_matrix_array");
-      current_statement__ = 493;
+      current_statement__ = 492;
       assign(transformed_data_matrix_array, pow(d_matrix_array, d_real),
         "assigning variable transformed_data_matrix_array");
-      current_statement__ = 494;
+      current_statement__ = 493;
       assign(transformed_data_matrix_array_2d, pow(d_matrix_array_2d, d_int),
         "assigning variable transformed_data_matrix_array_2d");
-      current_statement__ = 495;
+      current_statement__ = 494;
       assign(transformed_data_matrix_array_2d,
         pow(d_matrix_array_2d, d_real),
         "assigning variable transformed_data_matrix_array_2d");
-      current_statement__ = 496;
+      current_statement__ = 495;
       assign(transformed_data_matrix_array_3d, pow(d_matrix_array_3d, d_int),
         "assigning variable transformed_data_matrix_array_3d");
-      current_statement__ = 497;
+      current_statement__ = 496;
       assign(transformed_data_matrix_array_3d,
         pow(d_matrix_array_3d, d_real),
         "assigning variable transformed_data_matrix_array_3d");
-      current_statement__ = 498;
+      current_statement__ = 497;
       assign(transformed_data_matrix, pow(d_int, d_matrix),
         "assigning variable transformed_data_matrix");
-      current_statement__ = 499;
+      current_statement__ = 498;
       assign(transformed_data_matrix, pow(d_real, d_matrix),
         "assigning variable transformed_data_matrix");
-      current_statement__ = 500;
+      current_statement__ = 499;
       assign(transformed_data_matrix_array, pow(d_int, d_matrix_array),
         "assigning variable transformed_data_matrix_array");
-      current_statement__ = 501;
+      current_statement__ = 500;
       assign(transformed_data_matrix_array, pow(d_real, d_matrix_array),
         "assigning variable transformed_data_matrix_array");
-      current_statement__ = 502;
+      current_statement__ = 501;
       assign(transformed_data_matrix_array_2d, pow(d_int, d_matrix_array_2d),
         "assigning variable transformed_data_matrix_array_2d");
-      current_statement__ = 503;
+      current_statement__ = 502;
       assign(transformed_data_matrix_array_2d,
         pow(d_real, d_matrix_array_2d),
         "assigning variable transformed_data_matrix_array_2d");
-      current_statement__ = 504;
+      current_statement__ = 503;
       assign(transformed_data_matrix_array_3d, pow(d_int, d_matrix_array_3d),
         "assigning variable transformed_data_matrix_array_3d");
-      current_statement__ = 505;
+      current_statement__ = 504;
       assign(transformed_data_matrix_array_3d,
         pow(d_real, d_matrix_array_3d),
         "assigning variable transformed_data_matrix_array_3d");
-      current_statement__ = 506;
+      current_statement__ = 505;
       assign(transformed_data_matrix, pow(d_matrix, d_matrix),
         "assigning variable transformed_data_matrix");
-      current_statement__ = 507;
+      current_statement__ = 506;
       assign(transformed_data_matrix_array,
         pow(d_matrix_array, d_matrix_array),
         "assigning variable transformed_data_matrix_array");
-      current_statement__ = 508;
+      current_statement__ = 507;
       assign(transformed_data_matrix_array_2d,
         pow(d_matrix_array_2d, d_matrix_array_2d),
         "assigning variable transformed_data_matrix_array_2d");
-      current_statement__ = 509;
+      current_statement__ = 508;
       assign(transformed_data_matrix_array_3d,
         pow(d_matrix_array_3d, d_matrix_array_3d),
         "assigning variable transformed_data_matrix_array_3d");
-      current_statement__ = 510;
+      current_statement__ = 509;
       td_int = (d_int * d_int);
-      current_statement__ = 511;
+      current_statement__ = 510;
       transformed_data_real = (d_real * d_real);
       current_statement__ = 300;
       for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
@@ -6709,173 +6704,173 @@ class mother_model final : public model_base_crtp<mother_model> {
       check_cholesky_factor(function__, "td_cfcov_54", td_cfcov_54);
       current_statement__ = 312;
       check_cholesky_factor(function__, "td_cfcov_33", td_cfcov_33);
-      current_statement__ = 512;
+      current_statement__ = 511;
       validate_non_negative_index("p_real_1d_ar", "N", N);
-      current_statement__ = 513;
+      current_statement__ = 512;
       validate_non_negative_index("p_real_3d_ar", "N", N);
-      current_statement__ = 514;
+      current_statement__ = 513;
       validate_non_negative_index("p_real_3d_ar", "M", M);
-      current_statement__ = 515;
+      current_statement__ = 514;
       validate_non_negative_index("p_real_3d_ar", "K", K);
-      current_statement__ = 516;
+      current_statement__ = 515;
       validate_non_negative_index("p_vec", "N", N);
+      current_statement__ = 516;
+      validate_non_negative_index("p_1d_vec", "N", N);
       current_statement__ = 517;
       validate_non_negative_index("p_1d_vec", "N", N);
       current_statement__ = 518;
-      validate_non_negative_index("p_1d_vec", "N", N);
+      validate_non_negative_index("p_3d_vec", "N", N);
       current_statement__ = 519;
-      validate_non_negative_index("p_3d_vec", "N", N);
-      current_statement__ = 520;
       validate_non_negative_index("p_3d_vec", "M", M);
-      current_statement__ = 521;
+      current_statement__ = 520;
       validate_non_negative_index("p_3d_vec", "K", K);
-      current_statement__ = 522;
+      current_statement__ = 521;
       validate_non_negative_index("p_3d_vec", "N", N);
-      current_statement__ = 523;
+      current_statement__ = 522;
       validate_non_negative_index("p_row_vec", "N", N);
+      current_statement__ = 523;
+      validate_non_negative_index("p_1d_row_vec", "N", N);
       current_statement__ = 524;
       validate_non_negative_index("p_1d_row_vec", "N", N);
       current_statement__ = 525;
-      validate_non_negative_index("p_1d_row_vec", "N", N);
+      validate_non_negative_index("p_3d_row_vec", "N", N);
       current_statement__ = 526;
-      validate_non_negative_index("p_3d_row_vec", "N", N);
-      current_statement__ = 527;
       validate_non_negative_index("p_3d_row_vec", "M", M);
-      current_statement__ = 528;
+      current_statement__ = 527;
       validate_non_negative_index("p_3d_row_vec", "K", K);
-      current_statement__ = 529;
+      current_statement__ = 528;
       validate_non_negative_index("p_3d_row_vec", "N", N);
-      current_statement__ = 530;
+      current_statement__ = 529;
       validate_positive_index("p_simplex", "N", N);
-      current_statement__ = 531;
+      current_statement__ = 530;
       validate_non_negative_index("p_1d_simplex", "N", N);
-      current_statement__ = 532;
+      current_statement__ = 531;
       validate_positive_index("p_1d_simplex", "N", N);
-      current_statement__ = 533;
+      current_statement__ = 532;
       validate_non_negative_index("p_3d_simplex", "N", N);
-      current_statement__ = 534;
+      current_statement__ = 533;
       validate_non_negative_index("p_3d_simplex", "M", M);
-      current_statement__ = 535;
+      current_statement__ = 534;
       validate_non_negative_index("p_3d_simplex", "K", K);
-      current_statement__ = 536;
+      current_statement__ = 535;
       validate_positive_index("p_3d_simplex", "N", N);
-      current_statement__ = 537;
+      current_statement__ = 536;
       check_greater_or_equal("cholesky_factor_cov p_cfcov_54",
                              "num rows (must be greater or equal to num cols)",
                              5, 4);
-      current_statement__ = 538;
+      current_statement__ = 537;
       check_greater_or_equal("cholesky_factor_cov p_cfcov_33",
                              "num rows (must be greater or equal to num cols)",
                              3, 3);
-      current_statement__ = 539;
+      current_statement__ = 538;
       validate_non_negative_index("p_cfcov_33_ar", "K", K);
-      current_statement__ = 540;
+      current_statement__ = 539;
       check_greater_or_equal("cholesky_factor_cov p_cfcov_33_ar",
                              "num rows (must be greater or equal to num cols)",
                              3, 3);
-      current_statement__ = 541;
+      current_statement__ = 540;
       validate_non_negative_index("tp_real_1d_ar", "N", N);
-      current_statement__ = 542;
+      current_statement__ = 541;
       validate_non_negative_index("tp_real_3d_ar", "N", N);
-      current_statement__ = 543;
+      current_statement__ = 542;
       validate_non_negative_index("tp_real_3d_ar", "M", M);
-      current_statement__ = 544;
+      current_statement__ = 543;
       validate_non_negative_index("tp_real_3d_ar", "K", K);
-      current_statement__ = 545;
+      current_statement__ = 544;
       validate_non_negative_index("tp_vec", "N", N);
+      current_statement__ = 545;
+      validate_non_negative_index("tp_1d_vec", "N", N);
       current_statement__ = 546;
       validate_non_negative_index("tp_1d_vec", "N", N);
       current_statement__ = 547;
-      validate_non_negative_index("tp_1d_vec", "N", N);
+      validate_non_negative_index("tp_3d_vec", "N", N);
       current_statement__ = 548;
-      validate_non_negative_index("tp_3d_vec", "N", N);
-      current_statement__ = 549;
       validate_non_negative_index("tp_3d_vec", "M", M);
-      current_statement__ = 550;
+      current_statement__ = 549;
       validate_non_negative_index("tp_3d_vec", "K", K);
-      current_statement__ = 551;
+      current_statement__ = 550;
       validate_non_negative_index("tp_3d_vec", "N", N);
-      current_statement__ = 552;
+      current_statement__ = 551;
       validate_non_negative_index("tp_row_vec", "N", N);
+      current_statement__ = 552;
+      validate_non_negative_index("tp_1d_row_vec", "N", N);
       current_statement__ = 553;
       validate_non_negative_index("tp_1d_row_vec", "N", N);
       current_statement__ = 554;
-      validate_non_negative_index("tp_1d_row_vec", "N", N);
+      validate_non_negative_index("tp_3d_row_vec", "N", N);
       current_statement__ = 555;
-      validate_non_negative_index("tp_3d_row_vec", "N", N);
-      current_statement__ = 556;
       validate_non_negative_index("tp_3d_row_vec", "M", M);
-      current_statement__ = 557;
+      current_statement__ = 556;
       validate_non_negative_index("tp_3d_row_vec", "K", K);
-      current_statement__ = 558;
+      current_statement__ = 557;
       validate_non_negative_index("tp_3d_row_vec", "N", N);
-      current_statement__ = 559;
+      current_statement__ = 558;
       validate_non_negative_index("tp_simplex", "N", N);
+      current_statement__ = 559;
+      validate_non_negative_index("tp_1d_simplex", "N", N);
       current_statement__ = 560;
       validate_non_negative_index("tp_1d_simplex", "N", N);
       current_statement__ = 561;
-      validate_non_negative_index("tp_1d_simplex", "N", N);
+      validate_non_negative_index("tp_3d_simplex", "N", N);
       current_statement__ = 562;
-      validate_non_negative_index("tp_3d_simplex", "N", N);
-      current_statement__ = 563;
       validate_non_negative_index("tp_3d_simplex", "M", M);
-      current_statement__ = 564;
+      current_statement__ = 563;
       validate_non_negative_index("tp_3d_simplex", "K", K);
-      current_statement__ = 565;
+      current_statement__ = 564;
       validate_non_negative_index("tp_3d_simplex", "N", N);
-      current_statement__ = 566;
+      current_statement__ = 565;
       validate_non_negative_index("tp_cfcov_33_ar", "K", K);
-      current_statement__ = 567;
+      current_statement__ = 566;
       validate_non_negative_index("gq_real_1d_ar", "N", N);
-      current_statement__ = 568;
+      current_statement__ = 567;
       validate_non_negative_index("gq_real_3d_ar", "N", N);
-      current_statement__ = 569;
+      current_statement__ = 568;
       validate_non_negative_index("gq_real_3d_ar", "M", M);
-      current_statement__ = 570;
+      current_statement__ = 569;
       validate_non_negative_index("gq_real_3d_ar", "K", K);
-      current_statement__ = 571;
+      current_statement__ = 570;
       validate_non_negative_index("gq_vec", "N", N);
+      current_statement__ = 571;
+      validate_non_negative_index("gq_1d_vec", "N", N);
       current_statement__ = 572;
       validate_non_negative_index("gq_1d_vec", "N", N);
       current_statement__ = 573;
-      validate_non_negative_index("gq_1d_vec", "N", N);
+      validate_non_negative_index("gq_3d_vec", "N", N);
       current_statement__ = 574;
-      validate_non_negative_index("gq_3d_vec", "N", N);
-      current_statement__ = 575;
       validate_non_negative_index("gq_3d_vec", "M", M);
-      current_statement__ = 576;
+      current_statement__ = 575;
       validate_non_negative_index("gq_3d_vec", "K", K);
-      current_statement__ = 577;
+      current_statement__ = 576;
       validate_non_negative_index("gq_3d_vec", "N", N);
-      current_statement__ = 578;
+      current_statement__ = 577;
       validate_non_negative_index("gq_row_vec", "N", N);
+      current_statement__ = 578;
+      validate_non_negative_index("gq_1d_row_vec", "N", N);
       current_statement__ = 579;
       validate_non_negative_index("gq_1d_row_vec", "N", N);
       current_statement__ = 580;
-      validate_non_negative_index("gq_1d_row_vec", "N", N);
+      validate_non_negative_index("gq_3d_row_vec", "N", N);
       current_statement__ = 581;
-      validate_non_negative_index("gq_3d_row_vec", "N", N);
-      current_statement__ = 582;
       validate_non_negative_index("gq_3d_row_vec", "M", M);
-      current_statement__ = 583;
+      current_statement__ = 582;
       validate_non_negative_index("gq_3d_row_vec", "K", K);
-      current_statement__ = 584;
+      current_statement__ = 583;
       validate_non_negative_index("gq_3d_row_vec", "N", N);
-      current_statement__ = 585;
+      current_statement__ = 584;
       validate_non_negative_index("gq_simplex", "N", N);
+      current_statement__ = 585;
+      validate_non_negative_index("gq_1d_simplex", "N", N);
       current_statement__ = 586;
       validate_non_negative_index("gq_1d_simplex", "N", N);
       current_statement__ = 587;
-      validate_non_negative_index("gq_1d_simplex", "N", N);
+      validate_non_negative_index("gq_3d_simplex", "N", N);
       current_statement__ = 588;
-      validate_non_negative_index("gq_3d_simplex", "N", N);
-      current_statement__ = 589;
       validate_non_negative_index("gq_3d_simplex", "M", M);
-      current_statement__ = 590;
+      current_statement__ = 589;
       validate_non_negative_index("gq_3d_simplex", "K", K);
-      current_statement__ = 591;
+      current_statement__ = 590;
       validate_non_negative_index("gq_3d_simplex", "N", N);
-      current_statement__ = 592;
+      current_statement__ = 591;
       validate_non_negative_index("gq_cfcov_33_ar", "K", K);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
