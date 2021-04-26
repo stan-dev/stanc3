@@ -11,10 +11,9 @@ let unwrap_return_exn = function
 
 let trans_fn_kind kind name =
   let fname = Utils.stdlib_distribution_name name in
-  let suffix = Fun_kind.suffix_from_name name in
   match kind with
-  | Ast.StanLib -> Fun_kind.StanLib (fname, suffix)
-  | UserDefined -> UserDefined (fname, suffix)
+  | Ast.StanLib suffix -> Fun_kind.StanLib (fname, suffix)
+  | UserDefined suffix -> UserDefined (fname, suffix)
 
 let without_underscores = String.filter ~f:(( <> ) '_')
 
@@ -118,9 +117,9 @@ let truncate_dist ud_dists (id : Ast.identifier) ast_obs ast_args t =
       List.map ~f:(( ^ ) id.name) sfx |> String.Set.of_list
     in
     match List.find ~f:(fun (n, _) -> Set.mem possible_names n) ud_dists with
-    | Some (name, tp) -> (Ast.UserDefined, name, tp)
+    | Some (name, tp) -> (Ast.UserDefined FnPure, name, tp)
     | None ->
-        ( Ast.StanLib
+        ( Ast.StanLib FnPure
         , Set.to_list possible_names |> List.hd_exn
         , if Stan_math_signatures.is_stan_math_function_name (id.name ^ "_lpmf")
           then UnsizedType.UInt
@@ -167,7 +166,7 @@ let truncate_dist ud_dists (id : Ast.identifier) ast_obs ast_args t =
       [ trunc Less lb
           (trunc Greater ub
              (targetme ub.emeta.loc
-                (funapp ub.emeta Ast.StanLib "log_diff_exp"
+                (funapp ub.emeta (Ast.StanLib FnPure) "log_diff_exp"
                    [ funapp ub.emeta fk fn (ub :: ast_args)
                    ; funapp ub.emeta fk fn (inclusive_bound tp lb :: ast_args)
                    ]))) ]
