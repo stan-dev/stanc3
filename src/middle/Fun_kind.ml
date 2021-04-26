@@ -1,12 +1,12 @@
 open Core_kernel
 
-type suffix = FnPure | FnRng | FnLpdf of bool | FnTarget
-[@@deriving compare, sexp, hash]
+type 'a suffix = FnPure | FnRng | FnLpdf of 'a | FnTarget
+[@@deriving compare, sexp, hash, map]
 
 type t =
-  | StanLib of string * suffix
+  | StanLib of string * bool suffix
   | CompilerInternal of Internal_fun.t
-  | UserDefined of string * suffix
+  | UserDefined of string * bool suffix
 [@@deriving compare, sexp, hash]
 
 let suffix_from_name fname =

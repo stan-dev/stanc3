@@ -18,7 +18,9 @@ type 'e index =
 [@@deriving sexp, hash, compare, map, fold]
 
 (** Front-end function kinds *)
-type fun_kind = StanLib of Fun_kind.suffix | UserDefined of Fun_kind.suffix
+type fun_kind =
+  | StanLib of bool Fun_kind.suffix
+  | UserDefined of bool Fun_kind.suffix
 [@@deriving compare, sexp, hash]
 
 (** Expression shapes (used for both typed and untyped expressions, where we

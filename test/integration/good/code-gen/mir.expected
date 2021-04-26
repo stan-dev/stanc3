@@ -1,8 +1,9 @@
   $ ../../../../../install/default/bin/stanc --debug-mir mother.stan
 ((functions_block
-  (((fdrt (UInt)) (fdname foo) (fdargs ((AutoDiffable n UInt))) (fdbody ())
-    (fdloc <opaque>))
-   ((fdrt (UInt)) (fdname foo) (fdargs ((AutoDiffable n UInt)))
+  (((fdrt (UInt)) (fdname foo) (fdsuffix FnPure)
+    (fdargs ((AutoDiffable n UInt))) (fdbody ()) (fdloc <opaque>))
+   ((fdrt (UInt)) (fdname foo) (fdsuffix FnPure)
+    (fdargs ((AutoDiffable n UInt)))
     (fdbody
      (((pattern
         (Block
@@ -45,13 +46,13 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt ((UArray UReal))) (fdname sho)
+   ((fdrt ((UArray UReal))) (fdname sho) (fdsuffix FnPure)
     (fdargs
      ((AutoDiffable t UReal) (AutoDiffable y (UArray UReal))
       (AutoDiffable theta (UArray UReal)) (DataOnly x (UArray UReal))
       (DataOnly x_int (UArray UInt))))
     (fdbody ()) (fdloc <opaque>))
-   ((fdrt ((UArray UReal))) (fdname sho)
+   ((fdrt ((UArray UReal))) (fdname sho) (fdsuffix FnPure)
     (fdargs
      ((AutoDiffable t UReal) (AutoDiffable y (UArray UReal))
       (AutoDiffable theta (UArray UReal)) (DataOnly x (UArray UReal))
@@ -147,7 +148,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UReal)) (fdname foo_bar0) (fdargs ())
+   ((fdrt (UReal)) (fdname foo_bar0) (fdsuffix FnPure) (fdargs ())
     (fdbody
      (((pattern
         (Block
@@ -158,7 +159,8 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UReal)) (fdname foo_bar1) (fdargs ((AutoDiffable x UReal)))
+   ((fdrt (UReal)) (fdname foo_bar1) (fdsuffix FnPure)
+    (fdargs ((AutoDiffable x UReal)))
     (fdbody
      (((pattern
         (Block
@@ -169,7 +171,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UReal)) (fdname foo_bar2)
+   ((fdrt (UReal)) (fdname foo_bar2) (fdsuffix FnPure)
     (fdargs ((AutoDiffable x UReal) (AutoDiffable y UReal)))
     (fdbody
      (((pattern
@@ -181,7 +183,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UReal)) (fdname foo_lpmf)
+   ((fdrt (UReal)) (fdname foo_lpmf) (fdsuffix (FnLpdf ()))
     (fdargs ((AutoDiffable y UInt) (AutoDiffable lambda UReal)))
     (fdbody
      (((pattern
@@ -193,7 +195,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UReal)) (fdname foo_lcdf)
+   ((fdrt (UReal)) (fdname foo_lcdf) (fdsuffix FnPure)
     (fdargs ((AutoDiffable y UInt) (AutoDiffable lambda UReal)))
     (fdbody
      (((pattern
@@ -205,7 +207,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UReal)) (fdname foo_lccdf)
+   ((fdrt (UReal)) (fdname foo_lccdf) (fdsuffix FnPure)
     (fdargs ((AutoDiffable y UInt) (AutoDiffable lambda UReal)))
     (fdbody
      (((pattern
@@ -217,7 +219,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UReal)) (fdname foo_rng)
+   ((fdrt (UReal)) (fdname foo_rng) (fdsuffix FnRng)
     (fdargs ((AutoDiffable mu UReal) (AutoDiffable sigma UReal)))
     (fdbody
      (((pattern
@@ -236,7 +238,8 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt ()) (fdname unit_normal_lp) (fdargs ((AutoDiffable u UReal)))
+   ((fdrt ()) (fdname unit_normal_lp) (fdsuffix FnTarget)
+    (fdargs ((AutoDiffable u UReal)))
     (fdbody
      (((pattern
         (Block
@@ -271,7 +274,8 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UInt)) (fdname foo_1) (fdargs ((AutoDiffable a UInt)))
+   ((fdrt (UInt)) (fdname foo_1) (fdsuffix FnPure)
+    (fdargs ((AutoDiffable a UInt)))
     (fdbody
      (((pattern
         (Block
@@ -1099,7 +1103,8 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UInt)) (fdname foo_2) (fdargs ((AutoDiffable a UInt)))
+   ((fdrt (UInt)) (fdname foo_2) (fdsuffix FnPure)
+    (fdargs ((AutoDiffable a UInt)))
     (fdbody
      (((pattern
         (Block
@@ -1168,7 +1173,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt ((UArray UReal))) (fdname foo_3)
+   ((fdrt ((UArray UReal))) (fdname foo_3) (fdsuffix FnPure)
     (fdargs ((AutoDiffable t UReal) (AutoDiffable n UInt)))
     (fdbody
      (((pattern
@@ -1188,7 +1193,8 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UReal)) (fdname foo_lp) (fdargs ((AutoDiffable x UReal)))
+   ((fdrt (UReal)) (fdname foo_lp) (fdsuffix FnTarget)
+    (fdargs ((AutoDiffable x UReal)))
     (fdbody
      (((pattern
         (Block
@@ -1206,7 +1212,8 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt ()) (fdname foo_4) (fdargs ((AutoDiffable x UReal)))
+   ((fdrt ()) (fdname foo_4) (fdsuffix FnPure)
+    (fdargs ((AutoDiffable x UReal)))
     (fdbody
      (((pattern
         (Block
@@ -1219,7 +1226,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UReal)) (fdname relative_diff)
+   ((fdrt (UReal)) (fdname relative_diff) (fdsuffix FnPure)
     (fdargs
      ((AutoDiffable x UReal) (AutoDiffable y UReal) (AutoDiffable max_ UReal)
       (AutoDiffable min_ UReal)))
@@ -1370,7 +1377,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UVector)) (fdname foo_5)
+   ((fdrt (UVector)) (fdname foo_5) (fdsuffix FnPure)
     (fdargs
      ((AutoDiffable shared_params UVector) (AutoDiffable job_params UVector)
       (DataOnly data_r (UArray UReal)) (DataOnly data_i (UArray UInt))))
@@ -1398,7 +1405,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UReal)) (fdname foo_five_args)
+   ((fdrt (UReal)) (fdname foo_five_args) (fdsuffix FnPure)
     (fdargs
      ((AutoDiffable x1 UReal) (AutoDiffable x2 UReal) (AutoDiffable x3 UReal)
       (AutoDiffable x4 UReal) (AutoDiffable x5 UReal)))
@@ -1412,7 +1419,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UReal)) (fdname foo_five_args_lp)
+   ((fdrt (UReal)) (fdname foo_five_args_lp) (fdsuffix FnTarget)
     (fdargs
      ((AutoDiffable x1 UReal) (AutoDiffable x2 UReal) (AutoDiffable x3 UReal)
       (AutoDiffable x4 UReal) (AutoDiffable x5 UReal)
@@ -1427,7 +1434,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UMatrix)) (fdname covsqrt2corsqrt)
+   ((fdrt (UMatrix)) (fdname covsqrt2corsqrt) (fdsuffix FnPure)
     (fdargs ((AutoDiffable mat UMatrix) (AutoDiffable invert UInt)))
     (fdbody
      (((pattern
@@ -1525,7 +1532,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt ()) (fdname f0)
+   ((fdrt ()) (fdname f0) (fdsuffix FnPure)
     (fdargs
      ((AutoDiffable a1 UInt) (AutoDiffable a2 (UArray UInt))
       (AutoDiffable a3 (UArray (UArray UInt))) (AutoDiffable a4 UReal)
@@ -1545,7 +1552,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UInt)) (fdname f1)
+   ((fdrt (UInt)) (fdname f1) (fdsuffix FnPure)
     (fdargs
      ((AutoDiffable a1 UInt) (AutoDiffable a2 (UArray UInt))
       (AutoDiffable a3 (UArray (UArray UInt))) (AutoDiffable a4 UReal)
@@ -1565,7 +1572,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt ((UArray UInt))) (fdname f2)
+   ((fdrt ((UArray UInt))) (fdname f2) (fdsuffix FnPure)
     (fdargs
      ((AutoDiffable a1 UInt) (AutoDiffable a2 (UArray UInt))
       (AutoDiffable a3 (UArray (UArray UInt))) (AutoDiffable a4 UReal)
@@ -1586,7 +1593,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt ((UArray (UArray UInt)))) (fdname f3)
+   ((fdrt ((UArray (UArray UInt)))) (fdname f3) (fdsuffix FnPure)
     (fdargs
      ((AutoDiffable a1 UInt) (AutoDiffable a2 (UArray UInt))
       (AutoDiffable a3 (UArray (UArray UInt))) (AutoDiffable a4 UReal)
@@ -1608,7 +1615,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UReal)) (fdname f4)
+   ((fdrt (UReal)) (fdname f4) (fdsuffix FnPure)
     (fdargs
      ((AutoDiffable a1 UInt) (AutoDiffable a2 (UArray UInt))
       (AutoDiffable a3 (UArray (UArray UInt))) (AutoDiffable a4 UReal)
@@ -1628,7 +1635,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt ((UArray UReal))) (fdname f5)
+   ((fdrt ((UArray UReal))) (fdname f5) (fdsuffix FnPure)
     (fdargs
      ((AutoDiffable a1 UInt) (AutoDiffable a2 (UArray UInt))
       (AutoDiffable a3 (UArray (UArray UInt))) (AutoDiffable a4 UReal)
@@ -1650,7 +1657,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt ((UArray (UArray UReal)))) (fdname f6)
+   ((fdrt ((UArray (UArray UReal)))) (fdname f6) (fdsuffix FnPure)
     (fdargs
      ((AutoDiffable a1 UInt) (AutoDiffable a2 (UArray UInt))
       (AutoDiffable a3 (UArray (UArray UInt))) (AutoDiffable a4 UReal)
@@ -1672,7 +1679,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UVector)) (fdname f7)
+   ((fdrt (UVector)) (fdname f7) (fdsuffix FnPure)
     (fdargs
      ((AutoDiffable a1 UInt) (AutoDiffable a2 (UArray UInt))
       (AutoDiffable a3 (UArray (UArray UInt))) (AutoDiffable a4 UReal)
@@ -1692,7 +1699,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt ((UArray UVector))) (fdname f8)
+   ((fdrt ((UArray UVector))) (fdname f8) (fdsuffix FnPure)
     (fdargs
      ((AutoDiffable a1 UInt) (AutoDiffable a2 (UArray UInt))
       (AutoDiffable a3 (UArray (UArray UInt))) (AutoDiffable a4 UReal)
@@ -1714,7 +1721,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt ((UArray (UArray UVector)))) (fdname f9)
+   ((fdrt ((UArray (UArray UVector)))) (fdname f9) (fdsuffix FnPure)
     (fdargs
      ((AutoDiffable a1 UInt) (AutoDiffable a2 (UArray UInt))
       (AutoDiffable a3 (UArray (UArray UInt))) (AutoDiffable a4 UReal)
@@ -1736,7 +1743,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UMatrix)) (fdname f10)
+   ((fdrt (UMatrix)) (fdname f10) (fdsuffix FnPure)
     (fdargs
      ((AutoDiffable a1 UInt) (AutoDiffable a2 (UArray UInt))
       (AutoDiffable a3 (UArray (UArray UInt))) (AutoDiffable a4 UReal)
@@ -1756,7 +1763,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt ((UArray UMatrix))) (fdname f11)
+   ((fdrt ((UArray UMatrix))) (fdname f11) (fdsuffix FnPure)
     (fdargs
      ((AutoDiffable a1 UInt) (AutoDiffable a2 (UArray UInt))
       (AutoDiffable a3 (UArray (UArray UInt))) (AutoDiffable a4 UReal)
@@ -1778,7 +1785,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt ((UArray (UArray UMatrix)))) (fdname f12)
+   ((fdrt ((UArray (UArray UMatrix)))) (fdname f12) (fdsuffix FnPure)
     (fdargs
      ((AutoDiffable a1 UInt) (AutoDiffable a2 (UArray UInt))
       (AutoDiffable a3 (UArray (UArray UInt))) (AutoDiffable a4 UReal)
@@ -1800,7 +1807,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt ()) (fdname foo_6) (fdargs ())
+   ((fdrt ()) (fdname foo_6) (fdsuffix FnPure) (fdargs ())
     (fdbody
      (((pattern
         (Block
@@ -1859,7 +1866,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UMatrix)) (fdname matfoo) (fdargs ())
+   ((fdrt (UMatrix)) (fdname matfoo) (fdsuffix FnPure) (fdargs ())
     (fdbody
      (((pattern
         (Block
@@ -1973,7 +1980,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UVector)) (fdname vecfoo) (fdargs ())
+   ((fdrt (UVector)) (fdname vecfoo) (fdsuffix FnPure) (fdargs ())
     (fdbody
      (((pattern
         (Block
@@ -2019,7 +2026,8 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UVector)) (fdname vecmufoo) (fdargs ((AutoDiffable mu UReal)))
+   ((fdrt (UVector)) (fdname vecmufoo) (fdsuffix FnPure)
+    (fdargs ((AutoDiffable mu UReal)))
     (fdbody
      (((pattern
         (Block
@@ -2049,7 +2057,8 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UVector)) (fdname vecmubar) (fdargs ((AutoDiffable mu UReal)))
+   ((fdrt (UVector)) (fdname vecmubar) (fdsuffix FnPure)
+    (fdargs ((AutoDiffable mu UReal)))
     (fdbody
      (((pattern
         (Block
@@ -2139,7 +2148,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UVector)) (fdname algebra_system)
+   ((fdrt (UVector)) (fdname algebra_system) (fdsuffix FnPure)
     (fdargs
      ((AutoDiffable x UVector) (AutoDiffable y UVector)
       (AutoDiffable dat (UArray UReal)) (AutoDiffable dat_int (UArray UInt))))
@@ -2225,7 +2234,7 @@
            (meta <opaque>)))))
        (meta <opaque>))))
     (fdloc <opaque>))
-   ((fdrt (UVector)) (fdname binomialf)
+   ((fdrt (UVector)) (fdname binomialf) (fdsuffix FnPure)
     (fdargs
      ((AutoDiffable phi UVector) (AutoDiffable theta UVector)
       (DataOnly x_r (UArray UReal)) (DataOnly x_i (UArray UInt))))

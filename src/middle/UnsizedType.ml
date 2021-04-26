@@ -8,7 +8,7 @@ type t =
   | URowVector
   | UMatrix
   | UArray of t
-  | UFun of (autodifftype * t) list * returntype * Fun_kind.suffix
+  | UFun of (autodifftype * t) list * returntype * bool Fun_kind.suffix
   | UMathLibraryFunction
 
 and autodifftype = DataOnly | AutoDiffable

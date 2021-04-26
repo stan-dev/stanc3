@@ -119,17 +119,6 @@ let pp_unsizedtype_local ppf (adtype, ut) =
 let pp_expr_type ppf e =
   pp_unsizedtype_local ppf Expr.Typed.(adlevel_of e, type_of e)
 
-let user_dist_suffices = ["_lpdf"; "_lpmf"; "_log"]
-
-let ends_with_any suffices s =
-  List.exists ~f:(fun suffix -> String.is_suffix ~suffix s) suffices
-
-let is_user_dist s =
-  ends_with_any user_dist_suffices s
-  && not (ends_with_any ["_cdf_log"; "_ccdf_log"] s)
-
-let is_user_lp s = ends_with "_lp" s
-
 let suffix_args = function
   | Fun_kind.FnRng -> ["base_rng__"]
   | FnTarget -> ["lp__"; "lp_accum__"]

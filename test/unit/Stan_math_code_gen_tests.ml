@@ -12,6 +12,7 @@ let%expect_test "udf" =
   let pp_fun_def_w_rs a b = pp_fun_def a b String.Set.empty String.Set.empty in
   { fdrt= None
   ; fdname= "sars"
+  ; fdsuffix= FnPure
   ; fdargs= [(DataOnly, "x", UMatrix); (AutoDiffable, "y", URowVector)]
   ; fdbody=
       Stmt.Fixed.Pattern.Return
@@ -66,6 +67,7 @@ let%expect_test "udf-expressions" =
   let pp_fun_def_w_rs a b = pp_fun_def a b String.Set.empty String.Set.empty in
   { fdrt= Some UMatrix
   ; fdname= "sars"
+  ; fdsuffix= FnPure
   ; fdargs=
       [ (DataOnly, "x", UMatrix)
       ; (AutoDiffable, "y", URowVector)
