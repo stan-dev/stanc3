@@ -541,6 +541,7 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
     pf ppf "%a@ %a@ %a" (list ~sep:cut string)
       [ "using local_scalar_t__ = double;"; "vars__.resize(0);"
       ; "stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);"
+      ; "static constexpr bool propto__ = true;"; "(void) propto__;"
       ; "double lp__ = 0.0;"
       ; "(void) lp__;  // dummy to suppress unused var warning"
       ; "int current_statement__ = 0; "
