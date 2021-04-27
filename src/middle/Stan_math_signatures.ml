@@ -609,6 +609,32 @@ let add_binary_vec_int_int name =
 let add_ternary name =
   add_unqualified (name, ReturnType UReal, [UReal; UReal; UReal])
 
+(*Adds functions that operate on matrix, double array and real types*)
+let add_ternary_vec name =
+  add_unqualified (name, ReturnType UReal, [UReal; UReal; UReal]) ;
+  add_unqualified (name, ReturnType UVector, [UVector; UReal; UReal]) ;
+  add_unqualified (name, ReturnType UVector, [UVector; UVector; UReal]) ;
+  add_unqualified (name, ReturnType UVector, [UVector; UReal; UVector]) ;
+  add_unqualified (name, ReturnType UVector, [UVector; UVector; UVector]) ;
+  add_unqualified (name, ReturnType UVector, [UReal; UVector; UReal]) ;
+  add_unqualified (name, ReturnType UVector, [UReal; UVector; UVector]) ;
+  add_unqualified (name, ReturnType UVector, [UReal; UReal; UVector]) ;
+  add_unqualified (name, ReturnType URowVector, [URowVector; UReal; UReal]) ;
+  add_unqualified (name, ReturnType URowVector, [URowVector; URowVector; UReal]) ;
+  add_unqualified (name, ReturnType URowVector, [URowVector; UReal; URowVector]) ;
+  add_unqualified
+    (name, ReturnType URowVector, [URowVector; URowVector; URowVector]) ;
+  add_unqualified (name, ReturnType URowVector, [UReal; URowVector; UReal]) ;
+  add_unqualified (name, ReturnType URowVector, [UReal; URowVector; URowVector]) ;
+  add_unqualified (name, ReturnType URowVector, [UReal; UReal; URowVector]) ;
+  add_unqualified (name, ReturnType UMatrix, [UMatrix; UReal; UReal]) ;
+  add_unqualified (name, ReturnType UMatrix, [UMatrix; UMatrix; UReal]) ;
+  add_unqualified (name, ReturnType UMatrix, [UMatrix; UReal; UMatrix]) ;
+  add_unqualified (name, ReturnType UMatrix, [UMatrix; UMatrix; UMatrix]) ;
+  add_unqualified (name, ReturnType UMatrix, [UReal; UMatrix; UReal]) ;
+  add_unqualified (name, ReturnType UMatrix, [UReal; UMatrix; UMatrix]) ;
+  add_unqualified (name, ReturnType UMatrix, [UReal; UReal; UMatrix])
+
 let for_all_vector_types s = List.iter ~f:s all_vector_types
 let for_vector_types s = List.iter ~f:s vector_types
 
@@ -925,7 +951,7 @@ let () =
   add_binary_vec_int_int "falling_factorial" ;
   add_binary_vec_real_int "falling_factorial" ;
   add_binary_vec "fdim" ;
-  add_ternary "fma" ;
+  add_ternary_vec "fma" ;
   add_binary_vec "fmax" ;
   add_binary_vec "fmin" ;
   add_binary_vec "fmod" ;
