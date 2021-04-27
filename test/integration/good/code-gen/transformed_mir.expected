@@ -9240,7 +9240,7 @@
    ((pattern
      (Assignment (transformed_data_vector UVector ())
       ((pattern
-        (FunApp (StanLib fma)
+        (FunApp (StanLib fma FnPure)
          (((pattern (Var d_vector))
            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var d_vector))
@@ -9252,7 +9252,7 @@
    ((pattern
      (Assignment (transformed_data_vector UVector ())
       ((pattern
-        (FunApp (StanLib fma)
+        (FunApp (StanLib fma FnPure)
          (((pattern (Var d_vector))
            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var d_vector))
@@ -9264,7 +9264,7 @@
    ((pattern
      (Assignment (transformed_data_vector UVector ())
       ((pattern
-        (FunApp (StanLib fma)
+        (FunApp (StanLib fma FnPure)
          (((pattern (Var d_real))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var d_vector))
@@ -9470,7 +9470,7 @@
    ((pattern
      (Assignment (transformed_data_vector UVector ())
       ((pattern
-        (FunApp (StanLib fma)
+        (FunApp (StanLib fma FnPure)
          (((pattern (Var d_vector))
            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var d_vector))
@@ -9482,7 +9482,7 @@
    ((pattern
      (Assignment (transformed_data_vector UVector ())
       ((pattern
-        (FunApp (StanLib fma)
+        (FunApp (StanLib fma FnPure)
          (((pattern (Var d_vector))
            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var d_vector))
@@ -9825,7 +9825,7 @@
    ((pattern
      (Assignment (transformed_data_matrix UMatrix ())
       ((pattern
-        (FunApp (StanLib fma)
+        (FunApp (StanLib fma FnPure)
          (((pattern (Var d_matrix))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var d_matrix))
@@ -9837,7 +9837,7 @@
    ((pattern
      (Assignment (transformed_data_matrix UMatrix ())
       ((pattern
-        (FunApp (StanLib fma)
+        (FunApp (StanLib fma FnPure)
          (((pattern (Var d_matrix))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var d_matrix))
@@ -11989,7 +11989,7 @@
    ((pattern
      (Assignment (tp_mat UMatrix ())
       ((pattern
-        (FunApp (StanLib fma)
+        (FunApp (StanLib fma FnPure)
          (((pattern (Var d_cfcov_54))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var p_mat))
@@ -12001,7 +12001,7 @@
    ((pattern
      (Assignment (tp_vec UVector ())
       ((pattern
-        (FunApp (StanLib fma)
+        (FunApp (StanLib fma FnPure)
          (((pattern (Var d_vec))
            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var p_vec))
@@ -15486,7 +15486,7 @@
    ((pattern
      (Assignment (tp_mat UMatrix ())
       ((pattern
-        (FunApp (StanLib fma)
+        (FunApp (StanLib fma FnPure)
          (((pattern (Var d_cfcov_54))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var p_mat))
@@ -15498,7 +15498,7 @@
    ((pattern
      (Assignment (tp_vec UVector ())
       ((pattern
-        (FunApp (StanLib fma)
+        (FunApp (StanLib fma FnPure)
          (((pattern (Var d_vec))
            (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var p_vec))
@@ -21814,7 +21814,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__)
+                            (FunApp (StanLib Plus__ FnPure)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)
