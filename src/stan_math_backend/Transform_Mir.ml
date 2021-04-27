@@ -1,6 +1,8 @@
 open Core_kernel
 open Middle
 
+let ( = ) = Stdlib.( = )
+
 let use_opencl = ref false
 
 let opencl_trigger_restrictions =

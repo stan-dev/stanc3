@@ -5,6 +5,8 @@
 open Core_kernel
 open Ast
 
+let ( = ) = Stdlib.( = )
+
 let wrap_fmt fmt x =
   (* Switched from Format.str_formatter partially because of
      https://discuss.ocaml.org/t/debugging-memory-issues/3223/8

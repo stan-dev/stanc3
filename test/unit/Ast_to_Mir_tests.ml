@@ -53,17 +53,62 @@ let%expect_test "Prefix-Op-Example" =
               ((pattern
                 (FunApp (StanLib Less__)
                  (((pattern (Var i))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                   (meta
+                    ((type_ UInt)
+                     (loc
+                      ((begin_loc
+                        ((filename string) (line_num 4) (col_num 14)
+                         (included_from ())))
+                       (end_loc
+                        ((filename string) (line_num 4) (col_num 15)
+                         (included_from ())))))
+                     (adlevel DataOnly))))
                   ((pattern
                     (FunApp (StanLib PMinus__)
                      (((pattern (Lit Int 1))
-                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                       (meta
+                        ((type_ UInt)
+                         (loc
+                          ((begin_loc
+                            ((filename string) (line_num 4) (col_num 19)
+                             (included_from ())))
+                           (end_loc
+                            ((filename string) (line_num 4) (col_num 20)
+                             (included_from ())))))
+                         (adlevel DataOnly)))))))
+                   (meta
+                    ((type_ UInt)
+                     (loc
+                      ((begin_loc
+                        ((filename string) (line_num 4) (col_num 19)
+                         (included_from ())))
+                       (end_loc
+                        ((filename string) (line_num 4) (col_num 20)
+                         (included_from ())))))
+                     (adlevel DataOnly)))))))
+               (meta
+                ((type_ UInt)
+                 (loc
+                  ((begin_loc
+                    ((filename string) (line_num 4) (col_num 14)
+                     (included_from ())))
+                   (end_loc
+                    ((filename string) (line_num 4) (col_num 20)
+                     (included_from ())))))
+                 (adlevel DataOnly))))
               ((pattern
                 (NRFunApp (CompilerInternal FnPrint)
                  (((pattern (Lit Str Badger))
-                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta
+                    ((type_ UReal)
+                     (loc
+                      ((begin_loc
+                        ((filename string) (line_num 5) (col_num 12)
+                         (included_from ())))
+                       (end_loc
+                        ((filename string) (line_num 5) (col_num 28)
+                         (included_from ())))))
+                     (adlevel DataOnly)))))))
                (meta <opaque>))
               ()))
             (meta <opaque>)))))
@@ -81,11 +126,36 @@ let%expect_test "read data" =
           (SArray
            (SMatrix
             ((pattern (Lit Int 10))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             (meta
+              ((type_ UInt)
+               (loc
+                ((begin_loc
+                  ((filename string) (line_num 1) (col_num 14)
+                   (included_from ())))
+                 (end_loc
+                  ((filename string) (line_num 1) (col_num 16)
+                   (included_from ())))))
+               (adlevel DataOnly))))
             ((pattern (Lit Int 20))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+             (meta
+              ((type_ UInt)
+               (loc
+                ((begin_loc
+                  ((filename string) (line_num 1) (col_num 18)
+                   (included_from ())))
+                 (end_loc
+                  ((filename string) (line_num 1) (col_num 20)
+                   (included_from ())))))
+               (adlevel DataOnly)))))
            ((pattern (Lit Int 5))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+            (meta
+             ((type_ UInt)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 1) (col_num 26) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 1) (col_num 27) (included_from ())))))
+              (adlevel DataOnly)))))))))
       (meta <opaque>))) |}]
 
 let%expect_test "read param" =
@@ -100,11 +170,36 @@ let%expect_test "read param" =
           (SArray
            (SMatrix
             ((pattern (Lit Int 10))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             (meta
+              ((type_ UInt)
+               (loc
+                ((begin_loc
+                  ((filename string) (line_num 1) (col_num 29)
+                   (included_from ())))
+                 (end_loc
+                  ((filename string) (line_num 1) (col_num 31)
+                   (included_from ())))))
+               (adlevel DataOnly))))
             ((pattern (Lit Int 20))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+             (meta
+              ((type_ UInt)
+               (loc
+                ((begin_loc
+                  ((filename string) (line_num 1) (col_num 33)
+                   (included_from ())))
+                 (end_loc
+                  ((filename string) (line_num 1) (col_num 35)
+                   (included_from ())))))
+               (adlevel DataOnly)))))
            ((pattern (Lit Int 5))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+            (meta
+             ((type_ UInt)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 1) (col_num 41) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 1) (col_num 42) (included_from ())))))
+              (adlevel DataOnly)))))))))
       (meta <opaque>))) |}]
 
 let%expect_test "gen quant" =
@@ -121,11 +216,39 @@ let%expect_test "gen quant" =
            (((pattern
               (EOr
                ((pattern (Var emit_transformed_parameters__))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                (meta
+                 ((type_ UInt)
+                  (loc
+                   ((begin_loc
+                     ((filename "") (line_num 0) (col_num 0) (included_from ())))
+                    (end_loc
+                     ((filename "") (line_num 0) (col_num 0) (included_from ())))))
+                  (adlevel DataOnly))))
                ((pattern (Var emit_generated_quantities__))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                (meta
+                 ((type_ UInt)
+                  (loc
+                   ((begin_loc
+                     ((filename "") (line_num 0) (col_num 0) (included_from ())))
+                    (end_loc
+                     ((filename "") (line_num 0) (col_num 0) (included_from ())))))
+                  (adlevel DataOnly))))))
+             (meta
+              ((type_ UInt)
+               (loc
+                ((begin_loc
+                  ((filename "") (line_num 0) (col_num 0) (included_from ())))
+                 (end_loc
+                  ((filename "") (line_num 0) (col_num 0) (included_from ())))))
+               (adlevel DataOnly)))))))
+         (meta
+          ((type_ UInt)
+           (loc
+            ((begin_loc
+              ((filename "") (line_num 0) (col_num 0) (included_from ())))
+             (end_loc
+              ((filename "") (line_num 0) (col_num 0) (included_from ())))))
+           (adlevel DataOnly))))
         ((pattern (Return ())) (meta <opaque>)) ()))
       (meta <opaque>))
      ((pattern
@@ -133,8 +256,22 @@ let%expect_test "gen quant" =
         ((pattern
           (FunApp (StanLib PNot__)
            (((pattern (Var emit_generated_quantities__))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             (meta
+              ((type_ UInt)
+               (loc
+                ((begin_loc
+                  ((filename "") (line_num 0) (col_num 0) (included_from ())))
+                 (end_loc
+                  ((filename "") (line_num 0) (col_num 0) (included_from ())))))
+               (adlevel DataOnly)))))))
+         (meta
+          ((type_ UInt)
+           (loc
+            ((begin_loc
+              ((filename "") (line_num 0) (col_num 0) (included_from ())))
+             (end_loc
+              ((filename "") (line_num 0) (col_num 0) (included_from ())))))
+           (adlevel DataOnly))))
         ((pattern (Return ())) (meta <opaque>)) ()))
       (meta <opaque>))
      ((pattern
@@ -144,20 +281,59 @@ let%expect_test "gen quant" =
           (SArray
            (SMatrix
             ((pattern (Lit Int 10))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             (meta
+              ((type_ UInt)
+               (loc
+                ((begin_loc
+                  ((filename string) (line_num 1) (col_num 39)
+                   (included_from ())))
+                 (end_loc
+                  ((filename string) (line_num 1) (col_num 41)
+                   (included_from ())))))
+               (adlevel DataOnly))))
             ((pattern (Lit Int 20))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+             (meta
+              ((type_ UInt)
+               (loc
+                ((begin_loc
+                  ((filename string) (line_num 1) (col_num 43)
+                   (included_from ())))
+                 (end_loc
+                  ((filename string) (line_num 1) (col_num 45)
+                   (included_from ())))))
+               (adlevel DataOnly)))))
            ((pattern (Lit Int 5))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+            (meta
+             ((type_ UInt)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 1) (col_num 51) (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 1) (col_num 52) (included_from ())))))
+              (adlevel DataOnly)))))))))
       (meta <opaque>))
      ((pattern
        (For (loopvar sym1__)
         (lower
          ((pattern (Lit Int 1))
-          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (meta
+           ((type_ UInt)
+            (loc
+             ((begin_loc
+               ((filename "") (line_num 0) (col_num 0) (included_from ())))
+              (end_loc
+               ((filename "") (line_num 0) (col_num 0) (included_from ())))))
+            (adlevel DataOnly)))))
         (upper
          ((pattern (Lit Int 5))
-          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (meta
+           ((type_ UInt)
+            (loc
+             ((begin_loc
+               ((filename string) (line_num 1) (col_num 51) (included_from ())))
+              (end_loc
+               ((filename string) (line_num 1) (col_num 52) (included_from ())))))
+            (adlevel DataOnly)))))
         (body
          ((pattern
            (Block
@@ -165,10 +341,28 @@ let%expect_test "gen quant" =
                (For (loopvar sym2__)
                 (lower
                  ((pattern (Lit Int 1))
-                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (meta
+                   ((type_ UInt)
+                    (loc
+                     ((begin_loc
+                       ((filename "") (line_num 0) (col_num 0)
+                        (included_from ())))
+                      (end_loc
+                       ((filename "") (line_num 0) (col_num 0)
+                        (included_from ())))))
+                    (adlevel DataOnly)))))
                 (upper
                  ((pattern (Lit Int 10))
-                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (meta
+                   ((type_ UInt)
+                    (loc
+                     ((begin_loc
+                       ((filename string) (line_num 1) (col_num 39)
+                        (included_from ())))
+                      (end_loc
+                       ((filename string) (line_num 1) (col_num 41)
+                        (included_from ())))))
+                    (adlevel DataOnly)))))
                 (body
                  ((pattern
                    (Block
@@ -176,10 +370,28 @@ let%expect_test "gen quant" =
                        (For (loopvar sym3__)
                         (lower
                          ((pattern (Lit Int 1))
-                          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (meta
+                           ((type_ UInt)
+                            (loc
+                             ((begin_loc
+                               ((filename "") (line_num 0) (col_num 0)
+                                (included_from ())))
+                              (end_loc
+                               ((filename "") (line_num 0) (col_num 0)
+                                (included_from ())))))
+                            (adlevel DataOnly)))))
                         (upper
                          ((pattern (Lit Int 20))
-                          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                          (meta
+                           ((type_ UInt)
+                            (loc
+                             ((begin_loc
+                               ((filename string) (line_num 1) (col_num 43)
+                                (included_from ())))
+                              (end_loc
+                               ((filename string) (line_num 1) (col_num 45)
+                                (included_from ())))))
+                            (adlevel DataOnly)))))
                         (body
                          ((pattern
                            (Block
@@ -189,35 +401,84 @@ let%expect_test "gen quant" =
                                 (((pattern
                                    (Lit Str "mat[sym1__, sym2__, sym3__]"))
                                   (meta
-                                   ((type_ UInt) (loc <opaque>)
+                                   ((type_ UInt)
+                                    (loc
+                                     ((begin_loc
+                                       ((filename "") (line_num 0) (col_num 0)
+                                        (included_from ())))
+                                      (end_loc
+                                       ((filename "") (line_num 0) (col_num 0)
+                                        (included_from ())))))
                                     (adlevel DataOnly))))
                                  ((pattern
                                    (Indexed
                                     ((pattern (Var mat))
                                      (meta
-                                      ((type_ (UArray UMatrix)) (loc <opaque>)
+                                      ((type_ (UArray UMatrix))
+                                       (loc
+                                        ((begin_loc
+                                          ((filename string) (line_num 1)
+                                           (col_num 23) (included_from ())))
+                                         (end_loc
+                                          ((filename string) (line_num 1)
+                                           (col_num 54) (included_from ())))))
                                        (adlevel DataOnly))))
                                     ((Single
                                       ((pattern (Var sym1__))
                                        (meta
-                                        ((type_ UInt) (loc <opaque>)
+                                        ((type_ UInt)
+                                         (loc
+                                          ((begin_loc
+                                            ((filename string) (line_num 1)
+                                             (col_num 23) (included_from ())))
+                                           (end_loc
+                                            ((filename string) (line_num 1)
+                                             (col_num 54) (included_from ())))))
                                          (adlevel DataOnly)))))
                                      (Single
                                       ((pattern (Var sym2__))
                                        (meta
-                                        ((type_ UInt) (loc <opaque>)
+                                        ((type_ UInt)
+                                         (loc
+                                          ((begin_loc
+                                            ((filename string) (line_num 1)
+                                             (col_num 23) (included_from ())))
+                                           (end_loc
+                                            ((filename string) (line_num 1)
+                                             (col_num 54) (included_from ())))))
                                          (adlevel DataOnly)))))
                                      (Single
                                       ((pattern (Var sym3__))
                                        (meta
-                                        ((type_ UInt) (loc <opaque>)
+                                        ((type_ UInt)
+                                         (loc
+                                          ((begin_loc
+                                            ((filename string) (line_num 1)
+                                             (col_num 23) (included_from ())))
+                                           (end_loc
+                                            ((filename string) (line_num 1)
+                                             (col_num 54) (included_from ())))))
                                          (adlevel DataOnly))))))))
                                   (meta
-                                   ((type_ UReal) (loc <opaque>)
+                                   ((type_ UReal)
+                                    (loc
+                                     ((begin_loc
+                                       ((filename string) (line_num 1)
+                                        (col_num 23) (included_from ())))
+                                      (end_loc
+                                       ((filename string) (line_num 1)
+                                        (col_num 54) (included_from ())))))
                                     (adlevel DataOnly))))
                                  ((pattern (Lit Int 0))
                                   (meta
-                                   ((type_ UInt) (loc <opaque>)
+                                   ((type_ UInt)
+                                    (loc
+                                     ((begin_loc
+                                       ((filename string) (line_num 1)
+                                        (col_num 36) (included_from ())))
+                                      (end_loc
+                                       ((filename string) (line_num 1)
+                                        (col_num 37) (included_from ())))))
                                     (adlevel DataOnly)))))))
                               (meta <opaque>)))))
                           (meta <opaque>)))))

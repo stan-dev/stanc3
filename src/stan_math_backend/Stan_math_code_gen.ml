@@ -22,6 +22,9 @@ open Fmt
 open Expression_gen
 open Statement_gen
 
+let ( <> ) = Stdlib.( <> )
+let compare = Stdlib.compare
+
 let standalone_functions = ref false
 
 let stanc_args_to_print =

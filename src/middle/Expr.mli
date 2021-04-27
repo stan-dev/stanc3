@@ -1,21 +1,20 @@
-open Core_kernel
 open Common
 
 module Fixed : sig
   module Pattern : sig
     type litType = Int | Real | Str [@@deriving sexp, hash, compare]
 
-    type 'a t =
+    type 'expr t =
       | Var of string
       | Lit of litType * string
-      | FunApp of Fun_kind.t * 'a list
-      | TernaryIf of 'a * 'a * 'a
-      | EAnd of 'a * 'a
-      | EOr of 'a * 'a
-      | Indexed of 'a * 'a Index.t list
+      | FunApp of Fun_kind.t * 'expr list
+      | TernaryIf of 'expr * 'expr * 'expr
+      | EAnd of 'expr * 'expr
+      | EOr of 'expr * 'expr
+      | Indexed of 'expr * 'expr Index.t list
     [@@deriving sexp, hash, compare]
 
-    include Pattern.S with type 'a t := 'a t
+    include Pattern.S with type 'expr t := 'expr t
   end
 
   include Fixed.S with module Pattern := Pattern
@@ -30,14 +29,14 @@ module NoMeta : sig
 
   include Specialized.S with module Meta := Meta and type t = Meta.t Fixed.t
 
-  val remove_meta : 'a Fixed.t -> t
+  val remove_meta : 'expr Fixed.t -> t
 end
 
 module Typed : sig
   module Meta : sig
     type t =
       { type_: UnsizedType.t
-      ; loc: Location_span.t sexp_opaque [@compare.ignore]
+      ; loc: Location_span.t [@sexp.opaque] [@compare.ignore]
       ; adlevel: UnsizedType.autodifftype }
     [@@deriving compare, create, sexp, hash]
 
@@ -55,7 +54,7 @@ module Labelled : sig
   module Meta : sig
     type t =
       { type_: UnsizedType.t
-      ; loc: Location_span.t sexp_opaque [@compare.ignore]
+      ; loc: Location_span.t [@sexp.opaque] [@compare.ignore]
       ; adlevel: UnsizedType.autodifftype
       ; label: Label.Int_label.t }
     [@@deriving compare, create, sexp, hash]
@@ -84,12 +83,12 @@ module Helpers : sig
   val one : Typed.t
   val binop : Typed.t -> Operator.t -> Typed.t -> Typed.t
   val loop_bottom : Typed.t
-  val internal_funapp : Internal_fun.t -> 'a Fixed.t list -> 'a -> 'a Fixed.t
+  val internal_funapp : Internal_fun.t -> 'expr Fixed.t list -> 'expr -> 'expr Fixed.t
 
   val contains_fn_kind :
-    (Fun_kind.t -> bool) -> ?init:bool -> 'a Fixed.t -> bool
+    (Fun_kind.t -> bool) -> ?init:bool -> 'expr Fixed.t -> bool
 
-  val infer_type_of_indexed : UnsizedType.t -> 'a Index.t list -> UnsizedType.t
+  val infer_type_of_indexed : UnsizedType.t -> 'expr Index.t list -> UnsizedType.t
   val add_int_index : Typed.t -> Typed.t Index.t -> Typed.t
-  val collect_indices : 'a Fixed.t -> 'a Fixed.t Index.t list
+  val collect_indices : 'expr Fixed.t -> 'expr Fixed.t Index.t list
 end

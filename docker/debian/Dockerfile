@@ -19,7 +19,7 @@ RUN opam update; bash -x install_build_deps.sh
 COPY ./scripts/install_dev_deps.sh ./
 RUN opam update; bash -x install_dev_deps.sh
 
-RUN opam update; opam install -y js_of_ocaml-compiler.3.4.0 js_of_ocaml-ppx.3.4.0 js_of_ocaml.3.4.0
+RUN opam update; opam install -y js_of_ocaml-compiler js_of_ocaml-ppx js_of_ocaml
 
 # Install Javascript dev environment
 COPY ./scripts/install_js_deps.sh ./

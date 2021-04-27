@@ -10,7 +10,7 @@ open Core_kernel
 module type FLOWGRAPH = sig
   type labels
 
-  include Base__.Hashtbl_intf.Key with type t = labels
+  include Hashtbl_intf.Key with type t = labels
 
   val initials : labels Set.Poly.t
   val successors : (labels, labels Set.Poly.t) Map.Poly.t

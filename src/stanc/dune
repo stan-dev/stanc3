@@ -1,13 +1,16 @@
 (executable
+ (modes byte exe)
  (name stanc)
  (libraries frontend stan_math_backend)
  (modules Stanc)
  (public_name stanc)
- (preprocess (pps ppx_jane))
- )
+ (preprocess
+  (pps ppx_jane)))
 
 (env
  (static
-  (flags (-ccopt -static)))
-  (dev
-  (flags (:standard -g))))
+  (flags
+   (-ccopt -static)))
+ (dev
+  (flags
+   (:standard -g))))

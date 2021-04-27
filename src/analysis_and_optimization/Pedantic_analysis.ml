@@ -9,6 +9,13 @@ open Factor_graph
 open Mir_utils
 open Pedantic_dist_warnings
 
+let ( = ) = Stdlib.( = )
+let ( < ) = Stdlib.( < )
+let ( > ) = Stdlib.( > )
+let ( <> ) = Stdlib.( <> )
+let ( >= ) = Stdlib.( >= )
+
+
 type warning_span = Location_span.t * string [@@deriving compare]
 
 (*********************

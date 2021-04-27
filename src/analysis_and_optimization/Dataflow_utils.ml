@@ -3,6 +3,7 @@ open Middle
 open Dataflow_types
 open Mir_utils
 
+
 (** Union maps, preserving the left element in a collision *)
 let union_maps_left (m1 : ('a, 'b) Map.Poly.t) (m2 : ('a, 'b) Map.Poly.t) :
     ('a, 'b) Map.Poly.t =

@@ -39,8 +39,8 @@ If your distro does not support `bwrap`
 opam init --disable-sandboxing -y
 ```
 ```
-   opam switch create 4.07.0
-   opam switch 4.07.0
+   opam switch create 4.11.1
+   opam switch 4.11.1
    eval $(opam env)
 ```
 4. Add the opam repository for the cross-compile windows 
@@ -53,11 +53,11 @@ opam repository add windows git://github.com/ocaml-cross/opam-cross-windows
 ```
 6. Install the compiler
 ```
-   opam install "ocaml-windows64<=4.07.0"
+   opam install "ocaml-windows64<=4.11.1"
 ```
 7. Install opam packages that are required for build/runtest
 ```
-   opam install -y core_kernel-windows menhir-windows ppx_deriving-windows fmt-windows
+   opam install -y core-windows menhir-windows ppx_deriving-windows fmt-windows
 ```
 8. Install dos2unix for running the Windows tests on Jenkins
 ```
@@ -95,7 +95,7 @@ Switch to the root of the project and run
 ```
 4. Install opam packages that are required for build/runtest
 ```
-opam install -y core_kernel menhir ppx_deriving fmt
+opam install -y core menhir ppx_deriving fmt
 ```
 
 ### Test the environment
