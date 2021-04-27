@@ -1,7 +1,6 @@
 (* A partial evaluator for use in static analysis and optimization *)
 
 open Core_kernel
-open Mir_utils
 open Middle
 
 exception Rejected of Location_span.t * string
@@ -767,11 +766,15 @@ let rec simplify_indices_expr expr =
 
 let try_eval_expr expr = try eval_expr expr with Rejected _ -> expr
 
-let eval_stmt_base =
-  Stmt.Fixed.Pattern.map (Fn.compose eval_expr simplify_indices_expr) Fn.id
-
-let eval_stmt s =
-  try map_rec_stmt_loc eval_stmt_base s with Rejected (loc, m) ->
+let rec eval_stmt s =
+  try
+    Stmt.Fixed.
+      { s with
+        pattern=
+          Pattern.map
+            (Fn.compose eval_expr simplify_indices_expr)
+            eval_stmt s.pattern }
+  with Rejected (loc, m) ->
     { Stmt.Fixed.pattern=
         NRFunApp (CompilerInternal FnReject, [Expr.Helpers.str m])
     ; meta= loc }

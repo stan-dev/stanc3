@@ -1990,7 +1990,10 @@ let%expect_test "partial evaluate reject" =
   [%expect
     {|
       log_prob {
-        FnReject__("Integer division by zero");
+        {
+          int x;
+          FnReject__("Integer division by zero");
+        }
       }
 
       generate_quantities {
