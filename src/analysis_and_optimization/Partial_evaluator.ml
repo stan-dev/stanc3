@@ -776,4 +776,4 @@ let eval_stmt s =
         NRFunApp (CompilerInternal FnReject, [Expr.Helpers.str m])
     ; meta= loc }
 
-let eval_prog = Program.map eval_expr eval_stmt
+let eval_prog = Program.map try_eval_expr eval_stmt
