@@ -24946,11 +24946,11 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       Eigen::Matrix<local_scalar_t__, -1, -1> lcm_sym27__;
       double lcm_sym26__;
       double lcm_sym25__;
-      double lcm_sym24__;
+      Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym24__;
       double lcm_sym23__;
       double lcm_sym22__;
       double lcm_sym21__;
-      Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym20__;
+      double lcm_sym20__;
       int lcm_sym19__;
       local_scalar_t__ alpha_occ;
       alpha_occ = DUMMY_VAR__;
@@ -24980,10 +24980,10 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       logit_p = Eigen::Matrix<local_scalar_t__, -1, -1>(R, T);
       stan::math::fill(logit_p, DUMMY_VAR__);
       
-      assign(lcm_sym20__, add(alpha_occ, multiply(beta_occ, X)),
-        "assigning variable lcm_sym20__");
-      assign(logit_psi, lcm_sym20__, "assigning variable logit_psi");
-      assign(lcm_sym27__, rep_matrix(add(alpha_p, multiply(beta_p, X)), T),
+      assign(lcm_sym24__, stan::math::fma(beta_occ, X, alpha_occ),
+        "assigning variable lcm_sym24__");
+      assign(logit_psi, lcm_sym24__, "assigning variable logit_psi");
+      assign(lcm_sym27__, rep_matrix(stan::math::fma(beta_p, X, alpha_p), T),
         "assigning variable lcm_sym27__");
       assign(logit_p, lcm_sym27__, "assigning variable logit_p");
       {
@@ -24994,7 +24994,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
             current_statement__ = 25;
             lp_accum__.add(
               bernoulli_logit_lpmf<propto__>(1,
-                rvalue(lcm_sym20__, "lcm_sym20__", index_uni(1))));
+                rvalue(lcm_sym24__, "lcm_sym24__", index_uni(1))));
             current_statement__ = 26;
             lp_accum__.add(
               bernoulli_logit_lpmf<propto__>(rvalue(y, "y", index_uni(1)),
@@ -25004,11 +25004,11 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
             lp_accum__.add(
               log_sum_exp(
                 (bernoulli_logit_lpmf<false>(1,
-                   rvalue(lcm_sym20__, "lcm_sym20__", index_uni(1))) +
+                   rvalue(lcm_sym24__, "lcm_sym24__", index_uni(1))) +
                   bernoulli_logit_lpmf<false>(0,
                     rvalue(lcm_sym27__, "lcm_sym27__", index_uni(1)))),
                 bernoulli_logit_lpmf<false>(0,
-                  rvalue(lcm_sym20__, "lcm_sym20__", index_uni(1)))));
+                  rvalue(lcm_sym24__, "lcm_sym24__", index_uni(1)))));
           }
           for (int i = 2; i <= R; ++i) {
             current_statement__ = 28;
@@ -25016,7 +25016,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
               current_statement__ = 25;
               lp_accum__.add(
                 bernoulli_logit_lpmf<propto__>(1,
-                  rvalue(lcm_sym20__, "lcm_sym20__", index_uni(i))));
+                  rvalue(lcm_sym24__, "lcm_sym24__", index_uni(i))));
               current_statement__ = 26;
               lp_accum__.add(
                 bernoulli_logit_lpmf<propto__>(rvalue(y, "y", index_uni(i)),
@@ -25026,11 +25026,11 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
               lp_accum__.add(
                 log_sum_exp(
                   (bernoulli_logit_lpmf<false>(1,
-                     rvalue(lcm_sym20__, "lcm_sym20__", index_uni(i))) +
+                     rvalue(lcm_sym24__, "lcm_sym24__", index_uni(i))) +
                     bernoulli_logit_lpmf<false>(0,
                       rvalue(lcm_sym27__, "lcm_sym27__", index_uni(i)))),
                   bernoulli_logit_lpmf<false>(0,
-                    rvalue(lcm_sym20__, "lcm_sym20__", index_uni(i)))));
+                    rvalue(lcm_sym24__, "lcm_sym24__", index_uni(i)))));
             }
           }
         } 
@@ -25067,15 +25067,15 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      double lcm_sym12__;
       double lcm_sym11__;
+      double lcm_sym10__;
       int lcm_sym18__;
       Eigen::Matrix<double, -1, -1> lcm_sym17__;
       double lcm_sym16__;
       double lcm_sym15__;
       double lcm_sym14__;
       double lcm_sym13__;
-      Eigen::Matrix<double, -1, 1> lcm_sym10__;
+      Eigen::Matrix<double, -1, 1> lcm_sym12__;
       Eigen::Matrix<double, -1, 1> lcm_sym9__;
       Eigen::Matrix<double, -1, 1> lcm_sym8__;
       int lcm_sym7__;
@@ -25121,14 +25121,14 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
             primitive_value(emit_generated_quantities__)))) {
         return ;
       } 
-      assign(lcm_sym8__, add(alpha_occ, multiply(beta_occ, X)),
-        "assigning variable lcm_sym8__");
-      assign(logit_psi, lcm_sym8__, "assigning variable logit_psi");
-      assign(lcm_sym17__, rep_matrix(add(alpha_p, multiply(beta_p, X)), T),
+      assign(lcm_sym12__, stan::math::fma(beta_occ, X, alpha_occ),
+        "assigning variable lcm_sym12__");
+      assign(logit_psi, lcm_sym12__, "assigning variable logit_psi");
+      assign(lcm_sym17__, rep_matrix(stan::math::fma(beta_p, X, alpha_p), T),
         "assigning variable lcm_sym17__");
       assign(logit_p, lcm_sym17__, "assigning variable logit_p");
       if (emit_transformed_parameters__) {
-        out__.write(lcm_sym8__);
+        out__.write(lcm_sym12__);
         out__.write(lcm_sym17__);
       } 
       if (logical_negation(emit_generated_quantities__)) {
@@ -25152,22 +25152,22 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
           psi = std::numeric_limits<double>::quiet_NaN();
           
           lcm_sym14__ = inv_logit(
-                          rvalue(lcm_sym8__, "lcm_sym8__", index_uni(1)));
+                          rvalue(lcm_sym12__, "lcm_sym12__", index_uni(1)));
           current_statement__ = 14;
           validate_non_negative_index("q", "T", T);
           Eigen::Matrix<double, -1, 1> q;
           q = Eigen::Matrix<double, -1, 1>(T);
           stan::math::fill(q, std::numeric_limits<double>::quiet_NaN());
           
-          assign(lcm_sym10__,
+          assign(lcm_sym9__,
             transpose(
               inv_logit(
                 minus(rvalue(lcm_sym17__, "lcm_sym17__", index_uni(1))))),
-            "assigning variable lcm_sym10__");
+            "assigning variable lcm_sym9__");
           double qT;
           qT = std::numeric_limits<double>::quiet_NaN();
           
-          lcm_sym16__ = prod(lcm_sym10__);
+          lcm_sym16__ = prod(lcm_sym9__);
           current_statement__ = 17;
           assign(psi_con,
             ((lcm_sym14__ * lcm_sym16__) /
@@ -25190,22 +25190,22 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
             psi = std::numeric_limits<double>::quiet_NaN();
             
             lcm_sym13__ = inv_logit(
-                            rvalue(lcm_sym8__, "lcm_sym8__", index_uni(i)));
+                            rvalue(lcm_sym12__, "lcm_sym12__", index_uni(i)));
             current_statement__ = 14;
             validate_non_negative_index("q", "T", T);
             Eigen::Matrix<double, -1, 1> q;
             q = Eigen::Matrix<double, -1, 1>(T);
             stan::math::fill(q, std::numeric_limits<double>::quiet_NaN());
             
-            assign(lcm_sym9__,
+            assign(lcm_sym8__,
               transpose(
                 inv_logit(
                   minus(rvalue(lcm_sym17__, "lcm_sym17__", index_uni(i))))),
-              "assigning variable lcm_sym9__");
+              "assigning variable lcm_sym8__");
             double qT;
             qT = std::numeric_limits<double>::quiet_NaN();
             
-            lcm_sym15__ = prod(lcm_sym9__);
+            lcm_sym15__ = prod(lcm_sym8__);
             current_statement__ = 17;
             assign(psi_con,
               ((lcm_sym13__ * lcm_sym15__) /
@@ -25858,10 +25858,12 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       y_hat = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(y_hat, DUMMY_VAR__);
       
-      assign(lcm_sym9__, add((10 * mu_a1), multiply(sigma_a1, eta1)),
+      assign(lcm_sym9__,
+        stan::math::fma(10, mu_a1, multiply(sigma_a1, eta1)),
         "assigning variable lcm_sym9__");
       assign(a1, lcm_sym9__, "assigning variable a1");
-      assign(lcm_sym10__, add((0.1 * mu_a2), multiply(sigma_a2, eta2)),
+      assign(lcm_sym10__,
+        stan::math::fma(0.1, mu_a2, multiply(sigma_a2, eta2)),
         "assigning variable lcm_sym10__");
       assign(a2, lcm_sym10__, "assigning variable a2");
       current_statement__ = 13;
@@ -26013,10 +26015,12 @@ class off_small_model final : public model_base_crtp<off_small_model> {
             primitive_value(emit_generated_quantities__)))) {
         return ;
       } 
-      assign(lcm_sym4__, add((10 * mu_a1), multiply(sigma_a1, eta1)),
+      assign(lcm_sym4__,
+        stan::math::fma(10, mu_a1, multiply(sigma_a1, eta1)),
         "assigning variable lcm_sym4__");
       assign(a1, lcm_sym4__, "assigning variable a1");
-      assign(lcm_sym5__, add((0.1 * mu_a2), multiply(sigma_a2, eta2)),
+      assign(lcm_sym5__,
+        stan::math::fma(0.1, mu_a2, multiply(sigma_a2, eta2)),
         "assigning variable lcm_sym5__");
       assign(a2, lcm_sym5__, "assigning variable a2");
       current_statement__ = 13;
@@ -27338,7 +27342,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       x_cov = Eigen::Matrix<local_scalar_t__, -1, -1>(2, 2);
       stan::math::fill(x_cov, DUMMY_VAR__);
       
-      assign(x_cov, in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(2),
+      assign(x_cov, in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(2, 2),
         "assigning variable x_cov");
       out__.write_free_cov_matrix(x_cov);
     } catch (const std::exception& e) {
