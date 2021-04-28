@@ -297,8 +297,7 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
           pf ppf "%s(@[<hov>%a@]);" ("check_" ^ check_name)
             (list ~sep:comma pp_expr)
             (function_arg :: Expr.Helpers.str var_name :: var :: args) )
-  | NRFunApp (CompilerInternal (FnWriteParam {unconstrain_opt; var; _}), _)
-  -> (
+  | NRFunApp (CompilerInternal (FnWriteParam {unconstrain_opt; var; _}), _) -> (
     match
       (unconstrain_opt, Option.bind ~f:constraint_to_string unconstrain_opt)
     with
