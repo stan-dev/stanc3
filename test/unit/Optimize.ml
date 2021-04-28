@@ -1976,6 +1976,31 @@ let%expect_test "partial evaluation" =
         if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
+let%expect_test "partial evaluate reject" =
+  let mir =
+    reset_and_mir_of_string
+      {|
+      model {
+        int x = 5 %/% 0;
+      }
+      |}
+  in
+  let mir = partial_evaluation mir in
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
+  [%expect
+    {|
+      log_prob {
+        {
+          int x;
+          FnReject__("Integer division by zero");
+        }
+      }
+
+      generate_quantities {
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
+      } |}]
+
 let%expect_test "try partially evaluate" =
   let mir =
     reset_and_mir_of_string

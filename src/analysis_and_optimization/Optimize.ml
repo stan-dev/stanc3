@@ -537,8 +537,8 @@ let unroll_static_loops_statement _ =
   let f stmt =
     match stmt with
     | Stmt.Fixed.Pattern.For {loopvar; lower; upper; body} -> (
-        let lower = Partial_evaluator.eval_expr lower in
-        let upper = Partial_evaluator.eval_expr upper in
+        let lower = Partial_evaluator.try_eval_expr lower in
+        let upper = Partial_evaluator.try_eval_expr upper in
         match
           (contains_top_break_or_continue body, lower.pattern, upper.pattern)
         with

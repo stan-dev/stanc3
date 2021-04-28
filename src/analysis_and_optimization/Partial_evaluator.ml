@@ -1,8 +1,9 @@
 (* A partial evaluator for use in static analysis and optimization *)
 
 open Core_kernel
-open Mir_utils
 open Middle
+
+exception Rejected of Location_span.t * string
 
 let preserve_stability = false
 
@@ -40,8 +41,7 @@ let apply_operator_int (op : string) i1 i2 =
         | "Plus__" -> i1 + i2
         | "Minus__" -> i1 - i2
         | "Times__" -> i1 * i2
-        | "Divide__" -> i1 / i2
-        | "IntDivide__" -> i1 / i2
+        | "Divide__" | "IntDivide__" -> i1 / i2
         | "Modulo__" -> i1 % i2
         | "Equals__" -> Bool.to_int (i1 = i2)
         | "NEquals__" -> Bool.to_int (i1 <> i2)
@@ -620,6 +620,11 @@ let rec eval_expr (e : Expr.Typed.t) =
                   | "PPlus__" | "PMinus__" ->
                       apply_prefix_operator_real op (Float.of_string r)
                   | _ -> FunApp (kind, l) )
+                | ( ("Divide__" | "IntDivide__")
+                  , [{meta= {type_= UInt; _}; _}; {pattern= Lit (Int, i2); _}]
+                  )
+                  when Int.of_string i2 = 0 ->
+                    raise (Rejected (e.meta.loc, "Integer division by zero"))
                 | op, [{pattern= Lit (Int, i1); _}; {pattern= Lit (Int, i2); _}]
                 -> (
                   match op with
@@ -759,8 +764,19 @@ let rec simplify_indices_expr expr =
     in
     {expr with pattern})
 
-let eval_stmt_base =
-  Stmt.Fixed.Pattern.map (Fn.compose eval_expr simplify_indices_expr) Fn.id
+let try_eval_expr expr = try eval_expr expr with Rejected _ -> expr
 
-let eval_stmt = map_rec_stmt_loc eval_stmt_base
-let eval_prog = Program.map eval_expr eval_stmt
+let rec eval_stmt s =
+  try
+    Stmt.Fixed.
+      { s with
+        pattern=
+          Pattern.map
+            (Fn.compose eval_expr simplify_indices_expr)
+            eval_stmt s.pattern }
+  with Rejected (loc, m) ->
+    { Stmt.Fixed.pattern=
+        NRFunApp (CompilerInternal FnReject, [Expr.Helpers.str m])
+    ; meta= loc }
+
+let eval_prog = Program.map try_eval_expr eval_stmt
