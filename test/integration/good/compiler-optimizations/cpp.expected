@@ -2732,7 +2732,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       assign(beta,
         in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(max_age),
         "assigning variable beta");
-      out__.write_free_lub(0, 1, max_age, beta);
+      out__.write_free_lub(0, 1, beta);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -5253,13 +5253,13 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       
       assign(mu, in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2),
         "assigning variable mu");
-      out__.write_free_ordered(2, mu);
+      out__.write_free_ordered(mu);
       std::vector<local_scalar_t__> sigma;
       sigma = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
       
       assign(sigma, in__.read<std::vector<local_scalar_t__>>(2),
         "assigning variable sigma");
-      out__.write_free_lb(0, 2, sigma);
+      out__.write_free_lb(0, sigma);
       local_scalar_t__ theta;
       theta = DUMMY_VAR__;
       
@@ -13272,7 +13272,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       assign(beta,
         in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_occasions),
         "assigning variable beta");
-      out__.write_free_lb(0, n_occasions, beta);
+      out__.write_free_lb(0, beta);
       Eigen::Matrix<local_scalar_t__, -1, 1> epsilon;
       epsilon = Eigen::Matrix<local_scalar_t__, -1, 1>(M);
       stan::math::fill(epsilon, DUMMY_VAR__);
@@ -14371,7 +14371,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       
       assign(pi, in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(K),
         "assigning variable pi");
-      out__.write_free_simplex(K, pi);
+      out__.write_free_simplex(pi);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> theta;
       theta = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(J, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(K)));
       stan::math::fill(theta, DUMMY_VAR__);
@@ -14379,7 +14379,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       assign(theta,
         in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
           J, K, K), "assigning variable theta");
-      out__.write_free_simplex(J, K, K, theta);
+      out__.write_free_simplex(theta);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -17231,7 +17231,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       assign(beta,
         in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(max_age),
         "assigning variable beta");
-      out__.write_free_lub(0, 1, max_age, beta);
+      out__.write_free_lub(0, 1, beta);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -20610,7 +20610,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       assign(gamma,
         in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_occasions),
         "assigning variable gamma");
-      out__.write_free_lub(0, 1, n_occasions, gamma);
+      out__.write_free_lub(0, 1, gamma);
       Eigen::Matrix<local_scalar_t__, -1, 1> epsilon;
       epsilon = Eigen::Matrix<local_scalar_t__, -1, 1>((n_occasions - 1));
       stan::math::fill(epsilon, DUMMY_VAR__);
@@ -27350,7 +27350,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       
       assign(x_cov, in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(2),
         "assigning variable x_cov");
-      out__.write_free_cov_matrix(2, x_cov);
+      out__.write_free_cov_matrix(x_cov);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
