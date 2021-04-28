@@ -310,12 +310,9 @@ let gen_write ?(unconstrain = false)
           ; type_= SizedType.to_unsized out_constrained_st
           ; adlevel= DataOnly } }
   in
-  let dims = read_constrain_dims out_trans out_constrained_st in
   Stmt.Helpers.internal_nrfunapp
     (FnWriteParam
-       { unconstrain_opt= Option.some_if unconstrain out_trans
-       ; dims
-       ; var= decl_var })
+       {unconstrain_opt= Option.some_if unconstrain out_trans; var= decl_var})
     [] Location_span.empty
 
 (* Statements to read, unconstrain and assign a parameter then write it back *)

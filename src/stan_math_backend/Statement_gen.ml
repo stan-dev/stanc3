@@ -297,8 +297,7 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
           pf ppf "%s(@[<hov>%a@]);" ("check_" ^ check_name)
             (list ~sep:comma pp_expr)
             (function_arg :: Expr.Helpers.str var_name :: var :: args) )
-  | NRFunApp (CompilerInternal (FnWriteParam {unconstrain_opt; dims; var}), _)
-  -> (
+  | NRFunApp (CompilerInternal (FnWriteParam {unconstrain_opt; var}), _) -> (
     match
       (unconstrain_opt, Option.bind ~f:constraint_to_string unconstrain_opt)
     with
@@ -310,7 +309,7 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
         let unconstrain_args = transform_args trans in
         pf ppf "@[<hov 2>out__.write_free_%s(@,%a);@]" unconstrain_string
           (list ~sep:comma pp_expr)
-          (unconstrain_args @ dims @ [var]) )
+          (unconstrain_args @ [var]) )
   | NRFunApp (CompilerInternal f, args) ->
       let fname, extra_args = trans_math_fn f in
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)

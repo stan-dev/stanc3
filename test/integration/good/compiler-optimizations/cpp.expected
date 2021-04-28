@@ -2688,7 +2688,6 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
         }
       } 
       if (emit_transformed_parameters__) {
-        lcm_sym54__ = (n_occasions - 1);
         out__.write(phi);
         out__.write(p);
         out__.write(inline_sym1__);
@@ -2732,7 +2731,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       assign(beta,
         in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(max_age),
         "assigning variable beta");
-      out__.write_free_lub(0, 1, max_age, beta);
+      out__.write_free_lub(0, 1, beta);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -5253,13 +5252,13 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       
       assign(mu, in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2),
         "assigning variable mu");
-      out__.write_free_ordered(2, mu);
+      out__.write_free_ordered(mu);
       std::vector<local_scalar_t__> sigma;
       sigma = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
       
       assign(sigma, in__.read<std::vector<local_scalar_t__>>(2),
         "assigning variable sigma");
-      out__.write_free_lb(0, 2, sigma);
+      out__.write_free_lb(0, sigma);
       local_scalar_t__ theta;
       theta = DUMMY_VAR__;
       
@@ -7233,19 +7232,19 @@ static constexpr std::array<const char*, 43> locations_array__ =
 class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model> {
 
  private:
-  int lcm_sym34__;
   int lcm_sym33__;
   int lcm_sym32__;
   int lcm_sym31__;
-  double lcm_sym30__;
+  int lcm_sym30__;
   double lcm_sym29__;
   double lcm_sym28__;
   double lcm_sym27__;
-  Eigen::Matrix<double, -1, 1> lcm_sym26____;
-  int lcm_sym25__;
+  double lcm_sym26__;
+  Eigen::Matrix<double, -1, 1> lcm_sym25____;
   int lcm_sym24__;
   int lcm_sym23__;
   int lcm_sym22__;
+  int lcm_sym21__;
   int N;
   int N_edges;
   std::vector<int> node1;
@@ -7253,7 +7252,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
   Eigen::Matrix<double, -1, 1> E__;
   Eigen::Matrix<double, -1, 1> log_E__;
   int phi_std_raw_1dim__; 
-  Eigen::Map<Eigen::Matrix<double, -1, 1>> lcm_sym26__{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> lcm_sym25__{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> E{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> log_E{nullptr, 0};
  
@@ -7324,8 +7323,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       
       current_statement__ = 30;
       node1 = context__.vals_i("node1");
-      lcm_sym23__ = logical_gte(N_edges, 1);
-      if (lcm_sym23__) {
+      lcm_sym22__ = logical_gte(N_edges, 1);
+      if (lcm_sym22__) {
         current_statement__ = 30;
         check_greater_or_equal(function__, "node1[sym1__]",
                                rvalue(node1, "node1", index_uni(1)), 1);
@@ -7336,7 +7335,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
         }
       } 
       current_statement__ = 30;
-      if (lcm_sym23__) {
+      if (lcm_sym22__) {
         current_statement__ = 30;
         check_less_or_equal(function__, "node1[sym1__]",
                             rvalue(node1, "node1", index_uni(1)), N);
@@ -7356,7 +7355,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       current_statement__ = 32;
       node2 = context__.vals_i("node2");
       current_statement__ = 32;
-      if (lcm_sym23__) {
+      if (lcm_sym22__) {
         current_statement__ = 32;
         check_greater_or_equal(function__, "node2[sym1__]",
                                rvalue(node2, "node2", index_uni(1)), 1);
@@ -7367,7 +7366,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
         }
       } 
       current_statement__ = 32;
-      if (lcm_sym23__) {
+      if (lcm_sym22__) {
         current_statement__ = 32;
         check_less_or_equal(function__, "node2[sym1__]",
                             rvalue(node2, "node2", index_uni(1)), N);
@@ -7391,8 +7390,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
         E_flat__ = context__.vals_r("E");
         current_statement__ = 34;
         pos__ = 1;
-        lcm_sym22__ = logical_gte(N, 1);
-        if (lcm_sym22__) {
+        lcm_sym21__ = logical_gte(N, 1);
+        if (lcm_sym21__) {
           current_statement__ = 34;
           assign(E, rvalue(E_flat__, "E_flat__", index_uni(1)),
             "assigning variable E", index_uni(1));
@@ -7408,7 +7407,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
         } 
       }
       current_statement__ = 34;
-      if (lcm_sym22__) {
+      if (lcm_sym21__) {
         current_statement__ = 34;
         check_greater_or_equal(function__, "E[sym1__]",
                                rvalue(E, "E", index_uni(1)), 0);
@@ -7429,10 +7428,10 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       current_statement__ = 37;
       phi_std_raw_1dim__ = std::numeric_limits<int>::min();
       
-      lcm_sym24__ = (N - 1);
-      phi_std_raw_1dim__ = lcm_sym24__;
+      lcm_sym23__ = (N - 1);
+      phi_std_raw_1dim__ = lcm_sym23__;
       current_statement__ = 37;
-      validate_non_negative_index("phi_std_raw", "N - 1", lcm_sym24__);
+      validate_non_negative_index("phi_std_raw", "N - 1", lcm_sym23__);
       current_statement__ = 38;
       validate_non_negative_index("phi", "N", N);
       current_statement__ = 39;
@@ -7470,12 +7469,12 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     (void) function__;  // suppress unused var warning
     
     try {
-      local_scalar_t__ lcm_sym20__;
-      double lcm_sym19__;
+      local_scalar_t__ lcm_sym19__;
       double lcm_sym18__;
-      Eigen::Matrix<double, -1, 1> lcm_sym17__;
-      double lcm_sym16__;
-      int lcm_sym21__;
+      double lcm_sym17__;
+      Eigen::Matrix<double, -1, 1> lcm_sym16__;
+      double lcm_sym15__;
+      int lcm_sym20__;
       local_scalar_t__ tau_phi;
       tau_phi = DUMMY_VAR__;
       
@@ -7486,28 +7485,28 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       phi_std_raw = Eigen::Matrix<local_scalar_t__, -1, 1>((N - 1));
       stan::math::fill(phi_std_raw, DUMMY_VAR__);
       
-      lcm_sym21__ = (N - 1);
+      lcm_sym20__ = (N - 1);
       phi_std_raw = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
-                      lcm_sym21__);
+                      lcm_sym20__);
       local_scalar_t__ sigma_phi;
       sigma_phi = DUMMY_VAR__;
       
-      lcm_sym20__ = inv_sqrt(tau_phi);
-      sigma_phi = lcm_sym20__;
+      lcm_sym19__ = inv_sqrt(tau_phi);
+      sigma_phi = lcm_sym19__;
       Eigen::Matrix<local_scalar_t__, -1, 1> phi;
       phi = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(phi, DUMMY_VAR__);
       
       current_statement__ = 5;
       assign(phi, phi_std_raw,
-        "assigning variable phi", index_min_max(1, lcm_sym21__));
+        "assigning variable phi", index_min_max(1, lcm_sym20__));
       current_statement__ = 6;
       assign(phi, -sum(phi_std_raw), "assigning variable phi", index_uni(N));
       current_statement__ = 7;
-      assign(phi, multiply(stan::model::deep_copy(phi), lcm_sym20__),
+      assign(phi, multiply(stan::model::deep_copy(phi), lcm_sym19__),
         "assigning variable phi");
       current_statement__ = 3;
-      check_greater_or_equal(function__, "sigma_phi", lcm_sym20__, 0);
+      check_greater_or_equal(function__, "sigma_phi", lcm_sym19__, 0);
       {
         current_statement__ = 25;
         lp_accum__.add(
@@ -7550,17 +7549,17 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     (void) function__;  // suppress unused var warning
     
     try {
-      double lcm_sym11__;
       double lcm_sym10__;
-      Eigen::Matrix<double, -1, 1> lcm_sym9__;
+      double lcm_sym9__;
       Eigen::Matrix<double, -1, 1> lcm_sym8__;
-      double lcm_sym13__;
+      Eigen::Matrix<double, -1, 1> lcm_sym7__;
       double lcm_sym12__;
-      int lcm_sym7__;
+      double lcm_sym11__;
       int lcm_sym6__;
-      double lcm_sym5__;
-      int lcm_sym14__;
-      int lcm_sym3__;
+      int lcm_sym5__;
+      double lcm_sym4__;
+      int lcm_sym13__;
+      int lcm_sym2__;
       double tau_phi;
       tau_phi = std::numeric_limits<double>::quiet_NaN();
       
@@ -7571,9 +7570,9 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       phi_std_raw = Eigen::Matrix<double, -1, 1>((N - 1));
       stan::math::fill(phi_std_raw, std::numeric_limits<double>::quiet_NaN());
       
-      lcm_sym14__ = (N - 1);
+      lcm_sym13__ = (N - 1);
       phi_std_raw = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
-                      lcm_sym14__);
+                      lcm_sym13__);
       double sigma_phi;
       sigma_phi = std::numeric_limits<double>::quiet_NaN();
       
@@ -7587,20 +7586,20 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
             primitive_value(emit_generated_quantities__)))) {
         return ;
       } 
-      lcm_sym10__ = inv_sqrt(tau_phi);
-      sigma_phi = lcm_sym10__;
+      lcm_sym9__ = inv_sqrt(tau_phi);
+      sigma_phi = lcm_sym9__;
       current_statement__ = 5;
       assign(phi, phi_std_raw,
-        "assigning variable phi", index_min_max(1, lcm_sym14__));
+        "assigning variable phi", index_min_max(1, lcm_sym13__));
       current_statement__ = 6;
       assign(phi, -sum(phi_std_raw), "assigning variable phi", index_uni(N));
       current_statement__ = 7;
-      assign(phi, multiply(stan::model::deep_copy(phi), lcm_sym10__),
+      assign(phi, multiply(stan::model::deep_copy(phi), lcm_sym9__),
         "assigning variable phi");
       current_statement__ = 3;
-      check_greater_or_equal(function__, "sigma_phi", lcm_sym10__, 0);
+      check_greater_or_equal(function__, "sigma_phi", lcm_sym9__, 0);
       if (emit_transformed_parameters__) {
-        out__.write(lcm_sym10__);
+        out__.write(lcm_sym9__);
         out__.write(phi);
       } 
       if (logical_negation(emit_generated_quantities__)) {
@@ -7637,8 +7636,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       beta0 = normal_rng(0, 1, base_rng__);
       current_statement__ = 17;
       beta1 = normal_rng(0, 1, base_rng__);
-      lcm_sym3__ = logical_gte(N, 1);
-      if (lcm_sym3__) {
+      lcm_sym2__ = logical_gte(N, 1);
+      if (lcm_sym2__) {
         current_statement__ = 18;
         assign(theta_std, normal_rng(0, 1, base_rng__),
           "assigning variable theta_std", index_uni(1));
@@ -7650,13 +7649,13 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       } 
       current_statement__ = 20;
       tau_theta = gamma_rng(3.2761, 1.81, base_rng__);
-      lcm_sym11__ = inv_sqrt(tau_theta);
-      sigma_theta = lcm_sym11__;
-      assign(lcm_sym9__, multiply(theta_std, lcm_sym11__),
-        "assigning variable lcm_sym9__");
-      assign(theta, lcm_sym9__, "assigning variable theta");
+      lcm_sym10__ = inv_sqrt(tau_theta);
+      sigma_theta = lcm_sym10__;
+      assign(lcm_sym8__, multiply(theta_std, lcm_sym10__),
+        "assigning variable lcm_sym8__");
+      assign(theta, lcm_sym8__, "assigning variable theta");
       current_statement__ = 24;
-      if (lcm_sym3__) {
+      if (lcm_sym2__) {
         current_statement__ = 21;
         assign(x, normal_rng(0, 1, base_rng__),
           "assigning variable x", index_uni(1));
@@ -7666,7 +7665,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
             ((stan::math::fma(beta1, rvalue(x, "x", index_uni(1)),
                 (rvalue(stan::math::log(E), "log(E)", index_uni(1)) + beta0))
                + rvalue(phi, "phi", index_uni(1))) +
-              rvalue(lcm_sym9__, "lcm_sym9__", index_uni(1))), base_rng__),
+              rvalue(lcm_sym8__, "lcm_sym8__", index_uni(1))), base_rng__),
           "assigning variable y", index_uni(1));
         for (int i = 2; i <= N; ++i) {
           current_statement__ = 21;
@@ -7678,19 +7677,19 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
               ((stan::math::fma(beta1, rvalue(x, "x", index_uni(i)),
                   (rvalue(stan::math::log(E), "log(E)", index_uni(i)) +
                     beta0)) + rvalue(phi, "phi", index_uni(i))) +
-                rvalue(lcm_sym9__, "lcm_sym9__", index_uni(i))), base_rng__),
+                rvalue(lcm_sym8__, "lcm_sym8__", index_uni(i))), base_rng__),
             "assigning variable y", index_uni(i));
         }
       } 
       current_statement__ = 10;
       check_greater_or_equal(function__, "tau_theta", tau_theta, 0);
       current_statement__ = 11;
-      check_greater_or_equal(function__, "sigma_theta", lcm_sym11__, 0);
+      check_greater_or_equal(function__, "sigma_theta", lcm_sym10__, 0);
       out__.write(beta0);
       out__.write(beta1);
       out__.write(tau_theta);
-      out__.write(lcm_sym11__);
-      out__.write(lcm_sym9__);
+      out__.write(lcm_sym10__);
+      out__.write(lcm_sym8__);
       out__.write(theta_std);
       out__.write(x);
       out__.write(y);
@@ -7714,7 +7713,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
-      int lcm_sym2__;
+      int lcm_sym1__;
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
@@ -7728,9 +7727,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       phi_std_raw = Eigen::Matrix<local_scalar_t__, -1, 1>((N - 1));
       stan::math::fill(phi_std_raw, DUMMY_VAR__);
       
-      lcm_sym2__ = (N - 1);
       assign(phi_std_raw,
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lcm_sym2__),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>((N - 1)),
         "assigning variable phi_std_raw");
       out__.write(phi_std_raw);
     } catch (const std::exception& e) {
@@ -7768,16 +7766,16 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     final {
     
     param_names__.emplace_back(std::string() + "tau_phi");
-    for (int sym35__ = 1; sym35__ <= phi_std_raw_1dim__; ++sym35__) {
+    for (int sym34__ = 1; sym34__ <= phi_std_raw_1dim__; ++sym34__) {
       {
-        param_names__.emplace_back(std::string() + "phi_std_raw" + '.' + std::to_string(sym35__));
+        param_names__.emplace_back(std::string() + "phi_std_raw" + '.' + std::to_string(sym34__));
       } 
     }
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "sigma_phi");
-      for (int sym35__ = 1; sym35__ <= N; ++sym35__) {
+      for (int sym34__ = 1; sym34__ <= N; ++sym34__) {
         {
-          param_names__.emplace_back(std::string() + "phi" + '.' + std::to_string(sym35__));
+          param_names__.emplace_back(std::string() + "phi" + '.' + std::to_string(sym34__));
         } 
       }
     }
@@ -7787,24 +7785,24 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       param_names__.emplace_back(std::string() + "beta1");
       param_names__.emplace_back(std::string() + "tau_theta");
       param_names__.emplace_back(std::string() + "sigma_theta");
-      for (int sym35__ = 1; sym35__ <= N; ++sym35__) {
+      for (int sym34__ = 1; sym34__ <= N; ++sym34__) {
         {
-          param_names__.emplace_back(std::string() + "theta" + '.' + std::to_string(sym35__));
+          param_names__.emplace_back(std::string() + "theta" + '.' + std::to_string(sym34__));
         } 
       }
-      for (int sym35__ = 1; sym35__ <= N; ++sym35__) {
+      for (int sym34__ = 1; sym34__ <= N; ++sym34__) {
         {
-          param_names__.emplace_back(std::string() + "theta_std" + '.' + std::to_string(sym35__));
+          param_names__.emplace_back(std::string() + "theta_std" + '.' + std::to_string(sym34__));
         } 
       }
-      for (int sym35__ = 1; sym35__ <= N; ++sym35__) {
+      for (int sym34__ = 1; sym34__ <= N; ++sym34__) {
         {
-          param_names__.emplace_back(std::string() + "x" + '.' + std::to_string(sym35__));
+          param_names__.emplace_back(std::string() + "x" + '.' + std::to_string(sym34__));
         } 
       }
-      for (int sym35__ = 1; sym35__ <= N; ++sym35__) {
+      for (int sym34__ = 1; sym34__ <= N; ++sym34__) {
         {
-          param_names__.emplace_back(std::string() + "y" + '.' + std::to_string(sym35__));
+          param_names__.emplace_back(std::string() + "y" + '.' + std::to_string(sym34__));
         } 
       }
     }
@@ -7818,16 +7816,16 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     final {
     
     param_names__.emplace_back(std::string() + "tau_phi");
-    for (int sym35__ = 1; sym35__ <= phi_std_raw_1dim__; ++sym35__) {
+    for (int sym34__ = 1; sym34__ <= phi_std_raw_1dim__; ++sym34__) {
       {
-        param_names__.emplace_back(std::string() + "phi_std_raw" + '.' + std::to_string(sym35__));
+        param_names__.emplace_back(std::string() + "phi_std_raw" + '.' + std::to_string(sym34__));
       } 
     }
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "sigma_phi");
-      for (int sym35__ = 1; sym35__ <= N; ++sym35__) {
+      for (int sym34__ = 1; sym34__ <= N; ++sym34__) {
         {
-          param_names__.emplace_back(std::string() + "phi" + '.' + std::to_string(sym35__));
+          param_names__.emplace_back(std::string() + "phi" + '.' + std::to_string(sym34__));
         } 
       }
     }
@@ -7837,24 +7835,24 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       param_names__.emplace_back(std::string() + "beta1");
       param_names__.emplace_back(std::string() + "tau_theta");
       param_names__.emplace_back(std::string() + "sigma_theta");
-      for (int sym35__ = 1; sym35__ <= N; ++sym35__) {
+      for (int sym34__ = 1; sym34__ <= N; ++sym34__) {
         {
-          param_names__.emplace_back(std::string() + "theta" + '.' + std::to_string(sym35__));
+          param_names__.emplace_back(std::string() + "theta" + '.' + std::to_string(sym34__));
         } 
       }
-      for (int sym35__ = 1; sym35__ <= N; ++sym35__) {
+      for (int sym34__ = 1; sym34__ <= N; ++sym34__) {
         {
-          param_names__.emplace_back(std::string() + "theta_std" + '.' + std::to_string(sym35__));
+          param_names__.emplace_back(std::string() + "theta_std" + '.' + std::to_string(sym34__));
         } 
       }
-      for (int sym35__ = 1; sym35__ <= N; ++sym35__) {
+      for (int sym34__ = 1; sym34__ <= N; ++sym34__) {
         {
-          param_names__.emplace_back(std::string() + "x" + '.' + std::to_string(sym35__));
+          param_names__.emplace_back(std::string() + "x" + '.' + std::to_string(sym34__));
         } 
       }
-      for (int sym35__ = 1; sym35__ <= N; ++sym35__) {
+      for (int sym34__ = 1; sym34__ <= N; ++sym34__) {
         {
-          param_names__.emplace_back(std::string() + "y" + '.' + std::to_string(sym35__));
+          param_names__.emplace_back(std::string() + "y" + '.' + std::to_string(sym34__));
         } 
       }
     }
@@ -9754,7 +9752,6 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
         }
       } 
       if (emit_transformed_parameters__) {
-        lcm_sym54__ = (n_occasions - 1);
         out__.write(phi);
         out__.write(p);
         out__.write(inline_sym1__);
@@ -13272,7 +13269,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       assign(beta,
         in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_occasions),
         "assigning variable beta");
-      out__.write_free_lb(0, n_occasions, beta);
+      out__.write_free_lb(0, beta);
       Eigen::Matrix<local_scalar_t__, -1, 1> epsilon;
       epsilon = Eigen::Matrix<local_scalar_t__, -1, 1>(M);
       stan::math::fill(epsilon, DUMMY_VAR__);
@@ -14371,7 +14368,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       
       assign(pi, in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(K),
         "assigning variable pi");
-      out__.write_free_simplex(K, pi);
+      out__.write_free_simplex(pi);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> theta;
       theta = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(J, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(K)));
       stan::math::fill(theta, DUMMY_VAR__);
@@ -14379,7 +14376,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       assign(theta,
         in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
           J, K, K), "assigning variable theta");
-      out__.write_free_simplex(J, K, K, theta);
+      out__.write_free_simplex(theta);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -17187,7 +17184,6 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
         }
       } 
       if (emit_transformed_parameters__) {
-        lcm_sym54__ = (n_occasions - 1);
         out__.write(phi);
         out__.write(p);
         out__.write(inline_sym1__);
@@ -17231,7 +17227,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       assign(beta,
         in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(max_age),
         "assigning variable beta");
-      out__.write_free_lub(0, 1, max_age, beta);
+      out__.write_free_lub(0, 1, beta);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -18438,7 +18434,6 @@ return seq_cprob(gamma, pstream__);
 class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> {
 
  private:
-  int lcm_sym304__;
   int lcm_sym303__;
   int lcm_sym302__;
   int lcm_sym301__;
@@ -18462,6 +18457,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
   int lcm_sym283__;
   int lcm_sym282__;
   int lcm_sym281__;
+  int lcm_sym280__;
   int M;
   int n_occasions;
   std::vector<std::vector<int>> y;
@@ -18557,11 +18553,11 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         y_flat__ = context__.vals_i("y");
         current_statement__ = 106;
         pos__ = 1;
-        lcm_sym282__ = logical_gte(n_occasions, 1);
-        if (lcm_sym282__) {
+        lcm_sym281__ = logical_gte(n_occasions, 1);
+        if (lcm_sym281__) {
           {
-            lcm_sym281__ = logical_gte(M, 1);
-            if (lcm_sym281__) {
+            lcm_sym280__ = logical_gte(M, 1);
+            if (lcm_sym280__) {
               current_statement__ = 106;
               assign(y, rvalue(y_flat__, "y_flat__", index_uni(1)),
                 "assigning variable y", index_uni(1), index_uni(1));
@@ -18577,7 +18573,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             } 
             for (int sym1__ = 2; sym1__ <= n_occasions; ++sym1__) {
               current_statement__ = 106;
-              if (lcm_sym281__) {
+              if (lcm_sym280__) {
                 current_statement__ = 106;
                 assign(y, y_flat__[(pos__ - 1)],
                   "assigning variable y", index_uni(1), index_uni(sym1__));
@@ -18595,13 +18591,13 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             }
           }
         } else {
-          lcm_sym281__ = logical_gte(M, 1);
+          lcm_sym280__ = logical_gte(M, 1);
         }
       }
       current_statement__ = 106;
-      if (lcm_sym281__) {
+      if (lcm_sym280__) {
         current_statement__ = 106;
-        if (lcm_sym282__) {
+        if (lcm_sym281__) {
           current_statement__ = 106;
           check_greater_or_equal(function__, "y[sym1__, sym2__]",
                                  rvalue(y, "y", index_uni(1), index_uni(1)),
@@ -18615,7 +18611,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         } 
         for (int sym1__ = 2; sym1__ <= M; ++sym1__) {
           current_statement__ = 106;
-          if (lcm_sym282__) {
+          if (lcm_sym281__) {
             current_statement__ = 106;
             check_greater_or_equal(function__, "y[sym1__, sym2__]",
                                    rvalue(y, "y",
@@ -18629,9 +18625,9 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         }
       } 
       current_statement__ = 106;
-      if (lcm_sym281__) {
+      if (lcm_sym280__) {
         current_statement__ = 106;
-        if (lcm_sym282__) {
+        if (lcm_sym281__) {
           current_statement__ = 106;
           check_less_or_equal(function__, "y[sym1__, sym2__]",
                               rvalue(y, "y", index_uni(1), index_uni(1)), 1);
@@ -18644,7 +18640,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         } 
         for (int sym1__ = 2; sym1__ <= M; ++sym1__) {
           current_statement__ = 106;
-          if (lcm_sym282__) {
+          if (lcm_sym281__) {
             current_statement__ = 106;
             check_less_or_equal(function__, "y[sym1__, sym2__]",
                                 rvalue(y, "y",
@@ -18668,15 +18664,15 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       last = std::vector<int>(M, std::numeric_limits<int>::min());
       
       current_statement__ = 112;
-      if (lcm_sym281__) {
+      if (lcm_sym280__) {
         int inline_sym41__;
         int inline_sym43__;
         inline_sym43__ = std::numeric_limits<int>::min();
         
         inline_sym43__ = 0;
         for (int inline_sym44__ = 1; inline_sym44__ <= 1; ++inline_sym44__) {
-          lcm_sym290__ = size(rvalue(y, "y", index_uni(1)));
-          for (int inline_sym42__ = 1; inline_sym42__ <= lcm_sym290__;
+          lcm_sym289__ = size(rvalue(y, "y", index_uni(1)));
+          for (int inline_sym42__ = 1; inline_sym42__ <= lcm_sym289__;
                ++inline_sym42__) {
             current_statement__ = 58;
             if (rvalue(y, "y", index_uni(1))[(inline_sym42__ - 1)]) {
@@ -18701,8 +18697,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           
           inline_sym43__ = 0;
           for (int inline_sym44__ = 1; inline_sym44__ <= 1; ++inline_sym44__) {
-            lcm_sym289__ = size(rvalue(y, "y", index_uni(i)));
-            for (int inline_sym42__ = 1; inline_sym42__ <= lcm_sym289__;
+            lcm_sym288__ = size(rvalue(y, "y", index_uni(i)));
+            for (int inline_sym42__ = 1; inline_sym42__ <= lcm_sym288__;
                  ++inline_sym42__) {
               current_statement__ = 58;
               if (rvalue(y, "y", index_uni(i))[(inline_sym42__ - 1)]) {
@@ -18723,26 +18719,26 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         }
       } 
       current_statement__ = 119;
-      if (lcm_sym281__) {
+      if (lcm_sym280__) {
         int inline_sym45__;
         int inline_sym48__;
         inline_sym48__ = std::numeric_limits<int>::min();
         
         inline_sym48__ = 0;
         for (int inline_sym49__ = 1; inline_sym49__ <= 1; ++inline_sym49__) {
-          lcm_sym290__ = size(rvalue(y, "y", index_uni(1)));
-          lcm_sym287__ = (lcm_sym290__ - 1);
-          for (int inline_sym47__ = 0; inline_sym47__ <= lcm_sym287__;
+          lcm_sym289__ = size(rvalue(y, "y", index_uni(1)));
+          lcm_sym286__ = (lcm_sym289__ - 1);
+          for (int inline_sym47__ = 0; inline_sym47__ <= lcm_sym286__;
                ++inline_sym47__) {
             int inline_sym46__;
             inline_sym46__ = std::numeric_limits<int>::min();
             
-            lcm_sym286__ = (lcm_sym290__ - inline_sym47__);
-            inline_sym46__ = lcm_sym286__;
+            lcm_sym285__ = (lcm_sym289__ - inline_sym47__);
+            inline_sym46__ = lcm_sym285__;
             current_statement__ = 115;
-            if (rvalue(y, "y", index_uni(1))[(lcm_sym286__ - 1)]) {
+            if (rvalue(y, "y", index_uni(1))[(lcm_sym285__ - 1)]) {
               inline_sym48__ = 1;
-              inline_sym45__ = lcm_sym286__;
+              inline_sym45__ = lcm_sym285__;
               break;
             } 
           }
@@ -18761,19 +18757,19 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           
           inline_sym48__ = 0;
           for (int inline_sym49__ = 1; inline_sym49__ <= 1; ++inline_sym49__) {
-            lcm_sym289__ = size(rvalue(y, "y", index_uni(i)));
-            lcm_sym285__ = (lcm_sym289__ - 1);
-            for (int inline_sym47__ = 0; inline_sym47__ <= lcm_sym285__;
+            lcm_sym288__ = size(rvalue(y, "y", index_uni(i)));
+            lcm_sym284__ = (lcm_sym288__ - 1);
+            for (int inline_sym47__ = 0; inline_sym47__ <= lcm_sym284__;
                  ++inline_sym47__) {
               int inline_sym46__;
               inline_sym46__ = std::numeric_limits<int>::min();
               
-              lcm_sym284__ = (lcm_sym289__ - inline_sym47__);
-              inline_sym46__ = lcm_sym284__;
+              lcm_sym283__ = (lcm_sym288__ - inline_sym47__);
+              inline_sym46__ = lcm_sym283__;
               current_statement__ = 115;
-              if (rvalue(y, "y", index_uni(i))[(lcm_sym284__ - 1)]) {
+              if (rvalue(y, "y", index_uni(i))[(lcm_sym283__ - 1)]) {
                 inline_sym48__ = 1;
-                inline_sym45__ = lcm_sym284__;
+                inline_sym45__ = lcm_sym283__;
                 break;
               } 
             }
@@ -18789,7 +18785,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         }
       } 
       current_statement__ = 108;
-      if (lcm_sym281__) {
+      if (lcm_sym280__) {
         current_statement__ = 108;
         check_greater_or_equal(function__, "first[sym1__]",
                                rvalue(first, "first", index_uni(1)), 0);
@@ -18800,7 +18796,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         }
       } 
       current_statement__ = 108;
-      if (lcm_sym281__) {
+      if (lcm_sym280__) {
         current_statement__ = 108;
         check_less_or_equal(function__, "first[sym1__]",
                             rvalue(first, "first", index_uni(1)), n_occasions);
@@ -18811,7 +18807,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         }
       } 
       current_statement__ = 110;
-      if (lcm_sym281__) {
+      if (lcm_sym280__) {
         current_statement__ = 110;
         check_greater_or_equal(function__, "last[sym1__]",
                                rvalue(last, "last", index_uni(1)), 0);
@@ -18822,7 +18818,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         }
       } 
       current_statement__ = 110;
-      if (lcm_sym281__) {
+      if (lcm_sym280__) {
         current_statement__ = 110;
         check_less_or_equal(function__, "last[sym1__]",
                             rvalue(last, "last", index_uni(1)), n_occasions);
@@ -18837,19 +18833,19 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       current_statement__ = 121;
       epsilon_1dim__ = std::numeric_limits<int>::min();
       
-      lcm_sym283__ = (n_occasions - 1);
-      epsilon_1dim__ = lcm_sym283__;
+      lcm_sym282__ = (n_occasions - 1);
+      epsilon_1dim__ = lcm_sym282__;
       current_statement__ = 121;
-      validate_non_negative_index("epsilon", "n_occasions - 1", lcm_sym283__);
+      validate_non_negative_index("epsilon", "n_occasions - 1", lcm_sym282__);
       current_statement__ = 122;
       validate_non_negative_index("phi", "M", M);
       current_statement__ = 123;
       phi_2dim__ = std::numeric_limits<int>::min();
       
       current_statement__ = 123;
-      phi_2dim__ = lcm_sym283__;
+      phi_2dim__ = lcm_sym282__;
       current_statement__ = 123;
-      validate_non_negative_index("phi", "n_occasions - 1", lcm_sym283__);
+      validate_non_negative_index("phi", "n_occasions - 1", lcm_sym282__);
       current_statement__ = 124;
       validate_non_negative_index("p", "M", M);
       current_statement__ = 125;
@@ -18895,34 +18891,33 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     (void) function__;  // suppress unused var warning
     
     try {
-      double lcm_sym280__;
       double lcm_sym279__;
       double lcm_sym278__;
       double lcm_sym277__;
-      int lcm_sym276__;
+      double lcm_sym276__;
       int lcm_sym275__;
-      double lcm_sym274__;
+      int lcm_sym274__;
       double lcm_sym273__;
       double lcm_sym272__;
       double lcm_sym271__;
-      int lcm_sym270__;
+      double lcm_sym270__;
       int lcm_sym269__;
-      double lcm_sym268__;
+      int lcm_sym268__;
       double lcm_sym267__;
       double lcm_sym266__;
       double lcm_sym265__;
-      int lcm_sym264__;
+      double lcm_sym264__;
       int lcm_sym263__;
-      int lcm_sym261__;
-      Eigen::Matrix<local_scalar_t__, -1, -1> lcm_sym260__;
-      double lcm_sym259__;
+      int lcm_sym262__;
+      int lcm_sym260__;
+      Eigen::Matrix<local_scalar_t__, -1, -1> lcm_sym259__;
       double lcm_sym258__;
-      local_scalar_t__ lcm_sym257__;
+      double lcm_sym257__;
       local_scalar_t__ lcm_sym256__;
-      double lcm_sym255__;
+      local_scalar_t__ lcm_sym255__;
       double lcm_sym254__;
-      int lcm_sym253__;
-      double lcm_sym252__;
+      double lcm_sym253__;
+      int lcm_sym252__;
       double lcm_sym251__;
       double lcm_sym250__;
       double lcm_sym249__;
@@ -18935,10 +18930,10 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       double lcm_sym242__;
       double lcm_sym241__;
       double lcm_sym240__;
-      int lcm_sym239__;
+      double lcm_sym239__;
       int lcm_sym238__;
       int lcm_sym237__;
-      double lcm_sym236__;
+      int lcm_sym236__;
       double lcm_sym235__;
       double lcm_sym234__;
       double lcm_sym233__;
@@ -18952,17 +18947,17 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       double lcm_sym225__;
       double lcm_sym224__;
       double lcm_sym223__;
-      int lcm_sym222__;
+      double lcm_sym222__;
       int lcm_sym221__;
       int lcm_sym220__;
       int lcm_sym219__;
       int lcm_sym218__;
       int lcm_sym217__;
-      Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym216__;
+      int lcm_sym216__;
       Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym215__;
       Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym214__;
-      int lcm_sym262__;
-      int lcm_sym212__;
+      Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym213__;
+      int lcm_sym261__;
       int lcm_sym211__;
       int lcm_sym210__;
       int lcm_sym209__;
@@ -18974,6 +18969,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       int lcm_sym203__;
       int lcm_sym202__;
       int lcm_sym201__;
+      int lcm_sym200__;
       local_scalar_t__ mean_phi;
       mean_phi = DUMMY_VAR__;
       
@@ -18997,9 +18993,9 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       epsilon = Eigen::Matrix<local_scalar_t__, -1, 1>((n_occasions - 1));
       stan::math::fill(epsilon, DUMMY_VAR__);
       
-      lcm_sym262__ = (n_occasions - 1);
+      lcm_sym261__ = (n_occasions - 1);
       epsilon = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
-                  lcm_sym262__);
+                  lcm_sym261__);
       local_scalar_t__ sigma;
       sigma = DUMMY_VAR__;
       
@@ -19007,7 +19003,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       sigma = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                 0, 5, lp__);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
-      phi = Eigen::Matrix<local_scalar_t__, -1, -1>(M, lcm_sym262__);
+      phi = Eigen::Matrix<local_scalar_t__, -1, -1>(M, lcm_sym261__);
       stan::math::fill(phi, DUMMY_VAR__);
       
       Eigen::Matrix<local_scalar_t__, -1, -1> p;
@@ -19018,44 +19014,44 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       chi = Eigen::Matrix<local_scalar_t__, -1, -1>(M, n_occasions);
       stan::math::fill(chi, DUMMY_VAR__);
       
-      lcm_sym205__ = logical_gte(lcm_sym262__, 1);
-      if (lcm_sym205__) {
+      lcm_sym204__ = logical_gte(lcm_sym261__, 1);
+      if (lcm_sym204__) {
         {
-          lcm_sym203__ = logical_gte(M, 1);
-          if (lcm_sym203__) {
-            lcm_sym257__ = inv_logit(
+          lcm_sym202__ = logical_gte(M, 1);
+          if (lcm_sym202__) {
+            lcm_sym256__ = inv_logit(
                              (logit(mean_phi) +
                                rvalue(epsilon, "epsilon", index_uni(1))));
-            assign(phi, lcm_sym257__,
+            assign(phi, lcm_sym256__,
               "assigning variable phi", index_uni(1), index_uni(1));
             for (int i = 2; i <= M; ++i) {
               current_statement__ = 9;
-              assign(phi, lcm_sym257__,
+              assign(phi, lcm_sym256__,
                 "assigning variable phi", index_uni(i), index_uni(1));
             }
           } 
-          for (int t = 2; t <= lcm_sym262__; ++t) {
+          for (int t = 2; t <= lcm_sym261__; ++t) {
             current_statement__ = 10;
-            if (lcm_sym203__) {
-              lcm_sym256__ = inv_logit(
+            if (lcm_sym202__) {
+              lcm_sym255__ = inv_logit(
                                (logit(mean_phi) +
                                  rvalue(epsilon, "epsilon", index_uni(t))));
-              assign(phi, lcm_sym256__,
+              assign(phi, lcm_sym255__,
                 "assigning variable phi", index_uni(1), index_uni(t));
               for (int i = 2; i <= M; ++i) {
                 current_statement__ = 9;
-                assign(phi, lcm_sym256__,
+                assign(phi, lcm_sym255__,
                   "assigning variable phi", index_uni(i), index_uni(t));
               }
             } 
           }
         }
       } else {
-        lcm_sym203__ = logical_gte(M, 1);
+        lcm_sym202__ = logical_gte(M, 1);
       }
-      assign(lcm_sym260__, rep_matrix(mean_p, M, n_occasions),
-        "assigning variable lcm_sym260__");
-      assign(p, lcm_sym260__, "assigning variable p");
+      assign(lcm_sym259__, rep_matrix(mean_p, M, n_occasions),
+        "assigning variable lcm_sym259__");
+      assign(p, lcm_sym259__, "assigning variable p");
       Eigen::Matrix<local_scalar_t__, -1, -1> inline_sym22__;
       int inline_sym30__;
       inline_sym30__ = std::numeric_limits<int>::min();
@@ -19065,74 +19061,74 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         int inline_sym23__;
         inline_sym23__ = std::numeric_limits<int>::min();
         
-        lcm_sym261__ = rows(lcm_sym260__);
+        lcm_sym260__ = rows(lcm_sym259__);
         int inline_sym24__;
         inline_sym24__ = std::numeric_limits<int>::min();
         
-        lcm_sym253__ = cols(lcm_sym260__);
+        lcm_sym252__ = cols(lcm_sym259__);
         current_statement__ = 13;
-        validate_non_negative_index("chi", "n_ind", lcm_sym261__);
+        validate_non_negative_index("chi", "n_ind", lcm_sym260__);
         current_statement__ = 14;
-        validate_non_negative_index("chi", "n_occasions", lcm_sym253__);
+        validate_non_negative_index("chi", "n_occasions", lcm_sym252__);
         Eigen::Matrix<local_scalar_t__, -1, -1> inline_sym25__;
-        inline_sym25__ = Eigen::Matrix<local_scalar_t__, -1, -1>(lcm_sym261__, lcm_sym253__);
+        inline_sym25__ = Eigen::Matrix<local_scalar_t__, -1, -1>(lcm_sym260__, lcm_sym252__);
         stan::math::fill(inline_sym25__, DUMMY_VAR__);
         
-        for (int inline_sym29__ = 1; inline_sym29__ <= lcm_sym261__;
+        for (int inline_sym29__ = 1; inline_sym29__ <= lcm_sym260__;
              ++inline_sym29__) {
           current_statement__ = 16;
           assign(inline_sym25__, 1.0,
             "assigning variable inline_sym25__", index_uni(inline_sym29__),
-                                                   index_uni(lcm_sym253__));
-          lcm_sym218__ = (lcm_sym253__ - 1);
-          if (logical_gte(lcm_sym218__, 1)) {
+                                                   index_uni(lcm_sym252__));
+          lcm_sym217__ = (lcm_sym252__ - 1);
+          if (logical_gte(lcm_sym217__, 1)) {
             int inline_sym26__;
             inline_sym26__ = std::numeric_limits<int>::min();
             
             int inline_sym27__;
             inline_sym27__ = std::numeric_limits<int>::min();
             
-            lcm_sym222__ = (lcm_sym218__ + 1);
+            lcm_sym221__ = (lcm_sym217__ + 1);
             current_statement__ = 19;
             assign(inline_sym25__,
               stan::math::fma(
                 (rvalue(phi, "phi",
-                   index_uni(inline_sym29__), index_uni(lcm_sym218__)) *
+                   index_uni(inline_sym29__), index_uni(lcm_sym217__)) *
                   (1 -
-                    rvalue(lcm_sym260__, "lcm_sym260__",
-                      index_uni(inline_sym29__), index_uni(lcm_sym222__)))),
+                    rvalue(lcm_sym259__, "lcm_sym259__",
+                      index_uni(inline_sym29__), index_uni(lcm_sym221__)))),
                 rvalue(inline_sym25__, "inline_sym25__",
-                  index_uni(inline_sym29__), index_uni(lcm_sym222__)),
+                  index_uni(inline_sym29__), index_uni(lcm_sym221__)),
                 (1 -
                   rvalue(phi, "phi",
-                    index_uni(inline_sym29__), index_uni(lcm_sym218__)))),
+                    index_uni(inline_sym29__), index_uni(lcm_sym217__)))),
               "assigning variable inline_sym25__", index_uni(inline_sym29__),
-                                                     index_uni(lcm_sym218__));
-            for (int inline_sym28__ = 2; inline_sym28__ <= lcm_sym218__;
+                                                     index_uni(lcm_sym217__));
+            for (int inline_sym28__ = 2; inline_sym28__ <= lcm_sym217__;
                  ++inline_sym28__) {
               int inline_sym26__;
               inline_sym26__ = std::numeric_limits<int>::min();
               
-              lcm_sym217__ = (lcm_sym253__ - inline_sym28__);
+              lcm_sym216__ = (lcm_sym252__ - inline_sym28__);
               int inline_sym27__;
               inline_sym27__ = std::numeric_limits<int>::min();
               
-              lcm_sym221__ = (lcm_sym217__ + 1);
+              lcm_sym220__ = (lcm_sym216__ + 1);
               current_statement__ = 19;
               assign(inline_sym25__,
                 stan::math::fma(
                   (rvalue(phi, "phi",
-                     index_uni(inline_sym29__), index_uni(lcm_sym217__)) *
+                     index_uni(inline_sym29__), index_uni(lcm_sym216__)) *
                     (1 -
-                      rvalue(lcm_sym260__, "lcm_sym260__",
-                        index_uni(inline_sym29__), index_uni(lcm_sym221__)))),
+                      rvalue(lcm_sym259__, "lcm_sym259__",
+                        index_uni(inline_sym29__), index_uni(lcm_sym220__)))),
                   rvalue(inline_sym25__, "inline_sym25__",
-                    index_uni(inline_sym29__), index_uni(lcm_sym221__)),
+                    index_uni(inline_sym29__), index_uni(lcm_sym220__)),
                   (1 -
                     rvalue(phi, "phi",
-                      index_uni(inline_sym29__), index_uni(lcm_sym217__)))),
+                      index_uni(inline_sym29__), index_uni(lcm_sym216__)))),
                 "assigning variable inline_sym25__", index_uni(inline_sym29__),
-                                                       index_uni(lcm_sym217__));
+                                                       index_uni(lcm_sym216__));
             }
           } 
           if (inline_sym30__) {
@@ -19149,14 +19145,14 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       }
       assign(chi, inline_sym22__, "assigning variable chi");
       current_statement__ = 6;
-      if (lcm_sym203__) {
+      if (lcm_sym202__) {
         current_statement__ = 6;
-        if (lcm_sym205__) {
+        if (lcm_sym204__) {
           current_statement__ = 6;
           check_greater_or_equal(function__, "phi[sym1__, sym2__]",
                                  rvalue(phi, "phi",
                                    index_uni(1), index_uni(1)), 0);
-          for (int sym2__ = 2; sym2__ <= lcm_sym262__; ++sym2__) {
+          for (int sym2__ = 2; sym2__ <= lcm_sym261__; ++sym2__) {
             current_statement__ = 6;
             check_greater_or_equal(function__, "phi[sym1__, sym2__]",
                                    rvalue(phi, "phi",
@@ -19165,12 +19161,12 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         } 
         for (int sym1__ = 2; sym1__ <= M; ++sym1__) {
           current_statement__ = 6;
-          if (lcm_sym205__) {
+          if (lcm_sym204__) {
             current_statement__ = 6;
             check_greater_or_equal(function__, "phi[sym1__, sym2__]",
                                    rvalue(phi, "phi",
                                      index_uni(sym1__), index_uni(1)), 0);
-            for (int sym2__ = 2; sym2__ <= lcm_sym262__; ++sym2__) {
+            for (int sym2__ = 2; sym2__ <= lcm_sym261__; ++sym2__) {
               current_statement__ = 6;
               check_greater_or_equal(function__, "phi[sym1__, sym2__]",
                                      rvalue(phi, "phi",
@@ -19181,14 +19177,14 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         }
       } 
       current_statement__ = 6;
-      if (lcm_sym203__) {
+      if (lcm_sym202__) {
         current_statement__ = 6;
-        if (lcm_sym205__) {
+        if (lcm_sym204__) {
           current_statement__ = 6;
           check_less_or_equal(function__, "phi[sym1__, sym2__]",
                               rvalue(phi, "phi", index_uni(1), index_uni(1)),
                               1);
-          for (int sym2__ = 2; sym2__ <= lcm_sym262__; ++sym2__) {
+          for (int sym2__ = 2; sym2__ <= lcm_sym261__; ++sym2__) {
             current_statement__ = 6;
             check_less_or_equal(function__, "phi[sym1__, sym2__]",
                                 rvalue(phi, "phi",
@@ -19197,12 +19193,12 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         } 
         for (int sym1__ = 2; sym1__ <= M; ++sym1__) {
           current_statement__ = 6;
-          if (lcm_sym205__) {
+          if (lcm_sym204__) {
             current_statement__ = 6;
             check_less_or_equal(function__, "phi[sym1__, sym2__]",
                                 rvalue(phi, "phi",
                                   index_uni(sym1__), index_uni(1)), 1);
-            for (int sym2__ = 2; sym2__ <= lcm_sym262__; ++sym2__) {
+            for (int sym2__ = 2; sym2__ <= lcm_sym261__; ++sym2__) {
               current_statement__ = 6;
               check_less_or_equal(function__, "phi[sym1__, sym2__]",
                                   rvalue(phi, "phi",
@@ -19212,31 +19208,31 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         }
       } 
       current_statement__ = 7;
-      if (lcm_sym203__) {
-        lcm_sym204__ = logical_gte(n_occasions, 1);
-        if (lcm_sym204__) {
+      if (lcm_sym202__) {
+        lcm_sym203__ = logical_gte(n_occasions, 1);
+        if (lcm_sym203__) {
           current_statement__ = 7;
           check_greater_or_equal(function__, "p[sym1__, sym2__]",
-                                 rvalue(lcm_sym260__, "lcm_sym260__",
+                                 rvalue(lcm_sym259__, "lcm_sym259__",
                                    index_uni(1), index_uni(1)), 0);
           for (int sym2__ = 2; sym2__ <= n_occasions; ++sym2__) {
             current_statement__ = 7;
             check_greater_or_equal(function__, "p[sym1__, sym2__]",
-                                   rvalue(lcm_sym260__, "lcm_sym260__",
+                                   rvalue(lcm_sym259__, "lcm_sym259__",
                                      index_uni(1), index_uni(sym2__)), 0);
           }
         } 
         for (int sym1__ = 2; sym1__ <= M; ++sym1__) {
           current_statement__ = 7;
-          if (lcm_sym204__) {
+          if (lcm_sym203__) {
             current_statement__ = 7;
             check_greater_or_equal(function__, "p[sym1__, sym2__]",
-                                   rvalue(lcm_sym260__, "lcm_sym260__",
+                                   rvalue(lcm_sym259__, "lcm_sym259__",
                                      index_uni(sym1__), index_uni(1)), 0);
             for (int sym2__ = 2; sym2__ <= n_occasions; ++sym2__) {
               current_statement__ = 7;
               check_greater_or_equal(function__, "p[sym1__, sym2__]",
-                                     rvalue(lcm_sym260__, "lcm_sym260__",
+                                     rvalue(lcm_sym259__, "lcm_sym259__",
                                        index_uni(sym1__), index_uni(sym2__)),
                                      0);
             }
@@ -19244,40 +19240,40 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         }
       } 
       current_statement__ = 7;
-      if (lcm_sym203__) {
-        lcm_sym204__ = logical_gte(n_occasions, 1);
-        if (lcm_sym204__) {
+      if (lcm_sym202__) {
+        lcm_sym203__ = logical_gte(n_occasions, 1);
+        if (lcm_sym203__) {
           current_statement__ = 7;
           check_less_or_equal(function__, "p[sym1__, sym2__]",
-                              rvalue(lcm_sym260__, "lcm_sym260__",
+                              rvalue(lcm_sym259__, "lcm_sym259__",
                                 index_uni(1), index_uni(1)), 1);
           for (int sym2__ = 2; sym2__ <= n_occasions; ++sym2__) {
             current_statement__ = 7;
             check_less_or_equal(function__, "p[sym1__, sym2__]",
-                                rvalue(lcm_sym260__, "lcm_sym260__",
+                                rvalue(lcm_sym259__, "lcm_sym259__",
                                   index_uni(1), index_uni(sym2__)), 1);
           }
         } 
         for (int sym1__ = 2; sym1__ <= M; ++sym1__) {
           current_statement__ = 7;
-          if (lcm_sym204__) {
+          if (lcm_sym203__) {
             current_statement__ = 7;
             check_less_or_equal(function__, "p[sym1__, sym2__]",
-                                rvalue(lcm_sym260__, "lcm_sym260__",
+                                rvalue(lcm_sym259__, "lcm_sym259__",
                                   index_uni(sym1__), index_uni(1)), 1);
             for (int sym2__ = 2; sym2__ <= n_occasions; ++sym2__) {
               current_statement__ = 7;
               check_less_or_equal(function__, "p[sym1__, sym2__]",
-                                  rvalue(lcm_sym260__, "lcm_sym260__",
+                                  rvalue(lcm_sym259__, "lcm_sym259__",
                                     index_uni(sym1__), index_uni(sym2__)), 1);
             }
           } 
         }
       } 
       current_statement__ = 8;
-      if (lcm_sym203__) {
-        lcm_sym204__ = logical_gte(n_occasions, 1);
-        if (lcm_sym204__) {
+      if (lcm_sym202__) {
+        lcm_sym203__ = logical_gte(n_occasions, 1);
+        if (lcm_sym203__) {
           current_statement__ = 8;
           check_greater_or_equal(function__, "chi[sym1__, sym2__]",
                                  rvalue(inline_sym22__, "inline_sym22__",
@@ -19291,7 +19287,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         } 
         for (int sym1__ = 2; sym1__ <= M; ++sym1__) {
           current_statement__ = 8;
-          if (lcm_sym204__) {
+          if (lcm_sym203__) {
             current_statement__ = 8;
             check_greater_or_equal(function__, "chi[sym1__, sym2__]",
                                    rvalue(inline_sym22__, "inline_sym22__",
@@ -19307,9 +19303,9 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         }
       } 
       current_statement__ = 8;
-      if (lcm_sym203__) {
-        lcm_sym204__ = logical_gte(n_occasions, 1);
-        if (lcm_sym204__) {
+      if (lcm_sym202__) {
+        lcm_sym203__ = logical_gte(n_occasions, 1);
+        if (lcm_sym203__) {
           current_statement__ = 8;
           check_less_or_equal(function__, "chi[sym1__, sym2__]",
                               rvalue(inline_sym22__, "inline_sym22__",
@@ -19323,7 +19319,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         } 
         for (int sym1__ = 2; sym1__ <= M; ++sym1__) {
           current_statement__ = 8;
-          if (lcm_sym204__) {
+          if (lcm_sym203__) {
             current_statement__ = 8;
             check_less_or_equal(function__, "chi[sym1__, sym2__]",
                                 rvalue(inline_sym22__, "inline_sym22__",
@@ -19347,112 +19343,112 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           int inline_sym32__;
           inline_sym32__ = std::numeric_limits<int>::min();
           
-          lcm_sym275__ = rvalue(dims(y), "dims(y)", index_uni(1));
+          lcm_sym274__ = rvalue(dims(y), "dims(y)", index_uni(1));
           int inline_sym33__;
           inline_sym33__ = std::numeric_limits<int>::min();
           
-          lcm_sym276__ = rvalue(dims(y), "dims(y)", index_uni(2));
+          lcm_sym275__ = rvalue(dims(y), "dims(y)", index_uni(2));
           current_statement__ = 77;
-          validate_non_negative_index("qgamma", "n_occasions", lcm_sym276__);
+          validate_non_negative_index("qgamma", "n_occasions", lcm_sym275__);
           Eigen::Matrix<double, -1, 1> inline_sym34__;
-          inline_sym34__ = Eigen::Matrix<double, -1, 1>(lcm_sym276__);
+          inline_sym34__ = Eigen::Matrix<double, -1, 1>(lcm_sym275__);
           stan::math::fill(inline_sym34__, std::numeric_limits<double>::quiet_NaN());
           
           
-          assign(lcm_sym214__, subtract(1.0, gamma),
-            "assigning variable lcm_sym214__");
-          lcm_sym211__ = logical_gte(lcm_sym275__, 1);
-          if (lcm_sym211__) {
+          assign(lcm_sym213__, subtract(1.0, gamma),
+            "assigning variable lcm_sym213__");
+          lcm_sym210__ = logical_gte(lcm_sym274__, 1);
+          if (lcm_sym210__) {
             current_statement__ = 79;
-            validate_non_negative_index("qp", "n_occasions", lcm_sym276__);
+            validate_non_negative_index("qp", "n_occasions", lcm_sym275__);
             Eigen::Matrix<double, -1, 1> inline_sym35__;
-            inline_sym35__ = Eigen::Matrix<double, -1, 1>(lcm_sym276__);
+            inline_sym35__ = Eigen::Matrix<double, -1, 1>(lcm_sym275__);
             stan::math::fill(inline_sym35__, std::numeric_limits<double>::quiet_NaN());
             
             
-            assign(lcm_sym216__,
+            assign(lcm_sym215__,
               subtract(1.0,
-                transpose(rvalue(lcm_sym260__, "lcm_sym260__", index_uni(1)))),
-              "assigning variable lcm_sym216__");
-            lcm_sym264__ = rvalue(first, "first", index_uni(1));
-            if (lcm_sym264__) {
+                transpose(rvalue(lcm_sym259__, "lcm_sym259__", index_uni(1)))),
+              "assigning variable lcm_sym215__");
+            lcm_sym263__ = rvalue(first, "first", index_uni(1));
+            if (lcm_sym263__) {
               current_statement__ = 95;
-              if (logical_eq(lcm_sym264__, 1)) {
+              if (logical_eq(lcm_sym263__, 1)) {
                 current_statement__ = 93;
                 lp_accum__.add(
                   bernoulli_lpmf<propto__>(1,
                     (rvalue(gamma, "gamma", index_uni(1)) *
-                      rvalue(lcm_sym260__, "lcm_sym260__",
+                      rvalue(lcm_sym259__, "lcm_sym259__",
                         index_uni(1), index_uni(1)))));
               } else {
                 current_statement__ = 87;
-                validate_non_negative_index("lp", "first[i]", lcm_sym264__);
+                validate_non_negative_index("lp", "first[i]", lcm_sym263__);
                 Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym36__;
-                inline_sym36__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym264__);
+                inline_sym36__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym263__);
                 stan::math::fill(inline_sym36__, DUMMY_VAR__);
                 
-                lcm_sym220__ = (lcm_sym264__ - 1);
+                lcm_sym219__ = (lcm_sym263__ - 1);
                 assign(inline_sym36__,
                   (((bernoulli_lpmf<false>(1,
                        rvalue(gamma, "gamma", index_uni(1))) +
                       bernoulli_lpmf<false>(1,
                         prod(
-                          rvalue(lcm_sym216__, "lcm_sym216__",
-                            index_min_max(1, lcm_sym220__))))) +
+                          rvalue(lcm_sym215__, "lcm_sym215__",
+                            index_min_max(1, lcm_sym219__))))) +
                      bernoulli_lpmf<false>(1,
                        prod(
                          rvalue(phi, "phi",
-                           index_uni(1), index_min_max(1, lcm_sym220__))))) +
+                           index_uni(1), index_min_max(1, lcm_sym219__))))) +
                     bernoulli_lpmf<false>(1,
-                      rvalue(lcm_sym260__, "lcm_sym260__",
-                        index_uni(1), index_uni(lcm_sym264__)))),
+                      rvalue(lcm_sym259__, "lcm_sym259__",
+                        index_uni(1), index_uni(lcm_sym263__)))),
                   "assigning variable inline_sym36__", index_uni(1));
-                if (logical_gte(lcm_sym220__, 2)) {
+                if (logical_gte(lcm_sym219__, 2)) {
                   current_statement__ = 89;
                   assign(inline_sym36__,
                     ((((bernoulli_lpmf<false>(1,
                           prod(
-                            rvalue(lcm_sym214__, "lcm_sym214__",
+                            rvalue(lcm_sym213__, "lcm_sym213__",
                               index_min_max(1, 1)))) +
                          bernoulli_lpmf<false>(1,
                            rvalue(gamma, "gamma", index_uni(2)))) +
                         bernoulli_lpmf<false>(1,
                           prod(
-                            rvalue(lcm_sym216__, "lcm_sym216__",
-                              index_min_max(2, lcm_sym220__))))) +
+                            rvalue(lcm_sym215__, "lcm_sym215__",
+                              index_min_max(2, lcm_sym219__))))) +
                        bernoulli_lpmf<false>(1,
                          prod(
                            rvalue(phi, "phi",
-                             index_uni(1), index_min_max(2, lcm_sym220__)))))
+                             index_uni(1), index_min_max(2, lcm_sym219__)))))
                       +
                       bernoulli_lpmf<false>(1,
-                        rvalue(lcm_sym260__, "lcm_sym260__",
-                          index_uni(1), index_uni(lcm_sym264__)))),
+                        rvalue(lcm_sym259__, "lcm_sym259__",
+                          index_uni(1), index_uni(lcm_sym263__)))),
                     "assigning variable inline_sym36__", index_uni(2));
                   for (int inline_sym37__ = 3;
-                       inline_sym37__ <= lcm_sym220__; ++inline_sym37__) {
+                       inline_sym37__ <= lcm_sym219__; ++inline_sym37__) {
                     current_statement__ = 89;
                     assign(inline_sym36__,
                       ((((bernoulli_lpmf<false>(1,
                             prod(
-                              rvalue(lcm_sym214__, "lcm_sym214__",
+                              rvalue(lcm_sym213__, "lcm_sym213__",
                                 index_min_max(1, (inline_sym37__ - 1))))) +
                            bernoulli_lpmf<false>(1,
                              gamma[(inline_sym37__ - 1)])) +
                           bernoulli_lpmf<false>(1,
                             prod(
-                              rvalue(lcm_sym216__, "lcm_sym216__",
-                                index_min_max(inline_sym37__, lcm_sym220__)))))
+                              rvalue(lcm_sym215__, "lcm_sym215__",
+                                index_min_max(inline_sym37__, lcm_sym219__)))))
                          +
                          bernoulli_lpmf<false>(1,
                            prod(
                              rvalue(phi, "phi",
                                index_uni(1),
-                                 index_min_max(inline_sym37__, lcm_sym220__)))))
+                                 index_min_max(inline_sym37__, lcm_sym219__)))))
                         +
                         bernoulli_lpmf<false>(1,
-                          rvalue(lcm_sym260__, "lcm_sym260__",
-                            index_uni(1), index_uni(lcm_sym264__)))),
+                          rvalue(lcm_sym259__, "lcm_sym259__",
+                            index_uni(1), index_uni(lcm_sym263__)))),
                       "assigning variable inline_sym36__", index_uni(inline_sym37__));
                   }
                 } 
@@ -19460,32 +19456,32 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                 assign(inline_sym36__,
                   ((bernoulli_lpmf<false>(1,
                       prod(
-                        rvalue(lcm_sym214__, "lcm_sym214__",
-                          index_min_max(1, lcm_sym220__)))) +
-                     bernoulli_lpmf<false>(1, gamma[(lcm_sym264__ - 1)])) +
+                        rvalue(lcm_sym213__, "lcm_sym213__",
+                          index_min_max(1, lcm_sym219__)))) +
+                     bernoulli_lpmf<false>(1, gamma[(lcm_sym263__ - 1)])) +
                     bernoulli_lpmf<false>(1,
-                      rvalue(lcm_sym260__, "lcm_sym260__",
-                        index_uni(1), index_uni(lcm_sym264__)))),
-                  "assigning variable inline_sym36__", index_uni(lcm_sym264__));
+                      rvalue(lcm_sym259__, "lcm_sym259__",
+                        index_uni(1), index_uni(lcm_sym263__)))),
+                  "assigning variable inline_sym36__", index_uni(lcm_sym263__));
                 current_statement__ = 91;
                 lp_accum__.add(log_sum_exp(inline_sym36__));
               }
-              lcm_sym270__ = rvalue(last, "last", index_uni(1));
-              if (logical_gte(lcm_sym270__, (lcm_sym264__ + 1))) {
+              lcm_sym269__ = rvalue(last, "last", index_uni(1));
+              if (logical_gte(lcm_sym269__, (lcm_sym263__ + 1))) {
                 current_statement__ = 96;
                 lp_accum__.add(
                   bernoulli_lpmf<propto__>(1,
                     rvalue(phi, "phi",
-                      index_uni(1), index_uni(((lcm_sym264__ + 1) - 1)))));
-                lcm_sym238__ = ((lcm_sym264__ + 1) + 1);
+                      index_uni(1), index_uni(((lcm_sym263__ + 1) - 1)))));
+                lcm_sym237__ = ((lcm_sym263__ + 1) + 1);
                 lp_accum__.add(
                   bernoulli_lpmf<propto__>(
                     rvalue(y, "y",
-                      index_uni(1), index_uni((lcm_sym264__ + 1))),
-                    rvalue(lcm_sym260__, "lcm_sym260__",
-                      index_uni(1), index_uni((lcm_sym264__ + 1)))));
-                for (int inline_sym37__ = lcm_sym238__;
-                     inline_sym37__ <= lcm_sym270__; ++inline_sym37__) {
+                      index_uni(1), index_uni((lcm_sym263__ + 1))),
+                    rvalue(lcm_sym259__, "lcm_sym259__",
+                      index_uni(1), index_uni((lcm_sym263__ + 1)))));
+                for (int inline_sym37__ = lcm_sym237__;
+                     inline_sym37__ <= lcm_sym269__; ++inline_sym37__) {
                   current_statement__ = 96;
                   lp_accum__.add(
                     bernoulli_lpmf<propto__>(1,
@@ -19495,7 +19491,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                   lp_accum__.add(
                     bernoulli_lpmf<propto__>(
                       rvalue(y, "y", index_uni(1), index_uni(inline_sym37__)),
-                      rvalue(lcm_sym260__, "lcm_sym260__",
+                      rvalue(lcm_sym259__, "lcm_sym259__",
                         index_uni(1), index_uni(inline_sym37__))));
                 }
               } 
@@ -19503,13 +19499,13 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
               lp_accum__.add(
                 bernoulli_lpmf<propto__>(1,
                   rvalue(inline_sym22__, "inline_sym22__",
-                    index_uni(1), index_uni(lcm_sym270__))));
+                    index_uni(1), index_uni(lcm_sym269__))));
             } else {
-              lcm_sym239__ = (lcm_sym276__ + 1);
+              lcm_sym238__ = (lcm_sym275__ + 1);
               validate_non_negative_index("lp", "n_occasions + 1",
-                                          lcm_sym239__);
+                                          lcm_sym238__);
               Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym36__;
-              inline_sym36__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym239__);
+              inline_sym36__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym238__);
               stan::math::fill(inline_sym36__, DUMMY_VAR__);
               
               current_statement__ = 82;
@@ -19517,40 +19513,40 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                 ((bernoulli_lpmf<false>(1,
                     rvalue(gamma, "gamma", index_uni(1))) +
                    bernoulli_lpmf<false>(0,
-                     rvalue(lcm_sym260__, "lcm_sym260__",
+                     rvalue(lcm_sym259__, "lcm_sym259__",
                        index_uni(1), index_uni(1)))) +
                   bernoulli_lpmf<false>(1,
                     rvalue(inline_sym22__, "inline_sym22__",
                       index_uni(1), index_uni(1)))),
                 "assigning variable inline_sym36__", index_uni(1));
-              if (logical_gte(lcm_sym276__, 2)) {
+              if (logical_gte(lcm_sym275__, 2)) {
                 current_statement__ = 83;
                 assign(inline_sym36__,
                   (((bernoulli_lpmf<false>(1,
                        prod(
-                         rvalue(lcm_sym214__, "lcm_sym214__",
+                         rvalue(lcm_sym213__, "lcm_sym213__",
                            index_min_max(1, 1)))) +
                       bernoulli_lpmf<false>(1,
                         rvalue(gamma, "gamma", index_uni(2)))) +
                      bernoulli_lpmf<false>(0,
-                       rvalue(lcm_sym260__, "lcm_sym260__",
+                       rvalue(lcm_sym259__, "lcm_sym259__",
                          index_uni(1), index_uni(2)))) +
                     bernoulli_lpmf<false>(1,
                       rvalue(inline_sym22__, "inline_sym22__",
                         index_uni(1), index_uni(2)))),
                   "assigning variable inline_sym36__", index_uni(2));
-                for (int inline_sym37__ = 3; inline_sym37__ <= lcm_sym276__;
+                for (int inline_sym37__ = 3; inline_sym37__ <= lcm_sym275__;
                      ++inline_sym37__) {
                   current_statement__ = 83;
                   assign(inline_sym36__,
                     (((bernoulli_lpmf<false>(1,
                          prod(
-                           rvalue(lcm_sym214__, "lcm_sym214__",
+                           rvalue(lcm_sym213__, "lcm_sym213__",
                              index_min_max(1, (inline_sym37__ - 1))))) +
                         bernoulli_lpmf<false>(1, gamma[(inline_sym37__ - 1)]))
                        +
                        bernoulli_lpmf<false>(0,
-                         rvalue(lcm_sym260__, "lcm_sym260__",
+                         rvalue(lcm_sym259__, "lcm_sym259__",
                            index_uni(1), index_uni(inline_sym37__)))) +
                       bernoulli_lpmf<false>(1,
                         rvalue(inline_sym22__, "inline_sym22__",
@@ -19560,108 +19556,108 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
               } 
               current_statement__ = 84;
               assign(inline_sym36__,
-                bernoulli_lpmf<false>(1, prod(lcm_sym214__)),
-                "assigning variable inline_sym36__", index_uni(lcm_sym239__));
+                bernoulli_lpmf<false>(1, prod(lcm_sym213__)),
+                "assigning variable inline_sym36__", index_uni(lcm_sym238__));
               current_statement__ = 85;
               lp_accum__.add(log_sum_exp(inline_sym36__));
             }
-            for (int inline_sym38__ = 2; inline_sym38__ <= lcm_sym275__;
+            for (int inline_sym38__ = 2; inline_sym38__ <= lcm_sym274__;
                  ++inline_sym38__) {
               current_statement__ = 79;
-              validate_non_negative_index("qp", "n_occasions", lcm_sym276__);
+              validate_non_negative_index("qp", "n_occasions", lcm_sym275__);
               Eigen::Matrix<double, -1, 1> inline_sym35__;
-              inline_sym35__ = Eigen::Matrix<double, -1, 1>(lcm_sym276__);
+              inline_sym35__ = Eigen::Matrix<double, -1, 1>(lcm_sym275__);
               stan::math::fill(inline_sym35__, std::numeric_limits<double>::quiet_NaN());
               
               
-              assign(lcm_sym215__,
+              assign(lcm_sym214__,
                 subtract(1.0,
                   transpose(
-                    rvalue(lcm_sym260__, "lcm_sym260__",
+                    rvalue(lcm_sym259__, "lcm_sym259__",
                       index_uni(inline_sym38__)))),
-                "assigning variable lcm_sym215__");
-              lcm_sym263__ = first[(inline_sym38__ - 1)];
-              if (lcm_sym263__) {
+                "assigning variable lcm_sym214__");
+              lcm_sym262__ = first[(inline_sym38__ - 1)];
+              if (lcm_sym262__) {
                 current_statement__ = 95;
-                if (logical_eq(lcm_sym263__, 1)) {
+                if (logical_eq(lcm_sym262__, 1)) {
                   current_statement__ = 93;
                   lp_accum__.add(
                     bernoulli_lpmf<propto__>(1,
                       (rvalue(gamma, "gamma", index_uni(1)) *
-                        rvalue(lcm_sym260__, "lcm_sym260__",
+                        rvalue(lcm_sym259__, "lcm_sym259__",
                           index_uni(inline_sym38__), index_uni(1)))));
                 } else {
                   current_statement__ = 87;
-                  validate_non_negative_index("lp", "first[i]", lcm_sym263__);
+                  validate_non_negative_index("lp", "first[i]", lcm_sym262__);
                   Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym36__;
-                  inline_sym36__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym263__);
+                  inline_sym36__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym262__);
                   stan::math::fill(inline_sym36__, DUMMY_VAR__);
                   
-                  lcm_sym219__ = (lcm_sym263__ - 1);
+                  lcm_sym218__ = (lcm_sym262__ - 1);
                   assign(inline_sym36__,
                     (((bernoulli_lpmf<false>(1,
                          rvalue(gamma, "gamma", index_uni(1))) +
                         bernoulli_lpmf<false>(1,
                           prod(
-                            rvalue(lcm_sym215__, "lcm_sym215__",
-                              index_min_max(1, lcm_sym219__))))) +
+                            rvalue(lcm_sym214__, "lcm_sym214__",
+                              index_min_max(1, lcm_sym218__))))) +
                        bernoulli_lpmf<false>(1,
                          prod(
                            rvalue(phi, "phi",
                              index_uni(inline_sym38__),
-                               index_min_max(1, lcm_sym219__))))) +
+                               index_min_max(1, lcm_sym218__))))) +
                       bernoulli_lpmf<false>(1,
-                        rvalue(lcm_sym260__, "lcm_sym260__",
-                          index_uni(inline_sym38__), index_uni(lcm_sym263__)))),
+                        rvalue(lcm_sym259__, "lcm_sym259__",
+                          index_uni(inline_sym38__), index_uni(lcm_sym262__)))),
                     "assigning variable inline_sym36__", index_uni(1));
-                  if (logical_gte(lcm_sym219__, 2)) {
+                  if (logical_gte(lcm_sym218__, 2)) {
                     current_statement__ = 89;
                     assign(inline_sym36__,
                       ((((bernoulli_lpmf<false>(1,
                             prod(
-                              rvalue(lcm_sym214__, "lcm_sym214__",
+                              rvalue(lcm_sym213__, "lcm_sym213__",
                                 index_min_max(1, 1)))) +
                            bernoulli_lpmf<false>(1,
                              rvalue(gamma, "gamma", index_uni(2)))) +
                           bernoulli_lpmf<false>(1,
                             prod(
-                              rvalue(lcm_sym215__, "lcm_sym215__",
-                                index_min_max(2, lcm_sym219__))))) +
+                              rvalue(lcm_sym214__, "lcm_sym214__",
+                                index_min_max(2, lcm_sym218__))))) +
                          bernoulli_lpmf<false>(1,
                            prod(
                              rvalue(phi, "phi",
                                index_uni(inline_sym38__),
-                                 index_min_max(2, lcm_sym219__))))) +
+                                 index_min_max(2, lcm_sym218__))))) +
                         bernoulli_lpmf<false>(1,
-                          rvalue(lcm_sym260__, "lcm_sym260__",
+                          rvalue(lcm_sym259__, "lcm_sym259__",
                             index_uni(inline_sym38__),
-                              index_uni(lcm_sym263__)))),
+                              index_uni(lcm_sym262__)))),
                       "assigning variable inline_sym36__", index_uni(2));
                     for (int inline_sym37__ = 3;
-                         inline_sym37__ <= lcm_sym219__; ++inline_sym37__) {
+                         inline_sym37__ <= lcm_sym218__; ++inline_sym37__) {
                       current_statement__ = 89;
                       assign(inline_sym36__,
                         ((((bernoulli_lpmf<false>(1,
                               prod(
-                                rvalue(lcm_sym214__, "lcm_sym214__",
+                                rvalue(lcm_sym213__, "lcm_sym213__",
                                   index_min_max(1, (inline_sym37__ - 1))))) +
                              bernoulli_lpmf<false>(1,
                                gamma[(inline_sym37__ - 1)])) +
                             bernoulli_lpmf<false>(1,
                               prod(
-                                rvalue(lcm_sym215__, "lcm_sym215__",
-                                  index_min_max(inline_sym37__, lcm_sym219__)))))
+                                rvalue(lcm_sym214__, "lcm_sym214__",
+                                  index_min_max(inline_sym37__, lcm_sym218__)))))
                            +
                            bernoulli_lpmf<false>(1,
                              prod(
                                rvalue(phi, "phi",
                                  index_uni(inline_sym38__),
-                                   index_min_max(inline_sym37__, lcm_sym219__)))))
+                                   index_min_max(inline_sym37__, lcm_sym218__)))))
                           +
                           bernoulli_lpmf<false>(1,
-                            rvalue(lcm_sym260__, "lcm_sym260__",
+                            rvalue(lcm_sym259__, "lcm_sym259__",
                               index_uni(inline_sym38__),
-                                index_uni(lcm_sym263__)))),
+                                index_uni(lcm_sym262__)))),
                         "assigning variable inline_sym36__", index_uni(inline_sym37__));
                     }
                   } 
@@ -19669,35 +19665,35 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                   assign(inline_sym36__,
                     ((bernoulli_lpmf<false>(1,
                         prod(
-                          rvalue(lcm_sym214__, "lcm_sym214__",
-                            index_min_max(1, lcm_sym219__)))) +
-                       bernoulli_lpmf<false>(1, gamma[(lcm_sym263__ - 1)])) +
+                          rvalue(lcm_sym213__, "lcm_sym213__",
+                            index_min_max(1, lcm_sym218__)))) +
+                       bernoulli_lpmf<false>(1, gamma[(lcm_sym262__ - 1)])) +
                       bernoulli_lpmf<false>(1,
-                        rvalue(lcm_sym260__, "lcm_sym260__",
-                          index_uni(inline_sym38__), index_uni(lcm_sym263__)))),
-                    "assigning variable inline_sym36__", index_uni(lcm_sym263__));
+                        rvalue(lcm_sym259__, "lcm_sym259__",
+                          index_uni(inline_sym38__), index_uni(lcm_sym262__)))),
+                    "assigning variable inline_sym36__", index_uni(lcm_sym262__));
                   current_statement__ = 91;
                   lp_accum__.add(log_sum_exp(inline_sym36__));
                 }
-                lcm_sym269__ = last[(inline_sym38__ - 1)];
-                if (logical_gte(lcm_sym269__, (lcm_sym263__ + 1))) {
+                lcm_sym268__ = last[(inline_sym38__ - 1)];
+                if (logical_gte(lcm_sym268__, (lcm_sym262__ + 1))) {
                   current_statement__ = 96;
                   lp_accum__.add(
                     bernoulli_lpmf<propto__>(1,
                       rvalue(phi, "phi",
                         index_uni(inline_sym38__),
-                          index_uni(((lcm_sym263__ + 1) - 1)))));
-                  lcm_sym237__ = ((lcm_sym263__ + 1) + 1);
+                          index_uni(((lcm_sym262__ + 1) - 1)))));
+                  lcm_sym236__ = ((lcm_sym262__ + 1) + 1);
                   lp_accum__.add(
                     bernoulli_lpmf<propto__>(
                       rvalue(y, "y",
                         index_uni(inline_sym38__),
-                          index_uni((lcm_sym263__ + 1))),
-                      rvalue(lcm_sym260__, "lcm_sym260__",
+                          index_uni((lcm_sym262__ + 1))),
+                      rvalue(lcm_sym259__, "lcm_sym259__",
                         index_uni(inline_sym38__),
-                          index_uni((lcm_sym263__ + 1)))));
-                  for (int inline_sym37__ = lcm_sym237__;
-                       inline_sym37__ <= lcm_sym269__; ++inline_sym37__) {
+                          index_uni((lcm_sym262__ + 1)))));
+                  for (int inline_sym37__ = lcm_sym236__;
+                       inline_sym37__ <= lcm_sym268__; ++inline_sym37__) {
                     current_statement__ = 96;
                     lp_accum__.add(
                       bernoulli_lpmf<propto__>(1,
@@ -19708,7 +19704,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                     lp_accum__.add(
                       bernoulli_lpmf<propto__>(
                         y[(inline_sym38__ - 1)][(inline_sym37__ - 1)],
-                        rvalue(lcm_sym260__, "lcm_sym260__",
+                        rvalue(lcm_sym259__, "lcm_sym259__",
                           index_uni(inline_sym38__),
                             index_uni(inline_sym37__))));
                   }
@@ -19717,13 +19713,13 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                 lp_accum__.add(
                   bernoulli_lpmf<propto__>(1,
                     rvalue(inline_sym22__, "inline_sym22__",
-                      index_uni(inline_sym38__), index_uni(lcm_sym269__))));
+                      index_uni(inline_sym38__), index_uni(lcm_sym268__))));
               } else {
-                lcm_sym239__ = (lcm_sym276__ + 1);
+                lcm_sym238__ = (lcm_sym275__ + 1);
                 validate_non_negative_index("lp", "n_occasions + 1",
-                                            lcm_sym239__);
+                                            lcm_sym238__);
                 Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym36__;
-                inline_sym36__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym239__);
+                inline_sym36__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym238__);
                 stan::math::fill(inline_sym36__, DUMMY_VAR__);
                 
                 current_statement__ = 82;
@@ -19731,40 +19727,40 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                   ((bernoulli_lpmf<false>(1,
                       rvalue(gamma, "gamma", index_uni(1))) +
                      bernoulli_lpmf<false>(0,
-                       rvalue(lcm_sym260__, "lcm_sym260__",
+                       rvalue(lcm_sym259__, "lcm_sym259__",
                          index_uni(inline_sym38__), index_uni(1)))) +
                     bernoulli_lpmf<false>(1,
                       rvalue(inline_sym22__, "inline_sym22__",
                         index_uni(inline_sym38__), index_uni(1)))),
                   "assigning variable inline_sym36__", index_uni(1));
-                if (logical_gte(lcm_sym276__, 2)) {
+                if (logical_gte(lcm_sym275__, 2)) {
                   current_statement__ = 83;
                   assign(inline_sym36__,
                     (((bernoulli_lpmf<false>(1,
                          prod(
-                           rvalue(lcm_sym214__, "lcm_sym214__",
+                           rvalue(lcm_sym213__, "lcm_sym213__",
                              index_min_max(1, 1)))) +
                         bernoulli_lpmf<false>(1,
                           rvalue(gamma, "gamma", index_uni(2)))) +
                        bernoulli_lpmf<false>(0,
-                         rvalue(lcm_sym260__, "lcm_sym260__",
+                         rvalue(lcm_sym259__, "lcm_sym259__",
                            index_uni(inline_sym38__), index_uni(2)))) +
                       bernoulli_lpmf<false>(1,
                         rvalue(inline_sym22__, "inline_sym22__",
                           index_uni(inline_sym38__), index_uni(2)))),
                     "assigning variable inline_sym36__", index_uni(2));
                   for (int inline_sym37__ = 3;
-                       inline_sym37__ <= lcm_sym276__; ++inline_sym37__) {
+                       inline_sym37__ <= lcm_sym275__; ++inline_sym37__) {
                     current_statement__ = 83;
                     assign(inline_sym36__,
                       (((bernoulli_lpmf<false>(1,
                            prod(
-                             rvalue(lcm_sym214__, "lcm_sym214__",
+                             rvalue(lcm_sym213__, "lcm_sym213__",
                                index_min_max(1, (inline_sym37__ - 1))))) +
                           bernoulli_lpmf<false>(1,
                             gamma[(inline_sym37__ - 1)])) +
                          bernoulli_lpmf<false>(0,
-                           rvalue(lcm_sym260__, "lcm_sym260__",
+                           rvalue(lcm_sym259__, "lcm_sym259__",
                              index_uni(inline_sym38__),
                                index_uni(inline_sym37__)))) +
                         bernoulli_lpmf<false>(1,
@@ -19776,8 +19772,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                 } 
                 current_statement__ = 84;
                 assign(inline_sym36__,
-                  bernoulli_lpmf<false>(1, prod(lcm_sym214__)),
-                  "assigning variable inline_sym36__", index_uni(lcm_sym239__));
+                  bernoulli_lpmf<false>(1, prod(lcm_sym213__)),
+                  "assigning variable inline_sym36__", index_uni(lcm_sym238__));
                 current_statement__ = 85;
                 lp_accum__.add(log_sum_exp(inline_sym36__));
               }
@@ -19817,9 +19813,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     (void) function__;  // suppress unused var warning
     
     try {
-      int lcm_sym200__;
       int lcm_sym199__;
-      double lcm_sym198__;
+      int lcm_sym198__;
       double lcm_sym197__;
       double lcm_sym196__;
       double lcm_sym195__;
@@ -19831,57 +19826,58 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       double lcm_sym189__;
       double lcm_sym188__;
       double lcm_sym187__;
-      double lcm_sym160__;
-      int lcm_sym185__;
+      double lcm_sym186__;
+      double lcm_sym159__;
       int lcm_sym184__;
       int lcm_sym183__;
       int lcm_sym182__;
       int lcm_sym181__;
       int lcm_sym180__;
-      local_scalar_t__ lcm_sym179__;
-      int lcm_sym178__;
-      double lcm_sym177__;
-      int lcm_sym176__;
+      int lcm_sym179__;
+      local_scalar_t__ lcm_sym178__;
+      int lcm_sym177__;
+      double lcm_sym176__;
       int lcm_sym175__;
       int lcm_sym174__;
       int lcm_sym173__;
-      Eigen::Matrix<double, -1, -1> lcm_sym172__;
-      std::vector<std::vector<int>> lcm_sym171__;
-      local_scalar_t__ lcm_sym170__;
+      int lcm_sym172__;
+      Eigen::Matrix<double, -1, -1> lcm_sym171__;
+      std::vector<std::vector<int>> lcm_sym170__;
       local_scalar_t__ lcm_sym169__;
-      double lcm_sym168__;
+      local_scalar_t__ lcm_sym168__;
       double lcm_sym167__;
       double lcm_sym166__;
       double lcm_sym165__;
       double lcm_sym164__;
       double lcm_sym163__;
-      Eigen::Matrix<double, -1, 1> lcm_sym162__;
-      int lcm_sym161__;
-      int lcm_sym155__;
+      double lcm_sym162__;
+      Eigen::Matrix<double, -1, 1> lcm_sym161__;
+      int lcm_sym160__;
       int lcm_sym154__;
       int lcm_sym153__;
       int lcm_sym152__;
-      double lcm_sym151__;
+      int lcm_sym151__;
       double lcm_sym150__;
-      int lcm_sym149__;
+      double lcm_sym149__;
       int lcm_sym148__;
-      double lcm_sym147__;
+      int lcm_sym147__;
       double lcm_sym146__;
-      int lcm_sym145__;
+      double lcm_sym145__;
       int lcm_sym144__;
       int lcm_sym143__;
       int lcm_sym142__;
       int lcm_sym141__;
       int lcm_sym140__;
-      int lcm_sym186__;
-      int lcm_sym138__;
+      int lcm_sym139__;
+      int lcm_sym185__;
       int lcm_sym137__;
       int lcm_sym136__;
       int lcm_sym135__;
       int lcm_sym134__;
       int lcm_sym133__;
       int lcm_sym132__;
-      Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym131__;
+      int lcm_sym131__;
+      Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym130__;
       double mean_phi;
       mean_phi = std::numeric_limits<double>::quiet_NaN();
       
@@ -19905,9 +19901,9 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       epsilon = Eigen::Matrix<double, -1, 1>((n_occasions - 1));
       stan::math::fill(epsilon, std::numeric_limits<double>::quiet_NaN());
       
-      lcm_sym186__ = (n_occasions - 1);
+      lcm_sym185__ = (n_occasions - 1);
       epsilon = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
-                  lcm_sym186__);
+                  lcm_sym185__);
       double sigma;
       sigma = std::numeric_limits<double>::quiet_NaN();
       
@@ -19915,7 +19911,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       sigma = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                 0, 5, lp__);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi;
-      phi = Eigen::Matrix<local_scalar_t__, -1, -1>(M, lcm_sym186__);
+      phi = Eigen::Matrix<local_scalar_t__, -1, -1>(M, lcm_sym185__);
       stan::math::fill(phi, DUMMY_VAR__);
       
       Eigen::Matrix<double, -1, -1> p;
@@ -19935,44 +19931,44 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             primitive_value(emit_generated_quantities__)))) {
         return ;
       } 
-      lcm_sym135__ = logical_gte(lcm_sym186__, 1);
-      if (lcm_sym135__) {
+      lcm_sym134__ = logical_gte(lcm_sym185__, 1);
+      if (lcm_sym134__) {
         {
-          lcm_sym132__ = logical_gte(M, 1);
-          if (lcm_sym132__) {
-            lcm_sym170__ = inv_logit(
+          lcm_sym131__ = logical_gte(M, 1);
+          if (lcm_sym131__) {
+            lcm_sym169__ = inv_logit(
                              (logit(mean_phi) +
                                rvalue(epsilon, "epsilon", index_uni(1))));
-            assign(phi, lcm_sym170__,
+            assign(phi, lcm_sym169__,
               "assigning variable phi", index_uni(1), index_uni(1));
             for (int i = 2; i <= M; ++i) {
               current_statement__ = 9;
-              assign(phi, lcm_sym170__,
+              assign(phi, lcm_sym169__,
                 "assigning variable phi", index_uni(i), index_uni(1));
             }
           } 
-          for (int t = 2; t <= lcm_sym186__; ++t) {
+          for (int t = 2; t <= lcm_sym185__; ++t) {
             current_statement__ = 10;
-            if (lcm_sym132__) {
-              lcm_sym169__ = inv_logit(
+            if (lcm_sym131__) {
+              lcm_sym168__ = inv_logit(
                                (logit(mean_phi) +
                                  rvalue(epsilon, "epsilon", index_uni(t))));
-              assign(phi, lcm_sym169__,
+              assign(phi, lcm_sym168__,
                 "assigning variable phi", index_uni(1), index_uni(t));
               for (int i = 2; i <= M; ++i) {
                 current_statement__ = 9;
-                assign(phi, lcm_sym169__,
+                assign(phi, lcm_sym168__,
                   "assigning variable phi", index_uni(i), index_uni(t));
               }
             } 
           }
         }
       } else {
-        lcm_sym132__ = logical_gte(M, 1);
+        lcm_sym131__ = logical_gte(M, 1);
       }
-      assign(lcm_sym172__, rep_matrix(mean_p, M, n_occasions),
-        "assigning variable lcm_sym172__");
-      assign(p, lcm_sym172__, "assigning variable p");
+      assign(lcm_sym171__, rep_matrix(mean_p, M, n_occasions),
+        "assigning variable lcm_sym171__");
+      assign(p, lcm_sym171__, "assigning variable p");
       Eigen::Matrix<local_scalar_t__, -1, -1> inline_sym1__;
       int inline_sym9__;
       inline_sym9__ = std::numeric_limits<int>::min();
@@ -19982,74 +19978,74 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         int inline_sym2__;
         inline_sym2__ = std::numeric_limits<int>::min();
         
-        lcm_sym174__ = rows(lcm_sym172__);
+        lcm_sym173__ = rows(lcm_sym171__);
         int inline_sym3__;
         inline_sym3__ = std::numeric_limits<int>::min();
         
-        lcm_sym161__ = cols(lcm_sym172__);
+        lcm_sym160__ = cols(lcm_sym171__);
         current_statement__ = 13;
-        validate_non_negative_index("chi", "n_ind", lcm_sym174__);
+        validate_non_negative_index("chi", "n_ind", lcm_sym173__);
         current_statement__ = 14;
-        validate_non_negative_index("chi", "n_occasions", lcm_sym161__);
+        validate_non_negative_index("chi", "n_occasions", lcm_sym160__);
         Eigen::Matrix<local_scalar_t__, -1, -1> inline_sym4__;
-        inline_sym4__ = Eigen::Matrix<local_scalar_t__, -1, -1>(lcm_sym174__, lcm_sym161__);
+        inline_sym4__ = Eigen::Matrix<local_scalar_t__, -1, -1>(lcm_sym173__, lcm_sym160__);
         stan::math::fill(inline_sym4__, DUMMY_VAR__);
         
-        for (int inline_sym8__ = 1; inline_sym8__ <= lcm_sym174__;
+        for (int inline_sym8__ = 1; inline_sym8__ <= lcm_sym173__;
              ++inline_sym8__) {
           current_statement__ = 16;
           assign(inline_sym4__, 1.0,
             "assigning variable inline_sym4__", index_uni(inline_sym8__),
-                                                  index_uni(lcm_sym161__));
-          lcm_sym143__ = (lcm_sym161__ - 1);
-          if (logical_gte(lcm_sym143__, 1)) {
+                                                  index_uni(lcm_sym160__));
+          lcm_sym142__ = (lcm_sym160__ - 1);
+          if (logical_gte(lcm_sym142__, 1)) {
             int inline_sym5__;
             inline_sym5__ = std::numeric_limits<int>::min();
             
             int inline_sym6__;
             inline_sym6__ = std::numeric_limits<int>::min();
             
-            lcm_sym149__ = (lcm_sym143__ + 1);
+            lcm_sym148__ = (lcm_sym142__ + 1);
             current_statement__ = 19;
             assign(inline_sym4__,
               stan::math::fma(
                 (rvalue(phi, "phi",
-                   index_uni(inline_sym8__), index_uni(lcm_sym143__)) *
+                   index_uni(inline_sym8__), index_uni(lcm_sym142__)) *
                   (1 -
-                    rvalue(lcm_sym172__, "lcm_sym172__",
-                      index_uni(inline_sym8__), index_uni(lcm_sym149__)))),
+                    rvalue(lcm_sym171__, "lcm_sym171__",
+                      index_uni(inline_sym8__), index_uni(lcm_sym148__)))),
                 rvalue(inline_sym4__, "inline_sym4__",
-                  index_uni(inline_sym8__), index_uni(lcm_sym149__)),
+                  index_uni(inline_sym8__), index_uni(lcm_sym148__)),
                 (1 -
                   rvalue(phi, "phi",
-                    index_uni(inline_sym8__), index_uni(lcm_sym143__)))),
+                    index_uni(inline_sym8__), index_uni(lcm_sym142__)))),
               "assigning variable inline_sym4__", index_uni(inline_sym8__),
-                                                    index_uni(lcm_sym143__));
-            for (int inline_sym7__ = 2; inline_sym7__ <= lcm_sym143__;
+                                                    index_uni(lcm_sym142__));
+            for (int inline_sym7__ = 2; inline_sym7__ <= lcm_sym142__;
                  ++inline_sym7__) {
               int inline_sym5__;
               inline_sym5__ = std::numeric_limits<int>::min();
               
-              lcm_sym142__ = (lcm_sym161__ - inline_sym7__);
+              lcm_sym141__ = (lcm_sym160__ - inline_sym7__);
               int inline_sym6__;
               inline_sym6__ = std::numeric_limits<int>::min();
               
-              lcm_sym148__ = (lcm_sym142__ + 1);
+              lcm_sym147__ = (lcm_sym141__ + 1);
               current_statement__ = 19;
               assign(inline_sym4__,
                 stan::math::fma(
                   (rvalue(phi, "phi",
-                     index_uni(inline_sym8__), index_uni(lcm_sym142__)) *
+                     index_uni(inline_sym8__), index_uni(lcm_sym141__)) *
                     (1 -
-                      rvalue(lcm_sym172__, "lcm_sym172__",
-                        index_uni(inline_sym8__), index_uni(lcm_sym148__)))),
+                      rvalue(lcm_sym171__, "lcm_sym171__",
+                        index_uni(inline_sym8__), index_uni(lcm_sym147__)))),
                   rvalue(inline_sym4__, "inline_sym4__",
-                    index_uni(inline_sym8__), index_uni(lcm_sym148__)),
+                    index_uni(inline_sym8__), index_uni(lcm_sym147__)),
                   (1 -
                     rvalue(phi, "phi",
-                      index_uni(inline_sym8__), index_uni(lcm_sym142__)))),
+                      index_uni(inline_sym8__), index_uni(lcm_sym141__)))),
                 "assigning variable inline_sym4__", index_uni(inline_sym8__),
-                                                      index_uni(lcm_sym142__));
+                                                      index_uni(lcm_sym141__));
             }
           } 
           if (inline_sym9__) {
@@ -20066,14 +20062,14 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       }
       assign(chi, inline_sym1__, "assigning variable chi");
       current_statement__ = 6;
-      if (lcm_sym132__) {
+      if (lcm_sym131__) {
         current_statement__ = 6;
-        if (lcm_sym135__) {
+        if (lcm_sym134__) {
           current_statement__ = 6;
           check_greater_or_equal(function__, "phi[sym1__, sym2__]",
                                  rvalue(phi, "phi",
                                    index_uni(1), index_uni(1)), 0);
-          for (int sym2__ = 2; sym2__ <= lcm_sym186__; ++sym2__) {
+          for (int sym2__ = 2; sym2__ <= lcm_sym185__; ++sym2__) {
             current_statement__ = 6;
             check_greater_or_equal(function__, "phi[sym1__, sym2__]",
                                    rvalue(phi, "phi",
@@ -20082,12 +20078,12 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         } 
         for (int sym1__ = 2; sym1__ <= M; ++sym1__) {
           current_statement__ = 6;
-          if (lcm_sym135__) {
+          if (lcm_sym134__) {
             current_statement__ = 6;
             check_greater_or_equal(function__, "phi[sym1__, sym2__]",
                                    rvalue(phi, "phi",
                                      index_uni(sym1__), index_uni(1)), 0);
-            for (int sym2__ = 2; sym2__ <= lcm_sym186__; ++sym2__) {
+            for (int sym2__ = 2; sym2__ <= lcm_sym185__; ++sym2__) {
               current_statement__ = 6;
               check_greater_or_equal(function__, "phi[sym1__, sym2__]",
                                      rvalue(phi, "phi",
@@ -20098,14 +20094,14 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         }
       } 
       current_statement__ = 6;
-      if (lcm_sym132__) {
+      if (lcm_sym131__) {
         current_statement__ = 6;
-        if (lcm_sym135__) {
+        if (lcm_sym134__) {
           current_statement__ = 6;
           check_less_or_equal(function__, "phi[sym1__, sym2__]",
                               rvalue(phi, "phi", index_uni(1), index_uni(1)),
                               1);
-          for (int sym2__ = 2; sym2__ <= lcm_sym186__; ++sym2__) {
+          for (int sym2__ = 2; sym2__ <= lcm_sym185__; ++sym2__) {
             current_statement__ = 6;
             check_less_or_equal(function__, "phi[sym1__, sym2__]",
                                 rvalue(phi, "phi",
@@ -20114,12 +20110,12 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         } 
         for (int sym1__ = 2; sym1__ <= M; ++sym1__) {
           current_statement__ = 6;
-          if (lcm_sym135__) {
+          if (lcm_sym134__) {
             current_statement__ = 6;
             check_less_or_equal(function__, "phi[sym1__, sym2__]",
                                 rvalue(phi, "phi",
                                   index_uni(sym1__), index_uni(1)), 1);
-            for (int sym2__ = 2; sym2__ <= lcm_sym186__; ++sym2__) {
+            for (int sym2__ = 2; sym2__ <= lcm_sym185__; ++sym2__) {
               current_statement__ = 6;
               check_less_or_equal(function__, "phi[sym1__, sym2__]",
                                   rvalue(phi, "phi",
@@ -20129,32 +20125,32 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         }
       } 
       current_statement__ = 7;
-      if (lcm_sym132__) {
+      if (lcm_sym131__) {
         {
-          lcm_sym133__ = logical_gte(n_occasions, 1);
-          if (lcm_sym133__) {
+          lcm_sym132__ = logical_gte(n_occasions, 1);
+          if (lcm_sym132__) {
             current_statement__ = 7;
             check_greater_or_equal(function__, "p[sym1__, sym2__]",
-                                   rvalue(lcm_sym172__, "lcm_sym172__",
+                                   rvalue(lcm_sym171__, "lcm_sym171__",
                                      index_uni(1), index_uni(1)), 0);
             for (int sym2__ = 2; sym2__ <= n_occasions; ++sym2__) {
               current_statement__ = 7;
               check_greater_or_equal(function__, "p[sym1__, sym2__]",
-                                     rvalue(lcm_sym172__, "lcm_sym172__",
+                                     rvalue(lcm_sym171__, "lcm_sym171__",
                                        index_uni(1), index_uni(sym2__)), 0);
             }
           } 
           for (int sym1__ = 2; sym1__ <= M; ++sym1__) {
             current_statement__ = 7;
-            if (lcm_sym133__) {
+            if (lcm_sym132__) {
               current_statement__ = 7;
               check_greater_or_equal(function__, "p[sym1__, sym2__]",
-                                     rvalue(lcm_sym172__, "lcm_sym172__",
+                                     rvalue(lcm_sym171__, "lcm_sym171__",
                                        index_uni(sym1__), index_uni(1)), 0);
               for (int sym2__ = 2; sym2__ <= n_occasions; ++sym2__) {
                 current_statement__ = 7;
                 check_greater_or_equal(function__, "p[sym1__, sym2__]",
-                                       rvalue(lcm_sym172__, "lcm_sym172__",
+                                       rvalue(lcm_sym171__, "lcm_sym171__",
                                          index_uni(sym1__), index_uni(sym2__)),
                                        0);
               }
@@ -20162,43 +20158,43 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           }
         }
       } else {
-        lcm_sym133__ = logical_gte(n_occasions, 1);
+        lcm_sym132__ = logical_gte(n_occasions, 1);
       }
       current_statement__ = 7;
-      if (lcm_sym132__) {
+      if (lcm_sym131__) {
         current_statement__ = 7;
-        if (lcm_sym133__) {
+        if (lcm_sym132__) {
           current_statement__ = 7;
           check_less_or_equal(function__, "p[sym1__, sym2__]",
-                              rvalue(lcm_sym172__, "lcm_sym172__",
+                              rvalue(lcm_sym171__, "lcm_sym171__",
                                 index_uni(1), index_uni(1)), 1);
           for (int sym2__ = 2; sym2__ <= n_occasions; ++sym2__) {
             current_statement__ = 7;
             check_less_or_equal(function__, "p[sym1__, sym2__]",
-                                rvalue(lcm_sym172__, "lcm_sym172__",
+                                rvalue(lcm_sym171__, "lcm_sym171__",
                                   index_uni(1), index_uni(sym2__)), 1);
           }
         } 
         for (int sym1__ = 2; sym1__ <= M; ++sym1__) {
           current_statement__ = 7;
-          if (lcm_sym133__) {
+          if (lcm_sym132__) {
             current_statement__ = 7;
             check_less_or_equal(function__, "p[sym1__, sym2__]",
-                                rvalue(lcm_sym172__, "lcm_sym172__",
+                                rvalue(lcm_sym171__, "lcm_sym171__",
                                   index_uni(sym1__), index_uni(1)), 1);
             for (int sym2__ = 2; sym2__ <= n_occasions; ++sym2__) {
               current_statement__ = 7;
               check_less_or_equal(function__, "p[sym1__, sym2__]",
-                                  rvalue(lcm_sym172__, "lcm_sym172__",
+                                  rvalue(lcm_sym171__, "lcm_sym171__",
                                     index_uni(sym1__), index_uni(sym2__)), 1);
             }
           } 
         }
       } 
       current_statement__ = 8;
-      if (lcm_sym132__) {
+      if (lcm_sym131__) {
         current_statement__ = 8;
-        if (lcm_sym133__) {
+        if (lcm_sym132__) {
           current_statement__ = 8;
           check_greater_or_equal(function__, "chi[sym1__, sym2__]",
                                  rvalue(inline_sym1__, "inline_sym1__",
@@ -20212,7 +20208,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         } 
         for (int sym1__ = 2; sym1__ <= M; ++sym1__) {
           current_statement__ = 8;
-          if (lcm_sym133__) {
+          if (lcm_sym132__) {
             current_statement__ = 8;
             check_greater_or_equal(function__, "chi[sym1__, sym2__]",
                                    rvalue(inline_sym1__, "inline_sym1__",
@@ -20228,9 +20224,9 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         }
       } 
       current_statement__ = 8;
-      if (lcm_sym132__) {
+      if (lcm_sym131__) {
         current_statement__ = 8;
-        if (lcm_sym133__) {
+        if (lcm_sym132__) {
           current_statement__ = 8;
           check_less_or_equal(function__, "chi[sym1__, sym2__]",
                               rvalue(inline_sym1__, "inline_sym1__",
@@ -20244,7 +20240,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         } 
         for (int sym1__ = 2; sym1__ <= M; ++sym1__) {
           current_statement__ = 8;
-          if (lcm_sym133__) {
+          if (lcm_sym132__) {
             current_statement__ = 8;
             check_less_or_equal(function__, "chi[sym1__, sym2__]",
                                 rvalue(inline_sym1__, "inline_sym1__",
@@ -20260,7 +20256,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       } 
       if (emit_transformed_parameters__) {
         out__.write(phi);
-        out__.write(lcm_sym172__);
+        out__.write(lcm_sym171__);
         out__.write(inline_sym1__);
       } 
       if (logical_negation(emit_generated_quantities__)) {
@@ -20290,39 +20286,39 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       
       
       current_statement__ = 38;
-      if (lcm_sym132__) {
+      if (lcm_sym131__) {
         int q;
         q = std::numeric_limits<int>::min();
         
         double mu2;
         mu2 = std::numeric_limits<double>::quiet_NaN();
         
-        lcm_sym160__ = rvalue(gamma, "gamma", index_uni(1));
-        assign(z, bernoulli_rng(lcm_sym160__, base_rng__),
+        lcm_sym159__ = rvalue(gamma, "gamma", index_uni(1));
+        assign(z, bernoulli_rng(lcm_sym159__, base_rng__),
           "assigning variable z", index_uni(1), index_uni(1));
-        lcm_sym134__ = logical_gte(n_occasions, 2);
-        if (lcm_sym134__) {
-          lcm_sym155__ = (1 *
+        lcm_sym133__ = logical_gte(n_occasions, 2);
+        if (lcm_sym133__) {
+          lcm_sym154__ = (1 *
                            (1 - rvalue(z, "z", index_uni(1), index_uni(1))));
-          q = lcm_sym155__;
-          lcm_sym194__ = rvalue(phi, "phi", index_uni(1), index_uni(1));
-          lcm_sym167__ = stan::math::fma(lcm_sym194__,
+          q = lcm_sym154__;
+          lcm_sym193__ = rvalue(phi, "phi", index_uni(1), index_uni(1));
+          lcm_sym166__ = stan::math::fma(lcm_sym193__,
                            rvalue(z, "z", index_uni(1), index_uni(1)),
                            (rvalue(gamma, "gamma", index_uni(2)) *
-                             lcm_sym155__));
+                             lcm_sym154__));
           current_statement__ = 32;
-          assign(z, bernoulli_rng(lcm_sym167__, base_rng__),
+          assign(z, bernoulli_rng(lcm_sym166__, base_rng__),
             "assigning variable z", index_uni(1), index_uni(2));
           for (int t = 3; t <= n_occasions; ++t) {
             current_statement__ = 33;
             q = (q * (1 - rvalue(z, "z", index_uni(1), index_uni((t - 1)))));
-            lcm_sym168__ = stan::math::fma(
+            lcm_sym167__ = stan::math::fma(
                              rvalue(phi, "phi",
                                index_uni(1), index_uni((t - 1))),
                              rvalue(z, "z", index_uni(1), index_uni((t - 1))),
                              (rvalue(gamma, "gamma", index_uni(t)) * q));
             current_statement__ = 32;
-            assign(z, bernoulli_rng(lcm_sym168__, base_rng__),
+            assign(z, bernoulli_rng(lcm_sym167__, base_rng__),
               "assigning variable z", index_uni(1), index_uni(t));
           }
         } 
@@ -20334,33 +20330,33 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           mu2 = std::numeric_limits<double>::quiet_NaN();
           
           current_statement__ = 35;
-          assign(z, bernoulli_rng(lcm_sym160__, base_rng__),
+          assign(z, bernoulli_rng(lcm_sym159__, base_rng__),
             "assigning variable z", index_uni(i), index_uni(1));
           current_statement__ = 36;
-          if (lcm_sym134__) {
-            lcm_sym154__ = (1 *
+          if (lcm_sym133__) {
+            lcm_sym153__ = (1 *
                              (1 - rvalue(z, "z", index_uni(i), index_uni(1))));
-            q = lcm_sym154__;
-            lcm_sym165__ = stan::math::fma(
+            q = lcm_sym153__;
+            lcm_sym164__ = stan::math::fma(
                              rvalue(phi, "phi", index_uni(i), index_uni(1)),
                              rvalue(z, "z", index_uni(i), index_uni(1)),
                              (rvalue(gamma, "gamma", index_uni(2)) *
-                               lcm_sym154__));
+                               lcm_sym153__));
             current_statement__ = 32;
-            assign(z, bernoulli_rng(lcm_sym165__, base_rng__),
+            assign(z, bernoulli_rng(lcm_sym164__, base_rng__),
               "assigning variable z", index_uni(i), index_uni(2));
             for (int t = 3; t <= n_occasions; ++t) {
               current_statement__ = 33;
               q = (q *
                     (1 - rvalue(z, "z", index_uni(i), index_uni((t - 1)))));
-              lcm_sym166__ = stan::math::fma(
+              lcm_sym165__ = stan::math::fma(
                                rvalue(phi, "phi",
                                  index_uni(i), index_uni((t - 1))),
                                rvalue(z, "z",
                                  index_uni(i), index_uni((t - 1))),
                                (rvalue(gamma, "gamma", index_uni(t)) * q));
               current_statement__ = 32;
-              assign(z, bernoulli_rng(lcm_sym166__, base_rng__),
+              assign(z, bernoulli_rng(lcm_sym165__, base_rng__),
                 "assigning variable z", index_uni(i), index_uni(t));
             }
           } 
@@ -20382,17 +20378,17 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           int inline_sym12__;
           inline_sym12__ = std::numeric_limits<int>::min();
           
-          lcm_sym173__ = rows(gamma);
+          lcm_sym172__ = rows(gamma);
           current_statement__ = 42;
-          validate_non_negative_index("log_cprob", "N", lcm_sym173__);
+          validate_non_negative_index("log_cprob", "N", lcm_sym172__);
           Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym13__;
-          inline_sym13__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym173__);
+          inline_sym13__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym172__);
           stan::math::fill(inline_sym13__, DUMMY_VAR__);
           
           local_scalar_t__ inline_sym14__;
           inline_sym14__ = DUMMY_VAR__;
           
-          if (logical_gte(lcm_sym173__, 1)) {
+          if (logical_gte(lcm_sym172__, 1)) {
             current_statement__ = 45;
             assign(inline_sym13__,
               (stan::math::log(rvalue(gamma, "gamma", index_uni(1))) + 0),
@@ -20400,7 +20396,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             current_statement__ = 46;
             inline_sym14__ = (0 +
                                log1m(rvalue(gamma, "gamma", index_uni(1))));
-            for (int inline_sym15__ = 2; inline_sym15__ <= lcm_sym173__;
+            for (int inline_sym15__ = 2; inline_sym15__ <= lcm_sym172__;
                  ++inline_sym15__) {
               current_statement__ = 45;
               assign(inline_sym13__,
@@ -20441,15 +20437,15 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         std::vector<int> Nalive;
         Nalive = std::vector<int>(M, std::numeric_limits<int>::min());
         
-        lcm_sym177__ = square(sigma);
-        sigma2 = lcm_sym177__;
-        lcm_sym179__ = sum(inline_sym11__);
-        psi = lcm_sym179__;
-        assign(lcm_sym131__, divide(inline_sym11__, lcm_sym179__),
-          "assigning variable lcm_sym131__");
-        assign(b, lcm_sym131__, "assigning variable b");
+        lcm_sym176__ = square(sigma);
+        sigma2 = lcm_sym176__;
+        lcm_sym178__ = sum(inline_sym11__);
+        psi = lcm_sym178__;
+        assign(lcm_sym130__, divide(inline_sym11__, lcm_sym178__),
+          "assigning variable lcm_sym130__");
+        assign(b, lcm_sym130__, "assigning variable b");
         current_statement__ = 63;
-        if (lcm_sym132__) {
+        if (lcm_sym131__) {
           int f;
           f = std::numeric_limits<int>::min();
           
@@ -20459,8 +20455,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           
           inline_sym20__ = 0;
           for (int inline_sym21__ = 1; inline_sym21__ <= 1; ++inline_sym21__) {
-            lcm_sym176__ = size(rvalue(z, "z", index_uni(1)));
-            for (int inline_sym19__ = 1; inline_sym19__ <= lcm_sym176__;
+            lcm_sym175__ = size(rvalue(z, "z", index_uni(1)));
+            for (int inline_sym19__ = 1; inline_sym19__ <= lcm_sym175__;
                  ++inline_sym19__) {
               current_statement__ = 58;
               if (rvalue(z, "z", index_uni(1), index_uni(inline_sym19__))) {
@@ -20494,8 +20490,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             inline_sym20__ = 0;
             for (int inline_sym21__ = 1; inline_sym21__ <= 1;
                  ++inline_sym21__) {
-              lcm_sym175__ = size(rvalue(z, "z", index_uni(i)));
-              for (int inline_sym19__ = 1; inline_sym19__ <= lcm_sym175__;
+              lcm_sym174__ = size(rvalue(z, "z", index_uni(i)));
+              for (int inline_sym19__ = 1; inline_sym19__ <= lcm_sym174__;
                    ++inline_sym19__) {
                 current_statement__ = 58;
                 if (rvalue(z, "z", index_uni(i), index_uni(inline_sym19__))) {
@@ -20521,7 +20517,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           }
         } 
         current_statement__ = 67;
-        if (lcm_sym133__) {
+        if (lcm_sym132__) {
           current_statement__ = 64;
           assign(N, sum(rvalue(z, "z", index_omni(), index_uni(1))),
             "assigning variable N", index_uni(1));
@@ -20540,7 +20536,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           }
         } 
         current_statement__ = 71;
-        if (lcm_sym132__) {
+        if (lcm_sym131__) {
           current_statement__ = 68;
           assign(Nind, sum(rvalue(z, "z", index_uni(1))),
             "assigning variable Nind", index_uni(1));
@@ -20561,9 +20557,9 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         current_statement__ = 72;
         Nsuper = sum(Nalive);
       }
-      out__.write(lcm_sym177__);
-      out__.write(lcm_sym179__);
-      out__.write(lcm_sym131__);
+      out__.write(lcm_sym176__);
+      out__.write(lcm_sym178__);
+      out__.write(lcm_sym130__);
       out__.write(Nsuper);
       out__.write(N);
       out__.write(B);
@@ -20588,7 +20584,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
-      int lcm_sym130__;
+      int lcm_sym129__;
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
@@ -20610,14 +20606,13 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       assign(gamma,
         in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_occasions),
         "assigning variable gamma");
-      out__.write_free_lub(0, 1, n_occasions, gamma);
+      out__.write_free_lub(0, 1, gamma);
       Eigen::Matrix<local_scalar_t__, -1, 1> epsilon;
       epsilon = Eigen::Matrix<local_scalar_t__, -1, 1>((n_occasions - 1));
       stan::math::fill(epsilon, DUMMY_VAR__);
       
-      lcm_sym130__ = (n_occasions - 1);
       assign(epsilon,
-        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(lcm_sym130__),
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>((n_occasions - 1)),
         "assigning variable epsilon");
       out__.write(epsilon);
       local_scalar_t__ sigma;
@@ -20671,41 +20666,41 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     
     param_names__.emplace_back(std::string() + "mean_phi");
     param_names__.emplace_back(std::string() + "mean_p");
-    for (int sym305__ = 1; sym305__ <= n_occasions; ++sym305__) {
+    for (int sym304__ = 1; sym304__ <= n_occasions; ++sym304__) {
       {
-        param_names__.emplace_back(std::string() + "gamma" + '.' + std::to_string(sym305__));
+        param_names__.emplace_back(std::string() + "gamma" + '.' + std::to_string(sym304__));
       } 
     }
-    for (int sym305__ = 1; sym305__ <= epsilon_1dim__; ++sym305__) {
+    for (int sym304__ = 1; sym304__ <= epsilon_1dim__; ++sym304__) {
       {
-        param_names__.emplace_back(std::string() + "epsilon" + '.' + std::to_string(sym305__));
+        param_names__.emplace_back(std::string() + "epsilon" + '.' + std::to_string(sym304__));
       } 
     }
     param_names__.emplace_back(std::string() + "sigma");
     if (emit_transformed_parameters__) {
-      for (int sym305__ = 1; sym305__ <= phi_2dim__; ++sym305__) {
+      for (int sym304__ = 1; sym304__ <= phi_2dim__; ++sym304__) {
         {
-          for (int sym306__ = 1; sym306__ <= M; ++sym306__) {
+          for (int sym305__ = 1; sym305__ <= M; ++sym305__) {
             {
-              param_names__.emplace_back(std::string() + "phi" + '.' + std::to_string(sym306__) + '.' + std::to_string(sym305__));
+              param_names__.emplace_back(std::string() + "phi" + '.' + std::to_string(sym305__) + '.' + std::to_string(sym304__));
             } 
           }
         } 
       }
-      for (int sym305__ = 1; sym305__ <= n_occasions; ++sym305__) {
+      for (int sym304__ = 1; sym304__ <= n_occasions; ++sym304__) {
         {
-          for (int sym306__ = 1; sym306__ <= M; ++sym306__) {
+          for (int sym305__ = 1; sym305__ <= M; ++sym305__) {
             {
-              param_names__.emplace_back(std::string() + "p" + '.' + std::to_string(sym306__) + '.' + std::to_string(sym305__));
+              param_names__.emplace_back(std::string() + "p" + '.' + std::to_string(sym305__) + '.' + std::to_string(sym304__));
             } 
           }
         } 
       }
-      for (int sym305__ = 1; sym305__ <= n_occasions; ++sym305__) {
+      for (int sym304__ = 1; sym304__ <= n_occasions; ++sym304__) {
         {
-          for (int sym306__ = 1; sym306__ <= M; ++sym306__) {
+          for (int sym305__ = 1; sym305__ <= M; ++sym305__) {
             {
-              param_names__.emplace_back(std::string() + "chi" + '.' + std::to_string(sym306__) + '.' + std::to_string(sym305__));
+              param_names__.emplace_back(std::string() + "chi" + '.' + std::to_string(sym305__) + '.' + std::to_string(sym304__));
             } 
           }
         } 
@@ -20715,27 +20710,27 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "sigma2");
       param_names__.emplace_back(std::string() + "psi");
-      for (int sym305__ = 1; sym305__ <= n_occasions; ++sym305__) {
+      for (int sym304__ = 1; sym304__ <= n_occasions; ++sym304__) {
         {
-          param_names__.emplace_back(std::string() + "b" + '.' + std::to_string(sym305__));
+          param_names__.emplace_back(std::string() + "b" + '.' + std::to_string(sym304__));
         } 
       }
       param_names__.emplace_back(std::string() + "Nsuper");
-      for (int sym305__ = 1; sym305__ <= n_occasions; ++sym305__) {
+      for (int sym304__ = 1; sym304__ <= n_occasions; ++sym304__) {
         {
-          param_names__.emplace_back(std::string() + "N" + '.' + std::to_string(sym305__));
+          param_names__.emplace_back(std::string() + "N" + '.' + std::to_string(sym304__));
         } 
       }
-      for (int sym305__ = 1; sym305__ <= n_occasions; ++sym305__) {
+      for (int sym304__ = 1; sym304__ <= n_occasions; ++sym304__) {
         {
-          param_names__.emplace_back(std::string() + "B" + '.' + std::to_string(sym305__));
+          param_names__.emplace_back(std::string() + "B" + '.' + std::to_string(sym304__));
         } 
       }
-      for (int sym305__ = 1; sym305__ <= n_occasions; ++sym305__) {
+      for (int sym304__ = 1; sym304__ <= n_occasions; ++sym304__) {
         {
-          for (int sym306__ = 1; sym306__ <= M; ++sym306__) {
+          for (int sym305__ = 1; sym305__ <= M; ++sym305__) {
             {
-              param_names__.emplace_back(std::string() + "z" + '.' + std::to_string(sym306__) + '.' + std::to_string(sym305__));
+              param_names__.emplace_back(std::string() + "z" + '.' + std::to_string(sym305__) + '.' + std::to_string(sym304__));
             } 
           }
         } 
@@ -20752,41 +20747,41 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     
     param_names__.emplace_back(std::string() + "mean_phi");
     param_names__.emplace_back(std::string() + "mean_p");
-    for (int sym305__ = 1; sym305__ <= n_occasions; ++sym305__) {
+    for (int sym304__ = 1; sym304__ <= n_occasions; ++sym304__) {
       {
-        param_names__.emplace_back(std::string() + "gamma" + '.' + std::to_string(sym305__));
+        param_names__.emplace_back(std::string() + "gamma" + '.' + std::to_string(sym304__));
       } 
     }
-    for (int sym305__ = 1; sym305__ <= epsilon_1dim__; ++sym305__) {
+    for (int sym304__ = 1; sym304__ <= epsilon_1dim__; ++sym304__) {
       {
-        param_names__.emplace_back(std::string() + "epsilon" + '.' + std::to_string(sym305__));
+        param_names__.emplace_back(std::string() + "epsilon" + '.' + std::to_string(sym304__));
       } 
     }
     param_names__.emplace_back(std::string() + "sigma");
     if (emit_transformed_parameters__) {
-      for (int sym305__ = 1; sym305__ <= phi_2dim__; ++sym305__) {
+      for (int sym304__ = 1; sym304__ <= phi_2dim__; ++sym304__) {
         {
-          for (int sym306__ = 1; sym306__ <= M; ++sym306__) {
+          for (int sym305__ = 1; sym305__ <= M; ++sym305__) {
             {
-              param_names__.emplace_back(std::string() + "phi" + '.' + std::to_string(sym306__) + '.' + std::to_string(sym305__));
+              param_names__.emplace_back(std::string() + "phi" + '.' + std::to_string(sym305__) + '.' + std::to_string(sym304__));
             } 
           }
         } 
       }
-      for (int sym305__ = 1; sym305__ <= n_occasions; ++sym305__) {
+      for (int sym304__ = 1; sym304__ <= n_occasions; ++sym304__) {
         {
-          for (int sym306__ = 1; sym306__ <= M; ++sym306__) {
+          for (int sym305__ = 1; sym305__ <= M; ++sym305__) {
             {
-              param_names__.emplace_back(std::string() + "p" + '.' + std::to_string(sym306__) + '.' + std::to_string(sym305__));
+              param_names__.emplace_back(std::string() + "p" + '.' + std::to_string(sym305__) + '.' + std::to_string(sym304__));
             } 
           }
         } 
       }
-      for (int sym305__ = 1; sym305__ <= n_occasions; ++sym305__) {
+      for (int sym304__ = 1; sym304__ <= n_occasions; ++sym304__) {
         {
-          for (int sym306__ = 1; sym306__ <= M; ++sym306__) {
+          for (int sym305__ = 1; sym305__ <= M; ++sym305__) {
             {
-              param_names__.emplace_back(std::string() + "chi" + '.' + std::to_string(sym306__) + '.' + std::to_string(sym305__));
+              param_names__.emplace_back(std::string() + "chi" + '.' + std::to_string(sym305__) + '.' + std::to_string(sym304__));
             } 
           }
         } 
@@ -20796,27 +20791,27 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     if (emit_generated_quantities__) {
       param_names__.emplace_back(std::string() + "sigma2");
       param_names__.emplace_back(std::string() + "psi");
-      for (int sym305__ = 1; sym305__ <= n_occasions; ++sym305__) {
+      for (int sym304__ = 1; sym304__ <= n_occasions; ++sym304__) {
         {
-          param_names__.emplace_back(std::string() + "b" + '.' + std::to_string(sym305__));
+          param_names__.emplace_back(std::string() + "b" + '.' + std::to_string(sym304__));
         } 
       }
       param_names__.emplace_back(std::string() + "Nsuper");
-      for (int sym305__ = 1; sym305__ <= n_occasions; ++sym305__) {
+      for (int sym304__ = 1; sym304__ <= n_occasions; ++sym304__) {
         {
-          param_names__.emplace_back(std::string() + "N" + '.' + std::to_string(sym305__));
+          param_names__.emplace_back(std::string() + "N" + '.' + std::to_string(sym304__));
         } 
       }
-      for (int sym305__ = 1; sym305__ <= n_occasions; ++sym305__) {
+      for (int sym304__ = 1; sym304__ <= n_occasions; ++sym304__) {
         {
-          param_names__.emplace_back(std::string() + "B" + '.' + std::to_string(sym305__));
+          param_names__.emplace_back(std::string() + "B" + '.' + std::to_string(sym304__));
         } 
       }
-      for (int sym305__ = 1; sym305__ <= n_occasions; ++sym305__) {
+      for (int sym304__ = 1; sym304__ <= n_occasions; ++sym304__) {
         {
-          for (int sym306__ = 1; sym306__ <= M; ++sym306__) {
+          for (int sym305__ = 1; sym305__ <= M; ++sym305__) {
             {
-              param_names__.emplace_back(std::string() + "z" + '.' + std::to_string(sym306__) + '.' + std::to_string(sym305__));
+              param_names__.emplace_back(std::string() + "z" + '.' + std::to_string(sym305__) + '.' + std::to_string(sym304__));
             } 
           }
         } 
@@ -23727,7 +23722,6 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
         }
       } 
       if (emit_transformed_parameters__) {
-        lcm_sym54__ = (n_occasions - 1);
         out__.write(phi);
         out__.write(p);
         out__.write(inline_sym1__);
@@ -27346,7 +27340,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       
       assign(x_cov, in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(2),
         "assigning variable x_cov");
-      out__.write_free_cov_matrix(2, x_cov);
+      out__.write_free_cov_matrix(x_cov);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
