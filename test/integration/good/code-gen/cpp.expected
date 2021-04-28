@@ -18570,7 +18570,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
       
       assign(L_Omega,
         in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(nt,
-          2), "assigning variable L_Omega");
+          2, 2), "assigning variable L_Omega");
       out__.write_free_cholesky_factor_corr(L_Omega);
       Eigen::Matrix<local_scalar_t__, -1, 1> z1;
       z1 = Eigen::Matrix<local_scalar_t__, -1, 1>(NS);

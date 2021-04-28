@@ -27348,7 +27348,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       x_cov = Eigen::Matrix<local_scalar_t__, -1, -1>(2, 2);
       stan::math::fill(x_cov, DUMMY_VAR__);
       
-      assign(x_cov, in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(2),
+      assign(x_cov, in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(2, 2),
         "assigning variable x_cov");
       out__.write_free_cov_matrix(x_cov);
     } catch (const std::exception& e) {
