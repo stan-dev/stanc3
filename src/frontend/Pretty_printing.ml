@@ -138,31 +138,32 @@ and pp_expression ppf {expr= e_content; _} =
     | l -> Fmt.pf ppf "%a[%a]" pp_expression e pp_list_of_indices l )
 
 and pp_list_of_expression ppf es = Fmt.(list ~sep:comma pp_expression) ppf es
-and pp_lvalue ppf lhs = pp_expression ppf (expr_of_lvalue lhs)
 
-and pp_assignmentoperator ppf = function
+let pp_lvalue ppf lhs = pp_expression ppf (expr_of_lvalue lhs)
+
+let pp_assignmentoperator ppf = function
   | Assign -> Fmt.pf ppf "="
   (* ArrowAssign is deprecated *)
   | ArrowAssign -> Fmt.pf ppf "<-"
   | OperatorAssign op -> Fmt.pf ppf "%a=" pp_operator op
 
-and pretty_print_assignmentoperator op = wrap_fmt pp_assignmentoperator op
+let pretty_print_assignmentoperator op = wrap_fmt pp_assignmentoperator op
 
-and pp_truncation ppf = function
+let pp_truncation ppf = function
   | NoTruncate -> Fmt.pf ppf ""
   | TruncateUpFrom e -> Fmt.pf ppf " T[%a, ]" pp_expression e
   | TruncateDownFrom e -> Fmt.pf ppf " T[ , %a]" pp_expression e
   | TruncateBetween (e1, e2) ->
       Fmt.pf ppf " T[%a, %a]" pp_expression e1 pp_expression e2
 
-and pp_printable ppf = function
+let pp_printable ppf = function
   | PString s -> Fmt.pf ppf "%s" s
   | PExpr e -> pp_expression ppf e
 
-and pp_list_of_printables ppf l =
+let pp_list_of_printables ppf l =
   Fmt.(list ~sep:comma_no_break pp_printable) ppf l
 
-and pp_sizedtype ppf = function
+let pp_sizedtype ppf = function
   | Middle.SizedType.SInt -> Fmt.pf ppf "int"
   | SReal -> Fmt.pf ppf "real"
   | SVector e -> Fmt.pf ppf "vector[%a]" pp_expression e
@@ -171,7 +172,7 @@ and pp_sizedtype ppf = function
       Fmt.pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
   | SArray _ -> raise (Middle.Errors.FatalError "This should never happen.")
 
-and pp_transformation ppf = function
+let pp_transformation ppf = function
   | Middle.Program.Identity -> Fmt.pf ppf ""
   | Lower e -> Fmt.pf ppf "<lower=%a>" pp_expression e
   | Upper e -> Fmt.pf ppf "<upper=%a>" pp_expression e
@@ -190,7 +191,7 @@ and pp_transformation ppf = function
   | Correlation -> Fmt.pf ppf ""
   | Covariance -> Fmt.pf ppf ""
 
-and pp_transformed_type ppf (pst, trans) =
+let pp_transformed_type ppf (pst, trans) =
   let rec discard_arrays pst =
     match pst with
     | Middle.Type.Sized st ->
@@ -244,14 +245,14 @@ and pp_transformed_type ppf (pst, trans) =
   | Correlation -> Fmt.pf ppf "corr_matrix%a" cov_sizes_fmt ()
   | Covariance -> Fmt.pf ppf "cov_matrix%a" cov_sizes_fmt ()
 
-and pp_array_dims ppf = function
+let pp_array_dims ppf = function
   | [] -> Fmt.pf ppf ""
   | es ->
       Fmt.pf ppf "array[" ;
       with_box ppf 0 (fun () ->
           Fmt.pf ppf "%a] " pp_list_of_expression (List.rev es) )
 
-and pp_indent_unless_block ppf s =
+let rec pp_indent_unless_block ppf s =
   match s.stmt with
   | Block _ -> pp_statement ppf s
   | _ ->
@@ -272,7 +273,9 @@ and pp_recursive_ifthenelse ppf s =
       Fmt.pf ppf "else %a" pp_recursive_ifthenelse s2
   | _ -> pp_indent_unless_block ppf s
 
-and pp_statement ppf ({stmt= s_content; _} as ss) =
+and pp_statement ppf
+    ({stmt= s_content; smeta= {loc}} as ss : untyped_statement) =
+  let _ = loc in
   match s_content with
   | Assignment {assign_lhs= l; assign_op= assop; assign_rhs= e} ->
       with_hbox ppf (fun () ->
@@ -350,7 +353,23 @@ and pp_args ppf (at, ut, id) =
   Fmt.pf ppf "%a%a %a" pp_autodifftype at pp_unsizedtype ut pp_identifier id
 
 and pp_list_of_statements ppf l =
-  with_vbox ppf 0 (fun () -> Format.pp_print_list pp_statement ppf l)
+  let rec pp_tail loc ppf = function
+    | [] -> ()
+    | ({smeta= ({loc= {begin_loc; end_loc}} : located_meta); _} as s) :: l ->
+        Fmt.cut ppf () ;
+        if
+          loc.Middle.Location.filename <> begin_loc.filename
+          || loc.line_num + 1 < begin_loc.line_num
+        then Fmt.cut ppf () ;
+        pp_statement ppf s ;
+        pp_tail end_loc ppf l
+  in
+  let pp_head ppf = function
+    | [] -> ()
+    | ({smeta= ({loc= {end_loc; _}} : located_meta); _} as s) :: l ->
+        pp_statement ppf s ; pp_tail end_loc ppf l
+  in
+  with_vbox ppf 0 (fun () -> pp_head ppf l)
 
 let pp_block block_name ppf block_stmts =
   Fmt.pf ppf "%s {" block_name ;
@@ -398,6 +417,6 @@ let pretty_print_program p =
   check_correctness p result ; result
 
 let pretty_print_typed_program p =
+  let p = untyped_program_of_typed_program p in
   let result = wrap_fmt pp_program p in
-  check_correctness (untyped_program_of_typed_program p) result ;
-  result
+  check_correctness p result ; result

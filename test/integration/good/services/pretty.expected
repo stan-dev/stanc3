@@ -4,8 +4,10 @@ data {
   int<lower=0> N_edges;
   array[N_edges] int<lower=1, upper=N> node1;
   array[N_edges] int<lower=1, upper=N> node2;
+  
   array[N] int<lower=0> y;
   vector<lower=0>[N] E;
+  
   real<lower=0> scaling_factor;
 }
 transformed data {
@@ -13,21 +15,27 @@ transformed data {
 }
 parameters {
   real beta0;
+  
   real<lower=0> sigma;
   real<lower=0, upper=1> rho;
+  
   vector[N] theta;
   vector[N - 1] phi_raw;
 }
 transformed parameters {
   vector[N] phi;
   vector[N] convolved_re;
+  
   phi[1 : (N - 1)] = phi_raw;
   phi[N] = -sum(phi_raw);
+  
   convolved_re = sqrt(1 - rho) * theta + sqrt(rho / scaling_factor) * phi;
 }
 model {
   y ~ poisson_log(log_E + beta0 + convolved_re * sigma);
+  
   target += -0.5 * dot_self(phi[node1] - phi[node2]);
+  
   beta0 ~ normal(0.0, 2.5);
   theta ~ normal(0.0, 1.0);
   sigma ~ normal(0, 5);

@@ -206,14 +206,16 @@ let mk_typed_statement ~stmt ~loc ~return_type =
 
 (** Program shapes, where we obtain types of programs if we substitute typed or untyped
     statements for 's *)
-type 's program =
-  { functionblock: 's list option
-  ; datablock: 's list option
-  ; transformeddatablock: 's list option
-  ; parametersblock: 's list option
-  ; transformedparametersblock: 's list option
-  ; modelblock: 's list option
-  ; generatedquantitiesblock: 's list option }
+type 's block_opt = 's list option
+
+and 's program =
+  { functionblock: 's block_opt
+  ; datablock: 's block_opt
+  ; transformeddatablock: 's block_opt
+  ; parametersblock: 's block_opt
+  ; transformedparametersblock: 's block_opt
+  ; modelblock: 's block_opt
+  ; generatedquantitiesblock: 's block_opt }
 [@@deriving sexp, hash, compare, map, fold]
 
 (** Untyped programs (before type checking) *)

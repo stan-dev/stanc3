@@ -38,6 +38,7 @@ parameters {
 model {
   real k = (b < 0) ? lmultiply(1, d) : 0;
   target += lchoose(10, 10);
+  
   c ~ poisson(3.0);
   c ~ poisson_log(3.0);
   c ~ poisson_log(3.0);
@@ -53,9 +54,11 @@ model {
     x ~ exponential(1);
     target += foo_lcdf(x| 1);
   }
+  
   target += normal_lpdf(x| 0, 1) + normal_lcdf(2| 0, 1)
             + normal_lccdf(3| 0, 1);
   target += sum(K);
+  
   print("target: ", target());
 }
 generated quantities {

@@ -33,6 +33,7 @@ transformed data {
   array[0] real dat;
   array[0] int dat_int;
   vector[2] theta;
+  
   theta = algebra_solver(algebra_system, x, y, dat, dat_int);
   theta = algebra_solver(algebra_system, x, y, dat, dat_int, 0.01, 0.01, 10);
 }
@@ -44,15 +45,19 @@ parameters {
 transformed parameters {
   real abc_tp = algebra_solverfake(2.9);
   vector[2] theta_p;
+  
   theta_p = algebra_solver(algebra_system, x, y, dat, dat_int);
   theta_p = algebra_solver(algebra_system, x, y, dat, dat_int, 0.01, 0.01,
                            10);
+  
   theta_p = algebra_solver(algebra_system, x, y_p, dat, dat_int);
   theta_p = algebra_solver(algebra_system, x, y_p, dat, dat_int, 0.01, 0.01,
                            10);
+  
   theta_p = algebra_solver(algebra_system, x_p, y, dat, dat_int);
   theta_p = algebra_solver(algebra_system, x_p, y, dat, dat_int, 0.01, 0.01,
                            10);
+  
   theta_p = algebra_solver(algebra_system, x_p, y_p, dat, dat_int);
   theta_p = algebra_solver(algebra_system, x_p, y_p, dat, dat_int, 0.01,
                            0.01, 10);
@@ -83,6 +88,7 @@ transformed data {
   array[0] real dat;
   array[0] int dat_int;
   vector[2] theta;
+  
   theta = algebra_solver_newton(algebra_system, x, y, dat, dat_int);
   theta = algebra_solver_newton(algebra_system, x, y, dat, dat_int, 0.01,
                                 0.01, 10);
@@ -95,15 +101,19 @@ parameters {
 transformed parameters {
   real abc_tp = algebra_solverfake(2.9);
   vector[2] theta_p;
+  
   theta_p = algebra_solver_newton(algebra_system, x, y, dat, dat_int);
   theta_p = algebra_solver_newton(algebra_system, x, y, dat, dat_int, 0.01,
                                   0.01, 10);
+  
   theta_p = algebra_solver_newton(algebra_system, x, y_p, dat, dat_int);
   theta_p = algebra_solver_newton(algebra_system, x, y_p, dat, dat_int, 0.01,
                                   0.01, 10);
+  
   theta_p = algebra_solver_newton(algebra_system, x_p, y, dat, dat_int);
   theta_p = algebra_solver_newton(algebra_system, x_p, y, dat, dat_int, 0.01,
                                   0.01, 10);
+  
   theta_p = algebra_solver_newton(algebra_system, x_p, y_p, dat, dat_int);
   theta_p = algebra_solver_newton(algebra_system, x_p, y_p, dat, dat_int,
                                   0.01, 0.01, 10);
@@ -148,14 +158,17 @@ transformed data {
   array[17] vector[5] b;
   array[17] row_vector[5] c;
   matrix[15, 27] d;
+  
   array[12, 12, 12] real aa;
   array[12, 12] vector[5] bb;
   array[12, 12] row_vector[5] cc;
   array[12] matrix[5, 12] dd;
+  
   a[1][1] = 118.22;
   b[1][1] = 13;
   c[1][1] = 0;
   d[1][1] = 12;
+  
   aa[1][1][1] = 118.22;
   bb[1][1][1] = 13;
   cc[1][1][1] = 0;
@@ -169,14 +182,17 @@ transformed parameters {
   array[17] vector[5] bp;
   array[17] row_vector[5] cp;
   matrix[15, 27] dp;
+  
   array[12, 12, 12] real aap;
   array[12, 12] vector[5] bbp;
   array[12, 12] row_vector[5] ccp;
   array[12] matrix[5, 12] ddp;
+  
   ap[1][1] = 118.22;
   bp[1][1] = 13;
   cp[1][1] = 0;
   dp[1][1] = 12;
+  
   aap[1][1][1] = 118.22;
   bbp[1][1][1] = 13;
   ccp[1][1][1] = 0;
@@ -192,14 +208,17 @@ data {
   vector[5] y;
   row_vector[6] z;
   matrix[5, 6] m;
+  
   array[2] real x1;
   array[2] vector[5] y1;
   array[2] row_vector[6] z1;
   array[2] matrix[5, 6] m1;
+  
   array[2, 3] real x2;
   array[2, 3] vector[5] y2;
   array[2, 3] row_vector[6] z2;
   array[2, 3] matrix[5, 6] m2;
+  
   array[2, 3, 4] real x3;
   array[2, 3, 4] vector[5] y3;
   array[2, 3, 4] row_vector[6] z3;
@@ -210,82 +229,102 @@ transformed data {
   vector[5] ty;
   row_vector[6] tz;
   matrix[5, 6] tm;
+  
   array[2] real tx1;
   array[2] vector[5] ty1;
   array[2] row_vector[6] tz1;
   array[2] matrix[5, 6] tm1;
+  
   array[2, 3] real tx2;
   array[2, 3] vector[5] ty2;
   array[2, 3] row_vector[6] tz2;
   array[2, 3] matrix[5, 6] tm2;
+  
   array[2, 3, 4] real tx3;
   array[2, 3, 4] vector[5] ty3;
   array[2, 3, 4] row_vector[6] tz3;
   array[2, 3, 4] matrix[5, 6] tm3;
+  
   tx = x;
   tx = y[1];
   tx = z[1];
   tx = m[1, 2];
+  
   tx = x1[1];
   tx = y1[1, 1];
   tx = z1[1, 1];
   tx = m1[1, 1, 2];
+  
   tx = x2[1, 1];
   tx = y2[1, 1, 1];
   tx = z2[1, 1, 1];
   tx = m2[1, 1, 1, 2];
+  
   tx = x3[1, 1, 1];
   tx = y3[1, 1, 1, 1];
   tx = z3[1, 1, 1, 1];
   tx = m3[1, 1, 1, 1, 2];
+  
   tx1[1] = x;
   tx1[1] = y[1];
   tx1[1] = z[1];
   tx1[1] = m[1, 2];
+  
   tx1[1] = x1[1];
   tx1[1] = y1[1, 1];
   tx1[1] = z1[1, 1];
   tx1[1] = m1[1, 1, 2];
+  
   tx1[1] = x2[1, 1];
   tx1[1] = y2[1, 1, 1];
   tx1[1] = z2[1, 1, 1];
   tx1[1] = m2[1, 1, 1, 2];
+  
   tx1[1] = x3[1, 1, 1];
   tx1[1] = y3[1, 1, 1, 1];
   tx1[1] = z3[1, 1, 1, 1];
   tx1[1] = m3[1, 1, 1, 1, 2];
+  
   tx2[1, 1] = x;
   tx2[1, 1] = y[1];
   tx2[1, 1] = z[1];
   tx2[1, 1] = m[1, 2];
+  
   tx2[1, 1] = x1[1];
   tx2[1, 1] = y1[1, 1];
   tx2[1, 1] = z1[1, 1];
   tx2[1, 1] = m1[1, 1, 2];
+  
   tx2[1, 1] = x2[1, 1];
   tx2[1, 1] = y2[1, 1, 1];
   tx2[1, 1] = z2[1, 1, 1];
   tx2[1, 1] = m2[1, 1, 1, 2];
+  
   tx2[1, 1] = x3[1, 1, 1];
   tx2[1, 1] = y3[1, 1, 1, 1];
   tx2[1, 1] = z3[1, 1, 1, 1];
   tx2[1, 1] = m3[1, 1, 1, 1, 2];
+  
   tx3[1, 1, 1] = x;
   tx3[1, 1, 1] = y[1];
   tx3[1, 1, 1] = z[1];
   tx3[1, 1, 1] = m[1, 2];
+  
   tx3[1, 1, 1] = x1[1];
   tx3[1, 1, 1] = y1[1, 1];
   tx3[1, 1, 1] = z1[1, 1];
   tx3[1, 1, 1] = m1[1, 1, 2];
+  
   tx3[1, 1, 1] = x2[1, 1];
   tx3[1, 1, 1] = y2[1, 1, 1];
   tx3[1, 1, 1] = z2[1, 1, 1];
   tx3[1, 1, 1] = m2[1, 1, 1, 2];
+  
   tx3[1, 1, 1] = x3[1, 1, 1];
   tx3[1, 1, 1] = y3[1, 1, 1, 1];
   tx3[1, 1, 1] = z3[1, 1, 1, 1];
   tx3[1, 1, 1] = m3[1, 1, 1, 1, 2];
+  
   ty = y;
   ty = y1[1];
   ty = y2[1, 1];
@@ -294,6 +333,7 @@ transformed data {
   ty = col(m1[1], 1);
   ty = col(m2[1, 1], 1);
   ty = col(m3[1, 1, 1], 1);
+  
   ty1[1] = y;
   ty1[1] = y1[1];
   ty1[1] = y2[1, 1];
@@ -302,6 +342,7 @@ transformed data {
   ty1[1] = col(m1[1], 1);
   ty1[1] = col(m2[1, 1], 1);
   ty1[1] = col(m3[1, 1, 1], 1);
+  
   ty2[1, 1] = y;
   ty2[1, 1] = y1[1];
   ty2[1, 1] = y2[1, 1];
@@ -310,6 +351,7 @@ transformed data {
   ty2[1, 1] = col(m1[1], 1);
   ty2[1, 1] = col(m2[1, 1], 1);
   ty2[1, 1] = col(m3[1, 1, 1], 1);
+  
   ty3[1, 1, 1] = y;
   ty3[1, 1, 1] = y1[1];
   ty3[1, 1, 1] = y2[1, 1];
@@ -318,6 +360,7 @@ transformed data {
   ty3[1, 1, 1] = col(m1[1], 1);
   ty3[1, 1, 1] = col(m2[1, 1], 1);
   ty3[1, 1, 1] = col(m3[1, 1, 1], 1);
+  
   tz = z;
   tz = z1[1];
   tz = z2[1, 1];
@@ -330,6 +373,7 @@ transformed data {
   tz = m1[1, 1];
   tz = m2[1, 1, 1];
   tz = m3[1, 1, 1, 1];
+  
   tz1[1] = z;
   tz1[1] = z1[1];
   tz1[1] = z2[1, 1];
@@ -342,6 +386,7 @@ transformed data {
   tz1[1] = m1[1, 1];
   tz1[1] = m2[1, 1, 1];
   tz1[1] = m3[1, 1, 1, 1];
+  
   tz2[1, 1] = z;
   tz2[1, 1] = z1[1];
   tz2[1, 1] = z2[1, 1];
@@ -354,6 +399,7 @@ transformed data {
   tz2[1, 1] = m1[1, 1];
   tz2[1, 1] = m2[1, 1, 1];
   tz2[1, 1] = m3[1, 1, 1, 1];
+  
   tz3[1, 1, 1] = z;
   tz3[1, 1, 1] = z1[1];
   tz3[1, 1, 1] = z2[1, 1];
@@ -366,77 +412,105 @@ transformed data {
   tz3[1, 1, 1] = m1[1, 1];
   tz3[1, 1, 1] = m2[1, 1, 1];
   tz3[1, 1, 1] = m3[1, 1, 1, 1];
+  
   tm = m;
   tm = m1[1];
   tm = m2[1, 1];
   tm = m3[1, 1, 1];
+  
   tm1[1] = m;
   tm1[1] = m1[1];
   tm1[1] = m2[1, 1];
   tm1[1] = m3[1, 1, 1];
+  
   tm2[1, 1] = m;
   tm2[1, 1] = m1[1];
   tm2[1, 1] = m2[1, 1];
   tm2[1, 1] = m3[1, 1, 1];
+  
   tm3[1, 1, 1] = m;
   tm3[1, 1, 1] = m1[1];
   tm3[1, 1, 1] = m2[1, 1];
   tm3[1, 1, 1] = m3[1, 1, 1];
+  
   tx1 = x1;
   tx1 = x2[1];
   tx1 = x3[1, 1];
+  
   tx2[1] = x1;
   tx2[1] = x2[1];
   tx2[1] = x3[1, 1];
+  
   tx3[1, 1] = x1;
   tx3[1, 1] = x2[1];
   tx3[1, 1] = x3[1, 1];
+  
   ty1 = y1;
   ty1 = y2[1];
   ty1 = y3[1, 1];
+  
   ty2[1] = y1;
   ty2[1] = y2[1];
   ty2[1] = y3[1, 1];
+  
   ty3[1, 1] = y1;
   ty3[1, 1] = y2[1];
   ty3[1, 1] = y3[1, 1];
+  
   tz1 = z1;
   tz1 = z2[1];
   tz1 = z3[1, 1];
+  
   tz2[1] = z1;
   tz2[1] = z2[1];
   tz2[1] = z3[1, 1];
+  
   tz3[1, 1] = z1;
   tz3[1, 1] = z2[1];
   tz3[1, 1] = z3[1, 1];
+  
   tm1 = m1;
   tm1 = m2[1];
   tm1 = m3[1, 1];
+  
   tm2[1] = m1;
   tm2[1] = m2[1];
   tm2[1] = m3[1, 1];
+  
   tm3[1, 1] = m1;
   tm3[1, 1] = m2[1];
   tm3[1, 1] = m3[1, 1];
+  
   tx2 = x2;
   tx2 = x3[1];
+  
   tx3[1] = x2;
   tx3[1] = x3[1];
+  
   ty2 = y2;
   ty2 = y3[1];
+  
   ty3[1] = y2;
   ty3[1] = y3[1];
+  
   tz2 = z2;
   tz2 = z3[1];
+  
   tz3[1] = z2;
   tz3[1] = z3[1];
+  
   tm2 = m2;
   tm2 = m3[1];
+  
   tm3[1] = m2;
   tm3[1] = m3[1];
+  
   tx3 = x3;
+  
   ty3 = y3;
+  
   tz3 = z3;
+  
   tm3 = m3;
 }
 model {
@@ -449,14 +523,17 @@ data {
   vector[5] y;
   row_vector[6] z;
   matrix[5, 6] m;
+  
   array[2] real x1;
   array[2] vector[5] y1;
   array[2] row_vector[6] z1;
   array[2] matrix[5, 6] m1;
+  
   array[2, 3] real x2;
   array[2, 3] vector[5] y2;
   array[2, 3] row_vector[6] z2;
   array[2, 3] matrix[5, 6] m2;
+  
   array[2, 3, 4] real x3;
   array[2, 3, 4] vector[5] y3;
   array[2, 3, 4] row_vector[6] z3;
@@ -467,82 +544,102 @@ transformed parameters {
   vector[5] ty;
   row_vector[6] tz;
   matrix[5, 6] tm;
+  
   array[2] real tx1;
   array[2] vector[5] ty1;
   array[2] row_vector[6] tz1;
   array[2] matrix[5, 6] tm1;
+  
   array[2, 3] real tx2;
   array[2, 3] vector[5] ty2;
   array[2, 3] row_vector[6] tz2;
   array[2, 3] matrix[5, 6] tm2;
+  
   array[2, 3, 4] real tx3;
   array[2, 3, 4] vector[5] ty3;
   array[2, 3, 4] row_vector[6] tz3;
   array[2, 3, 4] matrix[5, 6] tm3;
+  
   tx = x;
   tx = y[1];
   tx = z[1];
   tx = m[1, 2];
+  
   tx = x1[1];
   tx = y1[1, 1];
   tx = z1[1, 1];
   tx = m1[1, 1, 2];
+  
   tx = x2[1, 1];
   tx = y2[1, 1, 1];
   tx = z2[1, 1, 1];
   tx = m2[1, 1, 1, 2];
+  
   tx = x3[1, 1, 1];
   tx = y3[1, 1, 1, 1];
   tx = z3[1, 1, 1, 1];
   tx = m3[1, 1, 1, 1, 2];
+  
   tx1[1] = x;
   tx1[1] = y[1];
   tx1[1] = z[1];
   tx1[1] = m[1, 2];
+  
   tx1[1] = x1[1];
   tx1[1] = y1[1, 1];
   tx1[1] = z1[1, 1];
   tx1[1] = m1[1, 1, 2];
+  
   tx1[1] = x2[1, 1];
   tx1[1] = y2[1, 1, 1];
   tx1[1] = z2[1, 1, 1];
   tx1[1] = m2[1, 1, 1, 2];
+  
   tx1[1] = x3[1, 1, 1];
   tx1[1] = y3[1, 1, 1, 1];
   tx1[1] = z3[1, 1, 1, 1];
   tx1[1] = m3[1, 1, 1, 1, 2];
+  
   tx2[1, 1] = x;
   tx2[1, 1] = y[1];
   tx2[1, 1] = z[1];
   tx2[1, 1] = m[1, 2];
+  
   tx2[1, 1] = x1[1];
   tx2[1, 1] = y1[1, 1];
   tx2[1, 1] = z1[1, 1];
   tx2[1, 1] = m1[1, 1, 2];
+  
   tx2[1, 1] = x2[1, 1];
   tx2[1, 1] = y2[1, 1, 1];
   tx2[1, 1] = z2[1, 1, 1];
   tx2[1, 1] = m2[1, 1, 1, 2];
+  
   tx2[1, 1] = x3[1, 1, 1];
   tx2[1, 1] = y3[1, 1, 1, 1];
   tx2[1, 1] = z3[1, 1, 1, 1];
   tx2[1, 1] = m3[1, 1, 1, 1, 2];
+  
   tx3[1, 1, 1] = x;
   tx3[1, 1, 1] = y[1];
   tx3[1, 1, 1] = z[1];
   tx3[1, 1, 1] = m[1, 2];
+  
   tx3[1, 1, 1] = x1[1];
   tx3[1, 1, 1] = y1[1, 1];
   tx3[1, 1, 1] = z1[1, 1];
   tx3[1, 1, 1] = m1[1, 1, 2];
+  
   tx3[1, 1, 1] = x2[1, 1];
   tx3[1, 1, 1] = y2[1, 1, 1];
   tx3[1, 1, 1] = z2[1, 1, 1];
   tx3[1, 1, 1] = m2[1, 1, 1, 2];
+  
   tx3[1, 1, 1] = x3[1, 1, 1];
   tx3[1, 1, 1] = y3[1, 1, 1, 1];
   tx3[1, 1, 1] = z3[1, 1, 1, 1];
   tx3[1, 1, 1] = m3[1, 1, 1, 1, 2];
+  
   ty = y;
   ty = y1[1];
   ty = y2[1, 1];
@@ -551,6 +648,7 @@ transformed parameters {
   ty = col(m1[1], 1);
   ty = col(m2[1, 1], 1);
   ty = col(m3[1, 1, 1], 1);
+  
   ty1[1] = y;
   ty1[1] = y1[1];
   ty1[1] = y2[1, 1];
@@ -559,6 +657,7 @@ transformed parameters {
   ty1[1] = col(m1[1], 1);
   ty1[1] = col(m2[1, 1], 1);
   ty1[1] = col(m3[1, 1, 1], 1);
+  
   ty2[1, 1] = y;
   ty2[1, 1] = y1[1];
   ty2[1, 1] = y2[1, 1];
@@ -567,6 +666,7 @@ transformed parameters {
   ty2[1, 1] = col(m1[1], 1);
   ty2[1, 1] = col(m2[1, 1], 1);
   ty2[1, 1] = col(m3[1, 1, 1], 1);
+  
   ty3[1, 1, 1] = y;
   ty3[1, 1, 1] = y1[1];
   ty3[1, 1, 1] = y2[1, 1];
@@ -575,6 +675,7 @@ transformed parameters {
   ty3[1, 1, 1] = col(m1[1], 1);
   ty3[1, 1, 1] = col(m2[1, 1], 1);
   ty3[1, 1, 1] = col(m3[1, 1, 1], 1);
+  
   tz = z;
   tz = z1[1];
   tz = z2[1, 1];
@@ -587,6 +688,7 @@ transformed parameters {
   tz = m1[1, 1];
   tz = m2[1, 1, 1];
   tz = m3[1, 1, 1, 1];
+  
   tz1[1] = z;
   tz1[1] = z1[1];
   tz1[1] = z2[1, 1];
@@ -599,6 +701,7 @@ transformed parameters {
   tz1[1] = m1[1, 1];
   tz1[1] = m2[1, 1, 1];
   tz1[1] = m3[1, 1, 1, 1];
+  
   tz2[1, 1] = z;
   tz2[1, 1] = z1[1];
   tz2[1, 1] = z2[1, 1];
@@ -611,6 +714,7 @@ transformed parameters {
   tz2[1, 1] = m1[1, 1];
   tz2[1, 1] = m2[1, 1, 1];
   tz2[1, 1] = m3[1, 1, 1, 1];
+  
   tz3[1, 1, 1] = z;
   tz3[1, 1, 1] = z1[1];
   tz3[1, 1, 1] = z2[1, 1];
@@ -623,77 +727,105 @@ transformed parameters {
   tz3[1, 1, 1] = m1[1, 1];
   tz3[1, 1, 1] = m2[1, 1, 1];
   tz3[1, 1, 1] = m3[1, 1, 1, 1];
+  
   tm = m;
   tm = m1[1];
   tm = m2[1, 1];
   tm = m3[1, 1, 1];
+  
   tm1[1] = m;
   tm1[1] = m1[1];
   tm1[1] = m2[1, 1];
   tm1[1] = m3[1, 1, 1];
+  
   tm2[1, 1] = m;
   tm2[1, 1] = m1[1];
   tm2[1, 1] = m2[1, 1];
   tm2[1, 1] = m3[1, 1, 1];
+  
   tm3[1, 1, 1] = m;
   tm3[1, 1, 1] = m1[1];
   tm3[1, 1, 1] = m2[1, 1];
   tm3[1, 1, 1] = m3[1, 1, 1];
+  
   tx1 = x1;
   tx1 = x2[1];
   tx1 = x3[1, 1];
+  
   tx2[1] = x1;
   tx2[1] = x2[1];
   tx2[1] = x3[1, 1];
+  
   tx3[1, 1] = x1;
   tx3[1, 1] = x2[1];
   tx3[1, 1] = x3[1, 1];
+  
   ty1 = y1;
   ty1 = y2[1];
   ty1 = y3[1, 1];
+  
   ty2[1] = y1;
   ty2[1] = y2[1];
   ty2[1] = y3[1, 1];
+  
   ty3[1, 1] = y1;
   ty3[1, 1] = y2[1];
   ty3[1, 1] = y3[1, 1];
+  
   tz1 = z1;
   tz1 = z2[1];
   tz1 = z3[1, 1];
+  
   tz2[1] = z1;
   tz2[1] = z2[1];
   tz2[1] = z3[1, 1];
+  
   tz3[1, 1] = z1;
   tz3[1, 1] = z2[1];
   tz3[1, 1] = z3[1, 1];
+  
   tm1 = m1;
   tm1 = m2[1];
   tm1 = m3[1, 1];
+  
   tm2[1] = m1;
   tm2[1] = m2[1];
   tm2[1] = m3[1, 1];
+  
   tm3[1, 1] = m1;
   tm3[1, 1] = m2[1];
   tm3[1, 1] = m3[1, 1];
+  
   tx2 = x2;
   tx2 = x3[1];
+  
   tx3[1] = x2;
   tx3[1] = x3[1];
+  
   ty2 = y2;
   ty2 = y3[1];
+  
   ty3[1] = y2;
   ty3[1] = y3[1];
+  
   tz2 = z2;
   tz2 = z3[1];
+  
   tz3[1] = z2;
   tz3[1] = z3[1];
+  
   tm2 = m2;
   tm2 = m3[1];
+  
   tm3[1] = m2;
   tm3[1] = m3[1];
+  
   tx3 = x3;
+  
   ty3 = y3;
+  
   tz3 = z3;
+  
   tm3 = m3;
 }
 model {
@@ -706,14 +838,17 @@ parameters {
   vector[5] y;
   row_vector[6] z;
   matrix[5, 6] m;
+  
   array[2] real x1;
   array[2] vector[5] y1;
   array[2] row_vector[6] z1;
   array[2] matrix[5, 6] m1;
+  
   array[2, 3] real x2;
   array[2, 3] vector[5] y2;
   array[2, 3] row_vector[6] z2;
   array[2, 3] matrix[5, 6] m2;
+  
   array[2, 3, 4] real x3;
   array[2, 3, 4] vector[5] y3;
   array[2, 3, 4] row_vector[6] z3;
@@ -724,82 +859,102 @@ transformed parameters {
   vector[5] ty;
   row_vector[6] tz;
   matrix[5, 6] tm;
+  
   array[2] real tx1;
   array[2] vector[5] ty1;
   array[2] row_vector[6] tz1;
   array[2] matrix[5, 6] tm1;
+  
   array[2, 3] real tx2;
   array[2, 3] vector[5] ty2;
   array[2, 3] row_vector[6] tz2;
   array[2, 3] matrix[5, 6] tm2;
+  
   array[2, 3, 4] real tx3;
   array[2, 3, 4] vector[5] ty3;
   array[2, 3, 4] row_vector[6] tz3;
   array[2, 3, 4] matrix[5, 6] tm3;
+  
   tx = x;
   tx = y[1];
   tx = z[1];
   tx = m[1, 2];
+  
   tx = x1[1];
   tx = y1[1, 1];
   tx = z1[1, 1];
   tx = m1[1, 1, 2];
+  
   tx = x2[1, 1];
   tx = y2[1, 1, 1];
   tx = z2[1, 1, 1];
   tx = m2[1, 1, 1, 2];
+  
   tx = x3[1, 1, 1];
   tx = y3[1, 1, 1, 1];
   tx = z3[1, 1, 1, 1];
   tx = m3[1, 1, 1, 1, 2];
+  
   tx1[1] = x;
   tx1[1] = y[1];
   tx1[1] = z[1];
   tx1[1] = m[1, 2];
+  
   tx1[1] = x1[1];
   tx1[1] = y1[1, 1];
   tx1[1] = z1[1, 1];
   tx1[1] = m1[1, 1, 2];
+  
   tx1[1] = x2[1, 1];
   tx1[1] = y2[1, 1, 1];
   tx1[1] = z2[1, 1, 1];
   tx1[1] = m2[1, 1, 1, 2];
+  
   tx1[1] = x3[1, 1, 1];
   tx1[1] = y3[1, 1, 1, 1];
   tx1[1] = z3[1, 1, 1, 1];
   tx1[1] = m3[1, 1, 1, 1, 2];
+  
   tx2[1, 1] = x;
   tx2[1, 1] = y[1];
   tx2[1, 1] = z[1];
   tx2[1, 1] = m[1, 2];
+  
   tx2[1, 1] = x1[1];
   tx2[1, 1] = y1[1, 1];
   tx2[1, 1] = z1[1, 1];
   tx2[1, 1] = m1[1, 1, 2];
+  
   tx2[1, 1] = x2[1, 1];
   tx2[1, 1] = y2[1, 1, 1];
   tx2[1, 1] = z2[1, 1, 1];
   tx2[1, 1] = m2[1, 1, 1, 2];
+  
   tx2[1, 1] = x3[1, 1, 1];
   tx2[1, 1] = y3[1, 1, 1, 1];
   tx2[1, 1] = z3[1, 1, 1, 1];
   tx2[1, 1] = m3[1, 1, 1, 1, 2];
+  
   tx3[1, 1, 1] = x;
   tx3[1, 1, 1] = y[1];
   tx3[1, 1, 1] = z[1];
   tx3[1, 1, 1] = m[1, 2];
+  
   tx3[1, 1, 1] = x1[1];
   tx3[1, 1, 1] = y1[1, 1];
   tx3[1, 1, 1] = z1[1, 1];
   tx3[1, 1, 1] = m1[1, 1, 2];
+  
   tx3[1, 1, 1] = x2[1, 1];
   tx3[1, 1, 1] = y2[1, 1, 1];
   tx3[1, 1, 1] = z2[1, 1, 1];
   tx3[1, 1, 1] = m2[1, 1, 1, 2];
+  
   tx3[1, 1, 1] = x3[1, 1, 1];
   tx3[1, 1, 1] = y3[1, 1, 1, 1];
   tx3[1, 1, 1] = z3[1, 1, 1, 1];
   tx3[1, 1, 1] = m3[1, 1, 1, 1, 2];
+  
   ty = y;
   ty = y1[1];
   ty = y2[1, 1];
@@ -808,6 +963,7 @@ transformed parameters {
   ty = col(m1[1], 1);
   ty = col(m2[1, 1], 1);
   ty = col(m3[1, 1, 1], 1);
+  
   ty1[1] = y;
   ty1[1] = y1[1];
   ty1[1] = y2[1, 1];
@@ -816,6 +972,7 @@ transformed parameters {
   ty1[1] = col(m1[1], 1);
   ty1[1] = col(m2[1, 1], 1);
   ty1[1] = col(m3[1, 1, 1], 1);
+  
   ty2[1, 1] = y;
   ty2[1, 1] = y1[1];
   ty2[1, 1] = y2[1, 1];
@@ -824,6 +981,7 @@ transformed parameters {
   ty2[1, 1] = col(m1[1], 1);
   ty2[1, 1] = col(m2[1, 1], 1);
   ty2[1, 1] = col(m3[1, 1, 1], 1);
+  
   ty3[1, 1, 1] = y;
   ty3[1, 1, 1] = y1[1];
   ty3[1, 1, 1] = y2[1, 1];
@@ -832,6 +990,7 @@ transformed parameters {
   ty3[1, 1, 1] = col(m1[1], 1);
   ty3[1, 1, 1] = col(m2[1, 1], 1);
   ty3[1, 1, 1] = col(m3[1, 1, 1], 1);
+  
   tz = z;
   tz = z1[1];
   tz = z2[1, 1];
@@ -844,6 +1003,7 @@ transformed parameters {
   tz = m1[1, 1];
   tz = m2[1, 1, 1];
   tz = m3[1, 1, 1, 1];
+  
   tz1[1] = z;
   tz1[1] = z1[1];
   tz1[1] = z2[1, 1];
@@ -856,6 +1016,7 @@ transformed parameters {
   tz1[1] = m1[1, 1];
   tz1[1] = m2[1, 1, 1];
   tz1[1] = m3[1, 1, 1, 1];
+  
   tz2[1, 1] = z;
   tz2[1, 1] = z1[1];
   tz2[1, 1] = z2[1, 1];
@@ -868,6 +1029,7 @@ transformed parameters {
   tz2[1, 1] = m1[1, 1];
   tz2[1, 1] = m2[1, 1, 1];
   tz2[1, 1] = m3[1, 1, 1, 1];
+  
   tz3[1, 1, 1] = z;
   tz3[1, 1, 1] = z1[1];
   tz3[1, 1, 1] = z2[1, 1];
@@ -880,77 +1042,105 @@ transformed parameters {
   tz3[1, 1, 1] = m1[1, 1];
   tz3[1, 1, 1] = m2[1, 1, 1];
   tz3[1, 1, 1] = m3[1, 1, 1, 1];
+  
   tm = m;
   tm = m1[1];
   tm = m2[1, 1];
   tm = m3[1, 1, 1];
+  
   tm1[1] = m;
   tm1[1] = m1[1];
   tm1[1] = m2[1, 1];
   tm1[1] = m3[1, 1, 1];
+  
   tm2[1, 1] = m;
   tm2[1, 1] = m1[1];
   tm2[1, 1] = m2[1, 1];
   tm2[1, 1] = m3[1, 1, 1];
+  
   tm3[1, 1, 1] = m;
   tm3[1, 1, 1] = m1[1];
   tm3[1, 1, 1] = m2[1, 1];
   tm3[1, 1, 1] = m3[1, 1, 1];
+  
   tx1 = x1;
   tx1 = x2[1];
   tx1 = x3[1, 1];
+  
   tx2[1] = x1;
   tx2[1] = x2[1];
   tx2[1] = x3[1, 1];
+  
   tx3[1, 1] = x1;
   tx3[1, 1] = x2[1];
   tx3[1, 1] = x3[1, 1];
+  
   ty1 = y1;
   ty1 = y2[1];
   ty1 = y3[1, 1];
+  
   ty2[1] = y1;
   ty2[1] = y2[1];
   ty2[1] = y3[1, 1];
+  
   ty3[1, 1] = y1;
   ty3[1, 1] = y2[1];
   ty3[1, 1] = y3[1, 1];
+  
   tz1 = z1;
   tz1 = z2[1];
   tz1 = z3[1, 1];
+  
   tz2[1] = z1;
   tz2[1] = z2[1];
   tz2[1] = z3[1, 1];
+  
   tz3[1, 1] = z1;
   tz3[1, 1] = z2[1];
   tz3[1, 1] = z3[1, 1];
+  
   tm1 = m1;
   tm1 = m2[1];
   tm1 = m3[1, 1];
+  
   tm2[1] = m1;
   tm2[1] = m2[1];
   tm2[1] = m3[1, 1];
+  
   tm3[1, 1] = m1;
   tm3[1, 1] = m2[1];
   tm3[1, 1] = m3[1, 1];
+  
   tx2 = x2;
   tx2 = x3[1];
+  
   tx3[1] = x2;
   tx3[1] = x3[1];
+  
   ty2 = y2;
   ty2 = y3[1];
+  
   ty3[1] = y2;
   ty3[1] = y3[1];
+  
   tz2 = z2;
   tz2 = z3[1];
+  
   tz3[1] = z2;
   tz3[1] = z3[1];
+  
   tm2 = m2;
   tm2 = m3[1];
+  
   tm3[1] = m2;
   tm3[1] = m3[1];
+  
   tx3 = x3;
+  
   ty3 = y3;
+  
   tz3 = z3;
+  
   tm3 = m3;
 }
 model {
@@ -982,6 +1172,7 @@ parameters {
 model {
   beta_inferred ~ normal(0, 2);
   alpha_inferred ~ normal(0, 4);
+  
   y ~ bernoulli_logit(x * beta_inferred + alpha_inferred);
 }
 
@@ -1016,6 +1207,7 @@ parameters {
 model {
   beta_inferred ~ normal(0, 2);
   alpha_inferred ~ normal(0, 4);
+  
   y ~ bernoulli_logit_glm(x, alpha_inferred, beta_inferred);
 }
 
@@ -1030,15 +1222,18 @@ functions {
   int foo(int a) {
     while (1) break;
     while (0) continue;
+    
     for (i in 1 : 10) 
       break;
     for (i in 1 : 10) 
       continue;
+    
     while (1) {
       int b;
       b = 5;
       break;
     }
+    
     while (1) {
       if (0) 
         break;
@@ -1047,11 +1242,14 @@ functions {
       else 
         break;
     }
+    
     while (1) while (0) break;
+    
     while (1) {
       for (i in 1 : 10) 
         break;
     }
+    
     while (1) {
       array[2, 3] int vs;
       int z;
@@ -1071,6 +1269,7 @@ functions {
         z = 1;
       }
     }
+    
     while (1) {
       real z;
       matrix[2, 3] vs;
@@ -1083,6 +1282,7 @@ functions {
         continue;
       }
     }
+    
     while (1) {
       real z;
       vector[2] vs;
@@ -1095,6 +1295,7 @@ functions {
         continue;
       }
     }
+    
     while (1) {
       real z;
       row_vector[2] vs;
@@ -1107,6 +1308,7 @@ functions {
         continue;
       }
     }
+    
     while (1) {
       int b;
       b = 5;
@@ -1116,6 +1318,7 @@ functions {
         break;
       }
     }
+    
     while (1) {
       while (1) {
         
@@ -1128,6 +1331,7 @@ functions {
       }
       continue;
     }
+    
     return 0;
   }
 }
@@ -1194,46 +1398,55 @@ data {
   array[2, 3] int a2;
   array[1] int a3;
   array[2, 3] int a4;
+  
   real b0;
   array[4] real b1;
   array[5, 6] real b2;
   array[4] real b3;
   array[5, 6] real b4;
+  
   vector[7] c0;
   array[8] vector[7] c1;
   array[8, 9] vector[7] c2;
   array[8] vector[7] c3;
   array[8, 9] vector[7] c4;
+  
   row_vector[7] d0;
   array[8] row_vector[7] d1;
   array[8, 9] row_vector[7] d2;
   array[8] row_vector[7] d3;
   array[8, 9] row_vector[7] d4;
+  
   matrix[8, 9] e;
   array[11] matrix[8, 9] e1;
   array[11, 12] matrix[8, 9] e2;
   array[11] matrix[8, 9] e3;
   array[11, 12] matrix[8, 9] e4;
+  
   simplex[8] f;
   array[9] simplex[8] f1;
   array[9, 10] simplex[8] f2;
   array[9] simplex[8] f3;
   array[9, 10] simplex[8] f4;
+  
   ordered[9] g;
   array[11] ordered[9] g1;
   array[12, 13] ordered[9] g2;
   array[11] ordered[9] g3;
   array[12, 13] ordered[9] g4;
+  
   positive_ordered[9] h;
   array[11] positive_ordered[9] h1;
   array[12, 13] positive_ordered[9] h2;
   array[11] positive_ordered[9] h3;
   array[12, 13] positive_ordered[9] h4;
+  
   corr_matrix[10] j;
   array[3] corr_matrix[10] j1;
   array[5, 6] corr_matrix[10] j2;
   array[3] corr_matrix[10] j3;
   array[5, 6] corr_matrix[10] j4;
+  
   cov_matrix[10] k;
   array[3] cov_matrix[10] k1;
   array[5, 6] cov_matrix[10] k2;
@@ -1246,72 +1459,86 @@ transformed data {
   array[2, 3] int td_a2;
   array[1] int td_a3;
   array[2, 3] int td_a4;
+  
   real td_b0;
   array[4] real td_b1;
   array[5, 6] real td_b2;
   array[4] real td_b3;
   array[5, 6] real td_b4;
+  
   vector[7] td_c0;
   array[8] vector[7] td_c1;
   array[8, 9] vector[7] td_c2;
   array[8] vector[7] td_c3;
   array[8, 9] vector[7] td_c4;
+  
   row_vector[7] td_d0;
   array[8] row_vector[7] td_d1;
   array[8, 9] row_vector[7] td_d2;
   array[8] row_vector[7] td_d3;
   array[8, 9] row_vector[7] td_d4;
+  
   matrix[8, 9] td_e;
   array[11] matrix[8, 9] td_e1;
   array[11, 12] matrix[8, 9] td_e2;
   array[11] matrix[8, 9] td_e3;
   array[11, 12] matrix[8, 9] td_e4;
+  
   simplex[8] td_f;
   array[9] simplex[8] td_f1;
   array[9, 10] simplex[8] td_f2;
   array[9] simplex[8] td_f3;
   array[9, 10] simplex[8] td_f4;
+  
   ordered[9] td_g;
   array[11] ordered[9] td_g1;
   array[12, 13] ordered[9] td_g2;
   array[11] ordered[9] td_g3;
   array[12, 13] ordered[9] td_g4;
+  
   positive_ordered[9] td_h;
   array[11] positive_ordered[9] td_h1;
   array[12, 13] positive_ordered[9] td_h2;
   array[11] positive_ordered[9] td_h3;
   array[12, 13] positive_ordered[9] td_h4;
+  
   corr_matrix[10] td_j;
   array[3] corr_matrix[10] td_j1;
   array[5, 6] corr_matrix[10] td_j2;
   array[3] corr_matrix[10] td_j3;
   array[5, 6] corr_matrix[10] td_j4;
+  
   cov_matrix[10] td_k;
   array[3] cov_matrix[10] td_k1;
   array[5, 6] cov_matrix[10] td_k2;
   array[3] cov_matrix[10] td_k3;
   array[5, 6] cov_matrix[10] td_k4;
+  
   {
     int loc_td_a0;
     array[1] int loc_td_a1;
     array[2, 3] int loc_td_a2;
     array[1] int loc_td_a3;
     array[2, 3] int loc_td_a4;
+    
     real loc_td_b0;
     array[4] real loc_td_b1;
     array[5, 6] real loc_td_b2;
     array[4] real loc_td_b3;
     array[5, 6] real loc_td_b4;
+    
     vector[7] loc_td_c0;
     array[8] vector[7] loc_td_c1;
     array[8, 9] vector[7] loc_td_c2;
     array[8] vector[7] loc_td_c3;
     array[8, 9] vector[7] loc_td_c4;
+    
     row_vector[7] loc_td_d0;
     array[8] row_vector[7] loc_td_d1;
     array[8, 9] row_vector[7] loc_td_d2;
     array[8] row_vector[7] loc_td_d3;
     array[8, 9] row_vector[7] loc_td_d4;
+    
     matrix[8, 9] loc_td_e;
     array[11] matrix[8, 9] loc_td_e1;
     array[11, 12] matrix[8, 9] loc_td_e2;
@@ -1325,41 +1552,49 @@ parameters {
   array[5, 6] real par_b2;
   array[4] real par_b3;
   array[5, 6] real par_b4;
+  
   vector[7] par_c0;
   array[8] vector[7] par_c1;
   array[8, 9] vector[7] par_c2;
   array[8] vector[7] par_c3;
   array[8, 9] vector[7] par_c4;
+  
   row_vector[7] par_d0;
   array[8] row_vector[7] par_d1;
   array[8, 9] row_vector[7] par_d2;
   array[8] row_vector[7] par_d3;
   array[8, 9] row_vector[7] par_d4;
+  
   matrix[8, 9] par_e;
   array[11] matrix[8, 9] par_e1;
   array[11, 12] matrix[8, 9] par_e2;
   array[11] matrix[8, 9] par_e3;
   array[11, 12] matrix[8, 9] par_e4;
+  
   simplex[8] par_f;
   array[9] simplex[8] par_f1;
   array[9, 10] simplex[8] par_f2;
   array[9] simplex[8] par_f3;
   array[9, 10] simplex[8] par_f4;
+  
   ordered[9] par_g;
   array[11] ordered[9] par_g1;
   array[12, 13] ordered[9] par_g2;
   array[11] ordered[9] par_g3;
   array[12, 13] ordered[9] par_g4;
+  
   positive_ordered[9] par_h;
   array[11] positive_ordered[9] par_h1;
   array[12, 13] positive_ordered[9] par_h2;
   array[11] positive_ordered[9] par_h3;
   array[12, 13] positive_ordered[9] par_h4;
+  
   corr_matrix[10] par_j;
   array[3] corr_matrix[10] par_j1;
   array[5, 6] corr_matrix[10] par_j2;
   array[3] corr_matrix[10] par_j3;
   array[5, 6] corr_matrix[10] par_j4;
+  
   cov_matrix[10] par_k;
   array[3] cov_matrix[10] par_k1;
   array[5, 6] cov_matrix[10] par_k2;
@@ -1372,67 +1607,80 @@ transformed parameters {
   array[5, 6] real tpar_b2;
   array[4] real tpar_b3;
   array[5, 6] real tpar_b4;
+  
   vector[7] tpar_c0;
   array[8] vector[7] tpar_c1;
   array[8, 9] vector[7] tpar_c2;
   array[8] vector[7] tpar_c3;
   array[8, 9] vector[7] tpar_c4;
+  
   row_vector[7] tpar_d0;
   array[8] row_vector[7] tpar_d1;
   array[8, 9] row_vector[7] tpar_d2;
   array[8] row_vector[7] tpar_d3;
   array[8, 9] row_vector[7] tpar_d4;
+  
   matrix[8, 9] tpar_e;
   array[11] matrix[8, 9] tpar_e1;
   array[11, 12] matrix[8, 9] tpar_e2;
   array[11] matrix[8, 9] tpar_e3;
   array[11, 12] matrix[8, 9] tpar_e4;
+  
   simplex[8] tpar_f;
   array[9] simplex[8] tpar_f1;
   array[9, 10] simplex[8] tpar_f2;
   array[9] simplex[8] tpar_f3;
   array[9, 10] simplex[8] tpar_f4;
+  
   ordered[9] tpar_g;
   array[11] ordered[9] tpar_g1;
   array[12, 13] ordered[9] tpar_g2;
   array[11] ordered[9] tpar_g3;
   array[12, 13] ordered[9] tpar_g4;
+  
   positive_ordered[9] tpar_h;
   array[11] positive_ordered[9] tpar_h1;
   array[12, 13] positive_ordered[9] tpar_h2;
   array[11] positive_ordered[9] tpar_h3;
   array[12, 13] positive_ordered[9] tpar_h4;
+  
   corr_matrix[10] tpar_j;
   array[3] corr_matrix[10] tpar_j1;
   array[5, 6] corr_matrix[10] tpar_j2;
   array[3] corr_matrix[10] tpar_j3;
   array[5, 6] corr_matrix[10] tpar_j4;
+  
   cov_matrix[10] tpar_k;
   array[3] cov_matrix[10] tpar_k1;
   array[5, 6] cov_matrix[10] tpar_k2;
   array[3] cov_matrix[10] tpar_k3;
   array[5, 6] cov_matrix[10] tpar_k4;
+  
   {
     int loc_tpar_a0;
     array[1] int loc_tpar_a1;
     array[2, 3] int loc_tpar_a2;
     array[1] int loc_tpar_a3;
     array[2, 3] int loc_tpar_a4;
+    
     real loc_tpar_b0;
     array[4] real loc_tpar_b1;
     array[5, 6] real loc_tpar_b2;
     array[4] real loc_tpar_b3;
     array[5, 6] real loc_tpar_b4;
+    
     vector[7] loc_tpar_c0;
     array[8] vector[7] loc_tpar_c1;
     array[8, 9] vector[7] loc_tpar_c2;
     array[8] vector[7] loc_tpar_c3;
     array[8, 9] vector[7] loc_tpar_c4;
+    
     row_vector[7] loc_tpar_d0;
     array[8] row_vector[7] loc_tpar_d1;
     array[8, 9] row_vector[7] loc_tpar_d2;
     array[8] row_vector[7] loc_tpar_d3;
     array[8, 9] row_vector[7] loc_tpar_d4;
+    
     matrix[8, 9] loc_tpar_e;
     array[11] matrix[8, 9] loc_tpar_e1;
     array[11, 12] matrix[8, 9] loc_tpar_e2;
@@ -1447,21 +1695,25 @@ model {
     array[2, 3] int loc_model_a2;
     array[1] int loc_model_a3;
     array[2, 3] int loc_model_a4;
+    
     real loc_model_b0;
     array[4] real loc_model_b1;
     array[5, 6] real loc_model_b2;
     array[4] real loc_model_b3;
     array[5, 6] real loc_model_b4;
+    
     vector[7] loc_model_c0;
     array[8] vector[7] loc_model_c1;
     array[8, 9] vector[7] loc_model_c2;
     array[8] vector[7] loc_model_c3;
     array[8, 9] vector[7] loc_model_c4;
+    
     row_vector[7] loc_model_d0;
     array[8] row_vector[7] loc_model_d1;
     array[8, 9] row_vector[7] loc_model_d2;
     array[8] row_vector[7] loc_model_d3;
     array[8, 9] row_vector[7] loc_model_d4;
+    
     matrix[8, 9] loc_model_e;
     array[11] matrix[8, 9] loc_model_e1;
     array[11, 12] matrix[8, 9] loc_model_e2;
@@ -1475,67 +1727,80 @@ generated quantities {
   array[5, 6] real gq_b2;
   array[4] real gq_b3;
   array[5, 6] real gq_b4;
+  
   vector[7] gq_c0;
   array[8] vector[7] gq_c1;
   array[8, 9] vector[7] gq_c2;
   array[8] vector[7] gq_c3;
   array[8, 9] vector[7] gq_c4;
+  
   row_vector[7] gq_d0;
   array[8] row_vector[7] gq_d1;
   array[8, 9] row_vector[7] gq_d2;
   array[8] row_vector[7] gq_d3;
   array[8, 9] row_vector[7] gq_d4;
+  
   matrix[8, 9] gq_e;
   array[11] matrix[8, 9] gq_e1;
   array[11, 12] matrix[8, 9] gq_e2;
   array[11] matrix[8, 9] gq_e3;
   array[11, 12] matrix[8, 9] gq_e4;
+  
   simplex[8] gq_f;
   array[9] simplex[8] gq_f1;
   array[9, 10] simplex[8] gq_f2;
   array[9] simplex[8] gq_f3;
   array[9, 10] simplex[8] gq_f4;
+  
   ordered[9] gq_g;
   array[11] ordered[9] gq_g1;
   array[12, 13] ordered[9] gq_g2;
   array[11] ordered[9] gq_g3;
   array[12, 13] ordered[9] gq_g4;
+  
   positive_ordered[9] gq_h;
   array[11] positive_ordered[9] gq_h1;
   array[12, 13] positive_ordered[9] gq_h2;
   array[11] positive_ordered[9] gq_h3;
   array[12, 13] positive_ordered[9] gq_h4;
+  
   corr_matrix[10] gq_j;
   array[3] corr_matrix[10] gq_j1;
   array[5, 6] corr_matrix[10] gq_j2;
   array[3] corr_matrix[10] gq_j3;
   array[5, 6] corr_matrix[10] gq_j4;
+  
   cov_matrix[10] gq_k;
   array[3] cov_matrix[10] gq_k1;
   array[5, 6] cov_matrix[10] gq_k2;
   array[3] cov_matrix[10] gq_k3;
   array[5, 6] cov_matrix[10] gq_k4;
+  
   {
     int loc_gq_a0;
     array[1] int loc_gq_a1;
     array[2, 3] int loc_gq_a2;
     array[1] int loc_gq_a3;
     array[2, 3] int loc_gq_a4;
+    
     real loc_gq_b0;
     array[4] real loc_gq_b1;
     array[5, 6] real loc_gq_b2;
     array[4] real loc_gq_b3;
     array[5, 6] real loc_gq_b4;
+    
     vector[7] loc_gq_c0;
     array[8] vector[7] loc_gq_c1;
     array[8, 9] vector[7] loc_gq_c2;
     array[8] vector[7] loc_gq_c3;
     array[8, 9] vector[7] loc_gq_c4;
+    
     row_vector[7] loc_gq_d0;
     array[8] row_vector[7] loc_gq_d1;
     array[8, 9] row_vector[7] loc_gq_d2;
     array[8] row_vector[7] loc_gq_d3;
     array[8, 9] row_vector[7] loc_gq_d4;
+    
     matrix[8, 9] loc_gq_e;
     array[11] matrix[8, 9] loc_gq_e1;
     array[11, 12] matrix[8, 9] loc_gq_e2;
@@ -1571,15 +1836,18 @@ transformed parameters {
   real tp_r3 = 1 ? x : 2.0;
   real tp_r4 = 0 ? x : x;
   real tp_r5 = 0 ? N : x;
+  
   real tp_r6 = 1 ? x : tp_r1;
   real tp_r7 = 1 ? tp_r1 : tp_r2;
   real tp_r8 = 1 ? N : tp_r1;
+  
   {
     real local_r1 = 1 ? 1.0 : 2.0;
     real local_r2 = 1 ? 1.0 : x;
     real local_r3 = 1 ? x : 2.0;
     real local_r4 = 0 ? x : x;
     real local_r5 = 0 ? N : x;
+    
     real local_r6 = 1 ? x : tp_r1;
     real local_r7 = 1 ? tp_r1 : tp_r2;
     real local_r8 = 1 ? N : tp_r1;
@@ -1595,20 +1863,24 @@ generated quantities {
   int gq_i2 = 1 ? N : y[1];
   int gq_i3 = 1 ? N : -3;
   int gq_i4 = 1 ? 1 : 4;
+  
   real gq_r1 = 1 ? 1.0 : 2.0;
   real gq_r2 = 1 ? 1.0 : x;
   real gq_r3 = 1 ? x : 2.0;
   real gq_r4 = 0 ? x : x;
   real gq_r5 = 0 ? N : x;
+  
   real gq_r6 = 1 ? x : tp_r1;
   real gq_r7 = 1 ? tp_r1 : tp_r2;
   real gq_r8 = 1 ? N : tp_r1;
+  
   {
     real local_r1 = 1 ? 1.0 : 2.0;
     real local_r2 = 1 ? 1.0 : x;
     real local_r3 = 1 ? x : 2.0;
     real local_r4 = 0 ? x : x;
     real local_r5 = 0 ? N : x;
+    
     real local_r6 = 1 ? x : tp_r1;
     real local_r7 = 1 ? tp_r1 : tp_r2;
     real local_r8 = 1 ? N : tp_r1;
@@ -1662,6 +1934,7 @@ transformed data {
   int td_a4 = 4;
   int td_a5;
   int td_a6 = 6;
+  
   real td_b0 = 0.5;
   real td_b1 = 2.5;
   real td_b2;
@@ -1669,6 +1942,7 @@ transformed data {
   real td_b4 = 4.5;
   real td_b5;
   real td_b6 = 6.5;
+  
   vector[2] td_c0 = [-1.5, -2.5]';
   vector[2] td_c1 = [1.5, 2.5]';
   vector[2] td_c2;
@@ -1676,6 +1950,7 @@ transformed data {
   vector[2] td_c4 = [-1.5, -2.5]';
   vector[2] td_c5;
   vector[2] td_c6 = [1.5, 2.5]';
+  
   array[2] real td_d0 = {-1.5, -2.5};
   array[2] real td_d1 = {1.5, 2.5};
   array[2] real td_d2;
@@ -1683,6 +1958,7 @@ transformed data {
   array[2] real td_d4 = {-1.5, -2.5};
   array[2] real td_d5;
   array[2] real td_d6 = {1.5, 2.5};
+  
   {
     int loc_a0 = 0;
     int loc_a1 = 2;
@@ -1691,6 +1967,7 @@ transformed data {
     int loc_a4 = 4;
     int loc_a5;
     int loc_a6 = 6;
+    
     real loc_b0 = 0.5;
     real loc_b1 = 2.5;
     real loc_b2;
@@ -1698,6 +1975,7 @@ transformed data {
     real loc_b4 = 4.5;
     real loc_b5;
     real loc_b6 = 6.5;
+    
     vector[2] loc_c0 = [-1.5, -2.5]';
     vector[2] loc_c1 = [1.5, 2.5]';
     vector[2] loc_c2;
@@ -1705,6 +1983,7 @@ transformed data {
     vector[2] loc_c4 = [-1.5, -2.5]';
     vector[2] loc_c5;
     vector[2] loc_c6 = [1.5, 2.5]';
+    
     array[2] real loc_d0 = {-1.5, -2.5};
     array[2] real loc_d1 = {1.5, 2.5};
     array[2] real loc_d2;
@@ -1733,6 +2012,7 @@ transformed parameters {
   real tpar_b4 = 4.5;
   real tpar_b5;
   real tpar_b6 = 6.5;
+  
   vector[2] tpar_c0 = [-1.5, -2.5]';
   vector[2] tpar_c1 = [1.5, 2.5]';
   vector[2] tpar_c2;
@@ -1740,6 +2020,7 @@ transformed parameters {
   vector[2] tpar_c4 = [-1.5, -2.5]';
   vector[2] tpar_c5;
   vector[2] tpar_c6 = [1.5, 2.5]';
+  
   array[2] real tpar_d0 = {-1.5, -2.5};
   array[2] real tpar_d1 = {1.5, 2.5};
   array[2] real tpar_d2;
@@ -1747,6 +2028,7 @@ transformed parameters {
   array[2] real tpar_d4 = {-1.5, -2.5};
   array[2] real tpar_d5;
   array[2] real tpar_d6 = {1.5, 2.5};
+  
   {
     int loc_tpar_a0 = 0;
     int loc_tpar_a1 = 2;
@@ -1755,6 +2037,7 @@ transformed parameters {
     int loc_tpar_a4 = 4;
     int loc_tpar_a5;
     int loc_tpar_a6 = 6;
+    
     real loc_tpar_b0 = 0.5;
     real loc_tpar_b1 = 2.5;
     real loc_tpar_b2;
@@ -1762,6 +2045,7 @@ transformed parameters {
     real loc_tpar_b4 = 4.5;
     real loc_tpar_b5;
     real loc_tpar_b6 = 6.5;
+    
     vector[2] loc_tpar_c0 = [-1.5, -2.5]';
     vector[2] loc_tpar_c1 = [1.5, 2.5]';
     vector[2] loc_tpar_c2;
@@ -1769,6 +2053,7 @@ transformed parameters {
     vector[2] loc_tpar_c4 = [-1.5, -2.5]';
     vector[2] loc_tpar_c5;
     vector[2] loc_tpar_c6 = [1.5, 2.5]';
+    
     array[2] real loc_tpar_d0 = {-1.5, -2.5};
     array[2] real loc_tpar_d1 = {1.5, 2.5};
     array[2] real loc_tpar_d2;
@@ -1786,6 +2071,7 @@ model {
   int model_a4 = 4;
   int model_a5;
   int model_a6 = 6;
+  
   real model_b0 = 0.5;
   real model_b1 = 2.5;
   real model_b2;
@@ -1793,6 +2079,7 @@ model {
   real model_b4 = 4.5;
   real model_b5;
   real model_b6 = 6.5;
+  
   vector[2] model_c0 = [-1.5, -2.5]';
   vector[2] model_c1 = [1.5, 2.5]';
   vector[2] model_c2;
@@ -1800,6 +2087,7 @@ model {
   vector[2] model_c4 = [-1.5, -2.5]';
   vector[2] model_c5;
   vector[2] model_c6 = [1.5, 2.5]';
+  
   array[2] real model_d0 = {-1.5, -2.5};
   array[2] real model_d1 = {1.5, 2.5};
   array[2] real model_d2;
@@ -1807,6 +2095,7 @@ model {
   array[2] real model_d4 = {-1.5, -2.5};
   array[2] real model_d5;
   array[2] real model_d6 = {1.5, 2.5};
+  
   {
     int loc_model_a0 = 0;
     int loc_model_a1 = 2;
@@ -1815,6 +2104,7 @@ model {
     int loc_model_a4 = 4;
     int loc_model_a5;
     int loc_model_a6 = 6;
+    
     real loc_model_b0 = 0.5;
     real loc_model_b1 = 2.5;
     real loc_model_b2;
@@ -1822,6 +2112,7 @@ model {
     real loc_model_b4 = 4.5;
     real loc_model_b5;
     real loc_model_b6 = 6.5;
+    
     vector[2] loc_model_c0 = [-1.5, -2.5]';
     vector[2] loc_model_c1 = [1.5, 2.5]';
     vector[2] loc_model_c2;
@@ -1829,6 +2120,7 @@ model {
     vector[2] loc_model_c4 = [-1.5, -2.5]';
     vector[2] loc_model_c5;
     vector[2] loc_model_c6 = [1.5, 2.5]';
+    
     array[2] real loc_model_d0 = {-1.5, -2.5};
     array[2] real loc_model_d1 = {1.5, 2.5};
     array[2] real loc_model_d2;
@@ -1846,6 +2138,7 @@ generated quantities {
   int gq_a4 = 4;
   int gq_a5;
   int gq_a6 = 6;
+  
   real gq_b0 = 0.5;
   real gq_b1 = 2.5;
   real gq_b2;
@@ -1853,6 +2146,7 @@ generated quantities {
   real gq_b4 = 4.5;
   real gq_b5;
   real gq_b6 = 6.5;
+  
   vector[2] gq_c0 = [-1.5, -2.5]';
   vector[2] gq_c1 = [1.5, 2.5]';
   vector[2] gq_c2;
@@ -1860,6 +2154,7 @@ generated quantities {
   vector[2] gq_c4 = [-1.5, -2.5]';
   vector[2] gq_c5;
   vector[2] gq_c6 = [1.5, 2.5]';
+  
   array[2] real gq_d0 = {-1.5, -2.5};
   array[2] real gq_d1 = {1.5, 2.5};
   array[2] real gq_d2;
@@ -1867,6 +2162,7 @@ generated quantities {
   array[2] real gq_d4 = {-1.5, -2.5};
   array[2] real gq_d5;
   array[2] real gq_d6 = {1.5, 2.5};
+  
   {
     int loc_gq_a0 = 0;
     int loc_gq_a1 = 2;
@@ -1875,6 +2171,7 @@ generated quantities {
     int loc_gq_a4 = 4;
     int loc_gq_a5;
     int loc_gq_a6 = 6;
+    
     real loc_gq_b0 = 0.5;
     real loc_gq_b1 = 2.5;
     real loc_gq_b2;
@@ -1882,6 +2179,7 @@ generated quantities {
     real loc_gq_b4 = 4.5;
     real loc_gq_b5;
     real loc_gq_b6 = 6.5;
+    
     vector[2] loc_gq_c0 = [-1.5, -2.5]';
     vector[2] loc_gq_c1 = [1.5, 2.5]';
     vector[2] loc_gq_c2;
@@ -1889,6 +2187,7 @@ generated quantities {
     vector[2] loc_gq_c4 = [-1.5, -2.5]';
     vector[2] loc_gq_c5;
     vector[2] loc_gq_c6 = [1.5, 2.5]';
+    
     array[2] real loc_gq_d0 = {-1.5, -2.5};
     array[2] real loc_gq_d1 = {1.5, 2.5};
     array[2] real loc_gq_d2;
@@ -1902,12 +2201,16 @@ generated quantities {
   $ ../../../../install/default/bin/stanc --auto-format declare-define-var-constrained-matrix.stan
 data {
   int d;
+  
   corr_matrix[d] d_corr_matrix;
   array[1] corr_matrix[d] d_corr_matrix_ar;
+  
   cov_matrix[d] d_cov_matrix;
   array[1] cov_matrix[d] d_cov_matrix_ar;
+  
   cholesky_factor_corr[d] d_cholesky_factor_corr;
   array[1] cholesky_factor_corr[d] d_cholesky_factor_corr_ar;
+  
   cholesky_factor_cov[d] d_cholesky_factor_cov;
   array[1] cholesky_factor_cov[d] d_cholesky_factor_cov_ar;
 }
@@ -1915,24 +2218,31 @@ transformed data {
   corr_matrix[d] td_corr_matrix1 = d_corr_matrix;
   corr_matrix[d] td_corr_matrix2 = d_corr_matrix_ar[1];
   array[1] corr_matrix[d] td_corr_matrix_ar = d_corr_matrix_ar;
+  
   cov_matrix[d] td_cov_matrix1 = d_cov_matrix;
   cov_matrix[d] td_cov_matrix2 = d_cov_matrix_ar[1];
   array[1] cov_matrix[d] td_cov_matrix_ar = d_cov_matrix_ar;
+  
   cholesky_factor_corr[d] td_cholesky_factor_corr1 = d_cholesky_factor_corr;
   cholesky_factor_corr[d] td_cholesky_factor_corr2 = d_cholesky_factor_corr_ar[1];
   array[1] cholesky_factor_corr[d] td_cholesky_factor_corr_ar = d_cholesky_factor_corr_ar;
+  
   cholesky_factor_cov[d] td_cholesky_factor_cov1 = d_cholesky_factor_cov;
   cholesky_factor_cov[d] td_cholesky_factor_cov2 = d_cholesky_factor_cov_ar[1];
   array[1] cholesky_factor_cov[d] td_cholesky_factor_cov_ar = d_cholesky_factor_cov_ar;
+  
   print("td_corr_matrix1 = ", td_corr_matrix1);
   print("td_corr_matrix2 = ", td_corr_matrix2);
   print("td_corr_matrix_ar = ", td_corr_matrix_ar);
+  
   print("td_cov_matrix1 = ", td_cov_matrix1);
   print("td_cov_matrix2 = ", td_cov_matrix2);
   print("td_cov_matrix_ar = ", td_cov_matrix_ar);
+  
   print("td_cholesky_factor_corr1 = ", td_cholesky_factor_corr1);
   print("td_cholesky_factor_corr2 = ", td_cholesky_factor_corr2);
   print("td_cholesky_factor_corr_ar = ", td_cholesky_factor_corr_ar);
+  
   print("td_cholesky_factor_cov1 = ", td_cholesky_factor_cov1);
   print("td_cholesky_factor_cov2 = ", td_cholesky_factor_cov2);
   print("td_cholesky_factor_cov_ar = ", td_cholesky_factor_cov_ar);
@@ -1941,24 +2251,31 @@ transformed parameters {
   corr_matrix[d] tp_corr_matrix1 = d_corr_matrix;
   corr_matrix[d] tp_corr_matrix2 = d_corr_matrix_ar[1];
   array[1] corr_matrix[d] tp_corr_matrix_ar = d_corr_matrix_ar;
+  
   cov_matrix[d] tp_cov_matrix1 = d_cov_matrix;
   cov_matrix[d] tp_cov_matrix2 = d_cov_matrix_ar[1];
   array[1] cov_matrix[d] tp_cov_matrix_ar = d_cov_matrix_ar;
+  
   cholesky_factor_corr[d] tp_cholesky_factor_corr1 = d_cholesky_factor_corr;
   cholesky_factor_corr[d] tp_cholesky_factor_corr2 = d_cholesky_factor_corr_ar[1];
   array[1] cholesky_factor_corr[d] tp_cholesky_factor_corr_ar = d_cholesky_factor_corr_ar;
+  
   cholesky_factor_cov[d] tp_cholesky_factor_cov1 = d_cholesky_factor_cov;
   cholesky_factor_cov[d] tp_cholesky_factor_cov2 = d_cholesky_factor_cov_ar[1];
   array[1] cholesky_factor_cov[d] tp_cholesky_factor_cov_ar = d_cholesky_factor_cov_ar;
+  
   print("tp_corr_matrix1 = ", tp_corr_matrix1);
   print("tp_corr_matrix2 = ", tp_corr_matrix2);
   print("tp_corr_matrix_ar = ", tp_corr_matrix_ar);
+  
   print("tp_cov_matrix1 = ", tp_cov_matrix1);
   print("tp_cov_matrix2 = ", tp_cov_matrix2);
   print("tp_cov_matrix_ar = ", tp_cov_matrix_ar);
+  
   print("tp_cholesky_factor_corr1 = ", tp_cholesky_factor_corr1);
   print("tp_cholesky_factor_corr2 = ", tp_cholesky_factor_corr2);
   print("tp_cholesky_factor_corr_ar = ", tp_cholesky_factor_corr_ar);
+  
   print("tp_cholesky_factor_cov1 = ", tp_cholesky_factor_cov1);
   print("tp_cholesky_factor_cov2 = ", tp_cholesky_factor_cov2);
   print("tp_cholesky_factor_cov_ar = ", tp_cholesky_factor_cov_ar);
@@ -1970,24 +2287,31 @@ generated quantities {
   corr_matrix[d] gq_corr_matrix1 = d_corr_matrix;
   corr_matrix[d] gq_corr_matrix2 = d_corr_matrix_ar[1];
   array[1] corr_matrix[d] gq_corr_matrix_ar = d_corr_matrix_ar;
+  
   cov_matrix[d] gq_cov_matrix1 = d_cov_matrix;
   cov_matrix[d] gq_cov_matrix2 = d_cov_matrix_ar[1];
   array[1] cov_matrix[d] gq_cov_matrix_ar = d_cov_matrix_ar;
+  
   cholesky_factor_corr[d] gq_cholesky_factor_corr1 = d_cholesky_factor_corr;
   cholesky_factor_corr[d] gq_cholesky_factor_corr2 = d_cholesky_factor_corr_ar[1];
   array[1] cholesky_factor_corr[d] gq_cholesky_factor_corr_ar = d_cholesky_factor_corr_ar;
+  
   cholesky_factor_cov[d] gq_cholesky_factor_cov1 = d_cholesky_factor_cov;
   cholesky_factor_cov[d] gq_cholesky_factor_cov2 = d_cholesky_factor_cov_ar[1];
   array[1] cholesky_factor_cov[d] gq_cholesky_factor_cov_ar = d_cholesky_factor_cov_ar;
+  
   print("gq_corr_matrix1 = ", gq_corr_matrix1);
   print("gq_corr_matrix2 = ", gq_corr_matrix2);
   print("gq_corr_matrix_ar = ", gq_corr_matrix_ar);
+  
   print("gq_cov_matrix1 = ", gq_cov_matrix1);
   print("gq_cov_matrix2 = ", gq_cov_matrix2);
   print("gq_cov_matrix_ar = ", gq_cov_matrix_ar);
+  
   print("gq_cholesky_factor_corr1 = ", gq_cholesky_factor_corr1);
   print("gq_cholesky_factor_corr2 = ", gq_cholesky_factor_corr2);
   print("gq_cholesky_factor_corr_ar = ", gq_cholesky_factor_corr_ar);
+  
   print("gq_cholesky_factor_cov1 = ", gq_cholesky_factor_cov1);
   print("gq_cholesky_factor_cov2 = ", gq_cholesky_factor_cov2);
   print("gq_cholesky_factor_cov_ar = ", gq_cholesky_factor_cov_ar);
@@ -2009,24 +2333,31 @@ transformed data {
   simplex[d] td_simplex1 = d_simplex;
   simplex[d] td_simplex2 = d_simplex_ar[1];
   array[d] simplex[d] td_simplex_ar = d_simplex_ar;
+  
   unit_vector[d] td_unit_vector1 = d_unit_vector;
   unit_vector[d] td_unit_vector2 = d_unit_vector_ar[1];
   array[d] unit_vector[d] td_unit_vector_ar = d_unit_vector_ar;
+  
   ordered[d] td_ordered1 = d_ordered;
   ordered[d] td_ordered2 = d_ordered_ar[1];
   array[d] ordered[d] td_ordered_ar = d_ordered_ar;
+  
   positive_ordered[d] td_positive_ordered1 = d_positive_ordered;
   positive_ordered[d] td_positive_ordered2 = d_positive_ordered_ar[1];
   array[d] positive_ordered[d] td_positive_ordered_ar = d_positive_ordered_ar;
+  
   print("td_simplex1 = ", td_simplex1);
   print("td_simplex2 = ", td_simplex2);
   print("td_simplex_ar = ", td_simplex_ar);
+  
   print("td_unit_vector1 = ", td_unit_vector1);
   print("td_unit_vector2 = ", td_unit_vector2);
   print("td_unit_vector_ar = ", td_unit_vector_ar);
+  
   print("td_ordered1 = ", td_ordered1);
   print("td_ordered2 = ", td_ordered2);
   print("td_ordered_ar = ", td_ordered_ar);
+  
   print("td_positive_ordered1 = ", td_positive_ordered1);
   print("td_positive_ordered2 = ", td_positive_ordered2);
   print("td_positive_ordered_ar = ", td_positive_ordered_ar);
@@ -2035,45 +2366,56 @@ transformed parameters {
   simplex[d] tp_simplex1 = d_simplex;
   simplex[d] tp_simplex2 = d_simplex_ar[1];
   array[d] simplex[d] tp_simplex_ar3 = d_simplex_ar;
+  
   simplex[d] tp_simplex4 = tp_simplex1;
   simplex[d] tp_simplex5 = d_simplex_ar[1];
   array[d] simplex[d] tp_simplex_ar6 = tp_simplex_ar3;
+  
   unit_vector[d] tp_unit_vector1 = d_unit_vector;
   unit_vector[d] tp_unit_vector2 = d_unit_vector_ar[1];
   array[d] unit_vector[d] tp_unit_vector_ar3 = d_unit_vector_ar;
+  
   unit_vector[d] tp_unit_vector4 = tp_unit_vector1;
   unit_vector[d] tp_unit_vector5 = tp_unit_vector_ar3[2];
   array[d] unit_vector[d] tp_unit_vector_ar6 = tp_unit_vector_ar3;
+  
   ordered[d] tp_ordered1 = d_ordered;
   ordered[d] tp_ordered2 = d_ordered_ar[1];
   array[d] ordered[d] tp_ordered_ar3 = d_ordered_ar;
+  
   ordered[d] tp_ordered4 = tp_ordered1;
   ordered[d] tp_ordered5 = tp_ordered_ar3[3];
   array[d] ordered[d] tp_ordered_ar6 = tp_ordered_ar3;
+  
   positive_ordered[d] tp_positive_ordered1 = d_positive_ordered;
   positive_ordered[d] tp_positive_ordered2 = d_positive_ordered_ar[1];
   array[d] positive_ordered[d] tp_positive_ordered_ar3 = d_positive_ordered_ar;
+  
   positive_ordered[d] tp_positive_ordered4 = tp_positive_ordered1;
   positive_ordered[d] tp_positive_ordered5 = tp_positive_ordered_ar3[1];
   array[d] positive_ordered[d] tp_positive_ordered_ar6 = tp_positive_ordered_ar3;
+  
   print("tp_simplex1 = ", tp_simplex1);
   print("tp_simplex2 = ", tp_simplex2);
   print("tp_simplex_ar3 = ", tp_simplex_ar3);
   print("tp_simplex4 = ", tp_simplex4);
   print("tp_simplex5 = ", tp_simplex5);
   print("tp_simplex_ar6 = ", tp_simplex_ar6);
+  
   print("tp_unit_vector1 = ", tp_unit_vector1);
   print("tp_unit_vector2 = ", tp_unit_vector2);
   print("tp_unit_vector_ar3 = ", tp_unit_vector_ar3);
   print("tp_unit_vector4 = ", tp_unit_vector4);
   print("tp_unit_vector5 = ", tp_unit_vector5);
   print("tp_unit_vector_ar6 = ", tp_unit_vector_ar6);
+  
   print("tp_ordered1 = ", tp_ordered1);
   print("tp_ordered2 = ", tp_ordered2);
   print("tp_ordered_ar3 = ", tp_ordered_ar3);
   print("tp_ordered4 = ", tp_ordered4);
   print("tp_ordered5 = ", tp_ordered5);
   print("tp_ordered_ar6 = ", tp_ordered_ar6);
+  
   print("tp_positive_ordered1 = ", tp_positive_ordered1);
   print("tp_positive_ordered2 = ", tp_positive_ordered2);
   print("tp_positive_ordered_ar3 = ", tp_positive_ordered_ar3);
@@ -2088,24 +2430,31 @@ generated quantities {
   simplex[d] gq_simplex1 = d_simplex;
   simplex[d] gq_simplex2 = d_simplex_ar[1];
   array[d] simplex[d] gq_simplex_ar = d_simplex_ar;
+  
   unit_vector[d] gq_unit_vector1 = d_unit_vector;
   unit_vector[d] gq_unit_vector2 = d_unit_vector_ar[1];
   array[d] unit_vector[d] gq_unit_vector_ar = d_unit_vector_ar;
+  
   ordered[d] gq_ordered1 = d_ordered;
   ordered[d] gq_ordered2 = d_ordered_ar[1];
   array[d] ordered[d] gq_ordered_ar = d_ordered_ar;
+  
   positive_ordered[d] gq_positive_ordered1 = d_positive_ordered;
   positive_ordered[d] gq_positive_ordered2 = d_positive_ordered_ar[1];
   array[d] positive_ordered[d] gq_positive_ordered_ar = d_positive_ordered_ar;
+  
   print("gq_simplex1 = ", gq_simplex1);
   print("gq_simplex2 = ", gq_simplex2);
   print("gq_simplex_ar = ", gq_simplex_ar);
+  
   print("gq_unit_vector1 = ", gq_unit_vector1);
   print("gq_unit_vector2 = ", gq_unit_vector2);
   print("gq_unit_vector_ar = ", gq_unit_vector_ar);
+  
   print("gq_ordered1 = ", gq_ordered1);
   print("gq_ordered2 = ", gq_ordered2);
   print("gq_ordered_ar = ", gq_ordered_ar);
+  
   print("gq_positive_ordered1 = ", gq_positive_ordered1);
   print("gq_positive_ordered2 = ", gq_positive_ordered2);
   print("gq_positive_ordered_ar = ", gq_positive_ordered_ar);
@@ -2172,15 +2521,18 @@ transformed parameters {
   array[3] real d_tp_a1 = td_a4;
   array[3] real d_tp_a2 = td_a3[1];
   array[3, 3] real d_tp_a3 = d;
+  
   real p_tp2 = d_tp1;
   real p_tp4 = d_tp_a1[1];
   array[3] real p_tp_a1 = d_tp_a1;
   array[3] real p_tp_a2 = d_tp_a3[3];
+  
   real tp1 = 1;
   real tp2 = 2.0;
   real tp3 = tp2;
   array[td0] real tp4;
   array[td0] real tp5 = tp4;
+  
   print("d_tp1 = ", d_tp1);
   print("d_tp2 = ", d_tp2, " should be td1 = ", td1, " which should be 123");
   print("d_tp3 = ", d_tp3);
@@ -2188,10 +2540,12 @@ transformed parameters {
   print("d_tp_a1 = ", d_tp_a1);
   print("d_tp_a2 = ", d_tp_a2);
   print("d_tp_a3 = ", d_tp_a3);
+  
   print("p_tp2 = ", p_tp2);
   print("p_tp4 = ", p_tp4);
   print("p_tp_a1 = ", p_tp_a1);
   print("p_tp_a2 = ", p_tp_a2);
+  
   print("tp1: ", tp1);
   print("tp2: ", tp2);
   print("tp3: ", tp3);
@@ -2226,6 +2580,7 @@ generated quantities {
   array[3] real gq_d_tp_a1 = td_a4;
   array[3] real gq_d_tp_a2 = td_a3[1];
   array[3, 3] real gq_d_tp_a3 = d;
+  
   real gq_p_tp2 = d_tp1;
   real gq_p_tp4 = d_tp_a1[1];
   array[3] real gq_p_tp_a1 = d_tp_a1;
@@ -2237,6 +2592,7 @@ generated quantities {
   print("gq_d_tp_a1 = ", gq_d_tp_a1);
   print("gq_d_tp_a2 = ", gq_d_tp_a2);
   print("gq_d_tp_a3 = ", gq_d_tp_a3);
+  
   print("gq_p_tp2 = ", gq_p_tp2);
   print("gq_p_tp4 = ", gq_p_tp4);
   print("gq_p_tp_a1 = ", gq_p_tp_a1);
@@ -2327,6 +2683,7 @@ transformed data {
   matrix[d, d] td_m1 = d_m;
   matrix[d, d] td_m2 = d_m_ar[1];
   array[d] matrix[d, d] td_m_ar3 = d_m_ar;
+  
   print("td_m1 = ", td_m1);
   print("td_m2 = ", td_m2);
   print("td_m_ar3 = ", td_m_ar3);
@@ -2338,6 +2695,7 @@ transformed parameters {
   matrix[d, d] tp_m4 = tp_m1;
   matrix[d, d] tp_m5 = tp_m_ar3[1];
   array[d] matrix[d, d] tp_m_ar6 = tp_m_ar3;
+  
   print("tp_m1 = ", tp_m1);
   print("tp_m2 = ", tp_m2);
   print("tp_m_ar3 = ", tp_m_ar3);
@@ -2369,6 +2727,7 @@ generated quantities {
   matrix[d, d] gq_m4 = tp_m1;
   matrix[d, d] gq_m5 = tp_m_ar3[1];
   array[d] matrix[d, d] gq_m_ar6 = tp_m_ar3;
+  
   print("gq_m1 = ", gq_m1);
   print("gq_m2 = ", gq_m2);
   print("gq_m_ar3 = ", gq_m_ar3);
@@ -2416,10 +2775,12 @@ transformed data {
   vector[d] td_v2 = d_v_ar[1];
   vector[d] td_v3 = d_m[ : , 1];
   array[d] vector[d] td_v_ar = d_v_ar;
+  
   row_vector[d] td_rv1 = d_rv;
   row_vector[d] td_rv2 = d_rv_ar[1];
   row_vector[d] td_rv3 = d_m[2];
   array[d] row_vector[d] td_rv_ar = d_rv_ar;
+  
   print("td_v1 = ", td_v1);
   print("td_v2 = ", td_v2);
   print("td_v3 = ", td_v3);
@@ -2428,15 +2789,18 @@ transformed data {
   print("td_rv2 = ", td_rv2);
   print("td_rv3 = ", td_rv3);
   print("td_rv_ar = ", td_rv_ar);
+  
   {
     vector[d] local_v1 = d_v;
     vector[d] local_v2 = d_v_ar[1];
     vector[d] local_v3 = d_m[ : , 1];
     array[d] vector[d] local_v_ar = d_v_ar;
+    
     row_vector[d] local_rv1 = d_rv;
     row_vector[d] local_rv2 = d_rv_ar[1];
     row_vector[d] local_rv3 = d_m[2];
     array[d] row_vector[d] local_rv_ar = d_rv_ar;
+    
     print("local_v1 = ", local_v1);
     print("local_v2 = ", local_v2);
     print("local_v3 = ", local_v3);
@@ -2456,18 +2820,22 @@ transformed parameters {
   vector[d] tp_v2 = d_v_ar[1];
   vector[d] tp_v3 = d_m[ : , 1];
   array[d] vector[d] tp_v_ar4 = d_v_ar;
+  
   vector[d] tp_v5 = tp_v1;
   vector[d] tp_v6 = tp_v_ar4[1];
   vector[d] tp_v7 = p_m[ : , 1];
   array[d] vector[d] tp_v_ar8 = tp_v_ar4;
+  
   row_vector[d] tp_rv1 = d_rv;
   row_vector[d] tp_rv2 = d_rv_ar[1];
   row_vector[d] tp_rv3 = d_m[2];
   array[d] row_vector[d] tp_rv_ar4 = d_rv_ar;
+  
   row_vector[d] tp_rv5 = tp_rv1;
   row_vector[d] tp_rv6 = tp_rv_ar4[1];
   row_vector[d] tp_rv7 = p_m[2,  : ];
   array[d] row_vector[d] tp_rv_ar8 = tp_rv_ar4;
+  
   print("tp_v1 = ", tp_v1);
   print("tp_v2 = ", tp_v2);
   print("tp_v3 = ", tp_v3);
@@ -2476,6 +2844,7 @@ transformed parameters {
   print("tp_v6 = ", tp_v6);
   print("tp_v7 = ", tp_v7);
   print("tp_v_ar8 = ", tp_v_ar8);
+  
   print("tp_rv1 = ", tp_rv1);
   print("tp_rv2 = ", tp_rv2);
   print("tp_rv3 = ", tp_rv3);
@@ -2484,6 +2853,7 @@ transformed parameters {
   print("tp_rv6 = ", tp_rv6);
   print("tp_rv7 = ", tp_rv7);
   print("tp_rv_ar8 = ", tp_rv_ar8);
+  
   {
     vector[d] local_v1 = d_v;
     vector[d] local_v2 = d_v_ar[1];
@@ -2493,6 +2863,7 @@ transformed parameters {
     vector[d] local_v6 = tp_v_ar4[1];
     vector[d] local_v7 = p_m[ : , 1];
     array[d] vector[d] local_v_ar8 = tp_v_ar4;
+    
     row_vector[d] local_rv1 = d_rv;
     row_vector[d] local_rv2 = d_rv_ar[1];
     row_vector[d] local_rv3 = d_m[2];
@@ -2501,6 +2872,7 @@ transformed parameters {
     row_vector[d] local_rv6 = tp_rv_ar4[1];
     row_vector[d] local_rv7 = p_m[1];
     array[d] row_vector[d] local_rv_ar8 = tp_rv_ar4;
+    
     print("local_v1 = ", local_v1);
     print("local_v2 = ", local_v2);
     print("local_v3 = ", local_v3);
@@ -2580,6 +2952,7 @@ model {
   foo = get_lp();
   foo = multiply_log(1, 1);
   foo = binomial_coefficient_log(1, 1);
+  
   foo = normal_log(0.5, 0, 1);
   foo = normal_cdf_log(0.5, 0, 1);
   foo = normal_ccdf_log(0.5, 0, 1);
@@ -2783,6 +3156,7 @@ model {
   $ ../../../../install/default/bin/stanc --auto-format fun_log_forward_decl.stan
 functions {
   real n_log(real y);
+  
   real n_log(real y) {
     return -0.5 * square(y);
   }
@@ -2800,6 +3174,7 @@ Warning in 'fun_log_forward_decl.stan', line 17, column 21: Use of the _log suff
   $ ../../../../install/default/bin/stanc --auto-format functions-fwd-ref.stan
 functions {
   int foo(int n);
+  
   int foo(int n) {
     if (n == 0) 
       return 1;
@@ -2848,6 +3223,7 @@ functions {
   real foo2(real x, real y) {
     return 2.0;
   }
+  
   real foo0_lp() {
     return 0.0;
   }
@@ -2857,6 +3233,7 @@ functions {
   real foo2_lp(real x, real y) {
     return 2.0;
   }
+  
   real foo0_rng() {
     return 0.0;
   }
@@ -2866,6 +3243,7 @@ functions {
   real foo2_rng(real x, real y) {
     return x * y - 2.0;
   }
+  
   real foo0_log(int y) {
     return -5;
   }
@@ -2885,18 +3263,21 @@ transformed data {
   real a;
   real b;
   real c;
+  
   a = foo0();
   b = foo1(N[6]);
   c = foo2(a, b);
   c = foo2(a, 1);
   c = foo2(2, b);
   c = foo2(2, 3);
+  
   a = foo0_log(2);
   b = foo1_log(N[6]);
   c = foo2_log(a, b);
   c = foo2_log(a, 1);
   c = foo2_log(2, b);
   c = foo2_log(2, 3);
+  
   a = foo0_rng();
   b = foo1_rng(a);
   b = foo1_rng(1);
@@ -2912,76 +3293,103 @@ transformed parameters {
   real phi1;
   real phi2;
   real phi3;
+  
   phi1 = foo0();
   phi2 = foo1(1);
   phi2 = foo1(2.0);
   phi2 = foo1(phi1);
+  
   phi3 = foo2(1.0, 2.0);
   phi3 = foo2(1.0, 2);
   phi3 = foo2(1, 2.0);
   phi3 = foo2(1, 2);
+  
   phi3 = foo2(phi1, 2.0);
   phi3 = foo2(phi1, 2);
+  
   phi3 = foo2(1.0, phi2);
   phi3 = foo2(1, phi2);
+  
   phi3 = foo2(phi1, phi2);
+  
   phi1 = foo0_log(3);
+  
   phi2 = foo1_log(1);
   phi2 = foo1_log(2.0);
   phi2 = foo1_log(phi1);
+  
   phi3 = foo2_log(1.0, 2.0);
   phi3 = foo2_log(1.0, 2);
   phi3 = foo2_log(1, 2.0);
   phi3 = foo2_log(1, 2);
+  
   phi3 = foo2_log(phi1, 2.0);
   phi3 = foo2_log(phi1, 2);
+  
   phi3 = foo2_log(1.0, phi2);
   phi3 = foo2_log(1, phi2);
+  
   phi3 = foo2_log(phi1, phi2);
 }
 model {
   real psi1;
   real psi2;
   real psi3;
+  
   psi1 = foo0();
   psi2 = foo1(1);
   psi2 = foo1(2.0);
   psi2 = foo1(psi1);
+  
   psi3 = foo2(1.0, 2.0);
   psi3 = foo2(1.0, 2);
   psi3 = foo2(1, 2.0);
   psi3 = foo2(1, 2);
+  
   psi3 = foo2(psi1, 2.0);
   psi3 = foo2(psi1, 2);
+  
   psi3 = foo2(1.0, psi2);
   psi3 = foo2(1, psi2);
+  
   psi3 = foo2(psi1, psi2);
+  
   psi1 = foo0_lp();
   psi2 = foo1_lp(1);
   psi2 = foo1_lp(2.0);
   psi2 = foo1_lp(psi1);
+  
   psi3 = foo2_lp(1.0, 2.0);
   psi3 = foo2_lp(1.0, 2);
   psi3 = foo2_lp(1, 2.0);
   psi3 = foo2_lp(1, 2);
+  
   psi3 = foo2_lp(psi1, 2.0);
   psi3 = foo2_lp(psi1, 2);
+  
   psi3 = foo2_lp(1.0, psi2);
   psi3 = foo2_lp(1, psi2);
+  
   psi3 = foo2_lp(psi1, psi2);
+  
   psi1 = foo0_log(3);
   psi2 = foo1_log(1);
   psi2 = foo1_log(2.0);
   psi2 = foo1_log(psi1);
+  
   psi3 = foo2_log(1.0, 2.0);
   psi3 = foo2_log(1.0, 2);
   psi3 = foo2_log(1, 2.0);
   psi3 = foo2_log(1, 2);
+  
   psi3 = foo2_log(psi1, 2.0);
   psi3 = foo2_log(psi1, 2);
+  
   psi3 = foo2_log(1.0, psi2);
   psi3 = foo2_log(1, psi2);
+  
   psi3 = foo2_log(psi1, psi2);
+  
   theta[1] ~ foo1();
   theta[2] ~ foo2(theta[1]);
 }
@@ -2989,6 +3397,7 @@ generated quantities {
   real x;
   real y;
   real z;
+  
   x = foo0();
   y = foo1(x);
   y = foo1(1);
@@ -2996,6 +3405,7 @@ generated quantities {
   z = foo2(1, y);
   z = foo2(x, 2);
   z = foo2(1, 2);
+  
   x = foo0_log(3);
   y = foo1_log(x);
   y = foo1_log(1);
@@ -3003,6 +3413,7 @@ generated quantities {
   z = foo2_log(1, y);
   z = foo2_log(x, 2);
   z = foo2_log(1, 2);
+  
   x = foo0_rng();
   y = foo1_rng(x);
   y = foo1_rng(1);
@@ -3353,6 +3764,7 @@ generated quantities {
   $ ../../../../install/default/bin/stanc --auto-format illegal_transformed_data.stan
 transformed data {
   real<lower=0> x;
+  
   x = -1;
 }
 model {
@@ -3362,6 +3774,7 @@ model {
   $ ../../../../install/default/bin/stanc --auto-format illegal_transformed_parameters.stan
 transformed parameters {
   real<lower=0> x;
+  
   x = -1;
 }
 model {
@@ -3399,16 +3812,20 @@ transformed data {
   int n;
   array[2] int nn;
   array[3, 4] int nnn;
+  
   real x;
   array[5] real xx;
   array[6, 7] real xxx;
   array[8, 9, 10] real xxxx;
+  
   vector[2] v;
   array[4] vector[3] vv;
   array[5, 6] vector[4] vvv;
+  
   row_vector[2] rv;
   array[4] row_vector[3] rvv;
   array[5, 6] row_vector[4] rvvv;
+  
   matrix[7, 8] m;
   array[2] matrix[7, 8] mm;
   array[3, 4] matrix[7, 8] mmm;
@@ -3418,12 +3835,15 @@ parameters {
   array[5] real p_xx;
   array[6, 7] real p_xxx;
   array[8, 9, 10] real p_xxxx;
+  
   vector[2] p_v;
   array[4] vector[3] p_vv;
   array[5, 6] vector[4] p_vvv;
+  
   row_vector[2] p_rv;
   array[4] row_vector[3] p_rvv;
   array[5, 6] row_vector[4] p_rvvv;
+  
   matrix[7, 8] p_m;
   array[2] matrix[7, 8] p_mm;
   array[3, 4] matrix[7, 8] p_mmm;
@@ -3432,29 +3852,37 @@ model {
   increment_log_prob(n);
   increment_log_prob(nn);
   increment_log_prob(nnn);
+  
   increment_log_prob(x);
   increment_log_prob(xx);
   increment_log_prob(xxx);
   increment_log_prob(xxxx);
+  
   increment_log_prob(v);
   increment_log_prob(vv);
   increment_log_prob(vvv);
+  
   increment_log_prob(rv);
   increment_log_prob(rvv);
   increment_log_prob(rvvv);
+  
   increment_log_prob(m);
   increment_log_prob(mm);
   increment_log_prob(mmm);
+  
   increment_log_prob(p_x);
   increment_log_prob(p_xx);
   increment_log_prob(p_xxx);
   increment_log_prob(p_xxxx);
+  
   increment_log_prob(p_v);
   increment_log_prob(p_vv);
   increment_log_prob(p_vvv);
+  
   increment_log_prob(p_rv);
   increment_log_prob(p_rvv);
   increment_log_prob(p_rvvv);
+  
   increment_log_prob(p_m);
   increment_log_prob(p_mm);
   increment_log_prob(p_mmm);
@@ -3553,6 +3981,7 @@ model {
   y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int);
   y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int);
   y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int);
+  
   y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
                               1e-10, 1e8);
   y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int, 1e-10,
@@ -3566,6 +3995,7 @@ generated quantities {
   y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int);
   y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_d, x, x_int);
   y_hat = integrate_ode_adams(sho, y0_p, t0, ts, theta_p, x, x_int);
+  
   y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10,
                               1e-10, 1e8);
   y_hat = integrate_ode_adams(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
@@ -3647,6 +4077,7 @@ model {
   y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int);
   y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int);
   y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int);
+  
   y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10,
                             1e-10, 1e8);
   y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
@@ -3662,6 +4093,7 @@ generated quantities {
   y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int);
   y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_d, x, x_int);
   y_hat = integrate_ode_bdf(sho, y0_p, t0, ts, theta_p, x, x_int);
+  
   y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_d, x, x_int, 1e-10,
                             1e-10, 1e8);
   y_hat = integrate_ode_bdf(sho, y0_d, t0, ts, theta_p, x, x_int, 1e-10,
@@ -3747,6 +4179,7 @@ model {
 generated quantities {
   array[T, 2] real y_hat;
   y_hat = integrate_ode(sho, y0, t0, ts, theta, x, x_int);
+  
   for (t in 1 : T) {
     y_hat[t, 1] = y_hat[t, 1] + normal_rng(0, 0.1);
     y_hat[t, 2] = y_hat[t, 2] + normal_rng(0, 0.1);
@@ -3953,6 +4386,7 @@ functions {
   real foo_lccdf(int y, real lambda) {
     return 1.0;
   }
+  
   real bar_log(int y, real lambda) {
     return 1.0;
   }
@@ -3962,6 +4396,7 @@ functions {
   real bar_ccdf_log(int y, real lambda) {
     return 1.0;
   }
+  
   real baz_lpdf(real y, real lambda) {
     return 1.0;
   }
@@ -3971,6 +4406,7 @@ functions {
   real baz_lccdf(real y, real lambda) {
     return 1.0;
   }
+  
   real quux_log(real y, real lambda) {
     return 1.0;
   }
@@ -3996,18 +4432,23 @@ model {
     y[n] ~ poisson(lambda) T[L, ];
     y[n] ~ poisson(lambda) T[L, U];
     y[n] ~ poisson(lambda) T[ , U];
+    
     y[n] ~ foo(lambda) T[L, ];
     y[n] ~ foo(lambda) T[L, U];
     y[n] ~ foo(lambda) T[ , U];
+    
     y[n] ~ bar(lambda) T[L, ];
     y[n] ~ bar(lambda) T[L, U];
     y[n] ~ bar(lambda) T[ , U];
+    
     u[n] ~ normal(0, 1) T[L, ];
     u[n] ~ normal(0, 1) T[ , U];
     u[n] ~ normal(0, 1) T[L, U];
+    
     y[n] ~ baz(lambda) T[L, ];
     y[n] ~ baz(lambda) T[L, U];
     y[n] ~ baz(lambda) T[ , U];
+    
     y[n] ~ quux(lambda) T[L, ];
     y[n] ~ quux(lambda) T[L, U];
     y[n] ~ quux(lambda) T[ , U];
@@ -4094,6 +4535,7 @@ transformed data {
   row_vector[2] y;
   y[1] = 10;
   y[2] = 100;
+  
   X[1] = y;
   X[2] = y;
   print("X=", X);
@@ -4105,10 +4547,13 @@ transformed parameters {
   matrix[2, 2] Xvar;
   matrix[2, 2] Xvar2;
   row_vector[2] yvar;
+  
   yvar[1] = 15.9;
   yvar[2] = 42.7;
+  
   Xvar[1] = y;
   Xvar[2] = y;
+  
   Xvar2[1] = yvar;
   Xvar2[2] = yvar;
 }
@@ -4127,7 +4572,9 @@ transformed parameters {
 }
 model {
   int b;
+  
   b = max(9, 10);
+  
   to_vector(a) ~ normal(0, 1);
 }
 
@@ -4184,6 +4631,7 @@ parameters {
 model {
   beta_inferred ~ normal(0, 2);
   alpha_inferred ~ normal(0, 4);
+  
   y ~ neg_binomial_2_log(x * beta_inferred + alpha_inferred, sigma);
 }
 
@@ -4219,6 +4667,7 @@ parameters {
 model {
   beta_inferred ~ normal(0, 2);
   alpha_inferred ~ normal(0, 4);
+  
   y ~ neg_binomial_2_log_glm(x, alpha_inferred, beta_inferred, sigma);
 }
 
@@ -4268,6 +4717,7 @@ parameters {
 model {
   beta_inferred ~ normal(0, 2);
   alpha_inferred ~ normal(0, 4);
+  
   y ~ normal(x * beta_inferred + alpha_inferred, sigma);
 }
 
@@ -4303,6 +4753,7 @@ parameters {
 model {
   beta_inferred ~ normal(0, 2);
   alpha_inferred ~ normal(0, 4);
+  
   y ~ normal_id_glm(x, alpha_inferred, beta_inferred, sigma);
 }
 
@@ -4511,6 +4962,7 @@ parameters {
 model {
   beta_inferred ~ normal(0, 2);
   alpha_inferred ~ normal(0, 4);
+  
   y ~ poisson_log(x * beta_inferred + alpha_inferred);
 }
 
@@ -4545,6 +4997,7 @@ parameters {
 model {
   beta_inferred ~ normal(0, 2);
   alpha_inferred ~ normal(0, 4);
+  
   y ~ poisson_log_glm(x, alpha_inferred, beta_inferred);
 }
 
@@ -4615,6 +5068,7 @@ model {
     rho ~ gamma(25, 4);
     alpha ~ normal(0, 2);
     sigma ~ normal(0, 1);
+    
     y ~ multi_normal_cholesky(rep_vector(0, N), L_cov);
   }
 }
@@ -4626,9 +5080,11 @@ functions {
     array[T, S] real A;
     array[S] real a_row;
     int cp_idx;
+    
     A = rep_array(0, T, S);
     a_row = rep_array(0, S);
     cp_idx = 1;
+    
     for (i in 1 : T) {
       while ((cp_idx <= S) && (t[i] >= t_change[cp_idx])) {
         a_row[cp_idx] = 1;
@@ -4638,15 +5094,18 @@ functions {
     }
     return A;
   }
+  
   array[] real logistic_gamma(real k, real m, array[] real delta,
                               array[] real t_change, int S) {
     array[S] real gamma;
     array[S + 1] real k_s;
     real m_pr;
+    
     k_s[1] = k;
     for (i in 1 : S) {
       k_s[i + 1] = k_s[i] + delta[i];
     }
+    
     m_pr = m;
     for (i in 1 : S) {
       gamma[i] = (t_change[i] - m_pr) * (1 - k_s[i] / k_s[i + 1]);
@@ -4654,12 +5113,14 @@ functions {
     }
     return gamma;
   }
+  
   array[] real logistic_trend(real k, real m, array[] real delta,
                               array[] real t, array[] real cap,
                               array[,] real A, array[] real t_change, int S,
                               int T) {
     array[S] real gamma;
     array[T] real Y;
+    
     gamma = logistic_gamma(k, m, delta, t_change, S);
     for (i in 1 : T) {
       Y[i] = cap[i]
@@ -4669,11 +5130,13 @@ functions {
     }
     return Y;
   }
+  
   array[] real linear_trend(real k, real m, array[] real delta,
                             array[] real t, array[,] real A,
                             array[] real t_change, int S, int T) {
     array[S] real gamma;
     array[T] real Y;
+    
     for (i in 1 : S) {
       gamma[i] = -t_change[i] * delta[i];
     }
@@ -4715,16 +5178,19 @@ transformed parameters {
   array[T] real Y;
   array[K] real beta_m;
   array[K] real beta_a;
+  
   if (trend_indicator == 0) {
     trend = linear_trend(k, m, delta, t, A, t_change, S, T);
   }
   else if (trend_indicator == 1) {
     trend = logistic_trend(k, m, delta, t, cap, A, t_change, S, T);
   }
+  
   for (i in 1 : K) {
     beta_m[i] = beta[i] * s_m[i];
     beta_a[i] = beta[i] * s_a[i];
   }
+  
   for (i in 1 : T) {
     Y[i] = (trend[i] * (1 + dot_product(X[i], beta_m))
             + dot_product(X[i], beta_a));
@@ -4736,6 +5202,7 @@ model {
   delta ~ double_exponential(0, tau);
   sigma_obs ~ normal(0, 0.5);
   beta ~ normal(0, sigmas);
+  
   y ~ normal(Y, sigma_obs);
 }
 
@@ -5073,6 +5540,7 @@ functions {
   real bar_lccdf(int y, real z) {
     return 1.0;
   }
+  
   real foo_lpdf(real y, real sigma) {
     return 1.0;
   }
@@ -5090,12 +5558,15 @@ model {
   target += foo_lpdf(y| 7.0);
   target += foo_lcdf(y| 7.0);
   target += foo_lccdf(y| 7.0);
+  
   target += normal_lpdf(y| 7.0, 1.0);
   target += normal_lcdf(y| 7.0, 1.0);
   target += normal_lccdf(y| 7.0, 1.0);
+  
   target += bar_lpmf(2| 7.0);
   target += bar_lcdf(2| 7.0);
   target += bar_lccdf(2| 7.0);
+  
   target += poisson_lpmf(2| 7.0);
   target += poisson_lcdf(2| 7.0);
   target += poisson_lccdf(2| 7.0);
@@ -5106,9 +5577,11 @@ functions {
   real foo_lpdf(real y, real mu) {
     return -(y - mu) ^ 2;
   }
+  
   real foo_lcdf(real y, real mu) {
     return -1.7;
   }
+  
   real foo_lccdf(real y, real mu) {
     return -0.02;
   }
@@ -5203,6 +5676,7 @@ model {
   vector[3] v_l;
   row_vector[3] rv_l;
   matrix[4, 5] m_l;
+  
   x_p ~ normal(0, 1);
 }
 generated quantities {
@@ -5243,8 +5717,10 @@ functions {
     int fl_y;
     fl_x = 1 ? fl_x : fl_y;
     fl_y = 1 ? fl_y : 0;
+    
     fl_x = 1 ? fa_x : fl_x;
     fl_y = 1 ? fa_y : fl_y;
+    
     return 2.0;
   }
 }
@@ -5275,6 +5751,7 @@ transformed data {
   matrix[5, 6] tma;
   matrix[5, 6] tmb;
   matrix[5, 6] tmc;
+  
   array[2] int tx1;
   array[2] real tya1;
   array[2] real tyb1;
@@ -5285,6 +5762,7 @@ transformed data {
   array[2] row_vector[6] twb1;
   array[2] row_vector[6] twc1;
   array[2] matrix[5, 6] tm1;
+  
   array[2, 3] int txa2;
   array[2, 3] int txb2;
   array[2, 3] int txc2;
@@ -5298,15 +5776,19 @@ transformed data {
   array[2, 2] matrix[5, 6] tma2;
   array[2, 2] matrix[5, 6] tmb2;
   array[2, 2] matrix[5, 6] tmc2;
+  
   tx = 1 ? 2 : 3;
   ty = 1 ? 2.0 : 3.0;
+  
   tx = x < 100 ? x : 100;
   ty = y > 100 ? 100 : y;
   ty = y < 100 ? y : 100;
   ty = y < 100 ? y : ty;
+  
   tzc = x < 100 ? tza : tzb;
   twc = x < 100 ? twa : twb;
   tmc = x < 100 ? tma : tmb;
+  
   tx1 = x < 100 ? txa2[1] : txb2[2];
   txc2 = x < 100 ? txa2 : txb2;
   tyc1 = x < 100 ? tya1 : tyb1;
@@ -5315,6 +5797,7 @@ transformed data {
   twa2 = x < 100 ? twa2 : twb2;
   tm1 = x < 100 ? tma2[1] : tmb2[1];
   tma2 = x < 100 ? tma2 : tmb2;
+  
   {
     real abcd;
     abcd = 1 ? abcd : 2.0;
@@ -5325,6 +5808,7 @@ parameters {
   vector[5] pz;
   row_vector[6] pw;
   matrix[5, 6] pm;
+  
   array[2] real pya1;
   array[2, 2] real pya2;
   array[2] vector[5] pza1;
@@ -5343,6 +5827,7 @@ transformed parameters {
   matrix[5, 6] tpma;
   matrix[5, 6] tpmb;
   matrix[5, 6] tpmc;
+  
   array[2] real tpya1;
   array[2] real tpyb1;
   array[2] real tpyc1;
@@ -5352,6 +5837,7 @@ transformed parameters {
   array[2] row_vector[6] tpwb1;
   array[2] row_vector[6] tpwc1;
   array[2] matrix[5, 6] tpm1;
+  
   array[2, 2] real tpya2;
   array[2, 2] real tpyb2;
   array[2, 2] vector[5] tpza2;
@@ -5362,38 +5848,55 @@ transformed parameters {
   array[2, 2] matrix[5, 6] tpma2;
   array[2, 2] matrix[5, 6] tpmb2;
   array[2, 2] matrix[5, 6] tpmc2;
+  
   tpy = y < 100 ? x : y;
   tpy = y < 100 ? y : x;
   tpy = y < 100 ? y : py;
   tpy = y < 100 ? x : py;
+  
   tpzc = x < 100 ? tpza : tpzb;
   tpwc = x < 100 ? tpwa : tpwb;
   tpmc = x < 100 ? tpma : tpmb;
+  
   tpzc = x < 100 ? z : pz;
   tpzc = x < 100 ? pz : z;
   tpwc = x < 100 ? w : pw;
   tpwc = x < 100 ? pw : w;
   tpmc = x < 100 ? m : pm;
   tpmc = x < 100 ? pm : m;
+  
   tpyc1 = ya1;
+  
   tpyc1 = x < 100 ? tpya1 : tpyb1;
+  
   tpyc1 = x < 100 ? ya1 : pya1;
   tpyc1 = x < 100 ? pya1 : ya1;
+  
   tpya2 = x < 100 ? tpya2 : tpyb2;
+  
   tpya2 = x < 100 ? ya2 : tpyb2;
   tpya2 = x < 100 ? tpya2 : ya2;
+  
   tpwc1 = x < 100 ? tpwa1 : tpwb1;
+  
   tpwc1 = x < 100 ? wa1 : tpwb1;
   tpwc1 = x < 100 ? tpwb1 : wa1;
+  
   tpwa2 = x < 100 ? tpwa2 : tpwb2;
+  
   tpwa2 = x < 100 ? wa2 : tpwb2;
   tpwa2 = x < 100 ? tpwb2 : wa2;
+  
   tpm1 = x < 100 ? tpma2[1] : tpmb2[1];
+  
   tpm1 = x < 100 ? ma2[1] : tpmb2[1];
   tpm1 = x < 100 ? tpmb2[1] : ma2[1];
+  
   tpma2 = x < 100 ? tpma2 : tpmb2;
+  
   tpma2 = x < 100 ? ma2 : pma2;
   tpma2 = x < 100 ? pma2 : ma2;
+  
   {
     real abcde;
     abcde = 1 ? abcde : 2.0;
@@ -5401,6 +5904,7 @@ transformed parameters {
 }
 model {
   py ~ normal(0, 1);
+  
   {
     real abcdefg;
     abcdefg = 1 ? abcdefg : 2.0;
@@ -5412,9 +5916,12 @@ generated quantities {
   vector[5] gqza;
   vector[5] gqzb;
   vector[5] gqzc;
+  
   gqy = y < 100 ? x : y;
   gqy = y < 100 ? y : x;
+  
   gqzc = x < 100 ? gqza : gqzb;
+  
   {
     real abcdef;
     abcdef = 1 ? abcdef : 2.0;
@@ -5738,8 +6245,11 @@ parameters {
 }
 model {
   1 ~ normal(y, 1);
+  
   2.7 ~ normal(z, 1);
+  
   y ~ normal(0, 1);
+  
   m ~ lkj_corr(2.0);
   (m + m) ~ lkj_corr(2.0);
   (m - m) ~ lkj_corr(2.0);
@@ -5761,11 +6271,13 @@ model {
   sum(v) ~ normal(0, 1);
   tail(v, 3) ~ normal(0, 1);
   to_vector(m) ~ normal(0, 1);
+  
   v[1] ~ normal(0, 1);
   m[1] ~ normal(0, 1);
   m[1, 2] ~ normal(0, 1);
   a[1, 2] ~ normal(0, 1);
   a[1][2] ~ normal(0, 1);
+  
   y + z ~ normal(0, 1);
   y - z ~ normal(0, 1);
   1 * z ~ normal(0, 1);
@@ -5773,6 +6285,7 @@ model {
   1 / (1 / z) ~ normal(0, 1);
   y + ((z / 2) * 3) ~ normal(0, 1);
   2.0 * 3 ~ normal(y, 1);
+  
   (-y) ~ normal(0, 1);
 }
 
@@ -6021,6 +6534,7 @@ functions {
   array[] real harm_osc_ode(real t, array[] real y, array[] real theta,
                             array[] real x, array[] int x_int) {
     array[size(y)] real dydt;
+    
     return dydt;
   }
 }
@@ -6119,6 +6633,7 @@ transformed data {
 }
 parameters {
   array[2] real<lower=-10, upper=10> y;
+  
   array[arrlen] real p_real_ar;
   vector[veclen] p_v1;
   array[arrlen] vector[veclen] p_v_ar;
@@ -6153,6 +6668,7 @@ model {
   array[arrlen] row_vector[veclen] local3_rv_ar = d_rv_ar;
   matrix[nrows, ncols] local3_m = d_m;
   array[arrlen] matrix[nrows, ncols] local3_m_ar = d_m_ar;
+  
   y ~ normal(0, 1);
 }
 generated quantities {
