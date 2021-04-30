@@ -15,8 +15,7 @@ let%expect_test "udf" =
   ; fdargs= [(DataOnly, "x", UMatrix); (AutoDiffable, "y", URowVector)]
   ; fdbody=
       Stmt.Fixed.Pattern.Return
-        (Some
-           (w @@ FunApp (StanLib, "add", [w @@ Var "x"; w @@ Lit (Int, "1")])))
+        (Some (w @@ FunApp (StanLib "add", [w @@ Var "x"; w @@ Lit (Int, "1")])))
       |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
       |> Some
   ; fdloc= Location_span.empty }
@@ -70,8 +69,7 @@ let%expect_test "udf-expressions" =
       ; (AutoDiffable, "w", UArray UMatrix) ]
   ; fdbody=
       Stmt.Fixed.Pattern.Return
-        (Some
-           (w @@ FunApp (StanLib, "add", [w @@ Var "x"; w @@ Lit (Int, "1")])))
+        (Some (w @@ FunApp (StanLib "add", [w @@ Var "x"; w @@ Lit (Int, "1")])))
       |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
       |> Some
   ; fdloc= Location_span.empty }

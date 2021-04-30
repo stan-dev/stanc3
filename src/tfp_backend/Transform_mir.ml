@@ -65,16 +65,16 @@ let translate_funapps_and_kwrds e =
   let open Expr.Fixed in
   let f ({pattern; _} as expr) =
     match pattern with
-    | FunApp (StanLib, fname, args) ->
+    | FunApp (StanLib fname, args) ->
         let prefix =
           if Utils.is_distribution_name fname then dist_prefix else ""
         in
         let fname = remove_stan_dist_suffix fname in
         let fname, args = map_functions fname args in
-        {expr with pattern= FunApp (StanLib, prefix ^ fname, args)}
-    | FunApp (UserDefined, fname, args) ->
+        {expr with pattern= FunApp (StanLib (prefix ^ fname), args)}
+    | FunApp (UserDefined fname, args) ->
         { expr with
-          pattern= FunApp (UserDefined, add_suffix_to_kwrds fname, args) }
+          pattern= FunApp (UserDefined (add_suffix_to_kwrds fname), args) }
     | Var s -> {expr with pattern= Var (add_suffix_to_kwrds s)}
     | _ -> expr
   in
@@ -85,17 +85,16 @@ let%expect_test "nested dist prefixes translated" =
   let e pattern = {Expr.Fixed.pattern; meta= Expr.Typed.Meta.empty} in
   let f =
     FunApp
-      ( Fun_kind.StanLib
-      , "normal_lpdf"
-      , [FunApp (Fun_kind.StanLib, "normal_lpdf", []) |> e] )
+      ( Fun_kind.StanLib "normal_lpdf"
+      , [FunApp (Fun_kind.StanLib "normal_lpdf", []) |> e] )
     |> e |> translate_funapps_and_kwrds
   in
   print_s [%sexp (f : Expr.Typed.Meta.t Expr.Fixed.t)] ;
   [%expect
     {|
     ((pattern
-      (FunApp StanLib tfd__.Normal
-       (((pattern (FunApp StanLib tfd__.Normal ()))
+      (FunApp (StanLib tfd__.Normal)
+       (((pattern (FunApp (StanLib tfd__.Normal) ()))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))) |}]
 
@@ -103,17 +102,18 @@ let%expect_test "nested dist prefixes translated" =
 let rec remove_unused_stmts s =
   let pattern =
     match s.Stmt.Fixed.pattern with
-    | Assignment (_, {Expr.Fixed.pattern= FunApp (CompilerInternal, f, _); _})
-      when Internal_fun.to_string FnConstrain = f
-           || Internal_fun.to_string FnUnconstrain = f ->
+    | Assignment
+        ( _
+        , { Expr.Fixed.pattern=
+              FunApp (CompilerInternal (FnConstrain _ | FnUnconstrain _), _); _
+          } ) ->
         Stmt.Fixed.Pattern.Skip
     | Decl _ -> Stmt.Fixed.Pattern.Skip
-    | NRFunApp (CompilerInternal, name, _)
-      when Internal_fun.(
-             to_string FnCheck = name
-             || to_string FnValidateSize = name
-             || to_string FnValidateSizeSimplex = name
-             || to_string FnValidateSizeUnitVector = name) ->
+    | NRFunApp
+        ( CompilerInternal
+            ( FnCheck _ | FnValidateSize | FnValidateSizeSimplex
+            | FnValidateSizeUnitVector )
+        , _ ) ->
         Stmt.Fixed.Pattern.Skip
     | x -> Stmt.Fixed.Pattern.map Fn.id remove_unused_stmts x
   in
@@ -124,7 +124,10 @@ let rec change_kwrds_stmts s =
   let pattern =
     match s.Stmt.Fixed.pattern with
     | Decl e -> Decl {e with decl_id= add_suffix_to_kwrds e.decl_id}
-    | NRFunApp (t, s, e) -> NRFunApp (t, add_suffix_to_kwrds s, e)
+    | NRFunApp (UserDefined s, e) ->
+        NRFunApp (UserDefined (add_suffix_to_kwrds s), e)
+    | NRFunApp (StanLib s, e) ->
+        NRFunApp (UserDefined (add_suffix_to_kwrds s), e)
     | Assignment ((s, t, e1), e2) ->
         Assignment ((add_suffix_to_kwrds s, t, e1), e2)
     | For e -> For {e with loopvar= add_suffix_to_kwrds e.loopvar}

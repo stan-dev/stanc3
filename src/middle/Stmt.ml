@@ -10,7 +10,7 @@ module Fixed = struct
     type ('a, 'b) t =
       | Assignment of 'a lvalue * 'a
       | TargetPE of 'a
-      | NRFunApp of Fun_kind.t * string * 'a list
+      | NRFunApp of Fun_kind.t * 'a list
       | Break
       | Continue
       | Return of 'a option
@@ -36,8 +36,8 @@ module Fixed = struct
             (assignee, idcs) pp_e rhs
       | TargetPE expr ->
           Fmt.pf ppf {|@[<h>%a +=@ %a;@]|} pp_keyword "target" pp_e expr
-      | NRFunApp (_, name, args) ->
-          Fmt.pf ppf {|@[%s%a;@]|} name
+      | NRFunApp (kind, args) ->
+          Fmt.pf ppf {|@[%a%a;@]|} Fun_kind.pp kind
             Fmt.(list pp_e ~sep:comma |> parens)
             args
       | Break -> pp_keyword ppf "break;"
@@ -177,7 +177,7 @@ module Labelled = struct
     | Fixed.Pattern.Break | Skip | Continue | Return None -> assocs
     | Return (Some e) | TargetPE e ->
         {assocs with exprs= Expr.Labelled.associate ~init:assocs.exprs e}
-    | NRFunApp (_, _, args) ->
+    | NRFunApp (_, args) ->
         { assocs with
           exprs=
             List.fold args ~init:assocs.exprs ~f:(fun accu x ->
@@ -250,9 +250,7 @@ module Helpers = struct
         {body with Fixed.pattern= Block [decl; assign; body]}
 
   let internal_nrfunapp fn args meta =
-    { Fixed.pattern=
-        NRFunApp (CompilerInternal, Internal_fun.to_string fn, args)
-    ; meta }
+    {Fixed.pattern= NRFunApp (CompilerInternal fn, args); meta}
 
   (** [mkfor] returns a MIR For statement that iterates over the given expression
     [iteratee]. *)
@@ -289,21 +287,21 @@ module Helpers = struct
         let emeta' = {emeta with Expr.Typed.Meta.type_= UInt} in
         let rows =
           Expr.Fixed.
-            {meta= emeta'; pattern= FunApp (StanLib, "rows", [iteratee])}
+            {meta= emeta'; pattern= FunApp (StanLib "rows", [iteratee])}
         in
         mkfor rows (fun e -> for_each bodyfn e smeta) iteratee smeta
     | UArray _ -> mkfor (len iteratee) bodyfn iteratee smeta
     | UMathLibraryFunction | UFun _ ->
         raise_s [%message "can't iterate over " (iteratee : Expr.Typed.t)]
 
-  let contains_fn fn ?(init = false) stmt =
-    let fstr = Internal_fun.to_string fn in
+  let contains_fn_kind is_fn_kind ?(init = false) stmt =
     let rec aux accu Fixed.({pattern; _}) =
       match pattern with
-      | NRFunApp (_, fname, _) when fname = fstr -> true
+      | NRFunApp (kind, _) when is_fn_kind kind -> true
       | stmt_pattern ->
           Fixed.Pattern.fold_left ~init:accu stmt_pattern
-            ~f:(fun accu expr -> Expr.Helpers.contains_fn fn ~init:accu expr)
+            ~f:(fun accu expr ->
+              Expr.Helpers.contains_fn_kind is_fn_kind ~init:accu expr )
             ~g:aux
     in
     aux init stmt
