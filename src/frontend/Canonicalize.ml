@@ -40,7 +40,10 @@ let rec replace_deprecated_expr
             , {name= rename_deprecated deprecated_distributions name; id_loc}
             , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e )
         else if String.is_suffix name ~suffix:"_cdf" then
-          CondDistApp (StanLib, {name; id_loc}, e)
+          CondDistApp
+            (StanLib
+            , {name; id_loc}
+            , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e )
         else
           FunApp
             ( StanLib

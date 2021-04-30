@@ -484,7 +484,7 @@ For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
     | NonRealProbFunDef ->
         Fmt.pf ppf
           "Real return type required for probability functions ending in \
-           _log, _lpdf, _lupdf, _lpmf, _lupmf, _lcdf, or _lccdf."
+           _log, _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf, or _lccdf."
     | ProbDensityNonRealVariate (Some ut) ->
         Fmt.pf ppf
           "Probability density functions require real variates (first \
