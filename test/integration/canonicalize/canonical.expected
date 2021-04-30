@@ -61,7 +61,7 @@ model {
   target += sum(K);
   target += normal_cdf(1| 2, 3);
   target += normal_cdf(normal_cdf(0| 1, 2)| 2, 3);
-  target += foo_cdf(1, 2, 3);
+  target += foo_cdf(1| 2, 3);
   print("target: ", target());
 }
 generated quantities {
