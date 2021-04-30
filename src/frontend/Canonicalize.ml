@@ -56,11 +56,18 @@ let rec replace_deprecated_expr
             ( UserDefined
             , {name= update_suffix name type_; id_loc}
             , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e )
-      | None ->
+      | None -> (
+        if String.is_suffix name ~suffix:"_cdf" then
+          CondDistApp
+            ( UserDefined
+            , {name; id_loc}
+            , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e )
+        else
           FunApp
             ( UserDefined
             , {name; id_loc}
             , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e )
+        )
       )
     | _ ->
         map_expression
