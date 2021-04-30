@@ -15,7 +15,7 @@ let typed_ast_of_string_exn s =
     Semantic_check.semantic_check_program ast
     |> map_error ~f:(function
          | err :: _ -> Errors.Semantic_error err
-         | _ ->
+         | [] ->
              failwith
                "Internal compiler error: no message from Semantic_check." ))
   |> Result.map_error ~f:Errors.to_string

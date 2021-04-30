@@ -95,38 +95,46 @@ program:
       ; parametersblock= opb
       ; transformedparametersblock= otpb
       ; modelblock= omb
-      ; generatedquantitiesblock= ogb }
+      ; generatedquantitiesblock= ogb
+      ; comments= [] }
     }
 
 (* blocks *)
 function_block:
   | FUNCTIONBLOCK LBRACE fd=list(function_def) RBRACE
-    {  grammar_logger "function_block" ; fd}
+    { grammar_logger "function_block" ;
+      {stmts= fd; xloc= Location_span.of_positions_exn $loc} }
 
 data_block:
   | DATABLOCK LBRACE tvd=list(top_var_decl_no_assign) RBRACE
-    { grammar_logger "data_block" ; List.concat tvd }
+    { grammar_logger "data_block" ;
+      {stmts= List.concat tvd; xloc= Location_span.of_positions_exn $loc} }
 
 transformed_data_block:
   | TRANSFORMEDDATABLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
-    {  grammar_logger "transformed_data_block" ; List.concat tvds }
+    { grammar_logger "transformed_data_block" ;
+      {stmts= List.concat tvds; xloc= Location_span.of_positions_exn $loc} }
     (* NOTE: this allows mixing of statements and top_var_decls *)
 
 parameters_block:
   | PARAMETERSBLOCK LBRACE tvd=list(top_var_decl_no_assign) RBRACE
-    { grammar_logger "parameters_block" ; List.concat tvd }
+    { grammar_logger "parameters_block" ;
+      {stmts= List.concat tvd; xloc= Location_span.of_positions_exn $loc} }
 
 transformed_parameters_block:
   | TRANSFORMEDPARAMETERSBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
-    { grammar_logger "transformed_parameters_block" ; List.concat tvds }
+    { grammar_logger "transformed_parameters_block" ;
+      {stmts= List.concat tvds; xloc= Location_span.of_positions_exn $loc} }
 
 model_block:
   | MODELBLOCK LBRACE vds=list(vardecl_or_statement) RBRACE
-    { grammar_logger "model_block" ; List.concat vds  }
+    { grammar_logger "model_block" ;
+      {stmts= List.concat vds; xloc= Location_span.of_positions_exn $loc} }
 
 generated_quantities_block:
   | GENERATEDQUANTITIESBLOCK LBRACE tvds=list(top_vardecl_or_statement) RBRACE
-    { grammar_logger "generated_quantities_block" ; List.concat tvds }
+    { grammar_logger "generated_quantities_block" ;
+      {stmts= List.concat tvds; xloc= Location_span.of_positions_exn $loc} }
 
 (* function definitions *)
 identifier:

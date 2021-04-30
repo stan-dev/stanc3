@@ -383,8 +383,17 @@ let pp_block block_name ppf block_stmts =
   Fmt.pf ppf "}" ;
   Format.pp_print_cut ppf ()
 
-let pp_opt_block ppf block_name opt_block =
-  Fmt.option ~none:Fmt.nop (pp_block block_name) ppf opt_block
+let pp_block_list ppf blocks =
+  let rec pp_tail ppf blocks =
+    match blocks with
+    | [] -> ()
+    | (name, {stmts; xloc}) :: tl ->
+        Fn.ignore xloc ; pp_block name ppf stmts ; pp_tail ppf tl
+  in
+  match blocks with
+  | [] -> ()
+  | (name, {stmts; xloc}) :: tl ->
+      Fn.ignore xloc ; pp_block name ppf stmts ; pp_tail ppf tl
 
 let pp_program ppf
     { functionblock= bf
@@ -393,16 +402,20 @@ let pp_program ppf
     ; parametersblock= bp
     ; transformedparametersblock= btp
     ; modelblock= bm
-    ; generatedquantitiesblock= bgq } =
+    ; generatedquantitiesblock= bgq
+    ; comments } =
+  let _ = comments in
   Format.pp_open_vbox ppf 0 ;
-  pp_opt_block ppf "functions" bf ;
-  pp_opt_block ppf "data" bd ;
-  pp_opt_block ppf "transformed data" btd ;
-  pp_opt_block ppf "parameters" bp ;
-  pp_opt_block ppf "transformed parameters" btp ;
-  pp_opt_block ppf "model" bm ;
-  pp_opt_block ppf "generated quantities" bgq ;
-  Format.pp_close_box ppf ()
+  let blocks =
+    List.filter_map
+      ~f:(fun (name, block_opt) -> Option.map ~f:(fun b -> (name, b)) block_opt)
+      [ ("functions", bf); ("data", bd); ("transformed data", btd)
+      ; ("parameters", bp)
+      ; ("transformed parameters", btp)
+      ; ("model", bm)
+      ; ("generated quantities", bgq) ]
+  in
+  pp_block_list ppf blocks
 
 let check_correctness prog pretty =
   let result_ast, (_ : Middle.Warnings.t list) =

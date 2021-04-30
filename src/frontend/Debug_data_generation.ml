@@ -307,7 +307,7 @@ let var_decl_gen_val m d =
   | _ -> failwith "This should never happen."
 
 let print_data_prog s =
-  let data = Option.value ~default:[] s.datablock in
+  let data = Ast.get_stmts s.datablock in
   let l, _ =
     List.fold data ~init:([], Map.Poly.empty) ~f:(fun (l, m) decl ->
         let value = var_decl_gen_val m decl in

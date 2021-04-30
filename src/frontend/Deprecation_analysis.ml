@@ -54,7 +54,7 @@ let userdef_distributions stmts =
             Some (drop_suffix name 4)
           else None
       | _ -> None)
-    (Option.value ~default:[] stmts)
+    (Ast.get_stmts stmts)
 
 let without_suffix user_dists name =
   let open String in
@@ -181,7 +181,7 @@ let rec collect_deprecated_stmt deprecated_userdefined
         acc stmt
 
 let collect_userdef_distributions program =
-  program.functionblock |> Option.value ~default:[]
+  program.functionblock |> Ast.get_stmts
   |> List.filter_map ~f:find_udf_log_suffix
   |> List.dedup_and_sort ~compare:(fun (x, _) (y, _) -> String.compare x y)
   |> String.Map.of_alist_exn

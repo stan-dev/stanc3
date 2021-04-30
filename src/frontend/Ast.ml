@@ -206,17 +206,22 @@ let mk_typed_statement ~stmt ~loc ~return_type =
 
 (** Program shapes, where we obtain types of programs if we substitute typed or untyped
     statements for 's *)
-type 's block_opt = 's list option
+type 's block = {stmts: 's list; xloc: Middle.Location_span.t [@ignore]}
+
+and comment_type = string * Middle.Location_span.t
 
 and 's program =
-  { functionblock: 's block_opt
-  ; datablock: 's block_opt
-  ; transformeddatablock: 's block_opt
-  ; parametersblock: 's block_opt
-  ; transformedparametersblock: 's block_opt
-  ; modelblock: 's block_opt
-  ; generatedquantitiesblock: 's block_opt }
+  { functionblock: 's block option
+  ; datablock: 's block option
+  ; transformeddatablock: 's block option
+  ; parametersblock: 's block option
+  ; transformedparametersblock: 's block option
+  ; modelblock: 's block option
+  ; generatedquantitiesblock: 's block option
+  ; comments: comment_type list [@ignore] }
 [@@deriving sexp, hash, compare, map, fold]
+
+let get_stmts = Option.value_map ~default:[] ~f:(fun x -> x.stmts)
 
 (** Untyped programs (before type checking) *)
 type untyped_program = untyped_statement program
