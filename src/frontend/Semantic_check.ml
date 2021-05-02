@@ -706,12 +706,15 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
             let hint ppf () =
               match (x.expr, y.expr) with
               | IntNumeral x, _ ->
-                  Fmt.pf ppf "%s.0 / %a" x Pretty_printing.pp_expression y
+                  Fmt.pf ppf "%s.0 / %a" x Pretty_printing.pp_typed_expression
+                    y
               | _, Ast.IntNumeral y ->
-                  Fmt.pf ppf "%a / %s.0" Pretty_printing.pp_expression x y
+                  Fmt.pf ppf "%a / %s.0" Pretty_printing.pp_typed_expression x
+                    y
               | _ ->
-                  Fmt.pf ppf "%a * 1.0 / %a" Pretty_printing.pp_expression x
-                    Pretty_printing.pp_expression y
+                  Fmt.pf ppf "%a * 1.0 / %a"
+                    Pretty_printing.pp_typed_expression x
+                    Pretty_printing.pp_typed_expression y
             in
             Fmt.pr
               "@[<v>@[<hov 0>Info: Found int division at %s:@]@   @[<hov \

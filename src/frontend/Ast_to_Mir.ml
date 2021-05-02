@@ -420,7 +420,9 @@ let check_sizedtype name =
     | n ->
         [ Stmt.Helpers.internal_nrfunapp FnValidateSize
             Expr.Helpers.
-              [str name; str (Fmt.strf "%a" Pretty_printing.pp_expression x); n]
+              [ str name
+              ; str (Fmt.strf "%a" Pretty_printing.pp_typed_expression x)
+              ; n ]
             n.meta.loc ]
   in
   let rec sizedtype = function
@@ -677,7 +679,7 @@ let trans_sizedtype_decl declc tr name =
   let check fn x n =
     Stmt.Helpers.internal_nrfunapp fn
       Expr.Helpers.
-        [str name; str (Fmt.strf "%a" Pretty_printing.pp_expression x); n]
+        [str name; str (Fmt.strf "%a" Pretty_printing.pp_typed_expression x); n]
       n.meta.loc
   in
   let grab_size fn n = function

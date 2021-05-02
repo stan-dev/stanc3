@@ -21,12 +21,12 @@ let comments : Ast.comment_type list ref = ref []
 (* Store comments *)
   let add_comment (begin_pos, buffer) end_pos =
     comments :=
-        ( [Buffer.contents buffer ^ " "]
-        , Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
+        Comment ( [Buffer.contents buffer ^ " "]
+                , Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
       :: !comments
   let add_multi_comment begin_pos lines end_pos =
     comments :=
-        ( lines, Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
+        Comment ( lines, Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
       :: !comments
 }
 
@@ -101,7 +101,11 @@ rule token = parse
   | ']'                       { lexer_logger "]" ; Parser.RBRACK }
   | '<'                       { lexer_logger "<" ; Parser.LABRACK }
   | '>'                       { lexer_logger ">" ; Parser.RABRACK }
-  | ','                       { lexer_logger "," ; Parser.COMMA }
+  | ','                       { lexer_logger "," ;
+                                comments :=
+                                  Comma (Middle.Location.of_position_exn lexbuf.lex_curr_p)
+                                  :: !comments ;
+                                Parser.COMMA }
   | ';'                       { lexer_logger ";" ; Parser.SEMICOLON }
   | '|'                       { lexer_logger "|" ; Parser.BAR }
 (* Control flow keywords *)

@@ -208,7 +208,9 @@ let mk_typed_statement ~stmt ~loc ~return_type =
     statements for 's *)
 type 's block = {stmts: 's list; xloc: Middle.Location_span.t [@ignore]}
 
-and comment_type = string list * Middle.Location_span.t
+and comment_type =
+  | Comment of string list * Middle.Location_span.t
+  | Comma of Middle.Location.t
 
 and 's program =
   { functionblock: 's block option
