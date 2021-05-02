@@ -36,8 +36,28 @@ let pp_space newline ppf (prev_loc, begin_loc) =
   else Fmt.pf ppf " "
 
 let pp_spacing ?(newline = true) skipped prev_loc next_loc ppf ls =
-  let pp_comment ppf (s, _) = Fmt.pf ppf "@[<v>/*%s*/@]" s in
-  let pp_skipped ppf (s, _) = Fmt.pf ppf "@[<v>/* ^^^:%s*/@]" s in
+  let trim init lines =
+    let padding =
+      List.fold lines ~init ~f:(fun m x ->
+          match String.lfindi ~f:(fun _ c -> c <> ' ') x with
+          | None -> m
+          | Some x -> min m x )
+    in
+    List.map lines ~f:(fun x -> String.drop_prefix x padding)
+  in
+  let trim_tail col_num lines =
+    match lines with [] -> [] | hd :: tl -> hd :: trim (col_num - 2) tl
+  in
+  let pp_comment ppf (lines, {Middle.Location_span.begin_loc= {col_num; _}; _})
+      =
+    Fmt.pf ppf "@[<v>/*%a*/@]" Fmt.(list string) (trim_tail col_num lines)
+  in
+  let pp_skipped ppf (lines, {Middle.Location_span.begin_loc= {col_num; _}; _})
+      =
+    Fmt.pf ppf "@[<v>/* ^^^:@[<v>%a*@]/@]"
+      Fmt.(list string)
+      (trim_tail col_num lines)
+  in
   let rec recurse pp prev_loc = function
     | ((_, {Middle.Location_span.begin_loc; end_loc}) as hd) :: tl ->
         pp_space false ppf (prev_loc, begin_loc) ;

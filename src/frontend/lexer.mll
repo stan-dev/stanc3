@@ -21,8 +21,12 @@ let comments : Ast.comment_type list ref = ref []
 (* Store comments *)
   let add_comment (begin_pos, buffer) end_pos =
     comments :=
-        ( Buffer.contents buffer ^ " "
+        ( [Buffer.contents buffer ^ " "]
         , Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
+      :: !comments
+  let add_multi_comment begin_pos lines end_pos =
+    comments :=
+        ( lines, Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
       :: !comments
 }
 
@@ -47,7 +51,7 @@ rule token = parse
                                 incr_linenum lexbuf ; token lexbuf }
   | space                     { lexer_logger "space" ; token lexbuf }
   | "/*"                      { lexer_logger "multicomment" ;
-                                multiline_comment lexbuf ; token lexbuf }
+                                multiline_comment ((lexbuf.lex_curr_p, []), Buffer.create 16) lexbuf ; token lexbuf }
   | "//"                      { lexer_logger "single comment" ;
                                 singleline_comment (lexbuf.lex_curr_p, Buffer.create 16) lexbuf ;
                                 token lexbuf }
@@ -219,11 +223,17 @@ rule token = parse
                                           (Stack.top_exn include_stack))))) }
 
 (* Multi-line comment terminated by "*/" *)
-and multiline_comment = parse
-  | "*/"     { () }
+and multiline_comment state = parse
+  | "*/"     { let ((pos, lines), buffer) = state in
+               let lines = (Buffer.contents buffer) :: lines in
+               add_multi_comment pos (List.rev lines) lexbuf.lex_curr_p }
   | eof      { failwith "unterminated comment" }
-  | newline  { incr_linenum lexbuf; multiline_comment lexbuf }
-  | _        { multiline_comment lexbuf }
+  | newline  { incr_linenum lexbuf;
+               let ((pos, lines), buffer) = state in
+               let lines = (Buffer.contents buffer) :: lines in
+               let newbuf = Buffer.create 16 in
+               multiline_comment ((pos, lines), newbuf) lexbuf }
+  | _        { Buffer.add_string (snd state) (lexeme lexbuf) ; multiline_comment state lexbuf }
 
 (* Single-line comment terminated by a newline *)
 and singleline_comment state = parse
