@@ -5,6 +5,61 @@
 open Core_kernel
 open Ast
 
+let comments : comment_type list ref = ref []
+let set_comments ls = comments := ls
+
+let get_comments end_loc =
+  let rec go ls =
+    match ls with
+    | ((_, {Middle.Location_span.begin_loc; _}) as hd) :: tl
+      when compare begin_loc end_loc < 0 ->
+        hd :: go tl
+    | _ ->
+        comments := ls ;
+        []
+  in
+  go !comments
+
+let remaining_comments () =
+  let x = !comments in
+  comments := [] ;
+  x
+
+let pp_space newline ppf (prev_loc, begin_loc) =
+  let open Middle.Location in
+  if
+    prev_loc.filename <> begin_loc.filename
+    || prev_loc.line_num + 1 < begin_loc.line_num
+  then Fmt.pf ppf "@,@,"
+  else if newline || prev_loc.line_num < begin_loc.line_num then
+    Fmt.pf ppf "@,"
+  else Fmt.pf ppf " "
+
+let pp_spacing ?(newline = true) skipped prev_loc next_loc ppf ls =
+  let pp_comment ppf (s, _) = Fmt.pf ppf "@[<v>/*%s*/@]" s in
+  let pp_skipped ppf (s, _) = Fmt.pf ppf "@[<v>/* ^^^:%s*/@]" s in
+  let rec recurse pp prev_loc = function
+    | ((_, {Middle.Location_span.begin_loc; end_loc}) as hd) :: tl ->
+        pp_space false ppf (prev_loc, begin_loc) ;
+        pp ppf hd ;
+        recurse pp end_loc tl
+    | [] -> prev_loc
+  in
+  match ls with
+  | ((_, {Middle.Location_span.begin_loc; end_loc}) as hd) :: tl ->
+      Option.iter prev_loc ~f:(fun prev_loc ->
+          pp_space false ppf (prev_loc, begin_loc) ) ;
+      pp_comment ppf hd ;
+      let _ = recurse pp_skipped Middle.Location.empty skipped in
+      let last_loc = recurse pp_comment end_loc tl in
+      Option.iter next_loc ~f:(fun next_loc ->
+          pp_space newline ppf (last_loc, next_loc) )
+  | [] ->
+      let _ = recurse pp_skipped Middle.Location.empty skipped in
+      Option.iter prev_loc ~f:(fun prev_loc ->
+          Option.iter next_loc ~f:(fun next_loc ->
+              pp_space newline ppf (prev_loc, next_loc) ) )
+
 let wrap_fmt fmt x =
   (* Switched from Format.str_formatter partially because of
      https://discuss.ocaml.org/t/debugging-memory-issues/3223/8
@@ -252,30 +307,37 @@ let pp_array_dims ppf = function
       with_box ppf 0 (fun () ->
           Fmt.pf ppf "%a] " pp_list_of_expression (List.rev es) )
 
-let rec pp_indent_unless_block ppf s =
+let rec pp_indent_unless_block ppf ((s : untyped_statement), loc) =
   match s.stmt with
   | Block _ -> pp_statement ppf s
   | _ ->
-      Format.pp_print_cut ppf () ;
+      pp_spacing [] (Some loc) (Some s.smeta.loc.begin_loc) ppf
+        (get_comments s.smeta.loc.begin_loc) ;
       with_indented_box ppf 2 0 (fun () -> Fmt.pf ppf "%a" pp_statement s)
 
 (* This function helps write chained if-then-else-if-... blocks
  * correctly. Without it, each IfThenElse would trigger a new
  * vbox in front of the if, adding spaces for each level of IfThenElse.
  *)
-and pp_recursive_ifthenelse ppf s =
+and pp_recursive_ifthenelse ppf (s, loc) =
   match s.stmt with
   | IfThenElse (e, s, None) ->
-      Fmt.pf ppf "if (%a) %a" pp_expression e pp_indent_unless_block s
+      Fmt.pf ppf "if (%a) %a" pp_expression e pp_indent_unless_block
+        (s, e.emeta.loc.end_loc)
   | IfThenElse (e, s1, Some s2) ->
-      Fmt.pf ppf "if (%a) %a" pp_expression e pp_indent_unless_block s1 ;
-      Format.pp_print_cut ppf () ;
-      Fmt.pf ppf "else %a" pp_recursive_ifthenelse s2
-  | _ -> pp_indent_unless_block ppf s
+      Fmt.pf ppf "if (%a) %a" pp_expression e pp_indent_unless_block
+        (s1, e.emeta.loc.end_loc) ;
+      let newline = match s1.stmt with Block _ -> false | _ -> true in
+      pp_spacing ~newline [] (Some s1.smeta.loc.end_loc)
+        (Some s2.smeta.loc.begin_loc) ppf
+        (get_comments s2.smeta.loc.begin_loc) ;
+      let loc = s1.smeta.loc.end_loc in
+      Fmt.pf ppf "else %a" pp_recursive_ifthenelse
+        (s2, {loc with line_num= loc.line_num + 1})
+  | _ -> pp_indent_unless_block ppf (s, loc)
 
 and pp_statement ppf
     ({stmt= s_content; smeta= {loc}} as ss : untyped_statement) =
-  let _ = loc in
   match s_content with
   | Assignment {assign_lhs= l; assign_op= assop; assign_rhs= e} ->
       with_hbox ppf (fun () ->
@@ -301,25 +363,29 @@ and pp_statement ppf
   | Reject ps -> Fmt.pf ppf "reject(%a);" pp_list_of_printables ps
   | Skip -> Fmt.pf ppf ";"
   | IfThenElse (_, _, _) ->
-      with_vbox ppf 0 (fun () -> pp_recursive_ifthenelse ppf ss)
+      with_vbox ppf 0 (fun () ->
+          pp_recursive_ifthenelse ppf (ss, ss.smeta.loc.begin_loc) )
   | While (e, s) -> Fmt.pf ppf "while (%a) %a" pp_expression e pp_statement s
   | For {loop_variable= id; lower_bound= e1; upper_bound= e2; loop_body= s} ->
       with_vbox ppf 0 (fun () ->
           Fmt.pf ppf "for (%a in %a : %a) %a" pp_identifier id pp_expression e1
-            pp_expression e2 pp_indent_unless_block s )
+            pp_expression e2 pp_indent_unless_block (s, e2.emeta.loc.end_loc)
+      )
   | ForEach (id, e, s) ->
       Fmt.pf ppf "for (%a in %a) %a" pp_identifier id pp_expression e
-        pp_indent_unless_block s
+        pp_indent_unless_block (s, e.emeta.loc.end_loc)
   | Block vdsl ->
       Fmt.pf ppf "{" ;
       Format.pp_print_cut ppf () ;
-      with_indented_box ppf 2 0 (fun () -> pp_list_of_statements ppf vdsl) ;
+      with_indented_box ppf 2 0 (fun () -> pp_list_of_statements ppf (vdsl, loc)
+      ) ;
       Format.pp_print_cut ppf () ;
       Fmt.pf ppf "}"
   | Profile (name, vdsl) ->
       Fmt.pf ppf "profile(%s) {" name ;
       Format.pp_print_cut ppf () ;
-      with_indented_box ppf 2 0 (fun () -> pp_list_of_statements ppf vdsl) ;
+      with_indented_box ppf 2 0 (fun () -> pp_list_of_statements ppf (vdsl, loc)
+      ) ;
       Format.pp_print_cut ppf () ;
       Fmt.pf ppf "}"
   | VarDecl
@@ -352,48 +418,45 @@ and pp_statement ppf
 and pp_args ppf (at, ut, id) =
   Fmt.pf ppf "%a%a %a" pp_autodifftype at pp_unsizedtype ut pp_identifier id
 
-and pp_list_of_statements ppf l =
-  let rec pp_tail loc ppf = function
-    | [] -> ()
+and pp_list_of_statements ppf (l, xloc) =
+  let rec pp_head ppf ls =
+    match ls with
     | ({smeta= ({loc= {begin_loc; end_loc}} : located_meta); _} as s) :: l ->
-        Fmt.cut ppf () ;
-        if
-          loc.Middle.Location.filename <> begin_loc.filename
-          || loc.line_num + 1 < begin_loc.line_num
-        then Fmt.cut ppf () ;
+        pp_spacing [] None (Some begin_loc) ppf (get_comments begin_loc) ;
         pp_statement ppf s ;
         pp_tail end_loc ppf l
-  in
-  let pp_head ppf = function
-    | [] -> ()
-    | ({smeta= ({loc= {end_loc; _}} : located_meta); _} as s) :: l ->
-        pp_statement ppf s ; pp_tail end_loc ppf l
+    | [] -> pp_spacing [] None None ppf (get_comments xloc.end_loc)
+  and pp_tail loc ppf ls =
+    let skipped = get_comments loc in
+    match ls with
+    | ({smeta= ({loc= {begin_loc; end_loc}} : located_meta); _} as s) :: l ->
+        pp_spacing skipped (Some loc) (Some begin_loc) ppf
+          (get_comments begin_loc) ;
+        pp_statement ppf s ;
+        pp_tail end_loc ppf l
+    | [] -> pp_spacing skipped (Some loc) None ppf (get_comments xloc.end_loc)
   in
   with_vbox ppf 0 (fun () -> pp_head ppf l)
 
-let pp_block block_name ppf block_stmts =
+let pp_block block_name ppf {stmts; xloc} =
   Fmt.pf ppf "%s {" block_name ;
   Format.pp_print_cut ppf () ;
-  if List.length block_stmts > 0 then (
+  if List.length stmts > 0 then (
     with_indented_box ppf 2 0 (fun () ->
-        pp_list_of_statements ppf block_stmts ;
+        pp_list_of_statements ppf (stmts, xloc) ;
         () ) ;
     Format.pp_print_cut ppf () )
   else Format.pp_print_cut ppf () ;
   Fmt.pf ppf "}" ;
   Format.pp_print_cut ppf ()
 
-let pp_block_list ppf blocks =
-  let rec pp_tail ppf blocks =
-    match blocks with
-    | [] -> ()
-    | (name, {stmts; xloc}) :: tl ->
-        Fn.ignore xloc ; pp_block name ppf stmts ; pp_tail ppf tl
-  in
-  match blocks with
-  | [] -> ()
+let rec pp_block_list ppf = function
   | (name, {stmts; xloc}) :: tl ->
-      Fn.ignore xloc ; pp_block name ppf stmts ; pp_tail ppf tl
+      pp_spacing [] None (Some xloc.begin_loc) ppf
+        (get_comments xloc.begin_loc) ;
+      pp_block name ppf {stmts; xloc} ;
+      pp_block_list ppf tl
+  | [] -> pp_spacing [] None None ppf (remaining_comments ())
 
 let pp_program ppf
     { functionblock= bf
@@ -404,7 +467,7 @@ let pp_program ppf
     ; modelblock= bm
     ; generatedquantitiesblock= bgq
     ; comments } =
-  let _ = comments in
+  set_comments comments ;
   Format.pp_open_vbox ppf 0 ;
   let blocks =
     List.filter_map

@@ -21,8 +21,8 @@ let comments : Ast.comment_type list ref = ref []
 (* Store comments *)
   let add_comment (begin_pos, buffer) end_pos =
     comments :=
-      ( Buffer.contents buffer ^ " "
-      , Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
+        ( Buffer.contents buffer ^ " "
+        , Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
       :: !comments
 }
 
