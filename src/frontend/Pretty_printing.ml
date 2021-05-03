@@ -13,9 +13,9 @@ let get_comments end_loc =
   let rec go ls =
     match ls with
     | Comment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
-      when compare begin_loc end_loc < 0 ->
+      when Middle.Location.compare_loc begin_loc end_loc < 0 ->
         (s, loc) :: go tl
-    | Comma loc :: tl when compare loc end_loc < 0 -> go tl
+    | Comma loc :: tl when Middle.Location.compare_loc loc end_loc < 0 -> go tl
     | _ ->
         comments := ls ;
         []
@@ -26,7 +26,7 @@ let get_comments_until_comma end_loc =
   let rec go ls =
     match ls with
     | Comment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
-      when compare begin_loc end_loc < 0 ->
+      when Middle.Location.compare_loc begin_loc end_loc < 0 ->
         (s, loc) :: go tl
     | _ ->
         comments := ls ;
@@ -209,18 +209,22 @@ let pp_list_of pp (loc_of : 'a -> Middle.Location_span.t) ppf
             comment_after_comma_on_the_same_line comments
           else comments
         in
+        Format.pp_close_box ppf () ;
         Fmt.comma ppf () ;
+        Format.pp_open_box ppf 0 ;
         pp_maybe_space false comments ;
         go next rest
     | [] -> pp ppf expr
   in
   skip_comments begin_loc ;
+  Format.pp_open_box ppf 0 ;
   ( match es with
   | [] -> ()
   | e :: es ->
       pp_maybe_space false (get_comments (loc_of e).begin_loc) ;
       go e es ) ;
-  pp_maybe_space true (get_comments end_loc)
+  pp_maybe_space true (get_comments end_loc) ;
+  Format.pp_close_box ppf ()
 
 let rec pp_index ppf = function
   | All -> Fmt.pf ppf " : "
@@ -426,8 +430,13 @@ and pp_recursive_ifthenelse ppf (s, loc) =
       Fmt.pf ppf "if (%a) %a" pp_expression e pp_indent_unless_block
         (s1, e.emeta.loc.end_loc) ;
       let newline = match s1.stmt with Block _ -> false | _ -> true in
-      pp_spacing ~newline (Some s1.smeta.loc.end_loc)
-        (Some s2.smeta.loc.begin_loc) ppf
+      let loc2 = s2.smeta.loc.begin_loc in
+      let loc2 =
+        match s2.stmt with
+        | Block _ -> loc2
+        | _ -> {loc2 with line_num= loc2.line_num - 1}
+      in
+      pp_spacing ~newline (Some s1.smeta.loc.end_loc) (Some loc2) ppf
         (get_comments s2.smeta.loc.begin_loc) ;
       let loc = s1.smeta.loc.end_loc in
       Fmt.pf ppf "else %a" pp_recursive_ifthenelse
@@ -543,12 +552,8 @@ and pp_list_of_statements ppf (l, xloc) =
 let pp_block block_name ppf {stmts; xloc} =
   Fmt.pf ppf "%s {" block_name ;
   Format.pp_print_cut ppf () ;
-  if List.length stmts > 0 then (
-    with_indented_box ppf 2 0 (fun () ->
-        pp_list_of_statements ppf (stmts, xloc) ;
-        () ) ;
-    Format.pp_print_cut ppf () )
-  else Format.pp_print_cut ppf () ;
+  with_indented_box ppf 2 0 (fun () -> pp_list_of_statements ppf (stmts, xloc)) ;
+  Format.pp_print_cut ppf () ;
   Fmt.pf ppf "}" ;
   Format.pp_print_cut ppf ()
 
