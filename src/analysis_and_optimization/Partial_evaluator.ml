@@ -227,7 +227,7 @@ let rec eval_expr (e : Expr.Typed.t) =
                           FunApp (StanLib ("inv_logit", FnPlain), [alpha]); _
                       } ] ) ->
                     FunApp
-                      (StanLib ("categorical_logit_lpmf", FnPlain), [y; alpha])
+                      (StanLib ("categorical_logit_lpmf", suffix), [y; alpha])
                 | ( "categorical_rng"
                   , [ { pattern=
                           FunApp (StanLib ("inv_logit", FnPlain), [alpha]); _

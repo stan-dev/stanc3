@@ -25,5 +25,8 @@ let suffix_from_name fname =
   else FnPlain
 
 let pp ppf = function
+  | StanLib (s, FnLpdf true) | UserDefined (s, FnLpdf true) ->
+      Fmt.string ppf
+        (Utils.with_unnormalized_suffix s |> Option.value ~default:s)
   | StanLib (s, _) | UserDefined (s, _) -> Fmt.string ppf s
   | CompilerInternal internal -> Internal_fun.pp ppf internal
