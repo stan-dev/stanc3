@@ -51,7 +51,7 @@ let opencl_supported_functions =
 let opencl_suffix = "_opencl__"
 
 let to_matrix_cl e =
-  Expr.Fixed.{e with pattern= FunApp (StanLib ("to_matrix_cl", FnPure), [e])}
+  Expr.Fixed.{e with pattern= FunApp (StanLib ("to_matrix_cl", FnPlain), [e])}
 
 let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
     =
@@ -497,7 +497,7 @@ let%expect_test "collect vars expr" =
   let args = List.map ~f:mkvar ["y"; "x_opencl__"; "z"; "w_opencl__"] in
   let fnapp =
     Expr.
-      { Fixed.pattern= FunApp (StanLib ("print", FnPure), args)
+      { Fixed.pattern= FunApp (StanLib ("print", FnPlain), args)
       ; meta= Typed.Meta.empty }
   in
   Stmt.Fixed.{pattern= TargetPE fnapp; meta= Location_span.empty}

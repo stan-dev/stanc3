@@ -1,6 +1,6 @@
 open Core_kernel
 
-type 'a suffix = FnPure | FnRng | FnLpdf of 'a | FnTarget
+type 'propto suffix = FnPlain | FnRng | FnLpdf of 'propto | FnTarget
 [@@deriving compare, sexp, hash, map]
 
 type t =
@@ -22,7 +22,7 @@ let suffix_from_name fname =
          || fname = "multiply_log"
          || fname = "binomial_coefficient_log" )
   then FnLpdf false
-  else FnPure
+  else FnPlain
 
 let pp ppf = function
   | StanLib (s, _) | UserDefined (s, _) -> Fmt.string ppf s

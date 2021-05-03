@@ -588,7 +588,7 @@ let unroll_loop_one_step_statement _ =
           IfElse
             ( Expr.Fixed.
                 { lower with
-                  pattern= FunApp (StanLib ("Geq__", FnPure), [upper; lower])
+                  pattern= FunApp (StanLib ("Geq__", FnPlain), [upper; lower])
                 }
             , { pattern=
                   (let body_unrolled =
@@ -605,7 +605,7 @@ let unroll_loop_one_step_statement _ =
                                { lower with
                                  pattern=
                                    FunApp
-                                     ( StanLib ("Plus__", FnPure)
+                                     ( StanLib ("Plus__", FnPlain)
                                      , [lower; Expr.Helpers.loop_bottom] ) } }
                      ; meta= Location_span.empty }
                    in

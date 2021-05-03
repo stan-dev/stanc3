@@ -343,7 +343,7 @@ let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
               ( ((_, sliced_arg_fun_type) as sliced_arg_fun)
                 :: (_, UInt) :: (_, UInt) :: fun_args
               , ReturnType UReal
-              , (FnPure | FnLpdf _) ); _ }; _ }
+              , (FnPlain | FnLpdf _) ); _ }; _ }
     :: sliced :: {emeta= {type_= UInt; _}; _} :: args
     when arg_match sliced_arg_fun sliced
          && List.mem Stan_math_signatures.reduce_sum_slice_types
@@ -352,7 +352,7 @@ let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
               sliced_arg_fun_type ~equal:( = ) ->
       if args_match fun_args args then
         mk_typed_expression
-          ~expr:(mk_fun_app ~is_cond_dist (StanLib FnPure, id, es))
+          ~expr:(mk_fun_app ~is_cond_dist (StanLib FnPlain, id, es))
           ~ad_level:(expr_ad_lub es) ~type_:UnsizedType.UReal ~loc
         |> Validate.ok
       else
@@ -391,7 +391,7 @@ let semantic_check_variadic_ode ~is_cond_dist ~loc id es =
   in
   match es with
   | { emeta=
-        {type_= UnsizedType.UFun (fun_args, ReturnType return_type, FnPure); _}; _
+        {type_= UnsizedType.UFun (fun_args, ReturnType return_type, FnPlain); _}; _
     }
     :: args ->
       let num_of_mandatory_args =
@@ -410,7 +410,7 @@ let semantic_check_variadic_ode ~is_cond_dist ~loc id es =
       then
         if args_match variadic_fun_args variadic_args then
           mk_typed_expression
-            ~expr:(mk_fun_app ~is_cond_dist (StanLib FnPure, id, es))
+            ~expr:(mk_fun_app ~is_cond_dist (StanLib FnPlain, id, es))
             ~ad_level:(expr_ad_lub es)
             ~type_:Stan_math_signatures.variadic_ode_return_type ~loc
           |> Validate.ok
@@ -441,9 +441,9 @@ let fn_kind_from_application id es =
 *)
 let semantic_check_fn ~is_cond_dist ~loc id es =
   match fn_kind_from_application id es with
-  | StanLib FnPure when Stan_math_signatures.is_reduce_sum_fn id.name ->
+  | StanLib FnPlain when Stan_math_signatures.is_reduce_sum_fn id.name ->
       semantic_check_reduce_sum ~is_cond_dist ~loc id es
-  | StanLib FnPure when Stan_math_signatures.is_variadic_ode_fn id.name ->
+  | StanLib FnPlain when Stan_math_signatures.is_variadic_ode_fn id.name ->
       semantic_check_variadic_ode ~is_cond_dist ~loc id es
   | StanLib _ -> semantic_check_fn_stan_math ~is_cond_dist ~loc id es
   | UserDefined _ -> semantic_check_fn_normal ~is_cond_dist ~loc id es
@@ -1007,7 +1007,7 @@ let semantic_check_nrfn_stan_math ~loc id es =
     with
     | Some UnsizedType.Void ->
         mk_typed_statement
-          ~stmt:(NRFunApp (StanLib FnPure, id, es))
+          ~stmt:(NRFunApp (StanLib FnPlain, id, es))
           ~return_type:NoReturnType ~loc
         |> ok
     | Some (UnsizedType.ReturnType _) ->
@@ -1214,7 +1214,7 @@ let cumulative_density_is_defined id arguments =
     |> Option.value_map ~default:false ~f:is_real_rt
   and valid_arg_types_for_suffix suffix =
     match Symbol_table.look vm (name ^ suffix) with
-    | Some (Functions, UFun (listedtypes, ReturnType UReal, FnPure)) ->
+    | Some (Functions, UFun (listedtypes, ReturnType UReal, FnPlain)) ->
         UnsizedType.check_compatible_arguments_mod_conv name listedtypes
           argumenttypes
     | _ -> false

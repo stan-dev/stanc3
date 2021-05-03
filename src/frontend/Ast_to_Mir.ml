@@ -47,7 +47,7 @@ let rec op_to_funapp op args =
   and adlevel = Ast.expr_ad_lub args in
   Expr.
     { Fixed.pattern=
-        FunApp (StanLib (Operator.to_string op, FnPure), trans_exprs args)
+        FunApp (StanLib (Operator.to_string op, FnPlain), trans_exprs args)
     ; meta= Expr.Typed.Meta.create ~type_ ~adlevel ~loc () }
 
 and trans_expr {Ast.expr; Ast.emeta} =
@@ -117,9 +117,9 @@ let truncate_dist ud_dists (id : Ast.identifier) ast_obs ast_args t =
       List.map ~f:(( ^ ) id.name) sfx |> String.Set.of_list
     in
     match List.find ~f:(fun (n, _) -> Set.mem possible_names n) ud_dists with
-    | Some (name, tp) -> (Ast.UserDefined FnPure, name, tp)
+    | Some (name, tp) -> (Ast.UserDefined FnPlain, name, tp)
     | None ->
-        ( Ast.StanLib FnPure
+        ( Ast.StanLib FnPlain
         , Set.to_list possible_names |> List.hd_exn
         , if Stan_math_signatures.is_stan_math_function_name (id.name ^ "_lpmf")
           then UnsizedType.UInt
@@ -166,7 +166,7 @@ let truncate_dist ud_dists (id : Ast.identifier) ast_obs ast_args t =
       [ trunc Less lb
           (trunc Greater ub
              (targetme ub.emeta.loc
-                (funapp ub.emeta (Ast.StanLib FnPure) "log_diff_exp"
+                (funapp ub.emeta (Ast.StanLib FnPlain) "log_diff_exp"
                    [ funapp ub.emeta fk fn (ub :: ast_args)
                    ; funapp ub.emeta fk fn (inclusive_bound tp lb :: ast_args)
                    ]))) ]
@@ -247,7 +247,7 @@ let same_shape decl_id decl_var id var meta =
     [ Stmt.
         { Fixed.pattern=
             NRFunApp
-              ( StanLib ("check_matching_dims", FnPure)
+              ( StanLib ("check_matching_dims", FnPlain)
               , Expr.Helpers.
                   [str "constraint"; str decl_id; decl_var; str id; var] )
         ; meta } ]
@@ -736,7 +736,7 @@ let trans_sizedtype_decl declc tr name =
           | Some Constrain, CholeskyCov ->
               [ { Stmt.Fixed.pattern=
                     NRFunApp
-                      ( StanLib ("check_greater_or_equal", FnPure)
+                      ( StanLib ("check_greater_or_equal", FnPlain)
                       , Expr.Helpers.
                           [ str ("cholesky_factor_cov " ^ name)
                           ; str
@@ -923,7 +923,7 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
   in
   let iexpr pattern = Expr.{pattern; Fixed.meta= Typed.Meta.empty} in
   let fnot e =
-    FunApp (StanLib (Operator.to_string PNot, FnPure), [e]) |> iexpr
+    FunApp (StanLib (Operator.to_string PNot, FnPlain), [e]) |> iexpr
   in
   let tparam_early_return =
     let to_var fv = iexpr (Var (Flag_vars.to_string fv)) in

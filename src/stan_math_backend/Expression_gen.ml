@@ -52,7 +52,7 @@ let minus_one e =
   { e with
     Expr.Fixed.pattern=
       FunApp
-        ( StanLib (Operator.to_string Minus, FnPure)
+        ( StanLib (Operator.to_string Minus, FnPlain)
         , [e; Expr.Helpers.loop_bottom] ) }
 
 let is_single_index = function Index.Single _ -> true | _ -> false
@@ -122,7 +122,7 @@ let pp_expr_type ppf e =
 let suffix_args = function
   | Fun_kind.FnRng -> ["base_rng__"]
   | FnTarget -> ["lp__"; "lp_accum__"]
-  | FnPure | FnLpdf _ -> []
+  | FnPlain | FnLpdf _ -> []
 
 let demangle_unnormalized_name udf suffix f =
   match suffix with
@@ -278,7 +278,7 @@ and gen_fun_app suffix ppf fname es =
         as e ->
           { e with
             pattern=
-              FunApp (StanLib (name ^ functor_suffix_select fname, FnPure), [])
+              FunApp (StanLib (name ^ functor_suffix_select fname, FnPlain), [])
           }
       | e -> e
     in
@@ -422,8 +422,8 @@ and pp_compiler_internal_fn ad ut f ppf es =
         (Fmt.option Fmt.string) constraint_suffix_opt pp_unsizedtype_local
         (UnsizedType.AutoDiffable, ut)
         (Fmt.option Fmt.string) jacobian_param_opt (list ~sep:comma pp_expr) es
-  | FnDeepCopy -> gen_fun_app FnPure ppf "stan::model::deep_copy" es
-  | _ -> gen_fun_app FnPure ppf (Internal_fun.to_string f) es
+  | FnDeepCopy -> gen_fun_app FnPlain ppf "stan::model::deep_copy" es
+  | _ -> gen_fun_app FnPlain ppf (Internal_fun.to_string f) es
 
 and pp_promoted ad ut ppf e =
   match e with
@@ -534,20 +534,20 @@ let%expect_test "pp_expr4" =
   [%expect {| 112 |}]
 
 let%expect_test "pp_expr5" =
-  printf "%s" (pp_unlocated (FunApp (StanLib ("pi", FnPure), []))) ;
+  printf "%s" (pp_unlocated (FunApp (StanLib ("pi", FnPlain), []))) ;
   [%expect {| stan::math::pi() |}]
 
 let%expect_test "pp_expr6" =
   printf "%s"
     (pp_unlocated
-       (FunApp (StanLib ("sqrt", FnPure), [dummy_locate (Lit (Int, "123"))]))) ;
+       (FunApp (StanLib ("sqrt", FnPlain), [dummy_locate (Lit (Int, "123"))]))) ;
   [%expect {| stan::math::sqrt(123) |}]
 
 let%expect_test "pp_expr7" =
   printf "%s"
     (pp_unlocated
        (FunApp
-          ( StanLib ("atan", FnPure)
+          ( StanLib ("atan", FnPlain)
           , [dummy_locate (Lit (Int, "123")); dummy_locate (Lit (Real, "1.2"))]
           ))) ;
   [%expect {| stan::math::atan(123, 1.2) |}]

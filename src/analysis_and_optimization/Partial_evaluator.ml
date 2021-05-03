@@ -120,14 +120,14 @@ let rec eval_expr (e : Expr.Typed.t) =
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("inv_logit", FnPure)
+                            ( StanLib ("inv_logit", FnPlain)
                             , [ { pattern=
                                     FunApp
-                                      ( StanLib ("Plus__", FnPure)
+                                      ( StanLib ("Plus__", FnPlain)
                                       , [ alpha
                                         ; { pattern=
                                               FunApp
-                                                ( StanLib ("Times__", FnPure)
+                                                ( StanLib ("Times__", FnPlain)
                                                 , [x; beta] ); _ } ] ); _ } ] ); _
                       } ] )
                   when Expr.Typed.type_of x = UMatrix ->
@@ -138,13 +138,13 @@ let rec eval_expr (e : Expr.Typed.t) =
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("inv_logit", FnPure)
+                            ( StanLib ("inv_logit", FnPlain)
                             , [ { pattern=
                                     FunApp
-                                      ( StanLib ("Plus__", FnPure)
+                                      ( StanLib ("Plus__", FnPlain)
                                       , [ { pattern=
                                               FunApp
-                                                ( StanLib ("Times__", FnPure)
+                                                ( StanLib ("Times__", FnPlain)
                                                 , [x; beta] ); _ }
                                         ; alpha ] ); _ } ] ); _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
@@ -155,10 +155,10 @@ let rec eval_expr (e : Expr.Typed.t) =
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("inv_logit", FnPure)
+                            ( StanLib ("inv_logit", FnPlain)
                             , [ { pattern=
                                     FunApp
-                                      (StanLib ("Times__", FnPure), [x; beta]); _
+                                      (StanLib ("Times__", FnPlain), [x; beta]); _
                                 } ] ); _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     FunApp
@@ -168,11 +168,11 @@ let rec eval_expr (e : Expr.Typed.t) =
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("Plus__", FnPure)
+                            ( StanLib ("Plus__", FnPlain)
                             , [ alpha
                               ; { pattern=
                                     FunApp
-                                      (StanLib ("Times__", FnPure), [x; beta]); _
+                                      (StanLib ("Times__", FnPlain), [x; beta]); _
                                 } ] ); _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     FunApp
@@ -182,10 +182,10 @@ let rec eval_expr (e : Expr.Typed.t) =
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("Plus__", FnPure)
+                            ( StanLib ("Plus__", FnPlain)
                             , [ { pattern=
                                     FunApp
-                                      (StanLib ("Times__", FnPure), [x; beta]); _
+                                      (StanLib ("Times__", FnPlain), [x; beta]); _
                                 }
                               ; alpha ] ); _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
@@ -194,7 +194,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                       , [y; x; alpha; beta] )
                 | ( "bernoulli_logit_lpmf"
                   , [ y
-                    ; { pattern= FunApp (StanLib ("Times__", FnPure), [x; beta]); _
+                    ; { pattern=
+                          FunApp (StanLib ("Times__", FnPlain), [x; beta]); _
                       } ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     FunApp
@@ -202,136 +203,148 @@ let rec eval_expr (e : Expr.Typed.t) =
                       , [y; x; Expr.Helpers.zero; beta] )
                 | ( "bernoulli_lpmf"
                   , [ y
-                    ; { pattern= FunApp (StanLib ("inv_logit", FnPure), [alpha]); _
+                    ; { pattern=
+                          FunApp (StanLib ("inv_logit", FnPlain), [alpha]); _
                       } ] ) ->
                     FunApp
                       (StanLib ("bernoulli_logit_lpmf", suffix), [y; alpha])
                 | ( "bernoulli_rng"
-                  , [ { pattern= FunApp (StanLib ("inv_logit", FnPure), [alpha]); _
+                  , [ { pattern=
+                          FunApp (StanLib ("inv_logit", FnPlain), [alpha]); _
                       } ] ) ->
                     FunApp (StanLib ("bernoulli_logit_rng", suffix), [alpha])
                 | ( "binomial_lpmf"
                   , [ y
                     ; n
-                    ; { pattern= FunApp (StanLib ("inv_logit", FnPure), [alpha]); _
+                    ; { pattern=
+                          FunApp (StanLib ("inv_logit", FnPlain), [alpha]); _
                       } ] ) ->
                     FunApp
                       (StanLib ("binomial_logit_lpmf", suffix), [y; n; alpha])
                 | ( "categorical_lpmf"
                   , [ y
-                    ; { pattern= FunApp (StanLib ("inv_logit", FnPure), [alpha]); _
+                    ; { pattern=
+                          FunApp (StanLib ("inv_logit", FnPlain), [alpha]); _
                       } ] ) ->
                     FunApp
-                      (StanLib ("categorical_logit_lpmf", FnPure), [y; alpha])
+                      (StanLib ("categorical_logit_lpmf", FnPlain), [y; alpha])
                 | ( "categorical_rng"
-                  , [ { pattern= FunApp (StanLib ("inv_logit", FnPure), [alpha]); _
+                  , [ { pattern=
+                          FunApp (StanLib ("inv_logit", FnPlain), [alpha]); _
                       } ] ) ->
                     FunApp (StanLib ("categorical_logit_rng", suffix), [alpha])
                 | "columns_dot_product", [x; y] when Expr.Typed.equal x y ->
                     FunApp (StanLib ("columns_dot_self", suffix), [x])
                 | "dot_product", [x; y] when Expr.Typed.equal x y ->
                     FunApp (StanLib ("dot_self", suffix), [x])
-                | "inv", [{pattern= FunApp (StanLib ("sqrt", FnPure), l); _}]
+                | "inv", [{pattern= FunApp (StanLib ("sqrt", FnPlain), l); _}]
                   ->
                     FunApp (StanLib ("inv_sqrt", suffix), l)
                 | ( "inv"
-                  , [{pattern= FunApp (StanLib ("square", FnPure), [x]); _}] )
+                  , [{pattern= FunApp (StanLib ("square", FnPlain), [x]); _}] )
                   ->
                     FunApp (StanLib ("inv_square", suffix), [x])
                 | ( "log"
                   , [ { pattern=
                           FunApp
-                            ( StanLib ("Minus__", FnPure)
+                            ( StanLib ("Minus__", FnPlain)
                             , [ y
-                              ; { pattern= FunApp (StanLib ("exp", FnPure), [x]); _
+                              ; { pattern=
+                                    FunApp (StanLib ("exp", FnPlain), [x]); _
                                 } ] ); _ } ] )
                   when is_int 1 y && not preserve_stability ->
                     FunApp (StanLib ("log1m_exp", suffix), [x])
                 | ( "log"
                   , [ { pattern=
                           FunApp
-                            ( StanLib ("Minus__", FnPure)
+                            ( StanLib ("Minus__", FnPlain)
                             , [ y
                               ; { pattern=
-                                    FunApp (StanLib ("inv_logit", FnPure), [x]); _
+                                    FunApp (StanLib ("inv_logit", FnPlain), [x]); _
                                 } ] ); _ } ] )
                   when is_int 1 y && not preserve_stability ->
                     FunApp (StanLib ("log1m_inv_logit", suffix), [x])
                 | ( "log"
-                  , [{pattern= FunApp (StanLib ("Minus__", FnPure), [y; x]); _}]
-                  )
+                  , [ { pattern= FunApp (StanLib ("Minus__", FnPlain), [y; x]); _
+                      } ] )
                   when is_int 1 y && not preserve_stability ->
                     FunApp (StanLib ("log1m", suffix), [x])
                 | ( "log"
                   , [ { pattern=
                           FunApp
-                            ( StanLib ("Plus__", FnPure)
+                            ( StanLib ("Plus__", FnPlain)
                             , [ y
-                              ; { pattern= FunApp (StanLib ("exp", FnPure), [x]); _
+                              ; { pattern=
+                                    FunApp (StanLib ("exp", FnPlain), [x]); _
                                 } ] ); _ } ] )
                   when is_int 1 y && not preserve_stability ->
                     FunApp (StanLib ("log1p_exp", suffix), [x])
                 | ( "log"
-                  , [{pattern= FunApp (StanLib ("Plus__", FnPure), [y; x]); _}]
+                  , [{pattern= FunApp (StanLib ("Plus__", FnPlain), [y; x]); _}]
                   )
                   when is_int 1 y && not preserve_stability ->
                     FunApp (StanLib ("log1p", suffix), [x])
                 | ( "log"
                   , [ { pattern=
                           FunApp
-                            ( StanLib ("fabs", FnPure)
+                            ( StanLib ("fabs", FnPlain)
                             , [ { pattern=
                                     FunApp
-                                      (StanLib ("determinant", FnPure), [x]); _
+                                      (StanLib ("determinant", FnPlain), [x]); _
                                 } ] ); _ } ] ) ->
                     FunApp (StanLib ("log_determinant", suffix), [x])
                 | ( "log"
                   , [ { pattern=
                           FunApp
-                            ( StanLib ("Minus__", FnPure)
-                            , [ { pattern= FunApp (StanLib ("exp", FnPure), [x]); _
+                            ( StanLib ("Minus__", FnPlain)
+                            , [ { pattern=
+                                    FunApp (StanLib ("exp", FnPlain), [x]); _
                                 }
-                              ; { pattern= FunApp (StanLib ("exp", FnPure), [y]); _
+                              ; { pattern=
+                                    FunApp (StanLib ("exp", FnPlain), [y]); _
                                 } ] ); _ } ] ) ->
                     FunApp (StanLib ("log_diff_exp", suffix), [x; y])
                 (* TODO: log_mix?*)
                 | ( "log"
                   , [ { pattern=
-                          FunApp (StanLib ("falling_factorial", FnPure), l); _
+                          FunApp (StanLib ("falling_factorial", FnPlain), l); _
                       } ] ) ->
                     FunApp (StanLib ("log_falling_factorial", suffix), l)
                 | ( "log"
                   , [ { pattern=
-                          FunApp (StanLib ("rising_factorial", FnPure), l); _
+                          FunApp (StanLib ("rising_factorial", FnPlain), l); _
                       } ] ) ->
                     FunApp (StanLib ("log_rising_factorial", suffix), l)
                 | ( "log"
-                  , [{pattern= FunApp (StanLib ("inv_logit", FnPure), l); _}] )
-                  ->
+                  , [{pattern= FunApp (StanLib ("inv_logit", FnPlain), l); _}]
+                  ) ->
                     FunApp (StanLib ("log_inv_logit", suffix), l)
-                | "log", [{pattern= FunApp (StanLib ("softmax", FnPure), l); _}]
+                | ( "log"
+                  , [{pattern= FunApp (StanLib ("softmax", FnPlain), l); _}] )
                   ->
                     FunApp (StanLib ("log_softmax", suffix), l)
                 | ( "log"
                   , [ { pattern=
                           FunApp
-                            ( StanLib ("sum", FnPure)
-                            , [ { pattern= FunApp (StanLib ("exp", FnPure), l); _
+                            ( StanLib ("sum", FnPlain)
+                            , [ { pattern= FunApp (StanLib ("exp", FnPlain), l); _
                                 } ] ); _ } ] ) ->
                     FunApp (StanLib ("log_sum_exp", suffix), l)
                 | ( "log"
                   , [ { pattern=
                           FunApp
-                            ( StanLib ("Plus__", FnPure)
-                            , [ { pattern= FunApp (StanLib ("exp", FnPure), [x]); _
+                            ( StanLib ("Plus__", FnPlain)
+                            , [ { pattern=
+                                    FunApp (StanLib ("exp", FnPlain), [x]); _
                                 }
-                              ; { pattern= FunApp (StanLib ("exp", FnPure), [y]); _
+                              ; { pattern=
+                                    FunApp (StanLib ("exp", FnPlain), [y]); _
                                 } ] ); _ } ] ) ->
                     FunApp (StanLib ("log_sum_exp", suffix), [x; y])
                 | ( "multi_normal_lpdf"
                   , [ y
                     ; mu
-                    ; {pattern= FunApp (StanLib ("inverse", FnPure), [tau]); _}
+                    ; {pattern= FunApp (StanLib ("inverse", FnPlain), [tau]); _}
                     ] ) ->
                     FunApp
                       (StanLib ("multi_normal_prec_lpdf", suffix), [y; mu; tau])
@@ -339,14 +352,14 @@ let rec eval_expr (e : Expr.Typed.t) =
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("exp", FnPure)
+                            ( StanLib ("exp", FnPlain)
                             , [ { pattern=
                                     FunApp
-                                      ( StanLib ("Plus__", FnPure)
+                                      ( StanLib ("Plus__", FnPlain)
                                       , [ alpha
                                         ; { pattern=
                                               FunApp
-                                                ( StanLib ("Times__", FnPure)
+                                                ( StanLib ("Times__", FnPlain)
                                                 , [x; beta] ); _ } ] ); _ } ] ); _
                       }
                     ; sigma ] )
@@ -358,13 +371,13 @@ let rec eval_expr (e : Expr.Typed.t) =
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("exp", FnPure)
+                            ( StanLib ("exp", FnPlain)
                             , [ { pattern=
                                     FunApp
-                                      ( StanLib ("Plus__", FnPure)
+                                      ( StanLib ("Plus__", FnPlain)
                                       , [ { pattern=
                                               FunApp
-                                                ( StanLib ("Times__", FnPure)
+                                                ( StanLib ("Times__", FnPlain)
                                                 , [x; beta] ); _ }
                                         ; alpha ] ); _ } ] ); _ }
                     ; sigma ] )
@@ -376,10 +389,10 @@ let rec eval_expr (e : Expr.Typed.t) =
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("exp", FnPure)
+                            ( StanLib ("exp", FnPlain)
                             , [ { pattern=
                                     FunApp
-                                      (StanLib ("Times__", FnPure), [x; beta]); _
+                                      (StanLib ("Times__", FnPlain), [x; beta]); _
                                 } ] ); _ }
                     ; sigma ] )
                   when Expr.Typed.type_of x = UMatrix ->
@@ -390,11 +403,11 @@ let rec eval_expr (e : Expr.Typed.t) =
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("Plus__", FnPure)
+                            ( StanLib ("Plus__", FnPlain)
                             , [ alpha
                               ; { pattern=
                                     FunApp
-                                      (StanLib ("Times__", FnPure), [x; beta]); _
+                                      (StanLib ("Times__", FnPlain), [x; beta]); _
                                 } ] ); _ }
                     ; sigma ] )
                   when Expr.Typed.type_of x = UMatrix ->
@@ -405,10 +418,10 @@ let rec eval_expr (e : Expr.Typed.t) =
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("Plus__", FnPure)
+                            ( StanLib ("Plus__", FnPlain)
                             , [ { pattern=
                                     FunApp
-                                      (StanLib ("Times__", FnPure), [x; beta]); _
+                                      (StanLib ("Times__", FnPlain), [x; beta]); _
                                 }
                               ; alpha ] ); _ }
                     ; sigma ] )
@@ -418,7 +431,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                       , [y; x; alpha; beta; sigma] )
                 | ( "neg_binomial_2_log_lpmf"
                   , [ y
-                    ; { pattern= FunApp (StanLib ("Times__", FnPure), [x; beta]); _
+                    ; { pattern=
+                          FunApp (StanLib ("Times__", FnPlain), [x; beta]); _
                       }
                     ; sigma ] )
                   when Expr.Typed.type_of x = UMatrix ->
@@ -427,25 +441,25 @@ let rec eval_expr (e : Expr.Typed.t) =
                       , [y; x; Expr.Helpers.zero; beta; sigma] )
                 | ( "neg_binomial_2_lpmf"
                   , [ y
-                    ; {pattern= FunApp (StanLib ("exp", FnPure), [eta]); _}
+                    ; {pattern= FunApp (StanLib ("exp", FnPlain), [eta]); _}
                     ; phi ] ) ->
                     FunApp
                       ( StanLib ("neg_binomial_2_log_lpmf", suffix)
                       , [y; eta; phi] )
                 | ( "neg_binomial_2_rng"
-                  , [{pattern= FunApp (StanLib ("exp", FnPure), [eta]); _}; phi]
-                  ) ->
+                  , [ {pattern= FunApp (StanLib ("exp", FnPlain), [eta]); _}
+                    ; phi ] ) ->
                     FunApp
                       (StanLib ("neg_binomial_2_log_rng", suffix), [eta; phi])
                 | ( "normal_lpdf"
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("Plus__", FnPure)
+                            ( StanLib ("Plus__", FnPlain)
                             , [ alpha
                               ; { pattern=
                                     FunApp
-                                      (StanLib ("Times__", FnPure), [x; beta]); _
+                                      (StanLib ("Times__", FnPlain), [x; beta]); _
                                 } ] ); _ }
                     ; sigma ] )
                   when Expr.Typed.type_of x = UMatrix ->
@@ -456,10 +470,10 @@ let rec eval_expr (e : Expr.Typed.t) =
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("Plus__", FnPure)
+                            ( StanLib ("Plus__", FnPlain)
                             , [ { pattern=
                                     FunApp
-                                      (StanLib ("Times__", FnPure), [x; beta]); _
+                                      (StanLib ("Times__", FnPlain), [x; beta]); _
                                 }
                               ; alpha ] ); _ }
                     ; sigma ] )
@@ -469,7 +483,8 @@ let rec eval_expr (e : Expr.Typed.t) =
                       , [y; x; alpha; beta; sigma] )
                 | ( "normal_lpdf"
                   , [ y
-                    ; { pattern= FunApp (StanLib ("Times__", FnPure), [x; beta]); _
+                    ; { pattern=
+                          FunApp (StanLib ("Times__", FnPlain), [x; beta]); _
                       }
                     ; sigma ] )
                   when Expr.Typed.type_of x = UMatrix ->
@@ -480,14 +495,14 @@ let rec eval_expr (e : Expr.Typed.t) =
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("exp", FnPure)
+                            ( StanLib ("exp", FnPlain)
                             , [ { pattern=
                                     FunApp
-                                      ( StanLib ("Plus__", FnPure)
+                                      ( StanLib ("Plus__", FnPlain)
                                       , [ alpha
                                         ; { pattern=
                                               FunApp
-                                                ( StanLib ("Times__", FnPure)
+                                                ( StanLib ("Times__", FnPlain)
                                                 , [x; beta] ); _ } ] ); _ } ] ); _
                       } ] )
                   when Expr.Typed.type_of x = UMatrix ->
@@ -498,13 +513,13 @@ let rec eval_expr (e : Expr.Typed.t) =
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("exp", FnPure)
+                            ( StanLib ("exp", FnPlain)
                             , [ { pattern=
                                     FunApp
-                                      ( StanLib ("Plus__", FnPure)
+                                      ( StanLib ("Plus__", FnPlain)
                                       , [ { pattern=
                                               FunApp
-                                                ( StanLib ("Times__", FnPure)
+                                                ( StanLib ("Times__", FnPlain)
                                                 , [x; beta] ); _ }
                                         ; alpha ] ); _ } ] ); _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
@@ -515,10 +530,10 @@ let rec eval_expr (e : Expr.Typed.t) =
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("exp", FnPure)
+                            ( StanLib ("exp", FnPlain)
                             , [ { pattern=
                                     FunApp
-                                      (StanLib ("Times__", FnPure), [x; beta]); _
+                                      (StanLib ("Times__", FnPlain), [x; beta]); _
                                 } ] ); _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     FunApp
@@ -528,11 +543,11 @@ let rec eval_expr (e : Expr.Typed.t) =
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("Plus__", FnPure)
+                            ( StanLib ("Plus__", FnPlain)
                             , [ alpha
                               ; { pattern=
                                     FunApp
-                                      (StanLib ("Times__", FnPure), [x; beta]); _
+                                      (StanLib ("Times__", FnPlain), [x; beta]); _
                                 } ] ); _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     FunApp
@@ -542,10 +557,10 @@ let rec eval_expr (e : Expr.Typed.t) =
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("Plus__", FnPure)
+                            ( StanLib ("Plus__", FnPlain)
                             , [ { pattern=
                                     FunApp
-                                      (StanLib ("Times__", FnPure), [x; beta]); _
+                                      (StanLib ("Times__", FnPlain), [x; beta]); _
                                 }
                               ; alpha ] ); _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
@@ -554,18 +569,19 @@ let rec eval_expr (e : Expr.Typed.t) =
                       , [y; x; alpha; beta] )
                 | ( "poisson_log_lpmf"
                   , [ y
-                    ; { pattern= FunApp (StanLib ("Times__", FnPure), [x; beta]); _
+                    ; { pattern=
+                          FunApp (StanLib ("Times__", FnPlain), [x; beta]); _
                       } ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     FunApp
                       ( StanLib ("poisson_log_glm_lpmf", suffix)
                       , [y; x; Expr.Helpers.zero; beta] )
                 | ( "poisson_lpmf"
-                  , [y; {pattern= FunApp (StanLib ("exp", FnPure), [eta]); _}]
+                  , [y; {pattern= FunApp (StanLib ("exp", FnPlain), [eta]); _}]
                   ) ->
                     FunApp (StanLib ("poisson_log_lpmf", suffix), [y; eta])
                 | ( "poisson_rng"
-                  , [{pattern= FunApp (StanLib ("exp", FnPure), [eta]); _}] )
+                  , [{pattern= FunApp (StanLib ("exp", FnPlain), [eta]); _}] )
                   ->
                     FunApp (StanLib ("poisson_log_rng", suffix), [eta])
                 | "pow", [y; x] when is_int 2 y ->
@@ -578,44 +594,45 @@ let rec eval_expr (e : Expr.Typed.t) =
                     FunApp (StanLib ("sqrt", suffix), [x])
                 | ( "pow"
                   , [ x
-                    ; { pattern= FunApp (StanLib ("Divide__", FnPure), [y; z]); _
+                    ; { pattern= FunApp (StanLib ("Divide__", FnPlain), [y; z]); _
                       } ] )
                   when is_int 1 y && is_int 2 z ->
                     FunApp (StanLib ("sqrt", suffix), [x])
                     (* This is wrong; if both are type UInt the exponent is rounds down to zero. *)
-                | "square", [{pattern= FunApp (StanLib ("sd", FnPure), [x]); _}]
-                  ->
+                | ( "square"
+                  , [{pattern= FunApp (StanLib ("sd", FnPlain), [x]); _}] ) ->
                     FunApp (StanLib ("variance", suffix), [x])
                 | "sqrt", [x] when is_int 2 x ->
                     FunApp (StanLib ("sqrt2", suffix), [])
                 | ( "sum"
                   , [ { pattern=
                           FunApp
-                            ( StanLib ("square", FnPure)
+                            ( StanLib ("square", FnPlain)
                             , [ { pattern=
-                                    FunApp (StanLib ("Minus__", FnPure), [x; y]); _
+                                    FunApp
+                                      (StanLib ("Minus__", FnPlain), [x; y]); _
                                 } ] ); _ } ] ) ->
                     FunApp (StanLib ("squared_distance", suffix), [x; y])
                 | ( "sum"
-                  , [{pattern= FunApp (StanLib ("diagonal", FnPure), l); _}] )
+                  , [{pattern= FunApp (StanLib ("diagonal", FnPlain), l); _}] )
                   ->
                     FunApp (StanLib ("trace", suffix), l)
                 | ( "trace"
                   , [ { pattern=
                           FunApp
-                            ( StanLib ("Times__", FnPure)
+                            ( StanLib ("Times__", FnPlain)
                             , [ { pattern=
                                     FunApp
-                                      ( StanLib ("Times__", FnPure)
+                                      ( StanLib ("Times__", FnPlain)
                                       , [ { pattern=
                                               FunApp
-                                                ( StanLib ("Times__", FnPure)
+                                                ( StanLib ("Times__", FnPlain)
                                                 , [ d
                                                   ; { pattern=
                                                         FunApp
                                                           ( StanLib
                                                               ( "transpose"
-                                                              , FnPure )
+                                                              , FnPlain )
                                                           , [b] ); _ } ] ); _
                                           }
                                         ; a ] ); _ }
@@ -623,46 +640,48 @@ let rec eval_expr (e : Expr.Typed.t) =
                   when Expr.Typed.equal b c ->
                     FunApp (StanLib ("trace_gen_quad_form", suffix), [d; a; b])
                 | ( "trace"
-                  , [ { pattern= FunApp (StanLib ("quad_form", FnPure), [a; b]); _
+                  , [ { pattern= FunApp (StanLib ("quad_form", FnPlain), [a; b]); _
                       } ] ) ->
                     FunApp (StanLib ("trace_quad_form", suffix), [a; b])
                 | ( "Minus__"
-                  , [x; {pattern= FunApp (StanLib ("erf", FnPure), l); _}] )
+                  , [x; {pattern= FunApp (StanLib ("erf", FnPlain), l); _}] )
                   when is_int 1 x ->
                     FunApp (StanLib ("erfc", suffix), l)
                 | ( "Minus__"
-                  , [x; {pattern= FunApp (StanLib ("erfc", FnPure), l); _}] )
+                  , [x; {pattern= FunApp (StanLib ("erfc", FnPlain), l); _}] )
                   when is_int 1 x ->
                     FunApp (StanLib ("erf", suffix), l)
                 | ( "Minus__"
-                  , [{pattern= FunApp (StanLib ("exp", FnPure), l'); _}; x] )
+                  , [{pattern= FunApp (StanLib ("exp", FnPlain), l'); _}; x] )
                   when is_int 1 x && not preserve_stability ->
                     FunApp (StanLib ("expm1", suffix), l')
                 | ( "Plus__"
-                  , [ {pattern= FunApp (StanLib ("Times__", FnPure), [x; y]); _}
+                  , [ { pattern= FunApp (StanLib ("Times__", FnPlain), [x; y]); _
+                      }
                     ; z ] )
                  |( "Plus__"
                   , [ z
-                    ; {pattern= FunApp (StanLib ("Times__", FnPure), [x; y]); _}
-                    ] )
+                    ; { pattern= FunApp (StanLib ("Times__", FnPlain), [x; y]); _
+                      } ] )
                   when not preserve_stability ->
                     FunApp (StanLib ("fma", suffix), [x; y; z])
                 | ( "Minus__"
-                  , [x; {pattern= FunApp (StanLib ("gamma_p", FnPure), l); _}]
+                  , [x; {pattern= FunApp (StanLib ("gamma_p", FnPlain), l); _}]
                   )
                   when is_int 1 x ->
                     FunApp (StanLib ("gamma_q", suffix), l)
                 | ( "Minus__"
-                  , [x; {pattern= FunApp (StanLib ("gamma_q", FnPure), l); _}]
+                  , [x; {pattern= FunApp (StanLib ("gamma_q", FnPlain), l); _}]
                   )
                   when is_int 1 x ->
                     FunApp (StanLib ("gamma_p", suffix), l)
                 | ( "Times__"
                   , [ { pattern=
                           FunApp
-                            ( StanLib ("matrix_exp", FnPure)
+                            ( StanLib ("matrix_exp", FnPlain)
                             , [ { pattern=
-                                    FunApp (StanLib ("Times__", FnPure), [t; a]); _
+                                    FunApp
+                                      (StanLib ("Times__", FnPlain), [t; a]); _
                                 } ] ); _ }
                     ; b ] )
                   when Expr.Typed.type_of t = UInt
@@ -672,9 +691,10 @@ let rec eval_expr (e : Expr.Typed.t) =
                 | ( "Times__"
                   , [ { pattern=
                           FunApp
-                            ( StanLib ("matrix_exp", FnPure)
+                            ( StanLib ("matrix_exp", FnPlain)
                             , [ { pattern=
-                                    FunApp (StanLib ("Times__", FnPure), [a; t]); _
+                                    FunApp
+                                      (StanLib ("Times__", FnPlain), [a; t]); _
                                 } ] ); _ }
                     ; b ] )
                   when Expr.Typed.type_of t = UInt
@@ -682,44 +702,46 @@ let rec eval_expr (e : Expr.Typed.t) =
                     FunApp
                       (StanLib ("scale_matrix_exp_multiply", suffix), [t; a; b])
                 | ( "Times__"
-                  , [ {pattern= FunApp (StanLib ("matrix_exp", FnPure), [a]); _}
+                  , [ { pattern= FunApp (StanLib ("matrix_exp", FnPlain), [a]); _
+                      }
                     ; b ] ) ->
                     FunApp (StanLib ("matrix_exp_multiply", suffix), [a; b])
                 | ( "Times__"
-                  , [x; {pattern= FunApp (StanLib ("log", FnPure), [y]); _}] )
+                  , [x; {pattern= FunApp (StanLib ("log", FnPlain), [y]); _}] )
                  |( "Times__"
-                  , [{pattern= FunApp (StanLib ("log", FnPure), [y]); _}; x] )
+                  , [{pattern= FunApp (StanLib ("log", FnPlain), [y]); _}; x] )
                   when not preserve_stability ->
                     FunApp (StanLib ("lmultiply", suffix), [x; y])
                 | ( "Times__"
-                  , [ { pattern= FunApp (StanLib ("diag_matrix", FnPure), [v]); _
+                  , [ { pattern= FunApp (StanLib ("diag_matrix", FnPlain), [v]); _
                       }
                     ; { pattern=
                           FunApp
-                            (StanLib ("diag_post_multiply", FnPure), [a; w]); _
+                            (StanLib ("diag_post_multiply", FnPlain), [a; w]); _
                       } ] )
                   when Expr.Typed.equal v w ->
                     FunApp (StanLib ("quad_form_diag", suffix), [a; v])
                 | ( "Times__"
                   , [ { pattern=
-                          FunApp (StanLib ("diag_pre_multiply", FnPure), [v; a]); _
+                          FunApp
+                            (StanLib ("diag_pre_multiply", FnPlain), [v; a]); _
                       }
-                    ; { pattern= FunApp (StanLib ("diag_matrix", FnPure), [w]); _
+                    ; { pattern= FunApp (StanLib ("diag_matrix", FnPlain), [w]); _
                       } ] )
                   when Expr.Typed.equal v w ->
                     FunApp (StanLib ("quad_form_diag", suffix), [a; v])
                 | ( "Times__"
-                  , [ {pattern= FunApp (StanLib ("transpose", FnPure), [b]); _}
-                    ; {pattern= FunApp (StanLib ("Times__", FnPure), [a; c]); _}
-                    ] )
+                  , [ {pattern= FunApp (StanLib ("transpose", FnPlain), [b]); _}
+                    ; { pattern= FunApp (StanLib ("Times__", FnPlain), [a; c]); _
+                      } ] )
                   when Expr.Typed.equal b c ->
                     FunApp (StanLib ("quad_form", suffix), [a; b])
                 | ( "Times__"
                   , [ { pattern=
                           FunApp
-                            ( StanLib ("Times__", FnPure)
+                            ( StanLib ("Times__", FnPlain)
                             , [ { pattern=
-                                    FunApp (StanLib ("transpose", FnPure), [b]); _
+                                    FunApp (StanLib ("transpose", FnPlain), [b]); _
                                 }
                               ; a ] ); _ }
                     ; c ] )
@@ -727,11 +749,11 @@ let rec eval_expr (e : Expr.Typed.t) =
                     FunApp (StanLib ("quad_form", suffix), [a; b])
                 | ( "Times__"
                   , [ e1'
-                    ; { pattern= FunApp (StanLib ("diag_matrix", FnPure), [v]); _
+                    ; { pattern= FunApp (StanLib ("diag_matrix", FnPlain), [v]); _
                       } ] ) ->
                     FunApp (StanLib ("diag_post_multiply", suffix), [e1'; v])
                 | ( "Times__"
-                  , [ { pattern= FunApp (StanLib ("diag_matrix", FnPure), [v]); _
+                  , [ { pattern= FunApp (StanLib ("diag_matrix", FnPlain), [v]); _
                       }
                     ; e2' ] ) ->
                     FunApp (StanLib ("diag_pre_multiply", suffix), [v; e2'])

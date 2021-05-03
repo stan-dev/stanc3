@@ -211,7 +211,7 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdsuffix; fdargs; fdbody; _})
     match fdsuffix with
     | Fun_kind.FnTarget -> (["lp__"; "lp_accum__"], ["T_lp__"; "T_lp_accum__"])
     | FnRng -> (["base_rng__"], ["RNG"])
-    | FnLpdf _ | FnPure -> ([], [])
+    | FnLpdf _ | FnPlain -> ([], [])
   in
   let pp_body ppf (Stmt.Fixed.({pattern; _}) as fdbody) =
     pf ppf "@[<hv 8>using local_scalar_t__ = %a;@]@," pp_promoted_scalar fdargs ;
@@ -220,7 +220,7 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdsuffix; fdargs; fdbody; _})
     then pp_eigen_arg_to_ref ppf fdargs ;
     ( match fdsuffix with
     | FnLpdf _ | FnTarget -> ()
-    | FnPure | FnRng ->
+    | FnPlain | FnRng ->
         pf ppf "%s@ " "static constexpr bool propto__ = true;" ;
         pf ppf "%s@ " "(void) propto__;" ) ;
     pf ppf "%s@ "
@@ -313,7 +313,7 @@ let pp_standalone_fun_def namespace_fun ppf
     | Fun_kind.FnTarget ->
         (["lp__"; "lp_accum__"], ["double"; "stan::math::accumulator<double>"])
     | FnRng -> (["base_rng__"], ["boost::ecuyer1988"])
-    | FnLpdf _ | FnPure -> ([], [])
+    | FnLpdf _ | FnPlain -> ([], [])
   in
   let args =
     List.map
@@ -342,7 +342,7 @@ let pp_standalone_fun_def namespace_fun ppf
         pp_call_str
         ( ( match fdsuffix with
           | FnLpdf _ | FnTarget -> fdname ^ "<false>"
-          | FnRng | FnPure -> fdname )
+          | FnRng | FnPlain -> fdname )
         , List.map ~f:(fun (_, name, _) -> name) fdargs @ extra @ ["pstream__"]
         )
 
@@ -878,7 +878,7 @@ let is_fun_used_with_variadic_fn variadic_fn_test p =
   let rec find_functors_expr accum Expr.Fixed.({pattern; _}) =
     String.Set.union accum
       ( match pattern with
-      | FunApp (StanLib (x, FnPure), {pattern= Var f; _} :: _)
+      | FunApp (StanLib (x, FnPlain), {pattern= Var f; _} :: _)
         when variadic_fn_test x ->
           String.Set.of_list [Utils.stdlib_distribution_name f]
       | x -> Expr.Fixed.Pattern.fold find_functors_expr accum x )

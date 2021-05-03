@@ -93,7 +93,7 @@ let rec collect_deprecated_expr deprecated_userdefined
       @ [ ( emeta.loc
           , "The no-argument function `get_lp()` is deprecated. Use the \
              no-argument function `target()` instead." ) ]
-  | FunApp (StanLib FnPure, {name= "abs"; _}, [e])
+  | FunApp (StanLib FnPlain, {name= "abs"; _}, [e])
     when Middle.UnsizedType.is_real_type e.emeta.type_ ->
       collect_deprecated_expr deprecated_userdefined
         ( acc
@@ -101,7 +101,7 @@ let rec collect_deprecated_expr deprecated_userdefined
             , "Use of the `abs` function with real-valued arguments is \
                deprecated; use functions `fabs` instead." ) ] )
         e
-  | FunApp (StanLib FnPure, {name= "if_else"; _}, l) ->
+  | FunApp (StanLib FnPlain, {name= "if_else"; _}, l) ->
       acc
       @ [ ( emeta.loc
           , "The function `if_else` is deprecated. Use the conditional \

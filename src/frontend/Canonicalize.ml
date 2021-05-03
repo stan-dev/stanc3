@@ -23,13 +23,13 @@ let rec replace_deprecated_expr
   let expr =
     match expr with
     | GetLP -> GetTarget
-    | FunApp (StanLib FnPure, {name= "abs"; id_loc}, [e])
+    | FunApp (StanLib FnPlain, {name= "abs"; id_loc}, [e])
       when Middle.UnsizedType.is_real_type e.emeta.type_ ->
         FunApp
-          ( StanLib FnPure
+          ( StanLib FnPlain
           , {name= "fabs"; id_loc}
           , [replace_deprecated_expr deprecated_userdefined e] )
-    | FunApp (StanLib FnPure, {name= "if_else"; _}, [c; t; e]) ->
+    | FunApp (StanLib FnPlain, {name= "if_else"; _}, [c; t; e]) ->
         Paren
           (replace_deprecated_expr deprecated_userdefined
              {expr= TernaryIf ({expr= Paren c; emeta= c.emeta}, t, e); emeta})
