@@ -224,8 +224,7 @@ pipeline {
 
                         sh """
                             git clone --recursive https://github.com/stan-dev/math.git
-                            mkdir -p math/bin/stanc
-                            cp bin/stanc math/bin/stanc
+                            cp bin/stanc math/test/expressions/stanc
                         """
 
                         script {
