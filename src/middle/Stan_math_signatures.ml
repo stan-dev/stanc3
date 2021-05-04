@@ -318,19 +318,6 @@ let dist_name_suffix udf_names name =
   | Some hd -> hd
   | None -> raise_s [%message "Couldn't find distribution " name]
 
-let assignmentoperator_to_stan_math_fn = function
-  | Operator.Plus -> Some "assign_add"
-  | Minus -> Some "assign_subtract"
-  | Times -> Some "assign_multiply"
-  | Divide -> Some "assign_divide"
-  | EltTimes -> Some "assign_elt_times"
-  | EltDivide -> Some "assign_elt_divide"
-  | _ -> None
-
-let assignmentoperator_stan_math_return_type assop arg_tys =
-  assignmentoperator_to_stan_math_fn assop
-  |> Option.bind ~f:(fun name -> stan_math_returntype name arg_tys)
-
 let operator_to_stan_math_fns = function
   | Operator.Plus -> ["add"]
   | PPlus -> ["plus"]
@@ -369,9 +356,41 @@ let operator_stan_math_return_type op arg_tys =
       |> List.filter_map ~f:(fun name -> stan_math_returntype name arg_tys)
       |> List.hd
 
+let assignmentoperator_stan_math_return_type assop arg_tys =
+  ( match assop with
+  | Operator.Divide -> stan_math_returntype "divide" arg_tys
+  | Plus | Minus | Times | EltTimes | EltDivide ->
+      operator_stan_math_return_type assop arg_tys
+  | _ -> None )
+  |> Option.bind ~f:(function
+       | ReturnType rtype
+         when rtype = snd (List.hd_exn arg_tys)
+              && not
+                   ( (assop = Operator.EltTimes || assop = Operator.EltDivide)
+                   && UnsizedType.is_scalar_type rtype ) ->
+           Some UnsizedType.Void
+       | _ -> None )
+
 let get_sigs name =
   let name = Utils.stdlib_distribution_name name in
   Hashtbl.find_multi stan_math_signatures name |> List.sort ~compare
+
+let make_assigmentoperator_stan_math_signatures assop =
+  ( match assop with
+  | Operator.Divide -> ["divide"]
+  | assop -> operator_to_stan_math_fns assop )
+  |> List.concat_map ~f:get_sigs
+  |> List.concat_map ~f:(function
+       | ReturnType rtype, [(ad1, lhs); (ad2, rhs)]
+         when rtype = lhs
+              && not
+                   ( (assop = Operator.EltTimes || assop = Operator.EltDivide)
+                   && UnsizedType.is_scalar_type rtype ) ->
+           if rhs = UReal then
+             [ (UnsizedType.Void, [(ad1, lhs); (ad2, UInt)])
+             ; (Void, [(ad1, lhs); (ad2, UReal)]) ]
+           else [(Void, [(ad1, lhs); (ad2, rhs)])]
+       | _ -> [] )
 
 let pp_math_sig ppf (rt, args) = UnsizedType.pp ppf (UFun (args, rt))
 
@@ -401,7 +420,13 @@ let pretty_print_math_lib_operator_sigs op =
   else operator_to_stan_math_fns op |> List.map ~f:pretty_print_math_sigs
 
 let pretty_print_math_lib_assignmentoperator_sigs op =
-  assignmentoperator_to_stan_math_fn op |> Option.map ~f:pretty_print_math_sigs
+  match op with
+  | Operator.Plus | Minus | Times | Divide | EltTimes | EltDivide ->
+      Some
+        (Fmt.strf "@[<v>@,%a@]"
+           (Fmt.list ~sep:Fmt.cut pp_math_sig)
+           (make_assigmentoperator_stan_math_signatures op))
+  | _ -> None
 
 (* -- Some helper definitions to populate stan_math_signatures -- *)
 let bare_types = [UnsizedType.UInt; UReal; UVector; URowVector; UMatrix]
@@ -708,62 +733,6 @@ let () =
             , [bare_array_type (t, i); bare_array_type (t, i)] ) )
         bare_types )
     (List.range 1 8) ;
-  add_unqualified ("assign_multiply", Void, [UInt; UInt]) ;
-  add_unqualified ("assign_multiply", Void, [UMatrix; UMatrix]) ;
-  add_unqualified ("assign_multiply", Void, [UMatrix; UReal]) ;
-  add_unqualified ("assign_multiply", Void, [UReal; UReal]) ;
-  add_unqualified ("assign_multiply", Void, [URowVector; UReal]) ;
-  add_unqualified ("assign_multiply", Void, [UMatrix; UInt]) ;
-  add_unqualified ("assign_multiply", Void, [UReal; UInt]) ;
-  add_unqualified ("assign_multiply", Void, [URowVector; UInt]) ;
-  add_unqualified ("assign_multiply", Void, [URowVector; UMatrix]) ;
-  add_unqualified ("assign_multiply", Void, [UVector; UReal]) ;
-  add_unqualified ("assign_multiply", Void, [UVector; UInt]) ;
-  add_unqualified ("assign_add", Void, [UInt; UInt]) ;
-  add_unqualified ("assign_add", Void, [UMatrix; UMatrix]) ;
-  add_unqualified ("assign_add", Void, [UMatrix; UReal]) ;
-  add_unqualified ("assign_add", Void, [UReal; UReal]) ;
-  add_unqualified ("assign_add", Void, [URowVector; UReal]) ;
-  add_unqualified ("assign_add", Void, [UMatrix; UInt]) ;
-  add_unqualified ("assign_add", Void, [UReal; UInt]) ;
-  add_unqualified ("assign_add", Void, [URowVector; UInt]) ;
-  add_unqualified ("assign_add", Void, [URowVector; URowVector]) ;
-  add_unqualified ("assign_add", Void, [UVector; UReal]) ;
-  add_unqualified ("assign_add", Void, [UVector; UInt]) ;
-  add_unqualified ("assign_add", Void, [UVector; UVector]) ;
-  add_unqualified ("assign_subtract", Void, [UInt; UInt]) ;
-  add_unqualified ("assign_subtract", Void, [UMatrix; UMatrix]) ;
-  add_unqualified ("assign_subtract", Void, [UMatrix; UReal]) ;
-  add_unqualified ("assign_subtract", Void, [UReal; UReal]) ;
-  add_unqualified ("assign_subtract", Void, [URowVector; UReal]) ;
-  add_unqualified ("assign_subtract", Void, [UMatrix; UInt]) ;
-  add_unqualified ("assign_subtract", Void, [UReal; UInt]) ;
-  add_unqualified ("assign_subtract", Void, [URowVector; UInt]) ;
-  add_unqualified ("assign_subtract", Void, [URowVector; URowVector]) ;
-  add_unqualified ("assign_subtract", Void, [UVector; UReal]) ;
-  add_unqualified ("assign_subtract", Void, [UVector; UInt]) ;
-  add_unqualified ("assign_subtract", Void, [UVector; UVector]) ;
-  add_unqualified ("assign_elt_times", Void, [UMatrix; UMatrix]) ;
-  add_unqualified ("assign_elt_times", Void, [URowVector; URowVector]) ;
-  add_unqualified ("assign_elt_times", Void, [UVector; UVector]) ;
-  add_unqualified ("assign_elt_divide", Void, [UMatrix; UMatrix]) ;
-  add_unqualified ("assign_elt_divide", Void, [UMatrix; UReal]) ;
-  add_unqualified ("assign_elt_divide", Void, [URowVector; UReal]) ;
-  add_unqualified ("assign_elt_divide", Void, [UMatrix; UInt]) ;
-  add_unqualified ("assign_elt_divide", Void, [URowVector; UInt]) ;
-  add_unqualified ("assign_elt_divide", Void, [URowVector; URowVector]) ;
-  add_unqualified ("assign_elt_divide", Void, [UVector; UReal]) ;
-  add_unqualified ("assign_elt_divide", Void, [UVector; UInt]) ;
-  add_unqualified ("assign_elt_divide", Void, [UVector; UVector]) ;
-  add_unqualified ("assign_divide", Void, [UInt; UInt]) ;
-  add_unqualified ("assign_divide", Void, [UMatrix; UReal]) ;
-  add_unqualified ("assign_divide", Void, [UReal; UReal]) ;
-  add_unqualified ("assign_divide", Void, [URowVector; UReal]) ;
-  add_unqualified ("assign_divide", Void, [UVector; UReal]) ;
-  add_unqualified ("assign_divide", Void, [UMatrix; UInt]) ;
-  add_unqualified ("assign_divide", Void, [UReal; UInt]) ;
-  add_unqualified ("assign_divide", Void, [URowVector; UInt]) ;
-  add_unqualified ("assign_divide", Void, [UVector; UInt]) ;
   add_binary "atan2" ;
   add_unqualified
     ( "bernoulli_logit_glm_lpmf"
@@ -1822,7 +1791,18 @@ let () =
      for type-checking *)
   Hashtbl.iteri manual_stan_math_signatures ~f:(fun ~key ~data ->
       List.iter data ~f:(fun data ->
-          Hashtbl.add_multi stan_math_signatures ~key ~data ) )
+          Hashtbl.add_multi stan_math_signatures ~key ~data ) ) ;
+  (* Add assignmentoperator signatures (for --dump-stan-math-signatures) *)
+  List.iter [Operator.Plus; Minus; Times; Divide; EltTimes; EltDivide]
+    ~f:(fun assop ->
+      let name =
+        match assop with
+        | Operator.Divide -> "assign_divide"
+        | EltTimes -> "assign_elt_times"
+        | _ -> "assign_" ^ (operator_to_stan_math_fns assop |> List.hd_exn)
+      in
+      List.iter (make_assigmentoperator_stan_math_signatures assop)
+        ~f:(fun (rtype, args) -> add_qualified (name, rtype, args) ) )
 
 let%expect_test "dist name suffix" =
   dist_name_suffix [] "normal" |> print_endline ;
