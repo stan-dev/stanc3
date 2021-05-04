@@ -1791,18 +1791,7 @@ let () =
      for type-checking *)
   Hashtbl.iteri manual_stan_math_signatures ~f:(fun ~key ~data ->
       List.iter data ~f:(fun data ->
-          Hashtbl.add_multi stan_math_signatures ~key ~data ) ) ;
-  (* Add assignmentoperator signatures (for --dump-stan-math-signatures) *)
-  List.iter [Operator.Plus; Minus; Times; Divide; EltTimes; EltDivide]
-    ~f:(fun assop ->
-      let name =
-        match assop with
-        | Operator.Divide -> "assign_divide"
-        | EltTimes -> "assign_elt_times"
-        | _ -> "assign_" ^ (operator_to_stan_math_fns assop |> List.hd_exn)
-      in
-      List.iter (make_assigmentoperator_stan_math_signatures assop)
-        ~f:(fun (rtype, args) -> add_qualified (name, rtype, args) ) )
+          Hashtbl.add_multi stan_math_signatures ~key ~data ) )
 
 let%expect_test "dist name suffix" =
   dist_name_suffix [] "normal" |> print_endline ;
