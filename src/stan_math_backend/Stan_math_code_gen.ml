@@ -775,7 +775,7 @@ let pp_overloads ppf {Program.output_vars; _} =
                             std::ostream* pstream = nullptr) const {
       int num_transformed = %a;
       int num_gen_quantities = %a;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;

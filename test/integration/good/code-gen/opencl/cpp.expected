@@ -6229,7 +6229,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
                             std::ostream* pstream = nullptr) const {
       int num_transformed = 1;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -6947,7 +6947,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
                             std::ostream* pstream = nullptr) const {
       int num_transformed = 1;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;

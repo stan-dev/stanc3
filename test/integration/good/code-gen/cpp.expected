@@ -383,7 +383,7 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
                             std::ostream* pstream = nullptr) const {
       int num_transformed = J;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -720,7 +720,7 @@ class _8start_with_number_model final : public model_base_crtp<_8start_with_numb
                             std::ostream* pstream = nullptr) const {
       int num_transformed = 0;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -1193,7 +1193,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
                             std::ostream* pstream = nullptr) const {
       int num_transformed = J;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -1666,7 +1666,7 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
       int num_transformed = 
   (((3 * 3) + (3 * 3)) + (3 * 3));
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -10004,7 +10004,7 @@ class mother_model final : public model_base_crtp<mother_model> {
             ((5 * 3) * 4)) + ((3 * 3) * 4)) + ((5 * 3) * 4)) + ((3 * 3) * 3))
         + ((3 * 3) * 4)) + ((5 * 3) * 4)) + ((3 * 3) * 3)) + (3 * 4)) +
     (2 * 2));
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -11875,7 +11875,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
   (((((((((1 + 1) + 1) + 3) + 3) + 3) + 2) + 2) + 2) + 2);
       int num_gen_quantities = 
   ((((((((T * 2) + 1) + 1) + 1) + 1) + 3) + 3) + 2);
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -16029,7 +16029,7 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       int num_transformed = 
   (N * N);
       int num_gen_quantities = (N * N);
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -16729,7 +16729,7 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       int num_transformed = 
   (N * 2);
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -18311,7 +18311,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                             std::ostream* pstream = nullptr) const {
       int num_transformed = 0;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -18734,7 +18734,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
                             std::ostream* pstream = nullptr) const {
       int num_transformed = 0;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -19322,7 +19322,7 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
                             std::ostream* pstream = nullptr) const {
       int num_transformed = 0;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -21606,7 +21606,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
                             std::ostream* pstream = nullptr) const {
       int num_transformed = 0;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -25488,7 +25488,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
   (((((((((((((((((((((((((1 + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) +
                    1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1) + 1)
        + 1) + 1) + 1) + 1);
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -25983,7 +25983,7 @@ class single_argument_lpmf_model final : public model_base_crtp<single_argument_
                             std::ostream* pstream = nullptr) const {
       int num_transformed = 0;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -26353,7 +26353,7 @@ class tilde_block_model final : public model_base_crtp<tilde_block_model> {
                             std::ostream* pstream = nullptr) const {
       int num_transformed = 0;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -28970,7 +28970,7 @@ class transform_model final : public model_base_crtp<transform_model> {
             ((n * m) * k)) + k) + (m * k)) + ((n * m) * k)) + k) + (m * k)) +
       ((n * m) * k)) + (m * k)) + ((n * m) * k));
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -29440,7 +29440,7 @@ class truncate_model final : public model_base_crtp<truncate_model> {
                             std::ostream* pstream = nullptr) const {
       int num_transformed = 0;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -29804,7 +29804,7 @@ class udf_tilde_stmt_conflict_model final : public model_base_crtp<udf_tilde_stm
                             std::ostream* pstream = nullptr) const {
       int num_transformed = 0;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -30172,7 +30172,7 @@ class user_constrain_model final : public model_base_crtp<user_constrain_model> 
                             std::ostream* pstream = nullptr) const {
       int num_transformed = 0;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;

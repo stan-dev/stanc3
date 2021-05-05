@@ -708,7 +708,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       int num_transformed = 
   (N_t * 4);
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -2881,7 +2881,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       int num_transformed = 
   (((nind * n_occ_minus_1) + (nind * n_occ_minus_1)) + (nind * n_occasions));
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -4168,7 +4168,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
                             std::ostream* pstream = nullptr) const {
       int num_transformed = 0;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -4528,7 +4528,7 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
                             std::ostream* pstream = nullptr) const {
       int num_transformed = 0;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -4882,7 +4882,7 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
                             std::ostream* pstream = nullptr) const {
       int num_transformed = 0;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -5376,7 +5376,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
                             std::ostream* pstream = nullptr) const {
       int num_transformed = 0;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -5824,7 +5824,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
                             std::ostream* pstream = nullptr) const {
       int num_transformed = 0;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -7091,7 +7091,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
                             std::ostream* pstream = nullptr) const {
       int num_transformed = N;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -7902,7 +7902,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
   (1 + N);
       int num_gen_quantities = (((((((1 + 1) + 1) + 1) + N) + N) +
                                              N) + N);
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -9993,7 +9993,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
   ((((nind * n_occ_minus_1) + (nind * n_occ_minus_1)) + (nind * n_occasions))
     + 1);
       int num_gen_quantities = 1;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -13544,7 +13544,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
      n_occasions) + (M * n_occasions));
       int num_gen_quantities = 
   ((((1 + 1) + n_occasions) + n_occasions) + (M * n_occasions));
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -14540,7 +14540,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       int num_transformed = 0;
       int num_gen_quantities = 
   (I * K);
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -15240,7 +15240,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       int num_transformed = 
   (1 + N);
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -17411,7 +17411,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       int num_transformed = 
   (((nind * n_occ_minus_1) + (nind * n_occ_minus_1)) + (nind * n_occasions));
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -20886,7 +20886,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       int num_gen_quantities = 
   ((((((1 + 1) + n_occasions) + 1) + n_occasions) + n_occasions) +
     (M * n_occasions));
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -21239,7 +21239,7 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
                             std::ostream* pstream = nullptr) const {
       int num_transformed = 0;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -21594,7 +21594,7 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
                             std::ostream* pstream = nullptr) const {
       int num_transformed = 0;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -21967,7 +21967,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
                             std::ostream* pstream = nullptr) const {
       int num_transformed = 0;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -23953,7 +23953,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       int num_transformed = 
   (((nind * n_occ_minus_1) + (nind * n_occ_minus_1)) + (nind * n_occasions));
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -24503,7 +24503,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       int num_transformed = 1;
       int num_gen_quantities = 
   (1 + 1);
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -25464,7 +25464,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       int num_transformed = 
   (R + (R * T));
       int num_gen_quantities = ((1 + R) + R);
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -26328,7 +26328,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       int num_transformed = 
   ((J + J) + N);
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -27533,7 +27533,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                             std::ostream* pstream = nullptr) const {
       int num_transformed = 0;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -28275,7 +28275,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
                             std::ostream* pstream = nullptr) const {
       int num_transformed = N;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -28983,7 +28983,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
                             std::ostream* pstream = nullptr) const {
       int num_transformed = 1;
       int num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -29602,7 +29602,7 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
                             std::ostream* pstream = nullptr) const {
       int num_transformed = 0;
       int num_gen_quantities = 1;
-      std::vector<double> vars_vec(num_params
+      std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
