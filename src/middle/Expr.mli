@@ -84,6 +84,7 @@ module Helpers : sig
   val zero : Typed.t
   val one : Typed.t
   val binop : Typed.t -> Operator.t -> Typed.t -> Typed.t
+  val binop_list : Typed.t list -> Operator.t -> default:Typed.t -> Typed.t
   val loop_bottom : Typed.t
 
   val internal_funapp :

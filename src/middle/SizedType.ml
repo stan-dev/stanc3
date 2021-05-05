@@ -66,6 +66,10 @@ let rec get_dims st =
   | SMatrix (dim1, dim2) -> [dim1; dim2]
   | SArray (t, dim) -> dim :: get_dims t
 
+let num_elems_expr st =
+  Expr.Helpers.binop_list (get_dims st) Operator.Times
+    ~default:(Expr.Helpers.int 1)
+
 let%expect_test "dims" =
   let open Fmt in
   strf "@[%a@]" (list ~sep:comma string)

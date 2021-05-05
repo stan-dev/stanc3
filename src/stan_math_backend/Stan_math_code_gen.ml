@@ -746,7 +746,23 @@ let pp_constrained_types ppf {Program.output_vars; _} =
   pp_outvar_metadata ppf ("get_constrained_sizedtypes", outvars)
 
 (** Print the generic method overloads needed in the model class. *)
-let pp_overloads ppf () =
+let pp_overloads ppf {Program.output_vars; _} =
+  (* An expression for the number of individual parameters in a list of output variables *)
+  let num_outvars outvars =
+    Expr.Helpers.binop_list
+      (List.map
+         ~f:(fun outvar ->
+           SizedType.num_elems_expr outvar.Program.out_unconstrained_st )
+         outvars)
+      Operator.Plus ~default:(Expr.Helpers.int 0)
+  in
+  (* The list of output variables that came from a particular block *)
+  let block_outvars block =
+    List.filter_map output_vars ~f:(fun (_, outvar) ->
+        if outvar.out_block = block then Some outvar else None )
+  in
+  let num_gen_quantities = num_outvars (block_outvars GeneratedQuantities) in
+  let num_transformed = num_outvars (block_outvars TransformedParameters) in
   pf ppf
     {|
     // Begin method overload boilerplate
@@ -757,7 +773,11 @@ let pp_overloads ppf () =
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      std::vector<double> vars_vec(vars.size());
+      int num_transformed = %a;
+      int num_gen_quantities = %a;
+      std::vector<double> vars_vec(num_params
+       + (emit_transformed_parameters * num_transformed)
+       + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
       write_array_impl(base_rng, params_r, params_i, vars_vec,
           emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -801,6 +821,7 @@ let pp_overloads ppf () =
         params_r_vec.data(), params_r_vec.size());
     }
 |}
+    pp_expr num_transformed pp_expr num_gen_quantities
 
 (** Print the `get_constrained_sizedtypes` method of the model class *)
 let pp_transform_inits ppf {Program.output_vars; _} =
@@ -849,7 +870,7 @@ let pp_model_public ppf p =
   pf ppf "@ %a" pp_constrained_types p ;
   pf ppf "@ %a" pp_unconstrained_types p ;
   (* Boilerplate *)
-  pf ppf "@ %a" pp_overloads () ;
+  pf ppf "@ %a" pp_overloads p ;
   pf ppf "@ %a" pp_transform_inits p
 
 let model_prefix = "model_"

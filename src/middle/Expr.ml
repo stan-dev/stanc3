@@ -167,6 +167,12 @@ module Helpers = struct
     { Fixed.meta= Typed.Meta.empty
     ; pattern= FunApp (StanLib (Operator.to_string op), [e1; e2]) }
 
+  let binop_list es op ~default =
+    match es with
+    | [] -> default
+    | head :: rest ->
+        List.fold ~init:head ~f:(fun accum next -> binop accum op next) rest
+
   let loop_bottom = one
 
   let internal_funapp fn args meta =
