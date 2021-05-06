@@ -177,15 +177,17 @@ let typename = ( ^ ) "typename "
 (** Construct an object with it's needed templates for function signatures.
  @param fdargs A sexp list of strings representing C++ types.
   *)
-let get_templates_and_args fdargs =
+let get_templates_and_args exprs fdargs =
   let argtypetemplates = maybe_templated_arg_types fdargs in
   ( List.filter_opt argtypetemplates
-  , List.map
-      ~f:(fun a -> strf "%a" pp_arg a)
-      (List.zip_exn argtypetemplates fdargs)
-  , List.map
-      ~f:(fun a -> strf "%a" pp_arg_eigen_suffix a)
-      (List.zip_exn argtypetemplates fdargs) )
+  , if not exprs then
+      List.map
+        ~f:(fun a -> strf "%a" pp_arg a)
+        (List.zip_exn argtypetemplates fdargs)
+    else
+      List.map
+        ~f:(fun a -> strf "%a" pp_arg_eigen_suffix a)
+        (List.zip_exn argtypetemplates fdargs) )
 
 (** Print the C++ template parameter decleration before a function.
   @param ppf A pretty printer.
@@ -203,27 +205,24 @@ let mk_extra_args templates args =
   Refactor this please - one idea might be to have different functions for
    printing user defined distributions vs rngs vs regular functions.
 *)
-let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
+let pp_fun_def ppf Program.({fdrt; fdname; fdsuffix; fdargs; fdbody; _})
     funs_used_in_reduce_sum funs_used_in_variadic_ode =
-  let is_lp = is_user_lp fdname in
-  let is_dist = is_user_dist fdname in
-  let is_rng = String.is_suffix fdname ~suffix:"_rng" in
   let extra, extra_templates =
-    if is_lp then (["lp__"; "lp_accum__"], ["T_lp__"; "T_lp_accum__"])
-    else if is_rng then (["base_rng__"], ["RNG"])
-    else ([], [])
-  in
-  let argtypetemplates, args, args_expressions =
-    get_templates_and_args fdargs
+    match fdsuffix with
+    | Fun_kind.FnTarget -> (["lp__"; "lp_accum__"], ["T_lp__"; "T_lp_accum__"])
+    | FnRng -> (["base_rng__"], ["RNG"])
+    | FnLpdf _ | FnPlain -> ([], [])
   in
   let pp_body ppf (Stmt.Fixed.({pattern; _}) as fdbody) =
     pf ppf "@[<hv 8>using local_scalar_t__ = %a;@]@," pp_promoted_scalar fdargs ;
     pf ppf "int current_statement__ = 0; @ " ;
     if List.exists ~f:(fun (_, _, t) -> UnsizedType.is_eigen_type t) fdargs
     then pp_eigen_arg_to_ref ppf fdargs ;
-    if not (is_dist || is_lp) then (
-      pf ppf "%s@ " "static constexpr bool propto__ = true;" ;
-      pf ppf "%s@ " "(void) propto__;" ) ;
+    ( match fdsuffix with
+    | FnLpdf _ | FnTarget -> ()
+    | FnPlain | FnRng ->
+        pf ppf "%s@ " "static constexpr bool propto__ = true;" ;
+        pf ppf "%s@ " "(void) propto__;" ) ;
     pf ppf "%s@ "
       "local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ;
     pf ppf "%a" pp_unused "DUMMY_VAR__" ;
@@ -236,19 +235,21 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
     pp_located_error ppf (pp_statement, blocked_fdbody) ;
     pf ppf "@ "
   in
-  let templates =
-    (if is_dist || is_lp then ["bool propto__"] else [])
-    @ List.(map ~f:typename (argtypetemplates @ extra_templates))
-  in
-  let pp_sig ppf (name, args, is_reduce_sum_fn, is_variadic_ode_fn) =
-    if (is_reduce_sum_fn || is_variadic_ode_fn) && is_dist then
-      pp_template_decorator ppf (List.tl_exn templates)
-    else pp_template_decorator ppf templates ;
+  let pp_sig ppf (name, exprs, variadic) =
+    let argtypetemplates, args = get_templates_and_args exprs fdargs in
+    let templates =
+      List.(map ~f:typename (argtypetemplates @ extra_templates))
+    in
+    ( match (fdsuffix, variadic) with
+    | (FnLpdf _ | FnTarget), `None ->
+        pp_template_decorator ppf ("bool propto__" :: templates)
+    | _ -> pp_template_decorator ppf templates ) ;
     pp_returntype ppf fdargs fdrt ;
     let args, variadic_args =
-      if is_reduce_sum_fn then List.split_n args 3
-      else if is_variadic_ode_fn then List.split_n args 2
-      else (args, [])
+      match variadic with
+      | `ReduceSum -> List.split_n args 3
+      | `VariadicODE -> List.split_n args 2
+      | `None -> (args, [])
     in
     let arg_strs =
       args
@@ -258,35 +259,42 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
     in
     pf ppf "%s(@[<hov>%a@]) " name (list ~sep:comma string) arg_strs
   in
-  pp_sig ppf (fdname, args_expressions, false, false) ;
+  pp_sig ppf (fdname, true, `None) ;
   match fdbody with
   | None -> pf ppf ";@ "
   | Some fdbody ->
       pp_block ppf (pp_body, fdbody) ;
-      pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
-        functor_suffix pp_sig
-        ("operator()", args, false, false)
-        pp_call_str
-        ( (if is_dist || is_lp then fdname ^ "<propto__>" else fdname)
-        , List.map ~f:(fun (_, name, _) -> name) fdargs @ extra @ ["pstream__"]
-        ) ;
+      let pp_functor ppf (str_args, args, variadic) =
+        let suffix =
+          match variadic with
+          | `None -> functor_suffix
+          | `ReduceSum -> reduce_sum_functor_suffix
+          | `VariadicODE -> variadic_ode_functor_suffix
+        in
+        let pp_template_propto ppf () =
+          match (fdsuffix, variadic) with
+          | FnLpdf _, `ReduceSum -> pf ppf "template <bool propto__>@ "
+          | _ -> pf ppf ""
+        in
+        pf ppf "@,@,%astruct %s%s {@,%a const @,{@,return %a;@,}@,};@,"
+          pp_template_propto () fdname suffix pp_sig
+          ("operator()", false, variadic)
+          pp_call_str
+          ( ( match fdsuffix with
+            | FnLpdf _ | FnTarget -> fdname ^ "<propto__>"
+            | _ -> fdname )
+          , str_args
+            @ List.map ~f:(fun (_, name, _) -> name) args
+            @ extra @ ["pstream__"] )
+      in
+      pp_functor ppf ([], fdargs, `None) ;
       if String.Set.mem funs_used_in_reduce_sum fdname then
         (* Produces the reduce_sum functors that has the pstream argument
         as the third and not last argument *)
         match fdargs with
         | (_, slice, _) :: (_, start, _) :: (_, end_, _) :: rest ->
-            let pp_template_propto ppf name =
-              if is_user_dist name then pf ppf "template <bool propto__>@ "
-              else pf ppf ""
-            in
-            pf ppf "@,@,%astruct %s%s {@,%a const @,{@,return %a;@,}@,};@,"
-              pp_template_propto fdname fdname reduce_sum_functor_suffix pp_sig
-              ("operator()", args, true, false)
-              pp_call_str
-              ( (if is_dist || is_lp then fdname ^ "<propto__>" else fdname)
-              , slice :: (start ^ " + 1") :: (end_ ^ " + 1")
-                :: List.map ~f:(fun (_, name, _) -> name) rest
-                @ extra @ ["pstream__"] )
+            pp_functor ppf
+              ([slice; start ^ " + 1"; end_ ^ " + 1"], rest, `ReduceSum)
         | _ ->
             raise_s
               [%message
@@ -294,24 +302,18 @@ let pp_fun_def ppf Program.({fdrt; fdname; fdargs; fdbody; _})
       else if String.Set.mem funs_used_in_variadic_ode fdname then
         (* Produces the variadic ode functors that has the pstream argument
         as the third and not last argument *)
-        pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
-          variadic_ode_functor_suffix pp_sig
-          ("operator()", args, false, true)
-          pp_call_str
-          ( fdname
-          , List.map ~f:(fun (_, name, _) -> name) fdargs
-            @ extra @ ["pstream__"] )
+        pp_functor ppf ([], fdargs, `VariadicODE)
 
 (* Creates functions outside the model namespaces which only call the ones
    inside the namespaces *)
 let pp_standalone_fun_def namespace_fun ppf
-    Program.({fdname; fdargs; fdbody; fdrt; _}) =
+    Program.({fdname; fdsuffix; fdargs; fdbody; fdrt; _}) =
   let extra, extra_templates =
-    if is_user_lp fdname then
-      (["lp__"; "lp_accum__"], ["double"; "stan::math::accumulator<double>"])
-    else if String.is_suffix fdname ~suffix:"_rng" then
-      (["base_rng__"], ["boost::ecuyer1988"])
-    else ([], [])
+    match fdsuffix with
+    | Fun_kind.FnTarget ->
+        (["lp__"; "lp_accum__"], ["double"; "stan::math::accumulator<double>"])
+    | FnRng -> (["base_rng__"], ["boost::ecuyer1988"])
+    | FnLpdf _ | FnPlain -> ([], [])
   in
   let args =
     List.map
@@ -338,8 +340,9 @@ let pp_standalone_fun_def namespace_fun ppf
       pf ppf "@,%s@,%s %s%a @,{@, %s%s::%a;@,}@," mark_function_comment
         return_type fdname pp_sig_standalone "" return_stmt namespace_fun
         pp_call_str
-        ( ( if is_user_dist fdname || is_user_lp fdname then fdname ^ "<false>"
-          else fdname )
+        ( ( match fdsuffix with
+          | FnLpdf _ | FnTarget -> fdname ^ "<false>"
+          | FnRng | FnPlain -> fdname )
         , List.map ~f:(fun (_, name, _) -> name) fdargs @ extra @ ["pstream__"]
         )
 
@@ -538,6 +541,7 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
     pf ppf "%a@ %a@ %a" (list ~sep:cut string)
       [ "using local_scalar_t__ = double;"; "vars__.resize(0);"
       ; "stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);"
+      ; "static constexpr bool propto__ = true;"; "(void) propto__;"
       ; "double lp__ = 0.0;"
       ; "(void) lp__;  // dummy to suppress unused var warning"
       ; "int current_statement__ = 0; "
@@ -874,7 +878,8 @@ let is_fun_used_with_variadic_fn variadic_fn_test p =
   let rec find_functors_expr accum Expr.Fixed.({pattern; _}) =
     String.Set.union accum
       ( match pattern with
-      | FunApp (StanLib x, {pattern= Var f; _} :: _) when variadic_fn_test x ->
+      | FunApp (StanLib (x, FnPlain), {pattern= Var f; _} :: _)
+        when variadic_fn_test x ->
           String.Set.of_list [Utils.stdlib_distribution_name f]
       | x -> Expr.Fixed.Pattern.fold find_functors_expr accum x )
   in
