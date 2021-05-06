@@ -21,7 +21,7 @@ module Fixed = struct
       | Var varname -> Fmt.string ppf varname
       | Lit (Str, str) -> Fmt.pf ppf "%S" str
       | Lit (_, str) -> Fmt.string ppf str
-      | FunApp (StanLib name, [lhs; rhs])
+      | FunApp (StanLib (name, FnPlain), [lhs; rhs])
         when Option.is_some (Operator.of_string_opt name) ->
           Fmt.pf ppf "(%a %a %a)" pp_e lhs Operator.pp
             (Option.value_exn (Operator.of_string_opt name))
@@ -164,7 +164,7 @@ module Helpers = struct
 
   let binop e1 op e2 =
     { Fixed.meta= Typed.Meta.empty
-    ; pattern= FunApp (StanLib (Operator.to_string op), [e1; e2]) }
+    ; pattern= FunApp (StanLib (Operator.to_string op, FnPlain), [e1; e2]) }
 
   let loop_bottom = one
 
