@@ -773,8 +773,8 @@ let pp_overloads ppf {Program.output_vars; _} =
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      int num_transformed = %a;
-      int num_gen_quantities = %a;
+      const size_t num_transformed = %a;
+      const size_t num_gen_quantities = %a;
       std::vector<double> vars_vec(num_params_r__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
@@ -792,7 +792,11 @@ let pp_overloads ppf {Program.output_vars; _} =
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      vars.resize(params_r.size());
+      const size_t num_transformed = %a;
+      const size_t num_gen_quantities = %a;
+      vars.resize(num_params_r__
+        + (emit_transformed_parameters * num_transformed)
+        + (emit_generated_quantities * num_gen_quantities));
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
@@ -821,7 +825,8 @@ let pp_overloads ppf {Program.output_vars; _} =
         params_r_vec.data(), params_r_vec.size());
     }
 |}
-    pp_expr num_transformed pp_expr num_gen_quantities
+    pp_expr num_transformed pp_expr num_gen_quantities pp_expr num_transformed
+    pp_expr num_gen_quantities
 
 (** Print the `get_constrained_sizedtypes` method of the model class *)
 let pp_transform_inits ppf {Program.output_vars; _} =
