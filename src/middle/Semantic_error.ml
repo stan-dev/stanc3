@@ -372,12 +372,12 @@ module ExpressionError = struct
     | ConditionalNotationNotAllowed ->
         Fmt.pf ppf
           "Only functions with names ending in _lpdf, _lupdf, _lpmf, _lupmf, \
-           _lcdf, _lccdf can make use of conditional notation."
+           _cdf, _lcdf, _lccdf can make use of conditional notation."
     | ConditioningRequired ->
         Fmt.pf ppf
           "Probability functions with suffixes _lpdf, _lupdf, _lpmf, _lupmf, \
-           _lcdf and _lccdf, require a vertical bar (|) between the first two \
-           arguments."
+           _cdf, _lcdf and _lccdf, require a vertical bar (|) between the \
+           first two arguments."
     | NotPrintable -> Fmt.pf ppf "Functions cannot be printed."
     | EmptyArray ->
         Fmt.pf ppf "Array expressions must contain at least one element."
@@ -485,7 +485,7 @@ For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
     | NonRealProbFunDef ->
         Fmt.pf ppf
           "Real return type required for probability functions ending in \
-           _log, _lpdf, _lupdf, _lpmf, _lupmf, _lcdf, or _lccdf."
+           _log, _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf, or _lccdf."
     | ProbDensityNonRealVariate (Some ut) ->
         Fmt.pf ppf
           "Probability density functions require real variates (first \

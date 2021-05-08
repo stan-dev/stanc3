@@ -229,6 +229,7 @@ let semantic_check_fn_conditioning ~loc id =
       List.exists
         ~f:(fun suffix -> String.is_suffix id.name ~suffix)
         Utils.conditioning_suffices
+      && not (String.is_suffix id.name ~suffix:"_cdf")
     then Semantic_error.conditioning_required loc |> error
     else ok ())
 
