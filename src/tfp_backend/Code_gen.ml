@@ -19,14 +19,15 @@ let rec pp_expr ppf {Expr.Fixed.pattern; _} =
   | Var ident -> string ppf ident
   | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> pf ppf "tf__.cast(%s, tf__.float64)" s
-  | FunApp (StanLib f, obs :: dist_params)
+  | FunApp (StanLib (f, _), obs :: dist_params)
     when f = Transform_mir.dist_prefix ^ "CholeskyLKJ" ->
       pf ppf "%s(@[<hov>(%a).shape[0], %a@]).log_prob(%a)" f pp_expr obs
         (list ~sep:comma pp_expr) dist_params pp_expr obs
-  | FunApp (StanLib f, obs :: dist_params)
+  | FunApp (StanLib (f, _), obs :: dist_params)
     when String.is_prefix ~prefix:Transform_mir.dist_prefix f ->
       pf ppf "%a.log_prob(%a)" pp_call (f, pp_expr, dist_params) pp_expr obs
-  | FunApp (StanLib f, args) when Operator.of_string_opt f |> Option.is_some -> (
+  | FunApp (StanLib (f, _), args)
+    when Operator.of_string_opt f |> Option.is_some -> (
     match
       ( Operator.of_string_opt f |> Option.value_exn |> pystring_of_operator
       , args )
@@ -35,7 +36,7 @@ let rec pp_expr ppf {Expr.Fixed.pattern; _} =
     | op, [unary] -> pf ppf "%s%a" op pp_paren unary
     | op, args ->
         raise_s [%message "Need to implement" op (args : Expr.Typed.t list)] )
-  | FunApp ((UserDefined fname | StanLib fname), args) ->
+  | FunApp ((UserDefined (fname, _) | StanLib (fname, _)), args) ->
       pp_call ppf (fname, pp_expr, args)
   | FunApp (CompilerInternal _, _) as e ->
       raise_s
@@ -64,7 +65,8 @@ and pp_indices ppf = function
 and pp_paren ppf expr =
   match expr.Expr.Fixed.pattern with
   | TernaryIf _ | EAnd _ | EOr _ -> pf ppf "(%a)" pp_expr expr
-  | FunApp (StanLib f, _) when Operator.of_string_opt f |> Option.is_some ->
+  | FunApp (StanLib (f, _), _) when Operator.of_string_opt f |> Option.is_some
+    ->
       pf ppf "(%a)" pp_expr expr
   | _ -> pp_expr ppf expr
 
@@ -73,7 +75,7 @@ let rec pp_stmt ppf s =
   | Assignment ((lhs, _, indices), rhs) ->
       pf ppf "%s%a = %a" lhs pp_indices indices pp_expr rhs
   | TargetPE rhs -> pf ppf "target += tf__.reduce_sum(%a)" pp_expr rhs
-  | NRFunApp (StanLib f, args) | NRFunApp (UserDefined f, args) ->
+  | NRFunApp (StanLib (f, _), args) | NRFunApp (UserDefined (f, _), args) ->
       pp_call ppf (f, pp_expr, args)
   | Break -> pf ppf "break"
   | Continue -> pf ppf "continue"
