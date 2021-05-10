@@ -304,8 +304,8 @@ let extra_constraint_args st = function
 let param_size transform sizedtype =
   let rec shrink_eigen f st =
     match st with
-    | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen f t, d)
-    | SVector d | SMatrix (d, _) -> SVector (f d)
+    | SizedType.SArray (t, dim) -> SizedType.SArray (shrink_eigen f t, dim)
+    | SVector (mem_type, row_expr) | SMatrix (mem_type, row_expr, _) -> SVector (mem_type, (f row_expr))
     | SInt | SReal | SRowVector _ ->
         raise_s
           [%message
@@ -313,8 +313,8 @@ let param_size transform sizedtype =
   in
   let rec shrink_eigen_mat f st =
     match st with
-    | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen_mat f t, d)
-    | SMatrix (d1, d2) -> SVector (f d1 d2)
+    | SizedType.SArray (t, dim) -> SizedType.SArray (shrink_eigen_mat f t, dim)
+    | SMatrix (mem_type, dim1, dim2) -> SVector (mem_type, (f dim1 dim2))
     | SInt | SReal | SRowVector _ | SVector _ ->
         raise_s
           [%message "Expecting SMatrix, got " (st : Expr.Typed.t SizedType.t)]
@@ -427,16 +427,16 @@ let check_sizedtype name =
   in
   let rec sizedtype = function
     | SizedType.(SInt | SReal) as t -> ([], t)
-    | SVector s ->
-        let e = trans_expr s in
-        (check s e, SizedType.SVector e)
-    | SRowVector s ->
-        let e = trans_expr s in
-        (check s e, SizedType.SRowVector e)
-    | SMatrix (r, c) ->
-        let er = trans_expr r in
-        let ec = trans_expr c in
-        (check r er @ check c ec, SizedType.SMatrix (er, ec))
+    | SVector (mem_type, size_expr) ->
+        let e = trans_expr size_expr in
+        (check size_expr e, SizedType.SVector (mem_type, e))
+    | SRowVector (mem_type, size_expr) ->
+        let e = trans_expr size_expr in
+        (check size_expr e, SizedType.SRowVector (mem_type, e))
+    | SMatrix (mem_type, row, col) ->
+        let expr_row = trans_expr row in
+        let expr_col = trans_expr col in
+        (check row expr_row @ check col expr_col, SizedType.SMatrix (mem_type, expr_row, expr_col))
     | SArray (t, s) ->
         let e = trans_expr s in
         let ll, t = sizedtype t in
@@ -715,7 +715,7 @@ let trans_sizedtype_decl declc tr name =
   in
   let rec go n = function
     | SizedType.(SInt | SReal) as t -> ([], t)
-    | SVector s ->
+    | SVector (mem_type, dim) ->
         let fn =
           match (declc.dconstrain, tr) with
           | Some Constrain, Program.Simplex ->
@@ -723,14 +723,14 @@ let trans_sizedtype_decl declc tr name =
           | Some Constrain, UnitVector -> FnValidateSizeUnitVector
           | _ -> FnValidateSize
         in
-        let l, s = grab_size fn n s in
-        (l, SizedType.SVector s)
-    | SRowVector s ->
-        let l, s = grab_size FnValidateSize n s in
-        (l, SizedType.SRowVector s)
-    | SMatrix (r, c) ->
-        let l1, r = grab_size FnValidateSize n r in
-        let l2, c = grab_size FnValidateSize (n + 1) c in
+        let l, dim = grab_size fn n dim in
+        (l, SizedType.SVector (mem_type, dim))
+    | SRowVector (mem_type, dim) ->
+        let l, dim = grab_size FnValidateSize n dim in
+        (l, SizedType.SRowVector (mem_type, dim))
+    | SMatrix (mem_type, row_expr, col_expr) ->
+        let l1, row = grab_size FnValidateSize n row_expr in
+        let l2, col = grab_size FnValidateSize (n + 1) col_expr in
         let cf_cov =
           match (declc.dconstrain, tr) with
           | Some Constrain, CholeskyCov ->
@@ -741,11 +741,11 @@ let trans_sizedtype_decl declc tr name =
                           [ str ("cholesky_factor_cov " ^ name)
                           ; str
                               "num rows (must be greater or equal to num cols)"
-                          ; r; c ] )
-                ; meta= r.Expr.Fixed.meta.Expr.Typed.Meta.loc } ]
+                          ; row; col ] )
+                ; meta= row.Expr.Fixed.meta.Expr.Typed.Meta.loc } ]
           | _ -> []
         in
-        (l1 @ l2 @ cf_cov, SizedType.SMatrix (r, c))
+        (l1 @ l2 @ cf_cov, SizedType.SMatrix (mem_type, row, col))
     | SArray (t, s) ->
         let l, s = grab_size FnValidateSize n s in
         let ll, t = go (n + 1) t in

@@ -1,21 +1,24 @@
 open Core_kernel
 open Common
 
+type mem_type = AoS | SoA
+[@@deriving sexp, compare, map, hash, fold]
+
 type 'a t =
-  | SInt
+  | SInt 
   | SReal
-  | SVector of 'a
-  | SRowVector of 'a
-  | SMatrix of 'a * 'a
+  | SVector of mem_type * 'a
+  | SRowVector of mem_type * 'a
+  | SMatrix of mem_type * 'a * 'a
   | SArray of 'a t * 'a
 [@@deriving sexp, compare, map, hash, fold]
 
 let rec pp pp_e ppf = function
   | SInt -> Fmt.string ppf "int"
   | SReal -> Fmt.string ppf "real"
-  | SVector expr -> Fmt.pf ppf {|vector%a|} (Fmt.brackets pp_e) expr
-  | SRowVector expr -> Fmt.pf ppf {|row_vector%a|} (Fmt.brackets pp_e) expr
-  | SMatrix (d1_expr, d2_expr) ->
+  | SVector (_, expr) -> Fmt.pf ppf {|vector%a|} (Fmt.brackets pp_e) expr
+  | SRowVector (_, expr) -> Fmt.pf ppf {|row_vector%a|} (Fmt.brackets pp_e) expr
+  | SMatrix (_, d1_expr, d2_expr) ->
       Fmt.pf ppf {|matrix%a|}
         Fmt.(pair ~sep:comma pp_e pp_e |> brackets)
         (d1_expr, d2_expr)
@@ -27,9 +30,9 @@ let rec pp pp_e ppf = function
 let collect_exprs st =
   let rec aux accu = function
     | SInt | SReal -> List.rev accu
-    | SVector e | SRowVector e -> List.rev @@ (e :: accu)
-    | SMatrix (e1, e2) -> List.rev @@ (e1 :: e2 :: accu)
-    | SArray (inner, e) -> aux (e :: accu) inner
+    | SVector (_, expr) | SRowVector (_, expr) -> List.rev @@ (expr :: accu)
+    | SMatrix (_, expr1, expr2) -> List.rev @@ (expr1 :: expr2 :: accu)
+    | SArray (inner, expr) -> aux (expr:: accu) inner
   in
   aux [] st
 
@@ -43,9 +46,9 @@ let rec to_unsized = function
 
 let rec associate ?init:(assocs = Label.Int_label.Map.empty) = function
   | SInt | SReal -> assocs
-  | SVector e | SRowVector e -> Expr.Labelled.associate ~init:assocs e
-  | SMatrix (e1, e2) ->
-      Expr.Labelled.(associate ~init:(associate ~init:assocs e1) e2)
+  | SVector (_, expr) | SRowVector (_, expr) -> Expr.Labelled.associate ~init:assocs expr
+  | SMatrix (_, expr1, expr2) ->
+      Expr.Labelled.(associate ~init:(associate ~init:assocs expr1) expr2)
   | SArray (st, e) ->
       associate ~init:(Expr.Labelled.associate ~init:assocs e) st
 
@@ -55,20 +58,20 @@ let rec inner_type = function SArray (t, _) -> inner_type t | t -> t
 let rec dims_of st =
   match st with
   | SArray (t, _) -> dims_of t
-  | SMatrix (d1, d2) -> [d1; d2]
-  | SRowVector dim | SVector dim -> [dim]
+  | SMatrix (_, dim1, dim2) -> [dim1; dim2]
+  | SRowVector (_, dim) | SVector (_, dim) -> [dim]
   | SInt | SReal -> []
 
 let rec get_dims st =
   match st with
   | SInt | SReal -> []
-  | SVector d | SRowVector d -> [d]
-  | SMatrix (dim1, dim2) -> [dim1; dim2]
+  | SVector (_, dim) | SRowVector (_, dim) -> [dim]
+  | SMatrix (_, dim1, dim2) -> [dim1; dim2]
   | SArray (t, dim) -> dim :: get_dims t
 
 let%expect_test "dims" =
   let open Fmt in
   strf "@[%a@]" (list ~sep:comma string)
-    (get_dims (SArray (SMatrix ("x", "y"), "z")))
+    (get_dims (SArray (SMatrix (AoS, "x", "y"), "z")))
   |> print_endline ;
   [%expect {| z, x, y |}]

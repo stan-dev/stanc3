@@ -218,8 +218,8 @@ let param_read smeta
     let rec constrain_get_dims st =
       match st with
       | SizedType.SInt | SReal -> []
-      | SVector d | SRowVector d -> [d]
-      | SMatrix (_, dim2) -> [dim2]
+      | SVector (_, size) | SRowVector (_, size) -> [size]
+      | SMatrix (_, _, col_expr) -> [col_expr]
       | SArray (t, dim) -> dim :: constrain_get_dims t
     in
     let read_constrain_dims constrain_transform st =

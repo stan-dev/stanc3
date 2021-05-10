@@ -165,22 +165,22 @@ and pp_list_of_printables ppf l =
 and pp_sizedtype ppf = function
   | Middle.SizedType.SInt -> Fmt.pf ppf "int"
   | SReal -> Fmt.pf ppf "real"
-  | SVector e -> Fmt.pf ppf "vector[%a]" pp_expression e
-  | SRowVector e -> Fmt.pf ppf "row_vector[%a]" pp_expression e
-  | SMatrix (e1, e2) ->
-      Fmt.pf ppf "matrix[%a, %a]" pp_expression e1 pp_expression e2
+  | SVector (_, expr) -> Fmt.pf ppf "vector[%a]" pp_expression expr
+  | SRowVector (_, expr) -> Fmt.pf ppf "row_vector[%a]" pp_expression expr
+  | SMatrix (_, row_expr, col_expr) ->
+      Fmt.pf ppf "matrix[%a, %a]" pp_expression row_expr pp_expression col_expr
   | SArray _ -> raise (Middle.Errors.FatalError "This should never happen.")
 
 and pp_transformation ppf = function
   | Middle.Program.Identity -> Fmt.pf ppf ""
   | Lower e -> Fmt.pf ppf "<lower=%a>" pp_expression e
   | Upper e -> Fmt.pf ppf "<upper=%a>" pp_expression e
-  | LowerUpper (e1, e2) ->
-      Fmt.pf ppf "<lower=%a, upper=%a>" pp_expression e1 pp_expression e2
+  | LowerUpper (lower_expr, upper_expr) ->
+      Fmt.pf ppf "<lower=%a, upper=%a>" pp_expression lower_expr pp_expression upper_expr
   | Offset e -> Fmt.pf ppf "<offset=%a>" pp_expression e
   | Multiplier e -> Fmt.pf ppf "<multiplier=%a>" pp_expression e
-  | OffsetMultiplier (e1, e2) ->
-      Fmt.pf ppf "<offset=%a, multiplier=%a>" pp_expression e1 pp_expression e2
+  | OffsetMultiplier (offset_expr, multiplier_expr) ->
+      Fmt.pf ppf "<offset=%a, multiplier=%a>" pp_expression offset_expr pp_expression multiplier_expr
   | Ordered -> Fmt.pf ppf ""
   | PositiveOrdered -> Fmt.pf ppf ""
   | Simplex -> Fmt.pf ppf ""
@@ -207,25 +207,25 @@ and pp_transformed_type ppf (pst, trans) =
   in
   let sizes_fmt =
     match pst with
-    | Sized (SVector e) | Sized (SRowVector e) ->
-        Fmt.const (fun ppf -> Fmt.pf ppf "[%a]" pp_expression) e
-    | Sized (SMatrix (e1, e2)) ->
+    | Sized (SVector (_, expr)) | Sized (SRowVector (_, expr)) ->
+        Fmt.const (fun ppf -> Fmt.pf ppf "[%a]" pp_expression) expr
+    | Sized (SMatrix (_, row_expr, col_expr)) ->
         Fmt.const
-          (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression e1 pp_expression)
-          e2
+          (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression row_expr pp_expression)
+          col_expr
     | Sized (SArray _) | Unsized _ | Sized Middle.SizedType.SInt | Sized SReal
       ->
         Fmt.nop
   in
   let cov_sizes_fmt =
     match pst with
-    | Sized (SMatrix (e1, e2)) ->
-        if e1 = e2 then
-          Fmt.const (fun ppf -> Fmt.pf ppf "[%a]" pp_expression) e1
+    | Sized (SMatrix (_, row_expr, col_expr)) ->
+        if row_expr = col_expr then
+          Fmt.const (fun ppf -> Fmt.pf ppf "[%a]" pp_expression) row_expr
         else
           Fmt.const
-            (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression e1 pp_expression)
-            e2
+            (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression row_expr pp_expression)
+            col_expr
     | _ -> Fmt.nop
   in
   match trans with

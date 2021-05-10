@@ -53,8 +53,8 @@ let rec pp_initialize ppf (st, adtype) =
   match st with
   | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
   | SReal -> pf ppf "%s" init_nan
-  | SVector d | SRowVector d -> pf ppf "%a(%a)" pp_st (st, adtype) pp_expr d
-  | SMatrix (d1, d2) ->
+  | SVector (_, size) | SRowVector (_, size) -> pf ppf "%a(%a)" pp_st (st, adtype) pp_expr size
+  | SMatrix (_, d1, d2) ->
       pf ppf "%a(%a, %a)" pp_st (st, adtype) pp_expr d1 pp_expr d2
   | SArray (t, d) ->
       pf ppf "%a(%a, %a)" pp_st (st, adtype) pp_expr d pp_initialize (t, adtype)
@@ -71,7 +71,7 @@ let pp_assign_sized ppf (decl_id, st, adtype) =
 let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in
   strf "@[<v>%a@]" pp_assign_sized
-    ("d", SArray (SArray (SMatrix (int 2, int 3), int 4), int 5), DataOnly)
+    ("d", SArray (SArray (SMatrix (SoA, int 2, int 3), int 4), int 5), DataOnly)
   |> print_endline ;
   [%expect
     {|
@@ -99,10 +99,10 @@ let pp_assign_data ppf
   in
   let pp_placement_new ppf (decl_id, st) =
     match st with
-    | SizedType.SVector d | SRowVector d ->
+    | SizedType.SVector (_, d) | SRowVector (_, d) ->
         pf ppf "@[<hov 2>new (&%s) Eigen::Map<%a>(%s__.data(), %a);@]@,"
           decl_id pp_st (st, DataOnly) decl_id pp_expr d
-    | SMatrix (d1, d2) ->
+    | SMatrix (_, d1, d2) ->
         pf ppf "@[<hov 2>new (&%s) Eigen::Map<%a>(%s__.data(), %a, %a);@]@,"
           decl_id pp_st (st, DataOnly) decl_id pp_expr d1 pp_expr d2
     | _ -> ()
@@ -123,7 +123,7 @@ let%expect_test "set size map int array" =
 let%expect_test "set size map mat array" =
   let int = Expr.Helpers.int in
   strf "@[<v>%a@]" pp_assign_data
-    ("darrmat", SArray (SArray (SMatrix (int 2, int 3), int 4), int 5), true)
+    ("darrmat", SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5), true)
   |> print_endline ;
   [%expect
     {|
@@ -132,7 +132,7 @@ let%expect_test "set size map mat array" =
 
 let%expect_test "set size map mat" =
   let int = Expr.Helpers.int in
-  strf "@[<v>%a@]" pp_assign_data ("dmat", SMatrix (int 2, int 3), false)
+  strf "@[<v>%a@]" pp_assign_data ("dmat", SMatrix (SoA, int 2, int 3), false)
   |> print_endline ;
   [%expect
     {|

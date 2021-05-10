@@ -279,10 +279,10 @@ let rec generate_value m st t =
   match st with
   | SizedType.SInt -> gen_int m t
   | SReal -> gen_real m t
-  | SVector e -> gen_vector m (unwrap_int_exn m e) t
-  | SRowVector e -> gen_row_vector m (unwrap_int_exn m e) t
-  | SMatrix (e1, e2) ->
-      gen_matrix m (unwrap_int_exn m e1) (unwrap_int_exn m e2) t
+  | SVector (_, expr) -> gen_vector m (unwrap_int_exn m expr) t
+  | SRowVector (_, expr) -> gen_row_vector m (unwrap_int_exn m expr) t
+  | SMatrix (_, expr1, expr2) ->
+      gen_matrix m (unwrap_int_exn m expr1) (unwrap_int_exn m expr2) t
   | SArray (st, e) ->
       let element () = generate_value m st t in
       gen_array element (unwrap_int_exn m e) t
