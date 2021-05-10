@@ -53,7 +53,8 @@ let rec pp_initialize ppf (st, adtype) =
   match st with
   | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
   | SReal -> pf ppf "%s" init_nan
-  | SVector (_, size) | SRowVector (_, size) -> pf ppf "%a(%a)" pp_st (st, adtype) pp_expr size
+  | SVector (_, size) | SRowVector (_, size) ->
+      pf ppf "%a(%a)" pp_st (st, adtype) pp_expr size
   | SMatrix (_, d1, d2) ->
       pf ppf "%a(%a, %a)" pp_st (st, adtype) pp_expr d1 pp_expr d2
   | SArray (t, d) ->
@@ -123,7 +124,9 @@ let%expect_test "set size map int array" =
 let%expect_test "set size map mat array" =
   let int = Expr.Helpers.int in
   strf "@[<v>%a@]" pp_assign_data
-    ("darrmat", SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5), true)
+    ( "darrmat"
+    , SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5)
+    , true )
   |> print_endline ;
   [%expect
     {|

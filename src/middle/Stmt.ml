@@ -337,8 +337,11 @@ module Helpers = struct
     | SizedType.SInt | SReal -> bodyfn var
     | SVector (_, dim) | SRowVector (_, dim) -> mkfor dim bodyfn var smeta
     | SMatrix (mem_type, dim1, dim2) ->
-        mkfor dim1 (fun e -> for_scalar (SRowVector (mem_type, dim2)) bodyfn e smeta) var smeta
-    | SArray (t, dim) -> mkfor dim (fun e -> for_scalar t bodyfn e smeta) var smeta
+        mkfor dim1
+          (fun e -> for_scalar (SRowVector (mem_type, dim2)) bodyfn e smeta)
+          var smeta
+    | SArray (t, dim) ->
+        mkfor dim (fun e -> for_scalar t bodyfn e smeta) var smeta
 
   (** Exactly like for_scalar, but iterating through array dimensions in the
   inverted order.*)

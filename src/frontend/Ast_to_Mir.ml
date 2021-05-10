@@ -305,7 +305,8 @@ let param_size transform sizedtype =
   let rec shrink_eigen f st =
     match st with
     | SizedType.SArray (t, dim) -> SizedType.SArray (shrink_eigen f t, dim)
-    | SVector (mem_type, row_expr) | SMatrix (mem_type, row_expr, _) -> SVector (mem_type, (f row_expr))
+    | SVector (mem_type, row_expr) | SMatrix (mem_type, row_expr, _) ->
+        SVector (mem_type, f row_expr)
     | SInt | SReal | SRowVector _ ->
         raise_s
           [%message
@@ -314,7 +315,7 @@ let param_size transform sizedtype =
   let rec shrink_eigen_mat f st =
     match st with
     | SizedType.SArray (t, dim) -> SizedType.SArray (shrink_eigen_mat f t, dim)
-    | SMatrix (mem_type, dim1, dim2) -> SVector (mem_type, (f dim1 dim2))
+    | SMatrix (mem_type, dim1, dim2) -> SVector (mem_type, f dim1 dim2)
     | SInt | SReal | SRowVector _ | SVector _ ->
         raise_s
           [%message "Expecting SMatrix, got " (st : Expr.Typed.t SizedType.t)]
@@ -436,7 +437,8 @@ let check_sizedtype name =
     | SMatrix (mem_type, row, col) ->
         let expr_row = trans_expr row in
         let expr_col = trans_expr col in
-        (check row expr_row @ check col expr_col, SizedType.SMatrix (mem_type, expr_row, expr_col))
+        ( check row expr_row @ check col expr_col
+        , SizedType.SMatrix (mem_type, expr_row, expr_col) )
     | SArray (t, s) ->
         let e = trans_expr s in
         let ll, t = sizedtype t in

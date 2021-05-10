@@ -881,9 +881,14 @@ let rec semantic_check_sizedtype cf = function
       semantic_check_expression_of_int_type cf expr "Row vector sizes"
       |> Validate.map ~f:(fun ue -> SizedType.SRowVector (mem_type, ue))
   | SMatrix (mem_type, row_expr, col_expr) ->
-      let ue1 = semantic_check_expression_of_int_type cf row_expr "Matrix sizes"
-      and ue2 = semantic_check_expression_of_int_type cf col_expr "Matrix sizes" in
-      Validate.liftA2 (fun ue1 ue2 -> SizedType.SMatrix (mem_type, ue1, ue2)) ue1 ue2
+      let ue1 =
+        semantic_check_expression_of_int_type cf row_expr "Matrix sizes"
+      and ue2 =
+        semantic_check_expression_of_int_type cf col_expr "Matrix sizes"
+      in
+      Validate.liftA2
+        (fun ue1 ue2 -> SizedType.SMatrix (mem_type, ue1, ue2))
+        ue1 ue2
   | SArray (st, e) ->
       let ust = semantic_check_sizedtype cf st
       and ue = semantic_check_expression_of_int_type cf e "Array sizes" in

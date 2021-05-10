@@ -1,11 +1,10 @@
 open Core_kernel
 open Common
 
-type mem_type = AoS | SoA
-[@@deriving sexp, compare, map, hash, fold]
+type mem_type = AoS | SoA [@@deriving sexp, compare, map, hash, fold]
 
 type 'a t =
-  | SInt 
+  | SInt
   | SReal
   | SVector of mem_type * 'a
   | SRowVector of mem_type * 'a
@@ -17,7 +16,8 @@ let rec pp pp_e ppf = function
   | SInt -> Fmt.string ppf "int"
   | SReal -> Fmt.string ppf "real"
   | SVector (_, expr) -> Fmt.pf ppf {|vector%a|} (Fmt.brackets pp_e) expr
-  | SRowVector (_, expr) -> Fmt.pf ppf {|row_vector%a|} (Fmt.brackets pp_e) expr
+  | SRowVector (_, expr) ->
+      Fmt.pf ppf {|row_vector%a|} (Fmt.brackets pp_e) expr
   | SMatrix (_, d1_expr, d2_expr) ->
       Fmt.pf ppf {|matrix%a|}
         Fmt.(pair ~sep:comma pp_e pp_e |> brackets)
@@ -32,7 +32,7 @@ let collect_exprs st =
     | SInt | SReal -> List.rev accu
     | SVector (_, expr) | SRowVector (_, expr) -> List.rev @@ (expr :: accu)
     | SMatrix (_, expr1, expr2) -> List.rev @@ (expr1 :: expr2 :: accu)
-    | SArray (inner, expr) -> aux (expr:: accu) inner
+    | SArray (inner, expr) -> aux (expr :: accu) inner
   in
   aux [] st
 
@@ -46,7 +46,8 @@ let rec to_unsized = function
 
 let rec associate ?init:(assocs = Label.Int_label.Map.empty) = function
   | SInt | SReal -> assocs
-  | SVector (_, expr) | SRowVector (_, expr) -> Expr.Labelled.associate ~init:assocs expr
+  | SVector (_, expr) | SRowVector (_, expr) ->
+      Expr.Labelled.associate ~init:assocs expr
   | SMatrix (_, expr1, expr2) ->
       Expr.Labelled.(associate ~init:(associate ~init:assocs expr1) expr2)
   | SArray (st, e) ->

@@ -176,11 +176,13 @@ and pp_transformation ppf = function
   | Lower e -> Fmt.pf ppf "<lower=%a>" pp_expression e
   | Upper e -> Fmt.pf ppf "<upper=%a>" pp_expression e
   | LowerUpper (lower_expr, upper_expr) ->
-      Fmt.pf ppf "<lower=%a, upper=%a>" pp_expression lower_expr pp_expression upper_expr
+      Fmt.pf ppf "<lower=%a, upper=%a>" pp_expression lower_expr pp_expression
+        upper_expr
   | Offset e -> Fmt.pf ppf "<offset=%a>" pp_expression e
   | Multiplier e -> Fmt.pf ppf "<multiplier=%a>" pp_expression e
   | OffsetMultiplier (offset_expr, multiplier_expr) ->
-      Fmt.pf ppf "<offset=%a, multiplier=%a>" pp_expression offset_expr pp_expression multiplier_expr
+      Fmt.pf ppf "<offset=%a, multiplier=%a>" pp_expression offset_expr
+        pp_expression multiplier_expr
   | Ordered -> Fmt.pf ppf ""
   | PositiveOrdered -> Fmt.pf ppf ""
   | Simplex -> Fmt.pf ppf ""
@@ -211,7 +213,8 @@ and pp_transformed_type ppf (pst, trans) =
         Fmt.const (fun ppf -> Fmt.pf ppf "[%a]" pp_expression) expr
     | Sized (SMatrix (_, row_expr, col_expr)) ->
         Fmt.const
-          (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression row_expr pp_expression)
+          (fun ppf ->
+            Fmt.pf ppf "[%a, %a]" pp_expression row_expr pp_expression )
           col_expr
     | Sized (SArray _) | Unsized _ | Sized Middle.SizedType.SInt | Sized SReal
       ->
@@ -224,7 +227,8 @@ and pp_transformed_type ppf (pst, trans) =
           Fmt.const (fun ppf -> Fmt.pf ppf "[%a]" pp_expression) row_expr
         else
           Fmt.const
-            (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression row_expr pp_expression)
+            (fun ppf ->
+              Fmt.pf ppf "[%a, %a]" pp_expression row_expr pp_expression )
             col_expr
     | _ -> Fmt.nop
   in

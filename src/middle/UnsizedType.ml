@@ -1,8 +1,7 @@
 open Core_kernel
 open Common.Helpers
 
-type mem_type = AoS | SoA
-[@@deriving sexp, compare, map, hash, fold]
+type mem_type = AoS | SoA [@@deriving sexp, compare, map, hash, fold]
 
 type t =
   | UInt
