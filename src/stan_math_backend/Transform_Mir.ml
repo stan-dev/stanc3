@@ -627,6 +627,14 @@ let trans_prog (p : Program.Typed.t) =
          [log_prob; generate_quantities])
     |> String.Set.to_list
   in
+  let maybe_add_opencl_events_clear =
+    let event_clear_stmt x =
+      Stmt.Fixed.
+        { pattern= NRFunApp (CompilerInternal (FnReadWriteEventsOpenCL x), [])
+        ; meta= Location_span.empty }
+    in
+    List.map ~f:event_clear_stmt opencl_vars
+  in
   let to_matrix_cl_stmts =
     List.concat_map opencl_vars ~f:(fun vident ->
         let vident_sans_opencl =
@@ -656,7 +664,7 @@ let trans_prog (p : Program.Typed.t) =
   in
   let p =
     { p with
-      log_prob
+      log_prob= log_prob @ maybe_add_opencl_events_clear
     ; prog_name= escape_name p.prog_name
     ; prepare_data=
         init_pos

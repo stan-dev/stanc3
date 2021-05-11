@@ -21,6 +21,7 @@ type t =
   | FnResizeToMatch
   | FnNaN
   | FnDeepCopy
+  | FnReadWriteEventsOpenCL of string
 [@@deriving sexp, hash, compare]
 
 let to_string x = Sexp.to_string (sexp_of_t x) ^ "__"

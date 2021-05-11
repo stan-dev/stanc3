@@ -224,6 +224,7 @@ let math_fn_translations = function
   | FnValidateSize -> Some ("validate_non_negative_index", [])
   | FnValidateSizeSimplex -> Some ("validate_positive_index", [])
   | FnValidateSizeUnitVector -> Some ("validate_unit_vector_index", [])
+  | FnReadWriteEventsOpenCL x -> Some (x ^ ".wait_for_read_write_events", [])
   | _ -> None
 
 let trans_math_fn fname =
