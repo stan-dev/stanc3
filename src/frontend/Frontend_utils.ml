@@ -29,7 +29,10 @@ let get_ast_or_exit ?printed_filename ?(print_warnings = true) filename =
       warnings ;
   match res with
   | Result.Ok ast -> ast
-  | Result.Error err -> Errors.pp Fmt.stderr err ; exit 1
+  | Result.Error err -> (
+    match err with
+    | Errors.Semantic_error _ -> Errors.pp Fmt.stderr err ; exit 1
+    | _ -> Errors.pp Fmt.stderr err ; exit 1 )
 
 let type_ast_or_exit ast =
   try

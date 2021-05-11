@@ -1,5 +1,7 @@
 open Core_kernel
 
+type mem_pattern = AoS | SoA [@@deriving sexp, compare, map, hash, fold]
+
 let option_or_else ~if_none x = Option.first_some x if_none
 let on_snd f (x, y) = (x, f y)
 let on_fst f (x, y) = (f x, y)

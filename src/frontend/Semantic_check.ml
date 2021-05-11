@@ -14,7 +14,7 @@ module Validate = Common.Validation.Make (Semantic_error)
    the checking functions for its children left to right. *)
 
 (* Top level function semantic_check_program declares the AST while operating
-   on (1) a global symbol table vm, and (2) structure of type context_flags_record
+   on (1) a global symbol table virt_table, and (2) structure of type context_flags_record
    to communicate information down the AST. *)
 
 let check_of_compatible_return_type rt1 srt2 =
@@ -45,7 +45,7 @@ type originblock =
 let check_that_all_functions_have_definition = ref true
 
 let model_name = ref ""
-let vm = Symbol_table.initialize ()
+let virt_table = Symbol_table.initialize ()
 
 (* Record structure holding flags and other markers about context to be
    used for error reporting. *)
@@ -131,7 +131,7 @@ let check_fresh_variable_basic id is_udf =
       else
         Semantic_error.ident_has_unnormalized_suffix id.id_loc id.name |> error
     else
-      match Symbol_table.look vm id.name with
+      match Symbol_table.look virt_table id.name with
       | Some _ -> Semantic_error.ident_in_use id.id_loc id.name |> error
       | None -> ok ())
 
@@ -150,9 +150,9 @@ let semantic_check_assignmentoperator op = Validate.ok op
 let semantic_check_autodifftype at = Validate.ok at
 
 (* Probably nothing to do here *)
-let rec semantic_check_unsizedtype : UnsizedType.t -> unit Validate.t =
-  function
-  | UFun (l, rt, _) ->
+let rec semantic_check_unsizedtype (ut : UnsizedType.t) : unit Validate.t =
+  match ut with
+  | UFun (l, rt, _, _) ->
       (* fold over argument types accumulating errors with initial state
        given by validating the return type *)
       List.fold
@@ -166,8 +166,8 @@ let rec semantic_check_unsizedtype : UnsizedType.t -> unit Validate.t =
   | UArray ut -> semantic_check_unsizedtype ut
   | _ -> Validate.ok ()
 
-and semantic_check_returntype : UnsizedType.returntype -> unit Validate.t =
-  function
+and semantic_check_returntype (rt : UnsizedType.returntype) : unit Validate.t =
+  match rt with
   | Void -> Validate.ok ()
   | ReturnType ut -> semantic_check_unsizedtype ut
 
@@ -208,12 +208,15 @@ let semantic_check_operator _ = Validate.ok ()
 
 (* == Expressions =========================================================== *)
 
-let arg_type x = (x.emeta.ad_level, x.emeta.type_)
-let get_arg_types = List.map ~f:arg_type
+let arg_type (x : Ast.typed_expression) = (x.emeta.ad_level, x.emeta.type_)
+
+let get_arg_types :
+    Ast.typed_expression list -> Stan_math_signatures.fun_arg list =
+  List.map ~f:arg_type
 
 (* -- Function application -------------------------------------------------- *)
 
-let semantic_check_fn_map_rect ~loc id es =
+let semantic_check_fn_map_rect ~loc id (es : typed_expression list) =
   Validate.(
     match (id.name, es) with
     | "map_rect", {expr= Variable arg1; _} :: _
@@ -271,17 +274,33 @@ let semantic_check_unnormalized cf ~loc id =
     then Semantic_error.invalid_unnormalized_fn loc |> error
     else ok ())
 
-let mk_fun_app ~is_cond_dist (x, y, z) =
+let mk_fun_app ~(is_cond_dist : bool)
+    ((x, y, z) : fun_kind * identifier * typed_expression list) =
   if is_cond_dist then CondDistApp (x, y, z) else FunApp (x, y, z)
 
 (* Regular function application *)
 let semantic_check_fn_normal ~is_cond_dist ~loc id es =
   Validate.(
-    match Symbol_table.look vm (Utils.normalized_name id.name) with
-    | Some (_, UnsizedType.UFun (_, Void, _)) ->
+    let unsuffix_name =
+      Symbol_table.look virt_table (Utils.normalized_name id.name)
+    in
+    match unsuffix_name with
+    | Some
+        ( (_ : originblock)
+        , UnsizedType.UFun
+            ( (_ : Stan_math_signatures.fun_arg list)
+            , Void
+            , (_ : bool Fun_kind.suffix)
+            , (_ : Common.Helpers.mem_pattern) ) ) ->
         Semantic_error.returning_fn_expected_nonreturning_found loc id.name
         |> error
-    | Some (_, UFun (listedtypes, rt, _))
+    | Some
+        ( (_ : originblock)
+        , UFun
+            ( listedtypes
+            , rt
+            , (_ : bool Fun_kind.suffix)
+            , (_ : Common.Helpers.mem_pattern) ) )
       when not
              (UnsizedType.check_compatible_arguments_mod_conv id.name
                 listedtypes (get_arg_types es)) ->
@@ -290,18 +309,30 @@ let semantic_check_fn_normal ~is_cond_dist ~loc id es =
         |> Semantic_error.illtyped_userdefined_fn_app loc id.name listedtypes
              rt
         |> error
-    | Some (_, UFun (_, ReturnType ut, FnLpdf _))
+    | Some
+        ( (_ : originblock)
+        , UFun
+            ( (_ : Stan_math_signatures.fun_arg list)
+            , ReturnType ut
+            , FnLpdf (_ : bool)
+            , (_ : Common.Helpers.mem_pattern) ) )
       when Utils.is_unnormalized_distribution id.name ->
         mk_typed_expression
           ~expr:(mk_fun_app ~is_cond_dist (UserDefined (FnLpdf true), id, es))
           ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
         |> ok
-    | Some (_, UFun (_, ReturnType ut, suffix)) ->
+    | Some
+        ( (_ : originblock)
+        , UFun
+            ( (_ : Stan_math_signatures.fun_arg list)
+            , ReturnType ut
+            , suffix
+            , (_ : Common.Helpers.mem_pattern) ) ) ->
         mk_typed_expression
           ~expr:(mk_fun_app ~is_cond_dist (UserDefined suffix, id, es))
           ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
         |> ok
-    | Some _ ->
+    | Some (_ : originblock * UnsizedType.t) ->
         (* Check that Funaps are actually functions *)
         Semantic_error.returning_fn_expected_nonfn_found loc id.name |> error
     | None ->
@@ -323,7 +354,7 @@ let semantic_check_fn_stan_math ~is_cond_dist ~loc id es =
              (StanLib (Fun_kind.suffix_from_name id.name), id, es))
         ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
       |> Validate.ok
-  | _ ->
+  | (_ : UnsizedType.returntype option) ->
       es
       |> List.map ~f:(fun e -> e.emeta.type_)
       |> Semantic_error.illtyped_stanlib_fn_app loc id.name
@@ -344,7 +375,8 @@ let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
               ( ((_, sliced_arg_fun_type) as sliced_arg_fun)
                 :: (_, UInt) :: (_, UInt) :: fun_args
               , ReturnType UReal
-              , (FnPlain | FnLpdf _) ); _ }; _ }
+              , (FnPlain | FnLpdf _)
+              , _ ); _ }; _ }
     :: sliced :: {emeta= {type_= UInt; _}; _} :: args
     when arg_match sliced_arg_fun sliced
          && List.mem Stan_math_signatures.reduce_sum_slice_types
@@ -392,8 +424,8 @@ let semantic_check_variadic_ode ~is_cond_dist ~loc id es =
   in
   match es with
   | { emeta=
-        {type_= UnsizedType.UFun (fun_args, ReturnType return_type, FnPlain); _}; _
-    }
+        { type_= UnsizedType.UFun (fun_args, ReturnType return_type, FnPlain, _); _
+        }; _ }
     :: args ->
       let num_of_mandatory_args =
         if Stan_math_signatures.is_variadic_ode_tol_fn id.name then 6 else 3
@@ -432,7 +464,7 @@ let fn_kind_from_application id es =
     Stan_math_signatures.stan_math_returntype id.name
       (List.map ~f:(fun x -> (x.emeta.ad_level, x.emeta.type_)) es)
     <> None
-    || Symbol_table.look vm id.name = None
+    || Symbol_table.look virt_table id.name = None
        && Stan_math_signatures.is_stan_math_function_name id.name
   then StanLib suffix
   else UserDefined suffix
@@ -527,7 +559,9 @@ let semantic_check_postfixop loc op e =
 (* -- Variables ------------------------------------------------------------- *)
 let semantic_check_variable cf loc id =
   Validate.(
-    match Symbol_table.look vm (Utils.stdlib_distribution_name id.name) with
+    match
+      Symbol_table.look virt_table (Utils.stdlib_distribution_name id.name)
+    with
     | None when not (Stan_math_signatures.is_stan_math_function_name id.name)
       ->
         Semantic_error.ident_not_in_scope loc id.name |> error
@@ -545,9 +579,10 @@ let semantic_check_variable cf loc id =
                 ( (cf.in_fun_def && (cf.in_udf_dist_def || cf.in_lp_fun_def))
                 || cf.current_block = Model ) ->
         Semantic_error.invalid_unnormalized_fn loc |> error
-    | Some (originblock, UFun (args, rt, FnLpdf _)) ->
+    | Some (originblock, UFun (args, rt, FnLpdf _, support_soa)) ->
         let type_ =
-          UnsizedType.UFun (args, rt, Fun_kind.suffix_from_name id.name)
+          UnsizedType.UFun
+            (args, rt, Fun_kind.suffix_from_name id.name, support_soa)
         in
         mk_typed_expression ~expr:(Variable id)
           ~ad_level:(calculate_autodifftype cf originblock type_)
@@ -844,14 +879,15 @@ and semantic_check_funapp ~is_cond_dist id es cf emeta =
     |> apply_const (semantic_check_fn_rng cf ~loc:emeta.loc id)
     |> apply_const (semantic_check_unnormalized cf ~loc:emeta.loc id))
 
-and semantic_check_expression_of_int_type cf e name =
+and semantic_check_expression_of_int_type cf (e : untyped_expression) name =
   Validate.(
     semantic_check_expression cf e
     >>= fun ue ->
     if has_int_type ue then ok ue
     else Semantic_error.int_expected ue.emeta.loc name ue.emeta.type_ |> error)
 
-and semantic_check_expression_of_int_or_real_type cf e name =
+and semantic_check_expression_of_int_or_real_type cf (e : untyped_expression)
+    name =
   Validate.(
     semantic_check_expression cf e
     >>= fun ue ->
@@ -860,7 +896,8 @@ and semantic_check_expression_of_int_or_real_type cf e name =
       Semantic_error.int_or_real_expected ue.emeta.loc name ue.emeta.type_
       |> error)
 
-let semantic_check_expression_of_scalar_or_type cf t e name =
+let semantic_check_expression_of_scalar_or_type cf t (e : untyped_expression)
+    name =
   Validate.(
     semantic_check_expression cf e
     >>= fun ue ->
@@ -981,21 +1018,21 @@ let semantic_check_nrfn_target ~loc ~cf id =
 
 let semantic_check_nrfn_normal ~loc id es =
   Validate.(
-    match Symbol_table.look vm id.name with
-    | Some (_, UFun (listedtypes, Void, suffix))
+    match Symbol_table.look virt_table id.name with
+    | Some (_, UFun (listedtypes, Void, suffix, Common.Helpers.AoS))
       when UnsizedType.check_compatible_arguments_mod_conv id.name listedtypes
              (get_arg_types es) ->
         mk_typed_statement
           ~stmt:(NRFunApp (UserDefined suffix, id, es))
           ~return_type:NoReturnType ~loc
         |> ok
-    | Some (_, UFun (listedtypes, Void, _)) ->
+    | Some (_, UFun (listedtypes, Void, _, _)) ->
         es
         |> List.map ~f:type_of_expr_typed
         |> Semantic_error.illtyped_userdefined_fn_app loc id.name listedtypes
              Void
         |> error
-    | Some (_, UFun (_, ReturnType _, _)) ->
+    | Some (_, UFun (_, ReturnType _, _, _)) ->
         Semantic_error.nonreturning_fn_expected_returning_found loc id.name
         |> error
     | Some _ ->
@@ -1043,7 +1080,7 @@ let semantic_check_nr_fn_app ~loc ~cf id es =
 
 let semantic_check_assignment_read_only ~loc id =
   Validate.(
-    if Symbol_table.get_read_only vm id.name then
+    if Symbol_table.get_read_only virt_table id.name then
       Semantic_error.cannot_assign_to_read_only loc id.name |> error
     else ok ())
 
@@ -1052,7 +1089,9 @@ let semantic_check_assignment_read_only ~loc id =
 *)
 let semantic_check_assignment_global ~loc ~cf ~block id =
   Validate.(
-    if (not (Symbol_table.is_global vm id.name)) || block = cf.current_block
+    if
+      (not (Symbol_table.is_global virt_table id.name))
+      || block = cf.current_block
     then ok ()
     else Semantic_error.cannot_assign_to_global loc id.name |> error)
 
@@ -1096,7 +1135,7 @@ let semantic_check_assignment ~loc ~cf assign_lhs assign_op assign_rhs =
   and assop = semantic_check_assignmentoperator assign_op
   and rhs = semantic_check_expression cf assign_rhs
   and block =
-    Symbol_table.look vm assign_id.name
+    Symbol_table.look virt_table assign_id.name
     |> Option.map ~f:(fun (block, _) -> Validate.ok block)
     |> Option.value
          ~default:
@@ -1194,8 +1233,8 @@ let semantic_check_sampling_distribution ~loc id arguments =
     && name <> "multiply"
   in
   let is_name_w_suffix_udf_sampling_dist suffix =
-    match Symbol_table.look vm (name ^ suffix) with
-    | Some (Functions, UFun (listedtypes, ReturnType UReal, FnLpdf _)) ->
+    match Symbol_table.look virt_table (name ^ suffix) with
+    | Some (Functions, UFun (listedtypes, ReturnType UReal, FnLpdf _, _)) ->
         UnsizedType.check_compatible_arguments_mod_conv name listedtypes
           argumenttypes
     | _ -> false
@@ -1219,8 +1258,8 @@ let cumulative_density_is_defined id arguments =
     Stan_math_signatures.stan_math_returntype (name ^ suffix) argumenttypes
     |> Option.value_map ~default:false ~f:is_real_rt
   and valid_arg_types_for_suffix suffix =
-    match Symbol_table.look vm (name ^ suffix) with
-    | Some (Functions, UFun (listedtypes, ReturnType UReal, FnPlain)) ->
+    match Symbol_table.look virt_table (name ^ suffix) with
+    | Some (Functions, UFun (listedtypes, ReturnType UReal, FnPlain, _)) ->
         UnsizedType.check_compatible_arguments_mod_conv name listedtypes
           argumenttypes
     | _ -> false
@@ -1405,17 +1444,18 @@ and semantic_check_while ~loc ~cf e s =
 
 (* -- For Statements -------------------------------------------------------- *)
 and semantic_check_loop_body ~cf loop_var loop_var_ty loop_body =
-  Symbol_table.begin_scope vm ;
+  Symbol_table.begin_scope virt_table ;
   let is_fresh_var = check_fresh_variable loop_var false in
-  Symbol_table.enter vm loop_var.name (cf.current_block, loop_var_ty) ;
+  Symbol_table.enter virt_table loop_var.name (cf.current_block, loop_var_ty) ;
   (* Check that function args and loop identifiers are not modified in
       function. (passed by const ref) *)
-  Symbol_table.set_read_only vm loop_var.name ;
+  Symbol_table.set_read_only virt_table loop_var.name ;
   let us =
     semantic_check_statement {cf with loop_depth= cf.loop_depth + 1} loop_body
     |> Validate.apply_const is_fresh_var
   in
-  Symbol_table.end_scope vm ; us
+  Symbol_table.end_scope virt_table ;
+  us
 
 and semantic_check_for ~loc ~cf loop_var lower_bound_e upper_bound_e loop_body
     =
@@ -1502,14 +1542,14 @@ and try_compute_block_statement_returntype loc srt1 srt2 =
       Validate.ok AnyReturnType
 
 and semantic_check_block ~loc ~cf stmts =
-  Symbol_table.begin_scope vm ;
+  Symbol_table.begin_scope virt_table ;
   (* Any statements after a break or continue or return or reject
      do not count for the return type.
   *)
   let validated_stmts =
     List.map ~f:(semantic_check_statement cf) stmts |> Validate.sequence
   in
-  Symbol_table.end_scope vm ;
+  Symbol_table.end_scope virt_table ;
   Validate.(
     validated_stmts
     >>= fun xs ->
@@ -1524,14 +1564,14 @@ and semantic_check_block ~loc ~cf stmts =
         mk_typed_statement ~stmt:(Block xs) ~return_type ~loc ))
 
 and semantic_check_profile ~loc ~cf name stmts =
-  Symbol_table.begin_scope vm ;
+  Symbol_table.begin_scope virt_table ;
   (* Any statements after a break or continue or return or reject
      do not count for the return type.
   *)
   let validated_stmts =
     List.map ~f:(semantic_check_statement cf) stmts |> Validate.sequence
   in
-  Symbol_table.end_scope vm ;
+  Symbol_table.end_scope virt_table ;
   Validate.(
     validated_stmts
     >>= fun xs ->
@@ -1604,7 +1644,7 @@ and semantic_check_var_decl ~loc ~cf sized_ty trans id init is_global =
     |> apply_const (check_fresh_variable id false)
     >>= fun (ust, utrans) ->
     let ut = SizedType.to_unsized ust in
-    Symbol_table.enter vm id.name (cf.current_block, ut) ;
+    Symbol_table.enter virt_table id.name (cf.current_block, ut) ;
     semantic_check_var_decl_initial_value ~loc ~cf id init
     |> apply_const (semantic_check_var_decl_bounds ~loc is_global ust utrans)
     |> apply_const (semantic_check_transformed_param_ty ~loc ~cf is_global ut)
@@ -1623,13 +1663,13 @@ and semantic_check_var_decl ~loc ~cf sized_ty trans id init is_global =
 and semantic_check_fundef_overloaded ~loc id arg_tys rt =
   Validate.(
     (* User defined functions cannot be overloaded *)
-    if Symbol_table.check_is_unassigned vm id.name then
-      match Symbol_table.look vm id.name with
-      | Some (Functions, UFun (arg_tys', rt', _))
+    if Symbol_table.check_is_unassigned virt_table id.name then
+      match Symbol_table.look virt_table id.name with
+      | Some (Functions, UFun (arg_tys', rt', _, _))
         when arg_tys' = arg_tys && rt' = rt ->
           ok ()
       | _ ->
-          Symbol_table.look vm id.name
+          Symbol_table.look virt_table id.name
           |> Option.map ~f:snd
           |> Semantic_error.mismatched_fn_def_decl loc id.name
           |> error
@@ -1640,13 +1680,13 @@ and semantic_check_fundef_decl ~loc id body =
   Validate.(
     match body with
     | {stmt= Skip; _} ->
-        if Symbol_table.check_is_unassigned vm id.name then
+        if Symbol_table.check_is_unassigned virt_table id.name then
           error @@ Semantic_error.fn_decl_without_def loc
         else
-          let () = Symbol_table.set_is_unassigned vm id.name in
+          let () = Symbol_table.set_is_unassigned virt_table id.name in
           ok ()
     | _ ->
-        Symbol_table.set_is_assigned vm id.name ;
+        Symbol_table.set_is_assigned virt_table id.name ;
         ok ())
 
 and semantic_check_fundef_dist_rt ~loc id return_ty =
@@ -1715,19 +1755,19 @@ and semantic_check_fundef_distinct_arg_ids ~loc arg_names =
 and semantic_check_fundef_return_tys ~loc id return_type body =
   Validate.(
     if
-      Symbol_table.check_is_unassigned vm id.name
+      Symbol_table.check_is_unassigned virt_table id.name
       || check_of_compatible_return_type return_type body.smeta.return_type
     then ok ()
     else error @@ Semantic_error.incompatible_return_types loc)
 
 and semantic_check_fundef ~loc ~cf return_ty id args body =
   let uargs =
-    List.map args ~f:(fun (at, ut, id) ->
+    List.map args ~f:(fun (ad_type, unsized_type, id) ->
         Validate.(
-          semantic_check_autodifftype at
-          |> apply_const (semantic_check_unsizedtype ut)
+          semantic_check_autodifftype ad_type
+          |> apply_const (semantic_check_unsizedtype unsized_type)
           |> apply_const (semantic_check_identifier id)
-          |> map ~f:(fun at -> (at, ut, id))) )
+          |> map ~f:(fun ad_t -> (ad_t, unsized_type, id))) )
     |> Validate.sequence
   in
   Validate.(
@@ -1736,24 +1776,38 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
     |> apply_const (semantic_check_returntype return_ty)
     >>= fun uargs ->
     let urt = return_ty in
-    let uarg_types = List.map ~f:(fun (w, y, _) -> (w, y)) uargs in
-    let uarg_identifiers = List.map ~f:(fun (_, _, z) -> z) uargs in
-    let uarg_names = List.map ~f:(fun x -> x.name) uarg_identifiers in
+    let uarg_types =
+      List.map
+        ~f:(fun (ad_type, unsized_type, (_ : identifier)) ->
+          (ad_type, unsized_type) )
+        uargs
+    in
+    let uarg_identifiers =
+      List.map
+        ~f:(fun ((_ : UnsizedType.autodifftype), (_ : UnsizedType.t), z) -> z)
+        uargs
+    in
+    let uarg_names = List.map ~f:(fun id -> id.name) uarg_identifiers in
     semantic_check_fundef_overloaded ~loc id uarg_types urt
     |> apply_const (semantic_check_fundef_decl ~loc id body)
     >>= fun _ ->
     (* WARNING: SIDE EFFECTING *)
-    Symbol_table.enter vm id.name
-      (Functions, UFun (uarg_types, urt, Fun_kind.suffix_from_name id.name)) ;
+    Symbol_table.enter virt_table id.name
+      ( Functions
+      , UFun
+          ( uarg_types
+          , urt
+          , Fun_kind.suffix_from_name id.name
+          , Common.Helpers.AoS ) ) ;
     (* Check that function args and loop identifiers are not modified in
        function. (passed by const ref)*)
-    List.iter ~f:(Symbol_table.set_read_only vm) uarg_names ;
+    List.iter ~f:(Symbol_table.set_read_only virt_table) uarg_names ;
     semantic_check_fundef_dist_rt ~loc id urt
     |> apply_const (semantic_check_pdf_fundef_first_arg_ty ~loc id uarg_types)
     |> apply_const (semantic_check_pmf_fundef_first_arg_ty ~loc id uarg_types)
     >>= fun _ ->
     (* WARNING: SIDE EFFECTING *)
-    Symbol_table.begin_scope vm ;
+    Symbol_table.begin_scope virt_table ;
     List.map ~f:(fun x -> check_fresh_variable x false) uarg_identifiers
     |> sequence
     |> apply_const (semantic_check_fundef_distinct_arg_ids ~loc uarg_names)
@@ -1767,7 +1821,9 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
     *)
     (* WARNING: SIDE EFFECTING *)
     let _ : unit Base.List.Or_unequal_lengths.t =
-      List.iter2 ~f:(Symbol_table.enter vm) uarg_names
+      List.iter2
+        ~f:(Symbol_table.enter virt_table)
+        uarg_names
         (List.map
            ~f:(function
              | UnsizedType.DataOnly, ut -> (Data, ut)
@@ -1792,7 +1848,7 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
     semantic_check_fundef_return_tys ~loc id urt ub
     |> map ~f:(fun _ ->
            (* WARNING: SIDE EFFECTING *)
-           Symbol_table.end_scope vm ;
+           Symbol_table.end_scope virt_table ;
            let stmt =
              FunDef {returntype= urt; funname= id; arguments= uargs; body= ub}
            in
@@ -1862,7 +1918,7 @@ let check_fun_def_body_in_block = function
 let semantic_check_functions_have_defn function_block_stmts_opt =
   Validate.(
     if
-      Symbol_table.check_some_id_is_unassigned vm
+      Symbol_table.check_some_id_is_unassigned virt_table
       && !check_that_all_functions_have_definition
     then
       match function_block_stmts_opt with
@@ -1889,7 +1945,7 @@ let semantic_check_program
     ; generatedquantitiesblock= gb } =
   (* NB: We always want to make sure we start with an empty symbol table, in
      case we are processing multiple files in one run. *)
-  unsafe_clear_symbol_table vm ;
+  unsafe_clear_symbol_table virt_table ;
   let cf =
     { current_block= Functions
     ; in_toplevel_decl= false
@@ -1911,9 +1967,9 @@ let semantic_check_program
   let upb = semantic_check_ostatements_in_block ~cf Param pb in
   let utpb = semantic_check_ostatements_in_block ~cf TParam tpb in
   (* Model top level variables only assigned and read in model  *)
-  Symbol_table.begin_scope vm ;
+  Symbol_table.begin_scope virt_table ;
   let umb = semantic_check_ostatements_in_block ~cf Model mb in
-  Symbol_table.end_scope vm ;
+  Symbol_table.end_scope virt_table ;
   let ugb = semantic_check_ostatements_in_block ~cf GQuant gb in
   let mk_typed_prog ufb udb utdb upb utpb umb ugb : Ast.typed_program =
     { functionblock= ufb

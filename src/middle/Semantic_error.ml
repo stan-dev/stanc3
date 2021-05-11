@@ -16,14 +16,10 @@ module TypeError = struct
     | IllTypedAssignment of Operator.t * UnsizedType.t * UnsizedType.t
     | IllTypedTernaryIf of UnsizedType.t * UnsizedType.t * UnsizedType.t
     | IllTypedReduceSum of
-        string
-        * UnsizedType.t list
-        * (UnsizedType.autodifftype * UnsizedType.t) list
+        string * UnsizedType.t list * Stan_math_signatures.fun_arg list
     | IllTypedReduceSumGeneric of string * UnsizedType.t list
     | IllTypedVariadicODE of
-        string
-        * UnsizedType.t list
-        * (UnsizedType.autodifftype * UnsizedType.t) list
+        string * UnsizedType.t list * Stan_math_signatures.fun_arg list
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
     | ReturningFnExpectedUndeclaredIdentFound of string
@@ -33,7 +29,7 @@ module TypeError = struct
     | IllTypedStanLibFunctionApp of string * UnsizedType.t list
     | IllTypedUserDefinedFunctionApp of
         string
-        * (UnsizedType.autodifftype * UnsizedType.t) list
+        * Stan_math_signatures.fun_arg list
         * UnsizedType.returntype
         * UnsizedType.t list
     | IllTypedBinaryOperator of Operator.t * UnsizedType.t * UnsizedType.t
@@ -41,7 +37,15 @@ module TypeError = struct
     | IllTypedPostfixOperator of Operator.t * UnsizedType.t
     | NotIndexable of UnsizedType.t * int
 
-  let pp ppf = function
+  (*
+    | NotVarMatrixFunCompatible of
+        string * UnsizedType.t list * Location_span.t
+    *)
+  let pp ppf err =
+    match err with
+    (*
+    | NotVarMatrixFunCompatible (_, _, _) -> Fmt.pf ppf "Yeesh!!"
+    *)
     | MismatchedReturnTypes (rt1, rt2) ->
         Fmt.pf ppf
           "Branches of function definition need to have the same return type. \
@@ -119,7 +123,8 @@ module TypeError = struct
                   ( List.hd_exn args :: (AutoDiffable, UInt)
                     :: (AutoDiffable, UInt) :: List.tl_exn args
                   , ReturnType UReal
-                  , FnPlain ) ]
+                  , FnPlain
+                  , Common.Helpers.AoS ) ]
             ; first; [UInt]; rest ]
         in
         Fmt.pf ppf
@@ -164,7 +169,8 @@ module TypeError = struct
           [ UnsizedType.UFun
               ( Stan_math_signatures.variadic_ode_mandatory_fun_args @ args
               , ReturnType Stan_math_signatures.variadic_ode_fun_return_type
-              , FnPlain ) ]
+              , FnPlain
+              , Common.Helpers.AoS ) ]
           @ types Stan_math_signatures.variadic_ode_mandatory_arg_types
           @ optional_tol_args @ types args
         in
@@ -271,7 +277,7 @@ module TypeError = struct
            signatures:%a\n\
            @[<h>Instead supplied arguments of incompatible type: %a.@]"
           name UnsizedType.pp
-          (UFun (listed_tys, return_ty, FnPlain))
+          (UFun (listed_tys, return_ty, FnPlain, Common.Helpers.AoS))
           Fmt.(list UnsizedType.pp ~sep:comma)
           arg_tys
     | IllTypedBinaryOperator (op, lt, rt) ->

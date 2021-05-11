@@ -79,7 +79,7 @@ let%expect_test "read data" =
         (decl_type
          (Sized
           (SArray
-           (SMatrix
+           (SMatrix SoA
             ((pattern (Lit Int 10))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
             ((pattern (Lit Int 20))
@@ -98,7 +98,7 @@ let%expect_test "read param" =
         (decl_type
          (Sized
           (SArray
-           (SMatrix
+           (SMatrix SoA
             ((pattern (Lit Int 10))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
             ((pattern (Lit Int 20))
@@ -142,7 +142,7 @@ let%expect_test "gen quant" =
         (decl_type
          (Sized
           (SArray
-           (SMatrix
+           (SMatrix SoA
             ((pattern (Lit Int 10))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
             ((pattern (Lit Int 20))
