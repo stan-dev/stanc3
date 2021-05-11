@@ -288,7 +288,10 @@ module Helpers = struct
         let rows =
           Expr.Fixed.
             { meta= emeta'
-            ; pattern= FunApp (StanLib ("rows", FnPlain), [iteratee]) }
+            ; pattern=
+                FunApp
+                  (StanLib ("rows", FnPlain, Common.Helpers.AoS), [iteratee])
+            }
         in
         mkfor rows (fun e -> for_each bodyfn e smeta) iteratee smeta
     | UArray _ -> mkfor (len iteratee) bodyfn iteratee smeta

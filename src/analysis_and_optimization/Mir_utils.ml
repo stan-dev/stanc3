@@ -30,7 +30,8 @@ let rec num_expr_value (v : Expr.Typed.t) : (float * string) option =
   | {pattern= Fixed.Pattern.Lit (Real, str); _}
    |{pattern= Fixed.Pattern.Lit (Int, str); _} ->
       Some (float_of_string str, str)
-  | {pattern= Fixed.Pattern.FunApp (StanLib ("PMinus__", FnPlain), [v]); _} -> (
+  | {pattern= Fixed.Pattern.FunApp (StanLib ("PMinus__", FnPlain, _), [v]); _}
+  -> (
     match num_expr_value v with
     | Some (v, s) -> Some (-.v, "-" ^ s)
     | None -> None )
@@ -294,7 +295,7 @@ let expr_assigned_var Expr.Fixed.({pattern; _}) =
 (** See interface file *)
 let rec summation_terms (Expr.Fixed.({pattern; _}) as rhs) =
   match pattern with
-  | FunApp (StanLib ("Plus__", FnPlain), [e1; e2]) ->
+  | FunApp (StanLib ("Plus__", FnPlain, _), [e1; e2]) ->
       List.append (summation_terms e1) (summation_terms e2)
   | _ -> [rhs]
 

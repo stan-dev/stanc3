@@ -4,7 +4,7 @@ type 'propto suffix = FnPlain | FnRng | FnLpdf of 'propto | FnTarget
 [@@deriving compare, sexp, hash, map]
 
 type t =
-  | StanLib of string * bool suffix
+  | StanLib of string * bool suffix * Common.Helpers.mem_pattern
   | CompilerInternal of Internal_fun.t
   | UserDefined of string * bool suffix
 [@@deriving compare, sexp, hash]
@@ -25,8 +25,8 @@ let suffix_from_name fname =
   else FnPlain
 
 let pp ppf = function
-  | StanLib (s, FnLpdf true) | UserDefined (s, FnLpdf true) ->
+  | StanLib (s, FnLpdf true, _) | UserDefined (s, FnLpdf true) ->
       Fmt.string ppf
         (Utils.with_unnormalized_suffix s |> Option.value ~default:s)
-  | StanLib (s, _) | UserDefined (s, _) -> Fmt.string ppf s
+  | StanLib (s, _, _) | UserDefined (s, _) -> Fmt.string ppf s
   | CompilerInternal internal -> Internal_fun.pp ppf internal

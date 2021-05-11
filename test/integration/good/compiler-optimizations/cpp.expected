@@ -26234,7 +26234,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       inline_sym26__ = std::numeric_limits<int>::min();
       
       for (int inline_sym27__ = 1; inline_sym27__ <= 1; ++inline_sym27__) {
-        inline_sym25__ = normal_lpdf<false>(mu, 1.0, 1);
+        inline_sym25__ = normal_lpdf<propto__>(mu, 1.0, 1);
         break;
       }
       tp = inline_sym25__;
@@ -26328,7 +26328,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       inline_sym14__ = std::numeric_limits<int>::min();
       
       for (int inline_sym15__ = 1; inline_sym15__ <= 1; ++inline_sym15__) {
-        inline_sym13__ = normal_lpdf<false>(mu, 1.0, 1);
+        inline_sym13__ = normal_lpdf<propto__>(mu, 1.0, 1);
         break;
       }
       tp = inline_sym13__;
@@ -26352,7 +26352,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
         inline_sym18__ = std::numeric_limits<int>::min();
         
         for (int inline_sym19__ = 1; inline_sym19__ <= 1; ++inline_sym19__) {
-          inline_sym17__ = normal_lpdf<false>(mu, 0.5, 1);
+          inline_sym17__ = normal_lpdf<propto__>(mu, 0.5, 1);
           break;
         }
         if (inline_sym20__) {
@@ -26371,7 +26371,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
       inline_sym23__ = std::numeric_limits<int>::min();
       
       for (int inline_sym24__ = 1; inline_sym24__ <= 1; ++inline_sym24__) {
-        inline_sym22__ = poisson_lpmf<false>(n, mu);
+        inline_sym22__ = poisson_lpmf<propto__>(n, mu);
         break;
       }
       lbar = inline_sym22__;

@@ -21,7 +21,9 @@ module Fixed = struct
       | Var varname -> Fmt.string ppf varname
       | Lit (Str, str) -> Fmt.pf ppf "%S" str
       | Lit (_, str) -> Fmt.string ppf str
-      | FunApp (StanLib (name, FnPlain), [lhs; rhs])
+      | FunApp
+          ( StanLib (name, FnPlain, (_ : Common.Helpers.mem_pattern))
+          , [lhs; rhs] )
         when Option.is_some (Operator.of_string_opt name) ->
           Fmt.pf ppf "(%a %a %a)" pp_e lhs Operator.pp
             (Option.value_exn (Operator.of_string_opt name))
@@ -163,8 +165,12 @@ module Helpers = struct
   let one = int 1
 
   let binop e1 op e2 =
+    (* AoS here because all operators should support var matrix*)
     { Fixed.meta= Typed.Meta.empty
-    ; pattern= FunApp (StanLib (Operator.to_string op, FnPlain), [e1; e2]) }
+    ; pattern=
+        FunApp
+          ( StanLib (Operator.to_string op, FnPlain, Common.Helpers.AoS)
+          , [e1; e2] ) }
 
   let loop_bottom = one
 
