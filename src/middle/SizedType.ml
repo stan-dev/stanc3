@@ -1,24 +1,12 @@
 open Core_kernel
 open Common
 
-(**
-  * This type represents whether or not an autodiff type can be represented 
-  * as an Array of Structs (AoS) or as a Struct of Arrays. This applies to 
-  * matrices, vectors, row vectors, and arrays of those types.
-  * In the C++ this allows us to swap out matrix types from an
-  * Eigen::Matrix<stan::math::var_value<double>, Rows, Cols> to an 
-  * stan::math::var_value<Eigen::Matrix<double, Rows, Cols>>.
-  * (fyi a var in the C++ code is an alias for var_value<double>)
-  *
- **)
-type mem_type = AoS | SoA [@@deriving sexp, compare, map, hash, fold]
-
 type 'a t =
   | SInt
   | SReal
-  | SVector of mem_type * 'a
-  | SRowVector of mem_type * 'a
-  | SMatrix of mem_type * 'a * 'a
+  | SVector of Common.Helpers.mem_pattern * 'a
+  | SRowVector of Common.Helpers.mem_pattern * 'a
+  | SMatrix of Common.Helpers.mem_pattern * 'a * 'a
   | SArray of 'a t * 'a
 [@@deriving sexp, compare, map, hash, fold]
 
