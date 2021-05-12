@@ -14,7 +14,7 @@ type 'a fun_def =
       (* If fdbody is None, this is a function declaration without body. *)
   ; fdbody: 'a option
   ; fdloc: Location_span.t sexp_opaque [@compare.ignore] }
-[@@deriving compare, hash, map, sexp, map, fold]
+[@@deriving compare, hash, map, sexp, fold]
 
 type io_block = Parameters | TransformedParameters | GeneratedQuantities
 [@@deriving sexp, hash]
