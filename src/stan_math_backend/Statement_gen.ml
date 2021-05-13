@@ -345,15 +345,6 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
   | Block ls -> pp_block ppf (pp_stmt_list, ls)
   | SList ls -> pp_stmt_list ppf ls
   | Decl {decl_adtype; decl_id; decl_type= Type.Sized sized_type} ->
-      let pp_unsized_decl ppf (vident, ut, adtype) =
-        let pp_type =
-          match (Transform_Mir.is_opencl_var vident, ut) with
-          | _, UnsizedType.(UInt | UReal) | false, _ -> pp_unsizedtype_local
-          | true, UArray UInt -> fun ppf _ -> pf ppf "matrix_cl<int>"
-          | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>"
-        in
-        pf ppf "%a %s;" pp_type (adtype, ut) vident
-      in
       let pp_var_decl ppf (name, st, adtype) =
         let ut = SizedType.to_unsized st in
         let pp_shim ppf (adtype, st) =
