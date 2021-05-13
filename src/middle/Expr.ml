@@ -69,7 +69,7 @@ module Typed = struct
   module Meta = struct
     type t =
       { type_: UnsizedType.t
-      ; loc: Location_span.t sexp_opaque [@compare.ignore]
+      ; loc: Location_span.t [@sexp.opaque] [@compare.ignore]
       ; adlevel: UnsizedType.autodifftype }
     [@@deriving compare, create, sexp, hash]
 
@@ -92,7 +92,7 @@ module Labelled = struct
   module Meta = struct
     type t =
       { type_: UnsizedType.t
-      ; loc: Location_span.t sexp_opaque [@compare.ignore]
+      ; loc: Location_span.t [@sexp.opaque] [@compare.ignore]
       ; adlevel: UnsizedType.autodifftype
       ; label: Label.Int_label.t [@compare.ignore] }
     [@@deriving compare, create, sexp, hash]
