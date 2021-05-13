@@ -96,18 +96,19 @@ let reduce_sum_slice_types =
 
 (* Variadic ODE *)
 let variadic_ode_adjoint_ctl_tol_arg_types =
-  [ (UnsizedType.AutoDiffable, UnsizedType.UReal) (* real rel_tol_f *)
-  ; (AutoDiffable, UVector) (* vector abs_tol_f *)
-  ; (AutoDiffable, UReal) (* real rel_tol_b *)
-  ; (AutoDiffable, UVector) (* real abs_tol_b *)
-  ; (AutoDiffable, UReal) (* real rel_tol_q *)
-  ; (AutoDiffable, UReal) (* real abs_tol_q *)
+  [ (UnsizedType.AutoDiffable, UnsizedType.UReal)
+    (* real relative_tolerance_forward *)
+  ; (AutoDiffable, UVector) (* vector absolute_tolerance_forward *)
+  ; (AutoDiffable, UReal) (* real relative_tolerance_backward *)
+  ; (AutoDiffable, UVector) (* real absolute_tolerance_backward *)
+  ; (AutoDiffable, UReal) (* real relative_tolerance_quadrature *)
+  ; (AutoDiffable, UReal) (* real absolute_tolerance_quadrature *)
   ; (DataOnly, UInt) (* int max_num_steps *)
-  ; (DataOnly, UInt) (* int num_checkpoints *)
+  ; (DataOnly, UInt) (* int num_steps_between_checkpoints *)
   ; (DataOnly, UInt) (* int interpolation_polynomial *)
-  ; (DataOnly, UInt) (* int solver_f *)
+  ; (DataOnly, UInt) (* int solver_forward *)
   ; (DataOnly, UInt)
-  (* int solver_b *)
+  (* int solver_backward *)
    ]
 
 let variadic_ode_tol_arg_types =
@@ -175,8 +176,7 @@ let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
 let reduce_sum_functions =
   String.Set.of_list ["reduce_sum"; "reduce_sum_static"]
 
-let variadic_ode_adjoint_fn =
-  "ode_adjoint_tol_ctl"
+let variadic_ode_adjoint_fn = "ode_adjoint_tol_ctl"
 
 let variadic_ode_basic_functions =
   String.Set.of_list
