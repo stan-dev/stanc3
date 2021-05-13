@@ -28970,7 +28970,7 @@ class transform_model final : public model_base_crtp<transform_model> {
                0, ds, lp__, n, m, k);
       current_statement__ = 10;
       check_matching_dims("constraint", "p_10", p_10, "upper", ds);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> pv_1;
+      Eigen::Matrix<local_scalar_t__, -1, 1> pv_1;
       pv_1 = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
       stan::math::fill(pv_1, DUMMY_VAR__);
       
@@ -29003,7 +29003,7 @@ class transform_model final : public model_base_crtp<transform_model> {
                dv, lp__, n, m, k);
       current_statement__ = 13;
       check_matching_dims("constraint", "pv_3", pv_3, "upper", dv);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, 1, -1>> pr_1;
+      Eigen::Matrix<local_scalar_t__, 1, -1> pr_1;
       pr_1 = Eigen::Matrix<local_scalar_t__, 1, -1>(k);
       stan::math::fill(pr_1, DUMMY_VAR__);
       
@@ -29036,7 +29036,7 @@ class transform_model final : public model_base_crtp<transform_model> {
                dr, lp__, n, m, k);
       current_statement__ = 16;
       check_matching_dims("constraint", "pr_3", pr_3, "upper", dr);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> pm_1;
+      Eigen::Matrix<local_scalar_t__, -1, -1> pm_1;
       pm_1 = Eigen::Matrix<local_scalar_t__, -1, -1>(m, k);
       stan::math::fill(pm_1, DUMMY_VAR__);
       
@@ -29142,7 +29142,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       assign(tp_10, p_10, "assigning variable tp_10");
       current_statement__ = 28;
       check_matching_dims("constraint", "tp_10", tp_10, "upper", ds);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> tpv_1;
+      Eigen::Matrix<local_scalar_t__, -1, 1> tpv_1;
       tpv_1 = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
       stan::math::fill(tpv_1, DUMMY_VAR__);
       
@@ -29171,7 +29171,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       assign(tpv_3, pv_3, "assigning variable tpv_3");
       current_statement__ = 31;
       check_matching_dims("constraint", "tpv_3", tpv_3, "upper", dv);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, 1, -1>> tpr_1;
+      Eigen::Matrix<local_scalar_t__, 1, -1> tpr_1;
       tpr_1 = Eigen::Matrix<local_scalar_t__, 1, -1>(k);
       stan::math::fill(tpr_1, DUMMY_VAR__);
       
@@ -29200,7 +29200,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       assign(tpr_3, pr_3, "assigning variable tpr_3");
       current_statement__ = 34;
       check_matching_dims("constraint", "tpr_3", tpr_3, "upper", dr);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> tpm_1;
+      Eigen::Matrix<local_scalar_t__, -1, -1> tpm_1;
       tpm_1 = Eigen::Matrix<local_scalar_t__, -1, -1>(m, k);
       stan::math::fill(tpm_1, DUMMY_VAR__);
       

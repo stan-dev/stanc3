@@ -54,12 +54,26 @@ let%expect_test "Factor graph reject example" =
         (((Reject 20) ())
          (((TargetTerm
             ((pattern (Lit Int 1))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+             (meta
+              ((type_ UInt)
+               (loc
+                ((begin_loc
+                  ((filename string) (line_num 29) (col_num 26) (included_from ())))
+                 (end_loc
+                  ((filename string) (line_num 29) (col_num 27) (included_from ())))))
+               (adlevel DataOnly)))))
            22)
           ())
          (((TargetTerm
             ((pattern (Lit Int 1))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+             (meta
+              ((type_ UInt)
+               (loc
+                ((begin_loc
+                  ((filename string) (line_num 29) (col_num 30) (included_from ())))
+                 (end_loc
+                  ((filename string) (line_num 29) (col_num 31) (included_from ())))))
+               (adlevel DataOnly)))))
            22)
           ())))
        (var_map ()))
@@ -106,68 +120,254 @@ let%expect_test "Factor graph complex example" =
       ((pattern
         (FunApp (StanLib Times__ FnPlain SoA)
          (((pattern (Var f))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           (meta
+            ((type_ UReal)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 23) (col_num 28)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 23) (col_num 29)
+                 (included_from ())))))
+             (adlevel AutoDiffable))))
           ((pattern (Var f))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+           (meta
+            ((type_ UReal)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 23) (col_num 30)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 23) (col_num 31)
+                 (included_from ())))))
+             (adlevel AutoDiffable)))))))
+       (meta
+        ((type_ UReal)
+         (loc
+          ((begin_loc
+            ((filename string) (line_num 23) (col_num 28) (included_from ())))
+           (end_loc
+            ((filename string) (line_num 23) (col_num 31) (included_from ())))))
+         (adlevel AutoDiffable)))))
      21)
     ((VVar f)))
    (((TargetTerm
       ((pattern
         (FunApp (StanLib Times__ FnPlain SoA)
          (((pattern (Var z))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           (meta
+            ((type_ UReal)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 23) (col_num 20)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 23) (col_num 21)
+                 (included_from ())))))
+             (adlevel AutoDiffable))))
           ((pattern (Var e))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+           (meta
+            ((type_ UReal)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 23) (col_num 24)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 23) (col_num 25)
+                 (included_from ())))))
+             (adlevel AutoDiffable)))))))
+       (meta
+        ((type_ UReal)
+         (loc
+          ((begin_loc
+            ((filename string) (line_num 23) (col_num 20) (included_from ())))
+           (end_loc
+            ((filename string) (line_num 23) (col_num 25) (included_from ())))))
+         (adlevel AutoDiffable)))))
      21)
     ((VVar a) (VVar b) (VVar c) (VVar d) (VVar e)))
    (((TargetTerm
       ((pattern
         (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
          (((pattern (Var a))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           (meta
+            ((type_ UReal)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 13) (col_num 10)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 13) (col_num 11)
+                 (included_from ())))))
+             (adlevel AutoDiffable))))
           ((pattern (Var b))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           (meta
+            ((type_ UReal)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 13) (col_num 21)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 13) (col_num 22)
+                 (included_from ())))))
+             (adlevel AutoDiffable))))
           ((pattern (Lit Int 1))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+           (meta
+            ((type_ UInt)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 13) (col_num 24)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 13) (col_num 25)
+                 (included_from ())))))
+             (adlevel DataOnly)))))))
+       (meta
+        ((type_ UReal)
+         (loc
+          ((begin_loc
+            ((filename string) (line_num 13) (col_num 10) (included_from ())))
+           (end_loc
+            ((filename string) (line_num 13) (col_num 27) (included_from ())))))
+         (adlevel AutoDiffable)))))
      10)
     ((VVar a) (VVar b)))
    (((TargetTerm
       ((pattern
         (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
          (((pattern (Var b))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           (meta
+            ((type_ UReal)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 12) (col_num 10)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 12) (col_num 11)
+                 (included_from ())))))
+             (adlevel AutoDiffable))))
           ((pattern (Lit Int 0))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+           (meta
+            ((type_ UInt)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 12) (col_num 21)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 12) (col_num 22)
+                 (included_from ())))))
+             (adlevel DataOnly))))
           ((pattern (Lit Int 1))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+           (meta
+            ((type_ UInt)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 12) (col_num 24)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 12) (col_num 25)
+                 (included_from ())))))
+             (adlevel DataOnly)))))))
+       (meta
+        ((type_ UReal)
+         (loc
+          ((begin_loc
+            ((filename string) (line_num 12) (col_num 10) (included_from ())))
+           (end_loc
+            ((filename string) (line_num 12) (col_num 27) (included_from ())))))
+         (adlevel AutoDiffable)))))
      9)
     ((VVar b)))
    (((TargetTerm
       ((pattern
         (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
          (((pattern (Var c))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           (meta
+            ((type_ UReal)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 20) (col_num 10)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 20) (col_num 11)
+                 (included_from ())))))
+             (adlevel AutoDiffable))))
           ((pattern (Var x))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           (meta
+            ((type_ UReal)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 20) (col_num 22)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 20) (col_num 23)
+                 (included_from ())))))
+             (adlevel AutoDiffable))))
           ((pattern (Lit Int 1))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+           (meta
+            ((type_ UInt)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 20) (col_num 25)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 20) (col_num 26)
+                 (included_from ())))))
+             (adlevel DataOnly)))))))
+       (meta
+        ((type_ UReal)
+         (loc
+          ((begin_loc
+            ((filename string) (line_num 20) (col_num 10) (included_from ())))
+           (end_loc
+            ((filename string) (line_num 20) (col_num 28) (included_from ())))))
+         (adlevel AutoDiffable)))))
      17)
     ((VVar a) (VVar c)))
    (((TargetTerm
       ((pattern
         (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
          (((pattern (Var d))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           (meta
+            ((type_ UReal)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 21) (col_num 10)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 21) (col_num 11)
+                 (included_from ())))))
+             (adlevel AutoDiffable))))
           ((pattern (Var c))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           (meta
+            ((type_ UReal)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 21) (col_num 22)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 21) (col_num 23)
+                 (included_from ())))))
+             (adlevel AutoDiffable))))
           ((pattern (Var b))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+           (meta
+            ((type_ UReal)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 21) (col_num 25)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 21) (col_num 26)
+                 (included_from ())))))
+             (adlevel AutoDiffable)))))))
+       (meta
+        ((type_ UReal)
+         (loc
+          ((begin_loc
+            ((filename string) (line_num 21) (col_num 10) (included_from ())))
+           (end_loc
+            ((filename string) (line_num 21) (col_num 28) (included_from ())))))
+         (adlevel AutoDiffable)))))
      18)
     ((VVar b) (VVar c) (VVar d)))))
  (var_map
@@ -176,148 +376,598 @@ let%expect_test "Factor graph complex example" =
        ((pattern
          (FunApp (StanLib Times__ FnPlain SoA)
           (((pattern (Var z))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 23) (col_num 20)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 23) (col_num 21)
+                  (included_from ())))))
+              (adlevel AutoDiffable))))
            ((pattern (Var e))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 23) (col_num 24)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 23) (col_num 25)
+                  (included_from ())))))
+              (adlevel AutoDiffable)))))))
+        (meta
+         ((type_ UReal)
+          (loc
+           ((begin_loc
+             ((filename string) (line_num 23) (col_num 20)
+              (included_from ())))
+            (end_loc
+             ((filename string) (line_num 23) (col_num 25)
+              (included_from ())))))
+          (adlevel AutoDiffable)))))
       21)
      ((TargetTerm
        ((pattern
          (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
           (((pattern (Var a))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 13) (col_num 10)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 13) (col_num 11)
+                  (included_from ())))))
+              (adlevel AutoDiffable))))
            ((pattern (Var b))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 13) (col_num 21)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 13) (col_num 22)
+                  (included_from ())))))
+              (adlevel AutoDiffable))))
            ((pattern (Lit Int 1))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+            (meta
+             ((type_ UInt)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 13) (col_num 24)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 13) (col_num 25)
+                  (included_from ())))))
+              (adlevel DataOnly)))))))
+        (meta
+         ((type_ UReal)
+          (loc
+           ((begin_loc
+             ((filename string) (line_num 13) (col_num 10)
+              (included_from ())))
+            (end_loc
+             ((filename string) (line_num 13) (col_num 27)
+              (included_from ())))))
+          (adlevel AutoDiffable)))))
       10)
      ((TargetTerm
        ((pattern
          (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
           (((pattern (Var c))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 20) (col_num 10)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 20) (col_num 11)
+                  (included_from ())))))
+              (adlevel AutoDiffable))))
            ((pattern (Var x))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 20) (col_num 22)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 20) (col_num 23)
+                  (included_from ())))))
+              (adlevel AutoDiffable))))
            ((pattern (Lit Int 1))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+            (meta
+             ((type_ UInt)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 20) (col_num 25)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 20) (col_num 26)
+                  (included_from ())))))
+              (adlevel DataOnly)))))))
+        (meta
+         ((type_ UReal)
+          (loc
+           ((begin_loc
+             ((filename string) (line_num 20) (col_num 10)
+              (included_from ())))
+            (end_loc
+             ((filename string) (line_num 20) (col_num 28)
+              (included_from ())))))
+          (adlevel AutoDiffable)))))
       17)))
    ((VVar b)
     (((TargetTerm
        ((pattern
          (FunApp (StanLib Times__ FnPlain SoA)
           (((pattern (Var z))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 23) (col_num 20)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 23) (col_num 21)
+                  (included_from ())))))
+              (adlevel AutoDiffable))))
            ((pattern (Var e))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 23) (col_num 24)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 23) (col_num 25)
+                  (included_from ())))))
+              (adlevel AutoDiffable)))))))
+        (meta
+         ((type_ UReal)
+          (loc
+           ((begin_loc
+             ((filename string) (line_num 23) (col_num 20)
+              (included_from ())))
+            (end_loc
+             ((filename string) (line_num 23) (col_num 25)
+              (included_from ())))))
+          (adlevel AutoDiffable)))))
       21)
      ((TargetTerm
        ((pattern
          (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
           (((pattern (Var a))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 13) (col_num 10)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 13) (col_num 11)
+                  (included_from ())))))
+              (adlevel AutoDiffable))))
            ((pattern (Var b))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 13) (col_num 21)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 13) (col_num 22)
+                  (included_from ())))))
+              (adlevel AutoDiffable))))
            ((pattern (Lit Int 1))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+            (meta
+             ((type_ UInt)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 13) (col_num 24)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 13) (col_num 25)
+                  (included_from ())))))
+              (adlevel DataOnly)))))))
+        (meta
+         ((type_ UReal)
+          (loc
+           ((begin_loc
+             ((filename string) (line_num 13) (col_num 10)
+              (included_from ())))
+            (end_loc
+             ((filename string) (line_num 13) (col_num 27)
+              (included_from ())))))
+          (adlevel AutoDiffable)))))
       10)
      ((TargetTerm
        ((pattern
          (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
           (((pattern (Var b))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 12) (col_num 10)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 12) (col_num 11)
+                  (included_from ())))))
+              (adlevel AutoDiffable))))
            ((pattern (Lit Int 0))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+            (meta
+             ((type_ UInt)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 12) (col_num 21)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 12) (col_num 22)
+                  (included_from ())))))
+              (adlevel DataOnly))))
            ((pattern (Lit Int 1))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+            (meta
+             ((type_ UInt)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 12) (col_num 24)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 12) (col_num 25)
+                  (included_from ())))))
+              (adlevel DataOnly)))))))
+        (meta
+         ((type_ UReal)
+          (loc
+           ((begin_loc
+             ((filename string) (line_num 12) (col_num 10)
+              (included_from ())))
+            (end_loc
+             ((filename string) (line_num 12) (col_num 27)
+              (included_from ())))))
+          (adlevel AutoDiffable)))))
       9)
      ((TargetTerm
        ((pattern
          (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
           (((pattern (Var d))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 21) (col_num 10)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 21) (col_num 11)
+                  (included_from ())))))
+              (adlevel AutoDiffable))))
            ((pattern (Var c))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 21) (col_num 22)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 21) (col_num 23)
+                  (included_from ())))))
+              (adlevel AutoDiffable))))
            ((pattern (Var b))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 21) (col_num 25)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 21) (col_num 26)
+                  (included_from ())))))
+              (adlevel AutoDiffable)))))))
+        (meta
+         ((type_ UReal)
+          (loc
+           ((begin_loc
+             ((filename string) (line_num 21) (col_num 10)
+              (included_from ())))
+            (end_loc
+             ((filename string) (line_num 21) (col_num 28)
+              (included_from ())))))
+          (adlevel AutoDiffable)))))
       18)))
    ((VVar c)
     (((TargetTerm
        ((pattern
          (FunApp (StanLib Times__ FnPlain SoA)
           (((pattern (Var z))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 23) (col_num 20)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 23) (col_num 21)
+                  (included_from ())))))
+              (adlevel AutoDiffable))))
            ((pattern (Var e))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 23) (col_num 24)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 23) (col_num 25)
+                  (included_from ())))))
+              (adlevel AutoDiffable)))))))
+        (meta
+         ((type_ UReal)
+          (loc
+           ((begin_loc
+             ((filename string) (line_num 23) (col_num 20)
+              (included_from ())))
+            (end_loc
+             ((filename string) (line_num 23) (col_num 25)
+              (included_from ())))))
+          (adlevel AutoDiffable)))))
       21)
      ((TargetTerm
        ((pattern
          (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
           (((pattern (Var c))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 20) (col_num 10)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 20) (col_num 11)
+                  (included_from ())))))
+              (adlevel AutoDiffable))))
            ((pattern (Var x))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 20) (col_num 22)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 20) (col_num 23)
+                  (included_from ())))))
+              (adlevel AutoDiffable))))
            ((pattern (Lit Int 1))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+            (meta
+             ((type_ UInt)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 20) (col_num 25)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 20) (col_num 26)
+                  (included_from ())))))
+              (adlevel DataOnly)))))))
+        (meta
+         ((type_ UReal)
+          (loc
+           ((begin_loc
+             ((filename string) (line_num 20) (col_num 10)
+              (included_from ())))
+            (end_loc
+             ((filename string) (line_num 20) (col_num 28)
+              (included_from ())))))
+          (adlevel AutoDiffable)))))
       17)
      ((TargetTerm
        ((pattern
          (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
           (((pattern (Var d))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 21) (col_num 10)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 21) (col_num 11)
+                  (included_from ())))))
+              (adlevel AutoDiffable))))
            ((pattern (Var c))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 21) (col_num 22)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 21) (col_num 23)
+                  (included_from ())))))
+              (adlevel AutoDiffable))))
            ((pattern (Var b))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 21) (col_num 25)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 21) (col_num 26)
+                  (included_from ())))))
+              (adlevel AutoDiffable)))))))
+        (meta
+         ((type_ UReal)
+          (loc
+           ((begin_loc
+             ((filename string) (line_num 21) (col_num 10)
+              (included_from ())))
+            (end_loc
+             ((filename string) (line_num 21) (col_num 28)
+              (included_from ())))))
+          (adlevel AutoDiffable)))))
       18)))
    ((VVar d)
     (((TargetTerm
        ((pattern
          (FunApp (StanLib Times__ FnPlain SoA)
           (((pattern (Var z))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 23) (col_num 20)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 23) (col_num 21)
+                  (included_from ())))))
+              (adlevel AutoDiffable))))
            ((pattern (Var e))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 23) (col_num 24)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 23) (col_num 25)
+                  (included_from ())))))
+              (adlevel AutoDiffable)))))))
+        (meta
+         ((type_ UReal)
+          (loc
+           ((begin_loc
+             ((filename string) (line_num 23) (col_num 20)
+              (included_from ())))
+            (end_loc
+             ((filename string) (line_num 23) (col_num 25)
+              (included_from ())))))
+          (adlevel AutoDiffable)))))
       21)
      ((TargetTerm
        ((pattern
          (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
           (((pattern (Var d))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 21) (col_num 10)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 21) (col_num 11)
+                  (included_from ())))))
+              (adlevel AutoDiffable))))
            ((pattern (Var c))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 21) (col_num 22)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 21) (col_num 23)
+                  (included_from ())))))
+              (adlevel AutoDiffable))))
            ((pattern (Var b))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 21) (col_num 25)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 21) (col_num 26)
+                  (included_from ())))))
+              (adlevel AutoDiffable)))))))
+        (meta
+         ((type_ UReal)
+          (loc
+           ((begin_loc
+             ((filename string) (line_num 21) (col_num 10)
+              (included_from ())))
+            (end_loc
+             ((filename string) (line_num 21) (col_num 28)
+              (included_from ())))))
+          (adlevel AutoDiffable)))))
       18)))
    ((VVar e)
     (((TargetTerm
        ((pattern
          (FunApp (StanLib Times__ FnPlain SoA)
           (((pattern (Var z))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 23) (col_num 20)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 23) (col_num 21)
+                  (included_from ())))))
+              (adlevel AutoDiffable))))
            ((pattern (Var e))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 23) (col_num 24)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 23) (col_num 25)
+                  (included_from ())))))
+              (adlevel AutoDiffable)))))))
+        (meta
+         ((type_ UReal)
+          (loc
+           ((begin_loc
+             ((filename string) (line_num 23) (col_num 20)
+              (included_from ())))
+            (end_loc
+             ((filename string) (line_num 23) (col_num 25)
+              (included_from ())))))
+          (adlevel AutoDiffable)))))
       21)))
    ((VVar f)
     (((TargetTerm
        ((pattern
          (FunApp (StanLib Times__ FnPlain SoA)
           (((pattern (Var f))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 23) (col_num 28)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 23) (col_num 29)
+                  (included_from ())))))
+              (adlevel AutoDiffable))))
            ((pattern (Var f))
-            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+            (meta
+             ((type_ UReal)
+              (loc
+               ((begin_loc
+                 ((filename string) (line_num 23) (col_num 30)
+                  (included_from ())))
+                (end_loc
+                 ((filename string) (line_num 23) (col_num 31)
+                  (included_from ())))))
+              (adlevel AutoDiffable)))))))
+        (meta
+         ((type_ UReal)
+          (loc
+           ((begin_loc
+             ((filename string) (line_num 23) (col_num 28)
+              (included_from ())))
+            (end_loc
+             ((filename string) (line_num 23) (col_num 31)
+              (included_from ())))))
+          (adlevel AutoDiffable)))))
       21))))))
     |}]
 
@@ -363,57 +1013,227 @@ let%expect_test "Priors complex example" =
       ((pattern
         (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
          (((pattern (Var a))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           (meta
+            ((type_ UReal)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 16) (col_num 10)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 16) (col_num 11)
+                 (included_from ())))))
+             (adlevel AutoDiffable))))
           ((pattern (Lit Int 0))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+           (meta
+            ((type_ UInt)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 16) (col_num 21)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 16) (col_num 22)
+                 (included_from ())))))
+             (adlevel DataOnly))))
           ((pattern (Lit Int 1))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+           (meta
+            ((type_ UInt)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 16) (col_num 24)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 16) (col_num 25)
+                 (included_from ())))))
+             (adlevel DataOnly)))))))
+       (meta
+        ((type_ UReal)
+         (loc
+          ((begin_loc
+            ((filename string) (line_num 16) (col_num 10) (included_from ())))
+           (end_loc
+            ((filename string) (line_num 16) (col_num 27) (included_from ())))))
+         (adlevel AutoDiffable)))))
      9)
     ((TargetTerm
       ((pattern
         (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
          (((pattern (Var e))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           (meta
+            ((type_ UReal)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 21) (col_num 10)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 21) (col_num 11)
+                 (included_from ())))))
+             (adlevel AutoDiffable))))
           ((pattern (Var a))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           (meta
+            ((type_ UReal)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 21) (col_num 21)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 21) (col_num 22)
+                 (included_from ())))))
+             (adlevel AutoDiffable))))
           ((pattern (Lit Int 1))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+           (meta
+            ((type_ UInt)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 21) (col_num 24)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 21) (col_num 25)
+                 (included_from ())))))
+             (adlevel DataOnly)))))))
+       (meta
+        ((type_ UReal)
+         (loc
+          ((begin_loc
+            ((filename string) (line_num 21) (col_num 10) (included_from ())))
+           (end_loc
+            ((filename string) (line_num 21) (col_num 27) (included_from ())))))
+         (adlevel AutoDiffable)))))
      14)
     ((TargetTerm
       ((pattern
         (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
          (((pattern (Var f))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           (meta
+            ((type_ UReal)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 22) (col_num 10)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 22) (col_num 11)
+                 (included_from ())))))
+             (adlevel AutoDiffable))))
           ((pattern (Var a))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           (meta
+            ((type_ UReal)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 22) (col_num 21)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 22) (col_num 22)
+                 (included_from ())))))
+             (adlevel AutoDiffable))))
           ((pattern (Lit Int 1))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+           (meta
+            ((type_ UInt)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 22) (col_num 24)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 22) (col_num 25)
+                 (included_from ())))))
+             (adlevel DataOnly)))))))
+       (meta
+        ((type_ UReal)
+         (loc
+          ((begin_loc
+            ((filename string) (line_num 22) (col_num 10) (included_from ())))
+           (end_loc
+            ((filename string) (line_num 22) (col_num 27) (included_from ())))))
+         (adlevel AutoDiffable)))))
      15))))
  ((VVar b)
   ((((TargetTerm
       ((pattern
         (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
          (((pattern (Var b))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           (meta
+            ((type_ UReal)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 17) (col_num 10)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 17) (col_num 11)
+                 (included_from ())))))
+             (adlevel AutoDiffable))))
           ((pattern (Var a))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           (meta
+            ((type_ UReal)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 17) (col_num 21)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 17) (col_num 22)
+                 (included_from ())))))
+             (adlevel AutoDiffable))))
           ((pattern (Lit Int 1))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+           (meta
+            ((type_ UInt)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 17) (col_num 24)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 17) (col_num 25)
+                 (included_from ())))))
+             (adlevel DataOnly)))))))
+       (meta
+        ((type_ UReal)
+         (loc
+          ((begin_loc
+            ((filename string) (line_num 17) (col_num 10) (included_from ())))
+           (end_loc
+            ((filename string) (line_num 17) (col_num 27) (included_from ())))))
+         (adlevel AutoDiffable)))))
      10)
     ((TargetTerm
       ((pattern
         (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
          (((pattern (Var d))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           (meta
+            ((type_ UReal)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 20) (col_num 10)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 20) (col_num 11)
+                 (included_from ())))))
+             (adlevel AutoDiffable))))
           ((pattern (Var b))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+           (meta
+            ((type_ UReal)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 20) (col_num 21)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 20) (col_num 22)
+                 (included_from ())))))
+             (adlevel AutoDiffable))))
           ((pattern (Lit Int 1))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))
+           (meta
+            ((type_ UInt)
+             (loc
+              ((begin_loc
+                ((filename string) (line_num 20) (col_num 24)
+                 (included_from ())))
+               (end_loc
+                ((filename string) (line_num 20) (col_num 25)
+                 (included_from ())))))
+             (adlevel DataOnly)))))))
+       (meta
+        ((type_ UReal)
+         (loc
+          ((begin_loc
+            ((filename string) (line_num 20) (col_num 10) (included_from ())))
+           (end_loc
+            ((filename string) (line_num 20) (col_num 27) (included_from ())))))
+         (adlevel AutoDiffable)))))
      13))))
  ((VVar c) (())) ((VVar d) (())) ((VVar e) (())) ((VVar f) (())))
     |}]

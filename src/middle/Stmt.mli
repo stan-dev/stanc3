@@ -1,4 +1,3 @@
-open Core_kernel
 open Common
 open Label
 
@@ -50,7 +49,7 @@ end
 
 module Located : sig
   module Meta : sig
-    type t = (Location_span.t sexp_opaque[@compare.ignore])
+    type t = (Location_span.t[@sexp.opaque] [@compare.ignore])
     [@@deriving compare, sexp, hash]
 
     include Specialized.Meta with type t := t
@@ -61,7 +60,7 @@ module Located : sig
     with module Meta := Meta
      and type t =
                 ( Expr.Typed.Meta.t
-                , (Meta.t sexp_opaque[@compare.ignore]) )
+                , (Meta.t[@sexp.opaque] [@compare.ignore]) )
                 Fixed.t
 
   val loc_of : t -> Location_span.t
@@ -101,7 +100,7 @@ end
 
 module Numbered : sig
   module Meta : sig
-    type t = (int sexp_opaque[@compare.ignore])
+    type t = (int[@sexp.opaque] [@compare.ignore])
     [@@deriving compare, sexp, hash]
 
     include Specialized.Meta with type t := t

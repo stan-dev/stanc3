@@ -217,6 +217,50 @@ let rec modify_stmt_functions Stmt.Fixed.({pattern; meta}) =
   in
   Stmt.Fixed.{pattern= new_pattern; meta}
 
+let rec query_for_name_functions var_name Expr.Fixed.({pattern; _}) =
+  let query_name = query_for_name_functions var_name in
+  match pattern with
+  | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) -> (
+    match kind with
+    | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), Common.Helpers.SoA)
+      -> (
+        let does_name_exist = List.for_all ~f:query_name exprs in
+        match does_name_exist with
+        | false -> true
+        | true ->
+            let make_args =
+              let find_args
+                  Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _})
+                  =
+                (adlevel, type_)
+              in
+              List.map ~f:find_args exprs
+            in
+            let check_fun_support =
+              Stan_math_signatures.query_stan_math_mem_pattern_support name
+                make_args
+            in
+            check_fun_support )
+    | CompilerInternal _ -> true
+    | Fun_kind.StanLib (_, _, Common.Helpers.AoS) -> false
+    | UserDefined _ -> false )
+  | TernaryIf (predicate, texpr, fexpr) ->
+      query_name predicate && query_name texpr && query_name fexpr
+  | Indexed (expr, indexed) ->
+      let query_index ind =
+        match ind with
+        | Index.All -> true
+        | Single ind_expr -> query_name ind_expr
+        | Upfrom ind_expr -> query_name ind_expr
+        | Between (expr_top, expr_bottom) ->
+            query_name expr_top && query_name expr_bottom
+        | MultiIndex exprs -> query_name exprs
+      in
+      query_name expr && List.exists ~f:query_index indexed
+  | Var (a : string) -> a = var_name
+  | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) -> true
+  | EAnd (lhs, rhs) | EOr (lhs, rhs) -> query_name lhs && query_name rhs
+
 (** Query function expressions in expressions returning back a list of optionals 
  *    with each Some element holding the queried function types.
  * @param select A functor taking in a tuple of the same types as 
@@ -228,11 +272,29 @@ let rec modify_stmt_functions Stmt.Fixed.({pattern; meta}) =
 *)
 let rec query_expr_functions var_name Expr.Fixed.({pattern; _}) =
   let query_expr = query_expr_functions var_name in
+  let query_name = query_for_name_functions var_name in
   match pattern with
   | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) -> (
     match kind with
-    | Fun_kind.StanLib (_, _, Common.Helpers.SoA) ->
-        true && List.for_all ~f:query_expr exprs
+    | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), Common.Helpers.SoA)
+      -> (
+        let does_name_exist = List.for_all ~f:query_name exprs in
+        match does_name_exist with
+        | false -> true
+        | true ->
+            let make_args =
+              let find_args
+                  Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _})
+                  =
+                (adlevel, type_)
+              in
+              List.map ~f:find_args exprs
+            in
+            let check_fun_support =
+              Stan_math_signatures.query_stan_math_mem_pattern_support name
+                make_args
+            in
+            check_fun_support )
     | CompilerInternal _ -> true
     | Fun_kind.StanLib (_, _, Common.Helpers.AoS) -> false
     | UserDefined _ -> false )
@@ -267,13 +329,31 @@ let rec query_expr_functions var_name Expr.Fixed.({pattern; _}) =
 let rec query_stmt_functions var_name Stmt.Fixed.({pattern; _}) =
   let query_expr = query_expr_functions var_name in
   let query_stmt = query_stmt_functions var_name in
+  let query_name = query_for_name_functions var_name in
   match pattern with
   | NRFunApp
-      ( StanLib ((_ : string), (_ : bool Fun_kind.suffix), Common.Helpers.SoA)
-      , expr ) ->
+      ( StanLib
+          ((name : string), (_ : bool Fun_kind.suffix), Common.Helpers.SoA)
+      , (exprs : Expr.Typed.Meta.t Expr.Fixed.t list) ) -> (
+      let does_name_exist = List.for_all ~f:query_name exprs in
+      match does_name_exist with
+      | false -> true
+      | true ->
+          let make_args =
+            let find_args
+                Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
+              (adlevel, type_)
+            in
+            List.map ~f:find_args exprs
+          in
+          let check_fun_support =
+            Stan_math_signatures.query_stan_math_mem_pattern_support name
+              make_args
+          in
+          check_fun_support )
+  | NRFunApp ((_ : Fun_kind.t), (expr : Expr.Typed.Meta.t Expr.Fixed.t list))
+    ->
       List.for_all ~f:query_expr expr
-  | NRFunApp ((_ : Fun_kind.t), (_ : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
-      false
   | Assignment (((_ : string), (_ : UnsizedType.t), lhs), rhs) ->
       let query_index ind =
         match ind with

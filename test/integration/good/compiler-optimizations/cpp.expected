@@ -3776,7 +3776,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
         
         current_statement__ = 19;
         validate_non_negative_index("b_state_hat", "n_state", n_state);
-        Eigen::Matrix<local_scalar_t__, -1, 1> b_state_hat;
+        conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> b_state_hat;
         b_state_hat = Eigen::Matrix<local_scalar_t__, -1, 1>(n_state);
         stan::math::fill(b_state_hat, DUMMY_VAR__);
         
@@ -15288,7 +15288,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       int lcm_sym51__;
       int lcm_sym50__;
       int lcm_sym49__;
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> pi;
+      Eigen::Matrix<local_scalar_t__, -1, 1> pi;
       pi = Eigen::Matrix<local_scalar_t__, -1, 1>(K);
       stan::math::fill(pi, DUMMY_VAR__);
       
@@ -15344,7 +15344,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         if (logical_gte(I, 1)) {
           current_statement__ = 13;
           validate_non_negative_index("log_q", "K", K);
-          Eigen::Matrix<local_scalar_t__, -1, 1> log_q;
+          conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> log_q;
           log_q = Eigen::Matrix<local_scalar_t__, -1, 1>(K);
           stan::math::fill(log_q, DUMMY_VAR__);
           
@@ -15380,7 +15380,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
           for (int i = 2; i <= I; ++i) {
             current_statement__ = 13;
             validate_non_negative_index("log_q", "K", K);
-            Eigen::Matrix<local_scalar_t__, -1, 1> log_q;
+            conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> log_q;
             log_q = Eigen::Matrix<local_scalar_t__, -1, 1>(K);
             stan::math::fill(log_q, DUMMY_VAR__);
             
@@ -30275,7 +30275,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       double lcm_sym25__;
       double lcm_sym24__;
       int lcm_sym23__;
-      Eigen::Matrix<local_scalar_t__, -1, 1> a;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> a;
       a = Eigen::Matrix<local_scalar_t__, -1, 1>(n_pair);
       stan::math::fill(a, DUMMY_VAR__);
       
