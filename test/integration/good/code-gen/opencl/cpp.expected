@@ -800,12 +800,14 @@ class distributions_model final : public model_base_crtp<distributions_model> {
   std::vector<int> d_int_array;
   double d_real;
   std::vector<double> d_real_array;
-  Eigen::Matrix<double, -1, 1> d_vector;
-  Eigen::Matrix<double, 1, -1> d_row_vector;
+  Eigen::Matrix<double, -1, 1> d_vector__;
+  Eigen::Matrix<double, 1, -1> d_row_vector__;
   matrix_cl<int> d_int_array_opencl__;
   matrix_cl<double> d_real_array_opencl__;
   matrix_cl<double> d_row_vector_opencl__;
-  matrix_cl<double> d_vector_opencl__;
+  matrix_cl<double> d_vector_opencl__; 
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> d_vector{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, 1, -1>> d_row_vector{nullptr, 0};
  
  public:
   ~distributions_model() { }
@@ -836,7 +838,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       pos__ = 1;
       current_statement__ = 756;
       context__.validate_dims("data initialization","d_int","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       d_int = std::numeric_limits<int>::min();
       
       current_statement__ = 756;
@@ -845,15 +847,14 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       validate_non_negative_index("d_int_array", "d_int", d_int);
       current_statement__ = 758;
       context__.validate_dims("data initialization","d_int_array","int",
-          context__.to_vec(d_int));
+           std::vector<size_t>{static_cast<size_t>(d_int)});
       d_int_array = std::vector<int>(d_int, std::numeric_limits<int>::min());
       
       current_statement__ = 758;
-      assign(d_int_array, context__.vals_i("d_int_array"),
-        "assigning variable d_int_array");
+      d_int_array = context__.vals_i("d_int_array");
       current_statement__ = 759;
       context__.validate_dims("data initialization","d_real","double",
-          context__.to_vec());
+           std::vector<size_t>{});
       d_real = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 759;
@@ -862,25 +863,25 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       validate_non_negative_index("d_real_array", "d_int", d_int);
       current_statement__ = 761;
       context__.validate_dims("data initialization","d_real_array","double",
-          context__.to_vec(d_int));
+           std::vector<size_t>{static_cast<size_t>(d_int)});
       d_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 761;
-      assign(d_real_array, context__.vals_r("d_real_array"),
-        "assigning variable d_real_array");
+      d_real_array = context__.vals_r("d_real_array");
       current_statement__ = 762;
       validate_non_negative_index("d_vector", "d_int", d_int);
       current_statement__ = 763;
       context__.validate_dims("data initialization","d_vector","double",
-          context__.to_vec(d_int));
-      d_vector = Eigen::Matrix<double, -1, 1>(d_int);
-      stan::math::fill(d_vector, std::numeric_limits<double>::quiet_NaN());
+           std::vector<size_t>{static_cast<size_t>(d_int)});
+      d_vector__ = Eigen::Matrix<double, -1, 1>(d_int);
+      new (&d_vector) Eigen::Map<Eigen::Matrix<double, -1, 1>>(d_vector__.data(), d_int);
+      
       
       {
         std::vector<local_scalar_t__> d_vector_flat__;
         current_statement__ = 763;
-        assign(d_vector_flat__, context__.vals_r("d_vector"),
-          "assigning variable d_vector_flat__");
+        d_vector_flat__ = context__.vals_r("d_vector");
         current_statement__ = 763;
         pos__ = 1;
         current_statement__ = 763;
@@ -889,21 +890,22 @@ class distributions_model final : public model_base_crtp<distributions_model> {
           assign(d_vector, d_vector_flat__[(pos__ - 1)],
             "assigning variable d_vector", index_uni(sym1__));
           current_statement__ = 763;
-          pos__ = (pos__ + 1);}
+          pos__ = (pos__ + 1);
+        }
       }
       current_statement__ = 764;
       validate_non_negative_index("d_row_vector", "d_int", d_int);
       current_statement__ = 765;
       context__.validate_dims("data initialization","d_row_vector","double",
-          context__.to_vec(d_int));
-      d_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
-      stan::math::fill(d_row_vector, std::numeric_limits<double>::quiet_NaN());
+           std::vector<size_t>{static_cast<size_t>(d_int)});
+      d_row_vector__ = Eigen::Matrix<double, 1, -1>(d_int);
+      new (&d_row_vector) Eigen::Map<Eigen::Matrix<double, 1, -1>>(d_row_vector__.data(), d_int);
+      
       
       {
         std::vector<local_scalar_t__> d_row_vector_flat__;
         current_statement__ = 765;
-        assign(d_row_vector_flat__, context__.vals_r("d_row_vector"),
-          "assigning variable d_row_vector_flat__");
+        d_row_vector_flat__ = context__.vals_r("d_row_vector");
         current_statement__ = 765;
         pos__ = 1;
         current_statement__ = 765;
@@ -912,7 +914,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
           assign(d_row_vector, d_row_vector_flat__[(pos__ - 1)],
             "assigning variable d_row_vector", index_uni(sym1__));
           current_statement__ = 765;
-          pos__ = (pos__ + 1);}
+          pos__ = (pos__ + 1);
+        }
       }
       current_statement__ = 766;
       validate_non_negative_index("p_real_array", "d_int", d_int);
@@ -937,20 +940,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 0U;
+    num_params_r__ = 1 + d_int + (d_int * d_int) + d_int + d_int + 1;
     
-    try {
-      num_params_r__ += 1;
-      num_params_r__ += d_int;
-      num_params_r__ += d_int * d_int;
-      num_params_r__ += d_int;
-      num_params_r__ += d_int;
-      num_params_r__ += 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
@@ -963,7 +954,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -975,38 +966,38 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       p_real = DUMMY_VAR__;
       
       current_statement__ = 1;
-      p_real = in__.scalar();
+      p_real = in__.template read<local_scalar_t__>();
       std::vector<local_scalar_t__> p_real_array;
       p_real_array = std::vector<local_scalar_t__>(d_int, DUMMY_VAR__);
       
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        current_statement__ = 2;
-        assign(p_real_array, in__.scalar(),
-          "assigning variable p_real_array", index_uni(sym1__));}
+      p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_matrix;
       p_matrix = Eigen::Matrix<local_scalar_t__, -1, -1>(d_int, d_int);
       stan::math::fill(p_matrix, DUMMY_VAR__);
       
       current_statement__ = 3;
-      p_matrix = in__.matrix(d_int, d_int);
+      p_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+                   d_int, d_int);
       Eigen::Matrix<local_scalar_t__, -1, 1> p_vector;
       p_vector = Eigen::Matrix<local_scalar_t__, -1, 1>(d_int);
       stan::math::fill(p_vector, DUMMY_VAR__);
       
       current_statement__ = 4;
-      p_vector = in__.vector(d_int);
+      p_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                   d_int);
       Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vector;
       p_row_vector = Eigen::Matrix<local_scalar_t__, 1, -1>(d_int);
       stan::math::fill(p_row_vector, DUMMY_VAR__);
       
       current_statement__ = 5;
-      p_row_vector = in__.row_vector(d_int);
+      p_row_vector = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(
+                       d_int);
       local_scalar_t__ y_p;
       y_p = DUMMY_VAR__;
       
       current_statement__ = 6;
-      y_p = in__.scalar();
+      y_p = in__.template read<local_scalar_t__>();
       local_scalar_t__ transformed_param_real;
       transformed_param_real = DUMMY_VAR__;
       
@@ -3483,6 +3474,10 @@ class distributions_model final : public model_base_crtp<distributions_model> {
         current_statement__ = 755;
         lp_accum__.add(normal_lpdf<propto__>(y_p, 0, 1));
       }
+      d_int_array_opencl__.wait_for_read_write_events();
+      d_real_array_opencl__.wait_for_read_write_events();
+      d_row_vector_opencl__.wait_for_read_write_events();
+      d_vector_opencl__.wait_for_read_write_events();
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -3503,12 +3498,15 @@ class distributions_model final : public model_base_crtp<distributions_model> {
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
-    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    constexpr bool jacobian__ = false;
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "distributions_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
@@ -3518,53 +3516,60 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       p_real = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      p_real = in__.scalar();
+      p_real = in__.template read<local_scalar_t__>();
       std::vector<double> p_real_array;
       p_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        current_statement__ = 2;
-        assign(p_real_array, in__.scalar(),
-          "assigning variable p_real_array", index_uni(sym1__));}
+      p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
       Eigen::Matrix<double, -1, -1> p_matrix;
       p_matrix = Eigen::Matrix<double, -1, -1>(d_int, d_int);
       stan::math::fill(p_matrix, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
-      p_matrix = in__.matrix(d_int, d_int);
+      p_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+                   d_int, d_int);
       Eigen::Matrix<double, -1, 1> p_vector;
       p_vector = Eigen::Matrix<double, -1, 1>(d_int);
       stan::math::fill(p_vector, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 4;
-      p_vector = in__.vector(d_int);
+      p_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                   d_int);
       Eigen::Matrix<double, 1, -1> p_row_vector;
       p_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
       stan::math::fill(p_row_vector, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 5;
-      p_row_vector = in__.row_vector(d_int);
+      p_row_vector = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(
+                       d_int);
       double y_p;
       y_p = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 6;
-      y_p = in__.scalar();
+      y_p = in__.template read<local_scalar_t__>();
       double transformed_param_real;
       transformed_param_real = std::numeric_limits<double>::quiet_NaN();
       
       vars__.emplace_back(p_real);
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_real_array[(sym1__ - 1)]);}
+        vars__.emplace_back(p_real_array[(sym1__ - 1)]);
+      }
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
           vars__.emplace_back(
             rvalue(p_matrix, "p_matrix",
-              index_uni(sym2__), index_uni(sym1__)));}}
+              index_uni(sym2__), index_uni(sym1__)));
+        }
+      }
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_vector[(sym1__ - 1)]);}
+        vars__.emplace_back(p_vector[(sym1__ - 1)]);
+      }
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_row_vector[(sym1__ - 1)]);}
+        vars__.emplace_back(p_row_vector[(sym1__ - 1)]);
+      }
       vars__.emplace_back(y_p);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
@@ -6076,9 +6081,9 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       std::vector<double> p_real_array;
       p_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 2;
-      assign(p_real_array, context__.vals_r("p_real_array"),
-        "assigning variable p_real_array");
+      p_real_array = context__.vals_r("p_real_array");
       Eigen::Matrix<double, -1, -1> p_matrix;
       p_matrix = Eigen::Matrix<double, -1, -1>(d_int, d_int);
       stan::math::fill(p_matrix, std::numeric_limits<double>::quiet_NaN());
@@ -6086,8 +6091,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       {
         std::vector<local_scalar_t__> p_matrix_flat__;
         current_statement__ = 3;
-        assign(p_matrix_flat__, context__.vals_r("p_matrix"),
-          "assigning variable p_matrix_flat__");
+        p_matrix_flat__ = context__.vals_r("p_matrix");
         current_statement__ = 3;
         pos__ = 1;
         current_statement__ = 3;
@@ -6099,7 +6103,9 @@ class distributions_model final : public model_base_crtp<distributions_model> {
               "assigning variable p_matrix", index_uni(sym2__),
                                                index_uni(sym1__));
             current_statement__ = 3;
-            pos__ = (pos__ + 1);}}
+            pos__ = (pos__ + 1);
+          }
+        }
       }
       Eigen::Matrix<double, -1, 1> p_vector;
       p_vector = Eigen::Matrix<double, -1, 1>(d_int);
@@ -6108,8 +6114,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       {
         std::vector<local_scalar_t__> p_vector_flat__;
         current_statement__ = 4;
-        assign(p_vector_flat__, context__.vals_r("p_vector"),
-          "assigning variable p_vector_flat__");
+        p_vector_flat__ = context__.vals_r("p_vector");
         current_statement__ = 4;
         pos__ = 1;
         current_statement__ = 4;
@@ -6118,17 +6123,18 @@ class distributions_model final : public model_base_crtp<distributions_model> {
           assign(p_vector, p_vector_flat__[(pos__ - 1)],
             "assigning variable p_vector", index_uni(sym1__));
           current_statement__ = 4;
-          pos__ = (pos__ + 1);}
+          pos__ = (pos__ + 1);
+        }
       }
       Eigen::Matrix<double, 1, -1> p_row_vector;
       p_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
       stan::math::fill(p_row_vector, std::numeric_limits<double>::quiet_NaN());
       
+      
       {
         std::vector<local_scalar_t__> p_row_vector_flat__;
         current_statement__ = 5;
-        assign(p_row_vector_flat__, context__.vals_r("p_row_vector"),
-          "assigning variable p_row_vector_flat__");
+        p_row_vector_flat__ = context__.vals_r("p_row_vector");
         current_statement__ = 5;
         pos__ = 1;
         current_statement__ = 5;
@@ -6137,7 +6143,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
           assign(p_row_vector, p_row_vector_flat__[(pos__ - 1)],
             "assigning variable p_row_vector", index_uni(sym1__));
           current_statement__ = 5;
-          pos__ = (pos__ + 1);}
+          pos__ = (pos__ + 1);
+        }
       }
       double y_p;
       y_p = std::numeric_limits<double>::quiet_NaN();
@@ -6146,16 +6153,21 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       y_p = context__.vals_r("y_p")[(1 - 1)];
       vars__.emplace_back(p_real);
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_real_array[(sym1__ - 1)]);}
+        vars__.emplace_back(p_real_array[(sym1__ - 1)]);
+      }
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
           vars__.emplace_back(
             rvalue(p_matrix, "p_matrix",
-              index_uni(sym2__), index_uni(sym1__)));}}
+              index_uni(sym2__), index_uni(sym1__)));
+        }
+      }
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_vector[(sym1__ - 1)]);}
+        vars__.emplace_back(p_vector[(sym1__ - 1)]);
+      }
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_row_vector[(sym1__ - 1)]);}
+        vars__.emplace_back(p_row_vector[(sym1__ - 1)]);
+      }
       vars__.emplace_back(y_p);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6166,32 +6178,20 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("p_real");
-    names__.emplace_back("p_real_array");
-    names__.emplace_back("p_matrix");
-    names__.emplace_back("p_vector");
-    names__.emplace_back("p_row_vector");
-    names__.emplace_back("y_p");
-    names__.emplace_back("transformed_param_real");
+    names__ = std::vector<std::string>{"p_real", "p_real_array", "p_matrix",
+      "p_vector", "p_row_vector", "y_p", "transformed_param_real"};
+    
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(d_int)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(d_int),
-                                             static_cast<size_t>(d_int)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(d_int)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(d_int)});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+      std::vector<size_t>{static_cast<size_t>(d_int)},
+      std::vector<size_t>{static_cast<size_t>(d_int),
+                          static_cast<size_t>(d_int)},
+      std::vector<size_t>{static_cast<size_t>(d_int)},
+      std::vector<size_t>{static_cast<size_t>(d_int)}, std::vector<size_t>{
+      }, std::vector<size_t>{}};
     
     } // get_dims() 
     
@@ -6205,22 +6205,27 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
       {
         param_names__.emplace_back(std::string() + "p_real_array" + '.' + std::to_string(sym1__));
-      }}
+      } 
+    }
     for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
       {
         for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
           {
             param_names__.emplace_back(std::string() + "p_matrix" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }}
-      }}
+          } 
+        }
+      } 
+    }
     for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
       {
         param_names__.emplace_back(std::string() + "p_vector" + '.' + std::to_string(sym1__));
-      }}
+      } 
+    }
     for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
       {
         param_names__.emplace_back(std::string() + "p_row_vector" + '.' + std::to_string(sym1__));
-      }}
+      } 
+    }
     param_names__.emplace_back(std::string() + "y_p");
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "transformed_param_real");
@@ -6242,22 +6247,27 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
       {
         param_names__.emplace_back(std::string() + "p_real_array" + '.' + std::to_string(sym1__));
-      }}
+      } 
+    }
     for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
       {
         for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
           {
             param_names__.emplace_back(std::string() + "p_matrix" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }}
-      }}
+          } 
+        }
+      } 
+    }
     for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
       {
         param_names__.emplace_back(std::string() + "p_vector" + '.' + std::to_string(sym1__));
-      }}
+      } 
+    }
     for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
       {
         param_names__.emplace_back(std::string() + "p_row_vector" + '.' + std::to_string(sym1__));
-      }}
+      } 
+    }
     param_names__.emplace_back(std::string() + "y_p");
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "transformed_param_real");
@@ -6270,15 +6280,15 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_real_array\",\"type\":{\"name\":\"array\",\"length\":" << d_int << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << d_int << ",\"cols\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_row_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"transformed_param_real\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+    
+    return std::string("[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_real_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(d_int) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(d_int) + ",\"cols\":" + std::to_string(d_int) + "},\"block\":\"parameters\"},{\"name\":\"p_vector\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(d_int) + "},\"block\":\"parameters\"},{\"name\":\"p_row_vector\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(d_int) + "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"transformed_param_real\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
+    
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_real_array\",\"type\":{\"name\":\"array\",\"length\":" << d_int << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << d_int << ",\"cols\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_row_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"transformed_param_real\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+    
+    return std::string("[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_real_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(d_int) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(d_int) + ",\"cols\":" + std::to_string(d_int) + "},\"block\":\"parameters\"},{\"name\":\"p_vector\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(d_int) + "},\"block\":\"parameters\"},{\"name\":\"p_row_vector\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(d_int) + "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"transformed_param_real\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
+    
     } // get_unconstrained_sizedtypes() 
     
   
@@ -6290,14 +6300,13 @@ class distributions_model final : public model_base_crtp<distributions_model> {
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      std::vector<double> vars_vec(vars.size());
+      std::vector<double> vars_vec;
+      vars_vec.reserve(vars.size());
       std::vector<int> params_i;
       write_array_impl(base_rng, params_r, params_i, vars_vec,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars.resize(vars_vec.size());
-      for (int i = 0; i < vars.size(); ++i) {
-        vars.coeffRef(i) = vars_vec[i];
-      }
+      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
+        vars_vec.data(), vars_vec.size());
     }
 
     template <typename RNG>
@@ -6307,7 +6316,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      write_array_impl(base_rng, params_r, params_i, vars,
+       emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -6328,13 +6338,12 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
                          std::ostream* pstream = nullptr) const final {
-      std::vector<double> params_r_vec(params_r.size());
+      std::vector<double> params_r_vec;
+      params_r_vec.reserve(params_r.size());
       std::vector<int> params_i;
       transform_inits_impl(context, params_i, params_r_vec, pstream);
-      params_r.resize(params_r_vec.size());
-      for (int i = 0; i < params_r.size(); ++i) {
-        params_r.coeffRef(i) = params_r_vec[i];
-      }
+      params_r = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
+        params_r_vec.data(), params_r_vec.size());
     }
     inline void transform_inits(const stan::io::var_context& context,
                                 std::vector<int>& params_i,
@@ -6437,9 +6446,11 @@ class restricted_model final : public model_base_crtp<restricted_model> {
   std::vector<int> d_int_array;
   double d_real;
   std::vector<double> d_real_array;
-  Eigen::Matrix<double, -1, 1> d_vector;
-  Eigen::Matrix<double, 1, -1> d_row_vector;
-  matrix_cl<double> d_vector_opencl__;
+  Eigen::Matrix<double, -1, 1> d_vector__;
+  Eigen::Matrix<double, 1, -1> d_row_vector__;
+  matrix_cl<double> d_vector_opencl__; 
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> d_vector{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, 1, -1>> d_row_vector{nullptr, 0};
  
  public:
   ~restricted_model() { }
@@ -6470,7 +6481,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       pos__ = 1;
       current_statement__ = 25;
       context__.validate_dims("data initialization","d_int","int",
-          context__.to_vec());
+           std::vector<size_t>{});
       d_int = std::numeric_limits<int>::min();
       
       current_statement__ = 25;
@@ -6479,15 +6490,14 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       validate_non_negative_index("d_int_array", "d_int", d_int);
       current_statement__ = 27;
       context__.validate_dims("data initialization","d_int_array","int",
-          context__.to_vec(d_int));
+           std::vector<size_t>{static_cast<size_t>(d_int)});
       d_int_array = std::vector<int>(d_int, std::numeric_limits<int>::min());
       
       current_statement__ = 27;
-      assign(d_int_array, context__.vals_i("d_int_array"),
-        "assigning variable d_int_array");
+      d_int_array = context__.vals_i("d_int_array");
       current_statement__ = 28;
       context__.validate_dims("data initialization","d_real","double",
-          context__.to_vec());
+           std::vector<size_t>{});
       d_real = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 28;
@@ -6496,25 +6506,25 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       validate_non_negative_index("d_real_array", "d_int", d_int);
       current_statement__ = 30;
       context__.validate_dims("data initialization","d_real_array","double",
-          context__.to_vec(d_int));
+           std::vector<size_t>{static_cast<size_t>(d_int)});
       d_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 30;
-      assign(d_real_array, context__.vals_r("d_real_array"),
-        "assigning variable d_real_array");
+      d_real_array = context__.vals_r("d_real_array");
       current_statement__ = 31;
       validate_non_negative_index("d_vector", "d_int", d_int);
       current_statement__ = 32;
       context__.validate_dims("data initialization","d_vector","double",
-          context__.to_vec(d_int));
-      d_vector = Eigen::Matrix<double, -1, 1>(d_int);
-      stan::math::fill(d_vector, std::numeric_limits<double>::quiet_NaN());
+           std::vector<size_t>{static_cast<size_t>(d_int)});
+      d_vector__ = Eigen::Matrix<double, -1, 1>(d_int);
+      new (&d_vector) Eigen::Map<Eigen::Matrix<double, -1, 1>>(d_vector__.data(), d_int);
+      
       
       {
         std::vector<local_scalar_t__> d_vector_flat__;
         current_statement__ = 32;
-        assign(d_vector_flat__, context__.vals_r("d_vector"),
-          "assigning variable d_vector_flat__");
+        d_vector_flat__ = context__.vals_r("d_vector");
         current_statement__ = 32;
         pos__ = 1;
         current_statement__ = 32;
@@ -6523,21 +6533,22 @@ class restricted_model final : public model_base_crtp<restricted_model> {
           assign(d_vector, d_vector_flat__[(pos__ - 1)],
             "assigning variable d_vector", index_uni(sym1__));
           current_statement__ = 32;
-          pos__ = (pos__ + 1);}
+          pos__ = (pos__ + 1);
+        }
       }
       current_statement__ = 33;
       validate_non_negative_index("d_row_vector", "d_int", d_int);
       current_statement__ = 34;
       context__.validate_dims("data initialization","d_row_vector","double",
-          context__.to_vec(d_int));
-      d_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
-      stan::math::fill(d_row_vector, std::numeric_limits<double>::quiet_NaN());
+           std::vector<size_t>{static_cast<size_t>(d_int)});
+      d_row_vector__ = Eigen::Matrix<double, 1, -1>(d_int);
+      new (&d_row_vector) Eigen::Map<Eigen::Matrix<double, 1, -1>>(d_row_vector__.data(), d_int);
+      
       
       {
         std::vector<local_scalar_t__> d_row_vector_flat__;
         current_statement__ = 34;
-        assign(d_row_vector_flat__, context__.vals_r("d_row_vector"),
-          "assigning variable d_row_vector_flat__");
+        d_row_vector_flat__ = context__.vals_r("d_row_vector");
         current_statement__ = 34;
         pos__ = 1;
         current_statement__ = 34;
@@ -6546,7 +6557,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
           assign(d_row_vector, d_row_vector_flat__[(pos__ - 1)],
             "assigning variable d_row_vector", index_uni(sym1__));
           current_statement__ = 34;
-          pos__ = (pos__ + 1);}
+          pos__ = (pos__ + 1);
+        }
       }
       current_statement__ = 35;
       validate_non_negative_index("p_real_array", "d_int", d_int);
@@ -6565,20 +6577,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 0U;
+    num_params_r__ = 1 + d_int + (d_int * d_int) + d_int + d_int + 1;
     
-    try {
-      num_params_r__ += 1;
-      num_params_r__ += d_int;
-      num_params_r__ += d_int * d_int;
-      num_params_r__ += d_int;
-      num_params_r__ += d_int;
-      num_params_r__ += 1;
-    } catch (const std::exception& e) {
-      stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-    }
   }
   
   template <bool propto__, bool jacobian__ , typename VecR, typename VecI, 
@@ -6591,7 +6591,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     using local_scalar_t__ = T__;
     T__ lp__(0.0);
     stan::math::accumulator<T__> lp_accum__;
-    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
     int current_statement__ = 0;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
@@ -6603,38 +6603,38 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       p_real = DUMMY_VAR__;
       
       current_statement__ = 1;
-      p_real = in__.scalar();
+      p_real = in__.template read<local_scalar_t__>();
       std::vector<local_scalar_t__> p_real_array;
       p_real_array = std::vector<local_scalar_t__>(d_int, DUMMY_VAR__);
       
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        current_statement__ = 2;
-        assign(p_real_array, in__.scalar(),
-          "assigning variable p_real_array", index_uni(sym1__));}
+      p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_matrix;
       p_matrix = Eigen::Matrix<local_scalar_t__, -1, -1>(d_int, d_int);
       stan::math::fill(p_matrix, DUMMY_VAR__);
       
       current_statement__ = 3;
-      p_matrix = in__.matrix(d_int, d_int);
+      p_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+                   d_int, d_int);
       Eigen::Matrix<local_scalar_t__, -1, 1> p_vector;
       p_vector = Eigen::Matrix<local_scalar_t__, -1, 1>(d_int);
       stan::math::fill(p_vector, DUMMY_VAR__);
       
       current_statement__ = 4;
-      p_vector = in__.vector(d_int);
+      p_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                   d_int);
       Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vector;
       p_row_vector = Eigen::Matrix<local_scalar_t__, 1, -1>(d_int);
       stan::math::fill(p_row_vector, DUMMY_VAR__);
       
       current_statement__ = 5;
-      p_row_vector = in__.row_vector(d_int);
+      p_row_vector = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(
+                       d_int);
       local_scalar_t__ y_p;
       y_p = DUMMY_VAR__;
       
       current_statement__ = 6;
-      y_p = in__.scalar();
+      y_p = in__.template read<local_scalar_t__>();
       local_scalar_t__ transformed_param_real;
       transformed_param_real = DUMMY_VAR__;
       
@@ -6680,6 +6680,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
         current_statement__ = 24;
         lp_accum__.add(normal_lpdf<propto__>(y_p, 0, 1));
       }
+      d_vector_opencl__.wait_for_read_write_events();
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -6700,12 +6701,15 @@ class restricted_model final : public model_base_crtp<restricted_model> {
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
     vars__.resize(0);
-    stan::io::reader<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
     stan::math::accumulator<double> lp_accum__;
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+    constexpr bool jacobian__ = false;
     (void) DUMMY_VAR__;  // suppress unused var warning
     static constexpr const char* function__ = "restricted_model_namespace::write_array";
     (void) function__;  // suppress unused var warning
@@ -6715,53 +6719,60 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       p_real = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 1;
-      p_real = in__.scalar();
+      p_real = in__.template read<local_scalar_t__>();
       std::vector<double> p_real_array;
       p_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 2;
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        current_statement__ = 2;
-        assign(p_real_array, in__.scalar(),
-          "assigning variable p_real_array", index_uni(sym1__));}
+      p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
       Eigen::Matrix<double, -1, -1> p_matrix;
       p_matrix = Eigen::Matrix<double, -1, -1>(d_int, d_int);
       stan::math::fill(p_matrix, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 3;
-      p_matrix = in__.matrix(d_int, d_int);
+      p_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+                   d_int, d_int);
       Eigen::Matrix<double, -1, 1> p_vector;
       p_vector = Eigen::Matrix<double, -1, 1>(d_int);
       stan::math::fill(p_vector, std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 4;
-      p_vector = in__.vector(d_int);
+      p_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                   d_int);
       Eigen::Matrix<double, 1, -1> p_row_vector;
       p_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
       stan::math::fill(p_row_vector, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 5;
-      p_row_vector = in__.row_vector(d_int);
+      p_row_vector = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(
+                       d_int);
       double y_p;
       y_p = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 6;
-      y_p = in__.scalar();
+      y_p = in__.template read<local_scalar_t__>();
       double transformed_param_real;
       transformed_param_real = std::numeric_limits<double>::quiet_NaN();
       
       vars__.emplace_back(p_real);
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_real_array[(sym1__ - 1)]);}
+        vars__.emplace_back(p_real_array[(sym1__ - 1)]);
+      }
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
           vars__.emplace_back(
             rvalue(p_matrix, "p_matrix",
-              index_uni(sym2__), index_uni(sym1__)));}}
+              index_uni(sym2__), index_uni(sym1__)));
+        }
+      }
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_vector[(sym1__ - 1)]);}
+        vars__.emplace_back(p_vector[(sym1__ - 1)]);
+      }
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_row_vector[(sym1__ - 1)]);}
+        vars__.emplace_back(p_row_vector[(sym1__ - 1)]);
+      }
       vars__.emplace_back(y_p);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
@@ -6842,9 +6853,9 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       std::vector<double> p_real_array;
       p_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 2;
-      assign(p_real_array, context__.vals_r("p_real_array"),
-        "assigning variable p_real_array");
+      p_real_array = context__.vals_r("p_real_array");
       Eigen::Matrix<double, -1, -1> p_matrix;
       p_matrix = Eigen::Matrix<double, -1, -1>(d_int, d_int);
       stan::math::fill(p_matrix, std::numeric_limits<double>::quiet_NaN());
@@ -6852,8 +6863,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       {
         std::vector<local_scalar_t__> p_matrix_flat__;
         current_statement__ = 3;
-        assign(p_matrix_flat__, context__.vals_r("p_matrix"),
-          "assigning variable p_matrix_flat__");
+        p_matrix_flat__ = context__.vals_r("p_matrix");
         current_statement__ = 3;
         pos__ = 1;
         current_statement__ = 3;
@@ -6865,7 +6875,9 @@ class restricted_model final : public model_base_crtp<restricted_model> {
               "assigning variable p_matrix", index_uni(sym2__),
                                                index_uni(sym1__));
             current_statement__ = 3;
-            pos__ = (pos__ + 1);}}
+            pos__ = (pos__ + 1);
+          }
+        }
       }
       Eigen::Matrix<double, -1, 1> p_vector;
       p_vector = Eigen::Matrix<double, -1, 1>(d_int);
@@ -6874,8 +6886,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       {
         std::vector<local_scalar_t__> p_vector_flat__;
         current_statement__ = 4;
-        assign(p_vector_flat__, context__.vals_r("p_vector"),
-          "assigning variable p_vector_flat__");
+        p_vector_flat__ = context__.vals_r("p_vector");
         current_statement__ = 4;
         pos__ = 1;
         current_statement__ = 4;
@@ -6884,17 +6895,18 @@ class restricted_model final : public model_base_crtp<restricted_model> {
           assign(p_vector, p_vector_flat__[(pos__ - 1)],
             "assigning variable p_vector", index_uni(sym1__));
           current_statement__ = 4;
-          pos__ = (pos__ + 1);}
+          pos__ = (pos__ + 1);
+        }
       }
       Eigen::Matrix<double, 1, -1> p_row_vector;
       p_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
       stan::math::fill(p_row_vector, std::numeric_limits<double>::quiet_NaN());
       
+      
       {
         std::vector<local_scalar_t__> p_row_vector_flat__;
         current_statement__ = 5;
-        assign(p_row_vector_flat__, context__.vals_r("p_row_vector"),
-          "assigning variable p_row_vector_flat__");
+        p_row_vector_flat__ = context__.vals_r("p_row_vector");
         current_statement__ = 5;
         pos__ = 1;
         current_statement__ = 5;
@@ -6903,7 +6915,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
           assign(p_row_vector, p_row_vector_flat__[(pos__ - 1)],
             "assigning variable p_row_vector", index_uni(sym1__));
           current_statement__ = 5;
-          pos__ = (pos__ + 1);}
+          pos__ = (pos__ + 1);
+        }
       }
       double y_p;
       y_p = std::numeric_limits<double>::quiet_NaN();
@@ -6912,16 +6925,21 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       y_p = context__.vals_r("y_p")[(1 - 1)];
       vars__.emplace_back(p_real);
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_real_array[(sym1__ - 1)]);}
+        vars__.emplace_back(p_real_array[(sym1__ - 1)]);
+      }
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
           vars__.emplace_back(
             rvalue(p_matrix, "p_matrix",
-              index_uni(sym2__), index_uni(sym1__)));}}
+              index_uni(sym2__), index_uni(sym1__)));
+        }
+      }
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_vector[(sym1__ - 1)]);}
+        vars__.emplace_back(p_vector[(sym1__ - 1)]);
+      }
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_row_vector[(sym1__ - 1)]);}
+        vars__.emplace_back(p_row_vector[(sym1__ - 1)]);
+      }
       vars__.emplace_back(y_p);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6932,32 +6950,20 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__.clear();
-    names__.emplace_back("p_real");
-    names__.emplace_back("p_real_array");
-    names__.emplace_back("p_matrix");
-    names__.emplace_back("p_vector");
-    names__.emplace_back("p_row_vector");
-    names__.emplace_back("y_p");
-    names__.emplace_back("transformed_param_real");
+    names__ = std::vector<std::string>{"p_real", "p_real_array", "p_matrix",
+      "p_vector", "p_row_vector", "y_p", "transformed_param_real"};
+    
     } // get_param_names() 
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
-    dimss__.clear();
-    dimss__.emplace_back(std::vector<size_t>{});
     
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(d_int)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(d_int),
-                                             static_cast<size_t>(d_int)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(d_int)});
-    
-    dimss__.emplace_back(std::vector<size_t>{static_cast<size_t>(d_int)});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
-    
-    dimss__.emplace_back(std::vector<size_t>{});
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
+      std::vector<size_t>{static_cast<size_t>(d_int)},
+      std::vector<size_t>{static_cast<size_t>(d_int),
+                          static_cast<size_t>(d_int)},
+      std::vector<size_t>{static_cast<size_t>(d_int)},
+      std::vector<size_t>{static_cast<size_t>(d_int)}, std::vector<size_t>{
+      }, std::vector<size_t>{}};
     
     } // get_dims() 
     
@@ -6971,22 +6977,27 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
       {
         param_names__.emplace_back(std::string() + "p_real_array" + '.' + std::to_string(sym1__));
-      }}
+      } 
+    }
     for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
       {
         for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
           {
             param_names__.emplace_back(std::string() + "p_matrix" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }}
-      }}
+          } 
+        }
+      } 
+    }
     for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
       {
         param_names__.emplace_back(std::string() + "p_vector" + '.' + std::to_string(sym1__));
-      }}
+      } 
+    }
     for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
       {
         param_names__.emplace_back(std::string() + "p_row_vector" + '.' + std::to_string(sym1__));
-      }}
+      } 
+    }
     param_names__.emplace_back(std::string() + "y_p");
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "transformed_param_real");
@@ -7008,22 +7019,27 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
       {
         param_names__.emplace_back(std::string() + "p_real_array" + '.' + std::to_string(sym1__));
-      }}
+      } 
+    }
     for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
       {
         for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
           {
             param_names__.emplace_back(std::string() + "p_matrix" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
-          }}
-      }}
+          } 
+        }
+      } 
+    }
     for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
       {
         param_names__.emplace_back(std::string() + "p_vector" + '.' + std::to_string(sym1__));
-      }}
+      } 
+    }
     for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
       {
         param_names__.emplace_back(std::string() + "p_row_vector" + '.' + std::to_string(sym1__));
-      }}
+      } 
+    }
     param_names__.emplace_back(std::string() + "y_p");
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "transformed_param_real");
@@ -7036,15 +7052,15 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_real_array\",\"type\":{\"name\":\"array\",\"length\":" << d_int << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << d_int << ",\"cols\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_row_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"transformed_param_real\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+    
+    return std::string("[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_real_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(d_int) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(d_int) + ",\"cols\":" + std::to_string(d_int) + "},\"block\":\"parameters\"},{\"name\":\"p_vector\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(d_int) + "},\"block\":\"parameters\"},{\"name\":\"p_row_vector\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(d_int) + "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"transformed_param_real\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
+    
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
-    std::stringstream s__;
-    s__ << "[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_real_array\",\"type\":{\"name\":\"array\",\"length\":" << d_int << ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" << d_int << ",\"cols\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"p_row_vector\",\"type\":{\"name\":\"vector\",\"length\":" << d_int << "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"transformed_param_real\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]";
-    return s__.str();
+    
+    return std::string("[{\"name\":\"p_real\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_real_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(d_int) + ",\"element_type\":{\"name\":\"real\"}},\"block\":\"parameters\"},{\"name\":\"p_matrix\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(d_int) + ",\"cols\":" + std::to_string(d_int) + "},\"block\":\"parameters\"},{\"name\":\"p_vector\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(d_int) + "},\"block\":\"parameters\"},{\"name\":\"p_row_vector\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(d_int) + "},\"block\":\"parameters\"},{\"name\":\"y_p\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"transformed_param_real\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"}]");
+    
     } // get_unconstrained_sizedtypes() 
     
   
@@ -7056,14 +7072,13 @@ class restricted_model final : public model_base_crtp<restricted_model> {
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      std::vector<double> vars_vec(vars.size());
+      std::vector<double> vars_vec;
+      vars_vec.reserve(vars.size());
       std::vector<int> params_i;
       write_array_impl(base_rng, params_r, params_i, vars_vec,
           emit_transformed_parameters, emit_generated_quantities, pstream);
-      vars.resize(vars_vec.size());
-      for (int i = 0; i < vars.size(); ++i) {
-        vars.coeffRef(i) = vars_vec[i];
-      }
+      vars = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
+        vars_vec.data(), vars_vec.size());
     }
 
     template <typename RNG>
@@ -7073,7 +7088,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
+      write_array_impl(base_rng, params_r, params_i, vars,
+       emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -7094,13 +7110,12 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
                          std::ostream* pstream = nullptr) const final {
-      std::vector<double> params_r_vec(params_r.size());
+      std::vector<double> params_r_vec;
+      params_r_vec.reserve(params_r.size());
       std::vector<int> params_i;
       transform_inits_impl(context, params_i, params_r_vec, pstream);
-      params_r.resize(params_r_vec.size());
-      for (int i = 0; i < params_r.size(); ++i) {
-        params_r.coeffRef(i) = params_r_vec[i];
-      }
+      params_r = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
+        params_r_vec.data(), params_r_vec.size());
     }
     inline void transform_inits(const stan::io::var_context& context,
                                 std::vector<int>& params_i,

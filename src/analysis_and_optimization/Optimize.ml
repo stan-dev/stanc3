@@ -219,7 +219,7 @@ let rec inline_function_expression propto adt fim
   match pattern with
   | Var _ -> ([], [], e)
   | Lit (_, _) -> ([], [], e)
-  | FunApp (t, s, es) -> (
+  | FunApp (kind, es) -> (
       let dse_list =
         List.map ~f:(inline_function_expression propto adt fim) es
       in
@@ -231,30 +231,49 @@ let rec inline_function_expression propto adt fim
         List.concat (List.rev (List.map ~f:(function _, x, _ -> x) dse_list))
       in
       let es = List.map ~f:(function _, _, x -> x) dse_list in
-      let s = if propto then s else Middle.Utils.stdlib_distribution_name s in
-      match Map.find fim s with
-      | None -> (d_list, s_list, {e with pattern= FunApp (t, s, es)})
-      | Some (rt, args, b) ->
-          let x = Gensym.generate ~prefix:"inline_" () in
-          let handle = handle_early_returns (Some x) in
-          let d_list2, s_list2, (e : Expr.Typed.t) =
-            ( [ Stmt.Fixed.Pattern.Decl
-                  {decl_adtype= adt; decl_id= x; decl_type= Option.value_exn rt}
-              ]
-              (* We should minimize the code that's having its variables
+      match kind with
+      | CompilerInternal _ ->
+          (d_list, s_list, {e with pattern= FunApp (kind, es)})
+      | UserDefined (fname, suffix) | StanLib (fname, suffix) -> (
+          let suffix, fname' =
+            match suffix with
+            | FnLpdf propto' when propto' && propto ->
+                ( Fun_kind.FnLpdf true
+                , Utils.with_unnormalized_suffix fname |> Option.value_exn )
+            | FnLpdf _ -> (Fun_kind.FnLpdf false, fname)
+            | _ -> (suffix, fname)
+          in
+          match Map.find fim fname' with
+          | None ->
+              let fun_kind =
+                match kind with
+                | Fun_kind.UserDefined _ -> Fun_kind.UserDefined (fname, suffix)
+                | _ -> StanLib (fname, suffix)
+              in
+              (d_list, s_list, {e with pattern= FunApp (fun_kind, es)})
+          | Some (rt, args, b) ->
+              let x = Gensym.generate ~prefix:"inline_" () in
+              let handle = handle_early_returns (Some x) in
+              let d_list2, s_list2, (e : Expr.Typed.t) =
+                ( [ Stmt.Fixed.Pattern.Decl
+                      { decl_adtype= adt
+                      ; decl_id= x
+                      ; decl_type= Option.value_exn rt } ]
+                  (* We should minimize the code that's having its variables
                    replaced to avoid conflict with the (two) new dummy
                    variables introduced by inlining *)
-            , [handle (replace_fresh_local_vars (subst_args_stmt args es b))]
-            , { pattern= Var x
-              ; meta=
-                  Expr.Typed.Meta.
-                    { type_= Type.to_unsized (Option.value_exn rt)
-                    ; adlevel= adt
-                    ; loc= Location_span.empty } } )
-          in
-          let d_list = d_list @ d_list2 in
-          let s_list = s_list @ s_list2 in
-          (d_list, s_list, e) )
+                , [ handle
+                      (replace_fresh_local_vars (subst_args_stmt args es b)) ]
+                , { pattern= Var x
+                  ; meta=
+                      Expr.Typed.Meta.
+                        { type_= Type.to_unsized (Option.value_exn rt)
+                        ; adlevel= adt
+                        ; loc= Location_span.empty } } )
+              in
+              let d_list = d_list @ d_list2 in
+              let s_list = s_list @ s_list2 in
+              (d_list, s_list, e) ) )
   | TernaryIf (e1, e2, e3) ->
       let dl1, sl1, e1 = inline_function_expression propto adt fim e1 in
       let dl2, sl2, e2 = inline_function_expression propto adt fim e2 in
@@ -347,7 +366,7 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.({pattern; meta}) =
         | TargetPE e ->
             let d, s, e = inline_function_expression propto adt fim e in
             slist_concat_no_loc (d @ s) (TargetPE e)
-        | NRFunApp (t, s, es) ->
+        | NRFunApp (kind, es) ->
             let dse_list =
               List.map ~f:(inline_function_expression propto adt fim) es
             in
@@ -362,14 +381,17 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.({pattern; meta}) =
             in
             let es = List.map ~f:(function _, _, x -> x) dse_list in
             slist_concat_no_loc (d_list @ s_list)
-              ( match Map.find fim s with
-              | None -> NRFunApp (t, s, es)
-              | Some (_, args, b) ->
-                  let b = replace_fresh_local_vars b in
-                  let b = handle_early_returns None b in
-                  (subst_args_stmt args es
-                     {pattern= b; meta= Location_span.empty})
-                    .pattern )
+              ( match kind with
+              | CompilerInternal _ -> NRFunApp (kind, es)
+              | UserDefined (s, _) | StanLib (s, _) -> (
+                match Map.find fim s with
+                | None -> NRFunApp (kind, es)
+                | Some (_, args, b) ->
+                    let b = replace_fresh_local_vars b in
+                    let b = handle_early_returns None b in
+                    (subst_args_stmt args es
+                       {pattern= b; meta= Location_span.empty})
+                      .pattern ) )
         | Return e -> (
           match e with
           | None -> Return None
@@ -499,7 +521,7 @@ let rec contains_top_break_or_continue Stmt.Fixed.({pattern; _}) =
   | Break | Continue -> true
   | Assignment (_, _)
    |TargetPE _
-   |NRFunApp (_, _, _)
+   |NRFunApp (_, _)
    |Return _ | Decl _
    |While (_, _)
    |For _ | Skip ->
@@ -519,8 +541,8 @@ let unroll_static_loops_statement _ =
   let f stmt =
     match stmt with
     | Stmt.Fixed.Pattern.For {loopvar; lower; upper; body} -> (
-        let lower = Partial_evaluator.eval_expr lower in
-        let upper = Partial_evaluator.eval_expr upper in
+        let lower = Partial_evaluator.try_eval_expr lower in
+        let upper = Partial_evaluator.try_eval_expr upper in
         match
           (contains_top_break_or_continue body, lower.pattern, upper.pattern)
         with
@@ -565,7 +587,9 @@ let unroll_loop_one_step_statement _ =
         else
           IfElse
             ( Expr.Fixed.
-                {lower with pattern= FunApp (StanLib, "Geq__", [upper; lower])}
+                { lower with
+                  pattern= FunApp (StanLib ("Geq__", FnPlain), [upper; lower])
+                }
             , { pattern=
                   (let body_unrolled =
                      subst_args_stmt [loopvar] [lower]
@@ -581,8 +605,7 @@ let unroll_loop_one_step_statement _ =
                                { lower with
                                  pattern=
                                    FunApp
-                                     ( StanLib
-                                     , "Plus__"
+                                     ( StanLib ("Plus__", FnPlain)
                                      , [lower; Expr.Helpers.loop_bottom] ) } }
                      ; meta= Location_span.empty }
                    in
@@ -666,26 +689,21 @@ and accum_any pred b e = b || expr_any pred e
 
 let can_side_effect_top_expr (e : Expr.Typed.t) =
   match e.pattern with
-  | FunApp (t, f, _) ->
-      String.suffix f 3 = "_lp"
-      || (t = CompilerInternal && f = Internal_fun.to_string FnReadParam)
-      || (t = CompilerInternal && f = Internal_fun.to_string FnReadData)
-      || (t = CompilerInternal && f = Internal_fun.to_string FnWriteParam)
-      || (t = CompilerInternal && f = Internal_fun.to_string FnConstrain)
-      || (t = CompilerInternal && f = Internal_fun.to_string FnValidateSize)
-      || (t = CompilerInternal && f = Internal_fun.to_string FnValidateSize)
-      || t = CompilerInternal
-         && f = Internal_fun.to_string FnValidateSizeSimplex
-      || t = CompilerInternal
-         && f = Internal_fun.to_string FnValidateSizeUnitVector
-      || (t = CompilerInternal && f = Internal_fun.to_string FnUnconstrain)
+  | FunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget)), _) -> true
+  | FunApp
+      ( CompilerInternal
+          ( FnReadParam _ | FnReadData | FnWriteParam | FnConstrain _
+          | FnValidateSize | FnValidateSizeSimplex | FnValidateSizeUnitVector
+          | FnUnconstrain _ )
+      , _ ) ->
+      true
   | _ -> false
 
 let cannot_duplicate_expr (e : Expr.Typed.t) =
   let pred e =
     can_side_effect_top_expr e
     || ( match e.pattern with
-       | FunApp (_, f, _) -> String.suffix f 4 = "_rng"
+       | FunApp ((UserDefined (_, FnRng) | StanLib (_, FnRng)), _) -> true
        | _ -> false )
     || (preserve_stability && UnsizedType.is_autodiffable e.meta.type_)
   in
@@ -746,7 +764,7 @@ let dead_code_elimination (mir : Program.Typed.t) =
            due to side effects. *)
       (* TODO: maybe we should revisit that. *)
       | Decl _ | TargetPE _
-       |NRFunApp (_, _, _)
+       |NRFunApp (_, _)
        |Break | Continue | Return _ | Skip ->
           stmt
       | IfElse (e, b1, b2) -> (

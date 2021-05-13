@@ -25,8 +25,8 @@ let%expect_test "map_rec_stmt_loc" =
       |}
   in
   let f = function
-    | Stmt.Fixed.Pattern.NRFunApp (CompilerInternal, "FnPrint__", [s]) ->
-        Stmt.Fixed.Pattern.NRFunApp (CompilerInternal, "FnPrint__", [s; s])
+    | Stmt.Fixed.Pattern.NRFunApp (CompilerInternal FnPrint, [s]) ->
+        Stmt.Fixed.Pattern.NRFunApp (CompilerInternal FnPrint, [s; s])
     | x -> x
   in
   let mir = Program.map Fn.id (map_rec_stmt_loc f) mir in
@@ -66,9 +66,8 @@ let%expect_test "map_rec_state_stmt_loc" =
       |}
   in
   let f i = function
-    | Stmt.Fixed.Pattern.NRFunApp (CompilerInternal, "FnPrint__", [s]) ->
-        Stmt.Fixed.Pattern.
-          (NRFunApp (CompilerInternal, "FnPrint__", [s; s]), i + 1)
+    | Stmt.Fixed.Pattern.NRFunApp (CompilerInternal FnPrint, [s]) ->
+        Stmt.Fixed.Pattern.(NRFunApp (CompilerInternal FnPrint, [s; s]), i + 1)
     | x -> (x, i)
   in
   let mir_stmt, num =
@@ -247,31 +246,32 @@ let%expect_test "list collapsing" =
   [%expect
     {|
     ((functions_block
-      (((fdrt ()) (fdname f)
+      (((fdrt ()) (fdname f) (fdsuffix FnPlain)
         (fdargs ((AutoDiffable x UInt) (AutoDiffable y UMatrix)))
         (fdbody
          (((pattern
             (Block
              (((pattern
-                (NRFunApp CompilerInternal FnPrint__
+                (NRFunApp (CompilerInternal FnPrint)
                  (((pattern (Var x))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                (meta <opaque>))
               ((pattern
-                (NRFunApp CompilerInternal FnPrint__
+                (NRFunApp (CompilerInternal FnPrint)
                  (((pattern (Var y))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta <opaque>)))))
            (meta <opaque>))))
         (fdloc <opaque>))
-       ((fdrt (UReal)) (fdname g) (fdargs ((AutoDiffable z UInt)))
+       ((fdrt (UReal)) (fdname g) (fdsuffix FnPlain)
+        (fdargs ((AutoDiffable z UInt)))
         (fdbody
          (((pattern
             (Block
              (((pattern
                 (Return
                  (((pattern
-                    (FunApp StanLib Pow__
+                    (FunApp (StanLib Pow__ FnPlain)
                      (((pattern (Var z))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 2))
@@ -305,16 +305,16 @@ let%expect_test "list collapsing" =
                ((pattern
                  (Block
                   (((pattern
-                     (NRFunApp CompilerInternal FnPrint__
+                     (NRFunApp (CompilerInternal FnPrint)
                       (((pattern (Lit Int 3))
                         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                     (meta <opaque>))
                    ((pattern
-                     (NRFunApp CompilerInternal FnPrint__
+                     (NRFunApp (CompilerInternal FnPrint)
                       (((pattern
-                         (FunApp CompilerInternal FnMakeRowVec__
+                         (FunApp (CompilerInternal FnMakeRowVec)
                           (((pattern
-                             (FunApp CompilerInternal FnMakeRowVec__
+                             (FunApp (CompilerInternal FnMakeRowVec)
                               (((pattern (Lit Int 3))
                                 (meta
                                  ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -325,7 +325,7 @@ let%expect_test "list collapsing" =
                              ((type_ URowVector) (loc <opaque>)
                               (adlevel DataOnly))))
                            ((pattern
-                             (FunApp CompilerInternal FnMakeRowVec__
+                             (FunApp (CompilerInternal FnMakeRowVec)
                               (((pattern (Lit Int 4))
                                 (meta
                                  ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -372,7 +372,7 @@ let%expect_test "list collapsing" =
                    ((pattern
                      (Assignment (inline_sym3__ UReal ())
                       ((pattern
-                        (FunApp StanLib Pow__
+                        (FunApp (StanLib Pow__ FnPlain)
                          (((pattern (Lit Int 53))
                            (meta
                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -385,7 +385,7 @@ let%expect_test "list collapsing" =
                 (meta <opaque>)))))
             (meta <opaque>))
            ((pattern
-             (NRFunApp CompilerInternal FnReject__
+             (NRFunApp (CompilerInternal FnReject)
               (((pattern (Var inline_sym3__))
                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta <opaque>)))))
@@ -401,7 +401,7 @@ let%expect_test "list collapsing" =
        ((pattern
          (IfElse
           ((pattern
-            (FunApp StanLib PNot__
+            (FunApp (StanLib PNot__ FnPlain)
              (((pattern
                 (EOr
                  ((pattern (Var emit_transformed_parameters__))
@@ -415,7 +415,7 @@ let%expect_test "list collapsing" =
        ((pattern
          (IfElse
           ((pattern
-            (FunApp StanLib PNot__
+            (FunApp (StanLib PNot__ FnPlain)
              (((pattern (Var emit_generated_quantities__))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -1977,6 +1977,31 @@ let%expect_test "partial evaluation" =
         if(PNot__(emit_generated_quantities__)) return;
       } |}]
 
+let%expect_test "partial evaluate reject" =
+  let mir =
+    reset_and_mir_of_string
+      {|
+      model {
+        int x = 5 %/% 0;
+      }
+      |}
+  in
+  let mir = partial_evaluation mir in
+  Fmt.strf "@[<v>%a@]" Program.Typed.pp mir |> print_endline ;
+  [%expect
+    {|
+      log_prob {
+        {
+          int x;
+          FnReject__("Integer division by zero");
+        }
+      }
+
+      generate_quantities {
+        if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
+        if(PNot__(emit_generated_quantities__)) return;
+      } |}]
+
 let%expect_test "try partially evaluate" =
   let mir =
     reset_and_mir_of_string
@@ -2094,12 +2119,21 @@ model {
     target += bernoulli_lpmf(y_arr| inv_logit(theta + x_matrix * x_vector));
     target += bernoulli_lpmf(y_arr| inv_logit(x_matrix * x_vector + theta));
     target += bernoulli_lpmf(y_arr| inv_logit(x_matrix * x_vector));
+    target += bernoulli_lupmf(y_arr| inv_logit(theta + x_matrix * x_vector));
+    target += bernoulli_lupmf(y_arr| inv_logit(x_matrix * x_vector + theta));
+    target += bernoulli_lupmf(y_arr| inv_logit(x_matrix * x_vector));
     target += bernoulli_logit_lpmf(y_arr| (theta + x_matrix * x_vector));
     target += bernoulli_logit_lpmf(y_arr| (x_matrix * x_vector + theta));
     target += bernoulli_logit_lpmf(y_arr| (x_matrix * x_vector));
+    target += bernoulli_logit_lupmf(y_arr| (theta + x_matrix * x_vector));
+    target += bernoulli_logit_lupmf(y_arr| (x_matrix * x_vector + theta));
+    target += bernoulli_logit_lupmf(y_arr| (x_matrix * x_vector));
     target += bernoulli_lpmf(y_arr| inv_logit(x_vector));
+    target += bernoulli_lupmf(y_arr| inv_logit(x_vector));
     target += binomial_lpmf(y_arr| j, inv_logit(x_vector));
+    target += binomial_lupmf(y_arr| j, inv_logit(x_vector));
     target += categorical_lpmf(y_arr| inv_logit(x_vector));
+    target += categorical_lupmf(y_arr| inv_logit(x_vector));
     target += columns_dot_product(x_matrix, x_matrix);
     target += dot_product(x_vector, x_vector);
     target += inv(sqrt(x_vector));
@@ -2121,23 +2155,41 @@ model {
     target += log(sum(exp(x_vector)));
     target += log(exp(theta_u) + exp(phi_u));
     target += multi_normal_lpdf(x_vector| x_vector, inverse(x_cov));
+    target += multi_normal_lupdf(x_vector| x_vector, inverse(x_cov));
     target += neg_binomial_2_lpmf(y_arr| exp(theta + x_matrix * x_vector), phi);
     target += neg_binomial_2_lpmf(y_arr| exp(x_matrix * x_vector + theta), phi);
     target += neg_binomial_2_lpmf(y_arr| exp(x_matrix * x_vector), phi);
+    target += neg_binomial_2_lupmf(y_arr| exp(theta + x_matrix * x_vector), phi);
+    target += neg_binomial_2_lupmf(y_arr| exp(x_matrix * x_vector + theta), phi);
+    target += neg_binomial_2_lupmf(y_arr| exp(x_matrix * x_vector), phi);
     target += neg_binomial_2_log_lpmf(y_arr| (theta + x_matrix * x_vector), phi);
     target += neg_binomial_2_log_lpmf(y_arr| (x_matrix * x_vector + theta), phi);
     target += neg_binomial_2_log_lpmf(y_arr| (x_matrix * x_vector), phi);
+    target += neg_binomial_2_log_lupmf(y_arr| (theta + x_matrix * x_vector), phi);
+    target += neg_binomial_2_log_lupmf(y_arr| (x_matrix * x_vector + theta), phi);
+    target += neg_binomial_2_log_lupmf(y_arr| (x_matrix * x_vector), phi);
     target += neg_binomial_2_lpmf(y_arr| exp(theta), phi);
+    target += neg_binomial_2_lupmf(y_arr| exp(theta), phi);
     target += normal_lpdf(y_vector| theta + x_matrix * x_vector, phi);
     target += normal_lpdf(y_vector| x_matrix * x_vector + theta, phi);
     target += normal_lpdf(y_vector| x_matrix * x_vector, phi);
+    target += normal_lupdf(y_vector| theta + x_matrix * x_vector, phi);
+    target += normal_lupdf(y_vector| x_matrix * x_vector + theta, phi);
+    target += normal_lupdf(y_vector| x_matrix * x_vector, phi);
     target += poisson_lpmf(y_arr| exp(theta + x_matrix * x_vector));
     target += poisson_lpmf(y_arr| exp(x_matrix * x_vector + theta));
     target += poisson_lpmf(y_arr| exp(x_matrix * x_vector));
+    target += poisson_lupmf(y_arr| exp(theta + x_matrix * x_vector));
+    target += poisson_lupmf(y_arr| exp(x_matrix * x_vector + theta));
+    target += poisson_lupmf(y_arr| exp(x_matrix * x_vector));
     target += poisson_log_lpmf(y_arr| (theta + x_matrix * x_vector));
     target += poisson_log_lpmf(y_arr| (x_matrix * x_vector + theta));
     target += poisson_log_lpmf(y_arr| (x_matrix * x_vector));
+    target += poisson_log_lupmf(y_arr| (theta + x_matrix * x_vector));
+    target += poisson_log_lupmf(y_arr| (x_matrix * x_vector + theta));
+    target += poisson_log_lupmf(y_arr| (x_matrix * x_vector));
     target += poisson_lpmf(y_arr| exp(x_vector));
+    target += poisson_lupmf(y_arr| exp(x_vector));
     target += pow(2, theta);
     target += pow(theta, 2);
     target += pow(theta, 0.5);
@@ -2188,7 +2240,6 @@ model {
         vector[2] x_vector;
         vector[3] y_vector;
         matrix[2, 2] x_cov;
-        x_cov = FnConstrain__(x_cov, "cov_matrix", 2);
         real theta_u;
         real phi_u;
         {
@@ -2235,12 +2286,21 @@ model {
           target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, 34., x_vector);
           target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, 34., x_vector);
           target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, 0, x_vector);
+          target += bernoulli_logit_glm_lupmf(y_arr, x_matrix, 34., x_vector);
+          target += bernoulli_logit_glm_lupmf(y_arr, x_matrix, 34., x_vector);
+          target += bernoulli_logit_glm_lupmf(y_arr, x_matrix, 0, x_vector);
           target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, 34., x_vector);
           target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, 34., x_vector);
           target += bernoulli_logit_glm_lpmf(y_arr, x_matrix, 0, x_vector);
+          target += bernoulli_logit_glm_lupmf(y_arr, x_matrix, 34., x_vector);
+          target += bernoulli_logit_glm_lupmf(y_arr, x_matrix, 34., x_vector);
+          target += bernoulli_logit_glm_lupmf(y_arr, x_matrix, 0, x_vector);
           target += bernoulli_logit_lpmf(y_arr, x_vector);
+          target += bernoulli_logit_lupmf(y_arr, x_vector);
           target += binomial_logit_lpmf(y_arr, 32, x_vector);
+          target += binomial_logit_lupmf(y_arr, 32, x_vector);
           target += categorical_logit_lpmf(y_arr, x_vector);
+          target += categorical_logit_lupmf(y_arr, x_vector);
           target += columns_dot_self(x_matrix);
           target += dot_self(x_vector);
           target += inv_sqrt(x_vector);
@@ -2262,23 +2322,41 @@ model {
           target += log_sum_exp(x_vector);
           target += log_sum_exp(theta_u, phi_u);
           target += multi_normal_prec_lpdf(x_vector, x_vector, x_cov);
+          target += multi_normal_prec_lupdf(x_vector, x_vector, x_cov);
           target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 34., x_vector, 5.);
           target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 34., x_vector, 5.);
           target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 0, x_vector, 5.);
+          target += neg_binomial_2_log_glm_lupmf(y_arr, x_matrix, 34., x_vector, 5.);
+          target += neg_binomial_2_log_glm_lupmf(y_arr, x_matrix, 34., x_vector, 5.);
+          target += neg_binomial_2_log_glm_lupmf(y_arr, x_matrix, 0, x_vector, 5.);
           target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 34., x_vector, 5.);
           target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 34., x_vector, 5.);
           target += neg_binomial_2_log_glm_lpmf(y_arr, x_matrix, 0, x_vector, 5.);
+          target += neg_binomial_2_log_glm_lupmf(y_arr, x_matrix, 34., x_vector, 5.);
+          target += neg_binomial_2_log_glm_lupmf(y_arr, x_matrix, 34., x_vector, 5.);
+          target += neg_binomial_2_log_glm_lupmf(y_arr, x_matrix, 0, x_vector, 5.);
           target += neg_binomial_2_log_lpmf(y_arr, 34., 5.);
+          target += neg_binomial_2_log_lupmf(y_arr, 34., 5.);
           target += normal_id_glm_lpdf(y_vector, x_matrix, 34., x_vector, 5.);
           target += normal_id_glm_lpdf(y_vector, x_matrix, 34., x_vector, 5.);
           target += normal_id_glm_lpdf(y_vector, x_matrix, 0, x_vector, 5.);
+          target += normal_id_glm_lupdf(y_vector, x_matrix, 34., x_vector, 5.);
+          target += normal_id_glm_lupdf(y_vector, x_matrix, 34., x_vector, 5.);
+          target += normal_id_glm_lupdf(y_vector, x_matrix, 0, x_vector, 5.);
           target += poisson_log_glm_lpmf(y_arr, x_matrix, 34., x_vector);
           target += poisson_log_glm_lpmf(y_arr, x_matrix, 34., x_vector);
           target += poisson_log_glm_lpmf(y_arr, x_matrix, 0, x_vector);
+          target += poisson_log_glm_lupmf(y_arr, x_matrix, 34., x_vector);
+          target += poisson_log_glm_lupmf(y_arr, x_matrix, 34., x_vector);
+          target += poisson_log_glm_lupmf(y_arr, x_matrix, 0, x_vector);
           target += poisson_log_glm_lpmf(y_arr, x_matrix, 34., x_vector);
           target += poisson_log_glm_lpmf(y_arr, x_matrix, 34., x_vector);
           target += poisson_log_glm_lpmf(y_arr, x_matrix, 0, x_vector);
+          target += poisson_log_glm_lupmf(y_arr, x_matrix, 34., x_vector);
+          target += poisson_log_glm_lupmf(y_arr, x_matrix, 34., x_vector);
+          target += poisson_log_glm_lupmf(y_arr, x_matrix, 0, x_vector);
           target += poisson_log_lpmf(y_arr, x_vector);
+          target += poisson_log_lupmf(y_arr, x_vector);
           target += exp2(34.);
           target += square(34.);
           target += sqrt(34.);
@@ -2324,7 +2402,6 @@ model {
         data vector[2] x_vector;
         data vector[3] y_vector;
         data matrix[2, 2] x_cov;
-        x_cov = FnConstrain__(x_cov, "cov_matrix", 2);
         data real theta_u;
         data real phi_u;
         if(PNot__(emit_transformed_parameters__ || emit_generated_quantities__)) return;
@@ -2339,7 +2416,7 @@ model {
         data vector[3] y_vector;
         data matrix[2, 2] x_cov;
         data vector[3] x_cov_free__;
-        x_cov_free__ = FnUnconstrain__(x_cov, "cov_matrix");
+        x_cov_free__ = (FnUnconstrain cov_matrix)__(x_cov);
         data real theta_u;
         data real phi_u;
       }
@@ -3053,7 +3130,7 @@ let%expect_test "block fixing" =
         (((pattern
            (IfElse
             ((pattern
-              (FunApp StanLib PNot__
+              (FunApp (StanLib PNot__ FnPlain)
                (((pattern
                   (EOr
                    ((pattern (Var emit_transformed_parameters__))
@@ -3067,7 +3144,7 @@ let%expect_test "block fixing" =
          ((pattern
            (IfElse
             ((pattern
-              (FunApp StanLib PNot__
+              (FunApp (StanLib PNot__ FnPlain)
                (((pattern (Var emit_generated_quantities__))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -3252,7 +3329,7 @@ let%expect_test "adlevel_optimization expressions" =
            ((pattern
              (IfElse
               ((pattern
-                (FunApp StanLib Greater__
+                (FunApp (StanLib Greater__ FnPlain)
                  (((pattern (Lit Int 1))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern (Lit Int 2))
@@ -3261,7 +3338,7 @@ let%expect_test "adlevel_optimization expressions" =
               ((pattern
                 (Assignment (y UReal ())
                  ((pattern
-                   (FunApp StanLib Plus__
+                   (FunApp (StanLib Plus__ FnPlain)
                     (((pattern (Var y))
                       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                      ((pattern (Var x))
@@ -3271,7 +3348,7 @@ let%expect_test "adlevel_optimization expressions" =
               (((pattern
                  (Assignment (y UReal ())
                   ((pattern
-                    (FunApp StanLib Plus__
+                    (FunApp (StanLib Plus__ FnPlain)
                      (((pattern (Var y))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern (Var w))
@@ -3282,7 +3359,7 @@ let%expect_test "adlevel_optimization expressions" =
            ((pattern
              (IfElse
               ((pattern
-                (FunApp StanLib Greater__
+                (FunApp (StanLib Greater__ FnPlain)
                  (((pattern (Lit Int 2))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern (Lit Int 1))
@@ -3298,7 +3375,7 @@ let%expect_test "adlevel_optimization expressions" =
            ((pattern
              (IfElse
               ((pattern
-                (FunApp StanLib Greater__
+                (FunApp (StanLib Greater__ FnPlain)
                  (((pattern (Lit Int 3))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern (Lit Int 1))
@@ -3312,12 +3389,12 @@ let%expect_test "adlevel_optimization expressions" =
               ()))
             (meta <opaque>))
            ((pattern
-             (NRFunApp CompilerInternal FnPrint__
+             (NRFunApp (CompilerInternal FnPrint)
               (((pattern (Var z))
                 (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
             (meta <opaque>))
            ((pattern
-             (NRFunApp CompilerInternal FnPrint__
+             (NRFunApp (CompilerInternal FnPrint)
               (((pattern (Var z_data))
                 (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
             (meta <opaque>)))))

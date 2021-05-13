@@ -3,7 +3,6 @@ import org.stan.Utils
 
 def utils = new org.stan.Utils()
 def skipExpressionTests = false
-
 /* Functions that runs a sh command and returns the stdout */
 def runShell(String command){
     def output = sh (returnStdout: true, script: "${command}").trim()
@@ -158,8 +157,8 @@ pipeline {
                                 cd performance-tests-cmdstan
                                 cd cmdstan; make -j${env.PARALLEL} build; cd ..
                                 cp ../bin/stanc cmdstan/bin/stanc
-                                ./runPerformanceTests.py --runs=0 ../test/integration/good
-                                ./runPerformanceTests.py --runs=0 example-models
+                                ./runPerformanceTests.py -j7 --runs=0 ../test/integration/good
+                                ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 example-models
                                 """
                         }
 
@@ -225,8 +224,7 @@ pipeline {
 
                         sh """
                             git clone --recursive https://github.com/stan-dev/math.git
-                            mkdir -p math/bin/stanc
-                            cp bin/stanc math/bin/stanc
+                            cp bin/stanc math/test/expressions/stanc
                         """
 
                         script {

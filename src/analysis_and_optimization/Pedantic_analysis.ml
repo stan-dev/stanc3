@@ -51,8 +51,7 @@ let list_multi_twiddles (mir : Program.Typed.t) :
       (string, Location_span.t Set.Poly.t) Map.Poly.t =
     match stmt.pattern with
     | Stmt.Fixed.Pattern.TargetPE
-        { pattern=
-            Expr.Fixed.Pattern.FunApp (_, _, {pattern= Var vname; _} :: _); _
+        { pattern= Expr.Fixed.Pattern.FunApp (_, {pattern= Var vname; _} :: _); _
         } ->
         Map.Poly.singleton vname (Set.Poly.singleton stmt.meta)
     | _ -> Map.Poly.empty
@@ -75,12 +74,13 @@ let list_multi_twiddles (mir : Program.Typed.t) :
 let var_deps info_map label ?expr:(expr_opt : Expr.Typed.t option = None)
     (targets : string Set.Poly.t) : string Set.Poly.t =
   (* Labels of dependencies *)
-  let dep_labels =
+  let dep_labels, expr_vars =
     match expr_opt with
-    | None -> node_dependencies info_map label
+    | None -> (node_dependencies info_map label, Set.Poly.empty)
     | Some expr ->
-        let vars = Set.Poly.map ~f:fst (expr_var_set expr) in
-        node_vars_dependencies info_map vars label
+        let vvars = Set.Poly.map ~f:fst (expr_var_set expr) in
+        ( node_vars_dependencies info_map vvars label
+        , Set.Poly.map ~f:string_of_vexpr vvars )
   in
   (* expressions of dependencies *)
   let dep_exprs =
@@ -91,7 +91,7 @@ let var_deps info_map label ?expr:(expr_opt : Expr.Typed.t option = None)
   (* variable dependencies *)
   let dep_vars = Set.Poly.map ~f:(fun (VVar v, _) -> v) dep_exprs in
   (* target dependencies *)
-  Set.Poly.inter targets dep_vars
+  Set.Poly.inter targets (Set.Poly.union dep_vars expr_vars)
 
 let list_target_dependant_cf
     (info_map :
@@ -178,7 +178,8 @@ let list_param_dependant_fundef_cf (mir : Program.Typed.t)
                    union_map (stmt_rhs stmt) ~f:(fun rhs_expr ->
                        expr_collect_exprs rhs_expr ~f:(fun rhs_subexpr ->
                            match rhs_subexpr.pattern with
-                           | Expr.Fixed.Pattern.FunApp (UserDefined, fname, _)
+                           | Expr.Fixed.Pattern.FunApp
+                               (UserDefined (fname, _), _)
                              when fname = fun_def.fdname ->
                                Some (rhs_subexpr, label)
                            | _ -> None ) )
@@ -187,7 +188,8 @@ let list_param_dependant_fundef_cf (mir : Program.Typed.t)
   in
   let arg_exprs (fcall_expr : Expr.Typed.t) =
     match fcall_expr with
-    | {pattern= Expr.Fixed.Pattern.FunApp (UserDefined, fname, arg_exprs); _}
+    | { pattern= Expr.Fixed.Pattern.FunApp (UserDefined (fname, _), arg_exprs); _
+      }
       when fname = fun_def.fdname ->
         Set.Poly.map dep_args ~f:(fun (loc, ix, arg_name) ->
             (loc, List.nth_exn arg_exprs ix, arg_name) )
@@ -261,16 +263,14 @@ let compiletime_value_of_expr
 let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
   let take_dist (expr : Expr.Typed.t) =
     match expr.pattern with
-    | Expr.Fixed.Pattern.FunApp (StanLib, fname, arg_exprs) -> (
-      match chop_dist_name fname with
-      | Some dname ->
-          let params = parameter_set mir in
-          let data = data_set mir in
-          let args =
-            List.map ~f:(compiletime_value_of_expr params data) arg_exprs
-          in
-          Some {name= dname; loc= expr.meta.loc; args}
-      | _ -> None )
+    | Expr.Fixed.Pattern.FunApp (StanLib (fname, FnLpdf true), arg_exprs) ->
+        let fname = chop_dist_name fname |> Option.value_exn in
+        let params = parameter_set mir in
+        let data = data_set mir in
+        let args =
+          List.map ~f:(compiletime_value_of_expr params data) arg_exprs
+        in
+        Some {name= fname; loc= expr.meta.loc; args}
     | _ -> None
   in
   stmts_collect_exprs
