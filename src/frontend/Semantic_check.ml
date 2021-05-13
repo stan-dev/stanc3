@@ -1019,7 +1019,7 @@ let semantic_check_nrfn_target ~loc ~cf id =
 let semantic_check_nrfn_normal ~loc id es =
   Validate.(
     match Symbol_table.look virt_table id.name with
-    | Some (_, UFun (listedtypes, Void, suffix, Common.Helpers.AoS))
+    | Some (_, UFun (listedtypes, Void, suffix, _))
       when UnsizedType.check_compatible_arguments_mod_conv id.name listedtypes
              (get_arg_types es) ->
         mk_typed_statement

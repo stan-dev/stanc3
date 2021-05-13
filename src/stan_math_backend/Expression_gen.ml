@@ -282,7 +282,7 @@ and gen_fun_app suffix ppf fname es =
                 ( StanLib
                     ( name ^ functor_suffix_select fname
                     , FnPlain
-                    , Common.Helpers.AoS )
+                    , Common.Helpers.SoA )
                 , [] ) }
       | e -> e
     in

@@ -140,7 +140,7 @@ my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
   try {
     current_statement__ = 7;
     validate_non_negative_index("result", "num_elements(x)", num_elements(x));
-    Eigen::Matrix<local_scalar_t__, -1, 1> result;
+    conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> result;
     result = Eigen::Matrix<local_scalar_t__, -1, 1>(num_elements(x));
     stan::math::fill(result, DUMMY_VAR__);
     

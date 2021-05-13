@@ -223,7 +223,7 @@ let rec modify_stmt_functions Stmt.Fixed.({pattern; meta}) =
 | Decl _ -> [None]
 *)
 let find_any_bads obj =
-  match obj with SizedType.SVector _ -> true | _ -> true
+  match obj with SizedType.SVector _ -> false | _ -> false
 
 let swap_fun_mem_pattern lst = List.map ~f:modify_stmt_functions lst
 

@@ -165,11 +165,11 @@ module Helpers = struct
   let one = int 1
 
   let binop e1 op e2 =
-    (* AoS here because all operators should support var matrix*)
+    (* SoA here because all operators should support var matrix*)
     { Fixed.meta= Typed.Meta.empty
     ; pattern=
         FunApp
-          ( StanLib (Operator.to_string op, FnPlain, Common.Helpers.AoS)
+          ( StanLib (Operator.to_string op, FnPlain, Common.Helpers.SoA)
           , [e1; e2] ) }
 
   let loop_bottom = one
