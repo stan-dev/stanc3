@@ -298,6 +298,7 @@ let declarative_fnsigs =
 
 let snd2 (_, b, _) = b
 let fst2 (a, _, _) = a
+let thrd (_, _, c) = c
 
 (* -- Querying stan_math_signatures -- *)
 let query_stan_math_mem_pattern_support (name : string) (args : fun_arg list) =
@@ -309,18 +310,15 @@ let query_stan_math_mem_pattern_support (name : string) (args : fun_arg list) =
         UnsizedType.check_compatible_arguments_mod_conv name (snd2 x) args )
       namematches
   in
-  match name with
-  | x when is_reduce_sum_fn x -> Some (UnsizedType.ReturnType UReal)
-  | x when is_variadic_ode_fn x ->
-      Some (UnsizedType.ReturnType (UArray UVector))
-  | _ ->
-      if List.length filteredmatches = 0 then None
-        (* Return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
-      else
-        Some
-          (List.hd_exn
-             (List.sort ~compare:UnsizedType.compare_returntype
-                (List.map ~f:fst2 filteredmatches)))
+  match List.length filteredmatches = 0 with
+  | true ->
+      false
+      (* Return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
+  | false ->
+      let is_soa ((_ : UnsizedType.returntype), (_ : fun_arg list), mem) =
+        mem = Common.Helpers.SoA
+      in
+      List.for_all ~f:is_soa filteredmatches
 
 (* -- Querying stan_math_signatures -- *)
 let stan_math_returntype (name : string) (args : fun_arg list) =

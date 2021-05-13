@@ -196,7 +196,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         validate_non_negative_index("L_cov", "N", N);
         current_statement__ = 8;
         validate_non_negative_index("L_cov", "N", N);
-        conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> L_cov;
+        Eigen::Matrix<local_scalar_t__, -1, -1> L_cov;
         L_cov = Eigen::Matrix<local_scalar_t__, -1, -1>(N, N);
         stan::math::fill(L_cov, DUMMY_VAR__);
         

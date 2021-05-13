@@ -12,7 +12,6 @@ open Core_kernel
  *  and returns either true or false.
  *  This is used to decide if a function's subsetted tuple should be returned.
  * @param pattern A pattern of fixed expressions to recurse over.
- *)
 let rec query_expr_functions select (where : 'a -> bool)
     Expr.Fixed.({pattern; _}) =
   let query_expr = query_expr_functions select where in
@@ -40,6 +39,7 @@ let rec query_expr_functions select (where : 'a -> bool)
   (*Vars and Literal types can't hold rngs*)
   | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
       [None]
+ *)
 
 (** Query function expressions in statements returning back a list
  *   of optionals with the the elements of the list holding the 
@@ -51,7 +51,6 @@ let rec query_expr_functions select (where : 'a -> bool)
  *   returning true or false. This is used to decide if a function's
  *   subsetted tuple should be returned.
  * @param pattern A pattern of fixed statements to recurse over.
- **)
 let rec query_stmt_functions select (where : 'a -> bool)
     Stmt.Fixed.({pattern; _}) =
   let query_stmt = query_stmt_functions select where in
@@ -93,6 +92,7 @@ let rec query_stmt_functions select (where : 'a -> bool)
   | SList stmts -> List.concat_map ~f:query_stmt stmts
   (*A Decl's record does not hold functions*)
   | Decl _ -> [None]
+ **)
 
 let rec swap_mem_pattern obj =
   match obj with
@@ -217,13 +217,102 @@ let rec modify_stmt_functions Stmt.Fixed.({pattern; meta}) =
   in
   Stmt.Fixed.{pattern= new_pattern; meta}
 
+(** Query function expressions in expressions returning back a list of optionals 
+ *    with each Some element holding the queried function types.
+ * @param select A functor taking in a tuple of the same types as 
+ *  those in `FunApp` and returning a subset of the `FunApp`'s types.
+ * @param where A functor that accepts a tuple returned by select
+ *  and returns either true or false.
+ *  This is used to decide if a function's subsetted tuple should be returned.
+ * @param pattern A pattern of fixed expressions to recurse over.
+*)
+let rec query_expr_functions var_name Expr.Fixed.({pattern; _}) =
+  let query_expr = query_expr_functions var_name in
+  match pattern with
+  | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) -> (
+    match kind with
+    | Fun_kind.StanLib (_, _, Common.Helpers.SoA) ->
+        true && List.for_all ~f:query_expr exprs
+    | CompilerInternal _ -> true
+    | Fun_kind.StanLib (_, _, Common.Helpers.AoS) -> false
+    | UserDefined _ -> false )
+  | TernaryIf (predicate, texpr, fexpr) ->
+      query_expr predicate && query_expr texpr && query_expr fexpr
+  | Indexed (expr, indexed) ->
+      let query_index ind =
+        match ind with
+        | Index.All -> true
+        | Single ind_expr -> query_expr ind_expr
+        | Upfrom ind_expr -> query_expr ind_expr
+        | Between (expr_top, expr_bottom) ->
+            query_expr expr_top && query_expr expr_bottom
+        | MultiIndex exprs -> query_expr exprs
+      in
+      query_expr expr && List.exists ~f:query_index indexed
+  | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
+      true
+  | EAnd (lhs, rhs) | EOr (lhs, rhs) -> query_expr lhs && query_expr rhs
+
+(** Query function expressions in statements returning back a list
+*   of optionals with the the elements of the list holding the 
+*   selected subset of function arguments.
+*   For an example of this function see `pp_rng_in_td`.
+* @param select A functor taking in a tuple of the same types as 
+*  those in `FunApp` and returning a subset of the `FunApp`'s types.
+* @param where A functor that accepts a tuple returned by select
+*   returning true or false. This is used to decide if a function's
+*   subsetted tuple should be returned.
+* @param pattern A pattern of fixed statements to recurse over.
+**)
+let rec query_stmt_functions var_name Stmt.Fixed.({pattern; _}) =
+  let query_expr = query_expr_functions var_name in
+  let query_stmt = query_stmt_functions var_name in
+  match pattern with
+  | NRFunApp
+      ( StanLib ((_ : string), (_ : bool Fun_kind.suffix), Common.Helpers.SoA)
+      , expr ) ->
+      List.for_all ~f:query_expr expr
+  | NRFunApp ((_ : Fun_kind.t), (_ : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
+      false
+  | Assignment (((_ : string), (_ : UnsizedType.t), lhs), rhs) ->
+      let query_index ind =
+        match ind with
+        | Index.All -> true
+        | Single ind_expr -> query_expr ind_expr
+        | Upfrom ind_expr -> query_expr ind_expr
+        | Between (expr_top, expr_bottom) ->
+            query_expr expr_top && query_expr expr_bottom
+        | MultiIndex exprs -> query_expr exprs
+      in
+      List.for_all ~f:query_index lhs && query_expr rhs
+  | IfElse (predicate, true_stmt, op_false_stmt) ->
+      let pred_query = query_expr predicate in
+      let true_query = query_stmt true_stmt in
+      let blah =
+        match op_false_stmt with Some stmt -> query_stmt stmt | None -> false
+      in
+      pred_query && true_query && blah
+  | Block stmts -> List.for_all ~f:query_stmt stmts
+  | SList stmts -> List.for_all ~f:query_stmt stmts
+  | For {lower; upper; body= Stmt.Fixed.({pattern= Block wooof; _}); _} ->
+      let ooof = List.for_all ~f:query_stmt wooof in
+      query_expr lower && query_expr upper && ooof
+  | TargetPE expr -> query_expr expr
+  | Return optional_expr -> (
+    match optional_expr with Some expr -> query_expr expr | None -> false )
+  | Profile ((_ : string), stmt) -> List.for_all ~f:query_stmt stmt
+  | Skip | Decl _ | Break | Continue -> true
+  | While (predicate, body) -> query_expr predicate && query_stmt body
+  | _ -> true
+
 (*
 | Skip -> [None]
 (*A Decl's record does not hold functions*)
 | Decl _ -> [None]
 *)
-let find_any_bads obj =
-  match obj with SizedType.SVector _ -> false | _ -> false
+let find_any_bads var_name lst =
+  let query_stmts = query_stmt_functions var_name in
+  match lst with Some lst2 -> List.for_all ~f:query_stmts lst2 | None -> true
 
 let swap_fun_mem_pattern lst = List.map ~f:modify_stmt_functions lst
 
@@ -251,7 +340,7 @@ let rec rewrite_soa_to_aos lst =
             { pattern= Decl {decl_adtype; decl_id; decl_type= Sized sized_type}
             ; meta }
         in
-        let check_bad_match = find_any_bads obj in
+        let check_bad_match = find_any_bads decl_id (List.tl lst) in
         match check_bad_match with
         | true ->
             binder

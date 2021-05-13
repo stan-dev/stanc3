@@ -458,7 +458,8 @@ let rec map_fn_names s =
     let pattern =
       Expr.Fixed.(
         match e.pattern with
-        | FunApp (StanLib (f, sfx, mem_type), a) when Map.mem fn_name_map f ->
+        | FunApp (StanLib (f, sfx, mem_type), (a : 'a Expr.Fixed.t list))
+          when Map.mem fn_name_map f ->
             Pattern.FunApp
               (StanLib (Map.find_exn fn_name_map f, sfx, mem_type), a)
         | expr -> Pattern.map map_fn_names_expr expr)

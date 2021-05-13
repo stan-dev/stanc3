@@ -1,18 +1,17 @@
-open Core_kernel
 open Common
 
 module Fixed : sig
   module Pattern : sig
     type litType = Int | Real | Str [@@deriving sexp, hash, compare]
 
-    type 'a t =
+    type 'expr t =
       | Var of string
       | Lit of litType * string
-      | FunApp of Fun_kind.t * 'a list
-      | TernaryIf of 'a * 'a * 'a
-      | EAnd of 'a * 'a
-      | EOr of 'a * 'a
-      | Indexed of 'a * 'a Index.t list
+      | FunApp of Fun_kind.t * 'expr list
+      | TernaryIf of 'expr * 'expr * 'expr
+      | EAnd of 'expr * 'expr
+      | EOr of 'expr * 'expr
+      | Indexed of 'expr * 'expr Index.t list
     [@@deriving sexp, hash, compare]
 
     include Pattern.S with type 'a t := 'a t
@@ -37,7 +36,7 @@ module Typed : sig
   module Meta : sig
     type t =
       { type_: UnsizedType.t
-      ; loc: Location_span.t sexp_opaque [@compare.ignore]
+      ; loc: Location_span.t [@sexp.opaque] [@compare.ignore]
       ; adlevel: UnsizedType.autodifftype }
     [@@deriving compare, create, sexp, hash]
 
@@ -55,7 +54,7 @@ module Labelled : sig
   module Meta : sig
     type t =
       { type_: UnsizedType.t
-      ; loc: Location_span.t sexp_opaque [@compare.ignore]
+      ; loc: Location_span.t [@sexp.opaque] [@compare.ignore]
       ; adlevel: UnsizedType.autodifftype
       ; label: Label.Int_label.t }
     [@@deriving compare, create, sexp, hash]

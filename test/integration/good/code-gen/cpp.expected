@@ -18421,7 +18421,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> alpha_v;
+      Eigen::Matrix<local_scalar_t__, -1, 1> alpha_v;
       alpha_v = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
       stan::math::fill(alpha_v, DUMMY_VAR__);
       
@@ -19679,7 +19679,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
       current_statement__ = 1;
       L_Omega = in__.template read_constrain_cholesky_factor_corr<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
                   lp__, nt, 2);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> z1;
+      Eigen::Matrix<local_scalar_t__, -1, 1> z1;
       z1 = Eigen::Matrix<local_scalar_t__, -1, 1>(NS);
       stan::math::fill(z1, DUMMY_VAR__);
       
