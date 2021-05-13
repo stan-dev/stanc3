@@ -385,14 +385,11 @@ let rec query_stmt_functions var_name Stmt.Fixed.({pattern; _}) =
   | While (predicate, body) -> query_expr predicate && query_stmt body
   | _ -> true
 
-(*
-| Skip -> [None]
-(*A Decl's record does not hold functions*)
-| Decl _ -> [None]
-*)
 let find_any_bads var_name lst =
   let query_stmts = query_stmt_functions var_name in
-  match lst with Some lst2 -> List.for_all ~f:query_stmts lst2 | None -> true
+  match lst with
+  | Some lst2 -> List.for_all ~f:query_stmts lst2
+  | None -> false
 
 let swap_fun_mem_pattern lst = List.map ~f:modify_stmt_functions lst
 
