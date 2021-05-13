@@ -344,6 +344,8 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
   | Profile (name, ls) -> pp_profile ppf (pp_stmt_list, name, ls)
   | Block ls -> pp_block ppf (pp_stmt_list, ls)
   | SList ls -> pp_stmt_list ppf ls
+  | Decl {decl_adtype; decl_id; decl_type= Type.Sized sized_type} ->
+      pp_sized_decl ppf (decl_id, sized_type, decl_adtype)
   | Decl {decl_adtype; decl_id; decl_type} ->
       pp_decl ppf (decl_id, decl_type, decl_adtype)
 

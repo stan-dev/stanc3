@@ -1104,7 +1104,7 @@ let settings_const b =
   ; dead_code_elimination= b
   ; partial_evaluation= b
   ; lazy_code_motion= b
-  ; optimize_ad_levels= b}
+  ; optimize_ad_levels= b }
 
 let all_optimizations : optimization_settings = settings_const true
 let no_optimizations : optimization_settings = settings_const false

@@ -8281,6 +8281,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       Eigen::Matrix<double, -1, 1> lcm_sym35__;
       double lcm_sym34__;
       int lcm_sym39__;
+      int lcm_sym33__;
       local_scalar_t__ tau_phi;
       tau_phi = DUMMY_VAR__;
       
@@ -8291,9 +8292,9 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       phi_std_raw = Eigen::Matrix<local_scalar_t__, -1, 1>((N - 1));
       stan::math::fill(phi_std_raw, DUMMY_VAR__);
       
-      lcm_sym39__ = (N - 1);
+      current_statement__ = 2;
       phi_std_raw = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
-                      lcm_sym39__);
+                      (N - 1));
       local_scalar_t__ sigma_phi;
       sigma_phi = DUMMY_VAR__;
       
@@ -8305,7 +8306,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       
       current_statement__ = 5;
       assign(phi, phi_std_raw,
-        "assigning variable phi", index_min_max(1, lcm_sym39__));
+        "assigning variable phi", index_min_max(1, (N - 1)));
       current_statement__ = 6;
       assign(phi, -sum(phi_std_raw), "assigning variable phi", index_uni(N));
       current_statement__ = 7;
@@ -12465,9 +12466,9 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       double lcm_sym266__;
       double lcm_sym265__;
       int lcm_sym264__;
-      double lcm_sym263__;
+      int lcm_sym263__;
       int lcm_sym262__;
-      int lcm_sym261__;
+      double lcm_sym261__;
       double lcm_sym260__;
       double lcm_sym259__;
       double lcm_sym258__;
@@ -12481,9 +12482,9 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       double lcm_sym250__;
       double lcm_sym249__;
       double lcm_sym248__;
-      double lcm_sym247__;
+      int lcm_sym247__;
       int lcm_sym246__;
-      int lcm_sym245__;
+      double lcm_sym245__;
       double lcm_sym244__;
       int lcm_sym243__;
       int lcm_sym242__;
@@ -12566,8 +12567,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       chi = Eigen::Matrix<local_scalar_t__, -1, -1>(M, n_occasions);
       stan::math::fill(chi, DUMMY_VAR__);
       
-      lcm_sym236__ = (n_occasions - 1);
-      assign(lcm_sym286__, rep_matrix(mean_phi, M, lcm_sym236__),
+      assign(lcm_sym286__, rep_matrix(mean_phi, M, (n_occasions - 1)),
         "assigning variable lcm_sym286__");
       assign(phi, lcm_sym286__, "assigning variable phi");
       lcm_sym226__ = logical_gte(n_occasions, 1);
@@ -12592,7 +12592,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         lcm_sym302__ = rvalue(lcm_sym220__, "lcm_sym220__", index_uni(1));
         current_statement__ = 15;
         assign(nu, lcm_sym302__, "assigning variable nu", index_uni(1));
-        current_statement__ = 19;
+        lcm_sym236__ = (n_occasions - 1);
         if (logical_gte(lcm_sym236__, 2)) {
           current_statement__ = 16;
           assign(nu,
@@ -12650,7 +12650,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
             int inline_sym20__;
             inline_sym20__ = std::numeric_limits<int>::min();
             
-            lcm_sym246__ = (lcm_sym241__ + 1);
+            lcm_sym247__ = (lcm_sym241__ + 1);
             current_statement__ = 30;
             assign(inline_sym18__,
               stan::math::fma(
@@ -12658,9 +12658,9 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                    index_uni(inline_sym22__), index_uni(lcm_sym241__)) *
                   (1 -
                     rvalue(p, "p",
-                      index_uni(inline_sym22__), index_uni(lcm_sym246__)))),
+                      index_uni(inline_sym22__), index_uni(lcm_sym247__)))),
                 rvalue(inline_sym18__, "inline_sym18__",
-                  index_uni(inline_sym22__), index_uni(lcm_sym246__)),
+                  index_uni(inline_sym22__), index_uni(lcm_sym247__)),
                 (1 -
                   rvalue(lcm_sym286__, "lcm_sym286__",
                     index_uni(inline_sym22__), index_uni(lcm_sym241__)))),
@@ -12675,7 +12675,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
               int inline_sym20__;
               inline_sym20__ = std::numeric_limits<int>::min();
               
-              lcm_sym245__ = (lcm_sym240__ + 1);
+              lcm_sym246__ = (lcm_sym240__ + 1);
               current_statement__ = 30;
               assign(inline_sym18__,
                 stan::math::fma(
@@ -12683,9 +12683,9 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                      index_uni(inline_sym22__), index_uni(lcm_sym240__)) *
                     (1 -
                       rvalue(p, "p",
-                        index_uni(inline_sym22__), index_uni(lcm_sym245__)))),
+                        index_uni(inline_sym22__), index_uni(lcm_sym246__)))),
                   rvalue(inline_sym18__, "inline_sym18__",
-                    index_uni(inline_sym22__), index_uni(lcm_sym245__)),
+                    index_uni(inline_sym22__), index_uni(lcm_sym246__)),
                   (1 -
                     rvalue(lcm_sym286__, "lcm_sym286__",
                       index_uni(inline_sym22__), index_uni(lcm_sym240__)))),
@@ -13056,14 +13056,14 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                   bernoulli_lpmf<propto__>(1,
                     rvalue(lcm_sym286__, "lcm_sym286__",
                       index_uni(1), index_uni(((lcm_sym289__ + 1) - 1)))));
-                lcm_sym262__ = ((lcm_sym289__ + 1) + 1);
+                lcm_sym263__ = ((lcm_sym289__ + 1) + 1);
                 lp_accum__.add(
                   bernoulli_lpmf<propto__>(
                     rvalue(y, "y",
                       index_uni(1), index_uni((lcm_sym289__ + 1))),
                     rvalue(p, "p",
                       index_uni(1), index_uni((lcm_sym289__ + 1)))));
-                for (int inline_sym30__ = lcm_sym262__;
+                for (int inline_sym30__ = lcm_sym263__;
                      inline_sym30__ <= lcm_sym295__; ++inline_sym30__) {
                   current_statement__ = 98;
                   lp_accum__.add(
@@ -13262,7 +13262,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                       rvalue(lcm_sym286__, "lcm_sym286__",
                         index_uni(inline_sym31__),
                           index_uni(((lcm_sym288__ + 1) - 1)))));
-                  lcm_sym261__ = ((lcm_sym288__ + 1) + 1);
+                  lcm_sym262__ = ((lcm_sym288__ + 1) + 1);
                   lp_accum__.add(
                     bernoulli_lpmf<propto__>(
                       rvalue(y, "y",
@@ -13271,7 +13271,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                       rvalue(p, "p",
                         index_uni(inline_sym31__),
                           index_uni((lcm_sym288__ + 1)))));
-                  for (int inline_sym30__ = lcm_sym261__;
+                  for (int inline_sym30__ = lcm_sym262__;
                        inline_sym30__ <= lcm_sym294__; ++inline_sym30__) {
                     current_statement__ = 98;
                     lp_accum__.add(
@@ -28815,9 +28815,9 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      double lcm_sym79__;
+      int lcm_sym79__;
       int lcm_sym78__;
-      int lcm_sym77__;
+      double lcm_sym77__;
       int lcm_sym76__;
       int lcm_sym75__;
       int lcm_sym74__;
@@ -29039,22 +29039,22 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
               }
             }
             {
-              lcm_sym78__ = (2 * 2);
-              if (logical_gte(lcm_sym78__, 2)) {
+              lcm_sym79__ = (2 * 2);
+              if (logical_gte(lcm_sym79__, 2)) {
                 lcm_sym76__ = (2 + 1);
                 lp_accum__.add(53);
-                for (int k = lcm_sym76__; k <= lcm_sym78__; ++k) {
+                for (int k = lcm_sym76__; k <= lcm_sym79__; ++k) {
                   current_statement__ = 15;
                   lp_accum__.add(53);
                 }
               } 
             }
             {
-              lcm_sym78__ = (3 * 2);
-              if (logical_gte(lcm_sym78__, 3)) {
+              lcm_sym79__ = (3 * 2);
+              if (logical_gte(lcm_sym79__, 3)) {
                 lcm_sym76__ = (3 + 1);
                 lp_accum__.add(53);
-                for (int k = lcm_sym76__; k <= lcm_sym78__; ++k) {
+                for (int k = lcm_sym76__; k <= lcm_sym79__; ++k) {
                   current_statement__ = 15;
                   lp_accum__.add(53);
                 }
@@ -29064,12 +29064,12 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           {
             lcm_sym74__ = (2 + 2);
             if (logical_gte(lcm_sym74__, 2)) {
-              lcm_sym77__ = (2 * 2);
-              if (logical_gte(lcm_sym77__, 2)) {
+              lcm_sym78__ = (2 * 2);
+              if (logical_gte(lcm_sym78__, 2)) {
                 {
                   lcm_sym73__ = (2 + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym73__; k <= lcm_sym77__; ++k) {
+                  for (int k = lcm_sym73__; k <= lcm_sym78__; ++k) {
                     current_statement__ = 15;
                     lp_accum__.add(53);
                   }
@@ -29078,11 +29078,11 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                 lcm_sym73__ = (2 + 1);
               }
               for (int j = lcm_sym73__; j <= lcm_sym74__; ++j) {
-                lcm_sym78__ = (j * 2);
-                if (logical_gte(lcm_sym78__, j)) {
+                lcm_sym79__ = (j * 2);
+                if (logical_gte(lcm_sym79__, j)) {
                   lcm_sym76__ = (j + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym76__; k <= lcm_sym78__; ++k) {
+                  for (int k = lcm_sym76__; k <= lcm_sym79__; ++k) {
                     current_statement__ = 15;
                     lp_accum__.add(53);
                   }
@@ -29093,12 +29093,12 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           {
             lcm_sym74__ = (3 + 2);
             if (logical_gte(lcm_sym74__, 3)) {
-              lcm_sym77__ = (3 * 2);
-              if (logical_gte(lcm_sym77__, 3)) {
+              lcm_sym78__ = (3 * 2);
+              if (logical_gte(lcm_sym78__, 3)) {
                 {
                   lcm_sym73__ = (3 + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym73__; k <= lcm_sym77__; ++k) {
+                  for (int k = lcm_sym73__; k <= lcm_sym78__; ++k) {
                     current_statement__ = 15;
                     lp_accum__.add(53);
                   }
@@ -29107,11 +29107,11 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                 lcm_sym73__ = (3 + 1);
               }
               for (int j = lcm_sym73__; j <= lcm_sym74__; ++j) {
-                lcm_sym78__ = (j * 2);
-                if (logical_gte(lcm_sym78__, j)) {
+                lcm_sym79__ = (j * 2);
+                if (logical_gte(lcm_sym79__, j)) {
                   lcm_sym76__ = (j + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym76__; k <= lcm_sym78__; ++k) {
+                  for (int k = lcm_sym76__; k <= lcm_sym79__; ++k) {
                     current_statement__ = 15;
                     lp_accum__.add(53);
                   }
@@ -29122,12 +29122,12 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           {
             lcm_sym74__ = (4 + 2);
             if (logical_gte(lcm_sym74__, 4)) {
-              lcm_sym77__ = (4 * 2);
-              if (logical_gte(lcm_sym77__, 4)) {
+              lcm_sym78__ = (4 * 2);
+              if (logical_gte(lcm_sym78__, 4)) {
                 {
                   lcm_sym73__ = (4 + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym73__; k <= lcm_sym77__; ++k) {
+                  for (int k = lcm_sym73__; k <= lcm_sym78__; ++k) {
                     current_statement__ = 15;
                     lp_accum__.add(53);
                   }
@@ -29136,11 +29136,11 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                 lcm_sym73__ = (4 + 1);
               }
               for (int j = lcm_sym73__; j <= lcm_sym74__; ++j) {
-                lcm_sym78__ = (j * 2);
-                if (logical_gte(lcm_sym78__, j)) {
+                lcm_sym79__ = (j * 2);
+                if (logical_gte(lcm_sym79__, j)) {
                   lcm_sym76__ = (j + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym76__; k <= lcm_sym78__; ++k) {
+                  for (int k = lcm_sym76__; k <= lcm_sym79__; ++k) {
                     current_statement__ = 15;
                     lp_accum__.add(53);
                   }
@@ -29151,12 +29151,12 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           {
             lcm_sym74__ = (5 + 2);
             if (logical_gte(lcm_sym74__, 5)) {
-              lcm_sym77__ = (5 * 2);
-              if (logical_gte(lcm_sym77__, 5)) {
+              lcm_sym78__ = (5 * 2);
+              if (logical_gte(lcm_sym78__, 5)) {
                 {
                   lcm_sym73__ = (5 + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym73__; k <= lcm_sym77__; ++k) {
+                  for (int k = lcm_sym73__; k <= lcm_sym78__; ++k) {
                     current_statement__ = 15;
                     lp_accum__.add(53);
                   }
@@ -29165,11 +29165,11 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                 lcm_sym73__ = (5 + 1);
               }
               for (int j = lcm_sym73__; j <= lcm_sym74__; ++j) {
-                lcm_sym78__ = (j * 2);
-                if (logical_gte(lcm_sym78__, j)) {
+                lcm_sym79__ = (j * 2);
+                if (logical_gte(lcm_sym79__, j)) {
                   lcm_sym76__ = (j + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym76__; k <= lcm_sym78__; ++k) {
+                  for (int k = lcm_sym76__; k <= lcm_sym79__; ++k) {
                     current_statement__ = 15;
                     lp_accum__.add(53);
                   }

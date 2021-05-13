@@ -70,21 +70,20 @@ let pp_fun_arg_decl ppf (autodifftype, name, unsizedtype) =
     unsizedtype name
 
 let pp_fun_def pp_s ppf fun_def =
-  match fun_def with 
-  | {fdrt; fdname; fdargs; fdbody; _} -> (
-      let pp_body_opt ppf = function
-        | None -> Fmt.pf ppf ";"
-        | Some body -> pp_s ppf body
-      in
-      match fdrt with
-      | Some rt ->
-          Fmt.pf ppf {|@[<v2>%a %s%a {@ %a@]@ }|} UnsizedType.pp rt fdname
-            Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
-            fdargs pp_body_opt fdbody
-      | None ->
-          Fmt.pf ppf {|@[<v2>%s %s%a {@ %a@]@ }|} "void" fdname
-            Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
-            fdargs pp_body_opt fdbody )
+  match fun_def with {fdrt; fdname; fdargs; fdbody; _} -> (
+    let pp_body_opt ppf = function
+      | None -> Fmt.pf ppf ";"
+      | Some body -> pp_s ppf body
+    in
+    match fdrt with
+    | Some rt ->
+        Fmt.pf ppf {|@[<v2>%a %s%a {@ %a@]@ }|} UnsizedType.pp rt fdname
+          Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
+          fdargs pp_body_opt fdbody
+    | None ->
+        Fmt.pf ppf {|@[<v2>%s %s%a {@ %a@]@ }|} "void" fdname
+          Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
+          fdargs pp_body_opt fdbody )
 
 let pp_io_block ppf = function
   | Parameters -> Fmt.string ppf "parameters"
@@ -92,7 +91,7 @@ let pp_io_block ppf = function
   | GeneratedQuantities -> Fmt.string ppf "generated_quantities"
 
 let pp_block label pp_elem ppf block =
-  match block with 
+  match block with
   | [] -> ()
   | elems ->
       Fmt.pf ppf {|@[<v2>%a {@ %a@]@ }|} pp_keyword label

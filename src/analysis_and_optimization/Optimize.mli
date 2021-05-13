@@ -68,11 +68,11 @@ type optimization_settings =
   ; dead_code_elimination: bool
   ; partial_evaluation: bool
   ; lazy_code_motion: bool
-  ; optimize_ad_levels: bool}
+  ; optimize_ad_levels: bool }
 
 val all_optimizations : optimization_settings
 val no_optimizations : optimization_settings
 
 val optimization_suite :
   ?settings:optimization_settings -> Program.Typed.t -> Program.Typed.t
-  (** Perform all optimizations in this module on the MIR in an appropriate order. *)
+(** Perform all optimizations in this module on the MIR in an appropriate order. *)

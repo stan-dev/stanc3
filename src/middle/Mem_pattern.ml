@@ -98,8 +98,7 @@ let rec swap_mem_pattern obj =
   match obj with
   | SizedType.SVector (Common.Helpers.SoA, dim) ->
       SizedType.SVector (Common.Helpers.AoS, dim)
-  | SRowVector (Common.Helpers.SoA, dim) ->
-      SRowVector (Common.Helpers.AoS, dim)
+  | SRowVector (Common.Helpers.SoA, dim) -> SRowVector (Common.Helpers.AoS, dim)
   | SMatrix (Common.Helpers.SoA, rows, cols) ->
       SMatrix (Common.Helpers.AoS, rows, cols)
   | SArray (inner_type, (dim : Expr.Typed.t)) ->
@@ -116,40 +115,38 @@ let rec swap_mem_pattern obj =
  * @param pattern A pattern of fixed expressions to recurse over.
  *)
 let rec modify_expr_functions Expr.Fixed.({pattern; meta}) =
-  let expr = Expr.Fixed.{pattern; meta} in
   let query_expr = modify_expr_functions in
-  match pattern with
-  | FunApp (kind, exprs) ->
-      let modify_funs kind =
-        match kind with
-        | Fun_kind.StanLib (name, sfx, Common.Helpers.SoA) ->
-            Fun_kind.StanLib (name, sfx, Common.Helpers.AoS)
-        | _ -> kind
-      in
-      Expr.Fixed.
-        {pattern= FunApp (modify_funs kind, List.map ~f:query_expr exprs); meta}
-  | _ -> expr
-
-(*
-| TernaryIf (predicate, texpr, fexpr) ->
-   List.concat_map ~f:query_expr [predicate; texpr; fexpr]
-| EAnd (lhs, rhs) -> List.concat_map ~f:query_expr [lhs; rhs]
-| EOr (lhs, rhs) -> List.concat_map ~f:query_expr [lhs; rhs]
-| Indexed (expr, indexed) ->
-   let query_index ind =
-     (match ind with
-     | Index.All -> Expr.Fixed.({pattern; meta})
-     | Single index_expr -> query_expr index_expr
-     | Upfrom index_expr -> query_expr index_expr
-     | Between (expr_top, expr_bottom) ->
-         List.concat_map ~f:query_expr [expr_top; expr_bottom]
-     | MultiIndex exprs -> query_expr exprs)
-   in
-   List.concat [query_expr expr; List.concat_map ~f:query_index indexed]
-(*Vars and Literal types can't hold rngs*)
-| Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
-  Expr.Fixed.({pattern; meta})
-*)
+  let new_pattern =
+    match pattern with
+    | FunApp (kind, (exprs : 'a Expr.Fixed.t list)) ->
+        let modify_funs kind =
+          match kind with
+          | Fun_kind.StanLib (name, sfx, Common.Helpers.SoA) ->
+              Fun_kind.StanLib (name, sfx, Common.Helpers.AoS)
+          | _ -> kind
+        in
+        Expr.Fixed.Pattern.FunApp
+          (modify_funs kind, List.map ~f:query_expr exprs)
+    | TernaryIf (predicate, texpr, fexpr) ->
+        TernaryIf (query_expr predicate, query_expr texpr, query_expr fexpr)
+    | Indexed (expr, indexed) ->
+        let query_index ind =
+          match ind with
+          | Index.All -> Index.All
+          | Single ind_expr -> Single (query_expr ind_expr)
+          | Upfrom ind_expr -> Upfrom (query_expr ind_expr)
+          | Between (expr_top, expr_bottom) ->
+              Between (query_expr expr_top, query_expr expr_bottom)
+          | MultiIndex exprs -> MultiIndex (query_expr exprs)
+        in
+        Indexed (query_expr expr, List.map ~f:query_index indexed)
+    | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string))
+      ->
+        pattern
+    | EAnd (lhs, rhs) -> EAnd (query_expr lhs, query_expr rhs)
+    | EOr (lhs, rhs) -> EOr (query_expr lhs, query_expr rhs)
+  in
+  Expr.Fixed.{pattern= new_pattern; meta}
 
 (** Query function expressions in statements returning back a list
 *   of optionals with the the elements of the list holding the 
@@ -163,60 +160,65 @@ let rec modify_expr_functions Expr.Fixed.({pattern; meta}) =
 * @param pattern A pattern of fixed statements to recurse over.
 **)
 let rec modify_stmt_functions Stmt.Fixed.({pattern; meta}) =
-  let real_stmt = Stmt.Fixed.{pattern; meta} in
-  let mod_stmt mod_pattern = Stmt.Fixed.{pattern=mod_pattern; meta} in
-  (*
-let query_stmt = query_stmt_functions where in
-let query_expr = query_expr_functions where in
-*)
-  match pattern with 
-  | NRFunApp (StanLib (name, kind, Common.Helpers.SoA), expr) -> 
-    let new_stmt = Stmt.Fixed.Pattern.NRFunApp (StanLib (name, kind, Common.Helpers.AoS), List.map ~f:modify_expr_functions expr) in
-    mod_stmt new_stmt
-  | Block stmts -> 
-  let new_stmt = Stmt.Fixed.Pattern.Block (List.map ~f:modify_stmt_functions stmts) in
-  mod_stmt new_stmt
-  | SList stmts -> 
-  let new_stmt = Stmt.Fixed.Pattern.SList (List.map ~f:modify_stmt_functions stmts) in
-  mod_stmt new_stmt
-
-  | _ -> real_stmt
+  let query_expr = modify_expr_functions in
+  let query_stmt = modify_stmt_functions in
+  let new_pattern =
+    match pattern with
+    | NRFunApp (StanLib (name, kind, Common.Helpers.SoA), expr) ->
+        Stmt.Fixed.Pattern.NRFunApp
+          ( StanLib (name, kind, Common.Helpers.AoS)
+          , List.map ~f:modify_expr_functions expr )
+    | NRFunApp (fun_kind, expr) ->
+        NRFunApp (fun_kind, List.map ~f:modify_expr_functions expr)
+    | Assignment (((name : string), (ut : UnsizedType.t), lhs), rhs) ->
+        let query_index ind =
+          match ind with
+          | Index.All -> Index.All
+          | Single ind_expr -> Single (query_expr ind_expr)
+          | Upfrom ind_expr -> Upfrom (query_expr ind_expr)
+          | Between (expr_top, expr_bottom) ->
+              Between (query_expr expr_top, query_expr expr_bottom)
+          | MultiIndex exprs -> MultiIndex (query_expr exprs)
+        in
+        Assignment ((name, ut, List.map ~f:query_index lhs), query_expr rhs)
+    | IfElse (predicate, true_stmt, op_false_stmt) ->
+        let pred_query = query_expr predicate in
+        let true_query = query_stmt true_stmt in
+        let blah =
+          match op_false_stmt with
+          | Some stmt -> Some (query_stmt stmt)
+          | None -> None
+        in
+        IfElse (pred_query, true_query, blah)
+    | Block stmts -> Block (List.map ~f:modify_stmt_functions stmts)
+    | SList stmts -> SList (List.map ~f:modify_stmt_functions stmts)
+    | For
+        { loopvar
+        ; lower
+        ; upper
+        ; body= Stmt.Fixed.({pattern= Block wooof; meta= metablock}) } ->
+        let ooof = List.map ~f:modify_stmt_functions wooof in
+        Stmt.Fixed.Pattern.For
+          { loopvar
+          ; lower
+          ; upper
+          ; body= Stmt.Fixed.{pattern= Block ooof; meta= metablock} }
+    | TargetPE expr ->
+        let modee = query_expr expr in
+        TargetPE modee
+    | Return optional_expr -> (
+      match optional_expr with
+      | Some expr -> Return (Some (query_expr expr))
+      | None -> Return None )
+    | Profile ((a : string), stmt) -> Profile (a, List.map ~f:query_stmt stmt)
+    | Skip | Decl _ | Break | Continue -> pattern
+    | While (predicate, body) -> While (query_expr predicate, query_stmt body)
+    | _ -> pattern
+  in
+  Stmt.Fixed.{pattern= new_pattern; meta}
 
 (*
-| Assignment (((_ : string), (_ : UnsizedType.t), lhs), rhs) ->
-   let query_index ind =
-     match ind with
-     | Index.All -> [None]
-     | Single ind_expr -> Index.Single (List.map ~f:query_expr ind_expr)
-     | Upfrom ind_expr -> query_expr ind_expr
-     | Between (expr_top, expr_bottom) ->
-         List.concat_map ~f:query_expr [expr_top; expr_bottom]
-     | MultiIndex exprs -> query_expr exprs
-   in
-   List.concat [query_expr rhs; List.concat_map ~f:query_index lhs]
-| TargetPE expr -> query_expr expr
-| NRFunApp (kind, exprs) -> (
-   let subset = select (kind, exprs) in
-   let expr_gets = List.map ~f:query_expr exprs in
-   match where subset with
-   | true -> List.concat [[Some subset]; expr_gets]
-   | false -> expr_gets )
-| Break | Continue -> [None]
-| Return optional_expr -> (
- match optional_expr with Some expr -> query_expr expr | None -> [None] )
 | Skip -> [None]
-| IfElse (predicate, true_stmt, op_false_stmt) -> (
-   let pred_query = query_expr predicate in
-   let true_query = query_stmt true_stmt in
-   match op_false_stmt with
-   | Some stmt -> List.concat [pred_query; true_query; query_stmt stmt]
-   | None -> List.concat [true_query; pred_query] )
-| While (expr, stmt) -> List.concat [query_expr expr; query_stmt stmt]
-| For {lower; upper; body; _} ->
-   List.concat [query_expr lower; query_expr upper; query_stmt body]
-| Profile ((_ : string), stmt) -> List.concat_map ~f:query_stmt stmt
-| Block stmts -> List.concat_map ~f:query_stmt stmts
-| SList stmts -> List.concat_map ~f:query_stmt stmts
 (*A Decl's record does not hold functions*)
 | Decl _ -> [None]
 *)
@@ -242,26 +244,21 @@ let rec rewrite_soa_to_aos lst =
   | Some Stmt.Fixed.({pattern; meta}) -> (
     match pattern with
     | Decl {decl_adtype; decl_id; decl_type= Type.Sized obj} -> (
-      (* At this point I need to search the rest of the list for 
+        (* At this point I need to search the rest of the list for 
        * the decl_id and decl_type's SOA *)
-      match List.tl lst with
-      | Some lst2 -> (
-          let rewrite_decl sized_type =
-            Stmt.Fixed.
-              { pattern=
-                  Decl {decl_adtype; decl_id; decl_type= Type.Sized sized_type}
-              ; meta }
-          in
-          let check_bad_match = find_any_bads obj in
-          match check_bad_match with
-          | true ->
-          (*
-            raise (Failure "bababooiie")
-              *)
-              binder (rewrite_decl (swap_mem_pattern obj)) (rewrite_soa_to_aos (swap_fun_mem_pattern lst2))
-              | false -> [rewrite_decl obj] @ rewrite_soa_to_aos lst2 )
-      (*If we hit the end of the list just return the whole list*)
-      | None -> lst )
+        let rewrite_decl sized_type =
+          Stmt.Fixed.
+            { pattern=
+                Decl {decl_adtype; decl_id; decl_type= Type.Sized sized_type}
+            ; meta }
+        in
+        let check_bad_match = find_any_bads obj in
+        match check_bad_match with
+        | true ->
+            binder
+              (rewrite_decl (swap_mem_pattern obj))
+              (swap_fun_mem_pattern lst)
+        | false -> binder (rewrite_decl obj) lst )
     | Block inner_lst ->
         let ooof = rewrite_soa_to_aos inner_lst in
         let blah2 = Stmt.Fixed.Pattern.Block ooof in
@@ -284,6 +281,15 @@ let rec rewrite_soa_to_aos lst =
             ; lower
             ; upper
             ; body= Stmt.Fixed.{pattern= Block ooof; meta= metablock} }
+        in
+        let blah = rewrite_stmt blah2 meta in
+        binder blah lst
+    | While (predicate, Stmt.Fixed.({pattern= Block wooof; meta= metablock}))
+      ->
+        let ooof = rewrite_soa_to_aos wooof in
+        let blah2 =
+          Stmt.Fixed.Pattern.While
+            (predicate, Stmt.Fixed.{pattern= Block ooof; meta= metablock})
         in
         let blah = rewrite_stmt blah2 meta in
         binder blah lst
