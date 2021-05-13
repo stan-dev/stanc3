@@ -51,11 +51,11 @@ let%expect_test "Prefix-Op-Example" =
            ((pattern
              (IfElse
               ((pattern
-                (FunApp (StanLib Less__ FnPlain)
+                (FunApp (StanLib Less__ FnPlain SoA)
                  (((pattern (Var i))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern
-                    (FunApp (StanLib PMinus__ FnPlain)
+                    (FunApp (StanLib PMinus__ FnPlain SoA)
                      (((pattern (Lit Int 1))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -117,7 +117,7 @@ let%expect_test "gen quant" =
     (((pattern
        (IfElse
         ((pattern
-          (FunApp (StanLib PNot__ FnPlain)
+          (FunApp (StanLib PNot__ FnPlain SoA)
            (((pattern
               (EOr
                ((pattern (Var emit_transformed_parameters__))
@@ -131,7 +131,7 @@ let%expect_test "gen quant" =
      ((pattern
        (IfElse
         ((pattern
-          (FunApp (StanLib PNot__ FnPlain)
+          (FunApp (StanLib PNot__ FnPlain SoA)
            (((pattern (Var emit_generated_quantities__))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))

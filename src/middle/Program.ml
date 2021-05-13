@@ -69,7 +69,8 @@ let pp_fun_arg_decl ppf (autodifftype, name, unsizedtype) =
   Fmt.pf ppf "%a%a %s" UnsizedType.pp_autodifftype autodifftype UnsizedType.pp
     unsizedtype name
 
-let pp_fun_def pp_s ppf = function
+let pp_fun_def pp_s ppf fun_def =
+  match fun_def with 
   | {fdrt; fdname; fdargs; fdbody; _} -> (
       let pp_body_opt ppf = function
         | None -> Fmt.pf ppf ";"
@@ -90,7 +91,8 @@ let pp_io_block ppf = function
   | TransformedParameters -> Fmt.string ppf "transformed_parameters"
   | GeneratedQuantities -> Fmt.string ppf "generated_quantities"
 
-let pp_block label pp_elem ppf = function
+let pp_block label pp_elem ppf block =
+  match block with 
   | [] -> ()
   | elems ->
       Fmt.pf ppf {|@[<v2>%a {@ %a@]@ }|} pp_keyword label

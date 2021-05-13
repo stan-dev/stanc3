@@ -1,6 +1,5 @@
 open Core_kernel
 open Middle
-
 let use_opencl = ref false
 
 let opencl_trigger_restrictions =
@@ -687,4 +686,5 @@ let trans_prog (p : Program.Typed.t) =
   Program.(
     p
     |> map Fn.id ensure_body_in_block
-    |> map_prog_stmt_lists flatten_slists_list)
+    |> map_prog_stmt_lists flatten_slists_list
+    |> Mem_pattern.eval_prog)
