@@ -345,67 +345,72 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
   | Block ls -> pp_block ppf (pp_stmt_list, ls)
   | SList ls -> pp_stmt_list ppf ls
   | Decl {decl_adtype; decl_id; decl_type= Type.Sized sized_type} ->
-    let pp_unsized_decl ppf (vident, ut, adtype) =
-      let pp_type =
-        match (Transform_Mir.is_opencl_var vident, ut) with
-        | _, UnsizedType.(UInt | UReal) | false, _ -> pp_unsizedtype_local
-        | true, UArray UInt -> fun ppf _ -> pf ppf "matrix_cl<int>"
-        | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>"
+      let pp_unsized_decl ppf (vident, ut, adtype) =
+        let pp_type =
+          match (Transform_Mir.is_opencl_var vident, ut) with
+          | _, UnsizedType.(UInt | UReal) | false, _ -> pp_unsizedtype_local
+          | true, UArray UInt -> fun ppf _ -> pf ppf "matrix_cl<int>"
+          | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>"
         in
-        pf ppf "%a %s;" pp_type (adtype, ut) vident in
-
-    let pp_var_decl ppf (name, st, adtype) =
-      let ut = SizedType.to_unsized st in
-      let pp_shim ppf (adtype, st) = pp_unsizedtype_local ppf (adtype, SizedType.to_unsized st) in
-      let pp_shiny_new ppf (adtype, st) =
-        let scalar = local_scalar ut adtype in
-        match st with
-        | SizedType.SInt | SReal -> string ppf scalar
-        | SArray (t, _) ->
-            pf ppf "conditional_var_value_t<%s, std::vector<%a>>" scalar pp_shim (DataOnly, t)
-        | SMatrix (_, _, _) -> pf ppf "conditional_var_value_t<%s, Eigen::Matrix<double, -1, -1>>" scalar
-        | SRowVector (_, _) -> pf ppf "conditional_var_value_t<%s, Eigen::Matrix<double, 1, -1>>" scalar
-        | SVector (_, _) -> pf ppf "conditional_var_value_t<%s, Eigen::Matrix<double, -1, 1>>" scalar
-      in        
-      let pp_type =
-        match (Transform_Mir.is_opencl_var name, ut) with
-        | _, UnsizedType.(UInt | UReal) | false, _ -> 
-          (match st with 
-          | SizedType.SInt | SReal -> pp_shim
-          | SVector (mem, _) -> 
-            (match mem with 
-            | Common.Helpers.AoS -> pp_shim
-            | SoA -> pp_shiny_new)
-          | SRowVector (mem, _) -> 
-            (match mem with 
-            | AoS -> pp_shim
-            | SoA -> pp_shiny_new)
-          | SMatrix (mem, _, _) -> 
-            (match mem with 
-            | AoS -> pp_shim
-            | SoA -> pp_shiny_new)
-          | SArray ((SVector _ | SRowVector _ | SMatrix _ | SArray _), _) -> pp_shiny_new
-          | SArray ((SInt | SReal), _) -> pp_shim)
-        | true, UArray UInt -> fun ppf _ -> pf ppf "matrix_cl<int>"
-        | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>"
-        in
-        pf ppf "%a %s;" pp_type (adtype, st) name in
-      
-
-
-    let pp_possibly_var_decl ppf (vident, st, adtype) =
-      ( match adtype with 
-      | UnsizedType.DataOnly ->
-        pf ppf "%a@,%a" pp_unsized_decl
-          (vident, SizedType.to_unsized st, adtype)
-          pp_assign_sized (vident, st, adtype)
-      | AutoDiffable -> 
-        pf ppf "%a@,%a" pp_var_decl (vident, st, adtype)
-        pp_assign_sized (vident, st, adtype)
-      )
+        pf ppf "%a %s;" pp_type (adtype, ut) vident
       in
-    
-    pp_possibly_var_decl ppf (decl_id, sized_type, decl_adtype)
+      let pp_var_decl ppf (name, st, adtype) =
+        let ut = SizedType.to_unsized st in
+        let pp_shim ppf (adtype, st) =
+          pp_unsizedtype_local ppf (adtype, SizedType.to_unsized st)
+        in
+        let pp_shiny_new ppf (adtype, st) =
+          let scalar = local_scalar ut adtype in
+          match st with
+          | SizedType.SInt | SReal -> string ppf scalar
+          | SArray (t, _) ->
+              pf ppf "conditional_var_value_t<%s, std::vector<%a>>" scalar
+                pp_shim (DataOnly, t)
+          | SMatrix (_, _, _) ->
+              pf ppf
+                "conditional_var_value_t<%s, Eigen::Matrix<double, -1, -1>>"
+                scalar
+          | SRowVector (_, _) ->
+              pf ppf
+                "conditional_var_value_t<%s, Eigen::Matrix<double, 1, -1>>"
+                scalar
+          | SVector (_, _) ->
+              pf ppf
+                "conditional_var_value_t<%s, Eigen::Matrix<double, -1, 1>>"
+                scalar
+        in
+        let pp_type =
+          match (Transform_Mir.is_opencl_var name, ut) with
+          | _, UnsizedType.(UInt | UReal) | false, _ -> (
+            match st with
+            | SizedType.SInt | SReal -> pp_shim
+            | SVector (mem, _) -> (
+              match mem with
+              | Common.Helpers.AoS -> pp_shim
+              | SoA -> pp_shiny_new )
+            | SRowVector (mem, _) -> (
+              match mem with AoS -> pp_shim | SoA -> pp_shiny_new )
+            | SMatrix (mem, _, _) -> (
+              match mem with AoS -> pp_shim | SoA -> pp_shiny_new )
+            | SArray ((SVector _ | SRowVector _ | SMatrix _ | SArray _), _) ->
+                pp_shiny_new
+            | SArray ((SInt | SReal), _) -> pp_shim )
+          | true, UArray UInt -> fun ppf _ -> pf ppf "matrix_cl<int>"
+          | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>"
+        in
+        pf ppf "%a %s;" pp_type (adtype, st) name
+      in
+      let pp_possibly_var_decl ppf (vident, st, adtype) =
+        match adtype with
+        | UnsizedType.DataOnly ->
+            pf ppf "%a@,%a" pp_unsized_decl
+              (vident, SizedType.to_unsized st, adtype)
+              pp_assign_sized (vident, st, adtype)
+        | AutoDiffable ->
+            pf ppf "%a@,%a" pp_var_decl (vident, st, adtype) pp_assign_sized
+              (vident, st, adtype)
+      in
+      pp_possibly_var_decl ppf (decl_id, sized_type, decl_adtype)
   | Decl {decl_adtype; decl_id; decl_type} ->
       pp_decl ppf (decl_id, decl_type, decl_adtype)
 

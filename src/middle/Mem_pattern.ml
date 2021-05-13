@@ -248,8 +248,7 @@ let rec rewrite_soa_to_aos lst =
        * the decl_id and decl_type's SOA *)
         let rewrite_decl sized_type =
           Stmt.Fixed.
-            { pattern=
-                Decl {decl_adtype; decl_id; decl_type= Type.Sized sized_type}
+            { pattern= Decl {decl_adtype; decl_id; decl_type= Sized sized_type}
             ; meta }
         in
         let check_bad_match = find_any_bads obj in

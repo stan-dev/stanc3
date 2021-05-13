@@ -274,16 +274,13 @@ and gen_fun_app suffix ppf fname es =
   let default ppf es =
     let to_var s = Expr.{Fixed.pattern= Var s; meta= Typed.Meta.empty} in
     let convert_hof_vars = function
-      | {Expr.Fixed.pattern= Var name; meta= {Expr.Typed.Meta.type_= UFun _; _}}
-        as e ->
+      | { Expr.Fixed.pattern= Var name
+        ; meta= {Expr.Typed.Meta.type_= UFun (_, _, _, mem); _} } as e ->
           { e with
             pattern=
               FunApp
-                ( StanLib
-                    ( name ^ functor_suffix_select fname
-                    , FnPlain
-                    , Common.Helpers.SoA )
-                , [] ) }
+                (StanLib (name ^ functor_suffix_select fname, FnPlain, mem), [])
+          }
       | e -> e
     in
     let converted_es = List.map ~f:convert_hof_vars es in
