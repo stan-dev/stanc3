@@ -47,7 +47,8 @@ let pp (pp_expr : 'a Fmt.t) ppf internal =
 *)
 let can_side_effect = function
   | FnReadParam _ | FnReadData | FnReadDataSerializer | FnWriteParam _
-   |FnValidateSize | FnValidateSizeSimplex | FnValidateSizeUnitVector | FnReadWriteEventsOpenCL _ ->
+   |FnValidateSize | FnValidateSizeSimplex | FnValidateSizeUnitVector
+   |FnReadWriteEventsOpenCL _ ->
       true
   | FnLength | FnMakeArray | FnMakeRowVec | FnNegInf | FnPrint | FnReject
    |FnResizeToMatch | FnNaN | FnDeepCopy | FnCheck _ ->
