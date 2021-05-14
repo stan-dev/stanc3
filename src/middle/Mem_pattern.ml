@@ -162,9 +162,9 @@ let rec modify_expr_functions Expr.Fixed.({pattern; meta}) =
 let rec modify_stmt_functions Stmt.Fixed.({pattern; meta}) =
   let query_expr = modify_expr_functions in
   let query_stmt = modify_stmt_functions in
-  let new_pattern =
+  let rec new_pattern pattern =
     match pattern with
-    | NRFunApp (StanLib (name, kind, Common.Helpers.SoA), expr) ->
+    | Stmt.Fixed.Pattern.NRFunApp (StanLib (name, kind, Common.Helpers.SoA), expr) ->
         Stmt.Fixed.Pattern.NRFunApp
           ( StanLib (name, kind, Common.Helpers.AoS)
           , List.map ~f:modify_expr_functions expr )
@@ -196,13 +196,13 @@ let rec modify_stmt_functions Stmt.Fixed.({pattern; meta}) =
         { loopvar
         ; lower
         ; upper
-        ; body= Stmt.Fixed.({pattern= Block wooof; meta= metablock}) } ->
-        let ooof = List.map ~f:modify_stmt_functions wooof in
+        ; body= Stmt.Fixed.({pattern= a; meta= metablock}) } ->
+        let ooof = new_pattern a in
         Stmt.Fixed.Pattern.For
           { loopvar
           ; lower
           ; upper
-          ; body= Stmt.Fixed.{pattern= Block ooof; meta= metablock} }
+          ; body= Stmt.Fixed.{pattern= ooof; meta= metablock} }
     | TargetPE expr ->
         let modee = query_expr expr in
         TargetPE modee
@@ -213,37 +213,14 @@ let rec modify_stmt_functions Stmt.Fixed.({pattern; meta}) =
     | Profile ((a : string), stmt) -> Profile (a, List.map ~f:query_stmt stmt)
     | Skip | Decl _ | Break | Continue -> pattern
     | While (predicate, body) -> While (query_expr predicate, query_stmt body)
-    | _ -> pattern
   in
-  Stmt.Fixed.{pattern= new_pattern; meta}
+  Stmt.Fixed.{pattern= (new_pattern pattern); meta}
 
 let rec query_for_name_functions var_name Expr.Fixed.({pattern; _}) =
   let query_name = query_for_name_functions var_name in
   match pattern with
-  | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) -> (
-    match kind with
-    | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), Common.Helpers.SoA)
-      -> (
-        let does_name_exist = List.for_all ~f:query_name exprs in
-        match does_name_exist with
-        | false -> true
-        | true ->
-            let make_args =
-              let find_args
-                  Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _})
-                  =
-                (adlevel, type_)
-              in
-              List.map ~f:find_args exprs
-            in
-            let check_fun_support =
-              Stan_math_signatures.query_stan_math_mem_pattern_support name
-                make_args
-            in
-            check_fun_support )
-    | CompilerInternal _ -> true
-    | Fun_kind.StanLib (_, _, Common.Helpers.AoS) -> false
-    | UserDefined _ -> false )
+  | FunApp (_, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) -> 
+        List.for_all ~f:query_name exprs 
   | TernaryIf (predicate, texpr, fexpr) ->
       query_name predicate && query_name texpr && query_name fexpr
   | Indexed (expr, indexed) ->
@@ -294,7 +271,7 @@ let rec query_expr_functions var_name Expr.Fixed.({pattern; _}) =
               Stan_math_signatures.query_stan_math_mem_pattern_support name
                 make_args
             in
-            check_fun_support )
+            check_fun_support && List.for_all ~f:query_expr exprs)
     | CompilerInternal _ -> true
     | Fun_kind.StanLib (_, _, Common.Helpers.AoS) -> false
     | UserDefined _ -> false )
@@ -330,8 +307,9 @@ let rec query_stmt_functions var_name Stmt.Fixed.({pattern; _}) =
   let query_expr = query_expr_functions var_name in
   let query_stmt = query_stmt_functions var_name in
   let query_name = query_for_name_functions var_name in
+  let rec find_pattern pattern = (
   match pattern with
-  | NRFunApp
+  | Stmt.Fixed.Pattern.NRFunApp
       ( StanLib
           ((name : string), (_ : bool Fun_kind.suffix), Common.Helpers.SoA)
       , (exprs : Expr.Typed.Meta.t Expr.Fixed.t list) ) -> (
@@ -350,7 +328,7 @@ let rec query_stmt_functions var_name Stmt.Fixed.({pattern; _}) =
             Stan_math_signatures.query_stan_math_mem_pattern_support name
               make_args
           in
-          check_fun_support )
+          check_fun_support && List.for_all ~f:query_expr exprs)
   | NRFunApp ((_ : Fun_kind.t), (expr : Expr.Typed.Meta.t Expr.Fixed.t list))
     ->
       List.for_all ~f:query_expr expr
@@ -358,7 +336,8 @@ let rec query_stmt_functions var_name Stmt.Fixed.({pattern; _}) =
       let query_index ind =
         match ind with
         | Index.All -> true
-        | Single ind_expr -> query_expr ind_expr
+        (*This should really be in the loop block but for now always fail*)
+        | Single _ -> false
         | Upfrom ind_expr -> query_expr ind_expr
         | Between (expr_top, expr_bottom) ->
             query_expr expr_top && query_expr expr_bottom
@@ -369,21 +348,21 @@ let rec query_stmt_functions var_name Stmt.Fixed.({pattern; _}) =
       let pred_query = query_expr predicate in
       let true_query = query_stmt true_stmt in
       let blah =
-        match op_false_stmt with Some stmt -> query_stmt stmt | None -> false
+        match op_false_stmt with Some stmt -> query_stmt stmt | None -> true
       in
       pred_query && true_query && blah
   | Block stmts -> List.for_all ~f:query_stmt stmts
   | SList stmts -> List.for_all ~f:query_stmt stmts
-  | For {lower; upper; body= Stmt.Fixed.({pattern= Block wooof; _}); _} ->
-      let ooof = List.for_all ~f:query_stmt wooof in
+  | For {lower; upper; body= Stmt.Fixed.({pattern= a; _}); _} ->
+      let ooof = find_pattern a in
       query_expr lower && query_expr upper && ooof
   | TargetPE expr -> query_expr expr
   | Return optional_expr -> (
-    match optional_expr with Some expr -> query_expr expr | None -> false )
+    match optional_expr with Some expr -> query_expr expr | None -> true )
   | Profile ((_ : string), stmt) -> List.for_all ~f:query_stmt stmt
   | Skip | Decl _ | Break | Continue -> true
-  | While (predicate, body) -> query_expr predicate && query_stmt body
-  | _ -> true
+  | While (predicate, body) -> query_expr predicate && query_stmt body)
+  in find_pattern pattern
 
 let find_any_bads var_name lst =
   let query_stmts = query_stmt_functions var_name in
@@ -419,11 +398,11 @@ let rec rewrite_soa_to_aos lst =
         in
         let check_bad_match = find_any_bads decl_id (List.tl lst) in
         match check_bad_match with
-        | true ->
+        | false ->
             binder
               (rewrite_decl (swap_mem_pattern obj))
               (swap_fun_mem_pattern lst)
-        | false -> binder (rewrite_decl obj) lst )
+        | true -> binder (rewrite_decl obj) lst )
     | Block inner_lst ->
         let ooof = rewrite_soa_to_aos inner_lst in
         let blah2 = Stmt.Fixed.Pattern.Block ooof in

@@ -312,7 +312,7 @@ let query_stan_math_mem_pattern_support (name : string) (args : fun_arg list) =
   in
   match List.length filteredmatches = 0 with
   | true ->
-      false
+      true
       (* Return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
   | false ->
       let is_soa ((_ : UnsizedType.returntype), (_ : fun_arg list), mem) =
