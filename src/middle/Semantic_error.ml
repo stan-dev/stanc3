@@ -118,7 +118,8 @@ module TypeError = struct
             [ [ UnsizedType.UFun
                   ( List.hd_exn args :: (AutoDiffable, UInt)
                     :: (AutoDiffable, UInt) :: List.tl_exn args
-                  , ReturnType UReal ) ]
+                  , ReturnType UReal
+                  , FnPlain ) ]
             ; first; [UInt]; rest ]
         in
         Fmt.pf ppf
@@ -162,8 +163,8 @@ module TypeError = struct
         let generate_ode_sig =
           [ UnsizedType.UFun
               ( Stan_math_signatures.variadic_ode_mandatory_fun_args @ args
-              , ReturnType Stan_math_signatures.variadic_ode_fun_return_type )
-          ]
+              , ReturnType Stan_math_signatures.variadic_ode_fun_return_type
+              , FnPlain ) ]
           @ types Stan_math_signatures.variadic_ode_mandatory_arg_types
           @ optional_tol_args @ types args
         in
@@ -270,7 +271,7 @@ module TypeError = struct
            signatures:%a\n\
            @[<h>Instead supplied arguments of incompatible type: %a.@]"
           name UnsizedType.pp
-          (UFun (listed_tys, return_ty))
+          (UFun (listed_tys, return_ty, FnPlain))
           Fmt.(list UnsizedType.pp ~sep:comma)
           arg_tys
     | IllTypedBinaryOperator (op, lt, rt) ->
@@ -371,12 +372,12 @@ module ExpressionError = struct
     | ConditionalNotationNotAllowed ->
         Fmt.pf ppf
           "Only functions with names ending in _lpdf, _lupdf, _lpmf, _lupmf, \
-           _lcdf, _lccdf can make use of conditional notation."
+           _cdf, _lcdf, _lccdf can make use of conditional notation."
     | ConditioningRequired ->
         Fmt.pf ppf
           "Probability functions with suffixes _lpdf, _lupdf, _lpmf, _lupmf, \
-           _lcdf and _lccdf, require a vertical bar (|) between the first two \
-           arguments."
+           _cdf, _lcdf and _lccdf, require a vertical bar (|) between the \
+           first two arguments."
     | NotPrintable -> Fmt.pf ppf "Functions cannot be printed."
     | EmptyArray ->
         Fmt.pf ppf "Array expressions must contain at least one element."
@@ -484,7 +485,7 @@ For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
     | NonRealProbFunDef ->
         Fmt.pf ppf
           "Real return type required for probability functions ending in \
-           _log, _lpdf, _lupdf, _lpmf, _lupmf, _lcdf, or _lccdf."
+           _log, _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf, or _lccdf."
     | ProbDensityNonRealVariate (Some ut) ->
         Fmt.pf ppf
           "Probability density functions require real variates (first \

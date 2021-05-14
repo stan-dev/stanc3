@@ -178,7 +178,8 @@ let list_param_dependant_fundef_cf (mir : Program.Typed.t)
                    union_map (stmt_rhs stmt) ~f:(fun rhs_expr ->
                        expr_collect_exprs rhs_expr ~f:(fun rhs_subexpr ->
                            match rhs_subexpr.pattern with
-                           | Expr.Fixed.Pattern.FunApp (UserDefined fname, _)
+                           | Expr.Fixed.Pattern.FunApp
+                               (UserDefined (fname, _), _)
                              when fname = fun_def.fdname ->
                                Some (rhs_subexpr, label)
                            | _ -> None ) )
@@ -187,7 +188,8 @@ let list_param_dependant_fundef_cf (mir : Program.Typed.t)
   in
   let arg_exprs (fcall_expr : Expr.Typed.t) =
     match fcall_expr with
-    | {pattern= Expr.Fixed.Pattern.FunApp (UserDefined fname, arg_exprs); _}
+    | { pattern= Expr.Fixed.Pattern.FunApp (UserDefined (fname, _), arg_exprs); _
+      }
       when fname = fun_def.fdname ->
         Set.Poly.map dep_args ~f:(fun (loc, ix, arg_name) ->
             (loc, List.nth_exn arg_exprs ix, arg_name) )
@@ -261,16 +263,14 @@ let compiletime_value_of_expr
 let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
   let take_dist (expr : Expr.Typed.t) =
     match expr.pattern with
-    | Expr.Fixed.Pattern.FunApp (StanLib fname, arg_exprs) -> (
-      match chop_dist_name fname with
-      | Some dname ->
-          let params = parameter_set mir in
-          let data = data_set mir in
-          let args =
-            List.map ~f:(compiletime_value_of_expr params data) arg_exprs
-          in
-          Some {name= dname; loc= expr.meta.loc; args}
-      | _ -> None )
+    | Expr.Fixed.Pattern.FunApp (StanLib (fname, FnLpdf true), arg_exprs) ->
+        let fname = chop_dist_name fname |> Option.value_exn in
+        let params = parameter_set mir in
+        let data = data_set mir in
+        let args =
+          List.map ~f:(compiletime_value_of_expr params data) arg_exprs
+        in
+        Some {name= fname; loc= expr.meta.loc; args}
     | _ -> None
   in
   stmts_collect_exprs

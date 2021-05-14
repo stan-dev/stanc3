@@ -1065,7 +1065,7 @@ Semantic error in 'functions-bad17.stan', line 2, column 2 to line 4, column 3:
      4:    }
    -------------------------------------------------
 
-Real return type required for probability functions ending in _log, _lpdf, _lupdf, _lpmf, _lupmf, _lcdf, or _lccdf.
+Real return type required for probability functions ending in _log, _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf, or _lccdf.
   $ ../../../../install/default/bin/stanc functions-bad18.stan
 Semantic error in 'functions-bad18.stan', line 7, column 7 to column 10:
    -------------------------------------------------
@@ -1716,7 +1716,7 @@ Semantic error in 'prob-fun-args-no-bar.stan', line 5, column 12 to column 32:
      6:  }
    -------------------------------------------------
 
-Probability functions with suffixes _lpdf, _lupdf, _lpmf, _lupmf, _lcdf and _lccdf, require a vertical bar (|) between the first two arguments.
+Probability functions with suffixes _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf and _lccdf, require a vertical bar (|) between the first two arguments.
   $ ../../../../install/default/bin/stanc prob-poisson_log-trunc-both.stan
 Semantic error in 'prob-poisson_log-trunc-both.stan', line 11, column 2 to column 33:
    -------------------------------------------------

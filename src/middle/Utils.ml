@@ -9,7 +9,7 @@ let unnormalized_suffices = ["_lupdf"; "_lupmf"]
 let distribution_suffices = ["_lpmf"; "_lpdf"; "_log"]
 
 let conditioning_suffices =
-  ["_lpdf"; "_lupdf"; "_lupmf"; "_lpmf"; "_lcdf"; "_lccdf"]
+  ["_lpdf"; "_lupdf"; "_lupmf"; "_lpmf"; "_cdf"; "_lcdf"; "_lccdf"]
 
 let conditioning_suffices_w_log = conditioning_suffices @ ["_log"]
 let is_user_ident = Fn.non (String.is_suffix ~suffix:"__")

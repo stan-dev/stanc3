@@ -8,6 +8,7 @@ type fun_arg_decl = (UnsizedType.autodifftype * string * UnsizedType.t) list
 type 'a fun_def =
   { fdrt: UnsizedType.t option
   ; fdname: string
+  ; fdsuffix: unit Fun_kind.suffix
   ; fdargs:
       (UnsizedType.autodifftype * string * UnsizedType.t) list
       (* If fdbody is None, this is a function declaration without body. *)

@@ -540,10 +540,7 @@ common_expression:
     {  grammar_logger "fun_app" ;
        if
          List.length args = 1
-         && ( String.is_suffix ~suffix:"_lpdf" id.name
-              || String.is_suffix ~suffix:"_lupdf" id.name
-              || String.is_suffix ~suffix:"_lpmf" id.name
-              || String.is_suffix ~suffix:"_lupmf" id.name )
+         && List.exists ~f:(fun x -> String.is_suffix ~suffix:x id.name) Utils.conditioning_suffices
        then CondDistApp ((), id, args)
        else FunApp ((), id, args) }
   | TARGET LPAREN RPAREN
