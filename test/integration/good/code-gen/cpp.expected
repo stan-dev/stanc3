@@ -6960,7 +6960,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 8;
       p_real_3d_ar = in__.template read_constrain_lb<std::vector<std::vector<std::vector<local_scalar_t__>>>, jacobian__>(
                        0, lp__, N, M, K);
-      Eigen::Matrix<local_scalar_t__, -1, 1> p_vec;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> p_vec;
       p_vec = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(p_vec, DUMMY_VAR__);
       
@@ -6981,7 +6981,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 11;
       p_3d_vec = in__.template read<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>>(
                    N, M, K, N);
-      Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vec;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, 1, -1>> p_row_vec;
       p_row_vec = Eigen::Matrix<local_scalar_t__, 1, -1>(N);
       stan::math::fill(p_row_vec, DUMMY_VAR__);
       
@@ -7002,7 +7002,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 14;
       p_3d_row_vec = in__.template read<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>>(
                        N, M, K, N);
-      Eigen::Matrix<local_scalar_t__, -1, -1> p_mat;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> p_mat;
       p_mat = Eigen::Matrix<local_scalar_t__, -1, -1>(5, 4);
       stan::math::fill(p_mat, DUMMY_VAR__);
       
@@ -7016,7 +7016,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 16;
       p_ar_mat = in__.template read_constrain_lub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>, jacobian__>(
                    0, 1, lp__, 4, 5, 2, 3);
-      Eigen::Matrix<local_scalar_t__, -1, 1> p_simplex;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> p_simplex;
       p_simplex = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(p_simplex, DUMMY_VAR__);
       
@@ -7037,14 +7037,14 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 19;
       p_3d_simplex = in__.template read_constrain_simplex<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>, jacobian__>(
                        lp__, N, M, K, N);
-      Eigen::Matrix<local_scalar_t__, -1, -1> p_cfcov_54;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> p_cfcov_54;
       p_cfcov_54 = Eigen::Matrix<local_scalar_t__, -1, -1>(5, 4);
       stan::math::fill(p_cfcov_54, DUMMY_VAR__);
       
       current_statement__ = 20;
       p_cfcov_54 = in__.template read_constrain_cholesky_factor_cov<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
                      lp__, 5, 4);
-      Eigen::Matrix<local_scalar_t__, -1, -1> p_cfcov_33;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> p_cfcov_33;
       p_cfcov_33 = Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3);
       stan::math::fill(p_cfcov_33, DUMMY_VAR__);
       
@@ -7058,13 +7058,13 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 22;
       p_cfcov_33_ar = in__.template read_constrain_cholesky_factor_cov<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
                         lp__, K, 3, 3);
-      Eigen::Matrix<local_scalar_t__, -1, 1> x_p;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> x_p;
       x_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(x_p, DUMMY_VAR__);
       
       current_statement__ = 23;
       x_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
-      Eigen::Matrix<local_scalar_t__, -1, 1> y_p;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> y_p;
       y_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(y_p, DUMMY_VAR__);
       
@@ -7077,7 +7077,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       tp_real_3d_ar = std::vector<std::vector<std::vector<local_scalar_t__>>>(N, std::vector<std::vector<local_scalar_t__>>(M, std::vector<local_scalar_t__>(K, DUMMY_VAR__)));
       
       
-      Eigen::Matrix<local_scalar_t__, -1, 1> tp_vec;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> tp_vec;
       tp_vec = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(tp_vec, DUMMY_VAR__);
       
@@ -7089,7 +7089,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       tp_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
       stan::math::fill(tp_3d_vec, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, 1, -1> tp_row_vec;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, 1, -1>> tp_row_vec;
       tp_row_vec = Eigen::Matrix<local_scalar_t__, 1, -1>(N);
       stan::math::fill(tp_row_vec, DUMMY_VAR__);
       
@@ -7101,7 +7101,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       tp_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(K, Eigen::Matrix<local_scalar_t__, 1, -1>(N))));
       stan::math::fill(tp_3d_row_vec, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, -1> tp_mat;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> tp_mat;
       tp_mat = Eigen::Matrix<local_scalar_t__, -1, -1>(5, 4);
       stan::math::fill(tp_mat, DUMMY_VAR__);
       
@@ -7109,7 +7109,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       tp_ar_mat = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(4, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(5, Eigen::Matrix<local_scalar_t__, -1, -1>(2, 3)));
       stan::math::fill(tp_ar_mat, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, 1> tp_simplex;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> tp_simplex;
       tp_simplex = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(tp_simplex, DUMMY_VAR__);
       
@@ -7121,11 +7121,11 @@ class mother_model final : public model_base_crtp<mother_model> {
       tp_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
       stan::math::fill(tp_3d_simplex, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, -1> tp_cfcov_54;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> tp_cfcov_54;
       tp_cfcov_54 = Eigen::Matrix<local_scalar_t__, -1, -1>(5, 4);
       stan::math::fill(tp_cfcov_54, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, -1> tp_cfcov_33;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> tp_cfcov_33;
       tp_cfcov_33 = Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3);
       stan::math::fill(tp_cfcov_33, DUMMY_VAR__);
       
@@ -7133,7 +7133,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       tp_cfcov_33_ar = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(K, Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3));
       stan::math::fill(tp_cfcov_33_ar, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, 1> theta_p;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> theta_p;
       theta_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(theta_p, DUMMY_VAR__);
       
@@ -7326,7 +7326,7 @@ class mother_model final : public model_base_crtp<mother_model> {
                               tp_cfcov_33_ar[(sym1__ - 1)]);
       }
       {
-        Eigen::Matrix<local_scalar_t__, -1, 1> tmp;
+        conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> tmp;
         tmp = Eigen::Matrix<local_scalar_t__, -1, 1>(0);
         stan::math::fill(tmp, DUMMY_VAR__);
         
@@ -11704,13 +11704,13 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       
       current_statement__ = 3;
       x_p = in__.template read<std::vector<local_scalar_t__>>(1);
-      Eigen::Matrix<local_scalar_t__, -1, 1> x_p_v;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> x_p_v;
       x_p_v = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(x_p_v, DUMMY_VAR__);
       
       current_statement__ = 4;
       x_p_v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
-      Eigen::Matrix<local_scalar_t__, -1, 1> shared_params_p;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> shared_params_p;
       shared_params_p = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
       stan::math::fill(shared_params_p, DUMMY_VAR__);
       
@@ -11744,7 +11744,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       
       current_statement__ = 10;
       abc3_p = map_rectfake(12, pstream__);
-      Eigen::Matrix<local_scalar_t__, -1, 1> y_hat_tp1;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> y_hat_tp1;
       y_hat_tp1 = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
       stan::math::fill(y_hat_tp1, DUMMY_VAR__);
       
@@ -11752,7 +11752,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       assign(y_hat_tp1,
         map_rect<1, foo_functor__>(shared_params_p, job_params_d, data_r,
           data_i, pstream__), "assigning variable y_hat_tp1");
-      Eigen::Matrix<local_scalar_t__, -1, 1> y_hat_tp2;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> y_hat_tp2;
       y_hat_tp2 = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
       stan::math::fill(y_hat_tp2, DUMMY_VAR__);
       
@@ -11760,7 +11760,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       assign(y_hat_tp2,
         map_rect<2, foo_functor__>(shared_params_d, job_params_p, data_r,
           data_i, pstream__), "assigning variable y_hat_tp2");
-      Eigen::Matrix<local_scalar_t__, -1, 1> y_hat_tp3;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> y_hat_tp3;
       y_hat_tp3 = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
       stan::math::fill(y_hat_tp3, DUMMY_VAR__);
       
@@ -11768,19 +11768,19 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       assign(y_hat_tp3,
         map_rect<3, foo_functor__>(shared_params_p, job_params_d, data_r,
           data_i, pstream__), "assigning variable y_hat_tp3");
-      Eigen::Matrix<local_scalar_t__, -1, 1> theta_p_as;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> theta_p_as;
       theta_p_as = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(theta_p_as, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, 1> x_v;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> x_v;
       x_v = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(x_v, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, 1> y_v;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> y_v;
       y_v = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(y_v, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, 1> y_p;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> y_p;
       y_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(y_p, DUMMY_VAR__);
       
@@ -26163,19 +26163,19 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       
       current_statement__ = 9;
       y9 = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<local_scalar_t__, -1, 1> y10;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> y10;
       y10 = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(y10, DUMMY_VAR__);
       
       current_statement__ = 10;
       y10 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
-      Eigen::Matrix<local_scalar_t__, 1, -1> y11;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, 1, -1>> y11;
       y11 = Eigen::Matrix<local_scalar_t__, 1, -1>(N);
       stan::math::fill(y11, DUMMY_VAR__);
       
       current_statement__ = 11;
       y11 = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(N);
-      Eigen::Matrix<local_scalar_t__, -1, -1> y12;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> y12;
       y12 = Eigen::Matrix<local_scalar_t__, -1, -1>(N, N);
       stan::math::fill(y12, DUMMY_VAR__);
       

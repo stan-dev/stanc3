@@ -1842,22 +1842,22 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       current_statement__ = 1;
       mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                  0, 1, lp__);
-      Eigen::Matrix<local_scalar_t__, -1, 1> beta;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> beta;
       beta = Eigen::Matrix<local_scalar_t__, -1, 1>(max_age);
       stan::math::fill(beta, DUMMY_VAR__);
       
       current_statement__ = 2;
       beta = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                0, 1, lp__, max_age);
-      Eigen::Matrix<local_scalar_t__, -1, -1> phi;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> phi;
       phi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(phi, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, -1> p;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> p;
       p = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(p, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, -1> chi;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> chi;
       chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
       stan::math::fill(chi, DUMMY_VAR__);
       
@@ -3732,35 +3732,35 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       
       current_statement__ = 11;
       b_v_prev = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<local_scalar_t__, -1, 1> b_age;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> b_age;
       b_age = Eigen::Matrix<local_scalar_t__, -1, 1>(n_age);
       stan::math::fill(b_age, DUMMY_VAR__);
       
       current_statement__ = 12;
       b_age = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                 n_age);
-      Eigen::Matrix<local_scalar_t__, -1, 1> b_edu;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> b_edu;
       b_edu = Eigen::Matrix<local_scalar_t__, -1, 1>(n_edu);
       stan::math::fill(b_edu, DUMMY_VAR__);
       
       current_statement__ = 13;
       b_edu = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                 n_edu);
-      Eigen::Matrix<local_scalar_t__, -1, 1> b_region;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> b_region;
       b_region = Eigen::Matrix<local_scalar_t__, -1, 1>(n_region);
       stan::math::fill(b_region, DUMMY_VAR__);
       
       current_statement__ = 14;
       b_region = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                    n_region);
-      Eigen::Matrix<local_scalar_t__, -1, -1> b_age_edu;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> b_age_edu;
       b_age_edu = Eigen::Matrix<local_scalar_t__, -1, -1>(n_age, n_edu);
       stan::math::fill(b_age_edu, DUMMY_VAR__);
       
       current_statement__ = 15;
       b_age_edu = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                     n_age, n_edu);
-      Eigen::Matrix<local_scalar_t__, -1, 1> b_hat;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> b_hat;
       b_hat = Eigen::Matrix<local_scalar_t__, -1, 1>(n_state);
       stan::math::fill(b_hat, DUMMY_VAR__);
       
@@ -3770,13 +3770,13 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       {
         current_statement__ = 17;
         validate_non_negative_index("p", "N", N);
-        Eigen::Matrix<local_scalar_t__, -1, 1> p;
+        conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> p;
         p = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
         stan::math::fill(p, DUMMY_VAR__);
         
         current_statement__ = 19;
         validate_non_negative_index("b_state_hat", "n_state", n_state);
-        Eigen::Matrix<local_scalar_t__, -1, 1> b_state_hat;
+        conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> b_state_hat;
         b_state_hat = Eigen::Matrix<local_scalar_t__, -1, 1>(n_state);
         stan::math::fill(b_state_hat, DUMMY_VAR__);
         
@@ -7016,39 +7016,39 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       double lcm_sym57__;
       double lcm_sym56__;
       int lcm_sym55__;
-      Eigen::Matrix<local_scalar_t__, -1, 1> a;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> a;
       a = Eigen::Matrix<local_scalar_t__, -1, 1>(n_age);
       stan::math::fill(a, DUMMY_VAR__);
       
       current_statement__ = 1;
       a = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_age);
-      Eigen::Matrix<local_scalar_t__, -1, 1> b;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> b;
       b = Eigen::Matrix<local_scalar_t__, -1, 1>(n_edu);
       stan::math::fill(b, DUMMY_VAR__);
       
       current_statement__ = 2;
       b = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_edu);
-      Eigen::Matrix<local_scalar_t__, -1, 1> c;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> c;
       c = Eigen::Matrix<local_scalar_t__, -1, 1>(n_age_edu);
       stan::math::fill(c, DUMMY_VAR__);
       
       current_statement__ = 3;
       c = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
             n_age_edu);
-      Eigen::Matrix<local_scalar_t__, -1, 1> d;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> d;
       d = Eigen::Matrix<local_scalar_t__, -1, 1>(n_state);
       stan::math::fill(d, DUMMY_VAR__);
       
       current_statement__ = 4;
       d = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_state);
-      Eigen::Matrix<local_scalar_t__, -1, 1> e;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> e;
       e = Eigen::Matrix<local_scalar_t__, -1, 1>(n_region_full);
       stan::math::fill(e, DUMMY_VAR__);
       
       current_statement__ = 5;
       e = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
             n_region_full);
-      Eigen::Matrix<local_scalar_t__, -1, 1> beta;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> beta;
       beta = Eigen::Matrix<local_scalar_t__, -1, 1>(5);
       stan::math::fill(beta, DUMMY_VAR__);
       
@@ -7084,7 +7084,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       current_statement__ = 11;
       sigma_e = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                   0, 100, lp__);
-      Eigen::Matrix<local_scalar_t__, -1, 1> y_hat;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> y_hat;
       y_hat = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(y_hat, DUMMY_VAR__);
       
@@ -8281,32 +8281,31 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       Eigen::Matrix<double, -1, 1> lcm_sym35__;
       double lcm_sym34__;
       int lcm_sym39__;
-      int lcm_sym33__;
       local_scalar_t__ tau_phi;
       tau_phi = DUMMY_VAR__;
       
       current_statement__ = 1;
       tau_phi = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                   0, lp__);
-      Eigen::Matrix<local_scalar_t__, -1, 1> phi_std_raw;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> phi_std_raw;
       phi_std_raw = Eigen::Matrix<local_scalar_t__, -1, 1>((N - 1));
       stan::math::fill(phi_std_raw, DUMMY_VAR__);
       
-      current_statement__ = 2;
+      lcm_sym39__ = (N - 1);
       phi_std_raw = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
-                      (N - 1));
+                      lcm_sym39__);
       local_scalar_t__ sigma_phi;
       sigma_phi = DUMMY_VAR__;
       
       lcm_sym38__ = inv_sqrt(tau_phi);
       sigma_phi = lcm_sym38__;
-      Eigen::Matrix<local_scalar_t__, -1, 1> phi;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> phi;
       phi = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(phi, DUMMY_VAR__);
       
       current_statement__ = 5;
       assign(phi, phi_std_raw,
-        "assigning variable phi", index_min_max(1, (N - 1)));
+        "assigning variable phi", index_min_max(1, lcm_sym39__));
       current_statement__ = 6;
       assign(phi, -sum(phi_std_raw), "assigning variable phi", index_uni(N));
       current_statement__ = 7;
@@ -9710,7 +9709,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       current_statement__ = 2;
       mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                  0, 1, lp__);
-      Eigen::Matrix<local_scalar_t__, -1, 1> epsilon;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> epsilon;
       epsilon = Eigen::Matrix<local_scalar_t__, -1, 1>(nind);
       stan::math::fill(epsilon, DUMMY_VAR__);
       
@@ -9723,15 +9722,15 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       current_statement__ = 4;
       sigma = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                 0, 5, lp__);
-      Eigen::Matrix<local_scalar_t__, -1, -1> phi;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> phi;
       phi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(phi, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, -1> p;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> p;
       p = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(p, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, -1> chi;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> chi;
       chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
       stan::math::fill(chi, DUMMY_VAR__);
       
@@ -12466,9 +12465,9 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       double lcm_sym266__;
       double lcm_sym265__;
       int lcm_sym264__;
-      int lcm_sym263__;
+      double lcm_sym263__;
       int lcm_sym262__;
-      double lcm_sym261__;
+      int lcm_sym261__;
       double lcm_sym260__;
       double lcm_sym259__;
       double lcm_sym258__;
@@ -12482,9 +12481,9 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       double lcm_sym250__;
       double lcm_sym249__;
       double lcm_sym248__;
-      int lcm_sym247__;
+      double lcm_sym247__;
       int lcm_sym246__;
-      double lcm_sym245__;
+      int lcm_sym245__;
       double lcm_sym244__;
       int lcm_sym243__;
       int lcm_sym242__;
@@ -12528,14 +12527,14 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       current_statement__ = 3;
       psi = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(0,
               1, lp__);
-      Eigen::Matrix<local_scalar_t__, -1, 1> beta;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> beta;
       beta = Eigen::Matrix<local_scalar_t__, -1, 1>(n_occasions);
       stan::math::fill(beta, DUMMY_VAR__);
       
       current_statement__ = 4;
       beta = in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                0, lp__, n_occasions);
-      Eigen::Matrix<local_scalar_t__, -1, 1> epsilon;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> epsilon;
       epsilon = Eigen::Matrix<local_scalar_t__, -1, 1>(M);
       stan::math::fill(epsilon, DUMMY_VAR__);
       
@@ -12547,27 +12546,28 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       current_statement__ = 6;
       sigma = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                 0, 5, lp__);
-      Eigen::Matrix<local_scalar_t__, -1, -1> phi;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> phi;
       phi = Eigen::Matrix<local_scalar_t__, -1, -1>(M, (n_occasions - 1));
       stan::math::fill(phi, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, -1> p;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> p;
       p = Eigen::Matrix<local_scalar_t__, -1, -1>(M, n_occasions);
       stan::math::fill(p, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, 1> b;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> b;
       b = Eigen::Matrix<local_scalar_t__, -1, 1>(n_occasions);
       stan::math::fill(b, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, 1> nu;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> nu;
       nu = Eigen::Matrix<local_scalar_t__, -1, 1>(n_occasions);
       stan::math::fill(nu, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, -1> chi;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> chi;
       chi = Eigen::Matrix<local_scalar_t__, -1, -1>(M, n_occasions);
       stan::math::fill(chi, DUMMY_VAR__);
       
-      assign(lcm_sym286__, rep_matrix(mean_phi, M, (n_occasions - 1)),
+      lcm_sym236__ = (n_occasions - 1);
+      assign(lcm_sym286__, rep_matrix(mean_phi, M, lcm_sym236__),
         "assigning variable lcm_sym286__");
       assign(phi, lcm_sym286__, "assigning variable phi");
       lcm_sym226__ = logical_gte(n_occasions, 1);
@@ -12592,7 +12592,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         lcm_sym302__ = rvalue(lcm_sym220__, "lcm_sym220__", index_uni(1));
         current_statement__ = 15;
         assign(nu, lcm_sym302__, "assigning variable nu", index_uni(1));
-        lcm_sym236__ = (n_occasions - 1);
+        current_statement__ = 19;
         if (logical_gte(lcm_sym236__, 2)) {
           current_statement__ = 16;
           assign(nu,
@@ -12650,7 +12650,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
             int inline_sym20__;
             inline_sym20__ = std::numeric_limits<int>::min();
             
-            lcm_sym247__ = (lcm_sym241__ + 1);
+            lcm_sym246__ = (lcm_sym241__ + 1);
             current_statement__ = 30;
             assign(inline_sym18__,
               stan::math::fma(
@@ -12658,9 +12658,9 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                    index_uni(inline_sym22__), index_uni(lcm_sym241__)) *
                   (1 -
                     rvalue(p, "p",
-                      index_uni(inline_sym22__), index_uni(lcm_sym247__)))),
+                      index_uni(inline_sym22__), index_uni(lcm_sym246__)))),
                 rvalue(inline_sym18__, "inline_sym18__",
-                  index_uni(inline_sym22__), index_uni(lcm_sym247__)),
+                  index_uni(inline_sym22__), index_uni(lcm_sym246__)),
                 (1 -
                   rvalue(lcm_sym286__, "lcm_sym286__",
                     index_uni(inline_sym22__), index_uni(lcm_sym241__)))),
@@ -12675,7 +12675,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
               int inline_sym20__;
               inline_sym20__ = std::numeric_limits<int>::min();
               
-              lcm_sym246__ = (lcm_sym240__ + 1);
+              lcm_sym245__ = (lcm_sym240__ + 1);
               current_statement__ = 30;
               assign(inline_sym18__,
                 stan::math::fma(
@@ -12683,9 +12683,9 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                      index_uni(inline_sym22__), index_uni(lcm_sym240__)) *
                     (1 -
                       rvalue(p, "p",
-                        index_uni(inline_sym22__), index_uni(lcm_sym246__)))),
+                        index_uni(inline_sym22__), index_uni(lcm_sym245__)))),
                   rvalue(inline_sym18__, "inline_sym18__",
-                    index_uni(inline_sym22__), index_uni(lcm_sym246__)),
+                    index_uni(inline_sym22__), index_uni(lcm_sym245__)),
                   (1 -
                     rvalue(lcm_sym286__, "lcm_sym286__",
                       index_uni(inline_sym22__), index_uni(lcm_sym240__)))),
@@ -13056,14 +13056,14 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                   bernoulli_lpmf<propto__>(1,
                     rvalue(lcm_sym286__, "lcm_sym286__",
                       index_uni(1), index_uni(((lcm_sym289__ + 1) - 1)))));
-                lcm_sym263__ = ((lcm_sym289__ + 1) + 1);
+                lcm_sym262__ = ((lcm_sym289__ + 1) + 1);
                 lp_accum__.add(
                   bernoulli_lpmf<propto__>(
                     rvalue(y, "y",
                       index_uni(1), index_uni((lcm_sym289__ + 1))),
                     rvalue(p, "p",
                       index_uni(1), index_uni((lcm_sym289__ + 1)))));
-                for (int inline_sym30__ = lcm_sym263__;
+                for (int inline_sym30__ = lcm_sym262__;
                      inline_sym30__ <= lcm_sym295__; ++inline_sym30__) {
                   current_statement__ = 98;
                   lp_accum__.add(
@@ -13262,7 +13262,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                       rvalue(lcm_sym286__, "lcm_sym286__",
                         index_uni(inline_sym31__),
                           index_uni(((lcm_sym288__ + 1) - 1)))));
-                  lcm_sym262__ = ((lcm_sym288__ + 1) + 1);
+                  lcm_sym261__ = ((lcm_sym288__ + 1) + 1);
                   lp_accum__.add(
                     bernoulli_lpmf<propto__>(
                       rvalue(y, "y",
@@ -13271,7 +13271,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                       rvalue(p, "p",
                         index_uni(inline_sym31__),
                           index_uni((lcm_sym288__ + 1)))));
-                  for (int inline_sym30__ = lcm_sym262__;
+                  for (int inline_sym30__ = lcm_sym261__;
                        inline_sym30__ <= lcm_sym294__; ++inline_sym30__) {
                     current_statement__ = 98;
                     lp_accum__.add(
@@ -17921,22 +17921,22 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       current_statement__ = 1;
       mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                  0, 1, lp__);
-      Eigen::Matrix<local_scalar_t__, -1, 1> beta;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> beta;
       beta = Eigen::Matrix<local_scalar_t__, -1, 1>(max_age);
       stan::math::fill(beta, DUMMY_VAR__);
       
       current_statement__ = 2;
       beta = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                0, 1, lp__, max_age);
-      Eigen::Matrix<local_scalar_t__, -1, -1> phi;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> phi;
       phi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(phi, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, -1> p;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> p;
       p = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(p, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, -1> chi;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> chi;
       chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
       stan::math::fill(chi, DUMMY_VAR__);
       
@@ -20747,14 +20747,14 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       current_statement__ = 2;
       mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                  0, 1, lp__);
-      Eigen::Matrix<local_scalar_t__, -1, 1> gamma;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> gamma;
       gamma = Eigen::Matrix<local_scalar_t__, -1, 1>(n_occasions);
       stan::math::fill(gamma, DUMMY_VAR__);
       
       current_statement__ = 3;
       gamma = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                 0, 1, lp__, n_occasions);
-      Eigen::Matrix<local_scalar_t__, -1, 1> epsilon;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> epsilon;
       epsilon = Eigen::Matrix<local_scalar_t__, -1, 1>((n_occasions - 1));
       stan::math::fill(epsilon, DUMMY_VAR__);
       
@@ -20767,15 +20767,15 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       current_statement__ = 5;
       sigma = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                 0, 5, lp__);
-      Eigen::Matrix<local_scalar_t__, -1, -1> phi;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> phi;
       phi = Eigen::Matrix<local_scalar_t__, -1, -1>(M, lcm_sym297__);
       stan::math::fill(phi, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, -1> p;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> p;
       p = Eigen::Matrix<local_scalar_t__, -1, -1>(M, n_occasions);
       stan::math::fill(p, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, -1> chi;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> chi;
       chi = Eigen::Matrix<local_scalar_t__, -1, -1>(M, n_occasions);
       stan::math::fill(chi, DUMMY_VAR__);
       
@@ -24812,15 +24812,15 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       current_statement__ = 2;
       mean_p = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                  0, 1, lp__);
-      Eigen::Matrix<local_scalar_t__, -1, -1> phi;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> phi;
       phi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(phi, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, -1> p;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> p;
       p = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, (n_occasions - 1));
       stan::math::fill(p, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, -1> chi;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> chi;
       chi = Eigen::Matrix<local_scalar_t__, -1, -1>(nind, n_occasions);
       stan::math::fill(chi, DUMMY_VAR__);
       
@@ -27876,13 +27876,13 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       
       current_statement__ = 1;
       beta = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<local_scalar_t__, -1, 1> eta1;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> eta1;
       eta1 = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       stan::math::fill(eta1, DUMMY_VAR__);
       
       current_statement__ = 2;
       eta1 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J);
-      Eigen::Matrix<local_scalar_t__, -1, 1> eta2;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> eta2;
       eta2 = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       stan::math::fill(eta2, DUMMY_VAR__);
       
@@ -27916,15 +27916,15 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       current_statement__ = 8;
       sigma_y = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                   0, 100, lp__);
-      Eigen::Matrix<local_scalar_t__, -1, 1> a1;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> a1;
       a1 = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       stan::math::fill(a1, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, 1> a2;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> a2;
       a2 = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       stan::math::fill(a2, DUMMY_VAR__);
       
-      Eigen::Matrix<local_scalar_t__, -1, 1> y_hat;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> y_hat;
       y_hat = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(y_hat, DUMMY_VAR__);
       
@@ -28815,9 +28815,9 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      int lcm_sym79__;
+      double lcm_sym79__;
       int lcm_sym78__;
-      double lcm_sym77__;
+      int lcm_sym77__;
       int lcm_sym76__;
       int lcm_sym75__;
       int lcm_sym74__;
@@ -28839,21 +28839,21 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       
       current_statement__ = 2;
       phi = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<local_scalar_t__, -1, -1> x_matrix;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> x_matrix;
       x_matrix = Eigen::Matrix<local_scalar_t__, -1, -1>(3, 2);
       stan::math::fill(x_matrix, DUMMY_VAR__);
       
       current_statement__ = 3;
       x_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                    3, 2);
-      Eigen::Matrix<local_scalar_t__, -1, 1> x_vector;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> x_vector;
       x_vector = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(x_vector, DUMMY_VAR__);
       
       current_statement__ = 4;
       x_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                    2);
-      Eigen::Matrix<local_scalar_t__, -1, -1> x_cov;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> x_cov;
       x_cov = Eigen::Matrix<local_scalar_t__, -1, -1>(2, 2);
       stan::math::fill(x_cov, DUMMY_VAR__);
       
@@ -29039,22 +29039,22 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
               }
             }
             {
-              lcm_sym79__ = (2 * 2);
-              if (logical_gte(lcm_sym79__, 2)) {
+              lcm_sym78__ = (2 * 2);
+              if (logical_gte(lcm_sym78__, 2)) {
                 lcm_sym76__ = (2 + 1);
                 lp_accum__.add(53);
-                for (int k = lcm_sym76__; k <= lcm_sym79__; ++k) {
+                for (int k = lcm_sym76__; k <= lcm_sym78__; ++k) {
                   current_statement__ = 15;
                   lp_accum__.add(53);
                 }
               } 
             }
             {
-              lcm_sym79__ = (3 * 2);
-              if (logical_gte(lcm_sym79__, 3)) {
+              lcm_sym78__ = (3 * 2);
+              if (logical_gte(lcm_sym78__, 3)) {
                 lcm_sym76__ = (3 + 1);
                 lp_accum__.add(53);
-                for (int k = lcm_sym76__; k <= lcm_sym79__; ++k) {
+                for (int k = lcm_sym76__; k <= lcm_sym78__; ++k) {
                   current_statement__ = 15;
                   lp_accum__.add(53);
                 }
@@ -29064,12 +29064,12 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           {
             lcm_sym74__ = (2 + 2);
             if (logical_gte(lcm_sym74__, 2)) {
-              lcm_sym78__ = (2 * 2);
-              if (logical_gte(lcm_sym78__, 2)) {
+              lcm_sym77__ = (2 * 2);
+              if (logical_gte(lcm_sym77__, 2)) {
                 {
                   lcm_sym73__ = (2 + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym73__; k <= lcm_sym78__; ++k) {
+                  for (int k = lcm_sym73__; k <= lcm_sym77__; ++k) {
                     current_statement__ = 15;
                     lp_accum__.add(53);
                   }
@@ -29078,11 +29078,11 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                 lcm_sym73__ = (2 + 1);
               }
               for (int j = lcm_sym73__; j <= lcm_sym74__; ++j) {
-                lcm_sym79__ = (j * 2);
-                if (logical_gte(lcm_sym79__, j)) {
+                lcm_sym78__ = (j * 2);
+                if (logical_gte(lcm_sym78__, j)) {
                   lcm_sym76__ = (j + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym76__; k <= lcm_sym79__; ++k) {
+                  for (int k = lcm_sym76__; k <= lcm_sym78__; ++k) {
                     current_statement__ = 15;
                     lp_accum__.add(53);
                   }
@@ -29093,12 +29093,12 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           {
             lcm_sym74__ = (3 + 2);
             if (logical_gte(lcm_sym74__, 3)) {
-              lcm_sym78__ = (3 * 2);
-              if (logical_gte(lcm_sym78__, 3)) {
+              lcm_sym77__ = (3 * 2);
+              if (logical_gte(lcm_sym77__, 3)) {
                 {
                   lcm_sym73__ = (3 + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym73__; k <= lcm_sym78__; ++k) {
+                  for (int k = lcm_sym73__; k <= lcm_sym77__; ++k) {
                     current_statement__ = 15;
                     lp_accum__.add(53);
                   }
@@ -29107,11 +29107,11 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                 lcm_sym73__ = (3 + 1);
               }
               for (int j = lcm_sym73__; j <= lcm_sym74__; ++j) {
-                lcm_sym79__ = (j * 2);
-                if (logical_gte(lcm_sym79__, j)) {
+                lcm_sym78__ = (j * 2);
+                if (logical_gte(lcm_sym78__, j)) {
                   lcm_sym76__ = (j + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym76__; k <= lcm_sym79__; ++k) {
+                  for (int k = lcm_sym76__; k <= lcm_sym78__; ++k) {
                     current_statement__ = 15;
                     lp_accum__.add(53);
                   }
@@ -29122,12 +29122,12 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           {
             lcm_sym74__ = (4 + 2);
             if (logical_gte(lcm_sym74__, 4)) {
-              lcm_sym78__ = (4 * 2);
-              if (logical_gte(lcm_sym78__, 4)) {
+              lcm_sym77__ = (4 * 2);
+              if (logical_gte(lcm_sym77__, 4)) {
                 {
                   lcm_sym73__ = (4 + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym73__; k <= lcm_sym78__; ++k) {
+                  for (int k = lcm_sym73__; k <= lcm_sym77__; ++k) {
                     current_statement__ = 15;
                     lp_accum__.add(53);
                   }
@@ -29136,11 +29136,11 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                 lcm_sym73__ = (4 + 1);
               }
               for (int j = lcm_sym73__; j <= lcm_sym74__; ++j) {
-                lcm_sym79__ = (j * 2);
-                if (logical_gte(lcm_sym79__, j)) {
+                lcm_sym78__ = (j * 2);
+                if (logical_gte(lcm_sym78__, j)) {
                   lcm_sym76__ = (j + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym76__; k <= lcm_sym79__; ++k) {
+                  for (int k = lcm_sym76__; k <= lcm_sym78__; ++k) {
                     current_statement__ = 15;
                     lp_accum__.add(53);
                   }
@@ -29151,12 +29151,12 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           {
             lcm_sym74__ = (5 + 2);
             if (logical_gte(lcm_sym74__, 5)) {
-              lcm_sym78__ = (5 * 2);
-              if (logical_gte(lcm_sym78__, 5)) {
+              lcm_sym77__ = (5 * 2);
+              if (logical_gte(lcm_sym77__, 5)) {
                 {
                   lcm_sym73__ = (5 + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym73__; k <= lcm_sym78__; ++k) {
+                  for (int k = lcm_sym73__; k <= lcm_sym77__; ++k) {
                     current_statement__ = 15;
                     lp_accum__.add(53);
                   }
@@ -29165,11 +29165,11 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                 lcm_sym73__ = (5 + 1);
               }
               for (int j = lcm_sym73__; j <= lcm_sym74__; ++j) {
-                lcm_sym79__ = (j * 2);
-                if (logical_gte(lcm_sym79__, j)) {
+                lcm_sym78__ = (j * 2);
+                if (logical_gte(lcm_sym78__, j)) {
                   lcm_sym76__ = (j + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym76__; k <= lcm_sym79__; ++k) {
+                  for (int k = lcm_sym76__; k <= lcm_sym78__; ++k) {
                     current_statement__ = 15;
                     lp_accum__.add(53);
                   }
@@ -30275,13 +30275,13 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       double lcm_sym25__;
       double lcm_sym24__;
       int lcm_sym23__;
-      Eigen::Matrix<local_scalar_t__, -1, 1> a;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> a;
       a = Eigen::Matrix<local_scalar_t__, -1, 1>(n_pair);
       stan::math::fill(a, DUMMY_VAR__);
       
       current_statement__ = 1;
       a = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_pair);
-      Eigen::Matrix<local_scalar_t__, -1, 1> beta;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> beta;
       beta = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(beta, DUMMY_VAR__);
       
@@ -30304,7 +30304,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       current_statement__ = 5;
       sigma_y = in__.template read_constrain_lub<local_scalar_t__, jacobian__>(
                   0, 100, lp__);
-      Eigen::Matrix<local_scalar_t__, -1, 1> y_hat;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> y_hat;
       y_hat = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(y_hat, DUMMY_VAR__);
       
