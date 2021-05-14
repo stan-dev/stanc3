@@ -149,14 +149,14 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       current_statement__ = 2;
       tau = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
               lp__);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> theta_tilde;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> theta_tilde;
       theta_tilde = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       stan::math::fill(theta_tilde, DUMMY_VAR__);
       
       current_statement__ = 3;
       theta_tilde = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                       J);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> theta;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> theta;
       theta = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       stan::math::fill(theta, DUMMY_VAR__);
       
@@ -958,14 +958,14 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       current_statement__ = 2;
       tau = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
               lp__);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> theta_tilde;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> theta_tilde;
       theta_tilde = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       stan::math::fill(theta_tilde, DUMMY_VAR__);
       
       current_statement__ = 3;
       theta_tilde = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                       J);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> theta;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> theta;
       theta = Eigen::Matrix<local_scalar_t__, -1, 1>(J);
       stan::math::fill(theta, DUMMY_VAR__);
       
@@ -1390,7 +1390,7 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
       
       current_statement__ = 1;
       xx = in__.template read<std::vector<local_scalar_t__>>(3);
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<double>>> y;
+      std::vector<std::vector<local_scalar_t__>> y;
       y = std::vector<std::vector<local_scalar_t__>>(3, std::vector<local_scalar_t__>(3, DUMMY_VAR__));
       
       
@@ -1398,7 +1398,7 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
       assign(y, std::vector<std::vector<local_scalar_t__>>{
         stan::math::promote_scalar<local_scalar_t__>(x), xx, xx},
         "assigning variable y");
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<double>>> w;
+      std::vector<std::vector<local_scalar_t__>> w;
       w = std::vector<std::vector<local_scalar_t__>>(3, std::vector<local_scalar_t__>(3, DUMMY_VAR__));
       
       
@@ -1409,7 +1409,7 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
         stan::math::promote_scalar<local_scalar_t__>(2),
         stan::math::promote_scalar<local_scalar_t__>(3)}, xx, xx},
         "assigning variable w");
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<double>>> td_arr33;
+      std::vector<std::vector<local_scalar_t__>> td_arr33;
       td_arr33 = std::vector<std::vector<local_scalar_t__>>(3, std::vector<local_scalar_t__>(3, DUMMY_VAR__));
       
       
@@ -2960,7 +2960,7 @@ foo_1(const int& a, std::ostream* pstream__) {
     }
     current_statement__ = 659;
     while (1) {
-      conditional_var_value_t<int, std::vector<std::vector<int>>> vs;
+      std::vector<std::vector<int>> vs;
       vs = std::vector<std::vector<int>>(2, std::vector<int>(3, std::numeric_limits<int>::min()));
       
       
@@ -3016,7 +3016,7 @@ foo_1(const int& a, std::ostream* pstream__) {
       local_scalar_t__ z;
       z = DUMMY_VAR__;
       
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> vs;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> vs;
       vs = Eigen::Matrix<local_scalar_t__, -1, -1>(2, 3);
       stan::math::fill(vs, DUMMY_VAR__);
       
@@ -3058,7 +3058,7 @@ foo_1(const int& a, std::ostream* pstream__) {
       local_scalar_t__ z;
       z = DUMMY_VAR__;
       
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> vs;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> vs;
       vs = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(vs, DUMMY_VAR__);
       
@@ -3090,7 +3090,7 @@ foo_1(const int& a, std::ostream* pstream__) {
       local_scalar_t__ z;
       z = DUMMY_VAR__;
       
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, 1, -1>> vs;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>> vs;
       vs = Eigen::Matrix<local_scalar_t__, 1, -1>(2);
       stan::math::fill(vs, DUMMY_VAR__);
       
@@ -3489,7 +3489,7 @@ covsqrt2corsqrt(const T0__& mat_arg__, const int& invert,
     validate_non_negative_index("o", "rows(mat)", rows(mat));
     current_statement__ = 729;
     validate_non_negative_index("o", "cols(mat)", cols(mat));
-    conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> o;
+    conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> o;
     o = Eigen::Matrix<local_scalar_t__, -1, -1>(rows(mat), cols(mat));
     stan::math::fill(o, DUMMY_VAR__);
     
@@ -4315,11 +4315,11 @@ foo_6(std::ostream* pstream__) {
     local_scalar_t__ b;
     b = DUMMY_VAR__;
     
-    conditional_var_value_t<local_scalar_t__, std::vector<std::vector<double>>> c;
+    std::vector<std::vector<local_scalar_t__>> c;
     c = std::vector<std::vector<local_scalar_t__>>(20, std::vector<local_scalar_t__>(30, DUMMY_VAR__));
     
     
-    conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>> ar_mat;
+    conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>> ar_mat;
     ar_mat = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(60, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(70, Eigen::Matrix<local_scalar_t__, -1, -1>(40, 50)));
     stan::math::fill(ar_mat, DUMMY_VAR__);
     
@@ -4412,7 +4412,7 @@ vecmufoo(const T0__& mu, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> l;
+    conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> l;
     l = Eigen::Matrix<local_scalar_t__, -1, 1>(10);
     stan::math::fill(l, DUMMY_VAR__);
     
@@ -4447,7 +4447,7 @@ vecmubar(const T0__& mu, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> l;
+    conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> l;
     l = Eigen::Matrix<local_scalar_t__, -1, 1>(10);
     stan::math::fill(l, DUMMY_VAR__);
     
@@ -4491,7 +4491,7 @@ algebra_system(const T0__& x_arg__, const T1__& y_arg__,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> f_x;
+    conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> f_x;
     f_x = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
     stan::math::fill(f_x, DUMMY_VAR__);
     
@@ -4540,7 +4540,7 @@ binomialf(const T0__& phi_arg__, const T1__& theta_arg__,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> lpmf;
+    conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> lpmf;
     lpmf = Eigen::Matrix<local_scalar_t__, -1, 1>(1);
     stan::math::fill(lpmf, DUMMY_VAR__);
     
@@ -6953,118 +6953,118 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 7;
       p_real_1d_ar = in__.template read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(
                        0, lp__, N);
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<std::vector<double>>>> p_real_3d_ar;
+      std::vector<std::vector<std::vector<local_scalar_t__>>> p_real_3d_ar;
       p_real_3d_ar = std::vector<std::vector<std::vector<local_scalar_t__>>>(N, std::vector<std::vector<local_scalar_t__>>(M, std::vector<local_scalar_t__>(K, DUMMY_VAR__)));
       
       
       current_statement__ = 8;
       p_real_3d_ar = in__.template read_constrain_lb<std::vector<std::vector<std::vector<local_scalar_t__>>>, jacobian__>(
                        0, lp__, N, M, K);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> p_vec;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> p_vec;
       p_vec = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(p_vec, DUMMY_VAR__);
       
       current_statement__ = 9;
       p_vec = in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                 0, lp__, N);
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, -1, 1>>> p_1d_vec;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> p_1d_vec;
       p_1d_vec = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       stan::math::fill(p_1d_vec, DUMMY_VAR__);
       
       current_statement__ = 10;
       p_1d_vec = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                    N, N);
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>> p_3d_vec;
+      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>> p_3d_vec;
       p_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
       stan::math::fill(p_3d_vec, DUMMY_VAR__);
       
       current_statement__ = 11;
       p_3d_vec = in__.template read<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>>(
                    N, M, K, N);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, 1, -1>> p_row_vec;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>> p_row_vec;
       p_row_vec = Eigen::Matrix<local_scalar_t__, 1, -1>(N);
       stan::math::fill(p_row_vec, DUMMY_VAR__);
       
       current_statement__ = 12;
       p_row_vec = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(
                     N);
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, 1, -1>>> p_1d_row_vec;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> p_1d_row_vec;
       p_1d_row_vec = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
       stan::math::fill(p_1d_row_vec, DUMMY_VAR__);
       
       current_statement__ = 13;
       p_1d_row_vec = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
                        N, N);
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>> p_3d_row_vec;
+      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>> p_3d_row_vec;
       p_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(K, Eigen::Matrix<local_scalar_t__, 1, -1>(N))));
       stan::math::fill(p_3d_row_vec, DUMMY_VAR__);
       
       current_statement__ = 14;
       p_3d_row_vec = in__.template read<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>>(
                        N, M, K, N);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> p_mat;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> p_mat;
       p_mat = Eigen::Matrix<local_scalar_t__, -1, -1>(5, 4);
       stan::math::fill(p_mat, DUMMY_VAR__);
       
       current_statement__ = 15;
       p_mat = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(5,
                 4);
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>> p_ar_mat;
+      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>> p_ar_mat;
       p_ar_mat = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(4, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(5, Eigen::Matrix<local_scalar_t__, -1, -1>(2, 3)));
       stan::math::fill(p_ar_mat, DUMMY_VAR__);
       
       current_statement__ = 16;
       p_ar_mat = in__.template read_constrain_lub<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>, jacobian__>(
                    0, 1, lp__, 4, 5, 2, 3);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> p_simplex;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> p_simplex;
       p_simplex = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(p_simplex, DUMMY_VAR__);
       
       current_statement__ = 17;
       p_simplex = in__.template read_constrain_simplex<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                     lp__, N);
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, -1, 1>>> p_1d_simplex;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> p_1d_simplex;
       p_1d_simplex = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       stan::math::fill(p_1d_simplex, DUMMY_VAR__);
       
       current_statement__ = 18;
       p_1d_simplex = in__.template read_constrain_simplex<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
                        lp__, N, N);
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>> p_3d_simplex;
+      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>> p_3d_simplex;
       p_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
       stan::math::fill(p_3d_simplex, DUMMY_VAR__);
       
       current_statement__ = 19;
       p_3d_simplex = in__.template read_constrain_simplex<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>, jacobian__>(
                        lp__, N, M, K, N);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> p_cfcov_54;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> p_cfcov_54;
       p_cfcov_54 = Eigen::Matrix<local_scalar_t__, -1, -1>(5, 4);
       stan::math::fill(p_cfcov_54, DUMMY_VAR__);
       
       current_statement__ = 20;
       p_cfcov_54 = in__.template read_constrain_cholesky_factor_cov<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
                      lp__, 5, 4);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> p_cfcov_33;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> p_cfcov_33;
       p_cfcov_33 = Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3);
       stan::math::fill(p_cfcov_33, DUMMY_VAR__);
       
       current_statement__ = 21;
       p_cfcov_33 = in__.template read_constrain_cholesky_factor_cov<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
                      lp__, 3, 3);
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, -1, -1>>> p_cfcov_33_ar;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> p_cfcov_33_ar;
       p_cfcov_33_ar = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(K, Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3));
       stan::math::fill(p_cfcov_33_ar, DUMMY_VAR__);
       
       current_statement__ = 22;
       p_cfcov_33_ar = in__.template read_constrain_cholesky_factor_cov<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
                         lp__, K, 3, 3);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> x_p;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> x_p;
       x_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(x_p, DUMMY_VAR__);
       
       current_statement__ = 23;
       x_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> y_p;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> y_p;
       y_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(y_p, DUMMY_VAR__);
       
@@ -7073,67 +7073,67 @@ class mother_model final : public model_base_crtp<mother_model> {
       std::vector<local_scalar_t__> tp_real_1d_ar;
       tp_real_1d_ar = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<std::vector<double>>>> tp_real_3d_ar;
+      std::vector<std::vector<std::vector<local_scalar_t__>>> tp_real_3d_ar;
       tp_real_3d_ar = std::vector<std::vector<std::vector<local_scalar_t__>>>(N, std::vector<std::vector<local_scalar_t__>>(M, std::vector<local_scalar_t__>(K, DUMMY_VAR__)));
       
       
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> tp_vec;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> tp_vec;
       tp_vec = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(tp_vec, DUMMY_VAR__);
       
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, -1, 1>>> tp_1d_vec;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> tp_1d_vec;
       tp_1d_vec = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       stan::math::fill(tp_1d_vec, DUMMY_VAR__);
       
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>> tp_3d_vec;
+      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>> tp_3d_vec;
       tp_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
       stan::math::fill(tp_3d_vec, DUMMY_VAR__);
       
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, 1, -1>> tp_row_vec;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>> tp_row_vec;
       tp_row_vec = Eigen::Matrix<local_scalar_t__, 1, -1>(N);
       stan::math::fill(tp_row_vec, DUMMY_VAR__);
       
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, 1, -1>>> tp_1d_row_vec;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> tp_1d_row_vec;
       tp_1d_row_vec = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
       stan::math::fill(tp_1d_row_vec, DUMMY_VAR__);
       
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>> tp_3d_row_vec;
+      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>> tp_3d_row_vec;
       tp_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(K, Eigen::Matrix<local_scalar_t__, 1, -1>(N))));
       stan::math::fill(tp_3d_row_vec, DUMMY_VAR__);
       
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> tp_mat;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> tp_mat;
       tp_mat = Eigen::Matrix<local_scalar_t__, -1, -1>(5, 4);
       stan::math::fill(tp_mat, DUMMY_VAR__);
       
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>> tp_ar_mat;
+      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>> tp_ar_mat;
       tp_ar_mat = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(4, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(5, Eigen::Matrix<local_scalar_t__, -1, -1>(2, 3)));
       stan::math::fill(tp_ar_mat, DUMMY_VAR__);
       
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> tp_simplex;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> tp_simplex;
       tp_simplex = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(tp_simplex, DUMMY_VAR__);
       
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, -1, 1>>> tp_1d_simplex;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> tp_1d_simplex;
       tp_1d_simplex = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       stan::math::fill(tp_1d_simplex, DUMMY_VAR__);
       
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>> tp_3d_simplex;
+      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>> tp_3d_simplex;
       tp_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
       stan::math::fill(tp_3d_simplex, DUMMY_VAR__);
       
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> tp_cfcov_54;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> tp_cfcov_54;
       tp_cfcov_54 = Eigen::Matrix<local_scalar_t__, -1, -1>(5, 4);
       stan::math::fill(tp_cfcov_54, DUMMY_VAR__);
       
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> tp_cfcov_33;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> tp_cfcov_33;
       tp_cfcov_33 = Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3);
       stan::math::fill(tp_cfcov_33, DUMMY_VAR__);
       
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, -1, -1>>> tp_cfcov_33_ar;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> tp_cfcov_33_ar;
       tp_cfcov_33_ar = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(K, Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3));
       stan::math::fill(tp_cfcov_33_ar, DUMMY_VAR__);
       
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> theta_p;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> theta_p;
       theta_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(theta_p, DUMMY_VAR__);
       
@@ -7326,11 +7326,11 @@ class mother_model final : public model_base_crtp<mother_model> {
                               tp_cfcov_33_ar[(sym1__ - 1)]);
       }
       {
-        conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> tmp;
+        conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> tmp;
         tmp = Eigen::Matrix<local_scalar_t__, -1, 1>(0);
         stan::math::fill(tmp, DUMMY_VAR__);
         
-        conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, -1, 1>>> tmp2;
+        conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> tmp2;
         tmp2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(0, Eigen::Matrix<local_scalar_t__, -1, 1>(0));
         stan::math::fill(tmp2, DUMMY_VAR__);
         
@@ -11409,7 +11409,7 @@ algebra_system(const T0__& x_arg__, const T1__& y_arg__,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> f_x;
+    conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> f_x;
     f_x = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
     stan::math::fill(f_x, DUMMY_VAR__);
     
@@ -11704,20 +11704,20 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       
       current_statement__ = 3;
       x_p = in__.template read<std::vector<local_scalar_t__>>(1);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> x_p_v;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> x_p_v;
       x_p_v = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(x_p_v, DUMMY_VAR__);
       
       current_statement__ = 4;
       x_p_v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> shared_params_p;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> shared_params_p;
       shared_params_p = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
       stan::math::fill(shared_params_p, DUMMY_VAR__);
       
       current_statement__ = 5;
       shared_params_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                           3);
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, -1, 1>>> job_params_p;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> job_params_p;
       job_params_p = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(3, Eigen::Matrix<local_scalar_t__, -1, 1>(3));
       stan::math::fill(job_params_p, DUMMY_VAR__);
       
@@ -11744,7 +11744,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       
       current_statement__ = 10;
       abc3_p = map_rectfake(12, pstream__);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> y_hat_tp1;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> y_hat_tp1;
       y_hat_tp1 = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
       stan::math::fill(y_hat_tp1, DUMMY_VAR__);
       
@@ -11752,7 +11752,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       assign(y_hat_tp1,
         map_rect<1, foo_functor__>(shared_params_p, job_params_d, data_r,
           data_i, pstream__), "assigning variable y_hat_tp1");
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> y_hat_tp2;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> y_hat_tp2;
       y_hat_tp2 = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
       stan::math::fill(y_hat_tp2, DUMMY_VAR__);
       
@@ -11760,7 +11760,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       assign(y_hat_tp2,
         map_rect<2, foo_functor__>(shared_params_d, job_params_p, data_r,
           data_i, pstream__), "assigning variable y_hat_tp2");
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> y_hat_tp3;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> y_hat_tp3;
       y_hat_tp3 = Eigen::Matrix<local_scalar_t__, -1, 1>(3);
       stan::math::fill(y_hat_tp3, DUMMY_VAR__);
       
@@ -11768,19 +11768,19 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       assign(y_hat_tp3,
         map_rect<3, foo_functor__>(shared_params_p, job_params_d, data_r,
           data_i, pstream__), "assigning variable y_hat_tp3");
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> theta_p_as;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> theta_p_as;
       theta_p_as = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(theta_p_as, DUMMY_VAR__);
       
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> x_v;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> x_v;
       x_v = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(x_v, DUMMY_VAR__);
       
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> y_v;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> y_v;
       y_v = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(y_v, DUMMY_VAR__);
       
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> y_p;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> y_p;
       y_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(y_p, DUMMY_VAR__);
       
@@ -11843,7 +11843,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       {
         current_statement__ = 80;
         validate_non_negative_index("y_hat", "T", T);
-        conditional_var_value_t<local_scalar_t__, std::vector<std::vector<double>>> y_hat;
+        std::vector<std::vector<local_scalar_t__>> y_hat;
         y_hat = std::vector<std::vector<local_scalar_t__>>(T, std::vector<local_scalar_t__>(2, DUMMY_VAR__));
         
         
@@ -13972,13 +13972,13 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       
       current_statement__ = 2;
       ra = in__.template read<std::vector<local_scalar_t__>>(N);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> v;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> v;
       v = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(v, DUMMY_VAR__);
       
       current_statement__ = 3;
       v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, -1, 1>>> z;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> z;
       z = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       stan::math::fill(z, DUMMY_VAR__);
       
@@ -14680,7 +14680,7 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
         validate_non_negative_index("zm", "N", N);
         current_statement__ = 401;
         validate_non_negative_index("zm", "N", N);
-        conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, -1, 1>>> zm;
+        conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> zm;
         zm = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
         stan::math::fill(zm, DUMMY_VAR__);
         
@@ -17420,7 +17420,7 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       current_statement__ = 6;
       sigma = in__.template read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(
                 0, lp__, 2);
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<double>>> z;
+      std::vector<std::vector<local_scalar_t__>> z;
       z = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(2, DUMMY_VAR__));
       
       
@@ -18421,19 +18421,19 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> alpha_v;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> alpha_v;
       alpha_v = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
       stan::math::fill(alpha_v, DUMMY_VAR__);
       
       current_statement__ = 1;
       alpha_v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> beta;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> beta;
       beta = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
       stan::math::fill(beta, DUMMY_VAR__);
       
       current_statement__ = 2;
       beta = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> cuts;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> cuts;
       cuts = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
       stan::math::fill(cuts, DUMMY_VAR__);
       
@@ -18455,20 +18455,20 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       
       current_statement__ = 6;
       phi = in__.template read<local_scalar_t__>();
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> X_p;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> X_p;
       X_p = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
       stan::math::fill(X_p, DUMMY_VAR__);
       
       current_statement__ = 7;
       X_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, k);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> beta_m;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> beta_m;
       beta_m = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
       stan::math::fill(beta_m, DUMMY_VAR__);
       
       current_statement__ = 8;
       beta_m = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n,
                  k);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, 1, -1>> X_rv_p;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>> X_rv_p;
       X_rv_p = Eigen::Matrix<local_scalar_t__, 1, -1>(n);
       stan::math::fill(X_rv_p, DUMMY_VAR__);
       
@@ -19672,14 +19672,14 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     (void) function__;  // suppress unused var warning
     
     try {
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, -1, -1>>> L_Omega;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> L_Omega;
       L_Omega = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(nt, Eigen::Matrix<local_scalar_t__, -1, -1>(2, 2));
       stan::math::fill(L_Omega, DUMMY_VAR__);
       
       current_statement__ = 1;
       L_Omega = in__.template read_constrain_cholesky_factor_corr<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
                   lp__, nt, 2);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> z1;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> z1;
       z1 = Eigen::Matrix<local_scalar_t__, -1, 1>(NS);
       stan::math::fill(z1, DUMMY_VAR__);
       
@@ -21918,49 +21918,49 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>> a8;
+      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>> a8;
       a8 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
       stan::math::fill(a8, DUMMY_VAR__);
       
       current_statement__ = 1;
       a8 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
              N, N, N, N);
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> a7;
+      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>> a7;
       a7 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N)));
       stan::math::fill(a7, DUMMY_VAR__);
       
       current_statement__ = 2;
       a7 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
              N, N, N);
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> a6;
+      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> a6;
       a6 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N)));
       stan::math::fill(a6, DUMMY_VAR__);
       
       current_statement__ = 3;
       a6 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
              N, N, N);
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<double>>> a5;
+      std::vector<std::vector<local_scalar_t__>> a5;
       a5 = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__));
       
       
       current_statement__ = 4;
       a5 = in__.template read<std::vector<std::vector<local_scalar_t__>>>(N,
              N);
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, -1, -1>>> a4;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> a4;
       a4 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N));
       stan::math::fill(a4, DUMMY_VAR__);
       
       current_statement__ = 5;
       a4 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
              N, N, N);
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, 1, -1>>> a3;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> a3;
       a3 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
       stan::math::fill(a3, DUMMY_VAR__);
       
       current_statement__ = 6;
       a3 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
              N, N);
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, -1, 1>>> a2;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> a2;
       a2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       stan::math::fill(a2, DUMMY_VAR__);
       
@@ -21972,49 +21972,49 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
       
       current_statement__ = 8;
       a1 = in__.template read<std::vector<local_scalar_t__>>(N);
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>> y8;
+      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>> y8;
       y8 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
       stan::math::fill(y8, DUMMY_VAR__);
       
       current_statement__ = 9;
       y8 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
              N, N, N, N);
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> y7;
+      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>> y7;
       y7 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N)));
       stan::math::fill(y7, DUMMY_VAR__);
       
       current_statement__ = 10;
       y7 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
              N, N, N);
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> y6;
+      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> y6;
       y6 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N)));
       stan::math::fill(y6, DUMMY_VAR__);
       
       current_statement__ = 11;
       y6 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
              N, N, N);
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<double>>> y5;
+      std::vector<std::vector<local_scalar_t__>> y5;
       y5 = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__));
       
       
       current_statement__ = 12;
       y5 = in__.template read<std::vector<std::vector<local_scalar_t__>>>(N,
              N);
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, -1, -1>>> y4;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> y4;
       y4 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N));
       stan::math::fill(y4, DUMMY_VAR__);
       
       current_statement__ = 13;
       y4 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
              N, N, N);
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, 1, -1>>> y3;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> y3;
       y3 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
       stan::math::fill(y3, DUMMY_VAR__);
       
       current_statement__ = 14;
       y3 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
              N, N);
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, -1, 1>>> y2;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> y2;
       y2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       stan::math::fill(y2, DUMMY_VAR__);
       
@@ -24981,7 +24981,7 @@ r(std::ostream* pstream__) {
     validate_non_negative_index("y2d", "N", N);
     current_statement__ = 227;
     validate_non_negative_index("y2d", "N", N);
-    conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, -1, 1>>> y2d;
+    conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> y2d;
     y2d = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
     stan::math::fill(y2d, DUMMY_VAR__);
     
@@ -24989,7 +24989,7 @@ r(std::ostream* pstream__) {
     validate_non_negative_index("y3d", "N", N);
     current_statement__ = 230;
     validate_non_negative_index("y3d", "N", N);
-    conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, 1, -1>>> y3d;
+    conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> y3d;
     y3d = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
     stan::math::fill(y3d, DUMMY_VAR__);
     
@@ -24999,7 +24999,7 @@ r(std::ostream* pstream__) {
     validate_non_negative_index("y4d", "N", N);
     current_statement__ = 234;
     validate_non_negative_index("y4d", "N", N);
-    conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, -1, -1>>> y4d;
+    conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> y4d;
     y4d = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N));
     stan::math::fill(y4d, DUMMY_VAR__);
     
@@ -25007,7 +25007,7 @@ r(std::ostream* pstream__) {
     validate_non_negative_index("y5d", "N", N);
     current_statement__ = 237;
     validate_non_negative_index("y5d", "N", N);
-    conditional_var_value_t<local_scalar_t__, std::vector<std::vector<double>>> y5d;
+    std::vector<std::vector<local_scalar_t__>> y5d;
     y5d = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__));
     
     
@@ -25017,7 +25017,7 @@ r(std::ostream* pstream__) {
     validate_non_negative_index("y6d", "N", N);
     current_statement__ = 241;
     validate_non_negative_index("y6d", "N", N);
-    conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> y6d;
+    conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> y6d;
     y6d = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N)));
     stan::math::fill(y6d, DUMMY_VAR__);
     
@@ -25027,7 +25027,7 @@ r(std::ostream* pstream__) {
     validate_non_negative_index("y7d", "N", N);
     current_statement__ = 245;
     validate_non_negative_index("y7d", "N", N);
-    conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> y7d;
+    conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>> y7d;
     y7d = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N)));
     stan::math::fill(y7d, DUMMY_VAR__);
     
@@ -25039,7 +25039,7 @@ r(std::ostream* pstream__) {
     validate_non_negative_index("y8d", "N", N);
     current_statement__ = 250;
     validate_non_negative_index("y8d", "N", N);
-    conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>> y8d;
+    conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>> y8d;
     y8d = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
     stan::math::fill(y8d, DUMMY_VAR__);
     
@@ -25048,13 +25048,13 @@ r(std::ostream* pstream__) {
     
     current_statement__ = 253;
     validate_non_negative_index("y10d", "N", N);
-    conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> y10d;
+    conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> y10d;
     y10d = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
     stan::math::fill(y10d, DUMMY_VAR__);
     
     current_statement__ = 255;
     validate_non_negative_index("y11d", "N", N);
-    conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, 1, -1>> y11d;
+    conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>> y11d;
     y11d = Eigen::Matrix<local_scalar_t__, 1, -1>(N);
     stan::math::fill(y11d, DUMMY_VAR__);
     
@@ -25062,7 +25062,7 @@ r(std::ostream* pstream__) {
     validate_non_negative_index("y12d", "N", N);
     current_statement__ = 258;
     validate_non_negative_index("y12d", "N", N);
-    conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> y12d;
+    conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> y12d;
     y12d = Eigen::Matrix<local_scalar_t__, -1, -1>(N, N);
     stan::math::fill(y12d, DUMMY_VAR__);
     
@@ -25078,7 +25078,7 @@ r(std::ostream* pstream__) {
     validate_non_negative_index("y15d", "N", N);
     current_statement__ = 264;
     validate_non_negative_index("y15d", "N", N);
-    conditional_var_value_t<int, std::vector<std::vector<int>>> y15d;
+    std::vector<std::vector<int>> y15d;
     y15d = std::vector<std::vector<int>>(N, std::vector<int>(N, std::numeric_limits<int>::min()));
     
     
@@ -25088,7 +25088,7 @@ r(std::ostream* pstream__) {
     validate_non_negative_index("y16d", "N", N);
     current_statement__ = 268;
     validate_non_negative_index("y16d", "N", N);
-    conditional_var_value_t<int, std::vector<std::vector<std::vector<int>>>> y16d;
+    std::vector<std::vector<std::vector<int>>> y16d;
     y16d = std::vector<std::vector<std::vector<int>>>(N, std::vector<std::vector<int>>(N, std::vector<int>(N, std::numeric_limits<int>::min())));
     
     
@@ -25098,7 +25098,7 @@ r(std::ostream* pstream__) {
     validate_non_negative_index("y17d", "N", N);
     current_statement__ = 272;
     validate_non_negative_index("y17d", "N", N);
-    conditional_var_value_t<local_scalar_t__, std::vector<std::vector<std::vector<double>>>> y17d;
+    std::vector<std::vector<std::vector<local_scalar_t__>>> y17d;
     y17d = std::vector<std::vector<std::vector<local_scalar_t__>>>(N, std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__)));
     
     
@@ -25111,7 +25111,7 @@ r(std::ostream* pstream__) {
     validate_non_negative_index("y2", "N", N);
     current_statement__ = 277;
     validate_non_negative_index("y2", "N", N);
-    conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, -1, 1>>> y2;
+    conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> y2;
     y2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
     stan::math::fill(y2, DUMMY_VAR__);
     
@@ -25119,7 +25119,7 @@ r(std::ostream* pstream__) {
     validate_non_negative_index("y3", "N", N);
     current_statement__ = 280;
     validate_non_negative_index("y3", "N", N);
-    conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, 1, -1>>> y3;
+    conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> y3;
     y3 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
     stan::math::fill(y3, DUMMY_VAR__);
     
@@ -25129,7 +25129,7 @@ r(std::ostream* pstream__) {
     validate_non_negative_index("y4", "N", N);
     current_statement__ = 284;
     validate_non_negative_index("y4", "N", N);
-    conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, -1, -1>>> y4;
+    conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> y4;
     y4 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N));
     stan::math::fill(y4, DUMMY_VAR__);
     
@@ -25137,7 +25137,7 @@ r(std::ostream* pstream__) {
     validate_non_negative_index("y5", "N", N);
     current_statement__ = 287;
     validate_non_negative_index("y5", "N", N);
-    conditional_var_value_t<local_scalar_t__, std::vector<std::vector<double>>> y5;
+    std::vector<std::vector<local_scalar_t__>> y5;
     y5 = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__));
     
     
@@ -25147,7 +25147,7 @@ r(std::ostream* pstream__) {
     validate_non_negative_index("y6", "N", N);
     current_statement__ = 291;
     validate_non_negative_index("y6", "N", N);
-    conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> y6;
+    conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> y6;
     y6 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N)));
     stan::math::fill(y6, DUMMY_VAR__);
     
@@ -25157,7 +25157,7 @@ r(std::ostream* pstream__) {
     validate_non_negative_index("y7", "N", N);
     current_statement__ = 295;
     validate_non_negative_index("y7", "N", N);
-    conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> y7;
+    conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>> y7;
     y7 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N)));
     stan::math::fill(y7, DUMMY_VAR__);
     
@@ -25169,7 +25169,7 @@ r(std::ostream* pstream__) {
     validate_non_negative_index("y8", "N", N);
     current_statement__ = 300;
     validate_non_negative_index("y8", "N", N);
-    conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>> y8;
+    conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>> y8;
     y8 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
     stan::math::fill(y8, DUMMY_VAR__);
     
@@ -25178,13 +25178,13 @@ r(std::ostream* pstream__) {
     
     current_statement__ = 303;
     validate_non_negative_index("y10", "N", N);
-    conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> y10;
+    conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> y10;
     y10 = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
     stan::math::fill(y10, DUMMY_VAR__);
     
     current_statement__ = 305;
     validate_non_negative_index("y11", "N", N);
-    conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, 1, -1>> y11;
+    conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>> y11;
     y11 = Eigen::Matrix<local_scalar_t__, 1, -1>(N);
     stan::math::fill(y11, DUMMY_VAR__);
     
@@ -25192,7 +25192,7 @@ r(std::ostream* pstream__) {
     validate_non_negative_index("y12", "N", N);
     current_statement__ = 308;
     validate_non_negative_index("y12", "N", N);
-    conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> y12;
+    conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> y12;
     y12 = Eigen::Matrix<local_scalar_t__, -1, -1>(N, N);
     stan::math::fill(y12, DUMMY_VAR__);
     
@@ -25202,7 +25202,7 @@ r(std::ostream* pstream__) {
     validate_non_negative_index("y17", "N", N);
     current_statement__ = 312;
     validate_non_negative_index("y17", "N", N);
-    conditional_var_value_t<local_scalar_t__, std::vector<std::vector<std::vector<double>>>> y17;
+    std::vector<std::vector<std::vector<local_scalar_t__>>> y17;
     y17 = std::vector<std::vector<std::vector<local_scalar_t__>>>(N, std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__)));
     
     
@@ -26109,49 +26109,49 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       
       current_statement__ = 1;
       y1 = in__.template read<std::vector<local_scalar_t__>>(N);
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, -1, 1>>> y2;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> y2;
       y2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       stan::math::fill(y2, DUMMY_VAR__);
       
       current_statement__ = 2;
       y2 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
              N, N);
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, 1, -1>>> y3;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> y3;
       y3 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
       stan::math::fill(y3, DUMMY_VAR__);
       
       current_statement__ = 3;
       y3 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
              N, N);
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, -1, -1>>> y4;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> y4;
       y4 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N));
       stan::math::fill(y4, DUMMY_VAR__);
       
       current_statement__ = 4;
       y4 = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
              N, N, N);
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<double>>> y5;
+      std::vector<std::vector<local_scalar_t__>> y5;
       y5 = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__));
       
       
       current_statement__ = 5;
       y5 = in__.template read<std::vector<std::vector<local_scalar_t__>>>(N,
              N);
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> y6;
+      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> y6;
       y6 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N)));
       stan::math::fill(y6, DUMMY_VAR__);
       
       current_statement__ = 6;
       y6 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
              N, N, N);
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> y7;
+      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>> y7;
       y7 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N)));
       stan::math::fill(y7, DUMMY_VAR__);
       
       current_statement__ = 7;
       y7 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
              N, N, N);
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>> y8;
+      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>> y8;
       y8 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
       stan::math::fill(y8, DUMMY_VAR__);
       
@@ -26163,25 +26163,25 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       
       current_statement__ = 9;
       y9 = in__.template read<local_scalar_t__>();
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> y10;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> y10;
       y10 = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(y10, DUMMY_VAR__);
       
       current_statement__ = 10;
       y10 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, 1, -1>> y11;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>> y11;
       y11 = Eigen::Matrix<local_scalar_t__, 1, -1>(N);
       stan::math::fill(y11, DUMMY_VAR__);
       
       current_statement__ = 11;
       y11 = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(N);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> y12;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> y12;
       y12 = Eigen::Matrix<local_scalar_t__, -1, -1>(N, N);
       stan::math::fill(y12, DUMMY_VAR__);
       
       current_statement__ = 12;
       y12 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, N);
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<std::vector<double>>>> y17;
+      std::vector<std::vector<std::vector<local_scalar_t__>>> y17;
       y17 = std::vector<std::vector<std::vector<local_scalar_t__>>>(N, std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__)));
       
       
@@ -28951,7 +28951,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 8;
       check_matching_dims("constraint", "p_8", p_8, "multiplier",
                           rvalue(ds, "ds", index_uni(1), index_uni(2)));
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<double>>> p_9;
+      std::vector<std::vector<local_scalar_t__>> p_9;
       p_9 = std::vector<std::vector<local_scalar_t__>>(m, std::vector<local_scalar_t__>(k, DUMMY_VAR__));
       
       
@@ -28961,7 +28961,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 9;
       check_matching_dims("constraint", "p_9", p_9, "lower",
                           rvalue(ds, "ds", index_uni(1)));
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<std::vector<double>>>> p_10;
+      std::vector<std::vector<std::vector<local_scalar_t__>>> p_10;
       p_10 = std::vector<std::vector<std::vector<local_scalar_t__>>>(n, std::vector<std::vector<local_scalar_t__>>(m, std::vector<local_scalar_t__>(k, DUMMY_VAR__)));
       
       
@@ -28970,7 +28970,7 @@ class transform_model final : public model_base_crtp<transform_model> {
                0, ds, lp__, n, m, k);
       current_statement__ = 10;
       check_matching_dims("constraint", "p_10", p_10, "upper", ds);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> pv_1;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> pv_1;
       pv_1 = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
       stan::math::fill(pv_1, DUMMY_VAR__);
       
@@ -28984,7 +28984,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 11;
       check_matching_dims("constraint", "pv_1", pv_1, "upper",
                           rvalue(dv, "dv", index_uni(1), index_uni(2)));
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, -1, 1>>> pv_2;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> pv_2;
       pv_2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(m, Eigen::Matrix<local_scalar_t__, -1, 1>(k));
       stan::math::fill(pv_2, DUMMY_VAR__);
       
@@ -28994,7 +28994,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 12;
       check_matching_dims("constraint", "pv_2", pv_2, "lower",
                           rvalue(dv, "dv", index_uni(1)));
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> pv_3;
+      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> pv_3;
       pv_3 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(n, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(m, Eigen::Matrix<local_scalar_t__, -1, 1>(k)));
       stan::math::fill(pv_3, DUMMY_VAR__);
       
@@ -29003,7 +29003,7 @@ class transform_model final : public model_base_crtp<transform_model> {
                dv, lp__, n, m, k);
       current_statement__ = 13;
       check_matching_dims("constraint", "pv_3", pv_3, "upper", dv);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, 1, -1>> pr_1;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>> pr_1;
       pr_1 = Eigen::Matrix<local_scalar_t__, 1, -1>(k);
       stan::math::fill(pr_1, DUMMY_VAR__);
       
@@ -29017,7 +29017,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 14;
       check_matching_dims("constraint", "pr_1", pr_1, "upper",
                           rvalue(dr, "dr", index_uni(1), index_uni(2)));
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, 1, -1>>> pr_2;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> pr_2;
       pr_2 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(m, Eigen::Matrix<local_scalar_t__, 1, -1>(k));
       stan::math::fill(pr_2, DUMMY_VAR__);
       
@@ -29027,7 +29027,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 15;
       check_matching_dims("constraint", "pr_2", pr_2, "lower",
                           rvalue(dr, "dr", index_uni(1)));
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> pr_3;
+      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>> pr_3;
       pr_3 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(n, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(m, Eigen::Matrix<local_scalar_t__, 1, -1>(k)));
       stan::math::fill(pr_3, DUMMY_VAR__);
       
@@ -29036,7 +29036,7 @@ class transform_model final : public model_base_crtp<transform_model> {
                dr, lp__, n, m, k);
       current_statement__ = 16;
       check_matching_dims("constraint", "pr_3", pr_3, "upper", dr);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> pm_1;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> pm_1;
       pm_1 = Eigen::Matrix<local_scalar_t__, -1, -1>(m, k);
       stan::math::fill(pm_1, DUMMY_VAR__);
       
@@ -29046,7 +29046,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 17;
       check_matching_dims("constraint", "pm_1", pm_1, "lower",
                           rvalue(dm, "dm", index_uni(1)));
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, -1, -1>>> pm_2;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> pm_2;
       pm_2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, Eigen::Matrix<local_scalar_t__, -1, -1>(m, k));
       stan::math::fill(pm_2, DUMMY_VAR__);
       
@@ -29125,7 +29125,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 26;
       check_matching_dims("constraint", "tp_8", tp_8, "multiplier",
                           rvalue(ds, "ds", index_uni(1), index_uni(2)));
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<double>>> tp_9;
+      std::vector<std::vector<local_scalar_t__>> tp_9;
       tp_9 = std::vector<std::vector<local_scalar_t__>>(m, std::vector<local_scalar_t__>(k, DUMMY_VAR__));
       
       
@@ -29134,7 +29134,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 27;
       check_matching_dims("constraint", "tp_9", tp_9, "lower",
                           rvalue(ds, "ds", index_uni(1)));
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<std::vector<double>>>> tp_10;
+      std::vector<std::vector<std::vector<local_scalar_t__>>> tp_10;
       tp_10 = std::vector<std::vector<std::vector<local_scalar_t__>>>(n, std::vector<std::vector<local_scalar_t__>>(m, std::vector<local_scalar_t__>(k, DUMMY_VAR__)));
       
       
@@ -29142,7 +29142,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       assign(tp_10, p_10, "assigning variable tp_10");
       current_statement__ = 28;
       check_matching_dims("constraint", "tp_10", tp_10, "upper", ds);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, 1>> tpv_1;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> tpv_1;
       tpv_1 = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
       stan::math::fill(tpv_1, DUMMY_VAR__);
       
@@ -29154,7 +29154,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 29;
       check_matching_dims("constraint", "tpv_1", tpv_1, "upper",
                           rvalue(dv, "dv", index_uni(1), index_uni(2)));
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, -1, 1>>> tpv_2;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> tpv_2;
       tpv_2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(m, Eigen::Matrix<local_scalar_t__, -1, 1>(k));
       stan::math::fill(tpv_2, DUMMY_VAR__);
       
@@ -29163,7 +29163,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 30;
       check_matching_dims("constraint", "tpv_2", tpv_2, "lower",
                           rvalue(dv, "dv", index_uni(1)));
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> tpv_3;
+      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> tpv_3;
       tpv_3 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(n, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(m, Eigen::Matrix<local_scalar_t__, -1, 1>(k)));
       stan::math::fill(tpv_3, DUMMY_VAR__);
       
@@ -29171,7 +29171,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       assign(tpv_3, pv_3, "assigning variable tpv_3");
       current_statement__ = 31;
       check_matching_dims("constraint", "tpv_3", tpv_3, "upper", dv);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, 1, -1>> tpr_1;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>> tpr_1;
       tpr_1 = Eigen::Matrix<local_scalar_t__, 1, -1>(k);
       stan::math::fill(tpr_1, DUMMY_VAR__);
       
@@ -29183,7 +29183,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 32;
       check_matching_dims("constraint", "tpr_1", tpr_1, "upper",
                           rvalue(dr, "dr", index_uni(1), index_uni(2)));
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, 1, -1>>> tpr_2;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> tpr_2;
       tpr_2 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(m, Eigen::Matrix<local_scalar_t__, 1, -1>(k));
       stan::math::fill(tpr_2, DUMMY_VAR__);
       
@@ -29192,7 +29192,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 33;
       check_matching_dims("constraint", "tpr_2", tpr_2, "lower",
                           rvalue(dr, "dr", index_uni(1)));
-      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> tpr_3;
+      conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>> tpr_3;
       tpr_3 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(n, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(m, Eigen::Matrix<local_scalar_t__, 1, -1>(k)));
       stan::math::fill(tpr_3, DUMMY_VAR__);
       
@@ -29200,7 +29200,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       assign(tpr_3, pr_3, "assigning variable tpr_3");
       current_statement__ = 34;
       check_matching_dims("constraint", "tpr_3", tpr_3, "upper", dr);
-      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<double, -1, -1>> tpm_1;
+      conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> tpm_1;
       tpm_1 = Eigen::Matrix<local_scalar_t__, -1, -1>(m, k);
       stan::math::fill(tpm_1, DUMMY_VAR__);
       
@@ -29209,7 +29209,7 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 35;
       check_matching_dims("constraint", "tpm_1", tpm_1, "lower",
                           rvalue(dm, "dm", index_uni(1)));
-      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<double, -1, -1>>> tpm_2;
+      conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> tpm_2;
       tpm_2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, Eigen::Matrix<local_scalar_t__, -1, -1>(m, k));
       stan::math::fill(tpm_2, DUMMY_VAR__);
       

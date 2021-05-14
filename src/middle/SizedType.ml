@@ -54,6 +54,14 @@ let rec associate ?init:(assocs = Label.Int_label.Map.empty) = function
 let is_scalar = function SInt | SReal -> true | _ -> false
 let rec inner_type = function SArray (t, _) -> inner_type t | t -> t
 
+let rec contains_soa st =
+  match st with
+  | SInt -> false
+  | SReal -> false
+  | SVector (SoA, _) | SRowVector (SoA, _) | SMatrix (SoA, _, _) -> true
+  | SVector (AoS, _) | SRowVector (AoS, _) | SMatrix (AoS, _, _) -> false
+  | SArray (t, _) -> contains_soa t
+
 let rec dims_of st =
   match st with
   | SArray (t, _) -> dims_of t
