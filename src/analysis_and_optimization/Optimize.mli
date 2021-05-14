@@ -43,8 +43,7 @@ val dead_code_elimination : Program.Typed.t -> Program.Typed.t
     This includes removing redundant assignments (because they will be overwritten)
     and removing redundant code in program branches that will never be reached. *)
 
-val partial_evaluation :
-  ?preserve_stability:bool -> Program.Typed.t -> Program.Typed.t
+val partial_evaluation : Program.Typed.t -> Program.Typed.t
 (** Partially evaluate expressions in the program. This includes simplification using
     algebraic identities of logical and arithmetic operators as well as Stan math functions. *)
 

@@ -8,7 +8,7 @@ type t =
   | URowVector
   | UMatrix
   | UArray of t
-  | UFun of (autodifftype * t) list * returntype
+  | UFun of (autodifftype * t) list * returntype * bool Fun_kind.suffix
   | UMathLibraryFunction
 
 and autodifftype = DataOnly | AutoDiffable
@@ -49,7 +49,7 @@ let rec pp ppf = function
       let ut2, d = unwind_array_type ut in
       let array_str = "[" ^ String.make d ',' ^ "]" in
       Fmt.pf ppf "array%s %a" array_str pp ut2
-  | UFun (argtypes, rt) ->
+  | UFun (argtypes, rt, _) ->
       Fmt.pf ppf {|@[<h>(%a) => %a@]|}
         Fmt.(list pp_fun_arg ~sep:comma)
         argtypes pp_returntype rt
@@ -80,15 +80,17 @@ let check_of_same_type_mod_conv name t1 t2 =
   else
     match (t1, t2) with
     | UReal, UInt -> true
-    | UFun (l1, rt1), UFun (l2, rt2) ->
-        rt1 = rt2
-        && List.length l1 = List.length l2
-        && List.for_all
-             ~f:(fun x -> x = true)
-             (List.map2_exn
-                ~f:(fun (at1, ut1) (at2, ut2) ->
-                  ut1 = ut2 && autodifftype_can_convert at2 at1 )
-                l1 l2)
+    | UFun (l1, rt1, s1), UFun (l2, rt2, s2) -> (
+        s1 = s2 && rt1 = rt2
+        &&
+        match
+          List.for_all2
+            ~f:(fun (ad1, ut1) (ad2, ut2) ->
+              ut1 = ut2 && autodifftype_can_convert ad2 ad1 )
+            l1 l2
+        with
+        | List.Or_unequal_lengths.Ok ok -> ok
+        | Unequal_lengths -> false )
     | _ -> t1 = t2
 
 let rec check_of_same_type_mod_array_conv name t1 t2 =
@@ -98,14 +100,15 @@ let rec check_of_same_type_mod_array_conv name t1 t2 =
   | _ -> check_of_same_type_mod_conv name t1 t2
 
 let check_compatible_arguments_mod_conv name args1 args2 =
-  List.length args1 = List.length args2
-  && List.for_all
-       ~f:(fun y -> y = true)
-       (List.map2_exn
-          ~f:(fun sign1 sign2 ->
-            check_of_same_type_mod_conv name (snd sign1) (snd sign2)
-            && autodifftype_can_convert (fst sign1) (fst sign2) )
-          args1 args2)
+  match
+    List.for_all2
+      ~f:(fun (ad1, ut1) (ad2, ut2) ->
+        check_of_same_type_mod_conv name ut1 ut2
+        && autodifftype_can_convert ad1 ad2 )
+      args1 args2
+  with
+  | List.Or_unequal_lengths.Ok ok -> ok
+  | Unequal_lengths -> false
 
 (** Given two types find the minimal type both can convert to *)
 let rec common_type = function

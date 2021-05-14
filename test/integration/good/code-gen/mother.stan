@@ -444,7 +444,6 @@ transformed data {
   transformed_data_real_array_2d = d_int_array_2d .^ d_real;
   transformed_data_real_array_3d = d_int_array_3d .^ d_int;
   transformed_data_real_array_3d = d_int_array_3d .^ d_real;
-
   transformed_data_real_array = d_int .^ d_int_array;
   transformed_data_real_array = d_real .^ d_int_array;
   transformed_data_real_array_2d = d_int .^ d_int_array_2d;
@@ -475,6 +474,9 @@ transformed data {
 
   transformed_data_vector = d_vector .^ d_int;
   transformed_data_vector = d_vector .^ d_real;
+  transformed_data_vector = fma(d_vector, d_vector, d_vector);
+  transformed_data_vector = fma(d_vector, d_vector, d_real);
+  transformed_data_vector = fma(d_real, d_vector, d_real);
   transformed_data_vector_array = d_vector_array .^ d_int;
   transformed_data_vector_array = d_vector_array .^ d_real;
   transformed_data_vector_array_2d = d_vector_array_2d .^ d_int;
@@ -492,6 +494,8 @@ transformed data {
   transformed_data_vector_array_3d = d_real .^ d_vector_array_3d;
 
   transformed_data_vector = d_vector .^ d_vector;
+  transformed_data_vector = fma(d_vector, d_vector, d_vector);
+  transformed_data_vector = fma(d_vector, d_vector, d_real);
   transformed_data_vector_array = d_vector_array .^ d_vector_array;
   transformed_data_vector_array_2d = d_vector_array_2d .^ d_vector_array_2d;
   transformed_data_vector_array_3d = d_vector_array_3d .^ d_vector_array_3d;
@@ -521,6 +525,8 @@ transformed data {
 
   transformed_data_matrix = d_matrix .^ d_int;
   transformed_data_matrix = d_matrix .^ d_real;
+  transformed_data_matrix = fma(d_matrix, d_matrix, d_matrix);
+  transformed_data_matrix = fma(d_matrix, d_matrix, d_real);
   transformed_data_matrix_array = d_matrix_array .^ d_int;
   transformed_data_matrix_array = d_matrix_array .^ d_real;
   transformed_data_matrix_array_2d = d_matrix_array_2d .^ d_int;
@@ -560,6 +566,7 @@ parameters {
   row_vector[N] p_row_vec;
   row_vector[N] p_1d_row_vec[N];
   row_vector[N] p_3d_row_vec[N,M,K];
+  matrix[5, 4] p_mat;
   matrix<lower=0,upper=1>[2,3] p_ar_mat[4,5];
   simplex[N] p_simplex;
   simplex[N] p_1d_simplex[N];
@@ -579,6 +586,7 @@ transformed parameters {
   row_vector[N] tp_row_vec;
   row_vector[N] tp_1d_row_vec[N];
   row_vector[N] tp_3d_row_vec[N,M,K];
+  matrix[5, 4] tp_mat;
   matrix<lower=0,upper=1>[2,3] tp_ar_mat[4,5];
   simplex[N] tp_simplex;
   simplex[N] tp_1d_simplex[N];
@@ -601,6 +609,9 @@ transformed parameters {
   tp_cfcov_54 = p_cfcov_54;
   tp_cfcov_33 = p_cfcov_33;
   tp_cfcov_33_ar = p_cfcov_33_ar;
+
+  tp_mat = fma(d_cfcov_54, p_mat, p_mat);
+  tp_vec = fma(d_vec, p_vec, p_vec);
 
   for (i in 1:2) {
     for (j in 1:3) {

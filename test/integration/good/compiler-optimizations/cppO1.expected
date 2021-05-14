@@ -354,6 +354,8 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -1334,6 +1336,8 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -2356,6 +2360,8 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -3126,6 +3132,8 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -3462,6 +3470,8 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -3842,6 +3852,8 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -4319,6 +4331,8 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -5145,6 +5159,8 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -6048,6 +6064,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -7086,6 +7104,8 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -8497,7 +8517,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         current_statement__ = 66;
         lp_accum__.add(gamma_lpdf<propto__>(beta, 1, 1));
         current_statement__ = 67;
-        js_super_lp<false>(y, first, last, p, phi, psi, nu,
+        js_super_lp<propto__>(y, first, last, p, phi, psi, nu,
           chi, lp__, lp_accum__, pstream__);
       }
     } catch (const std::exception& e) {
@@ -8521,6 +8541,8 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -9675,6 +9697,8 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -10355,6 +10379,8 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -11388,6 +11414,8 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -12765,7 +12793,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         current_statement__ = 58;
         lp_accum__.add(normal_lpdf<propto__>(epsilon, 0, sigma));
         current_statement__ = 59;
-        jolly_seber_lp<false>(y, first, last, p, phi, gamma,
+        jolly_seber_lp<propto__>(y, first, last, p, phi, gamma,
           chi, lp__, lp_accum__, pstream__);
       }
     } catch (const std::exception& e) {
@@ -12789,6 +12817,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -13649,6 +13679,8 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -13974,6 +14006,8 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -14318,6 +14352,8 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -15123,6 +15159,8 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -15750,6 +15788,8 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -16284,10 +16324,10 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       stan::math::fill(logit_p, DUMMY_VAR__);
       
       current_statement__ = 7;
-      assign(logit_psi, add(alpha_occ, multiply(beta_occ, X)),
+      assign(logit_psi, stan::math::fma(beta_occ, X, alpha_occ),
         "assigning variable logit_psi");
       current_statement__ = 8;
-      assign(logit_p, rep_matrix(add(alpha_p, multiply(beta_p, X)), T),
+      assign(logit_p, rep_matrix(stan::math::fma(beta_p, X, alpha_p), T),
         "assigning variable logit_p");
       {
         current_statement__ = 33;
@@ -16336,6 +16376,8 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -16384,10 +16426,10 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
         return ;
       } 
       current_statement__ = 7;
-      assign(logit_psi, add(alpha_occ, multiply(beta_occ, X)),
+      assign(logit_psi, stan::math::fma(beta_occ, X, alpha_occ),
         "assigning variable logit_psi");
       current_statement__ = 8;
-      assign(logit_p, rep_matrix(add(alpha_p, multiply(beta_p, X)), T),
+      assign(logit_p, rep_matrix(stan::math::fma(beta_p, X, alpha_p), T),
         "assigning variable logit_p");
       if (emit_transformed_parameters__) {
         for (int sym1__ = 1; sym1__ <= R; ++sym1__) {
@@ -17021,10 +17063,10 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       stan::math::fill(y_hat, DUMMY_VAR__);
       
       current_statement__ = 12;
-      assign(a1, add((10 * mu_a1), multiply(sigma_a1, eta1)),
+      assign(a1, stan::math::fma(10, mu_a1, multiply(sigma_a1, eta1)),
         "assigning variable a1");
       current_statement__ = 13;
-      assign(a2, add((0.1 * mu_a2), multiply(sigma_a2, eta2)),
+      assign(a2, stan::math::fma(0.1, mu_a2, multiply(sigma_a2, eta2)),
         "assigning variable a2");
       current_statement__ = 15;
       for (int i = 1; i <= N; ++i) {
@@ -17075,6 +17117,8 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -17160,10 +17204,10 @@ class off_small_model final : public model_base_crtp<off_small_model> {
         return ;
       } 
       current_statement__ = 12;
-      assign(a1, add((10 * mu_a1), multiply(sigma_a1, eta1)),
+      assign(a1, stan::math::fma(10, mu_a1, multiply(sigma_a1, eta1)),
         "assigning variable a1");
       current_statement__ = 13;
-      assign(a2, add((0.1 * mu_a2), multiply(sigma_a2, eta2)),
+      assign(a2, stan::math::fma(0.1, mu_a2, multiply(sigma_a2, eta2)),
         "assigning variable a2");
       current_statement__ = 15;
       for (int i = 1; i <= N; ++i) {
@@ -17852,7 +17896,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         x = std::numeric_limits<double>::quiet_NaN();
         
         current_statement__ = 7;
-        nrfun_lp<false>(4, 3, lp__, lp_accum__, pstream__);
+        nrfun_lp<propto__>(4, 3, lp__, lp_accum__, pstream__);
         current_statement__ = 8;
         if (pstream__) {
           stan_print(pstream__, rfun(3, pstream__));
@@ -17871,7 +17915,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           current_statement__ = 11;
           lp_accum__.add(rfun(8, pstream__));
           current_statement__ = 12;
-          nrfun_lp<false>(34, 3, lp__, lp_accum__, pstream__);
+          nrfun_lp<propto__>(34, 3, lp__, lp_accum__, pstream__);
         }
         current_statement__ = 17;
         for (int i = 1; i <= 5; ++i) {
@@ -17975,7 +18019,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           lp_accum__.add(2);
         }
         current_statement__ = 65;
-        if (rfun_lp<false>(lp__, lp_accum__, pstream__)) {
+        if (rfun_lp<propto__>(lp__, lp_accum__, pstream__)) {
           ;
         } else ;
         current_statement__ = 67;
@@ -17983,7 +18027,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           break;
         }
         current_statement__ = 69;
-        while (rfun_lp<false>(lp__, lp_accum__, pstream__)) {
+        while (rfun_lp<propto__>(lp__, lp_accum__, pstream__)) {
           break;
         }
         current_statement__ = 71;
@@ -17991,18 +18035,18 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
         current_statement__ = 73;
         for (int i = 31; i <= 225; ++i) { break;}
         current_statement__ = 75;
-        for (int i = rfun_lp<false>(lp__, lp_accum__, pstream__); i <= 225;
-             ++i) {
+        for (int i = rfun_lp<propto__>(lp__, lp_accum__, pstream__);
+             i <= 225; ++i) {
           continue;
         }
         current_statement__ = 77;
-        for (int i = rfun_lp<false>(lp__, lp_accum__, pstream__); i <= 225;
-             ++i) {
+        for (int i = rfun_lp<propto__>(lp__, lp_accum__, pstream__);
+             i <= 225; ++i) {
           break;
         }
         current_statement__ = 79;
-        for (int i = rfun_lp<false>(lp__, lp_accum__, pstream__); i <= 225;
-             ++i) ;
+        for (int i = rfun_lp<propto__>(lp__, lp_accum__, pstream__);
+             i <= 225; ++i) ;
         {
           current_statement__ = 80;
           lp_accum__.add(1);
@@ -18073,6 +18117,8 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -18776,6 +18822,8 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -19447,6 +19495,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 
@@ -19917,6 +19967,8 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 

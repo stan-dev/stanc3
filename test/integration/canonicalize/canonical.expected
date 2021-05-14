@@ -17,6 +17,9 @@ functions {
     }
     return s;
   }
+  real foo_cdf(real a, real b, real c) {
+    return a + b + c;
+  }
 }
 data {
   int<lower=1> N;
@@ -56,6 +59,9 @@ model {
   target += normal_lpdf(x| 0, 1) + normal_lcdf(2| 0, 1)
             + normal_lccdf(3| 0, 1);
   target += sum(K);
+  target += normal_cdf(1| 2, 3);
+  target += normal_cdf(normal_cdf(0| 1, 2)| 2, 3);
+  target += foo_cdf(1| 2, 3);
   print("target: ", target());
 }
 generated quantities {
@@ -72,27 +78,31 @@ generated quantities {
 
 Warning in 'deprecated.stan', line 14, column 11: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
 Warning in 'deprecated.stan', line 14, column 24: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-Warning in 'deprecated.stan', line 27, column 11: Use of the `abs` function with real-valued arguments is deprecated; use functions `fabs` instead.
-Warning in 'deprecated.stan', line 30, column 19: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
-Warning in 'deprecated.stan', line 37, column 11: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
-Warning in 'deprecated.stan', line 37, column 24: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
-Warning in 'deprecated.stan', line 38, column 12: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
-Warning in 'deprecated.stan', line 47, column 14: Use of the _log suffix in user defined function normal_log_log is deprecated, use normal_log_lpdf instead.
-Warning in 'deprecated.stan', line 52, column 23: Use of the _log suffix in user defined function foo_cdf_log is deprecated, use foo_lcdf instead.
-Warning in 'deprecated.stan', line 55, column 12: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
-Warning in 'deprecated.stan', line 56, column 6: normal_cdf_log is deprecated and will be removed in the future. Use normal_lcdf instead.
-Warning in 'deprecated.stan', line 57, column 6: normal_ccdf_log is deprecated and will be removed in the future. Use normal_lccdf instead.
-Warning in 'deprecated.stan', line 60, column 20: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
-Warning in 'deprecated.stan', line 65, column 20: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead. 
+Warning in 'deprecated.stan', line 30, column 11: Use of the `abs` function with real-valued arguments is deprecated; use functions `fabs` instead.
+Warning in 'deprecated.stan', line 33, column 19: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
+Warning in 'deprecated.stan', line 40, column 11: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
+Warning in 'deprecated.stan', line 40, column 24: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
+Warning in 'deprecated.stan', line 41, column 12: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
+Warning in 'deprecated.stan', line 50, column 14: Use of the _log suffix in user defined function normal_log_log is deprecated, use normal_log_lpdf instead.
+Warning in 'deprecated.stan', line 55, column 23: Use of the _log suffix in user defined function foo_cdf_log is deprecated, use foo_lcdf instead.
+Warning in 'deprecated.stan', line 58, column 12: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
+Warning in 'deprecated.stan', line 59, column 6: normal_cdf_log is deprecated and will be removed in the future. Use normal_lcdf instead.
+Warning in 'deprecated.stan', line 60, column 6: normal_ccdf_log is deprecated and will be removed in the future. Use normal_lccdf instead.
+Warning in 'deprecated.stan', line 63, column 12: Use of normal_cdf without a vertical bar (|) between the first two arguments is deprecated.
+Warning in 'deprecated.stan', line 64, column 12: Use of normal_cdf without a vertical bar (|) between the first two arguments is deprecated.
+Warning in 'deprecated.stan', line 64, column 23: Use of normal_cdf without a vertical bar (|) between the first two arguments is deprecated.
+Warning in 'deprecated.stan', line 65, column 12: Use of foo_cdf without a vertical bar (|) between the first two arguments is deprecated.
+Warning in 'deprecated.stan', line 67, column 20: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
+Warning in 'deprecated.stan', line 72, column 20: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead. 
 The new interface is slightly different, see: 
 https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'deprecated.stan', line 66, column 23: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
+Warning in 'deprecated.stan', line 73, column 23: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
 The new interface is slightly different, see: 
 https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'deprecated.stan', line 67, column 24: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
+Warning in 'deprecated.stan', line 74, column 24: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
 The new interface is slightly different, see: 
 https://mc-stan.org/users/documentation/case-studies/convert_odes.html
-Warning in 'deprecated.stan', line 68, column 26: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
+Warning in 'deprecated.stan', line 75, column 26: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
 The new interface is slightly different, see: 
 https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../install/default/bin/stanc --print-canonical parenthesize.stan

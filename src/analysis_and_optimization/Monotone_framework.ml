@@ -45,7 +45,7 @@ and free_vars_idx (i : Expr.Typed.t Index.t) =
 and free_vars_fnapp kind l =
   let arg_vars = List.map ~f:free_vars_expr l in
   match kind with
-  | Fun_kind.UserDefined f ->
+  | Fun_kind.UserDefined (f, _) ->
       Set.Poly.union_list (Set.Poly.singleton f :: List.map ~f:free_vars_expr l)
   | _ -> Set.Poly.union_list arg_vars
 
@@ -308,10 +308,7 @@ let constant_propagation_transfer ?(preserve_stability = false)
             (* TODO: we are currently only propagating constants for scalars.
              We could do the same for matrix and array expressions if we wanted. *)
             | Assignment ((s, t, []), e) -> (
-              match
-                Partial_evaluator.eval_expr ~preserve_stability
-                  (subst_expr m e)
-              with
+              match Partial_evaluator.try_eval_expr (subst_expr m e) with
               | {pattern= Lit (_, _); _} as e'
                 when not (preserve_stability && UnsizedType.is_autodiffable t)
                 ->
@@ -441,7 +438,7 @@ let assigned_vars_stmt (s : (Expr.Typed.t, 'a) Stmt.Fixed.Pattern.t) =
   match s with
   | Assignment ((x, _, _), _) -> Set.Poly.singleton x
   | TargetPE _ -> Set.Poly.singleton "target"
-  | NRFunApp ((UserDefined s | StanLib s), _) when String.suffix s 3 = "_lp" ->
+  | NRFunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget)), _) ->
       Set.Poly.singleton "target"
   | For {loopvar= x; _} -> Set.Poly.singleton x
   | Decl {decl_id= _; _}
@@ -484,8 +481,7 @@ let reaching_definitions_transfer
          |For {loopvar= x; _} ->
             Set.filter p ~f:(fun (y, _) -> y = x)
         | TargetPE _ -> Set.filter p ~f:(fun (y, _) -> y = "target")
-        | NRFunApp ((UserDefined s | StanLib s), _)
-          when String.suffix s 3 = "_lp" ->
+        | NRFunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget)), _) ->
             Set.filter p ~f:(fun (y, _) -> y = "target")
         | NRFunApp (_, _)
          |Break | Continue | Return _ | Skip
