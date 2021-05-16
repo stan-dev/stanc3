@@ -163,10 +163,11 @@ module TypeError = struct
           else []
         in
         let generate_ode_sig =
-          [ UnsizedType.AutoDiffable, UnsizedType.UFun
-              ( Stan_math_signatures.variadic_ode_mandatory_fun_args @ args
-              , ReturnType Stan_math_signatures.variadic_ode_fun_return_type
-              , FnPlain ) ]
+          [ ( UnsizedType.AutoDiffable
+            , UnsizedType.UFun
+                ( Stan_math_signatures.variadic_ode_mandatory_fun_args @ args
+                , ReturnType Stan_math_signatures.variadic_ode_fun_return_type
+                , FnPlain ) ) ]
           @ Stan_math_signatures.variadic_ode_mandatory_arg_types
           @ optional_tol_args @ args
         in
@@ -191,9 +192,11 @@ module TypeError = struct
           with
           | arg0 :: arg1 :: arg2 :: _, fun_arg0 :: fun_arg1 :: _ ->
               Fmt.strf "(%a, %a, ...) => %a, %a, %a, %a, %a ...\n"
-                UnsizedType.pp_fun_arg fun_arg0 UnsizedType.pp_fun_arg fun_arg1 UnsizedType.pp
+                UnsizedType.pp_fun_arg fun_arg0 UnsizedType.pp_fun_arg fun_arg1
+                UnsizedType.pp
                 Stan_math_signatures.variadic_ode_fun_return_type
-                UnsizedType.pp_fun_arg arg0 UnsizedType.pp_fun_arg arg1 UnsizedType.pp_fun_arg arg2
+                UnsizedType.pp_fun_arg arg0 UnsizedType.pp_fun_arg arg1
+                UnsizedType.pp_fun_arg arg2
                 Fmt.(list UnsizedType.pp ~sep:comma)
                 optional_tol_args
           | _ ->

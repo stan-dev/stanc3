@@ -380,8 +380,7 @@ let semantic_check_variadic_ode ~is_cond_dist ~loc id es =
     @ optional_tol_mandatory_args
   in
   let generic_variadic_ode_semantic_error =
-    Semantic_error.illtyped_variadic_ode loc id.name
-      (List.map ~f:arg_type es)
+    Semantic_error.illtyped_variadic_ode loc id.name (List.map ~f:arg_type es)
       []
     |> Validate.error
   in
@@ -419,8 +418,7 @@ let semantic_check_variadic_ode ~is_cond_dist ~loc id es =
           |> Validate.ok
         else
           Semantic_error.illtyped_variadic_ode loc id.name
-            (List.map ~f:arg_type es)
-            fun_args
+            (List.map ~f:arg_type es) fun_args
           |> Validate.error
       else generic_variadic_ode_semantic_error
   | _ -> generic_variadic_ode_semantic_error
