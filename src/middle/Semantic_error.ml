@@ -22,7 +22,7 @@ module TypeError = struct
     | IllTypedReduceSumGeneric of string * UnsizedType.t list
     | IllTypedVariadicODE of
         string
-        * UnsizedType.t list
+        * (UnsizedType.autodifftype * UnsizedType.t) list
         * (UnsizedType.autodifftype * UnsizedType.t) list
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
@@ -157,18 +157,18 @@ module TypeError = struct
         let types x = List.map ~f:snd x in
         let optional_tol_args =
           if Stan_math_signatures.variadic_ode_adjoint_fn = name then
-            types Stan_math_signatures.variadic_ode_adjoint_ctl_tol_arg_types
-          else if Stan_math_signatures.is_nonadjoint_variadic_ode_tol_fn name then
-            types Stan_math_signatures.variadic_ode_tol_arg_types
+            Stan_math_signatures.variadic_ode_adjoint_ctl_tol_arg_types
+          else if Stan_math_signatures.is_nonadjoint_variadic_ode_tol_fn name
+          then Stan_math_signatures.variadic_ode_tol_arg_types
           else []
         in
         let generate_ode_sig =
-          [ UnsizedType.UFun
+          [ UnsizedType.AutoDiffable, UnsizedType.UFun
               ( Stan_math_signatures.variadic_ode_mandatory_fun_args @ args
               , ReturnType Stan_math_signatures.variadic_ode_fun_return_type
               , FnPlain ) ]
-          @ types Stan_math_signatures.variadic_ode_mandatory_arg_types
-          @ optional_tol_args @ types args
+          @ Stan_math_signatures.variadic_ode_mandatory_arg_types
+          @ optional_tol_args @ args
         in
         (* This function is used to generate the generic signature for variadic ODEs,
            i.e. with ... representing the variadic parts of the signature.
@@ -181,19 +181,19 @@ module TypeError = struct
           let optional_tol_args =
             if Stan_math_signatures.variadic_ode_adjoint_fn = name then
               types Stan_math_signatures.variadic_ode_adjoint_ctl_tol_arg_types
-            else if Stan_math_signatures.is_nonadjoint_variadic_ode_tol_fn name then
-              types Stan_math_signatures.variadic_ode_tol_arg_types
+            else if Stan_math_signatures.is_nonadjoint_variadic_ode_tol_fn name
+            then types Stan_math_signatures.variadic_ode_tol_arg_types
             else []
           in
           match
-            ( types Stan_math_signatures.variadic_ode_mandatory_arg_types
-            , types Stan_math_signatures.variadic_ode_mandatory_fun_args )
+            ( Stan_math_signatures.variadic_ode_mandatory_arg_types
+            , Stan_math_signatures.variadic_ode_mandatory_fun_args )
           with
           | arg0 :: arg1 :: arg2 :: _, fun_arg0 :: fun_arg1 :: _ ->
               Fmt.strf "(%a, %a, ...) => %a, %a, %a, %a, %a ...\n"
-                UnsizedType.pp fun_arg0 UnsizedType.pp fun_arg1 UnsizedType.pp
+                UnsizedType.pp_fun_arg fun_arg0 UnsizedType.pp_fun_arg fun_arg1 UnsizedType.pp
                 Stan_math_signatures.variadic_ode_fun_return_type
-                UnsizedType.pp arg0 UnsizedType.pp arg1 UnsizedType.pp arg2
+                UnsizedType.pp_fun_arg arg0 UnsizedType.pp_fun_arg arg1 UnsizedType.pp_fun_arg arg2
                 Fmt.(list UnsizedType.pp ~sep:comma)
                 optional_tol_args
           | _ ->
@@ -211,9 +211,9 @@ module TypeError = struct
              @[<h>Instead supplied arguments of incompatible type:\n\
              %a@]"
             name
-            Fmt.(list UnsizedType.pp ~sep:comma)
+            Fmt.(list UnsizedType.pp_fun_arg ~sep:comma)
             generate_ode_sig
-            Fmt.(list UnsizedType.pp ~sep:comma)
+            Fmt.(list UnsizedType.pp_fun_arg ~sep:comma)
             arg_tys
         else
           Fmt.pf ppf
@@ -223,7 +223,7 @@ module TypeError = struct
              @[<h>Instead supplied arguments of incompatible type:\n\
              %a.@]"
             name variadic_ode_generic_signature
-            Fmt.(list UnsizedType.pp ~sep:comma)
+            Fmt.(list UnsizedType.pp_fun_arg ~sep:comma)
             arg_tys
     | NotIndexable (ut, nidcs) ->
         Fmt.pf ppf

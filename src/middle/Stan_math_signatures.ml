@@ -96,13 +96,13 @@ let reduce_sum_slice_types =
 
 (* Variadic ODE *)
 let variadic_ode_adjoint_ctl_tol_arg_types =
-  [ (UnsizedType.AutoDiffable, UnsizedType.UReal)
+  [ (UnsizedType.DataOnly, UnsizedType.UReal)
     (* real relative_tolerance_forward *)
-  ; (AutoDiffable, UVector) (* vector absolute_tolerance_forward *)
-  ; (AutoDiffable, UReal) (* real relative_tolerance_backward *)
-  ; (AutoDiffable, UVector) (* real absolute_tolerance_backward *)
-  ; (AutoDiffable, UReal) (* real relative_tolerance_quadrature *)
-  ; (AutoDiffable, UReal) (* real absolute_tolerance_quadrature *)
+  ; (DataOnly, UVector) (* vector absolute_tolerance_forward *)
+  ; (DataOnly, UReal) (* real relative_tolerance_backward *)
+  ; (DataOnly, UVector) (* real absolute_tolerance_backward *)
+  ; (DataOnly, UReal) (* real relative_tolerance_quadrature *)
+  ; (DataOnly, UReal) (* real absolute_tolerance_quadrature *)
   ; (DataOnly, UInt) (* int max_num_steps *)
   ; (DataOnly, UInt) (* int num_steps_between_checkpoints *)
   ; (DataOnly, UInt) (* int interpolation_polynomial *)
@@ -112,8 +112,8 @@ let variadic_ode_adjoint_ctl_tol_arg_types =
    ]
 
 let variadic_ode_tol_arg_types =
-  [ (UnsizedType.AutoDiffable, UnsizedType.UReal)
-  ; (AutoDiffable, UReal); (DataOnly, UInt) ]
+  [ (UnsizedType.DataOnly, UnsizedType.UReal)
+  ; (DataOnly, UReal); (DataOnly, UInt) ]
 
 let variadic_ode_mandatory_arg_types =
   [ (UnsizedType.AutoDiffable, UnsizedType.UVector)
@@ -185,9 +185,10 @@ let nonadjoint_variadic_ode_fns =
 
 let ode_tolerances_suffix = "_tol"
 let is_reduce_sum_fn f = Set.mem reduce_sum_functions f
-
 let is_nonadjoint_variadic_ode_fn f = Set.mem nonadjoint_variadic_ode_fns f
-let is_variadic_ode_fn f = Set.mem nonadjoint_variadic_ode_fns f || f = variadic_ode_adjoint_fn
+
+let is_variadic_ode_fn f =
+  Set.mem nonadjoint_variadic_ode_fns f || f = variadic_ode_adjoint_fn
 
 let is_nonadjoint_variadic_ode_tol_fn f =
   is_nonadjoint_variadic_ode_fn f
