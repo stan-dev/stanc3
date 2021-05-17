@@ -1,3 +1,4 @@
+open Core_kernel
 open Common
 open Label
 
@@ -49,7 +50,7 @@ end
 
 module Located : sig
   module Meta : sig
-    type t = (Location_span.t[@sexp.opaque] [@compare.ignore])
+    type t = (Location_span.t sexp_opaque[@compare.ignore])
     [@@deriving compare, sexp, hash]
 
     include Specialized.Meta with type t := t
@@ -76,7 +77,7 @@ end
 module Labelled : sig
   module Meta : sig
     type t =
-      { loc: Location_span.t [@sexp.opaque] [@compare.ignore]
+      { loc: Location_span.t sexp_opaque [@compare.ignore]
       ; label: Int_label.t [@compare.ignore] }
     [@@deriving compare, create, sexp, hash]
 

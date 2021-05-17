@@ -97,7 +97,7 @@ end
 (** Statements with location information and types for contained expressions *)
 module Located = struct
   module Meta = struct
-    type t = (Location_span.t[@sexp.opaque] [@compare.ignore])
+    type t = (Location_span.t sexp_opaque[@compare.ignore])
     [@@deriving compare, sexp, hash]
 
     let empty = Location_span.empty
@@ -130,7 +130,7 @@ both are typed and labelled. *)
 module Labelled = struct
   module Meta = struct
     type t =
-      { loc: Location_span.t [@sexp.opaque] [@compare.ignore]
+      { loc: Location_span.t sexp_opaque [@compare.ignore]
       ; label: Label.Int_label.t [@compare.ignore] }
     [@@deriving compare, create, sexp, hash]
 

@@ -5,7 +5,7 @@ open Middle
 
 (** Our type for identifiers, on which we record a location *)
 type identifier =
-  {name: string; id_loc: Location_span.t [@sexp.opaque] [@compare.ignore]}
+  {name: string; id_loc: Location_span.t sexp_opaque [@compare.ignore]}
 [@@deriving sexp, hash, compare]
 
 (** Indices for array access *)
@@ -48,7 +48,7 @@ type ('m, 'f) expr_with = {expr: (('m, 'f) expr_with, 'f) expression; emeta: 'm}
 [@@deriving sexp, compare, map, hash, fold]
 
 (** Untyped expressions, which have location_spans as meta-data *)
-type located_meta = {loc: Location_span.t [@sexp.opaque] [@compare.ignore]}
+type located_meta = {loc: Location_span.t sexp_opaque [@compare.ignore]}
 [@@deriving sexp, compare, map, hash, fold]
 
 type untyped_expression = (located_meta, unit) expr_with
@@ -57,7 +57,7 @@ type untyped_expression = (located_meta, unit) expr_with
 (** Typed expressions also have meta-data after type checking: a location_span, as well as a type
     and an origin block (lub of the origin blocks of the identifiers in it) *)
 type typed_expr_meta =
-  { loc: Location_span.t [@sexp.opaque] [@compare.ignore]
+  { loc: Location_span.t sexp_opaque [@compare.ignore]
   ; ad_level: UnsizedType.autodifftype
   ; type_: UnsizedType.t }
 [@@deriving sexp, compare, map, hash, fold]
@@ -190,7 +190,7 @@ type untyped_statement =
 let mk_untyped_statement ~stmt ~loc : untyped_statement = {stmt; smeta= {loc}}
 
 type stmt_typed_located_meta =
-  { loc: Middle.Location_span.t [@sexp.opaque] [@compare.ignore]
+  { loc: Middle.Location_span.t sexp_opaque [@compare.ignore]
   ; return_type: statement_returntype }
 [@@deriving sexp, compare, map, hash]
 
