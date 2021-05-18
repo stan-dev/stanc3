@@ -178,20 +178,20 @@ let reduce_sum_functions =
 
 let variadic_ode_adjoint_fn = "ode_adjoint_tol_ctl"
 
-let nonadjoint_variadic_ode_fns =
+let variadic_ode_nonadjoint_fns =
   String.Set.of_list
     [ "ode_bdf_tol"; "ode_rk45_tol"; "ode_adams_tol"; "ode_bdf"; "ode_rk45"
     ; "ode_adams"; "ode_ckrk"; "ode_ckrk_tol" ]
 
 let ode_tolerances_suffix = "_tol"
 let is_reduce_sum_fn f = Set.mem reduce_sum_functions f
-let is_nonadjoint_variadic_ode_fn f = Set.mem nonadjoint_variadic_ode_fns f
+let is_variadic_ode_nonadjoint_fn f = Set.mem variadic_ode_nonadjoint_fns f
 
 let is_variadic_ode_fn f =
-  Set.mem nonadjoint_variadic_ode_fns f || f = variadic_ode_adjoint_fn
+  Set.mem variadic_ode_nonadjoint_fns f || f = variadic_ode_adjoint_fn
 
-let is_nonadjoint_variadic_ode_tol_fn f =
-  is_nonadjoint_variadic_ode_fn f
+let is_variadic_ode_nonadjoint_tol_fn f =
+  is_variadic_ode_nonadjoint_fn f
   && String.is_suffix f ~suffix:ode_tolerances_suffix
 
 let distributions =
