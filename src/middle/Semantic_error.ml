@@ -220,8 +220,10 @@ module TypeError = struct
         else
           Fmt.pf ppf
             "Ill-typed arguments supplied to function '%s'. @[<h>Available \
-             signatures:\n@[<h>%s@]\n\
-             @[<h>Instead supplied arguments of incompatible type:\n%a@]"
+             signatures:\n\
+             @[<h>%s@]\n\
+             @[<h>Instead supplied arguments of incompatible type:\n\
+             %a@]"
             name variadic_ode_generic_signature
             Fmt.(list UnsizedType.pp_fun_arg ~sep:comma)
             arg_tys
