@@ -164,7 +164,7 @@ let stan_math_returntype name args =
            let errors, omitted = List.split_n errors 10 in
            Error (errors, not (List.is_empty omitted)) )
 
-let pp_signature_mismatch ppf (name, arg_tys, (errors, omitted)) =
+let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
   let open Fmt in
   let ctx = ref TypeMap.empty in
   let suffix_str = function
@@ -224,6 +224,6 @@ let pp_signature_mismatch ppf (name, arg_tys, (errors, omitted)) =
   pf ppf
     "@[<v>Ill-typed arguments supplied to function '%s':@ %a@ Available \
      signatures:@ %a%a@]"
-    name pp_args (List.map ~f:snd arg_tys)
+    name pp_args arg_tys
     (list ~sep:cut pp_signature)
-    errors pp_omitted ()
+    sigs pp_omitted ()

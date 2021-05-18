@@ -281,26 +281,24 @@ let semantic_check_fn_normal ~is_cond_dist ~loc id es =
     | Some (_, UnsizedType.UFun (_, Void, _)) ->
         Semantic_error.returning_fn_expected_nonreturning_found loc id.name
         |> error
-    | Some (_, UFun (listedtypes, rt, _))
-      when not
-             (UnsizedType.check_compatible_arguments_mod_conv id.name
-                listedtypes (get_arg_types es)) ->
-        es
-        |> List.map ~f:type_of_expr_typed
-        |> Semantic_error.illtyped_userdefined_fn_app loc id.name listedtypes
-             rt
-        |> error
-    | Some (_, UFun (_, ReturnType ut, FnLpdf _))
-      when Utils.is_unnormalized_distribution id.name ->
-        mk_typed_expression
-          ~expr:(mk_fun_app ~is_cond_dist (UserDefined (FnLpdf true), id, es))
-          ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
-        |> ok
-    | Some (_, UFun (_, ReturnType ut, suffix)) ->
-        mk_typed_expression
-          ~expr:(mk_fun_app ~is_cond_dist (UserDefined suffix, id, es))
-          ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
-        |> ok
+    | Some (_, UFun (listedtypes, ReturnType ut, _)) -> (
+      match
+        SignatureMismatch.check_compatible_arguments_mod_conv listedtypes
+          (get_arg_types es)
+      with
+      | Some x ->
+          es
+          |> List.map ~f:type_of_expr_typed
+          |> Semantic_error.illtyped_userdefined_fn_app loc id.name listedtypes
+               (ReturnType ut) x
+          |> error
+      | None ->
+          mk_typed_expression
+            ~expr:
+              (mk_fun_app ~is_cond_dist
+                 (UserDefined (Fun_kind.suffix_from_name id.name), id, es))
+            ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
+          |> ok )
     | Some _ ->
         (* Check that Funaps are actually functions *)
         Semantic_error.returning_fn_expected_nonfn_found loc id.name |> error
@@ -977,19 +975,22 @@ let semantic_check_nrfn_target ~loc ~cf id =
 let semantic_check_nrfn_normal ~loc id es =
   Validate.(
     match Symbol_table.look vm id.name with
-    | Some (_, UFun (listedtypes, Void, suffix))
-      when UnsizedType.check_compatible_arguments_mod_conv id.name listedtypes
-             (get_arg_types es) ->
-        mk_typed_statement
-          ~stmt:(NRFunApp (UserDefined suffix, id, es))
-          ~return_type:NoReturnType ~loc
-        |> ok
-    | Some (_, UFun (listedtypes, Void, _)) ->
-        es
-        |> List.map ~f:type_of_expr_typed
-        |> Semantic_error.illtyped_userdefined_fn_app loc id.name listedtypes
-             Void
-        |> error
+    | Some (_, UFun (listedtypes, Void, suffix)) -> (
+      match
+        SignatureMismatch.check_compatible_arguments_mod_conv listedtypes
+          (get_arg_types es)
+      with
+      | None ->
+          mk_typed_statement
+            ~stmt:(NRFunApp (UserDefined suffix, id, es))
+            ~return_type:NoReturnType ~loc
+          |> ok
+      | Some x ->
+          es
+          |> List.map ~f:type_of_expr_typed
+          |> Semantic_error.illtyped_userdefined_fn_app loc id.name listedtypes
+               Void x
+          |> error )
     | Some (_, UFun (_, ReturnType _, _)) ->
         Semantic_error.nonreturning_fn_expected_returning_found loc id.name
         |> error

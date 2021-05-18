@@ -65,6 +65,7 @@ val illtyped_userdefined_fn_app :
   -> string
   -> (UnsizedType.autodifftype * UnsizedType.t) list
   -> UnsizedType.returntype
+  -> SignatureMismatch.function_mismatch
   -> UnsizedType.t list
   -> t
 

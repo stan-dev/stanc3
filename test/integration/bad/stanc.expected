@@ -1124,9 +1124,13 @@ Semantic error in 'functions-bad21.stan', line 13, column 11 to column 21:
     15:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'my_fun3'. Available signatures:
+Ill-typed arguments supplied to function 'my_fun3':
+(real)
+Available signatures:
 (data real) => real
-Instead supplied arguments of incompatible type: real.
+  Argument 1 must be data-only. (Local variables are assumed to depend on
+  parameters; same goes for function inputs unless they are marked with the
+  keyword 'data'.)
   $ ../../../../install/default/bin/stanc functions-bad22-ode.stan
 Semantic error in 'functions-bad22-ode.stan', line 15, column 11 to column 82:
    -------------------------------------------------

@@ -36,6 +36,7 @@ module TypeError = struct
         * (UnsizedType.autodifftype * UnsizedType.t) list
         * UnsizedType.returntype
         * UnsizedType.t list
+        * SignatureMismatch.function_mismatch
     | IllTypedBinaryOperator of Operator.t * UnsizedType.t * UnsizedType.t
     | IllTypedPrefixOperator of Operator.t * UnsizedType.t
     | IllTypedPostfixOperator of Operator.t * UnsizedType.t
@@ -265,15 +266,10 @@ module TypeError = struct
           (Stan_math_signatures.pretty_print_math_sigs name)
           Fmt.(list UnsizedType.pp ~sep:comma)
           arg_tys
-    | IllTypedUserDefinedFunctionApp (name, listed_tys, return_ty, arg_tys) ->
-        Fmt.pf ppf
-          "Ill-typed arguments supplied to function '%s'. Available \
-           signatures:%a\n\
-           @[<h>Instead supplied arguments of incompatible type: %a.@]"
-          name UnsizedType.pp
-          (UFun (listed_tys, return_ty, FnPlain))
-          Fmt.(list UnsizedType.pp ~sep:comma)
-          arg_tys
+    | IllTypedUserDefinedFunctionApp
+        (name, listed_tys, return_ty, arg_tys, error) ->
+        SignatureMismatch.pp_signature_mismatch ppf
+          (name, arg_tys, ([((return_ty, listed_tys), error)], false))
     | IllTypedBinaryOperator (op, lt, rt) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to infix operator %a. Available \
@@ -597,11 +593,12 @@ let nonreturning_fn_expected_undeclaredident_found loc name =
 let illtyped_stanlib_fn_app loc name arg_tys =
   TypeError (loc, TypeError.IllTypedStanLibFunctionApp (name, arg_tys))
 
-let illtyped_userdefined_fn_app loc name decl_arg_tys decl_return_ty arg_tys =
+let illtyped_userdefined_fn_app loc name decl_arg_tys decl_return_ty error
+    arg_tys =
   TypeError
     ( loc
     , TypeError.IllTypedUserDefinedFunctionApp
-        (name, decl_arg_tys, decl_return_ty, arg_tys) )
+        (name, decl_arg_tys, decl_return_ty, arg_tys, error) )
 
 let illtyped_binary_op loc op lt rt =
   TypeError (loc, TypeError.IllTypedBinaryOperator (op, lt, rt))
