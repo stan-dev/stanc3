@@ -251,10 +251,10 @@ let pp_var_decl ppf (name, st, adtype) =
   in
   let pp_type =
     match (Transform_Mir.is_opencl_var name, ut) with
-    | _, UnsizedType.(UInt | UReal) | false, _ -> 
-    (match SizedType.contains_soa st with
-    | true -> pp_conditional_var_value
-    | false -> pp_shim)
+    | _, UnsizedType.(UInt | UReal) | false, _ -> (
+      match SizedType.contains_soa st with
+      | true -> pp_conditional_var_value
+      | false -> pp_shim )
     | true, UArray UInt -> fun ppf _ -> pf ppf "matrix_cl<int>"
     | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>"
   in
