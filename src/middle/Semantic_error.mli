@@ -58,7 +58,11 @@ val nonreturning_fn_expected_undeclaredident_found :
   Location_span.t -> string -> t
 
 val illtyped_stanlib_fn_app :
-  Location_span.t -> string -> UnsizedType.t list -> t
+     Location_span.t
+  -> string
+  -> SignatureMismatch.signature_error list * bool
+  -> UnsizedType.t list
+  -> t
 
 val illtyped_userdefined_fn_app :
      Location_span.t

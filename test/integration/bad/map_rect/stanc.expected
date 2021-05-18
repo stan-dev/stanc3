@@ -8,9 +8,13 @@ Semantic error in 'bad_data_i_type.stan', line 19, column 8 to column 68:
     20:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data array[] real, data array[] int) => vector, vector, array[] vector, data array[,] real, data array[,] int) => vector
-Instead supplied arguments of incompatible type: (vector, vector, array[] real, array[] int) => vector, vector, array[] vector, array[,] real, array[,,] int.
+Ill-typed arguments supplied to function 'map_rect':
+(<F1>, vector, array[] vector, array[,] real, array[,,] int)
+where F1 = (vector, vector, array[] real, array[] int) => vector
+Available signatures:
+(<F2>, vector, array[] vector, data array[,] real, data array[,] int) => vector
+where F2 = (vector, vector, data array[] real, data array[] int) => vector
+  Argument 5 must be array[,] int but found array[,,] int
   $ ../../../../../install/default/bin/stanc bad_data_int_const.stan
 Semantic error in 'bad_data_int_const.stan', line 21, column 8 to line 22, column 43:
    -------------------------------------------------
@@ -22,9 +26,15 @@ Semantic error in 'bad_data_int_const.stan', line 21, column 8 to line 22, colum
     23:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data array[] real, data array[] int) => vector, vector, array[] vector, data array[,] real, data array[,] int) => vector
-Instead supplied arguments of incompatible type: (vector, vector, array[] real, array[] int) => vector, vector, array[] vector, array[,] real, array[,] int.
+Ill-typed arguments supplied to function 'map_rect':
+(<F1>, vector, array[] vector, array[,] real, array[,] int)
+where F1 = (vector, vector, array[] real, array[] int) => vector
+Available signatures:
+(<F2>, vector, array[] vector, data array[,] real, data array[,] int) => vector
+where F2 = (vector, vector, data array[] real, data array[] int) => vector
+  Argument 5 must be data-only. (Local variables are assumed to depend on
+  parameters; same goes for function inputs unless they are marked with the
+  keyword 'data'.)
   $ ../../../../../install/default/bin/stanc bad_data_r_type.stan
 Semantic error in 'bad_data_r_type.stan', line 19, column 8 to column 68:
    -------------------------------------------------
@@ -35,9 +45,13 @@ Semantic error in 'bad_data_r_type.stan', line 19, column 8 to column 68:
     20:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data array[] real, data array[] int) => vector, vector, array[] vector, data array[,] real, data array[,] int) => vector
-Instead supplied arguments of incompatible type: (vector, vector, array[] real, array[] int) => vector, vector, array[] vector, real, array[,] int.
+Ill-typed arguments supplied to function 'map_rect':
+(<F1>, vector, array[] vector, real, array[,] int)
+where F1 = (vector, vector, array[] real, array[] int) => vector
+Available signatures:
+(<F2>, vector, array[] vector, data array[,] real, data array[,] int) => vector
+where F2 = (vector, vector, data array[] real, data array[] int) => vector
+  Argument 4 must be array[,] real but found real
   $ ../../../../../install/default/bin/stanc bad_data_real_const.stan
 Semantic error in 'bad_data_real_const.stan', line 20, column 8 to column 70:
    -------------------------------------------------
@@ -48,9 +62,15 @@ Semantic error in 'bad_data_real_const.stan', line 20, column 8 to column 70:
     21:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data array[] real, data array[] int) => vector, vector, array[] vector, data array[,] real, data array[,] int) => vector
-Instead supplied arguments of incompatible type: (vector, vector, array[] real, array[] int) => vector, vector, array[] vector, array[,] real, array[,] int.
+Ill-typed arguments supplied to function 'map_rect':
+(<F1>, vector, array[] vector, array[,] real, array[,] int)
+where F1 = (vector, vector, array[] real, array[] int) => vector
+Available signatures:
+(<F2>, vector, array[] vector, data array[,] real, data array[,] int) => vector
+where F2 = (vector, vector, data array[] real, data array[] int) => vector
+  Argument 4 must be data-only. (Local variables are assumed to depend on
+  parameters; same goes for function inputs unless they are marked with the
+  keyword 'data'.)
   $ ../../../../../install/default/bin/stanc bad_fun_type.stan
 Semantic error in 'bad_fun_type.stan', line 19, column 8 to column 68:
    -------------------------------------------------
@@ -61,9 +81,18 @@ Semantic error in 'bad_fun_type.stan', line 19, column 8 to column 68:
     20:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data array[] real, data array[] int) => vector, vector, array[] vector, data array[,] real, data array[,] int) => vector
-Instead supplied arguments of incompatible type: (vector, array[] vector, array[] real, array[] int) => vector, vector, array[] vector, array[,] real, array[,] int.
+Ill-typed arguments supplied to function 'map_rect':
+(<F1>, vector, array[] vector, array[,] real, array[,] int)
+where F1 = (vector, array[] vector, array[] real, array[] int) => vector
+Available signatures:
+(<F2>, vector, array[] vector, data array[,] real, data array[,] int) => vector
+where F2 = (vector, vector, data array[] real, data array[] int) => vector
+  Argument 1 must be
+   (vector, vector, data array[] real, data array[] int) => vector
+  but found
+   (vector, array[] vector, array[] real, array[] int) => vector
+  These are not compatible because:
+    Argument 2 must be array[] vector but found vector
   $ ../../../../../install/default/bin/stanc bad_job_params_type.stan
 Semantic error in 'bad_job_params_type.stan', line 19, column 8 to column 68:
    -------------------------------------------------
@@ -74,9 +103,13 @@ Semantic error in 'bad_job_params_type.stan', line 19, column 8 to column 68:
     20:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data array[] real, data array[] int) => vector, vector, array[] vector, data array[,] real, data array[,] int) => vector
-Instead supplied arguments of incompatible type: (vector, vector, array[] real, array[] int) => vector, vector, array[] matrix, array[,] real, array[,] int.
+Ill-typed arguments supplied to function 'map_rect':
+(<F1>, vector, array[] matrix, array[,] real, array[,] int)
+where F1 = (vector, vector, array[] real, array[] int) => vector
+Available signatures:
+(<F2>, vector, array[] vector, data array[,] real, data array[,] int) => vector
+where F2 = (vector, vector, data array[] real, data array[] int) => vector
+  Argument 3 must be array[] vector but found array[] matrix
   $ ../../../../../install/default/bin/stanc bad_lp_fn.stan
 Semantic error in 'bad_lp_fn.stan', line 22, column 16 to column 52:
    -------------------------------------------------
@@ -98,9 +131,18 @@ Semantic error in 'bad_not_enough_args.stan', line 13, column 8 to column 68:
     14:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data array[] real, data array[] int) => vector, vector, array[] vector, data array[,] real, data array[,] int) => vector
-Instead supplied arguments of incompatible type: (vector, vector, array[] real) => vector, vector, array[] vector, array[,] real, array[,] int.
+Ill-typed arguments supplied to function 'map_rect':
+(<F1>, vector, array[] vector, array[,] real, array[,] int)
+where F1 = (vector, vector, array[] real) => vector
+Available signatures:
+(<F2>, vector, array[] vector, data array[,] real, data array[,] int) => vector
+where F2 = (vector, vector, data array[] real, data array[] int) => vector
+  Argument 1 must be
+   (vector, vector, data array[] real, data array[] int) => vector
+  but found
+   (vector, vector, array[] real) => vector
+  These are not compatible because:
+    Expected 3 arguments but found 4 arguments.
   $ ../../../../../install/default/bin/stanc bad_rng_fn.stan
 Semantic error in 'bad_rng_fn.stan', line 22, column 19 to column 56:
    -------------------------------------------------
@@ -122,6 +164,10 @@ Semantic error in 'bad_shared_params_type.stan', line 19, column 8 to column 68:
     20:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'map_rect'. Available signatures: 
-((vector, vector, data array[] real, data array[] int) => vector, vector, array[] vector, data array[,] real, data array[,] int) => vector
-Instead supplied arguments of incompatible type: (vector, vector, array[] real, array[] int) => vector, array[] vector, array[] vector, array[,] real, array[,] int.
+Ill-typed arguments supplied to function 'map_rect':
+(<F1>, array[] vector, array[] vector, array[,] real, array[,] int)
+where F1 = (vector, vector, array[] real, array[] int) => vector
+Available signatures:
+(<F2>, vector, array[] vector, data array[,] real, data array[,] int) => vector
+where F2 = (vector, vector, data array[] real, data array[] int) => vector
+  Argument 2 must be vector but found array[] vector

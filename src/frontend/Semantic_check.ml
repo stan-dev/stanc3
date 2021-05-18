@@ -308,23 +308,21 @@ let semantic_check_fn_normal ~is_cond_dist ~loc id es =
 
 (* Stan-Math function application *)
 let semantic_check_fn_stan_math ~is_cond_dist ~loc id es =
-  match
-    Stan_math_signatures.stan_math_returntype id.name (get_arg_types es)
-  with
-  | Some UnsizedType.Void ->
+  match SignatureMismatch.stan_math_returntype id.name (get_arg_types es) with
+  | Ok Void ->
       Semantic_error.returning_fn_expected_nonreturning_found loc id.name
       |> Validate.error
-  | Some (UnsizedType.ReturnType ut) ->
+  | Ok (ReturnType ut) ->
       mk_typed_expression
         ~expr:
           (mk_fun_app ~is_cond_dist
              (StanLib (Fun_kind.suffix_from_name id.name), id, es))
         ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
       |> Validate.ok
-  | _ ->
+  | Error x ->
       es
       |> List.map ~f:(fun e -> e.emeta.type_)
-      |> Semantic_error.illtyped_stanlib_fn_app loc id.name
+      |> Semantic_error.illtyped_stanlib_fn_app loc id.name x
       |> Validate.error
 
 let arg_match (x_ad, x_t) y =
@@ -1005,20 +1003,20 @@ let semantic_check_nrfn_normal ~loc id es =
 let semantic_check_nrfn_stan_math ~loc id es =
   Validate.(
     match
-      Stan_math_signatures.stan_math_returntype id.name (get_arg_types es)
+      SignatureMismatch.stan_math_returntype id.name (get_arg_types es)
     with
-    | Some UnsizedType.Void ->
+    | Ok Void ->
         mk_typed_statement
           ~stmt:(NRFunApp (StanLib FnPlain, id, es))
           ~return_type:NoReturnType ~loc
         |> ok
-    | Some (UnsizedType.ReturnType _) ->
+    | Ok (ReturnType _) ->
         Semantic_error.nonreturning_fn_expected_returning_found loc id.name
         |> error
-    | None ->
+    | Error x ->
         es
         |> List.map ~f:type_of_expr_typed
-        |> Semantic_error.illtyped_stanlib_fn_app loc id.name
+        |> Semantic_error.illtyped_stanlib_fn_app loc id.name x
         |> error)
 
 let semantic_check_nr_fnkind ~loc id es =

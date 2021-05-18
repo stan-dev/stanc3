@@ -76,6 +76,10 @@ and function_mismatch =
   | ArgError of int * type_mismatch
   | ArgNumMismatch of int * int
 
+type signature_error =
+  (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
+  * function_mismatch
+
 let rec compare_types t1 t2 =
   match (t1, t2) with
   | UnsizedType.(UArray t1, UArray t2) -> compare_types t1 t2
@@ -195,8 +199,8 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
         pf ppf
           "@[<v>Argument %d must be@, %a@ but found@, %a@ @[<v 2>These are \
            not compatible because:@ @[<hov>%a@]@]@]"
-          n (pp_unsized_type ctx) expected (pp_unsized_type ctx) found
-          (pp_explain true) err
+          n (pp_fundef ctx) expected (pp_fundef ctx) found (pp_explain true)
+          err
     | ReturnTypeMismatch (expected, found) ->
         let _ = ppf in
         pf ppf "Return types are incompatible: expected %a but found %a"
@@ -219,7 +223,7 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
       fun_ty (pp_explain false) err
   in
   let pp_omitted ppf () =
-    if omitted then pf ppf "@,(Additional signature omitted)"
+    if omitted then pf ppf "@,(Additional signatures omitted)"
   in
   pf ppf
     "@[<v>Ill-typed arguments supplied to function '%s':@ %a@ Available \
