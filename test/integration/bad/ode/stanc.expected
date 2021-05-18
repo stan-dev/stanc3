@@ -320,9 +320,10 @@ Semantic error in 'bad_var_tol_1.stan', line 38, column 6 to line 39, column 104
     40:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_adjoint_tol_ctl'. Expected arguments:
-(real, vector) => vector, vector, real, array[] real, data real, data vector, data real, data vector, data real, data real, data int, data int, data int, data int, data int
-
+Ill-typed arguments supplied to function 'ode_adjoint_tol_ctl'. Available signatures:
+(real, vector, ...) => vector, vector, real, array[] real, data real,
+ data vector, data real, data vector, data real, data real, data int,
+ data int, data int, data int, data int ...
 Instead supplied arguments of incompatible type:
 (real, vector) => vector, vector, real, array[] real, data real, data vector, data real, data vector, real, data real, data int, data int, data int, data int, data int
   $ ../../../../../install/default/bin/stanc bad_var_tol_2.stan
@@ -336,9 +337,10 @@ Semantic error in 'bad_var_tol_2.stan', line 38, column 6 to line 39, column 104
     40:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_adjoint_tol_ctl'. Expected arguments:
-(real, vector) => vector, vector, real, array[] real, data real, data vector, data real, data vector, data real, data real, data int, data int, data int, data int, data int
-
+Ill-typed arguments supplied to function 'ode_adjoint_tol_ctl'. Available signatures:
+(real, vector, ...) => vector, vector, real, array[] real, data real,
+ data vector, data real, data vector, data real, data real, data int,
+ data int, data int, data int, data int ...
 Instead supplied arguments of incompatible type:
 (real, vector) => vector, vector, real, array[] real, data real, data vector, real, data vector, data real, data real, data int, data int, data int, data int, data int
   $ ../../../../../install/default/bin/stanc bad_var_tol_3.stan
@@ -352,9 +354,10 @@ Semantic error in 'bad_var_tol_3.stan', line 38, column 6 to line 39, column 104
     40:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_adjoint_tol_ctl'. Expected arguments:
-(real, vector) => vector, vector, real, array[] real, data real, data vector, data real, data vector, data real, data real, data int, data int, data int, data int, data int
-
+Ill-typed arguments supplied to function 'ode_adjoint_tol_ctl'. Available signatures:
+(real, vector, ...) => vector, vector, real, array[] real, data real,
+ data vector, data real, data vector, data real, data real, data int,
+ data int, data int, data int, data int ...
 Instead supplied arguments of incompatible type:
 (real, vector) => vector, vector, real, array[] real, data real, vector, data real, data vector, data real, data real, data int, data int, data int, data int, data int
   $ ../../../../../install/default/bin/stanc bad_x_int_type.stan
