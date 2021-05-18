@@ -53,20 +53,20 @@ let rec pp_initialize ppf (st, adtype) =
   match st with
   | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
   | SReal -> pf ppf "%s" init_nan
-  | SVector d | SRowVector d -> pf ppf "%a(%a)" pp_st (st, adtype) pp_expr d
+  | SVector d | SRowVector d ->
+      pf ppf "%a::Constant(%a, %s)" pp_st (st, adtype) pp_expr d init_nan
   | SMatrix (d1, d2) ->
-      pf ppf "%a(%a, %a)" pp_st (st, adtype) pp_expr d1 pp_expr d2
+      pf ppf "%a::Constant(%a, %a, %s)" pp_st (st, adtype) pp_expr d1 pp_expr
+        d2 init_nan
   | SArray (t, d) ->
       pf ppf "%a(%a, %a)" pp_st (st, adtype) pp_expr d pp_initialize (t, adtype)
 
 (*Initialize an object of a given size.*)
 let pp_assign_sized ppf (decl_id, st, adtype) =
-  let init_nan = nan_type (st, adtype) in
-  let pp_assign ppf (decl_id, st, adtype) =
-    pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_initialize (st, adtype)
+  let pp_assign ppf (_, st, adtype) =
+    pf ppf "@[<hov 2>%a;@]@," pp_initialize (st, adtype)
   in
-  pf ppf "@[%a%a@]@," pp_assign (decl_id, st, adtype) pp_filler
-    (decl_id, st, init_nan, true)
+  pf ppf "@[%a@]@," pp_assign (decl_id, st, adtype)
 
 let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in
@@ -75,8 +75,7 @@ let%expect_test "set size mat array" =
   |> print_endline ;
   [%expect
     {|
-      d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3)));
-      stan::math::fill(d, std::numeric_limits<double>::quiet_NaN()); |}]
+      std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>::Constant(2, 3, std::numeric_limits<double>::quiet_NaN()))); |}]
 
 (* Initialize Data and Transformed Data 
  * This function is used in the model's constructor to
@@ -127,7 +126,7 @@ let%expect_test "set size map mat array" =
   |> print_endline ;
   [%expect
     {|
-    darrmat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3)));
+    darrmat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>::Constant(2, 3, std::numeric_limits<double>::quiet_NaN())));
     stan::math::fill(darrmat, std::numeric_limits<double>::quiet_NaN()); |}]
 
 let%expect_test "set size map mat" =
@@ -136,7 +135,7 @@ let%expect_test "set size map mat" =
   |> print_endline ;
   [%expect
     {|
-    dmat__ = Eigen::Matrix<double, -1, -1>(2, 3);
+    dmat__ = Eigen::Matrix<double, -1, -1>::Constant(2, 3, std::numeric_limits<double>::quiet_NaN());
     new (&dmat) Eigen::Map<Eigen::Matrix<double, -1, -1>>(dmat__.data(), 2, 3); |}]
 
 let%expect_test "set size map int" =
@@ -209,8 +208,17 @@ let pp_unsized_decl ppf (vident, ut, adtype) =
   in
   pf ppf "%a %s;" pp_type (adtype, ut) vident
 
+let pp_unsized_decl_no_semicolon ppf (vident, ut, adtype) =
+  let pp_type =
+    match (Transform_Mir.is_opencl_var vident, ut) with
+    | _, UnsizedType.(UInt | UReal) | false, _ -> pp_unsizedtype_local
+    | true, UArray UInt -> fun ppf _ -> pf ppf "matrix_cl<int>"
+    | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>"
+  in
+  pf ppf "%a %s" pp_type (adtype, ut) vident
+
 let pp_sized_decl ppf (vident, st, adtype) =
-  pf ppf "%a@,%a" pp_unsized_decl
+  pf ppf "%a = %a" pp_unsized_decl_no_semicolon
     (vident, SizedType.to_unsized st, adtype)
     pp_assign_sized (vident, st, adtype)
 
@@ -337,8 +345,10 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
   | Profile (name, ls) -> pp_profile ppf (pp_stmt_list, name, ls)
   | Block ls -> pp_block ppf (pp_stmt_list, ls)
   | SList ls -> pp_stmt_list ppf ls
-  | Decl {decl_adtype; decl_id; decl_type} ->
-      pp_decl ppf (decl_id, decl_type, decl_adtype)
+  | Decl {decl_adtype; decl_id; decl_type= Type.Sized st} ->
+      pp_sized_decl ppf (decl_id, st, decl_adtype)
+  | Decl {decl_adtype; decl_id; decl_type= Type.Unsized ut} ->
+      pp_unsized_decl ppf (decl_id, ut, decl_adtype)
 
 and pp_block_s ppf body =
   match body.pattern with
