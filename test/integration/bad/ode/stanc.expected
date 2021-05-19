@@ -309,6 +309,57 @@ Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatu
 ((real, array[] real, array[] real, data array[] real, data array[] int) => array[] real, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
 ((real, array[] real, array[] real, data array[] real, data array[] int) => array[] real, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
 Instead supplied arguments of incompatible type: (real, array[] real, array[] real, array[] real, array[] int) => array[] real, array[] real, real, array[,] real, array[] real, array[] real, array[] int, real, real, int.
+  $ ../../../../../install/default/bin/stanc bad_var_tol_1.stan
+Semantic error in 'bad_var_tol_1.stan', line 38, column 6 to line 39, column 104:
+   -------------------------------------------------
+    36:    array[M] vector[N] z;
+    37:  
+    38:    z = ode_adjoint_tol_ctl(f_0_arg, y0, t0, times, rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q, abs_tol_q,
+               ^
+    39:                             max_num_steps, num_checkpoints, interpolation_polynomial, solver_f, solver_b);
+    40:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'ode_adjoint_tol_ctl'. Available signatures:
+(real, vector, ...) => vector, vector, real, array[] real, data real,
+ data vector, data real, data vector, data real, data real, data int,
+ data int, data int, data int, data int ...
+Instead supplied arguments of incompatible type:
+(real, vector) => vector, vector, real, array[] real, data real, data vector, data real, data vector, real, data real, data int, data int, data int, data int, data int
+  $ ../../../../../install/default/bin/stanc bad_var_tol_2.stan
+Semantic error in 'bad_var_tol_2.stan', line 38, column 6 to line 39, column 104:
+   -------------------------------------------------
+    36:    array[M] vector[N] z;
+    37:  
+    38:    z = ode_adjoint_tol_ctl(f_0_arg, y0, t0, times, rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q, abs_tol_q,
+               ^
+    39:                             max_num_steps, num_checkpoints, interpolation_polynomial, solver_f, solver_b);
+    40:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'ode_adjoint_tol_ctl'. Available signatures:
+(real, vector, ...) => vector, vector, real, array[] real, data real,
+ data vector, data real, data vector, data real, data real, data int,
+ data int, data int, data int, data int ...
+Instead supplied arguments of incompatible type:
+(real, vector) => vector, vector, real, array[] real, data real, data vector, real, data vector, data real, data real, data int, data int, data int, data int, data int
+  $ ../../../../../install/default/bin/stanc bad_var_tol_3.stan
+Semantic error in 'bad_var_tol_3.stan', line 38, column 6 to line 39, column 104:
+   -------------------------------------------------
+    36:    array[M] vector[N] z;
+    37:  
+    38:    z = ode_adjoint_tol_ctl(f_0_arg, y0, t0, times, rel_tol_f, abs_tol_f, rel_tol_b, abs_tol_b, rel_tol_q, abs_tol_q,
+               ^
+    39:                             max_num_steps, num_checkpoints, interpolation_polynomial, solver_f, solver_b);
+    40:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'ode_adjoint_tol_ctl'. Available signatures:
+(real, vector, ...) => vector, vector, real, array[] real, data real,
+ data vector, data real, data vector, data real, data real, data int,
+ data int, data int, data int, data int ...
+Instead supplied arguments of incompatible type:
+(real, vector) => vector, vector, real, array[] real, data real, vector, data real, data vector, data real, data real, data int, data int, data int, data int, data int
   $ ../../../../../install/default/bin/stanc bad_x_int_type.stan
 Semantic error in 'bad_x_int_type.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------

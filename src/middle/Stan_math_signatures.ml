@@ -95,9 +95,25 @@ let reduce_sum_slice_types =
   List.concat (List.map ~f:base_slice_type reduce_sum_allowed_dimensionalities)
 
 (* Variadic ODE *)
+let variadic_ode_adjoint_ctl_tol_arg_types =
+  [ (UnsizedType.DataOnly, UnsizedType.UReal)
+    (* real relative_tolerance_forward *)
+  ; (DataOnly, UVector) (* vector absolute_tolerance_forward *)
+  ; (DataOnly, UReal) (* real relative_tolerance_backward *)
+  ; (DataOnly, UVector) (* real absolute_tolerance_backward *)
+  ; (DataOnly, UReal) (* real relative_tolerance_quadrature *)
+  ; (DataOnly, UReal) (* real absolute_tolerance_quadrature *)
+  ; (DataOnly, UInt) (* int max_num_steps *)
+  ; (DataOnly, UInt) (* int num_steps_between_checkpoints *)
+  ; (DataOnly, UInt) (* int interpolation_polynomial *)
+  ; (DataOnly, UInt) (* int solver_forward *)
+  ; (DataOnly, UInt)
+  (* int solver_backward *)
+   ]
+
 let variadic_ode_tol_arg_types =
-  [ (UnsizedType.AutoDiffable, UnsizedType.UReal)
-  ; (AutoDiffable, UReal); (DataOnly, UInt) ]
+  [ (UnsizedType.DataOnly, UnsizedType.UReal)
+  ; (DataOnly, UReal); (DataOnly, UInt) ]
 
 let variadic_ode_mandatory_arg_types =
   [ (UnsizedType.AutoDiffable, UnsizedType.UVector)
@@ -160,17 +176,23 @@ let full_lpmf = [Lpmf; Rng; Ccdf; Cdf]
 let reduce_sum_functions =
   String.Set.of_list ["reduce_sum"; "reduce_sum_static"]
 
-let variadic_ode_functions =
+let variadic_ode_adjoint_fn = "ode_adjoint_tol_ctl"
+
+let variadic_ode_nonadjoint_fns =
   String.Set.of_list
     [ "ode_bdf_tol"; "ode_rk45_tol"; "ode_adams_tol"; "ode_bdf"; "ode_rk45"
     ; "ode_adams"; "ode_ckrk"; "ode_ckrk_tol" ]
 
 let ode_tolerances_suffix = "_tol"
 let is_reduce_sum_fn f = Set.mem reduce_sum_functions f
-let is_variadic_ode_fn f = Set.mem variadic_ode_functions f
+let is_variadic_ode_nonadjoint_fn f = Set.mem variadic_ode_nonadjoint_fns f
 
-let is_variadic_ode_tol_fn f =
-  is_variadic_ode_fn f && String.is_suffix f ~suffix:ode_tolerances_suffix
+let is_variadic_ode_fn f =
+  Set.mem variadic_ode_nonadjoint_fns f || f = variadic_ode_adjoint_fn
+
+let is_variadic_ode_nonadjoint_tol_fn f =
+  is_variadic_ode_nonadjoint_fn f
+  && String.is_suffix f ~suffix:ode_tolerances_suffix
 
 let distributions =
   [ (full_lpmf, "beta_binomial", [DVInt; DVInt; DVReal; DVReal])
