@@ -10,6 +10,7 @@ and function_mismatch =
   | ReturnTypeMismatch of UnsizedType.returntype * UnsizedType.returntype
   | ArgError of int * type_mismatch
   | ArgNumMismatch of int * int
+[@@deriving sexp]
 
 type signature_error =
   (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
@@ -24,6 +25,14 @@ val stan_math_returntype :
      string
   -> (UnsizedType.autodifftype * UnsizedType.t) list
   -> (UnsizedType.returntype, signature_error list * bool) result
+
+val check_variadic_args :
+     bool
+  -> (UnsizedType.autodifftype * UnsizedType.t) list
+  -> (UnsizedType.autodifftype * UnsizedType.t) list
+  -> UnsizedType.t
+  -> (UnsizedType.autodifftype * UnsizedType.t) list
+  -> function_mismatch option
 
 val pp_signature_mismatch :
      Format.formatter

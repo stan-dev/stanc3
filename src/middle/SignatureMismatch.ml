@@ -75,6 +75,7 @@ and function_mismatch =
   | ReturnTypeMismatch of UnsizedType.returntype * UnsizedType.returntype
   | ArgError of int * type_mismatch
   | ArgNumMismatch of int * int
+[@@deriving sexp]
 
 type signature_error =
   (UnsizedType.returntype * (UnsizedType.autodifftype * UnsizedType.t) list)
@@ -167,6 +168,41 @@ let stan_math_returntype name args =
            in
            let errors, omitted = List.split_n errors 10 in
            Error (errors, not (List.is_empty omitted)) )
+
+let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
+    fun_return args =
+  let minimal_func_type =
+    UnsizedType.UFun (mandatory_fun_arg_tys, ReturnType fun_return, FnPlain)
+  in
+  let wrap_err x = Some (ArgError (1, x)) in
+  match args with
+  | ( _
+    , (UnsizedType.UFun (fun_args, ReturnType return_type, suffix) as func_type)
+    )
+    :: _
+    when suffix = FnPlain
+         || (allow_lpdf && Fun_kind.without_propto suffix = FnLpdf ()) -> (
+      let wrap_func_error x =
+        FuncTypeMismatch (minimal_func_type, func_type, x) |> wrap_err
+      in
+      let mandatory, variadic_arg_tys =
+        List.split_n fun_args (List.length mandatory_fun_arg_tys)
+      in
+      match check_compatible_arguments 1 mandatory mandatory_fun_arg_tys with
+      | Some x -> wrap_func_error x
+      | None -> (
+        match check_same_type 1 return_type fun_return with
+        | Some _ ->
+            wrap_func_error
+              (ReturnTypeMismatch
+                 (ReturnType fun_return, ReturnType return_type))
+        | None ->
+            check_compatible_arguments 0
+              ( ((UnsizedType.AutoDiffable, func_type) :: mandatory_arg_tys)
+              @ variadic_arg_tys )
+              args ) )
+  | (_, x) :: _ -> TypesMismatch (minimal_func_type, x) |> wrap_err
+  | [] -> Some (ArgNumMismatch (List.length mandatory_arg_tys, 0))
 
 let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
   let open Fmt in
