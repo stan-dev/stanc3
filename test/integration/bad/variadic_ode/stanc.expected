@@ -15,12 +15,12 @@ where F1 = (real, array[] real, real, real) => array[] real
 Available signatures:
 (<F2>, vector, real, array[] real, data real, data real, data int) => vector
 where F2 = (real, vector) => vector
-  Argument 1 must be
+  The first argument must be
    (real, vector) => vector
   but found
    (real, array[] real, real, real) => array[] real
   These are not compatible because:
-    Argument 2 must be array[] real but found vector
+    The second argument must be array[] real but found vector
   $ ../../../../../install/default/bin/stanc bad_initial_state.stan
 Semantic error in 'bad_initial_state.stan', line 29, column 4 to line 31, column 24:
    -------------------------------------------------
@@ -38,12 +38,12 @@ where F1 = (real, array[] real, real, real) => array[] real
 Available signatures:
 (<F2>, vector, real, array[] real, data real, data real, data int) => vector
 where F2 = (real, vector) => vector
-  Argument 1 must be
+  The first argument must be
    (real, vector) => vector
   but found
    (real, array[] real, real, real) => array[] real
   These are not compatible because:
-    Argument 2 must be array[] real but found vector
+    The second argument must be array[] real but found vector
   $ ../../../../../install/default/bin/stanc bad_initial_time.stan
 Semantic error in 'bad_initial_time.stan', line 30, column 4 to line 32, column 24:
    -------------------------------------------------
@@ -61,12 +61,12 @@ where F1 = (real, array[] real, real, real) => array[] real
 Available signatures:
 (<F2>, vector, real, array[] real, data real, data real, data int) => vector
 where F2 = (real, vector) => vector
-  Argument 1 must be
+  The first argument must be
    (real, vector) => vector
   but found
    (real, array[] real, real, real) => array[] real
   These are not compatible because:
-    Argument 2 must be array[] real but found vector
+    The second argument must be array[] real but found vector
   $ ../../../../../install/default/bin/stanc bad_max_num_steps.stan
 Semantic error in 'bad_max_num_steps.stan', line 30, column 4 to line 32, column 24:
    -------------------------------------------------
@@ -84,12 +84,12 @@ where F1 = (real, array[] real, real, real) => array[] real
 Available signatures:
 (<F2>, vector, real, array[] real, data real, data real, data int) => vector
 where F2 = (real, vector) => vector
-  Argument 1 must be
+  The first argument must be
    (real, vector) => vector
   but found
    (real, array[] real, real, real) => array[] real
   These are not compatible because:
-    Argument 2 must be array[] real but found vector
+    The second argument must be array[] real but found vector
   $ ../../../../../install/default/bin/stanc bad_no_args.stan
 Semantic error in 'bad_no_args.stan', line 25, column 4 to line 26, column 28:
    -------------------------------------------------
@@ -107,12 +107,12 @@ where F1 = (real, array[] real) => array[] real
 Available signatures:
 (<F2>, vector, real, array[] real, data real, data real, data int) => vector
 where F2 = (real, vector) => vector
-  Argument 1 must be
+  The first argument must be
    (real, vector) => vector
   but found
    (real, array[] real) => array[] real
   These are not compatible because:
-    Argument 2 must be array[] real but found vector
+    The second argument must be array[] real but found vector
   $ ../../../../../install/default/bin/stanc bad_non_matching_args.stan
 Semantic error in 'bad_non_matching_args.stan', line 29, column 4 to line 31, column 24:
    -------------------------------------------------
@@ -130,12 +130,12 @@ where F1 = (real, array[] real, real, array[] real) => array[] real
 Available signatures:
 (<F2>, vector, real, array[] real, data real, data real, data int) => vector
 where F2 = (real, vector) => vector
-  Argument 1 must be
+  The first argument must be
    (real, vector) => vector
   but found
    (real, array[] real, real, array[] real) => array[] real
   These are not compatible because:
-    Argument 2 must be array[] real but found vector
+    The second argument must be array[] real but found vector
   $ ../../../../../install/default/bin/stanc bad_one_arg.stan
 Semantic error in 'bad_one_arg.stan', line 27, column 4 to line 29, column 18:
    -------------------------------------------------
@@ -153,12 +153,12 @@ where F1 = (real, array[] real, real) => array[] real
 Available signatures:
 (<F2>, vector, real, array[] real, data real, data real, data int) => vector
 where F2 = (real, vector) => vector
-  Argument 1 must be
+  The first argument must be
    (real, vector) => vector
   but found
    (real, array[] real, real) => array[] real
   These are not compatible because:
-    Argument 2 must be array[] real but found vector
+    The second argument must be array[] real but found vector
   $ ../../../../../install/default/bin/stanc bad_rel_tol.stan
 Semantic error in 'bad_rel_tol.stan', line 30, column 4 to line 32, column 24:
    -------------------------------------------------
@@ -176,12 +176,12 @@ where F1 = (real, array[] real, real, real) => array[] real
 Available signatures:
 (<F2>, vector, real, array[] real, data real, data real, data int) => vector
 where F2 = (real, vector) => vector
-  Argument 1 must be
+  The first argument must be
    (real, vector) => vector
   but found
    (real, array[] real, real, real) => array[] real
   These are not compatible because:
-    Argument 2 must be array[] real but found vector
+    The second argument must be array[] real but found vector
   $ ../../../../../install/default/bin/stanc bad_times.stan
 Semantic error in 'bad_times.stan', line 30, column 4 to line 31, column 24:
    -------------------------------------------------
@@ -199,12 +199,12 @@ where F1 = (real, array[] real, real, real) => array[] real
 Available signatures:
 (<F2>, vector, real, array[] real) => vector
 where F2 = (real, vector) => vector
-  Argument 1 must be
+  The first argument must be
    (real, vector) => vector
   but found
    (real, array[] real, real, real) => array[] real
   These are not compatible because:
-    Argument 2 must be array[] real but found vector
+    The second argument must be array[] real but found vector
   $ ../../../../../install/default/bin/stanc bad_times_tol.stan
 Semantic error in 'bad_times_tol.stan', line 30, column 4 to line 32, column 24:
    -------------------------------------------------
@@ -222,9 +222,9 @@ where F1 = (real, array[] real, real, real) => array[] real
 Available signatures:
 (<F2>, vector, real, array[] real, data real, data real, data int) => vector
 where F2 = (real, vector) => vector
-  Argument 1 must be
+  The first argument must be
    (real, vector) => vector
   but found
    (real, array[] real, real, real) => array[] real
   These are not compatible because:
-    Argument 2 must be array[] real but found vector
+    The second argument must be array[] real but found vector

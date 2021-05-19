@@ -212,30 +212,38 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
     | FnLpdf _ -> "a probability density function"
     | FnTarget -> "an _lp function"
   in
+  let index_str = function
+    | 1 -> "first"
+    | 2 -> "second"
+    | 3 -> "third"
+    | 4 -> "fourth"
+    | n -> Fmt.strf "%dth" n
+  in
   let rec pp_explain recursive ppf = function
     | ArgError (n, DataOnlyError) when recursive ->
-        pf ppf "@[<hov>Argument@ %d@ %a@]" n text
-          "has an incompatible data-qualifier."
+        pf ppf "@[<hov>The@ %s@ argument%a@]" (index_str n) text
+          " has an incompatible data-qualifier."
     | ArgError (n, DataOnlyError) ->
-        pf ppf "@[<hov>Argument@ %d@ %a@]" n text
-          "must be data-only. (Local variables are assumed to depend on \
+        pf ppf "@[<hov>The@ %s@ argument%a@]" (index_str n) text
+          " must be data-only. (Local variables are assumed to depend on \
            parameters; same goes for function inputs unless they are marked \
            with the keyword 'data'.)"
     | ArgError (n, TypesMismatch (expected, found)) ->
-        pf ppf "@[<hv>Argument %d must be@, %a@ but found@, %a@]" n
-          (pp_unsized_type ctx) expected (pp_unsized_type ctx) found
+        pf ppf "@[<hv>The %s argument must be@, %a@ but found@, %a@]"
+          (index_str n) (pp_unsized_type ctx) expected (pp_unsized_type ctx)
+          found
     | ArgError (n, FuncTypeMismatch (_, _, SuffixMismatch (expected, found)))
       ->
         pf ppf
-          "@[<v>Argument %d must be %s but found %s. These function types are \
-           not compatible.@]"
-          n (suffix_str expected) (suffix_str found)
+          "@[<v>The %s argument must be %s but found %s. These function types \
+           are not compatible.@]"
+          (index_str n) (suffix_str expected) (suffix_str found)
     | ArgError (n, FuncTypeMismatch (expected, found, err)) ->
         pf ppf
-          "@[<v>Argument %d must be@, %a@ but found@, %a@ @[<v 2>These are \
-           not compatible because:@ @[<hov>%a@]@]@]"
-          n (pp_fundef ctx) expected (pp_fundef ctx) found (pp_explain true)
-          err
+          "@[<v>The %s argument must be@, %a@ but found@, %a@ @[<v 2>These \
+           are not compatible because:@ @[<hov>%a@]@]@]"
+          (index_str n) (pp_fundef ctx) expected (pp_fundef ctx) found
+          (pp_explain true) err
     | ReturnTypeMismatch (expected, found) ->
         let _ = ppf in
         pf ppf "Return types are incompatible: expected %a but found %a"

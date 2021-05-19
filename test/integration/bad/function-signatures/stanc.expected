@@ -13,25 +13,25 @@ Ill-typed arguments supplied to function 'falling_factorial':
 (real, real)
 Available signatures:
 (real, int) => real
-  Argument 2 must be int but found real
+  The second argument must be int but found real
 (real, array[] int) => array[] real
-  Argument 2 must be array[] int but found real
+  The second argument must be array[] int but found real
 (real, array[,] int) => array[,] real
-  Argument 2 must be array[,] int but found real
+  The second argument must be array[,] int but found real
 (real, array[,,] int) => array[,,] real
-  Argument 2 must be array[,,] int but found real
+  The second argument must be array[,,] int but found real
 (real, array[,,,] int) => array[,,,] real
-  Argument 2 must be array[,,,] int but found real
+  The second argument must be array[,,,] int but found real
 (real, array[,,,,] int) => array[,,,,] real
-  Argument 2 must be array[,,,,] int but found real
+  The second argument must be array[,,,,] int but found real
 (real, array[,,,,,] int) => array[,,,,,] real
-  Argument 2 must be array[,,,,,] int but found real
+  The second argument must be array[,,,,,] int but found real
 (real, array[,,,,,,] int) => array[,,,,,,] real
-  Argument 2 must be array[,,,,,,] int but found real
+  The second argument must be array[,,,,,,] int but found real
 (int, array[,,,,,,] int) => array[,,,,,,] int
-  Argument 1 must be int but found real
+  The first argument must be int but found real
 (int, array[,,,,,] int) => array[,,,,,] int
-  Argument 1 must be int but found real
+  The first argument must be int but found real
 (Additional signatures omitted)
   $ ../../../../../install/default/bin/stanc rising_factorial.stan
 Semantic error in 'rising_factorial.stan', line 7, column 28 to column 60:
@@ -47,23 +47,23 @@ Ill-typed arguments supplied to function 'rising_factorial':
 (real, real)
 Available signatures:
 (real, int) => real
-  Argument 2 must be int but found real
+  The second argument must be int but found real
 (real, array[] int) => array[] real
-  Argument 2 must be array[] int but found real
+  The second argument must be array[] int but found real
 (real, array[,] int) => array[,] real
-  Argument 2 must be array[,] int but found real
+  The second argument must be array[,] int but found real
 (real, array[,,] int) => array[,,] real
-  Argument 2 must be array[,,] int but found real
+  The second argument must be array[,,] int but found real
 (real, array[,,,] int) => array[,,,] real
-  Argument 2 must be array[,,,] int but found real
+  The second argument must be array[,,,] int but found real
 (real, array[,,,,] int) => array[,,,,] real
-  Argument 2 must be array[,,,,] int but found real
+  The second argument must be array[,,,,] int but found real
 (real, array[,,,,,] int) => array[,,,,,] real
-  Argument 2 must be array[,,,,,] int but found real
+  The second argument must be array[,,,,,] int but found real
 (real, array[,,,,,,] int) => array[,,,,,,] real
-  Argument 2 must be array[,,,,,,] int but found real
+  The second argument must be array[,,,,,,] int but found real
 (int, array[,,,,,,] int) => array[,,,,,,] int
-  Argument 1 must be int but found real
+  The first argument must be int but found real
 (int, array[,,,,,] int) => array[,,,,,] int
-  Argument 1 must be int but found real
+  The first argument must be int but found real
 (Additional signatures omitted)

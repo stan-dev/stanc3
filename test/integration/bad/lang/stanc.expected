@@ -185,11 +185,11 @@ Ill-typed arguments supplied to function 'cov_exp_quad':
 (array[] vector, array[] vector, real, array[] real)
 Available signatures:
 (array[] vector, array[] vector, real, real) => matrix
-  Argument 4 must be real but found array[] real
+  The fourth argument must be real but found array[] real
 (array[] real, array[] real, real, real) => matrix
-  Argument 1 must be array[] real but found array[] vector
+  The first argument must be array[] real but found array[] vector
 (array[] row_vector, array[] row_vector, real, real) => matrix
-  Argument 1 must be array[] row_vector but found array[] vector
+  The first argument must be array[] row_vector but found array[] vector
 (array[] row_vector, real, real) => matrix
   Expected 3 arguments but found 4 arguments.
 (array[] vector, real, real) => matrix
@@ -271,11 +271,11 @@ Ill-typed arguments supplied to function 'cov_exp_quad':
 (row_vector, real, real)
 Available signatures:
 (array[] real, real, real) => matrix
-  Argument 1 must be array[] real but found row_vector
+  The first argument must be array[] real but found row_vector
 (array[] vector, real, real) => matrix
-  Argument 1 must be array[] vector but found row_vector
+  The first argument must be array[] vector but found row_vector
 (array[] row_vector, real, real) => matrix
-  Argument 1 must be array[] row_vector but found row_vector
+  The first argument must be array[] row_vector but found row_vector
 (array[] row_vector, array[] row_vector, real, real) => matrix
   Expected 4 arguments but found 3 arguments.
 (array[] vector, array[] vector, real, real) => matrix
@@ -297,11 +297,11 @@ Ill-typed arguments supplied to function 'cov_exp_quad':
 (array[] row_vector, array[] vector, real, real)
 Available signatures:
 (array[] row_vector, array[] row_vector, real, real) => matrix
-  Argument 2 must be array[] row_vector but found array[] vector
+  The second argument must be array[] row_vector but found array[] vector
 (array[] real, array[] real, real, real) => matrix
-  Argument 1 must be array[] real but found array[] row_vector
+  The first argument must be array[] real but found array[] row_vector
 (array[] vector, array[] vector, real, real) => matrix
-  Argument 1 must be array[] vector but found array[] row_vector
+  The first argument must be array[] vector but found array[] row_vector
 (array[] row_vector, real, real) => matrix
   Expected 3 arguments but found 4 arguments.
 (array[] vector, real, real) => matrix
@@ -335,11 +335,11 @@ Ill-typed arguments supplied to function 'cov_exp_quad':
 (array[] vector, array[] vector, array[] real, real)
 Available signatures:
 (array[] vector, array[] vector, real, real) => matrix
-  Argument 3 must be real but found array[] real
+  The third argument must be real but found array[] real
 (array[] real, array[] real, real, real) => matrix
-  Argument 1 must be array[] real but found array[] vector
+  The first argument must be array[] real but found array[] vector
 (array[] row_vector, array[] row_vector, real, real) => matrix
-  Argument 1 must be array[] row_vector but found array[] vector
+  The first argument must be array[] row_vector but found array[] vector
 (array[] row_vector, real, real) => matrix
   Expected 3 arguments but found 4 arguments.
 (array[] vector, real, real) => matrix
@@ -421,11 +421,11 @@ Ill-typed arguments supplied to function 'cov_exp_quad':
 (vector, real, real)
 Available signatures:
 (array[] real, real, real) => matrix
-  Argument 1 must be array[] real but found vector
+  The first argument must be array[] real but found vector
 (array[] vector, real, real) => matrix
-  Argument 1 must be array[] vector but found vector
+  The first argument must be array[] vector but found vector
 (array[] row_vector, real, real) => matrix
-  Argument 1 must be array[] row_vector but found vector
+  The first argument must be array[] row_vector but found vector
 (array[] row_vector, array[] row_vector, real, real) => matrix
   Expected 4 arguments but found 3 arguments.
 (array[] vector, array[] vector, real, real) => matrix
@@ -447,11 +447,11 @@ Ill-typed arguments supplied to function 'cov_exp_quad':
 (array[] vector, array[] row_vector, real, real)
 Available signatures:
 (array[] vector, array[] vector, real, real) => matrix
-  Argument 2 must be array[] vector but found array[] row_vector
+  The second argument must be array[] vector but found array[] row_vector
 (array[] real, array[] real, real, real) => matrix
-  Argument 1 must be array[] real but found array[] vector
+  The first argument must be array[] real but found array[] vector
 (array[] row_vector, array[] row_vector, real, real) => matrix
-  Argument 1 must be array[] row_vector but found array[] vector
+  The first argument must be array[] row_vector but found array[] vector
 (array[] row_vector, real, real) => matrix
   Expected 3 arguments but found 4 arguments.
 (array[] vector, real, real) => matrix
