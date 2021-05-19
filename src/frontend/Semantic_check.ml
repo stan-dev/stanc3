@@ -213,16 +213,6 @@ let get_arg_types = List.map ~f:arg_type
 
 (* -- Function application -------------------------------------------------- *)
 
-let semantic_check_fn_map_rect ~loc id es =
-  Validate.(
-    match (id.name, es) with
-    | "map_rect", {expr= Variable arg1; _} :: _
-      when String.(
-             is_suffix arg1.name ~suffix:"_lp"
-             || is_suffix arg1.name ~suffix:"_rng") ->
-        Semantic_error.invalid_map_rect_fn loc arg1.name |> error
-    | _ -> ok ())
-
 let semantic_check_fn_conditioning ~loc id =
   Validate.(
     if
@@ -815,7 +805,6 @@ and semantic_check_funapp ~is_cond_dist id es cf emeta =
     >>= fun ues ->
     semantic_check_fn ~is_cond_dist ~loc:emeta.loc id ues
     |> apply_const (semantic_check_identifier id)
-    |> apply_const (semantic_check_fn_map_rect ~loc:emeta.loc id ues)
     |> apply_const (name_check ~loc:emeta.loc id)
     |> apply_const (semantic_check_fn_target_plus_equals cf ~loc:emeta.loc id)
     |> apply_const (semantic_check_fn_rng cf ~loc:emeta.loc id)

@@ -120,7 +120,13 @@ Semantic error in 'bad_lp_fn.stan', line 22, column 16 to column 52:
     23:  }
    -------------------------------------------------
 
-Mapped function cannot be an _rng or _lp function, found function name: lr_lp
+Ill-typed arguments supplied to function 'map_rect':
+(<F1>, vector, array[] vector, array[,] real, array[,] int)
+where F1 = (vector, vector, array[] real, array[] int) => vector
+Available signatures:
+(<F2>, vector, array[] vector, data array[,] real, data array[,] int) => vector
+where F2 = (vector, vector, data array[] real, data array[] int) => vector
+  The first argument must be a pure function but found an _lp function. These function types are not compatible.
   $ ../../../../../install/default/bin/stanc bad_not_enough_args.stan
 Semantic error in 'bad_not_enough_args.stan', line 13, column 8 to column 68:
    -------------------------------------------------
@@ -153,7 +159,13 @@ Semantic error in 'bad_rng_fn.stan', line 22, column 19 to column 56:
     23:  }
    -------------------------------------------------
 
-Mapped function cannot be an _rng or _lp function, found function name: lr_rng
+Ill-typed arguments supplied to function 'map_rect':
+(<F1>, vector, array[] vector, array[,] real, array[,] int)
+where F1 = (vector, vector, array[] real, array[] int) => vector
+Available signatures:
+(<F2>, vector, array[] vector, data array[,] real, data array[,] int) => vector
+where F2 = (vector, vector, data array[] real, data array[] int) => vector
+  The first argument must be a pure function but found an rng function. These function types are not compatible.
   $ ../../../../../install/default/bin/stanc bad_shared_params_type.stan
 Semantic error in 'bad_shared_params_type.stan', line 19, column 8 to column 68:
    -------------------------------------------------
