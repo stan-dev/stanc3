@@ -426,13 +426,13 @@ let semantic_check_ternary_if loc (pe, te, fe) =
     in
     if pe.emeta.type_ = UInt then
       match UnsizedType.common_type (te.emeta.type_, fe.emeta.type_) with
-      | Some type_ ->
+      | Some type_ when not (UnsizedType.is_fun_type type_) ->
           mk_typed_expression
             ~expr:(TernaryIf (pe, te, fe))
             ~ad_level:(expr_ad_lub [pe; te; fe])
             ~type_ ~loc
           |> ok
-      | None -> error err
+      | Some _ | None -> error err
     else error err)
 
 (* -- Binary (Infix) Operators ---------------------------------------------- *)

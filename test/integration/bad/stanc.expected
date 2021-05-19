@@ -2126,6 +2126,18 @@ Semantic error in 'target-reserved.stan', line 2, column 7 to column 13:
    -------------------------------------------------
 
 Identifier 'target' clashes with reserved keyword.
+  $ ../../../../install/default/bin/stanc ternaryif-fntype.stan
+Semantic error in 'ternaryif-fntype.stan', line 13, column 6 to column 28:
+   -------------------------------------------------
+    11:      vector[1] true_states[1];
+    12:      true_states = ode_rk45(
+    13:        t0 < 0 ? rflow : gflow, [1]', t0, {1.}
+               ^
+    14:      );
+    15:  }
+   -------------------------------------------------
+
+Ternary expression cannot have a function type: (real, vector) => vector
   $ ../../../../install/default/bin/stanc tilde-bad.stan
 Semantic error in 'tilde-bad.stan', line 8, column 8 to column 19:
    -------------------------------------------------

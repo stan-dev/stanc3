@@ -111,6 +111,9 @@ module TypeError = struct
           ( Stan_math_signatures.pretty_print_math_lib_assignmentoperator_sigs
               op
           |> Option.value ~default:"no matching signatures" )
+    | IllTypedTernaryIf (UInt, ut, _) when UnsizedType.is_fun_type ut ->
+        Fmt.pf ppf "Ternary expression cannot have a function type: %a"
+          UnsizedType.pp ut
     | IllTypedTernaryIf (UInt, ut2, ut3) ->
         Fmt.pf ppf
           "Type mismatch in ternary expression, expression when true is: %a; \
