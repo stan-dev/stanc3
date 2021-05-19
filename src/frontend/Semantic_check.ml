@@ -325,42 +325,50 @@ let semantic_check_fn_stan_math ~is_cond_dist ~loc id es =
       |> Semantic_error.illtyped_stanlib_fn_app loc id.name x
       |> Validate.error
 
-let arg_match (x_ad, x_t) y =
-  UnsizedType.check_of_same_type_mod_conv "" x_t y.emeta.type_
-  && UnsizedType.autodifftype_can_convert x_ad y.emeta.ad_level
-
-let args_match a b =
-  List.length a = List.length b && List.for_all2_exn ~f:arg_match a b
-
 let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
   match es with
   | { emeta=
         { type_=
             UnsizedType.UFun
-              ( ((_, sliced_arg_fun_type) as sliced_arg_fun)
-                :: (_, UInt) :: (_, UInt) :: fun_args
-              , ReturnType UReal
-              , (FnPlain | FnLpdf _) ); _ }; _ }
-    :: sliced :: {emeta= {type_= UInt; _}; _} :: args
-    when arg_match sliced_arg_fun sliced
-         && List.mem Stan_math_signatures.reduce_sum_slice_types
-              sliced.emeta.type_ ~equal:( = )
-         && List.mem Stan_math_signatures.reduce_sum_slice_types
-              sliced_arg_fun_type ~equal:( = ) ->
-      if args_match fun_args args then
-        mk_typed_expression
-          ~expr:(mk_fun_app ~is_cond_dist (StanLib FnPlain, id, es))
-          ~ad_level:(expr_ad_lub es) ~type_:UnsizedType.UReal ~loc
-        |> Validate.ok
-      else
-        Semantic_error.illtyped_reduce_sum loc id.name
-          (List.map ~f:type_of_expr_typed es)
-          (sliced_arg_fun :: fun_args)
-        |> Validate.error
+              (((_, sliced_arg_fun_type) as sliced_arg_fun) :: _, _, _); _ }; _
+    }
+    :: _
+    when List.mem Stan_math_signatures.reduce_sum_slice_types
+           sliced_arg_fun_type ~equal:( = ) -> (
+      let mandatory_args = [sliced_arg_fun; (AutoDiffable, UInt)] in
+      let mandatory_fun_args =
+        [sliced_arg_fun; (DataOnly, UInt); (DataOnly, UInt)]
+      in
+      match
+        SignatureMismatch.check_variadic_args true mandatory_args
+          mandatory_fun_args UReal (get_arg_types es)
+      with
+      | None ->
+          mk_typed_expression
+            ~expr:(mk_fun_app ~is_cond_dist (StanLib FnPlain, id, es))
+            ~ad_level:(expr_ad_lub es) ~type_:UnsizedType.UReal ~loc
+          |> Validate.ok
+      | Some (expected_args, error) ->
+          Semantic_error.illtyped_reduce_sum loc id.name
+            (List.map ~f:type_of_expr_typed es)
+            expected_args error
+          |> Validate.error )
   | _ ->
-      es
-      |> List.map ~f:type_of_expr_typed
-      |> Semantic_error.illtyped_reduce_sum_generic loc id.name
+      let mandatory_args =
+        UnsizedType.[(AutoDiffable, UArray UReal); (AutoDiffable, UInt)]
+      in
+      let mandatory_fun_args =
+        UnsizedType.
+          [(AutoDiffable, UArray UReal); (DataOnly, UInt); (DataOnly, UInt)]
+      in
+      let expected_args, error =
+        SignatureMismatch.check_variadic_args true mandatory_args
+          mandatory_fun_args UReal (get_arg_types es)
+        |> Option.value_exn
+      in
+      Semantic_error.illtyped_reduce_sum_generic loc id.name
+        (List.map ~f:type_of_expr_typed es)
+        expected_args error
       |> Validate.error
 
 let semantic_check_variadic_ode ~is_cond_dist ~loc id es =

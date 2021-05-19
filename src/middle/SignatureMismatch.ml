@@ -144,30 +144,24 @@ and check_compatible_arguments depth args1 args2 =
 let check_compatible_arguments_mod_conv = check_compatible_arguments 0
 
 let stan_math_returntype name args =
-  if Stan_math_signatures.is_reduce_sum_fn name then
-    (* FIXME handle variadic *)
-    Result.Ok (UnsizedType.ReturnType UReal)
-  else if Stan_math_signatures.is_variadic_ode_fn name then
-    (* FIXME handle variadic *)
-    Ok (UnsizedType.ReturnType (UArray UVector))
-  else
-    let name = Utils.stdlib_distribution_name name in
-    Hashtbl.find_multi Stan_math_signatures.stan_math_signatures name
-    |> List.sort ~compare:(fun (x, _) (y, _) ->
-           UnsizedType.compare_returntype x y )
-    (* Check the least return type first in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
-    |> List.fold_until ~init:[]
-         ~f:(fun errors (rt, tys) ->
-           match check_compatible_arguments 0 tys args with
-           | None -> Stop (Ok rt)
-           | Some e -> Continue (((rt, tys), e) :: errors) )
-         ~finish:(fun errors ->
-           let errors =
-             List.sort errors ~compare:(fun (_, e1) (_, e2) ->
-                 compare_function_errors e1 e2 )
-           in
-           let errors, omitted = List.split_n errors 10 in
-           Error (errors, not (List.is_empty omitted)) )
+  (* NB: Variadic arguments are special-cased in Semantic_check and not handled here *)
+  let name = Utils.stdlib_distribution_name name in
+  Hashtbl.find_multi Stan_math_signatures.stan_math_signatures name
+  |> List.sort ~compare:(fun (x, _) (y, _) ->
+         UnsizedType.compare_returntype x y )
+  (* Check the least return type first in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
+  |> List.fold_until ~init:[]
+       ~f:(fun errors (rt, tys) ->
+         match check_compatible_arguments 0 tys args with
+         | None -> Stop (Ok rt)
+         | Some e -> Continue (((rt, tys), e) :: errors) )
+       ~finish:(fun errors ->
+         let errors =
+           List.sort errors ~compare:(fun (_, e1) (_, e2) ->
+               compare_function_errors e1 e2 )
+         in
+         let errors, omitted = List.split_n errors 10 in
+         Error (errors, not (List.is_empty omitted)) )
 
 let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
     fun_return args =

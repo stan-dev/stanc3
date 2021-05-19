@@ -39,10 +39,16 @@ val illtyped_reduce_sum :
   -> string
   -> UnsizedType.t list
   -> (UnsizedType.autodifftype * UnsizedType.t) list
+  -> SignatureMismatch.function_mismatch
   -> t
 
 val illtyped_reduce_sum_generic :
-  Location_span.t -> string -> UnsizedType.t list -> t
+     Location_span.t
+  -> string
+  -> UnsizedType.t list
+  -> (UnsizedType.autodifftype * UnsizedType.t) list
+  -> SignatureMismatch.function_mismatch
+  -> t
 
 val illtyped_variadic_ode :
      Location_span.t

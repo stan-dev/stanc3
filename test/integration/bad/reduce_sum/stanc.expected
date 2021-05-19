@@ -8,10 +8,12 @@ Semantic error in 'bad_args_length_mismatch.stan', line 12, column 12 to column 
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum'. Expected arguments:
-(array[] real, int, int, real, real) => real, array[] real, int, real, real
-
-Instead supplied arguments of incompatible type: (array[] real, int, int, real, real) => real, array[] real, int, real
+Ill-typed arguments supplied to function 'reduce_sum':
+(<F1>, array[] real, int, real)
+where F1 = (array[] real, int, int, real, real) => real
+Available signatures:
+(<F1>, array[] real, int, real, real) => real
+  Expected 5 arguments but found 4 arguments.
   $ ../../../../../install/default/bin/stanc bad_args_length_mismatch2.stan
 Semantic error in 'bad_args_length_mismatch2.stan', line 12, column 12 to column 47:
    -------------------------------------------------
@@ -22,9 +24,12 @@ Semantic error in 'bad_args_length_mismatch2.stan', line 12, column 12 to column
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum'. Expected arguments:
-(array[] real, int, int, real) => real, array[] real, int, real
-Instead supplied arguments of incompatible type: (array[] real, int, int, real) => real, array[] real, int, real, real
+Ill-typed arguments supplied to function 'reduce_sum':
+(<F1>, array[] real, int, real, real)
+where F1 = (array[] real, int, int, real) => real
+Available signatures:
+(<F1>, array[] real, int, real) => real
+  Expected 4 arguments but found 5 arguments.
   $ ../../../../../install/default/bin/stanc bad_args_length_mismatch2_static.stan
 Semantic error in 'bad_args_length_mismatch2_static.stan', line 12, column 12 to column 54:
    -------------------------------------------------
@@ -35,9 +40,12 @@ Semantic error in 'bad_args_length_mismatch2_static.stan', line 12, column 12 to
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static'. Expected arguments:
-(array[] real, int, int, real) => real, array[] real, int, real
-Instead supplied arguments of incompatible type: (array[] real, int, int, real) => real, array[] real, int, real, real
+Ill-typed arguments supplied to function 'reduce_sum_static':
+(<F1>, array[] real, int, real, real)
+where F1 = (array[] real, int, int, real) => real
+Available signatures:
+(<F1>, array[] real, int, real) => real
+  Expected 4 arguments but found 5 arguments.
   $ ../../../../../install/default/bin/stanc bad_args_length_mismatch_static.stan
 Semantic error in 'bad_args_length_mismatch_static.stan', line 12, column 12 to column 49:
    -------------------------------------------------
@@ -48,10 +56,12 @@ Semantic error in 'bad_args_length_mismatch_static.stan', line 12, column 12 to 
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static'. Expected arguments:
-(array[] real, int, int, real, real) => real, array[] real, int, real, real
-
-Instead supplied arguments of incompatible type: (array[] real, int, int, real, real) => real, array[] real, int, real
+Ill-typed arguments supplied to function 'reduce_sum_static':
+(<F1>, array[] real, int, real)
+where F1 = (array[] real, int, int, real, real) => real
+Available signatures:
+(<F1>, array[] real, int, real, real) => real
+  Expected 5 arguments but found 4 arguments.
   $ ../../../../../install/default/bin/stanc bad_fun_1.stan
 Semantic error in 'bad_fun_1.stan', line 12, column 12 to column 39:
    -------------------------------------------------
@@ -62,16 +72,18 @@ Semantic error in 'bad_fun_1.stan', line 12, column 12 to column 39:
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum'. Available arguments:
-(T[], int, int, ...) => real, T[], int, ...
-(T[,], int, int, ...) => real, T[,], int, ...
-(T[,,], int, int, ...) => real, T[,,], int, ...
-(T[,,,], int, int, ...) => real, T[,,,], int, ...
-(T[,,,,], int, int, ...) => real, T[,,,,], int, ...
-(T[,,,,,], int, int, ...) => real, T[,,,,,], int, ...
-(T[,,,,,,], int, int, ...) => real, T[,,,,,,], int, ...
-Where T is any one of int, real, vector, row_vector or matrix.
-Instead supplied arguments of incompatible type: (array[] real, int) => real, array[] real, int
+Ill-typed arguments supplied to function 'reduce_sum':
+(<F1>, array[] real, int)
+where F1 = (array[] real, int) => real
+Available signatures:
+(<F2>, array[] real, int) => real
+where F2 = (array[] real, data int, data int) => real
+  Argument 1 must be
+   (array[] real, data int, data int) => real
+  but found
+   (array[] real, int) => real
+  These are not compatible because:
+    Expected 2 arguments but found 3 arguments.
   $ ../../../../../install/default/bin/stanc bad_fun_1_static.stan
 Semantic error in 'bad_fun_1_static.stan', line 12, column 12 to column 46:
    -------------------------------------------------
@@ -82,16 +94,18 @@ Semantic error in 'bad_fun_1_static.stan', line 12, column 12 to column 46:
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static'. Available arguments:
-(T[], int, int, ...) => real, T[], int, ...
-(T[,], int, int, ...) => real, T[,], int, ...
-(T[,,], int, int, ...) => real, T[,,], int, ...
-(T[,,,], int, int, ...) => real, T[,,,], int, ...
-(T[,,,,], int, int, ...) => real, T[,,,,], int, ...
-(T[,,,,,], int, int, ...) => real, T[,,,,,], int, ...
-(T[,,,,,,], int, int, ...) => real, T[,,,,,,], int, ...
-Where T is any one of int, real, vector, row_vector or matrix.
-Instead supplied arguments of incompatible type: (array[] real, int) => real, array[] real, int
+Ill-typed arguments supplied to function 'reduce_sum_static':
+(<F1>, array[] real, int)
+where F1 = (array[] real, int) => real
+Available signatures:
+(<F2>, array[] real, int) => real
+where F2 = (array[] real, data int, data int) => real
+  Argument 1 must be
+   (array[] real, data int, data int) => real
+  but found
+   (array[] real, int) => real
+  These are not compatible because:
+    Expected 2 arguments but found 3 arguments.
   $ ../../../../../install/default/bin/stanc bad_fun_first_arg.stan
 Semantic error in 'bad_fun_first_arg.stan', line 12, column 12 to column 42:
    -------------------------------------------------
@@ -102,16 +116,18 @@ Semantic error in 'bad_fun_first_arg.stan', line 12, column 12 to column 42:
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum'. Available arguments:
-(T[], int, int, ...) => real, T[], int, ...
-(T[,], int, int, ...) => real, T[,], int, ...
-(T[,,], int, int, ...) => real, T[,,], int, ...
-(T[,,,], int, int, ...) => real, T[,,,], int, ...
-(T[,,,,], int, int, ...) => real, T[,,,,], int, ...
-(T[,,,,,], int, int, ...) => real, T[,,,,,], int, ...
-(T[,,,,,,], int, int, ...) => real, T[,,,,,,], int, ...
-Where T is any one of int, real, vector, row_vector or matrix.
-Instead supplied arguments of incompatible type: (array[] real, real, int, real, real) => real, array[] real, int, real
+Ill-typed arguments supplied to function 'reduce_sum':
+(<F1>, array[] real, int, real)
+where F1 = (array[] real, real, int, real, real) => real
+Available signatures:
+(<F2>, array[] real, int) => real
+where F2 = (array[] real, data int, data int) => real
+  Argument 1 must be
+   (array[] real, data int, data int) => real
+  but found
+   (array[] real, real, int, real, real) => real
+  These are not compatible because:
+    Argument 2 must be real but found int
   $ ../../../../../install/default/bin/stanc bad_fun_first_arg_static.stan
 Semantic error in 'bad_fun_first_arg_static.stan', line 12, column 12 to column 49:
    -------------------------------------------------
@@ -122,16 +138,18 @@ Semantic error in 'bad_fun_first_arg_static.stan', line 12, column 12 to column 
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static'. Available arguments:
-(T[], int, int, ...) => real, T[], int, ...
-(T[,], int, int, ...) => real, T[,], int, ...
-(T[,,], int, int, ...) => real, T[,,], int, ...
-(T[,,,], int, int, ...) => real, T[,,,], int, ...
-(T[,,,,], int, int, ...) => real, T[,,,,], int, ...
-(T[,,,,,], int, int, ...) => real, T[,,,,,], int, ...
-(T[,,,,,,], int, int, ...) => real, T[,,,,,,], int, ...
-Where T is any one of int, real, vector, row_vector or matrix.
-Instead supplied arguments of incompatible type: (array[] real, real, int, real, real) => real, array[] real, int, real
+Ill-typed arguments supplied to function 'reduce_sum_static':
+(<F1>, array[] real, int, real)
+where F1 = (array[] real, real, int, real, real) => real
+Available signatures:
+(<F2>, array[] real, int) => real
+where F2 = (array[] real, data int, data int) => real
+  Argument 1 must be
+   (array[] real, data int, data int) => real
+  but found
+   (array[] real, real, int, real, real) => real
+  These are not compatible because:
+    Argument 2 must be real but found int
   $ ../../../../../install/default/bin/stanc bad_fun_second_arg.stan
 Semantic error in 'bad_fun_second_arg.stan', line 12, column 12 to column 42:
    -------------------------------------------------
@@ -142,16 +160,18 @@ Semantic error in 'bad_fun_second_arg.stan', line 12, column 12 to column 42:
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum'. Available arguments:
-(T[], int, int, ...) => real, T[], int, ...
-(T[,], int, int, ...) => real, T[,], int, ...
-(T[,,], int, int, ...) => real, T[,,], int, ...
-(T[,,,], int, int, ...) => real, T[,,,], int, ...
-(T[,,,,], int, int, ...) => real, T[,,,,], int, ...
-(T[,,,,,], int, int, ...) => real, T[,,,,,], int, ...
-(T[,,,,,,], int, int, ...) => real, T[,,,,,,], int, ...
-Where T is any one of int, real, vector, row_vector or matrix.
-Instead supplied arguments of incompatible type: (array[] real, int, real, real, real) => real, array[] real, int, real
+Ill-typed arguments supplied to function 'reduce_sum':
+(<F1>, array[] real, int, real)
+where F1 = (array[] real, int, real, real, real) => real
+Available signatures:
+(<F2>, array[] real, int) => real
+where F2 = (array[] real, data int, data int) => real
+  Argument 1 must be
+   (array[] real, data int, data int) => real
+  but found
+   (array[] real, int, real, real, real) => real
+  These are not compatible because:
+    Argument 3 must be real but found int
   $ ../../../../../install/default/bin/stanc bad_fun_second_arg_static.stan
 Semantic error in 'bad_fun_second_arg_static.stan', line 12, column 12 to column 49:
    -------------------------------------------------
@@ -162,16 +182,18 @@ Semantic error in 'bad_fun_second_arg_static.stan', line 12, column 12 to column
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static'. Available arguments:
-(T[], int, int, ...) => real, T[], int, ...
-(T[,], int, int, ...) => real, T[,], int, ...
-(T[,,], int, int, ...) => real, T[,,], int, ...
-(T[,,,], int, int, ...) => real, T[,,,], int, ...
-(T[,,,,], int, int, ...) => real, T[,,,,], int, ...
-(T[,,,,,], int, int, ...) => real, T[,,,,,], int, ...
-(T[,,,,,,], int, int, ...) => real, T[,,,,,,], int, ...
-Where T is any one of int, real, vector, row_vector or matrix.
-Instead supplied arguments of incompatible type: (array[] real, int, real, real, real) => real, array[] real, int, real
+Ill-typed arguments supplied to function 'reduce_sum_static':
+(<F1>, array[] real, int, real)
+where F1 = (array[] real, int, real, real, real) => real
+Available signatures:
+(<F2>, array[] real, int) => real
+where F2 = (array[] real, data int, data int) => real
+  Argument 1 must be
+   (array[] real, data int, data int) => real
+  but found
+   (array[] real, int, real, real, real) => real
+  These are not compatible because:
+    Argument 3 must be real but found int
   $ ../../../../../install/default/bin/stanc bad_fun_slice_and_slice_dont_match.stan
 Semantic error in 'bad_fun_slice_and_slice_dont_match.stan', line 12, column 12 to column 42:
    -------------------------------------------------
@@ -182,16 +204,12 @@ Semantic error in 'bad_fun_slice_and_slice_dont_match.stan', line 12, column 12 
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum'. Available arguments:
-(T[], int, int, ...) => real, T[], int, ...
-(T[,], int, int, ...) => real, T[,], int, ...
-(T[,,], int, int, ...) => real, T[,,], int, ...
-(T[,,,], int, int, ...) => real, T[,,,], int, ...
-(T[,,,,], int, int, ...) => real, T[,,,,], int, ...
-(T[,,,,,], int, int, ...) => real, T[,,,,,], int, ...
-(T[,,,,,,], int, int, ...) => real, T[,,,,,,], int, ...
-Where T is any one of int, real, vector, row_vector or matrix.
-Instead supplied arguments of incompatible type: (array[] real, int, int, real, real) => real, array[] vector, int, real
+Ill-typed arguments supplied to function 'reduce_sum':
+(<F1>, array[] vector, int, real)
+where F1 = (array[] real, int, int, real, real) => real
+Available signatures:
+(<F1>, array[] real, int, real, real) => real
+  Expected 5 arguments but found 4 arguments.
   $ ../../../../../install/default/bin/stanc bad_fun_slice_and_slice_dont_match_static.stan
 Semantic error in 'bad_fun_slice_and_slice_dont_match_static.stan', line 12, column 12 to column 49:
    -------------------------------------------------
@@ -202,16 +220,12 @@ Semantic error in 'bad_fun_slice_and_slice_dont_match_static.stan', line 12, col
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static'. Available arguments:
-(T[], int, int, ...) => real, T[], int, ...
-(T[,], int, int, ...) => real, T[,], int, ...
-(T[,,], int, int, ...) => real, T[,,], int, ...
-(T[,,,], int, int, ...) => real, T[,,,], int, ...
-(T[,,,,], int, int, ...) => real, T[,,,,], int, ...
-(T[,,,,,], int, int, ...) => real, T[,,,,,], int, ...
-(T[,,,,,,], int, int, ...) => real, T[,,,,,,], int, ...
-Where T is any one of int, real, vector, row_vector or matrix.
-Instead supplied arguments of incompatible type: (array[] real, int, int, real, real) => real, array[] vector, int, real
+Ill-typed arguments supplied to function 'reduce_sum_static':
+(<F1>, array[] vector, int, real)
+where F1 = (array[] real, int, int, real, real) => real
+Available signatures:
+(<F1>, array[] real, int, real, real) => real
+  Expected 5 arguments but found 4 arguments.
   $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types.stan
 Semantic error in 'bad_non_matching_arg_types.stan', line 16, column 14 to column 47:
    -------------------------------------------------
@@ -222,16 +236,18 @@ Semantic error in 'bad_non_matching_arg_types.stan', line 16, column 14 to colum
     17:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum'. Available arguments:
-(T[], int, int, ...) => real, T[], int, ...
-(T[,], int, int, ...) => real, T[,], int, ...
-(T[,,], int, int, ...) => real, T[,,], int, ...
-(T[,,,], int, int, ...) => real, T[,,,], int, ...
-(T[,,,,], int, int, ...) => real, T[,,,,], int, ...
-(T[,,,,,], int, int, ...) => real, T[,,,,,], int, ...
-(T[,,,,,,], int, int, ...) => real, T[,,,,,,], int, ...
-Where T is any one of int, real, vector, row_vector or matrix.
-Instead supplied arguments of incompatible type: (array[] real, real, int, int, real) => real, array[] real, int, real, int
+Ill-typed arguments supplied to function 'reduce_sum':
+(<F1>, array[] real, int, real, int)
+where F1 = (array[] real, real, int, int, real) => real
+Available signatures:
+(<F2>, array[] real, int) => real
+where F2 = (array[] real, data int, data int) => real
+  Argument 1 must be
+   (array[] real, data int, data int) => real
+  but found
+   (array[] real, real, int, int, real) => real
+  These are not compatible because:
+    Argument 2 must be real but found int
   $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types2.stan
 Semantic error in 'bad_non_matching_arg_types2.stan', line 16, column 14 to column 47:
    -------------------------------------------------
@@ -242,10 +258,12 @@ Semantic error in 'bad_non_matching_arg_types2.stan', line 16, column 14 to colu
     17:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum'. Expected arguments:
-(array[] real, int, int, real, real) => real, array[] real, int, real, real
-
-Instead supplied arguments of incompatible type: (array[] real, int, int, real, real) => real, array[] real, int, real, array[] real
+Ill-typed arguments supplied to function 'reduce_sum':
+(<F1>, array[] real, int, real, array[] real)
+where F1 = (array[] real, int, int, real, real) => real
+Available signatures:
+(<F1>, array[] real, int, real, real) => real
+  Argument 5 must be real but found array[] real
   $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types2_static.stan
 Semantic error in 'bad_non_matching_arg_types2_static.stan', line 16, column 14 to column 54:
    -------------------------------------------------
@@ -256,10 +274,12 @@ Semantic error in 'bad_non_matching_arg_types2_static.stan', line 16, column 14 
     17:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static'. Expected arguments:
-(array[] real, int, int, real, real) => real, array[] real, int, real, real
-
-Instead supplied arguments of incompatible type: (array[] real, int, int, real, real) => real, array[] real, int, real, array[] real
+Ill-typed arguments supplied to function 'reduce_sum_static':
+(<F1>, array[] real, int, real, array[] real)
+where F1 = (array[] real, int, int, real, real) => real
+Available signatures:
+(<F1>, array[] real, int, real, real) => real
+  Argument 5 must be real but found array[] real
   $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types3.stan
 Semantic error in 'bad_non_matching_arg_types3.stan', line 13, column 14 to column 47:
    -------------------------------------------------
@@ -270,10 +290,12 @@ Semantic error in 'bad_non_matching_arg_types3.stan', line 13, column 14 to colu
     14:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum'. Expected arguments:
-(array[] real, int, int, real, real) => real, array[] real, int, real, real
-
-Instead supplied arguments of incompatible type: (array[] real, int, int, real, real) => real, array[] real, int, real, vector
+Ill-typed arguments supplied to function 'reduce_sum':
+(<F1>, array[] real, int, real, vector)
+where F1 = (array[] real, int, int, real, real) => real
+Available signatures:
+(<F1>, array[] real, int, real, real) => real
+  Argument 5 must be real but found vector
   $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types3_static.stan
 Semantic error in 'bad_non_matching_arg_types3_static.stan', line 13, column 14 to column 54:
    -------------------------------------------------
@@ -284,10 +306,12 @@ Semantic error in 'bad_non_matching_arg_types3_static.stan', line 13, column 14 
     14:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static'. Expected arguments:
-(array[] real, int, int, real, real) => real, array[] real, int, real, real
-
-Instead supplied arguments of incompatible type: (array[] real, int, int, real, real) => real, array[] real, int, real, vector
+Ill-typed arguments supplied to function 'reduce_sum_static':
+(<F1>, array[] real, int, real, vector)
+where F1 = (array[] real, int, int, real, real) => real
+Available signatures:
+(<F1>, array[] real, int, real, real) => real
+  Argument 5 must be real but found vector
   $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types_static.stan
 
   $ ../../../../../install/default/bin/stanc bad_not_slice_type.stan
@@ -300,16 +324,12 @@ Semantic error in 'bad_not_slice_type.stan', line 12, column 12 to column 42:
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum'. Available arguments:
-(T[], int, int, ...) => real, T[], int, ...
-(T[,], int, int, ...) => real, T[,], int, ...
-(T[,,], int, int, ...) => real, T[,,], int, ...
-(T[,,,], int, int, ...) => real, T[,,,], int, ...
-(T[,,,,], int, int, ...) => real, T[,,,,], int, ...
-(T[,,,,,], int, int, ...) => real, T[,,,,,], int, ...
-(T[,,,,,,], int, int, ...) => real, T[,,,,,,], int, ...
-Where T is any one of int, real, vector, row_vector or matrix.
-Instead supplied arguments of incompatible type: (array[] real, int, int, real, real) => real, real, int, real
+Ill-typed arguments supplied to function 'reduce_sum':
+(<F1>, real, int, real)
+where F1 = (array[] real, int, int, real, real) => real
+Available signatures:
+(<F1>, array[] real, int, real, real) => real
+  Expected 5 arguments but found 4 arguments.
   $ ../../../../../install/default/bin/stanc bad_not_slice_type_static.stan
 Semantic error in 'bad_not_slice_type_static.stan', line 12, column 12 to column 49:
    -------------------------------------------------
@@ -320,16 +340,12 @@ Semantic error in 'bad_not_slice_type_static.stan', line 12, column 12 to column
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static'. Available arguments:
-(T[], int, int, ...) => real, T[], int, ...
-(T[,], int, int, ...) => real, T[,], int, ...
-(T[,,], int, int, ...) => real, T[,,], int, ...
-(T[,,,], int, int, ...) => real, T[,,,], int, ...
-(T[,,,,], int, int, ...) => real, T[,,,,], int, ...
-(T[,,,,,], int, int, ...) => real, T[,,,,,], int, ...
-(T[,,,,,,], int, int, ...) => real, T[,,,,,,], int, ...
-Where T is any one of int, real, vector, row_vector or matrix.
-Instead supplied arguments of incompatible type: (array[] real, int, int, real, real) => real, real, int, real
+Ill-typed arguments supplied to function 'reduce_sum_static':
+(<F1>, real, int, real)
+where F1 = (array[] real, int, int, real, real) => real
+Available signatures:
+(<F1>, array[] real, int, real, real) => real
+  Expected 5 arguments but found 4 arguments.
   $ ../../../../../install/default/bin/stanc bad_return_type.stan
 Semantic error in 'bad_return_type.stan', line 12, column 12 to column 39:
    -------------------------------------------------
@@ -340,16 +356,18 @@ Semantic error in 'bad_return_type.stan', line 12, column 12 to column 39:
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum'. Available arguments:
-(T[], int, int, ...) => real, T[], int, ...
-(T[,], int, int, ...) => real, T[,], int, ...
-(T[,,], int, int, ...) => real, T[,,], int, ...
-(T[,,,], int, int, ...) => real, T[,,,], int, ...
-(T[,,,,], int, int, ...) => real, T[,,,,], int, ...
-(T[,,,,,], int, int, ...) => real, T[,,,,,], int, ...
-(T[,,,,,,], int, int, ...) => real, T[,,,,,,], int, ...
-Where T is any one of int, real, vector, row_vector or matrix.
-Instead supplied arguments of incompatible type: (array[] real, int, int) => int, array[] real, int
+Ill-typed arguments supplied to function 'reduce_sum':
+(<F1>, array[] real, int)
+where F1 = (array[] real, int, int) => int
+Available signatures:
+(<F2>, array[] real, int) => real
+where F2 = (array[] real, data int, data int) => real
+  Argument 1 must be
+   (array[] real, data int, data int) => real
+  but found
+   (array[] real, int, int) => int
+  These are not compatible because:
+    Return types are incompatible: expected real but found int
   $ ../../../../../install/default/bin/stanc bad_return_type_static.stan
 Semantic error in 'bad_return_type_static.stan', line 12, column 12 to column 46:
    -------------------------------------------------
@@ -360,16 +378,18 @@ Semantic error in 'bad_return_type_static.stan', line 12, column 12 to column 46
     13:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'reduce_sum_static'. Available arguments:
-(T[], int, int, ...) => real, T[], int, ...
-(T[,], int, int, ...) => real, T[,], int, ...
-(T[,,], int, int, ...) => real, T[,,], int, ...
-(T[,,,], int, int, ...) => real, T[,,,], int, ...
-(T[,,,,], int, int, ...) => real, T[,,,,], int, ...
-(T[,,,,,], int, int, ...) => real, T[,,,,,], int, ...
-(T[,,,,,,], int, int, ...) => real, T[,,,,,,], int, ...
-Where T is any one of int, real, vector, row_vector or matrix.
-Instead supplied arguments of incompatible type: (array[] real, int, int) => int, array[] real, int
+Ill-typed arguments supplied to function 'reduce_sum_static':
+(<F1>, array[] real, int)
+where F1 = (array[] real, int, int) => int
+Available signatures:
+(<F2>, array[] real, int) => real
+where F2 = (array[] real, data int, data int) => real
+  Argument 1 must be
+   (array[] real, data int, data int) => real
+  but found
+   (array[] real, int, int) => int
+  These are not compatible because:
+    Return types are incompatible: expected real but found int
   $ ../../../../../install/default/bin/stanc bad_userdefined_reduce_sum.stan
 Semantic error in 'bad_userdefined_reduce_sum.stan', line 2, column 7 to column 17:
    -------------------------------------------------

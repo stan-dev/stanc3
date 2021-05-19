@@ -19,7 +19,12 @@ module TypeError = struct
         string
         * UnsizedType.t list
         * (UnsizedType.autodifftype * UnsizedType.t) list
-    | IllTypedReduceSumGeneric of string * UnsizedType.t list
+        * SignatureMismatch.function_mismatch
+    | IllTypedReduceSumGeneric of
+        string
+        * UnsizedType.t list
+        * (UnsizedType.autodifftype * UnsizedType.t) list
+        * SignatureMismatch.function_mismatch
     | IllTypedVariadicODE of
         string
         * UnsizedType.t list
@@ -115,49 +120,12 @@ module TypeError = struct
         Fmt.pf ppf
           "Condition in ternary expression must be primitive int; found type=%a"
           UnsizedType.pp ut1
-    | IllTypedReduceSum (name, arg_tys, args) ->
-        let arg_types = List.map ~f:(fun (_, t) -> t) args in
-        let first, rest = List.split_n arg_types 1 in
-        let generate_reduce_sum_sig =
-          List.concat
-            [ [ UnsizedType.UFun
-                  ( List.hd_exn args :: (AutoDiffable, UInt)
-                    :: (AutoDiffable, UInt) :: List.tl_exn args
-                  , ReturnType UReal
-                  , FnPlain ) ]
-            ; first; [UInt]; rest ]
-        in
-        Fmt.pf ppf
-          "Ill-typed arguments supplied to function '%s'. Expected \
-           arguments:@[<h>%a@]\n\
-           @[<h>Instead supplied arguments of incompatible type: %a@]"
-          name
-          Fmt.(list UnsizedType.pp ~sep:comma)
-          generate_reduce_sum_sig
-          Fmt.(list UnsizedType.pp ~sep:comma)
-          arg_tys
-    | IllTypedReduceSumGeneric (name, arg_tys) ->
-        let rec n_commas n = if n = 0 then "" else "," ^ n_commas (n - 1) in
-        let type_string (a, b, c, d) i =
-          Fmt.strf "(T[%s], %a, %a, ...) => %a, T[%s], %a, ...\n"
-            (n_commas (i - 1))
-            UnsizedType.pp a UnsizedType.pp b UnsizedType.pp c
-            (n_commas (i - 1))
-            UnsizedType.pp d
-        in
-        let lines =
-          List.map
-            ~f:(fun i -> type_string (UInt, UInt, UReal, UInt) i)
-            Stan_math_signatures.reduce_sum_allowed_dimensionalities
-        in
-        Fmt.pf ppf
-          "Ill-typed arguments supplied to function '%s'. Available arguments:\n\
-           %sWhere T is any one of int, real, vector, row_vector or \
-           matrix.@[<h>Instead supplied arguments of incompatible type: %a@]"
-          name
-          (String.concat ~sep:"" lines)
-          Fmt.(list UnsizedType.pp ~sep:comma)
-          arg_tys
+    | IllTypedReduceSum (name, arg_tys, expected_args, error) ->
+        SignatureMismatch.pp_signature_mismatch ppf
+          (name, arg_tys, ([((ReturnType UReal, expected_args), error)], false))
+    | IllTypedReduceSumGeneric (name, arg_tys, expected_args, error) ->
+        SignatureMismatch.pp_signature_mismatch ppf
+          (name, arg_tys, ([((ReturnType UReal, expected_args), error)], false))
     | IllTypedVariadicODE (name, arg_tys, args, error) ->
         SignatureMismatch.pp_signature_mismatch ppf
           ( name
@@ -504,11 +472,14 @@ let illtyped_ternary_if loc predt lt rt =
 let returning_fn_expected_nonreturning_found loc name =
   TypeError (loc, TypeError.ReturningFnExpectedNonReturningFound name)
 
-let illtyped_reduce_sum loc name arg_tys args =
-  TypeError (loc, TypeError.IllTypedReduceSum (name, arg_tys, args))
+let illtyped_reduce_sum loc name arg_tys args error =
+  TypeError (loc, TypeError.IllTypedReduceSum (name, arg_tys, args, error))
 
-let illtyped_reduce_sum_generic loc name arg_tys =
-  TypeError (loc, TypeError.IllTypedReduceSumGeneric (name, arg_tys))
+let illtyped_reduce_sum_generic loc name arg_tys expected_args error =
+  TypeError
+    ( loc
+    , TypeError.IllTypedReduceSumGeneric (name, arg_tys, expected_args, error)
+    )
 
 let illtyped_variadic_ode loc name arg_tys args error =
   TypeError (loc, TypeError.IllTypedVariadicODE (name, arg_tys, args, error))
