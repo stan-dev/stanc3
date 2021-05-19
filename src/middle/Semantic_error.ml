@@ -22,7 +22,7 @@ module TypeError = struct
     | IllTypedReduceSumGeneric of string * UnsizedType.t list
     | IllTypedVariadicODE of
         string
-        * UnsizedType.t list
+        * (UnsizedType.autodifftype * UnsizedType.t) list
         * (UnsizedType.autodifftype * UnsizedType.t) list
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
@@ -154,19 +154,21 @@ module TypeError = struct
           Fmt.(list UnsizedType.pp ~sep:comma)
           arg_tys
     | IllTypedVariadicODE (name, arg_tys, args) ->
-        let types x = List.map ~f:snd x in
         let optional_tol_args =
-          if Stan_math_signatures.is_variadic_ode_tol_fn name then
-            types Stan_math_signatures.variadic_ode_tol_arg_types
+          if Stan_math_signatures.variadic_ode_adjoint_fn = name then
+            Stan_math_signatures.variadic_ode_adjoint_ctl_tol_arg_types
+          else if Stan_math_signatures.is_variadic_ode_nonadjoint_tol_fn name
+          then Stan_math_signatures.variadic_ode_tol_arg_types
           else []
         in
         let generate_ode_sig =
-          [ UnsizedType.UFun
-              ( Stan_math_signatures.variadic_ode_mandatory_fun_args @ args
-              , ReturnType Stan_math_signatures.variadic_ode_fun_return_type
-              , FnPlain ) ]
-          @ types Stan_math_signatures.variadic_ode_mandatory_arg_types
-          @ optional_tol_args @ types args
+          [ ( UnsizedType.AutoDiffable
+            , UnsizedType.UFun
+                ( Stan_math_signatures.variadic_ode_mandatory_fun_args @ args
+                , ReturnType Stan_math_signatures.variadic_ode_fun_return_type
+                , FnPlain ) ) ]
+          @ Stan_math_signatures.variadic_ode_mandatory_arg_types
+          @ optional_tol_args @ args
         in
         (* This function is used to generate the generic signature for variadic ODEs,
            i.e. with ... representing the variadic parts of the signature.
@@ -177,20 +179,24 @@ module TypeError = struct
             (with explicit types for variadic args). *)
         let variadic_ode_generic_signature =
           let optional_tol_args =
-            if Stan_math_signatures.is_variadic_ode_tol_fn name then
-              types Stan_math_signatures.variadic_ode_tol_arg_types
+            if Stan_math_signatures.variadic_ode_adjoint_fn = name then
+              Stan_math_signatures.variadic_ode_adjoint_ctl_tol_arg_types
+            else if Stan_math_signatures.is_variadic_ode_nonadjoint_tol_fn name
+            then Stan_math_signatures.variadic_ode_tol_arg_types
             else []
           in
           match
-            ( types Stan_math_signatures.variadic_ode_mandatory_arg_types
-            , types Stan_math_signatures.variadic_ode_mandatory_fun_args )
+            ( Stan_math_signatures.variadic_ode_mandatory_arg_types
+            , Stan_math_signatures.variadic_ode_mandatory_fun_args )
           with
           | arg0 :: arg1 :: arg2 :: _, fun_arg0 :: fun_arg1 :: _ ->
-              Fmt.strf "(%a, %a, ...) => %a, %a, %a, %a, %a ...\n"
-                UnsizedType.pp fun_arg0 UnsizedType.pp fun_arg1 UnsizedType.pp
+              Fmt.strf "@[<hov 1>(%a, %a, ...) => %a, %a, %a, %a, %a ...@]"
+                UnsizedType.pp_fun_arg fun_arg0 UnsizedType.pp_fun_arg fun_arg1
+                UnsizedType.pp
                 Stan_math_signatures.variadic_ode_fun_return_type
-                UnsizedType.pp arg0 UnsizedType.pp arg1 UnsizedType.pp arg2
-                Fmt.(list UnsizedType.pp ~sep:comma)
+                UnsizedType.pp_fun_arg arg0 UnsizedType.pp_fun_arg arg1
+                UnsizedType.pp_fun_arg arg2
+                Fmt.(list UnsizedType.pp_fun_arg ~sep:comma)
                 optional_tol_args
           | _ ->
               raise_s
@@ -200,26 +206,26 @@ module TypeError = struct
                    supplied to the variadic ODE function has exactly two \
                    mandatory arguments."]
         in
-        if List.length args = 0 then
+        if List.length args <> 0 then
           Fmt.pf ppf
             "Ill-typed arguments supplied to function '%s'. Expected \
              arguments:@[<h>%a@]\n\
-             @[<h>Instead supplied arguments of incompatible type:\n\
-             %a@]"
+             Instead supplied arguments of incompatible type:\n\
+             @[<h>%a@]"
             name
-            Fmt.(list UnsizedType.pp ~sep:comma)
+            Fmt.(list UnsizedType.pp_fun_arg ~sep:comma)
             generate_ode_sig
-            Fmt.(list UnsizedType.pp ~sep:comma)
+            Fmt.(list UnsizedType.pp_fun_arg ~sep:comma)
             arg_tys
         else
           Fmt.pf ppf
             "Ill-typed arguments supplied to function '%s'. @[<h>Available \
              signatures:\n\
-             %s.@]\n\
+             @[<h>%s@]\n\
              @[<h>Instead supplied arguments of incompatible type:\n\
-             %a.@]"
+             %a@]"
             name variadic_ode_generic_signature
-            Fmt.(list UnsizedType.pp ~sep:comma)
+            Fmt.(list UnsizedType.pp_fun_arg ~sep:comma)
             arg_tys
     | NotIndexable (ut, nidcs) ->
         Fmt.pf ppf
