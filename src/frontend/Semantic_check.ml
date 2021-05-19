@@ -373,83 +373,22 @@ let semantic_check_variadic_ode ~is_cond_dist ~loc id es =
     Stan_math_signatures.variadic_ode_mandatory_arg_types
     @ optional_tol_mandatory_args
   in
-  let generic_variadic_ode_semantic_error =
-    Semantic_error.illtyped_variadic_ode loc id.name
-      (List.map ~f:type_of_expr_typed es)
-      []
-    |> Validate.error
-  in
-  let fun_arg_match (x_ad, x_t) (y_ad, y_t) =
-    UnsizedType.check_of_same_type_mod_conv "" x_t y_t
-    && UnsizedType.autodifftype_can_convert x_ad y_ad
-  in
-  let fun_args_match a b =
-    List.length a = List.length b && List.for_all2_exn ~f:fun_arg_match a b
-  in
   match
     SignatureMismatch.check_variadic_args false mandatory_arg_types
       Stan_math_signatures.variadic_ode_mandatory_fun_args
       Stan_math_signatures.variadic_ode_fun_return_type (get_arg_types es)
   with
-  | None -> (
-    match es with
-    | { emeta=
-          { type_= UnsizedType.UFun (fun_args, ReturnType return_type, FnPlain); _
-          }; _ }
-      :: args ->
-        let num_of_mandatory_args =
-          if Stan_math_signatures.is_variadic_ode_tol_fn id.name then 6 else 3
-        in
-        let mandatory_args, variadic_args =
-          List.split_n args num_of_mandatory_args
-        in
-        let mandatory_fun_args, variadic_fun_args = List.split_n fun_args 2 in
-        if
-          fun_args_match mandatory_fun_args
-            Stan_math_signatures.variadic_ode_mandatory_fun_args
-          && UnsizedType.check_of_same_type_mod_conv "" return_type
-               Stan_math_signatures.variadic_ode_fun_return_type
-          && args_match mandatory_arg_types mandatory_args
-        then
-          if args_match variadic_fun_args variadic_args then
-            mk_typed_expression
-              ~expr:(mk_fun_app ~is_cond_dist (StanLib FnPlain, id, es))
-              ~ad_level:(expr_ad_lub es)
-              ~type_:Stan_math_signatures.variadic_ode_return_type ~loc
-            |> Validate.ok
-          else raise_s [%message "accepted"]
-        else raise_s [%message "accepted"]
-    | _ -> raise_s [%message "accepted"] )
-  | Some x -> (
-    match es with
-    | { emeta=
-          { type_= UnsizedType.UFun (fun_args, ReturnType return_type, FnPlain); _
-          }; _ }
-      :: args ->
-        let num_of_mandatory_args =
-          if Stan_math_signatures.is_variadic_ode_tol_fn id.name then 6 else 3
-        in
-        let mandatory_args, variadic_args =
-          List.split_n args num_of_mandatory_args
-        in
-        let mandatory_fun_args, variadic_fun_args = List.split_n fun_args 2 in
-        if
-          fun_args_match mandatory_fun_args
-            Stan_math_signatures.variadic_ode_mandatory_fun_args
-          && UnsizedType.check_of_same_type_mod_conv "" return_type
-               Stan_math_signatures.variadic_ode_fun_return_type
-          && args_match mandatory_arg_types mandatory_args
-        then
-          if args_match variadic_fun_args variadic_args then
-            raise_s
-              [%message "rejected" (x : SignatureMismatch.function_mismatch)]
-          else
-            Semantic_error.illtyped_variadic_ode loc id.name
-              (List.map ~f:type_of_expr_typed es)
-              fun_args
-            |> Validate.error
-        else generic_variadic_ode_semantic_error
-    | _ -> generic_variadic_ode_semantic_error )
+  | None ->
+      mk_typed_expression
+        ~expr:(mk_fun_app ~is_cond_dist (StanLib FnPlain, id, es))
+        ~ad_level:(expr_ad_lub es)
+        ~type_:Stan_math_signatures.variadic_ode_return_type ~loc
+      |> Validate.ok
+  | Some (expected_args, err) ->
+      Semantic_error.illtyped_variadic_ode loc id.name
+        (List.map ~f:type_of_expr_typed es)
+        expected_args err
+      |> Validate.error
 
 let fn_kind_from_application id es =
   (* We need to check an application here, rather than a mere name of the

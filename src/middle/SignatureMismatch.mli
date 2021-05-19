@@ -32,7 +32,8 @@ val check_variadic_args :
   -> (UnsizedType.autodifftype * UnsizedType.t) list
   -> UnsizedType.t
   -> (UnsizedType.autodifftype * UnsizedType.t) list
-  -> function_mismatch option
+  -> ((UnsizedType.autodifftype * UnsizedType.t) list * function_mismatch)
+     option
 
 val pp_signature_mismatch :
      Format.formatter
