@@ -373,7 +373,9 @@ let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
 
 let semantic_check_variadic_ode ~is_cond_dist ~loc id es =
   let optional_tol_mandatory_args =
-    if Stan_math_signatures.is_variadic_ode_tol_fn id.name then
+    if Stan_math_signatures.variadic_ode_adjoint_fn = id.name then
+      Stan_math_signatures.variadic_ode_adjoint_ctl_tol_arg_types
+    else if Stan_math_signatures.is_variadic_ode_nonadjoint_tol_fn id.name then
       Stan_math_signatures.variadic_ode_tol_arg_types
     else []
   in
