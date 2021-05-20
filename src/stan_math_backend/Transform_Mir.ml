@@ -177,7 +177,7 @@ let read_constrain_dims constrain_transform st =
       constrain_get_dims st
   | _ -> SizedType.get_dims st
 
-let data_serializer_read loc Program.({out_constrained_st; _}) =
+let data_serializer_read loc out_constrained_st =
   let ut = SizedType.to_unsized out_constrained_st in
   let dims = SizedType.get_dims out_constrained_st in
   let emeta = Expr.Typed.Meta.create ~loc ~type_:ut ~adlevel:AutoDiffable () in
@@ -213,7 +213,7 @@ let escape_name str =
 
 (* Make sure that all if-while-and-for bodies are safely wrapped in a block in such a way that we can insert a location update before.
    The blocks make sure that the program with the inserted location update is still well-formed C++ though.
-   *)
+*)
 let rec ensure_body_in_block (Stmt.Fixed.({pattern; _}) as stmt) =
   let in_block stmt =
     let pattern =
@@ -313,24 +313,29 @@ let gen_write ?(unconstrain = false)
 
 (* Statements to read, unconstrain and assign a parameter then write it back *)
 let data_unconstrain_transform smeta (decl_id, outvar) =
-  if not (outvar.Program.out_block = Parameters) then []
-  else
-    [ Stmt.Fixed.
-        { pattern=
-            Decl
-              { decl_adtype= UnsizedType.AutoDiffable
-              ; decl_id
-              ; decl_type= Type.Sized outvar.Program.out_constrained_st }
-        ; meta= smeta }
-    ; Stmt.Fixed.
-        { pattern=
-            Assignment
-              ( ( decl_id
-                , SizedType.to_unsized outvar.Program.out_unconstrained_st
-                , [] )
-              , data_serializer_read smeta outvar )
-        ; meta= smeta }
-    ; gen_write ~unconstrain:true (decl_id, outvar) ]
+  [ Stmt.Fixed.
+      { pattern=
+          Decl
+            { decl_adtype= UnsizedType.AutoDiffable
+            ; decl_id
+            ; decl_type= Type.Sized outvar.Program.out_constrained_st }
+      ; meta= smeta }
+  ; (let nonarray_st, array_dims =
+       SizedType.get_array_dims outvar.Program.out_constrained_st
+     in
+     Stmt.Helpers.mk_nested_for (List.rev array_dims)
+       (fun loopvars ->
+         Stmt.Fixed.
+           { meta= smeta
+           ; pattern=
+               Assignment
+                 ( ( decl_id
+                   , SizedType.to_unsized nonarray_st
+                   , List.map ~f:(fun e -> Index.Single e) (List.rev loopvars)
+                   )
+                 , data_serializer_read smeta nonarray_st ) } )
+       smeta)
+  ; gen_write ~unconstrain:true (decl_id, outvar) ]
 
 let rec contains_var_expr is_vident accum Expr.Fixed.({pattern; _}) =
   accum

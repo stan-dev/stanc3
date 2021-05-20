@@ -5302,8 +5302,12 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       std::vector<local_scalar_t__> sigma;
       sigma = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
       
-      assign(sigma, in__.read<std::vector<local_scalar_t__>>(2),
-        "assigning variable sigma");
+      {
+        sigma[(1 - 1)] = in__.read<local_scalar_t__>();
+        {
+          sigma[(2 - 1)] = in__.read<local_scalar_t__>();
+        }
+      }
       out__.write_free_lb(0, sigma);
       local_scalar_t__ theta;
       theta = DUMMY_VAR__;
@@ -5541,9 +5545,9 @@ static constexpr std::array<const char*, 12> locations_array__ =
 class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model> {
 
  private:
+  double lcm_sym8__;
   double lcm_sym7__;
-  double lcm_sym6__;
-  int lcm_sym5__;
+  int lcm_sym6__;
   int J;
   std::vector<double> y;
   std::vector<double> sigma; 
@@ -5647,8 +5651,8 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     (void) function__;  // suppress unused var warning
     
     try {
+      double lcm_sym5__;
       double lcm_sym4__;
-      double lcm_sym3__;
       local_scalar_t__ mu;
       mu = DUMMY_VAR__;
       
@@ -5705,8 +5709,8 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     (void) function__;  // suppress unused var warning
     
     try {
+      int lcm_sym3__;
       int lcm_sym2__;
-      int lcm_sym1__;
       double mu;
       mu = std::numeric_limits<double>::quiet_NaN();
       
@@ -5754,6 +5758,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
+      int lcm_sym1__;
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
@@ -5766,8 +5771,12 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       std::vector<local_scalar_t__> theta;
       theta = std::vector<local_scalar_t__>(J, DUMMY_VAR__);
       
-      assign(theta, in__.read<std::vector<local_scalar_t__>>(J),
-        "assigning variable theta");
+      if (logical_gte(J, 1)) {
+        theta[(1 - 1)] = in__.read<local_scalar_t__>();
+        for (int sym1__ = 2; sym1__ <= J; ++sym1__) {
+          theta[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+        }
+      } 
       out__.write(theta);
       local_scalar_t__ tau;
       tau = DUMMY_VAR__;
@@ -5802,9 +5811,9 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     final {
     
     param_names__.emplace_back(std::string() + "mu");
-    for (int sym8__ = 1; sym8__ <= J; ++sym8__) {
+    for (int sym9__ = 1; sym9__ <= J; ++sym9__) {
       {
-        param_names__.emplace_back(std::string() + "theta" + '.' + std::to_string(sym8__));
+        param_names__.emplace_back(std::string() + "theta" + '.' + std::to_string(sym9__));
       } 
     }
     param_names__.emplace_back(std::string() + "tau");
@@ -5825,9 +5834,9 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     final {
     
     param_names__.emplace_back(std::string() + "mu");
-    for (int sym8__ = 1; sym8__ <= J; ++sym8__) {
+    for (int sym9__ = 1; sym9__ <= J; ++sym9__) {
       {
-        param_names__.emplace_back(std::string() + "theta" + '.' + std::to_string(sym8__));
+        param_names__.emplace_back(std::string() + "theta" + '.' + std::to_string(sym9__));
       } 
     }
     param_names__.emplace_back(std::string() + "tau");
@@ -13773,12 +13782,14 @@ static constexpr std::array<const char*, 38> locations_array__ =
 class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model> {
 
  private:
+  int lcm_sym46__;
+  int lcm_sym45__;
   int lcm_sym44__;
   int lcm_sym43__;
   int lcm_sym42__;
   int lcm_sym41__;
-  int lcm_sym40__;
-  int lcm_sym39__;
+  double lcm_sym40__;
+  double lcm_sym39__;
   double lcm_sym38__;
   double lcm_sym37__;
   double lcm_sym36__;
@@ -13787,12 +13798,10 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
   double lcm_sym33__;
   double lcm_sym32__;
   double lcm_sym31__;
-  double lcm_sym30__;
-  double lcm_sym29__;
+  int lcm_sym30__;
+  int lcm_sym29__;
   int lcm_sym28__;
   int lcm_sym27__;
-  int lcm_sym26__;
-  int lcm_sym25__;
   int K;
   int I;
   int J;
@@ -13892,11 +13901,11 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         y_flat__ = context__.vals_i("y");
         current_statement__ = 26;
         pos__ = 1;
-        lcm_sym26__ = logical_gte(J, 1);
-        if (lcm_sym26__) {
+        lcm_sym28__ = logical_gte(J, 1);
+        if (lcm_sym28__) {
           {
-            lcm_sym25__ = logical_gte(I, 1);
-            if (lcm_sym25__) {
+            lcm_sym27__ = logical_gte(I, 1);
+            if (lcm_sym27__) {
               current_statement__ = 26;
               assign(y, rvalue(y_flat__, "y_flat__", index_uni(1)),
                 "assigning variable y", index_uni(1), index_uni(1));
@@ -13912,7 +13921,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
             } 
             for (int sym1__ = 2; sym1__ <= J; ++sym1__) {
               current_statement__ = 26;
-              if (lcm_sym25__) {
+              if (lcm_sym27__) {
                 current_statement__ = 26;
                 assign(y, y_flat__[(pos__ - 1)],
                   "assigning variable y", index_uni(1), index_uni(sym1__));
@@ -13930,13 +13939,13 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
             }
           }
         } else {
-          lcm_sym25__ = logical_gte(I, 1);
+          lcm_sym27__ = logical_gte(I, 1);
         }
       }
       current_statement__ = 26;
-      if (lcm_sym25__) {
+      if (lcm_sym27__) {
         current_statement__ = 26;
-        if (lcm_sym26__) {
+        if (lcm_sym28__) {
           current_statement__ = 26;
           check_greater_or_equal(function__, "y[sym1__, sym2__]",
                                  rvalue(y, "y", index_uni(1), index_uni(1)),
@@ -13950,7 +13959,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         } 
         for (int sym1__ = 2; sym1__ <= I; ++sym1__) {
           current_statement__ = 26;
-          if (lcm_sym26__) {
+          if (lcm_sym28__) {
             current_statement__ = 26;
             check_greater_or_equal(function__, "y[sym1__, sym2__]",
                                    rvalue(y, "y",
@@ -13964,9 +13973,9 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         }
       } 
       current_statement__ = 26;
-      if (lcm_sym25__) {
+      if (lcm_sym27__) {
         current_statement__ = 26;
-        if (lcm_sym26__) {
+        if (lcm_sym28__) {
           current_statement__ = 26;
           check_less_or_equal(function__, "y[sym1__, sym2__]",
                               rvalue(y, "y", index_uni(1), index_uni(1)), K);
@@ -13979,7 +13988,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         } 
         for (int sym1__ = 2; sym1__ <= I; ++sym1__) {
           current_statement__ = 26;
-          if (lcm_sym26__) {
+          if (lcm_sym28__) {
             current_statement__ = 26;
             check_less_or_equal(function__, "y[sym1__, sym2__]",
                                 rvalue(y, "y",
@@ -14007,8 +14016,8 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         alpha_flat__ = context__.vals_r("alpha");
         current_statement__ = 28;
         pos__ = 1;
-        lcm_sym27__ = logical_gte(K, 1);
-        if (lcm_sym27__) {
+        lcm_sym29__ = logical_gte(K, 1);
+        if (lcm_sym29__) {
           current_statement__ = 28;
           assign(alpha, rvalue(alpha_flat__, "alpha_flat__", index_uni(1)),
             "assigning variable alpha", index_uni(1));
@@ -14024,7 +14033,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         } 
       }
       current_statement__ = 28;
-      if (lcm_sym27__) {
+      if (lcm_sym29__) {
         current_statement__ = 28;
         check_greater_or_equal(function__, "alpha[sym1__]",
                                rvalue(alpha, "alpha", index_uni(1)), 0);
@@ -14052,9 +14061,9 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         current_statement__ = 31;
         pos__ = 1;
         current_statement__ = 31;
-        if (lcm_sym27__) {
+        if (lcm_sym29__) {
           current_statement__ = 31;
-          if (lcm_sym27__) {
+          if (lcm_sym29__) {
             current_statement__ = 31;
             assign(beta, rvalue(beta_flat__, "beta_flat__", index_uni(1)),
               "assigning variable beta", index_uni(1), index_uni(1));
@@ -14070,7 +14079,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
           } 
           for (int sym1__ = 2; sym1__ <= K; ++sym1__) {
             current_statement__ = 31;
-            if (lcm_sym27__) {
+            if (lcm_sym29__) {
               current_statement__ = 31;
               assign(beta, beta_flat__[(pos__ - 1)],
                 "assigning variable beta", index_uni(1), index_uni(sym1__));
@@ -14089,9 +14098,9 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         } 
       }
       current_statement__ = 31;
-      if (lcm_sym27__) {
+      if (lcm_sym29__) {
         current_statement__ = 31;
-        if (lcm_sym27__) {
+        if (lcm_sym29__) {
           current_statement__ = 31;
           check_greater_or_equal(function__, "beta[sym1__, sym2__]",
                                  rvalue(beta, "beta",
@@ -14105,7 +14114,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         } 
         for (int sym1__ = 2; sym1__ <= K; ++sym1__) {
           current_statement__ = 31;
-          if (lcm_sym27__) {
+          if (lcm_sym29__) {
             current_statement__ = 31;
             check_greater_or_equal(function__, "beta[sym1__, sym2__]",
                                    rvalue(beta, "beta",
@@ -14157,20 +14166,20 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     (void) function__;  // suppress unused var warning
     
     try {
+      double lcm_sym26__;
+      Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym25__;
       double lcm_sym24__;
-      Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym23__;
+      double lcm_sym23__;
       double lcm_sym22__;
       double lcm_sym21__;
       double lcm_sym20__;
-      double lcm_sym19__;
-      double lcm_sym18__;
+      Eigen::Matrix<double, -1, 1> lcm_sym19__;
+      Eigen::Matrix<double, -1, 1> lcm_sym18__;
       Eigen::Matrix<double, -1, 1> lcm_sym17__;
       Eigen::Matrix<double, -1, 1> lcm_sym16__;
-      Eigen::Matrix<double, -1, 1> lcm_sym15__;
-      Eigen::Matrix<double, -1, 1> lcm_sym14__;
+      int lcm_sym15__;
+      int lcm_sym14__;
       int lcm_sym13__;
-      int lcm_sym12__;
-      int lcm_sym11__;
       Eigen::Matrix<local_scalar_t__, -1, 1> pi;
       pi = Eigen::Matrix<local_scalar_t__, -1, 1>(K);
       stan::math::fill(pi, DUMMY_VAR__);
@@ -14188,10 +14197,10 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       {
         current_statement__ = 11;
         lp_accum__.add(dirichlet_lpdf<propto__>(pi, alpha));
-        lcm_sym12__ = logical_gte(J, 1);
-        if (lcm_sym12__) {
-          lcm_sym13__ = logical_gte(K, 1);
-          if (lcm_sym13__) {
+        lcm_sym14__ = logical_gte(J, 1);
+        if (lcm_sym14__) {
+          lcm_sym15__ = logical_gte(K, 1);
+          if (lcm_sym15__) {
             current_statement__ = 12;
             lp_accum__.add(
               dirichlet_lpdf<propto__>(
@@ -14207,7 +14216,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
           } 
           for (int j = 2; j <= J; ++j) {
             current_statement__ = 13;
-            if (lcm_sym13__) {
+            if (lcm_sym15__) {
               current_statement__ = 12;
               lp_accum__.add(
                 dirichlet_lpdf<propto__>(
@@ -14231,14 +14240,14 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
           log_q = Eigen::Matrix<local_scalar_t__, -1, 1>(K);
           stan::math::fill(log_q, DUMMY_VAR__);
           
-          assign(lcm_sym23__, stan::math::log(pi),
-            "assigning variable lcm_sym23__");
-          assign(log_q, lcm_sym23__, "assigning variable log_q");
+          assign(lcm_sym25__, stan::math::log(pi),
+            "assigning variable lcm_sym25__");
+          assign(log_q, lcm_sym25__, "assigning variable log_q");
           current_statement__ = 17;
-          if (lcm_sym12__) {
+          if (lcm_sym14__) {
             current_statement__ = 16;
             assign(log_q,
-              add(lcm_sym23__,
+              add(lcm_sym25__,
                 to_vector(
                   stan::math::log(
                     rvalue(theta, "theta",
@@ -14268,12 +14277,12 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
             stan::math::fill(log_q, DUMMY_VAR__);
             
             current_statement__ = 15;
-            assign(log_q, lcm_sym23__, "assigning variable log_q");
+            assign(log_q, lcm_sym25__, "assigning variable log_q");
             current_statement__ = 17;
-            if (lcm_sym12__) {
+            if (lcm_sym14__) {
               current_statement__ = 16;
               assign(log_q,
-                add(lcm_sym23__,
+                add(lcm_sym25__,
                   to_vector(
                     stan::math::log(
                       rvalue(theta, "theta",
@@ -14333,16 +14342,16 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     (void) function__;  // suppress unused var warning
     
     try {
+      Eigen::Matrix<double, -1, 1> lcm_sym12__;
+      Eigen::Matrix<double, -1, 1> lcm_sym11__;
       Eigen::Matrix<double, -1, 1> lcm_sym10__;
       Eigen::Matrix<double, -1, 1> lcm_sym9__;
       Eigen::Matrix<double, -1, 1> lcm_sym8__;
-      Eigen::Matrix<double, -1, 1> lcm_sym7__;
-      Eigen::Matrix<double, -1, 1> lcm_sym6__;
-      int lcm_sym5__;
+      int lcm_sym7__;
+      int lcm_sym6__;
+      Eigen::Matrix<double, -1, 1> lcm_sym5__;
       int lcm_sym4__;
-      Eigen::Matrix<double, -1, 1> lcm_sym3__;
-      int lcm_sym2__;
-      int lcm_sym1__;
+      int lcm_sym3__;
       Eigen::Matrix<double, -1, 1> pi;
       pi = Eigen::Matrix<double, -1, 1>(K);
       stan::math::fill(pi, std::numeric_limits<double>::quiet_NaN());
@@ -14378,14 +14387,14 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         log_q = Eigen::Matrix<double, -1, 1>(K);
         stan::math::fill(log_q, std::numeric_limits<double>::quiet_NaN());
         
-        assign(lcm_sym10__, stan::math::log(pi),
-          "assigning variable lcm_sym10__");
-        assign(log_q, lcm_sym10__, "assigning variable log_q");
-        lcm_sym2__ = logical_gte(J, 1);
-        if (lcm_sym2__) {
+        assign(lcm_sym12__, stan::math::log(pi),
+          "assigning variable lcm_sym12__");
+        assign(log_q, lcm_sym12__, "assigning variable log_q");
+        lcm_sym4__ = logical_gte(J, 1);
+        if (lcm_sym4__) {
           current_statement__ = 6;
           assign(log_q,
-            add(lcm_sym10__,
+            add(lcm_sym12__,
               to_vector(
                 stan::math::log(
                   rvalue(theta, "theta",
@@ -14415,12 +14424,12 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
           stan::math::fill(log_q, std::numeric_limits<double>::quiet_NaN());
           
           current_statement__ = 5;
-          assign(log_q, lcm_sym10__, "assigning variable log_q");
+          assign(log_q, lcm_sym12__, "assigning variable log_q");
           current_statement__ = 8;
-          if (lcm_sym2__) {
+          if (lcm_sym4__) {
             current_statement__ = 6;
             assign(log_q,
-              add(lcm_sym10__,
+              add(lcm_sym12__,
                 to_vector(
                   stan::math::log(
                     rvalue(theta, "theta",
@@ -14466,6 +14475,8 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
+      int lcm_sym2__;
+      int lcm_sym1__;
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
@@ -14481,9 +14492,31 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       theta = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(J, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(K)));
       stan::math::fill(theta, DUMMY_VAR__);
       
-      assign(theta,
-        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
-          J, K, K), "assigning variable theta");
+      if (logical_gte(K, 1)) {
+        lcm_sym1__ = logical_gte(J, 1);
+        if (lcm_sym1__) {
+          assign(theta, in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(K),
+            "assigning variable theta", index_uni(1), index_uni(1));
+          for (int sym2__ = 2; sym2__ <= J; ++sym2__) {
+            assign(theta,
+              in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(K),
+              "assigning variable theta", index_uni(sym2__), index_uni(1));
+          }
+        } 
+        for (int sym1__ = 2; sym1__ <= K; ++sym1__) {
+          if (lcm_sym1__) {
+            assign(theta,
+              in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(K),
+              "assigning variable theta", index_uni(1), index_uni(sym1__));
+            for (int sym2__ = 2; sym2__ <= J; ++sym2__) {
+              assign(theta,
+                in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(K),
+                "assigning variable theta", index_uni(sym2__),
+                                              index_uni(sym1__));
+            }
+          } 
+        }
+      } 
       out__.write_free_simplex(theta);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -14515,18 +14548,18 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
                                       bool emit_generated_quantities__ = true) const
     final {
     
-    for (int sym45__ = 1; sym45__ <= K; ++sym45__) {
+    for (int sym47__ = 1; sym47__ <= K; ++sym47__) {
       {
-        param_names__.emplace_back(std::string() + "pi" + '.' + std::to_string(sym45__));
+        param_names__.emplace_back(std::string() + "pi" + '.' + std::to_string(sym47__));
       } 
     }
-    for (int sym45__ = 1; sym45__ <= K; ++sym45__) {
+    for (int sym47__ = 1; sym47__ <= K; ++sym47__) {
       {
-        for (int sym46__ = 1; sym46__ <= K; ++sym46__) {
+        for (int sym48__ = 1; sym48__ <= K; ++sym48__) {
           {
-            for (int sym47__ = 1; sym47__ <= J; ++sym47__) {
+            for (int sym49__ = 1; sym49__ <= J; ++sym49__) {
               {
-                param_names__.emplace_back(std::string() + "theta" + '.' + std::to_string(sym47__) + '.' + std::to_string(sym46__) + '.' + std::to_string(sym45__));
+                param_names__.emplace_back(std::string() + "theta" + '.' + std::to_string(sym49__) + '.' + std::to_string(sym48__) + '.' + std::to_string(sym47__));
               } 
             }
           } 
@@ -14538,11 +14571,11 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     }
     
     if (emit_generated_quantities__) {
-      for (int sym45__ = 1; sym45__ <= K; ++sym45__) {
+      for (int sym47__ = 1; sym47__ <= K; ++sym47__) {
         {
-          for (int sym46__ = 1; sym46__ <= I; ++sym46__) {
+          for (int sym48__ = 1; sym48__ <= I; ++sym48__) {
             {
-              param_names__.emplace_back(std::string() + "log_Pr_z" + '.' + std::to_string(sym46__) + '.' + std::to_string(sym45__));
+              param_names__.emplace_back(std::string() + "log_Pr_z" + '.' + std::to_string(sym48__) + '.' + std::to_string(sym47__));
             } 
           }
         } 
@@ -14557,18 +14590,18 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
                                         bool emit_generated_quantities__ = true) const
     final {
     
-    for (int sym45__ = 1; sym45__ <= (K - 1); ++sym45__) {
+    for (int sym47__ = 1; sym47__ <= (K - 1); ++sym47__) {
       {
-        param_names__.emplace_back(std::string() + "pi" + '.' + std::to_string(sym45__));
+        param_names__.emplace_back(std::string() + "pi" + '.' + std::to_string(sym47__));
       } 
     }
-    for (int sym45__ = 1; sym45__ <= (K - 1); ++sym45__) {
+    for (int sym47__ = 1; sym47__ <= (K - 1); ++sym47__) {
       {
-        for (int sym46__ = 1; sym46__ <= K; ++sym46__) {
+        for (int sym48__ = 1; sym48__ <= K; ++sym48__) {
           {
-            for (int sym47__ = 1; sym47__ <= J; ++sym47__) {
+            for (int sym49__ = 1; sym49__ <= J; ++sym49__) {
               {
-                param_names__.emplace_back(std::string() + "theta" + '.' + std::to_string(sym47__) + '.' + std::to_string(sym46__) + '.' + std::to_string(sym45__));
+                param_names__.emplace_back(std::string() + "theta" + '.' + std::to_string(sym49__) + '.' + std::to_string(sym48__) + '.' + std::to_string(sym47__));
               } 
             }
           } 
@@ -14580,11 +14613,11 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     }
     
     if (emit_generated_quantities__) {
-      for (int sym45__ = 1; sym45__ <= K; ++sym45__) {
+      for (int sym47__ = 1; sym47__ <= K; ++sym47__) {
         {
-          for (int sym46__ = 1; sym46__ <= I; ++sym46__) {
+          for (int sym48__ = 1; sym48__ <= I; ++sym48__) {
             {
-              param_names__.emplace_back(std::string() + "log_Pr_z" + '.' + std::to_string(sym46__) + '.' + std::to_string(sym45__));
+              param_names__.emplace_back(std::string() + "log_Pr_z" + '.' + std::to_string(sym48__) + '.' + std::to_string(sym47__));
             } 
           }
         } 
@@ -21910,7 +21943,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      double lcm_sym3__;
+      double lcm_sym4__;
       std::vector<local_scalar_t__> theta;
       theta = std::vector<local_scalar_t__>(J, DUMMY_VAR__);
       
@@ -21954,8 +21987,8 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     (void) function__;  // suppress unused var warning
     
     try {
+      int lcm_sym3__;
       int lcm_sym2__;
-      int lcm_sym1__;
       std::vector<double> theta;
       theta = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       
@@ -21990,6 +22023,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
+      int lcm_sym1__;
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
@@ -21997,8 +22031,12 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       std::vector<local_scalar_t__> theta;
       theta = std::vector<local_scalar_t__>(J, DUMMY_VAR__);
       
-      assign(theta, in__.read<std::vector<local_scalar_t__>>(J),
-        "assigning variable theta");
+      if (logical_gte(J, 1)) {
+        theta[(1 - 1)] = in__.read<local_scalar_t__>();
+        for (int sym1__ = 2; sym1__ <= J; ++sym1__) {
+          theta[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+        }
+      } 
       out__.write(theta);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -22027,9 +22065,9 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
                                       bool emit_generated_quantities__ = true) const
     final {
     
-    for (int sym4__ = 1; sym4__ <= J; ++sym4__) {
+    for (int sym5__ = 1; sym5__ <= J; ++sym5__) {
       {
-        param_names__.emplace_back(std::string() + "theta" + '.' + std::to_string(sym4__));
+        param_names__.emplace_back(std::string() + "theta" + '.' + std::to_string(sym5__));
       } 
     }
     if (emit_transformed_parameters__) {
@@ -22048,9 +22086,9 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
                                         bool emit_generated_quantities__ = true) const
     final {
     
-    for (int sym4__ = 1; sym4__ <= J; ++sym4__) {
+    for (int sym5__ = 1; sym5__ <= J; ++sym5__) {
       {
-        param_names__.emplace_back(std::string() + "theta" + '.' + std::to_string(sym4__));
+        param_names__.emplace_back(std::string() + "theta" + '.' + std::to_string(sym5__));
       } 
     }
     if (emit_transformed_parameters__) {
@@ -28586,17 +28624,17 @@ static constexpr std::array<const char*, 33> locations_array__ =
 class stalled1_failure_model final : public model_base_crtp<stalled1_failure_model> {
 
  private:
+  double lcm_sym26__;
   double lcm_sym25__;
   double lcm_sym24__;
   double lcm_sym23__;
-  double lcm_sym22__;
+  int lcm_sym22__;
   int lcm_sym21__;
   int lcm_sym20__;
   int lcm_sym19__;
   int lcm_sym18__;
   int lcm_sym17__;
-  int lcm_sym16__;
-  Eigen::Matrix<double, -1, 1> lcm_sym15____;
+  Eigen::Matrix<double, -1, 1> lcm_sym16____;
   int I;
   std::vector<int> n;
   std::vector<int> N;
@@ -28604,7 +28642,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
   Eigen::Matrix<double, -1, 1> x2__;
   int K;
   Eigen::Matrix<double, -1, 1> x1x2__; 
-  Eigen::Map<Eigen::Matrix<double, -1, 1>> lcm_sym15__{nullptr, 0};
+  Eigen::Map<Eigen::Matrix<double, -1, 1>> lcm_sym16__{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> x1{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> x2{nullptr, 0};
   Eigen::Map<Eigen::Matrix<double, -1, 1>> x1x2{nullptr, 0};
@@ -28665,8 +28703,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       
       current_statement__ = 19;
       n = context__.vals_i("n");
-      lcm_sym16__ = logical_gte(I, 1);
-      if (lcm_sym16__) {
+      lcm_sym17__ = logical_gte(I, 1);
+      if (lcm_sym17__) {
         current_statement__ = 19;
         check_greater_or_equal(function__, "n[sym1__]",
                                rvalue(n, "n", index_uni(1)), 0);
@@ -28685,7 +28723,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       current_statement__ = 21;
       N = context__.vals_i("N");
       current_statement__ = 21;
-      if (lcm_sym16__) {
+      if (lcm_sym17__) {
         current_statement__ = 21;
         check_greater_or_equal(function__, "N[sym1__]",
                                rvalue(N, "N", index_uni(1)), 0);
@@ -28709,7 +28747,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
         current_statement__ = 23;
         pos__ = 1;
         current_statement__ = 23;
-        if (lcm_sym16__) {
+        if (lcm_sym17__) {
           current_statement__ = 23;
           assign(x1, rvalue(x1_flat__, "x1_flat__", index_uni(1)),
             "assigning variable x1", index_uni(1));
@@ -28739,7 +28777,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
         current_statement__ = 25;
         pos__ = 1;
         current_statement__ = 25;
-        if (lcm_sym16__) {
+        if (lcm_sym17__) {
           current_statement__ = 25;
           assign(x2, rvalue(x2_flat__, "x2_flat__", index_uni(1)),
             "assigning variable x2", index_uni(1));
@@ -28799,6 +28837,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     (void) function__;  // suppress unused var warning
     
     try {
+      double lcm_sym15__;
       double lcm_sym14__;
       double lcm_sym13__;
       double lcm_sym12__;
@@ -28807,9 +28846,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       double lcm_sym9__;
       double lcm_sym8__;
       double lcm_sym7__;
-      double lcm_sym6__;
-      int lcm_sym5__;
-      local_scalar_t__ lcm_sym4__;
+      int lcm_sym6__;
+      local_scalar_t__ lcm_sym5__;
       local_scalar_t__ alpha0;
       alpha0 = DUMMY_VAR__;
       
@@ -28846,8 +28884,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       local_scalar_t__ sigma;
       sigma = DUMMY_VAR__;
       
-      lcm_sym4__ = (1 / stan::math::sqrt(tau));
-      sigma = lcm_sym4__;
+      lcm_sym5__ = (1 / stan::math::sqrt(tau));
+      sigma = lcm_sym5__;
       {
         current_statement__ = 8;
         lp_accum__.add(normal_lpdf<propto__>(alpha0, 0.0, 1.0E3));
@@ -28864,7 +28902,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
           current_statement__ = 13;
           lp_accum__.add(
             normal_lpdf<propto__>(rvalue(b, "b", index_uni(1)), 0.0,
-              lcm_sym4__));
+              lcm_sym5__));
           current_statement__ = 14;
           lp_accum__.add(
             binomial_logit_lpmf<propto__>(rvalue(n, "n", index_uni(1)),
@@ -28879,7 +28917,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
             current_statement__ = 13;
             lp_accum__.add(
               normal_lpdf<propto__>(rvalue(b, "b", index_uni(i)), 0.0,
-                lcm_sym4__));
+                lcm_sym5__));
             current_statement__ = 14;
             lp_accum__.add(
               binomial_logit_lpmf<propto__>(rvalue(n, "n", index_uni(i)),
@@ -28927,9 +28965,9 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     (void) function__;  // suppress unused var warning
     
     try {
+      int lcm_sym4__;
       int lcm_sym3__;
-      int lcm_sym2__;
-      double lcm_sym1__;
+      double lcm_sym2__;
       double alpha0;
       alpha0 = std::numeric_limits<double>::quiet_NaN();
       
@@ -28976,10 +29014,10 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
             primitive_value(emit_generated_quantities__)))) {
         return ;
       } 
-      lcm_sym1__ = (1 / stan::math::sqrt(tau));
-      sigma = lcm_sym1__;
+      lcm_sym2__ = (1 / stan::math::sqrt(tau));
+      sigma = lcm_sym2__;
       if (emit_transformed_parameters__) {
-        out__.write(lcm_sym1__);
+        out__.write(lcm_sym2__);
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -29004,6 +29042,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
+      int lcm_sym1__;
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
@@ -29037,9 +29076,14 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       b = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(I, Eigen::Matrix<local_scalar_t__, -1, 1>(8));
       stan::math::fill(b, DUMMY_VAR__);
       
-      assign(b,
-        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(I, 8),
-        "assigning variable b");
+      if (logical_gte(I, 1)) {
+        assign(b, in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(8),
+          "assigning variable b", index_uni(1));
+        for (int sym1__ = 2; sym1__ <= I; ++sym1__) {
+          assign(b, in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(8),
+            "assigning variable b", index_uni(sym1__));
+        }
+      } 
       out__.write(b);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -29076,11 +29120,11 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     param_names__.emplace_back(std::string() + "alpha2");
     param_names__.emplace_back(std::string() + "alpha12");
     param_names__.emplace_back(std::string() + "tau");
-    for (int sym26__ = 1; sym26__ <= K; ++sym26__) {
+    for (int sym27__ = 1; sym27__ <= K; ++sym27__) {
       {
-        for (int sym27__ = 1; sym27__ <= I; ++sym27__) {
+        for (int sym28__ = 1; sym28__ <= I; ++sym28__) {
           {
-            param_names__.emplace_back(std::string() + "b" + '.' + std::to_string(sym27__) + '.' + std::to_string(sym26__));
+            param_names__.emplace_back(std::string() + "b" + '.' + std::to_string(sym28__) + '.' + std::to_string(sym27__));
           } 
         }
       } 
@@ -29106,11 +29150,11 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     param_names__.emplace_back(std::string() + "alpha2");
     param_names__.emplace_back(std::string() + "alpha12");
     param_names__.emplace_back(std::string() + "tau");
-    for (int sym26__ = 1; sym26__ <= K; ++sym26__) {
+    for (int sym27__ = 1; sym27__ <= K; ++sym27__) {
       {
-        for (int sym27__ = 1; sym27__ <= I; ++sym27__) {
+        for (int sym28__ = 1; sym28__ <= I; ++sym28__) {
           {
-            param_names__.emplace_back(std::string() + "b" + '.' + std::to_string(sym27__) + '.' + std::to_string(sym26__));
+            param_names__.emplace_back(std::string() + "b" + '.' + std::to_string(sym28__) + '.' + std::to_string(sym27__));
           } 
         }
       } 

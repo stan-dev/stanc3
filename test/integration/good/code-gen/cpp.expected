@@ -1541,8 +1541,9 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
       std::vector<local_scalar_t__> xx;
       xx = std::vector<local_scalar_t__>(3, DUMMY_VAR__);
       
-      assign(xx, in__.read<std::vector<local_scalar_t__>>(3),
-        "assigning variable xx");
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        xx[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write(xx);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -8423,36 +8424,43 @@ class mother_model final : public model_base_crtp<mother_model> {
       std::vector<local_scalar_t__> offset_multiplier;
       offset_multiplier = std::vector<local_scalar_t__>(5, DUMMY_VAR__);
       
-      assign(offset_multiplier, in__.read<std::vector<local_scalar_t__>>(5),
-        "assigning variable offset_multiplier");
+      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+        offset_multiplier[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write_free_offset_multiplier(1, 2, offset_multiplier);
       std::vector<local_scalar_t__> no_offset_multiplier;
       no_offset_multiplier = std::vector<local_scalar_t__>(5, DUMMY_VAR__);
       
-      assign(no_offset_multiplier,
-        in__.read<std::vector<local_scalar_t__>>(5),
-        "assigning variable no_offset_multiplier");
+      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+        no_offset_multiplier[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write_free_offset_multiplier(0, 2, no_offset_multiplier);
       std::vector<local_scalar_t__> offset_no_multiplier;
       offset_no_multiplier = std::vector<local_scalar_t__>(5, DUMMY_VAR__);
       
-      assign(offset_no_multiplier,
-        in__.read<std::vector<local_scalar_t__>>(5),
-        "assigning variable offset_no_multiplier");
+      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+        offset_no_multiplier[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write_free_offset_multiplier(3, 1, offset_no_multiplier);
       std::vector<local_scalar_t__> p_real_1d_ar;
       p_real_1d_ar = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       
-      assign(p_real_1d_ar, in__.read<std::vector<local_scalar_t__>>(N),
-        "assigning variable p_real_1d_ar");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        p_real_1d_ar[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write_free_lb(0, p_real_1d_ar);
       std::vector<std::vector<std::vector<local_scalar_t__>>> p_real_3d_ar;
       p_real_3d_ar = std::vector<std::vector<std::vector<local_scalar_t__>>>(N, std::vector<std::vector<local_scalar_t__>>(M, std::vector<local_scalar_t__>(K, DUMMY_VAR__)));
       
       
-      assign(p_real_3d_ar,
-        in__.read<std::vector<std::vector<std::vector<local_scalar_t__>>>>(N,
-          M, K), "assigning variable p_real_3d_ar");
+      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+            p_real_3d_ar[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)] = 
+                in__.read<local_scalar_t__>();
+          }
+        }
+      }
       out__.write_free_lb(0, p_real_3d_ar);
       Eigen::Matrix<local_scalar_t__, -1, 1> p_vec;
       p_vec = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
@@ -8465,17 +8473,27 @@ class mother_model final : public model_base_crtp<mother_model> {
       p_1d_vec = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       stan::math::fill(p_1d_vec, DUMMY_VAR__);
       
-      assign(p_1d_vec,
-        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, N),
-        "assigning variable p_1d_vec");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        assign(p_1d_vec,
+          in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N),
+          "assigning variable p_1d_vec", index_uni(sym1__));
+      }
       out__.write(p_1d_vec);
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> p_3d_vec;
       p_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
       stan::math::fill(p_3d_vec, DUMMY_VAR__);
       
-      assign(p_3d_vec,
-        in__.read<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>>(
-          N, M, K, N), "assigning variable p_3d_vec");
+      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+            assign(p_3d_vec,
+              in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N),
+              "assigning variable p_3d_vec", index_uni(sym3__),
+                                               index_uni(sym2__),
+                                               index_uni(sym1__));
+          }
+        }
+      }
       out__.write(p_3d_vec);
       Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vec;
       p_row_vec = Eigen::Matrix<local_scalar_t__, 1, -1>(N);
@@ -8488,17 +8506,27 @@ class mother_model final : public model_base_crtp<mother_model> {
       p_1d_row_vec = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
       stan::math::fill(p_1d_row_vec, DUMMY_VAR__);
       
-      assign(p_1d_row_vec,
-        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, N),
-        "assigning variable p_1d_row_vec");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        assign(p_1d_row_vec,
+          in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(N),
+          "assigning variable p_1d_row_vec", index_uni(sym1__));
+      }
       out__.write(p_1d_row_vec);
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>> p_3d_row_vec;
       p_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(K, Eigen::Matrix<local_scalar_t__, 1, -1>(N))));
       stan::math::fill(p_3d_row_vec, DUMMY_VAR__);
       
-      assign(p_3d_row_vec,
-        in__.read<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>>(
-          N, M, K, N), "assigning variable p_3d_row_vec");
+      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+            assign(p_3d_row_vec,
+              in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(N),
+              "assigning variable p_3d_row_vec", index_uni(sym3__),
+                                                   index_uni(sym2__),
+                                                   index_uni(sym1__));
+          }
+        }
+      }
       out__.write(p_3d_row_vec);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_mat;
       p_mat = Eigen::Matrix<local_scalar_t__, -1, -1>(5, 4);
@@ -8511,9 +8539,14 @@ class mother_model final : public model_base_crtp<mother_model> {
       p_ar_mat = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(4, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(5, Eigen::Matrix<local_scalar_t__, -1, -1>(2, 3)));
       stan::math::fill(p_ar_mat, DUMMY_VAR__);
       
-      assign(p_ar_mat,
-        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
-          4, 5, 2, 3), "assigning variable p_ar_mat");
+      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 4; ++sym2__) {
+          assign(p_ar_mat,
+            in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(2, 3),
+            "assigning variable p_ar_mat", index_uni(sym2__),
+                                             index_uni(sym1__));
+        }
+      }
       out__.write_free_lub(0, 1, p_ar_mat);
       Eigen::Matrix<local_scalar_t__, -1, 1> p_simplex;
       p_simplex = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
@@ -8526,17 +8559,27 @@ class mother_model final : public model_base_crtp<mother_model> {
       p_1d_simplex = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       stan::math::fill(p_1d_simplex, DUMMY_VAR__);
       
-      assign(p_1d_simplex,
-        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, N),
-        "assigning variable p_1d_simplex");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        assign(p_1d_simplex,
+          in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N),
+          "assigning variable p_1d_simplex", index_uni(sym1__));
+      }
       out__.write_free_simplex(p_1d_simplex);
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> p_3d_simplex;
       p_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
       stan::math::fill(p_3d_simplex, DUMMY_VAR__);
       
-      assign(p_3d_simplex,
-        in__.read<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>>(
-          N, M, K, N), "assigning variable p_3d_simplex");
+      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+            assign(p_3d_simplex,
+              in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N),
+              "assigning variable p_3d_simplex", index_uni(sym3__),
+                                                   index_uni(sym2__),
+                                                   index_uni(sym1__));
+          }
+        }
+      }
       out__.write_free_simplex(p_3d_simplex);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_cfcov_54;
       p_cfcov_54 = Eigen::Matrix<local_scalar_t__, -1, -1>(5, 4);
@@ -8558,9 +8601,11 @@ class mother_model final : public model_base_crtp<mother_model> {
       p_cfcov_33_ar = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(K, Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3));
       stan::math::fill(p_cfcov_33_ar, DUMMY_VAR__);
       
-      assign(p_cfcov_33_ar,
-        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(K, 3,
-          3), "assigning variable p_cfcov_33_ar");
+      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+        assign(p_cfcov_33_ar,
+          in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(3, 3),
+          "assigning variable p_cfcov_33_ar", index_uni(sym1__));
+      }
       out__.write_free_cholesky_factor_cov(p_cfcov_33_ar);
       Eigen::Matrix<local_scalar_t__, -1, 1> x_p;
       x_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
@@ -11584,20 +11629,23 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       std::vector<local_scalar_t__> y0_p;
       y0_p = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
       
-      assign(y0_p, in__.read<std::vector<local_scalar_t__>>(2),
-        "assigning variable y0_p");
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        y0_p[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write(y0_p);
       std::vector<local_scalar_t__> theta_p;
       theta_p = std::vector<local_scalar_t__>(1, DUMMY_VAR__);
       
-      assign(theta_p, in__.read<std::vector<local_scalar_t__>>(1),
-        "assigning variable theta_p");
+      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
+        theta_p[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write(theta_p);
       std::vector<local_scalar_t__> x_p;
       x_p = std::vector<local_scalar_t__>(1, DUMMY_VAR__);
       
-      assign(x_p, in__.read<std::vector<local_scalar_t__>>(1),
-        "assigning variable x_p");
+      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
+        x_p[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write(x_p);
       Eigen::Matrix<local_scalar_t__, -1, 1> x_p_v;
       x_p_v = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
@@ -11618,9 +11666,11 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       job_params_p = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(3, Eigen::Matrix<local_scalar_t__, -1, 1>(3));
       stan::math::fill(job_params_p, DUMMY_VAR__);
       
-      assign(job_params_p,
-        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(3, 3),
-        "assigning variable job_params_p");
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        assign(job_params_p,
+          in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(3),
+          "assigning variable job_params_p", index_uni(sym1__));
+      }
       out__.write(job_params_p);
       local_scalar_t__ x_r;
       x_r = DUMMY_VAR__;
@@ -15944,8 +15994,9 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       std::vector<local_scalar_t__> ra;
       ra = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       
-      assign(ra, in__.read<std::vector<local_scalar_t__>>(N),
-        "assigning variable ra");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        ra[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write(ra);
       Eigen::Matrix<local_scalar_t__, -1, 1> v;
       v = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
@@ -16661,14 +16712,16 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       std::vector<local_scalar_t__> z_init;
       z_init = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
       
-      assign(z_init, in__.read<std::vector<local_scalar_t__>>(2),
-        "assigning variable z_init");
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        z_init[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write_free_lb(0, z_init);
       std::vector<local_scalar_t__> sigma;
       sigma = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
       
-      assign(sigma, in__.read<std::vector<local_scalar_t__>>(2),
-        "assigning variable sigma");
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        sigma[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write_free_lb(0, sigma);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -18686,9 +18739,11 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
       L_Omega = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(nt, Eigen::Matrix<local_scalar_t__, -1, -1>(2, 2));
       stan::math::fill(L_Omega, DUMMY_VAR__);
       
-      assign(L_Omega,
-        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(nt,
-          2, 2), "assigning variable L_Omega");
+      for (int sym1__ = 1; sym1__ <= nt; ++sym1__) {
+        assign(L_Omega,
+          in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(2, 2),
+          "assigning variable L_Omega", index_uni(sym1__));
+      }
       out__.write_free_cholesky_factor_corr(L_Omega);
       Eigen::Matrix<local_scalar_t__, -1, 1> z1;
       z1 = Eigen::Matrix<local_scalar_t__, -1, 1>(NS);
@@ -19283,20 +19338,23 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
       std::vector<local_scalar_t__> y1;
       y1 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       
-      assign(y1, in__.read<std::vector<local_scalar_t__>>(N),
-        "assigning variable y1");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        y1[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write(y1);
       std::vector<local_scalar_t__> y2;
       y2 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       
-      assign(y2, in__.read<std::vector<local_scalar_t__>>(N),
-        "assigning variable y2");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        y2[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write(y2);
       std::vector<local_scalar_t__> y3;
       y3 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       
-      assign(y3, in__.read<std::vector<local_scalar_t__>>(N),
-        "assigning variable y3");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        y3[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write(y3);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -21121,123 +21179,157 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
       a8 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
       stan::math::fill(a8, DUMMY_VAR__);
       
-      assign(a8,
-        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
-          N, N, N, N), "assigning variable a8");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          assign(a8,
+            in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, N),
+            "assigning variable a8", index_uni(sym2__), index_uni(sym1__));
+        }
+      }
       out__.write(a8);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> a7;
       a7 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N)));
       stan::math::fill(a7, DUMMY_VAR__);
       
-      assign(a7,
-        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
-          N, N, N), "assigning variable a7");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          assign(a7, in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(N),
+            "assigning variable a7", index_uni(sym2__), index_uni(sym1__));
+        }
+      }
       out__.write(a7);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> a6;
       a6 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N)));
       stan::math::fill(a6, DUMMY_VAR__);
       
-      assign(a6,
-        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
-          N, N, N), "assigning variable a6");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          assign(a6, in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N),
+            "assigning variable a6", index_uni(sym2__), index_uni(sym1__));
+        }
+      }
       out__.write(a6);
       std::vector<std::vector<local_scalar_t__>> a5;
       a5 = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__));
       
       
-      assign(a5, in__.read<std::vector<std::vector<local_scalar_t__>>>(N, N),
-        "assigning variable a5");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          a5[(sym2__ - 1)][(sym1__ - 1)] = in__.read<local_scalar_t__>();
+        }
+      }
       out__.write(a5);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> a4;
       a4 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N));
       stan::math::fill(a4, DUMMY_VAR__);
       
-      assign(a4,
-        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, N,
-          N), "assigning variable a4");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        assign(a4, in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, N),
+          "assigning variable a4", index_uni(sym1__));
+      }
       out__.write(a4);
       std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> a3;
       a3 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
       stan::math::fill(a3, DUMMY_VAR__);
       
-      assign(a3,
-        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, N),
-        "assigning variable a3");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        assign(a3, in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(N),
+          "assigning variable a3", index_uni(sym1__));
+      }
       out__.write(a3);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> a2;
       a2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       stan::math::fill(a2, DUMMY_VAR__);
       
-      assign(a2,
-        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, N),
-        "assigning variable a2");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        assign(a2, in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N),
+          "assigning variable a2", index_uni(sym1__));
+      }
       out__.write(a2);
       std::vector<local_scalar_t__> a1;
       a1 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       
-      assign(a1, in__.read<std::vector<local_scalar_t__>>(N),
-        "assigning variable a1");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        a1[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write(a1);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> y8;
       y8 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
       stan::math::fill(y8, DUMMY_VAR__);
       
-      assign(y8,
-        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
-          N, N, N, N), "assigning variable y8");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          assign(y8,
+            in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, N),
+            "assigning variable y8", index_uni(sym2__), index_uni(sym1__));
+        }
+      }
       out__.write(y8);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> y7;
       y7 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N)));
       stan::math::fill(y7, DUMMY_VAR__);
       
-      assign(y7,
-        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
-          N, N, N), "assigning variable y7");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          assign(y7, in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(N),
+            "assigning variable y7", index_uni(sym2__), index_uni(sym1__));
+        }
+      }
       out__.write(y7);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> y6;
       y6 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N)));
       stan::math::fill(y6, DUMMY_VAR__);
       
-      assign(y6,
-        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
-          N, N, N), "assigning variable y6");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          assign(y6, in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N),
+            "assigning variable y6", index_uni(sym2__), index_uni(sym1__));
+        }
+      }
       out__.write(y6);
       std::vector<std::vector<local_scalar_t__>> y5;
       y5 = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__));
       
       
-      assign(y5, in__.read<std::vector<std::vector<local_scalar_t__>>>(N, N),
-        "assigning variable y5");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          y5[(sym2__ - 1)][(sym1__ - 1)] = in__.read<local_scalar_t__>();
+        }
+      }
       out__.write(y5);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> y4;
       y4 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N));
       stan::math::fill(y4, DUMMY_VAR__);
       
-      assign(y4,
-        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, N,
-          N), "assigning variable y4");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        assign(y4, in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, N),
+          "assigning variable y4", index_uni(sym1__));
+      }
       out__.write(y4);
       std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> y3;
       y3 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
       stan::math::fill(y3, DUMMY_VAR__);
       
-      assign(y3,
-        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, N),
-        "assigning variable y3");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        assign(y3, in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(N),
+          "assigning variable y3", index_uni(sym1__));
+      }
       out__.write(y3);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> y2;
       y2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       stan::math::fill(y2, DUMMY_VAR__);
       
-      assign(y2,
-        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, N),
-        "assigning variable y2");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        assign(y2, in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N),
+          "assigning variable y2", index_uni(sym1__));
+      }
       out__.write(y2);
       std::vector<local_scalar_t__> y1;
       y1 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       
-      assign(y1, in__.read<std::vector<local_scalar_t__>>(N),
-        "assigning variable y1");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        y1[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write(y1);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -25092,63 +25184,80 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       std::vector<local_scalar_t__> y1;
       y1 = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       
-      assign(y1, in__.read<std::vector<local_scalar_t__>>(N),
-        "assigning variable y1");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        y1[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write(y1);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> y2;
       y2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
       stan::math::fill(y2, DUMMY_VAR__);
       
-      assign(y2,
-        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, N),
-        "assigning variable y2");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        assign(y2, in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N),
+          "assigning variable y2", index_uni(sym1__));
+      }
       out__.write(y2);
       std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> y3;
       y3 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N));
       stan::math::fill(y3, DUMMY_VAR__);
       
-      assign(y3,
-        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, N),
-        "assigning variable y3");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        assign(y3, in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(N),
+          "assigning variable y3", index_uni(sym1__));
+      }
       out__.write(y3);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> y4;
       y4 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N));
       stan::math::fill(y4, DUMMY_VAR__);
       
-      assign(y4,
-        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, N,
-          N), "assigning variable y4");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        assign(y4, in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, N),
+          "assigning variable y4", index_uni(sym1__));
+      }
       out__.write(y4);
       std::vector<std::vector<local_scalar_t__>> y5;
       y5 = std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__));
       
       
-      assign(y5, in__.read<std::vector<std::vector<local_scalar_t__>>>(N, N),
-        "assigning variable y5");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          y5[(sym2__ - 1)][(sym1__ - 1)] = in__.read<local_scalar_t__>();
+        }
+      }
       out__.write(y5);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> y6;
       y6 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N)));
       stan::math::fill(y6, DUMMY_VAR__);
       
-      assign(y6,
-        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
-          N, N, N), "assigning variable y6");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          assign(y6, in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N),
+            "assigning variable y6", index_uni(sym2__), index_uni(sym1__));
+        }
+      }
       out__.write(y6);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> y7;
       y7 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>(N)));
       stan::math::fill(y7, DUMMY_VAR__);
       
-      assign(y7,
-        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
-          N, N, N), "assigning variable y7");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          assign(y7, in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(N),
+            "assigning variable y7", index_uni(sym2__), index_uni(sym1__));
+        }
+      }
       out__.write(y7);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> y8;
       y8 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>(N, N)));
       stan::math::fill(y8, DUMMY_VAR__);
       
-      assign(y8,
-        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
-          N, N, N, N), "assigning variable y8");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          assign(y8,
+            in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, N),
+            "assigning variable y8", index_uni(sym2__), index_uni(sym1__));
+        }
+      }
       out__.write(y8);
       local_scalar_t__ y9;
       y9 = DUMMY_VAR__;
@@ -25180,9 +25289,14 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       y17 = std::vector<std::vector<std::vector<local_scalar_t__>>>(N, std::vector<std::vector<local_scalar_t__>>(N, std::vector<local_scalar_t__>(N, DUMMY_VAR__)));
       
       
-      assign(y17,
-        in__.read<std::vector<std::vector<std::vector<local_scalar_t__>>>>(N,
-          N, N), "assigning variable y17");
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+            y17[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)] = in__.read<local_scalar_t__>(
+                                                              );
+          }
+        }
+      }
       out__.write(y17);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -28280,55 +28394,63 @@ class transform_model final : public model_base_crtp<transform_model> {
       std::vector<local_scalar_t__> p_1;
       p_1 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       
-      assign(p_1, in__.read<std::vector<local_scalar_t__>>(k),
-        "assigning variable p_1");
+      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+        p_1[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write_free_lb(rvalue(ds, "ds", index_uni(1), index_uni(1)), p_1);
       std::vector<local_scalar_t__> p_2;
       p_2 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       
-      assign(p_2, in__.read<std::vector<local_scalar_t__>>(k),
-        "assigning variable p_2");
+      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+        p_2[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write_free_ub(rvalue(ds, "ds", index_uni(1), index_uni(1)), p_2);
       std::vector<local_scalar_t__> p_3;
       p_3 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       
-      assign(p_3, in__.read<std::vector<local_scalar_t__>>(k),
-        "assigning variable p_3");
+      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+        p_3[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write_free_lub(rvalue(ds, "ds", index_uni(1), index_uni(1)),
         rvalue(ds, "ds", index_uni(1), index_uni(2)), p_3);
       std::vector<local_scalar_t__> p_4;
       p_4 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       
-      assign(p_4, in__.read<std::vector<local_scalar_t__>>(k),
-        "assigning variable p_4");
+      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+        p_4[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write_free_lub(0, rvalue(ds, "ds", index_uni(1), index_uni(2)),
         p_4);
       std::vector<local_scalar_t__> p_5;
       p_5 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       
-      assign(p_5, in__.read<std::vector<local_scalar_t__>>(k),
-        "assigning variable p_5");
+      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+        p_5[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write_free_lub(rvalue(ds, "ds", index_uni(1), index_uni(1)), 1,
         p_5);
       std::vector<local_scalar_t__> p_6;
       p_6 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       
-      assign(p_6, in__.read<std::vector<local_scalar_t__>>(k),
-        "assigning variable p_6");
+      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+        p_6[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write_free_offset_multiplier(
         rvalue(ds, "ds", index_uni(1), index_uni(1)), 1, p_6);
       std::vector<local_scalar_t__> p_7;
       p_7 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       
-      assign(p_7, in__.read<std::vector<local_scalar_t__>>(k),
-        "assigning variable p_7");
+      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+        p_7[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write_free_offset_multiplier(0,
         rvalue(ds, "ds", index_uni(1), index_uni(1)), p_7);
       std::vector<local_scalar_t__> p_8;
       p_8 = std::vector<local_scalar_t__>(k, DUMMY_VAR__);
       
-      assign(p_8, in__.read<std::vector<local_scalar_t__>>(k),
-        "assigning variable p_8");
+      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+        p_8[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write_free_offset_multiplier(
         rvalue(ds, "ds", index_uni(1), index_uni(1)),
         rvalue(ds, "ds", index_uni(1), index_uni(2)), p_8);
@@ -28336,17 +28458,24 @@ class transform_model final : public model_base_crtp<transform_model> {
       p_9 = std::vector<std::vector<local_scalar_t__>>(m, std::vector<local_scalar_t__>(k, DUMMY_VAR__));
       
       
-      assign(p_9,
-        in__.read<std::vector<std::vector<local_scalar_t__>>>(m, k),
-        "assigning variable p_9");
+      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
+          p_9[(sym2__ - 1)][(sym1__ - 1)] = in__.read<local_scalar_t__>();
+        }
+      }
       out__.write_free_lub(rvalue(ds, "ds", index_uni(1)), 1, p_9);
       std::vector<std::vector<std::vector<local_scalar_t__>>> p_10;
       p_10 = std::vector<std::vector<std::vector<local_scalar_t__>>>(n, std::vector<std::vector<local_scalar_t__>>(m, std::vector<local_scalar_t__>(k, DUMMY_VAR__)));
       
       
-      assign(p_10,
-        in__.read<std::vector<std::vector<std::vector<local_scalar_t__>>>>(n,
-          m, k), "assigning variable p_10");
+      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
+            p_10[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)] = in__.read<local_scalar_t__>(
+                                                               );
+          }
+        }
+      }
       out__.write_free_lub(0, ds, p_10);
       Eigen::Matrix<local_scalar_t__, -1, 1> pv_1;
       pv_1 = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
@@ -28360,17 +28489,21 @@ class transform_model final : public model_base_crtp<transform_model> {
       pv_2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(m, Eigen::Matrix<local_scalar_t__, -1, 1>(k));
       stan::math::fill(pv_2, DUMMY_VAR__);
       
-      assign(pv_2,
-        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(m, k),
-        "assigning variable pv_2");
+      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
+        assign(pv_2, in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k),
+          "assigning variable pv_2", index_uni(sym1__));
+      }
       out__.write_free_lb(rvalue(dv, "dv", index_uni(1)), pv_2);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> pv_3;
       pv_3 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(n, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(m, Eigen::Matrix<local_scalar_t__, -1, 1>(k)));
       stan::math::fill(pv_3, DUMMY_VAR__);
       
-      assign(pv_3,
-        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
-          n, m, k), "assigning variable pv_3");
+      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
+          assign(pv_3, in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k),
+            "assigning variable pv_3", index_uni(sym2__), index_uni(sym1__));
+        }
+      }
       out__.write_free_ub(dv, pv_3);
       Eigen::Matrix<local_scalar_t__, 1, -1> pr_1;
       pr_1 = Eigen::Matrix<local_scalar_t__, 1, -1>(k);
@@ -28384,17 +28517,21 @@ class transform_model final : public model_base_crtp<transform_model> {
       pr_2 = std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(m, Eigen::Matrix<local_scalar_t__, 1, -1>(k));
       stan::math::fill(pr_2, DUMMY_VAR__);
       
-      assign(pr_2,
-        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(m, k),
-        "assigning variable pr_2");
+      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
+        assign(pr_2, in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(k),
+          "assigning variable pr_2", index_uni(sym1__));
+      }
       out__.write_free_lb(rvalue(dr, "dr", index_uni(1)), pr_2);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> pr_3;
       pr_3 = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(n, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(m, Eigen::Matrix<local_scalar_t__, 1, -1>(k)));
       stan::math::fill(pr_3, DUMMY_VAR__);
       
-      assign(pr_3,
-        in__.read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
-          n, m, k), "assigning variable pr_3");
+      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
+          assign(pr_3, in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(k),
+            "assigning variable pr_3", index_uni(sym2__), index_uni(sym1__));
+        }
+      }
       out__.write_free_ub(dr, pr_3);
       Eigen::Matrix<local_scalar_t__, -1, -1> pm_1;
       pm_1 = Eigen::Matrix<local_scalar_t__, -1, -1>(m, k);
@@ -28407,9 +28544,11 @@ class transform_model final : public model_base_crtp<transform_model> {
       pm_2 = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, Eigen::Matrix<local_scalar_t__, -1, -1>(m, k));
       stan::math::fill(pm_2, DUMMY_VAR__);
       
-      assign(pm_2,
-        in__.read<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(n, m,
-          k), "assigning variable pm_2");
+      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
+        assign(pm_2,
+          in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(m, k),
+          "assigning variable pm_2", index_uni(sym1__));
+      }
       out__.write_free_ub(dm, pm_2);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);

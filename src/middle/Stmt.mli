@@ -131,7 +131,16 @@ module Helpers : sig
     -> ('a, 'b) Fixed.t
     -> bool
 
-  val mkfor :
+  val mk_for :
+    Expr.Typed.t -> (Expr.Typed.t -> Located.t) -> Location_span.t -> Located.t
+
+  val mk_nested_for :
+       Expr.Typed.t list
+    -> (Expr.Typed.t list -> Located.t)
+    -> Location_span.t
+    -> Located.t
+
+  val mk_for_iteratee :
        Expr.Typed.t
     -> (Expr.Typed.t -> Located.t)
     -> Expr.Typed.t

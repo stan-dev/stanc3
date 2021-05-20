@@ -6070,8 +6070,9 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       std::vector<local_scalar_t__> p_real_array;
       p_real_array = std::vector<local_scalar_t__>(d_int, DUMMY_VAR__);
       
-      assign(p_real_array, in__.read<std::vector<local_scalar_t__>>(d_int),
-        "assigning variable p_real_array");
+      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+        p_real_array[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write(p_real_array);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_matrix;
       p_matrix = Eigen::Matrix<local_scalar_t__, -1, -1>(d_int, d_int);
@@ -6795,8 +6796,9 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       std::vector<local_scalar_t__> p_real_array;
       p_real_array = std::vector<local_scalar_t__>(d_int, DUMMY_VAR__);
       
-      assign(p_real_array, in__.read<std::vector<local_scalar_t__>>(d_int),
-        "assigning variable p_real_array");
+      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
+        p_real_array[(sym1__ - 1)] = in__.read<local_scalar_t__>();
+      }
       out__.write(p_real_array);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_matrix;
       p_matrix = Eigen::Matrix<local_scalar_t__, -1, -1>(d_int, d_int);
