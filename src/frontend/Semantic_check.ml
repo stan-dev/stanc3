@@ -401,7 +401,9 @@ let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
 
 let semantic_check_variadic_ode ~is_cond_dist ~loc id es =
   let optional_tol_mandatory_args =
-    if Stan_math_signatures.is_variadic_ode_tol_fn id.name then
+    if Stan_math_signatures.variadic_ode_adjoint_fn = id.name then
+      Stan_math_signatures.variadic_ode_adjoint_ctl_tol_arg_types
+    else if Stan_math_signatures.is_variadic_ode_nonadjoint_tol_fn id.name then
       Stan_math_signatures.variadic_ode_tol_arg_types
     else []
   in
@@ -410,8 +412,7 @@ let semantic_check_variadic_ode ~is_cond_dist ~loc id es =
     @ optional_tol_mandatory_args
   in
   let generic_variadic_ode_semantic_error =
-    Semantic_error.illtyped_variadic_ode loc id.name
-      (List.map ~f:type_of_expr_typed es)
+    Semantic_error.illtyped_variadic_ode loc id.name (List.map ~f:arg_type es)
       []
     |> Validate.error
   in
@@ -427,11 +428,8 @@ let semantic_check_variadic_ode ~is_cond_dist ~loc id es =
         { type_= UnsizedType.UFun (fun_args, ReturnType return_type, FnPlain, _); _
         }; _ }
     :: args ->
-      let num_of_mandatory_args =
-        if Stan_math_signatures.is_variadic_ode_tol_fn id.name then 6 else 3
-      in
       let mandatory_args, variadic_args =
-        List.split_n args num_of_mandatory_args
+        List.split_n args (List.length mandatory_arg_types)
       in
       let mandatory_fun_args, variadic_fun_args = List.split_n fun_args 2 in
       if
@@ -449,8 +447,7 @@ let semantic_check_variadic_ode ~is_cond_dist ~loc id es =
           |> Validate.ok
         else
           Semantic_error.illtyped_variadic_ode loc id.name
-            (List.map ~f:type_of_expr_typed es)
-            fun_args
+            (List.map ~f:arg_type es) fun_args
           |> Validate.error
       else generic_variadic_ode_semantic_error
   | _ -> generic_variadic_ode_semantic_error

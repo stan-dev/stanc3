@@ -35,7 +35,8 @@ let search_index op ind =
  * @param pattern An expression pattern we recursivly search through 
  *  for the name.
  **)
-let rec query_for_name_functions var_name Expr.Fixed.({pattern; _}) =
+let rec query_for_name_functions (var_name : string) Expr.Fixed.({pattern; _})
+    =
   let query_name = query_for_name_functions var_name in
   match pattern with
   | FunApp (_, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
@@ -85,7 +86,7 @@ let rec modify_stmt_functions var_name Stmt.Fixed.({pattern; meta}) =
   let mod_expr = modify_expr_functions var_name in
   let mod_stmt = modify_stmt_functions var_name in
   let find_name = query_for_name_functions var_name in
-  let rec mod_pattern pattern =
+  let mod_pattern pattern =
     match pattern with
     | Stmt.Fixed.Pattern.NRFunApp
         (StanLib (name, kind, Common.Helpers.SoA), exprs) as func -> (
@@ -112,17 +113,12 @@ let rec modify_stmt_functions var_name Stmt.Fixed.({pattern; meta}) =
         IfElse (mod_pred, mod_true, mod_false)
     | Block stmts -> Block (List.map ~f:mod_stmt stmts)
     | SList stmts -> SList (List.map ~f:mod_stmt stmts)
-    | For
-        { loopvar
-        ; lower
-        ; upper
-        ; body= Stmt.Fixed.({pattern= sub_pattern; meta= metablock}) } ->
-        let new_pattern = mod_pattern sub_pattern in
+    | For {loopvar; lower; upper; body= inner_stmt} ->
         Stmt.Fixed.Pattern.For
           { loopvar
-          ; lower
-          ; upper
-          ; body= Stmt.Fixed.{pattern= new_pattern; meta= metablock} }
+          ; lower= mod_expr lower
+          ; upper= mod_expr upper
+          ; body= mod_stmt inner_stmt }
     | TargetPE expr -> TargetPE (mod_expr expr)
     | Return optional_expr -> (
       match optional_expr with
@@ -144,9 +140,21 @@ let find_args Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
  * I really want to move from returning true/false to return SoA/AoS
  * which should be a lot easier to read.
  *  I think we want to use this in an "is any" style context
+ *
+ * Logic for deciding if the object can use SoA is:
+ * If we find a FunApp
+ *  - If the FunApp (StanLib _) is an SoA, check if the object's name exists 
+ *     in the expressions and whether that signature supports 
+ *     SoA.
+ *  - If we find a FunApp (StanLib _) that is not SoA or is UserDefined,
+ *    check that the name, chat that the object name is not used in
+ *    the expressions for the 
+ * For Assignments
+ * If the assignee's name is in the list of known failures 
  *)
-let rec query_expr_functions var_name Expr.Fixed.({pattern; _}) =
-  let query_expr = query_expr_functions var_name in
+let rec query_expr_functions var_name known_failures Expr.Fixed.({pattern; _})
+    =
+  let query_expr = query_expr_functions var_name known_failures in
   let query_name = query_for_name_functions var_name in
   match pattern with
   | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) -> (
@@ -164,8 +172,8 @@ let rec query_expr_functions var_name Expr.Fixed.({pattern; _}) =
             in
             (not check_fun_support) || List.exists ~f:query_expr exprs )
     | CompilerInternal _ -> false
-    | Fun_kind.StanLib (_, _, Common.Helpers.AoS) -> true
-    | UserDefined _ -> true )
+    | Fun_kind.StanLib (_, _, Common.Helpers.AoS) | UserDefined _ ->
+        List.exists ~f:query_name exprs )
   | TernaryIf (predicate, texpr, fexpr) ->
       query_expr predicate || query_expr texpr || query_expr fexpr
   | Indexed (expr, indexed) ->
@@ -176,17 +184,14 @@ let rec query_expr_functions var_name Expr.Fixed.({pattern; _}) =
   | EAnd (lhs, rhs) | EOr (lhs, rhs) -> query_expr lhs || query_expr rhs
 
 (* Look through a statement to see whether it needs modified from
- * SoA to AoS.
- * TODO: The logic on when to return true/false is wrong.
- * I really want to move from returning true/false to return SoA/AoS
- * which should be a lot easier to read.
- *  I think we want to use this in an "is any" style context
+ * SoA to AoS. Returns true if object needs changed from SoA to AoS.
  *)
-let rec query_stmt_functions var_name Stmt.Fixed.({pattern; _}) =
-  let query_expr = query_expr_functions var_name in
-  let query_stmt = query_stmt_functions var_name in
+let rec query_stmt_functions var_name known_failures Stmt.Fixed.({pattern; _})
+    =
+  let query_expr = query_expr_functions var_name known_failures in
+  let query_stmt = query_stmt_functions var_name known_failures in
   let query_name = query_for_name_functions var_name in
-  let rec find_pattern pattern =
+  let find_pattern pattern =
     match pattern with
     | Stmt.Fixed.Pattern.NRFunApp
         ( StanLib
@@ -202,11 +207,14 @@ let rec query_stmt_functions var_name Stmt.Fixed.({pattern; _}) =
             in
             (not check_fun_support) || List.exists ~f:query_expr exprs )
     | NRFunApp (CompilerInternal _, _) -> false
-    | NRFunApp (UserDefined _, _) -> true
-    | NRFunApp (StanLib (_, _, AoS), _) -> true
-    | Assignment (((_ : string), (_ : UnsizedType.t), lhs), rhs) ->
+    | NRFunApp (UserDefined _, exprs) -> List.for_all ~f:query_name exprs
+    | NRFunApp (StanLib (_, _, AoS), exprs) -> List.for_all ~f:query_name exprs
+    | Assignment (((assign_name : string), (_ : UnsizedType.t), lhs), rhs) ->
         let query_index = search_index query_expr in
-        List.exists ~f:query_index lhs || query_expr rhs
+        let check_name item = assign_name = item in
+        List.exists ~f:check_name known_failures
+        || List.exists ~f:query_index lhs
+        || query_expr rhs
     | IfElse (predicate, true_stmt, op_false_stmt) ->
         let pred_query = query_expr predicate in
         let true_query = query_stmt true_stmt in
@@ -218,8 +226,8 @@ let rec query_stmt_functions var_name Stmt.Fixed.({pattern; _}) =
         pred_query || true_query || false_query
     | Block stmts -> List.exists ~f:query_stmt stmts
     | SList stmts -> List.exists ~f:query_stmt stmts
-    | For {lower; upper; body= Stmt.Fixed.({pattern= sub_pattern; _}); _} ->
-        query_expr lower || query_expr upper || find_pattern sub_pattern
+    | For {lower; upper; body= sub_stmts; _} ->
+        query_expr lower || query_expr upper || query_stmt sub_stmts
     | TargetPE expr -> query_expr expr
     | Return optional_expr -> (
       match optional_expr with Some expr -> query_expr expr | None -> false )
@@ -233,8 +241,8 @@ let rec query_stmt_functions var_name Stmt.Fixed.({pattern; _}) =
  * This is where we do the query to check if we should 
  * modify the list of statements.
  *)
-let find_any_bads var_name lst =
-  let query_stmts = query_stmt_functions var_name in
+let find_any_bads var_name lst (known_failures : string list) =
+  let query_stmts = query_stmt_functions var_name known_failures in
   match lst with
   | Some lst2 -> (
     match List.for_all ~f:query_stmts lst2 with
@@ -289,10 +297,10 @@ let rec contains_eigen (ut : UnsizedType.t) : bool =
   *  rewriting the Decl to also be an AoS and continuing our 
   *  search recursivly for other Decls.
   **)
-let rec rewrite_soa_to_aos lst =
+let rec rewrite_soa_to_aos lst (known_failures : string list) =
   let binder other lst =
     match List.tl lst with
-    | Some sub_lst -> [other] @ rewrite_soa_to_aos sub_lst
+    | Some sub_lst -> [other] @ rewrite_soa_to_aos sub_lst known_failures
     | None -> lst
   in
   let rewrite_stmt pattern meta = Stmt.Fixed.{pattern; meta} in
@@ -308,27 +316,33 @@ let rec rewrite_soa_to_aos lst =
         in
         match contains_eigen (SizedType.to_unsized obj) with
         | true -> (
-            let check_bad_match = find_any_bads decl_id (List.tl lst) in
+            let check_bad_match =
+              find_any_bads decl_id (List.tl lst) known_failures
+            in
             let swap_fun_mem_pattern decl_id lst =
               let mod_stmts = modify_stmt_functions decl_id in
               List.map ~f:mod_stmts lst
             in
             match check_bad_match with
-            | AoS ->
-                binder
-                  (rewrite_decl (swap_mem_pattern obj))
-                  (swap_fun_mem_pattern decl_id lst)
+            | AoS -> (
+              match List.tl (swap_fun_mem_pattern decl_id lst) with
+              | Some sub_lst ->
+                  [rewrite_decl (swap_mem_pattern obj)]
+                  @ rewrite_soa_to_aos sub_lst (decl_id :: known_failures)
+              | None -> lst )
             | SoA -> binder (rewrite_decl obj) lst )
         (*TODO: Figure out SArray*)
         | false -> binder (rewrite_decl obj) lst )
     | Block inner_lst ->
         let new_block =
-          Stmt.Fixed.Pattern.Block (rewrite_soa_to_aos inner_lst)
+          Stmt.Fixed.Pattern.Block
+            (rewrite_soa_to_aos inner_lst known_failures)
         in
         binder (rewrite_stmt new_block meta) lst
     | SList inner_lst ->
         let new_list =
-          Stmt.Fixed.Pattern.SList (rewrite_soa_to_aos inner_lst)
+          Stmt.Fixed.Pattern.SList
+            (rewrite_soa_to_aos inner_lst known_failures)
         in
         binder (rewrite_stmt new_list meta) lst
     (*Idk how to handle these block and whiles. I think I just want to
@@ -338,7 +352,7 @@ let rec rewrite_soa_to_aos lst =
         ; lower
         ; upper
         ; body= {pattern= Block sub_list; meta= metablock} } ->
-        let mod_sub_list = rewrite_soa_to_aos sub_list in
+        let mod_sub_list = rewrite_soa_to_aos sub_list known_failures in
         let new_for =
           Stmt.Fixed.Pattern.For
             { loopvar
@@ -353,7 +367,7 @@ let rec rewrite_soa_to_aos lst =
         ; lower
         ; upper
         ; body= {pattern= SList sub_list; meta= metablock} } ->
-        let mod_sub_list = rewrite_soa_to_aos sub_list in
+        let mod_sub_list = rewrite_soa_to_aos sub_list known_failures in
         let new_for =
           Stmt.Fixed.Pattern.For
             { loopvar
@@ -364,7 +378,7 @@ let rec rewrite_soa_to_aos lst =
         in
         binder (rewrite_stmt new_for meta) lst
     | While (predicate, {pattern= Block sub_list; meta= metablock}) ->
-        let mod_sub_list = rewrite_soa_to_aos sub_list in
+        let mod_sub_list = rewrite_soa_to_aos sub_list known_failures in
         let new_while =
           Stmt.Fixed.Pattern.While
             ( predicate
@@ -372,7 +386,7 @@ let rec rewrite_soa_to_aos lst =
         in
         binder (rewrite_stmt new_while meta) lst
     | While (predicate, {pattern= SList sub_list; meta= metablock}) ->
-        let mod_sub_list = rewrite_soa_to_aos sub_list in
+        let mod_sub_list = rewrite_soa_to_aos sub_list known_failures in
         let new_while =
           Stmt.Fixed.Pattern.While
             ( predicate
@@ -394,7 +408,7 @@ let eval_prog (mir : (Expr.Typed.t, Stmt.Located.t) Program.t) :
   { Program.functions_block= mir.functions_block
   ; input_vars= mir.input_vars
   ; prepare_data= mir.prepare_data
-  ; log_prob= rewrite_soa_to_aos mir.log_prob
+  ; log_prob= rewrite_soa_to_aos mir.log_prob []
   ; generate_quantities= mir.generate_quantities
   ; transform_inits= mir.transform_inits
   ; output_vars= mir.output_vars

@@ -30,7 +30,8 @@ let rec contains_eigen (ut : UnsizedType.t) : bool =
 let pp_filler ppf (decl_id, st, nan_type, needs_filled) =
   match (needs_filled, contains_eigen (SizedType.to_unsized st)) with
   | true, true ->
-      pf ppf "@[<hov 2>stan::math::fill(%s, %s);@]@," decl_id nan_type
+      pf ppf "@[<hov 2>stan::math::initialize_fill(%s, %s);@]@," decl_id
+        nan_type
   | _ -> ()
 
 (*Pretty print a sized type*)
@@ -77,7 +78,7 @@ let%expect_test "set size mat array" =
   [%expect
     {|
       d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3)));
-      stan::math::fill(d, std::numeric_limits<double>::quiet_NaN()); |}]
+      stan::math::initialize_fill(d, std::numeric_limits<double>::quiet_NaN()); |}]
 
 (* Initialize Data and Transformed Data 
  * This function is used in the model's constructor to
@@ -131,7 +132,7 @@ let%expect_test "set size map mat array" =
   [%expect
     {|
     darrmat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3)));
-    stan::math::fill(darrmat, std::numeric_limits<double>::quiet_NaN()); |}]
+    stan::math::initialize_fill(darrmat, std::numeric_limits<double>::quiet_NaN()); |}]
 
 let%expect_test "set size map mat" =
   let int = Expr.Helpers.int in

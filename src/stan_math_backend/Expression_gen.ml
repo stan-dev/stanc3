@@ -336,13 +336,37 @@ and gen_fun_app suffix ppf fname es =
       | true, x, f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: tl
         when Stan_math_signatures.is_variadic_ode_fn x
              && String.is_suffix fname
-                  ~suffix:Stan_math_signatures.ode_tolerances_suffix ->
+                  ~suffix:Stan_math_signatures.ode_tolerances_suffix
+             && not (Stan_math_signatures.variadic_ode_adjoint_fn = x) ->
           ( fname
           , f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: msgs
             :: tl )
       | true, x, f :: y0 :: t0 :: ts :: tl
-        when Stan_math_signatures.is_variadic_ode_fn x ->
+        when Stan_math_signatures.is_variadic_ode_fn x
+             && not (Stan_math_signatures.variadic_ode_adjoint_fn = x) ->
           (fname, f :: y0 :: t0 :: ts :: msgs :: tl)
+      | ( true
+        , x
+        , f
+          :: y0
+             :: t0
+                :: ts
+                   :: rel_tol
+                      :: abs_tol
+                         :: rel_tol_b
+                            :: abs_tol_b
+                               :: rel_tol_q
+                                  :: abs_tol_q
+                                     :: max_num_steps
+                                        :: num_checkpoints
+                                           :: interpolation_polynomial
+                                              :: solver_f :: solver_b :: tl )
+        when Stan_math_signatures.variadic_ode_adjoint_fn = x ->
+          ( fname
+          , f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: rel_tol_b :: abs_tol_b
+            :: rel_tol_q :: abs_tol_q :: max_num_steps :: num_checkpoints
+            :: interpolation_polynomial :: solver_f :: solver_b :: msgs :: tl
+          )
       | ( true
         , "map_rect"
         , {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _, _)), _); _}

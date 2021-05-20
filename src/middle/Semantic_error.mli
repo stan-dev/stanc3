@@ -47,8 +47,8 @@ val illtyped_reduce_sum_generic :
 val illtyped_variadic_ode :
      Location_span.t
   -> string
-  -> UnsizedType.t list
-  -> Stan_math_signatures.fun_arg list
+  -> (UnsizedType.autodifftype * UnsizedType.t) list
+  -> (UnsizedType.autodifftype * UnsizedType.t) list
   -> t
 
 val nonreturning_fn_expected_returning_found : Location_span.t -> string -> t
