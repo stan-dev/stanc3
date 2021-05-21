@@ -1018,7 +1018,8 @@ let block_fixing mir =
     update_expr: update an MIR expression given the variable set
     update_decl: update an MIR decl given the variable set
     extra_variables: the set of variables that are implied to be in the set by a given variable in the set (usually empty, sometimes unrepresented variables like _in__ variables)
-    initial_variables_fn: the set of variables that are known to be in the set at the start of a block. If the first argument matches `Some fundef`, `fundef` is function definition of the current block.
+    initial_variables: the initial known members of the set of variables
+    stmt: the MIR statement to optimize.
 *)
 let optimize_minimal_variables
     ~(gen_variables :
@@ -1032,43 +1033,36 @@ let optimize_minimal_variables
        -> UnsizedType.autodifftype * 'a Type.t
        -> UnsizedType.autodifftype * 'a Type.t)
     ~(extra_variables : string -> string Set.Poly.t)
-    ~(initial_variables_fn :
-          Stmt.Located.t Program.fun_def option
-       -> Stmt.Located.t
-       -> string Set.Poly.t) (mir : Program.Typed.t) =
-  let transform fundef_opt s =
-    let initial_variables = initial_variables_fn fundef_opt s in
-    let rev_flowgraph, flowgraph_to_mir =
-      Monotone_framework.inverse_flowgraph_of_stmt s
-    in
-    let fwd_flowgraph = Monotone_framework.reverse rev_flowgraph in
-    let (module Rev_Flowgraph) = rev_flowgraph in
-    let (module Fwd_Flowgraph) = fwd_flowgraph in
-    let ad_levels =
-      Monotone_framework.minimal_variables_mfp
-        (module Fwd_Flowgraph)
-        (module Rev_Flowgraph)
-        flowgraph_to_mir initial_variables gen_variables
-    in
-    let optimize_min_vars_stmt_base i stmt =
-      let variable_set =
-        let exits = (Map.find_exn ad_levels i).exit in
-        Set.Poly.union exits (union_map exits ~f:extra_variables)
-      in
-      match
-        Stmt.Fixed.Pattern.map (update_expr variable_set) (fun x -> x) stmt
-      with
-      | Decl {decl_id; decl_type; decl_adtype} ->
-          let ad', type' =
-            update_decl (Set.mem variable_set decl_id) (decl_adtype, decl_type)
-          in
-          Stmt.Fixed.Pattern.Decl {decl_adtype= ad'; decl_id; decl_type= type'}
-      | s -> s
-    in
-    map_rec_stmt_loc_num flowgraph_to_mir optimize_min_vars_stmt_base
-      (Map.find_exn flowgraph_to_mir 1)
+    ~(initial_variables : string Set.Poly.t) (stmt : Stmt.Located.t) =
+  let rev_flowgraph, flowgraph_to_mir =
+    Monotone_framework.inverse_flowgraph_of_stmt stmt
   in
-  transform_program_blockwise mir transform
+  let fwd_flowgraph = Monotone_framework.reverse rev_flowgraph in
+  let (module Rev_Flowgraph) = rev_flowgraph in
+  let (module Fwd_Flowgraph) = fwd_flowgraph in
+  let ad_levels =
+    Monotone_framework.minimal_variables_mfp
+      (module Fwd_Flowgraph)
+      (module Rev_Flowgraph)
+      flowgraph_to_mir initial_variables gen_variables
+  in
+  let optimize_min_vars_stmt_base i stmt =
+    let variable_set =
+      let exits = (Map.find_exn ad_levels i).exit in
+      Set.Poly.union exits (union_map exits ~f:extra_variables)
+    in
+    match
+      Stmt.Fixed.Pattern.map (update_expr variable_set) (fun x -> x) stmt
+    with
+    | Decl {decl_id; decl_type; decl_adtype} ->
+        let ad', type' =
+          update_decl (Set.mem variable_set decl_id) (decl_adtype, decl_type)
+        in
+        Stmt.Fixed.Pattern.Decl {decl_adtype= ad'; decl_id; decl_type= type'}
+    | s -> s
+  in
+  map_rec_stmt_loc_num flowgraph_to_mir optimize_min_vars_stmt_base
+    (Map.find_exn flowgraph_to_mir 1)
 
 let optimize_ad_levels (mir : Program.Typed.t) =
   let gen_ad_variables
@@ -1103,9 +1097,13 @@ let optimize_ad_levels (mir : Program.Typed.t) =
     let ad = if is_ad_var then UnsizedType.AutoDiffable else DataOnly in
     (ad, ty)
   in
-  optimize_minimal_variables ~gen_variables:gen_ad_variables
-    ~update_expr:update_expr_ad_levels ~update_decl ~extra_variables
-    ~initial_variables_fn:initial_ad_variables mir
+  let transform fundef_opt stmt =
+    optimize_minimal_variables ~gen_variables:gen_ad_variables
+      ~update_expr:update_expr_ad_levels ~update_decl ~extra_variables
+      ~initial_variables:(initial_ad_variables fundef_opt stmt)
+      stmt
+  in
+  transform_program_blockwise mir transform
 
 (* Apparently you need to completely copy/paste type definitions between
    ml and mli files?*)
