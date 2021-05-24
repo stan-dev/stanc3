@@ -18,7 +18,10 @@ type 'e index =
 [@@deriving sexp, hash, compare, map, fold]
 
 (** Front-end function kinds *)
-type fun_kind = StanLib | UserDefined | Closure
+type fun_kind =
+  | StanLib of bool Fun_kind.suffix
+  | UserDefined of bool Fun_kind.suffix
+  | Closure of bool Fun_kind.suffix
 [@@deriving compare, sexp, hash]
 
 type capture_info =
@@ -258,7 +261,7 @@ let rec untyped_statement_of_typed_statement ({stmt; smeta} : typed_statement)
   { stmt=
       map_statement untyped_expression_of_typed_expression
         untyped_statement_of_typed_statement untyped_lvalue_of_typed_lvalue
-        (function StanLib | UserDefined | Closure -> ())
+        (function StanLib _ | UserDefined _ | Closure _ -> ())
         Fn.ignore stmt
   ; smeta= {loc= smeta.loc} }
 

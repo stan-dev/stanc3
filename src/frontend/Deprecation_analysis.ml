@@ -93,7 +93,7 @@ let rec collect_deprecated_expr deprecated_userdefined
       @ [ ( emeta.loc
           , "The no-argument function `get_lp()` is deprecated. Use the \
              no-argument function `target()` instead." ) ]
-  | FunApp (StanLib, {name= "abs"; _}, [e])
+  | FunApp (StanLib FnPlain, {name= "abs"; _}, [e])
     when Middle.UnsizedType.is_real_type e.emeta.type_ ->
       collect_deprecated_expr deprecated_userdefined
         ( acc
@@ -101,7 +101,7 @@ let rec collect_deprecated_expr deprecated_userdefined
             , "Use of the `abs` function with real-valued arguments is \
                deprecated; use functions `fabs` instead." ) ] )
         e
-  | FunApp (StanLib, {name= "if_else"; _}, l) ->
+  | FunApp (StanLib FnPlain, {name= "if_else"; _}, l) ->
       acc
       @ [ ( emeta.loc
           , "The function `if_else` is deprecated. Use the conditional \
@@ -109,13 +109,18 @@ let rec collect_deprecated_expr deprecated_userdefined
       @ List.concat
           (List.map l ~f:(fun e ->
                collect_deprecated_expr deprecated_userdefined [] e ))
-  | FunApp (StanLib, {name; _}, l) ->
+  | FunApp (StanLib _, {name; _}, l) ->
       let w =
         if Option.is_some (String.Map.find deprecated_distributions name) then
           [ ( emeta.loc
             , name ^ " is deprecated and will be removed in the future. Use "
               ^ rename_deprecated deprecated_distributions name
               ^ " instead." ) ]
+        else if String.is_suffix name ~suffix:"_cdf" then
+          [ ( emeta.loc
+            , "Use of " ^ name
+              ^ " without a vertical bar (|) between the first two arguments \
+                 is deprecated." ) ]
         else if Option.is_some (String.Map.find deprecated_functions name) then
           [ ( emeta.loc
             , name ^ " is deprecated and will be removed in the future. Use "
@@ -135,7 +140,7 @@ let rec collect_deprecated_expr deprecated_userdefined
       @ List.concat
           (List.map l ~f:(fun e ->
                collect_deprecated_expr deprecated_userdefined [] e ))
-  | FunApp (UserDefined, {name; _}, l) ->
+  | FunApp (UserDefined _, {name; _}, l) ->
       let w =
         let type_ = String.Map.find deprecated_userdefined name in
         if Option.is_some type_ then
@@ -144,6 +149,11 @@ let rec collect_deprecated_expr deprecated_userdefined
               ^ " is deprecated, use "
               ^ update_suffix name (Option.value_exn type_)
               ^ " instead." ) ]
+        else if String.is_suffix name ~suffix:"_cdf" then
+          [ ( emeta.loc
+            , "Use of " ^ name
+              ^ " without a vertical bar (|) between the first two arguments \
+                 is deprecated." ) ]
         else []
       in
       acc @ w

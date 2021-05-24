@@ -10,7 +10,7 @@ module Fixed = struct
     type 'a t =
       | Var of string
       | Lit of litType * string
-      | FunApp of Fun_kind.t * string * 'a list
+      | FunApp of Fun_kind.t * 'a list
       | TernaryIf of 'a * 'a * 'a
       | EAnd of 'a * 'a
       | EOr of 'a * 'a
@@ -21,14 +21,15 @@ module Fixed = struct
       | Var varname -> Fmt.string ppf varname
       | Lit (Str, str) -> Fmt.pf ppf "%S" str
       | Lit (_, str) -> Fmt.string ppf str
-      | FunApp (StanLib, name, [lhs; rhs])
+      | FunApp (StanLib (name, FnPlain), [lhs; rhs])
         when Option.is_some (Operator.of_string_opt name) ->
           Fmt.pf ppf "(%a %a %a)" pp_e lhs Operator.pp
             (Option.value_exn (Operator.of_string_opt name))
             pp_e rhs
-      | FunApp (_, name, args) ->
-          Fmt.string ppf name ;
-          Fmt.(list pp_e ~sep:Fmt.comma |> parens) ppf args
+      | FunApp (fun_kind, args) ->
+          Fmt.pf ppf "%a(%a)" Fun_kind.pp fun_kind
+            Fmt.(list pp_e ~sep:Fmt.comma)
+            args
       | TernaryIf (pred, texpr, fexpr) ->
           Fmt.pf ppf {|@[%a@ %a@,%a@,%a@ %a@]|} pp_e pred pp_builtin_syntax "?"
             pp_e texpr pp_builtin_syntax ":" pp_e fexpr
@@ -112,8 +113,8 @@ module Labelled = struct
   let adlevel_of Fixed.({meta= Meta.({adlevel; _}); _}) = adlevel
   let loc_of Fixed.({meta= Meta.({loc; _}); _}) = loc
 
-  (** Traverse a typed expression adding unique labels using locally mutable 
-      state 
+  (** Traverse a typed expression adding unique labels using locally mutable
+      state
   *)
   let label ?(init = Label.Int_label.init) (expr : Typed.t) : t =
     let lbl = ref init in
@@ -135,7 +136,7 @@ module Labelled = struct
 
   and associate_pattern assocs = function
     | Fixed.Pattern.Lit _ | Var _ -> assocs
-    | FunApp (_, _, args) ->
+    | FunApp (_, args) ->
         List.fold args ~init:assocs ~f:(fun accu x -> associate ~init:accu x)
     | EAnd (e1, e2) | EOr (e1, e2) ->
         associate ~init:(associate ~init:assocs e2) e1
@@ -163,27 +164,26 @@ module Helpers = struct
 
   let binop e1 op e2 =
     { Fixed.meta= Typed.Meta.empty
-    ; pattern= FunApp (StanLib, Operator.to_string op, [e1; e2]) }
+    ; pattern= FunApp (StanLib (Operator.to_string op, FnPlain), [e1; e2]) }
 
   let loop_bottom = one
 
   let internal_funapp fn args meta =
-    { Fixed.meta
-    ; pattern= FunApp (CompilerInternal, Internal_fun.to_string fn, args) }
+    {Fixed.meta; pattern= FunApp (CompilerInternal fn, args)}
 
-  let contains_fn fn ?(init = false) e =
-    let fstr = Internal_fun.to_string fn in
+  let contains_fn_kind is_fn_kind ?(init = false) e =
     let rec aux accu Fixed.({pattern; _}) =
       accu
       ||
       match pattern with
-      | FunApp (_, name, _) when name = fstr -> true
+      | FunApp (kind, _) when is_fn_kind kind -> true
       | x -> Fixed.Pattern.fold aux accu x
     in
     aux init e
 
   let%test "expr contains fn" =
-    internal_funapp FnReadData [] () |> contains_fn FnReadData
+    internal_funapp FnReadData [] ()
+    |> contains_fn_kind (fun kind -> kind = CompilerInternal FnReadData)
 
   let rec infer_type_of_indexed ut indices =
     match (ut, indices) with

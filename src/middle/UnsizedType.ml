@@ -8,7 +8,7 @@ type t =
   | URowVector
   | UMatrix
   | UArray of t
-  | UFun of (autodifftype * t) list * returntype * (Fun_kind.suffix * bool)
+  | UFun of (autodifftype * t) list * returntype * (bool Fun_kind.suffix * bool)
   | UMathLibraryFunction
 
 and autodifftype = DataOnly | AutoDiffable
@@ -43,10 +43,10 @@ let rec unwind_array_type = function
 
 let make_suffix s args =
   match s with
-  | Fun_kind.FnPure -> ""
+  | Fun_kind.FnPlain -> ""
   | FnRng -> "_rng"
   | FnTarget -> "_lp"
-  | FnLpdf -> (
+  | FnLpdf _ -> (
     match args with (_, (UInt | UArray UInt)) :: _ -> "_lpmf" | _ -> "_lpdf" )
 
 let rec pp ppf = function
@@ -59,8 +59,8 @@ let rec pp ppf = function
       let ut2, d = unwind_array_type ut in
       let array_str = "[" ^ String.make d ',' ^ "]" in
       Fmt.pf ppf "array%s %a" array_str pp ut2
-  | UFun (argtypes, rt, (s, _)) ->
-      Fmt.pf ppf {|@[<h>%s(%a) => %a@]|} (make_suffix s argtypes)
+  | UFun (argtypes, rt, _) ->
+      Fmt.pf ppf {|@[<h>(%a) => %a@]|}
         Fmt.(list pp_fun_arg ~sep:comma)
         argtypes pp_returntype rt
   | UMathLibraryFunction ->
@@ -92,7 +92,8 @@ let check_of_same_type_mod_conv name t1 t2 =
     | UReal, UInt -> true
     | UFun (_, _, (_, false)), UFun (_, _, (_, true)) -> false
     | UFun (l1, rt1, (s1, _)), UFun (l2, rt2, (s2, _)) -> (
-        s1 = s2 && rt1 = rt2
+        (match (s1, s2) with FnLpdf _, FnLpdf _ -> true | _ -> s1 = s2)
+        && rt1 = rt2
         &&
         match
           List.for_all2
@@ -147,9 +148,8 @@ let rec is_autodiffable = function
 let is_scalar_type = function UReal | UInt -> true | _ -> false
 let is_int_type = function UInt | UArray UInt -> true | _ -> false
 
-let is_eigen_type = function
-  | UVector | URowVector | UMatrix -> true
-  | _ -> false
+let is_eigen_type ut =
+  match ut with UVector | URowVector | UMatrix -> true | _ -> false
 
 let is_fun_type = function UFun _ -> true | _ -> false
 

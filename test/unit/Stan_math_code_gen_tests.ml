@@ -16,13 +16,16 @@ let%expect_test "udf" =
   let w e = Expr.{Fixed.pattern= e; meta= Typed.Meta.empty} in
   { fdrt= None
   ; fdname= "sars"
-  ; fdsuffix= FnPure
+  ; fdsuffix= FnPlain
   ; fdcaptures= None
   ; fdargs= [(DataOnly, "x", UMatrix); (AutoDiffable, "y", URowVector)]
   ; fdbody=
       Stmt.Fixed.Pattern.Return
         (Some
-           (w @@ FunApp (StanLib, "add", [w @@ Var "x"; w @@ Lit (Int, "1")])))
+           ( w
+           @@ FunApp
+                (StanLib ("add", FnPlain), [w @@ Var "x"; w @@ Lit (Int, "1")])
+           ))
       |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
       |> Some
   ; fdloc= Location_span.empty }
@@ -47,8 +50,11 @@ let%expect_test "udf" =
     sars(const T0__& x_arg__, const T1__& y_arg__, std::ostream* pstream__) {
       using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
               stan::value_type_t<T1__>>;
+      int current_statement__ = 0;
       const auto& x = to_ref(x_arg__);
       const auto& y = to_ref(y_arg__);
+      static constexpr bool propto__ = true;
+      (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
       (void) DUMMY_VAR__;  // suppress unused var warning
       try {
@@ -68,7 +74,7 @@ let%expect_test "udf-expressions" =
   let w e = Expr.{Fixed.pattern= e; meta= Typed.Meta.empty} in
   { fdrt= Some UMatrix
   ; fdname= "sars"
-  ; fdsuffix= FnPure
+  ; fdsuffix= FnPlain
   ; fdcaptures= None
   ; fdargs=
       [ (DataOnly, "x", UMatrix)
@@ -78,7 +84,10 @@ let%expect_test "udf-expressions" =
   ; fdbody=
       Stmt.Fixed.Pattern.Return
         (Some
-           (w @@ FunApp (StanLib, "add", [w @@ Var "x"; w @@ Lit (Int, "1")])))
+           ( w
+           @@ FunApp
+                (StanLib ("add", FnPlain), [w @@ Var "x"; w @@ Lit (Int, "1")])
+           ))
       |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
       |> Some
   ; fdloc= Location_span.empty }
@@ -117,9 +126,12 @@ let%expect_test "udf-expressions" =
               stan::value_type_t<T1__>,
               stan::value_type_t<T2__>,
               T3__>;
+      int current_statement__ = 0;
       const auto& x = to_ref(x_arg__);
       const auto& y = to_ref(y_arg__);
       const auto& z = to_ref(z_arg__);
+      static constexpr bool propto__ = true;
+      (void) propto__;
       local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
       (void) DUMMY_VAR__;  // suppress unused var warning
       try {

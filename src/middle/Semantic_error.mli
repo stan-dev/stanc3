@@ -48,7 +48,7 @@ val illtyped_reduce_sum_generic :
 val illtyped_variadic_ode :
      Location_span.t
   -> string
-  -> UnsizedType.t list
+  -> (UnsizedType.autodifftype * UnsizedType.t) list
   -> (UnsizedType.autodifftype * UnsizedType.t) list
   -> t
 

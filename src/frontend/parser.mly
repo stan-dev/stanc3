@@ -27,7 +27,7 @@ let fix_argtypes =
   let suffix = Fun_kind.suffix_from_name in
   let f (ad, ut, id) =
     match ut with
-    | UFun (a, r, (FnPure, true)) ->
+    | UFun (a, r, (FnPlain, true)) ->
         (ad, UFun (a, r, (suffix id.name, true)), id)
     | ut -> (ad, ut, id)
   in
@@ -226,7 +226,7 @@ arg_type:
 
 function_type:
   | rt=return_type LPAREN args=separated_list(COMMA, arg_type) RPAREN
-    { grammar_logger "function_type" ; UnsizedType.UFun (args, rt, (Fun_kind.FnPure, true)) }
+    { grammar_logger "function_type" ; UnsizedType.UFun (args, rt, (Fun_kind.FnPlain, true)) }
 
 always(x):
   | x=x
@@ -572,10 +572,7 @@ common_expression:
     {  grammar_logger "fun_app" ;
        if
          List.length args = 1
-         && ( String.is_suffix ~suffix:"_lpdf" id.name
-              || String.is_suffix ~suffix:"_lupdf" id.name
-              || String.is_suffix ~suffix:"_lpmf" id.name
-              || String.is_suffix ~suffix:"_lupmf" id.name )
+         && List.exists ~f:(fun x -> String.is_suffix ~suffix:x id.name) Utils.conditioning_suffices
        then CondDistApp ((), id, args)
        else FunApp ((), id, args) }
   | TARGET LPAREN RPAREN

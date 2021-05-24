@@ -13,7 +13,7 @@ type fun_arg_decl = (UnsizedType.autodifftype * string * UnsizedType.t) list
 type 'a fun_def =
   { fdrt: UnsizedType.t option
   ; fdname: string
-  ; fdsuffix: Fun_kind.suffix
+  ; fdsuffix: unit Fun_kind.suffix
   ; fdcaptures:
       ( UnsizedType.capturetype
       * UnsizedType.autodifftype

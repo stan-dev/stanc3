@@ -51,17 +51,17 @@ let%expect_test "Prefix-Op-Example" =
            ((pattern
              (IfElse
               ((pattern
-                (FunApp StanLib Less__
+                (FunApp (StanLib Less__ FnPlain)
                  (((pattern (Var i))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern
-                    (FunApp StanLib PMinus__
+                    (FunApp (StanLib PMinus__ FnPlain)
                      (((pattern (Lit Int 1))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (NRFunApp CompilerInternal FnPrint__
+                (NRFunApp (CompilerInternal FnPrint)
                  (((pattern (Lit Str Badger))
                    (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
                (meta <opaque>))
@@ -105,101 +105,6 @@ let%expect_test "read param" =
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Lit Int 5))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
-      (meta <opaque>))
-     ((pattern
-       (For (loopvar sym1__)
-        (lower
-         ((pattern (Lit Int 1))
-          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-        (upper
-         ((pattern (Lit Int 5))
-          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-        (body
-         ((pattern
-           (Block
-            (((pattern
-               (For (loopvar sym2__)
-                (lower
-                 ((pattern (Lit Int 1))
-                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-                (upper
-                 ((pattern (Lit Int 10))
-                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-                (body
-                 ((pattern
-                   (Block
-                    (((pattern
-                       (For (loopvar sym3__)
-                        (lower
-                         ((pattern (Lit Int 1))
-                          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-                        (upper
-                         ((pattern (Lit Int 20))
-                          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-                        (body
-                         ((pattern
-                           (Block
-                            (((pattern
-                               (Assignment
-                                (mat (UArray UMatrix)
-                                 ((Single
-                                   ((pattern (Var sym1__))
-                                    (meta
-                                     ((type_ UInt) (loc <opaque>)
-                                      (adlevel DataOnly)))))
-                                  (Single
-                                   ((pattern (Var sym2__))
-                                    (meta
-                                     ((type_ UInt) (loc <opaque>)
-                                      (adlevel DataOnly)))))
-                                  (Single
-                                   ((pattern (Var sym3__))
-                                    (meta
-                                     ((type_ UInt) (loc <opaque>)
-                                      (adlevel DataOnly)))))))
-                                ((pattern
-                                  (FunApp CompilerInternal FnConstrain__
-                                   (((pattern
-                                      (Indexed
-                                       ((pattern (Var mat))
-                                        (meta
-                                         ((type_ (UArray UMatrix)) (loc <opaque>)
-                                          (adlevel AutoDiffable))))
-                                       ((Single
-                                         ((pattern (Var sym1__))
-                                          (meta
-                                           ((type_ UInt) (loc <opaque>)
-                                            (adlevel DataOnly)))))
-                                        (Single
-                                         ((pattern (Var sym2__))
-                                          (meta
-                                           ((type_ UInt) (loc <opaque>)
-                                            (adlevel DataOnly)))))
-                                        (Single
-                                         ((pattern (Var sym3__))
-                                          (meta
-                                           ((type_ UInt) (loc <opaque>)
-                                            (adlevel DataOnly))))))))
-                                     (meta
-                                      ((type_ UReal) (loc <opaque>)
-                                       (adlevel AutoDiffable))))
-                                    ((pattern (Lit Str lb))
-                                     (meta
-                                      ((type_ UReal) (loc <opaque>)
-                                       (adlevel DataOnly))))
-                                    ((pattern (Lit Int 0))
-                                     (meta
-                                      ((type_ UInt) (loc <opaque>)
-                                       (adlevel DataOnly)))))))
-                                 (meta
-                                  ((type_ UReal) (loc <opaque>)
-                                   (adlevel AutoDiffable))))))
-                              (meta <opaque>)))))
-                          (meta <opaque>)))))
-                      (meta <opaque>)))))
-                  (meta <opaque>)))))
-              (meta <opaque>)))))
-          (meta <opaque>)))))
       (meta <opaque>))) |}]
 
 let%expect_test "gen quant" =
@@ -212,7 +117,7 @@ let%expect_test "gen quant" =
     (((pattern
        (IfElse
         ((pattern
-          (FunApp StanLib PNot__
+          (FunApp (StanLib PNot__ FnPlain)
            (((pattern
               (EOr
                ((pattern (Var emit_transformed_parameters__))
@@ -226,7 +131,7 @@ let%expect_test "gen quant" =
      ((pattern
        (IfElse
         ((pattern
-          (FunApp StanLib PNot__
+          (FunApp (StanLib PNot__ FnPlain)
            (((pattern (Var emit_generated_quantities__))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -279,12 +184,9 @@ let%expect_test "gen quant" =
                          ((pattern
                            (Block
                             (((pattern
-                               (NRFunApp CompilerInternal FnCheck__
-                                (((pattern (Lit Str greater_or_equal))
-                                  (meta
-                                   ((type_ UReal) (loc <opaque>)
-                                    (adlevel DataOnly))))
-                                 ((pattern
+                               (NRFunApp
+                                (CompilerInternal (FnCheck greater_or_equal))
+                                (((pattern
                                    (Lit Str "mat[sym1__, sym2__, sym3__]"))
                                   (meta
                                    ((type_ UInt) (loc <opaque>)
