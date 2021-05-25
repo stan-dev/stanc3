@@ -234,9 +234,10 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      const size_t num_params__ = 0;
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
-      std::vector<double> vars_vec(num_params_r__
+      std::vector<double> vars_vec(num_params__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -253,9 +254,10 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      const size_t num_params__ = 0;
       const size_t num_transformed = 0;
       const size_t num_gen_quantities = 0;
-      vars.resize(num_params_r__
+      vars.resize(num_params__
         + (emit_transformed_parameters * num_transformed)
         + (emit_generated_quantities * num_gen_quantities));
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);

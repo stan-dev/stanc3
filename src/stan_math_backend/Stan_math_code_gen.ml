@@ -752,20 +752,22 @@ let pp_constrained_types ppf {Program.output_vars; _} =
 (** Print the generic method overloads needed in the model class. *)
 let pp_overloads ppf {Program.output_vars; _} =
   (* An expression for the number of individual parameters in a list of output variables *)
-  let num_outvars outvars =
+  let num_outvars (outvars : Expr.Typed.t Program.outvar list) =
     Expr.Helpers.binop_list
       (List.map
          ~f:(fun outvar ->
-           SizedType.num_elems_expr outvar.Program.out_unconstrained_st )
+           SizedType.num_elems_expr outvar.Program.out_constrained_st )
          outvars)
       Operator.Plus ~default:(Expr.Helpers.int 0)
   in
   (* The list of output variables that came from a particular block *)
-  let block_outvars block =
-    List.filter_map output_vars ~f:(fun (_, outvar) ->
+  let block_outvars (block : Program.io_block) =
+    List.filter_map output_vars
+      ~f:(fun ((_ : string), (outvar : Expr.Typed.t Program.outvar)) ->
         if outvar.out_block = block then Some outvar else None )
   in
   let num_gen_quantities = num_outvars (block_outvars GeneratedQuantities) in
+  let num_params = num_outvars (block_outvars Parameters) in
   let num_transformed = num_outvars (block_outvars TransformedParameters) in
   pf ppf
     {|
@@ -777,9 +779,10 @@ let pp_overloads ppf {Program.output_vars; _} =
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      const size_t num_params__ = %a;
       const size_t num_transformed = %a;
       const size_t num_gen_quantities = %a;
-      std::vector<double> vars_vec(num_params_r__
+      std::vector<double> vars_vec(num_params__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
@@ -796,9 +799,10 @@ let pp_overloads ppf {Program.output_vars; _} =
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
+      const size_t num_params__ = %a;
       const size_t num_transformed = %a;
       const size_t num_gen_quantities = %a;
-      vars.resize(num_params_r__
+      vars.resize(num_params__
         + (emit_transformed_parameters * num_transformed)
         + (emit_generated_quantities * num_gen_quantities));
       write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -829,8 +833,8 @@ let pp_overloads ppf {Program.output_vars; _} =
         params_r_vec.data(), params_r_vec.size());
     }
 |}
-    pp_expr num_transformed pp_expr num_gen_quantities pp_expr num_transformed
-    pp_expr num_gen_quantities
+    pp_expr num_params pp_expr num_transformed pp_expr num_gen_quantities
+    pp_expr num_params pp_expr num_transformed pp_expr num_gen_quantities
 
 (** Print the `get_constrained_sizedtypes` method of the model class *)
 let pp_transform_inits ppf {Program.output_vars; _} =
