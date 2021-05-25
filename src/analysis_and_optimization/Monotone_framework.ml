@@ -286,12 +286,11 @@ let reaching_definitions_lattice (type v l)
       let initial = Set.Poly.map ~f:(fun x -> (x, None)) Variables.initial
     end )
 
-(* Autodiff-level lattice *)
-let autodiff_level_lattice autodiff_variables =
+let minimal_variables_lattice initial_variables =
   powerset_lattice
     (module struct type vals = string
 
-                   let initial = autodiff_variables end)
+                   let initial = initial_variables end)
 
 (* The transfer function for a constant propagation analysis *)
 let constant_propagation_transfer
@@ -768,7 +767,12 @@ let used_not_latest_expressions_transfer
     with type labels = int and type properties = Expr.Typed.Set.t )
 
 (** The transfer function for the first forward analysis part of determining optimal ad-levels for variables *)
-let autodiff_level_fwd1_transfer
+let minimal_variables_fwd1_transfer
+    (gen_variable :
+         (int, Stmt.Located.Non_recursive.t) Map.Poly.t
+      -> int
+      -> string Set.Poly.t
+      -> string Set.Poly.t)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
   ( module struct
     type labels = int
@@ -776,16 +780,10 @@ let autodiff_level_fwd1_transfer
 
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
-      let gen =
-        match mir_node with
-        | Assignment ((x, _, _), e)
-          when Expr.Typed.adlevel_of (update_expr_ad_levels p e) = AutoDiffable
-          ->
-            Set.Poly.singleton x
-        | _ -> Set.Poly.empty
-      in
+      let gen = gen_variable flowgraph_to_mir l p in
       let kill =
         match mir_node with
+        (* This probably isn't necessary because Stan doesn't allow shadowing, right? *)
         | Decl {decl_id; decl_adtype= DataOnly; _} ->
             Set.Poly.singleton decl_id
         | _ -> Set.Poly.empty
@@ -796,16 +794,16 @@ let autodiff_level_fwd1_transfer
     with type labels = int and type properties = string Set.Poly.t )
 
 (** The transfer function for the reverse analysis part of determining optimal ad-levels for variables *)
-let autodiff_level_rev_transfer
+let minimal_variables_rev_transfer
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
-    (fwd_ad_levels : (int, string Set.Poly.t) Map.Poly.t) =
+    (fwd_min_vars : (int, string Set.Poly.t) Map.Poly.t) =
   ( module struct
     type labels = int
     type properties = string Set.Poly.t
 
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
-      let gen = Map.find_exn fwd_ad_levels l in
+      let gen = Map.find_exn fwd_min_vars l in
       let kill =
         match mir_node with
         | Decl {decl_id; _} -> Set.Poly.singleton decl_id
@@ -819,16 +817,16 @@ let autodiff_level_rev_transfer
     with type labels = int and type properties = string Set.Poly.t )
 
 (** The transfer function for the second forward analysis part of determining optimal ad-levels for variables *)
-let autodiff_level_fwd2_transfer
+let minimal_variables_fwd2_transfer
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
-    (rev_ad_levels : (int, string Set.Poly.t) Map.Poly.t) =
+    (rev_min_vars : (int, string Set.Poly.t) Map.Poly.t) =
   ( module struct
     type labels = int
     type properties = string Set.Poly.t
 
     let transfer_function l p =
       let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
-      let gen = Map.find_exn rev_ad_levels l in
+      let gen = Map.find_exn rev_min_vars l in
       let kill =
         match mir_node with
         | Decl {decl_id; _} -> Set.Poly.singleton decl_id
@@ -1106,23 +1104,30 @@ let lazy_expressions_mfp
   (latest_expr, used_not_latest_expressions_mfp)
 
 (** Perform the analysis for ad-levels, using both the fwd and reverse pass *)
-let autodiff_level_mfp
+let minimal_variables_mfp
     (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (module Rev_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
       with type labels = int)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
-    (autodiff_variables : string Set.Poly.t) =
-  let (module Lattice1) = autodiff_level_lattice autodiff_variables in
-  let (module Lattice2) = autodiff_level_lattice Set.Poly.empty in
-  let (module Transfer1) = autodiff_level_fwd1_transfer flowgraph_to_mir in
+    (initial_variables : string Set.Poly.t)
+    (gen_variable :
+         (int, Stmt.Located.Non_recursive.t) Map.Poly.t
+      -> int
+      -> string Set.Poly.t
+      -> string Set.Poly.t) =
+  let (module Lattice1) = minimal_variables_lattice initial_variables in
+  let (module Lattice2) = minimal_variables_lattice Set.Poly.empty in
+  let (module Transfer1) =
+    minimal_variables_fwd1_transfer gen_variable flowgraph_to_mir
+  in
   let (module Mf1) =
     monotone_framework (module Flowgraph) (module Lattice1) (module Transfer1)
   in
-  let fwd1_ad_levels_mfp = Mf1.mfp () in
+  let fwd1_min_vars_mfp = Mf1.mfp () in
   let (module Transfer2) =
-    autodiff_level_rev_transfer flowgraph_to_mir
-      (Map.map ~f:(fun x -> x.exit) fwd1_ad_levels_mfp)
+    minimal_variables_rev_transfer flowgraph_to_mir
+      (Map.map ~f:(fun x -> x.exit) fwd1_min_vars_mfp)
   in
   let (module Mf2) =
     monotone_framework
@@ -1130,13 +1135,13 @@ let autodiff_level_mfp
       (module Lattice2)
       (module Transfer2)
   in
-  let rev_ad_levels_mfp = Mf2.mfp () in
+  let rev_min_vars_mfp = Mf2.mfp () in
   let (module Transfer3) =
-    autodiff_level_fwd2_transfer flowgraph_to_mir
-      (Map.map ~f:(fun x -> x.entry) rev_ad_levels_mfp)
+    minimal_variables_fwd2_transfer flowgraph_to_mir
+      (Map.map ~f:(fun x -> x.entry) rev_min_vars_mfp)
   in
   let (module Mf3) =
     monotone_framework (module Flowgraph) (module Lattice2) (module Transfer3)
   in
-  let fwd2_ad_levels_mfp = Mf3.mfp () in
-  fwd2_ad_levels_mfp
+  let fwd2_min_vars_mfp = Mf3.mfp () in
+  fwd2_min_vars_mfp
