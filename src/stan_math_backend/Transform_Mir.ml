@@ -237,7 +237,8 @@ let param_read smeta
       Expr.(
         Helpers.(
           internal_funapp
-            (FnReadParam (constraint_to_string out_trans Constrain))
+            (FnReadParam
+               (constraint_to_string out_trans Constrain, SizedType.get_soa cst))
             ( transform_args
             @ ( if out_trans = Identity then []
               else [{decl_var with pattern= Var "lp__"}] )
