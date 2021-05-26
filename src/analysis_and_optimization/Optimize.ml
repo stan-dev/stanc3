@@ -1079,8 +1079,7 @@ let optimize_soa (mir : Program.Typed.t) =
     match (mir_node l).pattern with
     | Decl {decl_id; decl_type= Type.Sized _; _} -> (
         let query_stmt stmt =
-          Mir_utils.query_stmt_functions decl_id soa_variables flowgraph_to_mir
-            stmt
+          Mir_utils.query_aos_stmts decl_id soa_variables flowgraph_to_mir stmt
         in
         match Map.for_all ~f:query_stmt split_flowgraph with
         | true -> Set.Poly.singleton decl_id
@@ -1109,8 +1108,8 @@ let optimize_soa (mir : Program.Typed.t) =
   in
   let transform _ stmt =
     optimize_minimal_variables ~gen_variables:gen_aos_variables
-      ~update_expr:Mir_utils.modify_expr_functions ~update_decl
-      ~extra_variables ~initial_variables:Set.Poly.empty stmt
+      ~update_expr:Mir_utils.modify_soa_exprs ~update_decl ~extra_variables
+      ~initial_variables:Set.Poly.empty stmt
   in
   transform_program_blockwise mir transform
 

@@ -459,9 +459,8 @@ let search_index op ind =
  * @param pattern An expression pattern we recursivly search through 
  *  for the name.
  **)
-let rec query_for_name_functions (var_name : string) Expr.Fixed.({pattern; _})
-    =
-  let query_name = query_for_name_functions var_name in
+let rec query_aos_names (var_name : string) Expr.Fixed.({pattern; _}) =
+  let query_name = query_aos_names var_name in
   match pattern with
   | FunApp (_, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
       List.exists ~f:query_name exprs
@@ -474,9 +473,16 @@ let rec query_for_name_functions (var_name : string) Expr.Fixed.({pattern; _})
   | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) -> false
   | EAnd (lhs, rhs) | EOr (lhs, rhs) -> query_name lhs || query_name rhs
 
-let rec query_for_set_name_functions (var_name : string Set.Poly.t)
+(**
+ * Search through an expression for `Var name` where `name = var_name`
+ * @param var_name A Set of strings with the name of the obj
+ *  we are searching for.
+ * @param pattern An expression pattern we recursivly search through 
+ *  for the name.
+ **)
+let rec query_aos_set_names (var_name : string Set.Poly.t)
     Expr.Fixed.({pattern; _}) =
-  let query_name = query_for_set_name_functions var_name in
+  let query_name = query_aos_set_names var_name in
   match pattern with
   | FunApp (_, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
       List.exists ~f:query_name exprs
@@ -491,14 +497,23 @@ let rec query_for_set_name_functions (var_name : string Set.Poly.t)
 
 (** 
  * Modify functions expressions from SoA to AoS
+ * TODO: Docs
+ * The main issue with this right now is that if we see the failed var_name
+ * inside of any StanLib we flip the whole StanLib to AoS, but we only need to 
+ * do that if every expression's objs are all AoS. If just one argument 
+ * is still an SoA then we can actually keep the functions as SoA.
+ *
+ * The only real path in the below is on the functions, everything else is 
+ * for recursion through expressions of expressions.
  *)
-let rec modify_expr_functions (var_name : string Set.Poly.t)
+let rec modify_soa_exprs (var_name : string Set.Poly.t)
     Expr.Fixed.({pattern; meta}) =
-  let mod_expr = modify_expr_functions var_name in
-  let find_name = query_for_set_name_functions var_name in
+  let mod_expr = modify_soa_exprs var_name in
+  let find_name = query_aos_set_names var_name in
   let new_pattern =
     match pattern with
     | FunApp (kind, (exprs : 'a Expr.Fixed.t list)) ->
+        let exprs' = List.map ~f:mod_expr exprs in
         let modify_funs kind =
           match kind with
           | Fun_kind.StanLib (name, sfx, Common.Helpers.SoA) as func -> (
@@ -507,7 +522,7 @@ let rec modify_expr_functions (var_name : string Set.Poly.t)
             | false -> func )
           | _ -> kind
         in
-        Expr.Fixed.Pattern.FunApp (modify_funs kind, List.map ~f:mod_expr exprs)
+        Expr.Fixed.Pattern.FunApp (modify_funs kind, exprs')
     | TernaryIf (predicate, texpr, fexpr) ->
         TernaryIf (mod_expr predicate, mod_expr texpr, mod_expr fexpr)
     | Indexed (expr, indexed) ->
@@ -521,11 +536,12 @@ let rec modify_expr_functions (var_name : string Set.Poly.t)
   in
   Expr.Fixed.{pattern= new_pattern; meta}
 
-let rec modify_stmt_functions (var_name : string Set.Poly.t)
+(*I'm not sure I need this anymore*)
+let rec modify_soa_stmts (var_name : string Set.Poly.t)
     Stmt.Fixed.({pattern; meta}) =
-  let mod_expr = modify_expr_functions var_name in
-  let mod_stmt = modify_stmt_functions var_name in
-  let find_name = query_for_set_name_functions var_name in
+  let mod_expr = modify_soa_exprs var_name in
+  let mod_stmt = modify_soa_stmts var_name in
+  let find_name = query_aos_set_names var_name in
   let mod_pattern pattern =
     match pattern with
     | Stmt.Fixed.Pattern.NRFunApp
@@ -592,10 +608,9 @@ let find_args Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
  * For Assignments
  * If the assignee's name is in the list of known failures 
  *)
-let rec query_expr_functions var_name known_failures Expr.Fixed.({pattern; _})
-    =
-  let query_expr = query_expr_functions var_name known_failures in
-  let query_name = query_for_name_functions var_name in
+let rec query_aos_exprs var_name known_failures Expr.Fixed.({pattern; _}) =
+  let query_expr = query_aos_exprs var_name known_failures in
+  let query_name = query_aos_names var_name in
   match pattern with
   | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) -> (
     match kind with
@@ -626,13 +641,13 @@ let rec query_expr_functions var_name known_failures Expr.Fixed.({pattern; _})
 (* Look through a statement to see whether it needs modified from
  * SoA to AoS. Returns true if object needs changed from SoA to AoS.
  *)
-let rec query_stmt_functions (var_name : string)
+let rec query_aos_stmts (var_name : string)
     (known_failures : string Set.Poly.t)
     (stmt_map : (int, Stmt.Located.Non_recursive.t) Core_kernel.Map.Poly.t)
     Stmt.Located.Non_recursive.({pattern; _}) : bool =
-  let query_expr = query_expr_functions var_name known_failures in
-  let query_stmt = query_stmt_functions var_name known_failures stmt_map in
-  let query_name = query_for_name_functions var_name in
+  let query_expr = query_aos_exprs var_name known_failures in
+  let query_stmt = query_aos_stmts var_name known_failures stmt_map in
+  let query_name = query_aos_names var_name in
   let get_key key = Map.find_exn stmt_map key in
   let find_key blah = List.map ~f:get_key blah in
   let find_pattern (pattern : (Expr.Typed.t, cf_state) Stmt.Fixed.Pattern.t) =

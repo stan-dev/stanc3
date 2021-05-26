@@ -209,19 +209,19 @@ val update_expr_ad_levels : string Set.Poly.t -> Expr.Typed.t -> Expr.Typed.t
 (** Recompute all AD-levels in the metadata of an expression from the bottom up, making the variables
     in the first argument autodiffable *)
 
-val query_stmt_functions :
+val query_aos_stmts :
      string
   -> string Set.Poly.t
   -> (int, Stmt.Located.Non_recursive.t) Core_kernel.Map.Poly.t
   -> Stmt.Located.Non_recursive.t
   -> bool
 
-val modify_stmt_functions :
+val modify_soa_stmts :
      string Set.Poly.t
   -> (Expr.Typed.Meta.t, 'a) Stmt.Fixed.t
   -> (Expr.Typed.Meta.t, 'a) Stmt.Fixed.t
 
-val modify_expr_functions :
+val modify_soa_exprs :
      string Core_kernel.Set.Poly.t
   -> Expr.Typed.Meta.t Expr.Fixed.t
   -> Expr.Typed.Meta.t Expr.Fixed.t
