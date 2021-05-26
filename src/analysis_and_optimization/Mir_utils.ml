@@ -426,20 +426,18 @@ let rec update_expr_ad_levels autodiffable_variables
 and update_idx_ad_levels autodiffable_variables =
   Index.map (update_expr_ad_levels autodiffable_variables)
 
-(*
 (**
  * Modify an index's inner expressions with `op`
  * @param op a functor returning an expression
  * @param ind the Index.t to modify
  *)
- let mod_index op ind =
+let mod_index op ind =
   match ind with
   | Index.All -> Index.All
   | Single ind_expr -> Single (op ind_expr)
   | Upfrom ind_expr -> Upfrom (op ind_expr)
   | Between (expr_top, expr_bottom) -> Between (op expr_top, op expr_bottom)
   | MultiIndex exprs -> MultiIndex (op exprs)
-*)
 
 (**
  * Apply an op returning true/false to an index 
@@ -476,14 +474,28 @@ let rec query_for_name_functions (var_name : string) Expr.Fixed.({pattern; _})
   | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) -> false
   | EAnd (lhs, rhs) | EOr (lhs, rhs) -> query_name lhs || query_name rhs
 
-(*
+let rec query_for_set_name_functions (var_name : string Set.Poly.t)
+    Expr.Fixed.({pattern; _}) =
+  let query_name = query_for_set_name_functions var_name in
+  match pattern with
+  | FunApp (_, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
+      List.exists ~f:query_name exprs
+  | TernaryIf (predicate, texpr, fexpr) ->
+      query_name predicate || query_name texpr || query_name fexpr
+  | Indexed (expr, indexed) ->
+      let search_index = search_index query_name in
+      query_name expr || List.exists ~f:search_index indexed
+  | Var (name : string) -> Set.Poly.exists ~f:(fun x -> x = name) var_name
+  | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) -> false
+  | EAnd (lhs, rhs) | EOr (lhs, rhs) -> query_name lhs || query_name rhs
+
 (** 
  * Modify functions expressions from SoA to AoS
  *)
-let rec modify_expr_functions var_name Expr.Fixed.({pattern; meta}) =
+let rec modify_expr_functions (var_name : string Set.Poly.t)
+    Expr.Fixed.({pattern; meta}) =
   let mod_expr = modify_expr_functions var_name in
-  let find_name = query_for_name_functions var_name in
-  (*TODO: Only modify FunApps that have the variable name in their exprs*)
+  let find_name = query_for_set_name_functions var_name in
   let new_pattern =
     match pattern with
     | FunApp (kind, (exprs : 'a Expr.Fixed.t list)) ->
@@ -509,10 +521,11 @@ let rec modify_expr_functions var_name Expr.Fixed.({pattern; meta}) =
   in
   Expr.Fixed.{pattern= new_pattern; meta}
 
-let rec modify_stmt_functions var_name Stmt.Fixed.({pattern; meta}) =
+let rec modify_stmt_functions (var_name : string Set.Poly.t)
+    Stmt.Fixed.({pattern; meta}) =
   let mod_expr = modify_expr_functions var_name in
   let mod_stmt = modify_stmt_functions var_name in
-  let find_name = query_for_name_functions var_name in
+  let find_name = query_for_set_name_functions var_name in
   let mod_pattern pattern =
     match pattern with
     | Stmt.Fixed.Pattern.NRFunApp
@@ -556,7 +569,7 @@ let rec modify_stmt_functions var_name Stmt.Fixed.({pattern; meta}) =
     | While (predicate, body) -> While (mod_expr predicate, mod_stmt body)
   in
   Stmt.Fixed.{pattern= mod_pattern pattern; meta}
-*)
+
 (* Look through an expression and find the overall type and adlevel*)
 let find_args Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
   (adlevel, type_)

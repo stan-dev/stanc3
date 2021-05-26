@@ -216,5 +216,15 @@ val query_stmt_functions :
   -> Stmt.Located.Non_recursive.t
   -> bool
 
+val modify_stmt_functions :
+     string Set.Poly.t
+  -> (Expr.Typed.Meta.t, 'a) Stmt.Fixed.t
+  -> (Expr.Typed.Meta.t, 'a) Stmt.Fixed.t
+
+val modify_expr_functions :
+     string Core_kernel.Set.Poly.t
+  -> Expr.Typed.Meta.t Expr.Fixed.t
+  -> Expr.Typed.Meta.t Expr.Fixed.t
+
 val cleanup_empty_stmts :
   ('e, 's) Stmt.Fixed.t list -> ('e, 's) Stmt.Fixed.t list

@@ -131,10 +131,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       current_statement__ = 26;
       sum_y = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 28;
       {
-        profile<local_scalar_t__> profile__("sum", const_cast<profile_map&>(profiles__));
-        
         current_statement__ = 27;
         sum_y = sum(y);
       }
@@ -200,30 +197,18 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         L_cov = Eigen::Matrix<local_scalar_t__, -1, -1>(N, N);
         stan::math::initialize_fill(L_cov, DUMMY_VAR__);
         
-        current_statement__ = 11;
         {
-          profile<local_scalar_t__> profile__("cov_exp_quad", const_cast<profile_map&>(profiles__));
-          
           current_statement__ = 10;
           assign(cov,
             add(gp_exp_quad_cov(x, alpha, rho),
               diag_matrix(rep_vector(sigma, N))), "assigning variable cov");
         }
-        current_statement__ = 13;
         {
-          profile<local_scalar_t__> profile__("cholesky_decompose", const_cast<profile_map&>(profiles__));
-          
           current_statement__ = 12;
           assign(L_cov, cholesky_decompose(cov), "assigning variable L_cov");
         }
-        current_statement__ = 20;
         {
-          profile<local_scalar_t__> profile__("likelihood", const_cast<profile_map&>(profiles__));
-          
-          current_statement__ = 17;
           {
-            profile<local_scalar_t__> profile__("priors", const_cast<profile_map&>(profiles__));
-            
             current_statement__ = 14;
             lp_accum__.add(gamma_lpdf<propto__>(rho, 25, 4));
             current_statement__ = 15;
@@ -231,10 +216,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
             current_statement__ = 16;
             lp_accum__.add(normal_lpdf<propto__>(sigma, 0, 1));
           }
-          current_statement__ = 19;
           {
-            profile<local_scalar_t__> profile__("multi_normal_cholesky", const_cast<profile_map&>(profiles__));
-            
             current_statement__ = 18;
             lp_accum__.add(
               multi_normal_cholesky_lpdf<propto__>(y, rep_vector(0, N),
