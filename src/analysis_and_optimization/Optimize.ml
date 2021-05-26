@@ -1110,6 +1110,51 @@ let optimize_ad_levels (mir : Program.Typed.t) =
   in
   transform_program_blockwise mir transform
 
+  let optimize_soa (mir : Program.Typed.t) =
+    let gen_ad_variables
+        (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
+        (l : int) (soa_variables : string Set.Poly.t) =
+      let mir_node mir_idx = (Map.find_exn flowgraph_to_mir mir_idx) in
+      let _, _, hmmm = (Map.split flowgraph_to_mir l) in
+      match (mir_node l).pattern with
+      (** Find the Decl and then search rest of florgraph*)
+      | Decl {decl_id; decl_type= Type.Sized _; _} ->
+      let okayyy stmt = Mir_utils.query_stmt_functions decl_id soa_variables flowgraph_to_mir stmt in
+      (match Map.for_all ~f:okayyy hmmm with 
+      | true -> Set.Poly.singleton decl_id
+      | false -> Set.Poly.empty)
+      | _ -> Set.Poly.empty
+    in
+    let global_initial_ad_variables =
+      Set.Poly.of_list
+        (List.filter_map
+           ~f:(fun (v, Program.({out_block; _})) ->
+             match out_block with Parameters | TransformedParameters -> Some v | _ -> None )
+           mir.output_vars)
+    in
+    let initial_ad_variables fundef_opt _ =
+      match (fundef_opt : Stmt.Located.t Program.fun_def option) with
+      | None -> global_initial_ad_variables
+      | Some {fdargs; _} ->
+          Set.Poly.union global_initial_ad_variables
+            (Set.Poly.of_list
+               (List.filter_map fdargs ~f:(fun (_, name, ut) ->
+                    if UnsizedType.is_autodiffable ut then Some name else None )))
+    in
+    let extra_variables v = Set.Poly.singleton (v ^ "_in__") in
+    let update_decl is_ad_var (_, ty) =
+      let ad = if is_ad_var then UnsizedType.AutoDiffable else DataOnly in
+      (ad, ty)
+    in
+    let transform fundef_opt stmt =
+      optimize_minimal_variables ~gen_variables:gen_ad_variables
+        ~update_expr:update_expr_ad_levels ~update_decl ~extra_variables
+        ~initial_variables:(initial_ad_variables fundef_opt stmt)
+        stmt
+    in
+    transform_program_blockwise mir transform
+  
+
 (* Apparently you need to completely copy/paste type definitions between
    ml and mli files?*)
 type optimization_settings =
@@ -1124,7 +1169,8 @@ type optimization_settings =
   ; dead_code_elimination: bool
   ; partial_evaluation: bool
   ; lazy_code_motion: bool
-  ; optimize_ad_levels: bool }
+  ; optimize_ad_levels: bool
+  ; optimize_soa: bool }
 
 let settings_const b =
   { function_inlining= b
@@ -1138,7 +1184,8 @@ let settings_const b =
   ; dead_code_elimination= b
   ; partial_evaluation= b
   ; lazy_code_motion= b
-  ; optimize_ad_levels= b }
+  ; optimize_ad_levels= b
+  ; optimize_soa= true }
 
 let all_optimizations : optimization_settings = settings_const true
 let no_optimizations : optimization_settings = settings_const false
@@ -1182,7 +1229,8 @@ let optimization_suite ?(settings = all_optimizations) mir =
     ; (optimize_ad_levels, settings.optimize_ad_levels)
       (* Book: Machine idioms and instruction combining *)
       (* Matthijs: Everything < block_fixing *)
-    ; (block_fixing, settings.block_fixing) ]
+    ; (block_fixing, settings.block_fixing)
+    ; (optimize_soa, true) ]
   in
   let optimizations =
     List.filter_map maybe_optimizations ~f:(fun (fn, flag) ->

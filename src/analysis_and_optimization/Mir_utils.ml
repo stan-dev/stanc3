@@ -426,6 +426,249 @@ let rec update_expr_ad_levels autodiffable_variables
 and update_idx_ad_levels autodiffable_variables =
   Index.map (update_expr_ad_levels autodiffable_variables)
 
+(*
+(**
+ * Modify an index's inner expressions with `op`
+ * @param op a functor returning an expression
+ * @param ind the Index.t to modify
+ *)
+ let mod_index op ind =
+  match ind with
+  | Index.All -> Index.All
+  | Single ind_expr -> Single (op ind_expr)
+  | Upfrom ind_expr -> Upfrom (op ind_expr)
+  | Between (expr_top, expr_bottom) -> Between (op expr_top, op expr_bottom)
+  | MultiIndex exprs -> MultiIndex (op exprs)
+*)
+
+(**
+ * Apply an op returning true/false to an index 
+ * @param op a functor returning a boolean
+ * @param ind the Index.t to modify
+ *)
+let search_index op ind =
+  match ind with
+  | Index.All -> false
+  | Single ind_expr -> op ind_expr
+  | Upfrom ind_expr -> op ind_expr
+  | Between (expr_top, expr_bottom) -> op expr_top || op expr_bottom
+  | MultiIndex exprs -> op exprs
+
+(**
+ * Search through an expression for `Var name` where `name = var_name`
+ * @param var_name A string with the name of the obj
+ *  we are searching for.
+ * @param pattern An expression pattern we recursivly search through 
+ *  for the name.
+ **)
+let rec query_for_name_functions (var_name : string) Expr.Fixed.({pattern; _})
+    =
+  let query_name = query_for_name_functions var_name in
+  match pattern with
+  | FunApp (_, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
+      List.exists ~f:query_name exprs
+  | TernaryIf (predicate, texpr, fexpr) ->
+      query_name predicate || query_name texpr || query_name fexpr
+  | Indexed (expr, indexed) ->
+      let search_index = search_index query_name in
+      query_name expr || List.exists ~f:search_index indexed
+  | Var (name : string) -> name = var_name
+  | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) -> false
+  | EAnd (lhs, rhs) | EOr (lhs, rhs) -> query_name lhs || query_name rhs
+
+(*
+(** 
+ * Modify functions expressions from SoA to AoS
+ *)
+let rec modify_expr_functions var_name Expr.Fixed.({pattern; meta}) =
+  let mod_expr = modify_expr_functions var_name in
+  let find_name = query_for_name_functions var_name in
+  (*TODO: Only modify FunApps that have the variable name in their exprs*)
+  let new_pattern =
+    match pattern with
+    | FunApp (kind, (exprs : 'a Expr.Fixed.t list)) ->
+        let modify_funs kind =
+          match kind with
+          | Fun_kind.StanLib (name, sfx, Common.Helpers.SoA) as func -> (
+            match List.exists ~f:find_name exprs with
+            | true -> Fun_kind.StanLib (name, sfx, Common.Helpers.AoS)
+            | false -> func )
+          | _ -> kind
+        in
+        Expr.Fixed.Pattern.FunApp (modify_funs kind, List.map ~f:mod_expr exprs)
+    | TernaryIf (predicate, texpr, fexpr) ->
+        TernaryIf (mod_expr predicate, mod_expr texpr, mod_expr fexpr)
+    | Indexed (expr, indexed) ->
+        let query_index = mod_index mod_expr in
+        Indexed (mod_expr expr, List.map ~f:query_index indexed)
+    | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string))
+      ->
+        pattern
+    | EAnd (lhs, rhs) -> EAnd (mod_expr lhs, mod_expr rhs)
+    | EOr (lhs, rhs) -> EOr (mod_expr lhs, mod_expr rhs)
+  in
+  Expr.Fixed.{pattern= new_pattern; meta}
+
+let rec modify_stmt_functions var_name Stmt.Fixed.({pattern; meta}) =
+  let mod_expr = modify_expr_functions var_name in
+  let mod_stmt = modify_stmt_functions var_name in
+  let find_name = query_for_name_functions var_name in
+  let mod_pattern pattern =
+    match pattern with
+    | Stmt.Fixed.Pattern.NRFunApp
+        (StanLib (name, kind, Common.Helpers.SoA), exprs) as func -> (
+      match List.exists ~f:find_name exprs with
+      | true ->
+          Stmt.Fixed.Pattern.NRFunApp
+            ( StanLib (name, kind, Common.Helpers.AoS)
+            , List.map ~f:mod_expr exprs )
+      | false -> func )
+    (*TODO: User defined functions here*)
+    | NRFunApp (fun_kind, expr) ->
+        NRFunApp (fun_kind, List.map ~f:mod_expr expr)
+    | Assignment (((name : string), (ut : UnsizedType.t), lhs), rhs) ->
+        let query_index = mod_index mod_expr in
+        Assignment ((name, ut, List.map ~f:query_index lhs), mod_expr rhs)
+    | IfElse (predicate, true_stmt, op_false_stmt) ->
+        let mod_pred = mod_expr predicate in
+        let mod_true = mod_stmt true_stmt in
+        let mod_false =
+          match op_false_stmt with
+          | Some stmt -> Some (mod_stmt stmt)
+          | None -> None
+        in
+        IfElse (mod_pred, mod_true, mod_false)
+    | Block stmts -> Block (List.map ~f:mod_stmt stmts)
+    | SList stmts -> SList (List.map ~f:mod_stmt stmts)
+    | For {loopvar; lower; upper; body= inner_stmt} ->
+        Stmt.Fixed.Pattern.For
+          { loopvar
+          ; lower= mod_expr lower
+          ; upper= mod_expr upper
+          ; body= mod_stmt inner_stmt }
+    | TargetPE expr -> TargetPE (mod_expr expr)
+    | Return optional_expr -> (
+      match optional_expr with
+      | Some expr -> Return (Some (mod_expr expr))
+      | None -> Return None )
+    | Profile ((a : string), stmt) -> Profile (a, List.map ~f:mod_stmt stmt)
+    | Skip | Decl _ | Break | Continue -> pattern
+    | While (predicate, body) -> While (mod_expr predicate, mod_stmt body)
+  in
+  Stmt.Fixed.{pattern= mod_pattern pattern; meta}
+*)
+(* Look through an expression and find the overall type and adlevel*)
+let find_args Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
+  (adlevel, type_)
+
+(* Look through an expression to see whether it needs modified from
+ * SoA to AoS.
+ * TODO: The logic on when to return true/false is wrong.
+ * I really want to move from returning true/false to return SoA/AoS
+ * which should be a lot easier to read.
+ *  I think we want to use this in an "is any" style context
+ *
+ * Logic for deciding if the object can use SoA is:
+ * If we find a FunApp
+ *  - If the FunApp (StanLib _) is an SoA, check if the object's name exists 
+ *     in the expressions and whether that signature supports 
+ *     SoA.
+ *  - If we find a FunApp (StanLib _) that is not SoA or is UserDefined,
+ *    check that the name, chat that the object name is not used in
+ *    the expressions for the 
+ * For Assignments
+ * If the assignee's name is in the list of known failures 
+ *)
+let rec query_expr_functions var_name known_failures Expr.Fixed.({pattern; _})
+    =
+  let query_expr = query_expr_functions var_name known_failures in
+  let query_name = query_for_name_functions var_name in
+  match pattern with
+  | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) -> (
+    match kind with
+    | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), Common.Helpers.SoA)
+      -> (
+        let does_name_exist = List.exists ~f:query_name exprs in
+        (*If name doesn't exist then we are good, else check support*)
+        match does_name_exist with
+        | false -> false
+        | true ->
+            let check_fun_support =
+              Stan_math_signatures.query_stan_math_mem_pattern_support name
+                (List.map ~f:find_args exprs)
+            in
+            (not check_fun_support) || List.exists ~f:query_expr exprs )
+    | CompilerInternal _ -> false
+    | Fun_kind.StanLib (_, _, Common.Helpers.AoS) | UserDefined _ ->
+        List.exists ~f:query_name exprs )
+  | TernaryIf (predicate, texpr, fexpr) ->
+      query_expr predicate || query_expr texpr || query_expr fexpr
+  | Indexed (expr, indexed) ->
+      let query_index = search_index query_expr in
+      query_expr expr || List.exists ~f:query_index indexed
+  | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
+      false
+  | EAnd (lhs, rhs) | EOr (lhs, rhs) -> query_expr lhs || query_expr rhs
+
+(* Look through a statement to see whether it needs modified from
+ * SoA to AoS. Returns true if object needs changed from SoA to AoS.
+ *)
+let rec query_stmt_functions (var_name : string)
+    (known_failures : string Set.Poly.t)
+    (stmt_map : (int, Stmt.Located.Non_recursive.t) Core_kernel.Map.Poly.t)
+    Stmt.Located.Non_recursive.({pattern; _}) : bool =
+  let query_expr = query_expr_functions var_name known_failures in
+  let query_stmt = query_stmt_functions var_name known_failures stmt_map in
+  let query_name = query_for_name_functions var_name in
+  let get_key key = Map.find_exn stmt_map key in
+  let find_key blah = List.map ~f:get_key blah in
+  let find_pattern (pattern : (Expr.Typed.t, cf_state) Stmt.Fixed.Pattern.t) =
+    match pattern with
+    | Stmt.Fixed.Pattern.NRFunApp
+        ( StanLib
+            ((name : string), (_ : bool Fun_kind.suffix), Common.Helpers.SoA)
+        , (exprs : Expr.Typed.Meta.t Expr.Fixed.t list) ) -> (
+        let does_name_exist = List.for_all ~f:query_name exprs in
+        match does_name_exist with
+        | false -> false
+        | true ->
+            let check_fun_support =
+              Stan_math_signatures.query_stan_math_mem_pattern_support name
+                (List.map ~f:find_args exprs)
+            in
+            (not check_fun_support) || List.exists ~f:query_expr exprs )
+    | NRFunApp (CompilerInternal _, _) -> false
+    | NRFunApp (UserDefined _, exprs) -> List.for_all ~f:query_name exprs
+    | NRFunApp (StanLib (_, _, AoS), exprs) -> List.for_all ~f:query_name exprs
+    | Assignment (((assign_name : string), (_ : UnsizedType.t), lhs), rhs) ->
+        let query_index = search_index query_expr in
+        let check_name item = assign_name = item in
+        Set.Poly.exists ~f:check_name known_failures
+        || List.exists ~f:query_index lhs
+        || query_expr rhs
+    | IfElse (predicate, true_stmt, op_false_stmt) ->
+        let pred_query = query_expr predicate in
+        let true_query = query_stmt (get_key true_stmt) in
+        let false_query =
+          match op_false_stmt with
+          | Some stmt -> query_stmt (get_key stmt)
+          | None -> false
+        in
+        pred_query || true_query || false_query
+    | Block stmts -> List.exists ~f:query_stmt (find_key stmts)
+    | SList stmts -> List.exists ~f:query_stmt (find_key stmts)
+    | For {lower; upper; body= sub_stmts; _} ->
+        query_expr lower || query_expr upper || query_stmt (get_key sub_stmts)
+    | TargetPE expr -> query_expr expr
+    | Return optional_expr -> (
+      match optional_expr with Some expr -> query_expr expr | None -> false )
+    | Profile ((_ : string), stmt) -> List.exists ~f:query_stmt (find_key stmt)
+    | Skip | Decl _ | Break | Continue -> false
+    | While (predicate, body) ->
+        query_expr predicate || query_stmt (get_key body)
+  in
+  find_pattern pattern
+
 (** [cleanup_stmts statements] will do a few simple transformations like
     removing Skips, collapsing empty blocks and SLists, etc. *)
 let cleanup_empty_stmts stmts =

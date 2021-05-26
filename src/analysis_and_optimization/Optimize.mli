@@ -68,7 +68,8 @@ type optimization_settings =
   ; dead_code_elimination: bool
   ; partial_evaluation: bool
   ; lazy_code_motion: bool
-  ; optimize_ad_levels: bool }
+  ; optimize_ad_levels: bool
+  ; optimize_soa: bool }
 
 val all_optimizations : optimization_settings
 val no_optimizations : optimization_settings

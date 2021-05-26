@@ -209,5 +209,12 @@ val update_expr_ad_levels : string Set.Poly.t -> Expr.Typed.t -> Expr.Typed.t
 (** Recompute all AD-levels in the metadata of an expression from the bottom up, making the variables
     in the first argument autodiffable *)
 
+val query_stmt_functions :
+     string
+  -> string Set.Poly.t
+  -> (int, Stmt.Located.Non_recursive.t) Core_kernel.Map.Poly.t
+  -> Stmt.Located.Non_recursive.t
+  -> bool
+
 val cleanup_empty_stmts :
   ('e, 's) Stmt.Fixed.t list -> ('e, 's) Stmt.Fixed.t list
