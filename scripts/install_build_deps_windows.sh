@@ -10,10 +10,10 @@ opam pin -y opam-file-format 2.1.0
 opam repository add windows git://github.com/ocaml-cross/opam-cross-windows
 
 #Request the compiler to be built with flambda optimizers
-opam install conf-flambda-windows
+opam install -y conf-flambda-windows
 
 # Install the compiler
-opam install "ocaml-windows64<=4.07.0"
+opam install -y "ocaml-windows64<=4.07.0"
 
 # Install dependencies
 opam install -y core_kernel core_kernel-windows menhir menhir-windows ppx_deriving ppx_deriving-windows fmt fmt-windows yojson yojson-windows
