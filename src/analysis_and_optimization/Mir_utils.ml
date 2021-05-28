@@ -505,9 +505,13 @@ let rec query_aos_set_names (var_name : string Set.Poly.t)
  *
  * The only real path in the below is on the functions, everything else is 
  * for recursion through expressions of expressions.
+ *
+ * @param var_name The name of the variable whose
+ *  associated expressions we want to modify.
+ * @param expr The expression to modify
  *)
 let rec modify_soa_exprs (var_name : string Set.Poly.t)
-    Expr.Fixed.({pattern; meta}) =
+    (Expr.Fixed.({pattern; _}) as expr) =
   let mod_expr = modify_soa_exprs var_name in
   let find_name = query_aos_set_names var_name in
   let new_pattern =
@@ -525,32 +529,43 @@ let rec modify_soa_exprs (var_name : string Set.Poly.t)
         Expr.Fixed.Pattern.FunApp (modify_funs kind, exprs')
     | TernaryIf (predicate, texpr, fexpr) ->
         TernaryIf (mod_expr predicate, mod_expr texpr, mod_expr fexpr)
-    | Indexed (expr, indexed) ->
+    | Indexed (idx_expr, indexed) ->
         let query_index = mod_index mod_expr in
-        Indexed (mod_expr expr, List.map ~f:query_index indexed)
+        Indexed (mod_expr idx_expr, List.map ~f:query_index indexed)
     | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string))
       ->
         pattern
     | EAnd (lhs, rhs) -> EAnd (mod_expr lhs, mod_expr rhs)
     | EOr (lhs, rhs) -> EOr (mod_expr lhs, mod_expr rhs)
   in
-  Expr.Fixed.{pattern= new_pattern; meta}
+  {expr with pattern= new_pattern}
 
+(**
+ * Internal to the module, used when looking recursivly
+ *  in statment patterns that have hold statements
+ *)
 let modify_soa_stmts (var_name : string Set.Poly.t) pattern_fn
-    Stmt.Fixed.({pattern; meta}) =
-  Stmt.Fixed.{pattern= pattern_fn pattern var_name; meta}
+    (Stmt.Fixed.({pattern; _}) as stmt) =
+  {stmt with pattern= pattern_fn pattern var_name}
 
-  let rec demote_sizedtype_mem st =
-    match st with
-    | (SizedType.SInt | SReal) as ret -> ret
-    | SVector (SoA, dim) -> SVector (AoS, dim)
-    | SRowVector (SoA, dim) -> SRowVector (AoS, dim)
-    | SMatrix (SoA, dim1, dim2) -> SMatrix (AoS, dim1, dim2)
-    | SArray (inner_type, dim) ->
-        SArray (demote_sizedtype_mem inner_type, dim)
-    | _ -> st
+let rec demote_sizedtype_mem st =
+  match st with
+  | (SizedType.SInt | SReal) as ret -> ret
+  | SVector (SoA, dim) -> SVector (AoS, dim)
+  | SRowVector (SoA, dim) -> SRowVector (AoS, dim)
+  | SMatrix (SoA, dim1, dim2) -> SMatrix (AoS, dim1, dim2)
+  | SArray (inner_type, dim) -> SArray (demote_sizedtype_mem inner_type, dim)
+  | _ -> st
 
-let rec mod_soa_stmt_pattern pattern var_name =
+(**
+ * Demote statements in the MIR so that they go from Struct of Arrays (SoA) 
+ *  to Array of Structs (AoS)
+ * @param pattern The statement to modify 
+ * @param var_name The name of the variable we are searching for.
+ *)
+let rec mod_soa_stmt_pattern
+    (pattern : ('a Fixed.t, ('a, 'b) Stmt.Fixed.t) Stmt.Fixed.Pattern.t)
+    (var_name : string Core_kernel.Set.Poly.t) =
   let mod_expr = modify_soa_exprs var_name in
   let mod_stmt = modify_soa_stmts var_name mod_soa_stmt_pattern in
   let find_name = query_aos_set_names var_name in
@@ -561,12 +576,15 @@ let rec mod_soa_stmt_pattern pattern var_name =
         { decl_adtype
         ; decl_id
         ; decl_type= Type.Sized (demote_sizedtype_mem sized_type) }
-  | Decl {decl_adtype=UnsizedType.DataOnly; decl_id; decl_type= Type.Sized sized_type} ->
-    Decl
-      { decl_adtype=UnsizedType.DataOnly
+  | Decl
+      { decl_adtype= UnsizedType.DataOnly
       ; decl_id
-      ; decl_type= Type.Sized (demote_sizedtype_mem sized_type) }
-      | Decl _ -> pattern
+      ; decl_type= Type.Sized sized_type } ->
+      Decl
+        { decl_adtype= UnsizedType.DataOnly
+        ; decl_id
+        ; decl_type= Type.Sized (demote_sizedtype_mem sized_type) }
+  | Decl _ -> pattern
   | Stmt.Fixed.Pattern.NRFunApp (kind, (exprs : 'a Expr.Fixed.t list)) ->
       let exprs' = List.map ~f:mod_expr exprs in
       let modify_funs kind =
@@ -684,8 +702,45 @@ let rec query_aos_exprs (var_name : string)
       false
   | EAnd (lhs, rhs) | EOr (lhs, rhs) -> query_expr lhs || query_expr rhs
 
+let rec any_not_eigen_type st =
+  match st with
+  | SizedType.SReal | SInt -> true
+  | SVector _ | SRowVector _ | SMatrix _ -> false
+  | SArray (inner_type, _) -> any_not_eigen_type inner_type
+
 (* Look through a statement to see whether it needs modified from
  * SoA to AoS. Returns true if object needs changed from SoA to AoS.
+ *
+ * Rules:
+ * 1. Decl is data only or contains and int or real type, return true
+ * 2. StanLib functions return true if any of
+ *   - The name exists in the exprs of the function
+ *   - The function does not support SoA
+ *   - The exprs satisfies the query_aos_exprs checks
+ * 3. (TODO: UserDefined)
+ *  - I'm not sure how to do these yet
+ *  - For these we need to lookup the body of the user defined function,
+ *   check all these rules for the UDF, and if it passes tag it as SoA,
+ *   and if not tag it as AoS. But then we run into this problem where
+ *  we need to have multiple function definitions when some input types can
+ *  or cannot be AoS or SoA.
+ *  For now I think it's better to just check if the variable name
+ *  is in the list of expressions to the user defined function and fail
+ *  the variable if we see it enter a UDF.
+ * 4. Assignment return true if
+ *     - The object being assigned to is in the list of known failures and
+ *    - any of
+ *     - The expression query from the indexed expression returns true 
+ *     - The expression query from the rhs of the assignment returns true
+ *   -  I think I also need to return true if the assigned to object is
+ *      in the list of known failures the variable exists 
+ *      on the right hand side or in the indexed type?
+ *
+ * 4. (TODO: For loops)
+ *  Single indexing is fine outside of loops, but in loops we need to return true
+ *
+ * All other statements simply recurse into their lists of expressions 
+ *  or statements repeating the checks from above.
  *)
 let rec query_aos_stmts (var_name : string)
     (known_failures : string Set.Poly.t)
@@ -698,7 +753,12 @@ let rec query_aos_stmts (var_name : string)
   let find_key blah = List.map ~f:get_key blah in
   let find_pattern (pattern : (Expr.Typed.t, cf_state) Stmt.Fixed.Pattern.t) =
     match pattern with
-    | Decl {decl_adtype=UnsizedType.DataOnly; _} -> true
+    | Decl {decl_adtype= UnsizedType.DataOnly; decl_id; _}
+      when decl_id = var_name ->
+        true
+    | Decl {decl_id; decl_type= Type.Sized st; _}
+      when decl_id = var_name && any_not_eigen_type st ->
+        true
     | Decl _ -> false
     | Stmt.Fixed.Pattern.NRFunApp
         ( StanLib
@@ -723,9 +783,8 @@ let rec query_aos_stmts (var_name : string)
     | Assignment (((assign_name : string), (_ : UnsizedType.t), lhs), rhs) ->
         let query_index = search_index query_expr in
         let check_name item = assign_name = item in
-        Set.Poly.exists ~f:check_name known_failures
-        || List.exists ~f:query_index lhs
-        || query_expr rhs
+        let is_bad_assign = Set.Poly.exists ~f:check_name known_failures in
+        is_bad_assign || List.exists ~f:query_index lhs || query_expr rhs
     | IfElse (predicate, true_stmt, op_false_stmt) ->
         let pred_query = query_expr predicate in
         let true_query = query_stmt (get_key true_stmt) in

@@ -13829,7 +13829,7 @@
    ((pattern
      (Assignment (p_1d_vec (UArray UVector) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var N))
@@ -13857,7 +13857,7 @@
    ((pattern
      (Assignment (p_3d_vec (UArray (UArray (UArray UVector))) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var M))
@@ -13881,7 +13881,7 @@
    ((pattern
      (Assignment (p_row_vec URowVector ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -13900,7 +13900,7 @@
    ((pattern
      (Assignment (p_1d_row_vec (UArray URowVector) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var N))
@@ -13928,7 +13928,7 @@
    ((pattern
      (Assignment (p_3d_row_vec (UArray (UArray (UArray URowVector))) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var M))
@@ -13980,7 +13980,7 @@
    ((pattern
      (Assignment (p_ar_mat (UArray (UArray UMatrix)) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (lub) AoS))
+        (FunApp (CompilerInternal (FnReadParam (lub) SoA))
          (((pattern (Lit Int 0))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 1))
@@ -14012,7 +14012,7 @@
    ((pattern
      (Assignment (p_simplex UVector ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (simplex) AoS))
+        (FunApp (CompilerInternal (FnReadParam (simplex) SoA))
          (((pattern (Var lp__))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var N))
@@ -14033,7 +14033,7 @@
    ((pattern
      (Assignment (p_1d_simplex (UArray UVector) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (simplex) AoS))
+        (FunApp (CompilerInternal (FnReadParam (simplex) SoA))
          (((pattern (Var lp__))
            (meta
             ((type_ (UArray UVector)) (loc <opaque>) (adlevel AutoDiffable))))
@@ -14064,7 +14064,7 @@
    ((pattern
      (Assignment (p_3d_simplex (UArray (UArray (UArray UVector))) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (simplex) AoS))
+        (FunApp (CompilerInternal (FnReadParam (simplex) SoA))
          (((pattern (Var lp__))
            (meta
             ((type_ (UArray (UArray (UArray UVector)))) (loc <opaque>)
@@ -14094,7 +14094,7 @@
    ((pattern
      (Assignment (p_cfcov_54 UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (cholesky_factor_cov) AoS))
+        (FunApp (CompilerInternal (FnReadParam (cholesky_factor_cov) SoA))
          (((pattern (Var lp__))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Lit Int 5))
@@ -14116,7 +14116,7 @@
    ((pattern
      (Assignment (p_cfcov_33 UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (cholesky_factor_cov) AoS))
+        (FunApp (CompilerInternal (FnReadParam (cholesky_factor_cov) SoA))
          (((pattern (Var lp__))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Lit Int 3))
@@ -14141,7 +14141,7 @@
    ((pattern
      (Assignment (p_cfcov_33_ar (UArray UMatrix) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (cholesky_factor_cov) AoS))
+        (FunApp (CompilerInternal (FnReadParam (cholesky_factor_cov) SoA))
          (((pattern (Var lp__))
            (meta
             ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel AutoDiffable))))

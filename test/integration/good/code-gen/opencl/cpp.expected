@@ -3519,7 +3519,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
                                                
       
       current_statement__ = 3;
-      p_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+      p_matrix = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
                    d_int, d_int);
       Eigen::Matrix<double, -1, 1> p_vector = Eigen::Matrix<double, -1, 1>::Constant(d_int, std::numeric_limits<double>::quiet_NaN());
                                               
@@ -6703,19 +6703,19 @@ class restricted_model final : public model_base_crtp<restricted_model> {
                                                
       
       current_statement__ = 3;
-      p_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+      p_matrix = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
                    d_int, d_int);
       Eigen::Matrix<double, -1, 1> p_vector = Eigen::Matrix<double, -1, 1>::Constant(d_int, std::numeric_limits<double>::quiet_NaN());
                                               
       
       current_statement__ = 4;
-      p_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+      p_vector = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                    d_int);
       Eigen::Matrix<double, 1, -1> p_row_vector = Eigen::Matrix<double, 1, -1>::Constant(d_int, std::numeric_limits<double>::quiet_NaN());
                                                   
       
       current_statement__ = 5;
-      p_row_vector = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(
+      p_row_vector = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>>>(
                        d_int);
       double y_p = std::numeric_limits<double>::quiet_NaN();
       

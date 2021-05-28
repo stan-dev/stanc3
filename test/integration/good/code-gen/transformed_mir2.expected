@@ -15759,7 +15759,7 @@
    ((pattern
      (Assignment (p_1d_vec (UArray UVector) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var N))
@@ -15787,7 +15787,7 @@
    ((pattern
      (Assignment (p_3d_vec (UArray (UArray (UArray UVector))) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var M))
@@ -15811,7 +15811,7 @@
    ((pattern
      (Assignment (p_row_vec URowVector ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -15830,7 +15830,7 @@
    ((pattern
      (Assignment (p_1d_row_vec (UArray URowVector) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var N))
@@ -15858,7 +15858,7 @@
    ((pattern
      (Assignment (p_3d_row_vec (UArray (UArray (UArray URowVector))) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var M))
@@ -15910,7 +15910,7 @@
    ((pattern
      (Assignment (p_ar_mat (UArray (UArray UMatrix)) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (lub) AoS))
+        (FunApp (CompilerInternal (FnReadParam (lub) SoA))
          (((pattern (Lit Int 0))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 1))
@@ -15942,7 +15942,7 @@
    ((pattern
      (Assignment (p_simplex UVector ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (simplex) AoS))
+        (FunApp (CompilerInternal (FnReadParam (simplex) SoA))
          (((pattern (Var lp__))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var N))
@@ -15963,7 +15963,7 @@
    ((pattern
      (Assignment (p_1d_simplex (UArray UVector) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (simplex) AoS))
+        (FunApp (CompilerInternal (FnReadParam (simplex) SoA))
          (((pattern (Var lp__))
            (meta
             ((type_ (UArray UVector)) (loc <opaque>) (adlevel AutoDiffable))))
@@ -15994,7 +15994,7 @@
    ((pattern
      (Assignment (p_3d_simplex (UArray (UArray (UArray UVector))) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (simplex) AoS))
+        (FunApp (CompilerInternal (FnReadParam (simplex) SoA))
          (((pattern (Var lp__))
            (meta
             ((type_ (UArray (UArray (UArray UVector)))) (loc <opaque>)
@@ -16024,7 +16024,7 @@
    ((pattern
      (Assignment (p_cfcov_54 UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (cholesky_factor_cov) AoS))
+        (FunApp (CompilerInternal (FnReadParam (cholesky_factor_cov) SoA))
          (((pattern (Var lp__))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Lit Int 5))
@@ -16046,7 +16046,7 @@
    ((pattern
      (Assignment (p_cfcov_33 UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (cholesky_factor_cov) AoS))
+        (FunApp (CompilerInternal (FnReadParam (cholesky_factor_cov) SoA))
          (((pattern (Var lp__))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Lit Int 3))
@@ -16071,7 +16071,7 @@
    ((pattern
      (Assignment (p_cfcov_33_ar (UArray UMatrix) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (cholesky_factor_cov) AoS))
+        (FunApp (CompilerInternal (FnReadParam (cholesky_factor_cov) SoA))
          (((pattern (Var lp__))
            (meta
             ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel AutoDiffable))))
@@ -62894,7 +62894,7 @@ https://mc-stan.org/users/documentation/case-studies/convert_odes.html
    ((pattern
      (Assignment (alpha_v UVector ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var k))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -62910,7 +62910,7 @@ https://mc-stan.org/users/documentation/case-studies/convert_odes.html
    ((pattern
      (Assignment (beta UVector ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var k))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -62926,7 +62926,7 @@ https://mc-stan.org/users/documentation/case-studies/convert_odes.html
    ((pattern
      (Assignment (cuts UVector ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var k))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -62973,7 +62973,7 @@ https://mc-stan.org/users/documentation/case-studies/convert_odes.html
    ((pattern
      (Assignment (X_p UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var n))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var k))
@@ -62993,7 +62993,7 @@ https://mc-stan.org/users/documentation/case-studies/convert_odes.html
    ((pattern
      (Assignment (beta_m UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var n))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var k))
@@ -64234,7 +64234,7 @@ https://mc-stan.org/users/documentation/case-studies/convert_odes.html
    ((pattern
      (Assignment (L_Omega (UArray UMatrix) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (cholesky_factor_corr) AoS))
+        (FunApp (CompilerInternal (FnReadParam (cholesky_factor_corr) SoA))
          (((pattern (Var lp__))
            (meta
             ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel AutoDiffable))))
@@ -68209,7 +68209,7 @@ https://mc-stan.org/users/documentation/case-studies/convert_odes.html
    ((pattern
      (Assignment (a8 (UArray (UArray UMatrix)) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var N))
@@ -68239,7 +68239,7 @@ https://mc-stan.org/users/documentation/case-studies/convert_odes.html
    ((pattern
      (Assignment (a7 (UArray (UArray URowVector)) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var N))
@@ -68267,7 +68267,7 @@ https://mc-stan.org/users/documentation/case-studies/convert_odes.html
    ((pattern
      (Assignment (a6 (UArray (UArray UVector)) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var N))
@@ -68317,7 +68317,7 @@ https://mc-stan.org/users/documentation/case-studies/convert_odes.html
    ((pattern
      (Assignment (a4 (UArray UMatrix) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var N))
@@ -68341,7 +68341,7 @@ https://mc-stan.org/users/documentation/case-studies/convert_odes.html
    ((pattern
      (Assignment (a3 (UArray URowVector) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var N))
@@ -68363,7 +68363,7 @@ https://mc-stan.org/users/documentation/case-studies/convert_odes.html
    ((pattern
      (Assignment (a2 (UArray UVector) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var N))
@@ -68406,7 +68406,7 @@ https://mc-stan.org/users/documentation/case-studies/convert_odes.html
    ((pattern
      (Assignment (y8 (UArray (UArray UMatrix)) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var N))
@@ -68436,7 +68436,7 @@ https://mc-stan.org/users/documentation/case-studies/convert_odes.html
    ((pattern
      (Assignment (y7 (UArray (UArray URowVector)) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var N))
@@ -68464,7 +68464,7 @@ https://mc-stan.org/users/documentation/case-studies/convert_odes.html
    ((pattern
      (Assignment (y6 (UArray (UArray UVector)) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var N))
@@ -68514,7 +68514,7 @@ https://mc-stan.org/users/documentation/case-studies/convert_odes.html
    ((pattern
      (Assignment (y4 (UArray UMatrix) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var N))
@@ -68538,7 +68538,7 @@ https://mc-stan.org/users/documentation/case-studies/convert_odes.html
    ((pattern
      (Assignment (y3 (UArray URowVector) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var N))
@@ -68560,7 +68560,7 @@ https://mc-stan.org/users/documentation/case-studies/convert_odes.html
    ((pattern
      (Assignment (y2 (UArray UVector) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var N))

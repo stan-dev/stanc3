@@ -1070,6 +1070,16 @@ let optimize_minimal_variables
   map_rec_stmt_loc_num flowgraph_to_mir optimize_min_vars_stmt_base
     (Map.find_exn flowgraph_to_mir 1)
 
+(** A generic optimization pass for finding a minimal set of variables that are generated
+ *by some circumstance, and then updating the MIR with that set.
+ *
+ * gen_variables: the variables that must be added to the set at the given statement
+ * update_expr: update an MIR expression given the variable set
+ * update_stmt: update an MIR statement given the variable set
+ * extra_variables: the set of variables that are implied to be in the set by a given variable in the set (usually empty, sometimes unrepresented variables like _in__ variables)
+ * initial_variables: the initial known members of the set of variables
+ * stmt: the MIR statement to optimize.
+ *)
 let optimize_mem_pattern
     ~(gen_variables :
           (int, Stmt.Located.Non_recursive.t) Map.Poly.t
@@ -1085,7 +1095,6 @@ let optimize_mem_pattern
           , (Expr.Typed.Meta.t, 'a) Stmt.Fixed.t )
           Stmt.Fixed.Pattern.t)
     ~(update_expr : string Set.Poly.t -> Expr.Typed.t -> Expr.Typed.t)
-    ~(extra_variables : string -> string Set.Poly.t)
     ~(initial_variables : string Set.Poly.t) (stmt : Stmt.Located.t) =
   let rev_flowgraph, flowgraph_to_mir =
     Monotone_framework.inverse_flowgraph_of_stmt stmt
@@ -1100,10 +1109,7 @@ let optimize_mem_pattern
       flowgraph_to_mir initial_variables gen_variables
   in
   let optimize_min_vars_stmt_base i stmt_pattern =
-    let variable_set =
-      let exits = (Map.find_exn soa_levels i).exit in
-      Set.Poly.union exits (union_map exits ~f:extra_variables)
-    in
+    let variable_set = (Map.find_exn soa_levels i).exit in
     let stmt_val =
       Stmt.Fixed.Pattern.map (update_expr variable_set)
         (fun x -> x)
@@ -1114,27 +1120,36 @@ let optimize_mem_pattern
   map_rec_stmt_loc_num flowgraph_to_mir optimize_min_vars_stmt_base
     (Map.find_exn flowgraph_to_mir 1)
 
+(**
+  *)
+let gen_aos_variables
+    (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
+    (l : int) (aos_variables : string Set.Poly.t) =
+  let mir_node mir_idx = Map.find_exn flowgraph_to_mir mir_idx in
+  let _, _, split_flowgraph = Map.split flowgraph_to_mir l in
+  match (mir_node l).pattern with
+  | Decl {decl_id; decl_type= Type.Sized _; _} -> (
+      let query_stmt stmt =
+        Mir_utils.query_aos_stmts decl_id aos_variables flowgraph_to_mir stmt
+      in
+      match Map.exists ~f:query_stmt split_flowgraph with
+      | true -> Set.Poly.singleton decl_id
+      | false -> Set.Poly.empty )
+  | _ -> Set.Poly.empty
+
+(**
+  * Deduces whether types can be Structures of Arrays (SoA/fast) or Arrays of Structs (AoS/slow)
+  *  See the docs in Mir_utils.query_aos_* functions for details on the rules 
+  *   surrounding when demotion from SoA -> AoS needs to happen.
+  * @param to_mir: A Map of flattened MIR statements whose 
+  *  key represents the flattened statements position in the nested structure
+  * @param 
+  *)
 let optimize_soa (mir : Program.Typed.t) =
-  let gen_aos_variables
-      (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
-      (l : int) (aos_variables : string Set.Poly.t) =
-    let mir_node mir_idx = Map.find_exn flowgraph_to_mir mir_idx in
-    let _, _, split_flowgraph = Map.split flowgraph_to_mir l in
-    match (mir_node l).pattern with
-    | Decl {decl_id; decl_type= Type.Sized _; _} -> (
-        let query_stmt stmt =
-          Mir_utils.query_aos_stmts decl_id aos_variables flowgraph_to_mir stmt
-        in
-        match Map.exists ~f:query_stmt split_flowgraph with
-        | true -> Set.Poly.singleton decl_id
-        | false -> Set.Poly.empty )
-    | _ -> Set.Poly.empty
-  in
-  let extra_variables _ = Set.Poly.empty in
   let transform _ stmt =
     optimize_mem_pattern ~gen_variables:gen_aos_variables
       ~update_expr:Mir_utils.modify_soa_exprs
-      ~update_stmt:Mir_utils.mod_soa_stmt_pattern ~extra_variables
+      ~update_stmt:Mir_utils.mod_soa_stmt_pattern
       ~initial_variables:Set.Poly.empty stmt
   in
   transform_program_blockwise mir transform

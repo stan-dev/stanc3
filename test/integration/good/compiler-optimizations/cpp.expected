@@ -2339,7 +2339,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
                                           
       
       current_statement__ = 2;
-      beta = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+      beta = in__.template read_constrain_lub<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
                0, 1, lp__, max_age);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(nind, 
                                                       (n_occasions - 1), DUMMY_VAR__);
@@ -3937,25 +3937,25 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
                                            
       
       current_statement__ = 12;
-      b_age = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+      b_age = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                 n_age);
       Eigen::Matrix<double, -1, 1> b_edu = Eigen::Matrix<double, -1, 1>::Constant(n_edu, std::numeric_limits<double>::quiet_NaN());
                                            
       
       current_statement__ = 13;
-      b_edu = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+      b_edu = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                 n_edu);
       Eigen::Matrix<double, -1, 1> b_region = Eigen::Matrix<double, -1, 1>::Constant(n_region, std::numeric_limits<double>::quiet_NaN());
                                               
       
       current_statement__ = 14;
-      b_region = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+      b_region = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                    n_region);
       Eigen::Matrix<double, -1, -1> b_age_edu = Eigen::Matrix<double, -1, -1>::Constant(n_age, n_edu, std::numeric_limits<double>::quiet_NaN());
                                                 
       
       current_statement__ = 15;
-      b_age_edu = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+      b_age_edu = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
                     n_age, n_edu);
       Eigen::Matrix<double, -1, 1> b_hat = Eigen::Matrix<double, -1, 1>::Constant(n_state, std::numeric_limits<double>::quiet_NaN());
                                            
@@ -5513,7 +5513,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
                                         
       
       current_statement__ = 1;
-      mu = in__.template read_constrain_ordered<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+      mu = in__.template read_constrain_ordered<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
              lp__, 2);
       std::vector<double> sigma = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
                                   
@@ -8225,21 +8225,21 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
             primitive_value(emit_generated_quantities__)))) {
         return ;
       } 
-      lcm_sym17__ = inv_sqrt(tau_phi);
-      sigma_phi = lcm_sym17__;
+      lcm_sym18__ = inv_sqrt(tau_phi);
+      sigma_phi = lcm_sym18__;
       current_statement__ = 5;
       assign(phi, phi_std_raw,
         "assigning variable phi", index_min_max(1, (N - 1)));
       current_statement__ = 6;
       assign(phi, -sum(phi_std_raw), "assigning variable phi", index_uni(N));
       current_statement__ = 7;
-      assign(phi, multiply(stan::model::deep_copy(phi), lcm_sym17__),
+      assign(phi, multiply(stan::model::deep_copy(phi), lcm_sym18__),
         "assigning variable phi");
       current_statement__ = 3;
-      check_greater_or_equal(function__, "sigma_phi", lcm_sym17__, 0);
+      check_greater_or_equal(function__, "sigma_phi", lcm_sym18__, 0);
       if (emit_transformed_parameters__) {
         {
-          vars__.emplace_back(lcm_sym17__);
+          vars__.emplace_back(lcm_sym18__);
           lcm_sym8__ = logical_gte(N, 1);
           if (lcm_sym8__) {
             vars__.emplace_back(rvalue(phi, "phi", index_uni(1)));
@@ -8291,9 +8291,9 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       } 
       current_statement__ = 21;
       tau_theta = gamma_rng(3.2761, 1.81, base_rng__);
-      lcm_sym18__ = inv_sqrt(tau_theta);
-      sigma_theta = lcm_sym18__;
-      assign(lcm_sym16__, multiply(theta_std, lcm_sym18__),
+      lcm_sym17__ = inv_sqrt(tau_theta);
+      sigma_theta = lcm_sym17__;
+      assign(lcm_sym16__, multiply(theta_std, lcm_sym17__),
         "assigning variable lcm_sym16__");
       assign(theta, lcm_sym16__, "assigning variable theta");
       current_statement__ = 25;
@@ -8326,11 +8326,11 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       current_statement__ = 10;
       check_greater_or_equal(function__, "tau_theta", tau_theta, 0);
       current_statement__ = 11;
-      check_greater_or_equal(function__, "sigma_theta", lcm_sym18__, 0);
+      check_greater_or_equal(function__, "sigma_theta", lcm_sym17__, 0);
       vars__.emplace_back(beta0);
       vars__.emplace_back(beta1);
       vars__.emplace_back(tau_theta);
-      vars__.emplace_back(lcm_sym18__);
+      vars__.emplace_back(lcm_sym17__);
       if (lcm_sym8__) {
         vars__.emplace_back(
           rvalue(lcm_sym16__, "lcm_sym16__", index_uni(1)));
@@ -15144,7 +15144,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
                                         
       
       current_statement__ = 1;
-      pi = in__.template read_constrain_simplex<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+      pi = in__.template read_constrain_simplex<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
              lp__, K);
       std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> theta = 
       std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(J, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>::Constant(K, std::numeric_limits<double>::quiet_NaN())));
@@ -16196,13 +16196,13 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
                                                
       
       current_statement__ = 5;
-      theta_std = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+      theta_std = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                     N);
       Eigen::Matrix<double, -1, 1> phi_std_raw = Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN());
                                                  
       
       current_statement__ = 6;
-      phi_std_raw = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+      phi_std_raw = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                       N);
       double sigma_phi = std::numeric_limits<double>::quiet_NaN();
       
@@ -18074,7 +18074,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
                                           
       
       current_statement__ = 2;
-      beta = in__.template read_constrain_lub<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+      beta = in__.template read_constrain_lub<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
                0, 1, lp__, max_age);
       Eigen::Matrix<local_scalar_t__, -1, -1> phi = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(nind, 
                                                       (n_occasions - 1), DUMMY_VAR__);
@@ -28799,13 +28799,13 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                                                
       
       current_statement__ = 3;
-      x_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+      x_matrix = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
                    3, 2);
       Eigen::Matrix<double, -1, 1> x_vector = Eigen::Matrix<double, -1, 1>::Constant(2, std::numeric_limits<double>::quiet_NaN());
                                               
       
       current_statement__ = 4;
-      x_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+      x_vector = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                    2);
       Eigen::Matrix<double, -1, -1> x_cov = Eigen::Matrix<double, -1, -1>::Constant(2, 2, std::numeric_limits<double>::quiet_NaN());
                                             
@@ -30526,7 +30526,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
                                                     
       
       current_statement__ = 6;
-      b = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+      b = in__.template read<stan::conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
             I, 8);
       double sigma = std::numeric_limits<double>::quiet_NaN();
       
