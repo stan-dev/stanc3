@@ -536,55 +536,97 @@ let rec modify_soa_exprs (var_name : string Set.Poly.t)
   in
   Expr.Fixed.{pattern= new_pattern; meta}
 
-(*I'm not sure I need this anymore*)
-let rec modify_soa_stmts (var_name : string Set.Poly.t)
+let modify_soa_stmts (var_name : string Set.Poly.t) pattern_fn
     Stmt.Fixed.({pattern; meta}) =
+  Stmt.Fixed.{pattern= pattern_fn pattern var_name; meta}
+
+  let rec demote_sizedtype_mem st =
+    match st with
+    | (SizedType.SInt | SReal) as ret -> ret
+    | SVector (SoA, dim) -> SVector (AoS, dim)
+    | SRowVector (SoA, dim) -> SRowVector (AoS, dim)
+    | SMatrix (SoA, dim1, dim2) -> SMatrix (AoS, dim1, dim2)
+    | SArray (inner_type, dim) ->
+        SArray (demote_sizedtype_mem inner_type, dim)
+    | _ -> st
+
+let rec mod_soa_stmt_pattern pattern var_name =
   let mod_expr = modify_soa_exprs var_name in
-  let mod_stmt = modify_soa_stmts var_name in
+  let mod_stmt = modify_soa_stmts var_name mod_soa_stmt_pattern in
   let find_name = query_aos_set_names var_name in
-  let mod_pattern pattern =
-    match pattern with
-    | Stmt.Fixed.Pattern.NRFunApp
-        (StanLib (name, kind, Common.Helpers.SoA), exprs) as func -> (
-      match List.exists ~f:find_name exprs with
-      | true ->
-          Stmt.Fixed.Pattern.NRFunApp
-            ( StanLib (name, kind, Common.Helpers.AoS)
-            , List.map ~f:mod_expr exprs )
-      | false -> func )
-    (*TODO: User defined functions here*)
-    | NRFunApp (fun_kind, expr) ->
-        NRFunApp (fun_kind, List.map ~f:mod_expr expr)
-    | Assignment (((name : string), (ut : UnsizedType.t), lhs), rhs) ->
+  match pattern with
+  | Decl {decl_adtype; decl_id; decl_type= Type.Sized sized_type}
+    when Set.exists ~f:(fun x -> x = decl_id) var_name ->
+      Decl
+        { decl_adtype
+        ; decl_id
+        ; decl_type= Type.Sized (demote_sizedtype_mem sized_type) }
+  | Decl {decl_adtype=UnsizedType.DataOnly; decl_id; decl_type= Type.Sized sized_type} ->
+    Decl
+      { decl_adtype=UnsizedType.DataOnly
+      ; decl_id
+      ; decl_type= Type.Sized (demote_sizedtype_mem sized_type) }
+      | Decl _ -> pattern
+  | Stmt.Fixed.Pattern.NRFunApp (kind, (exprs : 'a Expr.Fixed.t list)) ->
+      let exprs' = List.map ~f:mod_expr exprs in
+      let modify_funs kind =
+        match kind with
+        | Fun_kind.StanLib (name, sfx, Common.Helpers.SoA) as func -> (
+          match List.exists ~f:find_name exprs with
+          | true -> Fun_kind.StanLib (name, sfx, Common.Helpers.AoS)
+          | false -> func )
+        | _ -> kind
+      in
+      Stmt.Fixed.Pattern.NRFunApp (modify_funs kind, exprs')
+  | Assignment
+      ( ((name : string), (ut : UnsizedType.t), lhs)
+      , { pattern=
+            FunApp (CompilerInternal (FnReadParam (constrain_op, SoA)), args)
+        ; meta= emeta } ) ->
+      if Set.Poly.exists ~f:(fun x -> x = name) var_name then
         let query_index = mod_index mod_expr in
-        Assignment ((name, ut, List.map ~f:query_index lhs), mod_expr rhs)
-    | IfElse (predicate, true_stmt, op_false_stmt) ->
-        let mod_pred = mod_expr predicate in
-        let mod_true = mod_stmt true_stmt in
-        let mod_false =
-          match op_false_stmt with
-          | Some stmt -> Some (mod_stmt stmt)
-          | None -> None
-        in
-        IfElse (mod_pred, mod_true, mod_false)
-    | Block stmts -> Block (List.map ~f:mod_stmt stmts)
-    | SList stmts -> SList (List.map ~f:mod_stmt stmts)
-    | For {loopvar; lower; upper; body= inner_stmt} ->
-        Stmt.Fixed.Pattern.For
-          { loopvar
-          ; lower= mod_expr lower
-          ; upper= mod_expr upper
-          ; body= mod_stmt inner_stmt }
-    | TargetPE expr -> TargetPE (mod_expr expr)
-    | Return optional_expr -> (
-      match optional_expr with
-      | Some expr -> Return (Some (mod_expr expr))
-      | None -> Return None )
-    | Profile ((a : string), stmt) -> Profile (a, List.map ~f:mod_stmt stmt)
-    | Skip | Decl _ | Break | Continue -> pattern
-    | While (predicate, body) -> While (mod_expr predicate, mod_stmt body)
-  in
-  Stmt.Fixed.{pattern= mod_pattern pattern; meta}
+        Assignment
+          ( (name, ut, List.map ~f:query_index lhs)
+          , { pattern=
+                FunApp
+                  ( CompilerInternal (FnReadParam (constrain_op, AoS))
+                  , List.map ~f:mod_expr args )
+            ; meta= emeta } )
+      else
+        Assignment
+          ( (name, ut, lhs)
+          , { pattern=
+                FunApp
+                  (CompilerInternal (FnReadParam (constrain_op, SoA)), args)
+            ; meta= emeta } )
+  | Assignment (((name : string), (ut : UnsizedType.t), lhs), rhs) ->
+      let query_index = mod_index mod_expr in
+      Assignment ((name, ut, List.map ~f:query_index lhs), mod_expr rhs)
+  | IfElse (predicate, true_stmt, op_false_stmt) ->
+      let mod_pred = mod_expr predicate in
+      let mod_true = mod_stmt true_stmt in
+      let mod_false =
+        match op_false_stmt with
+        | Some stmt -> Some (mod_stmt stmt)
+        | None -> None
+      in
+      IfElse (mod_pred, mod_true, mod_false)
+  | Block stmts -> Block (List.map ~f:mod_stmt stmts)
+  | SList stmts -> SList (List.map ~f:mod_stmt stmts)
+  | For {loopvar; lower; upper; body= inner_stmt} ->
+      Stmt.Fixed.Pattern.For
+        { loopvar
+        ; lower= mod_expr lower
+        ; upper= mod_expr upper
+        ; body= mod_stmt inner_stmt }
+  | TargetPE expr -> TargetPE (mod_expr expr)
+  | Return optional_expr -> (
+    match optional_expr with
+    | Some expr -> Return (Some (mod_expr expr))
+    | None -> Return None )
+  | Profile ((a : string), stmt) -> Profile (a, List.map ~f:mod_stmt stmt)
+  | Skip | Break | Continue -> pattern
+  | While (predicate, body) -> While (mod_expr predicate, mod_stmt body)
 
 (* Look through an expression and find the overall type and adlevel*)
 let find_args Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
@@ -608,7 +650,8 @@ let find_args Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
  * For Assignments
  * If the assignee's name is in the list of known failures 
  *)
-let rec query_aos_exprs var_name known_failures Expr.Fixed.({pattern; _}) =
+let rec query_aos_exprs (var_name : string)
+    (known_failures : string Set.Poly.t) Expr.Fixed.({pattern; _}) =
   let query_expr = query_aos_exprs var_name known_failures in
   let query_name = query_aos_names var_name in
   match pattern with
@@ -617,15 +660,18 @@ let rec query_aos_exprs var_name known_failures Expr.Fixed.({pattern; _}) =
     | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), Common.Helpers.SoA)
       -> (
         let does_name_exist = List.exists ~f:query_name exprs in
-        (*If name doesn't exist then we are good, else check support*)
         match does_name_exist with
         | false -> false
-        | true ->
-            let check_fun_support =
-              Stan_math_signatures.query_stan_math_mem_pattern_support name
-                (List.map ~f:find_args exprs)
-            in
-            (not check_fun_support) || List.exists ~f:query_expr exprs )
+        | true -> (
+          match name with
+          | x when Stan_math_signatures.is_reduce_sum_fn x -> true
+          | x when Stan_math_signatures.is_variadic_ode_fn x -> true
+          | _ ->
+              let check_fun_support =
+                Stan_math_signatures.query_stan_math_mem_pattern_support name
+                  (List.map ~f:find_args exprs)
+              in
+              (not check_fun_support) || List.exists ~f:query_expr exprs ) )
     | CompilerInternal _ -> false
     | Fun_kind.StanLib (_, _, Common.Helpers.AoS) | UserDefined _ ->
         List.exists ~f:query_name exprs )
@@ -652,22 +698,28 @@ let rec query_aos_stmts (var_name : string)
   let find_key blah = List.map ~f:get_key blah in
   let find_pattern (pattern : (Expr.Typed.t, cf_state) Stmt.Fixed.Pattern.t) =
     match pattern with
+    | Decl {decl_adtype=UnsizedType.DataOnly; _} -> true
+    | Decl _ -> false
     | Stmt.Fixed.Pattern.NRFunApp
         ( StanLib
             ((name : string), (_ : bool Fun_kind.suffix), Common.Helpers.SoA)
         , (exprs : Expr.Typed.Meta.t Expr.Fixed.t list) ) -> (
-        let does_name_exist = List.for_all ~f:query_name exprs in
+        let does_name_exist = List.exists ~f:query_name exprs in
         match does_name_exist with
         | false -> false
-        | true ->
-            let check_fun_support =
-              Stan_math_signatures.query_stan_math_mem_pattern_support name
-                (List.map ~f:find_args exprs)
-            in
-            (not check_fun_support) || List.exists ~f:query_expr exprs )
+        | true -> (
+          match name with
+          | x when Stan_math_signatures.is_reduce_sum_fn x -> true
+          | x when Stan_math_signatures.is_variadic_ode_fn x -> true
+          | _ ->
+              let check_fun_support =
+                Stan_math_signatures.query_stan_math_mem_pattern_support name
+                  (List.map ~f:find_args exprs)
+              in
+              (not check_fun_support) || List.exists ~f:query_expr exprs ) )
     | NRFunApp (CompilerInternal _, _) -> false
-    | NRFunApp (UserDefined _, exprs) -> List.for_all ~f:query_name exprs
-    | NRFunApp (StanLib (_, _, AoS), exprs) -> List.for_all ~f:query_name exprs
+    | NRFunApp (UserDefined _, exprs) -> List.exists ~f:query_name exprs
+    | NRFunApp (StanLib (_, _, AoS), exprs) -> List.exists ~f:query_name exprs
     | Assignment (((assign_name : string), (_ : UnsizedType.t), lhs), rhs) ->
         let query_index = search_index query_expr in
         let check_name item = assign_name = item in
@@ -691,7 +743,7 @@ let rec query_aos_stmts (var_name : string)
     | Return optional_expr -> (
       match optional_expr with Some expr -> query_expr expr | None -> false )
     | Profile ((_ : string), stmt) -> List.exists ~f:query_stmt (find_key stmt)
-    | Skip | Decl _ | Break | Continue -> false
+    | Skip | Break | Continue -> false
     | While (predicate, body) ->
         query_expr predicate || query_stmt (get_key body)
   in

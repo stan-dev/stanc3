@@ -332,15 +332,19 @@ let query_stan_math_mem_pattern_support (name : string) (args : fun_arg list) =
         UnsizedType.check_compatible_arguments_mod_conv name (snd2 x) args )
       namematches
   in
-  match List.length filteredmatches = 0 with
-  | true ->
-      true
-      (* Return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
-  | false ->
-      let is_soa ((_ : UnsizedType.returntype), (_ : fun_arg list), mem) =
-        mem = Common.Helpers.SoA
-      in
-      List.for_all ~f:is_soa filteredmatches
+  match name with
+  | x when is_reduce_sum_fn x -> false
+  | x when is_variadic_ode_fn x -> false
+  | _ -> (
+    match List.length filteredmatches = 0 with
+    | true ->
+        false
+        (* Return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
+    | false ->
+        let is_soa ((_ : UnsizedType.returntype), (_ : fun_arg list), mem) =
+          mem = Common.Helpers.SoA
+        in
+        List.exists ~f:is_soa filteredmatches )
 
 (* -- Querying stan_math_signatures -- *)
 let stan_math_returntype (name : string) (args : fun_arg list) =

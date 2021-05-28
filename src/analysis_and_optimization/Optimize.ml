@@ -1070,45 +1070,71 @@ let optimize_minimal_variables
   map_rec_stmt_loc_num flowgraph_to_mir optimize_min_vars_stmt_base
     (Map.find_exn flowgraph_to_mir 1)
 
+let optimize_mem_pattern
+    ~(gen_variables :
+          (int, Stmt.Located.Non_recursive.t) Map.Poly.t
+       -> int
+       -> string Set.Poly.t
+       -> string Set.Poly.t)
+    ~(update_stmt :
+          ( Expr.Typed.Meta.t Expr.Fixed.t
+          , (Expr.Typed.Meta.t, 'a) Stmt.Fixed.t )
+          Stmt.Fixed.Pattern.t
+       -> string Core_kernel.Set.Poly.t
+       -> ( Expr.Typed.Meta.t Expr.Fixed.t
+          , (Expr.Typed.Meta.t, 'a) Stmt.Fixed.t )
+          Stmt.Fixed.Pattern.t)
+    ~(update_expr : string Set.Poly.t -> Expr.Typed.t -> Expr.Typed.t)
+    ~(extra_variables : string -> string Set.Poly.t)
+    ~(initial_variables : string Set.Poly.t) (stmt : Stmt.Located.t) =
+  let rev_flowgraph, flowgraph_to_mir =
+    Monotone_framework.inverse_flowgraph_of_stmt stmt
+  in
+  let fwd_flowgraph = Monotone_framework.reverse rev_flowgraph in
+  let (module Rev_Flowgraph) = rev_flowgraph in
+  let (module Fwd_Flowgraph) = fwd_flowgraph in
+  let soa_levels =
+    Monotone_framework.minimal_variables_mfp
+      (module Fwd_Flowgraph)
+      (module Rev_Flowgraph)
+      flowgraph_to_mir initial_variables gen_variables
+  in
+  let optimize_min_vars_stmt_base i stmt_pattern =
+    let variable_set =
+      let exits = (Map.find_exn soa_levels i).exit in
+      Set.Poly.union exits (union_map exits ~f:extra_variables)
+    in
+    let stmt_val =
+      Stmt.Fixed.Pattern.map (update_expr variable_set)
+        (fun x -> x)
+        stmt_pattern
+    in
+    update_stmt stmt_val variable_set
+  in
+  map_rec_stmt_loc_num flowgraph_to_mir optimize_min_vars_stmt_base
+    (Map.find_exn flowgraph_to_mir 1)
+
 let optimize_soa (mir : Program.Typed.t) =
   let gen_aos_variables
       (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
-      (l : int) (soa_variables : string Set.Poly.t) =
+      (l : int) (aos_variables : string Set.Poly.t) =
     let mir_node mir_idx = Map.find_exn flowgraph_to_mir mir_idx in
     let _, _, split_flowgraph = Map.split flowgraph_to_mir l in
     match (mir_node l).pattern with
     | Decl {decl_id; decl_type= Type.Sized _; _} -> (
         let query_stmt stmt =
-          Mir_utils.query_aos_stmts decl_id soa_variables flowgraph_to_mir stmt
+          Mir_utils.query_aos_stmts decl_id aos_variables flowgraph_to_mir stmt
         in
-        match Map.for_all ~f:query_stmt split_flowgraph with
+        match Map.exists ~f:query_stmt split_flowgraph with
         | true -> Set.Poly.singleton decl_id
         | false -> Set.Poly.empty )
     | _ -> Set.Poly.empty
   in
   let extra_variables _ = Set.Poly.empty in
-  let flip_mem_pattern (ty : Expr.Typed.t Type.t) =
-    let rec flip_sized_pattern (st : Expr.Typed.t SizedType.t) =
-      match st with
-      | (SizedType.SReal | SInt) as scalar -> scalar
-      | SVector (SoA, expr) -> SVector (AoS, expr)
-      | SRowVector (SoA, expr) -> SRowVector (AoS, expr)
-      | SMatrix (SoA, expr1, expr2) -> SMatrix (AoS, expr1, expr2)
-      | SArray (sub_st, expr) -> SArray (flip_sized_pattern sub_st, expr)
-      | a -> a
-    in
-    match ty with
-    | Middle.Type.Sized st -> Type.Sized (flip_sized_pattern st)
-    | Unsized a -> Unsized a
-  in
-  let update_decl (is_aos : bool)
-      ((ad : UnsizedType.autodifftype), (ty : Expr.Typed.t Type.t)) =
-    let ty' = if is_aos then flip_mem_pattern ty else ty in
-    (ad, ty')
-  in
   let transform _ stmt =
-    optimize_minimal_variables ~gen_variables:gen_aos_variables
-      ~update_expr:Mir_utils.modify_soa_exprs ~update_decl ~extra_variables
+    optimize_mem_pattern ~gen_variables:gen_aos_variables
+      ~update_expr:Mir_utils.modify_soa_exprs
+      ~update_stmt:Mir_utils.mod_soa_stmt_pattern ~extra_variables
       ~initial_variables:Set.Poly.empty stmt
   in
   transform_program_blockwise mir transform

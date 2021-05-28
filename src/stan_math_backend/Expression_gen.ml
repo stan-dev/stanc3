@@ -434,7 +434,7 @@ and pp_compiler_internal_fn ad ut f ppf es =
   | FnConstrain flavor -> pp_constrain_funapp "constrain" flavor ppf es
   | FnUnconstrain flavor -> pp_constrain_funapp "free" flavor ppf es
   | FnReadData -> read_data ut ppf es
-  | FnReadParam (constraint_opt, mem_pattern) ->
+  | FnReadParam (constraint_opt, mem_pattern) -> (
       let constraint_suffix_opt =
         Option.map
           ~f:(fun constraint_string -> "_constrain_" ^ constraint_string)
@@ -443,21 +443,22 @@ and pp_compiler_internal_fn ad ut f ppf es =
       let jacobian_param_opt =
         Option.map ~f:(fun _ -> ", jacobian__") constraint_opt
       in
-      if mem_pattern = Common.Helpers.AoS then
-        pf ppf "@[<hov 2>in__.template read%a<%a%a>(@,%a)@]"
-          (Fmt.option Fmt.string) constraint_suffix_opt pp_unsizedtype_local
-          (UnsizedType.AutoDiffable, ut)
-          (Fmt.option Fmt.string) jacobian_param_opt (list ~sep:comma pp_expr)
-          es
-      else
-        pf ppf
-          "@[<hov 2>in__.template \
-           read%a<stan::conditional_var_value_t<local_scalar_t__, \
-           %a>%a>(@,%a)@]"
-          (Fmt.option Fmt.string) constraint_suffix_opt pp_unsizedtype_local
-          (UnsizedType.AutoDiffable, ut)
-          (Fmt.option Fmt.string) jacobian_param_opt (list ~sep:comma pp_expr)
-          es
+      match mem_pattern with
+      | Common.Helpers.AoS ->
+          pf ppf "@[<hov 2>in__.template read%a<%a%a>(@,%a)@]"
+            (Fmt.option Fmt.string) constraint_suffix_opt pp_unsizedtype_local
+            (UnsizedType.AutoDiffable, ut)
+            (Fmt.option Fmt.string) jacobian_param_opt
+            (list ~sep:comma pp_expr) es
+      | SoA ->
+          pf ppf
+            "@[<hov 2>in__.template \
+             read%a<stan::conditional_var_value_t<local_scalar_t__, \
+             %a>%a>(@,%a)@]"
+            (Fmt.option Fmt.string) constraint_suffix_opt pp_unsizedtype_local
+            (UnsizedType.AutoDiffable, ut)
+            (Fmt.option Fmt.string) jacobian_param_opt
+            (list ~sep:comma pp_expr) es )
   | FnDeepCopy -> gen_fun_app FnPlain ppf "stan::model::deep_copy" es
   | _ -> gen_fun_app FnPlain ppf (Internal_fun.to_string f) es
 

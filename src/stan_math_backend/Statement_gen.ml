@@ -38,6 +38,17 @@ let pp_filler ppf (decl_id, st, nan_type, needs_filled) =
 let pp_st ppf (st, adtype) =
   pf ppf "%a" pp_unsizedtype_local (adtype, SizedType.to_unsized st)
 
+  (*Pretty print a sized type*)
+let rec pp_possibly_soa_st ppf (st, adtype) =
+  match st with 
+  | SizedType.SInt | SReal | SVector (AoS, _) | SRowVector (AoS, _) | SMatrix (AoS, _, _) ->
+    pf ppf "%a" pp_unsizedtype_local (adtype, SizedType.to_unsized st)
+  | SVector (SoA, _) | SRowVector (SoA, _) | SMatrix (SoA, _, _) ->
+    (*FIX ME: WRONG SCALAR*)
+    pf ppf "stan::conditional_var_value_t<local_scalar_t__, %a>" pp_unsizedtype_local (adtype, SizedType.to_unsized st)
+    | SArray (t,_) ->  pf ppf "std::vector<%a>" pp_possibly_soa_st (t, adtype)
+
+
 let pp_ut ppf (ut, adtype) = pf ppf "%a" pp_unsizedtype_local (adtype, ut)
 
 (*Get a string representing for the NaN type of the given type *)
@@ -86,7 +97,7 @@ let rec pp_initialize ppf (st, adtype) =
           (st, adtype) pp_initialize
           (SizedType.SMatrix (AoS, d1, d2), DataOnly)
     | SArray (t, d) ->
-        pf ppf "%a(%a, %a)" pp_st (st, adtype) pp_expr d pp_initialize
+        pf ppf "%a(%a, %a)" pp_possibly_soa_st (st, adtype) pp_expr d pp_initialize
           (t, adtype)
 
 (*Initialize an object of a given size.*)
