@@ -176,30 +176,31 @@ let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
   | ( _
     , (UnsizedType.UFun (fun_args, ReturnType return_type, suffix) as func_type)
     )
-    :: _
-    when suffix = FnPlain
-         || (allow_lpdf && Fun_kind.without_propto suffix = FnLpdf ()) -> (
+    :: _ ->
       let mandatory, variadic_arg_tys =
         List.split_n fun_args (List.length mandatory_fun_arg_tys)
       in
       let wrap_func_error x =
         FuncTypeMismatch (minimal_func_type, func_type, x) |> wrap_err
       in
-      match check_compatible_arguments 1 mandatory mandatory_fun_arg_tys with
-      | Some x -> wrap_func_error x
-      | None -> (
-        match check_same_type 1 return_type fun_return with
-        | Some _ ->
-            wrap_func_error
-              (ReturnTypeMismatch
-                 (ReturnType fun_return, ReturnType return_type))
-        | None ->
-            let expected_args =
-              ((UnsizedType.AutoDiffable, func_type) :: mandatory_arg_tys)
-              @ variadic_arg_tys
-            in
-            check_compatible_arguments 0 expected_args args
-            |> Option.map ~f:(fun x -> (expected_args, x)) ) )
+      let suffix = Fun_kind.without_propto suffix in
+      if suffix = FnPlain || (allow_lpdf && suffix = FnLpdf ()) then
+        match check_compatible_arguments 1 mandatory mandatory_fun_arg_tys with
+        | Some x -> wrap_func_error x
+        | None -> (
+          match check_same_type 1 return_type fun_return with
+          | Some _ ->
+              wrap_func_error
+                (ReturnTypeMismatch
+                   (ReturnType fun_return, ReturnType return_type))
+          | None ->
+              let expected_args =
+                ((UnsizedType.AutoDiffable, func_type) :: mandatory_arg_tys)
+                @ variadic_arg_tys
+              in
+              check_compatible_arguments 0 expected_args args
+              |> Option.map ~f:(fun x -> (expected_args, x)) )
+      else wrap_func_error (SuffixMismatch (FnPlain, suffix))
   | (_, x) :: _ -> TypesMismatch (minimal_func_type, x) |> wrap_err
   | [] -> Some ([], ArgNumMismatch (List.length mandatory_arg_tys, 0))
 

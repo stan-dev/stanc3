@@ -390,6 +390,24 @@ where F2 = (array[] real, data int, data int) => real
    (array[] real, int, int) => int
   These are not compatible because:
     Return types are incompatible: expected real but found int
+  $ ../../../../../install/default/bin/stanc bad_suffix.stan
+Semantic error in 'bad_suffix.stan', line 27, column 12 to line 28, column 45:
+   -------------------------------------------------
+    25:    beta[2] ~ normal(0, 1);
+    26:  
+    27:    target += reduce_sum(partial_sum_lp, n_redcards, grainsize,
+                     ^
+    28:                         n_games, rating, beta);
+    29:  }
+   -------------------------------------------------
+
+Ill-typed arguments supplied to function 'reduce_sum':
+(<F1>, array[] int, int, array[] int, vector, vector)
+where F1 = (array[] int, int, int, array[] int, vector, vector) => real
+Available signatures:
+(<F2>, array[] int, int) => real
+where F2 = (array[] int, data int, data int) => real
+  The first argument must be a pure function but found an _lp function. These function types are not compatible.
   $ ../../../../../install/default/bin/stanc bad_userdefined_reduce_sum.stan
 Semantic error in 'bad_userdefined_reduce_sum.stan', line 2, column 7 to column 17:
    -------------------------------------------------
