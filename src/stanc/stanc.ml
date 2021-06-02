@@ -78,7 +78,7 @@ let options =
          transformed it." )
     ; ( "--dump-stan-math-signatures"
       , Arg.Set dump_stan_math_sigs
-      , "Dump out the list of supported type signatures for Stan Math backend."
+      , " Dump out the list of supported type signatures for Stan Math backend."
       )
     ; ( "--warn-uninitialized"
       , Arg.Set warn_uninitialized
@@ -105,7 +105,7 @@ let options =
          \"$model_filename_model\")" )
     ; ( "--O"
       , Arg.Set optimize
-      , "Allow the compiler to apply all optimizations to the Stan code." )
+      , " Allow the compiler to apply all optimizations to the Stan code." )
     ; ( "--o"
       , Arg.Set_string output_file
       , " Take the path to an output file for generated C++ code (default = \
