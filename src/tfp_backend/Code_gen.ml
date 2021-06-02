@@ -213,7 +213,7 @@ let pp_bijector ppf trans =
   let pp_call_expr ppf (name, args) = pp_call ppf (name, pp_expr, args) in
   let components =
     match trans with
-    | Program.Identity -> []
+    | Transformation.Identity -> []
     | Lower lb -> [("Exp", []); ("Shift", [lb])]
     | Upper ub ->
         [("Exp", []); ("Scale", [Expr.Helpers.float (-1.)]); ("Shift", [ub])]
@@ -225,8 +225,7 @@ let pp_bijector ppf trans =
     | Correlation -> [("CorrelationCholesky", []); ("CholeskyOuterProduct", [])]
     | _ ->
         raise_s
-          [%message
-            "Unsupported " (trans : Expr.Typed.t Program.transformation)]
+          [%message "Unsupported " (trans : Expr.Typed.t Transformation.t)]
   in
   match components with
   | [] -> pf ppf "tfb__.Identity()"

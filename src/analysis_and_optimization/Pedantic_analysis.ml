@@ -238,7 +238,7 @@ let list_non_one_priors (fg : factor_graph) (mir : Program.Typed.t) :
 (* Collect useful information about an expression that's available at
    compile-time into a convenient form. *)
 let compiletime_value_of_expr
-    (params : (string * Expr.Typed.t Program.transformation) Set.Poly.t)
+    (params : (string * Expr.Typed.t Transformation.t) Set.Poly.t)
     (data : string Set.Poly.t) (expr : Expr.Typed.t) :
     compiletime_val * Expr.Typed.Meta.t =
   let v =

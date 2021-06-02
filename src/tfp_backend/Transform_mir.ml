@@ -103,12 +103,6 @@ let%expect_test "nested dist prefixes translated" =
 let rec remove_unused_stmts s =
   let pattern =
     match s.Stmt.Fixed.pattern with
-    | Assignment
-        ( _
-        , { Expr.Fixed.pattern=
-              FunApp (CompilerInternal (FnConstrain _ | FnUnconstrain _), _); _
-          } ) ->
-        Stmt.Fixed.Pattern.Skip
     | Decl _ -> Stmt.Fixed.Pattern.Skip
     | NRFunApp
         ( CompilerInternal

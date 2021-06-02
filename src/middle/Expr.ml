@@ -10,7 +10,7 @@ module Fixed = struct
     type 'a t =
       | Var of string
       | Lit of litType * string
-      | FunApp of Fun_kind.t * 'a list
+      | FunApp of 'a Fun_kind.t * 'a list
       | TernaryIf of 'a * 'a * 'a
       | EAnd of 'a * 'a
       | EOr of 'a * 'a
@@ -27,7 +27,7 @@ module Fixed = struct
             (Option.value_exn (Operator.of_string_opt name))
             pp_e rhs
       | FunApp (fun_kind, args) ->
-          Fmt.pf ppf "%a(%a)" Fun_kind.pp fun_kind
+          Fmt.pf ppf "%a(%a)" (Fun_kind.pp pp_e) fun_kind
             Fmt.(list pp_e ~sep:Fmt.comma)
             args
       | TernaryIf (pred, texpr, fexpr) ->
@@ -159,12 +159,19 @@ module Helpers = struct
     {Fixed.meta= Typed.Meta.empty; pattern= Lit (Real, string_of_float i)}
 
   let str i = {Fixed.meta= Typed.Meta.empty; pattern= Lit (Str, i)}
+  let variable v = {Fixed.meta= Typed.Meta.empty; pattern= Var v}
   let zero = int 0
   let one = int 1
 
   let binop e1 op e2 =
     { Fixed.meta= Typed.Meta.empty
     ; pattern= FunApp (StanLib (Operator.to_string op, FnPlain), [e1; e2]) }
+
+  let binop_list es op ~default =
+    match es with
+    | [] -> default
+    | head :: rest ->
+        List.fold ~init:head ~f:(fun accum next -> binop accum op next) rest
 
   let loop_bottom = one
 

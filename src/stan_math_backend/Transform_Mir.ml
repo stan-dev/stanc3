@@ -157,87 +157,51 @@ let data_read smeta (decl_id, st) =
           ; Stmt.Helpers.for_scalar_inv st bodyfn decl_var smeta ]
         |> swrap ]
 
-type constrainaction = Check | Constrain | Unconstrain [@@deriving sexp]
+(*
+  Get the dimension expressions that are expected by constrain/unconstrain
+  functions for a sized type.
 
-let constraint_to_string t (c : constrainaction) =
-  match t with
-  | Program.Ordered -> Some "ordered"
-  | PositiveOrdered -> Some "positive_ordered"
-  | Simplex -> Some "simplex"
-  | UnitVector -> Some "unit_vector"
-  | CholeskyCorr -> Some "cholesky_factor_corr"
-  | CholeskyCov -> Some "cholesky_factor_cov"
-  | Correlation -> Some "corr_matrix"
-  | Covariance -> Some "cov_matrix"
-  | Lower _ -> (
-    match c with
-    | Check -> Some "greater_or_equal"
-    | Constrain | Unconstrain -> Some "lb" )
-  | Upper _ -> (
-    match c with
-    | Check -> Some "less_or_equal"
-    | Constrain | Unconstrain -> Some "ub" )
-  | LowerUpper _ -> (
-    match c with
-    | Check ->
-        raise_s
-          [%message "LowerUpper is really two other checks tied together"]
-    | Constrain | Unconstrain -> Some "lub" )
-  | Offset _ | Multiplier _ | OffsetMultiplier _ -> (
-    match c with
-    | Check -> None
-    | Constrain | Unconstrain -> Some "offset_multiplier" )
-  | Identity -> None
+  For constrains that return square / lower triangular matrices the C++
+  only wants one of the matrix dimensions.
+*)
+let read_constrain_dims constrain_transform st =
+  let rec constrain_get_dims st =
+    match st with
+    | SizedType.SInt | SReal -> []
+    | SVector d | SRowVector d -> [d]
+    | SMatrix (_, dim2) -> [dim2]
+    | SArray (t, dim) -> dim :: constrain_get_dims t
+  in
+  match constrain_transform with
+  | Transformation.CholeskyCorr | Correlation | Covariance ->
+      constrain_get_dims st
+  | _ -> SizedType.get_dims st
 
-let default_multiplier = 1
-let default_offset = 0
-
-let transform_args = function
-  | Program.Offset offset -> [offset; Expr.Helpers.int default_multiplier]
-  | Multiplier multiplier -> [Expr.Helpers.int default_offset; multiplier]
-  | transform ->
-      Program.fold_transformation (fun args arg -> args @ [arg]) [] transform
+let data_serializer_read loc out_constrained_st =
+  let ut = SizedType.to_unsized out_constrained_st in
+  let dims = SizedType.get_dims out_constrained_st in
+  let emeta = Expr.Typed.Meta.create ~loc ~type_:ut ~adlevel:AutoDiffable () in
+  Expr.(
+    Helpers.(
+      internal_funapp FnReadDataSerializer dims
+        Typed.Meta.{emeta with type_= ut}))
 
 let param_read smeta
     (decl_id, Program.({out_constrained_st= cst; out_block; out_trans; _})) =
   if not (out_block = Parameters) then []
   else
     let ut = SizedType.to_unsized cst in
-    let decl_var =
-      Expr.Fixed.
-        { pattern= Var decl_id
-        ; meta=
-            Expr.Typed.Meta.create ~loc:smeta ~type_:ut ~adlevel:AutoDiffable
-              () }
+    let emeta =
+      Expr.Typed.Meta.create ~loc:smeta ~type_:ut ~adlevel:AutoDiffable ()
     in
-    let transform_args = transform_args out_trans in
-    (*
-      For constrains that return square / lower triangular matrices the C++
-      only wants one of the matrix dimensions.
-    *)
-    let rec constrain_get_dims st =
-      match st with
-      | SizedType.SInt | SReal -> []
-      | SVector d | SRowVector d -> [d]
-      | SMatrix (_, dim2) -> [dim2]
-      | SArray (t, dim) -> dim :: constrain_get_dims t
-    in
-    let read_constrain_dims constrain_transform st =
-      match constrain_transform with
-      | Program.CholeskyCorr | Correlation | Covariance ->
-          constrain_get_dims st
-      | _ -> SizedType.get_dims st
-    in
+    let dims = read_constrain_dims out_trans cst in
     let read =
       Expr.(
         Helpers.(
           internal_funapp
-            (FnReadParam (constraint_to_string out_trans Constrain))
-            ( transform_args
-            @ ( if out_trans = Identity then []
-              else [{decl_var with pattern= Var "lp__"}] )
-            @ read_constrain_dims out_trans cst ))
-          Typed.Meta.{decl_var.meta with type_= ut})
+            (FnReadParam {constrain= out_trans; dims})
+            []
+            Typed.Meta.{emeta with type_= ut}))
     in
     [ Stmt.Fixed.
         {pattern= Pattern.Assignment ((decl_id, ut, []), read); meta= smeta} ]
@@ -247,37 +211,9 @@ let escape_name str =
   |> String.substr_replace_all ~pattern:"." ~with_:"_"
   |> String.substr_replace_all ~pattern:"-" ~with_:"_"
 
-let rec add_jacobians Stmt.Fixed.({meta= smeta; pattern}) =
-  match pattern with
-  | Assignment
-      ( lhs
-      , { pattern= FunApp (CompilerInternal (FnConstrain trans), args)
-        ; meta= emeta } ) ->
-      let var n = Expr.{Fixed.pattern= Var n; meta= Typed.Meta.empty} in
-      let assign rhs =
-        Stmt.{Fixed.pattern= Assignment (lhs, rhs); meta= smeta}
-      in
-      { Stmt.Fixed.pattern=
-          IfElse
-            ( var "jacobian__"
-            , assign
-                { Expr.Fixed.pattern=
-                    FunApp
-                      ( CompilerInternal (FnConstrain trans)
-                      , args @ [var "lp__"] )
-                ; meta= emeta }
-            , Some
-                (assign
-                   { Expr.Fixed.pattern=
-                       FunApp (CompilerInternal (FnConstrain trans), args)
-                   ; meta= emeta }) )
-      ; meta= smeta }
-  | ptn ->
-      Stmt.Fixed.{pattern= Pattern.map Fn.id add_jacobians ptn; meta= smeta}
-
 (* Make sure that all if-while-and-for bodies are safely wrapped in a block in such a way that we can insert a location update before.
    The blocks make sure that the program with the inserted location update is still well-formed C++ though.
-   *)
+*)
 let rec ensure_body_in_block (Stmt.Fixed.({pattern; _}) as stmt) =
   let in_block stmt =
     let pattern =
@@ -360,36 +296,46 @@ let add_reads vars mkread stmts =
   in
   List.concat_map ~f:add_read_to_decl stmts
 
-let gen_write (decl_id, sizedtype) =
-  let bodyfn var =
-    Stmt.Helpers.internal_nrfunapp FnWriteParam [var] Location_span.empty
+let gen_write ?(unconstrain = false)
+    (decl_id, Program.({out_constrained_st; out_trans; _})) =
+  let decl_var =
+    { Expr.Fixed.pattern= Var decl_id
+    ; meta=
+        Expr.Typed.Meta.
+          { loc= Location_span.empty
+          ; type_= SizedType.to_unsized out_constrained_st
+          ; adlevel= DataOnly } }
   in
-  let meta =
-    {Expr.Typed.Meta.empty with type_= SizedType.to_unsized sizedtype}
-  in
-  let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
-  Stmt.Helpers.for_scalar_inv sizedtype bodyfn expr Location_span.empty
+  Stmt.Helpers.internal_nrfunapp
+    (FnWriteParam
+       {unconstrain_opt= Option.some_if unconstrain out_trans; var= decl_var})
+    [] Location_span.empty
 
-let gen_write_unconstrained (decl_id, sizedtype) =
-  let bodyfn var =
-    let var =
-      match var.Expr.Fixed.pattern with
-      | Indexed ({pattern= Indexed (expr, idcs1); _}, idcs2) ->
-          {var with pattern= Indexed (expr, idcs1 @ idcs2)}
-      | _ -> var
-    in
-    Stmt.Helpers.internal_nrfunapp FnWriteParam [var] Location_span.empty
-  in
-  let meta =
-    {Expr.Typed.Meta.empty with type_= SizedType.to_unsized sizedtype}
-  in
-  let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
-  let writefn var =
-    Stmt.Helpers.for_scalar_inv
-      (SizedType.inner_type sizedtype)
-      bodyfn var Location_span.empty
-  in
-  Stmt.Helpers.for_eigen sizedtype writefn expr Location_span.empty
+(* Statements to read, unconstrain and assign a parameter then write it back *)
+let data_unconstrain_transform smeta (decl_id, outvar) =
+  [ Stmt.Fixed.
+      { pattern=
+          Decl
+            { decl_adtype= UnsizedType.AutoDiffable
+            ; decl_id
+            ; decl_type= Type.Sized outvar.Program.out_constrained_st }
+      ; meta= smeta }
+  ; (let nonarray_st, array_dims =
+       SizedType.get_array_dims outvar.Program.out_constrained_st
+     in
+     Stmt.Helpers.mk_nested_for (List.rev array_dims)
+       (fun loopvars ->
+         Stmt.Fixed.
+           { meta= smeta
+           ; pattern=
+               Assignment
+                 ( ( decl_id
+                   , SizedType.to_unsized nonarray_st
+                   , List.map ~f:(fun e -> Index.Single e) (List.rev loopvars)
+                   )
+                 , data_serializer_read smeta nonarray_st ) } )
+       smeta)
+  ; gen_write ~unconstrain:true (decl_id, outvar) ]
 
 let rec contains_var_expr is_vident accum Expr.Fixed.({pattern; _}) =
   accum
@@ -398,52 +344,6 @@ let rec contains_var_expr is_vident accum Expr.Fixed.({pattern; _}) =
   | Var v when is_vident v -> true
   | pattern ->
       Expr.Fixed.Pattern.fold (contains_var_expr is_vident) false pattern
-
-(* When a parameter's unconstrained type and its constrained type are different,
-   we generate a new variable "<param_name>_in__" and read into that. We now need
-   to change the FnConstrain calls to constrain that variable and assign to the
-   actual <param_name> var.
-*)
-let constrain_in_params outvars stmts =
-  let is_target_var = function
-    | ( name
-      , { Program.out_unconstrained_st
-        ; out_constrained_st
-        ; out_block= Parameters; _ } )
-      when not (out_unconstrained_st = out_constrained_st) ->
-        Some name
-    | _ -> None
-  in
-  let target_vars =
-    List.filter_map outvars ~f:is_target_var |> String.Set.of_list
-  in
-  let rec change_constrain_target (Stmt.Fixed.({pattern; _}) as s) =
-    match pattern with
-    | Assignment
-        ( lval
-        , { pattern=
-              FunApp ((CompilerInternal (FnConstrain _) as kind), var :: args)
-          ; meta } )
-      when contains_var_expr (Set.mem target_vars) false var ->
-        let rec change_var_expr (Expr.Fixed.({pattern; _}) as e) =
-          match pattern with
-          | Var vident when Set.mem target_vars vident ->
-              {e with pattern= Var (vident ^ "_in__")}
-          | pattern ->
-              {e with pattern= Expr.Fixed.Pattern.map change_var_expr pattern}
-        in
-        Stmt.Fixed.
-          { s with
-            pattern=
-              Assignment
-                ( lval
-                , {pattern= FunApp (kind, change_var_expr var :: args); meta}
-                ) }
-    | pattern ->
-        Stmt.Fixed.
-          {s with pattern= Pattern.map Fn.id change_constrain_target pattern}
-  in
-  List.map ~f:change_constrain_target stmts
 
 let fn_name_map =
   String.Map.of_alist_exn [("integrate_ode", "integrate_ode_rk45")]
@@ -525,27 +425,9 @@ let trans_prog (p : Program.Typed.t) =
     |> List.map ~f:(fun pattern ->
            Stmt.Fixed.{pattern; meta= Location_span.empty} )
   in
-  let get_pname_cst = function
-    | name, {Program.out_block= Parameters; out_constrained_st; _} ->
-        Some (name, out_constrained_st)
-    | _ -> None
-  in
-  let get_pname_ust = function
-    | ( name
-      , { Program.out_block= Parameters
-        ; out_unconstrained_st
-        ; out_trans= Identity; _ } ) ->
-        Some (name, out_unconstrained_st)
-    | name, {Program.out_block= Parameters; out_unconstrained_st; _} ->
-        Some (name ^ "_free__", out_unconstrained_st)
-    | _ -> None
-  in
-  let constrained_params = List.filter_map ~f:get_pname_cst p.output_vars in
-  let free_params = List.filter_map ~f:get_pname_ust p.output_vars in
   let param_writes, tparam_writes, gq_writes =
-    List.map p.output_vars
-      ~f:(fun (name, {out_constrained_st= st; out_block; _}) ->
-        (out_block, gen_write (name, st)) )
+    List.map p.output_vars ~f:(fun (name, outvar) ->
+        (outvar.Program.out_block, gen_write (name, outvar)) )
     |> List.partition3_map ~f:(fun (b, x) ->
            match b with
            | Parameters -> `Fst x
@@ -609,16 +491,12 @@ let trans_prog (p : Program.Typed.t) =
     ( p.generate_quantities
     |> add_reads p.output_vars param_read
     |> translate_to_open_cl
-    |> constrain_in_params p.output_vars
     |> insert_before tparam_start param_writes
     |> insert_before gq_start tparam_writes_cond )
     @ gq_writes
   in
   let log_prob =
-    p.log_prob |> List.map ~f:add_jacobians
-    |> add_reads p.output_vars param_read
-    |> constrain_in_params p.output_vars
-    |> translate_to_open_cl
+    p.log_prob |> add_reads p.output_vars param_read |> translate_to_open_cl
   in
   let opencl_vars =
     String.Set.union_list
@@ -672,8 +550,11 @@ let trans_prog (p : Program.Typed.t) =
         @ to_matrix_cl_stmts
     ; transform_inits=
         init_pos
-        @ (p.transform_inits |> add_reads constrained_params data_read)
-        @ List.map ~f:gen_write_unconstrained free_params
+        @ List.concat_map
+            ~f:(data_unconstrain_transform Location_span.empty)
+            (List.filter
+               ~f:(fun (_, ov) -> ov.Program.out_block = Parameters)
+               p.output_vars)
     ; generate_quantities }
   in
   Program.(

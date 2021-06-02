@@ -8,7 +8,7 @@ module Fixed : sig
     type 'a t =
       | Var of string
       | Lit of litType * string
-      | FunApp of Fun_kind.t * 'a list
+      | FunApp of 'a Fun_kind.t * 'a list
       | TernaryIf of 'a * 'a * 'a
       | EAnd of 'a * 'a
       | EOr of 'a * 'a
@@ -80,14 +80,18 @@ module Helpers : sig
   val int : int -> Typed.t
   val float : float -> Typed.t
   val str : string -> Typed.t
+  val variable : string -> Typed.t
   val zero : Typed.t
   val one : Typed.t
   val binop : Typed.t -> Operator.t -> Typed.t -> Typed.t
+  val binop_list : Typed.t list -> Operator.t -> default:Typed.t -> Typed.t
   val loop_bottom : Typed.t
-  val internal_funapp : Internal_fun.t -> 'a Fixed.t list -> 'a -> 'a Fixed.t
+
+  val internal_funapp :
+    'a Fixed.t Internal_fun.t -> 'a Fixed.t list -> 'a -> 'a Fixed.t
 
   val contains_fn_kind :
-    (Fun_kind.t -> bool) -> ?init:bool -> 'a Fixed.t -> bool
+    ('a Fixed.t Fun_kind.t -> bool) -> ?init:bool -> 'a Fixed.t -> bool
 
   val infer_type_of_indexed : UnsizedType.t -> 'a Index.t list -> UnsizedType.t
   val add_int_index : Typed.t -> Typed.t Index.t -> Typed.t

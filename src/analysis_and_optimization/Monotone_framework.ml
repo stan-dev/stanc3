@@ -45,7 +45,9 @@ and free_vars_idx (i : Expr.Typed.t Index.t) =
   | Between (e1, e2) -> Set.Poly.union (free_vars_expr e1) (free_vars_expr e2)
 
 and free_vars_fnapp kind l =
-  let arg_vars = List.map ~f:free_vars_expr l in
+  let arg_vars =
+    List.map ~f:free_vars_expr (l @ Fun_kind.collect_exprs kind)
+  in
   match kind with
   | Fun_kind.UserDefined (f, _) ->
       Set.Poly.union_list (Set.Poly.singleton f :: List.map ~f:free_vars_expr l)
@@ -547,8 +549,9 @@ let rec used_subexpressions_expr (e : Expr.Typed.t) =
     (Expr.Typed.Set.singleton e)
     ( match e.pattern with
     | Var _ | Lit (_, _) -> Expr.Typed.Set.empty
-    | FunApp (_, l) ->
-        Expr.Typed.Set.union_list (List.map ~f:used_subexpressions_expr l)
+    | FunApp (k, l) ->
+        Expr.Typed.Set.union_list
+          (List.map ~f:used_subexpressions_expr (l @ Fun_kind.collect_exprs k))
     | TernaryIf (e1, e2, e3) ->
         Expr.Typed.Set.union_list
           [ used_subexpressions_expr e1
@@ -585,7 +588,8 @@ let rec used_expressions_stmt_help f
         [ f e
         ; used_expressions_stmt_help f b1.pattern
         ; used_expressions_stmt_help f b2.pattern ]
-  | NRFunApp (_, l) -> Expr.Typed.Set.union_list (List.map ~f l)
+  | NRFunApp (k, l) ->
+      Expr.Typed.Set.union_list (List.map ~f (l @ Fun_kind.collect_exprs k))
   | Decl _ | Return None | Break | Continue | Skip -> Expr.Typed.Set.empty
   | IfElse (e, b, None) | While (e, b) ->
       Expr.Typed.Set.union (f e) (used_expressions_stmt_help f b.pattern)
@@ -619,7 +623,8 @@ let top_used_expressions_stmt_help f
         (Expr.Typed.Set.union_list
            (List.map ~f:(used_expressions_idx_help f) l))
   | While (e, _) | IfElse (e, _, _) -> f e
-  | NRFunApp (_, l) -> Expr.Typed.Set.union_list (List.map ~f l)
+  | NRFunApp (k, l) ->
+      Expr.Typed.Set.union_list (List.map ~f (l @ Fun_kind.collect_exprs k))
   | Profile _ | Block _ | SList _ | Decl _
    |Return None
    |Break | Continue | Skip ->

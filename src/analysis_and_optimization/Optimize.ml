@@ -690,13 +690,8 @@ and accum_any pred b e = b || expr_any pred e
 let can_side_effect_top_expr (e : Expr.Typed.t) =
   match e.pattern with
   | FunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget)), _) -> true
-  | FunApp
-      ( CompilerInternal
-          ( FnReadParam _ | FnReadData | FnWriteParam | FnConstrain _
-          | FnValidateSize | FnValidateSizeSimplex | FnValidateSizeUnitVector
-          | FnUnconstrain _ )
-      , _ ) ->
-      true
+  | FunApp (CompilerInternal internal_fn, _) ->
+      Internal_fun.can_side_effect internal_fn
   | _ -> false
 
 let cannot_duplicate_expr (e : Expr.Typed.t) =

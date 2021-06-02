@@ -172,7 +172,7 @@ and pp_sizedtype ppf = function
   | SArray _ -> raise (Middle.Errors.FatalError "This should never happen.")
 
 and pp_transformation ppf = function
-  | Middle.Program.Identity -> Fmt.pf ppf ""
+  | Middle.Transformation.Identity -> Fmt.pf ppf ""
   | Lower e -> Fmt.pf ppf "<lower=%a>" pp_expression e
   | Upper e -> Fmt.pf ppf "<upper=%a>" pp_expression e
   | LowerUpper (e1, e2) ->
@@ -229,7 +229,7 @@ and pp_transformed_type ppf (pst, trans) =
     | _ -> Fmt.nop
   in
   match trans with
-  | Middle.Program.Identity ->
+  | Middle.Transformation.Identity ->
       Fmt.pf ppf "%a%a" unsizedtype_fmt () sizes_fmt ()
   | Lower _ | Upper _ | LowerUpper _ | Offset _ | Multiplier _
    |OffsetMultiplier _ ->
