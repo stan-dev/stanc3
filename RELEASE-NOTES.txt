@@ -1,6 +1,24 @@
 STANC3 RELEASE NOTES
 ======================================================================
 
+v2.27.0 (2 June 2021)
+======================================================================
+
+ - Added the `--info` argument to output a list of functions and distributions used.(#813)
+ - Added `ode_ckrk` and `ode_ckrk_tol` to the Stan language.(#828)
+ - Cleaned up indexing by using variadic rvalue and assign functions.(#829)
+ - Fixed incorrect codegen for mixed-type array expressions.(#830)
+ - Added building ARM to our infrastructure.(#832, #833)
+ - Made locations_array constexpr and moved curr_statement__ to function scope.(#842, #845)
+ - Added range checks.(#849, #521)
+ - Consolidated the use of | in cdf functions to match lpdf/lpmf and lccdf functions. Comma version of cdf function is deprecated.(#863)
+ - Adds signatures for data-only quantile functions.(#870)
+ - Cleanup readability of the C++.(#871)
+ - Adds vectorized versions of `fma()`.(#888)
+ - Fixed optimizer crash on divide-by-zero expressions.(#891)
+ - Added clearing of read/write events for global matrix_cls.(#897)
+ - Added  `ode_adjoint_tol_ctl` and improved type printing with variadic ODEs.(#900)
+
 v2.26.1 (15 February 2021)
 ======================================================================
 
