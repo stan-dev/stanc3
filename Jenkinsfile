@@ -155,7 +155,7 @@ pipeline {
                                     text:"O=0\nCXX=${CXX}")
                             sh """
                                 cd performance-tests-cmdstan
-                                cd cmdstan; make -j${env.PARALLEL} build; cd ..
+                                cd cmdstan; make clean-all; make -j${env.PARALLEL} build; cd ..
                                 cp ../bin/stanc cmdstan/bin/stanc
                                 ./runPerformanceTests.py -j7 --runs=0 ../test/integration/good
                                 ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 example-models
@@ -188,7 +188,7 @@ pipeline {
                             cat shotgun_perf_all.tests >> all.tests
                             cat all.tests
                             echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
-                            cd cmdstan; git show HEAD --stat; make -j4 build; cd ..
+                            cd cmdstan; make clean-all; git show HEAD --stat; make -j4 build; cd ..
                             CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
                         """
 
