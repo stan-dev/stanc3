@@ -140,10 +140,9 @@ my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
   try {
     current_statement__ = 7;
     validate_non_negative_index("result", "num_elements(x)", num_elements(x));
-    stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> result = 
-    stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(
-      num_elements(x), std::numeric_limits<double>::quiet_NaN()));
-    
+    Eigen::Matrix<local_scalar_t__, -1, 1> result = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(
+                                                      num_elements(x), DUMMY_VAR__);
+                                                    
     
     current_statement__ = 8;
     assign(result, multiply(x, 5.0), "assigning variable result");

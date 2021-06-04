@@ -33,7 +33,7 @@
 
 (rule
  (targets transformed_mir2.output)
- (deps (package stanc) (:stanfiles (glob_files *.stan)))
+ (deps (package stanc) (:stanfiles mem_patterns.stan))
  (action
   (with-stdout-to %{targets}
    (run %{bin:run_bin_on_args} "%{bin:stanc} --debug-transformed-mir" %{stanfiles}))))

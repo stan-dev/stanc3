@@ -271,7 +271,7 @@ let%expect_test "list collapsing" =
              (((pattern
                 (Return
                  (((pattern
-                    (FunApp (StanLib Pow__ FnPlain SoA)
+                    (FunApp (StanLib Pow__ FnPlain AoS)
                      (((pattern (Var z))
                        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern (Lit Int 2))
@@ -372,7 +372,7 @@ let%expect_test "list collapsing" =
                    ((pattern
                      (Assignment (inline_sym3__ UReal ())
                       ((pattern
-                        (FunApp (StanLib Pow__ FnPlain SoA)
+                        (FunApp (StanLib Pow__ FnPlain AoS)
                          (((pattern (Lit Int 53))
                            (meta
                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -401,7 +401,7 @@ let%expect_test "list collapsing" =
        ((pattern
          (IfElse
           ((pattern
-            (FunApp (StanLib PNot__ FnPlain SoA)
+            (FunApp (StanLib PNot__ FnPlain AoS)
              (((pattern
                 (EOr
                  ((pattern (Var emit_transformed_parameters__))
@@ -415,7 +415,7 @@ let%expect_test "list collapsing" =
        ((pattern
          (IfElse
           ((pattern
-            (FunApp (StanLib PNot__ FnPlain SoA)
+            (FunApp (StanLib PNot__ FnPlain AoS)
              (((pattern (Var emit_generated_quantities__))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -3130,7 +3130,7 @@ let%expect_test "block fixing" =
         (((pattern
            (IfElse
             ((pattern
-              (FunApp (StanLib PNot__ FnPlain SoA)
+              (FunApp (StanLib PNot__ FnPlain AoS)
                (((pattern
                   (EOr
                    ((pattern (Var emit_transformed_parameters__))
@@ -3144,7 +3144,7 @@ let%expect_test "block fixing" =
          ((pattern
            (IfElse
             ((pattern
-              (FunApp (StanLib PNot__ FnPlain SoA)
+              (FunApp (StanLib PNot__ FnPlain AoS)
                (((pattern (Var emit_generated_quantities__))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -3329,7 +3329,7 @@ let%expect_test "adlevel_optimization expressions" =
            ((pattern
              (IfElse
               ((pattern
-                (FunApp (StanLib Greater__ FnPlain SoA)
+                (FunApp (StanLib Greater__ FnPlain AoS)
                  (((pattern (Lit Int 1))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern (Lit Int 2))
@@ -3338,7 +3338,7 @@ let%expect_test "adlevel_optimization expressions" =
               ((pattern
                 (Assignment (y UReal ())
                  ((pattern
-                   (FunApp (StanLib Plus__ FnPlain SoA)
+                   (FunApp (StanLib Plus__ FnPlain AoS)
                     (((pattern (Var y))
                       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                      ((pattern (Var x))
@@ -3348,7 +3348,7 @@ let%expect_test "adlevel_optimization expressions" =
               (((pattern
                  (Assignment (y UReal ())
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain SoA)
+                    (FunApp (StanLib Plus__ FnPlain AoS)
                      (((pattern (Var y))
                        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                       ((pattern (Var w))
@@ -3359,7 +3359,7 @@ let%expect_test "adlevel_optimization expressions" =
            ((pattern
              (IfElse
               ((pattern
-                (FunApp (StanLib Greater__ FnPlain SoA)
+                (FunApp (StanLib Greater__ FnPlain AoS)
                  (((pattern (Lit Int 2))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern (Lit Int 1))
@@ -3375,7 +3375,7 @@ let%expect_test "adlevel_optimization expressions" =
            ((pattern
              (IfElse
               ((pattern
-                (FunApp (StanLib Greater__ FnPlain SoA)
+                (FunApp (StanLib Greater__ FnPlain AoS)
                  (((pattern (Lit Int 3))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern (Lit Int 1))

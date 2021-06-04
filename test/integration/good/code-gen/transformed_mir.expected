@@ -10,7 +10,7 @@
          (((pattern
             (IfElse
              ((pattern
-               (FunApp (StanLib Equals__ FnPlain SoA)
+               (FunApp (StanLib Equals__ FnPlain AoS)
                 (((pattern (Var n))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                  ((pattern (Lit Int 0))
@@ -29,13 +29,13 @@
           ((pattern
             (Return
              (((pattern
-                (FunApp (StanLib Times__ FnPlain SoA)
+                (FunApp (StanLib Times__ FnPlain AoS)
                  (((pattern (Var n))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern
                     (FunApp (UserDefined foo FnPlain)
                      (((pattern
-                        (FunApp (StanLib Minus__ FnPlain SoA)
+                        (FunApp (StanLib Minus__ FnPlain AoS)
                          (((pattern (Var n))
                            (meta
                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -95,9 +95,9 @@
                 ((pattern (Lit Int 2))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
              ((pattern
-               (FunApp (StanLib Minus__ FnPlain SoA)
+               (FunApp (StanLib Minus__ FnPlain AoS)
                 (((pattern
-                   (FunApp (StanLib PMinus__ FnPlain SoA)
+                   (FunApp (StanLib PMinus__ FnPlain AoS)
                     (((pattern
                        (Indexed
                         ((pattern (Var y))
@@ -113,7 +113,7 @@
                   (meta
                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                  ((pattern
-                   (FunApp (StanLib Times__ FnPlain SoA)
+                   (FunApp (StanLib Times__ FnPlain AoS)
                     (((pattern
                        (Indexed
                         ((pattern (Var theta))
@@ -230,7 +230,7 @@
          (((pattern
             (Return
              (((pattern
-                (FunApp (StanLib normal_rng FnRng SoA)
+                (FunApp (StanLib normal_rng FnRng AoS)
                  (((pattern (Var mu))
                    (meta
                     ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
@@ -249,7 +249,7 @@
          (((pattern
             (TargetPE
              ((pattern
-               (FunApp (StanLib normal_log (FnLpdf false) SoA)
+               (FunApp (StanLib normal_log (FnLpdf false) AoS)
                 (((pattern (Var u))
                   (meta
                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
@@ -262,12 +262,12 @@
           ((pattern
             (TargetPE
              ((pattern
-               (FunApp (StanLib uniform_lpdf (FnLpdf true) SoA)
+               (FunApp (StanLib uniform_lpdf (FnLpdf true) AoS)
                 (((pattern (Var u))
                   (meta
                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                  ((pattern
-                   (FunApp (StanLib PMinus__ FnPlain SoA)
+                   (FunApp (StanLib PMinus__ FnPlain AoS)
                     (((pattern (Lit Int 100))
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -664,7 +664,7 @@
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
                     (upper
                      ((pattern
-                       (FunApp (StanLib rows FnPlain AoS)
+                       (FunApp (StanLib rows FnPlain SoA)
                         (((pattern (Var vs))
                           (meta
                            ((type_ UMatrix) (loc <opaque>)
@@ -753,7 +753,7 @@
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
                     (upper
                      ((pattern
-                       (FunApp (StanLib rows FnPlain AoS)
+                       (FunApp (StanLib rows FnPlain SoA)
                         (((pattern (Var vs))
                           (meta
                            ((type_ UMatrix) (loc <opaque>)
@@ -1199,7 +1199,7 @@
          (((pattern
             (Return
              (((pattern
-                (FunApp (StanLib rep_array FnPlain SoA)
+                (FunApp (StanLib rep_array FnPlain AoS)
                  (((pattern (Var t))
                    (meta
                     ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
@@ -1219,11 +1219,11 @@
          (((pattern
             (Return
              (((pattern
-                (FunApp (StanLib Plus__ FnPlain SoA)
+                (FunApp (StanLib Plus__ FnPlain AoS)
                  (((pattern (Var x))
                    (meta
                     ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-                  ((pattern (FunApp (StanLib target FnTarget SoA) ()))
+                  ((pattern (FunApp (StanLib target FnTarget AoS) ()))
                    (meta
                     ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -1262,9 +1262,9 @@
           ((pattern
             (Assignment (abs_diff UReal ())
              ((pattern
-               (FunApp (StanLib fabs FnPlain SoA)
+               (FunApp (StanLib fabs FnPlain AoS)
                 (((pattern
-                   (FunApp (StanLib Minus__ FnPlain SoA)
+                   (FunApp (StanLib Minus__ FnPlain AoS)
                     (((pattern (Var x))
                       (meta
                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
@@ -1278,11 +1278,11 @@
           ((pattern
             (Assignment (avg_scale UReal ())
              ((pattern
-               (FunApp (StanLib Divide__ FnPlain SoA)
+               (FunApp (StanLib Divide__ FnPlain AoS)
                 (((pattern
-                   (FunApp (StanLib Plus__ FnPlain SoA)
+                   (FunApp (StanLib Plus__ FnPlain AoS)
                     (((pattern
-                       (FunApp (StanLib fabs FnPlain SoA)
+                       (FunApp (StanLib fabs FnPlain AoS)
                         (((pattern (Var x))
                           (meta
                            ((type_ UReal) (loc <opaque>)
@@ -1290,7 +1290,7 @@
                       (meta
                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                      ((pattern
-                       (FunApp (StanLib fabs FnPlain SoA)
+                       (FunApp (StanLib fabs FnPlain AoS)
                         (((pattern (Var y))
                           (meta
                            ((type_ UReal) (loc <opaque>)
@@ -1419,7 +1419,7 @@
          (((pattern
             (Return
              (((pattern
-                (FunApp (StanLib Transpose__ FnPlain SoA)
+                (FunApp (StanLib Transpose__ FnPlain AoS)
                  (((pattern
                     (FunApp (CompilerInternal FnMakeRowVec)
                      (((pattern (Lit Int 1))
@@ -1478,7 +1478,7 @@
               ((pattern (Lit Str "rows(mat)"))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib rows FnPlain SoA)
+                (FunApp (StanLib rows FnPlain AoS)
                  (((pattern (Var mat))
                    (meta
                     ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -1491,7 +1491,7 @@
               ((pattern (Lit Str "cols(mat)"))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib cols FnPlain SoA)
+                (FunApp (StanLib cols FnPlain AoS)
                  (((pattern (Var mat))
                    (meta
                     ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -1501,15 +1501,15 @@
             (Decl (decl_adtype AutoDiffable) (decl_id o)
              (decl_type
               (Sized
-               (SMatrix SoA
+               (SMatrix AoS
                 ((pattern
-                  (FunApp (StanLib rows FnPlain SoA)
+                  (FunApp (StanLib rows FnPlain AoS)
                    (((pattern (Var mat))
                      (meta
                       ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel AutoDiffable))))
                 ((pattern
-                  (FunApp (StanLib cols FnPlain SoA)
+                  (FunApp (StanLib cols FnPlain AoS)
                    (((pattern (Var mat))
                      (meta
                       ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -1868,7 +1868,7 @@
               (Sized
                (SArray
                 (SArray
-                 (SMatrix SoA
+                 (SMatrix AoS
                   ((pattern (Lit Int 40))
                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern (Lit Int 50))
@@ -2019,7 +2019,7 @@
          (((pattern
             (Return
              (((pattern
-                (FunApp (StanLib Transpose__ FnPlain SoA)
+                (FunApp (StanLib Transpose__ FnPlain AoS)
                  (((pattern
                     (FunApp (CompilerInternal FnMakeRowVec)
                      (((pattern (Lit Int 1))
@@ -2067,14 +2067,14 @@
             (Decl (decl_adtype AutoDiffable) (decl_id l)
              (decl_type
               (Sized
-               (SVector SoA
+               (SVector AoS
                 ((pattern (Lit Int 10))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
            (meta <opaque>))
           ((pattern
             (Assignment (l UVector ())
              ((pattern
-               (FunApp (StanLib Times__ FnPlain SoA)
+               (FunApp (StanLib Times__ FnPlain AoS)
                 (((pattern (Var mu))
                   (meta
                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
@@ -2098,19 +2098,19 @@
             (Decl (decl_adtype AutoDiffable) (decl_id l)
              (decl_type
               (Sized
-               (SVector SoA
+               (SVector AoS
                 ((pattern (Lit Int 10))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
            (meta <opaque>))
           ((pattern
             (Assignment (l UVector ())
              ((pattern
-               (FunApp (StanLib Times__ FnPlain SoA)
+               (FunApp (StanLib Times__ FnPlain AoS)
                 (((pattern (Var mu))
                   (meta
                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                  ((pattern
-                   (FunApp (StanLib Transpose__ FnPlain SoA)
+                   (FunApp (StanLib Transpose__ FnPlain AoS)
                     (((pattern
                        (FunApp (CompilerInternal FnMakeRowVec)
                         (((pattern (Lit Int 1))
@@ -2191,7 +2191,7 @@
             (Decl (decl_adtype AutoDiffable) (decl_id f_x)
              (decl_type
               (Sized
-               (SVector SoA
+               (SVector AoS
                 ((pattern (Lit Int 2))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
            (meta <opaque>))
@@ -2202,7 +2202,7 @@
                 ((pattern (Lit Int 1))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
              ((pattern
-               (FunApp (StanLib Minus__ FnPlain SoA)
+               (FunApp (StanLib Minus__ FnPlain AoS)
                 (((pattern
                    (Indexed
                     ((pattern (Var x))
@@ -2234,7 +2234,7 @@
                 ((pattern (Lit Int 2))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
              ((pattern
-               (FunApp (StanLib Minus__ FnPlain SoA)
+               (FunApp (StanLib Minus__ FnPlain AoS)
                 (((pattern
                    (Indexed
                     ((pattern (Var x))
@@ -2277,7 +2277,7 @@
             (Decl (decl_adtype AutoDiffable) (decl_id lpmf)
              (decl_type
               (Sized
-               (SVector SoA
+               (SVector AoS
                 ((pattern (Lit Int 1))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
            (meta <opaque>))
@@ -2329,12 +2329,12 @@
      ((pattern (Var N))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_vec
-    (SVector SoA
+    (SVector AoS
      ((pattern (Var N))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_1d_vec
     (SArray
-     (SVector SoA
+     (SVector AoS
       ((pattern (Var N))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
      ((pattern (Var N))
@@ -2343,7 +2343,7 @@
     (SArray
      (SArray
       (SArray
-       (SVector SoA
+       (SVector AoS
         ((pattern (Var N))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var K))
@@ -2353,12 +2353,12 @@
      ((pattern (Var N))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_row_vec
-    (SRowVector SoA
+    (SRowVector AoS
      ((pattern (Var N))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_1d_row_vec
     (SArray
-     (SRowVector SoA
+     (SRowVector AoS
       ((pattern (Var N))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
      ((pattern (Var N))
@@ -2367,7 +2367,7 @@
     (SArray
      (SArray
       (SArray
-       (SRowVector SoA
+       (SRowVector AoS
         ((pattern (Var N))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var K))
@@ -2379,7 +2379,7 @@
    (d_ar_mat
     (SArray
      (SArray
-      (SMatrix SoA
+      (SMatrix AoS
        ((pattern (Lit Int 2))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 3))
@@ -2389,12 +2389,12 @@
      ((pattern (Lit Int 4))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_simplex
-    (SVector SoA
+    (SVector AoS
      ((pattern (Var N))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_1d_simplex
     (SArray
-     (SVector SoA
+     (SVector AoS
       ((pattern (Var N))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
      ((pattern (Var N))
@@ -2403,7 +2403,7 @@
     (SArray
      (SArray
       (SArray
-       (SVector SoA
+       (SVector AoS
         ((pattern (Var N))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var K))
@@ -2413,20 +2413,20 @@
      ((pattern (Var N))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_cfcov_54
-    (SMatrix SoA
+    (SMatrix AoS
      ((pattern (Lit Int 5))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
      ((pattern (Lit Int 4))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_cfcov_33
-    (SMatrix SoA
+    (SMatrix AoS
      ((pattern (Lit Int 3))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
      ((pattern (Lit Int 3))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_cfcov_33_ar
     (SArray
-     (SMatrix SoA
+     (SMatrix AoS
       ((pattern (Lit Int 3))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
       ((pattern (Lit Int 3))
@@ -2478,14 +2478,14 @@
      ((pattern (Var d_int))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_matrix
-    (SMatrix SoA
+    (SMatrix AoS
      ((pattern (Var d_int))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
      ((pattern (Var d_int))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_matrix_array
     (SArray
-     (SMatrix SoA
+     (SMatrix AoS
       ((pattern (Var d_int))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
       ((pattern (Var d_int))
@@ -2495,7 +2495,7 @@
    (d_matrix_array_2d
     (SArray
      (SArray
-      (SMatrix SoA
+      (SMatrix AoS
        ((pattern (Var d_int))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Var d_int))
@@ -2508,7 +2508,7 @@
     (SArray
      (SArray
       (SArray
-       (SMatrix SoA
+       (SMatrix AoS
         ((pattern (Var d_int))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Var d_int))
@@ -2520,12 +2520,12 @@
      ((pattern (Var d_int))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_vector
-    (SVector SoA
+    (SVector AoS
      ((pattern (Var d_int))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_vector_array
     (SArray
-     (SVector SoA
+     (SVector AoS
       ((pattern (Var d_int))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
      ((pattern (Var d_int))
@@ -2533,7 +2533,7 @@
    (d_vector_array_2d
     (SArray
      (SArray
-      (SVector SoA
+      (SVector AoS
        ((pattern (Var d_int))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
       ((pattern (Lit Int 2))
@@ -2544,7 +2544,7 @@
     (SArray
      (SArray
       (SArray
-       (SVector SoA
+       (SVector AoS
         ((pattern (Var d_int))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 3))
@@ -2554,12 +2554,12 @@
      ((pattern (Var d_int))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_row_vector
-    (SRowVector SoA
+    (SRowVector AoS
      ((pattern (Var d_int))
       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
    (d_row_vector_array
     (SArray
-     (SRowVector SoA
+     (SRowVector AoS
       ((pattern (Var d_int))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
      ((pattern (Var d_int))
@@ -2567,7 +2567,7 @@
    (d_row_vector_array_2d
     (SArray
      (SArray
-      (SRowVector SoA
+      (SRowVector AoS
        ((pattern (Var d_int))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
       ((pattern (Lit Int 2))
@@ -2578,7 +2578,7 @@
     (SArray
      (SArray
       (SArray
-       (SRowVector SoA
+       (SRowVector AoS
         ((pattern (Var d_int))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 3))
@@ -2876,7 +2876,7 @@
                                ((pattern
                                  (Assignment (pos__ UInt ())
                                   ((pattern
-                                    (FunApp (StanLib Plus__ FnPlain AoS)
+                                    (FunApp (StanLib Plus__ FnPlain SoA)
                                      (((pattern (Var pos__))
                                        (meta
                                         ((type_ UInt) (loc <opaque>)
@@ -2999,7 +2999,7 @@
        ((pattern (Var J))
         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
        ((pattern
-         (FunApp (StanLib PMinus__ FnPlain SoA)
+         (FunApp (StanLib PMinus__ FnPlain AoS)
           (((pattern (Lit Real 2.0))
             (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
@@ -3172,7 +3172,7 @@
                                ((pattern
                                  (Assignment (pos__ UInt ())
                                   ((pattern
-                                    (FunApp (StanLib Plus__ FnPlain AoS)
+                                    (FunApp (StanLib Plus__ FnPlain SoA)
                                      (((pattern (Var pos__))
                                        (meta
                                         ((type_ UInt) (loc <opaque>)
@@ -3260,7 +3260,7 @@
                ((pattern
                  (Assignment (pos__ UInt ())
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (StanLib Plus__ FnPlain SoA)
                      (((pattern (Var pos__))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -3373,7 +3373,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (StanLib Plus__ FnPlain SoA)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)
@@ -3558,7 +3558,7 @@
                                          (Assignment (pos__ UInt ())
                                           ((pattern
                                             (FunApp
-                                             (StanLib Plus__ FnPlain AoS)
+                                             (StanLib Plus__ FnPlain SoA)
                                              (((pattern (Var pos__))
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
@@ -3648,7 +3648,7 @@
                ((pattern
                  (Assignment (pos__ UInt ())
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (StanLib Plus__ FnPlain SoA)
                      (((pattern (Var pos__))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -3762,7 +3762,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (StanLib Plus__ FnPlain SoA)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)
@@ -3949,7 +3949,7 @@
                                          (Assignment (pos__ UInt ())
                                           ((pattern
                                             (FunApp
-                                             (StanLib Plus__ FnPlain AoS)
+                                             (StanLib Plus__ FnPlain SoA)
                                              (((pattern (Var pos__))
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
@@ -4101,7 +4101,7 @@
                                          (Assignment (pos__ UInt ())
                                           ((pattern
                                             (FunApp
-                                             (StanLib Plus__ FnPlain AoS)
+                                             (StanLib Plus__ FnPlain SoA)
                                              (((pattern (Var pos__))
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
@@ -4399,7 +4399,7 @@
                ((pattern
                  (Assignment (pos__ UInt ())
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (StanLib Plus__ FnPlain SoA)
                      (((pattern (Var pos__))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -4519,7 +4519,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (StanLib Plus__ FnPlain SoA)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)
@@ -4733,7 +4733,7 @@
                                          (Assignment (pos__ UInt ())
                                           ((pattern
                                             (FunApp
-                                             (StanLib Plus__ FnPlain AoS)
+                                             (StanLib Plus__ FnPlain SoA)
                                              (((pattern (Var pos__))
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
@@ -4911,7 +4911,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (StanLib Plus__ FnPlain SoA)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)
@@ -5016,7 +5016,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (StanLib Plus__ FnPlain SoA)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)
@@ -5153,7 +5153,7 @@
                                ((pattern
                                  (Assignment (pos__ UInt ())
                                   ((pattern
-                                    (FunApp (StanLib Plus__ FnPlain AoS)
+                                    (FunApp (StanLib Plus__ FnPlain SoA)
                                      (((pattern (Var pos__))
                                        (meta
                                         ((type_ UInt) (loc <opaque>)
@@ -5336,7 +5336,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (StanLib Plus__ FnPlain SoA)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)
@@ -5469,7 +5469,7 @@
                                ((pattern
                                  (Assignment (pos__ UInt ())
                                   ((pattern
-                                    (FunApp (StanLib Plus__ FnPlain AoS)
+                                    (FunApp (StanLib Plus__ FnPlain SoA)
                                      (((pattern (Var pos__))
                                        (meta
                                         ((type_ UInt) (loc <opaque>)
@@ -5624,7 +5624,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (StanLib Plus__ FnPlain SoA)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)
@@ -5757,7 +5757,7 @@
                                ((pattern
                                  (Assignment (pos__ UInt ())
                                   ((pattern
-                                    (FunApp (StanLib Plus__ FnPlain AoS)
+                                    (FunApp (StanLib Plus__ FnPlain SoA)
                                      (((pattern (Var pos__))
                                        (meta
                                         ((type_ UInt) (loc <opaque>)
@@ -5876,7 +5876,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (StanLib Plus__ FnPlain SoA)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)
@@ -6024,7 +6024,7 @@
                                ((pattern
                                  (Assignment (pos__ UInt ())
                                   ((pattern
-                                    (FunApp (StanLib Plus__ FnPlain AoS)
+                                    (FunApp (StanLib Plus__ FnPlain SoA)
                                      (((pattern (Var pos__))
                                        (meta
                                         ((type_ UInt) (loc <opaque>)
@@ -6203,7 +6203,7 @@
                                          (Assignment (pos__ UInt ())
                                           ((pattern
                                             (FunApp
-                                             (StanLib Plus__ FnPlain AoS)
+                                             (StanLib Plus__ FnPlain SoA)
                                              (((pattern (Var pos__))
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
@@ -6418,7 +6418,7 @@
                                                   ((pattern
                                                     (FunApp
                                                      (StanLib Plus__ FnPlain
-                                                      AoS)
+                                                      SoA)
                                                      (((pattern (Var pos__))
                                                        (meta
                                                         ((type_ UInt)
@@ -6513,7 +6513,7 @@
                ((pattern
                  (Assignment (pos__ UInt ())
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (StanLib Plus__ FnPlain SoA)
                      (((pattern (Var pos__))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -6626,7 +6626,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (StanLib Plus__ FnPlain SoA)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)
@@ -6769,7 +6769,7 @@
                                ((pattern
                                  (Assignment (pos__ UInt ())
                                   ((pattern
-                                    (FunApp (StanLib Plus__ FnPlain AoS)
+                                    (FunApp (StanLib Plus__ FnPlain SoA)
                                      (((pattern (Var pos__))
                                        (meta
                                         ((type_ UInt) (loc <opaque>)
@@ -6940,7 +6940,7 @@
                                          (Assignment (pos__ UInt ())
                                           ((pattern
                                             (FunApp
-                                             (StanLib Plus__ FnPlain AoS)
+                                             (StanLib Plus__ FnPlain SoA)
                                              (((pattern (Var pos__))
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
@@ -7030,7 +7030,7 @@
                ((pattern
                  (Assignment (pos__ UInt ())
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (StanLib Plus__ FnPlain SoA)
                      (((pattern (Var pos__))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -7144,7 +7144,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (StanLib Plus__ FnPlain SoA)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)
@@ -7288,7 +7288,7 @@
                                ((pattern
                                  (Assignment (pos__ UInt ())
                                   ((pattern
-                                    (FunApp (StanLib Plus__ FnPlain AoS)
+                                    (FunApp (StanLib Plus__ FnPlain SoA)
                                      (((pattern (Var pos__))
                                        (meta
                                         ((type_ UInt) (loc <opaque>)
@@ -7462,7 +7462,7 @@
                                          (Assignment (pos__ UInt ())
                                           ((pattern
                                             (FunApp
-                                             (StanLib Plus__ FnPlain AoS)
+                                             (StanLib Plus__ FnPlain SoA)
                                              (((pattern (Var pos__))
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
@@ -10673,7 +10673,7 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_greater_or_equal FnPlain SoA)
+     (NRFunApp (StanLib check_greater_or_equal FnPlain AoS)
       (((pattern (Lit Str "cholesky_factor_cov p_cfcov_54"))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str "num rows (must be greater or equal to num cols)"))
@@ -10684,7 +10684,7 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_greater_or_equal FnPlain SoA)
+     (NRFunApp (StanLib check_greater_or_equal FnPlain AoS)
       (((pattern (Lit Str "cholesky_factor_cov p_cfcov_33"))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str "num rows (must be greater or equal to num cols)"))
@@ -10704,7 +10704,7 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (NRFunApp (StanLib check_greater_or_equal FnPlain SoA)
+     (NRFunApp (StanLib check_greater_or_equal FnPlain AoS)
       (((pattern (Lit Str "cholesky_factor_cov p_cfcov_33_ar"))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str "num rows (must be greater or equal to num cols)"))
@@ -11761,7 +11761,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_vec)
       (decl_type
        (Sized
-        (SVector SoA
+        (SVector AoS
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
@@ -12125,7 +12125,7 @@
               ((pattern
                 (FunApp (StanLib Times__ FnPlain AoS)
                  (((pattern
-                    (FunApp (StanLib PMinus__ FnPlain SoA)
+                    (FunApp (StanLib PMinus__ FnPlain AoS)
                      (((pattern (Lit Real 1.0))
                        (meta
                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
@@ -12178,7 +12178,7 @@
    ((pattern
      (Assignment (theta_p UVector ())
       ((pattern
-        (FunApp (StanLib algebra_solver FnPlain SoA)
+        (FunApp (StanLib algebra_solver FnPlain AoS)
          (((pattern (Var algebra_system))
            (meta
             ((type_
@@ -12200,7 +12200,7 @@
    ((pattern
      (Assignment (theta_p UVector ())
       ((pattern
-        (FunApp (StanLib algebra_solver FnPlain SoA)
+        (FunApp (StanLib algebra_solver FnPlain AoS)
          (((pattern (Var algebra_system))
            (meta
             ((type_
@@ -12933,7 +12933,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
              (((pattern (Var offset_multiplier))
                (meta
                 ((type_ (UArray UReal)) (loc <opaque>)
@@ -12947,7 +12947,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
              (((pattern (Var no_offset_multiplier))
                (meta
                 ((type_ (UArray UReal)) (loc <opaque>)
@@ -12961,7 +12961,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
              (((pattern (Var offset_no_multiplier))
                (meta
                 ((type_ (UArray UReal)) (loc <opaque>)
@@ -13345,7 +13345,7 @@
                                  (TargetPE
                                   ((pattern
                                     (FunApp
-                                     (StanLib normal_lpdf (FnLpdf true) SoA)
+                                     (StanLib normal_lpdf (FnLpdf true) AoS)
                                      (((pattern
                                         (Indexed
                                          ((pattern (Var p_real_3d_ar))
@@ -13829,7 +13829,7 @@
    ((pattern
      (Assignment (p_1d_vec (UArray UVector) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () SoA))
+        (FunApp (CompilerInternal (FnReadParam () AoS))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var N))
@@ -13857,7 +13857,7 @@
    ((pattern
      (Assignment (p_3d_vec (UArray (UArray (UArray UVector))) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () SoA))
+        (FunApp (CompilerInternal (FnReadParam () AoS))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var M))
@@ -13881,7 +13881,7 @@
    ((pattern
      (Assignment (p_row_vec URowVector ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () SoA))
+        (FunApp (CompilerInternal (FnReadParam () AoS))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -13900,7 +13900,7 @@
    ((pattern
      (Assignment (p_1d_row_vec (UArray URowVector) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () SoA))
+        (FunApp (CompilerInternal (FnReadParam () AoS))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var N))
@@ -13928,7 +13928,7 @@
    ((pattern
      (Assignment (p_3d_row_vec (UArray (UArray (UArray URowVector))) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () SoA))
+        (FunApp (CompilerInternal (FnReadParam () AoS))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var M))
@@ -13980,7 +13980,7 @@
    ((pattern
      (Assignment (p_ar_mat (UArray (UArray UMatrix)) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (lub) SoA))
+        (FunApp (CompilerInternal (FnReadParam (lub) AoS))
          (((pattern (Lit Int 0))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 1))
@@ -14012,7 +14012,7 @@
    ((pattern
      (Assignment (p_simplex UVector ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (simplex) SoA))
+        (FunApp (CompilerInternal (FnReadParam (simplex) AoS))
          (((pattern (Var lp__))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var N))
@@ -14033,7 +14033,7 @@
    ((pattern
      (Assignment (p_1d_simplex (UArray UVector) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (simplex) SoA))
+        (FunApp (CompilerInternal (FnReadParam (simplex) AoS))
          (((pattern (Var lp__))
            (meta
             ((type_ (UArray UVector)) (loc <opaque>) (adlevel AutoDiffable))))
@@ -14064,7 +14064,7 @@
    ((pattern
      (Assignment (p_3d_simplex (UArray (UArray (UArray UVector))) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (simplex) SoA))
+        (FunApp (CompilerInternal (FnReadParam (simplex) AoS))
          (((pattern (Var lp__))
            (meta
             ((type_ (UArray (UArray (UArray UVector)))) (loc <opaque>)
@@ -14094,7 +14094,7 @@
    ((pattern
      (Assignment (p_cfcov_54 UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (cholesky_factor_cov) SoA))
+        (FunApp (CompilerInternal (FnReadParam (cholesky_factor_cov) AoS))
          (((pattern (Var lp__))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Lit Int 5))
@@ -14116,7 +14116,7 @@
    ((pattern
      (Assignment (p_cfcov_33 UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (cholesky_factor_cov) SoA))
+        (FunApp (CompilerInternal (FnReadParam (cholesky_factor_cov) AoS))
          (((pattern (Var lp__))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Lit Int 3))
@@ -14141,7 +14141,7 @@
    ((pattern
      (Assignment (p_cfcov_33_ar (UArray UMatrix) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (cholesky_factor_cov) SoA))
+        (FunApp (CompilerInternal (FnReadParam (cholesky_factor_cov) AoS))
          (((pattern (Var lp__))
            (meta
             ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel AutoDiffable))))
@@ -15423,7 +15423,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain SoA)
+        (FunApp (StanLib PNot__ FnPlain AoS)
          (((pattern
             (EOr
              ((pattern (Var emit_transformed_parameters__))
@@ -15625,7 +15625,7 @@
               ((pattern
                 (FunApp (StanLib Times__ FnPlain AoS)
                  (((pattern
-                    (FunApp (StanLib PMinus__ FnPlain SoA)
+                    (FunApp (StanLib PMinus__ FnPlain AoS)
                      (((pattern (Lit Real 1.0))
                        (meta
                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
@@ -15678,7 +15678,7 @@
    ((pattern
      (Assignment (theta_p UVector ())
       ((pattern
-        (FunApp (StanLib algebra_solver FnPlain SoA)
+        (FunApp (StanLib algebra_solver FnPlain AoS)
          (((pattern (Var algebra_system))
            (meta
             ((type_
@@ -15700,7 +15700,7 @@
    ((pattern
      (Assignment (theta_p UVector ())
       ((pattern
-        (FunApp (StanLib algebra_solver FnPlain SoA)
+        (FunApp (StanLib algebra_solver FnPlain AoS)
          (((pattern (Var algebra_system))
            (meta
             ((type_
@@ -17387,7 +17387,7 @@
    ((pattern
      (IfElse
       ((pattern
-        (FunApp (StanLib PNot__ FnPlain SoA)
+        (FunApp (StanLib PNot__ FnPlain AoS)
          (((pattern (Var emit_generated_quantities__))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -17926,7 +17926,7 @@
               ((pattern
                 (FunApp (StanLib Times__ FnPlain AoS)
                  (((pattern
-                    (FunApp (StanLib PMinus__ FnPlain SoA)
+                    (FunApp (StanLib PMinus__ FnPlain AoS)
                      (((pattern (Lit Real 1.0))
                        (meta
                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
@@ -17999,7 +17999,7 @@
                                    ((type_ UInt) (loc <opaque>)
                                     (adlevel DataOnly)))))))
                               ((pattern
-                                (FunApp (StanLib normal_rng FnRng SoA)
+                                (FunApp (StanLib normal_rng FnRng AoS)
                                  (((pattern (Lit Int 0))
                                    (meta
                                     ((type_ UInt) (loc <opaque>)
@@ -20922,7 +20922,7 @@
                                ((pattern
                                  (Assignment (pos__ UInt ())
                                   ((pattern
-                                    (FunApp (StanLib Plus__ FnPlain AoS)
+                                    (FunApp (StanLib Plus__ FnPlain SoA)
                                      (((pattern (Var pos__))
                                        (meta
                                         ((type_ UInt) (loc <opaque>)
@@ -21110,7 +21110,7 @@
                ((pattern
                  (Assignment (pos__ UInt ())
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (StanLib Plus__ FnPlain SoA)
                      (((pattern (Var pos__))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -21248,7 +21248,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (StanLib Plus__ FnPlain SoA)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)
@@ -21397,7 +21397,7 @@
                                          (Assignment (pos__ UInt ())
                                           ((pattern
                                             (FunApp
-                                             (StanLib Plus__ FnPlain AoS)
+                                             (StanLib Plus__ FnPlain SoA)
                                              (((pattern (Var pos__))
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
@@ -21478,7 +21478,7 @@
                ((pattern
                  (Assignment (pos__ UInt ())
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (StanLib Plus__ FnPlain SoA)
                      (((pattern (Var pos__))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -21574,7 +21574,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (StanLib Plus__ FnPlain SoA)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)
@@ -21725,7 +21725,7 @@
                                          (Assignment (pos__ UInt ())
                                           ((pattern
                                             (FunApp
-                                             (StanLib Plus__ FnPlain AoS)
+                                             (StanLib Plus__ FnPlain SoA)
                                              (((pattern (Var pos__))
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
@@ -21828,7 +21828,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (StanLib Plus__ FnPlain SoA)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)
@@ -21975,7 +21975,7 @@
                                          (Assignment (pos__ UInt ())
                                           ((pattern
                                             (FunApp
-                                             (StanLib Plus__ FnPlain AoS)
+                                             (StanLib Plus__ FnPlain SoA)
                                              (((pattern (Var pos__))
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
@@ -22201,7 +22201,7 @@
                ((pattern
                  (Assignment (pos__ UInt ())
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (StanLib Plus__ FnPlain SoA)
                      (((pattern (Var pos__))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -22317,7 +22317,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (StanLib Plus__ FnPlain SoA)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)
@@ -22517,7 +22517,7 @@
                                          (Assignment (pos__ UInt ())
                                           ((pattern
                                             (FunApp
-                                             (StanLib Plus__ FnPlain AoS)
+                                             (StanLib Plus__ FnPlain SoA)
                                              (((pattern (Var pos__))
                                                (meta
                                                 ((type_ UInt) (loc <opaque>)
@@ -22734,7 +22734,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (StanLib Plus__ FnPlain SoA)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)
@@ -22889,7 +22889,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain AoS)
+                            (FunApp (StanLib Plus__ FnPlain SoA)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)
@@ -23067,7 +23067,7 @@
                                ((pattern
                                  (Assignment (pos__ UInt ())
                                   ((pattern
-                                    (FunApp (StanLib Plus__ FnPlain AoS)
+                                    (FunApp (StanLib Plus__ FnPlain SoA)
                                      (((pattern (Var pos__))
                                        (meta
                                         ((type_ UInt) (loc <opaque>)
@@ -23236,7 +23236,7 @@
                ((pattern
                  (Assignment (pos__ UInt ())
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (StanLib Plus__ FnPlain SoA)
                      (((pattern (Var pos__))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -23307,7 +23307,7 @@
                ((pattern
                  (Assignment (pos__ UInt ())
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain AoS)
+                    (FunApp (StanLib Plus__ FnPlain SoA)
                      (((pattern (Var pos__))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -24538,11 +24538,11 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
    (p_vec
     ((out_unconstrained_st
-      (SVector SoA
+      (SVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SVector SoA
+      (SVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters)
@@ -24553,14 +24553,14 @@
    (p_1d_vec
     ((out_unconstrained_st
       (SArray
-       (SVector SoA
+       (SVector AoS
         ((pattern (Var N))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
       (SArray
-       (SVector SoA
+       (SVector AoS
         ((pattern (Var N))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
@@ -24571,7 +24571,7 @@
       (SArray
        (SArray
         (SArray
-         (SVector SoA
+         (SVector AoS
           ((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K))
@@ -24584,7 +24584,7 @@
       (SArray
        (SArray
         (SArray
-         (SVector SoA
+         (SVector AoS
           ((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K))
@@ -24596,25 +24596,25 @@
      (out_block Parameters) (out_trans Identity)))
    (p_row_vec
     ((out_unconstrained_st
-      (SRowVector SoA
+      (SRowVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SRowVector SoA
+      (SRowVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (p_1d_row_vec
     ((out_unconstrained_st
       (SArray
-       (SRowVector SoA
+       (SRowVector AoS
         ((pattern (Var N))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
       (SArray
-       (SRowVector SoA
+       (SRowVector AoS
         ((pattern (Var N))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
@@ -24625,7 +24625,7 @@
       (SArray
        (SArray
         (SArray
-         (SRowVector SoA
+         (SRowVector AoS
           ((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K))
@@ -24638,7 +24638,7 @@
       (SArray
        (SArray
         (SArray
-         (SRowVector SoA
+         (SRowVector AoS
           ((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K))
@@ -24650,13 +24650,13 @@
      (out_block Parameters) (out_trans Identity)))
    (p_mat
     ((out_unconstrained_st
-      (SMatrix SoA
+      (SMatrix AoS
        ((pattern (Lit Int 5))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 4))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SMatrix SoA
+      (SMatrix AoS
        ((pattern (Lit Int 5))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 4))
@@ -24666,7 +24666,7 @@
     ((out_unconstrained_st
       (SArray
        (SArray
-        (SMatrix SoA
+        (SMatrix AoS
          ((pattern (Lit Int 2))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 3))
@@ -24678,7 +24678,7 @@
      (out_constrained_st
       (SArray
        (SArray
-        (SMatrix SoA
+        (SMatrix AoS
          ((pattern (Lit Int 2))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 3))
@@ -24696,7 +24696,7 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
    (p_simplex
     ((out_unconstrained_st
-      (SVector SoA
+      (SVector AoS
        ((pattern
          (FunApp (StanLib Minus__ FnPlain SoA)
           (((pattern (Var N))
@@ -24705,14 +24705,14 @@
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SVector SoA
+      (SVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Simplex)))
    (p_1d_simplex
     ((out_unconstrained_st
       (SArray
-       (SVector SoA
+       (SVector AoS
         ((pattern
           (FunApp (StanLib Minus__ FnPlain SoA)
            (((pattern (Var N))
@@ -24724,7 +24724,7 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
       (SArray
-       (SVector SoA
+       (SVector AoS
         ((pattern (Var N))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
@@ -24735,7 +24735,7 @@
       (SArray
        (SArray
         (SArray
-         (SVector SoA
+         (SVector AoS
           ((pattern
             (FunApp (StanLib Minus__ FnPlain SoA)
              (((pattern (Var N))
@@ -24753,7 +24753,7 @@
       (SArray
        (SArray
         (SArray
-         (SVector SoA
+         (SVector AoS
           ((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K))
@@ -24765,7 +24765,7 @@
      (out_block Parameters) (out_trans Simplex)))
    (p_cfcov_54
     ((out_unconstrained_st
-      (SVector SoA
+      (SVector AoS
        ((pattern
          (FunApp (StanLib Plus__ FnPlain SoA)
           (((pattern
@@ -24808,7 +24808,7 @@
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SMatrix SoA
+      (SMatrix AoS
        ((pattern (Lit Int 5))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 4))
@@ -24816,7 +24816,7 @@
      (out_block Parameters) (out_trans CholeskyCov)))
    (p_cfcov_33
     ((out_unconstrained_st
-      (SVector SoA
+      (SVector AoS
        ((pattern
          (FunApp (StanLib Plus__ FnPlain SoA)
           (((pattern
@@ -24859,7 +24859,7 @@
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SMatrix SoA
+      (SMatrix AoS
        ((pattern (Lit Int 3))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 3))
@@ -24868,7 +24868,7 @@
    (p_cfcov_33_ar
     ((out_unconstrained_st
       (SArray
-       (SVector SoA
+       (SVector AoS
         ((pattern
           (FunApp (StanLib Plus__ FnPlain SoA)
            (((pattern
@@ -24916,7 +24916,7 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
       (SArray
-       (SMatrix SoA
+       (SMatrix AoS
         ((pattern (Lit Int 3))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 3))
@@ -24926,21 +24926,21 @@
      (out_block Parameters) (out_trans CholeskyCov)))
    (x_p
     ((out_unconstrained_st
-      (SVector SoA
+      (SVector AoS
        ((pattern (Lit Int 2))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SVector SoA
+      (SVector AoS
        ((pattern (Lit Int 2))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (y_p
     ((out_unconstrained_st
-      (SVector SoA
+      (SVector AoS
        ((pattern (Lit Int 2))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SVector SoA
+      (SVector AoS
        ((pattern (Lit Int 2))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
@@ -24986,11 +24986,11 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
    (tp_vec
     ((out_unconstrained_st
-      (SVector SoA
+      (SVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SVector SoA
+      (SVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters)
@@ -25001,14 +25001,14 @@
    (tp_1d_vec
     ((out_unconstrained_st
       (SArray
-       (SVector SoA
+       (SVector AoS
         ((pattern (Var N))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
       (SArray
-       (SVector SoA
+       (SVector AoS
         ((pattern (Var N))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
@@ -25019,7 +25019,7 @@
       (SArray
        (SArray
         (SArray
-         (SVector SoA
+         (SVector AoS
           ((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K))
@@ -25032,7 +25032,7 @@
       (SArray
        (SArray
         (SArray
-         (SVector SoA
+         (SVector AoS
           ((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K))
@@ -25044,25 +25044,25 @@
      (out_block TransformedParameters) (out_trans Identity)))
    (tp_row_vec
     ((out_unconstrained_st
-      (SRowVector SoA
+      (SRowVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SRowVector SoA
+      (SRowVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
    (tp_1d_row_vec
     ((out_unconstrained_st
       (SArray
-       (SRowVector SoA
+       (SRowVector AoS
         ((pattern (Var N))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
       (SArray
-       (SRowVector SoA
+       (SRowVector AoS
         ((pattern (Var N))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
@@ -25073,7 +25073,7 @@
       (SArray
        (SArray
         (SArray
-         (SRowVector SoA
+         (SRowVector AoS
           ((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K))
@@ -25086,7 +25086,7 @@
       (SArray
        (SArray
         (SArray
-         (SRowVector SoA
+         (SRowVector AoS
           ((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K))
@@ -25098,13 +25098,13 @@
      (out_block TransformedParameters) (out_trans Identity)))
    (tp_mat
     ((out_unconstrained_st
-      (SMatrix SoA
+      (SMatrix AoS
        ((pattern (Lit Int 5))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 4))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SMatrix SoA
+      (SMatrix AoS
        ((pattern (Lit Int 5))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 4))
@@ -25114,7 +25114,7 @@
     ((out_unconstrained_st
       (SArray
        (SArray
-        (SMatrix SoA
+        (SMatrix AoS
          ((pattern (Lit Int 2))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 3))
@@ -25126,7 +25126,7 @@
      (out_constrained_st
       (SArray
        (SArray
-        (SMatrix SoA
+        (SMatrix AoS
          ((pattern (Lit Int 2))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 3))
@@ -25144,7 +25144,7 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
    (tp_simplex
     ((out_unconstrained_st
-      (SVector SoA
+      (SVector AoS
        ((pattern
          (FunApp (StanLib Minus__ FnPlain SoA)
           (((pattern (Var N))
@@ -25153,14 +25153,14 @@
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SVector SoA
+      (SVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Simplex)))
    (tp_1d_simplex
     ((out_unconstrained_st
       (SArray
-       (SVector SoA
+       (SVector AoS
         ((pattern
           (FunApp (StanLib Minus__ FnPlain SoA)
            (((pattern (Var N))
@@ -25172,7 +25172,7 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
       (SArray
-       (SVector SoA
+       (SVector AoS
         ((pattern (Var N))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
@@ -25183,7 +25183,7 @@
       (SArray
        (SArray
         (SArray
-         (SVector SoA
+         (SVector AoS
           ((pattern
             (FunApp (StanLib Minus__ FnPlain SoA)
              (((pattern (Var N))
@@ -25201,7 +25201,7 @@
       (SArray
        (SArray
         (SArray
-         (SVector SoA
+         (SVector AoS
           ((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K))
@@ -25213,7 +25213,7 @@
      (out_block TransformedParameters) (out_trans Simplex)))
    (tp_cfcov_54
     ((out_unconstrained_st
-      (SVector SoA
+      (SVector AoS
        ((pattern
          (FunApp (StanLib Plus__ FnPlain SoA)
           (((pattern
@@ -25256,7 +25256,7 @@
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SMatrix SoA
+      (SMatrix AoS
        ((pattern (Lit Int 5))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 4))
@@ -25264,7 +25264,7 @@
      (out_block TransformedParameters) (out_trans CholeskyCov)))
    (tp_cfcov_33
     ((out_unconstrained_st
-      (SVector SoA
+      (SVector AoS
        ((pattern
          (FunApp (StanLib Plus__ FnPlain SoA)
           (((pattern
@@ -25307,7 +25307,7 @@
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SMatrix SoA
+      (SMatrix AoS
        ((pattern (Lit Int 3))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 3))
@@ -25316,7 +25316,7 @@
    (tp_cfcov_33_ar
     ((out_unconstrained_st
       (SArray
-       (SVector SoA
+       (SVector AoS
         ((pattern
           (FunApp (StanLib Plus__ FnPlain SoA)
            (((pattern
@@ -25364,7 +25364,7 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
       (SArray
-       (SMatrix SoA
+       (SMatrix AoS
         ((pattern (Lit Int 3))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 3))
@@ -25374,11 +25374,11 @@
      (out_block TransformedParameters) (out_trans CholeskyCov)))
    (theta_p
     ((out_unconstrained_st
-      (SVector SoA
+      (SVector AoS
        ((pattern (Lit Int 2))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SVector SoA
+      (SVector AoS
        ((pattern (Lit Int 2))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
@@ -25433,11 +25433,11 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
    (gq_vec
     ((out_unconstrained_st
-      (SVector SoA
+      (SVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SVector SoA
+      (SVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block GeneratedQuantities)
@@ -25448,14 +25448,14 @@
    (gq_1d_vec
     ((out_unconstrained_st
       (SArray
-       (SVector SoA
+       (SVector AoS
         ((pattern (Var N))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
       (SArray
-       (SVector SoA
+       (SVector AoS
         ((pattern (Var N))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
@@ -25466,7 +25466,7 @@
       (SArray
        (SArray
         (SArray
-         (SVector SoA
+         (SVector AoS
           ((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K))
@@ -25479,7 +25479,7 @@
       (SArray
        (SArray
         (SArray
-         (SVector SoA
+         (SVector AoS
           ((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K))
@@ -25491,25 +25491,25 @@
      (out_block GeneratedQuantities) (out_trans Identity)))
    (gq_row_vec
     ((out_unconstrained_st
-      (SRowVector SoA
+      (SRowVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SRowVector SoA
+      (SRowVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block GeneratedQuantities) (out_trans Identity)))
    (gq_1d_row_vec
     ((out_unconstrained_st
       (SArray
-       (SRowVector SoA
+       (SRowVector AoS
         ((pattern (Var N))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
       (SArray
-       (SRowVector SoA
+       (SRowVector AoS
         ((pattern (Var N))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
@@ -25520,7 +25520,7 @@
       (SArray
        (SArray
         (SArray
-         (SRowVector SoA
+         (SRowVector AoS
           ((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K))
@@ -25533,7 +25533,7 @@
       (SArray
        (SArray
         (SArray
-         (SRowVector SoA
+         (SRowVector AoS
           ((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K))
@@ -25547,7 +25547,7 @@
     ((out_unconstrained_st
       (SArray
        (SArray
-        (SMatrix SoA
+        (SMatrix AoS
          ((pattern (Lit Int 2))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 3))
@@ -25559,7 +25559,7 @@
      (out_constrained_st
       (SArray
        (SArray
-        (SMatrix SoA
+        (SMatrix AoS
          ((pattern (Lit Int 2))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 3))
@@ -25577,7 +25577,7 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
    (gq_simplex
     ((out_unconstrained_st
-      (SVector SoA
+      (SVector AoS
        ((pattern
          (FunApp (StanLib Minus__ FnPlain SoA)
           (((pattern (Var N))
@@ -25586,14 +25586,14 @@
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SVector SoA
+      (SVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block GeneratedQuantities) (out_trans Simplex)))
    (gq_1d_simplex
     ((out_unconstrained_st
       (SArray
-       (SVector SoA
+       (SVector AoS
         ((pattern
           (FunApp (StanLib Minus__ FnPlain SoA)
            (((pattern (Var N))
@@ -25605,7 +25605,7 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
       (SArray
-       (SVector SoA
+       (SVector AoS
         ((pattern (Var N))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
@@ -25616,7 +25616,7 @@
       (SArray
        (SArray
         (SArray
-         (SVector SoA
+         (SVector AoS
           ((pattern
             (FunApp (StanLib Minus__ FnPlain SoA)
              (((pattern (Var N))
@@ -25634,7 +25634,7 @@
       (SArray
        (SArray
         (SArray
-         (SVector SoA
+         (SVector AoS
           ((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K))
@@ -25646,7 +25646,7 @@
      (out_block GeneratedQuantities) (out_trans Simplex)))
    (gq_cfcov_54
     ((out_unconstrained_st
-      (SVector SoA
+      (SVector AoS
        ((pattern
          (FunApp (StanLib Plus__ FnPlain SoA)
           (((pattern
@@ -25689,7 +25689,7 @@
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SMatrix SoA
+      (SMatrix AoS
        ((pattern (Lit Int 5))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 4))
@@ -25697,7 +25697,7 @@
      (out_block GeneratedQuantities) (out_trans CholeskyCov)))
    (gq_cfcov_33
     ((out_unconstrained_st
-      (SVector SoA
+      (SVector AoS
        ((pattern
          (FunApp (StanLib Plus__ FnPlain SoA)
           (((pattern
@@ -25740,7 +25740,7 @@
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
-      (SMatrix SoA
+      (SMatrix AoS
        ((pattern (Lit Int 3))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 3))
@@ -25749,7 +25749,7 @@
    (gq_cfcov_33_ar
     ((out_unconstrained_st
       (SArray
-       (SVector SoA
+       (SVector AoS
         ((pattern
           (FunApp (StanLib Plus__ FnPlain SoA)
            (((pattern
@@ -25797,7 +25797,7 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
       (SArray
-       (SMatrix SoA
+       (SMatrix AoS
         ((pattern (Lit Int 3))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 3))
@@ -25818,7 +25818,7 @@
    (indexing_mat
     ((out_unconstrained_st
       (SArray
-       (SMatrix SoA
+       (SMatrix AoS
         ((pattern (Lit Int 3))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 4))
@@ -25827,7 +25827,7 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
       (SArray
-       (SMatrix SoA
+       (SMatrix AoS
         ((pattern (Lit Int 3))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 4))
@@ -25838,7 +25838,7 @@
    (idx_res1
     ((out_unconstrained_st
       (SArray
-       (SMatrix SoA
+       (SMatrix AoS
         ((pattern (Lit Int 3))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 4))
@@ -25847,7 +25847,7 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
       (SArray
-       (SMatrix SoA
+       (SMatrix AoS
         ((pattern (Lit Int 3))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 4))
@@ -25858,7 +25858,7 @@
    (idx_res2
     ((out_unconstrained_st
       (SArray
-       (SMatrix SoA
+       (SMatrix AoS
         ((pattern (Lit Int 3))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 4))
@@ -25867,7 +25867,7 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
       (SArray
-       (SMatrix SoA
+       (SMatrix AoS
         ((pattern (Lit Int 3))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 4))
@@ -25878,7 +25878,7 @@
    (idx_res3
     ((out_unconstrained_st
       (SArray
-       (SMatrix SoA
+       (SMatrix AoS
         ((pattern (Lit Int 3))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 3))
@@ -25887,7 +25887,7 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
       (SArray
-       (SMatrix SoA
+       (SMatrix AoS
         ((pattern (Lit Int 3))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 3))
@@ -25898,7 +25898,7 @@
    (idx_res11
     ((out_unconstrained_st
       (SArray
-       (SMatrix SoA
+       (SMatrix AoS
         ((pattern (Lit Int 3))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 4))
@@ -25907,7 +25907,7 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
       (SArray
-       (SMatrix SoA
+       (SMatrix AoS
         ((pattern (Lit Int 3))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 4))
@@ -25918,7 +25918,7 @@
    (idx_res21
     ((out_unconstrained_st
       (SArray
-       (SMatrix SoA
+       (SMatrix AoS
         ((pattern (Lit Int 3))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 4))
@@ -25927,7 +25927,7 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
       (SArray
-       (SMatrix SoA
+       (SMatrix AoS
         ((pattern (Lit Int 3))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 4))
@@ -25938,7 +25938,7 @@
    (idx_res31
     ((out_unconstrained_st
       (SArray
-       (SMatrix SoA
+       (SMatrix AoS
         ((pattern (Lit Int 3))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 3))
@@ -25947,7 +25947,7 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
       (SArray
-       (SMatrix SoA
+       (SMatrix AoS
         ((pattern (Lit Int 3))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
         ((pattern (Lit Int 3))
@@ -25958,14 +25958,14 @@
    (idx_res4
     ((out_unconstrained_st
       (SArray
-       (SRowVector SoA
+       (SRowVector AoS
         ((pattern (Lit Int 4))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 3))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
       (SArray
-       (SRowVector SoA
+       (SRowVector AoS
         ((pattern (Lit Int 4))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 3))
@@ -25974,14 +25974,14 @@
    (idx_res5
     ((out_unconstrained_st
       (SArray
-       (SVector SoA
+       (SVector AoS
         ((pattern (Lit Int 2))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 2))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
       (SArray
-       (SVector SoA
+       (SVector AoS
         ((pattern (Lit Int 2))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 2))

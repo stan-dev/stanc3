@@ -608,13 +608,11 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 8;
       beta_m = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n,
                  k);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>> X_rv_p = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>>(Eigen::Matrix<double, 1, -1>::Constant(n, std::numeric_limits<double>::quiet_NaN()));
-      
+      Eigen::Matrix<local_scalar_t__, 1, -1> X_rv_p = Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(n, DUMMY_VAR__);
+                                                      
       
       current_statement__ = 9;
-      X_rv_p = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>>>(
-                 n);
+      X_rv_p = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(n);
       {
         current_statement__ = 10;
         lp_accum__.add(
@@ -1292,20 +1290,17 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                                              
       
       current_statement__ = 1;
-      alpha_v = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-                  k);
+      alpha_v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
       Eigen::Matrix<double, -1, 1> beta = Eigen::Matrix<double, -1, 1>::Constant(k, std::numeric_limits<double>::quiet_NaN());
                                           
       
       current_statement__ = 2;
-      beta = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-               k);
+      beta = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
       Eigen::Matrix<double, -1, 1> cuts = Eigen::Matrix<double, -1, 1>::Constant(k, std::numeric_limits<double>::quiet_NaN());
                                           
       
       current_statement__ = 3;
-      cuts = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-               k);
+      cuts = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
       double sigma = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 4;
@@ -1323,20 +1318,18 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                                           
       
       current_statement__ = 7;
-      X_p = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
-              n, k);
+      X_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, k);
       Eigen::Matrix<double, -1, -1> beta_m = Eigen::Matrix<double, -1, -1>::Constant(n, k, std::numeric_limits<double>::quiet_NaN());
                                              
       
       current_statement__ = 8;
-      beta_m = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
-                 n, k);
+      beta_m = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n,
+                 k);
       Eigen::Matrix<double, 1, -1> X_rv_p = Eigen::Matrix<double, 1, -1>::Constant(n, std::numeric_limits<double>::quiet_NaN());
                                             
       
       current_statement__ = 9;
-      X_rv_p = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>>>(
-                 n);
+      X_rv_p = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(n);
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         vars__.emplace_back(alpha_v[(sym1__ - 1)]);
       }

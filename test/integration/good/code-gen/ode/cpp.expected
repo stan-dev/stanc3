@@ -360,9 +360,8 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       
       current_statement__ = 4;
       times = in__.template read<std::vector<local_scalar_t__>>(N);
-      stan::conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> z = 
-      std::vector<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN())));
-      
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> z = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(M, Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__));
+                                                              
       
       current_statement__ = 6;
       assign(z,
