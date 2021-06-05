@@ -11189,7 +11189,7 @@
     (meta <opaque>))
    ((pattern
      (Assignment (p_real UReal ())
-      ((pattern (FunApp (CompilerInternal (FnReadParam () AoS)) ()))
+      ((pattern (FunApp (CompilerInternal (FnReadParam () SoA)) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -11199,7 +11199,7 @@
    ((pattern
      (Assignment (p_upper UReal ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (lb) AoS))
+        (FunApp (CompilerInternal (FnReadParam (lb) SoA))
          (((pattern (Var p_real))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var lp__))
@@ -11213,7 +11213,7 @@
    ((pattern
      (Assignment (p_lower UReal ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (ub) AoS))
+        (FunApp (CompilerInternal (FnReadParam (ub) SoA))
          (((pattern (Var p_upper))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var lp__))
@@ -11231,7 +11231,7 @@
    ((pattern
      (Assignment (offset_multiplier (UArray UReal) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (offset_multiplier) AoS))
+        (FunApp (CompilerInternal (FnReadParam (offset_multiplier) SoA))
          (((pattern (Lit Int 1))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 2))
@@ -11254,7 +11254,7 @@
    ((pattern
      (Assignment (no_offset_multiplier (UArray UReal) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (offset_multiplier) AoS))
+        (FunApp (CompilerInternal (FnReadParam (offset_multiplier) SoA))
          (((pattern (Lit Int 0))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 2))
@@ -11277,7 +11277,7 @@
    ((pattern
      (Assignment (offset_no_multiplier (UArray UReal) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (offset_multiplier) AoS))
+        (FunApp (CompilerInternal (FnReadParam (offset_multiplier) SoA))
          (((pattern (Lit Int 3))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 1))
@@ -11327,7 +11327,7 @@
    ((pattern
      (Assignment (p_real_3d_ar (UArray (UArray (UArray UReal))) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (lb) AoS))
+        (FunApp (CompilerInternal (FnReadParam (lb) SoA))
          (((pattern (Lit Int 0))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var lp__))
@@ -11783,7 +11783,7 @@
         (SArray
          (SArray
           (SArray
-           (SVector AoS
+           (SVector SoA
             ((pattern (Var N))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K))
@@ -11806,7 +11806,7 @@
       (decl_type
        (Sized
         (SArray
-         (SRowVector AoS
+         (SRowVector SoA
           ((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
@@ -11819,7 +11819,7 @@
         (SArray
          (SArray
           (SArray
-           (SRowVector AoS
+           (SRowVector SoA
             ((pattern (Var N))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K))
@@ -11845,7 +11845,7 @@
        (Sized
         (SArray
          (SArray
-          (SMatrix AoS
+          (SMatrix SoA
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
            ((pattern (Lit Int 3))
@@ -11859,7 +11859,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_simplex)
       (decl_type
        (Sized
-        (SVector AoS
+        (SVector SoA
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
@@ -11868,7 +11868,7 @@
       (decl_type
        (Sized
         (SArray
-         (SVector AoS
+         (SVector SoA
           ((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
@@ -11881,7 +11881,7 @@
         (SArray
          (SArray
           (SArray
-           (SVector AoS
+           (SVector SoA
             ((pattern (Var N))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K))
@@ -11895,7 +11895,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_cfcov_54)
       (decl_type
        (Sized
-        (SMatrix AoS
+        (SMatrix SoA
          ((pattern (Lit Int 5))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 4))
@@ -11905,7 +11905,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_cfcov_33)
       (decl_type
        (Sized
-        (SMatrix AoS
+        (SMatrix SoA
          ((pattern (Lit Int 3))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 3))
@@ -11916,7 +11916,7 @@
       (decl_type
        (Sized
         (SArray
-         (SMatrix AoS
+         (SMatrix SoA
           ((pattern (Lit Int 3))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 3))

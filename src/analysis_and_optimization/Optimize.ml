@@ -1167,9 +1167,8 @@ let gen_aos_variables
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
     (l : int) (aos_variables : string Set.Poly.t) =
   let mir_node mir_idx = Map.find_exn flowgraph_to_mir mir_idx in
-  let _, _, split_flowgraph = Map.split flowgraph_to_mir l in
   match (mir_node l).pattern with stmt ->
-    Mem_pattern.query_mem_pattern_stmt aos_variables split_flowgraph stmt
+    Mem_pattern.query_mem_pattern_stmt aos_variables stmt
 
 let transform_program_logprob (mir : Program.Typed.t)
     (transform : Stmt.Located.t -> Stmt.Located.t) : Program.Typed.t =
@@ -1180,6 +1179,7 @@ let transform_program_logprob (mir : Program.Typed.t)
         raise
           (Failure "Something went wrong with program transformation packing!")
   in
+  (*{mir with log_prob= transform' forced_logprob}*)
   {mir with log_prob= transform' mir.log_prob}
 
 (**
@@ -1191,13 +1191,29 @@ let transform_program_logprob (mir : Program.Typed.t)
 * @param 
 *)
 let optimize_soa (mir : Program.Typed.t) =
+  (*let print_set s = Set.Poly.iter ~f:(printf "%s ") s in*)
+  let get_initials =
+    Mem_pattern.query_soa_stmts_loop false
+      Mem_pattern.query_mem_pattern_stmt_loops
+  in
+  let initial_variables =
+    Set.Poly.union_list (List.map ~f:get_initials mir.log_prob)
+  in
+  let eigen_types =
+    Set.Poly.union_list (List.map ~f:Mem_pattern.get_eigen_decls mir.log_prob)
+  in
+  (*print_set initial_variables ;*)
+  let promote_stmt =
+    Mem_pattern.promote_soa_stmts eigen_types
+      Mem_pattern.promote_soa_stmt_pattern
+  in
+  let forced_logprob = List.map ~f:promote_stmt mir.log_prob in
   let transform stmt =
     optimize_mem_pattern ~gen_variables:gen_aos_variables
       ~update_expr:Mem_pattern.modify_soa_exprs
-      ~update_stmt:Mem_pattern.mod_soa_stmt_pattern
-      ~initial_variables:Set.Poly.empty stmt
+      ~update_stmt:Mem_pattern.modify_soa_stmt_pattern ~initial_variables stmt
   in
-  transform_program_logprob mir transform
+  transform_program_logprob {mir with log_prob= forced_logprob} transform
 
 (* Apparently you need to completely copy/paste type definitions between
    ml and mli files?*)

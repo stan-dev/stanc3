@@ -322,9 +322,36 @@ let snd2 (_, b, _) = b
 let fst2 (a, _, _) = a
 let thrd (_, _, c) = c
 
+let string_operator_to_stan_math_fns str =
+  match str with
+  | "Plus__" -> "add"
+  | "PPlus__" -> "plus"
+  | "Minus__" -> "subtract"
+  | "PMinus__" -> "minus"
+  | "Times__" -> "multiply"
+  | "Divide__" -> "divide"
+  | "Modulo__" -> "modulus"
+  | "IntDivide__" -> "divide"
+  | "LDivide__" -> "mdivide_left"
+  | "EltTimes__" -> "elt_multiply"
+  | "EltDivide__" -> "elt_divide"
+  | "Pow__" -> "pow"
+  | "EltPow__" -> "pow"
+  | "Or__" -> "logical_or"
+  | "And__" -> "logical_and"
+  | "Equals__" -> "logical_eq"
+  | "NEquals__" -> "logical_neq"
+  | "Less__" -> "logical_lt"
+  | "Leq__" -> "logical_lte"
+  | "Greater__" -> "logical_gt"
+  | "Geq__" -> "logical_gte"
+  | "PNot__" -> "logical_negation"
+  | "Transpose__" -> "transpose"
+  | _ -> str
+
 (* -- Querying stan_math_signatures -- *)
 let query_stan_math_mem_pattern_support (name : string) (args : fun_arg list) =
-  let name = Utils.stdlib_distribution_name name in
+  let name = string_operator_to_stan_math_fns (Utils.stdlib_distribution_name name) in
   let namematches = Hashtbl.find_multi stan_math_signatures name in
   let filteredmatches =
     List.filter

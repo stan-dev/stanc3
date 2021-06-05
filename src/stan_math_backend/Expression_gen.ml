@@ -450,11 +450,18 @@ and pp_compiler_internal_fn ad ut f ppf es =
             (UnsizedType.AutoDiffable, ut)
             (Fmt.option Fmt.string) jacobian_param_opt
             (list ~sep:comma pp_expr) es
-      | SoA ->
+          (*TODO: This check shouldn't be here*)
+      | SoA when UnsizedType.contains_eigen_type ut ->
           pf ppf
             "@[<hov 2>in__.template \
              read%a<stan::conditional_var_value_t<local_scalar_t__, \
              %a>%a>(@,%a)@]"
+            (Fmt.option Fmt.string) constraint_suffix_opt pp_unsizedtype_local
+            (UnsizedType.AutoDiffable, ut)
+            (Fmt.option Fmt.string) jacobian_param_opt
+            (list ~sep:comma pp_expr) es
+      | Common.Helpers.SoA ->
+          pf ppf "@[<hov 2>in__.template read%a<%a%a>(@,%a)@]"
             (Fmt.option Fmt.string) constraint_suffix_opt pp_unsizedtype_local
             (UnsizedType.AutoDiffable, ut)
             (Fmt.option Fmt.string) jacobian_param_opt

@@ -19,6 +19,13 @@ and autodifftype = DataOnly | AutoDiffable
 
 and returntype = Void | ReturnType of t [@@deriving compare, hash, sexp]
 
+let rec contains_eigen_type ut =
+  match ut with
+  | UInt -> false
+  | UReal | UMathLibraryFunction | UFun (_, Void, _, _) -> false
+  | UVector | URowVector | UMatrix -> true
+  | UArray t | UFun (_, ReturnType t, _, _) -> contains_eigen_type t
+
 let pp_autodifftype ppf = function
   | DataOnly -> pp_keyword ppf "data "
   | AutoDiffable -> ()
