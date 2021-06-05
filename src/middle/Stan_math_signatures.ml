@@ -138,7 +138,7 @@ let variadic_ode_mandatory_fun_args =
 let variadic_ode_fun_return_type = UnsizedType.UVector
 let variadic_ode_return_type = UnsizedType.UArray UnsizedType.UVector
 
-let mk_declarative_sig (fnkinds, name, args, _) =
+let mk_declarative_sig (fnkinds, name, args, mem_pattern) =
   let sfxes = function
     | Lpmf -> ["_lpmf"; "_log"]
     | Lpdf -> ["_lpdf"; "_log"]
@@ -162,7 +162,7 @@ let mk_declarative_sig (fnkinds, name, args, _) =
   let create_from_fk_args fk arglists =
     List.concat_map arglists ~f:(fun args ->
         List.map (sfxes fk) ~f:(fun sfx ->
-            (name ^ sfx, find_rt UReal args fk, args, Common.Helpers.AoS) ) )
+            (name ^ sfx, find_rt UReal args fk, args, mem_pattern) ) )
   in
   let add_fnkind = function
     | Rng ->
@@ -171,7 +171,7 @@ let mk_declarative_sig (fnkinds, name, args, _) =
         let rt = promoted_dim rt in
         let name = name ^ "_rng" in
         List.map (all_expanded args) ~f:(fun args ->
-            (name, find_rt rt args Rng, args, Common.Helpers.AoS) )
+            (name, find_rt rt args Rng, args, mem_pattern) )
     | UnaryVectorized ->
         create_from_fk_args UnaryVectorized (all_expanded args)
     | fk -> create_from_fk_args fk (all_expanded args)
@@ -322,57 +322,6 @@ let snd2 (_, b, _) = b
 let fst2 (a, _, _) = a
 let thrd (_, _, c) = c
 
-let string_operator_to_stan_math_fns str =
-  match str with
-  | "Plus__" -> "add"
-  | "PPlus__" -> "plus"
-  | "Minus__" -> "subtract"
-  | "PMinus__" -> "minus"
-  | "Times__" -> "multiply"
-  | "Divide__" -> "divide"
-  | "Modulo__" -> "modulus"
-  | "IntDivide__" -> "divide"
-  | "LDivide__" -> "mdivide_left"
-  | "EltTimes__" -> "elt_multiply"
-  | "EltDivide__" -> "elt_divide"
-  | "Pow__" -> "pow"
-  | "EltPow__" -> "pow"
-  | "Or__" -> "logical_or"
-  | "And__" -> "logical_and"
-  | "Equals__" -> "logical_eq"
-  | "NEquals__" -> "logical_neq"
-  | "Less__" -> "logical_lt"
-  | "Leq__" -> "logical_lte"
-  | "Greater__" -> "logical_gt"
-  | "Geq__" -> "logical_gte"
-  | "PNot__" -> "logical_negation"
-  | "Transpose__" -> "transpose"
-  | _ -> str
-
-(* -- Querying stan_math_signatures -- *)
-let query_stan_math_mem_pattern_support (name : string) (args : fun_arg list) =
-  let name = string_operator_to_stan_math_fns (Utils.stdlib_distribution_name name) in
-  let namematches = Hashtbl.find_multi stan_math_signatures name in
-  let filteredmatches =
-    List.filter
-      ~f:(fun x ->
-        UnsizedType.check_compatible_arguments_mod_conv name (snd2 x) args )
-      namematches
-  in
-  match name with
-  | x when is_reduce_sum_fn x -> false
-  | x when is_variadic_ode_fn x -> false
-  | _ -> (
-    match List.length filteredmatches = 0 with
-    | true ->
-        false
-        (* Return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
-    | false ->
-        let is_soa ((_ : UnsizedType.returntype), (_ : fun_arg list), mem) =
-          mem = Common.Helpers.SoA
-        in
-        List.exists ~f:is_soa filteredmatches )
-
 (* -- Querying stan_math_signatures -- *)
 let stan_math_returntype (name : string) (args : fun_arg list) =
   let name = Utils.stdlib_distribution_name name in
@@ -511,6 +460,66 @@ let pp_math_sigs ppf name =
   (Fmt.list ~sep:Fmt.cut pp_math_sig) ppf (get_sigs name)
 
 let pretty_print_math_sigs = Fmt.strf "@[<v>@,%a@]" pp_math_sigs
+
+let string_operator_to_stan_math_fns str =
+  match str with
+  | "Plus__" -> "add"
+  | "PPlus__" -> "plus"
+  | "Minus__" -> "subtract"
+  | "PMinus__" -> "minus"
+  | "Times__" -> "multiply"
+  | "Divide__" -> "divide"
+  | "Modulo__" -> "modulus"
+  | "IntDivide__" -> "divide"
+  | "LDivide__" -> "mdivide_left"
+  | "EltTimes__" -> "elt_multiply"
+  | "EltDivide__" -> "elt_divide"
+  | "Pow__" -> "pow"
+  | "EltPow__" -> "pow"
+  | "Or__" -> "logical_or"
+  | "And__" -> "logical_and"
+  | "Equals__" -> "logical_eq"
+  | "NEquals__" -> "logical_neq"
+  | "Less__" -> "logical_lt"
+  | "Leq__" -> "logical_lte"
+  | "Greater__" -> "logical_gt"
+  | "Geq__" -> "logical_gte"
+  | "PNot__" -> "logical_negation"
+  | "Transpose__" -> "transpose"
+  | _ -> str
+
+(* -- Querying stan_math_signatures -- *)
+let query_stan_math_mem_pattern_support (name : string) (args : fun_arg list) =
+  let name =
+    string_operator_to_stan_math_fns (Utils.stdlib_distribution_name name)
+  in
+  let namematches = Hashtbl.find_multi stan_math_signatures name in
+  let filteredmatches =
+    List.filter
+      ~f:(fun x ->
+        UnsizedType.check_compatible_arguments_mod_conv name (snd2 x) args )
+      namematches
+  in
+  match name with
+  | x when is_reduce_sum_fn x -> false
+  | x when is_variadic_ode_fn x -> false
+  | _ -> (
+    (*    let printer intro s = Set.Poly.iter ~f:(printf intro) s in*)
+    match List.length filteredmatches = 0 with
+    | true ->
+        false
+        (* Return the least return type in case there are multiple options (due to implicit UInt-UReal conversion), where UInt<UReal *)
+    | false -> (
+        let is_soa ((_ : UnsizedType.returntype), (_ : fun_arg list), mem) =
+          mem = Common.Helpers.SoA
+        in
+        let blah = List.exists ~f:is_soa filteredmatches in
+        match blah with
+        | true ->
+            (*printer "\n%s is supported\n" (Set.Poly.singleton name);*) true
+        | false ->
+            (*printer "\n%s is not supported\n" (Set.Poly.singleton name);*)
+            false ) )
 
 let pretty_print_all_math_sigs ppf () =
   let open Fmt in
@@ -822,8 +831,9 @@ let for_vector_types s = List.iter ~f:s vector_types
 
 (* -- Start populating stan_math_signaturess -- *)
 let () =
-  List.iter declarative_fnsigs ~f:(fun (key, rt, args, _) ->
-      Hashtbl.add_multi stan_math_signatures ~key ~data:(rt, args, SoA) ) ;
+  List.iter declarative_fnsigs ~f:(fun (key, rt, args, mem_pattern) ->
+      Hashtbl.add_multi stan_math_signatures ~key ~data:(rt, args, mem_pattern)
+  ) ;
   add_unqualified ("abs", ReturnType UInt, [UInt], AoS) ;
   add_unqualified ("abs", ReturnType UReal, [UReal], AoS) ;
   List.iter

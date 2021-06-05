@@ -1,4 +1,19 @@
-  $ ../../../../../install/default/bin/stanc --debug-transformed-mir mem_patterns.stan
+
+inv is supported
+
+normal_lpdf is supported
+
+Plus__ is supported
+
+multiply is supported
+
+normal_lpdf is supported
+
+multiply is supported
+
+normal_lpdf is supported
+
+multiply is supported
 ((functions_block ())
  (input_vars
   ((N SInt) (M SInt)
@@ -364,14 +379,14 @@
      (Decl (decl_adtype AutoDiffable) (decl_id vec_v_aos_assign_to_aos)
       (decl_type
        (Sized
-        (SVector AoS
+        (SVector SoA
          ((pattern (Var M))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
      (Assignment (vec_v_aos_assign_to_aos UVector ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var M))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -380,14 +395,14 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_vec_v_aos)
       (decl_type
        (Sized
-        (SVector AoS
+        (SVector SoA
          ((pattern (Var M))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
      (Assignment (tp_vec_v_aos UVector ())
       ((pattern
-        (FunApp (StanLib inv FnPlain AoS)
+        (FunApp (StanLib inv FnPlain SoA)
          (((pattern (Var vec_v_aos_assign_to_aos))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -1328,4 +1343,5 @@
        ((pattern (Var M))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))))
- (prog_name mem_patterns_model) (prog_path mem_patterns.stan))
+ (prog_name mem_patterns_model)
+ (prog_path test/integration/good/code-gen/mem_patterns.stan))

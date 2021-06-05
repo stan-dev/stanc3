@@ -533,12 +533,11 @@ let query_mem_pattern_funkinds_loop query_expr_loop in_loop kind exprs =
         printer "\n%s is supported\n" (Set.Poly.singleton name)
         else 
         printer "\n%s is not supported\n" (Set.Poly.singleton name);
-        *)
+*)
         (*Still needs to look for single indexing*)
         if is_fun_support then
           Set.Poly.union_list (List.map ~f:query_expr_loop2 exprs)
-        else 
-        Set.Poly.union_list (List.map ~f:find_mem_pattern_set_names exprs)
+        else Set.Poly.union_list (List.map ~f:find_mem_pattern_set_names exprs)
     )
   | CompilerInternal _ -> Set.Poly.empty
   | UserDefined _ ->
@@ -547,11 +546,9 @@ let query_mem_pattern_funkinds_loop query_expr_loop in_loop kind exprs =
 let rec query_mem_pattern_exprs_loop in_loop Expr.Fixed.({pattern; _}) =
   let query_expr = query_mem_pattern_exprs_loop in_loop in
   match pattern with
-  
   | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
       query_mem_pattern_funkinds_loop query_mem_pattern_exprs_loop in_loop kind
         exprs
-  
   | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
       Set.Poly.empty
   | TernaryIf (predicate, texpr, fexpr) ->
@@ -569,7 +566,6 @@ let rec query_mem_pattern_exprs_loop in_loop Expr.Fixed.({pattern; _}) =
         (Set.Poly.union_list (List.map ~f:query_index indexed))
   | EAnd (lhs, rhs) | EOr (lhs, rhs) ->
       Set.Poly.union (query_expr lhs) (query_expr rhs)
-      
 
 (**
  * Internal to the module, used when looking recursivly

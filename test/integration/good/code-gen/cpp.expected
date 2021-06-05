@@ -1480,16 +1480,14 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       current_statement__ = 4;
       vec_v_aos_for_loopd = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                               M);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> vec_v_aos_assign_to_aos = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(M, std::numeric_limits<double>::quiet_NaN()));
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> vec_v_aos_assign_to_aos = 
+      Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(M, DUMMY_VAR__);
       
       current_statement__ = 5;
-      vec_v_aos_assign_to_aos = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+      vec_v_aos_assign_to_aos = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                                   M);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> tp_vec_v_aos = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(M, std::numeric_limits<double>::quiet_NaN()));
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> tp_vec_v_aos = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(M, DUMMY_VAR__);
+                                                            
       
       current_statement__ = 6;
       assign(tp_vec_v_aos, inv(vec_v_aos_assign_to_aos),
