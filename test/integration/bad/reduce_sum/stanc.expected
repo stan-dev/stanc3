@@ -80,10 +80,10 @@ Available signatures:
 where F2 = (array[] real, data int, data int) => real
   The first argument must be
    (array[] real, data int, data int) => real
-  but found
+  but got
    (array[] real, int) => real
   These are not compatible because:
-    Expected 2 arguments but found 3 arguments.
+    One takes 2 arguments but the other takes 3 arguments.
   $ ../../../../../install/default/bin/stanc bad_fun_1_static.stan
 Semantic error in 'bad_fun_1_static.stan', line 12, column 12 to column 46:
    -------------------------------------------------
@@ -102,10 +102,10 @@ Available signatures:
 where F2 = (array[] real, data int, data int) => real
   The first argument must be
    (array[] real, data int, data int) => real
-  but found
+  but got
    (array[] real, int) => real
   These are not compatible because:
-    Expected 2 arguments but found 3 arguments.
+    One takes 2 arguments but the other takes 3 arguments.
   $ ../../../../../install/default/bin/stanc bad_fun_first_arg.stan
 Semantic error in 'bad_fun_first_arg.stan', line 12, column 12 to column 42:
    -------------------------------------------------
@@ -124,10 +124,13 @@ Available signatures:
 where F2 = (array[] real, data int, data int) => real
   The first argument must be
    (array[] real, data int, data int) => real
-  but found
+  but got
    (array[] real, real, int, real, real) => real
   These are not compatible because:
-    The second argument must be real but found int
+    The types for the second argument are incompatible: one is
+     real
+    on one but the other is
+     int
   $ ../../../../../install/default/bin/stanc bad_fun_first_arg_static.stan
 Semantic error in 'bad_fun_first_arg_static.stan', line 12, column 12 to column 49:
    -------------------------------------------------
@@ -146,10 +149,13 @@ Available signatures:
 where F2 = (array[] real, data int, data int) => real
   The first argument must be
    (array[] real, data int, data int) => real
-  but found
+  but got
    (array[] real, real, int, real, real) => real
   These are not compatible because:
-    The second argument must be real but found int
+    The types for the second argument are incompatible: one is
+     real
+    on one but the other is
+     int
   $ ../../../../../install/default/bin/stanc bad_fun_second_arg.stan
 Semantic error in 'bad_fun_second_arg.stan', line 12, column 12 to column 42:
    -------------------------------------------------
@@ -168,10 +174,13 @@ Available signatures:
 where F2 = (array[] real, data int, data int) => real
   The first argument must be
    (array[] real, data int, data int) => real
-  but found
+  but got
    (array[] real, int, real, real, real) => real
   These are not compatible because:
-    The third argument must be real but found int
+    The types for the third argument are incompatible: one is
+     real
+    on one but the other is
+     int
   $ ../../../../../install/default/bin/stanc bad_fun_second_arg_static.stan
 Semantic error in 'bad_fun_second_arg_static.stan', line 12, column 12 to column 49:
    -------------------------------------------------
@@ -190,10 +199,13 @@ Available signatures:
 where F2 = (array[] real, data int, data int) => real
   The first argument must be
    (array[] real, data int, data int) => real
-  but found
+  but got
    (array[] real, int, real, real, real) => real
   These are not compatible because:
-    The third argument must be real but found int
+    The types for the third argument are incompatible: one is
+     real
+    on one but the other is
+     int
   $ ../../../../../install/default/bin/stanc bad_fun_slice_and_slice_dont_match.stan
 Semantic error in 'bad_fun_slice_and_slice_dont_match.stan', line 12, column 12 to column 42:
    -------------------------------------------------
@@ -244,10 +256,13 @@ Available signatures:
 where F2 = (array[] real, data int, data int) => real
   The first argument must be
    (array[] real, data int, data int) => real
-  but found
+  but got
    (array[] real, real, int, int, real) => real
   These are not compatible because:
-    The second argument must be real but found int
+    The types for the second argument are incompatible: one is
+     real
+    on one but the other is
+     int
   $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types2.stan
 Semantic error in 'bad_non_matching_arg_types2.stan', line 16, column 14 to column 47:
    -------------------------------------------------
@@ -263,7 +278,7 @@ Ill-typed arguments supplied to function 'reduce_sum':
 where F1 = (array[] real, int, int, real, real) => real
 Available signatures:
 (<F1>, array[] real, int, real, real) => real
-  The 5th argument must be real but found array[] real
+  The 5th argument must be real but got array[] real
   $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types2_static.stan
 Semantic error in 'bad_non_matching_arg_types2_static.stan', line 16, column 14 to column 54:
    -------------------------------------------------
@@ -279,7 +294,7 @@ Ill-typed arguments supplied to function 'reduce_sum_static':
 where F1 = (array[] real, int, int, real, real) => real
 Available signatures:
 (<F1>, array[] real, int, real, real) => real
-  The 5th argument must be real but found array[] real
+  The 5th argument must be real but got array[] real
   $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types3.stan
 Semantic error in 'bad_non_matching_arg_types3.stan', line 13, column 14 to column 47:
    -------------------------------------------------
@@ -295,7 +310,7 @@ Ill-typed arguments supplied to function 'reduce_sum':
 where F1 = (array[] real, int, int, real, real) => real
 Available signatures:
 (<F1>, array[] real, int, real, real) => real
-  The 5th argument must be real but found vector
+  The 5th argument must be real but got vector
   $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types3_static.stan
 Semantic error in 'bad_non_matching_arg_types3_static.stan', line 13, column 14 to column 54:
    -------------------------------------------------
@@ -311,7 +326,7 @@ Ill-typed arguments supplied to function 'reduce_sum_static':
 where F1 = (array[] real, int, int, real, real) => real
 Available signatures:
 (<F1>, array[] real, int, real, real) => real
-  The 5th argument must be real but found vector
+  The 5th argument must be real but got vector
   $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types_static.stan
 
   $ ../../../../../install/default/bin/stanc bad_not_slice_type.stan
@@ -364,10 +379,10 @@ Available signatures:
 where F2 = (array[] real, data int, data int) => real
   The first argument must be
    (array[] real, data int, data int) => real
-  but found
+  but got
    (array[] real, int, int) => int
   These are not compatible because:
-    Return types are incompatible: expected real but found int
+    Return types are incompatible: one is real but the other is int
   $ ../../../../../install/default/bin/stanc bad_return_type_static.stan
 Semantic error in 'bad_return_type_static.stan', line 12, column 12 to column 46:
    -------------------------------------------------
@@ -386,10 +401,10 @@ Available signatures:
 where F2 = (array[] real, data int, data int) => real
   The first argument must be
    (array[] real, data int, data int) => real
-  but found
+  but got
    (array[] real, int, int) => int
   These are not compatible because:
-    Return types are incompatible: expected real but found int
+    Return types are incompatible: one is real but the other is int
   $ ../../../../../install/default/bin/stanc bad_suffix.stan
 Semantic error in 'bad_suffix.stan', line 27, column 12 to line 28, column 45:
    -------------------------------------------------
@@ -407,7 +422,7 @@ where F1 = (array[] int, int, int, array[] int, vector, vector) => real
 Available signatures:
 (<F2>, array[] int, int) => real
 where F2 = (array[] int, data int, data int) => real
-  The first argument must be a pure function but found an _lp function. These function types are not compatible.
+  The first argument must be a pure function but got an _lp function. These function types are not compatible.
   $ ../../../../../install/default/bin/stanc bad_userdefined_reduce_sum.stan
 Semantic error in 'bad_userdefined_reduce_sum.stan', line 2, column 7 to column 17:
    -------------------------------------------------

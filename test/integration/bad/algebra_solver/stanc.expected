@@ -17,10 +17,13 @@ Available signatures:
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The first argument must be
    (vector, vector, data array[] real, data array[] int) => vector
-  but found
+  but got
    (array[] real, vector, array[] real, array[] int) => vector
   These are not compatible because:
-    The first argument must be array[] real but found vector
+    The types for the first argument are incompatible: one is
+     array[] real
+    on one but the other is
+     vector
 (<F2>, vector, vector, data array[] real, data array[] int, data real,
  data real, data real) => vector
   Expected 8 arguments but found 5 arguments.
@@ -44,10 +47,13 @@ Available signatures:
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The first argument must be
    (vector, vector, data array[] real, data array[] int) => vector
-  but found
+  but got
    (array[] real, vector, array[] real, array[] int) => vector
   These are not compatible because:
-    The first argument must be array[] real but found vector
+    The types for the first argument are incompatible: one is
+     array[] real
+    on one but the other is
+     vector
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
   $ ../../../../../install/default/bin/stanc bad_newton_fun_type_control.stan
@@ -70,10 +76,13 @@ Available signatures:
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The first argument must be
    (vector, vector, data array[] real, data array[] int) => vector
-  but found
+  but got
    (array[] real, vector, array[] real, array[] int) => vector
   These are not compatible because:
-    The first argument must be array[] real but found vector
+    The types for the first argument are incompatible: one is
+     array[] real
+    on one but the other is
+     vector
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
   $ ../../../../../install/default/bin/stanc bad_newton_x_i_type.stan
@@ -93,7 +102,7 @@ where F1 = (vector, vector, array[] real, array[] int) => vector
 Available signatures:
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The 5th argument must be array[] int but found array[] real
+  The 5th argument must be array[] int but got array[] real
 (<F2>, vector, vector, data array[] real, data array[] int, data real,
  data real, data real) => vector
   Expected 8 arguments but found 5 arguments.
@@ -115,7 +124,7 @@ Available signatures:
 (<F2>, vector, vector, data array[] real, data array[] int, data real,
  data real, data real) => vector
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The 5th argument must be array[] int but found array[] real
+  The 5th argument must be array[] int but got array[] real
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
   $ ../../../../../install/default/bin/stanc bad_newton_x_r_type.stan
@@ -135,7 +144,7 @@ where F1 = (vector, vector, array[] real, array[] int) => vector
 Available signatures:
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The fourth argument must be array[] real but found array[] int
+  The fourth argument must be array[] real but got array[] int
 (<F2>, vector, vector, data array[] real, data array[] int, data real,
  data real, data real) => vector
   Expected 8 arguments but found 5 arguments.
@@ -157,7 +166,7 @@ Available signatures:
 (<F2>, vector, vector, data array[] real, data array[] int, data real,
  data real, data real) => vector
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The fourth argument must be array[] real but found array[] int
+  The fourth argument must be array[] real but got array[] int
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
   $ ../../../../../install/default/bin/stanc bad_newton_x_r_var_type.stan
@@ -225,10 +234,13 @@ Available signatures:
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The first argument must be
    (vector, vector, data array[] real, data array[] int) => vector
-  but found
+  but got
    (array[] real, vector, array[] real, array[] int) => vector
   These are not compatible because:
-    The first argument must be array[] real but found vector
+    The types for the first argument are incompatible: one is
+     array[] real
+    on one but the other is
+     vector
 (<F2>, vector, vector, data array[] real, data array[] int, data real,
  data real, data real) => vector
   Expected 8 arguments but found 5 arguments.
@@ -252,10 +264,13 @@ Available signatures:
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The first argument must be
    (vector, vector, data array[] real, data array[] int) => vector
-  but found
+  but got
    (array[] real, vector, array[] real, array[] int) => vector
   These are not compatible because:
-    The first argument must be array[] real but found vector
+    The types for the first argument are incompatible: one is
+     array[] real
+    on one but the other is
+     vector
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
   $ ../../../../../install/default/bin/stanc bad_theta_type.stan
@@ -277,10 +292,13 @@ Available signatures:
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The first argument must be
    (vector, vector, data array[] real, data array[] int) => vector
-  but found
+  but got
    (array[] real, vector, array[] real, array[] int) => vector
   These are not compatible because:
-    The first argument must be array[] real but found vector
+    The types for the first argument are incompatible: one is
+     array[] real
+    on one but the other is
+     vector
 (<F2>, vector, vector, data array[] real, data array[] int, data real,
  data real, data real) => vector
   Expected 8 arguments but found 5 arguments.
@@ -304,10 +322,13 @@ Available signatures:
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The first argument must be
    (vector, vector, data array[] real, data array[] int) => vector
-  but found
+  but got
    (array[] real, vector, array[] real, array[] int) => vector
   These are not compatible because:
-    The first argument must be array[] real but found vector
+    The types for the first argument are incompatible: one is
+     array[] real
+    on one but the other is
+     vector
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
   $ ../../../../../install/default/bin/stanc bad_x_i_type.stan
@@ -327,7 +348,7 @@ where F1 = (vector, vector, array[] real, array[] int) => vector
 Available signatures:
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The 5th argument must be array[] int but found array[] real
+  The 5th argument must be array[] int but got array[] real
 (<F2>, vector, vector, data array[] real, data array[] int, data real,
  data real, data real) => vector
   Expected 8 arguments but found 5 arguments.
@@ -349,7 +370,7 @@ Available signatures:
 (<F2>, vector, vector, data array[] real, data array[] int, data real,
  data real, data real) => vector
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The 5th argument must be array[] int but found array[] real
+  The 5th argument must be array[] int but got array[] real
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
   $ ../../../../../install/default/bin/stanc bad_x_r_type.stan
@@ -369,7 +390,7 @@ where F1 = (vector, vector, array[] real, array[] int) => vector
 Available signatures:
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The fourth argument must be array[] real but found array[] int
+  The fourth argument must be array[] real but got array[] int
 (<F2>, vector, vector, data array[] real, data array[] int, data real,
  data real, data real) => vector
   Expected 8 arguments but found 5 arguments.
@@ -391,7 +412,7 @@ Available signatures:
 (<F2>, vector, vector, data array[] real, data array[] int, data real,
  data real, data real) => vector
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
-  The fourth argument must be array[] real but found array[] int
+  The fourth argument must be array[] real but got array[] int
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
   $ ../../../../../install/default/bin/stanc bad_x_r_var_type.stan
@@ -459,10 +480,13 @@ Available signatures:
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The first argument must be
    (vector, vector, data array[] real, data array[] int) => vector
-  but found
+  but got
    (array[] real, vector, array[] real, array[] int) => vector
   These are not compatible because:
-    The first argument must be array[] real but found vector
+    The types for the first argument are incompatible: one is
+     array[] real
+    on one but the other is
+     vector
 (<F2>, vector, vector, data array[] real, data array[] int, data real,
  data real, data real) => vector
   Expected 8 arguments but found 5 arguments.
@@ -486,9 +510,12 @@ Available signatures:
 where F2 = (vector, vector, data array[] real, data array[] int) => vector
   The first argument must be
    (vector, vector, data array[] real, data array[] int) => vector
-  but found
+  but got
    (array[] real, vector, array[] real, array[] int) => vector
   These are not compatible because:
-    The first argument must be array[] real but found vector
+    The types for the first argument are incompatible: one is
+     array[] real
+    on one but the other is
+     vector
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.

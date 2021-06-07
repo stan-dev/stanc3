@@ -20,10 +20,10 @@ where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
   The first argument must be
    (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-  but found
+  but got
    (real, array[] real, array[] real, array[] real, array[] int) => real
   These are not compatible because:
-    Return types are incompatible: expected array[] real but found real
+    Return types are incompatible: one is array[] real but the other is real
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
@@ -50,10 +50,13 @@ where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
   The first argument must be
    (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-  but found
+  but got
    (array[] real, array[] real, array[] real, array[] real, array[] int) => array[] real
   These are not compatible because:
-    The first argument must be array[] real but found real
+    The types for the first argument are incompatible: one is
+     array[] real
+    on one but the other is
+     real
   $ ../../../../../install/default/bin/stanc bad_fun_type_bdf.stan
 Semantic error in 'bad_fun_type_bdf.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
@@ -77,10 +80,13 @@ where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
   The first argument must be
    (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-  but found
+  but got
    (array[] real, array[] real, array[] real, array[] real, array[] int) => array[] real
   These are not compatible because:
-    The first argument must be array[] real but found real
+    The types for the first argument are incompatible: one is
+     array[] real
+    on one but the other is
+     real
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
@@ -107,10 +113,13 @@ where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
   The first argument must be
    (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-  but found
+  but got
    (array[] real, array[] real, array[] real, array[] real, array[] int) => array[] real
   These are not compatible because:
-    The first argument must be array[] real but found real
+    The types for the first argument are incompatible: one is
+     array[] real
+    on one but the other is
+     real
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
@@ -137,10 +146,13 @@ where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
   The first argument must be
    (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-  but found
+  but got
    (array[] real, array[] real, array[] real, array[] real, array[] int) => array[] real
   These are not compatible because:
-    The first argument must be array[] real but found real
+    The types for the first argument are incompatible: one is
+     array[] real
+    on one but the other is
+     real
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
@@ -167,10 +179,13 @@ where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
   The first argument must be
    (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-  but found
+  but got
    (array[] real, array[] real, array[] real, array[] real, array[] int) => array[] real
   These are not compatible because:
-    The first argument must be array[] real but found real
+    The types for the first argument are incompatible: one is
+     array[] real
+    on one but the other is
+     real
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
@@ -194,7 +209,7 @@ Available signatures:
  data array[] int) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The third argument must be real but found matrix
+  The third argument must be real but got matrix
   $ ../../../../../install/default/bin/stanc bad_t_type_bdf.stan
 Semantic error in 'bad_t_type_bdf.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -215,7 +230,7 @@ Available signatures:
  data array[] int) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The third argument must be real but found matrix
+  The third argument must be real but got matrix
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
@@ -239,7 +254,7 @@ Available signatures:
  data array[] int, data real, data real, data real) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The third argument must be real but found matrix
+  The third argument must be real but got matrix
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
@@ -263,7 +278,7 @@ Available signatures:
  data array[] int) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The third argument must be real but found matrix
+  The third argument must be real but got matrix
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
@@ -287,7 +302,7 @@ Available signatures:
  data array[] int, data real, data real, data real) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The third argument must be real but found matrix
+  The third argument must be real but got matrix
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
@@ -311,7 +326,7 @@ Available signatures:
  data array[] int) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The 5th argument must be array[] real but found array[,] real
+  The 5th argument must be array[] real but got array[,] real
   $ ../../../../../install/default/bin/stanc bad_theta_type_bdf.stan
 Semantic error in 'bad_theta_type_bdf.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
@@ -332,7 +347,7 @@ Available signatures:
  data array[] int) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The 5th argument must be array[] real but found array[,] real
+  The 5th argument must be array[] real but got array[,] real
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
@@ -356,7 +371,7 @@ Available signatures:
  data array[] int, data real, data real, data real) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The 5th argument must be array[] real but found array[,] real
+  The 5th argument must be array[] real but got array[,] real
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
@@ -380,7 +395,7 @@ Available signatures:
  data array[] int) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The 5th argument must be array[] real but found array[,] real
+  The 5th argument must be array[] real but got array[,] real
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
@@ -404,7 +419,7 @@ Available signatures:
  data array[] int, data real, data real, data real) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The 5th argument must be array[] real but found array[,] real
+  The 5th argument must be array[] real but got array[,] real
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
@@ -428,7 +443,7 @@ Available signatures:
  data array[] int) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The fourth argument must be array[] real but found array[,] real
+  The fourth argument must be array[] real but got array[,] real
   $ ../../../../../install/default/bin/stanc bad_ts_type_bdf.stan
 Semantic error in 'bad_ts_type_bdf.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -449,7 +464,7 @@ Available signatures:
  data array[] int) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The fourth argument must be array[] real but found array[,] real
+  The fourth argument must be array[] real but got array[,] real
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
@@ -473,7 +488,7 @@ Available signatures:
  data array[] int, data real, data real, data real) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The fourth argument must be array[] real but found array[,] real
+  The fourth argument must be array[] real but got array[,] real
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
@@ -497,7 +512,7 @@ Available signatures:
  data array[] int) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The fourth argument must be array[] real but found array[,] real
+  The fourth argument must be array[] real but got array[,] real
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
@@ -521,7 +536,7 @@ Available signatures:
  data array[] int, data real, data real, data real) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The fourth argument must be array[] real but found array[,] real
+  The fourth argument must be array[] real but got array[,] real
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
@@ -611,7 +626,7 @@ Available signatures:
  data array[] int) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The 7th argument must be array[] int but found array[,] int
+  The 7th argument must be array[] int but got array[,] int
   $ ../../../../../install/default/bin/stanc bad_x_int_type_bdf.stan
 Semantic error in 'bad_x_int_type_bdf.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -632,7 +647,7 @@ Available signatures:
  data array[] int) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The 7th argument must be array[] int but found array[,] int
+  The 7th argument must be array[] int but got array[,] int
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
@@ -656,7 +671,7 @@ Available signatures:
  data array[] int, data real, data real, data real) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The 7th argument must be array[] int but found array[,] int
+  The 7th argument must be array[] int but got array[,] int
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
@@ -680,7 +695,7 @@ Available signatures:
  data array[] int) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The 7th argument must be array[] int but found array[,] int
+  The 7th argument must be array[] int but got array[,] int
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
@@ -704,7 +719,7 @@ Available signatures:
  data array[] int, data real, data real, data real) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The 7th argument must be array[] int but found array[,] int
+  The 7th argument must be array[] int but got array[,] int
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
@@ -728,7 +743,7 @@ Available signatures:
  data array[] int) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The 6th argument must be array[] real but found array[] vector
+  The 6th argument must be array[] real but got array[] vector
   $ ../../../../../install/default/bin/stanc bad_x_type_bdf.stan
 Semantic error in 'bad_x_type_bdf.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
@@ -749,7 +764,7 @@ Available signatures:
  data array[] int) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The 6th argument must be array[] real but found array[] vector
+  The 6th argument must be array[] real but got array[] vector
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
@@ -773,7 +788,7 @@ Available signatures:
  data array[] int, data real, data real, data real) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The 6th argument must be array[] real but found array[] vector
+  The 6th argument must be array[] real but got array[] vector
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
@@ -797,7 +812,7 @@ Available signatures:
  data array[] int) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The 6th argument must be array[] real but found array[] vector
+  The 6th argument must be array[] real but got array[] vector
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
@@ -821,7 +836,7 @@ Available signatures:
  data array[] int, data real, data real, data real) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The 6th argument must be array[] real but found array[] vector
+  The 6th argument must be array[] real but got array[] vector
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
@@ -972,7 +987,7 @@ Available signatures:
  data array[] int) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The second argument must be array[] real but found array[,] real
+  The second argument must be array[] real but got array[,] real
   $ ../../../../../install/default/bin/stanc bad_y_type_bdf.stan
 Semantic error in 'bad_y_type_bdf.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -993,7 +1008,7 @@ Available signatures:
  data array[] int) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The second argument must be array[] real but found array[,] real
+  The second argument must be array[] real but got array[,] real
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
@@ -1017,7 +1032,7 @@ Available signatures:
  data array[] int, data real, data real, data real) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The second argument must be array[] real but found array[,] real
+  The second argument must be array[] real but got array[,] real
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.
@@ -1041,7 +1056,7 @@ Available signatures:
  data array[] int) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The second argument must be array[] real but found array[,] real
+  The second argument must be array[] real but got array[,] real
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
   Expected 10 arguments but found 7 arguments.
@@ -1065,7 +1080,7 @@ Available signatures:
  data array[] int, data real, data real, data real) => array[,] real
 where F2 = (real, array[] real, array[] real, data array[] real,
             data array[] int) => array[] real
-  The second argument must be array[] real but found array[,] real
+  The second argument must be array[] real but got array[,] real
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.

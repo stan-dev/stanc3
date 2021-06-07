@@ -220,33 +220,63 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
     | 4 -> "fourth"
     | n -> Fmt.strf "%dth" n
   in
-  let rec pp_explain recursive ppf = function
-    | ArgError (n, DataOnlyError) when recursive ->
+  let rec pp_explain_rec ppf = function
+    | ArgError (n, DataOnlyError) ->
         pf ppf "@[<hov>The@ %s@ argument%a@]" (index_str n) text
           " has an incompatible data-qualifier."
+    | ArgError (n, TypesMismatch (expected, found)) ->
+        pf ppf
+          "@[<hv>The types for the %s argument are incompatible: one is@, %a@ on one but the other is@, \
+           %a@]"
+          (index_str n) (pp_unsized_type ctx) expected (pp_unsized_type ctx)
+          found
+    | ArgError (n, FuncTypeMismatch (_, _, SuffixMismatch (expected, found)))
+      ->
+        pf ppf
+          "@[<v>The %s argument is %s but the other is %s. These function \
+           types are not compatible.@]"
+          (index_str n) (suffix_str expected) (suffix_str found)
+    | ArgError (n, FuncTypeMismatch (expected, found, err)) ->
+        pf ppf
+          "@[<v>The types for the %s argument are incompatible: one is@, %a@ but the other is@, %a@ \
+           @[<v>These are not compatible because:@ @[<hov>%a@]@]@]"
+          (index_str n) (pp_fundef ctx) expected (pp_fundef ctx) found
+          pp_explain_rec err
+    | ReturnTypeMismatch (expected, found) ->
+        pf ppf "Return types are incompatible: one is %a but the other is %a"
+          UnsizedType.pp_returntype expected UnsizedType.pp_returntype found
+    | ArgNumMismatch (expected, found) ->
+        pf ppf "One takes %d arguments but the other takes %d arguments."
+          expected found
+    | SuffixMismatch (expected, found) ->
+        pf ppf
+          "One is %s but the other is %s. These function types are not \
+           compatible."
+          (suffix_str expected) (suffix_str found)
+  in
+  let pp_explain ppf = function
     | ArgError (n, DataOnlyError) ->
         pf ppf "@[<hov>The@ %s@ argument%a@]" (index_str n) text
           " must be data-only. (Local variables are assumed to depend on \
            parameters; same goes for function inputs unless they are marked \
            with the keyword 'data'.)"
     | ArgError (n, TypesMismatch (expected, found)) ->
-        pf ppf "@[<hv>The %s argument must be@, %a@ but found@, %a@]"
+        pf ppf "@[<hv>The %s argument must be@, %a@ but got@, %a@]"
           (index_str n) (pp_unsized_type ctx) expected (pp_unsized_type ctx)
           found
     | ArgError (n, FuncTypeMismatch (_, _, SuffixMismatch (expected, found)))
       ->
         pf ppf
-          "@[<v>The %s argument must be %s but found %s. These function types \
+          "@[<v>The %s argument must be %s but got %s. These function types \
            are not compatible.@]"
           (index_str n) (suffix_str expected) (suffix_str found)
     | ArgError (n, FuncTypeMismatch (expected, found, err)) ->
         pf ppf
-          "@[<v>The %s argument must be@, %a@ but found@, %a@ @[<v 2>These \
+          "@[<v>The %s argument must be@, %a@ but got@, %a@ @[<v 2>These \
            are not compatible because:@ @[<hov>%a@]@]@]"
           (index_str n) (pp_fundef ctx) expected (pp_fundef ctx) found
-          (pp_explain true) err
+          pp_explain_rec err
     | ReturnTypeMismatch (expected, found) ->
-        let _ = ppf in
         pf ppf "Return types are incompatible: expected %a but found %a"
           UnsizedType.pp_returntype expected UnsizedType.pp_returntype found
     | ArgNumMismatch (expected, found) ->
@@ -264,7 +294,7 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
     let fun_ty = UnsizedType.UFun (args, rt, FnPlain) in
     Fmt.pf ppf "%a@ @[<hov 2>  %a@]"
       (pp_with_where ctx (pp_fundef ctx))
-      fun_ty (pp_explain false) err
+      fun_ty pp_explain err
   in
   let pp_omitted ppf () =
     if omitted then pf ppf "@,(Additional signatures omitted)"
