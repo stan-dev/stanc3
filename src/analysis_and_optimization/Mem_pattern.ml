@@ -105,7 +105,7 @@ let rec query_mem_pattern_set_names (soa_exits : string Set.Poly.t)
   | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) -> false
   | EAnd (lhs, rhs) | EOr (lhs, rhs) -> query_name lhs || query_name rhs
 
-let rec find_mem_pattern_set_names Expr.Fixed.({pattern; _}) =
+let rec find_mem_pattern_set_names Expr.Fixed.({pattern; meta=Expr.Typed.Meta.({type_;_})}) =
   let find_name = find_mem_pattern_set_names in
   match pattern with
   | FunApp (_, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
@@ -117,7 +117,8 @@ let rec find_mem_pattern_set_names Expr.Fixed.({pattern; _}) =
       let find_in_index = search_index find_name in
       Set.Poly.union (find_name expr)
         (Set.Poly.union_list (List.map ~f:find_in_index indexed))
-  | Var (name : string) -> Set.Poly.singleton name
+  | Var (name : string) when UnsizedType.contains_eigen_type type_ -> Set.Poly.singleton name
+  | Var (_ : string) -> Set.Poly.empty
   | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) -> Set.Poly.empty
   | EAnd (lhs, rhs) | EOr (lhs, rhs) ->
       Set.Poly.union (find_name lhs) (find_name rhs)
@@ -278,6 +279,7 @@ let rec modify_soa_stmt_pattern
 (* Look through an expression and find the overall type and adlevel*)
 let find_args Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
   (adlevel, type_)
+  
 
 let query_mem_pattern_funkinds query_expr kind exprs =
   match kind with
@@ -385,11 +387,14 @@ let query_mem_pattern_stmt (success_set : string Set.Poly.t) pattern =
         Set.Poly.union_list (List.map ~f:(search_index query_expr) lhs)
       in
       let check_rhs = query_expr rhs in
-      let is_bad_assign = Set.Poly.length (query_expr rhs) > 0 in
-      if is_bad_assign then
-        Set.Poly.union_list
-          [Set.Poly.singleton assign_name; check_lhs; check_rhs]
-      else Set.Poly.union_list [check_lhs; check_rhs]
+      let is_aos_rhs = (Set.Poly.length (check_rhs) > 0) in
+      let is_aos_assigned = (match is_aos_rhs with
+      | true -> Set.Poly.singleton assign_name 
+      | false -> Set.Poly.empty) in
+      let is_aos_assignee = (match (Set.Poly.mem success_set assign_name) with 
+      | true -> find_mem_pattern_set_names rhs
+      | false -> check_rhs) in
+        Set.Poly.union_list [is_aos_assigned; check_lhs; is_aos_assignee]
   | NRFunApp (kind, exprs) ->
       query_mem_pattern_funkinds
         (query_mem_pattern_exprs success_set)
@@ -599,11 +604,16 @@ let rec query_mem_pattern_stmt_loops in_loop pattern =
   in
   match pattern with
   | Stmt.Fixed.Pattern.Decl _ -> Set.Poly.empty
-  | Assignment (((_ : string), (_ : UnsizedType.t), lhs), rhs) ->
+  | Assignment (((name : string), (_ : UnsizedType.t), lhs), rhs) ->
       let check_lhs =
         Set.Poly.union_list (List.map ~f:(search_index query_expr) lhs)
       in
-      Set.Poly.union check_lhs (query_expr rhs)
+      let check_rhs = query_expr rhs in
+      if (Set.Poly.length check_rhs) > 0 then
+      let sub_set = Set.Poly.union check_lhs check_rhs in 
+      Set.Poly.add sub_set name
+      else 
+      Set.Poly.union check_lhs check_rhs
   | NRFunApp (kind, exprs) ->
       query_mem_pattern_funkinds_loop query_mem_pattern_exprs_loop in_loop kind
         exprs

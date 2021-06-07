@@ -11300,7 +11300,7 @@
    ((pattern
      (Assignment (p_real_1d_ar (UArray UReal) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (lb) AoS))
+        (FunApp (CompilerInternal (FnReadParam (lb) SoA))
          (((pattern (Lit Int 0))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var lp__))
