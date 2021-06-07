@@ -226,8 +226,8 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
           " has an incompatible data-qualifier."
     | ArgError (n, TypesMismatch (expected, found)) ->
         pf ppf
-          "@[<hv>The types for the %s argument are incompatible: one is@, %a@ on one but the other is@, \
-           %a@]"
+          "@[<hv>The types for the %s argument are incompatible: one is@, %a@ \
+           on one but the other is@, %a@]"
           (index_str n) (pp_unsized_type ctx) expected (pp_unsized_type ctx)
           found
     | ArgError (n, FuncTypeMismatch (_, _, SuffixMismatch (expected, found)))
@@ -238,8 +238,9 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
           (index_str n) (suffix_str expected) (suffix_str found)
     | ArgError (n, FuncTypeMismatch (expected, found, err)) ->
         pf ppf
-          "@[<v>The types for the %s argument are incompatible: one is@, %a@ but the other is@, %a@ \
-           @[<v>These are not compatible because:@ @[<hov>%a@]@]@]"
+          "@[<v>The types for the %s argument are incompatible: one is@, %a@ \
+           but the other is@, %a@ @[<v>These are not compatible because:@ \
+           @[<hov>%a@]@]@]"
           (index_str n) (pp_fundef ctx) expected (pp_fundef ctx) found
           pp_explain_rec err
     | ReturnTypeMismatch (expected, found) ->
@@ -272,8 +273,8 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
           (index_str n) (suffix_str expected) (suffix_str found)
     | ArgError (n, FuncTypeMismatch (expected, found, err)) ->
         pf ppf
-          "@[<v>The %s argument must be@, %a@ but got@, %a@ @[<v 2>These \
-           are not compatible because:@ @[<hov>%a@]@]@]"
+          "@[<v>The %s argument must be@, %a@ but got@, %a@ @[<v 2>These are \
+           not compatible because:@ @[<hov>%a@]@]@]"
           (index_str n) (pp_fundef ctx) expected (pp_fundef ctx) found
           pp_explain_rec err
     | ReturnTypeMismatch (expected, found) ->
