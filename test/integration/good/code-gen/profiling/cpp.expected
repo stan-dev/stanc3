@@ -184,9 +184,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         validate_non_negative_index("cov", "N", N);
         current_statement__ = 5;
         validate_non_negative_index("cov", "N", N);
-        stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> cov = 
-        stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>(Eigen::Matrix<double, -1, -1>::Constant(N, N, std::numeric_limits<double>::quiet_NaN()));
-        
+        Eigen::Matrix<local_scalar_t__, -1, -1> cov = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(N, N, DUMMY_VAR__);
+                                                      
         
         current_statement__ = 7;
         validate_non_negative_index("L_cov", "N", N);

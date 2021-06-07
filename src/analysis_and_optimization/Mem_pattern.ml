@@ -279,7 +279,7 @@ let rec modify_soa_stmt_pattern
 let find_args Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
   (adlevel, type_)
 
-let query_mem_pattern_funkinds _ _ kind exprs =
+let query_mem_pattern_funkinds query_expr kind exprs =
   match kind with
   | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) -> (
     match name with
@@ -292,7 +292,8 @@ let query_mem_pattern_funkinds _ _ kind exprs =
           Stan_math_signatures.query_stan_math_mem_pattern_support name
             (List.map ~f:find_args exprs)
         in
-        if is_fun_support then Set.Poly.empty
+        if is_fun_support then
+          Set.Poly.union_list (List.map ~f:query_expr exprs)
         else Set.Poly.union_list (List.map ~f:find_mem_pattern_set_names exprs)
     )
   | CompilerInternal _ -> Set.Poly.empty
@@ -322,7 +323,9 @@ let rec query_mem_pattern_exprs (success_set : string Set.Poly.t)
   let query_expr = query_mem_pattern_exprs success_set in
   match pattern with
   | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
-      query_mem_pattern_funkinds query_mem_pattern_exprs success_set kind exprs
+      query_mem_pattern_funkinds
+        (query_mem_pattern_exprs success_set)
+        kind exprs
   | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
       Set.Poly.empty
   | TernaryIf (predicate, texpr, fexpr) ->
@@ -388,7 +391,9 @@ let query_mem_pattern_stmt (success_set : string Set.Poly.t) pattern =
           [Set.Poly.singleton assign_name; check_lhs; check_rhs]
       else Set.Poly.union_list [check_lhs; check_rhs]
   | NRFunApp (kind, exprs) ->
-      query_mem_pattern_funkinds query_mem_pattern_exprs success_set kind exprs
+      query_mem_pattern_funkinds
+        (query_mem_pattern_exprs success_set)
+        kind exprs
   (*For the below, we just want to look at expressions*)
   | IfElse (predicate, (_ : int), (_ : int option)) -> query_expr predicate
   | Return optional_expr -> (
@@ -431,11 +436,11 @@ let rec promote_soa_exprs eigen_types (Expr.Fixed.({pattern; _}) as expr) =
     | Indexed (idx_expr, indexed) ->
         let query_index = mod_index mod_expr in
         Indexed (mod_expr idx_expr, List.map ~f:query_index indexed)
+    | EAnd (lhs, rhs) -> EAnd (mod_expr lhs, mod_expr rhs)
+    | EOr (lhs, rhs) -> EOr (mod_expr lhs, mod_expr rhs)
     | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string))
       ->
         pattern
-    | EAnd (lhs, rhs) -> EAnd (mod_expr lhs, mod_expr rhs)
-    | EOr (lhs, rhs) -> EOr (mod_expr lhs, mod_expr rhs)
   in
   {expr with pattern= new_pattern}
 
@@ -543,6 +548,18 @@ let query_mem_pattern_funkinds_loop query_expr_loop in_loop kind exprs =
   | UserDefined _ ->
       Set.Poly.union_list (List.map ~f:find_mem_pattern_set_names exprs)
 
+let rec is_uni_loop_indexing ut index =
+  match (ut, index) with
+  | (UnsizedType.UArray t | UFun (_, ReturnType t, _, _)), index -> (
+    match List.tl index with
+    | Some cut_list -> is_uni_loop_indexing t cut_list
+    | None -> is_uni_loop_indexing t [Index.All] )
+  | (UVector | URowVector), [Index.Single _] -> true
+  | UMatrix, [Single _; Single _] -> true
+  | (UReal | UInt | UMathLibraryFunction | UFun (_, Void, _, _)), _ -> false
+  | (UVector | URowVector), _ -> false
+  | UMatrix, _ -> false
+
 let rec query_mem_pattern_exprs_loop in_loop Expr.Fixed.({pattern; _}) =
   let query_expr = query_mem_pattern_exprs_loop in_loop in
   match pattern with
@@ -555,11 +572,12 @@ let rec query_mem_pattern_exprs_loop in_loop Expr.Fixed.({pattern; _}) =
       Set.Poly.union
         (Set.Poly.union (query_expr predicate) (query_expr texpr))
         (query_expr fexpr)
-  | Indexed (Expr.Fixed.({pattern= Var name; meta= {type_; _}}), indexed)
-    when UnsizedType.is_eigen_type type_
-         && List.exists ~f:index_constains_single indexed
-         && in_loop ->
-      Set.Poly.singleton name
+  | Indexed (Expr.Fixed.({pattern= Var name; meta= {type_; _}}), indexed) ->
+      let query_index = search_index query_expr in
+      if in_loop && is_uni_loop_indexing type_ indexed then
+        Set.Poly.union (Set.Poly.singleton name)
+          (Set.Poly.union_list (List.map ~f:query_index indexed))
+      else Set.Poly.union_list (List.map ~f:query_index indexed)
   | Indexed (expr, indexed) ->
       let query_index = search_index query_expr in
       Set.Poly.union (query_expr expr)

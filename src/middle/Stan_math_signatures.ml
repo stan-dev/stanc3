@@ -2212,9 +2212,9 @@ let () =
     ("trace_gen_quad_form", ReturnType UReal, [UMatrix; UMatrix; UMatrix], SoA) ;
   add_unqualified ("trace_quad_form", ReturnType UReal, [UMatrix; UVector], SoA) ;
   add_unqualified ("trace_quad_form", ReturnType UReal, [UMatrix; UMatrix], SoA) ;
-  add_unqualified ("transpose", ReturnType URowVector, [UVector], AoS) ;
-  add_unqualified ("transpose", ReturnType UVector, [URowVector], AoS) ;
-  add_unqualified ("transpose", ReturnType UMatrix, [UMatrix], AoS) ;
+  add_unqualified ("transpose", ReturnType URowVector, [UVector], SoA) ;
+  add_unqualified ("transpose", ReturnType UVector, [URowVector], SoA) ;
+  add_unqualified ("transpose", ReturnType UMatrix, [UMatrix], SoA) ;
   add_unqualified ("uniform_simplex", ReturnType UVector, [UInt], AoS) ;
   add_unqualified ("variance", ReturnType UReal, [UArray UReal], SoA) ;
   add_unqualified ("variance", ReturnType UReal, [UVector], SoA) ;

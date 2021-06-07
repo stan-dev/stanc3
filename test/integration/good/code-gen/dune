@@ -32,7 +32,7 @@
  (action (diff transformed_mir.expected transformed_mir.output)))
 
 (rule
- (targets transformed_mir2.output)
+ (targets mem_pattern_tmir.output)
  (deps (package stanc) (:stanfiles mem_patterns.stan))
  (action
   (with-stdout-to %{targets}
@@ -40,7 +40,7 @@
 
 (alias
  (name runtest)
- (action (diff transformed_mir2.expected transformed_mir2.output)))
+ (action (diff mem_pattern_tmir.expected mem_pattern_tmir.output)))
 
 
 

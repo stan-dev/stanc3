@@ -11770,7 +11770,7 @@
       (decl_type
        (Sized
         (SArray
-         (SVector AoS
+         (SVector SoA
           ((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
@@ -11797,7 +11797,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_row_vec)
       (decl_type
        (Sized
-        (SRowVector AoS
+        (SRowVector SoA
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
@@ -12149,7 +12149,7 @@
    ((pattern
      (Assignment (tp_row_vec URowVector ())
       ((pattern
-        (FunApp (StanLib Transpose__ FnPlain AoS)
+        (FunApp (StanLib Transpose__ FnPlain SoA)
          (((pattern
             (Indexed
              ((pattern (Var tp_1d_vec))
