@@ -281,7 +281,7 @@ let semantic_check_fn_normal ~is_cond_dist ~loc id es =
     | Some (_, UnsizedType.UFun (_, Void, _)) ->
         Semantic_error.returning_fn_expected_nonreturning_found loc id.name
         |> error
-    | Some (_, UFun (listedtypes, ReturnType ut, _)) -> (
+    | Some (_, UFun (listedtypes, ReturnType ut, (_, is_closure))) -> (
       match
         SignatureMismatch.check_compatible_arguments_mod_conv listedtypes
           (get_arg_types es)
@@ -293,10 +293,12 @@ let semantic_check_fn_normal ~is_cond_dist ~loc id es =
                (ReturnType ut) x
           |> error
       | None ->
+          let kind =
+            if is_closure then Closure (Fun_kind.suffix_from_name id.name)
+            else UserDefined (Fun_kind.suffix_from_name id.name)
+          in
           mk_typed_expression
-            ~expr:
-              (mk_fun_app ~is_cond_dist
-                 (UserDefined (Fun_kind.suffix_from_name id.name), id, es))
+            ~expr:(mk_fun_app ~is_cond_dist (kind, id, es))
             ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
           |> ok )
     | Some _ ->
@@ -961,7 +963,9 @@ let semantic_check_nrfn_normal ~loc id es =
           (get_arg_types es)
       with
       | None ->
-        let kind = if is_closure then Closure suffix else UserDefined suffix in
+          let kind =
+            if is_closure then Closure suffix else UserDefined suffix
+          in
           mk_typed_statement
             ~stmt:(NRFunApp (kind, id, es))
             ~return_type:NoReturnType ~loc

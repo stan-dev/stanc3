@@ -178,7 +178,8 @@ let stan_math_returntype name args =
 let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
     fun_return args =
   let minimal_func_type =
-    UnsizedType.UFun (mandatory_fun_arg_tys, ReturnType fun_return, (FnPlain, true))
+    UnsizedType.UFun
+      (mandatory_fun_arg_tys, ReturnType fun_return, (FnPlain, true))
   in
   let minimal_args =
     (UnsizedType.AutoDiffable, minimal_func_type) :: mandatory_arg_tys
@@ -186,8 +187,8 @@ let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
   let wrap_err x = Some (minimal_args, ArgError (1, x)) in
   match args with
   | ( _
-    , (UnsizedType.UFun (fun_args, ReturnType return_type, (suffix, _)) as func_type)
-    )
+    , ( UnsizedType.UFun (fun_args, ReturnType return_type, (suffix, _)) as
+      func_type ) )
     :: _ ->
       let mandatory, variadic_arg_tys =
         List.split_n fun_args (List.length mandatory_fun_arg_tys)
@@ -248,11 +249,8 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
           "@[<v>The %s argument is %s but the other is %s. These function \
            types are not compatible.@]"
           (index_str n) (suffix_str expected) (suffix_str found)
-    | ArgError (n, TypeMismatch (_, _, Some (ClosureError)))
-      ->
-        pf ppf
-          "@[<v>The %s argument cannot be a closure.@]"
-          (index_str n)
+    | ArgError (n, TypeMismatch (_, _, Some ClosureError)) ->
+        pf ppf "@[<v>The %s argument cannot be a closure.@]" (index_str n)
     | ArgError (n, TypeMismatch (expected, found, Some (InputMismatch err))) ->
         pf ppf
           "@[<v>The types for the %s argument are incompatible: one is@, %a@ \
@@ -286,11 +284,8 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
           "@[<v>The %s argument must be %s but got %s. These function types \
            are not compatible.@]"
           (index_str n) (suffix_str expected) (suffix_str found)
-    | ArgError (n, TypeMismatch (_, _, Some (ClosureError)))
-      ->
-        pf ppf
-          "@[<v>The %s argument cannot be a closure.@]"
-          (index_str n)
+    | ArgError (n, TypeMismatch (_, _, Some ClosureError)) ->
+        pf ppf "@[<v>The %s argument cannot be a closure.@]" (index_str n)
     | ArgError (n, TypeMismatch (expected, found, Some (InputMismatch err))) ->
         pf ppf
           "@[<v>The %s argument must be@, %a@ but got@, %a@ @[<v 2>These are \
