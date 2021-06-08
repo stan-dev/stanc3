@@ -146,6 +146,7 @@ and check_compatible_arguments depth args1 args2 =
               else Some (ArgError (i + 1, DataOnlyError)) )
 
 let check_compatible_arguments_mod_conv = check_compatible_arguments 0
+let max_n_errors = 5
 
 let stan_math_returntype name args =
   (* NB: Variadic arguments are special-cased in Semantic_check and not handled here *)
@@ -164,7 +165,7 @@ let stan_math_returntype name args =
            List.sort errors ~compare:(fun (_, e1) (_, e2) ->
                compare_errors e1 e2 )
          in
-         let errors, omitted = List.split_n errors 10 in
+         let errors, omitted = List.split_n errors max_n_errors in
          Error (errors, not (List.is_empty omitted)) )
 
 let check_variadic_args allow_lpdf mandatory_arg_tys mandatory_fun_arg_tys
@@ -214,7 +215,7 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
   let suffix_str = function
     | Fun_kind.FnPlain -> "a pure function"
     | FnRng -> "an rng function"
-    | FnLpdf _ -> "a probability density function"
+    | FnLpdf () -> "a probability density or mass function"
     | FnTarget -> "an _lp function"
   in
   let index_str = function
@@ -231,7 +232,7 @@ let pp_signature_mismatch ppf (name, arg_tys, (sigs, omitted)) =
     | ArgError (n, TypeMismatch (expected, found, None)) ->
         pf ppf
           "@[<hv>The types for the %s argument are incompatible: one is@, %a@ \
-           on one but the other is@, %a@]"
+           but the other is@, %a@]"
           (index_str n) (pp_unsized_type ctx) expected (pp_unsized_type ctx)
           found
     | ArgError (n, TypeMismatch (_, _, Some (SuffixMismatch (expected, found))))

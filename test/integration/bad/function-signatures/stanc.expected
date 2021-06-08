@@ -22,16 +22,6 @@ Available signatures:
   The second argument must be array[,,] int but got real
 (real, array[,,,] int) => array[,,,] real
   The second argument must be array[,,,] int but got real
-(real, array[,,,,] int) => array[,,,,] real
-  The second argument must be array[,,,,] int but got real
-(real, array[,,,,,] int) => array[,,,,,] real
-  The second argument must be array[,,,,,] int but got real
-(real, array[,,,,,,] int) => array[,,,,,,] real
-  The second argument must be array[,,,,,,] int but got real
-(int, array[,,,,,,] int) => array[,,,,,,] int
-  The first argument must be int but got real
-(int, array[,,,,,] int) => array[,,,,,] int
-  The first argument must be int but got real
 (Additional signatures omitted)
   $ ../../../../../install/default/bin/stanc rising_factorial.stan
 Semantic error in 'rising_factorial.stan', line 7, column 28 to column 60:
@@ -56,14 +46,4 @@ Available signatures:
   The second argument must be array[,,] int but got real
 (real, array[,,,] int) => array[,,,] real
   The second argument must be array[,,,] int but got real
-(real, array[,,,,] int) => array[,,,,] real
-  The second argument must be array[,,,,] int but got real
-(real, array[,,,,,] int) => array[,,,,,] real
-  The second argument must be array[,,,,,] int but got real
-(real, array[,,,,,,] int) => array[,,,,,,] real
-  The second argument must be array[,,,,,,] int but got real
-(int, array[,,,,,,] int) => array[,,,,,,] int
-  The first argument must be int but got real
-(int, array[,,,,,] int) => array[,,,,,] int
-  The first argument must be int but got real
 (Additional signatures omitted)

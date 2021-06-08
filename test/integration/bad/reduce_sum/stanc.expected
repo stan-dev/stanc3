@@ -129,7 +129,7 @@ where F2 = (array[] real, data int, data int) => real
   These are not compatible because:
     The types for the second argument are incompatible: one is
      real
-    on one but the other is
+    but the other is
      int
   $ ../../../../../install/default/bin/stanc bad_fun_first_arg_static.stan
 Semantic error in 'bad_fun_first_arg_static.stan', line 12, column 12 to column 49:
@@ -154,7 +154,7 @@ where F2 = (array[] real, data int, data int) => real
   These are not compatible because:
     The types for the second argument are incompatible: one is
      real
-    on one but the other is
+    but the other is
      int
   $ ../../../../../install/default/bin/stanc bad_fun_second_arg.stan
 Semantic error in 'bad_fun_second_arg.stan', line 12, column 12 to column 42:
@@ -179,7 +179,7 @@ where F2 = (array[] real, data int, data int) => real
   These are not compatible because:
     The types for the third argument are incompatible: one is
      real
-    on one but the other is
+    but the other is
      int
   $ ../../../../../install/default/bin/stanc bad_fun_second_arg_static.stan
 Semantic error in 'bad_fun_second_arg_static.stan', line 12, column 12 to column 49:
@@ -204,7 +204,7 @@ where F2 = (array[] real, data int, data int) => real
   These are not compatible because:
     The types for the third argument are incompatible: one is
      real
-    on one but the other is
+    but the other is
      int
   $ ../../../../../install/default/bin/stanc bad_fun_slice_and_slice_dont_match.stan
 Semantic error in 'bad_fun_slice_and_slice_dont_match.stan', line 12, column 12 to column 42:
@@ -261,7 +261,7 @@ where F2 = (array[] real, data int, data int) => real
   These are not compatible because:
     The types for the second argument are incompatible: one is
      real
-    on one but the other is
+    but the other is
      int
   $ ../../../../../install/default/bin/stanc bad_non_matching_arg_types2.stan
 Semantic error in 'bad_non_matching_arg_types2.stan', line 16, column 14 to column 47:

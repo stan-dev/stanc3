@@ -194,8 +194,7 @@ Available signatures:
   Expected 3 arguments but found 4 arguments.
 (array[] vector, real, real) => matrix
   Expected 3 arguments but found 4 arguments.
-(array[] real, real, real) => matrix
-  Expected 3 arguments but found 4 arguments.
+(Additional signatures omitted)
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_len_param.stan
 Syntax error in 'bad_cov_exp_quad_len_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
@@ -280,8 +279,7 @@ Available signatures:
   Expected 4 arguments but found 3 arguments.
 (array[] vector, array[] vector, real, real) => matrix
   Expected 4 arguments but found 3 arguments.
-(array[] real, array[] real, real, real) => matrix
-  Expected 4 arguments but found 3 arguments.
+(Additional signatures omitted)
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_vec_data.stan
 Semantic error in 'bad_cov_exp_quad_rvec_vec_data.stan', line 13, column 28 to column 75:
    -------------------------------------------------
@@ -306,8 +304,7 @@ Available signatures:
   Expected 3 arguments but found 4 arguments.
 (array[] vector, real, real) => matrix
   Expected 3 arguments but found 4 arguments.
-(array[] real, real, real) => matrix
-  Expected 3 arguments but found 4 arguments.
+(Additional signatures omitted)
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_vec_param.stan
 Syntax error in 'bad_cov_exp_quad_rvec_vec_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
@@ -344,8 +341,7 @@ Available signatures:
   Expected 3 arguments but found 4 arguments.
 (array[] vector, real, real) => matrix
   Expected 3 arguments but found 4 arguments.
-(array[] real, real, real) => matrix
-  Expected 3 arguments but found 4 arguments.
+(Additional signatures omitted)
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_sigma_param.stan
 Syntax error in 'bad_cov_exp_quad_sigma_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
@@ -430,8 +426,7 @@ Available signatures:
   Expected 4 arguments but found 3 arguments.
 (array[] vector, array[] vector, real, real) => matrix
   Expected 4 arguments but found 3 arguments.
-(array[] real, array[] real, real, real) => matrix
-  Expected 4 arguments but found 3 arguments.
+(Additional signatures omitted)
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_rvec_data.stan
 Semantic error in 'bad_cov_exp_quad_vec_rvec_data.stan', line 13, column 28 to column 75:
    -------------------------------------------------
@@ -456,8 +451,7 @@ Available signatures:
   Expected 3 arguments but found 4 arguments.
 (array[] vector, real, real) => matrix
   Expected 3 arguments but found 4 arguments.
-(array[] real, real, real) => matrix
-  Expected 3 arguments but found 4 arguments.
+(Additional signatures omitted)
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_rvec_param.stan
 Syntax error in 'bad_cov_exp_quad_vec_rvec_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------

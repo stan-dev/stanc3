@@ -94,7 +94,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
   These are not compatible because:
     The types for the second argument are incompatible: one is
      array[] vector
-    on one but the other is
+    but the other is
      vector
   $ ../../../../../install/default/bin/stanc bad_job_params_type.stan
 Semantic error in 'bad_job_params_type.stan', line 19, column 8 to column 68:

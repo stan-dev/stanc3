@@ -1787,16 +1787,6 @@ Available signatures:
   The second argument must be real but got array[] int
 (real, vector, real) => real
   The second argument must be vector but got array[] int
-(real, vector, array[] real) => real
-  The second argument must be vector but got array[] int
-(real, vector, vector) => real
-  The second argument must be vector but got array[] int
-(real, vector, row_vector) => real
-  The second argument must be vector but got array[] int
-(real, row_vector, real) => real
-  The second argument must be row_vector but got array[] int
-(real, row_vector, array[] real) => real
-  The second argument must be row_vector but got array[] int
 (Additional signatures omitted)
   $ ../../../../install/default/bin/stanc real-pdf.stan
 Semantic error in 'real-pdf.stan', line 2, column 2 to line 4, column 3:
@@ -2053,12 +2043,7 @@ Available signatures:
   The first argument must be int but got vector
 (array[] int, real) => real
   The first argument must be array[] int but got vector
-(array[] int, array[] real) => real
-  The first argument must be array[] int but got vector
-(array[] int, vector) => real
-  The first argument must be array[] int but got vector
-(array[] int, row_vector) => real
-  The first argument must be array[] int but got vector
+(Additional signatures omitted)
   $ ../../../../install/default/bin/stanc signature_function_unknown.stan
 Warning in 'signature_function_unknown.stan', line 8, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.Semantic error in 'signature_function_unknown.stan', line 8, column 21 to column 45:
    -------------------------------------------------

@@ -54,7 +54,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
   These are not compatible because:
     The types for the first argument are incompatible: one is
      array[] real
-    on one but the other is
+    but the other is
      real
   $ ../../../../../install/default/bin/stanc bad_fun_type_bdf.stan
 Semantic error in 'bad_fun_type_bdf.stan', line 27, column 10 to line 33, column 27:
@@ -84,7 +84,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
   These are not compatible because:
     The types for the first argument are incompatible: one is
      array[] real
-    on one but the other is
+    but the other is
      real
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
@@ -117,7 +117,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
   These are not compatible because:
     The types for the first argument are incompatible: one is
      array[] real
-    on one but the other is
+    but the other is
      real
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
@@ -150,7 +150,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
   These are not compatible because:
     The types for the first argument are incompatible: one is
      array[] real
-    on one but the other is
+    but the other is
      real
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int, data real, data real, data real) => array[,] real
@@ -183,7 +183,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
   These are not compatible because:
     The types for the first argument are incompatible: one is
      array[] real
-    on one but the other is
+    but the other is
      real
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real

@@ -22,7 +22,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
   These are not compatible because:
     The types for the first argument are incompatible: one is
      array[] real
-    on one but the other is
+    but the other is
      vector
 (<F2>, vector, vector, data array[] real, data array[] int, data real,
  data real, data real) => vector
@@ -52,7 +52,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
   These are not compatible because:
     The types for the first argument are incompatible: one is
      array[] real
-    on one but the other is
+    but the other is
      vector
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
@@ -81,7 +81,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
   These are not compatible because:
     The types for the first argument are incompatible: one is
      array[] real
-    on one but the other is
+    but the other is
      vector
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
@@ -239,7 +239,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
   These are not compatible because:
     The types for the first argument are incompatible: one is
      array[] real
-    on one but the other is
+    but the other is
      vector
 (<F2>, vector, vector, data array[] real, data array[] int, data real,
  data real, data real) => vector
@@ -269,7 +269,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
   These are not compatible because:
     The types for the first argument are incompatible: one is
      array[] real
-    on one but the other is
+    but the other is
      vector
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
@@ -297,7 +297,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
   These are not compatible because:
     The types for the first argument are incompatible: one is
      array[] real
-    on one but the other is
+    but the other is
      vector
 (<F2>, vector, vector, data array[] real, data array[] int, data real,
  data real, data real) => vector
@@ -327,7 +327,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
   These are not compatible because:
     The types for the first argument are incompatible: one is
      array[] real
-    on one but the other is
+    but the other is
      vector
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
@@ -485,7 +485,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
   These are not compatible because:
     The types for the first argument are incompatible: one is
      array[] real
-    on one but the other is
+    but the other is
      vector
 (<F2>, vector, vector, data array[] real, data array[] int, data real,
  data real, data real) => vector
@@ -515,7 +515,7 @@ where F2 = (vector, vector, data array[] real, data array[] int) => vector
   These are not compatible because:
     The types for the first argument are incompatible: one is
      array[] real
-    on one but the other is
+    but the other is
      vector
 (<F2>, vector, vector, data array[] real, data array[] int) => vector
   Expected 5 arguments but found 8 arguments.
