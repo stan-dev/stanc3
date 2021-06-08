@@ -1283,36 +1283,40 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 50> locations_array__ = 
+static constexpr std::array<const char*, 58> locations_array__ = 
 {" (found before start of program)",
  " (in 'mem_patterns.stan', line 9, column 2 to column 13)",
  " (in 'mem_patterns.stan', line 11, column 2 to column 24)",
- " (in 'mem_patterns.stan', line 12, column 2 to column 38)",
- " (in 'mem_patterns.stan', line 13, column 2 to column 36)",
- " (in 'mem_patterns.stan', line 14, column 2 to column 30)",
- " (in 'mem_patterns.stan', line 15, column 2 to column 41)",
- " (in 'mem_patterns.stan', line 18, column 2 to column 38)",
- " (in 'mem_patterns.stan', line 20, column 2 to column 38)",
- " (in 'mem_patterns.stan', line 22, column 2 to column 37)",
- " (in 'mem_patterns.stan', line 23, column 2 to column 41)",
- " (in 'mem_patterns.stan', line 28, column 2 to column 41)",
- " (in 'mem_patterns.stan', line 31, column 2 to column 58)",
- " (in 'mem_patterns.stan', line 34, column 2 to column 63)",
- " (in 'mem_patterns.stan', line 38, column 2 to column 56)",
- " (in 'mem_patterns.stan', line 39, column 2 to column 62)",
- " (in 'mem_patterns.stan', line 40, column 2 to column 79)",
- " (in 'mem_patterns.stan', line 41, column 2 to column 81)",
- " (in 'mem_patterns.stan', line 44, column 4 to column 57)",
- " (in 'mem_patterns.stan', line 45, column 4 to column 69)",
- " (in 'mem_patterns.stan', line 46, column 4 to column 69)",
- " (in 'mem_patterns.stan', line 47, column 4 to column 70)",
- " (in 'mem_patterns.stan', line 48, column 4 to column 69)",
- " (in 'mem_patterns.stan', line 43, column 18 to line 49, column 3)",
- " (in 'mem_patterns.stan', line 43, column 2 to line 49, column 3)",
- " (in 'mem_patterns.stan', line 52, column 4 to column 70)",
- " (in 'mem_patterns.stan', line 53, column 4 to column 75)",
- " (in 'mem_patterns.stan', line 51, column 17 to line 54, column 3)",
- " (in 'mem_patterns.stan', line 51, column 2 to line 54, column 3)",
+ " (in 'mem_patterns.stan', line 12, column 2 to column 25)",
+ " (in 'mem_patterns.stan', line 13, column 2 to column 38)",
+ " (in 'mem_patterns.stan', line 14, column 2 to column 36)",
+ " (in 'mem_patterns.stan', line 15, column 2 to column 30)",
+ " (in 'mem_patterns.stan', line 16, column 2 to column 41)",
+ " (in 'mem_patterns.stan', line 19, column 2 to column 38)",
+ " (in 'mem_patterns.stan', line 21, column 2 to column 38)",
+ " (in 'mem_patterns.stan', line 23, column 2 to column 37)",
+ " (in 'mem_patterns.stan', line 24, column 2 to column 41)",
+ " (in 'mem_patterns.stan', line 27, column 2 to column 25)",
+ " (in 'mem_patterns.stan', line 33, column 2 to column 41)",
+ " (in 'mem_patterns.stan', line 36, column 2 to column 58)",
+ " (in 'mem_patterns.stan', line 39, column 2 to column 63)",
+ " (in 'mem_patterns.stan', line 43, column 2 to column 56)",
+ " (in 'mem_patterns.stan', line 44, column 2 to column 62)",
+ " (in 'mem_patterns.stan', line 45, column 2 to column 79)",
+ " (in 'mem_patterns.stan', line 46, column 2 to column 81)",
+ " (in 'mem_patterns.stan', line 47, column 2 to column 85)",
+ " (in 'mem_patterns.stan', line 48, column 2 to column 106)",
+ " (in 'mem_patterns.stan', line 51, column 4 to column 57)",
+ " (in 'mem_patterns.stan', line 52, column 4 to column 69)",
+ " (in 'mem_patterns.stan', line 53, column 4 to column 69)",
+ " (in 'mem_patterns.stan', line 54, column 4 to column 70)",
+ " (in 'mem_patterns.stan', line 55, column 4 to column 69)",
+ " (in 'mem_patterns.stan', line 50, column 18 to line 56, column 3)",
+ " (in 'mem_patterns.stan', line 50, column 2 to line 56, column 3)",
+ " (in 'mem_patterns.stan', line 59, column 4 to column 70)",
+ " (in 'mem_patterns.stan', line 60, column 4 to column 75)",
+ " (in 'mem_patterns.stan', line 58, column 17 to line 61, column 3)",
+ " (in 'mem_patterns.stan', line 58, column 2 to line 61, column 3)",
  " (in 'mem_patterns.stan', line 2, column 1 to column 7)",
  " (in 'mem_patterns.stan', line 3, column 1 to column 7)",
  " (in 'mem_patterns.stan', line 4, column 8 to column 9)",
@@ -1321,19 +1325,23 @@ static constexpr std::array<const char*, 50> locations_array__ =
  " (in 'mem_patterns.stan', line 5, column 8 to column 9)",
  " (in 'mem_patterns.stan', line 5, column 1 to column 13)",
  " (in 'mem_patterns.stan', line 11, column 9 to column 10)",
- " (in 'mem_patterns.stan', line 12, column 19 to column 20)",
- " (in 'mem_patterns.stan', line 13, column 9 to column 10)",
- " (in 'mem_patterns.stan', line 13, column 11 to column 12)",
+ " (in 'mem_patterns.stan', line 12, column 9 to column 10)",
+ " (in 'mem_patterns.stan', line 12, column 12 to column 13)",
+ " (in 'mem_patterns.stan', line 13, column 19 to column 20)",
  " (in 'mem_patterns.stan', line 14, column 9 to column 10)",
+ " (in 'mem_patterns.stan', line 14, column 11 to column 12)",
  " (in 'mem_patterns.stan', line 15, column 9 to column 10)",
- " (in 'mem_patterns.stan', line 15, column 11 to column 12)",
- " (in 'mem_patterns.stan', line 18, column 9 to column 10)",
- " (in 'mem_patterns.stan', line 20, column 9 to column 10)",
- " (in 'mem_patterns.stan', line 22, column 9 to column 10)",
+ " (in 'mem_patterns.stan', line 16, column 9 to column 10)",
+ " (in 'mem_patterns.stan', line 16, column 11 to column 12)",
+ " (in 'mem_patterns.stan', line 19, column 9 to column 10)",
+ " (in 'mem_patterns.stan', line 21, column 9 to column 10)",
  " (in 'mem_patterns.stan', line 23, column 9 to column 10)",
- " (in 'mem_patterns.stan', line 23, column 11 to column 12)",
- " (in 'mem_patterns.stan', line 31, column 9 to column 10)",
- " (in 'mem_patterns.stan', line 34, column 9 to column 10)"};
+ " (in 'mem_patterns.stan', line 24, column 9 to column 10)",
+ " (in 'mem_patterns.stan', line 24, column 11 to column 12)",
+ " (in 'mem_patterns.stan', line 27, column 9 to column 10)",
+ " (in 'mem_patterns.stan', line 27, column 12 to column 13)",
+ " (in 'mem_patterns.stan', line 36, column 9 to column 10)",
+ " (in 'mem_patterns.stan', line 39, column 9 to column 10)"};
 
 
 
@@ -1373,25 +1381,25 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       int pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      current_statement__ = 29;
+      current_statement__ = 33;
       context__.validate_dims("data initialization","N","int",
            std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       
-      current_statement__ = 29;
+      current_statement__ = 33;
       N = context__.vals_i("N")[(1 - 1)];
-      current_statement__ = 30;
+      current_statement__ = 34;
       context__.validate_dims("data initialization","M","int",
            std::vector<size_t>{});
       M = std::numeric_limits<int>::min();
       
-      current_statement__ = 30;
+      current_statement__ = 34;
       M = context__.vals_i("M")[(1 - 1)];
-      current_statement__ = 31;
+      current_statement__ = 35;
       validate_non_negative_index("dat_x", "N", N);
-      current_statement__ = 32;
+      current_statement__ = 36;
       validate_non_negative_index("dat_x", "M", M);
-      current_statement__ = 33;
+      current_statement__ = 37;
       context__.validate_dims("data initialization","dat_x","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(M)});
@@ -1401,26 +1409,26 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       
       {
         std::vector<local_scalar_t__> dat_x_flat__;
-        current_statement__ = 33;
+        current_statement__ = 37;
         dat_x_flat__ = context__.vals_r("dat_x");
-        current_statement__ = 33;
+        current_statement__ = 37;
         pos__ = 1;
-        current_statement__ = 33;
+        current_statement__ = 37;
         for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
-          current_statement__ = 33;
+          current_statement__ = 37;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 33;
+            current_statement__ = 37;
             assign(dat_x, dat_x_flat__[(pos__ - 1)],
               "assigning variable dat_x", index_uni(sym2__),
                                             index_uni(sym1__));
-            current_statement__ = 33;
+            current_statement__ = 37;
             pos__ = (pos__ + 1);
           }
         }
       }
-      current_statement__ = 34;
+      current_statement__ = 38;
       validate_non_negative_index("y", "N", N);
-      current_statement__ = 35;
+      current_statement__ = 39;
       context__.validate_dims("data initialization","y","double",
            std::vector<size_t>{static_cast<size_t>(N)});
       y__ = Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN());
@@ -1428,54 +1436,62 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       
       {
         std::vector<local_scalar_t__> y_flat__;
-        current_statement__ = 35;
+        current_statement__ = 39;
         y_flat__ = context__.vals_r("y");
-        current_statement__ = 35;
+        current_statement__ = 39;
         pos__ = 1;
-        current_statement__ = 35;
+        current_statement__ = 39;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 35;
+          current_statement__ = 39;
           assign(y, y_flat__[(pos__ - 1)],
             "assigning variable y", index_uni(sym1__));
-          current_statement__ = 35;
+          current_statement__ = 39;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 36;
-      validate_non_negative_index("p_soa_vec_v", "M", M);
-      current_statement__ = 37;
-      validate_non_negative_index("p_soa_arr_vec_v", "N", N);
-      current_statement__ = 38;
-      validate_non_negative_index("p_soa_mat_uni_col_idx", "N", N);
-      current_statement__ = 39;
-      validate_non_negative_index("p_soa_mat_uni_col_idx", "M", M);
       current_statement__ = 40;
-      validate_non_negative_index("p_soa_vec_uni_idx", "N", N);
+      validate_non_negative_index("p_soa_vec_v", "M", M);
       current_statement__ = 41;
-      validate_non_negative_index("p_soa_loop_mat_uni_col_idx", "N", N);
+      validate_non_negative_index("p_soa_mat", "N", N);
       current_statement__ = 42;
-      validate_non_negative_index("p_soa_loop_mat_uni_col_idx", "M", M);
+      validate_non_negative_index("p_soa_mat", "M", M);
       current_statement__ = 43;
-      validate_non_negative_index("p_aos_vec_v_assign_to_aos", "M", M);
+      validate_non_negative_index("p_soa_arr_vec_v", "N", N);
       current_statement__ = 44;
-      validate_non_negative_index("p_aos_vec_v_tp_fails_func", "M", M);
+      validate_non_negative_index("p_soa_mat_uni_col_idx", "N", N);
       current_statement__ = 45;
-      validate_non_negative_index("p_aos_loop_vec_v_uni_idx", "M", M);
+      validate_non_negative_index("p_soa_mat_uni_col_idx", "M", M);
       current_statement__ = 46;
-      validate_non_negative_index("p_aos_loop_mat_uni_uni_idx", "N", N);
+      validate_non_negative_index("p_soa_vec_uni_idx", "N", N);
       current_statement__ = 47;
-      validate_non_negative_index("p_aos_loop_mat_uni_uni_idx", "M", M);
+      validate_non_negative_index("p_soa_loop_mat_uni_col_idx", "N", N);
       current_statement__ = 48;
-      validate_non_negative_index("tp_aos_vec_v", "M", M);
+      validate_non_negative_index("p_soa_loop_mat_uni_col_idx", "M", M);
       current_statement__ = 49;
+      validate_non_negative_index("p_aos_vec_v_assign_to_aos", "M", M);
+      current_statement__ = 50;
+      validate_non_negative_index("p_aos_vec_v_tp_fails_func", "M", M);
+      current_statement__ = 51;
+      validate_non_negative_index("p_aos_loop_vec_v_uni_idx", "M", M);
+      current_statement__ = 52;
+      validate_non_negative_index("p_aos_loop_mat_uni_uni_idx", "N", N);
+      current_statement__ = 53;
+      validate_non_negative_index("p_aos_loop_mat_uni_uni_idx", "M", M);
+      current_statement__ = 54;
+      validate_non_negative_index("p_aos_mat", "N", N);
+      current_statement__ = 55;
+      validate_non_negative_index("p_aos_mat", "M", M);
+      current_statement__ = 56;
+      validate_non_negative_index("tp_aos_vec_v", "M", M);
+      current_statement__ = 57;
       validate_non_negative_index("tp_aos_fail_func_vec_v", "M", M);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 1 + M + (10 * N) + (N * M) + N + (N * M) + M + M + 
-      M + (N * M);
+    num_params_r__ = 1 + M + (N * M) + (10 * N) + (N * M) + N + (N * M) + 
+      M + M + M + (N * M) + (N * M);
     
   }
   
@@ -1508,120 +1524,144 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       current_statement__ = 2;
       p_soa_vec_v = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                       M);
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> p_soa_mat = 
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>(Eigen::Matrix<double, -1, -1>::Constant(N, M, std::numeric_limits<double>::quiet_NaN()));
+      
+      
+      current_statement__ = 3;
+      p_soa_mat = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
+                    N, M);
       stan::conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> p_soa_arr_vec_v = 
       std::vector<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(10, stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN())));
       
       
-      current_statement__ = 3;
+      current_statement__ = 4;
       p_soa_arr_vec_v = in__.template read<stan::conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
                           10, N);
       stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> p_soa_mat_uni_col_idx = 
       stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>(Eigen::Matrix<double, -1, -1>::Constant(N, M, std::numeric_limits<double>::quiet_NaN()));
       
       
-      current_statement__ = 4;
+      current_statement__ = 5;
       p_soa_mat_uni_col_idx = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
                                 N, M);
       stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> p_soa_vec_uni_idx = 
       stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN()));
       
       
-      current_statement__ = 5;
+      current_statement__ = 6;
       p_soa_vec_uni_idx = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                             N);
       stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> p_soa_loop_mat_uni_col_idx = 
       stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>(Eigen::Matrix<double, -1, -1>::Constant(N, M, std::numeric_limits<double>::quiet_NaN()));
       
       
-      current_statement__ = 6;
+      current_statement__ = 7;
       p_soa_loop_mat_uni_col_idx = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
                                      N, M);
       Eigen::Matrix<local_scalar_t__, -1, 1> p_aos_vec_v_assign_to_aos = 
       Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(M, DUMMY_VAR__);
       
-      current_statement__ = 7;
+      current_statement__ = 8;
       p_aos_vec_v_assign_to_aos = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                                     M);
       Eigen::Matrix<local_scalar_t__, -1, 1> p_aos_vec_v_tp_fails_func = 
       Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(M, DUMMY_VAR__);
       
-      current_statement__ = 8;
+      current_statement__ = 9;
       p_aos_vec_v_tp_fails_func = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                                     M);
       Eigen::Matrix<local_scalar_t__, -1, 1> p_aos_loop_vec_v_uni_idx = 
       Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(M, DUMMY_VAR__);
       
-      current_statement__ = 9;
+      current_statement__ = 10;
       p_aos_loop_vec_v_uni_idx = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                                    M);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_aos_loop_mat_uni_uni_idx = 
       Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(N, M, DUMMY_VAR__);
       
-      current_statement__ = 10;
+      current_statement__ = 11;
       p_aos_loop_mat_uni_uni_idx = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                                      N, M);
+      Eigen::Matrix<local_scalar_t__, -1, -1> p_aos_mat = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(N, M, DUMMY_VAR__);
+                                                          
+      
+      current_statement__ = 12;
+      p_aos_mat = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+                    N, M);
       local_scalar_t__ tp_real_from_aos = DUMMY_VAR__;
       
-      current_statement__ = 11;
+      current_statement__ = 13;
       tp_real_from_aos = rvalue(p_soa_vec_v, "p_soa_vec_v", index_uni(1));
       Eigen::Matrix<local_scalar_t__, -1, 1> tp_aos_vec_v = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(M, DUMMY_VAR__);
                                                             
       
-      current_statement__ = 12;
+      current_statement__ = 14;
       assign(tp_aos_vec_v, inv(p_aos_vec_v_assign_to_aos),
         "assigning variable tp_aos_vec_v");
       Eigen::Matrix<local_scalar_t__, -1, 1> tp_aos_fail_func_vec_v = 
       Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(M, DUMMY_VAR__);
       
-      current_statement__ = 13;
+      current_statement__ = 15;
       assign(tp_aos_fail_func_vec_v, p_aos_vec_v_tp_fails_func,
         "assigning variable tp_aos_fail_func_vec_v");
       {
-        current_statement__ = 14;
+        current_statement__ = 16;
         lp_accum__.add(
           normal_lpdf<propto__>(y, add(alpha, multiply(dat_x, p_soa_vec_v)),
             1.0));
-        current_statement__ = 15;
+        current_statement__ = 17;
         lp_accum__.add(
           normal_lpdf<propto__>(y,
             multiply(dat_x,
               rvalue(p_soa_mat_uni_col_idx, "p_soa_mat_uni_col_idx",
                 index_omni(), index_uni(N))), 1.0));
-        current_statement__ = 16;
+        current_statement__ = 18;
         lp_accum__.add(
           normal_lpdf<propto__>(y,
             multiply(dat_x,
               rvalue(p_soa_mat_uni_col_idx, "p_soa_mat_uni_col_idx",
                 index_omni(), index_uni(N))),
             rvalue(p_soa_vec_uni_idx, "p_soa_vec_uni_idx", index_uni(N))));
-        current_statement__ = 17;
+        current_statement__ = 19;
         lp_accum__.add(
           normal_lpdf<propto__>(y,
             multiply(dat_x, inv(tp_aos_fail_func_vec_v)),
             rvalue(p_soa_vec_uni_idx, "p_soa_vec_uni_idx", index_uni(N))));
-        current_statement__ = 24;
+        current_statement__ = 20;
+        lp_accum__.add(
+          normal_lpdf<propto__>(y,
+            multiply(p_soa_mat, inv(tp_aos_fail_func_vec_v)),
+            rvalue(p_soa_vec_uni_idx, "p_soa_vec_uni_idx", index_uni(N))));
+        current_statement__ = 21;
+        lp_accum__.add(
+          normal_lpdf<propto__>(y,
+            multiply(p_soa_mat,
+              inv(multiply(p_aos_mat, tp_aos_fail_func_vec_v))),
+            rvalue(p_soa_vec_uni_idx, "p_soa_vec_uni_idx", index_uni(N))));
+        current_statement__ = 28;
         for (int i = 1; i <= 10; ++i) {
-          current_statement__ = 18;
+          current_statement__ = 22;
           lp_accum__.add(
             normal_lpdf<propto__>(y,
               multiply(dat_x,
                 rvalue(p_soa_arr_vec_v, "p_soa_arr_vec_v", index_uni(i))),
               1.0));
-          current_statement__ = 19;
+          current_statement__ = 23;
           lp_accum__.add(
             normal_lpdf<propto__>(y,
               multiply(dat_x,
                 rvalue(p_soa_loop_mat_uni_col_idx,
                   "p_soa_loop_mat_uni_col_idx", index_omni(), index_uni(i))),
               1.0));
-          current_statement__ = 20;
+          current_statement__ = 24;
           lp_accum__.add(
             normal_lpdf<propto__>(y,
               multiply(
                 rvalue(p_soa_loop_mat_uni_col_idx,
                   "p_soa_loop_mat_uni_col_idx", index_uni(i), index_omni()),
                 dat_x), 1.0));
-          current_statement__ = 21;
+          current_statement__ = 25;
           lp_accum__.add(
             normal_lpdf<propto__>(y,
               multiply(dat_x,
@@ -1629,7 +1669,7 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
                   rvalue(p_soa_loop_mat_uni_col_idx,
                     "p_soa_loop_mat_uni_col_idx", index_uni(i), index_omni()))),
               1.0));
-          current_statement__ = 22;
+          current_statement__ = 26;
           lp_accum__.add(
             normal_lpdf<propto__>(y,
               multiply(dat_x,
@@ -1637,15 +1677,15 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
                   rvalue(p_soa_loop_mat_uni_col_idx,
                     "p_soa_loop_mat_uni_col_idx", index_uni(i)))), 1.0));
         }
-        current_statement__ = 28;
+        current_statement__ = 32;
         for (int i = 1; i <= N; ++i) {
-          current_statement__ = 25;
+          current_statement__ = 29;
           lp_accum__.add(
             normal_lpdf<propto__>(y,
               multiply(rvalue(dat_x, "dat_x", index_omni(), index_uni(i)),
                 rvalue(p_aos_loop_vec_v_uni_idx, "p_aos_loop_vec_v_uni_idx",
                   index_uni(i))), 1.0));
-          current_statement__ = 26;
+          current_statement__ = 30;
           lp_accum__.add(
             normal_lpdf<propto__>(y,
               multiply(rvalue(dat_x, "dat_x", index_omni(), index_uni(i)),
@@ -1698,54 +1738,66 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       current_statement__ = 2;
       p_soa_vec_v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                       M);
+      Eigen::Matrix<double, -1, -1> p_soa_mat = Eigen::Matrix<double, -1, -1>::Constant(N, M, std::numeric_limits<double>::quiet_NaN());
+                                                
+      
+      current_statement__ = 3;
+      p_soa_mat = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+                    N, M);
       std::vector<Eigen::Matrix<double, -1, 1>> p_soa_arr_vec_v = std::vector<Eigen::Matrix<double, -1, 1>>(10, Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN()));
                                                                   
       
-      current_statement__ = 3;
+      current_statement__ = 4;
       p_soa_arr_vec_v = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                           10, N);
       Eigen::Matrix<double, -1, -1> p_soa_mat_uni_col_idx = Eigen::Matrix<double, -1, -1>::Constant(N, M, std::numeric_limits<double>::quiet_NaN());
                                                             
       
-      current_statement__ = 4;
+      current_statement__ = 5;
       p_soa_mat_uni_col_idx = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                                 N, M);
       Eigen::Matrix<double, -1, 1> p_soa_vec_uni_idx = Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN());
                                                        
       
-      current_statement__ = 5;
+      current_statement__ = 6;
       p_soa_vec_uni_idx = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                             N);
       Eigen::Matrix<double, -1, -1> p_soa_loop_mat_uni_col_idx = Eigen::Matrix<double, -1, -1>::Constant(N, M, std::numeric_limits<double>::quiet_NaN());
                                                                  
       
-      current_statement__ = 6;
+      current_statement__ = 7;
       p_soa_loop_mat_uni_col_idx = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                                      N, M);
       Eigen::Matrix<double, -1, 1> p_aos_vec_v_assign_to_aos = Eigen::Matrix<double, -1, 1>::Constant(M, std::numeric_limits<double>::quiet_NaN());
                                                                
       
-      current_statement__ = 7;
+      current_statement__ = 8;
       p_aos_vec_v_assign_to_aos = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                                     M);
       Eigen::Matrix<double, -1, 1> p_aos_vec_v_tp_fails_func = Eigen::Matrix<double, -1, 1>::Constant(M, std::numeric_limits<double>::quiet_NaN());
                                                                
       
-      current_statement__ = 8;
+      current_statement__ = 9;
       p_aos_vec_v_tp_fails_func = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                                     M);
       Eigen::Matrix<double, -1, 1> p_aos_loop_vec_v_uni_idx = Eigen::Matrix<double, -1, 1>::Constant(M, std::numeric_limits<double>::quiet_NaN());
                                                               
       
-      current_statement__ = 9;
+      current_statement__ = 10;
       p_aos_loop_vec_v_uni_idx = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                                    M);
       Eigen::Matrix<double, -1, -1> p_aos_loop_mat_uni_uni_idx = Eigen::Matrix<double, -1, -1>::Constant(N, M, std::numeric_limits<double>::quiet_NaN());
                                                                  
       
-      current_statement__ = 10;
+      current_statement__ = 11;
       p_aos_loop_mat_uni_uni_idx = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                                      N, M);
+      Eigen::Matrix<double, -1, -1> p_aos_mat = Eigen::Matrix<double, -1, -1>::Constant(N, M, std::numeric_limits<double>::quiet_NaN());
+                                                
+      
+      current_statement__ = 12;
+      p_aos_mat = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+                    N, M);
       double tp_real_from_aos = std::numeric_limits<double>::quiet_NaN();
       
       Eigen::Matrix<double, -1, 1> tp_aos_vec_v = Eigen::Matrix<double, -1, 1>::Constant(M, std::numeric_limits<double>::quiet_NaN());
@@ -1757,6 +1809,13 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       vars__.emplace_back(alpha);
       for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
         vars__.emplace_back(p_soa_vec_v[(sym1__ - 1)]);
+      }
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          vars__.emplace_back(
+            rvalue(p_soa_mat, "p_soa_mat",
+              index_uni(sym2__), index_uni(sym1__)));
+        }
       }
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
@@ -1796,16 +1855,23 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
               index_uni(sym2__), index_uni(sym1__)));
         }
       }
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          vars__.emplace_back(
+            rvalue(p_aos_mat, "p_aos_mat",
+              index_uni(sym2__), index_uni(sym1__)));
+        }
+      }
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
       } 
-      current_statement__ = 11;
+      current_statement__ = 13;
       tp_real_from_aos = rvalue(p_soa_vec_v, "p_soa_vec_v", index_uni(1));
-      current_statement__ = 12;
+      current_statement__ = 14;
       assign(tp_aos_vec_v, inv(p_aos_vec_v_assign_to_aos),
         "assigning variable tp_aos_vec_v");
-      current_statement__ = 13;
+      current_statement__ = 15;
       assign(tp_aos_fail_func_vec_v, p_aos_vec_v_tp_fails_func,
         "assigning variable tp_aos_fail_func_vec_v");
       if (emit_transformed_parameters__) {
@@ -1864,24 +1930,46 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
           pos__ = (pos__ + 1);
         }
       }
+      Eigen::Matrix<double, -1, -1> p_soa_mat = Eigen::Matrix<double, -1, -1>::Constant(N, M, std::numeric_limits<double>::quiet_NaN());
+                                                
+      
+      {
+        std::vector<local_scalar_t__> p_soa_mat_flat__;
+        current_statement__ = 3;
+        p_soa_mat_flat__ = context__.vals_r("p_soa_mat");
+        current_statement__ = 3;
+        pos__ = 1;
+        current_statement__ = 3;
+        for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+          current_statement__ = 3;
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            current_statement__ = 3;
+            assign(p_soa_mat, p_soa_mat_flat__[(pos__ - 1)],
+              "assigning variable p_soa_mat", index_uni(sym2__),
+                                                index_uni(sym1__));
+            current_statement__ = 3;
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
       std::vector<Eigen::Matrix<double, -1, 1>> p_soa_arr_vec_v = std::vector<Eigen::Matrix<double, -1, 1>>(10, Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN()));
                                                                   
       
       {
         std::vector<local_scalar_t__> p_soa_arr_vec_v_flat__;
-        current_statement__ = 3;
+        current_statement__ = 4;
         p_soa_arr_vec_v_flat__ = context__.vals_r("p_soa_arr_vec_v");
-        current_statement__ = 3;
+        current_statement__ = 4;
         pos__ = 1;
-        current_statement__ = 3;
+        current_statement__ = 4;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 3;
+          current_statement__ = 4;
           for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
-            current_statement__ = 3;
+            current_statement__ = 4;
             assign(p_soa_arr_vec_v, p_soa_arr_vec_v_flat__[(pos__ - 1)],
               "assigning variable p_soa_arr_vec_v", index_uni(sym2__),
                                                       index_uni(sym1__));
-            current_statement__ = 3;
+            current_statement__ = 4;
             pos__ = (pos__ + 1);
           }
         }
@@ -1891,20 +1979,20 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       
       {
         std::vector<local_scalar_t__> p_soa_mat_uni_col_idx_flat__;
-        current_statement__ = 4;
+        current_statement__ = 5;
         p_soa_mat_uni_col_idx_flat__ = context__.vals_r("p_soa_mat_uni_col_idx");
-        current_statement__ = 4;
+        current_statement__ = 5;
         pos__ = 1;
-        current_statement__ = 4;
+        current_statement__ = 5;
         for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
-          current_statement__ = 4;
+          current_statement__ = 5;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 4;
+            current_statement__ = 5;
             assign(p_soa_mat_uni_col_idx,
               p_soa_mat_uni_col_idx_flat__[(pos__ - 1)],
               "assigning variable p_soa_mat_uni_col_idx", index_uni(sym2__),
                                                             index_uni(sym1__));
-            current_statement__ = 4;
+            current_statement__ = 5;
             pos__ = (pos__ + 1);
           }
         }
@@ -1914,16 +2002,16 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       
       {
         std::vector<local_scalar_t__> p_soa_vec_uni_idx_flat__;
-        current_statement__ = 5;
+        current_statement__ = 6;
         p_soa_vec_uni_idx_flat__ = context__.vals_r("p_soa_vec_uni_idx");
-        current_statement__ = 5;
+        current_statement__ = 6;
         pos__ = 1;
-        current_statement__ = 5;
+        current_statement__ = 6;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 5;
+          current_statement__ = 6;
           assign(p_soa_vec_uni_idx, p_soa_vec_uni_idx_flat__[(pos__ - 1)],
             "assigning variable p_soa_vec_uni_idx", index_uni(sym1__));
-          current_statement__ = 5;
+          current_statement__ = 6;
           pos__ = (pos__ + 1);
         }
       }
@@ -1932,20 +2020,20 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       
       {
         std::vector<local_scalar_t__> p_soa_loop_mat_uni_col_idx_flat__;
-        current_statement__ = 6;
+        current_statement__ = 7;
         p_soa_loop_mat_uni_col_idx_flat__ = context__.vals_r("p_soa_loop_mat_uni_col_idx");
-        current_statement__ = 6;
+        current_statement__ = 7;
         pos__ = 1;
-        current_statement__ = 6;
+        current_statement__ = 7;
         for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
-          current_statement__ = 6;
+          current_statement__ = 7;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 6;
+            current_statement__ = 7;
             assign(p_soa_loop_mat_uni_col_idx,
               p_soa_loop_mat_uni_col_idx_flat__[(pos__ - 1)],
               "assigning variable p_soa_loop_mat_uni_col_idx", index_uni(sym2__),
                                                                  index_uni(sym1__));
-            current_statement__ = 6;
+            current_statement__ = 7;
             pos__ = (pos__ + 1);
           }
         }
@@ -1955,17 +2043,17 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       
       {
         std::vector<local_scalar_t__> p_aos_vec_v_assign_to_aos_flat__;
-        current_statement__ = 7;
+        current_statement__ = 8;
         p_aos_vec_v_assign_to_aos_flat__ = context__.vals_r("p_aos_vec_v_assign_to_aos");
-        current_statement__ = 7;
+        current_statement__ = 8;
         pos__ = 1;
-        current_statement__ = 7;
+        current_statement__ = 8;
         for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
-          current_statement__ = 7;
+          current_statement__ = 8;
           assign(p_aos_vec_v_assign_to_aos,
             p_aos_vec_v_assign_to_aos_flat__[(pos__ - 1)],
             "assigning variable p_aos_vec_v_assign_to_aos", index_uni(sym1__));
-          current_statement__ = 7;
+          current_statement__ = 8;
           pos__ = (pos__ + 1);
         }
       }
@@ -1974,17 +2062,17 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       
       {
         std::vector<local_scalar_t__> p_aos_vec_v_tp_fails_func_flat__;
-        current_statement__ = 8;
+        current_statement__ = 9;
         p_aos_vec_v_tp_fails_func_flat__ = context__.vals_r("p_aos_vec_v_tp_fails_func");
-        current_statement__ = 8;
+        current_statement__ = 9;
         pos__ = 1;
-        current_statement__ = 8;
+        current_statement__ = 9;
         for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
-          current_statement__ = 8;
+          current_statement__ = 9;
           assign(p_aos_vec_v_tp_fails_func,
             p_aos_vec_v_tp_fails_func_flat__[(pos__ - 1)],
             "assigning variable p_aos_vec_v_tp_fails_func", index_uni(sym1__));
-          current_statement__ = 8;
+          current_statement__ = 9;
           pos__ = (pos__ + 1);
         }
       }
@@ -1993,17 +2081,17 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       
       {
         std::vector<local_scalar_t__> p_aos_loop_vec_v_uni_idx_flat__;
-        current_statement__ = 9;
+        current_statement__ = 10;
         p_aos_loop_vec_v_uni_idx_flat__ = context__.vals_r("p_aos_loop_vec_v_uni_idx");
-        current_statement__ = 9;
+        current_statement__ = 10;
         pos__ = 1;
-        current_statement__ = 9;
+        current_statement__ = 10;
         for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
-          current_statement__ = 9;
+          current_statement__ = 10;
           assign(p_aos_loop_vec_v_uni_idx,
             p_aos_loop_vec_v_uni_idx_flat__[(pos__ - 1)],
             "assigning variable p_aos_loop_vec_v_uni_idx", index_uni(sym1__));
-          current_statement__ = 9;
+          current_statement__ = 10;
           pos__ = (pos__ + 1);
         }
       }
@@ -2012,20 +2100,42 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       
       {
         std::vector<local_scalar_t__> p_aos_loop_mat_uni_uni_idx_flat__;
-        current_statement__ = 10;
+        current_statement__ = 11;
         p_aos_loop_mat_uni_uni_idx_flat__ = context__.vals_r("p_aos_loop_mat_uni_uni_idx");
-        current_statement__ = 10;
+        current_statement__ = 11;
         pos__ = 1;
-        current_statement__ = 10;
+        current_statement__ = 11;
         for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
-          current_statement__ = 10;
+          current_statement__ = 11;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 10;
+            current_statement__ = 11;
             assign(p_aos_loop_mat_uni_uni_idx,
               p_aos_loop_mat_uni_uni_idx_flat__[(pos__ - 1)],
               "assigning variable p_aos_loop_mat_uni_uni_idx", index_uni(sym2__),
                                                                  index_uni(sym1__));
-            current_statement__ = 10;
+            current_statement__ = 11;
+            pos__ = (pos__ + 1);
+          }
+        }
+      }
+      Eigen::Matrix<double, -1, -1> p_aos_mat = Eigen::Matrix<double, -1, -1>::Constant(N, M, std::numeric_limits<double>::quiet_NaN());
+                                                
+      
+      {
+        std::vector<local_scalar_t__> p_aos_mat_flat__;
+        current_statement__ = 12;
+        p_aos_mat_flat__ = context__.vals_r("p_aos_mat");
+        current_statement__ = 12;
+        pos__ = 1;
+        current_statement__ = 12;
+        for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+          current_statement__ = 12;
+          for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+            current_statement__ = 12;
+            assign(p_aos_mat, p_aos_mat_flat__[(pos__ - 1)],
+              "assigning variable p_aos_mat", index_uni(sym2__),
+                                                index_uni(sym1__));
+            current_statement__ = 12;
             pos__ = (pos__ + 1);
           }
         }
@@ -2033,6 +2143,13 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       vars__.emplace_back(alpha);
       for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
         vars__.emplace_back(p_soa_vec_v[(sym1__ - 1)]);
+      }
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          vars__.emplace_back(
+            rvalue(p_soa_mat, "p_soa_mat",
+              index_uni(sym2__), index_uni(sym1__)));
+        }
       }
       for (int sym1__ = 1; sym1__ <= 10; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
@@ -2072,6 +2189,13 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
               index_uni(sym2__), index_uni(sym1__)));
         }
       }
+      for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          vars__.emplace_back(
+            rvalue(p_aos_mat, "p_aos_mat",
+              index_uni(sym2__), index_uni(sym1__)));
+        }
+      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -2081,12 +2205,12 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__ = std::vector<std::string>{"alpha", "p_soa_vec_v",
+    names__ = std::vector<std::string>{"alpha", "p_soa_vec_v", "p_soa_mat",
       "p_soa_arr_vec_v", "p_soa_mat_uni_col_idx", "p_soa_vec_uni_idx",
       "p_soa_loop_mat_uni_col_idx", "p_aos_vec_v_assign_to_aos",
       "p_aos_vec_v_tp_fails_func", "p_aos_loop_vec_v_uni_idx",
-      "p_aos_loop_mat_uni_uni_idx", "tp_real_from_aos", "tp_aos_vec_v",
-      "tp_aos_fail_func_vec_v"};
+      "p_aos_loop_mat_uni_uni_idx", "p_aos_mat", "tp_real_from_aos",
+      "tp_aos_vec_v", "tp_aos_fail_func_vec_v"};
     
     } // get_param_names() 
     
@@ -2094,6 +2218,7 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
     
     dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{},
       std::vector<size_t>{static_cast<size_t>(M)},
+      std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(M)},
       std::vector<size_t>{static_cast<size_t>(10), static_cast<size_t>(N)},
       std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(M)},
       std::vector<size_t>{static_cast<size_t>(N)},
@@ -2101,6 +2226,7 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       std::vector<size_t>{static_cast<size_t>(M)},
       std::vector<size_t>{static_cast<size_t>(M)},
       std::vector<size_t>{static_cast<size_t>(M)},
+      std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(M)},
       std::vector<size_t>{static_cast<size_t>(N), static_cast<size_t>(M)},
       std::vector<size_t>{}, std::vector<size_t>{static_cast<size_t>(M)},
       std::vector<size_t>{static_cast<size_t>(M)}};
@@ -2117,6 +2243,15 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
     for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
       {
         param_names__.emplace_back(std::string() + "p_soa_vec_v" + '.' + std::to_string(sym1__));
+      } 
+    }
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          {
+            param_names__.emplace_back(std::string() + "p_soa_mat" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          } 
+        }
       } 
     }
     for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -2171,6 +2306,15 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           {
             param_names__.emplace_back(std::string() + "p_aos_loop_mat_uni_uni_idx" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          } 
+        }
+      } 
+    }
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          {
+            param_names__.emplace_back(std::string() + "p_aos_mat" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
           } 
         }
       } 
@@ -2207,6 +2351,15 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
         param_names__.emplace_back(std::string() + "p_soa_vec_v" + '.' + std::to_string(sym1__));
       } 
     }
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          {
+            param_names__.emplace_back(std::string() + "p_soa_mat" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          } 
+        }
+      } 
+    }
     for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       {
         for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
@@ -2263,6 +2416,15 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
         }
       } 
     }
+    for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
+      {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          {
+            param_names__.emplace_back(std::string() + "p_aos_mat" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+          } 
+        }
+      } 
+    }
     if (emit_transformed_parameters__) {
       param_names__.emplace_back(std::string() + "tp_real_from_aos");
       for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
@@ -2285,13 +2447,13 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
     
   inline std::string get_constrained_sizedtypes() const {
     
-    return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_soa_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_arr_vec_v\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"p_soa_mat_uni_col_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_vec_uni_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_loop_mat_uni_col_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_vec_v_assign_to_aos\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_vec_v_tp_fails_func\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_vec_v_uni_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_mat_uni_uni_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"tp_real_from_aos\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_fail_func_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_soa_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_arr_vec_v\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"p_soa_mat_uni_col_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_vec_uni_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_loop_mat_uni_col_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_vec_v_assign_to_aos\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_vec_v_tp_fails_func\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_vec_v_uni_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_mat_uni_uni_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"tp_real_from_aos\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_fail_func_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"}]");
     
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
     
-    return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_soa_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_arr_vec_v\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"p_soa_mat_uni_col_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_vec_uni_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_loop_mat_uni_col_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_vec_v_assign_to_aos\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_vec_v_tp_fails_func\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_vec_v_uni_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_mat_uni_uni_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"tp_real_from_aos\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_fail_func_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_soa_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_arr_vec_v\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"p_soa_mat_uni_col_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_vec_uni_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_loop_mat_uni_col_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_vec_v_assign_to_aos\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_vec_v_tp_fails_func\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_vec_v_uni_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_mat_uni_uni_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"tp_real_from_aos\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_fail_func_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"}]");
     
     } // get_unconstrained_sizedtypes() 
     
