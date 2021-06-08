@@ -1114,10 +1114,10 @@ let optimize_ad_levels (mir : Program.Typed.t) =
 (** A generic optimization pass for finding a minimal set of variables that are generated
  *by some circumstance, and then updating the MIR with that set.
  *
- * gen_variables: the variables that must be added to the set at the given statement
- * update_expr: update an MIR expression given the variable set
- * update_stmt: update an MIR statement given the variable set
- * extra_variables: the set of variables that are implied to be in the set by a given variable in the set (usually empty, sometimes unrepresented variables like _in__ variables)
+ * gen_variables: Functor for generating the variables that must be added
+ *  to the set at the given statement
+ * update_expr: Functor for updating an MIR expression given the variable set
+ * update_stmt: Functor for updating an MIR statement given the variable set
  * initial_variables: the initial known members of the set of variables
  * stmt: the MIR statement to optimize.
  *)
@@ -1162,16 +1162,54 @@ let optimize_mem_pattern
     (Map.find_exn flowgraph_to_mir 1)
 
 (**
-*)
+ * The gen function for the monotone framework for deducing
+ *  the statements and expressions that must be demoted to AoS.
+ * Returns a Set of strings where the strings are the names of 
+ * variables that must be demoted from SoA -> AoS.
+ *)
 let gen_aos_variables
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
     (l : int) (aos_variables : string Set.Poly.t) =
   let mir_node mir_idx = Map.find_exn flowgraph_to_mir mir_idx in
   match (mir_node l).pattern with stmt ->
-    Mem_pattern.query_mem_pattern_stmt aos_variables stmt
+    Mem_pattern.query_demotable_stmt aos_variables stmt
 
-let transform_program_logprob (mir : Program.Typed.t)
-    (transform : Stmt.Located.t -> Stmt.Located.t) : Program.Typed.t =
+(**
+* Deduces whether types can be Structures of Arrays (SoA/fast) or
+*  Arrays of Structs (AoS/slow). See the docs in
+*  Mem_pattern.query_demote_stmt/exprs* functions for 
+*  details on the rules surrounding when demotion from
+*  SoA -> AoS needs to happen.
+*
+* This first does a simple iter over
+* the log_prob portion of the MIR, finding the names of all matrices
+* (and arrays of matrices) where either the Stan math function
+* does not support SoA or is the object is single cell accesed within a 
+* For or While loop. These are the initial variables
+* given to the monotone framework. Then log_prob has all matrix like objects
+* and the functions that use them to SoA. After that the 
+* Monotone framework is used to deduce assignment paths of AoS -> SoA
+* and vice versa which need to be demoted to AoS as well as updating 
+* functions and objects after these assignment passes that then 
+* also need to be AoS.
+*
+* @param mir: The program's whole MIR.
+*)
+let optimize_soa (mir : Program.Typed.t) =
+  let initial_variables =
+    Set.Poly.union_list
+      (List.map ~f:(Mem_pattern.query_demotable_stmts_loop false) mir.log_prob)
+  in
+  let promotable_types =
+    Set.Poly.union_list (List.map ~f:Mem_pattern.get_eigen_decls mir.log_prob)
+  in
+  let promote_stmt = Mem_pattern.promote_stmts promotable_types in
+  let forced_logprob = List.map ~f:promote_stmt mir.log_prob in
+  let transform stmt =
+    optimize_mem_pattern ~gen_variables:gen_aos_variables
+      ~update_expr:Mem_pattern.demote_exprs
+      ~update_stmt:Mem_pattern.demote_stmt_pattern ~initial_variables stmt
+  in
   let transform' s =
     match transform {pattern= SList s; meta= Location_span.empty} with
     | {pattern= SList l; _} -> l
@@ -1179,41 +1217,7 @@ let transform_program_logprob (mir : Program.Typed.t)
         raise
           (Failure "Something went wrong with program transformation packing!")
   in
-  (*{mir with log_prob= transform' forced_logprob}*)
-  {mir with log_prob= transform' mir.log_prob}
-
-(**
-* Deduces whether types can be Structures of Arrays (SoA/fast) or Arrays of Structs (AoS/slow)
-*  See the docs in Mem_pattern.query_aos_* functions for details on the rules 
-*   surrounding when demotion from SoA -> AoS needs to happen.
-* @param to_mir: A Map of flattened MIR statements whose 
-*  key represents the flattened statements position in the nested structure
-* @param 
-*)
-let optimize_soa (mir : Program.Typed.t) =
-  (*let print_set s = Set.Poly.iter ~f:(printf "%s ") s in*)
-  let get_initials =
-    Mem_pattern.query_soa_stmts_loop false
-      Mem_pattern.query_mem_pattern_stmt_loops
-  in
-  let initial_variables =
-    Set.Poly.union_list (List.map ~f:get_initials mir.log_prob)
-  in
-  let eigen_types =
-    Set.Poly.union_list (List.map ~f:Mem_pattern.get_eigen_decls mir.log_prob)
-  in
-  (*print_set initial_variables ;*)
-  let promote_stmt =
-    Mem_pattern.promote_soa_stmts eigen_types
-      Mem_pattern.promote_soa_stmt_pattern
-  in
-  let forced_logprob = List.map ~f:promote_stmt mir.log_prob in
-  let transform stmt =
-    optimize_mem_pattern ~gen_variables:gen_aos_variables
-      ~update_expr:Mem_pattern.modify_soa_exprs
-      ~update_stmt:Mem_pattern.modify_soa_stmt_pattern ~initial_variables stmt
-  in
-  transform_program_logprob {mir with log_prob= forced_logprob} transform
+  {mir with log_prob= transform' forced_logprob}
 
 (* Apparently you need to completely copy/paste type definitions between
    ml and mli files?*)
