@@ -159,6 +159,13 @@ let functor_suffix_select hof =
       variadic_ode_functor_suffix
   | _ -> functor_suffix
 
+let ode_adapter f =
+  match Expr.(f.Fixed.meta.Typed.Meta.type_) with
+  | UFun (args, rt, _) ->
+      { Expr.Fixed.meta= {f.meta with type_= UFun (args, rt, (FnPlain, true))}
+      ; pattern= FunApp (StanLib ("stan::math::ode_closure_adapter", FnPlain), []) }
+  | _ -> failwith "impossible"
+
 let wrap_fn f =
   match Expr.(f.Fixed.meta.Typed.Meta.type_) with
   | UFun (args, rt, (suffix, false)) ->

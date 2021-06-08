@@ -13,35 +13,35 @@ functions {
     }
 }
 transformed data {
-    functions
+    function
     void hof(real(real) s_rng,real(real) s_lpdf, real(real) s_lp) {}
     hof(ff_rng,ff_lpdf,ff_lp);
 
-    functions
+    function
     real foo_rng(real(real) bar_lpdf) {
         return bar_lpdf(1);
     }
-    functions
+    function
     real foo_lpdf(real zz, real(real) bar_lpdf) {
         return bar_lupdf(1);
     }
-    functions
+    function
     real foo_lp(real(real) bar_lp) {
         return bar_lp(1);
     }
-    functions
+    function
     real f2(real x) {
         return x;
     }
-    functions
+    function
     real f3_lpdf(real x) {
         return x;
     }
-    functions
+    function
     real f4_rng(real x) {
         return x;
     }
-    functions
+    function
     real f5_lp(real x) {
         return x;
     }

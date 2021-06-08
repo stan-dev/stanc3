@@ -1130,7 +1130,7 @@ let () =
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType UReal
-            , plain_func ) )
+            , pure_closure ) )
       ; (AutoDiffable, UReal); (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ] ) ;
@@ -1143,7 +1143,7 @@ let () =
               ; (AutoDiffable, UArray UReal)
               ; (DataOnly, UArray UReal); (DataOnly, UArray UInt) ]
             , ReturnType UReal
-            , plain_func ) )
+            , pure_closure ) )
       ; (AutoDiffable, UReal); (AutoDiffable, UReal)
       ; (AutoDiffable, UArray UReal)
       ; (DataOnly, UArray UReal); (DataOnly, UArray UInt); (DataOnly, UReal) ]

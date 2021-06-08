@@ -100,6 +100,7 @@ rule token = parse
   | "break"                   { lexer_logger "break" ; Parser.BREAK }
   | "continue"                { lexer_logger "continue" ; Parser.CONTINUE }
 (* Types *)
+  | "function"                { lexer_logger "function" ; Parser.FUNCTION }
   | "void"                    { lexer_logger "void" ; Parser.VOID }
   | "int"                     { lexer_logger "int" ; Parser.INT }
   | "real"                    { lexer_logger "real" ; Parser.REAL }

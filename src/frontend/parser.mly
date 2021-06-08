@@ -38,7 +38,7 @@ let fix_argtypes =
        TRANSFORMEDPARAMETERSBLOCK MODELBLOCK GENERATEDQUANTITIESBLOCK
 %token LBRACE RBRACE LPAREN RPAREN LBRACK RBRACK LABRACK RABRACK COMMA SEMICOLON
        BAR
-%token RETURN IF ELSE WHILE FOR IN BREAK CONTINUE PROFILE
+%token RETURN IF ELSE WHILE FOR IN BREAK CONTINUE PROFILE FUNCTION
 %token VOID INT REAL VECTOR ROWVECTOR ARRAY MATRIX ORDERED POSITIVEORDERED SIMPLEX
        UNITVECTOR CHOLESKYFACTORCORR CHOLESKYFACTORCOV CORRMATRIX COVMATRIX
 %token LOWER UPPER OFFSET MULTIPLIER
@@ -154,6 +154,7 @@ decl_identifier:
   (* Keywords cannot be identifiers but
      semantic check produces a better error message. *)
   | FUNCTIONBLOCK { build_id "functions" $loc }
+  | FUNCTION { build_id "function" $loc }
   | DATABLOCK { build_id "data" $loc }
   | PARAMETERSBLOCK { build_id "parameters" $loc }
   | MODELBLOCK { build_id "model" $loc }
@@ -197,7 +198,7 @@ function_def:
     }
 
 closure_def:
-  | FUNCTIONBLOCK rt=return_type name=decl_identifier LPAREN args=separated_list(COMMA, arg_decl)
+  | FUNCTION rt=return_type name=decl_identifier LPAREN args=separated_list(COMMA, arg_decl)
     RPAREN b=statement
     {
       grammar_logger "function_def" ;

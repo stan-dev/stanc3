@@ -1,7 +1,7 @@
 model {
-    functions
+    function
     real foo(real x, real y);
-    functions
+    function
     real foo(real x, real y) {
         return sqrt(squar(x)+square(y));
     }

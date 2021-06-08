@@ -5,7 +5,7 @@ data {
     vector[N] v;
 }
 transformed data {
-    functions
+    function
     real foo(real z, row_vector r) {
         real rs = sum(r);
         real ys = sum(y);
@@ -19,7 +19,7 @@ parameters {
     vector[N] pv;
 }
 model {
-    functions
+    function
     real bar(real z, row_vector r) {
         real rs = sum(r);
         real ys = sum(y);

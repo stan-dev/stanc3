@@ -6,11 +6,11 @@ parameters {
     real x[N];
 }
 model {
-    functions
+    function
     real foo(real[] slice, int start, int end) {
         return normal_lpdf(slice|mu,1);
     }
-    functions
+    function
     real bar_lpdf(real[] slice, int start, int end) {
         return normal_lupdf(slice|mu, 1);
     }

@@ -1,6 +1,6 @@
 functions {
     real foo(real(real) g, real x) {
-        functions
+        function
         real g2(real y) {
             return g(y) * x;
         }
@@ -12,7 +12,7 @@ functions {
 }
 transformed data {
     real x = foo(foo2, 2.0);
-    functions
+    function
     real bar(real y) {
         return x*y;
     }
@@ -22,7 +22,7 @@ parameters {
     real p;
 }
 transformed parameters {
-    functions
+    function
     real baz(real y) {
         return p*y;
     }
