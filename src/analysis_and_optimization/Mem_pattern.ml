@@ -253,6 +253,11 @@ and demote_stmts (aos_exits : string Set.Poly.t) pattern_fn
 let find_args Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
   (adlevel, type_)
 
+(**
+ * Check a StanLib Fun_kind to detect whether itself and it's 
+ * subexpressions can be used in an SoA context.
+ * 
+ *)
 let query_demotable_funkinds query_expr kind exprs =
   let ret_all_eigen_names =
     Set.Poly.union_list (List.map ~f:query_all_expr_eigen_names exprs)
@@ -262,8 +267,7 @@ let query_demotable_funkinds query_expr kind exprs =
     match name with
     | x
       when Stan_math_signatures.is_reduce_sum_fn x
-           || Stan_math_signatures.is_variadic_ode_fn x
-            ->
+           || Stan_math_signatures.is_variadic_ode_fn x ->
         ret_all_eigen_names
     | (_ : string) ->
         let is_fun_support =
@@ -279,21 +283,6 @@ let query_demotable_funkinds query_expr kind exprs =
 
 (* Look through an expression to see whether it needs modified from
  * SoA to AoS.
- * TODO: The logic on when to return true/false is wrong.
- * I really want to move from returning true/false to return SoA/AoS
- * which should be a lot easier to read.
- *  I think we want to use this in an "is any" style context
- *
- * Logic for deciding if the object can use SoA is:
- * If we find a FunApp
- *  - If the FunApp (StanLib _) is an SoA, check if the object's name exists 
- *     in the expressions and whether that signature supports 
- *     SoA.
- *  - If we find a FunApp (StanLib _) that is not SoA or is UserDefined,
- *    check that the name, chat that the object name is not used in
- *    the expressions for the 
- * For Assignments
- * If the assignee's name is in the list of known failures 
  *)
 let rec query_demotable_exprs (aos_exits : string Set.Poly.t)
     Expr.Fixed.({pattern; _}) =
@@ -317,37 +306,6 @@ let rec query_demotable_exprs (aos_exits : string Set.Poly.t)
 (* Look through a statement to see whether it needs modified from
  * SoA to AoS. Returns the set of object names that need demoted
  * in a statement, if any.
- *
- * Rules:
- * 1. Decl is data only or contains and int or real type, return true
- * 2. StanLib functions return true if any of
- *   - The name exists in the exprs of the function
- *   - The function does not support SoA
- *   - The exprs satisfies the query_demotable_exprs checks
- * 3. (TODO: UserDefined)
- *  - I'm not sure how to do these yet
- *  - For these we need to lookup the body of the user defined function,
- *   check all these rules for the UDF, and if it passes tag it as SoA,
- *   and if not tag it as AoS. But then we run into this problem where
- *  we need to have multiple function definitions when some input types can
- *  or cannot be AoS or SoA.
- *  For now I think it's better to just check if the variable name
- *  is in the list of expressions to the user defined function and fail
- *  the variable if we see it enter a UDF.
- * 4. Assignment return true if
- *     - The object being assigned to is in the list of known failures and
- *    - any of
- *     - The expression query from the indexed expression returns true 
- *     - The expression query from the rhs of the assignment returns true
- *   -  I think I also need to return true if the assigned to object is
- *      in the list of known failures the variable exists 
- *      on the right hand side or in the indexed type?
- *
- * 4. (TODO: For loops)
- *  Single indexing is fine outside of loops, but in loops we need to return true
- *
- * All other statements simply recurse into their lists of expressions 
- *  or statements repeating the checks from above.
  *)
 let query_demotable_stmt (aos_exits : string Set.Poly.t) pattern =
   let query_expr = query_demotable_exprs aos_exits in
@@ -506,17 +464,22 @@ let rec promote_stmts promotable_types (Stmt.Fixed.({pattern; _}) as stmt) =
   {stmt with pattern= new_pattern}
 
 (**
- *
+ * Specialization of the above to handle demotion while carrying 
+ * information on whether we have entered a for loop.
+ * (TODO: We can probably coerce this and the 
+ *  other query demotable function together)
+ * 
  *)
 let query_demotable_funkinds_loop query_expr_loop in_loop kind exprs =
-  let ret_demotable_types = Set.Poly.union_list (List.map ~f:query_all_expr_eigen_names exprs) in
+  let ret_demotable_types =
+    Set.Poly.union_list (List.map ~f:query_all_expr_eigen_names exprs)
+  in
   match kind with
   | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) -> (
     match name with
     | x
       when Stan_math_signatures.is_reduce_sum_fn x
-           || Stan_math_signatures.is_variadic_ode_fn x
-            ->
+           || Stan_math_signatures.is_variadic_ode_fn x ->
         ret_demotable_types
     | _ ->
         let is_fun_support =
@@ -525,12 +488,10 @@ let query_demotable_funkinds_loop query_expr_loop in_loop kind exprs =
         in
         if is_fun_support then
           Set.Poly.union_list (List.map ~f:(query_expr_loop in_loop) exprs)
-        else
-        ret_demotable_types
-    )
+        else ret_demotable_types )
   | CompilerInternal (_ : Internal_fun.t) -> Set.Poly.empty
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) ->
-  ret_demotable_types
+      ret_demotable_types
 
 (**
  * Find indices on Matrix and Vector types that perform single 
@@ -555,7 +516,9 @@ let rec is_uni_eigen_loop_indexing (ut : UnsizedType.t)
   | UMatrix, _ -> false
 
 (**
- *
+ * Specialization to find demotable (SoA -> AoS) objects
+ *  that carries logic on whether we are in a for loop or not.
+ * (TODO: Could be combined with other query demotable above.)
  *)
 let rec query_demotable_exprs_loop in_loop Expr.Fixed.({pattern; _}) =
   let query_expr = query_demotable_exprs_loop in_loop in
@@ -583,7 +546,11 @@ let rec query_demotable_exprs_loop in_loop Expr.Fixed.({pattern; _}) =
       Set.Poly.union (query_expr lhs) (query_expr rhs)
 
 (**
- *
+ * Specialization of the above to handle demotion while carrying 
+ * information on whether we have entered a for loop.
+ * (TODO: We can probably coerce this and the 
+ *  other query demotable function together)
+ * 
  *)
 let rec query_demotable_stmts_loop in_loop Stmt.Fixed.({pattern; _}) =
   let query_expr = query_demotable_exprs_loop in_loop in
