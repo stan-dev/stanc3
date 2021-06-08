@@ -76,7 +76,7 @@ let rec query_expr_eigen_names (aos_exits : string Set.Poly.t)
       query_name expr
       || List.exists ~f:(name_exists_in_index query_name) indexed
   | Var (name : string) when UnsizedType.contains_eigen_type type_ ->
-      Set.Poly.exists ~f:(fun x -> x = name) aos_exits
+      Set.Poly.mem aos_exits name
   | Var (_ : string) -> false
   | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) -> false
   | EAnd (lhs, rhs) | EOr (lhs, rhs) -> query_name lhs || query_name rhs
@@ -172,10 +172,11 @@ let rec demote_stmt_pattern
   let mod_expr = demote_exprs aos_exits in
   let mod_stmt = demote_stmts aos_exits demote_stmt_pattern in
   let find_name = query_expr_eigen_names aos_exits in
+  (*let printer intro s = Set.Poly.iter ~f:(printf intro) s in*)
   match pattern with
   | Stmt.Fixed.Pattern.Decl
       {decl_adtype; decl_id; decl_type= Type.Sized sized_type}
-    when Set.Poly.exists ~f:(fun x -> x = decl_id) aos_exits ->
+    when Set.Poly.mem aos_exits decl_id ->
       Stmt.Fixed.Pattern.Decl
         { decl_adtype
         ; decl_id
@@ -194,9 +195,9 @@ let rec demote_stmt_pattern
   | Assignment
       ( ((name : string), (ut : UnsizedType.t), lhs)
       , { pattern=
-            FunApp (CompilerInternal (FnReadParam (constrain_op, _)), args)
+            FunApp (CompilerInternal (FnReadParam (constrain_op, SoA)), args)
         ; meta= emeta } ) ->
-      if Set.Poly.exists ~f:(fun x -> x = name) aos_exits then
+      if Set.Poly.mem aos_exits name then
         let query_index = modify_index mod_expr in
         Assignment
           ( (name, ut, List.map ~f:query_index lhs)

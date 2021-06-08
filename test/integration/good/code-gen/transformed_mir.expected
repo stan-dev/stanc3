@@ -11189,7 +11189,7 @@
     (meta <opaque>))
    ((pattern
      (Assignment (p_real UReal ())
-      ((pattern (FunApp (CompilerInternal (FnReadParam () SoA)) ()))
+      ((pattern (FunApp (CompilerInternal (FnReadParam () AoS)) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -11199,7 +11199,7 @@
    ((pattern
      (Assignment (p_upper UReal ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (lb) SoA))
+        (FunApp (CompilerInternal (FnReadParam (lb) AoS))
          (((pattern (Var p_real))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var lp__))
@@ -11213,7 +11213,7 @@
    ((pattern
      (Assignment (p_lower UReal ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (ub) SoA))
+        (FunApp (CompilerInternal (FnReadParam (ub) AoS))
          (((pattern (Var p_upper))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Var lp__))
@@ -11231,7 +11231,7 @@
    ((pattern
      (Assignment (offset_multiplier (UArray UReal) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (offset_multiplier) SoA))
+        (FunApp (CompilerInternal (FnReadParam (offset_multiplier) AoS))
          (((pattern (Lit Int 1))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 2))
@@ -11254,7 +11254,7 @@
    ((pattern
      (Assignment (no_offset_multiplier (UArray UReal) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (offset_multiplier) SoA))
+        (FunApp (CompilerInternal (FnReadParam (offset_multiplier) AoS))
          (((pattern (Lit Int 0))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 2))
@@ -11277,7 +11277,7 @@
    ((pattern
      (Assignment (offset_no_multiplier (UArray UReal) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (offset_multiplier) SoA))
+        (FunApp (CompilerInternal (FnReadParam (offset_multiplier) AoS))
          (((pattern (Lit Int 3))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 1))
@@ -11300,7 +11300,7 @@
    ((pattern
      (Assignment (p_real_1d_ar (UArray UReal) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (lb) SoA))
+        (FunApp (CompilerInternal (FnReadParam (lb) AoS))
          (((pattern (Lit Int 0))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var lp__))
@@ -11327,7 +11327,7 @@
    ((pattern
      (Assignment (p_real_3d_ar (UArray (UArray (UArray UReal))) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (lb) SoA))
+        (FunApp (CompilerInternal (FnReadParam (lb) AoS))
          (((pattern (Lit Int 0))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var lp__))

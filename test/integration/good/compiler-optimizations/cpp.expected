@@ -5418,7 +5418,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
                                                   
       
       current_statement__ = 1;
-      mu = in__.template read_constrain_ordered<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+      mu = in__.template read_constrain_ordered<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
              lp__, 2);
       std::vector<local_scalar_t__> sigma = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
                                             
@@ -6869,8 +6869,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
                                                  
       
       current_statement__ = 1;
-      a = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-            n_age);
+      a = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_age);
       Eigen::Matrix<local_scalar_t__, -1, 1> b = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(n_edu, DUMMY_VAR__);
                                                  
       
@@ -12241,14 +12240,13 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                                                     
       
       current_statement__ = 4;
-      beta = in__.template read_constrain_lb<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+      beta = in__.template read_constrain_lb<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
                0, lp__, n_occasions);
       Eigen::Matrix<local_scalar_t__, -1, 1> epsilon = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(M, DUMMY_VAR__);
                                                        
       
       current_statement__ = 5;
-      epsilon = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-                  M);
+      epsilon = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(M);
       local_scalar_t__ sigma = DUMMY_VAR__;
       
       current_statement__ = 6;
@@ -14936,7 +14934,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
                                                   
       
       current_statement__ = 1;
-      pi = in__.template read_constrain_simplex<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+      pi = in__.template read_constrain_simplex<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
              lp__, K);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> theta = 
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(J, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(K, DUMMY_VAR__)));
@@ -27253,14 +27251,12 @@ class off_small_model final : public model_base_crtp<off_small_model> {
                                                     
       
       current_statement__ = 2;
-      eta1 = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-               J);
+      eta1 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J);
       Eigen::Matrix<local_scalar_t__, -1, 1> eta2 = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(J, DUMMY_VAR__);
                                                     
       
       current_statement__ = 3;
-      eta2 = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-               J);
+      eta2 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J);
       local_scalar_t__ mu_a1 = DUMMY_VAR__;
       
       current_statement__ = 4;
@@ -29579,8 +29575,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
                                                  
       
       current_statement__ = 1;
-      a = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-            n_pair);
+      a = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_pair);
       Eigen::Matrix<local_scalar_t__, -1, 1> beta = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(2, DUMMY_VAR__);
                                                     
       

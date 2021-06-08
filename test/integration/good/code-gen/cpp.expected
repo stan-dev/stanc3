@@ -1569,7 +1569,7 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(M, DUMMY_VAR__);
       
       current_statement__ = 9;
-      p_aos_vec_v_tp_fails_func = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+      p_aos_vec_v_tp_fails_func = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                                     M);
       Eigen::Matrix<local_scalar_t__, -1, 1> p_aos_loop_vec_v_uni_idx = 
       Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(M, DUMMY_VAR__);
@@ -19419,8 +19419,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                                                        
       
       current_statement__ = 1;
-      alpha_v = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-                  k);
+      alpha_v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
       stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> beta = 
       stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(k, std::numeric_limits<double>::quiet_NaN()));
       
@@ -22871,7 +22870,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
       
       
       current_statement__ = 1;
-      a8 = in__.template read<stan::conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>>(
+      a8 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
              N, N, N, N);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> a7 = 
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(N, DUMMY_VAR__)));

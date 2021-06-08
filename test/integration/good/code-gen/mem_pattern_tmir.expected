@@ -420,7 +420,7 @@
     (meta <opaque>))
    ((pattern
      (Assignment (alpha UReal ())
-      ((pattern (FunApp (CompilerInternal (FnReadParam () SoA)) ()))
+      ((pattern (FunApp (CompilerInternal (FnReadParam () AoS)) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -564,7 +564,7 @@
    ((pattern
      (Assignment (p_aos_vec_v_tp_fails_func UVector ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () SoA))
+        (FunApp (CompilerInternal (FnReadParam () AoS))
          (((pattern (Var M))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))

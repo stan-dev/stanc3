@@ -573,8 +573,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                                                        
       
       current_statement__ = 1;
-      alpha_v = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-                  k);
+      alpha_v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
       Eigen::Matrix<local_scalar_t__, -1, 1> beta = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(k, DUMMY_VAR__);
                                                     
       
