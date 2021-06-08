@@ -22,8 +22,7 @@ where F2 = (real, array[] real, array[] real, data array[] real,
    (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
   but got
    (real, array[] real, array[] real, array[] real, array[] int) => real
-  These are not compatible because:
-    Return types are incompatible: one is array[] real but the other is real
+  The return types are not compatible.
 (<F2>, array[] real, real, array[] real, array[] real, data array[] real,
  data array[] int) => array[,] real
   Expected 7 arguments but found 10 arguments.

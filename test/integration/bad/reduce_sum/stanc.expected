@@ -381,8 +381,7 @@ where F2 = (array[] real, data int, data int) => real
    (array[] real, data int, data int) => real
   but got
    (array[] real, int, int) => int
-  These are not compatible because:
-    Return types are incompatible: one is real but the other is int
+  The return types are not compatible.
   $ ../../../../../install/default/bin/stanc bad_return_type_static.stan
 Semantic error in 'bad_return_type_static.stan', line 12, column 12 to column 46:
    -------------------------------------------------
@@ -403,8 +402,7 @@ where F2 = (array[] real, data int, data int) => real
    (array[] real, data int, data int) => real
   but got
    (array[] real, int, int) => int
-  These are not compatible because:
-    Return types are incompatible: one is real but the other is int
+  The return types are not compatible.
   $ ../../../../../install/default/bin/stanc bad_suffix.stan
 Semantic error in 'bad_suffix.stan', line 27, column 12 to line 28, column 45:
    -------------------------------------------------

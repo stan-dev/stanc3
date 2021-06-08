@@ -2,12 +2,14 @@ open Core_kernel
 
 type type_mismatch =
   | DataOnlyError
-  | TypesMismatch of UnsizedType.t * UnsizedType.t
-  | FuncTypeMismatch of UnsizedType.t * UnsizedType.t * function_mismatch
+  | TypeMismatch of UnsizedType.t * UnsizedType.t * details option
 
-and function_mismatch =
+and details =
   | SuffixMismatch of unit Fun_kind.suffix * unit Fun_kind.suffix
   | ReturnTypeMismatch of UnsizedType.returntype * UnsizedType.returntype
+  | InputMismatch of function_mismatch
+
+and function_mismatch =
   | ArgError of int * type_mismatch
   | ArgNumMismatch of int * int
 [@@deriving sexp]
