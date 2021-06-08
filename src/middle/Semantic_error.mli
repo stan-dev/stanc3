@@ -28,7 +28,6 @@ val illtyped_assignment :
 val illtyped_ternary_if :
   Location_span.t -> UnsizedType.t -> UnsizedType.t -> UnsizedType.t -> t
 
-val ternary_if_fn_type : Location_span.t -> UnsizedType.t -> t
 val returning_fn_expected_nonreturning_found : Location_span.t -> string -> t
 val returning_fn_expected_nonfn_found : Location_span.t -> string -> t
 
@@ -40,16 +39,23 @@ val illtyped_reduce_sum :
   -> string
   -> UnsizedType.t list
   -> (UnsizedType.autodifftype * UnsizedType.t) list
+  -> SignatureMismatch.function_mismatch
   -> t
 
 val illtyped_reduce_sum_generic :
-  Location_span.t -> string -> UnsizedType.t list -> t
+     Location_span.t
+  -> string
+  -> UnsizedType.t list
+  -> (UnsizedType.autodifftype * UnsizedType.t) list
+  -> SignatureMismatch.function_mismatch
+  -> t
 
 val illtyped_variadic_ode :
      Location_span.t
   -> string
+  -> UnsizedType.t list
   -> (UnsizedType.autodifftype * UnsizedType.t) list
-  -> (UnsizedType.autodifftype * UnsizedType.t) list
+  -> SignatureMismatch.function_mismatch
   -> t
 
 val nonreturning_fn_expected_returning_found : Location_span.t -> string -> t
@@ -59,15 +65,18 @@ val nonreturning_fn_expected_undeclaredident_found :
   Location_span.t -> string -> t
 
 val illtyped_stanlib_fn_app :
-  Location_span.t -> string -> UnsizedType.t list -> t
-
-val illtyped_stanlib_hof_app : Location_span.t -> string -> t
+     Location_span.t
+  -> string
+  -> SignatureMismatch.signature_error list * bool
+  -> UnsizedType.t list
+  -> t
 
 val illtyped_userdefined_fn_app :
      Location_span.t
   -> string
   -> (UnsizedType.autodifftype * UnsizedType.t) list
   -> UnsizedType.returntype
+  -> SignatureMismatch.function_mismatch
   -> UnsizedType.t list
   -> t
 

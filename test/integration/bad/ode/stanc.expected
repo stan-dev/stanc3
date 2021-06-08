@@ -9,16 +9,23 @@ Semantic error in 'bad_bdf_control_function_return.stan', line 13, column 6 to l
     15:                          10, 10, 10);
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_bdf':
+(<F1>, array[] real, real, array[] real, array[] real, array[] real,
  array[] int, int, int, int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The first argument must be
+   (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
+  but got
+   (real, array[] real, array[] real, array[] real, array[] int) => real
+  The return types are not compatible.
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+  Expected 7 arguments but found 10 arguments.
   $ ../../../../../install/default/bin/stanc bad_fun_type.stan
 Semantic error in 'bad_fun_type.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
@@ -30,15 +37,25 @@ Semantic error in 'bad_fun_type.stan', line 27, column 10 to line 33, column 27:
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode':
+(<F1>, array[] real, real, array[] real, array[] real, array[] real,
  array[] int)
-  where
-<F2> = (array[] real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (array[] real, array[] real, array[] real, array[] real,
+            array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The first argument must be
+   (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
+  but got
+   (array[] real, array[] real, array[] real, array[] real, array[] int) => array[] real
+  These are not compatible because:
+    The types for the first argument are incompatible: one is
+     array[] real
+    but the other is
+     real
   $ ../../../../../install/default/bin/stanc bad_fun_type_bdf.stan
 Semantic error in 'bad_fun_type_bdf.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
@@ -50,16 +67,28 @@ Semantic error in 'bad_fun_type_bdf.stan', line 27, column 10 to line 33, column
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_bdf':
+(<F1>, array[] real, real, array[] real, array[] real, array[] real,
  array[] int)
-  where
-<F2> = (array[] real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (array[] real, array[] real, array[] real, array[] real,
+            array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The first argument must be
+   (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
+  but got
+   (array[] real, array[] real, array[] real, array[] real, array[] int) => array[] real
+  These are not compatible because:
+    The types for the first argument are incompatible: one is
+     array[] real
+    but the other is
+     real
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+  Expected 10 arguments but found 7 arguments.
   $ ../../../../../install/default/bin/stanc bad_fun_type_bdf_control.stan
 Semantic error in 'bad_fun_type_bdf_control.stan', line 27, column 10 to line 33, column 43:
    -------------------------------------------------
@@ -71,16 +100,28 @@ Semantic error in 'bad_fun_type_bdf_control.stan', line 27, column 10 to line 33
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_bdf':
+(<F1>, array[] real, real, array[] real, array[] real, array[] real,
  array[] int, real, real, int)
-  where
-<F2> = (array[] real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (array[] real, array[] real, array[] real, array[] real,
+            array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The first argument must be
+   (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
+  but got
+   (array[] real, array[] real, array[] real, array[] real, array[] int) => array[] real
+  These are not compatible because:
+    The types for the first argument are incompatible: one is
+     array[] real
+    but the other is
+     real
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+  Expected 7 arguments but found 10 arguments.
   $ ../../../../../install/default/bin/stanc bad_fun_type_rk45.stan
 Semantic error in 'bad_fun_type_rk45.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
@@ -92,16 +133,28 @@ Semantic error in 'bad_fun_type_rk45.stan', line 27, column 10 to line 33, colum
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_rk45':
+(<F1>, array[] real, real, array[] real, array[] real, array[] real,
  array[] int)
-  where
-<F2> = (array[] real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (array[] real, array[] real, array[] real, array[] real,
+            array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The first argument must be
+   (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
+  but got
+   (array[] real, array[] real, array[] real, array[] real, array[] int) => array[] real
+  These are not compatible because:
+    The types for the first argument are incompatible: one is
+     array[] real
+    but the other is
+     real
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+  Expected 10 arguments but found 7 arguments.
   $ ../../../../../install/default/bin/stanc bad_fun_type_rk45_control.stan
 Semantic error in 'bad_fun_type_rk45_control.stan', line 27, column 10 to line 33, column 43:
    -------------------------------------------------
@@ -113,16 +166,28 @@ Semantic error in 'bad_fun_type_rk45_control.stan', line 27, column 10 to line 3
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_rk45':
+(<F1>, array[] real, real, array[] real, array[] real, array[] real,
  array[] int, real, real, int)
-  where
-<F2> = (array[] real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (array[] real, array[] real, array[] real, array[] real,
+            array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The first argument must be
+   (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
+  but got
+   (array[] real, array[] real, array[] real, array[] real, array[] int) => array[] real
+  These are not compatible because:
+    The types for the first argument are incompatible: one is
+     array[] real
+    but the other is
+     real
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+  Expected 7 arguments but found 10 arguments.
   $ ../../../../../install/default/bin/stanc bad_t_type.stan
 Semantic error in 'bad_t_type.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -134,15 +199,16 @@ Semantic error in 'bad_t_type.stan', line 26, column 10 to line 32, column 27:
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, matrix, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode':
+(<F1>, array[] real, matrix, array[] real, array[] real, array[] real,
  array[] int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The third argument must be real but got matrix
   $ ../../../../../install/default/bin/stanc bad_t_type_bdf.stan
 Semantic error in 'bad_t_type_bdf.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -154,16 +220,19 @@ Semantic error in 'bad_t_type_bdf.stan', line 26, column 10 to line 32, column 2
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, matrix, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_bdf':
+(<F1>, array[] real, matrix, array[] real, array[] real, array[] real,
  array[] int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The third argument must be real but got matrix
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+  Expected 10 arguments but found 7 arguments.
   $ ../../../../../install/default/bin/stanc bad_t_type_bdf_control.stan
 Semantic error in 'bad_t_type_bdf_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
@@ -175,16 +244,19 @@ Semantic error in 'bad_t_type_bdf_control.stan', line 26, column 10 to line 32, 
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, matrix, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_bdf':
+(<F1>, array[] real, matrix, array[] real, array[] real, array[] real,
  array[] int, real, real, int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The third argument must be real but got matrix
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+  Expected 7 arguments but found 10 arguments.
   $ ../../../../../install/default/bin/stanc bad_t_type_rk45.stan
 Semantic error in 'bad_t_type_rk45.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -196,16 +268,19 @@ Semantic error in 'bad_t_type_rk45.stan', line 26, column 10 to line 32, column 
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, matrix, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_rk45':
+(<F1>, array[] real, matrix, array[] real, array[] real, array[] real,
  array[] int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The third argument must be real but got matrix
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+  Expected 10 arguments but found 7 arguments.
   $ ../../../../../install/default/bin/stanc bad_t_type_rk45_control.stan
 Semantic error in 'bad_t_type_rk45_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
@@ -217,16 +292,19 @@ Semantic error in 'bad_t_type_rk45_control.stan', line 26, column 10 to line 32,
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, matrix, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_rk45':
+(<F1>, array[] real, matrix, array[] real, array[] real, array[] real,
  array[] int, real, real, int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The third argument must be real but got matrix
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+  Expected 7 arguments but found 10 arguments.
   $ ../../../../../install/default/bin/stanc bad_theta_type.stan
 Semantic error in 'bad_theta_type.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
@@ -238,15 +316,16 @@ Semantic error in 'bad_theta_type.stan', line 27, column 10 to line 33, column 2
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[,] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode':
+(<F1>, array[] real, real, array[] real, array[,] real, array[] real,
  array[] int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The 5th argument must be array[] real but got array[,] real
   $ ../../../../../install/default/bin/stanc bad_theta_type_bdf.stan
 Semantic error in 'bad_theta_type_bdf.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
@@ -258,16 +337,19 @@ Semantic error in 'bad_theta_type_bdf.stan', line 27, column 10 to line 33, colu
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[,] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_bdf':
+(<F1>, array[] real, real, array[] real, array[,] real, array[] real,
  array[] int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The 5th argument must be array[] real but got array[,] real
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+  Expected 10 arguments but found 7 arguments.
   $ ../../../../../install/default/bin/stanc bad_theta_type_bdf_control.stan
 Semantic error in 'bad_theta_type_bdf_control.stan', line 27, column 10 to line 33, column 43:
    -------------------------------------------------
@@ -279,16 +361,19 @@ Semantic error in 'bad_theta_type_bdf_control.stan', line 27, column 10 to line 
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[,] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_bdf':
+(<F1>, array[] real, real, array[] real, array[,] real, array[] real,
  array[] int, real, real, int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The 5th argument must be array[] real but got array[,] real
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+  Expected 7 arguments but found 10 arguments.
   $ ../../../../../install/default/bin/stanc bad_theta_type_rk45.stan
 Semantic error in 'bad_theta_type_rk45.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
@@ -300,16 +385,19 @@ Semantic error in 'bad_theta_type_rk45.stan', line 27, column 10 to line 33, col
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[,] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_rk45':
+(<F1>, array[] real, real, array[] real, array[,] real, array[] real,
  array[] int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The 5th argument must be array[] real but got array[,] real
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+  Expected 10 arguments but found 7 arguments.
   $ ../../../../../install/default/bin/stanc bad_theta_type_rk45_control.stan
 Semantic error in 'bad_theta_type_rk45_control.stan', line 27, column 10 to line 33, column 43:
    -------------------------------------------------
@@ -321,16 +409,19 @@ Semantic error in 'bad_theta_type_rk45_control.stan', line 27, column 10 to line
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[,] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_rk45':
+(<F1>, array[] real, real, array[] real, array[,] real, array[] real,
  array[] int, real, real, int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The 5th argument must be array[] real but got array[,] real
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+  Expected 7 arguments but found 10 arguments.
   $ ../../../../../install/default/bin/stanc bad_ts_type.stan
 Semantic error in 'bad_ts_type.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -342,15 +433,16 @@ Semantic error in 'bad_ts_type.stan', line 26, column 10 to line 32, column 27:
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[,] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode':
+(<F1>, array[] real, real, array[,] real, array[] real, array[] real,
  array[] int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The fourth argument must be array[] real but got array[,] real
   $ ../../../../../install/default/bin/stanc bad_ts_type_bdf.stan
 Semantic error in 'bad_ts_type_bdf.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -362,16 +454,19 @@ Semantic error in 'bad_ts_type_bdf.stan', line 26, column 10 to line 32, column 
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[,] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_bdf':
+(<F1>, array[] real, real, array[,] real, array[] real, array[] real,
  array[] int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The fourth argument must be array[] real but got array[,] real
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+  Expected 10 arguments but found 7 arguments.
   $ ../../../../../install/default/bin/stanc bad_ts_type_bdf_control.stan
 Semantic error in 'bad_ts_type_bdf_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
@@ -383,16 +478,19 @@ Semantic error in 'bad_ts_type_bdf_control.stan', line 26, column 10 to line 32,
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[,] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_bdf':
+(<F1>, array[] real, real, array[,] real, array[] real, array[] real,
  array[] int, real, real, int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The fourth argument must be array[] real but got array[,] real
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+  Expected 7 arguments but found 10 arguments.
   $ ../../../../../install/default/bin/stanc bad_ts_type_rk45.stan
 Semantic error in 'bad_ts_type_rk45.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -404,16 +502,19 @@ Semantic error in 'bad_ts_type_rk45.stan', line 26, column 10 to line 32, column
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[,] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_rk45':
+(<F1>, array[] real, real, array[,] real, array[] real, array[] real,
  array[] int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The fourth argument must be array[] real but got array[,] real
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+  Expected 10 arguments but found 7 arguments.
   $ ../../../../../install/default/bin/stanc bad_ts_type_rk45_control.stan
 Semantic error in 'bad_ts_type_rk45_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
@@ -425,16 +526,19 @@ Semantic error in 'bad_ts_type_rk45_control.stan', line 26, column 10 to line 32
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[,] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_rk45':
+(<F1>, array[] real, real, array[,] real, array[] real, array[] real,
  array[] int, real, real, int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The fourth argument must be array[] real but got array[,] real
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+  Expected 7 arguments but found 10 arguments.
   $ ../../../../../install/default/bin/stanc bad_var_tol_1.stan
 Semantic error in 'bad_var_tol_1.stan', line 38, column 6 to line 39, column 104:
    -------------------------------------------------
@@ -446,12 +550,17 @@ Semantic error in 'bad_var_tol_1.stan', line 38, column 6 to line 39, column 104
     40:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_adjoint_tol_ctl'. Available signatures:
-(real, vector, ...) => vector, vector, real, array[] real, data real,
- data vector, data real, data vector, data real, data real, data int,
- data int, data int, data int, data int ...
-Instead supplied arguments of incompatible type:
-(real, vector) => vector, vector, real, array[] real, data real, data vector, data real, data vector, real, data real, data int, data int, data int, data int, data int
+Ill-typed arguments supplied to function 'ode_adjoint_tol_ctl':
+(<F1>, vector, real, array[] real, real, vector, real, vector, real, real,
+ int, int, int, int, int)
+where F1 = (real, vector) => vector
+Available signatures:
+(<F1>, vector, real, array[] real, data real, data vector, data real,
+ data vector, data real, data real, data int, data int, data int, data int,
+ data int) => vector
+  The 9th argument must be data-only. (Local variables are assumed to depend
+  on parameters; same goes for function inputs unless they are marked with
+  the keyword 'data'.)
   $ ../../../../../install/default/bin/stanc bad_var_tol_2.stan
 Semantic error in 'bad_var_tol_2.stan', line 38, column 6 to line 39, column 104:
    -------------------------------------------------
@@ -463,12 +572,17 @@ Semantic error in 'bad_var_tol_2.stan', line 38, column 6 to line 39, column 104
     40:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_adjoint_tol_ctl'. Available signatures:
-(real, vector, ...) => vector, vector, real, array[] real, data real,
- data vector, data real, data vector, data real, data real, data int,
- data int, data int, data int, data int ...
-Instead supplied arguments of incompatible type:
-(real, vector) => vector, vector, real, array[] real, data real, data vector, real, data vector, data real, data real, data int, data int, data int, data int, data int
+Ill-typed arguments supplied to function 'ode_adjoint_tol_ctl':
+(<F1>, vector, real, array[] real, real, vector, real, vector, real, real,
+ int, int, int, int, int)
+where F1 = (real, vector) => vector
+Available signatures:
+(<F1>, vector, real, array[] real, data real, data vector, data real,
+ data vector, data real, data real, data int, data int, data int, data int,
+ data int) => vector
+  The 7th argument must be data-only. (Local variables are assumed to depend
+  on parameters; same goes for function inputs unless they are marked with
+  the keyword 'data'.)
   $ ../../../../../install/default/bin/stanc bad_var_tol_3.stan
 Semantic error in 'bad_var_tol_3.stan', line 38, column 6 to line 39, column 104:
    -------------------------------------------------
@@ -480,12 +594,17 @@ Semantic error in 'bad_var_tol_3.stan', line 38, column 6 to line 39, column 104
     40:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'ode_adjoint_tol_ctl'. Available signatures:
-(real, vector, ...) => vector, vector, real, array[] real, data real,
- data vector, data real, data vector, data real, data real, data int,
- data int, data int, data int, data int ...
-Instead supplied arguments of incompatible type:
-(real, vector) => vector, vector, real, array[] real, data real, vector, data real, data vector, data real, data real, data int, data int, data int, data int, data int
+Ill-typed arguments supplied to function 'ode_adjoint_tol_ctl':
+(<F1>, vector, real, array[] real, real, vector, real, vector, real, real,
+ int, int, int, int, int)
+where F1 = (real, vector) => vector
+Available signatures:
+(<F1>, vector, real, array[] real, data real, data vector, data real,
+ data vector, data real, data real, data int, data int, data int, data int,
+ data int) => vector
+  The 6th argument must be data-only. (Local variables are assumed to depend
+  on parameters; same goes for function inputs unless they are marked with
+  the keyword 'data'.)
   $ ../../../../../install/default/bin/stanc bad_x_int_type.stan
 Semantic error in 'bad_x_int_type.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -497,15 +616,16 @@ Semantic error in 'bad_x_int_type.stan', line 26, column 10 to line 32, column 2
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode':
+(<F1>, array[] real, real, array[] real, array[] real, array[] real,
  array[,] int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The 7th argument must be array[] int but got array[,] int
   $ ../../../../../install/default/bin/stanc bad_x_int_type_bdf.stan
 Semantic error in 'bad_x_int_type_bdf.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -517,16 +637,19 @@ Semantic error in 'bad_x_int_type_bdf.stan', line 26, column 10 to line 32, colu
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_bdf':
+(<F1>, array[] real, real, array[] real, array[] real, array[] real,
  array[,] int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The 7th argument must be array[] int but got array[,] int
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+  Expected 10 arguments but found 7 arguments.
   $ ../../../../../install/default/bin/stanc bad_x_int_type_bdf_control.stan
 Semantic error in 'bad_x_int_type_bdf_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
@@ -538,16 +661,19 @@ Semantic error in 'bad_x_int_type_bdf_control.stan', line 26, column 10 to line 
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_bdf':
+(<F1>, array[] real, real, array[] real, array[] real, array[] real,
  array[,] int, real, real, int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The 7th argument must be array[] int but got array[,] int
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+  Expected 7 arguments but found 10 arguments.
   $ ../../../../../install/default/bin/stanc bad_x_int_type_rk45.stan
 Semantic error in 'bad_x_int_type_rk45.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -559,16 +685,19 @@ Semantic error in 'bad_x_int_type_rk45.stan', line 26, column 10 to line 32, col
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_rk45':
+(<F1>, array[] real, real, array[] real, array[] real, array[] real,
  array[,] int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The 7th argument must be array[] int but got array[,] int
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+  Expected 10 arguments but found 7 arguments.
   $ ../../../../../install/default/bin/stanc bad_x_int_type_rk45_control.stan
 Semantic error in 'bad_x_int_type_rk45_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
@@ -580,16 +709,19 @@ Semantic error in 'bad_x_int_type_rk45_control.stan', line 26, column 10 to line
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_rk45':
+(<F1>, array[] real, real, array[] real, array[] real, array[] real,
  array[,] int, real, real, int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The 7th argument must be array[] int but got array[,] int
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+  Expected 7 arguments but found 10 arguments.
   $ ../../../../../install/default/bin/stanc bad_x_type.stan
 Semantic error in 'bad_x_type.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
@@ -601,15 +733,16 @@ Semantic error in 'bad_x_type.stan', line 27, column 10 to line 33, column 27:
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[] real, array[] vector,
+Ill-typed arguments supplied to function 'integrate_ode':
+(<F1>, array[] real, real, array[] real, array[] real, array[] vector,
  array[] int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The 6th argument must be array[] real but got array[] vector
   $ ../../../../../install/default/bin/stanc bad_x_type_bdf.stan
 Semantic error in 'bad_x_type_bdf.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
@@ -621,16 +754,19 @@ Semantic error in 'bad_x_type_bdf.stan', line 27, column 10 to line 33, column 2
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[] real, array[] vector,
+Ill-typed arguments supplied to function 'integrate_ode_bdf':
+(<F1>, array[] real, real, array[] real, array[] real, array[] vector,
  array[] int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The 6th argument must be array[] real but got array[] vector
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+  Expected 10 arguments but found 7 arguments.
   $ ../../../../../install/default/bin/stanc bad_x_type_bdf_control.stan
 Semantic error in 'bad_x_type_bdf_control.stan', line 27, column 10 to line 33, column 43:
    -------------------------------------------------
@@ -642,16 +778,19 @@ Semantic error in 'bad_x_type_bdf_control.stan', line 27, column 10 to line 33, 
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[] real, array[] vector,
+Ill-typed arguments supplied to function 'integrate_ode_bdf':
+(<F1>, array[] real, real, array[] real, array[] real, array[] vector,
  array[] int, real, real, int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The 6th argument must be array[] real but got array[] vector
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+  Expected 7 arguments but found 10 arguments.
   $ ../../../../../install/default/bin/stanc bad_x_type_rk45.stan
 Semantic error in 'bad_x_type_rk45.stan', line 27, column 10 to line 33, column 27:
    -------------------------------------------------
@@ -663,16 +802,19 @@ Semantic error in 'bad_x_type_rk45.stan', line 27, column 10 to line 33, column 
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[] real, array[] vector,
+Ill-typed arguments supplied to function 'integrate_ode_rk45':
+(<F1>, array[] real, real, array[] real, array[] real, array[] vector,
  array[] int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The 6th argument must be array[] real but got array[] vector
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+  Expected 10 arguments but found 7 arguments.
   $ ../../../../../install/default/bin/stanc bad_x_type_rk45_control.stan
 Semantic error in 'bad_x_type_rk45_control.stan', line 27, column 10 to line 33, column 43:
    -------------------------------------------------
@@ -684,16 +826,19 @@ Semantic error in 'bad_x_type_rk45_control.stan', line 27, column 10 to line 33,
     29:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[] real, array[] vector,
+Ill-typed arguments supplied to function 'integrate_ode_rk45':
+(<F1>, array[] real, real, array[] real, array[] real, array[] vector,
  array[] int, real, real, int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The 6th argument must be array[] real but got array[] vector
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+  Expected 7 arguments but found 10 arguments.
   $ ../../../../../install/default/bin/stanc bad_x_var_type.stan
 Semantic error in 'bad_x_var_type.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -705,15 +850,18 @@ Semantic error in 'bad_x_var_type.stan', line 26, column 10 to line 32, column 2
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode':
+(<F1>, array[] real, real, array[] real, array[] real, array[] real,
  array[] int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The 6th argument must be data-only. (Local variables are assumed to depend
+  on parameters; same goes for function inputs unless they are marked with
+  the keyword 'data'.)
   $ ../../../../../install/default/bin/stanc bad_x_var_type_bdf.stan
 Semantic error in 'bad_x_var_type_bdf.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -725,16 +873,21 @@ Semantic error in 'bad_x_var_type_bdf.stan', line 26, column 10 to line 32, colu
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_bdf':
+(<F1>, array[] real, real, array[] real, array[] real, array[] real,
  array[] int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The 6th argument must be data-only. (Local variables are assumed to depend
+  on parameters; same goes for function inputs unless they are marked with
+  the keyword 'data'.)
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+  Expected 10 arguments but found 7 arguments.
   $ ../../../../../install/default/bin/stanc bad_x_var_type_bdf_control.stan
 Semantic error in 'bad_x_var_type_bdf_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
@@ -746,16 +899,21 @@ Semantic error in 'bad_x_var_type_bdf_control.stan', line 26, column 10 to line 
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_bdf':
+(<F1>, array[] real, real, array[] real, array[] real, array[] real,
  array[] int, real, real, int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The 6th argument must be data-only. (Local variables are assumed to depend
+  on parameters; same goes for function inputs unless they are marked with
+  the keyword 'data'.)
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+  Expected 7 arguments but found 10 arguments.
   $ ../../../../../install/default/bin/stanc bad_x_var_type_rk45.stan
 Semantic error in 'bad_x_var_type_rk45.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -767,16 +925,21 @@ Semantic error in 'bad_x_var_type_rk45.stan', line 26, column 10 to line 32, col
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_rk45':
+(<F1>, array[] real, real, array[] real, array[] real, array[] real,
  array[] int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The 6th argument must be data-only. (Local variables are assumed to depend
+  on parameters; same goes for function inputs unless they are marked with
+  the keyword 'data'.)
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+  Expected 10 arguments but found 7 arguments.
   $ ../../../../../install/default/bin/stanc bad_x_var_type_rk45_control.stan
 Semantic error in 'bad_x_var_type_rk45_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
@@ -788,16 +951,21 @@ Semantic error in 'bad_x_var_type_rk45_control.stan', line 26, column 10 to line
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[] real, real, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_rk45':
+(<F1>, array[] real, real, array[] real, array[] real, array[] real,
  array[] int, real, real, int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The 6th argument must be data-only. (Local variables are assumed to depend
+  on parameters; same goes for function inputs unless they are marked with
+  the keyword 'data'.)
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+  Expected 7 arguments but found 10 arguments.
   $ ../../../../../install/default/bin/stanc bad_y_type.stan
 Semantic error in 'bad_y_type.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -809,15 +977,16 @@ Semantic error in 'bad_y_type.stan', line 26, column 10 to line 32, column 27:
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[,] real, real, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode':
+(<F1>, array[,] real, real, array[] real, array[] real, array[] real,
  array[] int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The second argument must be array[] real but got array[,] real
   $ ../../../../../install/default/bin/stanc bad_y_type_bdf.stan
 Semantic error in 'bad_y_type_bdf.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -829,16 +998,19 @@ Semantic error in 'bad_y_type_bdf.stan', line 26, column 10 to line 32, column 2
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[,] real, real, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_bdf':
+(<F1>, array[,] real, real, array[] real, array[] real, array[] real,
  array[] int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The second argument must be array[] real but got array[,] real
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+  Expected 10 arguments but found 7 arguments.
   $ ../../../../../install/default/bin/stanc bad_y_type_bdf_control.stan
 Semantic error in 'bad_y_type_bdf_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
@@ -850,16 +1022,19 @@ Semantic error in 'bad_y_type_bdf_control.stan', line 26, column 10 to line 32, 
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_bdf'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[,] real, real, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_bdf':
+(<F1>, array[,] real, real, array[] real, array[] real, array[] real,
  array[] int, real, real, int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The second argument must be array[] real but got array[,] real
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+  Expected 7 arguments but found 10 arguments.
   $ ../../../../../install/default/bin/stanc bad_y_type_rk45.stan
 Semantic error in 'bad_y_type_rk45.stan', line 26, column 10 to line 32, column 27:
    -------------------------------------------------
@@ -871,16 +1046,19 @@ Semantic error in 'bad_y_type_rk45.stan', line 26, column 10 to line 32, column 
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[,] real, real, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_rk45':
+(<F1>, array[,] real, real, array[] real, array[] real, array[] real,
  array[] int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The second argument must be array[] real but got array[,] real
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+  Expected 10 arguments but found 7 arguments.
   $ ../../../../../install/default/bin/stanc bad_y_type_rk45_control.stan
 Semantic error in 'bad_y_type_rk45_control.stan', line 26, column 10 to line 32, column 43:
    -------------------------------------------------
@@ -892,13 +1070,16 @@ Semantic error in 'bad_y_type_rk45_control.stan', line 26, column 10 to line 32,
     28:                       t0,            // initial time
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures:
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-(<F1>, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-  where
-<F1> = (real, array[] real, array[] real, data array[] real, data array[] int) => array[] real
-Instead supplied arguments of incompatible type:
-(<F2>, array[,] real, real, array[] real, array[] real, array[] real,
+Ill-typed arguments supplied to function 'integrate_ode_rk45':
+(<F1>, array[,] real, real, array[] real, array[] real, array[] real,
  array[] int, real, real, int)
-  where
-<F2> = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The second argument must be array[] real but got array[,] real
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+  Expected 7 arguments but found 10 arguments.
