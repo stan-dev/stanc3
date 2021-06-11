@@ -1,5 +1,17 @@
   $ ../../../../../install/default/bin/stanc --debug-transformed-mir mem_patterns.stan
-((functions_block ())
+((functions_block
+  (((fdrt (UInt)) (fdname mask_fun) (fdsuffix FnPlain)
+    (fdargs ((AutoDiffable i UInt)))
+    (fdbody
+     (((pattern
+        (Block
+         (((pattern
+            (Return
+             (((pattern (Var i))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta <opaque>)))))
+       (meta <opaque>))))
+    (fdloc <opaque>))))
  (input_vars
   ((N SInt) (M SInt)
    (dat_x
@@ -397,6 +409,42 @@
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
+      (((pattern (Lit Str p_aos_mat_fail_func_uni_uni_idx1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Str N))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Var N))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp (CompilerInternal FnValidateSize)
+      (((pattern (Lit Str p_aos_mat_fail_func_uni_uni_idx1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Str M))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Var M))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp (CompilerInternal FnValidateSize)
+      (((pattern (Lit Str p_aos_mat_fail_func_uni_uni_idx2))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Str N))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Var N))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp (CompilerInternal FnValidateSize)
+      (((pattern (Lit Str p_aos_mat_fail_func_uni_uni_idx2))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Str M))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Var M))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp (CompilerInternal FnValidateSize)
       (((pattern (Lit Str tp_aos_vec_v))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str M))
@@ -617,6 +665,48 @@
     (meta <opaque>))
    ((pattern
      (Assignment (p_aos_mat UMatrix ())
+      ((pattern
+        (FunApp (CompilerInternal (FnReadParam () AoS))
+         (((pattern (Var N))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var M))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable)
+      (decl_id p_aos_mat_fail_func_uni_uni_idx1)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Var N))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var M))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (p_aos_mat_fail_func_uni_uni_idx1 UMatrix ())
+      ((pattern
+        (FunApp (CompilerInternal (FnReadParam () AoS))
+         (((pattern (Var N))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var M))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable)
+      (decl_id p_aos_mat_fail_func_uni_uni_idx2)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Var N))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var M))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (p_aos_mat_fail_func_uni_uni_idx2 UMatrix ())
       ((pattern
         (FunApp (CompilerInternal (FnReadParam () AoS))
          (((pattern (Var N))
@@ -1177,6 +1267,84 @@
                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
                    (meta
                     ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+                (meta <opaque>))
+               ((pattern
+                 (TargetPE
+                  ((pattern
+                    (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+                     (((pattern (Var y))
+                       (meta
+                        ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern
+                        (FunApp (StanLib multiply FnPlain SoA)
+                         (((pattern
+                            (Indexed
+                             ((pattern (Var dat_x))
+                              (meta
+                               ((type_ UMatrix) (loc <opaque>)
+                                (adlevel DataOnly))))
+                             (All
+                              (Single
+                               ((pattern (Var i))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>)
+                                  (adlevel DataOnly))))))))
+                           (meta
+                            ((type_ UVector) (loc <opaque>)
+                             (adlevel DataOnly))))
+                          ((pattern
+                            (Indexed
+                             ((pattern
+                               (FunApp (StanLib transpose FnPlain AoS)
+                                (((pattern
+                                   (FunApp (StanLib multiply FnPlain AoS)
+                                    (((pattern
+                                       (Var p_aos_mat_fail_func_uni_uni_idx1))
+                                      (meta
+                                       ((type_ UMatrix) (loc <opaque>)
+                                        (adlevel AutoDiffable))))
+                                     ((pattern
+                                       (Var p_aos_mat_fail_func_uni_uni_idx2))
+                                      (meta
+                                       ((type_ UMatrix) (loc <opaque>)
+                                        (adlevel AutoDiffable)))))))
+                                  (meta
+                                   ((type_ UMatrix) (loc <opaque>)
+                                    (adlevel AutoDiffable)))))))
+                              (meta
+                               ((type_ UMatrix) (loc <opaque>)
+                                (adlevel AutoDiffable))))
+                             ((Single
+                               ((pattern
+                                 (FunApp (UserDefined mask_fun FnPlain)
+                                  (((pattern (Var i))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>)
+                                      (adlevel DataOnly)))))))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>)
+                                  (adlevel DataOnly)))))
+                              (Single
+                               ((pattern
+                                 (FunApp (UserDefined mask_fun FnPlain)
+                                  (((pattern (Var i))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>)
+                                      (adlevel DataOnly)))))))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>)
+                                  (adlevel DataOnly))))))))
+                           (meta
+                            ((type_ UReal) (loc <opaque>)
+                             (adlevel AutoDiffable)))))))
+                       (meta
+                        ((type_ UVector) (loc <opaque>)
+                         (adlevel AutoDiffable))))
+                      ((pattern (Lit Real 1.0))
+                       (meta
+                        ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
                 (meta <opaque>)))))
             (meta <opaque>)))))
         (meta <opaque>)))))
@@ -1384,6 +1552,46 @@
     (meta <opaque>))
    ((pattern
      (Assignment (p_aos_mat UMatrix ())
+      ((pattern
+        (FunApp (CompilerInternal (FnReadParam () AoS))
+         (((pattern (Var N))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var M))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id p_aos_mat_fail_func_uni_uni_idx1)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Var N))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var M))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (p_aos_mat_fail_func_uni_uni_idx1 UMatrix ())
+      ((pattern
+        (FunApp (CompilerInternal (FnReadParam () AoS))
+         (((pattern (Var N))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var M))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id p_aos_mat_fail_func_uni_uni_idx2)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Var N))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var M))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (p_aos_mat_fail_func_uni_uni_idx2 UMatrix ())
       ((pattern
         (FunApp (CompilerInternal (FnReadParam () AoS))
          (((pattern (Var N))
@@ -1799,6 +2007,100 @@
                       (((pattern
                          (Indexed
                           ((pattern (Var p_aos_mat))
+                           (meta
+                            ((type_ UMatrix) (loc <opaque>)
+                             (adlevel DataOnly))))
+                          ((Single
+                            ((pattern (Var sym2__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly)))))
+                           (Single
+                            ((pattern (Var sym1__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))))))
+                        (meta
+                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar sym1__)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Var M))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (For (loopvar sym2__)
+              (lower
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (upper
+               ((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (body
+               ((pattern
+                 (Block
+                  (((pattern
+                     (NRFunApp (CompilerInternal FnWriteParam)
+                      (((pattern
+                         (Indexed
+                          ((pattern (Var p_aos_mat_fail_func_uni_uni_idx1))
+                           (meta
+                            ((type_ UMatrix) (loc <opaque>)
+                             (adlevel DataOnly))))
+                          ((Single
+                            ((pattern (Var sym2__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly)))))
+                           (Single
+                            ((pattern (Var sym1__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))))))
+                        (meta
+                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar sym1__)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Var M))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (For (loopvar sym2__)
+              (lower
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (upper
+               ((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (body
+               ((pattern
+                 (Block
+                  (((pattern
+                     (NRFunApp (CompilerInternal FnWriteParam)
+                      (((pattern
+                         (Indexed
+                          ((pattern (Var p_aos_mat_fail_func_uni_uni_idx2))
                            (meta
                             ((type_ UMatrix) (loc <opaque>)
                              (adlevel DataOnly))))
@@ -2920,6 +3222,208 @@
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id p_aos_mat_fail_func_uni_uni_idx1)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Var N))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var M))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable)
+          (decl_id p_aos_mat_fail_func_uni_uni_idx1_flat__)
+          (decl_type (Unsized (UArray UReal)))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment
+          (p_aos_mat_fail_func_uni_uni_idx1_flat__ (UArray UReal) ())
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str p_aos_mat_fail_func_uni_uni_idx1))
+               (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (pos__ UInt ())
+          ((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Var M))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Var N))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (Assignment
+                          (p_aos_mat_fail_func_uni_uni_idx1 UMatrix
+                           ((Single
+                             ((pattern (Var sym2__))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly)))))
+                            (Single
+                             ((pattern (Var sym1__))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly)))))))
+                          ((pattern
+                            (Indexed
+                             ((pattern
+                               (Var p_aos_mat_fail_func_uni_uni_idx1_flat__))
+                              (meta
+                               ((type_ (UArray UReal)) (loc <opaque>)
+                                (adlevel DataOnly))))
+                             ((Single
+                               ((pattern (Var pos__))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>)
+                                  (adlevel DataOnly))))))))
+                           (meta
+                            ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>))
+                       ((pattern
+                         (Assignment (pos__ UInt ())
+                          ((pattern
+                            (FunApp (StanLib Plus__ FnPlain SoA)
+                             (((pattern (Var pos__))
+                               (meta
+                                ((type_ UInt) (loc <opaque>)
+                                 (adlevel DataOnly))))
+                              ((pattern (Lit Int 1))
+                               (meta
+                                ((type_ UInt) (loc <opaque>)
+                                 (adlevel DataOnly)))))))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id p_aos_mat_fail_func_uni_uni_idx2)
+      (decl_type
+       (Sized
+        (SMatrix AoS
+         ((pattern (Var N))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var M))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable)
+          (decl_id p_aos_mat_fail_func_uni_uni_idx2_flat__)
+          (decl_type (Unsized (UArray UReal)))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment
+          (p_aos_mat_fail_func_uni_uni_idx2_flat__ (UArray UReal) ())
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str p_aos_mat_fail_func_uni_uni_idx2))
+               (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (pos__ UInt ())
+          ((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Var M))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Var N))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (Assignment
+                          (p_aos_mat_fail_func_uni_uni_idx2 UMatrix
+                           ((Single
+                             ((pattern (Var sym2__))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly)))))
+                            (Single
+                             ((pattern (Var sym1__))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly)))))))
+                          ((pattern
+                            (Indexed
+                             ((pattern
+                               (Var p_aos_mat_fail_func_uni_uni_idx2_flat__))
+                              (meta
+                               ((type_ (UArray UReal)) (loc <opaque>)
+                                (adlevel DataOnly))))
+                             ((Single
+                               ((pattern (Var pos__))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>)
+                                  (adlevel DataOnly))))))))
+                           (meta
+                            ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>))
+                       ((pattern
+                         (Assignment (pos__ UInt ())
+                          ((pattern
+                            (FunApp (StanLib Plus__ FnPlain SoA)
+                             (((pattern (Var pos__))
+                               (meta
+                                ((type_ UInt) (loc <opaque>)
+                                 (adlevel DataOnly))))
+                              ((pattern (Lit Int 1))
+                               (meta
+                                ((type_ UInt) (loc <opaque>)
+                                 (adlevel DataOnly)))))))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
      (NRFunApp (CompilerInternal FnWriteParam)
       (((pattern (Var alpha))
         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
@@ -3325,6 +3829,100 @@
                 (meta <opaque>)))))
             (meta <opaque>)))))
         (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar sym1__)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Var M))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (For (loopvar sym2__)
+              (lower
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (upper
+               ((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (body
+               ((pattern
+                 (Block
+                  (((pattern
+                     (NRFunApp (CompilerInternal FnWriteParam)
+                      (((pattern
+                         (Indexed
+                          ((pattern (Var p_aos_mat_fail_func_uni_uni_idx1))
+                           (meta
+                            ((type_ UMatrix) (loc <opaque>)
+                             (adlevel DataOnly))))
+                          ((Single
+                            ((pattern (Var sym2__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly)))))
+                           (Single
+                            ((pattern (Var sym1__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))))))
+                        (meta
+                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar sym1__)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Var M))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (For (loopvar sym2__)
+              (lower
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (upper
+               ((pattern (Var N))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (body
+               ((pattern
+                 (Block
+                  (((pattern
+                     (NRFunApp (CompilerInternal FnWriteParam)
+                      (((pattern
+                         (Indexed
+                          ((pattern (Var p_aos_mat_fail_func_uni_uni_idx2))
+                           (meta
+                            ((type_ UMatrix) (loc <opaque>)
+                             (adlevel DataOnly))))
+                          ((Single
+                            ((pattern (Var sym2__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly)))))
+                           (Single
+                            ((pattern (Var sym1__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))))))
+                        (meta
+                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
     (meta <opaque>))))
  (output_vars
   ((alpha
@@ -3453,6 +4051,34 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
    (p_aos_mat
+    ((out_unconstrained_st
+      (SMatrix AoS
+       ((pattern (Var N))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Var M))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_constrained_st
+      (SMatrix AoS
+       ((pattern (Var N))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Var M))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_block Parameters) (out_trans Identity)))
+   (p_aos_mat_fail_func_uni_uni_idx1
+    ((out_unconstrained_st
+      (SMatrix AoS
+       ((pattern (Var N))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Var M))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_constrained_st
+      (SMatrix AoS
+       ((pattern (Var N))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Var M))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_block Parameters) (out_trans Identity)))
+   (p_aos_mat_fail_func_uni_uni_idx2
     ((out_unconstrained_st
       (SMatrix AoS
        ((pattern (Var N))

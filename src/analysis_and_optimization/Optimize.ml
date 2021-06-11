@@ -1205,10 +1205,13 @@ let optimize_soa (mir : Program.Typed.t) =
   in
   let promote_stmt = Mem_pattern.promote_stmts promotable_types in
   let forced_logprob = List.map ~f:promote_stmt mir.log_prob in
+  let demote_exprs aos_exits =
+    Mir_utils.map_rec_expr (Mem_pattern.demote_expr_patterns aos_exits)
+  in
   let transform stmt =
     optimize_mem_pattern ~gen_variables:gen_aos_variables
-      ~update_expr:Mem_pattern.demote_exprs
-      ~update_stmt:Mem_pattern.demote_stmt_pattern ~initial_variables stmt
+      ~update_expr:demote_exprs ~update_stmt:Mem_pattern.demote_stmt_pattern
+      ~initial_variables stmt
   in
   let transform' s =
     match transform {pattern= SList s; meta= Location_span.empty} with

@@ -19,11 +19,14 @@ let fold_stmts ~take_expr ~take_stmt ~(init : 'c)
    * in *)
   let rec fold_stmt (state : 'c) (stmt : Stmt.Located.t) =
     Stmt.Fixed.Pattern.fold_left
-      ~f:(fun a e -> fold_expr ~take_expr ~init:(take_expr a e) e)
-      ~g:(fun a s -> fold_stmt (take_stmt a s) s)
+      ~f:(fun (a : 'c) (e : Expr.Typed.t) ->
+        fold_expr ~take_expr ~init:(take_expr a e) e )
+      ~g:(fun (a : 'c) (s : Stmt.Located.t) -> fold_stmt (take_stmt a s) s)
       ~init:state stmt.pattern
   in
-  List.fold ~f:(fun a s -> fold_stmt (take_stmt a s) s) ~init stmts
+  List.fold
+    ~f:(fun (a : 'c) (s : Stmt.Located.t) -> fold_stmt (take_stmt a s) s)
+    ~init stmts
 
 let rec num_expr_value (v : Expr.Typed.t) : (float * string) option =
   match v with

@@ -1,3 +1,9 @@
+functions {
+  int mask_fun(int i) {
+    return i;
+  }
+}
+
 data {
  int N;
  int M;
@@ -25,7 +31,9 @@ parameters {
   // Because used in sub-function that supports 
   // SoA but outer function does not
   matrix[N, M] p_aos_mat;
-
+  // Because used in single cell index from function
+  matrix[N, M] p_aos_mat_fail_func_uni_uni_idx1;
+  matrix[N, M] p_aos_mat_fail_func_uni_uni_idx2;
 }
 
 transformed parameters {
@@ -58,6 +66,7 @@ model {
   for (i in 1:N) {
     y ~ normal(multiply(dat_x[,i], p_aos_loop_vec_v_uni_idx[i]), 1.0);
     y ~ normal(multiply(dat_x[,i], p_aos_loop_mat_uni_uni_idx[i, i]), 1.0);
+    y ~ normal(multiply(dat_x[,i], transpose(multiply(p_aos_mat_fail_func_uni_uni_idx1, p_aos_mat_fail_func_uni_uni_idx2))[mask_fun(i), mask_fun(i)]), 1.0);
   }
 
 }
