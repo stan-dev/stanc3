@@ -77,6 +77,10 @@ let wrap_real r =
   { expr= RealNumeral (Float.to_string r)
   ; emeta= {loc= Location_span.empty; ad_level= DataOnly; type_= UReal} }
 
+let wrap_complex z =
+  { expr= RealNumeral (Float.to_string z)
+  ; emeta= {loc= Location_span.empty; ad_level= DataOnly; type_= UReal} }
+
 let wrap_row_vector l =
   { expr= RowVectorExpr l
   ; emeta= {loc= Location_span.empty; ad_level= DataOnly; type_= URowVector} }
@@ -87,6 +91,7 @@ let wrap_vector l =
 
 let gen_int m t = wrap_int (gen_num_int m t)
 let gen_real m t = wrap_real (gen_num_real m t)
+let gen_complex m t = wrap_complex (gen_num_real m t)
 
 let gen_row_vector m n t =
   let extract_var e =
@@ -279,6 +284,7 @@ let rec generate_value m st t =
   match st with
   | SizedType.SInt -> gen_int m t
   | SReal -> gen_real m t
+  | SComplex -> gen_complex m t
   | SVector e -> gen_vector m (unwrap_int_exn m e) t
   | SRowVector e -> gen_row_vector m (unwrap_int_exn m e) t
   | SMatrix (e1, e2) ->

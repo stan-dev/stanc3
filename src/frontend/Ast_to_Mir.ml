@@ -72,6 +72,7 @@ and trans_expr {Ast.expr; Ast.emeta} =
   | Variable {name; _} -> Var name |> ewrap
   | IntNumeral x -> Lit (Int, format_number x) |> ewrap
   | RealNumeral x -> Lit (Real, format_number x) |> ewrap
+  | ComplexNumeral x -> Lit (Complex, format_number x) |> ewrap
   | FunApp (fn_kind, {name; _}, args) | CondDistApp (fn_kind, {name; _}, args)
     ->
       FunApp (trans_fn_kind fn_kind name, trans_exprs args) |> ewrap
@@ -306,7 +307,7 @@ let param_size transform sizedtype =
     match st with
     | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen f t, d)
     | SVector d | SMatrix (d, _) -> SVector (f d)
-    | SInt | SReal | SRowVector _ ->
+    | SInt | SReal | SComplex | SRowVector _ ->
         raise_s
           [%message
             "Expecting SVector or SMatrix, got " (st : Expr.Typed.t SizedType.t)]
@@ -315,7 +316,7 @@ let param_size transform sizedtype =
     match st with
     | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen_mat f t, d)
     | SMatrix (d1, d2) -> SVector (f d1 d2)
-    | SInt | SReal | SRowVector _ | SVector _ ->
+    | SInt | SReal | SComplex | SRowVector _ | SVector _ ->
         raise_s
           [%message "Expecting SMatrix, got " (st : Expr.Typed.t SizedType.t)]
   in
@@ -426,7 +427,7 @@ let check_sizedtype name =
             n.meta.loc ]
   in
   let rec sizedtype = function
-    | SizedType.(SInt | SReal) as t -> ([], t)
+    | SizedType.(SInt | SReal | SComplex) as t -> ([], t)
     | SVector s ->
         let e = trans_expr s in
         (check s e, SizedType.SVector e)
@@ -714,7 +715,7 @@ let trans_sizedtype_decl declc tr name =
         ([decl; assign; check fn s var], var)
   in
   let rec go n = function
-    | SizedType.(SInt | SReal) as t -> ([], t)
+    | SizedType.(SInt | SReal | SComplex) as t -> ([], t)
     | SVector s ->
         let fn =
           match (declc.dconstrain, tr) with

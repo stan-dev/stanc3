@@ -103,6 +103,7 @@ rule token = parse
   | "void"                    { lexer_logger "void" ; Parser.VOID }
   | "int"                     { lexer_logger "int" ; Parser.INT }
   | "real"                    { lexer_logger "real" ; Parser.REAL }
+  | "complex"                 { lexer_logger "complex" ; Parser.COMPLEX }
   | "vector"                  { lexer_logger "vector" ; Parser.VECTOR }
   | "row_vector"              { lexer_logger "row_vector" ; Parser.ROWVECTOR }
   | "array"                   { lexer_logger "array" ; Parser.ARRAY }

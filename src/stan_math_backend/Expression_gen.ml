@@ -12,7 +12,7 @@ let functions_requiring_namespace =
     ; "asinh"; "atan"; "atanh"; "cbrt"; "ceil"; "cos"; "cosh"; "erf"; "erfc"
     ; "exp"; "exp2"; "expm1"; "fabs"; "floor"; "lgamma"; "log"; "log1p"; "log2"
     ; "log10"; "round"; "sin"; "sinh"; "sqrt"; "tan"; "tanh"; "tgamma"; "trunc"
-    ; "fdim"; "fmax"; "fmin"; "hypot"; "fma" ]
+    ; "fdim"; "fmax"; "fmin"; "hypot"; "fma"; ]
 
 let stan_namespace_qualify f =
   if Set.mem functions_requiring_namespace f then "stan::math::" ^ f else f
@@ -28,7 +28,9 @@ let is_stan_math f = ends_with "__" f || starts_with "stan::math::" f
 
 (* retun true if the tpe of the expression is integer or real *)
 let is_scalar e =
-  match Expr.Typed.type_of e with UInt | UReal -> true | _ -> false
+  match Expr.Typed.type_of e with
+  | UInt | UReal | UComplex -> true
+  | _ -> false
 
 let is_matrix e = Expr.Typed.type_of e = UMatrix
 let is_row_vector e = Expr.Typed.type_of e = URowVector
@@ -95,7 +97,7 @@ let%expect_test "promote_unsized" =
 
 let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   match ut with
-  | UnsizedType.UInt | UReal -> string ppf scalar
+  | UnsizedType.UInt | UReal | UComplex -> string ppf scalar
   | UArray t ->
       pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar (scalar, t)
   | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar
@@ -263,8 +265,8 @@ and read_data ut ppf es =
     match ut with
     | UnsizedType.UArray UInt -> "i"
     | UArray UReal -> "r"
-    | UInt | UReal | UVector | URowVector | UMatrix | UArray _ | UFun _
-     |UMathLibraryFunction ->
+    | UInt | UReal | UComplex | UVector | URowVector | UMatrix | UArray _
+     |UFun _ | UMathLibraryFunction ->
         raise_s [%message "Can't ReadData of " (ut : UnsizedType.t)]
   in
   pf ppf "context__.vals_%s(%a)" i_or_r pp_expr (List.hd_exn es)

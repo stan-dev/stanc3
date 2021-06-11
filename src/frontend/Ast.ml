@@ -33,6 +33,7 @@ type ('e, 'f) expression =
   | Variable of identifier
   | IntNumeral of string
   | RealNumeral of string
+  | ComplexNumeral of string
   | FunApp of 'f * identifier * 'e list
   | CondDistApp of 'f * identifier * 'e list
   (* GetLP is deprecated *)

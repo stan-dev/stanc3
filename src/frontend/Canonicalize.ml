@@ -114,7 +114,8 @@ let rec replace_deprecated_stmt
 let rec no_parens {expr; emeta} =
   match expr with
   | Paren e -> no_parens e
-  | Variable _ | IntNumeral _ | RealNumeral _ | GetLP | GetTarget ->
+  | Variable _ | IntNumeral _ | RealNumeral _ | ComplexNumeral _ | GetLP
+   |GetTarget ->
       {expr; emeta}
   | TernaryIf _ | BinOp _ | PrefixOp _ | PostfixOp _ ->
       {expr= map_expression keep_parens ident expr; emeta}

@@ -109,7 +109,7 @@ let data_read smeta (decl_id, st) =
       Expr.Typed.Meta.{var.meta with type_= flat_type}
   in
   match unsized with
-  | UInt | UReal ->
+  | UInt | UReal | UComplex ->
       [ Assignment
           ( (decl_id, unsized, [])
           , { Expr.Fixed.pattern=
@@ -217,7 +217,7 @@ let param_read smeta
     *)
     let rec constrain_get_dims st =
       match st with
-      | SizedType.SInt | SReal -> []
+      | SizedType.SInt | SReal | SComplex -> []
       | SVector d | SRowVector d -> [d]
       | SMatrix (_, dim2) -> [dim2]
       | SArray (t, dim) -> dim :: constrain_get_dims t

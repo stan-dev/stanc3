@@ -188,8 +188,8 @@ let reserved_keywords =
   ; "try"; "typedef"; "typeid"; "typename"; "union"; "unsigned"; "using"
   ; "virtual"; "void"; "volatile"; "wchar_t"; "while"; "xor"; "xor_eq"
   ; "functions"; "data"; "parameters"; "model"; "return"; "if"; "else"; "while"
-  ; "for"; "in"; "break"; "continue"; "void"; "int"; "real"; "vector"
-  ; "row_vector"; "matrix"; "ordered"; "positive_ordered"; "simplex"
+  ; "for"; "in"; "break"; "continue"; "void"; "int"; "real"; "complex"
+  ; "vector"; "row_vector"; "matrix"; "ordered"; "positive_ordered"; "simplex"
   ; "unit_vector"; "cholesky_factor_corr"; "cholesky_factor_cov"; "corr_matrix"
   ; "cov_matrix"; "print"; "reject"; "target"; "get_lp"; "profile" ]
 
@@ -646,7 +646,7 @@ let inferred_unsizedtype_of_indexed ~loc ut indices =
     | UMatrix, [`Multi; `Single] -> Validate.ok UnsizedType.UVector
     | UMatrix, _ :: _ :: _ :: _
      |(UVector | URowVector), _ :: _ :: _
-     |(UInt | UReal | UFun _ | UMathLibraryFunction), _ :: _ ->
+     |(UInt | UReal | UComplex | UFun _ | UMathLibraryFunction), _ :: _ ->
         Semantic_error.not_indexable loc ut (List.length indices)
         |> Validate.error
   in
@@ -772,6 +772,10 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       mk_typed_expression ~expr:(RealNumeral s) ~ad_level:DataOnly ~type_:UReal
         ~loc:emeta.loc
       |> Validate.ok
+  | ComplexNumeral s ->
+      mk_typed_expression ~expr:(ComplexNumeral s) ~ad_level:DataOnly
+        ~type_:UComplex ~loc:emeta.loc
+      |> Validate.ok
   | FunApp ((), id, es) ->
       semantic_check_funapp ~is_cond_dist:false id es cf emeta
   | CondDistApp ((), id, es) ->
@@ -871,6 +875,7 @@ let semantic_check_expression_of_scalar_or_type cf t e name =
 let rec semantic_check_sizedtype cf = function
   | SizedType.SInt -> Validate.ok SizedType.SInt
   | SReal -> Validate.ok SizedType.SReal
+  | SComplex -> Validate.ok SizedType.SComplex
   | SVector e ->
       semantic_check_expression_of_int_type cf e "Vector sizes"
       |> Validate.map ~f:(fun ue -> SizedType.SVector ue)

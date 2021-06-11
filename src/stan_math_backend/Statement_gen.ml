@@ -19,7 +19,7 @@ let rec contains_eigen (ut : UnsizedType.t) : bool =
   match ut with
   | UnsizedType.UArray t -> contains_eigen t
   | UMatrix | URowVector | UVector -> true
-  | UInt | UReal | UMathLibraryFunction | UFun _ -> false
+  | UInt | UReal | UComplex | UMathLibraryFunction | UFun _ -> false
 
 (*Fill only needs to happen for containers 
   * Note: This should probably be moved into its own function as data
@@ -53,6 +53,7 @@ let rec pp_initialize ppf (st, adtype) =
   match st with
   | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
   | SReal -> pf ppf "%s" init_nan
+  | SComplex -> pf ppf "%s" init_nan
   | SVector d | SRowVector d -> pf ppf "%a(%a)" pp_st (st, adtype) pp_expr d
   | SMatrix (d1, d2) ->
       pf ppf "%a(%a, %a)" pp_st (st, adtype) pp_expr d1 pp_expr d2
@@ -94,7 +95,7 @@ let pp_assign_data ppf
     match st with
     | SizedType.SVector _ | SRowVector _ | SMatrix _ ->
         pf ppf "@[<hov 2>%s__ = %a;@]@," decl_id pp_initialize (st, DataOnly)
-    | SInt | SReal | SArray _ ->
+    | SInt | SReal | SComplex | SArray _ ->
         pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_initialize (st, DataOnly)
   in
   let pp_placement_new ppf (decl_id, st) =
@@ -152,9 +153,9 @@ let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
   pf ppf " %a@]" pp_body body
 
 let rec integer_el_type = function
-  | SizedType.SReal | SVector _ | SMatrix _ | SRowVector _ -> false
-  | SInt -> true
+  | SizedType.SInt -> true
   | SArray (st, _) -> integer_el_type st
+  | _ -> false
 
 (* Print the private members of the model class
  *   Accounting for types that can be moved to OpenCL.

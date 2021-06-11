@@ -5,7 +5,8 @@ open Helpers
 (** Pattern and fixed-point of MIR expressions *)
 module Fixed = struct
   module Pattern = struct
-    type litType = Int | Real | Str [@@deriving sexp, hash, compare]
+    type litType = Int | Real | Complex | Str
+    [@@deriving sexp, hash, compare]
 
     type 'a t =
       | Var of string

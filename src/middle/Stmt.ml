@@ -280,7 +280,7 @@ module Helpers = struct
       Expr.Helpers.internal_funapp FnLength [e] emeta'
     in
     match Expr.Typed.type_of iteratee with
-    | UInt | UReal -> bodyfn iteratee
+    | UInt | UReal | UComplex -> bodyfn iteratee
     | UVector | URowVector -> mkfor (len iteratee) bodyfn iteratee smeta
     | UMatrix ->
         let emeta = iteratee.meta in
@@ -319,7 +319,8 @@ module Helpers = struct
 *)
   let rec for_eigen st bodyfn var smeta =
     match st with
-    | SizedType.SInt | SReal | SVector _ | SRowVector _ | SMatrix _ ->
+    | SizedType.SInt | SReal | SComplex | SVector _ | SRowVector _ | SMatrix _
+      ->
         bodyfn var
     | SArray (t, d) -> mkfor d (fun e -> for_eigen t bodyfn e smeta) var smeta
 
@@ -334,7 +335,7 @@ module Helpers = struct
 *)
   let rec for_scalar st bodyfn var smeta =
     match st with
-    | SizedType.SInt | SReal -> bodyfn var
+    | SizedType.SInt | SReal | SComplex -> bodyfn var
     | SVector d | SRowVector d -> mkfor d bodyfn var smeta
     | SMatrix (d1, d2) ->
         mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
