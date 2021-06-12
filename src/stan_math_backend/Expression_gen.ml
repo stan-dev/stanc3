@@ -51,8 +51,9 @@ let rec local_scalar ut ad =
 let minus_one e =
   { e with
     Expr.Fixed.pattern=
-      FunApp (StanLib (Operator.to_string Minus), [e; Expr.Helpers.loop_bottom])
-  }
+      FunApp
+        ( StanLib (Operator.to_string Minus, FnPlain)
+        , [e; Expr.Helpers.loop_bottom] ) }
 
 let is_single_index = function Index.Single _ -> true | _ -> false
 
@@ -118,30 +119,17 @@ let pp_unsizedtype_local ppf (adtype, ut) =
 let pp_expr_type ppf e =
   pp_unsizedtype_local ppf Expr.Typed.(adlevel_of e, type_of e)
 
-let user_dist_suffices = ["_lpdf"; "_lpmf"; "_log"]
+let suffix_args = function
+  | Fun_kind.FnRng -> ["base_rng__"]
+  | FnTarget -> ["lp__"; "lp_accum__"]
+  | FnPlain | FnLpdf _ -> []
 
-let ends_with_any suffices s =
-  List.exists ~f:(fun suffix -> String.is_suffix ~suffix s) suffices
-
-let is_user_dist s =
-  ends_with_any user_dist_suffices s
-  && not (ends_with_any ["_cdf_log"; "_ccdf_log"] s)
-
-let is_user_lp s = ends_with "_lp" s
-
-let suffix_args f =
-  if ends_with "_rng" f then ["base_rng__"]
-  else if ends_with "_lp" f then ["lp__"; "lp_accum__"]
-  else []
-
-let demangle_unnormalized_name udf f =
-  if f = "multiply_log" || f = "binomial_coefficient_log" then f
-  else if Utils.is_unnormalized_distribution f then
-    Utils.stdlib_distribution_name f ^ "<propto__>"
-  else if
-    Utils.is_distribution_name f || (udf && (is_user_dist f || is_user_lp f))
-  then f ^ "<false>"
-  else f
+let demangle_unnormalized_name udf suffix f =
+  match suffix with
+  | Fun_kind.FnLpdf true -> f ^ "<propto__>"
+  | FnLpdf false -> f ^ "<false>"
+  | FnTarget when udf -> f ^ "<propto__>"
+  | _ -> f
 
 let fn_renames =
   List.map
@@ -275,27 +263,27 @@ and read_data ut ppf es =
     match ut with
     | UnsizedType.UArray UInt -> "i"
     | UArray UReal -> "r"
-    | UInt | UReal | UVector | URowVector | UMatrix | UArray _
-     |UFun (_, _)
+    | UInt | UReal | UVector | URowVector | UMatrix | UArray _ | UFun _
      |UMathLibraryFunction ->
         raise_s [%message "Can't ReadData of " (ut : UnsizedType.t)]
   in
   pf ppf "context__.vals_%s(%a)" i_or_r pp_expr (List.hd_exn es)
 
 (* assumes everything well formed from parser checks *)
-and gen_fun_app ppf fname es =
+and gen_fun_app suffix ppf fname es =
   let default ppf es =
     let to_var s = Expr.{Fixed.pattern= Var s; meta= Typed.Meta.empty} in
     let convert_hof_vars = function
       | {Expr.Fixed.pattern= Var name; meta= {Expr.Typed.Meta.type_= UFun _; _}}
         as e ->
           { e with
-            pattern= FunApp (StanLib (name ^ functor_suffix_select fname), [])
+            pattern=
+              FunApp (StanLib (name ^ functor_suffix_select fname, FnPlain), [])
           }
       | e -> e
     in
     let converted_es = List.map ~f:convert_hof_vars es in
-    let extra = suffix_args fname |> List.map ~f:to_var in
+    let extra = suffix_args suffix |> List.map ~f:to_var in
     let is_hof_call = not (converted_es = es) in
     let msgs = "pstream__" |> to_var in
     (* Here, because these signatures are written in C++ such that they
@@ -325,7 +313,7 @@ and gen_fun_app ppf fname es =
           (fname, f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl)
       | ( true
         , x
-        , {pattern= FunApp ((UserDefined f | StanLib f), _); _}
+        , {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _)), _); _}
           :: grainsize :: container :: tl )
         when Stan_math_signatures.is_reduce_sum_fn x ->
           let chop_functor_suffix =
@@ -347,16 +335,41 @@ and gen_fun_app ppf fname es =
       | true, x, f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: tl
         when Stan_math_signatures.is_variadic_ode_fn x
              && String.is_suffix fname
-                  ~suffix:Stan_math_signatures.ode_tolerances_suffix ->
+                  ~suffix:Stan_math_signatures.ode_tolerances_suffix
+             && not (Stan_math_signatures.variadic_ode_adjoint_fn = x) ->
           ( fname
           , f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps :: msgs
             :: tl )
       | true, x, f :: y0 :: t0 :: ts :: tl
-        when Stan_math_signatures.is_variadic_ode_fn x ->
+        when Stan_math_signatures.is_variadic_ode_fn x
+             && not (Stan_math_signatures.variadic_ode_adjoint_fn = x) ->
           (fname, f :: y0 :: t0 :: ts :: msgs :: tl)
       | ( true
+        , x
+        , f
+          :: y0
+             :: t0
+                :: ts
+                   :: rel_tol
+                      :: abs_tol
+                         :: rel_tol_b
+                            :: abs_tol_b
+                               :: rel_tol_q
+                                  :: abs_tol_q
+                                     :: max_num_steps
+                                        :: num_checkpoints
+                                           :: interpolation_polynomial
+                                              :: solver_f :: solver_b :: tl )
+        when Stan_math_signatures.variadic_ode_adjoint_fn = x ->
+          ( fname
+          , f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: rel_tol_b :: abs_tol_b
+            :: rel_tol_q :: abs_tol_q :: max_num_steps :: num_checkpoints
+            :: interpolation_polynomial :: solver_f :: solver_b :: msgs :: tl
+          )
+      | ( true
         , "map_rect"
-        , {pattern= FunApp ((UserDefined f | StanLib f), _); _} :: tl ) ->
+        , {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _)), _); _} :: tl
+        ) ->
           let next_map_rect_id = Hashtbl.length map_rect_calls + 1 in
           Hashtbl.add_exn map_rect_calls ~key:next_map_rect_id ~data:f ;
           (strf "%s<%d, %s>" fname next_map_rect_id f, tl @ [msgs])
@@ -364,7 +377,7 @@ and gen_fun_app ppf fname es =
       | false, _, args -> (fname, args)
     in
     let fname =
-      stan_namespace_qualify fname |> demangle_unnormalized_name false
+      stan_namespace_qualify fname |> demangle_unnormalized_name false suffix
     in
     pp_call ppf (fname, pp_expr, args)
   in
@@ -381,11 +394,11 @@ and pp_constrain_funapp constrain_or_un_str constraint_flavor ppf = function
         constrain_or_un_str (list ~sep:comma pp_expr) (var :: args)
   | es -> raise_s [%message "Bad constraint " (es : Expr.Typed.t list)]
 
-and pp_user_defined_fun ppf (f, es) =
-  let extra_args = suffix_args f @ ["pstream__"] in
+and pp_user_defined_fun ppf (f, suffix, es) =
+  let extra_args = suffix_args suffix @ ["pstream__"] in
   let sep = if List.is_empty es then "" else ", " in
   pf ppf "@[<hov 2>%s(@,%a%s)@]"
-    (demangle_unnormalized_name true f)
+    (demangle_unnormalized_name true suffix f)
     (list ~sep:comma pp_expr) es
     (sep ^ String.concat ~sep:", " extra_args)
 
@@ -433,8 +446,8 @@ and pp_compiler_internal_fn ad ut f ppf es =
         (Fmt.option Fmt.string) constraint_suffix_opt pp_unsizedtype_local
         (UnsizedType.AutoDiffable, ut)
         (Fmt.option Fmt.string) jacobian_param_opt (list ~sep:comma pp_expr) es
-  | FnDeepCopy -> gen_fun_app ppf "stan::model::deep_copy" es
-  | _ -> gen_fun_app ppf (Internal_fun.to_string f) es
+  | FnDeepCopy -> gen_fun_app FnPlain ppf "stan::model::deep_copy" es
+  | _ -> gen_fun_app FnPlain ppf (Internal_fun.to_string f) es
 
 and pp_promoted ad ut ppf e =
   match e with
@@ -478,7 +491,7 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
   | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> pf ppf "%s" s
   | FunApp
-      ( StanLib op
+      ( StanLib (op, _)
       , [ { meta= {type_= URowVector; _}
           ; pattern= FunApp (CompilerInternal FnMakeRowVec, es) } ] )
     when Operator.(Some Transpose = of_string_opt op) ->
@@ -487,11 +500,12 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
       else
         pf ppf "(Eigen::Matrix<%s,-1,1>(%d) <<@ %a).finished()" st
           (List.length es) (list ~sep:comma pp_expr) es
-  | FunApp (StanLib f, es) -> gen_fun_app ppf f es
+  | FunApp (StanLib (f, suffix), es) -> gen_fun_app suffix ppf f es
   | FunApp (CompilerInternal f, es) ->
       pp_compiler_internal_fn meta.adlevel meta.type_ f ppf es
       (* stan_namespace_qualify?  *)
-  | FunApp (UserDefined f, es) -> pp_user_defined_fun ppf (f, es)
+  | FunApp (UserDefined (f, suffix), es) ->
+      pp_user_defined_fun ppf (f, suffix, es)
   | EAnd (e1, e2) -> pp_logical_op ppf "&&" e1 e2
   | EOr (e1, e2) -> pp_logical_op ppf "||" e1 e2
   | TernaryIf (ec, et, ef) ->
@@ -544,19 +558,20 @@ let%expect_test "pp_expr4" =
   [%expect {| 112 |}]
 
 let%expect_test "pp_expr5" =
-  printf "%s" (pp_unlocated (FunApp (StanLib "pi", []))) ;
+  printf "%s" (pp_unlocated (FunApp (StanLib ("pi", FnPlain), []))) ;
   [%expect {| stan::math::pi() |}]
 
 let%expect_test "pp_expr6" =
   printf "%s"
-    (pp_unlocated (FunApp (StanLib "sqrt", [dummy_locate (Lit (Int, "123"))]))) ;
+    (pp_unlocated
+       (FunApp (StanLib ("sqrt", FnPlain), [dummy_locate (Lit (Int, "123"))]))) ;
   [%expect {| stan::math::sqrt(123) |}]
 
 let%expect_test "pp_expr7" =
   printf "%s"
     (pp_unlocated
        (FunApp
-          ( StanLib "atan"
+          ( StanLib ("atan", FnPlain)
           , [dummy_locate (Lit (Int, "123")); dummy_locate (Lit (Real, "1.2"))]
           ))) ;
   [%expect {| stan::math::atan(123, 1.2) |}]
@@ -577,5 +592,7 @@ let%expect_test "pp_expr10" =
 let%expect_test "pp_expr11" =
   printf "%s"
     (pp_unlocated
-       (FunApp (UserDefined "poisson_rng", [dummy_locate (Lit (Int, "123"))]))) ;
+       (FunApp
+          ( UserDefined ("poisson_rng", FnRng)
+          , [dummy_locate (Lit (Int, "123"))] ))) ;
   [%expect {| poisson_rng(123, base_rng__, pstream__) |}]

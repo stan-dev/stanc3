@@ -1253,6 +1253,12 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
             to_matrix_cl(rvalue(X_d_a, "X_d_a", index_uni(1))), alpha,
             to_matrix_cl(beta), sigma));
       }
+      X_d_opencl__.wait_for_read_write_events();
+      X_d_td_opencl__.wait_for_read_write_events();
+      y_v_d_opencl__.wait_for_read_write_events();
+      y_v_d_td_opencl__.wait_for_read_write_events();
+      y_vi_d_opencl__.wait_for_read_write_events();
+      y_vi_d_td_opencl__.wait_for_read_write_events();
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -1274,6 +1280,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     using local_scalar_t__ = double;
     vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    static constexpr bool propto__ = true;
+    (void) propto__;
     double lp__ = 0.0;
     (void) lp__;  // dummy to suppress unused var warning
     int current_statement__ = 0; 

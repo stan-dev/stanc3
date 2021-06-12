@@ -234,17 +234,21 @@ let rec inline_function_expression propto adt fim
       match kind with
       | CompilerInternal _ ->
           (d_list, s_list, {e with pattern= FunApp (kind, es)})
-      | UserDefined fname | StanLib fname -> (
-          let fname =
-            if propto then fname
-            else Middle.Utils.stdlib_distribution_name fname
+      | UserDefined (fname, suffix) | StanLib (fname, suffix) -> (
+          let suffix, fname' =
+            match suffix with
+            | FnLpdf propto' when propto' && propto ->
+                ( Fun_kind.FnLpdf true
+                , Utils.with_unnormalized_suffix fname |> Option.value_exn )
+            | FnLpdf _ -> (Fun_kind.FnLpdf false, fname)
+            | _ -> (suffix, fname)
           in
-          match Map.find fim fname with
+          match Map.find fim fname' with
           | None ->
               let fun_kind =
                 match kind with
-                | Fun_kind.UserDefined _ -> Fun_kind.UserDefined fname
-                | _ -> StanLib fname
+                | Fun_kind.UserDefined _ -> Fun_kind.UserDefined (fname, suffix)
+                | _ -> StanLib (fname, suffix)
               in
               (d_list, s_list, {e with pattern= FunApp (fun_kind, es)})
           | Some (rt, args, b) ->
@@ -379,7 +383,7 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.({pattern; meta}) =
             slist_concat_no_loc (d_list @ s_list)
               ( match kind with
               | CompilerInternal _ -> NRFunApp (kind, es)
-              | UserDefined s | StanLib s -> (
+              | UserDefined (s, _) | StanLib (s, _) -> (
                 match Map.find fim s with
                 | None -> NRFunApp (kind, es)
                 | Some (_, args, b) ->
@@ -583,7 +587,9 @@ let unroll_loop_one_step_statement _ =
         else
           IfElse
             ( Expr.Fixed.
-                {lower with pattern= FunApp (StanLib "Geq__", [upper; lower])}
+                { lower with
+                  pattern= FunApp (StanLib ("Geq__", FnPlain), [upper; lower])
+                }
             , { pattern=
                   (let body_unrolled =
                      subst_args_stmt [loopvar] [lower]
@@ -599,7 +605,7 @@ let unroll_loop_one_step_statement _ =
                                { lower with
                                  pattern=
                                    FunApp
-                                     ( StanLib "Plus__"
+                                     ( StanLib ("Plus__", FnPlain)
                                      , [lower; Expr.Helpers.loop_bottom] ) } }
                      ; meta= Location_span.empty }
                    in
@@ -683,7 +689,7 @@ and accum_any pred b e = b || expr_any pred e
 
 let can_side_effect_top_expr (e : Expr.Typed.t) =
   match e.pattern with
-  | FunApp ((UserDefined f | StanLib f), _) -> String.suffix f 3 = "_lp"
+  | FunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget)), _) -> true
   | FunApp
       ( CompilerInternal
           ( FnReadParam _ | FnReadData | FnWriteParam | FnConstrain _
@@ -697,7 +703,7 @@ let cannot_duplicate_expr (e : Expr.Typed.t) =
   let pred e =
     can_side_effect_top_expr e
     || ( match e.pattern with
-       | FunApp ((UserDefined f | StanLib f), _) -> String.suffix f 4 = "_rng"
+       | FunApp ((UserDefined (_, FnRng) | StanLib (_, FnRng)), _) -> true
        | _ -> false )
     || (preserve_stability && UnsizedType.is_autodiffable e.meta.type_)
   in

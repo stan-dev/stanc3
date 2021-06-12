@@ -8,11 +8,11 @@ data {
 }
 transformed data {
   real transformed_data_real;
-  transformed_data_real = std_normal_cdf(d_int);
-  transformed_data_real = std_normal_cdf(d_real);
-  transformed_data_real = std_normal_cdf(d_real_array);
-  transformed_data_real = std_normal_cdf(d_vector);
-  transformed_data_real = std_normal_cdf(d_row_vector);
+  transformed_data_real = std_normal_lcdf(d_int);
+  transformed_data_real = std_normal_lcdf(d_real);
+  transformed_data_real = std_normal_lcdf(d_real_array);
+  transformed_data_real = std_normal_lcdf(d_vector);
+  transformed_data_real = std_normal_lcdf(d_row_vector);
 }
 parameters {
   real p_real;
@@ -23,15 +23,15 @@ parameters {
 }
 transformed parameters {
   real transformed_param_real;
-  transformed_param_real = std_normal_cdf(d_int);
-  transformed_param_real = std_normal_cdf(d_real);
-  transformed_param_real = std_normal_cdf(d_real_array);
-  transformed_param_real = std_normal_cdf(d_vector);
-  transformed_param_real = std_normal_cdf(d_row_vector);
-  transformed_param_real = std_normal_cdf(p_real);
-  transformed_param_real = std_normal_cdf(p_real_array);
-  transformed_param_real = std_normal_cdf(p_vector);
-  transformed_param_real = std_normal_cdf(p_row_vector);
+  transformed_param_real = std_normal_lcdf(d_int);
+  transformed_param_real = std_normal_lcdf(d_real);
+  transformed_param_real = std_normal_lcdf(d_real_array);
+  transformed_param_real = std_normal_lcdf(d_vector);
+  transformed_param_real = std_normal_lcdf(d_row_vector);
+  transformed_param_real = std_normal_lcdf(p_real);
+  transformed_param_real = std_normal_lcdf(p_real_array);
+  transformed_param_real = std_normal_lcdf(p_vector);
+  transformed_param_real = std_normal_lcdf(p_row_vector);
 }
 model {
   y_p ~ normal(0, 1);

@@ -68,8 +68,8 @@ let block_info name ppf block =
 let rec get_function_calls_expr (funs, distrs) expr =
   let acc =
     match expr.expr with
-    | FunApp (StanLib, f, _) -> (SSet.add funs f.name, distrs)
-    | CondDistApp (StanLib, f, _) -> (funs, SSet.add distrs f.name)
+    | FunApp (StanLib _, f, _) -> (SSet.add funs f.name, distrs)
+    | CondDistApp (StanLib _, f, _) -> (funs, SSet.add distrs f.name)
     | _ -> (funs, distrs)
   in
   fold_expression get_function_calls_expr (fun acc _ -> acc) acc expr.expr
@@ -77,7 +77,7 @@ let rec get_function_calls_expr (funs, distrs) expr =
 let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
   let acc =
     match stmt.stmt with
-    | NRFunApp (StanLib, f, _) -> (SSet.add funs f.name, distrs)
+    | NRFunApp (StanLib _, f, _) -> (SSet.add funs f.name, distrs)
     | Tilde {distribution; _} ->
         let possible_names =
           List.map ~f:(( ^ ) distribution.name) Utils.distribution_suffices

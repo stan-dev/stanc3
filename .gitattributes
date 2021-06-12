@@ -1,3 +1,4 @@
 # Set the default behavior, in case people don't have core.autocrlf set.
 # This makes sure all text files are automatically converted to lf line endings.
 * text eol=lf
+*.png binary

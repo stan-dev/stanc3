@@ -224,6 +224,7 @@ let math_fn_translations = function
   | FnValidateSize -> Some ("validate_non_negative_index", [])
   | FnValidateSizeSimplex -> Some ("validate_positive_index", [])
   | FnValidateSizeUnitVector -> Some ("validate_unit_vector_index", [])
+  | FnReadWriteEventsOpenCL x -> Some (x ^ ".wait_for_read_write_events", [])
   | _ -> None
 
 let trans_math_fn fname =
@@ -309,10 +310,10 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
       let fname, extra_args = trans_math_fn fname in
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)
         (extra_args @ args)
-  | NRFunApp (StanLib fname, args) ->
+  | NRFunApp (StanLib (fname, _), args) ->
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr) args
-  | NRFunApp (UserDefined fname, args) ->
-      pf ppf "%a;" pp_user_defined_fun (fname, args)
+  | NRFunApp (UserDefined (fname, suffix), args) ->
+      pf ppf "%a;" pp_user_defined_fun (fname, suffix, args)
   | Break -> string ppf "break;"
   | Continue -> string ppf "continue;"
   | Return e -> pf ppf "@[<hov 4>return %a;@]" (option pp_expr) e
