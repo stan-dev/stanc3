@@ -4,7 +4,7 @@ transformed data {
   y = pi();
 }
 model {
-
+  
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format good_cov.stan
@@ -49,24 +49,24 @@ transformed data {
   z = binomial_coefficient_log(x, y);
 }
 model {
-
+  
 }
 
 Warning in 'good_funs.stan', line 7, column 6: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
 Warning in 'good_funs.stan', line 9, column 6: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
   $ ../../../../../install/default/bin/stanc --auto-format good_intercept_var.stan
 data {
-  int<lower=0> m1;
+  int<lower=0> m1; /* make sure didn't mess up spacing */
   int<lower=0> m2;
   int<lower=0> m3;
   int<lower=0> m4;
 }
 transformed data {
   int intercept;
-  intercept = 5;
+  intercept = 5; /* failed in 1.0.2 */
 }
 model {
-
+  
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format good_local_var_array_size.stan
@@ -85,7 +85,7 @@ model {
   y ~ normal(0, 1);
   
   for (i in 1 : 10) {
-    array[i] real x;
+    array[i] real x; /* should allow i here. */
     for (j in 1 : i) 
       x[j] = j * j;
   }
@@ -99,11 +99,11 @@ model {
   }
   
   for (i in 1 : 5) {
-    array[M[i]] real x;
+    array[M[i]] real x; /* data */
   }
   
   for (i in 1 : 2) {
-    array[N[i]] real x;
+    array[N[i]] real x; /* tdata */
   }
 }
 
@@ -136,7 +136,7 @@ transformed data {
   y = y .* y;
 }
 model {
-
+  
 }
 
   $ ../../../../../install/default/bin/stanc --auto-format good_trunc.stan
@@ -158,8 +158,9 @@ transformed data {
   real b;
   b = 1.0;
   b = a + b + 1.0;
+  
   {
-    real b_local;
+    real b_local; /* init to 0 locally */
     b = a + b + b_local;
     b_local = a + b + b_local;
   }
@@ -171,6 +172,7 @@ transformed parameters {
   real d;
   d = 1.0;
   d = a + b + c + d;
+  
   {
     real d_local;
     d = a + b + c + d + d_local;
@@ -181,6 +183,7 @@ model {
   real e_local;
   e_local = 1.0;
   e_local = a + b + c + d + e_local;
+  
   {
     real f_local;
     f_local = 1.0;
@@ -192,6 +195,7 @@ generated quantities {
   real g;
   g = 1.0;
   g = a + b + c + d + g;
+  
   {
     real g_local;
     g_local = 1.0;
@@ -481,7 +485,7 @@ generated quantities {
 
   $ ../../../../../install/default/bin/stanc --auto-format reject_model.stan
 data {
-
+  
 }
 parameters {
   array[2] real<lower=-10, upper=10> y;

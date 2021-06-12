@@ -191,13 +191,15 @@ let pp_list_of pp (loc_of : 'a -> Middle.Location_span.t) ppf
     match more with
     | next :: rest ->
         pp ppf expr ;
+        let prev_file = (loc_of expr).end_loc.filename in
         let prev_line = (loc_of expr).end_loc.line_num in
         let next_loc = (loc_of next).begin_loc in
         pp_maybe_space true (get_comments_until_comma next_loc) ;
         let rec comment_after_comma_on_the_same_line = function
-          | ((_, {Middle.Location_span.begin_loc= {line_num; _}; _}) as c)
+          | ( (_, {Middle.Location_span.begin_loc= {filename; line_num; _}; _})
+            as c )
             :: ls
-            when line_num <= prev_line ->
+            when line_num = prev_line && prev_file = filename ->
               Fmt.sp ppf () ;
               pp_comment ppf c ;
               comment_after_comma_on_the_same_line ls
@@ -533,7 +535,8 @@ and pp_args ppf (at, ut, id) =
 and pp_list_of_statements ppf (l, xloc) =
   let rec pp_head ppf ls =
     match ls with
-    | ({smeta= ({loc= {begin_loc; end_loc}} : located_meta); _} as s) :: l ->
+    | ({smeta= ({loc= {end_loc; _}} : located_meta); _} as s) :: l ->
+        let begin_loc = Ast.get_first_loc s in
         pp_spacing None (Some begin_loc) ppf (get_comments begin_loc) ;
         pp_statement ppf s ;
         pp_tail end_loc ppf l
@@ -541,7 +544,8 @@ and pp_list_of_statements ppf (l, xloc) =
   and pp_tail loc ppf ls =
     skip_comments loc ;
     match ls with
-    | ({smeta= ({loc= {begin_loc; end_loc}} : located_meta); _} as s) :: l ->
+    | ({smeta= ({loc= {end_loc; _}} : located_meta); _} as s) :: l ->
+        let begin_loc = Ast.get_first_loc s in
         pp_spacing (Some loc) (Some begin_loc) ppf (get_comments begin_loc) ;
         pp_statement ppf s ;
         pp_tail end_loc ppf l

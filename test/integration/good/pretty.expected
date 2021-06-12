@@ -25,7 +25,7 @@ functions {
   }
 }
 data {
-
+  
 }
 transformed data {
   vector[2] x;
@@ -47,16 +47,16 @@ transformed parameters {
   vector[2] theta_p;
   
   theta_p = algebra_solver(algebra_system, x, y, dat, dat_int);
-  theta_p = algebra_solver(algebra_system, x, y, dat, dat_int, 0.01, 0.01,
-                           10);
+  theta_p = algebra_solver(algebra_system, x, y, dat, dat_int, 0.01, 
+                           0.01, 10);
   
   theta_p = algebra_solver(algebra_system, x, y_p, dat, dat_int);
-  theta_p = algebra_solver(algebra_system, x, y_p, dat, dat_int, 0.01, 0.01,
-                           10);
+  theta_p = algebra_solver(algebra_system, x, y_p, dat, dat_int, 0.01, 
+                           0.01, 10);
   
   theta_p = algebra_solver(algebra_system, x_p, y, dat, dat_int);
-  theta_p = algebra_solver(algebra_system, x_p, y, dat, dat_int, 0.01, 0.01,
-                           10);
+  theta_p = algebra_solver(algebra_system, x_p, y, dat, dat_int, 0.01, 
+                           0.01, 10);
   
   theta_p = algebra_solver(algebra_system, x_p, y_p, dat, dat_int);
   theta_p = algebra_solver(algebra_system, x_p, y_p, dat, dat_int, 0.01,
@@ -80,7 +80,7 @@ functions {
   }
 }
 data {
-
+  
 }
 transformed data {
   vector[2] x;
@@ -103,16 +103,16 @@ transformed parameters {
   vector[2] theta_p;
   
   theta_p = algebra_solver_newton(algebra_system, x, y, dat, dat_int);
-  theta_p = algebra_solver_newton(algebra_system, x, y, dat, dat_int, 0.01,
-                                  0.01, 10);
+  theta_p = algebra_solver_newton(algebra_system, x, y, dat, dat_int, 
+                                  0.01, 0.01, 10);
   
   theta_p = algebra_solver_newton(algebra_system, x, y_p, dat, dat_int);
-  theta_p = algebra_solver_newton(algebra_system, x, y_p, dat, dat_int, 0.01,
-                                  0.01, 10);
+  theta_p = algebra_solver_newton(algebra_system, x, y_p, dat, dat_int, 
+                                  0.01, 0.01, 10);
   
   theta_p = algebra_solver_newton(algebra_system, x_p, y, dat, dat_int);
-  theta_p = algebra_solver_newton(algebra_system, x_p, y, dat, dat_int, 0.01,
-                                  0.01, 10);
+  theta_p = algebra_solver_newton(algebra_system, x_p, y, dat, dat_int, 
+                                  0.01, 0.01, 10);
   
   theta_p = algebra_solver_newton(algebra_system, x_p, y_p, dat, dat_int);
   theta_p = algebra_solver_newton(algebra_system, x_p, y_p, dat, dat_int,
@@ -514,7 +514,7 @@ transformed data {
   tm3 = m3;
 }
 model {
-
+  
 }
 
   $ ../../../../install/default/bin/stanc --auto-format assignments_double_var.stan
@@ -829,7 +829,7 @@ transformed parameters {
   tm3 = m3;
 }
 model {
-
+  
 }
 
   $ ../../../../install/default/bin/stanc --auto-format assignments_var.stan
@@ -1144,7 +1144,7 @@ transformed parameters {
   tm3 = m3;
 }
 model {
-
+  
 }
 
   $ ../../../../install/default/bin/stanc --auto-format bernoulli_logit_glm_old_performance.stan
@@ -1218,22 +1218,27 @@ the division as
   j * 1.0 / M
 If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format break-continue.stan
+/* test right value passed through for, while and embedded */
 functions {
   int foo(int a) {
+    /* direct while */
     while (1) break;
     while (0) continue;
     
+    /* direct for */
     for (i in 1 : 10) 
       break;
     for (i in 1 : 10) 
       continue;
     
+    /* in statement seq */
     while (1) {
       int b;
       b = 5;
       break;
     }
     
+    /* if, else if, else body */
     while (1) {
       if (0) 
         break;
@@ -1243,13 +1248,16 @@ functions {
         break;
     }
     
+    /* nested while */
     while (1) while (0) break;
     
+    /* nested for */
     while (1) {
       for (i in 1 : 10) 
         break;
     }
     
+    /* nested foreach (array) */
     while (1) {
       array[2, 3] int vs;
       int z;
@@ -1270,6 +1278,7 @@ functions {
       }
     }
     
+    /* nested foreach (matrix) */
     while (1) {
       real z;
       matrix[2, 3] vs;
@@ -1283,6 +1292,7 @@ functions {
       }
     }
     
+    /* nested foreach (vector) */
     while (1) {
       real z;
       vector[2] vs;
@@ -1296,6 +1306,7 @@ functions {
       }
     }
     
+    /* nested foreach (rowvector) */
     while (1) {
       real z;
       row_vector[2] vs;
@@ -1309,9 +1320,11 @@ functions {
       }
     }
     
+    /* nested block */
     while (1) {
       int b;
       b = 5;
+      
       {
         int c;
         c = 6;
@@ -1319,6 +1332,7 @@ functions {
       }
     }
     
+    /* nested loop exit */
     while (1) {
       while (1) {
         
@@ -1351,7 +1365,7 @@ transformed parameters {
   while (1) continue;
 }
 model {
-
+  
 }
 generated quantities {
   real u;
@@ -1890,6 +1904,7 @@ generated quantities {
   $ ../../../../install/default/bin/stanc --auto-format declare-define-gq-local-rng.stan
 transformed data {
   int a = categorical_rng(rep_vector(0.1, 10));
+  
   {
     int b = categorical_rng(rep_vector(0.1, 10));
   }
@@ -2281,7 +2296,7 @@ transformed parameters {
   print("tp_cholesky_factor_cov_ar = ", tp_cholesky_factor_cov_ar);
 }
 model {
-
+  
 }
 generated quantities {
   corr_matrix[d] gq_corr_matrix1 = d_corr_matrix;
@@ -2318,6 +2333,8 @@ generated quantities {
 }
 
   $ ../../../../install/default/bin/stanc --auto-format declare-define-var-constrained-vector.stan
+/* no constrained types in functions or local variables */
+
 data {
   int d;
   simplex[d] d_simplex;
@@ -2424,7 +2441,7 @@ transformed parameters {
   print("tp_positive_ordered_ar6 = ", tp_positive_ordered_ar6);
 }
 model {
-
+  
 }
 generated quantities {
   simplex[d] gq_simplex1 = d_simplex;
@@ -2482,12 +2499,12 @@ data {
 }
 transformed data {
   int td0 = 3;
-  real td1 = 123;
-  real td2 = 2.0;
+  real td1 = 123; /* real_d = int_d */
+  real td2 = 2.0; /* real_d = real_d */
   real td3 = td0;
   real td4 = td3;
   array[3] real td_a1;
-  array[3] real td_a2 = td_a1;
+  array[3] real td_a2 = td_a1; /* real_arr_d = real_arr_d */
   real td5 = td_a2[1];
   array[3, 3] real td_a3 = d;
   array[3] real td_a4 = td_a3[2];
@@ -2498,9 +2515,10 @@ transformed data {
   print("td5: ", td5);
   print("td_a2: ", td_a2);
   print("td_a4: ", td_a4);
+  
   {
-    real ltd1 = 1;
-    real ltd2 = 2.0;
+    real ltd1 = 1; /* real_d = int_d  */
+    real ltd2 = 2.0; /* real_d = real_d */
     real ltd3 = td1;
     array[td0] real ltd4;
     array[td0] real ltd5 = ltd4;
@@ -2527,9 +2545,9 @@ transformed parameters {
   array[3] real p_tp_a1 = d_tp_a1;
   array[3] real p_tp_a2 = d_tp_a3[3];
   
-  real tp1 = 1;
-  real tp2 = 2.0;
-  real tp3 = tp2;
+  real tp1 = 1; /* real_p = int_d  */
+  real tp2 = 2.0; /* real_p = real_d */
+  real tp3 = tp2; /* real_p = real_p */
   array[td0] real tp4;
   array[td0] real tp5 = tp4;
   
@@ -2552,10 +2570,11 @@ transformed parameters {
   print("tp5: ", tp5);
   tp1 = foo(tp3);
   print("tp1: ", tp1);
+  
   {
-    real lp1 = td0;
-    real lp2 = 9.0;
-    real lp3 = tp2;
+    real lp1 = td0; /* real_p = int_d  */
+    real lp2 = 9.0; /* real_p = real_d */
+    real lp3 = tp2; /* real_p = real_p */
     array[td0] real lp4;
     array[td0] real lp5 = lp4;
     print("lp1: ", lp1);
@@ -2565,9 +2584,10 @@ transformed parameters {
   }
 }
 model {
-  real lm1 = 1;
-  real lm2 = 2.0;
-  real lm3 = tp2;
+  /* local variables */
+  real lm1 = 1; /* real_p = int_d  */
+  real lm2 = 2.0; /* real_p = real_d */
+  real lm3 = tp2; /* real_p = real_p */
   theta ~ beta(1, 1);
   for (n in 1 : N) 
     y[n] ~ bernoulli(theta);
@@ -2597,9 +2617,10 @@ generated quantities {
   print("gq_p_tp4 = ", gq_p_tp4);
   print("gq_p_tp_a1 = ", gq_p_tp_a1);
   print("gq_p_tp_a2 = ", gq_p_tp_a2);
+  
   {
-    real lgq1 = 1;
-    real lgq2 = 2.0;
+    real lgq1 = 1; /* real_d = int_d */
+    real lgq2 = 2.0; /* real_d = real_d */
     real lqd2a = lgq2;
     array[td0] real lgq3;
     real lgq3a = lgq3[1];
@@ -2645,12 +2666,14 @@ transformed data {
 }
 transformed parameters {
   real p1;
+  
   {
     int lp1 = 1;
     print("transformed param ", lp1);
   }
 }
 model {
+  /* local variables */
   int lm1 = 4;
   print("local int ", lm1);
   print(foo());
@@ -2659,6 +2682,7 @@ generated quantities {
   int gq1 = 1;
   print("gq1 ", gq1);
   gq1 = 2;
+  
   {
     int lgq1 = 2;
     print("gq2 ", lgq1);
@@ -2702,6 +2726,7 @@ transformed parameters {
   print("tp_m4 = ", tp_m4);
   print("tp_m5 = ", tp_m5);
   print("tp_m_ar6 = ", tp_m_ar6);
+  
   {
     matrix[d, d] local_m1 = d_m;
     matrix[d, d] local_m2 = d_m_ar[1];
@@ -2718,7 +2743,7 @@ transformed parameters {
   }
 }
 model {
-
+  
 }
 generated quantities {
   matrix[d, d] gq_m1 = d_m;
@@ -2741,7 +2766,7 @@ data {
   vector[7] b0;
 }
 transformed data {
-  vector[8] td_b2 = b0;
+  vector[8] td_b2 = b0; /* can't check dimension sizes at compile time */
 }
 parameters {
   real y;
@@ -2892,10 +2917,10 @@ transformed parameters {
   }
 }
 model {
-
+  
 }
 generated quantities {
-
+  
 }
 
   $ ../../../../install/default/bin/stanc --auto-format deprecate-increment-log-prob.stan
@@ -2912,6 +2937,7 @@ parameters {
   array[8, 9] real h;
 }
 model {
+  /*  increment_log_prob(-e^2 / 2); */
   increment_log_prob(a);
   increment_log_prob(b);
   increment_log_prob(b);
@@ -2952,7 +2978,7 @@ model {
   foo = get_lp();
   foo = multiply_log(1, 1);
   foo = binomial_coefficient_log(1, 1);
-  
+  /* deprecated distribution functions versions */
   foo = normal_log(0.5, 0, 1);
   foo = normal_cdf_log(0.5, 0, 1);
   foo = normal_ccdf_log(0.5, 0, 1);
@@ -3042,7 +3068,7 @@ functions {
   }
 }
 model {
-
+  
 }
 
   $ ../../../../install/default/bin/stanc --auto-format fun_args_0_lp.stan
@@ -3052,7 +3078,7 @@ functions {
   }
 }
 model {
-
+  
 }
 
   $ ../../../../install/default/bin/stanc --auto-format fun_args_1.stan
@@ -3062,7 +3088,7 @@ functions {
   }
 }
 model {
-
+  
 }
 
   $ ../../../../install/default/bin/stanc --auto-format fun_args_4.stan
@@ -3072,7 +3098,7 @@ functions {
   }
 }
 model {
-
+  
 }
 
   $ ../../../../install/default/bin/stanc --auto-format fun_args_4_lp.stan
@@ -3082,7 +3108,7 @@ functions {
   }
 }
 model {
-
+  
 }
 
   $ ../../../../install/default/bin/stanc --auto-format fun_args_5.stan
@@ -3092,7 +3118,7 @@ functions {
   }
 }
 model {
-
+  
 }
 
   $ ../../../../install/default/bin/stanc --auto-format fun_args_5_lp.stan
@@ -3102,7 +3128,7 @@ functions {
   }
 }
 model {
-
+  
 }
 
   $ ../../../../install/default/bin/stanc --auto-format fun_args_int0.stan
@@ -3112,7 +3138,7 @@ functions {
   }
 }
 model {
-
+  
 }
 
   $ ../../../../install/default/bin/stanc --auto-format fun_args_int_1_int.stan
@@ -3122,7 +3148,7 @@ functions {
   }
 }
 model {
-
+  
 }
 
   $ ../../../../install/default/bin/stanc --auto-format fun_args_int_1_real.stan
@@ -3132,10 +3158,13 @@ functions {
   }
 }
 model {
-
+  
 }
 
   $ ../../../../install/default/bin/stanc --auto-format fun_as_lhs_sampling.stan
+/* programs to tickle bug 2612 */
+/* sampling stmts w/ function calls */
+
 transformed data {
   matrix[2, 2] M = rep_matrix(0, 2, 2);
 }
@@ -3144,9 +3173,10 @@ model {
 }
 
   $ ../../../../install/default/bin/stanc --auto-format fun_as_stmt.stan
+/* programs to tickle bug 2612 */
 functions {
   void foo_lp() {
-    
+    /* does nothing */
   }
 }
 model {
@@ -3154,6 +3184,10 @@ model {
 }
 
   $ ../../../../install/default/bin/stanc --auto-format fun_log_forward_decl.stan
+/**
+ * this one's for issue #1768, where there was a duplicate fun decl
+ * because of the <false> instantiation of propto
+ */
 functions {
   real n_log(real y);
   
@@ -3166,7 +3200,7 @@ parameters {
 }
 model {
   mu ~ n();
-  increment_log_prob(n_log(mu));
+  increment_log_prob(n_log(mu)); /* check both instantiations */
 }
 
 Warning in 'fun_log_forward_decl.stan', line 17, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
@@ -3213,6 +3247,10 @@ model {
 }
 
   $ ../../../../install/default/bin/stanc --auto-format functions-good1.stan
+/**
+ * Tests for 0, 1, 2 arity functions void and non-void returns
+ * and calls.
+ */
 functions {
   real foo0() {
     return 0.0;
@@ -3263,7 +3301,7 @@ transformed data {
   real a;
   real b;
   real c;
-  
+  /* double, int arguments */
   a = foo0();
   b = foo1(N[6]);
   c = foo2(a, b);
@@ -3293,7 +3331,7 @@ transformed parameters {
   real phi1;
   real phi2;
   real phi3;
-  
+  /* var, double and mixed instantiations */
   phi1 = foo0();
   phi2 = foo1(1);
   phi2 = foo1(2.0);
@@ -3311,6 +3349,24 @@ transformed parameters {
   phi3 = foo2(1, phi2);
   
   phi3 = foo2(phi1, phi2);
+  
+  /*   phi1 = foo0_lp(); */
+  /*   phi2 = foo1_lp(1); */
+  /*   phi2 = foo1_lp(2.0); */
+  /*   phi2 = foo1_lp(phi1); */
+  
+  /*   phi3 = foo2_lp(1.0,2.0); */
+  /*   phi3 = foo2_lp(1.0,2); */
+  /*   phi3 = foo2_lp(1,2.0); */
+  /*   phi3 = foo2_lp(1,2); */
+  
+  /*   phi3 = foo2_lp(phi1,2.0); */
+  /*   phi3 = foo2_lp(phi1,2); */
+  
+  /*   phi3 = foo2_lp(1.0,phi2); */
+  /*   phi3 = foo2_lp(1,phi2); */
+  
+  /*   phi3 = foo2_lp(phi1,phi2); */
   
   phi1 = foo0_log(3);
   
@@ -3390,6 +3446,7 @@ model {
   
   psi3 = foo2_log(psi1, psi2);
   
+  /* use _log as sampling statements */
   theta[1] ~ foo1();
   theta[2] ~ foo2(theta[1]);
 }
@@ -3397,7 +3454,7 @@ generated quantities {
   real x;
   real y;
   real z;
-  
+  /* double instantiations */
   x = foo0();
   y = foo1(x);
   y = foo1(1);
@@ -3482,6 +3539,9 @@ model {
 }
 
   $ ../../../../install/default/bin/stanc --auto-format functions-good3.stan
+/**
+ * test return statement source propagation
+ */
 functions {
   real unit_normal_rng() {
     return normal_rng(0, 1);
@@ -3502,9 +3562,9 @@ generated quantities {
 functions {
   vector foo(vector x, real y) {
     if (y < 10) 
-      return log(x);
+      return log(x); /* problem is here if x data and y parameter */
     else 
-      return log(y * x);
+      return log(y * x); /* this promotes OK given x and y scalars */
   }
 }
 transformed data {
@@ -3515,7 +3575,7 @@ parameters {
   real y;
 }
 model {
-  foo(x, y) ~ normal(0, 1);
+  foo(x, y) ~ normal(0, 1); /* foo(x,y) has x double, y var, and return type var */
 }
 
   $ ../../../../install/default/bin/stanc --auto-format funs1.stan
@@ -3554,7 +3614,7 @@ generated quantities {
   $ ../../../../install/default/bin/stanc --auto-format funs3.stan
 functions {
   real unit_normal_log(real y) {
-    return normal_log(y, 0, 1);
+    return normal_log(y, 0, 1); /* print's messing this up now */
   }
 }
 parameters {
@@ -3669,7 +3729,14 @@ Warning in 'get-lp-target.stan', line 10, column 21: get_lp() function is deprec
 Warning in 'get-lp-target.stan', line 6, column 21: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
 Warning in 'get-lp-target.stan', line 10, column 21: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
   $ ../../../../install/default/bin/stanc --auto-format get_lp_good.stan
+/**
+ * get_lp() allowed in:
+ *  - functions ending in _lp
+ *  transformed parameter block
+ *  model block
+ */
 functions {
+  /* allowed in functions ending in _lp */
   real foo_lp(real x) {
     return x + get_lp();
   }
@@ -3730,6 +3797,10 @@ functions {
 }
 
   $ ../../../../install/default/bin/stanc --auto-format good_inf.stan
+/*
+ * tests to make sure variables with prefix "inf" can
+ * be used in models.
+ */
 data {
   real L;
   real U;
@@ -3768,7 +3839,7 @@ transformed data {
   x = -1;
 }
 model {
-
+  
 }
 
   $ ../../../../install/default/bin/stanc --auto-format illegal_transformed_parameters.stan
@@ -3778,7 +3849,7 @@ transformed parameters {
   x = -1;
 }
 model {
-
+  
 }
 
   $ ../../../../install/default/bin/stanc --auto-format increment-target.stan
@@ -3927,7 +3998,7 @@ transformed data {
   c = a[1] / b[2];
 }
 model {
-
+  
 }
 
 Info: Found int division at 'int_div_user.stan', line 7, column 6 to column 10:
@@ -4174,12 +4245,13 @@ transformed data {
   array[0] int x_int;
 }
 model {
-
+  
 }
 generated quantities {
   array[T, 2] real y_hat;
   y_hat = integrate_ode(sho, y0, t0, ts, theta, x, x_int);
   
+  /* add measurement error */
   for (t in 1 : T) {
     y_hat[t, 1] = y_hat[t, 1] + normal_rng(0, 0.1);
     y_hat[t, 2] = y_hat[t, 2] + normal_rng(0, 0.1);
@@ -4260,7 +4332,7 @@ parameters {
   real mu2;
 }
 model {
-
+  
 }
 
   $ ../../../../install/default/bin/stanc --auto-format keywords-else-if.stan
@@ -4271,8 +4343,7 @@ parameters {
 model {
   if (1 > 2) {
     a ~ normal(0, 1);
-  }
-  else 
+  } else 
     if2 ~ normal(0, 1);
 }
 
@@ -4377,6 +4448,7 @@ model {
 Warning in 'lkj_cov_deprecation2.stan', line 8, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
   $ ../../../../install/default/bin/stanc --auto-format lower-trunc-discrete.stan
 functions {
+  /* new syntax */
   real foo_lpmf(int y, real lambda) {
     return 1.0;
   }
@@ -4387,6 +4459,7 @@ functions {
     return 1.0;
   }
   
+  /* deprecated syntax */
   real bar_log(int y, real lambda) {
     return 1.0;
   }
@@ -4397,6 +4470,7 @@ functions {
     return 1.0;
   }
   
+  /* new syntax */
   real baz_lpdf(real y, real lambda) {
     return 1.0;
   }
@@ -4407,6 +4481,7 @@ functions {
     return 1.0;
   }
   
+  /* deprecated syntax */
   real quux_log(real y, real lambda) {
     return 1.0;
   }
@@ -4429,26 +4504,32 @@ parameters {
 }
 model {
   for (n in 1 : N) {
+    /* discrete, built-in */
     y[n] ~ poisson(lambda) T[L, ];
     y[n] ~ poisson(lambda) T[L, U];
     y[n] ~ poisson(lambda) T[ , U];
     
+    /* discrete, user-defined, new syntax */
     y[n] ~ foo(lambda) T[L, ];
     y[n] ~ foo(lambda) T[L, U];
     y[n] ~ foo(lambda) T[ , U];
     
+    /* discrete, user-defined, deprecated syntax */
     y[n] ~ bar(lambda) T[L, ];
     y[n] ~ bar(lambda) T[L, U];
     y[n] ~ bar(lambda) T[ , U];
     
+    /* continuous, built-in */
     u[n] ~ normal(0, 1) T[L, ];
     u[n] ~ normal(0, 1) T[ , U];
     u[n] ~ normal(0, 1) T[L, U];
     
+    /* continuous, user-defined, new syntax */
     y[n] ~ baz(lambda) T[L, ];
     y[n] ~ baz(lambda) T[L, U];
     y[n] ~ baz(lambda) T[ , U];
     
+    /* continuous, user-defined, deprecated syntax */
     y[n] ~ quux(lambda) T[L, ];
     y[n] ~ quux(lambda) T[L, U];
     y[n] ~ quux(lambda) T[ , U];
@@ -4462,7 +4543,7 @@ functions {
   }
 }
 model {
-
+  
 }
 
 Warning in 'lp_in_fun.stan', line 3, column 21: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
@@ -4512,12 +4593,12 @@ transformed parameters {
   real abc1_p = 3;
   real abc2_p = map_rectfake(abc1_p);
   real abc3_p = map_rectfake(12);
-  vector[3] y_hat_tp1 = map_rect(foo, shared_params_p, job_params_d, data_r,
-                                 data_i);
-  vector[3] y_hat_tp2 = map_rect(foo, shared_params_d, job_params_p, data_r,
-                                 data_i);
-  vector[3] y_hat_tp3 = map_rect(foo, shared_params_p, job_params_d, data_r,
-                                 data_i);
+  vector[3] y_hat_tp1 = map_rect(foo, shared_params_p, job_params_d, 
+                                 data_r, data_i);
+  vector[3] y_hat_tp2 = map_rect(foo, shared_params_d, job_params_p, 
+                                 data_r, data_i);
+  vector[3] y_hat_tp3 = map_rect(foo, shared_params_p, job_params_d, 
+                                 data_r, data_i);
 }
 model {
   real abc_m = map_rectfake(abc1_p);
@@ -4573,6 +4654,7 @@ transformed parameters {
 model {
   int b;
   
+  /* int */
   b = max(9, 10);
   
   to_vector(a) ~ normal(0, 1);
@@ -4585,7 +4667,7 @@ functions {
   }
 }
 model {
-
+  
 }
 
   $ ../../../../install/default/bin/stanc --auto-format multiple_funs.stan
@@ -4789,7 +4871,7 @@ transformed parameters {
   mu += logit + bernoulli_logit_glm_lpmf + reduce_sum;
 }
 model {
-
+  
 }
 
   $ ../../../../install/default/bin/stanc --auto-format numeric-literal.stan
@@ -4827,19 +4909,24 @@ parameters {
 }
 transformed parameters {
   array[T, 2] real y_hat;
+  
   {
     int N = 0;
     y_hat = integrate_ode(ode, y0, t0, segment(ts, 0, N), theta, x, x_int);
   }
 }
 model {
-
+  
 }
 
 Warning in 'ode-int-segments.stan', line 25, column 12: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead. 
 The new interface is slightly different, see: 
 https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../install/default/bin/stanc --auto-format ode-nested-quotes.stan
+/**
+ * Minimal example derived from jimsinmss example brought
+ * up on stan-users mailing list, Feb 2015.
+ */
 functions {
   array[] real foo(real t, array[] real y, array[] real theta,
                    array[] real x_r, array[] int x_i) {
@@ -4853,7 +4940,7 @@ transformed data {
                     rep_array(1.0, 1), rep_array(1, 1))[1, 1];
 }
 model {
-
+  
 }
 
 Warning in 'ode-nested-quotes.stan', line 17, column 6: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead. 
@@ -4861,8 +4948,10 @@ The new interface is slightly different, see:
 https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../install/default/bin/stanc --auto-format ode_good.stan
 functions {
-  array[] real harm_osc_ode(real t, array[] real y, array[] real theta,
-                            array[] real x, array[] int x_int) {
+  array[] real harm_osc_ode(real t, array[] real y /* state */,
+                            array[] real theta /* parameters */,
+                            array[] real x /* data */, array[] int x_int) {
+    /* integer data */
     array[2] real dydt;
     dydt[1] = x[1] * y[2];
     dydt[2] = -y[1] - theta[1] * y[2];
@@ -4883,20 +4972,40 @@ parameters {
 }
 transformed parameters {
   array[10, 2] real y_hat;
-  y_hat = integrate_ode(harm_osc_ode, y0, t0, ts, theta, x, x_int);
-  y_hat = integrate_ode_rk45(harm_osc_ode, y0, t0, ts, theta, x, x_int);
-  y_hat = integrate_ode_bdf(harm_osc_ode, y0, t0, ts, theta, x, x_int);
-  y_hat = integrate_ode_adams(harm_osc_ode, y0, t0, ts, theta, x, x_int);
-  y_hat = integrate_ode_rk45(harm_osc_ode, y0, t0, ts, theta, x, x_int, 0.01,
-                             0.01, 10);
-  y_hat = integrate_ode_bdf(harm_osc_ode, y0, t0, ts, theta, x, x_int, 0.01,
-                            0.01, 10);
-  y_hat = integrate_ode_adams(harm_osc_ode, y0, t0, ts, theta, x, x_int,
-                              0.01, 0.01, 10);
+  y_hat = integrate_ode(harm_osc_ode /* system */, y0 /* initial state */,
+                        t0 /* initial time */, ts /* solution times */,
+                        theta /* parameters */, x /* data */, x_int); 
+  /* integer data */
+  y_hat = integrate_ode_rk45(harm_osc_ode /* system */,
+                             y0 /* initial state */, t0 /* initial time */,
+                             ts /* solution times */, theta /* parameters */,
+                             x /* data */, x_int); /* integer data */
+  y_hat = integrate_ode_bdf(harm_osc_ode /* system */,
+                            y0 /* initial state */, t0 /* initial time */,
+                            ts /* solution times */, theta /* parameters */,
+                            x /* data */, x_int); /* integer data */
+  y_hat = integrate_ode_adams(harm_osc_ode /* system */,
+                              y0 /* initial state */, t0 /* initial time */,
+                              ts /* solution times */,
+                              theta /* parameters */, x /* data */, x_int); 
+  /* integer data */
+  y_hat = integrate_ode_rk45(harm_osc_ode /* system */,
+                             y0 /* initial state */, t0 /* initial time */,
+                             ts /* solution times */, theta /* parameters */,
+                             x /* data */, x_int, 0.01, 0.01, 10); /* integer data */
+  y_hat = integrate_ode_bdf(harm_osc_ode /* system */,
+                            y0 /* initial state */, t0 /* initial time */,
+                            ts /* solution times */, theta /* parameters */,
+                            x /* data */, x_int, 0.01, 0.01, 10); /* integer data */
+  y_hat = integrate_ode_adams(harm_osc_ode /* system */,
+                              y0 /* initial state */, t0 /* initial time */,
+                              ts /* solution times */,
+                              theta /* parameters */, x /* data */, x_int,
+                              0.01, 0.01, 10); /* integer data */
 }
 model {
   for (t in 1 : 10) 
-    y[t] ~ normal(y_hat[t], sigma);
+    y[t] ~ normal(y_hat[t], sigma); /* independent normal noise */
 }
 
 Warning in 'ode_good.stan', line 27, column 10: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead. 
@@ -4923,10 +5032,10 @@ https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../install/default/bin/stanc --auto-format old-log-funs.stan
 transformed data {
   real x;
-  x = multiply_log(x, x);
-  x = binomial_coefficient_log(x, x);
-  x = lmultiply(x, x);
-  x = lchoose(x, x);
+  x = multiply_log(x, x); /* should raise deprecation warning */
+  x = binomial_coefficient_log(x, x); /* ditto */
+  x = lmultiply(x, x); /* new function is OK */
+  x = lchoose(x, x); /* new function is OK */
 }
 parameters {
   real y;
@@ -5009,10 +5118,11 @@ the division as
 If rounding is intended please use the integer division operator %/%.
   $ ../../../../install/default/bin/stanc --auto-format pound-comment-deprecated.stan
 data {
+  /* hey, this is the old way to do things, should raise warning */
   int N;
 }
 model {
-
+  
 }
 
 Warning in 'pound-comment-deprecated.stan', line 2, column 2: Comments beginning with # are deprecated. Please use // in place of # for line comments.
@@ -5046,6 +5156,7 @@ data {
 }
 transformed data {
   real sum_y;
+  
   profile("sum") {
     sum_y = sum(y);
   }
@@ -5058,12 +5169,15 @@ parameters {
 model {
   matrix[N, N] cov;
   matrix[N, N] L_cov;
+  
   profile("cov_exp_quad") {
     cov = gp_exp_quad_cov(x, alpha, rho) + diag_matrix(rep_vector(sigma, N));
   }
+  
   profile("cholesky_decompose") {
     L_cov = cholesky_decompose(cov);
   }
+  
   profile("multi_normal_cholesky") {
     rho ~ gamma(25, 4);
     alpha ~ normal(0, 2);
@@ -5074,17 +5188,21 @@ model {
 }
 
   $ ../../../../install/default/bin/stanc --auto-format prophet.stan
+/* Copyright (c) 2017-present, Facebook, Inc. All rights reserved. */
 functions {
   array[,] real get_changepoint_matrix(array[] real t, array[] real t_change,
                                        int T, int S) {
+    /* Assumes t and t_change are sorted. */
     array[T, S] real A;
     array[S] real a_row;
     int cp_idx;
     
+    /* Start with an empty matrix. */
     A = rep_array(0, T, S);
     a_row = rep_array(0, S);
     cp_idx = 1;
     
+    /* Fill in each row of A. */
     for (i in 1 : T) {
       while ((cp_idx <= S) && (t[i] >= t_change[cp_idx])) {
         a_row[cp_idx] = 1;
@@ -5095,29 +5213,33 @@ functions {
     return A;
   }
   
+  /* Logistic trend functions */
+  
   array[] real logistic_gamma(real k, real m, array[] real delta,
                               array[] real t_change, int S) {
-    array[S] real gamma;
-    array[S + 1] real k_s;
+    array[S] real gamma; /* adjusted offsets, for piecewise continuity */
+    array[S + 1] real k_s; /* actual rate in each segment */
     real m_pr;
     
+    /* Compute the rate in each segment */
     k_s[1] = k;
     for (i in 1 : S) {
       k_s[i + 1] = k_s[i] + delta[i];
     }
     
-    m_pr = m;
+    /* Piecewise offsets */
+    m_pr = m; /* The offset in the previous segment */
     for (i in 1 : S) {
       gamma[i] = (t_change[i] - m_pr) * (1 - k_s[i] / k_s[i + 1]);
-      m_pr = m_pr + gamma[i];
+      m_pr = m_pr + gamma[i]; /* update for the next segment */
     }
     return gamma;
   }
   
   array[] real logistic_trend(real k, real m, array[] real delta,
                               array[] real t, array[] real cap,
-                              array[,] real A, array[] real t_change, int S,
-                              int T) {
+                              array[,] real A, array[] real t_change, 
+                              int S, int T) {
     array[S] real gamma;
     array[T] real Y;
     
@@ -5130,6 +5252,8 @@ functions {
     }
     return Y;
   }
+  
+  /* Linear trend function */
   
   array[] real linear_trend(real k, real m, array[] real delta,
                             array[] real t, array[,] real A,
@@ -5148,30 +5272,30 @@ functions {
   }
 }
 data {
-  int T;
-  int<lower=1> K;
-  array[T] real t;
-  array[T] real cap;
-  array[T] real y;
-  int S;
-  array[S] real t_change;
-  array[T, K] real X;
-  vector[K] sigmas;
-  real<lower=0> tau;
-  int trend_indicator;
-  array[K] real s_a;
-  array[K] real s_m;
+  int T; /* Number of time periods */
+  int<lower=1> K; /* Number of regressors */
+  array[T] real t; /* Time */
+  array[T] real cap; /* Capacities for logistic trend */
+  array[T] real y; /* Time series */
+  int S; /* Number of changepoints */
+  array[S] real t_change; /* Times of trend changepoints */
+  array[T, K] real X; /* Regressors */
+  vector[K] sigmas; /* Scale on seasonality prior */
+  real<lower=0> tau; /* Scale on changepoints prior */
+  int trend_indicator; /* 0 for linear, 1 for logistic */
+  array[K] real s_a; /* Indicator of additive features */
+  array[K] real s_m; /* Indicator of multiplicative features */
 }
 transformed data {
   array[T, S] real A;
   A = get_changepoint_matrix(t, t_change, T, S);
 }
 parameters {
-  real k;
-  real m;
-  array[S] real delta;
-  real<lower=0> sigma_obs;
-  array[K] real beta;
+  real k; /* Base trend growth rate */
+  real m; /* Trend offset */
+  array[S] real delta; /* Trend rate adjustments */
+  real<lower=0> sigma_obs; /* Observation noise */
+  array[K] real beta; /* Regressor coefficients */
 }
 transformed parameters {
   array[T] real trend;
@@ -5181,8 +5305,7 @@ transformed parameters {
   
   if (trend_indicator == 0) {
     trend = linear_trend(k, m, delta, t, A, t_change, S, T);
-  }
-  else if (trend_indicator == 1) {
+  } else if (trend_indicator == 1) {
     trend = logistic_trend(k, m, delta, t, cap, A, t_change, S, T);
   }
   
@@ -5197,12 +5320,14 @@ transformed parameters {
   }
 }
 model {
+  /*priors */
   k ~ normal(0, 5);
   m ~ normal(0, 5);
   delta ~ double_exponential(0, tau);
   sigma_obs ~ normal(0, 0.5);
   beta ~ normal(0, sigmas);
   
+  /* Likelihood */
   y ~ normal(Y, sigma_obs);
 }
 
@@ -5222,10 +5347,10 @@ transformed data {
   y = normal_rng(0, 1);
 }
 parameters {
-
+  
 }
 model {
-
+  
 }
 generated quantities {
   real z;
@@ -5346,6 +5471,8 @@ parameters {
   real<lower=0> sigma;
 }
 model {
+  /* TODO(carpenter): why can't we get this unconstrained var out? */
+  /* params_r__ ~ normal(0, 1); */
   1 ~ normal(mu, sigma);
   2 ~ normal(mu, sigma);
   3 ~ normal(mu, sigma);
@@ -5780,23 +5907,23 @@ transformed data {
   tx = 1 ? 2 : 3;
   ty = 1 ? 2.0 : 3.0;
   
-  tx = x < 100 ? x : 100;
-  ty = y > 100 ? 100 : y;
-  ty = y < 100 ? y : 100;
-  ty = y < 100 ? y : ty;
+  tx = x < 100 ? x : 100; /* t,f : int,int */
+  ty = y > 100 ? 100 : y; /* t,f : int,real */
+  ty = y < 100 ? y : 100; /* t,f : real,int */
+  ty = y < 100 ? y : ty; /* t,f : real,real */
   
-  tzc = x < 100 ? tza : tzb;
-  twc = x < 100 ? twa : twb;
-  tmc = x < 100 ? tma : tmb;
+  tzc = x < 100 ? tza : tzb; /* tf vector, vector */
+  twc = x < 100 ? twa : twb; /* tf row_vector, row_vector */
+  tmc = x < 100 ? tma : tmb; /* tf matrix, matrix */
   
-  tx1 = x < 100 ? txa2[1] : txb2[2];
-  txc2 = x < 100 ? txa2 : txb2;
-  tyc1 = x < 100 ? tya1 : tyb1;
-  tya2 = x < 100 ? tya2 : tyb2;
-  twc1 = x < 100 ? twa1 : twb1;
-  twa2 = x < 100 ? twa2 : twb2;
-  tm1 = x < 100 ? tma2[1] : tmb2[1];
-  tma2 = x < 100 ? tma2 : tmb2;
+  tx1 = x < 100 ? txa2[1] : txb2[2]; /* t,f : int[2],int[2] */
+  txc2 = x < 100 ? txa2 : txb2; /* t,f : int[2,2],int[2,2] */
+  tyc1 = x < 100 ? tya1 : tyb1; /* t,f : real[2],real[2] */
+  tya2 = x < 100 ? tya2 : tyb2; /* t,f : real[2,2],real[2,2] */
+  twc1 = x < 100 ? twa1 : twb1; /* tf row_vector, row_vector */
+  twa2 = x < 100 ? twa2 : twb2; /* tf row_vector[,], row_vector[,] */
+  tm1 = x < 100 ? tma2[1] : tmb2[1]; /* tf matrix[], matrix[] */
+  tma2 = x < 100 ? tma2 : tmb2; /* tf matrix[,], matrix[,] */
   
   {
     real abcd;
@@ -5849,53 +5976,53 @@ transformed parameters {
   array[2, 2] matrix[5, 6] tpmb2;
   array[2, 2] matrix[5, 6] tpmc2;
   
-  tpy = y < 100 ? x : y;
-  tpy = y < 100 ? y : x;
-  tpy = y < 100 ? y : py;
-  tpy = y < 100 ? x : py;
+  tpy = y < 100 ? x : y; /* t,f : int,real */
+  tpy = y < 100 ? y : x; /* t,f : real,int */
+  tpy = y < 100 ? y : py; /* t,f : real,var */
+  tpy = y < 100 ? x : py; /* t,f : int,var */
   
-  tpzc = x < 100 ? tpza : tpzb;
-  tpwc = x < 100 ? tpwa : tpwb;
-  tpmc = x < 100 ? tpma : tpmb;
+  tpzc = x < 100 ? tpza : tpzb; /* tf var vector */
+  tpwc = x < 100 ? tpwa : tpwb; /* tf var row_vector */
+  tpmc = x < 100 ? tpma : tpmb; /* tf var matrix */
   
-  tpzc = x < 100 ? z : pz;
+  tpzc = x < 100 ? z : pz; /* tf real/var vector */
   tpzc = x < 100 ? pz : z;
-  tpwc = x < 100 ? w : pw;
+  tpwc = x < 100 ? w : pw; /* tf real/var row_vector */
   tpwc = x < 100 ? pw : w;
-  tpmc = x < 100 ? m : pm;
+  tpmc = x < 100 ? m : pm; /* tf real/var var matrix */
   tpmc = x < 100 ? pm : m;
   
   tpyc1 = ya1;
   
-  tpyc1 = x < 100 ? tpya1 : tpyb1;
+  tpyc1 = x < 100 ? tpya1 : tpyb1; /* t,f : var[2],var[2] */
   
-  tpyc1 = x < 100 ? ya1 : pya1;
+  tpyc1 = x < 100 ? ya1 : pya1; /* t,f : real[2],var[2] */
   tpyc1 = x < 100 ? pya1 : ya1;
   
-  tpya2 = x < 100 ? tpya2 : tpyb2;
+  tpya2 = x < 100 ? tpya2 : tpyb2; /* t,f : var[2,2],var[2,2] */
   
-  tpya2 = x < 100 ? ya2 : tpyb2;
+  tpya2 = x < 100 ? ya2 : tpyb2; /* t,f : real[2,2],var[2,2] */
   tpya2 = x < 100 ? tpya2 : ya2;
   
-  tpwc1 = x < 100 ? tpwa1 : tpwb1;
+  tpwc1 = x < 100 ? tpwa1 : tpwb1; /* tf var row_vector */
   
-  tpwc1 = x < 100 ? wa1 : tpwb1;
+  tpwc1 = x < 100 ? wa1 : tpwb1; /* tf real/var row_vector */
   tpwc1 = x < 100 ? tpwb1 : wa1;
   
-  tpwa2 = x < 100 ? tpwa2 : tpwb2;
+  tpwa2 = x < 100 ? tpwa2 : tpwb2; /* tf var row_vector[,] */
   
-  tpwa2 = x < 100 ? wa2 : tpwb2;
+  tpwa2 = x < 100 ? wa2 : tpwb2; /* tf real/var row_vector[,] */
   tpwa2 = x < 100 ? tpwb2 : wa2;
   
-  tpm1 = x < 100 ? tpma2[1] : tpmb2[1];
+  tpm1 = x < 100 ? tpma2[1] : tpmb2[1]; /* tf var matrix[] */
   
-  tpm1 = x < 100 ? ma2[1] : tpmb2[1];
+  tpm1 = x < 100 ? ma2[1] : tpmb2[1]; /* tf real/var matrix[] */
   tpm1 = x < 100 ? tpmb2[1] : ma2[1];
   
-  tpma2 = x < 100 ? tpma2 : tpmb2;
+  tpma2 = x < 100 ? tpma2 : tpmb2; /* tf var matrix[,] */
   
-  tpma2 = x < 100 ? ma2 : pma2;
-  tpma2 = x < 100 ? pma2 : ma2;
+  tpma2 = x < 100 ? ma2 : pma2; /* tf real/var matrix[,] */
+  tpma2 = x < 100 ? pma2 : ma2; /* tf real/var matrix[,] */
   
   {
     real abcde;
@@ -5917,10 +6044,10 @@ generated quantities {
   vector[5] gqzb;
   vector[5] gqzc;
   
-  gqy = y < 100 ? x : y;
-  gqy = y < 100 ? y : x;
+  gqy = y < 100 ? x : y; /* t,f : int,real */
+  gqy = y < 100 ? y : x; /* t,f : real,int */
   
-  gqzc = x < 100 ? gqza : gqzb;
+  gqzc = x < 100 ? gqza : gqzb; /* tf var vector */
   
   {
     real abcdef;
@@ -6057,10 +6184,10 @@ data {
 }
 transformed data {
   real z;
-  z = x ^ y;
-  z = x ^ j;
-  z = j ^ x;
-  z = i ^ j;
+  z = x ^ y; /* double, double */
+  z = x ^ j; /* double, int */
+  z = j ^ x; /* int, double */
+  z = i ^ j; /* int, int */
 }
 parameters {
   real a;
@@ -6069,15 +6196,15 @@ parameters {
 transformed parameters {
   real z2;
   z2 = a * b;
-  z2 = x ^ y;
-  z2 = x ^ j;
-  z2 = x ^ a;
-  z2 = i ^ x;
-  z2 = i ^ j;
-  z2 = i ^ b;
-  z2 = a ^ x;
-  z2 = a ^ j;
-  z2 = a ^ b;
+  z2 = x ^ y; /* double, double */
+  z2 = x ^ j; /* double, int */
+  z2 = x ^ a; /* double, var */
+  z2 = i ^ x; /* int, double */
+  z2 = i ^ j; /* int, int */
+  z2 = i ^ b; /* int, var */
+  z2 = a ^ x; /* var, double */
+  z2 = a ^ j; /* var, int */
+  z2 = a ^ b; /* var, var */
 }
 model {
   a ~ normal(0, 1);
@@ -6085,7 +6212,7 @@ model {
 
   $ ../../../../install/default/bin/stanc --auto-format validate_exponentiation_precedence.stan
 data {
-
+  
 }
 transformed data {
   vector[3] a;
@@ -6155,7 +6282,7 @@ data {
 }
 transformed data {
   int k;
-  k = i %/% j;
+  k = i %/% j; /* int, int */
 }
 parameters {
   real y;
@@ -6244,12 +6371,16 @@ parameters {
   real z;
 }
 model {
+  /* int_literal */
   1 ~ normal(y, 1);
   
+  /* double_literal */
   2.7 ~ normal(z, 1);
   
+  /* variable */
   y ~ normal(0, 1);
   
+  /* fun */
   m ~ lkj_corr(2.0);
   (m + m) ~ lkj_corr(2.0);
   (m - m) ~ lkj_corr(2.0);
@@ -6272,12 +6403,14 @@ model {
   tail(v, 3) ~ normal(0, 1);
   to_vector(m) ~ normal(0, 1);
   
+  /* index_op */
   v[1] ~ normal(0, 1);
   m[1] ~ normal(0, 1);
   m[1, 2] ~ normal(0, 1);
   a[1, 2] ~ normal(0, 1);
   a[1][2] ~ normal(0, 1);
   
+  /* binary_op */
   y + z ~ normal(0, 1);
   y - z ~ normal(0, 1);
   1 * z ~ normal(0, 1);
@@ -6286,7 +6419,9 @@ model {
   y + ((z / 2) * 3) ~ normal(0, 1);
   2.0 * 3 ~ normal(y, 1);
   
+  /* unary_op */
   (-y) ~ normal(0, 1);
+  /* -(-y) ~ normal(0,1); */
 }
 
   $ ../../../../install/default/bin/stanc --auto-format validate_jacobian_warning_user.stan
@@ -6342,7 +6477,7 @@ data {
 }
 transformed data {
   int k;
-  k = i % j;
+  k = i % j; /* int, int */
 }
 parameters {
   real y;
@@ -6526,15 +6661,17 @@ transformed data {
   z = 3;
 }
 model {
-
+  
 }
 
   $ ../../../../install/default/bin/stanc --auto-format var-decls-in-functions.stan
 functions {
-  array[] real harm_osc_ode(real t, array[] real y, array[] real theta,
-                            array[] real x, array[] int x_int) {
+  array[] real harm_osc_ode(real t /* time */, array[] real y /* state */,
+                            array[] real theta /* parameters */,
+                            array[] real x /* data */, array[] int x_int) {
+    /* integer data */
     array[size(y)] real dydt;
-    
+    /* ... set dydt at state y and time t ... */
     return dydt;
   }
 }
@@ -6621,6 +6758,7 @@ transformed data {
   array[arrlen] row_vector[veclen] td_rv_ar = d_rv_ar;
   matrix[nrows, ncols] td_m = d_m;
   array[arrlen] matrix[nrows, ncols] td_m_ar = d_m_ar;
+  
   {
     array[arrlen] real local_real_ar = d_real_ar;
     vector[veclen] local_v = d_v;
@@ -6650,6 +6788,7 @@ transformed parameters {
   array[arrlen] row_vector[veclen] tp_rv_ar = d_rv_ar;
   matrix[nrows, ncols] tp_m = d_m;
   array[arrlen] matrix[nrows, ncols] tp_m_ar = d_m_ar;
+  
   {
     array[arrlen] real local2_real_ar = d_real_ar;
     vector[veclen] local2_v = d_v;
@@ -6679,6 +6818,7 @@ generated quantities {
   array[arrlen] row_vector[veclen] gq_rv_ar = d_rv_ar;
   matrix[nrows, ncols] gq_m = d_m;
   array[arrlen] matrix[nrows, ncols] gq_m_ar = d_m_ar;
+  
   {
     array[arrlen] real local4_real_ar = d_real_ar;
     vector[veclen] local4_v = d_v;
@@ -6744,7 +6884,7 @@ transformed parameters {
   array[0, 0] real tp_r2c;
 }
 model {
-
+  
 }
 generated quantities {
   vector[0] gq_v;
@@ -6770,6 +6910,6 @@ parameters {
   vector[d] p_ltzero;
 }
 model {
-
+  
 }
 

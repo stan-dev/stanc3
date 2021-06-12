@@ -220,7 +220,7 @@ and 's program =
   ; transformedparametersblock: 's block option
   ; modelblock: 's block option
   ; generatedquantitiesblock: 's block option
-  ; comments: comment_type list [@ignore] }
+  ; comments: comment_type list sexp_opaque [@ignore] }
 [@@deriving sexp, hash, compare, map, fold]
 
 let get_stmts = Option.value_map ~default:[] ~f:(fun x -> x.stmts)
@@ -278,3 +278,67 @@ let rec lvalue_of_expr {expr; emeta} =
 
 let rec id_of_lvalue {lval; _} =
   match lval with LVariable s -> s | LIndexed (l, _) -> id_of_lvalue l
+
+(* XXX: the parser produces inaccurate locations: smeta.loc.begin_loc is the last
+        token before the current statement and all the whitespace between two statements
+        appears as if it were part of the second statement.
+        get_first_loc tries to skip the leading whitespace and approximate the location
+        of the first token in the statement. *)
+
+let rec get_loc_expr (e : untyped_expression) =
+  match e.expr with
+  | TernaryIf (e, _, _) | BinOp (e, _, _) | PostfixOp (e, _) | Indexed (e, _)
+    ->
+      get_loc_expr e
+  | PrefixOp (_, e) | ArrayExpr (e :: _) | RowVectorExpr (e :: _) | Paren e ->
+      e.emeta.loc.begin_loc
+  | Variable _ | IntNumeral _ | RealNumeral _ | GetLP | GetTarget
+   |ArrayExpr []
+   |RowVectorExpr [] ->
+      e.emeta.loc.end_loc
+  | FunApp (_, id, _) | CondDistApp (_, id, _) -> id.id_loc.end_loc
+
+let get_loc_dt (t : untyped_expression Type.t) =
+  match t with
+  | Type.Unsized _ | Sized (SInt | SReal) -> None
+  | Sized (SVector e | SRowVector e | SMatrix (e, _) | SArray (_, e)) ->
+      Some e.emeta.loc.begin_loc
+
+let get_loc_tf (t : untyped_expression Program.transformation) =
+  match t with
+  | Lower e
+   |Upper e
+   |LowerUpper (e, _)
+   |Offset e
+   |Multiplier e
+   |OffsetMultiplier (e, _) ->
+      Some e.emeta.loc.begin_loc
+  | _ -> None
+
+let get_first_loc (s : untyped_statement) =
+  match s.stmt with
+  | Assignment {assign_lhs; _} -> assign_lhs.lmeta.loc.end_loc
+  | NRFunApp (_, id, _)
+   |For {loop_variable= id; _}
+   |ForEach (id, _, _)
+   |FunDef {funname= id; _} ->
+      id.id_loc.begin_loc
+  | TargetPE e
+   |IncrementLogProb e
+   |Return e
+   |IfThenElse (e, _, _)
+   |While (e, _) ->
+      e.emeta.loc.begin_loc
+  | Profile (_, s :: _) | Block (s :: _) -> s.smeta.loc.begin_loc
+  | Tilde {arg; _} -> get_loc_expr arg
+  | Break | Continue | ReturnVoid | Print _ | Reject _ | Skip
+   |Profile (_, [])
+   |Block [] ->
+      s.smeta.loc.end_loc
+  | VarDecl {decl_type; transformation; identifier; _} -> (
+    match get_loc_dt decl_type with
+    | Some loc -> loc
+    | None -> (
+      match get_loc_tf transformation with
+      | Some loc -> loc
+      | None -> identifier.id_loc.begin_loc ) )

@@ -20,7 +20,7 @@ parameters {
   real dummy_parameter;
 }
 transformed parameters {
-
+  
 }
 model {
   dummy_parameter ~ normal(0, 1);
@@ -70,6 +70,7 @@ functions {
 }
 transformed data {
   vector[1] td_y;
+  
   {
     vector[1] td_y_guess = [1]';
     vector[1] td_theta = [1]';
@@ -80,6 +81,7 @@ transformed data {
 }
 generated quantities {
   vector[1] gq_y;
+  
   {
     vector[1] gq_y_guess = [1]';
     vector[1] gq_theta = [1]';
@@ -313,6 +315,7 @@ generated quantities {
   real p2;
   for (x in 1 : 10) 
     p2 = x;
+  
   {
     int a;
     array[20, 30] real b;
@@ -326,6 +329,7 @@ generated quantities {
 transformed data {
   int a1;
   real d1;
+  
   {
     int a2;
     real d2;
@@ -342,6 +346,7 @@ transformed parameters {
   real p2;
   for (x in 1 : 10) 
     p2 = x;
+  
   {
     int a;
     array[2] int vs;
@@ -443,12 +448,13 @@ transformed data {
   array[0] int x_int;
 }
 model {
-
+  
 }
 generated quantities {
   array[T, 2] real y_hat;
   y_hat = integrate_ode(sho, y0, t0, ts, theta, x, x_int);
   
+  /* add measurement error */
   for (t in 1 : T) {
     y_hat[t, 1] = y_hat[t, 1] + normal_rng(0, 0.1);
     y_hat[t, 2] = y_hat[t, 2] + normal_rng(0, 0.1);
@@ -480,17 +486,18 @@ transformed data {
   array[0] int x_int;
 }
 model {
-
+  
 }
 generated quantities {
   array[T, 3] real y_hat;
-  y_hat = integrate_ode_rk45(sho, y0, t0, ts, theta, x, x_int, 1e-10, 1e-10,
-                             1e6);
-  y_hat = integrate_ode_bdf(sho, y0, t0, ts, theta, x, x_int, 1e-10, 1e-10,
-                            1e6);
-  y_hat = integrate_ode_adams(sho, y0, t0, ts, theta, x, x_int, 1e-10, 1e-10,
-                              1e6);
+  y_hat = integrate_ode_rk45(sho, y0, t0, ts, theta, x, x_int, 1e-10, 
+                             1e-10, 1e6);
+  y_hat = integrate_ode_bdf(sho, y0, t0, ts, theta, x, x_int, 1e-10, 
+                            1e-10, 1e6);
+  y_hat = integrate_ode_adams(sho, y0, t0, ts, theta, x, x_int, 1e-10, 
+                              1e-10, 1e6);
   
+  /* add measurement error */
   for (t in 1 : T) {
     y_hat[t, 1] = y_hat[t, 1] + normal_rng(0, 0.1);
     y_hat[t, 2] = y_hat[t, 2] + normal_rng(0, 0.1);
@@ -573,6 +580,6 @@ functions {
   }
 }
 model {
-
+  
 }
 

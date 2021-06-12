@@ -48,8 +48,7 @@ model {
     x ~ normal_log(0, 1);
     target += normal_log_lpdf(x| 1, 2);
     target += std_normal_lpdf(x| );
-  }
-  else {
+  } else {
     x ~ exponential(1);
     x ~ exponential(1);
     target += foo_lcdf(x| 1);
@@ -69,8 +68,8 @@ generated quantities {
                                                  x_r, x_i);
   array[3, 2] real y_hat_bdf = integrate_ode_bdf(sho, y0, 0.0, ts, theta,
                                                  x_r, x_i);
-  array[3, 2] real y_hat_adams = integrate_ode_adams(sho, y0, 0.0, ts, theta,
-                                                     x_r, x_i);
+  array[3, 2] real y_hat_adams = integrate_ode_adams(sho, y0, 0.0, ts, 
+                                                     theta, x_r, x_i);
 }
 
 Warning in 'deprecated.stan', line 14, column 11: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.

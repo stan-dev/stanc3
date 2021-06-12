@@ -1,13 +1,15 @@
   $ ../../../../../install/default/bin/stanc --auto-format validate_array_expr_big.stan
 transformed data {
   int i = 5;
-  array[100] int td_ar_int_dim1 = {1, 2, 3, 5, i, i, 7, 8, i, 10, 1, 2, 3, 5,
-                                   i, i, 7, 8, i, 10, 1, 2, 3, 5, i, i, 7, 8,
-                                   i, 10, 1, 2, 3, 5, i, i, 7, 8, i, 10, 1,
-                                   2, 3, 5, i, i, 7, 8, i, 10, 1, 2, 3, 5, i,
-                                   i, 7, 8, i, 10, 1, 2, 3, 5, i, i, 7, 8, i,
-                                   10, 1, 2, 3, 5, i, i, 7, 8, i, 10, 1, 2,
-                                   3, 5, i, i, 7, 8, i, 10};
+  array[100] int td_ar_int_dim1 = {1, 2, 3, 5, i, i, 7, 8, i, 10, 1, 
+                                   2, 3, 5, i, i, 7, 8, i, 10, 1, 2, 
+                                   3, 5, i, i, 7, 8, i, 10, 1, 2, 3, 
+                                   5, i, i, 7, 8, i, 10, 1, 2, 3, 5, 
+                                   i, i, 7, 8, i, 10, 1, 2, 3, 5, i, 
+                                   i, 7, 8, i, 10, 1, 2, 3, 5, i, i, 
+                                   7, 8, i, 10, 1, 2, 3, 5, i, i, 7, 
+                                   8, i, 10, 1, 2, 3, 5, i, i, 7, 8, 
+                                   i, 10};
 }
 parameters {
   real<lower=0, upper=1> theta;
@@ -15,7 +17,7 @@ parameters {
 
   $ ../../../../../install/default/bin/stanc --auto-format validate_array_expr_containers.stan
 functions {
-
+  
 }
 data {
   int d;
@@ -67,7 +69,7 @@ transformed data {
   print("td_m_ar_dim2_2 = ", td_m_ar_dim2_2);
 }
 parameters {
-
+  
 }
 transformed parameters {
   array[1] vector[d] tp_v_ar_dim1_1 = {d_v1};
@@ -112,7 +114,7 @@ transformed parameters {
   print("tp_m_ar_dim2_2 = ", tp_m_ar_dim2_2);
 }
 model {
-
+  
 }
 generated quantities {
   array[1] vector[d] gq_v_ar_dim1_1 = {d_v1};
@@ -253,7 +255,7 @@ transformed data {
   }
 }
 parameters {
-
+  
 }
 transformed parameters {
   real tp1 = 0.1;
@@ -280,7 +282,7 @@ transformed parameters {
   print("");
 }
 model {
-
+  
 }
 generated quantities {
   array[3] int gq_arr_int_d1_1 = {1, 2, 3};

@@ -35,7 +35,7 @@ let%expect_test "parse conditional" =
            ((filename string) (line_num 1) (col_num 0) (included_from ())))
           (end_loc
            ((filename string) (line_num 1) (col_num 35) (included_from ()))))))))
-     (generatedquantitiesblock ()) (comments ())) |}]
+     (generatedquantitiesblock ()) (comments <opaque>)) |}]
 
 let%expect_test "parse dangling else problem" =
   print_ast_of_string
@@ -72,7 +72,7 @@ let%expect_test "parse dangling else problem" =
              ((filename string) (line_num 1) (col_num 0) (included_from ())))
             (end_loc
              ((filename string) (line_num 1) (col_num 112) (included_from ()))))))))
-       (generatedquantitiesblock ()) (comments ())) |}]
+       (generatedquantitiesblock ()) (comments <opaque>)) |}]
 
 let%expect_test "parse minus unary" =
   print_ast_of_string "model { real x; x = -x;}" ;
@@ -105,7 +105,7 @@ let%expect_test "parse minus unary" =
              ((filename string) (line_num 1) (col_num 0) (included_from ())))
             (end_loc
              ((filename string) (line_num 1) (col_num 24) (included_from ()))))))))
-       (generatedquantitiesblock ()) (comments ())) |}]
+       (generatedquantitiesblock ()) (comments <opaque>)) |}]
 
 let%expect_test "parse unary over binary" =
   print_ast_of_string "model { real x = x - - x - - x; }" ;
@@ -146,7 +146,7 @@ let%expect_test "parse unary over binary" =
            ((filename string) (line_num 1) (col_num 0) (included_from ())))
           (end_loc
            ((filename string) (line_num 1) (col_num 33) (included_from ()))))))))
-     (generatedquantitiesblock ()) (comments ())) |}]
+     (generatedquantitiesblock ()) (comments <opaque>)) |}]
 
 let%expect_test "parse indices, two different colons" =
   print_ast_of_string "model { matrix[5, 5] x; print(x[2 - 3 ? 3 : 4 : 2]); }" ;
@@ -190,7 +190,7 @@ let%expect_test "parse indices, two different colons" =
              ((filename string) (line_num 1) (col_num 0) (included_from ())))
             (end_loc
              ((filename string) (line_num 1) (col_num 54) (included_from ()))))))))
-       (generatedquantitiesblock ()) (comments ())) |}]
+       (generatedquantitiesblock ()) (comments <opaque>)) |}]
 
 let%expect_test "parse operator precedence" =
   print_ast_of_string
@@ -367,7 +367,7 @@ let%expect_test "parse operator precedence" =
              ((filename string) (line_num 1) (col_num 0) (included_from ())))
             (end_loc
              ((filename string) (line_num 1) (col_num 74) (included_from ()))))))))
-       (generatedquantitiesblock ()) (comments ())) |}]
+       (generatedquantitiesblock ()) (comments <opaque>)) |}]
 
 let%expect_test "parse crazy truncation example" =
   print_ast_of_string
@@ -434,7 +434,7 @@ let%expect_test "parse crazy truncation example" =
              ((filename string) (line_num 2) (col_num 6) (included_from ())))
             (end_loc
              ((filename string) (line_num 6) (col_num 7) (included_from ()))))))))
-       (generatedquantitiesblock ()) (comments ())) |}]
+       (generatedquantitiesblock ()) (comments <opaque>)) |}]
 
 let%expect_test "parse nested loop" =
   print_ast_of_string
@@ -469,4 +469,4 @@ let%expect_test "parse nested loop" =
            ((filename string) (line_num 1) (col_num 6) (included_from ())))
           (end_loc
            ((filename string) (line_num 5) (col_num 13) (included_from ()))))))))
-     (generatedquantitiesblock ()) (comments ())) |}]
+     (generatedquantitiesblock ()) (comments <opaque>)) |}]

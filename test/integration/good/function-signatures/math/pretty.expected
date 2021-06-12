@@ -22,16 +22,13 @@ transformed data {
   if (transformed_data_real) {
     transformed_data_real = 1.0;
     transformed_data_real = 1.0;
-  }
-  else if (transformed_data_real) {
+  } else if (transformed_data_real) {
     transformed_data_real = 1.0;
     transformed_data_real = 1.0;
-  }
-  else if (transformed_data_real) {
+  } else if (transformed_data_real) {
     transformed_data_real = 1.0;
     transformed_data_real = 1.0;
-  }
-  else {
+  } else {
     transformed_data_real = 1.0;
     transformed_data_real = 1.0;
   }
@@ -39,16 +36,13 @@ transformed data {
   if (transformed_data_int) {
     transformed_data_real = 1.0;
     transformed_data_real = 1.0;
-  }
-  else if (transformed_data_int) {
+  } else if (transformed_data_int) {
     transformed_data_real = 1.0;
     transformed_data_real = 1.0;
-  }
-  else if (transformed_data_int) {
+  } else if (transformed_data_int) {
     transformed_data_real = 1.0;
     transformed_data_real = 1.0;
-  }
-  else {
+  } else {
     transformed_data_real = 1.0;
     transformed_data_real = 1.0;
   }
@@ -74,16 +68,13 @@ transformed parameters {
   if (transformed_param_real) {
     transformed_param_real = 1.0;
     transformed_param_real = 1.0;
-  }
-  else if (transformed_param_real) {
+  } else if (transformed_param_real) {
     transformed_param_real = 1.0;
     transformed_param_real = 1.0;
-  }
-  else if (transformed_param_real) {
+  } else if (transformed_param_real) {
     transformed_param_real = 1.0;
     transformed_param_real = 1.0;
-  }
-  else {
+  } else {
     transformed_param_real = 1.0;
     transformed_param_real = 1.0;
   }
@@ -91,16 +82,13 @@ transformed parameters {
   if (transformed_data_int) {
     transformed_param_real = 1.0;
     transformed_param_real = 1.0;
-  }
-  else if (transformed_data_int) {
+  } else if (transformed_data_int) {
     transformed_param_real = 1.0;
     transformed_param_real = 1.0;
-  }
-  else if (transformed_data_int) {
+  } else if (transformed_data_int) {
     transformed_param_real = 1.0;
     transformed_param_real = 1.0;
-  }
-  else {
+  } else {
     transformed_param_real = 1.0;
     transformed_param_real = 1.0;
   }

@@ -148,26 +148,26 @@ transformed data {
                                             d_vector);
   transformed_data_real = beta_binomial_cdf(d_int_array, d_int, d_row_vector,
                                             d_row_vector);
-  transformed_data_real = beta_binomial_cdf(d_int_array, d_int_array, d_int,
-                                            d_int);
-  transformed_data_real = beta_binomial_cdf(d_int_array, d_int_array, d_int,
-                                            d_real);
-  transformed_data_real = beta_binomial_cdf(d_int_array, d_int_array, d_int,
-                                            d_real_array);
-  transformed_data_real = beta_binomial_cdf(d_int_array, d_int_array, d_int,
-                                            d_vector);
-  transformed_data_real = beta_binomial_cdf(d_int_array, d_int_array, d_int,
-                                            d_row_vector);
-  transformed_data_real = beta_binomial_cdf(d_int_array, d_int_array, d_real,
-                                            d_int);
-  transformed_data_real = beta_binomial_cdf(d_int_array, d_int_array, d_real,
-                                            d_real);
-  transformed_data_real = beta_binomial_cdf(d_int_array, d_int_array, d_real,
-                                            d_real_array);
-  transformed_data_real = beta_binomial_cdf(d_int_array, d_int_array, d_real,
-                                            d_vector);
-  transformed_data_real = beta_binomial_cdf(d_int_array, d_int_array, d_real,
-                                            d_row_vector);
+  transformed_data_real = beta_binomial_cdf(d_int_array, d_int_array, 
+                                            d_int, d_int);
+  transformed_data_real = beta_binomial_cdf(d_int_array, d_int_array, 
+                                            d_int, d_real);
+  transformed_data_real = beta_binomial_cdf(d_int_array, d_int_array, 
+                                            d_int, d_real_array);
+  transformed_data_real = beta_binomial_cdf(d_int_array, d_int_array, 
+                                            d_int, d_vector);
+  transformed_data_real = beta_binomial_cdf(d_int_array, d_int_array, 
+                                            d_int, d_row_vector);
+  transformed_data_real = beta_binomial_cdf(d_int_array, d_int_array, 
+                                            d_real, d_int);
+  transformed_data_real = beta_binomial_cdf(d_int_array, d_int_array, 
+                                            d_real, d_real);
+  transformed_data_real = beta_binomial_cdf(d_int_array, d_int_array, 
+                                            d_real, d_real_array);
+  transformed_data_real = beta_binomial_cdf(d_int_array, d_int_array, 
+                                            d_real, d_vector);
+  transformed_data_real = beta_binomial_cdf(d_int_array, d_int_array, 
+                                            d_real, d_row_vector);
   transformed_data_real = beta_binomial_cdf(d_int_array, d_int_array,
                                             d_real_array, d_int);
   transformed_data_real = beta_binomial_cdf(d_int_array, d_int_array,
@@ -673,24 +673,24 @@ transformed parameters {
                                              p_row_vector, p_vector);
   transformed_param_real = beta_binomial_cdf(d_int_array, d_int,
                                              p_row_vector, p_row_vector);
-  transformed_param_real = beta_binomial_cdf(d_int_array, d_int_array, d_int,
-                                             d_int);
-  transformed_param_real = beta_binomial_cdf(d_int_array, d_int_array, d_int,
-                                             d_real);
-  transformed_param_real = beta_binomial_cdf(d_int_array, d_int_array, d_int,
-                                             d_real_array);
-  transformed_param_real = beta_binomial_cdf(d_int_array, d_int_array, d_int,
-                                             d_vector);
-  transformed_param_real = beta_binomial_cdf(d_int_array, d_int_array, d_int,
-                                             d_row_vector);
-  transformed_param_real = beta_binomial_cdf(d_int_array, d_int_array, d_int,
-                                             p_real);
-  transformed_param_real = beta_binomial_cdf(d_int_array, d_int_array, d_int,
-                                             p_real_array);
-  transformed_param_real = beta_binomial_cdf(d_int_array, d_int_array, d_int,
-                                             p_vector);
-  transformed_param_real = beta_binomial_cdf(d_int_array, d_int_array, d_int,
-                                             p_row_vector);
+  transformed_param_real = beta_binomial_cdf(d_int_array, d_int_array, 
+                                             d_int, d_int);
+  transformed_param_real = beta_binomial_cdf(d_int_array, d_int_array, 
+                                             d_int, d_real);
+  transformed_param_real = beta_binomial_cdf(d_int_array, d_int_array, 
+                                             d_int, d_real_array);
+  transformed_param_real = beta_binomial_cdf(d_int_array, d_int_array, 
+                                             d_int, d_vector);
+  transformed_param_real = beta_binomial_cdf(d_int_array, d_int_array, 
+                                             d_int, d_row_vector);
+  transformed_param_real = beta_binomial_cdf(d_int_array, d_int_array, 
+                                             d_int, p_real);
+  transformed_param_real = beta_binomial_cdf(d_int_array, d_int_array, 
+                                             d_int, p_real_array);
+  transformed_param_real = beta_binomial_cdf(d_int_array, d_int_array, 
+                                             d_int, p_vector);
+  transformed_param_real = beta_binomial_cdf(d_int_array, d_int_array, 
+                                             d_int, p_row_vector);
   transformed_param_real = beta_binomial_cdf(d_int_array, d_int_array,
                                              d_real, d_int);
   transformed_param_real = beta_binomial_cdf(d_int_array, d_int_array,
