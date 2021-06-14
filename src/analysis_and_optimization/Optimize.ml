@@ -1198,7 +1198,9 @@ let gen_aos_variables
 let optimize_soa (mir : Program.Typed.t) =
   let initial_variables =
     Set.Poly.union_list
-      (List.map ~f:(Mem_pattern.query_demotable_stmts false) mir.log_prob)
+      (List.map
+         ~f:(Mem_pattern.query_initial_demotable_stmt false)
+         mir.log_prob)
   in
   let all_eigen_types =
     Set.Poly.union_list (List.map ~f:Mem_pattern.get_eigen_decls mir.log_prob)
