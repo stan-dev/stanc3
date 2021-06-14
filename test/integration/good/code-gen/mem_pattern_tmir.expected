@@ -166,7 +166,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain SoA)
+                            (FunApp (StanLib Plus__ FnPlain AoS)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)
@@ -251,7 +251,7 @@
                ((pattern
                  (Assignment (pos__ UInt ())
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain SoA)
+                    (FunApp (StanLib Plus__ FnPlain AoS)
                      (((pattern (Var pos__))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -858,7 +858,7 @@
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib multiply FnPlain SoA)
+                (FunApp (StanLib multiply FnPlain AoS)
                  (((pattern (Var dat_x))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern
@@ -1172,12 +1172,12 @@
               (((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
                      (((pattern (Var y))
                        (meta
                         ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain SoA)
+                        (FunApp (StanLib multiply FnPlain AoS)
                          (((pattern
                             (Indexed
                              ((pattern (Var dat_x))
@@ -1219,12 +1219,12 @@
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
                      (((pattern (Var y))
                        (meta
                         ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain SoA)
+                        (FunApp (StanLib multiply FnPlain AoS)
                          (((pattern
                             (Indexed
                              ((pattern (Var dat_x))
@@ -1271,12 +1271,12 @@
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
                      (((pattern (Var y))
                        (meta
                         ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain SoA)
+                        (FunApp (StanLib multiply FnPlain AoS)
                          (((pattern
                             (Indexed
                              ((pattern (Var dat_x))
@@ -2327,7 +2327,7 @@
                ((pattern
                  (Assignment (pos__ UInt ())
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain SoA)
+                    (FunApp (StanLib Plus__ FnPlain AoS)
                      (((pattern (Var pos__))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -2420,7 +2420,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain SoA)
+                            (FunApp (StanLib Plus__ FnPlain AoS)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)
@@ -2520,7 +2520,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain SoA)
+                            (FunApp (StanLib Plus__ FnPlain AoS)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)
@@ -2619,7 +2619,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain SoA)
+                            (FunApp (StanLib Plus__ FnPlain AoS)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)
@@ -2695,7 +2695,7 @@
                ((pattern
                  (Assignment (pos__ UInt ())
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain SoA)
+                    (FunApp (StanLib Plus__ FnPlain AoS)
                      (((pattern (Var pos__))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -2790,7 +2790,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain SoA)
+                            (FunApp (StanLib Plus__ FnPlain AoS)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)
@@ -2867,7 +2867,7 @@
                ((pattern
                  (Assignment (pos__ UInt ())
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain SoA)
+                    (FunApp (StanLib Plus__ FnPlain AoS)
                      (((pattern (Var pos__))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -2939,7 +2939,7 @@
                ((pattern
                  (Assignment (pos__ UInt ())
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain SoA)
+                    (FunApp (StanLib Plus__ FnPlain AoS)
                      (((pattern (Var pos__))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -3011,7 +3011,7 @@
                ((pattern
                  (Assignment (pos__ UInt ())
                   ((pattern
-                    (FunApp (StanLib Plus__ FnPlain SoA)
+                    (FunApp (StanLib Plus__ FnPlain AoS)
                      (((pattern (Var pos__))
                        (meta
                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -3106,7 +3106,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain SoA)
+                            (FunApp (StanLib Plus__ FnPlain AoS)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)
@@ -3204,7 +3204,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain SoA)
+                            (FunApp (StanLib Plus__ FnPlain AoS)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)
@@ -3305,7 +3305,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain SoA)
+                            (FunApp (StanLib Plus__ FnPlain AoS)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)
@@ -3406,7 +3406,7 @@
                        ((pattern
                          (Assignment (pos__ UInt ())
                           ((pattern
-                            (FunApp (StanLib Plus__ FnPlain SoA)
+                            (FunApp (StanLib Plus__ FnPlain AoS)
                              (((pattern (Var pos__))
                                (meta
                                 ((type_ UInt) (loc <opaque>)

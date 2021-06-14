@@ -1198,11 +1198,12 @@ let gen_aos_variables
 let optimize_soa (mir : Program.Typed.t) =
   let initial_variables =
     Set.Poly.union_list
-      (List.map ~f:(Mem_pattern.query_demotable_stmts_loop false) mir.log_prob)
+      (List.map ~f:(Mem_pattern.query_demotable_stmts false) mir.log_prob)
   in
-  let promotable_types =
+  let all_eigen_types =
     Set.Poly.union_list (List.map ~f:Mem_pattern.get_eigen_decls mir.log_prob)
   in
+  let promotable_types = Set.Poly.diff all_eigen_types initial_variables in
   let promote_stmt = Mem_pattern.promote_stmts promotable_types in
   let forced_logprob = List.map ~f:promote_stmt mir.log_prob in
   let demote_exprs aos_exits =

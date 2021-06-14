@@ -31,18 +31,6 @@ let map_index op ind =
   | MultiIndex exprs -> op exprs
 
 (**
- * Apply a functor to an `Index` type's inner returning a boolean if 
- * the conditional is true for any of the inner expressions.
- *)
-let name_exists_in_index op ind =
-  match ind with
-  | Index.All -> false
-  | Single ind_expr -> op ind_expr
-  | Upfrom ind_expr -> op ind_expr
-  | Between (expr_top, expr_bottom) -> op expr_top || op expr_bottom
-  | MultiIndex exprs -> op exprs
-
-(**
  * Search through an expression for `Var name` where `name` is in
  *  the `aos_exits` and return `true` if it exists and false otherwise.
  * and the type of the expression contains an eigen type.
@@ -52,16 +40,11 @@ let name_exists_in_index op ind =
  *  for the name.
  **)
 let query_all_expr_eigen_names expr =
-  let get_expr_eigen_names ayy =
-    match ayy with
-    | Dataflow_types.VVar s, Expr.Typed.Meta.({type_; _})
-      when UnsizedType.contains_eigen_type type_ ->
-        s
-    | _ -> ""
+  let get_expr_eigen_names (Dataflow_types.VVar s, Expr.Typed.Meta.({type_; _}))
+      =
+    if UnsizedType.contains_eigen_type type_ then Some s else None
   in
-  let rm_blanks x = match x with "" -> false | _ -> true in
-  Set.Poly.filter ~f:rm_blanks
-    (Set.Poly.map ~f:get_expr_eigen_names (Mir_utils.expr_var_set expr))
+  Set.Poly.filter_map ~f:get_expr_eigen_names (Mir_utils.expr_var_set expr)
 
 (**
  * Search through an expression for `Var name` where `name` is in
@@ -91,16 +74,15 @@ let rec demote_expr_patterns aos_exits pattern =
   let find_name = query_expr_eigen_names aos_exits in
   match pattern with
   | Expr.Fixed.Pattern.FunApp (kind, (exprs : 'a Expr.Fixed.t list)) ->
-      let exprs' = List.map ~f:mod_expr exprs in
       let modify_funs kind =
         match kind with
-        | Fun_kind.StanLib (name, sfx, _) as func -> (
+        | Fun_kind.StanLib (name, sfx, Common.Helpers.SoA) as func -> (
           match List.for_all ~f:find_name exprs with
           | true -> Fun_kind.StanLib (name, sfx, Common.Helpers.AoS)
           | false -> func )
         | (_ : Fun_kind.t) -> kind
       in
-      Expr.Fixed.Pattern.FunApp (modify_funs kind, exprs')
+      Expr.Fixed.Pattern.FunApp (modify_funs kind, List.map ~f:mod_expr exprs)
   | TernaryIf (predicate, texpr, fexpr) ->
       TernaryIf (mod_expr predicate, mod_expr texpr, mod_expr fexpr)
   | Indexed (idx_expr, indexed) ->
@@ -133,7 +115,7 @@ let rec demote_stmt_pattern
     (pattern : ('a Fixed.t, ('a, 'b) Stmt.Fixed.t) Stmt.Fixed.Pattern.t)
     (aos_exits : string Core_kernel.Set.Poly.t) =
   let mod_expr = Mir_utils.map_rec_expr (demote_expr_patterns aos_exits) in
-  let mod_stmt = demote_stmts aos_exits demote_stmt_pattern in
+  let mod_stmt = demote_stmts aos_exits in
   let find_name = query_expr_eigen_names aos_exits in
   (*let printer intro s = Set.Poly.iter ~f:(printf intro) s in*)
   match pattern with
@@ -178,14 +160,12 @@ let rec demote_stmt_pattern
       Assignment
         ((name, ut, List.map ~f:(Index.map mod_expr) lhs), mod_expr rhs)
   | IfElse (predicate, true_stmt, op_false_stmt) ->
-      let mod_pred = mod_expr predicate in
-      let mod_true = mod_stmt true_stmt in
       let mod_false =
         match op_false_stmt with
         | Some stmt -> Some (mod_stmt stmt)
         | None -> None
       in
-      IfElse (mod_pred, mod_true, mod_false)
+      IfElse (mod_expr predicate, mod_stmt true_stmt, mod_false)
   | Block stmts -> Block (List.map ~f:mod_stmt stmts)
   | SList stmts -> SList (List.map ~f:mod_stmt stmts)
   | For {loopvar; lower; upper; body= inner_stmt} ->
@@ -207,9 +187,9 @@ let rec demote_stmt_pattern
  * Internal to the module, used when looking recursivly
  *  in statement patterns that hold statements
  *)
-and demote_stmts (aos_exits : string Set.Poly.t) pattern_fn
+and demote_stmts (aos_exits : string Set.Poly.t)
     (Stmt.Fixed.({pattern; _}) as stmt) =
-  {stmt with pattern= pattern_fn pattern aos_exits}
+  {stmt with pattern= demote_stmt_pattern pattern aos_exits}
 
 (** 
  * Given a Set of strings containing the names of objects that can be 
@@ -226,14 +206,13 @@ let rec promote_exprs promotable_types (Expr.Fixed.({pattern; _}) as expr) =
         let name_diff =
           Set.Poly.length (Set.Poly.inter promotable_types expr_names)
         in
-        let exprs' = List.map ~f:mod_expr exprs in
         let modify_funs kind =
           match kind with
           | Fun_kind.StanLib (name, sfx, _) when name_diff > 0 ->
               Fun_kind.StanLib (name, sfx, Common.Helpers.SoA)
           | _ -> kind
         in
-        Expr.Fixed.Pattern.FunApp (modify_funs kind, exprs')
+        Expr.Fixed.Pattern.FunApp (modify_funs kind, List.map ~f:mod_expr exprs)
     | TernaryIf (predicate, texpr, fexpr) ->
         TernaryIf (mod_expr predicate, mod_expr texpr, mod_expr fexpr)
     | Indexed (idx_expr, indexed) ->
@@ -333,10 +312,23 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t) pattern =
       ( ( (assign_name : string)
         , (_ : UnsizedType.t)
         , (_ : Typed.t Index.t list) )
-      , rhs ) -> (
-    match Set.Poly.mem aos_exits assign_name with
-    | true -> query_all_expr_eigen_names rhs
-    | false -> Set.Poly.empty )
+      , rhs ) ->
+      let all_rhs_eigen_names = query_all_expr_eigen_names rhs in
+      let rhs_fails =
+        match Set.Poly.mem aos_exits assign_name with
+        | true -> all_rhs_eigen_names
+        | false -> Set.Poly.empty
+      in
+      let lhs_fails =
+        match
+          Set.Poly.is_subset all_rhs_eigen_names ~of_:aos_exits
+          && Set.Poly.length all_rhs_eigen_names > 0
+          && Set.Poly.length aos_exits > 0
+        with
+        | true -> Set.Poly.singleton assign_name
+        | false -> Set.Poly.empty
+      in
+      Set.Poly.union rhs_fails lhs_fails
   | Decl _
    |NRFunApp ((_ : Fun_kind.t), (_ : Typed.t list))
    |Return (_ : Typed.t option)
@@ -410,26 +402,17 @@ let rec is_uni_eigen_loop_indexing (ut : UnsizedType.t)
  *  that carries logic on whether we are in a for loop or not.
  * (TODO: Could be combined with other query demotable above.)
  *)
-let rec query_demotable_exprs_loop in_loop Expr.Fixed.({pattern; _}) =
-  let query_expr = query_demotable_exprs_loop in_loop in
+let rec query_demotable_exprs in_loop Expr.Fixed.({pattern; _}) =
+  let query_expr = query_demotable_exprs in_loop in
   match pattern with
   | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
-      query_demotable_funkinds_loop query_demotable_exprs_loop in_loop kind
-        exprs
+      query_demotable_funkinds_loop query_demotable_exprs in_loop kind exprs
   | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
       Set.Poly.empty
   | TernaryIf (predicate, texpr, fexpr) ->
       Set.Poly.union
         (Set.Poly.union (query_expr predicate) (query_expr texpr))
         (query_expr fexpr)
-  (*
-  | Indexed (Expr.Fixed.({pattern= Var name; meta= {type_; _}}), indexed) ->
-      let query_index = map_index query_expr in
-      if in_loop && is_uni_eigen_loop_indexing type_ indexed then
-        Set.Poly.union (Set.Poly.singleton name)
-          (Set.Poly.union_list (List.map ~f:query_index indexed))
-      else Set.Poly.union_list (List.map ~f:query_index indexed)
-  *)
   | Indexed ((Expr.Fixed.({meta= {type_; _}; _}) as expr), indexed) ->
       let query_index = map_index query_expr in
       if in_loop && is_uni_eigen_loop_indexing type_ indexed then
@@ -449,11 +432,9 @@ let rec query_demotable_exprs_loop in_loop Expr.Fixed.({pattern; _}) =
  *  other query demotable function together)
  * 
  *)
-let rec query_demotable_stmts_loop in_loop Stmt.Fixed.({pattern; _}) =
-  let query_expr = query_demotable_exprs_loop in_loop in
-  let query_inner_stmt checking_loop =
-    query_demotable_stmts_loop checking_loop
-  in
+let rec query_demotable_stmts in_loop Stmt.Fixed.({pattern; _}) =
+  let query_expr = query_demotable_exprs in_loop in
+  let query_inner_stmt checking_loop = query_demotable_stmts checking_loop in
   match pattern with
   | Stmt.Fixed.Pattern.Decl _ -> Set.Poly.empty
   | Assignment (((name : string), (_ : UnsizedType.t), lhs), rhs) ->
@@ -466,8 +447,7 @@ let rec query_demotable_stmts_loop in_loop Stmt.Fixed.({pattern; _}) =
         Set.Poly.add sub_set name
       else Set.Poly.union check_lhs check_rhs
   | NRFunApp (kind, exprs) ->
-      query_demotable_funkinds_loop query_demotable_exprs_loop in_loop kind
-        exprs
+      query_demotable_funkinds_loop query_demotable_exprs in_loop kind exprs
   (*For the below, we just want to look at expressions*)
   | IfElse (predicate, lhs, rhs) -> (
     match rhs with

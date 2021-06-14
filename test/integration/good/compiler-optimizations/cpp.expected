@@ -12176,11 +12176,11 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       double lcm_sym267__;
       double lcm_sym266__;
       double lcm_sym265__;
-      double lcm_sym264__;
+      int lcm_sym264__;
       int lcm_sym263__;
       int lcm_sym262__;
       double lcm_sym261__;
-      int lcm_sym260__;
+      double lcm_sym260__;
       double lcm_sym259__;
       double lcm_sym258__;
       double lcm_sym257__;
@@ -12194,9 +12194,9 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       double lcm_sym249__;
       double lcm_sym248__;
       double lcm_sym247__;
-      double lcm_sym246__;
+      int lcm_sym246__;
       int lcm_sym245__;
-      int lcm_sym244__;
+      double lcm_sym244__;
       int lcm_sym243__;
       int lcm_sym242__;
       int lcm_sym241__;
@@ -12345,7 +12345,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
             
             int inline_sym20__ = std::numeric_limits<int>::min();
             
-            lcm_sym245__ = (lcm_sym241__ + 1);
+            lcm_sym246__ = (lcm_sym241__ + 1);
             current_statement__ = 30;
             assign(inline_sym18__,
               stan::math::fma(
@@ -12353,9 +12353,9 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                    index_uni(inline_sym22__), index_uni(lcm_sym241__)) *
                   (1 -
                     rvalue(p, "p",
-                      index_uni(inline_sym22__), index_uni(lcm_sym245__)))),
+                      index_uni(inline_sym22__), index_uni(lcm_sym246__)))),
                 rvalue(inline_sym18__, "inline_sym18__",
-                  index_uni(inline_sym22__), index_uni(lcm_sym245__)),
+                  index_uni(inline_sym22__), index_uni(lcm_sym246__)),
                 (1 -
                   rvalue(lcm_sym286__, "lcm_sym286__",
                     index_uni(inline_sym22__), index_uni(lcm_sym241__)))),
@@ -12368,7 +12368,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
               lcm_sym240__ = (lcm_sym279__ - inline_sym21__);
               int inline_sym20__ = std::numeric_limits<int>::min();
               
-              lcm_sym244__ = (lcm_sym240__ + 1);
+              lcm_sym245__ = (lcm_sym240__ + 1);
               current_statement__ = 30;
               assign(inline_sym18__,
                 stan::math::fma(
@@ -12376,9 +12376,9 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                      index_uni(inline_sym22__), index_uni(lcm_sym240__)) *
                     (1 -
                       rvalue(p, "p",
-                        index_uni(inline_sym22__), index_uni(lcm_sym244__)))),
+                        index_uni(inline_sym22__), index_uni(lcm_sym245__)))),
                   rvalue(inline_sym18__, "inline_sym18__",
-                    index_uni(inline_sym22__), index_uni(lcm_sym244__)),
+                    index_uni(inline_sym22__), index_uni(lcm_sym245__)),
                   (1 -
                     rvalue(lcm_sym286__, "lcm_sym286__",
                       index_uni(inline_sym22__), index_uni(lcm_sym240__)))),
@@ -12742,14 +12742,14 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                   bernoulli_lpmf<propto__>(1,
                     rvalue(lcm_sym286__, "lcm_sym286__",
                       index_uni(1), index_uni(((lcm_sym289__ + 1) - 1)))));
-                lcm_sym263__ = ((lcm_sym289__ + 1) + 1);
+                lcm_sym264__ = ((lcm_sym289__ + 1) + 1);
                 lp_accum__.add(
                   bernoulli_lpmf<propto__>(
                     rvalue(y, "y",
                       index_uni(1), index_uni((lcm_sym289__ + 1))),
                     rvalue(p, "p",
                       index_uni(1), index_uni((lcm_sym289__ + 1)))));
-                for (int inline_sym30__ = lcm_sym263__;
+                for (int inline_sym30__ = lcm_sym264__;
                      inline_sym30__ <= lcm_sym295__; ++inline_sym30__) {
                   current_statement__ = 98;
                   lp_accum__.add(
@@ -12769,11 +12769,11 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                   rvalue(inline_sym15__, "inline_sym15__",
                     index_uni(1), index_uni(lcm_sym295__))));
             } else {
-              lcm_sym260__ = (lcm_sym304__ + 1);
+              lcm_sym262__ = (lcm_sym304__ + 1);
               validate_non_negative_index("lp", "n_occasions + 1",
-                                          lcm_sym260__);
+                                          lcm_sym262__);
               Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym29__ = 
-              Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(lcm_sym260__, DUMMY_VAR__);
+              Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(lcm_sym262__, DUMMY_VAR__);
               
               
               lcm_sym297__ = rvalue(nu, "nu", index_uni(1));
@@ -12823,7 +12823,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
               } 
               current_statement__ = 86;
               assign(inline_sym29__, bernoulli_lpmf<false>(0, psi),
-                "assigning variable inline_sym29__", index_uni(lcm_sym260__));
+                "assigning variable inline_sym29__", index_uni(lcm_sym262__));
               current_statement__ = 87;
               lp_accum__.add(log_sum_exp(inline_sym29__));
             }
@@ -12946,7 +12946,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                       rvalue(lcm_sym286__, "lcm_sym286__",
                         index_uni(inline_sym31__),
                           index_uni(((lcm_sym288__ + 1) - 1)))));
-                  lcm_sym262__ = ((lcm_sym288__ + 1) + 1);
+                  lcm_sym263__ = ((lcm_sym288__ + 1) + 1);
                   lp_accum__.add(
                     bernoulli_lpmf<propto__>(
                       rvalue(y, "y",
@@ -12955,7 +12955,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                       rvalue(p, "p",
                         index_uni(inline_sym31__),
                           index_uni((lcm_sym288__ + 1)))));
-                  for (int inline_sym30__ = lcm_sym262__;
+                  for (int inline_sym30__ = lcm_sym263__;
                        inline_sym30__ <= lcm_sym294__; ++inline_sym30__) {
                     current_statement__ = 98;
                     lp_accum__.add(
@@ -12978,11 +12978,11 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                     rvalue(inline_sym15__, "inline_sym15__",
                       index_uni(inline_sym31__), index_uni(lcm_sym294__))));
               } else {
-                lcm_sym260__ = (lcm_sym304__ + 1);
+                lcm_sym262__ = (lcm_sym304__ + 1);
                 validate_non_negative_index("lp", "n_occasions + 1",
-                                            lcm_sym260__);
+                                            lcm_sym262__);
                 Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym29__ = 
-                Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(lcm_sym260__, DUMMY_VAR__);
+                Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(lcm_sym262__, DUMMY_VAR__);
                 
                 
                 current_statement__ = 103;
@@ -13037,7 +13037,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                 } 
                 current_statement__ = 86;
                 assign(inline_sym29__, bernoulli_lpmf<false>(0, psi),
-                  "assigning variable inline_sym29__", index_uni(lcm_sym260__));
+                  "assigning variable inline_sym29__", index_uni(lcm_sym262__));
                 current_statement__ = 87;
                 lp_accum__.add(log_sum_exp(inline_sym29__));
               }
@@ -26393,9 +26393,8 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       Eigen::Matrix<local_scalar_t__, -1, 1> logit_psi = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(R, DUMMY_VAR__);
                                                          
       
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> logit_p = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>(Eigen::Matrix<double, -1, -1>::Constant(R, T, std::numeric_limits<double>::quiet_NaN()));
-      
+      Eigen::Matrix<local_scalar_t__, -1, -1> logit_p = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(R, T, DUMMY_VAR__);
+                                                        
       
       assign(lcm_sym35__, stan::math::fma(beta_occ, X, alpha_occ),
         "assigning variable lcm_sym35__");
