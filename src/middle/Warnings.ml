@@ -25,5 +25,6 @@ let pp ?printed_filename ppf (span, message) =
   in
   Fmt.pf ppf "@[<hov>Warning%s: %s@]" loc_str message
 
-let pp_warnings ?printed_filename ppf =
-  Fmt.(pf ppf "@[<v>%a@]" (list ~sep:cut (pp ?printed_filename)))
+let pp_warnings ?printed_filename ppf warnings =
+  Fmt.(
+    pf ppf "@[<v>%a@]%a" (list ~sep:cut (pp ?printed_filename)) warnings cut ())
