@@ -3,6 +3,7 @@ import org.stan.Utils
 
 def utils = new org.stan.Utils()
 def skipExpressionTests = false
+def buildingAgentARM = "linux"
 /* Functions that runs a sh command and returns the stdout */
 def runShell(String command){
     def output = sh (returnStdout: true, script: "${command}").trim()
@@ -16,14 +17,6 @@ def tagName() {
         'nightly'
     } else {
         'unknown-tag'
-    }
-}
-
-def buildingAgent(String agent) {
-    if (buildingTag()) {
-        agent
-    } else {
-        'linux'
     }
 }
 
@@ -52,6 +45,10 @@ pipeline {
 
                     def stanMathSigs = ['test/integration/signatures/stan_math_sigs.expected'].join(" ")
                     skipExpressionTests = utils.verifyChanges(stanMathSigs)
+                    
+                    if (buildingTag()) {
+                        buildingAgentARM = "arm-ec2"
+                    }
                 }
             }
         }
@@ -69,6 +66,7 @@ pipeline {
                     eval \$(opam env)
                     dune build @install
                 """)
+                
                 sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
                 stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
             }
@@ -98,57 +96,57 @@ pipeline {
             }
             post { always { runShell("rm -rf ./*") }}
         }
-        // stage("OCaml tests") {
-        //     parallel {
-        //         stage("Dune tests") {
-        //             agent {
-        //                 dockerfile {
-        //                     filename 'docker/debian/Dockerfile'
-        //                     //Forces image to ignore entrypoint
-        //                     args "-u root --entrypoint=\'\'"
-        //                 }
-        //             }
-        //             steps {
-        //                 sh 'printenv'
-        //                 runShell("""
-        //                     eval \$(opam env)
-        //                     dune runtest
-        //                 """)
-        //             }
-        //             post { always { runShell("rm -rf ./*") }}
-        //         }
-        //         stage("TFP tests") {
-        //             agent {
-        //                 docker {
-        //                     image 'tensorflow/tensorflow@sha256:08901711826b185136886c7b8271b9fdbe86b8ccb598669781a1f5cb340184eb'
-        //                     args '-u root'
-        //                 }
-        //             }
-        //             steps {
-        //                 sh "pip3 install tfp-nightly==0.11.0.dev20200516"
-        //                 sh "python3 test/integration/tfp/tests.py"
-        //             }
-        //             post { always { runShell("rm -rf ./*") }}
-        //         }
-        //         stage("stancjs tests") {
-        //             agent {
-        //                 dockerfile {
-        //                     filename 'docker/debian/Dockerfile'
-        //                     //Forces image to ignore entrypoint
-        //                     args "-u root --entrypoint=\'\'"
-        //                 }
-        //             }
-        //             steps {
-        //                 sh 'printenv'
-        //                 runShell("""
-        //                     eval \$(opam env)
-        //                     dune build @runjstest
-        //                 """)
-        //             }
-        //             post { always { runShell("rm -rf ./*") }}
-        //         }
-        //     }
-        // }
+        stage("OCaml tests") {
+            parallel {
+                stage("Dune tests") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/debian/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u root --entrypoint=\'\'"
+                        }
+                    }
+                    steps {
+                        sh 'printenv'
+                        runShell("""
+                            eval \$(opam env)
+                            dune runtest
+                        """)
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+                stage("TFP tests") {
+                    agent {
+                        docker {
+                            image 'tensorflow/tensorflow@sha256:08901711826b185136886c7b8271b9fdbe86b8ccb598669781a1f5cb340184eb'
+                            args '-u root'
+                        }
+                    }
+                    steps {
+                        sh "pip3 install tfp-nightly==0.11.0.dev20200516"
+                        sh "python3 test/integration/tfp/tests.py"
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+                stage("stancjs tests") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/debian/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u root --entrypoint=\'\'"
+                        }
+                    }
+                    steps {
+                        sh 'printenv'
+                        runShell("""
+                            eval \$(opam env)
+                            dune build @runjstest
+                        """)
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+            }
+        }
         // stage("CmdStan & Math tests") {
         //     parallel {
         //         stage("Compile tests") {
@@ -332,7 +330,7 @@ pipeline {
 
                 stage("Build & test a static Linux ARM binary") {
                     when { anyOf { buildingTag(); branch 'master' } }
-                    agent { label buildingAgent("arm-ec2") }
+                    agent { label "${buildingAgentARM}" }
                     steps {
 
                         runShell("""
