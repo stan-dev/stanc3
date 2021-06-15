@@ -154,7 +154,7 @@ let modify_sizedtype_mem (mem_pattern : Common.Helpers.mem_pattern) st =
 let rec modify_stmt_pattern (mem_pattern : Common.Helpers.mem_pattern)
     (pattern :
       ( Typed.Meta.t Expr.Fixed.t
-      , (Typed.Meta.t, 'b) Stmt.Fixed.t )
+      , (Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t )
       Stmt.Fixed.Pattern.t) (modifiable_set : string Core_kernel.Set.Poly.t) =
   let mod_expr =
     Mir_utils.map_rec_expr (modify_expr_pattern mem_pattern modifiable_set)
@@ -336,8 +336,9 @@ and query_initial_demotable_funs (in_loop : bool) (kind : Fun_kind.t)
  * @param in_loop A boolean to specify the logic of indexing expressions. See
  *  `query_initial_demotable_expr` for an explanation of the logic.
  *)
-let rec query_initial_demotable_stmt (in_loop : bool) Stmt.Fixed.({pattern; _})
-    =
+let rec query_initial_demotable_stmt (in_loop : bool)
+    (Stmt.Fixed.({pattern; _}) :
+      (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t) =
   let query_expr = query_initial_demotable_expr in_loop in
   let query_inner_stmt checking_loop =
     query_initial_demotable_stmt checking_loop

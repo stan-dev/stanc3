@@ -1224,7 +1224,11 @@ let optimize_soa (mir : Program.Typed.t) =
   in
   let transform' s =
     match transform {pattern= SList s; meta= Location_span.empty} with
-    | {pattern= SList l; _} -> l
+    | { pattern=
+          SList
+            (l : (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t list); _
+      } ->
+        l
     | _ ->
         raise
           (Failure "Something went wrong with program transformation packing!")
