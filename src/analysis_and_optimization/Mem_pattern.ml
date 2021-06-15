@@ -21,8 +21,8 @@ let get_eigen_decls Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
  * @param op a functor returning a Set of strings
  * @param ind the Index.t to modify
  *)
-let map_index (op : Typed.Meta.t Fixed.t -> string Core_kernel.Set.Poly.t)
-    (ind : Typed.Meta.t Fixed.t Index.t) : string Set.Poly.t =
+let map_index (op : Typed.Meta.t Expr.Fixed.t -> string Core_kernel.Set.Poly.t)
+    (ind : Typed.Meta.t Expr.Fixed.t Index.t) : string Set.Poly.t =
   match ind with
   | Index.All -> Set.Poly.empty
   | Single ind_expr -> op ind_expr
@@ -35,7 +35,7 @@ let map_index (op : Typed.Meta.t Fixed.t -> string Core_kernel.Set.Poly.t)
  * Search through an expression for the names of all types that hold matrices 
  *  and vectors.
  **)
-let query_eigen_names (expr : 'a Expr.Fixed.t) : string Set.Poly.t =
+let query_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) : string Set.Poly.t =
   let get_expr_eigen_names (Dataflow_types.VVar s, Expr.Typed.Meta.({type_; _}))
       =
     if UnsizedType.contains_eigen_type type_ then Some s else None
@@ -47,7 +47,7 @@ let query_eigen_names (expr : 'a Expr.Fixed.t) : string Set.Poly.t =
  *  Return true if any of the names in `name_set` are in the expression.
  **)
 let contains_eigen_names (name_set : string Set.Poly.t)
-    (expr : 'a Expr.Fixed.t) : bool =
+    (expr : Typed.Meta.t Expr.Fixed.t) : bool =
   not (Set.Poly.is_empty (Set.inter name_set (query_eigen_names expr)))
 
 (**
@@ -56,7 +56,7 @@ let contains_eigen_names (name_set : string Set.Poly.t)
  **)
 let modify_kind (mem_pattern : Common.Helpers.mem_pattern)
     (modifiable_set : string Set.Poly.t) (kind : Fun_kind.t)
-    (exprs : 'a Expr.Fixed.t list) : Fun_kind.t =
+    (exprs : Typed.Meta.t Expr.Fixed.t list) : Fun_kind.t =
   let find_eigen_names = contains_eigen_names modifiable_set in
   let expr_checker =
     match mem_pattern with
@@ -64,8 +64,8 @@ let modify_kind (mem_pattern : Common.Helpers.mem_pattern)
     | Common.Helpers.SoA -> List.exists
   in
   match kind with
-  | Fun_kind.StanLib (name, sfx, _) when expr_checker ~f:find_eigen_names exprs
-    ->
+  | Fun_kind.StanLib (name, sfx, (_ : Common.Helpers.mem_pattern))
+    when expr_checker ~f:find_eigen_names exprs ->
       Fun_kind.StanLib (name, sfx, mem_pattern)
   | (_ : Fun_kind.t) -> kind
 
@@ -86,10 +86,11 @@ let modify_kind (mem_pattern : Common.Helpers.mem_pattern)
  *)
 let rec modify_expr_pattern (mem_pattern : Common.Helpers.mem_pattern)
     (modifiable_set : string Set.Poly.t)
-    (pattern : Typed.Meta.t Fixed.t Fixed.Pattern.t) =
+    (pattern : Typed.Meta.t Expr.Fixed.t Fixed.Pattern.t) =
   let mod_expr = modify_expr mem_pattern modifiable_set in
   match pattern with
-  | Expr.Fixed.Pattern.FunApp (kind, (exprs : 'a Expr.Fixed.t list)) ->
+  | Expr.Fixed.Pattern.FunApp (kind, (exprs : Typed.Meta.t Expr.Fixed.t list))
+    ->
       let mod_kind = modify_kind mem_pattern modifiable_set kind exprs in
       Expr.Fixed.Pattern.FunApp (mod_kind, List.map ~f:mod_expr exprs)
   | TernaryIf (predicate, texpr, fexpr) ->
@@ -151,8 +152,10 @@ let modify_sizedtype_mem (mem_pattern : Common.Helpers.mem_pattern) st =
  * @param modifiable_set The name of the variable we are searching for.
  *)
 let rec modify_stmt_pattern (mem_pattern : Common.Helpers.mem_pattern)
-    (pattern : ('a Expr.Fixed.t, ('a, 'b) Stmt.Fixed.t) Stmt.Fixed.Pattern.t)
-    (modifiable_set : string Core_kernel.Set.Poly.t) =
+    (pattern :
+      ( Typed.Meta.t Expr.Fixed.t
+      , (Typed.Meta.t, 'b) Stmt.Fixed.t )
+      Stmt.Fixed.Pattern.t) (modifiable_set : string Core_kernel.Set.Poly.t) =
   let mod_expr =
     Mir_utils.map_rec_expr (modify_expr_pattern mem_pattern modifiable_set)
   in
@@ -166,7 +169,7 @@ let rec modify_stmt_pattern (mem_pattern : Common.Helpers.mem_pattern)
         { decl with
           decl_type= Type.Sized (modify_sizedtype_mem mem_pattern sized_type)
         }
-  | NRFunApp (kind, (exprs : 'a Expr.Fixed.t list)) ->
+  | NRFunApp (kind, (exprs : Typed.Meta.t Expr.Fixed.t list)) ->
       let mod_kind = modify_kind mem_pattern modifiable_set kind exprs in
       NRFunApp (mod_kind, List.map ~f:mod_expr exprs)
   | Assignment
@@ -255,15 +258,14 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
  * inner matrix types cell.
  *)
 let rec is_uni_eigen_loop_indexing (ut : UnsizedType.t)
-    (index : 'a Expr.Fixed.t Index.t list) =
+    (index : Typed.Meta.t Expr.Fixed.t Index.t list) =
   match (ut, index) with
   | (UnsizedType.UArray t | UFun (_, ReturnType t, _, _)), index -> (
     match List.tl index with
     | Some cut_list -> is_uni_eigen_loop_indexing t cut_list
     | None -> is_uni_eigen_loop_indexing t [Index.All] )
-  | (UVector | URowVector), [Index.Single (_ : 'a Expr.Fixed.t)] -> true
-  | UMatrix, [Single (_ : 'a Expr.Fixed.t); Single (_ : 'a Expr.Fixed.t)] ->
-      true
+  | (UVector | URowVector), [Index.Single _] -> true
+  | UMatrix, [Single _; Single _] -> true
   (* None of the below contain single cell access*)
   | (UReal | UInt | UMathLibraryFunction | UFun (_, Void, _, _)), _ -> false
   | (UVector | URowVector), _ -> false
@@ -307,7 +309,7 @@ let rec query_initial_demotable_expr (in_loop : bool) Expr.Fixed.({pattern; _})
  *  `query_initial_demotable_expr` for an explanation of the logic.
  *)
 and query_initial_demotable_funs (in_loop : bool) (kind : Fun_kind.t)
-    (exprs : 'a Expr.Fixed.t list) =
+    (exprs : Typed.Meta.t Expr.Fixed.t list) =
   let query_expr = query_initial_demotable_expr in_loop in
   let all_eigen_names =
     Set.Poly.union_list (List.map ~f:query_eigen_names exprs)
