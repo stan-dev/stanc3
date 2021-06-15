@@ -5,7 +5,7 @@ open Middle.Expr
 (**
  * Recursivly look in Decls for sized types that hold matrices or vectors
  *)
-let get_eigen_decls Stmt.Fixed.({pattern; _}) =
+let get_eigen_decls Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
   match pattern with
   | Stmt.Fixed.Pattern.Decl
       { decl_adtype= UnsizedType.AutoDiffable
@@ -21,7 +21,8 @@ let get_eigen_decls Stmt.Fixed.({pattern; _}) =
  * @param op a functor returning a Set of strings
  * @param ind the Index.t to modify
  *)
-let map_index op ind =
+let map_index (op : Typed.Meta.t Fixed.t -> string Core_kernel.Set.Poly.t)
+    (ind : Typed.Meta.t Fixed.t Index.t) : string Set.Poly.t =
   match ind with
   | Index.All -> Set.Poly.empty
   | Single ind_expr -> op ind_expr
@@ -34,7 +35,7 @@ let map_index op ind =
  * Search through an expression for the names of all types that hold matrices 
  *  and vectors.
  **)
-let query_eigen_names expr =
+let query_eigen_names (expr : 'a Expr.Fixed.t) : string Set.Poly.t =
   let get_expr_eigen_names (Dataflow_types.VVar s, Expr.Typed.Meta.({type_; _}))
       =
     if UnsizedType.contains_eigen_type type_ then Some s else None
@@ -45,10 +46,17 @@ let query_eigen_names expr =
  * Query an expression to check if any of it's named types exists in a set.
  *  Return true if any of the names in `name_set` are in the expression.
  **)
-let contains_eigen_names (name_set : string Set.Poly.t) (expr : Typed.t) =
+let contains_eigen_names (name_set : string Set.Poly.t)
+    (expr : 'a Expr.Fixed.t) : bool =
   not (Set.Poly.is_empty (Set.inter name_set (query_eigen_names expr)))
 
-let modify_kind mem_pattern modifiable_set kind exprs =
+(**
+ * Modify a function and it's subexpressions from SoA <-> AoS and vice versa.
+ * @param mem_pattern 
+ **)
+let modify_kind (mem_pattern : Common.Helpers.mem_pattern)
+    (modifiable_set : string Set.Poly.t) (kind : Fun_kind.t)
+    (exprs : 'a Expr.Fixed.t list) : Fun_kind.t =
   let find_eigen_names = contains_eigen_names modifiable_set in
   let expr_checker =
     match mem_pattern with
@@ -76,7 +84,9 @@ let modify_kind mem_pattern modifiable_set kind exprs =
  *  associated expressions we want to modify.
  * @param pattern The expression to modify
  *)
-let rec modify_expr_pattern mem_pattern modifiable_set pattern =
+let rec modify_expr_pattern (mem_pattern : Common.Helpers.mem_pattern)
+    (modifiable_set : string Set.Poly.t)
+    (pattern : Typed.Meta.t Fixed.t Fixed.Pattern.t) =
   let mod_expr = modify_expr mem_pattern modifiable_set in
   match pattern with
   | Expr.Fixed.Pattern.FunApp (kind, (exprs : 'a Expr.Fixed.t list)) ->
@@ -92,11 +102,14 @@ let rec modify_expr_pattern mem_pattern modifiable_set pattern =
       pattern
 
 (** 
-   * Given a Set of strings containing the names of objects that can be 
-   * promoted from AoS -> SoA for a given expression, promote them.
-   *)
-and modify_expr mem_pattern modifiable_set (Expr.Fixed.({pattern; _}) as expr)
-    =
+ * Given a Set of strings containing the names of objects that can be 
+ * promoted from AoS -> SoA for a given expression, promote them.
+ * @param mem_pattern The memory pattern to change expressions to.
+ * @param modifiable_set The name of the variables whose
+ *  associated expressions we want to modify.
+ *)
+and modify_expr (mem_pattern : Common.Helpers.mem_pattern)
+    (modifiable_set : string Set.Poly.t) (Expr.Fixed.({pattern; _}) as expr) =
   let new_pattern = modify_expr_pattern mem_pattern modifiable_set pattern in
   {expr with pattern= new_pattern}
 
@@ -138,7 +151,7 @@ let modify_sizedtype_mem (mem_pattern : Common.Helpers.mem_pattern) st =
  * @param modifiable_set The name of the variable we are searching for.
  *)
 let rec modify_stmt_pattern (mem_pattern : Common.Helpers.mem_pattern)
-    (pattern : ('a Fixed.t, ('a, 'b) Stmt.Fixed.t) Stmt.Fixed.Pattern.t)
+    (pattern : ('a Expr.Fixed.t, ('a, 'b) Stmt.Fixed.t) Stmt.Fixed.Pattern.t)
     (modifiable_set : string Core_kernel.Set.Poly.t) =
   let mod_expr =
     Mir_utils.map_rec_expr (modify_expr_pattern mem_pattern modifiable_set)
@@ -193,15 +206,16 @@ let rec modify_stmt_pattern (mem_pattern : Common.Helpers.mem_pattern)
  * Internal to the module, used when looking recursivly
  *  in statement patterns that hold statements
  *)
-and modify_stmt mem_pattern (Stmt.Fixed.({pattern; _}) as stmt)
-    (modifiable_set : string Set.Poly.t) =
+and modify_stmt (mem_pattern : Common.Helpers.mem_pattern)
+    (Stmt.Fixed.({pattern; _}) as stmt) (modifiable_set : string Set.Poly.t) =
   {stmt with pattern= modify_stmt_pattern mem_pattern pattern modifiable_set}
 
 (* Look through a statement to see whether it needs modified from
  * SoA to AoS. Returns the set of object names that need demoted
  * in a statement, if any.
  *)
-let query_demotable_stmt (aos_exits : string Set.Poly.t) pattern =
+let query_demotable_stmt (aos_exits : string Set.Poly.t)
+    (pattern : (Typed.t, int) Stmt.Fixed.Pattern.t) : string Set.Poly.t =
   match pattern with
   | Stmt.Fixed.Pattern.Assignment
       ( ( (assign_name : string)
@@ -292,7 +306,8 @@ let rec query_initial_demotable_expr (in_loop : bool) Expr.Fixed.({pattern; _})
  * @param in_loop A boolean to specify the logic of indexing expressions. See
  *  `query_initial_demotable_expr` for an explanation of the logic.
  *)
-and query_initial_demotable_funs (in_loop : bool) (kind : Fun_kind.t) (exprs : Typed.t list) =
+and query_initial_demotable_funs (in_loop : bool) (kind : Fun_kind.t)
+    (exprs : 'a Expr.Fixed.t list) =
   let query_expr = query_initial_demotable_expr in_loop in
   let all_eigen_names =
     Set.Poly.union_list (List.map ~f:query_eigen_names exprs)
@@ -326,7 +341,8 @@ let rec query_initial_demotable_stmt (in_loop : bool) Stmt.Fixed.({pattern; _})
     query_initial_demotable_stmt checking_loop
   in
   match pattern with
-  | Stmt.Fixed.Pattern.Assignment (((name : string), (_ : UnsizedType.t), lhs), rhs) ->
+  | Stmt.Fixed.Pattern.Assignment
+      (((name : string), (_ : UnsizedType.t), lhs), rhs) ->
       let check_lhs =
         Set.Poly.union_list (List.map ~f:(map_index query_expr) lhs)
       in
@@ -353,4 +369,4 @@ let rec query_initial_demotable_stmt (in_loop : bool) Stmt.Fixed.({pattern; _})
         (query_inner_stmt true body)
   | While (predicate, body) ->
       Set.Poly.union (query_expr predicate) (query_inner_stmt true body)
-  | Skip | Break | Continue | Decl _-> Set.Poly.empty
+  | Skip | Break | Continue | Decl _ -> Set.Poly.empty
