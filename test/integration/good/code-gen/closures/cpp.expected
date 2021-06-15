@@ -96,12 +96,12 @@ stan::value_type_t<T1__>>
   return vars_count__;
   }
   auto value_of__() const {
-  return ValueOf__(value_of(p), value_of(pa), value_of(pv), value_of(v),
-                   value_of(x), value_of(y));
+  return ValueOf__(eval(value_of(p)), eval(value_of(pa)), eval(value_of(pv)),
+                   v, x, y);
   }
   auto deep_copy_vars__() const {
-  return CopyOf__(deep_copy_vars(p), deep_copy_vars(pa), deep_copy_vars(pv),
-                  deep_copy_vars(v), deep_copy_vars(x), deep_copy_vars(y));
+  return CopyOf__(eval(deep_copy_vars(p)), eval(deep_copy_vars(pa)),
+                  eval(deep_copy_vars(pv)), v, x, y);
   }
   void zero_adjoints__() {
   stan::math::zero_adjoints(p);
@@ -165,10 +165,10 @@ stan::value_type_t<T1__>>
   return vars_count__;
   }
   auto value_of__() const {
-  return ValueOf__(value_of(v), value_of(x), value_of(y));
+  return ValueOf__(v, x, y);
   }
   auto deep_copy_vars__() const {
-  return CopyOf__(deep_copy_vars(v), deep_copy_vars(x), deep_copy_vars(y));
+  return CopyOf__(v, x, y);
   }
   void zero_adjoints__() {
   stan::math::zero_adjoints(v);
@@ -815,10 +815,10 @@ T0__>
   return vars_count__;
   }
   auto value_of__() const {
-  return ValueOf__(value_of(foo));
+  return ValueOf__(eval(value_of(foo)));
   }
   auto deep_copy_vars__() const {
-  return CopyOf__(deep_copy_vars(foo));
+  return CopyOf__(eval(deep_copy_vars(foo)));
   }
   void zero_adjoints__() {
   stan::math::zero_adjoints(foo);
@@ -868,10 +868,10 @@ T0__>
   return vars_count__;
   }
   auto value_of__() const {
-  return ValueOf__(value_of(foo));
+  return ValueOf__(eval(value_of(foo)));
   }
   auto deep_copy_vars__() const {
-  return CopyOf__(deep_copy_vars(foo));
+  return CopyOf__(eval(deep_copy_vars(foo)));
   }
   void zero_adjoints__() {
   stan::math::zero_adjoints(foo);
@@ -1595,10 +1595,10 @@ class bar_L16C9_cfunctor__ {
   return vars_count__;
   }
   auto value_of__() const {
-  return ValueOf__(value_of(x));
+  return ValueOf__(x);
   }
   auto deep_copy_vars__() const {
-  return CopyOf__(deep_copy_vars(x));
+  return CopyOf__(x);
   }
   void zero_adjoints__() {
   stan::math::zero_adjoints(x);
@@ -1646,10 +1646,10 @@ T0__>
   return vars_count__;
   }
   auto value_of__() const {
-  return ValueOf__(value_of(p));
+  return ValueOf__(eval(value_of(p)));
   }
   auto deep_copy_vars__() const {
-  return CopyOf__(deep_copy_vars(p));
+  return CopyOf__(eval(deep_copy_vars(p)));
   }
   void zero_adjoints__() {
   stan::math::zero_adjoints(p);
@@ -1703,10 +1703,10 @@ T0__>
   return vars_count__;
   }
   auto value_of__() const {
-  return ValueOf__(value_of(g), value_of(x));
+  return ValueOf__(eval(value_of(g)), eval(value_of(x)));
   }
   auto deep_copy_vars__() const {
-  return CopyOf__(deep_copy_vars(g), deep_copy_vars(x));
+  return CopyOf__(eval(deep_copy_vars(g)), eval(deep_copy_vars(x)));
   }
   void zero_adjoints__() {
   stan::math::zero_adjoints(g);
@@ -2249,10 +2249,10 @@ stan::value_type_t<T1__>>, -1, 1>
   return vars_count__;
   }
   auto value_of__() const {
-  return ValueOf__(value_of(k));
+  return ValueOf__(eval(value_of(k)));
   }
   auto deep_copy_vars__() const {
-  return CopyOf__(deep_copy_vars(k));
+  return CopyOf__(eval(deep_copy_vars(k)));
   }
   void zero_adjoints__() {
   stan::math::zero_adjoints(k);
@@ -2829,10 +2829,10 @@ T0__>
   return vars_count__;
   }
   auto value_of__() const {
-  return ValueOf__(value_of(mu));
+  return ValueOf__(eval(value_of(mu)));
   }
   auto deep_copy_vars__() const {
-  return CopyOf__(deep_copy_vars(mu));
+  return CopyOf__(eval(deep_copy_vars(mu)));
   }
   void zero_adjoints__() {
   stan::math::zero_adjoints(mu);
@@ -2891,10 +2891,10 @@ T0__>
   return vars_count__;
   }
   auto value_of__() const {
-  return ValueOf__(value_of(mu));
+  return ValueOf__(eval(value_of(mu)));
   }
   auto deep_copy_vars__() const {
-  return CopyOf__(deep_copy_vars(mu));
+  return CopyOf__(eval(deep_copy_vars(mu)));
   }
   void zero_adjoints__() {
   stan::math::zero_adjoints(mu);

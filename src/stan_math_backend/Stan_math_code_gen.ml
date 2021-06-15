@@ -419,7 +419,9 @@ let pp_closure ppf (fdrt, fdname, fdsuffix, fdcaptures, fdargs) =
           (list ~sep:comma string) templates )
     in
     let pp f =
-      list ~sep:comma (fun ppf (_, _, id, _) -> pf ppf "%s(%s)" f id)
+      list ~sep:comma (fun ppf -> function
+        | _, UnsizedType.DataOnly, id, _ -> pf ppf "%s" id
+        | _, AutoDiffable, id, _ -> pf ppf "eval(%s(%s))" f id )
     in
     let valueof ppf () =
       pf ppf "auto value_of__() const {@ return ValueOf__(@[<hov>%a@]);@ }"

@@ -323,8 +323,7 @@ and gen_fun_app suffix ppf fname es =
        |"integrate_ode_adams", f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl
        |"integrate_ode_rk45", f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl
         ->
-          ( fname
-          , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl )
+          (fname, f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl)
       | ( x
         , {meta= {type_= UFun (_, _, (_, false)); _}; pattern= Var f}
           :: grainsize :: container :: tl )
