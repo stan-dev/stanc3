@@ -656,9 +656,10 @@ let add_binary_vec_int_int name =
 let add_ternary name =
   add_unqualified (name, ReturnType UReal, [UReal; UReal; UReal])
 
-(*Adds functions that operate on matrix, double array and real types*)
+(*Adds functions that operate on matrix, double array, real, and complex types*)
 let add_ternary_vec name =
   add_unqualified (name, ReturnType UReal, [UReal; UReal; UReal]) ;
+  add_unqualified (name, ReturnType UComplex, [UComplex; UComplex; UComplex]) ;
   add_unqualified (name, ReturnType UVector, [UVector; UReal; UReal]) ;
   add_unqualified (name, ReturnType UVector, [UVector; UVector; UReal]) ;
   add_unqualified (name, ReturnType UVector, [UVector; UReal; UVector]) ;
@@ -840,6 +841,10 @@ let () =
   add_unqualified ("columns_dot_self", ReturnType URowVector, [UVector]) ;
   add_unqualified ("columns_dot_self", ReturnType URowVector, [URowVector]) ;
   add_unqualified ("columns_dot_self", ReturnType URowVector, [UMatrix]) ;
+  add_unqualified ("complex", ReturnType UComplex, []) ;
+  add_unqualified ("complex", ReturnType UComplex, [UReal; UReal]) ;
+  add_unqualified ("complex", ReturnType UComplex, [UReal]) ;
+  add_unqualified ("complex", ReturnType UComplex, [UComplex]) ;
   add_unqualified
     ("cov_exp_quad", ReturnType UMatrix, [UArray UReal; UReal; UReal]) ;
   add_unqualified
@@ -1099,6 +1104,7 @@ let () =
   add_unqualified ("identity_matrix", ReturnType UMatrix, [UInt]) ;
   add_unqualified ("if_else", ReturnType UInt, [UInt; UInt; UInt]) ;
   add_unqualified ("if_else", ReturnType UReal, [UInt; UReal; UReal]) ;
+  add_unqualified ("imag", ReturnType UReal, [UComplex]) ;
   add_unqualified ("inc_beta", ReturnType UReal, [UReal; UReal; UReal]) ;
   add_unqualified ("int_step", ReturnType UInt, [UReal]) ;
   add_unqualified ("int_step", ReturnType UInt, [UInt]) ;
@@ -1635,6 +1641,7 @@ let () =
   add_unqualified ("append_row", ReturnType UVector, [UVector; UVector]) ;
   add_unqualified ("append_row", ReturnType UVector, [UReal; UVector]) ;
   add_unqualified ("append_row", ReturnType UVector, [UVector; UReal]) ;
+  add_unqualified ("real", ReturnType UReal, [UComplex]) ;
   List.iter
     ~f:(fun t ->
       add_unqualified

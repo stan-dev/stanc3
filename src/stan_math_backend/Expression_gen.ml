@@ -12,7 +12,7 @@ let functions_requiring_namespace =
     ; "asinh"; "atan"; "atanh"; "cbrt"; "ceil"; "cos"; "cosh"; "erf"; "erfc"
     ; "exp"; "exp2"; "expm1"; "fabs"; "floor"; "lgamma"; "log"; "log1p"; "log2"
     ; "log10"; "round"; "sin"; "sinh"; "sqrt"; "tan"; "tanh"; "tgamma"; "trunc"
-    ; "fdim"; "fmax"; "fmin"; "hypot"; "fma"; ]
+    ; "fdim"; "fmax"; "fmin"; "hypot"; "fma"; "imag"; "complex"; "real"; ]
 
 let stan_namespace_qualify f =
   if Set.mem functions_requiring_namespace f then "stan::math::" ^ f else f
@@ -97,7 +97,8 @@ let%expect_test "promote_unsized" =
 
 let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   match ut with
-  | UnsizedType.UInt | UReal | UComplex -> string ppf scalar
+  | UnsizedType.UInt | UReal -> string ppf scalar
+  | UComplex -> pf ppf "std::complex<%s>" scalar
   | UArray t ->
       pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar (scalar, t)
   | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar
