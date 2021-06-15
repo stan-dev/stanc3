@@ -2292,7 +2292,8 @@ integrate(const std::vector<Eigen::Matrix<T0__, -1, 1>>& k,
     current_statement__ = 6;
     auto harmonic = harmonic_L4C15_make__(k);
     current_statement__ = 7;
-    return ode_rk45(harmonic, init, 0, ts, pstream__);
+    return ode_rk45(stan::math::ode_closure_adapter(), init, 0, ts,
+             pstream__, harmonic);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return

@@ -163,7 +163,8 @@ let ode_adapter f =
   match Expr.(f.Fixed.meta.Typed.Meta.type_) with
   | UFun (args, rt, _) ->
       { Expr.Fixed.meta= {f.meta with type_= UFun (args, rt, (FnPlain, true))}
-      ; pattern= FunApp (StanLib ("stan::math::ode_closure_adapter", FnPlain), []) }
+      ; pattern=
+          FunApp (StanLib ("stan::math::ode_closure_adapter", FnPlain), []) }
   | _ -> failwith "impossible"
 
 let wrap_fn f =
@@ -322,7 +323,8 @@ and gen_fun_app suffix ppf fname es =
        |"integrate_ode_adams", f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl
        |"integrate_ode_rk45", f :: y0 :: t0 :: ts :: theta :: x :: x_int :: tl
         ->
-          (fname, f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl)
+          ( fname
+          , f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl )
       | ( x
         , {meta= {type_= UFun (_, _, (_, false)); _}; pattern= Var f}
           :: grainsize :: container :: tl )
@@ -350,12 +352,12 @@ and gen_fun_app suffix ppf fname es =
                   ~suffix:Stan_math_signatures.ode_tolerances_suffix
              && not (Stan_math_signatures.variadic_ode_adjoint_fn = x) ->
           ( fname
-          , wrap_fn f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps
-            :: msgs :: tl )
+          , ode_adapter f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: max_steps
+            :: msgs :: wrap_fn f :: tl )
       | x, f :: y0 :: t0 :: ts :: tl
         when Stan_math_signatures.is_variadic_ode_fn x
              && not (Stan_math_signatures.variadic_ode_adjoint_fn = x) ->
-          (fname, wrap_fn f :: y0 :: t0 :: ts :: msgs :: tl)
+          (fname, ode_adapter f :: y0 :: t0 :: ts :: msgs :: wrap_fn f :: tl)
       | ( x
         , f
           :: y0
@@ -373,14 +375,14 @@ and gen_fun_app suffix ppf fname es =
                                               :: solver_f :: solver_b :: tl )
         when Stan_math_signatures.variadic_ode_adjoint_fn = x ->
           ( fname
-          , wrap_fn f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: rel_tol_b
+          , ode_adapter f :: y0 :: t0 :: ts :: rel_tol :: abs_tol :: rel_tol_b
             :: abs_tol_b :: rel_tol_q :: abs_tol_q :: max_num_steps
             :: num_checkpoints :: interpolation_polynomial :: solver_f
-            :: solver_b :: msgs :: tl )
+            :: solver_b :: msgs :: wrap_fn f :: tl )
       | x, f :: y0 :: t0 :: ts :: tl
         when Stan_math_signatures.is_variadic_ode_fn x
              && not (Stan_math_signatures.variadic_ode_adjoint_fn = x) ->
-          (fname, f :: y0 :: t0 :: ts :: msgs :: tl)
+          (fname, ode_adapter f :: y0 :: t0 :: ts :: msgs :: wrap_fn f :: tl)
       | ( "map_rect"
         , {pattern= Var f; meta= {type_= UFun (_, _, (FnPlain, false)); _}}
           :: tl ) ->

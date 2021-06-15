@@ -1780,7 +1780,8 @@ and semantic_check_fundef ~loc ~cf ~is_closure return_ty id args body =
                 Utils.distribution_suffices
             in
             { cf with
-              in_fun_def= true
+              current_block= Functions
+            ; in_fun_def= true
             ; in_rng_fun_def= String.is_suffix id.name ~suffix:"_rng"
             ; in_lp_fun_def= String.is_suffix id.name ~suffix:"_lp"
             ; in_udf_dist_def= is_udf_dist id.name
