@@ -132,7 +132,8 @@ let modify_sizedtype_mem (mem_pattern : Common.Helpers.mem_pattern) st =
 (**
  * Modify statement patterns in the MIR from AoS <-> SoA and vice versa 
  * @param mem_pattern A mem_pattern to modify expressions to. For the 
- *  given memory pattern, this modifies statement patterns and expressions it.
+ *  given memory pattern, this modifies 
+ *  statement patterns and expressions to it.
  * @param pattern The statement pattern to modify 
  * @param modifiable_set The name of the variable we are searching for.
  *)
@@ -291,7 +292,7 @@ let rec query_initial_demotable_expr (in_loop : bool) Expr.Fixed.({pattern; _})
  * @param in_loop A boolean to specify the logic of indexing expressions. See
  *  `query_initial_demotable_expr` for an explanation of the logic.
  *)
-and query_initial_demotable_funs (in_loop : bool) kind (exprs : Typed.t list) =
+and query_initial_demotable_funs (in_loop : bool) (kind : Fun_kind.t) (exprs : Typed.t list) =
   let query_expr = query_initial_demotable_expr in_loop in
   let all_eigen_names =
     Set.Poly.union_list (List.map ~f:query_eigen_names exprs)
@@ -325,8 +326,7 @@ let rec query_initial_demotable_stmt (in_loop : bool) Stmt.Fixed.({pattern; _})
     query_initial_demotable_stmt checking_loop
   in
   match pattern with
-  | Stmt.Fixed.Pattern.Decl _ -> Set.Poly.empty
-  | Assignment (((name : string), (_ : UnsizedType.t), lhs), rhs) ->
+  | Stmt.Fixed.Pattern.Assignment (((name : string), (_ : UnsizedType.t), lhs), rhs) ->
       let check_lhs =
         Set.Poly.union_list (List.map ~f:(map_index query_expr) lhs)
       in
@@ -353,4 +353,4 @@ let rec query_initial_demotable_stmt (in_loop : bool) Stmt.Fixed.({pattern; _})
         (query_inner_stmt true body)
   | While (predicate, body) ->
       Set.Poly.union (query_expr predicate) (query_inner_stmt true body)
-  | Skip | Break | Continue -> Set.Poly.empty
+  | Skip | Break | Continue | Decl _-> Set.Poly.empty
