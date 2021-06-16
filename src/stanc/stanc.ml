@@ -78,8 +78,8 @@ let options =
          transformed it." )
     ; ( "--dump-stan-math-signatures"
       , Arg.Set dump_stan_math_sigs
-      , "\tDump out the list of supported type signatures for Stan Math \
-         backend." )
+      , " Dump out the list of supported type signatures for Stan Math backend."
+      )
     ; ( "--warn-uninitialized"
       , Arg.Set warn_uninitialized
       , " Emit warnings about uninitialized variables to stderr. Currently an \

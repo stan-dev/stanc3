@@ -3,6 +3,7 @@ import org.stan.Utils
 
 def utils = new org.stan.Utils()
 def skipExpressionTests = false
+def buildingAgentARM = "linux"
 /* Functions that runs a sh command and returns the stdout */
 def runShell(String command){
     def output = sh (returnStdout: true, script: "${command}").trim()
@@ -18,6 +19,7 @@ def tagName() {
         'unknown-tag'
     }
 }
+
 pipeline {
     agent none
     parameters {
@@ -43,6 +45,10 @@ pipeline {
 
                     def stanMathSigs = ['test/integration/signatures/stan_math_sigs.expected'].join(" ")
                     skipExpressionTests = utils.verifyChanges(stanMathSigs)
+                    
+                    if (buildingTag()) {
+                        buildingAgentARM = "arm-ec2"
+                    }
                 }
             }
         }
@@ -60,6 +66,7 @@ pipeline {
                     eval \$(opam env)
                     dune build @install
                 """)
+                
                 sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
                 stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
             }
@@ -155,9 +162,10 @@ pipeline {
                                     text:"O=0\nCXX=${CXX}")
                             sh """
                                 cd performance-tests-cmdstan
-                                cd cmdstan; make -j${env.PARALLEL} build; cd ..
-                                cp ../bin/stanc cmdstan/bin/stanc
-                                ./runPerformanceTests.py -j7 --runs=0 ../test/integration/good
+                                mkdir cmdstan/bin
+                                cp ../bin/stanc cmdstan/bin/linux-stanc
+                                cd cmdstan; make clean-all; make -j${env.PARALLEL} build; cd ..                                
+                                ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ../test/integration/good
                                 ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 example-models
                                 """
                         }
@@ -188,7 +196,7 @@ pipeline {
                             cat shotgun_perf_all.tests >> all.tests
                             cat all.tests
                             echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
-                            cd cmdstan; git show HEAD --stat; make -j4 build; cd ..
+                            cd cmdstan; make clean-all; git show HEAD --stat; make -j4 build; cd ..
                             CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
                         """
 
@@ -322,7 +330,7 @@ pipeline {
 
                 stage("Build & test a static Linux ARM binary") {
                     when { anyOf { buildingTag(); branch 'master' } }
-                    agent { label "arm-ec2" }
+                    agent { label "${buildingAgentARM}" }
                     steps {
 
                         runShell("""
