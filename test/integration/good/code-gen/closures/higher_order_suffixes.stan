@@ -14,8 +14,10 @@ functions {
 }
 transformed data {
     function
-    void hof(real(real) s_rng,real(real) s_lpdf, real(real) s_lp) {}
-    hof(ff_rng,ff_lpdf,ff_lp);
+    void hof(real(real) s_rng,real(real) s_lpdf, real(real) s_lp) {
+        // nothing
+    }
+    hof(ff_rng, ff_lpdf, ff_lp);
 
     function
     real foo_rng(real(real) bar_lpdf) {

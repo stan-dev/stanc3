@@ -6,7 +6,7 @@ data {
 }
 transformed data {
     function
-    real foo(real z, row_vector r) {
+    real capture_data(real z, row_vector r) {
         real rs = sum(r);
         real ys = sum(y);
         real vs = sum(v);
@@ -20,7 +20,7 @@ parameters {
 }
 model {
     function
-    real bar(real z, row_vector r) {
+    real capture_data_and_params(real z, row_vector r) {
         real rs = sum(r);
         real ys = sum(y);
         real vs = sum(v);
@@ -28,8 +28,8 @@ model {
         real pvs = sum(pv);
         return z + rs + x + ys + vs + p + pas + pvs;
     }
-    target += foo(0.0,[1.0]);
-    target += foo(p,[1.0]);
-    target += bar(0.0,[1.0]);
-    target += bar(p,[1.0]);
+    target += capture_data(0.0,[1.0]);
+    target += capture_data(p,[1.0]);
+    target += capture_data_and_params(0.0,[1.0]);
+    target += capture_data_and_params(p,[1.0]);
 }

@@ -4,7 +4,7 @@ transformed data {
         return x;
     }
     function
-    real bar(real y) {
+    real capture_dataonly_closure(real y) {
         return foo(y);
     }
 }
@@ -13,18 +13,18 @@ parameters {
 }
 transformed parameters {
     function
-    real baz(real y) {
+    real capture_closure(real y) {
         return foo(y);
     }
     function
-    real goo(real s) {
+    real closure_in_closure(real s) {
         function
         real gar(real b) {
             return b;
         }
         return gar(s);
     }
-    real s1 = bar(1.0);
-    real s2 = baz(1.0);
-    real s3 = goo(1.0);
+    real s1 = capture_dataonly_closure(1.0);
+    real s2 = capture_closure(1.0);
+    real s3 = closure_in_closure(1.0);
 }
