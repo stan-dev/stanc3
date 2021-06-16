@@ -181,14 +181,20 @@ Semantic error in 'bad_cov_exp_quad_len_data.stan', line 13, column 28 to column
     15:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'cov_exp_quad'. Available signatures: 
-(array[] real, real, real) => matrix
-(array[] real, array[] real, real, real) => matrix
-(array[] vector, real, real) => matrix
+Ill-typed arguments supplied to function 'cov_exp_quad':
+(array[] vector, array[] vector, real, array[] real)
+Available signatures:
 (array[] vector, array[] vector, real, real) => matrix
-(array[] row_vector, real, real) => matrix
+  The fourth argument must be real but got array[] real
+(array[] real, array[] real, real, real) => matrix
+  The first argument must be array[] real but got array[] vector
 (array[] row_vector, array[] row_vector, real, real) => matrix
-Instead supplied arguments of incompatible type: array[] vector, array[] vector, real, array[] real.
+  The first argument must be array[] row_vector but got array[] vector
+(array[] row_vector, real, real) => matrix
+  Expected 3 arguments but found 4 arguments.
+(array[] vector, real, real) => matrix
+  Expected 3 arguments but found 4 arguments.
+(Additional signatures omitted)
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_len_param.stan
 Syntax error in 'bad_cov_exp_quad_len_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
@@ -260,14 +266,20 @@ Semantic error in 'bad_cov_exp_quad_rvec_data.stan', line 12, column 28 to colum
     14:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'cov_exp_quad'. Available signatures: 
+Ill-typed arguments supplied to function 'cov_exp_quad':
+(row_vector, real, real)
+Available signatures:
 (array[] real, real, real) => matrix
-(array[] real, array[] real, real, real) => matrix
+  The first argument must be array[] real but got row_vector
 (array[] vector, real, real) => matrix
-(array[] vector, array[] vector, real, real) => matrix
+  The first argument must be array[] vector but got row_vector
 (array[] row_vector, real, real) => matrix
+  The first argument must be array[] row_vector but got row_vector
 (array[] row_vector, array[] row_vector, real, real) => matrix
-Instead supplied arguments of incompatible type: row_vector, real, real.
+  Expected 4 arguments but found 3 arguments.
+(array[] vector, array[] vector, real, real) => matrix
+  Expected 4 arguments but found 3 arguments.
+(Additional signatures omitted)
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_vec_data.stan
 Semantic error in 'bad_cov_exp_quad_rvec_vec_data.stan', line 13, column 28 to column 75:
    -------------------------------------------------
@@ -279,14 +291,20 @@ Semantic error in 'bad_cov_exp_quad_rvec_vec_data.stan', line 13, column 28 to c
     15:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'cov_exp_quad'. Available signatures: 
-(array[] real, real, real) => matrix
-(array[] real, array[] real, real, real) => matrix
-(array[] vector, real, real) => matrix
-(array[] vector, array[] vector, real, real) => matrix
-(array[] row_vector, real, real) => matrix
+Ill-typed arguments supplied to function 'cov_exp_quad':
+(array[] row_vector, array[] vector, real, real)
+Available signatures:
 (array[] row_vector, array[] row_vector, real, real) => matrix
-Instead supplied arguments of incompatible type: array[] row_vector, array[] vector, real, real.
+  The second argument must be array[] row_vector but got array[] vector
+(array[] real, array[] real, real, real) => matrix
+  The first argument must be array[] real but got array[] row_vector
+(array[] vector, array[] vector, real, real) => matrix
+  The first argument must be array[] vector but got array[] row_vector
+(array[] row_vector, real, real) => matrix
+  Expected 3 arguments but found 4 arguments.
+(array[] vector, real, real) => matrix
+  Expected 3 arguments but found 4 arguments.
+(Additional signatures omitted)
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_rvec_vec_param.stan
 Syntax error in 'bad_cov_exp_quad_rvec_vec_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
@@ -310,14 +328,20 @@ Semantic error in 'bad_cov_exp_quad_sigma_data.stan', line 13, column 28 to colu
     15:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'cov_exp_quad'. Available signatures: 
-(array[] real, real, real) => matrix
-(array[] real, array[] real, real, real) => matrix
-(array[] vector, real, real) => matrix
+Ill-typed arguments supplied to function 'cov_exp_quad':
+(array[] vector, array[] vector, array[] real, real)
+Available signatures:
 (array[] vector, array[] vector, real, real) => matrix
-(array[] row_vector, real, real) => matrix
+  The third argument must be real but got array[] real
+(array[] real, array[] real, real, real) => matrix
+  The first argument must be array[] real but got array[] vector
 (array[] row_vector, array[] row_vector, real, real) => matrix
-Instead supplied arguments of incompatible type: array[] vector, array[] vector, array[] real, real.
+  The first argument must be array[] row_vector but got array[] vector
+(array[] row_vector, real, real) => matrix
+  Expected 3 arguments but found 4 arguments.
+(array[] vector, real, real) => matrix
+  Expected 3 arguments but found 4 arguments.
+(Additional signatures omitted)
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_sigma_param.stan
 Syntax error in 'bad_cov_exp_quad_sigma_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
@@ -389,14 +413,20 @@ Semantic error in 'bad_cov_exp_quad_vec_data.stan', line 12, column 28 to column
     14:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'cov_exp_quad'. Available signatures: 
+Ill-typed arguments supplied to function 'cov_exp_quad':
+(vector, real, real)
+Available signatures:
 (array[] real, real, real) => matrix
-(array[] real, array[] real, real, real) => matrix
+  The first argument must be array[] real but got vector
 (array[] vector, real, real) => matrix
-(array[] vector, array[] vector, real, real) => matrix
+  The first argument must be array[] vector but got vector
 (array[] row_vector, real, real) => matrix
+  The first argument must be array[] row_vector but got vector
 (array[] row_vector, array[] row_vector, real, real) => matrix
-Instead supplied arguments of incompatible type: vector, real, real.
+  Expected 4 arguments but found 3 arguments.
+(array[] vector, array[] vector, real, real) => matrix
+  Expected 4 arguments but found 3 arguments.
+(Additional signatures omitted)
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_rvec_data.stan
 Semantic error in 'bad_cov_exp_quad_vec_rvec_data.stan', line 13, column 28 to column 75:
    -------------------------------------------------
@@ -408,14 +438,20 @@ Semantic error in 'bad_cov_exp_quad_vec_rvec_data.stan', line 13, column 28 to c
     15:  parameters {
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'cov_exp_quad'. Available signatures: 
-(array[] real, real, real) => matrix
-(array[] real, array[] real, real, real) => matrix
-(array[] vector, real, real) => matrix
+Ill-typed arguments supplied to function 'cov_exp_quad':
+(array[] vector, array[] row_vector, real, real)
+Available signatures:
 (array[] vector, array[] vector, real, real) => matrix
-(array[] row_vector, real, real) => matrix
+  The second argument must be array[] vector but got array[] row_vector
+(array[] real, array[] real, real, real) => matrix
+  The first argument must be array[] real but got array[] vector
 (array[] row_vector, array[] row_vector, real, real) => matrix
-Instead supplied arguments of incompatible type: array[] vector, array[] row_vector, real, real.
+  The first argument must be array[] row_vector but got array[] vector
+(array[] row_vector, real, real) => matrix
+  Expected 3 arguments but found 4 arguments.
+(array[] vector, real, real) => matrix
+  Expected 3 arguments but found 4 arguments.
+(Additional signatures omitted)
   $ ../../../../../install/default/bin/stanc bad_cov_exp_quad_vec_rvec_param.stan
 Syntax error in 'bad_cov_exp_quad_vec_rvec_param.stan', line 17, column 0 to column 10, parsing error:
    -------------------------------------------------
