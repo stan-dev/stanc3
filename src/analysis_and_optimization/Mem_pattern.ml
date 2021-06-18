@@ -5,13 +5,40 @@ open Middle.Expr
 (**
  * Recursivly look in Decls for sized types that hold matrices or vectors
  *)
-let get_eigen_decls Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
+let rec get_eigen_decls Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
   match pattern with
   | Stmt.Fixed.Pattern.Decl
       { decl_adtype= UnsizedType.AutoDiffable
       ; decl_id
       ; decl_type= Type.Sized sized_type }
     when SizedType.contains_eigen_type sized_type ->
+      Set.Poly.singleton decl_id
+  |IfElse ((_ : Expr.Typed.t), (true_stmt : (Typed.Meta.t, 'a) Stmt.Fixed.t), (false_stmt : (Typed.Meta.t, 'a) Stmt.Fixed.t option))
+  -> 
+   let false_op = match false_stmt with 
+   | Some x -> get_eigen_decls x 
+   | None -> Set.Poly.empty in
+   Set.Poly.union (get_eigen_decls true_stmt) false_op
+  |For {body;_} -> get_eigen_decls body
+  |While (_, stmt) -> get_eigen_decls stmt
+  |SList stmt_lst 
+  |Block stmt_lst
+  |Profile ((_ : string), stmt_lst) ->
+      Set.Poly.union_list (List.map ~f:get_eigen_decls stmt_lst)
+  |Skip | Break | Continue  -> Set.Poly.empty
+  | _ -> Set.Poly.empty
+
+
+(**
+ * Recursivly look in Decls for sized types that hold matrices or vectors
+ *)
+ let get_aos_decls Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
+  match pattern with
+  | Stmt.Fixed.Pattern.Decl
+      { decl_adtype= UnsizedType.AutoDiffable
+      ; decl_id
+      ; decl_type= Type.Sized sized_type }
+    when not (SizedType.contains_soa sized_type) ->
       Set.Poly.singleton decl_id
   | _ -> Set.Poly.empty
 
@@ -213,12 +240,24 @@ and modify_stmt (mem_pattern : Common.Helpers.mem_pattern)
     (Stmt.Fixed.({pattern; _}) as stmt) (modifiable_set : string Set.Poly.t) =
   {stmt with pattern= modify_stmt_pattern mem_pattern pattern modifiable_set}
 
+
+(**
+ * Query an expression to check if any of it's named types exists in a set.
+ *  Return true if any of the names in `name_set` are in the expression.
+ **)
+ let check_eigen_names (name_set : string Set.Poly.t)
+ (expr : Typed.Meta.t Expr.Fixed.t) : bool =
+ (Set.Poly.is_empty (Set.inter name_set (query_eigen_names expr)))
+
 (* Look through a statement to see whether it needs modified from
  * SoA to AoS. Returns the set of object names that need demoted
  * in a statement, if any.
  *)
 let query_demotable_stmt (aos_exits : string Set.Poly.t)
     (pattern : (Typed.t, int) Stmt.Fixed.Pattern.t) : string Set.Poly.t =
+(*  let printer intro s = Set.Poly.iter ~f:(printf intro) s in
+ let print_set s = 
+    Set.iter ~f:print_endline s in*)
   match pattern with
   | Stmt.Fixed.Pattern.Assignment
       ( ( (assign_name : string)
@@ -232,16 +271,20 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
         | false -> Set.Poly.empty
       in
       let lhs_fails =
-        match not (contains_eigen_names aos_exits rhs) with
-        | false -> Set.Poly.singleton assign_name
+        match (check_eigen_names aos_exits rhs) with
         | true -> Set.Poly.empty
+        | false -> Set.Poly.singleton assign_name
       in
-      Set.Poly.union rhs_fails lhs_fails
+      let blah =       Set.Poly.union rhs_fails lhs_fails in
+(*      printf "Set: \n";
+      let () = printer "\n %s \n" aos_exits in*)
+      blah
+
   | Decl _
-   |NRFunApp ((_ : Fun_kind.t), (_ : Typed.t list))
-   |Return (_ : Typed.t option)
-   |TargetPE (_ : Typed.t)
-   |IfElse ((_ : Typed.t), (_ : int), (_ : int option))
+   |NRFunApp ((_ : Fun_kind.t), (_ : Expr.Typed.t list))
+   |Return (_ : Expr.Typed.t option)
+   |TargetPE (_ : Expr.Typed.t)
+   |IfElse ((_ : Expr.Typed.t), (_ : int), (_ : int option))
    |For _
    |While (_, (_ : int))
    |Skip | Break | Continue
