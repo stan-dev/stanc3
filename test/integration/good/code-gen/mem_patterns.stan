@@ -30,6 +30,8 @@ parameters {
   vector[M] p_aos_vec_v_tp_fails_func;
     // Because of uni idx in loop
   vector[M] p_aos_loop_vec_v_uni_idx;
+  // Because of multi index assign
+  vector[M] p_aos_fail_assign_from_top_idx;
   matrix[N,M] p_aos_loop_mat_uni_uni_idx;
   matrix[N,M] p_aos_loop_mat_multi_uni_uni_idx;
   // Because used in sub-function that supports 
@@ -49,6 +51,11 @@ transformed parameters {
     // because tp vec is used in not supported func
     // both should fail
   vector[M] tp_aos_fail_func_vec_v = p_aos_vec_v_tp_fails_func;
+  // Should pass for single index on rhs out of loop
+  tp_aos_fail_func_vec_v[1] = p_soa_vec_v[1];
+  // Should fail
+  vector[M] tp_aos_fail_assign_from_top_idx;
+  tp_aos_fail_assign_from_top_idx[1:] = p_aos_fail_assign_from_top_idx[1:];
 }
 
 model {
@@ -57,6 +64,7 @@ model {
   y ~ normal(multiply(dat_x, p_soa_mat_uni_col_idx[,N]), p_soa_vec_uni_idx[N]);
   y ~ normal(multiply(dat_x, inv(tp_aos_fail_func_vec_v)), p_soa_vec_uni_idx[N]);
   y ~ normal(multiply(p_soa_mat, inv(tp_aos_fail_func_vec_v)), p_soa_vec_uni_idx[N]);
+  y ~ normal(multiply(p_soa_mat, inv(tp_aos_fail_assign_from_top_idx)), p_soa_vec_uni_idx[N]);
   y ~ normal(multiply(p_soa_mat, inv(multiply(p_aos_mat, tp_aos_fail_func_vec_v))), p_soa_vec_uni_idx[N]);
   vector[N] tp_soa_single_assign;
   tp_soa_single_assign[1] = 2.0;
