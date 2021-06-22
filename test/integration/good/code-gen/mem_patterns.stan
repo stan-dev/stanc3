@@ -9,6 +9,7 @@ data {
  int M;
  matrix[N, M] dat_x;
  vector[N] y;
+ int idx_tester[N];
 }
 
 parameters {
@@ -30,6 +31,7 @@ parameters {
     // Because of uni idx in loop
   vector[M] p_aos_loop_vec_v_uni_idx;
   matrix[N,M] p_aos_loop_mat_uni_uni_idx;
+  matrix[N,M] p_aos_loop_mat_multi_uni_uni_idx;
   // Because used in sub-function that supports 
   // SoA but outer function does not
   matrix[N, M] p_aos_mat;
@@ -66,15 +68,22 @@ model {
     y ~ normal(multiply(dat_x, p_soa_loop_mat_uni_col_idx[,i]), 1.0);
     y ~ normal(multiply(p_soa_loop_mat_uni_col_idx[i,], dat_x), 1.0);
     y ~ normal(multiply(dat_x, p_soa_loop_mat_uni_col_idx[i,]'), 1.0);
+    y ~ normal(multiply(dat_x, p_soa_loop_mat_uni_col_idx[1:N, 1]), 1.0);
     y ~ normal(multiply(dat_x, p_soa_loop_mat_uni_col_idx[i]'), 1.0);
+    y ~ normal(multiply(dat_x, p_aos_loop_mat_multi_uni_uni_idx[idx_tester[i],]'), 1.0);
   }
   // SHOULD NOT BE SOA
   vector[N] tp_aos_loop_vec_v_uni_idx;
+  vector[N] tp_aos_loop_vec_v_multi_uni_idx;
   for (i in 1:N) {
+    // lhs should fail, rhs should succeed
     tp_aos_loop_vec_v_uni_idx[i] = multiply(p_soa_lhs_loop_mul, p_soa_rhs_loop_mul);
+    tp_aos_loop_vec_v_multi_uni_idx[idx_tester[i]] = multiply(p_soa_lhs_loop_mul, p_soa_rhs_loop_mul);
+    // single indexing failures
     y ~ normal(multiply(dat_x[,i], p_aos_loop_vec_v_uni_idx[i]), 1.0);
     y ~ normal(multiply(dat_x[,i], p_aos_loop_mat_uni_uni_idx[i, i]), 1.0);
-    y ~ normal(multiply(dat_x[,i], transpose(multiply(p_aos_mat_fail_func_uni_uni_idx1, p_aos_mat_fail_func_uni_uni_idx2))[mask_fun(i), mask_fun(i)]), 1.0);
+    y ~ normal(multiply(dat_x[,i], transpose(multiply(p_aos_mat_fail_func_uni_uni_idx1,
+     p_aos_mat_fail_func_uni_uni_idx2))[mask_fun(i), mask_fun(i)]), 1.0);
   }
 
 }

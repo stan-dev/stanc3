@@ -11845,7 +11845,7 @@
        (Sized
         (SArray
          (SArray
-          (SMatrix SoA
+          (SMatrix AoS
            ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
            ((pattern (Lit Int 3))

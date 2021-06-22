@@ -96,3 +96,32 @@ let%expect_test "dims" =
     (get_dims (SArray (SMatrix (SoA, "x", "y"), "z")))
   |> print_endline ;
   [%expect {| z, x, y |}]
+
+(*Given a sizedtype, demote it's mem pattern from SoA to AoS*)
+let rec demote_sizedtype_mem st =
+  match st with
+  | ( SInt | SReal
+    | SVector (AoS, _)
+    | SRowVector (AoS, _)
+    | SMatrix (AoS, _, _) ) as ret ->
+      ret
+  | SArray (inner_type, dim) -> SArray (demote_sizedtype_mem inner_type, dim)
+  | SVector (SoA, dim) -> SVector (AoS, dim)
+  | SRowVector (SoA, dim) -> SRowVector (AoS, dim)
+  | SMatrix (SoA, dim1, dim2) -> SMatrix (AoS, dim1, dim2)
+
+(*Given a sizedtype, promote it's mem pattern from AoS to SoA*)
+let rec promote_sizedtype_mem st =
+  match st with
+  | (SInt | SReal) as ret -> ret
+  | SVector (AoS, dim) -> SVector (SoA, dim)
+  | SRowVector (AoS, dim) -> SRowVector (SoA, dim)
+  | SMatrix (AoS, dim1, dim2) -> SMatrix (SoA, dim1, dim2)
+  | SArray (inner_type, dim) -> SArray (promote_sizedtype_mem inner_type, dim)
+  | _ -> st
+
+(*Given a mem_pattern and SizedType, modify the SizedType to AoS or SoA*)
+let modify_sizedtype_mem (mem_pattern : Common.Helpers.mem_pattern) st =
+  match mem_pattern with
+  | Common.Helpers.AoS -> demote_sizedtype_mem st
+  | Common.Helpers.SoA -> promote_sizedtype_mem st

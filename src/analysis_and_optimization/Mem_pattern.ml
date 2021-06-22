@@ -13,26 +13,27 @@ let rec get_eigen_decls Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
       ; decl_type= Type.Sized sized_type }
     when SizedType.contains_eigen_type sized_type ->
       Set.Poly.singleton decl_id
-  |IfElse ((_ : Expr.Typed.t), (true_stmt : (Typed.Meta.t, 'a) Stmt.Fixed.t), (false_stmt : (Typed.Meta.t, 'a) Stmt.Fixed.t option))
-  -> 
-   let false_op = match false_stmt with 
-   | Some x -> get_eigen_decls x 
-   | None -> Set.Poly.empty in
-   Set.Poly.union (get_eigen_decls true_stmt) false_op
-  |For {body;_} -> get_eigen_decls body
-  |While (_, stmt) -> get_eigen_decls stmt
-  |SList stmt_lst 
-  |Block stmt_lst
-  |Profile ((_ : string), stmt_lst) ->
+  | IfElse
+      ( (_ : Expr.Typed.t)
+      , (true_stmt : (Typed.Meta.t, 'a) Stmt.Fixed.t)
+      , (false_stmt : (Typed.Meta.t, 'a) Stmt.Fixed.t option) ) ->
+      let false_op =
+        match false_stmt with
+        | Some x -> get_eigen_decls x
+        | None -> Set.Poly.empty
+      in
+      Set.Poly.union (get_eigen_decls true_stmt) false_op
+  | For {body; _} -> get_eigen_decls body
+  | While (_, stmt) -> get_eigen_decls stmt
+  | SList stmt_lst | Block stmt_lst | Profile ((_ : string), stmt_lst) ->
       Set.Poly.union_list (List.map ~f:get_eigen_decls stmt_lst)
-  |Skip | Break | Continue  -> Set.Poly.empty
+  | Skip | Break | Continue -> Set.Poly.empty
   | _ -> Set.Poly.empty
-
 
 (**
  * Recursivly look in Decls for sized types that hold matrices or vectors
  *)
- let get_aos_decls Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
+let get_aos_decls Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
   match pattern with
   | Stmt.Fixed.Pattern.Decl
       { decl_adtype= UnsizedType.AutoDiffable
@@ -41,22 +42,6 @@ let rec get_eigen_decls Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
     when not (SizedType.contains_soa sized_type) ->
       Set.Poly.singleton decl_id
   | _ -> Set.Poly.empty
-
-(**
- * Apply an op returning a Set of strings for `Index` types
- *  with inner expressions
- * @param op a functor returning a Set of strings
- * @param ind the Index.t to modify
- *)
-let map_index (op : Typed.Meta.t Expr.Fixed.t -> string Core_kernel.Set.Poly.t)
-    (ind : Typed.Meta.t Expr.Fixed.t Index.t) : string Set.Poly.t =
-  match ind with
-  | Index.All -> Set.Poly.empty
-  | Single ind_expr -> op ind_expr
-  | Upfrom ind_expr -> op ind_expr
-  | Between (expr_top, expr_bottom) ->
-      Set.Poly.union (op expr_top) (op expr_bottom)
-  | MultiIndex exprs -> op exprs
 
 (**
  * Search through an expression for the names of all types that hold matrices 
@@ -141,35 +126,6 @@ and modify_expr (mem_pattern : Common.Helpers.mem_pattern)
   let new_pattern = modify_expr_pattern mem_pattern modifiable_set pattern in
   {expr with pattern= new_pattern}
 
-(*Given a sizedtype, demote it's mem pattern from SoA to AoS*)
-let rec demote_sizedtype_mem st =
-  match st with
-  | ( SizedType.SInt | SReal
-    | SVector (AoS, _)
-    | SRowVector (AoS, _)
-    | SMatrix (AoS, _, _) ) as ret ->
-      ret
-  | SArray (inner_type, dim) -> SArray (demote_sizedtype_mem inner_type, dim)
-  | SVector (SoA, dim) -> SVector (AoS, dim)
-  | SRowVector (SoA, dim) -> SRowVector (AoS, dim)
-  | SMatrix (SoA, dim1, dim2) -> SMatrix (AoS, dim1, dim2)
-
-(*Given a sizedtype, promote it's mem pattern from AoS to SoA*)
-let rec promote_sizedtype_mem st =
-  match st with
-  | (SizedType.SInt | SReal) as ret -> ret
-  | SVector (AoS, dim) -> SVector (SoA, dim)
-  | SRowVector (AoS, dim) -> SRowVector (SoA, dim)
-  | SMatrix (AoS, dim1, dim2) -> SMatrix (SoA, dim1, dim2)
-  | SArray (inner_type, dim) -> SArray (promote_sizedtype_mem inner_type, dim)
-  | _ -> st
-
-(*Given a mem_pattern and SizedType, modify the SizedType to AoS or SoA*)
-let modify_sizedtype_mem (mem_pattern : Common.Helpers.mem_pattern) st =
-  match mem_pattern with
-  | Common.Helpers.AoS -> demote_sizedtype_mem st
-  | Common.Helpers.SoA -> promote_sizedtype_mem st
-
 (**
  * Modify statement patterns in the MIR from AoS <-> SoA and vice versa 
  * @param mem_pattern A mem_pattern to modify expressions to. For the 
@@ -187,14 +143,14 @@ let rec modify_stmt_pattern (mem_pattern : Common.Helpers.mem_pattern)
     Mir_utils.map_rec_expr (modify_expr_pattern mem_pattern modifiable_set)
   in
   let mod_stmt stmt = modify_stmt mem_pattern stmt modifiable_set in
-  (*let printer intro s = Set.Poly.iter ~f:(printf intro) s in*)
   match pattern with
   | Stmt.Fixed.Pattern.Decl
       ({decl_id; decl_type= Type.Sized sized_type; _} as decl)
     when Set.Poly.mem modifiable_set decl_id ->
       Stmt.Fixed.Pattern.Decl
         { decl with
-          decl_type= Type.Sized (modify_sizedtype_mem mem_pattern sized_type)
+          decl_type=
+            Type.Sized (SizedType.modify_sizedtype_mem mem_pattern sized_type)
         }
   | NRFunApp (kind, (exprs : Typed.Meta.t Expr.Fixed.t list)) ->
       let mod_kind = modify_kind mem_pattern modifiable_set kind exprs in
@@ -240,14 +196,13 @@ and modify_stmt (mem_pattern : Common.Helpers.mem_pattern)
     (Stmt.Fixed.({pattern; _}) as stmt) (modifiable_set : string Set.Poly.t) =
   {stmt with pattern= modify_stmt_pattern mem_pattern pattern modifiable_set}
 
-
 (**
  * Query an expression to check if any of it's named types exists in a set.
  *  Return true if any of the names in `name_set` are in the expression.
  **)
- let check_eigen_names (name_set : string Set.Poly.t)
- (expr : Typed.Meta.t Expr.Fixed.t) : bool =
- (Set.Poly.is_empty (Set.inter name_set (query_eigen_names expr)))
+let check_eigen_names (name_set : string Set.Poly.t)
+    (expr : Typed.Meta.t Expr.Fixed.t) : bool =
+  Set.Poly.is_empty (Set.inter name_set (query_eigen_names expr))
 
 (* Look through a statement to see whether it needs modified from
  * SoA to AoS. Returns the set of object names that need demoted
@@ -255,31 +210,29 @@ and modify_stmt (mem_pattern : Common.Helpers.mem_pattern)
  *)
 let query_demotable_stmt (aos_exits : string Set.Poly.t)
     (pattern : (Typed.t, int) Stmt.Fixed.Pattern.t) : string Set.Poly.t =
-(*  let printer intro s = Set.Poly.iter ~f:(printf intro) s in
- let print_set s = 
-    Set.iter ~f:print_endline s in*)
   match pattern with
   | Stmt.Fixed.Pattern.Assignment
       ( ( (assign_name : string)
         , (_ : UnsizedType.t)
-        , (_ : Typed.t Index.t list) )
+        , (_ : Expr.Typed.t Index.t list) )
       , rhs ) ->
       let all_rhs_eigen_names = query_eigen_names rhs in
+      let rhs_assign_type_non_eigen =
+        UnsizedType.contains_eigen_type (Expr.Typed.type_of rhs)
+      in
       let rhs_fails =
-        match Set.Poly.mem aos_exits assign_name with
+        match
+          Set.Poly.mem aos_exits assign_name && rhs_assign_type_non_eigen
+        with
         | true -> all_rhs_eigen_names
         | false -> Set.Poly.empty
       in
       let lhs_fails =
-        match (check_eigen_names aos_exits rhs) with
+        match check_eigen_names aos_exits rhs with
         | true -> Set.Poly.empty
         | false -> Set.Poly.singleton assign_name
       in
-      let blah =       Set.Poly.union rhs_fails lhs_fails in
-(*      printf "Set: \n";
-      let () = printer "\n %s \n" aos_exits in*)
-      blah
-
+      Set.Poly.union rhs_fails lhs_fails
   | Decl _
    |NRFunApp ((_ : Fun_kind.t), (_ : Expr.Typed.t list))
    |Return (_ : Expr.Typed.t option)
@@ -331,7 +284,12 @@ let rec query_initial_demotable_expr (in_loop : bool) Expr.Fixed.({pattern; _})
       query_initial_demotable_funs in_loop kind exprs
   | Indexed ((Expr.Fixed.({meta= {type_; _}; _}) as expr), indexed) ->
       let index_set =
-        Set.Poly.union_list (List.map ~f:(map_index query_expr) indexed)
+        Set.Poly.union_list
+          (List.map
+             ~f:
+               (Index.apply ~default:Set.Poly.empty ~merge:Set.Poly.union
+                  query_expr)
+             indexed)
       in
       if in_loop && is_uni_eigen_loop_indexing type_ indexed then
         Set.Poly.union (query_eigen_names expr) index_set
@@ -388,9 +346,19 @@ let rec query_initial_demotable_stmt (in_loop : bool)
   in
   match pattern with
   | Stmt.Fixed.Pattern.Assignment
-      (((name : string), (_ : UnsizedType.t), lhs), rhs) ->
+      (((name : string), (ut : UnsizedType.t), lhs), rhs) ->
       let check_lhs =
-        Set.Poly.union_list (List.map ~f:(map_index query_expr) lhs)
+        let lhs_list =
+          Set.Poly.union_list
+            (List.map
+               ~f:
+                 (Index.apply ~default:Set.Poly.empty ~merge:Set.Poly.union
+                    query_expr)
+               lhs)
+        in
+        match in_loop && is_uni_eigen_loop_indexing ut lhs with
+        | true -> Set.Poly.add lhs_list name
+        | false -> lhs_list
       in
       let check_rhs = query_expr rhs in
       let both_sides = Set.Poly.union check_lhs check_rhs in
