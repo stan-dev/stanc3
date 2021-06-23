@@ -11494,7 +11494,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_mat)
       (decl_type
        (Sized
-        (SMatrix AoS
+        (SMatrix SoA
          ((pattern (Lit Int 5))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 4))
@@ -11503,7 +11503,7 @@
    ((pattern
      (Assignment (p_mat UMatrix ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Lit Int 5))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Lit Int 4))
@@ -11833,7 +11833,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_mat)
       (decl_type
        (Sized
-        (SMatrix AoS
+        (SMatrix SoA
          ((pattern (Lit Int 5))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 4))
@@ -11998,7 +11998,7 @@
    ((pattern
      (Assignment (tp_mat UMatrix ())
       ((pattern
-        (FunApp (StanLib fma FnPlain AoS)
+        (FunApp (StanLib fma FnPlain SoA)
          (((pattern (Var d_cfcov_54))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var p_mat))

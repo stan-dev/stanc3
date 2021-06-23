@@ -608,13 +608,11 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 8;
       beta_m = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n,
                  k);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>> X_rv_p = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>>(Eigen::Matrix<double, 1, -1>::Constant(n, std::numeric_limits<double>::quiet_NaN()));
-      
+      Eigen::Matrix<local_scalar_t__, 1, -1> X_rv_p = Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(n, DUMMY_VAR__);
+                                                      
       
       current_statement__ = 9;
-      X_rv_p = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>>>(
-                 n);
+      X_rv_p = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(n);
       {
         current_statement__ = 10;
         lp_accum__.add(

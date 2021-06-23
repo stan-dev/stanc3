@@ -8791,12 +8791,13 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 14;
       p_3d_row_vec = in__.template read<std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>>(
                        N, M, K, N);
-      Eigen::Matrix<local_scalar_t__, -1, -1> p_mat = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(5, 4, DUMMY_VAR__);
-                                                      
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> p_mat = 
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>(Eigen::Matrix<double, -1, -1>::Constant(5, 4, std::numeric_limits<double>::quiet_NaN()));
+      
       
       current_statement__ = 15;
-      p_mat = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(5,
-                4);
+      p_mat = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
+                5, 4);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> p_ar_mat = 
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(4, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(5, Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(2, 3, DUMMY_VAR__)));
       
@@ -8882,8 +8883,9 @@ class mother_model final : public model_base_crtp<mother_model> {
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(K, Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(N, DUMMY_VAR__))));
       
       
-      Eigen::Matrix<local_scalar_t__, -1, -1> tp_mat = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(5, 4, DUMMY_VAR__);
-                                                       
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> tp_mat = 
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>(Eigen::Matrix<double, -1, -1>::Constant(5, 4, std::numeric_limits<double>::quiet_NaN()));
+      
       
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> tp_ar_mat = 
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(4, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(5, Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(2, 3, DUMMY_VAR__)));
@@ -20027,13 +20029,11 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       current_statement__ = 8;
       beta_m = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n,
                  k);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>> X_rv_p = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>>(Eigen::Matrix<double, 1, -1>::Constant(n, std::numeric_limits<double>::quiet_NaN()));
-      
+      Eigen::Matrix<local_scalar_t__, 1, -1> X_rv_p = Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(n, DUMMY_VAR__);
+                                                      
       
       current_statement__ = 9;
-      X_rv_p = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>>>(
-                 n);
+      X_rv_p = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(n);
       {
         current_statement__ = 10;
         lp_accum__.add(
