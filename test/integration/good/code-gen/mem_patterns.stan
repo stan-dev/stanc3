@@ -83,10 +83,12 @@ model {
   // SHOULD NOT BE SOA
   vector[N] tp_aos_loop_vec_v_uni_idx;
   vector[N] tp_aos_loop_vec_v_multi_uni_idx;
+  vector[N] tp_aos_loop_vec_v_double_brackets_multi_uni_idx;
   for (i in 1:N) {
     // lhs should fail, rhs should succeed
     tp_aos_loop_vec_v_uni_idx[i] = multiply(p_soa_lhs_loop_mul, p_soa_rhs_loop_mul);
     tp_aos_loop_vec_v_multi_uni_idx[idx_tester[i]] = multiply(p_soa_lhs_loop_mul, p_soa_rhs_loop_mul);
+    tp_aos_loop_vec_v_double_brackets_multi_uni_idx[1:N][i] = multiply(p_soa_lhs_loop_mul, p_soa_rhs_loop_mul);
     // single indexing failures
     y ~ normal(multiply(dat_x[,i], p_aos_loop_vec_v_uni_idx[i]), 1.0);
     y ~ normal(multiply(dat_x[,i], p_aos_loop_mat_uni_uni_idx[i, i]), 1.0);

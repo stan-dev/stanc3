@@ -31,19 +31,6 @@ let rec get_eigen_decls Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
   | _ -> Set.Poly.empty
 
 (**
- * Recursivly look in Decls for sized types that hold matrices or vectors
- *)
-let get_aos_decls Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
-  match pattern with
-  | Stmt.Fixed.Pattern.Decl
-      { decl_adtype= UnsizedType.AutoDiffable
-      ; decl_id
-      ; decl_type= Type.Sized sized_type }
-    when not (SizedType.contains_soa sized_type) ->
-      Set.Poly.singleton decl_id
-  | _ -> Set.Poly.empty
-
-(**
  * Search through an expression for the names of all types that hold matrices 
  *  and vectors.
  **)
@@ -64,7 +51,13 @@ let contains_eigen_names (name_set : string Set.Poly.t)
 
 (**
  * Modify a function and it's subexpressions from SoA <-> AoS and vice versa.
- * @param mem_pattern 
+ * @param modifiable_set The set of eigen names that are either demotable 
+ *  to AoS or promotable to SoA.
+ * @param mem_pattern If AoS, checks if all names in the functions
+ *  expressions are in the modifiable set and demotes the function to SoA.
+ *  Else if SoA, checks if any of the names in the modifiable set
+ *   and if so then promotes the function to SoA.
+ * @param exprs A list of expressions going into the function.
  **)
 let modify_kind (mem_pattern : Common.Helpers.mem_pattern)
     (modifiable_set : string Set.Poly.t) (kind : Fun_kind.t)
@@ -85,16 +78,16 @@ let modify_kind (mem_pattern : Common.Helpers.mem_pattern)
  * Modify the expressions to demote/promote from AoS <-> SoA and vice versa
  * The only real path in the below is on the functions.
  *
- * For AoS, we check that all of the matrix and vector names
+ * For AoS, we check that *all* of the matrix and vector names
  *  in the list of expressions are in the `modifiable_set` and if so
  *  make the function AoS. 
- * For SoA, we check that any of the matrix and vector names
+ * For SoA, we check that *any* of the matrix and vector names
  *  in the list of expressions are in the `modifiable_set` and if so
  *  make the function SoA. 
  * @param mem_pattern The memory pattern to change functions to.
  * @param modifiable_set The name of the variables whose
  *  associated expressions we want to modify.
- * @param pattern The expression to modify
+ * @param pattern The expression to modify.
  *)
 let rec modify_expr_pattern (mem_pattern : Common.Helpers.mem_pattern)
     (modifiable_set : string Set.Poly.t)
@@ -103,8 +96,9 @@ let rec modify_expr_pattern (mem_pattern : Common.Helpers.mem_pattern)
   match pattern with
   | Expr.Fixed.Pattern.FunApp (kind, (exprs : Typed.Meta.t Expr.Fixed.t list))
     ->
-      let mod_kind = modify_kind mem_pattern modifiable_set kind exprs in
-      Expr.Fixed.Pattern.FunApp (mod_kind, List.map ~f:mod_expr exprs)
+      let new_exprs = List.map ~f:mod_expr exprs in
+      let mod_kind = modify_kind mem_pattern modifiable_set in
+      Expr.Fixed.Pattern.FunApp (mod_kind kind new_exprs, new_exprs)
   | TernaryIf (predicate, texpr, fexpr) ->
       TernaryIf (mod_expr predicate, mod_expr texpr, mod_expr fexpr)
   | Indexed (idx_expr, indexed) ->
@@ -116,15 +110,15 @@ let rec modify_expr_pattern (mem_pattern : Common.Helpers.mem_pattern)
 
 (** 
  * Given a Set of strings containing the names of objects that can be 
- * promoted from AoS -> SoA for a given expression, promote them.
+ * modified from AoS <-> SoA and vice versa, modify them within the expression.
  * @param mem_pattern The memory pattern to change expressions to.
  * @param modifiable_set The name of the variables whose
  *  associated expressions we want to modify.
+ * @param expr the expression to modify.
  *)
 and modify_expr (mem_pattern : Common.Helpers.mem_pattern)
     (modifiable_set : string Set.Poly.t) (Expr.Fixed.({pattern; _}) as expr) =
-  let new_pattern = modify_expr_pattern mem_pattern modifiable_set pattern in
-  {expr with pattern= new_pattern}
+  {expr with pattern= modify_expr_pattern mem_pattern modifiable_set pattern}
 
 (**
  * Modify statement patterns in the MIR from AoS <-> SoA and vice versa 
@@ -153,10 +147,11 @@ let rec modify_stmt_pattern (mem_pattern : Common.Helpers.mem_pattern)
             Type.Sized (SizedType.modify_sizedtype_mem mem_pattern sized_type)
         }
   | NRFunApp (kind, (exprs : Typed.Meta.t Expr.Fixed.t list)) ->
-      let mod_kind = modify_kind mem_pattern modifiable_set kind exprs in
-      NRFunApp (mod_kind, List.map ~f:mod_expr exprs)
+      let new_exprs = List.map ~f:mod_expr exprs in
+      let mod_kind = modify_kind mem_pattern modifiable_set kind new_exprs in
+      NRFunApp (mod_kind, new_exprs)
   | Assignment
-      ( ((name : string), (ut : UnsizedType.t), lhs)
+      ( (name, ut, lhs)
       , ( { pattern=
               FunApp (CompilerInternal (FnReadParam (constrain_op, _)), args); _
           } as assigner ) )
@@ -184,13 +179,18 @@ let rec modify_stmt_pattern (mem_pattern : Common.Helpers.mem_pattern)
           lower= mod_expr lower; upper= mod_expr upper; body= mod_stmt body }
   | TargetPE expr -> TargetPE (mod_expr expr)
   | Return optional_expr -> Return (Option.map ~f:mod_expr optional_expr)
-  | Profile ((a : string), stmt) -> Profile (a, List.map ~f:mod_stmt stmt)
+  | Profile ((p_name : string), stmt) ->
+      Profile (p_name, List.map ~f:mod_stmt stmt)
   | While (predicate, body) -> While (mod_expr predicate, mod_stmt body)
   | Skip | Break | Continue | Decl _ -> pattern
 
 (**
- * Internal to the module, used when looking recursivly
- *  in statement patterns that hold statements
+ * Modify statement patterns in the MIR from AoS <-> SoA and vice versa 
+ * @param mem_pattern A mem_pattern to modify expressions to. For the 
+ *  given memory pattern, this modifies 
+ *  statement patterns and expressions to it.
+ * @param stmt The statement to modify. 
+ * @param modifiable_set The name of the variable we are searching for.
  *)
 and modify_stmt (mem_pattern : Common.Helpers.mem_pattern)
     (Stmt.Fixed.({pattern; _}) as stmt) (modifiable_set : string Set.Poly.t) =
@@ -239,12 +239,43 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
    |TargetPE (_ : Expr.Typed.t)
    |IfElse ((_ : Expr.Typed.t), (_ : int), (_ : int option))
    |For _
-   |While (_, (_ : int))
+   |While ((_ : Typed.t), (_ : int))
    |Skip | Break | Continue
    |SList (_ : int list)
    |Block (_ : int list)
    |Profile ((_ : string), (_ : int list)) ->
       Set.Poly.empty
+
+let rec check_for_single_idx_expr (acc : int) Expr.Fixed.({pattern; _}) : int =
+  match pattern with
+  | Expr.Fixed.Pattern.FunApp (_, (exprs : Typed.Meta.t Expr.Fixed.t list)) ->
+      List.fold_left ~init:acc ~f:check_for_single_idx_expr exprs
+  | TernaryIf (predicate, texpr, fexpr) ->
+      acc
+      + check_for_single_idx_expr 0 predicate
+      + check_for_single_idx_expr 0 texpr
+      + check_for_single_idx_expr 0 fexpr
+  | Indexed (idx_expr, indexed) ->
+      acc
+      + check_for_single_idx_expr 0 idx_expr
+      + List.fold_left ~init:0 ~f:is_single_idx indexed
+  | EAnd (lhs, rhs) ->
+      acc + check_for_single_idx_expr 0 lhs + check_for_single_idx_expr 0 rhs
+  | EOr (lhs, rhs) ->
+      acc + check_for_single_idx_expr 0 lhs + check_for_single_idx_expr 0 rhs
+  | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
+      acc
+
+and is_single_idx (acc : int) idx =
+  match idx with
+  | Index.All -> acc
+  | Between
+      ( (_ : Expr.Typed.Meta.t Expr.Fixed.t)
+      , (_ : Expr.Typed.Meta.t Expr.Fixed.t) ) ->
+      acc
+  | Single _ -> acc + 1
+  | Upfrom up -> check_for_single_idx_expr acc up
+  | MultiIndex multi -> check_for_single_idx_expr acc multi
 
 (**
  * Find indices on Matrix and Vector types that perform single 
@@ -255,17 +286,17 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
  *)
 let rec is_uni_eigen_loop_indexing (ut : UnsizedType.t)
     (index : Typed.Meta.t Expr.Fixed.t Index.t list) =
+  let contains_single_idx = List.fold_left ~init:0 ~f:is_single_idx index in
   match (ut, index) with
-  | (UnsizedType.UArray t | UFun (_, ReturnType t, _, _)), index -> (
+  | (UnsizedType.UVector | URowVector), _ when contains_single_idx > 0 -> true
+  | UMatrix, _ when contains_single_idx > 1 -> true
+  | (UArray t | UFun (_, ReturnType t, _, _)), index -> (
     match List.tl index with
     | Some cut_list -> is_uni_eigen_loop_indexing t cut_list
     | None -> is_uni_eigen_loop_indexing t [Index.All] )
-  | (UVector | URowVector), [Index.Single _] -> true
-  | UMatrix, [Single _; Single _] -> true
   (* None of the below contain single cell access*)
   | (UReal | UInt | UMathLibraryFunction | UFun (_, Void, _, _)), _ -> false
-  | (UVector | URowVector), _ -> false
-  | UMatrix, _ -> false
+  | (UVector | URowVector | UMatrix), _ -> false
 
 (**
  * Query to find the initial set of objects that cannot be SoA.
@@ -308,9 +339,14 @@ let rec query_initial_demotable_expr (in_loop : bool) Expr.Fixed.({pattern; _})
  *  expression's objects or expressions should be demoted to AoS.
  * @param in_loop A boolean to specify the logic of indexing expressions. See
  *  `query_initial_demotable_expr` for an explanation of the logic.
+ * @param kind The function type, for StanLib functions we check if the 
+ *  function supports SoA and for UserDefined functions we always fail 
+ *  and return back all of the names of the objects passed in expressions
+ *  to the UDF.
+ * exprs The expression list passed to the functions.
  *)
 and query_initial_demotable_funs (in_loop : bool) (kind : Fun_kind.t)
-    (exprs : Typed.Meta.t Expr.Fixed.t list) =
+    (exprs : Typed.Meta.t Expr.Fixed.t list) : string Set.Poly.t =
   let query_expr = query_initial_demotable_expr in_loop in
   let all_eigen_names =
     Set.Poly.union_list (List.map ~f:query_eigen_names exprs)
@@ -339,7 +375,8 @@ and query_initial_demotable_funs (in_loop : bool) (kind : Fun_kind.t)
  *)
 let rec query_initial_demotable_stmt (in_loop : bool)
     (Stmt.Fixed.({pattern; _}) :
-      (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t) =
+      (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t) :
+    string Set.Poly.t =
   let query_expr = query_initial_demotable_expr in_loop in
   let query_inner_stmt checking_loop =
     query_initial_demotable_stmt checking_loop

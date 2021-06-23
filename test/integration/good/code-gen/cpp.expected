@@ -1283,7 +1283,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 97> locations_array__ = 
+static constexpr std::array<const char*, 100> locations_array__ = 
 {" (found before start of program)",
  " (in 'mem_patterns.stan', line 16, column 2 to column 13)",
  " (in 'mem_patterns.stan', line 18, column 2 to column 24)",
@@ -1335,13 +1335,16 @@ static constexpr std::array<const char*, 97> locations_array__ =
  " (in 'mem_patterns.stan', line 84, column 2 to column 38)",
  " (in 'mem_patterns.stan', line 85, column 9 to column 10)",
  " (in 'mem_patterns.stan', line 85, column 2 to column 44)",
- " (in 'mem_patterns.stan', line 88, column 4 to column 84)",
- " (in 'mem_patterns.stan', line 89, column 4 to column 102)",
- " (in 'mem_patterns.stan', line 91, column 4 to column 70)",
- " (in 'mem_patterns.stan', line 92, column 4 to column 75)",
- " (in 'mem_patterns.stan', line 93, column 4 to line 94, column 73)",
- " (in 'mem_patterns.stan', line 86, column 17 to line 95, column 3)",
- " (in 'mem_patterns.stan', line 86, column 2 to line 95, column 3)",
+ " (in 'mem_patterns.stan', line 86, column 9 to column 10)",
+ " (in 'mem_patterns.stan', line 86, column 2 to column 60)",
+ " (in 'mem_patterns.stan', line 89, column 4 to column 84)",
+ " (in 'mem_patterns.stan', line 90, column 4 to column 102)",
+ " (in 'mem_patterns.stan', line 91, column 4 to column 111)",
+ " (in 'mem_patterns.stan', line 93, column 4 to column 70)",
+ " (in 'mem_patterns.stan', line 94, column 4 to column 75)",
+ " (in 'mem_patterns.stan', line 95, column 4 to line 96, column 73)",
+ " (in 'mem_patterns.stan', line 87, column 17 to line 97, column 3)",
+ " (in 'mem_patterns.stan', line 87, column 2 to line 97, column 3)",
  " (in 'mem_patterns.stan', line 8, column 1 to column 7)",
  " (in 'mem_patterns.stan', line 9, column 1 to column 7)",
  " (in 'mem_patterns.stan', line 10, column 8 to column 9)",
@@ -1392,7 +1395,7 @@ mask_fun(const int& i, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 95;
+    current_statement__ = 98;
     return i;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1447,25 +1450,25 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       int pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      current_statement__ = 58;
+      current_statement__ = 61;
       context__.validate_dims("data initialization","N","int",
            std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       
-      current_statement__ = 58;
+      current_statement__ = 61;
       N = context__.vals_i("N")[(1 - 1)];
-      current_statement__ = 59;
+      current_statement__ = 62;
       context__.validate_dims("data initialization","M","int",
            std::vector<size_t>{});
       M = std::numeric_limits<int>::min();
       
-      current_statement__ = 59;
-      M = context__.vals_i("M")[(1 - 1)];
-      current_statement__ = 60;
-      validate_non_negative_index("dat_x", "N", N);
-      current_statement__ = 61;
-      validate_non_negative_index("dat_x", "M", M);
       current_statement__ = 62;
+      M = context__.vals_i("M")[(1 - 1)];
+      current_statement__ = 63;
+      validate_non_negative_index("dat_x", "N", N);
+      current_statement__ = 64;
+      validate_non_negative_index("dat_x", "M", M);
+      current_statement__ = 65;
       context__.validate_dims("data initialization","dat_x","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(M)});
@@ -1475,26 +1478,26 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       
       {
         std::vector<local_scalar_t__> dat_x_flat__;
-        current_statement__ = 62;
+        current_statement__ = 65;
         dat_x_flat__ = context__.vals_r("dat_x");
-        current_statement__ = 62;
+        current_statement__ = 65;
         pos__ = 1;
-        current_statement__ = 62;
+        current_statement__ = 65;
         for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
-          current_statement__ = 62;
+          current_statement__ = 65;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-            current_statement__ = 62;
+            current_statement__ = 65;
             assign(dat_x, dat_x_flat__[(pos__ - 1)],
               "assigning variable dat_x", index_uni(sym2__),
                                             index_uni(sym1__));
-            current_statement__ = 62;
+            current_statement__ = 65;
             pos__ = (pos__ + 1);
           }
         }
       }
-      current_statement__ = 63;
+      current_statement__ = 66;
       validate_non_negative_index("y", "N", N);
-      current_statement__ = 64;
+      current_statement__ = 67;
       context__.validate_dims("data initialization","y","double",
            std::vector<size_t>{static_cast<size_t>(N)});
       y__ = Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN());
@@ -1502,83 +1505,83 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       
       {
         std::vector<local_scalar_t__> y_flat__;
-        current_statement__ = 64;
+        current_statement__ = 67;
         y_flat__ = context__.vals_r("y");
-        current_statement__ = 64;
+        current_statement__ = 67;
         pos__ = 1;
-        current_statement__ = 64;
+        current_statement__ = 67;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 64;
+          current_statement__ = 67;
           assign(y, y_flat__[(pos__ - 1)],
             "assigning variable y", index_uni(sym1__));
-          current_statement__ = 64;
+          current_statement__ = 67;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 65;
+      current_statement__ = 68;
       validate_non_negative_index("idx_tester", "N", N);
-      current_statement__ = 66;
+      current_statement__ = 69;
       context__.validate_dims("data initialization","idx_tester","int",
            std::vector<size_t>{static_cast<size_t>(N)});
       idx_tester = std::vector<int>(N, std::numeric_limits<int>::min());
       
-      current_statement__ = 66;
-      idx_tester = context__.vals_i("idx_tester");
-      current_statement__ = 67;
-      validate_non_negative_index("p_soa_vec_v", "M", M);
-      current_statement__ = 68;
-      validate_non_negative_index("p_soa_mat", "N", N);
       current_statement__ = 69;
-      validate_non_negative_index("p_soa_mat", "M", M);
+      idx_tester = context__.vals_i("idx_tester");
       current_statement__ = 70;
-      validate_non_negative_index("p_soa_arr_vec_v", "N", N);
+      validate_non_negative_index("p_soa_vec_v", "M", M);
       current_statement__ = 71;
-      validate_non_negative_index("p_soa_mat_uni_col_idx", "N", N);
+      validate_non_negative_index("p_soa_mat", "N", N);
       current_statement__ = 72;
-      validate_non_negative_index("p_soa_mat_uni_col_idx", "M", M);
+      validate_non_negative_index("p_soa_mat", "M", M);
       current_statement__ = 73;
-      validate_non_negative_index("p_soa_vec_uni_idx", "N", N);
+      validate_non_negative_index("p_soa_arr_vec_v", "N", N);
       current_statement__ = 74;
-      validate_non_negative_index("p_soa_loop_mat_uni_col_idx", "N", N);
+      validate_non_negative_index("p_soa_mat_uni_col_idx", "N", N);
       current_statement__ = 75;
-      validate_non_negative_index("p_soa_loop_mat_uni_col_idx", "M", M);
+      validate_non_negative_index("p_soa_mat_uni_col_idx", "M", M);
       current_statement__ = 76;
-      validate_non_negative_index("p_soa_lhs_loop_mul", "N", N);
+      validate_non_negative_index("p_soa_vec_uni_idx", "N", N);
       current_statement__ = 77;
-      validate_non_negative_index("p_soa_rhs_loop_mul", "N", N);
+      validate_non_negative_index("p_soa_loop_mat_uni_col_idx", "N", N);
       current_statement__ = 78;
-      validate_non_negative_index("p_aos_vec_v_assign_to_aos", "M", M);
+      validate_non_negative_index("p_soa_loop_mat_uni_col_idx", "M", M);
       current_statement__ = 79;
-      validate_non_negative_index("p_aos_vec_v_tp_fails_func", "M", M);
+      validate_non_negative_index("p_soa_lhs_loop_mul", "N", N);
       current_statement__ = 80;
-      validate_non_negative_index("p_aos_loop_vec_v_uni_idx", "M", M);
+      validate_non_negative_index("p_soa_rhs_loop_mul", "N", N);
       current_statement__ = 81;
-      validate_non_negative_index("p_aos_fail_assign_from_top_idx", "M", M);
+      validate_non_negative_index("p_aos_vec_v_assign_to_aos", "M", M);
       current_statement__ = 82;
-      validate_non_negative_index("p_aos_loop_mat_uni_uni_idx", "N", N);
+      validate_non_negative_index("p_aos_vec_v_tp_fails_func", "M", M);
       current_statement__ = 83;
-      validate_non_negative_index("p_aos_loop_mat_uni_uni_idx", "M", M);
+      validate_non_negative_index("p_aos_loop_vec_v_uni_idx", "M", M);
       current_statement__ = 84;
-      validate_non_negative_index("p_aos_loop_mat_multi_uni_uni_idx", "N", N);
+      validate_non_negative_index("p_aos_fail_assign_from_top_idx", "M", M);
       current_statement__ = 85;
-      validate_non_negative_index("p_aos_loop_mat_multi_uni_uni_idx", "M", M);
+      validate_non_negative_index("p_aos_loop_mat_uni_uni_idx", "N", N);
       current_statement__ = 86;
-      validate_non_negative_index("p_aos_mat", "N", N);
+      validate_non_negative_index("p_aos_loop_mat_uni_uni_idx", "M", M);
       current_statement__ = 87;
-      validate_non_negative_index("p_aos_mat", "M", M);
+      validate_non_negative_index("p_aos_loop_mat_multi_uni_uni_idx", "N", N);
       current_statement__ = 88;
-      validate_non_negative_index("p_aos_mat_fail_func_uni_uni_idx1", "N", N);
+      validate_non_negative_index("p_aos_loop_mat_multi_uni_uni_idx", "M", M);
       current_statement__ = 89;
-      validate_non_negative_index("p_aos_mat_fail_func_uni_uni_idx1", "M", M);
+      validate_non_negative_index("p_aos_mat", "N", N);
       current_statement__ = 90;
-      validate_non_negative_index("p_aos_mat_fail_func_uni_uni_idx2", "N", N);
+      validate_non_negative_index("p_aos_mat", "M", M);
       current_statement__ = 91;
-      validate_non_negative_index("p_aos_mat_fail_func_uni_uni_idx2", "M", M);
+      validate_non_negative_index("p_aos_mat_fail_func_uni_uni_idx1", "N", N);
       current_statement__ = 92;
-      validate_non_negative_index("tp_aos_vec_v", "M", M);
+      validate_non_negative_index("p_aos_mat_fail_func_uni_uni_idx1", "M", M);
       current_statement__ = 93;
-      validate_non_negative_index("tp_aos_fail_func_vec_v", "M", M);
+      validate_non_negative_index("p_aos_mat_fail_func_uni_uni_idx2", "N", N);
       current_statement__ = 94;
+      validate_non_negative_index("p_aos_mat_fail_func_uni_uni_idx2", "M", M);
+      current_statement__ = 95;
+      validate_non_negative_index("tp_aos_vec_v", "M", M);
+      current_statement__ = 96;
+      validate_non_negative_index("tp_aos_fail_func_vec_v", "M", M);
+      current_statement__ = 97;
       validate_non_negative_index("tp_aos_fail_assign_from_top_idx", "M", M);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1874,13 +1877,19 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
         Eigen::Matrix<local_scalar_t__, -1, 1> tp_aos_loop_vec_v_multi_uni_idx = 
         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
         
-        current_statement__ = 57;
+        current_statement__ = 51;
+        validate_non_negative_index("tp_aos_loop_vec_v_double_brackets_multi_uni_idx",
+                                    "N", N);
+        Eigen::Matrix<local_scalar_t__, -1, 1> tp_aos_loop_vec_v_double_brackets_multi_uni_idx = 
+        Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
+        
+        current_statement__ = 60;
         for (int i = 1; i <= N; ++i) {
-          current_statement__ = 51;
+          current_statement__ = 53;
           assign(tp_aos_loop_vec_v_uni_idx,
             multiply(p_soa_lhs_loop_mul, p_soa_rhs_loop_mul),
             "assigning variable tp_aos_loop_vec_v_uni_idx", index_uni(i));
-          current_statement__ = 52;
+          current_statement__ = 54;
           assign(tp_aos_loop_vec_v_multi_uni_idx,
             multiply(p_soa_lhs_loop_mul, p_soa_rhs_loop_mul),
             "assigning variable tp_aos_loop_vec_v_multi_uni_idx", index_uni(
@@ -1888,20 +1897,25 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
                                                                     idx_tester,
                                                                     "idx_tester",
                                                                     index_uni(i))));
-          current_statement__ = 53;
+          current_statement__ = 55;
+          assign(tp_aos_loop_vec_v_double_brackets_multi_uni_idx,
+            multiply(p_soa_lhs_loop_mul, p_soa_rhs_loop_mul),
+            "assigning variable tp_aos_loop_vec_v_double_brackets_multi_uni_idx", 
+            index_min_max(1, N), index_uni(i));
+          current_statement__ = 56;
           lp_accum__.add(
             normal_lpdf<propto__>(y,
               multiply(rvalue(dat_x, "dat_x", index_omni(), index_uni(i)),
                 rvalue(p_aos_loop_vec_v_uni_idx, "p_aos_loop_vec_v_uni_idx",
                   index_uni(i))), 1.0));
-          current_statement__ = 54;
+          current_statement__ = 57;
           lp_accum__.add(
             normal_lpdf<propto__>(y,
               multiply(rvalue(dat_x, "dat_x", index_omni(), index_uni(i)),
                 rvalue(p_aos_loop_mat_uni_uni_idx,
                   "p_aos_loop_mat_uni_uni_idx", index_uni(i), index_uni(i))),
               1.0));
-          current_statement__ = 55;
+          current_statement__ = 58;
           lp_accum__.add(
             normal_lpdf<propto__>(y,
               multiply(rvalue(dat_x, "dat_x", index_omni(), index_uni(i)),
