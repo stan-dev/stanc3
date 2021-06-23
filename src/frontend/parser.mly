@@ -157,6 +157,7 @@ decl_identifier:
   | VOID { build_id "void" $loc }
   | INT { build_id "int" $loc }
   | REAL { build_id "real" $loc }
+  | COMPLEX { build_id "complex" $loc }
   | VECTOR { build_id "vector" $loc }
   | ROWVECTOR { build_id "row_vector" $loc }
   | MATRIX { build_id "matrix" $loc }

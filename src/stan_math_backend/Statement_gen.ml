@@ -15,11 +15,16 @@ let pp_profile ppf (pp_body, name, body) =
   in
   pf ppf "{@;<1 2>@[<v>%s@;@;%a@]@,}" profile pp_body body
 
-let rec contains_eigen (ut : UnsizedType.t) : bool =
-  match ut with
-  | UnsizedType.UArray t -> contains_eigen t
-  | UMatrix | URowVector | UVector -> true
-  | UInt | UReal | UComplex | UMathLibraryFunction | UFun _ -> false
+(*Helper function for pp_filler to allow for 
+  * recursive use of unsized types
+ *)
+let rec pp_filler_helper ppf (decl_id, ut, nan_type, needs_filled) = 
+  match (needs_filled, ut) with
+  | true, UnsizedType.UArray t -> pp_filler_helper ppf (decl_id, t, nan_type, needs_filled)
+  | true, UMatrix | true, URowVector | true, UVector ->
+      pf ppf "@[<hov 2>stan::math::fill(%s, %s);@]@," decl_id nan_type
+  | true, UComplex -> pf ppf "@[%s.imag(%s);@]@," decl_id nan_type
+  | _ -> ()
 
 (*Fill only needs to happen for containers 
   * Note: This should probably be moved into its own function as data
@@ -28,10 +33,7 @@ let rec contains_eigen (ut : UnsizedType.t) : bool =
   * to elements of objects in transform data not being set by the user.
   *)
 let pp_filler ppf (decl_id, st, nan_type, needs_filled) =
-  match (needs_filled, contains_eigen (SizedType.to_unsized st)) with
-  | true, true ->
-      pf ppf "@[<hov 2>stan::math::fill(%s, %s);@]@," decl_id nan_type
-  | _ -> ()
+  pp_filler_helper ppf (decl_id, (SizedType.to_unsized st), nan_type, needs_filled)
 
 (*Pretty print a sized type*)
 let pp_st ppf (st, adtype) =
@@ -179,6 +181,14 @@ let pp_data_decl ppf (vident, ut) =
     | _ -> pf ppf "%a %s;" pp_type (DataOnly, ut) vident )
   | (true, _), _ -> pf ppf "%a %s;" pp_type (DataOnly, ut) vident
 
+(* Create string representations for vars__.emplace_back *)
+let pp_emplace_var ppf var =
+  match Expr.Typed.type_of var with
+      | UnsizedType.UComplex -> 
+          pf ppf "@[<b 2>vars__.emplace_back(%a.real());@]" pp_expr var ;
+          pf ppf "@[<b 2>vars__.emplace_back(%a.imag());@]" pp_expr var
+      | _ -> pf ppf "@[<hov 2>vars__.emplace_back(@,%a);@]" pp_expr var
+
 (*Create strings representing maps of Eigen types*)
 let pp_map_decl ppf (vident, ut) =
   let scalar = local_scalar ut DataOnly in
@@ -305,7 +315,7 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
       pf ppf "%s(@[<hov>%a@]);" ("check_" ^ check_name)
         (list ~sep:comma pp_expr) (function_arg :: args)
   | NRFunApp (CompilerInternal FnWriteParam, [var]) ->
-      pf ppf "@[<hov 2>vars__.emplace_back(@,%a);@]" pp_expr var
+      pp_emplace_var ppf var
   | NRFunApp (CompilerInternal f, args) ->
       let fname = Internal_fun.to_string f in
       let fname, extra_args = trans_math_fn fname in

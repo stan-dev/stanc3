@@ -12,7 +12,7 @@ let functions_requiring_namespace =
     ; "asinh"; "atan"; "atanh"; "cbrt"; "ceil"; "cos"; "cosh"; "erf"; "erfc"
     ; "exp"; "exp2"; "expm1"; "fabs"; "floor"; "lgamma"; "log"; "log1p"; "log2"
     ; "log10"; "round"; "sin"; "sinh"; "sqrt"; "tan"; "tanh"; "tgamma"; "trunc"
-    ; "fdim"; "fmax"; "fmin"; "hypot"; "fma"; "imag"; "complex"; "real"; ]
+    ; "fdim"; "fmax"; "fmin"; "hypot"; "fma"; "complex"; ]
 
 let stan_namespace_qualify f =
   if Set.mem functions_requiring_namespace f then "stan::math::" ^ f else f
