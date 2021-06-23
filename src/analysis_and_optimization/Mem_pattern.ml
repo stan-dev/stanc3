@@ -246,6 +246,11 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
    |Profile ((_ : string), (_ : int list)) ->
       Set.Poly.empty
 
+(**
+ * Check an expression to count how many times we see a single index.
+ * @param acc An accumulator from previous folds of multiple expressions.
+ * @param pattern The expression patterns to match against
+ *)
 let rec check_for_single_idx_expr (acc : int) Expr.Fixed.({pattern; _}) : int =
   match pattern with
   | Expr.Fixed.Pattern.FunApp (_, (exprs : Typed.Meta.t Expr.Fixed.t list)) ->
@@ -266,7 +271,15 @@ let rec check_for_single_idx_expr (acc : int) Expr.Fixed.({pattern; _}) : int =
   | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
       acc
 
-and is_single_idx (acc : int) idx =
+(**
+ * Check an Index to count how many times we see a single index.
+ * @param acc An accumulator from previous folds of multiple expressions.
+ * @param idx An Index to match. For Single types this adds 1 to the 
+ *  acc. For Upfrom and MultiIndex types we check the inner expression 
+ *  for a Single index. All and Between cannot be Single cell access 
+ *  and so pass acc along.
+ *)
+and is_single_idx (acc : int) (idx : Expr.Typed.Meta.t Expr.Fixed.t Index.t) =
   match idx with
   | Index.All -> acc
   | Between
@@ -283,6 +296,9 @@ and is_single_idx (acc : int) idx =
  * a vector, row vector, matrix, or matrix with single cell access
  * as well as an array of any of the above that is accessing the 
  * inner matrix types cell.
+ * @param ut An UnsizedType to match against.
+ * @param index This list is checked for Single cell access 
+ *  either at the top level or within the `Index` types of the list.
  *)
 let rec is_uni_eigen_loop_indexing (ut : UnsizedType.t)
     (index : Typed.Meta.t Expr.Fixed.t Index.t list) =
