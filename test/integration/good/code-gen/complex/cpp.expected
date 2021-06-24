@@ -64,7 +64,7 @@ class complex_model final : public model_base_crtp<complex_model> {
       a = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
-      assign(a, context__.vals_z("a")[(1 - 1)], "assigning variable a");
+      assign(a, context__.vals_c("a")[(1 - 1)], "assigning variable a");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -173,7 +173,7 @@ class complex_model final : public model_base_crtp<complex_model> {
       b.imag(std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 1;
-      assign(b, context__.vals_z("b")[(1 - 1)], "assigning variable b");
+      assign(b, context__.vals_c("b")[(1 - 1)], "assigning variable b");
       vars__.emplace_back(b.real());vars__.emplace_back(b.imag());
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
