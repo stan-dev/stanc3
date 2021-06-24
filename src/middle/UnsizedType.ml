@@ -117,7 +117,8 @@ let check_compatible_arguments_mod_conv name args1 args2 =
 (** Given two types find the minimal type both can convert to *)
 let rec common_type = function
   | UReal, UInt | UInt, UReal -> Some UReal
-  | UComplex, UInt | UInt, UComplex | UComplex, UReal | UReal, UComplex -> Some UComplex
+  | UComplex, UInt | UInt, UComplex | UComplex, UReal | UReal, UComplex ->
+      Some UComplex
   | UArray t1, UArray t2 ->
       common_type (t1, t2) |> Option.map ~f:(fun t -> UArray t)
   | t1, t2 when t1 = t2 -> Some t1

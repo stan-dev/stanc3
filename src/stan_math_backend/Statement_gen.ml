@@ -18,9 +18,10 @@ let pp_profile ppf (pp_body, name, body) =
 (*Helper function for pp_filler to allow for 
   * recursive use of unsized types
  *)
-let rec pp_filler_helper ppf (decl_id, ut, nan_type, needs_filled) = 
+let rec pp_filler_helper ppf (decl_id, ut, nan_type, needs_filled) =
   match (needs_filled, ut) with
-  | true, UnsizedType.UArray t -> pp_filler_helper ppf (decl_id, t, nan_type, needs_filled)
+  | true, UnsizedType.UArray t ->
+      pp_filler_helper ppf (decl_id, t, nan_type, needs_filled)
   | true, UMatrix | true, URowVector | true, UVector ->
       pf ppf "@[<hov 2>stan::math::fill(%s, %s);@]@," decl_id nan_type
   | true, UComplex -> pf ppf "@[%s.imag(%s);@]@," decl_id nan_type
@@ -33,7 +34,8 @@ let rec pp_filler_helper ppf (decl_id, ut, nan_type, needs_filled) =
   * to elements of objects in transform data not being set by the user.
   *)
 let pp_filler ppf (decl_id, st, nan_type, needs_filled) =
-  pp_filler_helper ppf (decl_id, (SizedType.to_unsized st), nan_type, needs_filled)
+  pp_filler_helper ppf
+    (decl_id, SizedType.to_unsized st, nan_type, needs_filled)
 
 (*Pretty print a sized type*)
 let pp_st ppf (st, adtype) =
@@ -184,10 +186,10 @@ let pp_data_decl ppf (vident, ut) =
 (* Create string representations for vars__.emplace_back *)
 let pp_emplace_var ppf var =
   match Expr.Typed.type_of var with
-      | UnsizedType.UComplex -> 
-          pf ppf "@[<b 2>vars__.emplace_back(%a.real());@]" pp_expr var ;
-          pf ppf "@[<b 2>vars__.emplace_back(%a.imag());@]" pp_expr var
-      | _ -> pf ppf "@[<hov 2>vars__.emplace_back(@,%a);@]" pp_expr var
+  | UnsizedType.UComplex ->
+      pf ppf "@[<b 2>vars__.emplace_back(%a.real());@]" pp_expr var ;
+      pf ppf "@[<b 2>vars__.emplace_back(%a.imag());@]" pp_expr var
+  | _ -> pf ppf "@[<hov 2>vars__.emplace_back(@,%a);@]" pp_expr var
 
 (*Create strings representing maps of Eigen types*)
 let pp_map_decl ppf (vident, ut) =
@@ -314,8 +316,7 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
       in
       pf ppf "%s(@[<hov>%a@]);" ("check_" ^ check_name)
         (list ~sep:comma pp_expr) (function_arg :: args)
-  | NRFunApp (CompilerInternal FnWriteParam, [var]) ->
-      pp_emplace_var ppf var
+  | NRFunApp (CompilerInternal FnWriteParam, [var]) -> pp_emplace_var ppf var
   | NRFunApp (CompilerInternal f, args) ->
       let fname = Internal_fun.to_string f in
       let fname, extra_args = trans_math_fn fname in
