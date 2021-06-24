@@ -262,15 +262,16 @@ and gen_misc_special_math_app f =
   | _ -> None
 
 and read_data ut ppf es =
-  let i_or_r =
+  let i_or_r_or_z =
     match ut with
     | UnsizedType.UArray UInt -> "i"
     | UArray UReal -> "r"
+    | UArray UComplex -> "z"
     | UInt | UReal | UComplex | UVector | URowVector | UMatrix | UArray _
      |UFun _ | UMathLibraryFunction ->
         raise_s [%message "Can't ReadData of " (ut : UnsizedType.t)]
   in
-  pf ppf "context__.vals_%s(%a)" i_or_r pp_expr (List.hd_exn es)
+  pf ppf "context__.vals_%s(%a)" i_or_r_or_z pp_expr (List.hd_exn es)
 
 (* assumes everything well formed from parser checks *)
 and gen_fun_app suffix ppf fname es =
