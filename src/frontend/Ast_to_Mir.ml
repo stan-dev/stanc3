@@ -661,7 +661,7 @@ let trans_fun_def ud_dists (ts : Ast.typed_statement) =
               (match returntype with Void -> None | ReturnType ut -> Some ut)
           ; fdname= funname.name
           ; fdsuffix=
-              Fun_kind.(suffix_from_name funname.name |> map_suffix Fn.ignore)
+              Fun_kind.(suffix_from_name funname.name |> without_propto)
           ; fdargs= List.map ~f:trans_arg arguments
           ; fdbody=
               trans_stmt ud_dists

@@ -9,102 +9,20 @@ Semantic error in 'falling_factorial.stan', line 7, column 26 to column 59:
      9:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'falling_factorial'. Available signatures: 
-(int, int) => int
+Ill-typed arguments supplied to function 'falling_factorial':
+(real, real)
+Available signatures:
 (real, int) => real
-(vector, int) => vector
-(vector, array[] int) => vector
-(row_vector, int) => row_vector
-(row_vector, array[] int) => row_vector
-(matrix, int) => matrix
-(matrix, array[,] int) => matrix
-(int, array[] int) => array[] int
-(array[] int, int) => array[] int
-(array[] int, array[] int) => array[] int
+  The second argument must be int but got real
 (real, array[] int) => array[] real
-(array[] real, int) => array[] real
-(array[] real, array[] int) => array[] real
-(array[] vector, int) => array[] vector
-(array[] vector, array[,] int) => array[] vector
-(array[] row_vector, int) => array[] row_vector
-(array[] row_vector, array[,] int) => array[] row_vector
-(array[] matrix, int) => array[] matrix
-(array[] matrix, array[,,] int) => array[] matrix
-(int, array[,] int) => array[,] int
-(array[,] int, int) => array[,] int
-(array[,] int, array[,] int) => array[,] int
+  The second argument must be array[] int but got real
 (real, array[,] int) => array[,] real
-(array[,] real, int) => array[,] real
-(array[,] real, array[,] int) => array[,] real
-(array[,] vector, int) => array[,] vector
-(array[,] vector, array[,,] int) => array[,] vector
-(array[,] row_vector, int) => array[,] row_vector
-(array[,] row_vector, array[,,] int) => array[,] row_vector
-(array[,] matrix, int) => array[,] matrix
-(array[,] matrix, array[,,,] int) => array[,] matrix
-(int, array[,,] int) => array[,,] int
-(array[,,] int, int) => array[,,] int
-(array[,,] int, array[,,] int) => array[,,] int
+  The second argument must be array[,] int but got real
 (real, array[,,] int) => array[,,] real
-(array[,,] real, int) => array[,,] real
-(array[,,] real, array[,,] int) => array[,,] real
-(array[,,] vector, int) => array[,,] vector
-(array[,,] vector, array[,,,] int) => array[,,] vector
-(array[,,] row_vector, int) => array[,,] row_vector
-(array[,,] row_vector, array[,,,] int) => array[,,] row_vector
-(array[,,] matrix, int) => array[,,] matrix
-(array[,,] matrix, array[,,,,] int) => array[,,] matrix
-(int, array[,,,] int) => array[,,,] int
-(array[,,,] int, int) => array[,,,] int
-(array[,,,] int, array[,,,] int) => array[,,,] int
+  The second argument must be array[,,] int but got real
 (real, array[,,,] int) => array[,,,] real
-(array[,,,] real, int) => array[,,,] real
-(array[,,,] real, array[,,,] int) => array[,,,] real
-(array[,,,] vector, int) => array[,,,] vector
-(array[,,,] vector, array[,,,,] int) => array[,,,] vector
-(array[,,,] row_vector, int) => array[,,,] row_vector
-(array[,,,] row_vector, array[,,,,] int) => array[,,,] row_vector
-(array[,,,] matrix, int) => array[,,,] matrix
-(array[,,,] matrix, array[,,,,,] int) => array[,,,] matrix
-(int, array[,,,,] int) => array[,,,,] int
-(array[,,,,] int, int) => array[,,,,] int
-(array[,,,,] int, array[,,,,] int) => array[,,,,] int
-(real, array[,,,,] int) => array[,,,,] real
-(array[,,,,] real, int) => array[,,,,] real
-(array[,,,,] real, array[,,,,] int) => array[,,,,] real
-(array[,,,,] vector, int) => array[,,,,] vector
-(array[,,,,] vector, array[,,,,,] int) => array[,,,,] vector
-(array[,,,,] row_vector, int) => array[,,,,] row_vector
-(array[,,,,] row_vector, array[,,,,,] int) => array[,,,,] row_vector
-(array[,,,,] matrix, int) => array[,,,,] matrix
-(array[,,,,] matrix, array[,,,,,,] int) => array[,,,,] matrix
-(int, array[,,,,,] int) => array[,,,,,] int
-(array[,,,,,] int, int) => array[,,,,,] int
-(array[,,,,,] int, array[,,,,,] int) => array[,,,,,] int
-(real, array[,,,,,] int) => array[,,,,,] real
-(array[,,,,,] real, int) => array[,,,,,] real
-(array[,,,,,] real, array[,,,,,] int) => array[,,,,,] real
-(array[,,,,,] vector, int) => array[,,,,,] vector
-(array[,,,,,] vector, array[,,,,,,] int) => array[,,,,,] vector
-(array[,,,,,] row_vector, int) => array[,,,,,] row_vector
-(array[,,,,,] row_vector, array[,,,,,,] int) => array[,,,,,] row_vector
-(array[,,,,,] matrix, int) => array[,,,,,] matrix
-(array[,,,,,] matrix, array[,,,,,,,] int) => array[,,,,,] matrix
-(int, array[,,,,,,] int) => array[,,,,,,] int
-(array[,,,,,,] int, int) => array[,,,,,,] int
-(array[,,,,,,] int, array[,,,,,,] int) => array[,,,,,,] int
-(real, array[,,,,,,] int) => array[,,,,,,] real
-(array[,,,,,,] real, int) => array[,,,,,,] real
-(array[,,,,,,] real, array[,,,,,,] int) => array[,,,,,,] real
-(array[,,,,,,] vector, int) => array[,,,,,,] vector
-(array[,,,,,,] vector, array[,,,,,,,] int) => array[,,,,,,] vector
-(array[,,,,,,] row_vector, int) => array[,,,,,,] row_vector
-(array[,,,,,,] row_vector, array[,,,,,,,] int) => array[,,,,,,] row_vector
-(array[,,,,,,] matrix, int) => array[,,,,,,] matrix
-(array[,,,,,,] matrix, array[,,,,,,,,] int) => array[,,,,,,] matrix
-(array[,,,,,,,] real, int) => array[,,,,,,,] real
-(array[,,,,,,,] real, array[,,,,,,,] int) => array[,,,,,,,] real
-Instead supplied arguments of incompatible type: real, real.
+  The second argument must be array[,,,] int but got real
+(Additional signatures omitted)
   $ ../../../../../install/default/bin/stanc rising_factorial.stan
 Semantic error in 'rising_factorial.stan', line 7, column 28 to column 60:
    -------------------------------------------------
@@ -115,99 +33,17 @@ Semantic error in 'rising_factorial.stan', line 7, column 28 to column 60:
      8:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'rising_factorial'. Available signatures: 
-(int, int) => int
+Ill-typed arguments supplied to function 'rising_factorial':
+(real, real)
+Available signatures:
 (real, int) => real
-(vector, int) => vector
-(vector, array[] int) => vector
-(row_vector, int) => row_vector
-(row_vector, array[] int) => row_vector
-(matrix, int) => matrix
-(matrix, array[,] int) => matrix
-(int, array[] int) => array[] int
-(array[] int, int) => array[] int
-(array[] int, array[] int) => array[] int
+  The second argument must be int but got real
 (real, array[] int) => array[] real
-(array[] real, int) => array[] real
-(array[] real, array[] int) => array[] real
-(array[] vector, int) => array[] vector
-(array[] vector, array[,] int) => array[] vector
-(array[] row_vector, int) => array[] row_vector
-(array[] row_vector, array[,] int) => array[] row_vector
-(array[] matrix, int) => array[] matrix
-(array[] matrix, array[,,] int) => array[] matrix
-(int, array[,] int) => array[,] int
-(array[,] int, int) => array[,] int
-(array[,] int, array[,] int) => array[,] int
+  The second argument must be array[] int but got real
 (real, array[,] int) => array[,] real
-(array[,] real, int) => array[,] real
-(array[,] real, array[,] int) => array[,] real
-(array[,] vector, int) => array[,] vector
-(array[,] vector, array[,,] int) => array[,] vector
-(array[,] row_vector, int) => array[,] row_vector
-(array[,] row_vector, array[,,] int) => array[,] row_vector
-(array[,] matrix, int) => array[,] matrix
-(array[,] matrix, array[,,,] int) => array[,] matrix
-(int, array[,,] int) => array[,,] int
-(array[,,] int, int) => array[,,] int
-(array[,,] int, array[,,] int) => array[,,] int
+  The second argument must be array[,] int but got real
 (real, array[,,] int) => array[,,] real
-(array[,,] real, int) => array[,,] real
-(array[,,] real, array[,,] int) => array[,,] real
-(array[,,] vector, int) => array[,,] vector
-(array[,,] vector, array[,,,] int) => array[,,] vector
-(array[,,] row_vector, int) => array[,,] row_vector
-(array[,,] row_vector, array[,,,] int) => array[,,] row_vector
-(array[,,] matrix, int) => array[,,] matrix
-(array[,,] matrix, array[,,,,] int) => array[,,] matrix
-(int, array[,,,] int) => array[,,,] int
-(array[,,,] int, int) => array[,,,] int
-(array[,,,] int, array[,,,] int) => array[,,,] int
+  The second argument must be array[,,] int but got real
 (real, array[,,,] int) => array[,,,] real
-(array[,,,] real, int) => array[,,,] real
-(array[,,,] real, array[,,,] int) => array[,,,] real
-(array[,,,] vector, int) => array[,,,] vector
-(array[,,,] vector, array[,,,,] int) => array[,,,] vector
-(array[,,,] row_vector, int) => array[,,,] row_vector
-(array[,,,] row_vector, array[,,,,] int) => array[,,,] row_vector
-(array[,,,] matrix, int) => array[,,,] matrix
-(array[,,,] matrix, array[,,,,,] int) => array[,,,] matrix
-(int, array[,,,,] int) => array[,,,,] int
-(array[,,,,] int, int) => array[,,,,] int
-(array[,,,,] int, array[,,,,] int) => array[,,,,] int
-(real, array[,,,,] int) => array[,,,,] real
-(array[,,,,] real, int) => array[,,,,] real
-(array[,,,,] real, array[,,,,] int) => array[,,,,] real
-(array[,,,,] vector, int) => array[,,,,] vector
-(array[,,,,] vector, array[,,,,,] int) => array[,,,,] vector
-(array[,,,,] row_vector, int) => array[,,,,] row_vector
-(array[,,,,] row_vector, array[,,,,,] int) => array[,,,,] row_vector
-(array[,,,,] matrix, int) => array[,,,,] matrix
-(array[,,,,] matrix, array[,,,,,,] int) => array[,,,,] matrix
-(int, array[,,,,,] int) => array[,,,,,] int
-(array[,,,,,] int, int) => array[,,,,,] int
-(array[,,,,,] int, array[,,,,,] int) => array[,,,,,] int
-(real, array[,,,,,] int) => array[,,,,,] real
-(array[,,,,,] real, int) => array[,,,,,] real
-(array[,,,,,] real, array[,,,,,] int) => array[,,,,,] real
-(array[,,,,,] vector, int) => array[,,,,,] vector
-(array[,,,,,] vector, array[,,,,,,] int) => array[,,,,,] vector
-(array[,,,,,] row_vector, int) => array[,,,,,] row_vector
-(array[,,,,,] row_vector, array[,,,,,,] int) => array[,,,,,] row_vector
-(array[,,,,,] matrix, int) => array[,,,,,] matrix
-(array[,,,,,] matrix, array[,,,,,,,] int) => array[,,,,,] matrix
-(int, array[,,,,,,] int) => array[,,,,,,] int
-(array[,,,,,,] int, int) => array[,,,,,,] int
-(array[,,,,,,] int, array[,,,,,,] int) => array[,,,,,,] int
-(real, array[,,,,,,] int) => array[,,,,,,] real
-(array[,,,,,,] real, int) => array[,,,,,,] real
-(array[,,,,,,] real, array[,,,,,,] int) => array[,,,,,,] real
-(array[,,,,,,] vector, int) => array[,,,,,,] vector
-(array[,,,,,,] vector, array[,,,,,,,] int) => array[,,,,,,] vector
-(array[,,,,,,] row_vector, int) => array[,,,,,,] row_vector
-(array[,,,,,,] row_vector, array[,,,,,,,] int) => array[,,,,,,] row_vector
-(array[,,,,,,] matrix, int) => array[,,,,,,] matrix
-(array[,,,,,,] matrix, array[,,,,,,,,] int) => array[,,,,,,] matrix
-(array[,,,,,,,] real, int) => array[,,,,,,,] real
-(array[,,,,,,,] real, array[,,,,,,,] int) => array[,,,,,,,] real
-Instead supplied arguments of incompatible type: real, real.
+  The second argument must be array[,,,] int but got real
+(Additional signatures omitted)
