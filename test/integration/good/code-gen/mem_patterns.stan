@@ -23,6 +23,7 @@ parameters {
   matrix[N,M] p_soa_loop_mat_uni_col_idx;
   row_vector[N] p_soa_lhs_loop_mul;
   vector[N] p_soa_rhs_loop_mul;
+  vector[N] p_soa_used_with_aos_in_excluded_fun;
   // Should not be SoA
     // because of failed function
   vector[M] p_aos_vec_v_assign_to_aos;
@@ -59,6 +60,8 @@ transformed parameters {
 }
 
 model {
+  vector[N] tp_soa_used_with_aos_in_excluded_fun = p_soa_used_with_aos_in_excluded_fun * size(tp_aos_vec_v);
+  y ~ normal(alpha + multiply(dat_x, p_soa_vec_v + tp_soa_used_with_aos_in_excluded_fun), 1.0);
   y ~ normal(alpha + multiply(dat_x, p_soa_vec_v), 1.0);
   y ~ normal(multiply(dat_x, p_soa_mat_uni_col_idx[,N]), 1.0);
   y ~ normal(multiply(dat_x, p_soa_mat_uni_col_idx[,N]), p_soa_vec_uni_idx[N]);

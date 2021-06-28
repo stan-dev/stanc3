@@ -29,7 +29,7 @@ let bounds = function
 (**
  * Apply an op over the `Index` types inner expressions.
  * @param default Value to return for `All`
- * @param merge Functor taking in lhs and rhs of `Between` and
+ * @param merge Function taking in lhs and rhs of `Between` and
  *  merging their result.
  * @param op a functor to run with inputs of inner exprs
  * @param ind the Index.t to

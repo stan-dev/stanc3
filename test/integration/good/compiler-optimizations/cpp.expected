@@ -3657,17 +3657,19 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       
       current_statement__ = 11;
       b_v_prev = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<local_scalar_t__, -1, 1> b_age = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(n_age, DUMMY_VAR__);
-                                                     
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> b_age = 
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(n_age, std::numeric_limits<double>::quiet_NaN()));
+      
       
       current_statement__ = 12;
-      b_age = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+      b_age = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                 n_age);
-      Eigen::Matrix<local_scalar_t__, -1, 1> b_edu = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(n_edu, DUMMY_VAR__);
-                                                     
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> b_edu = 
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(n_edu, std::numeric_limits<double>::quiet_NaN()));
+      
       
       current_statement__ = 13;
-      b_edu = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+      b_edu = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                 n_edu);
       Eigen::Matrix<local_scalar_t__, -1, 1> b_region = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(n_region, DUMMY_VAR__);
                                                         
@@ -3681,11 +3683,12 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       current_statement__ = 15;
       b_age_edu = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                     n_age, n_edu);
-      Eigen::Matrix<local_scalar_t__, -1, 1> b_hat = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(n_state, DUMMY_VAR__);
-                                                     
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> b_hat = 
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(n_state, std::numeric_limits<double>::quiet_NaN()));
+      
       
       current_statement__ = 16;
-      b_hat = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+      b_hat = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                 n_state);
       {
         current_statement__ = 17;
@@ -5414,11 +5417,12 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       double lcm_sym18__;
       double lcm_sym17__;
       int lcm_sym16__;
-      Eigen::Matrix<local_scalar_t__, -1, 1> mu = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(2, DUMMY_VAR__);
-                                                  
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> mu = 
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(2, std::numeric_limits<double>::quiet_NaN()));
+      
       
       current_statement__ = 1;
-      mu = in__.template read_constrain_ordered<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+      mu = in__.template read_constrain_ordered<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
              lp__, 2);
       std::vector<local_scalar_t__> sigma = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
                                             
@@ -8085,8 +8089,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     try {
       local_scalar_t__ lcm_sym38__;
       double lcm_sym37__;
-      double lcm_sym36__;
-      Eigen::Matrix<double, -1, 1> lcm_sym35__;
+      Eigen::Matrix<double, -1, 1> lcm_sym36__;
+      double lcm_sym35__;
       double lcm_sym34__;
       int lcm_sym39__;
       local_scalar_t__ tau_phi = DUMMY_VAR__;
@@ -8094,19 +8098,21 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       current_statement__ = 1;
       tau_phi = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                   0, lp__);
-      Eigen::Matrix<local_scalar_t__, -1, 1> phi_std_raw = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(
-                                                             (N - 1), DUMMY_VAR__);
-                                                           
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> phi_std_raw = 
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(
+        (N - 1), std::numeric_limits<double>::quiet_NaN()));
+      
       
       lcm_sym39__ = (N - 1);
-      phi_std_raw = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+      phi_std_raw = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                       lcm_sym39__);
       local_scalar_t__ sigma_phi = DUMMY_VAR__;
       
       lcm_sym38__ = inv_sqrt(tau_phi);
       sigma_phi = lcm_sym38__;
-      Eigen::Matrix<local_scalar_t__, -1, 1> phi = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
-                                                   
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> phi = 
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN()));
+      
       
       current_statement__ = 5;
       assign(phi, phi_std_raw,
@@ -12218,9 +12224,9 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       int lcm_sym225__;
       int lcm_sym224__;
       int lcm_sym223__;
-      double lcm_sym222__;
+      Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym222__;
       double lcm_sym221__;
-      Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym220__;
+      double lcm_sym220__;
       local_scalar_t__ mean_phi = DUMMY_VAR__;
       
       current_statement__ = 1;
@@ -12284,32 +12290,32 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
             "assigning variable p", index_omni(), index_uni(t));
         }
       } 
-      assign(lcm_sym220__, divide(beta, sum(beta)),
-        "assigning variable lcm_sym220__");
-      assign(b, lcm_sym220__, "assigning variable b");
+      assign(lcm_sym222__, divide(beta, sum(beta)),
+        "assigning variable lcm_sym222__");
+      assign(b, lcm_sym222__, "assigning variable b");
       {
         local_scalar_t__ cum_b = DUMMY_VAR__;
         
-        lcm_sym302__ = rvalue(lcm_sym220__, "lcm_sym220__", index_uni(1));
+        lcm_sym302__ = rvalue(lcm_sym222__, "lcm_sym222__", index_uni(1));
         current_statement__ = 15;
         assign(nu, lcm_sym302__, "assigning variable nu", index_uni(1));
         current_statement__ = 19;
         if (logical_gte(lcm_sym236__, 2)) {
           current_statement__ = 16;
           assign(nu,
-            (rvalue(lcm_sym220__, "lcm_sym220__", index_uni(2)) /
+            (rvalue(lcm_sym222__, "lcm_sym222__", index_uni(2)) /
               (1.0 - lcm_sym302__)), "assigning variable nu", index_uni(2));
           current_statement__ = 17;
           cum_b = (lcm_sym302__ +
-                    rvalue(lcm_sym220__, "lcm_sym220__", index_uni(2)));
+                    rvalue(lcm_sym222__, "lcm_sym222__", index_uni(2)));
           for (int t = 3; t <= lcm_sym236__; ++t) {
             current_statement__ = 16;
             assign(nu,
-              (rvalue(lcm_sym220__, "lcm_sym220__", index_uni(t)) /
+              (rvalue(lcm_sym222__, "lcm_sym222__", index_uni(t)) /
                 (1.0 - cum_b)), "assigning variable nu", index_uni(t));
             current_statement__ = 17;
             cum_b = (cum_b +
-                      rvalue(lcm_sym220__, "lcm_sym220__", index_uni(t)));
+                      rvalue(lcm_sym222__, "lcm_sym222__", index_uni(t)));
           }
         } 
         current_statement__ = 20;
@@ -12525,7 +12531,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         }
       } 
       current_statement__ = 9;
-      check_simplex(function__, "b", lcm_sym220__);
+      check_simplex(function__, "b", lcm_sym222__);
       current_statement__ = 10;
       if (lcm_sym226__) {
         current_statement__ = 10;
@@ -14930,18 +14936,19 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       int lcm_sym51__;
       int lcm_sym50__;
       int lcm_sym49__;
-      Eigen::Matrix<local_scalar_t__, -1, 1> pi = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(K, DUMMY_VAR__);
-                                                  
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> pi = 
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(K, std::numeric_limits<double>::quiet_NaN()));
+      
       
       current_statement__ = 1;
-      pi = in__.template read_constrain_simplex<Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(
+      pi = in__.template read_constrain_simplex<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
              lp__, K);
-      std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> theta = 
-      std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(J, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(K, DUMMY_VAR__)));
+      stan::conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> theta = 
+      std::vector<std::vector<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>>(J, std::vector<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(K, stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(K, std::numeric_limits<double>::quiet_NaN()))));
       
       
       current_statement__ = 2;
-      theta = in__.template read_constrain_simplex<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>, jacobian__>(
+      theta = in__.template read_constrain_simplex<stan::conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>, jacobian__>(
                 lp__, J, K, K);
       {
         current_statement__ = 10;
@@ -14985,8 +14992,9 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         if (logical_gte(I, 1)) {
           current_statement__ = 13;
           validate_non_negative_index("log_q", "K", K);
-          Eigen::Matrix<local_scalar_t__, -1, 1> log_q = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(K, DUMMY_VAR__);
-                                                         
+          stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> log_q = 
+          stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(K, std::numeric_limits<double>::quiet_NaN()));
+          
           
           assign(lcm_sym61__, stan::math::log(pi),
             "assigning variable lcm_sym61__");
@@ -15020,8 +15028,9 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
           for (int i = 2; i <= I; ++i) {
             current_statement__ = 13;
             validate_non_negative_index("log_q", "K", K);
-            Eigen::Matrix<local_scalar_t__, -1, 1> log_q = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(K, DUMMY_VAR__);
-                                                           
+            stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> log_q = 
+            stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(K, std::numeric_limits<double>::quiet_NaN()));
+            
             
             current_statement__ = 14;
             assign(log_q, lcm_sym61__, "assigning variable log_q");
@@ -26393,8 +26402,9 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       Eigen::Matrix<local_scalar_t__, -1, 1> logit_psi = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(R, DUMMY_VAR__);
                                                          
       
-      Eigen::Matrix<local_scalar_t__, -1, -1> logit_p = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(R, T, DUMMY_VAR__);
-                                                        
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> logit_p = 
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>(Eigen::Matrix<double, -1, -1>::Constant(R, T, std::numeric_limits<double>::quiet_NaN()));
+      
       
       assign(lcm_sym35__, stan::math::fma(beta_occ, X, alpha_occ),
         "assigning variable lcm_sym35__");
@@ -27251,11 +27261,13 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       
       current_statement__ = 2;
       eta1 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J);
-      Eigen::Matrix<local_scalar_t__, -1, 1> eta2 = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(J, DUMMY_VAR__);
-                                                    
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> eta2 = 
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(J, std::numeric_limits<double>::quiet_NaN()));
+      
       
       current_statement__ = 3;
-      eta2 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(J);
+      eta2 = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+               J);
       local_scalar_t__ mu_a1 = DUMMY_VAR__;
       
       current_statement__ = 4;
@@ -27282,8 +27294,9 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       Eigen::Matrix<local_scalar_t__, -1, 1> a1 = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(J, DUMMY_VAR__);
                                                   
       
-      Eigen::Matrix<local_scalar_t__, -1, 1> a2 = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(J, DUMMY_VAR__);
-                                                  
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> a2 = 
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(J, std::numeric_limits<double>::quiet_NaN()));
+      
       
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
                                                      
@@ -29575,11 +29588,13 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       
       current_statement__ = 1;
       a = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(n_pair);
-      Eigen::Matrix<local_scalar_t__, -1, 1> beta = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(2, DUMMY_VAR__);
-                                                    
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> beta = 
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(2, std::numeric_limits<double>::quiet_NaN()));
+      
       
       current_statement__ = 2;
-      beta = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
+      beta = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+               2);
       local_scalar_t__ mu_a = DUMMY_VAR__;
       
       current_statement__ = 3;

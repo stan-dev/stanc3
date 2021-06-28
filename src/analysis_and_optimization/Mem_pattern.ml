@@ -30,6 +30,31 @@ let rec get_eigen_decls Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
   | Skip | Break | Continue -> Set.Poly.empty
   | _ -> Set.Poly.empty
 
+(** See interface file *)
+let rec expr_eigen_set
+    Expr.Fixed.({pattern; meta= Expr.Typed.Meta.({type_; adlevel; _}) as meta})
+    =
+  let union_recur exprs =
+    Set.Poly.union_list (List.map exprs ~f:expr_eigen_set)
+  in
+  match
+    UnsizedType.contains_eigen_type type_ && adlevel = UnsizedType.AutoDiffable
+  with
+  | false -> Set.Poly.empty
+  | true -> (
+    match pattern with
+    | Var s -> Set.Poly.singleton (Dataflow_types.VVar s, meta)
+    | Lit _ -> Set.Poly.empty
+    | FunApp (_, exprs) -> union_recur exprs
+    | TernaryIf (expr1, expr2, expr3) -> union_recur [expr1; expr2; expr3]
+    | Indexed (expr, ix) ->
+        let apply_idx =
+          Index.apply ~default:Set.Poly.empty ~merge:Set.Poly.union
+            expr_eigen_set
+        in
+        Set.Poly.union_list (expr_eigen_set expr :: List.map ix ~f:apply_idx)
+    | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2] )
+
 (**
  * Search through an expression for the names of all types that hold matrices 
  *  and vectors.
@@ -39,7 +64,7 @@ let query_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) : string Set.Poly.t =
       =
     if UnsizedType.contains_eigen_type type_ then Some s else None
   in
-  Set.Poly.filter_map ~f:get_expr_eigen_names (Mir_utils.expr_var_set expr)
+  Set.Poly.filter_map ~f:get_expr_eigen_names (expr_eigen_set expr)
 
 (**
  * Query an expression to check if any of it's named types exists in a set.
@@ -197,16 +222,23 @@ and modify_stmt (mem_pattern : Common.Helpers.mem_pattern)
   {stmt with pattern= modify_stmt_pattern mem_pattern pattern modifiable_set}
 
 (**
- * Query an expression to check if any of it's named types exists in a set.
- *  Return true if any of the names in `name_set` are in the expression.
+ * Check one set against a base set to validate if anything in the set is 
+ * in the base set.
  **)
-let check_eigen_names (name_set : string Set.Poly.t)
-    (expr : Typed.Meta.t Expr.Fixed.t) : bool =
-  Set.Poly.is_empty (Set.inter name_set (query_eigen_names expr))
+let check_names (base_set : string Set.Poly.t) (alt_set : string Set.Poly.t) :
+    bool =
+  let inter_set = Set.Poly.inter base_set alt_set in
+  let check_single_names (x : string) = Set.Poly.mem inter_set x in
+  Set.Poly.is_empty inter_set
+  || not (Set.Poly.for_all ~f:check_single_names alt_set)
+
+(*let printer intro s = Set.Poly.iter ~f:(printf intro) s*)
 
 (* Look through a statement to see whether it needs modified from
  * SoA to AoS. Returns the set of object names that need demoted
  * in a statement, if any.
+ * @param aos_exits A set of variables that can be demoted.
+ * @param pattern The Stmt pattern to query.
  *)
 let query_demotable_stmt (aos_exits : string Set.Poly.t)
     (pattern : (Typed.t, int) Stmt.Fixed.Pattern.t) : string Set.Poly.t =
@@ -217,22 +249,20 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
         , (_ : Expr.Typed.t Index.t list) )
       , rhs ) ->
       let all_rhs_eigen_names = query_eigen_names rhs in
-      let rhs_assign_type_non_eigen =
+      let rhs_type_eigen =
         UnsizedType.contains_eigen_type (Expr.Typed.type_of rhs)
       in
-      let rhs_fails =
-        match
-          Set.Poly.mem aos_exits assign_name && rhs_assign_type_non_eigen
-        with
+      let rhs_set =
+        match Set.Poly.mem aos_exits assign_name && rhs_type_eigen with
         | true -> all_rhs_eigen_names
         | false -> Set.Poly.empty
       in
-      let lhs_fails =
-        match check_eigen_names aos_exits rhs with
+      let lhs_set =
+        match check_names aos_exits all_rhs_eigen_names with
         | true -> Set.Poly.empty
         | false -> Set.Poly.singleton assign_name
       in
-      Set.Poly.union rhs_fails lhs_fails
+      Set.Poly.union rhs_set lhs_set
   | Decl _
    |NRFunApp ((_ : Fun_kind.t), (_ : Expr.Typed.t list))
    |Return (_ : Expr.Typed.t option)
@@ -300,19 +330,26 @@ and is_single_idx (acc : int) (idx : Expr.Typed.Meta.t Expr.Fixed.t Index.t) =
  * @param index This list is checked for Single cell access 
  *  either at the top level or within the `Index` types of the list.
  *)
-let rec is_uni_eigen_loop_indexing (ut : UnsizedType.t)
+let rec is_uni_eigen_loop_indexing in_loop (ut : UnsizedType.t)
     (index : Typed.Meta.t Expr.Fixed.t Index.t list) =
-  let contains_single_idx = List.fold_left ~init:0 ~f:is_single_idx index in
-  match (ut, index) with
-  | (UnsizedType.UVector | URowVector), _ when contains_single_idx > 0 -> true
-  | UMatrix, _ when contains_single_idx > 1 -> true
-  | (UArray t | UFun (_, ReturnType t, _, _)), index -> (
-    match List.tl index with
-    | Some cut_list -> is_uni_eigen_loop_indexing t cut_list
-    | None -> is_uni_eigen_loop_indexing t [Index.All] )
-  (* None of the below contain single cell access*)
-  | (UReal | UInt | UMathLibraryFunction | UFun (_, Void, _, _)), _ -> false
-  | (UVector | URowVector | UMatrix), _ -> false
+  match in_loop with
+  | false -> false
+  | true -> (
+      let contains_single_idx =
+        List.fold_left ~init:0 ~f:is_single_idx index
+      in
+      match (ut, index) with
+      | (UnsizedType.UVector | URowVector), _ when contains_single_idx > 0 ->
+          true
+      | UMatrix, _ when contains_single_idx > 1 -> true
+      | (UArray t | UFun (_, ReturnType t, _, _)), index -> (
+        match List.tl index with
+        | Some cut_list -> is_uni_eigen_loop_indexing in_loop t cut_list
+        | None -> is_uni_eigen_loop_indexing in_loop t [Index.All] )
+      (* None of the below contain single cell access*)
+      | (UReal | UInt | UMathLibraryFunction | UFun (_, Void, _, _)), _ ->
+          false
+      | (UVector | URowVector | UMatrix), _ -> false )
 
 (**
  * Query to find the initial set of objects that cannot be SoA.
@@ -338,7 +375,7 @@ let rec query_initial_demotable_expr (in_loop : bool) Expr.Fixed.({pattern; _})
                   query_expr)
              indexed)
       in
-      if in_loop && is_uni_eigen_loop_indexing type_ indexed then
+      if is_uni_eigen_loop_indexing in_loop type_ indexed then
         Set.Poly.union (query_eigen_names expr) index_set
       else Set.Poly.union (query_expr expr) index_set
   | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
@@ -409,7 +446,7 @@ let rec query_initial_demotable_stmt (in_loop : bool)
                     query_expr)
                lhs)
         in
-        match in_loop && is_uni_eigen_loop_indexing ut lhs with
+        match is_uni_eigen_loop_indexing in_loop ut lhs with
         | true -> Set.Poly.add lhs_list name
         | false -> lhs_list
       in
