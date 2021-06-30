@@ -34,7 +34,10 @@
     (meta <opaque>))
    ((pattern
      (Assignment (b UComplex ())
-      ((pattern (FunApp (CompilerInternal (FnReadParam ())) ()))
+      ((pattern
+        (FunApp (CompilerInternal (FnReadParam ()))
+         (((pattern (Lit Int 2))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))))
  (generate_quantities
@@ -43,7 +46,10 @@
     (meta <opaque>))
    ((pattern
      (Assignment (b UComplex ())
-      ((pattern (FunApp (CompilerInternal (FnReadParam ())) ()))
+      ((pattern
+        (FunApp (CompilerInternal (FnReadParam ()))
+         (((pattern (Lit Int 2))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern

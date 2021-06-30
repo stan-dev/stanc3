@@ -64,14 +64,15 @@ let rec dims_of st =
 
 let rec get_dims st =
   match st with
-  | SInt | SReal | SComplex -> []
+  | SInt | SReal -> []
+  | SComplex ->
+      [ Expr.Fixed.
+          { meta=
+              Expr.Typed.Meta.
+                { type_= UnsizedType.UComplex
+                ; loc= Location_span.empty
+                ; adlevel= DataOnly }
+          ; pattern= Lit (Int, "2") } ]
   | SVector d | SRowVector d -> [d]
   | SMatrix (dim1, dim2) -> [dim1; dim2]
   | SArray (t, dim) -> dim :: get_dims t
-
-let%expect_test "dims" =
-  let open Fmt in
-  strf "@[%a@]" (list ~sep:comma string)
-    (get_dims (SArray (SMatrix ("x", "y"), "z")))
-  |> print_endline ;
-  [%expect {| z, x, y |}]

@@ -692,6 +692,7 @@ let () =
       Hashtbl.add_multi stan_math_signatures ~key ~data:(rt, args) ) ;
   add_unqualified ("abs", ReturnType UInt, [UInt]) ;
   add_unqualified ("abs", ReturnType UReal, [UReal]) ;
+  add_unqualified ("abs", ReturnType UReal, [UComplex]) ;
   List.iter
     ~f:(fun x -> add_unqualified ("add", ReturnType x, [x; x]))
     bare_types ;
@@ -841,10 +842,6 @@ let () =
   add_unqualified ("columns_dot_self", ReturnType URowVector, [UVector]) ;
   add_unqualified ("columns_dot_self", ReturnType URowVector, [URowVector]) ;
   add_unqualified ("columns_dot_self", ReturnType URowVector, [UMatrix]) ;
-  add_unqualified ("to_complex", ReturnType UComplex, []) ;
-  add_unqualified ("to_complex", ReturnType UComplex, [UReal; UReal]) ;
-  add_unqualified ("to_complex", ReturnType UComplex, [UReal]) ;
-  add_unqualified ("to_complex", ReturnType UComplex, [UComplex]) ;
   add_unqualified
     ("cov_exp_quad", ReturnType UMatrix, [UArray UReal; UReal; UReal]) ;
   add_unqualified
@@ -969,6 +966,8 @@ let () =
     ( "gaussian_dlm_obs_lpdf"
     , ReturnType UReal
     , [UMatrix; UMatrix; UMatrix; UVector; UMatrix; UVector; UMatrix] ) ;
+  add_unqualified ("get_imag", ReturnType UReal, [UComplex]) ;
+  add_unqualified ("get_real", ReturnType UReal, [UComplex]) ;
   add_unqualified ("gp_dot_prod_cov", ReturnType UMatrix, [UArray UReal; UReal]) ;
   add_unqualified
     ("gp_dot_prod_cov", ReturnType UMatrix, [UArray UReal; UArray UReal; UReal]) ;
@@ -1104,7 +1103,6 @@ let () =
   add_unqualified ("identity_matrix", ReturnType UMatrix, [UInt]) ;
   add_unqualified ("if_else", ReturnType UInt, [UInt; UInt; UInt]) ;
   add_unqualified ("if_else", ReturnType UReal, [UInt; UReal; UReal]) ;
-  add_unqualified ("get_imag", ReturnType UReal, [UComplex]) ;
   add_unqualified ("inc_beta", ReturnType UReal, [UReal; UReal; UReal]) ;
   add_unqualified ("int_step", ReturnType UInt, [UReal]) ;
   add_unqualified ("int_step", ReturnType UInt, [UInt]) ;
@@ -1641,7 +1639,6 @@ let () =
   add_unqualified ("append_row", ReturnType UVector, [UVector; UVector]) ;
   add_unqualified ("append_row", ReturnType UVector, [UReal; UVector]) ;
   add_unqualified ("append_row", ReturnType UVector, [UVector; UReal]) ;
-  add_unqualified ("get_real", ReturnType UReal, [UComplex]) ;
   List.iter
     ~f:(fun t ->
       add_unqualified
@@ -1803,6 +1800,10 @@ let () =
     (List.range 1 10) ;
   add_unqualified
     ("to_array_2d", ReturnType (bare_array_type (UReal, 2)), [UMatrix]) ;
+  add_unqualified ("to_complex", ReturnType UComplex, []) ;
+  add_unqualified ("to_complex", ReturnType UComplex, [UReal; UReal]) ;
+  add_unqualified ("to_complex", ReturnType UComplex, [UReal]) ;
+  add_unqualified ("to_complex", ReturnType UComplex, [UComplex]) ;
   add_unqualified ("to_matrix", ReturnType UMatrix, [UMatrix]) ;
   add_unqualified ("to_matrix", ReturnType UMatrix, [UMatrix; UInt; UInt]) ;
   add_unqualified ("to_matrix", ReturnType UMatrix, [UMatrix; UInt; UInt; UInt]) ;

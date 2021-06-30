@@ -262,7 +262,7 @@ and gen_misc_special_math_app f =
   | _ -> None
 
 and read_data ut ppf es =
-  let i_or_r_or_z =
+  let i_or_r_or_c =
     match ut with
     | UnsizedType.UArray UInt -> "i"
     | UArray UReal -> "r"
@@ -271,7 +271,7 @@ and read_data ut ppf es =
      |UFun _ | UMathLibraryFunction ->
         raise_s [%message "Can't ReadData of " (ut : UnsizedType.t)]
   in
-  pf ppf "context__.vals_%s(%a)" i_or_r_or_z pp_expr (List.hd_exn es)
+  pf ppf "context__.vals_%s(%a)" i_or_r_or_c pp_expr (List.hd_exn es)
 
 (* assumes everything well formed from parser checks *)
 and gen_fun_app suffix ppf fname es =
@@ -446,10 +446,15 @@ and pp_compiler_internal_fn ad ut f ppf es =
       let jacobian_param_opt =
         Option.map ~f:(fun _ -> ", jacobian__") constraint_opt
       in
+      let check_complex =
+        match ut with
+        | UComplex -> []
+        | _ -> es
+      in
       pf ppf "@[<hov 2>in__.template read%a<%a%a>(@,%a)@]"
         (Fmt.option Fmt.string) constraint_suffix_opt pp_unsizedtype_local
         (UnsizedType.AutoDiffable, ut)
-        (Fmt.option Fmt.string) jacobian_param_opt (list ~sep:comma pp_expr) es
+        (Fmt.option Fmt.string) jacobian_param_opt (list ~sep:comma pp_expr) check_complex
   | FnDeepCopy -> gen_fun_app FnPlain ppf "stan::model::deep_copy" es
   | _ -> gen_fun_app FnPlain ppf (Internal_fun.to_string f) es
 

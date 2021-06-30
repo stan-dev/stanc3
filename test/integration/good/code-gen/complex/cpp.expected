@@ -60,7 +60,7 @@ class complex_model final : public model_base_crtp<complex_model> {
       pos__ = 1;
       current_statement__ = 2;
       context__.validate_dims("data initialization","a","double",
-           std::vector<size_t>{});
+           std::vector<size_t>{static_cast<size_t>(2)});
       a = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 2;
@@ -70,7 +70,7 @@ class complex_model final : public model_base_crtp<complex_model> {
       // Next line prevents compiler griping about no return
       throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
-    num_params_r__ = 1;
+    num_params_r__ = 2;
     
   }
   
@@ -96,7 +96,7 @@ class complex_model final : public model_base_crtp<complex_model> {
       b = DUMMY_VAR__;b.imag(DUMMY_VAR__);
       
       current_statement__ = 1;
-      b = in__.template read<std::complex<local_scalar_t__>>();
+      b = in__.template read<std::complex<local_scalar_t__>>(2);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -136,8 +136,9 @@ class complex_model final : public model_base_crtp<complex_model> {
       b.imag(std::numeric_limits<double>::quiet_NaN());
       
       current_statement__ = 1;
-      b = in__.template read<std::complex<local_scalar_t__>>();
-      vars__.emplace_back(b.real());vars__.emplace_back(b.imag());
+      b = in__.template read<std::complex<local_scalar_t__>>(2);
+      vars__.emplace_back(b.real());
+      vars__.emplace_back(b.imag());
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -174,7 +175,8 @@ class complex_model final : public model_base_crtp<complex_model> {
       
       current_statement__ = 1;
       assign(b, context__.vals_c("b")[(1 - 1)], "assigning variable b");
-      vars__.emplace_back(b.real());vars__.emplace_back(b.imag());
+      vars__.emplace_back(b.real());
+      vars__.emplace_back(b.imag());
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -190,7 +192,9 @@ class complex_model final : public model_base_crtp<complex_model> {
     
   inline void get_dims(std::vector<std::vector<size_t>>& dimss__) const {
     
-    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{}};
+    dimss__ = std::vector<std::vector<size_t>>{std::vector<size_t>{
+                                                                   static_cast<size_t>(2)
+                                                                   }};
     
     } // get_dims() 
     
@@ -200,7 +204,11 @@ class complex_model final : public model_base_crtp<complex_model> {
                                       bool emit_generated_quantities__ = true) const
     final {
     
-    param_names__.emplace_back(std::string() + "b");
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      {
+        param_names__.emplace_back(std::string() + "b" + '.' + std::to_string(sym1__));
+      } 
+    }
     if (emit_transformed_parameters__) {
       
     }
@@ -217,7 +225,11 @@ class complex_model final : public model_base_crtp<complex_model> {
                                         bool emit_generated_quantities__ = true) const
     final {
     
-    param_names__.emplace_back(std::string() + "b");
+    for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+      {
+        param_names__.emplace_back(std::string() + "b" + '.' + std::to_string(sym1__));
+      } 
+    }
     if (emit_transformed_parameters__) {
       
     }

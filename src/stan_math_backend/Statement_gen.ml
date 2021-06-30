@@ -187,8 +187,8 @@ let pp_data_decl ppf (vident, ut) =
 let pp_emplace_var ppf var =
   match Expr.Typed.type_of var with
   | UnsizedType.UComplex ->
-      pf ppf "@[<b 2>vars__.emplace_back(%a.real());@]" pp_expr var ;
-      pf ppf "@[<b 2>vars__.emplace_back(%a.imag());@]" pp_expr var
+      pf ppf "@[<hov 2>vars__.emplace_back(%a.real());@]@," pp_expr var ;
+      pf ppf "@[<hov 2>vars__.emplace_back(%a.imag());@]" pp_expr var
   | _ -> pf ppf "@[<hov 2>vars__.emplace_back(@,%a);@]" pp_expr var
 
 (*Create strings representing maps of Eigen types*)

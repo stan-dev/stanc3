@@ -80,6 +80,7 @@ Phi_approx(array[,,,,,,] row_vector) => array[,,,,,,] row_vector
 Phi_approx(array[,,,,,,] matrix) => array[,,,,,,] matrix
 abs(int) => int
 abs(real) => real
+abs(complex) => real
 acos(int) => real
 acos(real) => real
 acos(vector) => vector
