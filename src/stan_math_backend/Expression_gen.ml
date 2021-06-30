@@ -446,15 +446,12 @@ and pp_compiler_internal_fn ad ut f ppf es =
       let jacobian_param_opt =
         Option.map ~f:(fun _ -> ", jacobian__") constraint_opt
       in
-      let check_complex =
-        match ut with
-        | UComplex -> []
-        | _ -> es
-      in
+      let check_complex = match ut with UComplex -> [] | _ -> es in
       pf ppf "@[<hov 2>in__.template read%a<%a%a>(@,%a)@]"
         (Fmt.option Fmt.string) constraint_suffix_opt pp_unsizedtype_local
         (UnsizedType.AutoDiffable, ut)
-        (Fmt.option Fmt.string) jacobian_param_opt (list ~sep:comma pp_expr) check_complex
+        (Fmt.option Fmt.string) jacobian_param_opt (list ~sep:comma pp_expr)
+        check_complex
   | FnDeepCopy -> gen_fun_app FnPlain ppf "stan::model::deep_copy" es
   | _ -> gen_fun_app FnPlain ppf (Internal_fun.to_string f) es
 
