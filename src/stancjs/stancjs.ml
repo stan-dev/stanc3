@@ -47,15 +47,16 @@ let stan2cpp model_name model_string is_flag_set =
         in
         typed_ast_and_warnings
         >>| fun typed_ast_and_warnings ->
-        let typed_ast, semantic_warnings = typed_ast_and_warnings in 
+        let typed_ast, semantic_warnings = typed_ast_and_warnings in
+        let warnings = parser_warnings @ semantic_warnings in
         if is_flag_set "info" then
-          r.return (Result.Ok (Info.info typed_ast), parser_warnings, []) ;
+          r.return (Result.Ok (Info.info typed_ast), warnings, []) ;
         if is_flag_set "print-canonical" then
           r.return
             ( Result.Ok
                 (Pretty_printing.pretty_print_typed_program
                    (Canonicalize.canonicalize_program typed_ast))
-            , parser_warnings
+            , warnings
             , [] ) ;
         if is_flag_set "debug-generate-data" then
           r.return
@@ -79,7 +80,7 @@ let stan2cpp model_name model_string is_flag_set =
             Pedantic_analysis.warn_pedantic mir
           else []
         in
-        (cpp, parser_warnings @ semantic_warnings, uninit_warnings @ pedantic_warnings)
+        (cpp, warnings, uninit_warnings @ pedantic_warnings)
       in
       match result with
       | Result.Ok (cpp, warnings, pedantic_mode_warnings) ->

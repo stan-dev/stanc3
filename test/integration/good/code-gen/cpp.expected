@@ -11021,6 +11021,7 @@ stan::math::profile_map& get_stan_profile_data() {
 STAN_REGISTER_MAP_RECT(1, mother_model_namespace::binomialf_functor__)
 Warning in 'mother.stan', line 63, column 4: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 Warning in 'mother.stan', line 187, column 15: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
+
 Warning in 'mother.stan', line 63, column 23: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
 Warning in 'mother.stan', line 187, column 15: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
   $ ../../../../../install/default/bin/stanc --print-cpp motherHOF.stan
@@ -12965,6 +12966,7 @@ STAN_REGISTER_MAP_RECT(6, motherHOF_model_namespace::foo_functor__)
 STAN_REGISTER_MAP_RECT(7, motherHOF_model_namespace::foo_functor__)
 STAN_REGISTER_MAP_RECT(8, motherHOF_model_namespace::goo_functor__)
 STAN_REGISTER_MAP_RECT(9, motherHOF_model_namespace::goo_functor__)
+
 Warning in 'motherHOF.stan', line 95, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
 The new interface is slightly different, see: 
 https://mc-stan.org/users/documentation/case-studies/convert_odes.html
@@ -17864,6 +17866,7 @@ stan::math::profile_map& get_stan_profile_data() {
 }
 
 #endif
+
 
 
 

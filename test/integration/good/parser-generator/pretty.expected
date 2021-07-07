@@ -427,6 +427,7 @@ generated quantities {
   }
 }
 
+
 Warning in 'ode.stan', line 28, column 10: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead. 
 The new interface is slightly different, see: 
 https://mc-stan.org/users/documentation/case-studies/convert_odes.html
@@ -468,6 +469,7 @@ generated quantities {
     y_hat[t, 3] = y_hat[t, 3] + normal_rng(0, 0.1);
   }
 }
+
 
 Warning in 'ode_control.stan', line 28, column 10: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
 The new interface is slightly different, see: 

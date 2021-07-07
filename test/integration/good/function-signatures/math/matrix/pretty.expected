@@ -2865,6 +2865,7 @@ model {
   y_p ~ normal(0, 1);
 }
 
+
 Warning in 'binomial_coefficient_log.stan', line 42, column 32: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
 Warning in 'binomial_coefficient_log.stan', line 43, column 32: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
 Warning in 'binomial_coefficient_log.stan', line 44, column 35: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
@@ -4034,6 +4035,7 @@ transformed parameters {
 model {
   y_p ~ normal(0, 1);
 }
+
 
 Warning in 'cov_exp_quad.stan', line 18, column 28: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
 Warning in 'cov_exp_quad.stan', line 19, column 28: cov_exp_quad is deprecated and will be removed in the future. Use gp_exp_quad_cov instead.
@@ -16044,6 +16046,7 @@ transformed parameters {
 model {
   y_p ~ normal(0, 1);
 }
+
 
 Warning in 'multiply_log.stan', line 42, column 32: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
 Warning in 'multiply_log.stan', line 43, column 32: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.

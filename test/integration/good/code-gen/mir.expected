@@ -15630,5 +15630,6 @@
  (prog_name mother_model) (prog_path mother.stan))
 Warning in 'mother.stan', line 63, column 4: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 Warning in 'mother.stan', line 187, column 15: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
+
 Warning in 'mother.stan', line 63, column 23: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
 Warning in 'mother.stan', line 187, column 15: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.

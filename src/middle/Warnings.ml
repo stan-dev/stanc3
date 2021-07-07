@@ -8,6 +8,7 @@ let collect () = List.rev !warnings
 
 let add_warning (span : Location_span.t) (message : string) =
   warnings := (span, message) :: !warnings
+
 let empty file =
   warnings :=
     ( Location_span.empty
