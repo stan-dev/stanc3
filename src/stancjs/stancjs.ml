@@ -28,31 +28,32 @@ let stan2cpp model_name model_string is_flag_set =
   With_return.with_return (fun r ->
       if is_flag_set "version" then
         r.return (Result.Ok (Fmt.strf "%s" version), [], []) ;
-      let ast, warnings =
+      let ast, parser_warnings =
         Parse.parse_string Parser.Incremental.program model_string
       in
       let open Result.Monad_infix in
       if is_flag_set "auto-format" then
         r.return
           ( (ast >>| fun ast -> Pretty_printing.pretty_print_program ast)
-          , warnings
+          , parser_warnings
           , [] ) ;
       let result =
         ast
         >>= fun ast ->
-        let typed_ast =
+        let typed_ast_and_warnings =
           Semantic_check.semantic_check_program ast
           |> Result.map_error ~f:(fun errs ->
                  Errors.Semantic_error (List.hd_exn errs) )
         in
-        typed_ast
-        >>| fun typed_ast ->
+        typed_ast_and_warnings
+        >>| fun typed_ast_and_warnings ->
+        let typed_ast, semantic_warnings = typed_ast_and_warnings in 
         if is_flag_set "print-canonical" then
           r.return
             ( Result.Ok
                 (Pretty_printing.pretty_print_typed_program
                    (Canonicalize.canonicalize_program typed_ast))
-            , warnings
+            , parser_warnings
             , [] ) ;
         let mir = Ast_to_Mir.trans_prog model_name typed_ast in
         let tx_mir = Transform_Mir.trans_prog mir in
@@ -71,12 +72,12 @@ let stan2cpp model_name model_string is_flag_set =
             Pedantic_analysis.warn_pedantic mir
           else []
         in
-        (cpp, warnings, uninit_warnings @ pedantic_warnings)
+        (cpp, parser_warnings @ semantic_warnings, uninit_warnings @ pedantic_warnings)
       in
       match result with
       | Result.Ok (cpp, warnings, pedantic_mode_warnings) ->
           (Result.Ok cpp, warnings, pedantic_mode_warnings)
-      | Result.Error _ as e -> (e, warnings, []) )
+      | Result.Error _ as e -> (e, parser_warnings, []) )
 
 let wrap_result ?printed_filename ~warnings = function
   | Result.Ok s ->
