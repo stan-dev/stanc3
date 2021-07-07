@@ -10,13 +10,12 @@ open Ast
 open Errors
 module Validate = Common.Validation.Make (Semantic_error)
 
-let warnings = ref [] 
+let warnings = ref []
 
 let add_warning (span : Location_span.t) (message : string) =
-      warnings := (span, message) :: !warnings 
+  warnings := (span, message) :: !warnings
 
-let attach_warnings (x : typed_program Validate.t) = 
-  (x, List.rev !warnings)
+let attach_warnings (x : typed_program) = (x, List.rev !warnings)
 
 (* There is a semantic checking function for each AST node that calls
    the checking functions for its children left to right. *)
@@ -732,8 +731,7 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
                 "If rounding is intended please use the integer division \
                  operator %/%."
             in
-            add_warning x.emeta.loc s ;
-            (x, y)
+            add_warning x.emeta.loc s ; (x, y)
         | _ -> (x, y)
       in
       Validate.(
@@ -1934,5 +1932,7 @@ let semantic_check_program
   Validate.(
     ok mk_typed_prog |> apply_to ufb |> apply_to udb |> apply_to utdb
     |> apply_to upb |> apply_to utpb |> apply_to umb |> apply_to ugb
-    |> check_correctness_invariant_validate)
-    |> attach_warnings
+    |> check_correctness_invariant_validate
+    |> get_with
+         ~with_ok:(fun ok -> Result.Ok (attach_warnings ok))
+         ~with_errors:(fun errs -> Result.Error errs))
