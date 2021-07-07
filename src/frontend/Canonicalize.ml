@@ -23,40 +23,52 @@ let rec replace_deprecated_expr
   let expr =
     match expr with
     | GetLP -> GetTarget
-    | FunApp (StanLib, {name= "abs"; id_loc}, [e])
+    | FunApp (StanLib FnPlain, {name= "abs"; id_loc}, [e])
       when Middle.UnsizedType.is_real_type e.emeta.type_ ->
         FunApp
-          ( StanLib
+          ( StanLib FnPlain
           , {name= "fabs"; id_loc}
           , [replace_deprecated_expr deprecated_userdefined e] )
-    | FunApp (StanLib, {name= "if_else"; _}, [c; t; e]) ->
+    | FunApp (StanLib FnPlain, {name= "if_else"; _}, [c; t; e]) ->
         Paren
           (replace_deprecated_expr deprecated_userdefined
              {expr= TernaryIf ({expr= Paren c; emeta= c.emeta}, t, e); emeta})
-    | FunApp (StanLib, {name; id_loc}, e) ->
+    | FunApp (StanLib suffix, {name; id_loc}, e) ->
         if is_deprecated_distribution name then
           CondDistApp
-            ( StanLib
+            ( StanLib suffix
             , {name= rename_deprecated deprecated_distributions name; id_loc}
+            , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e )
+        else if String.is_suffix name ~suffix:"_cdf" then
+          CondDistApp
+            ( StanLib suffix
+            , {name; id_loc}
             , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e )
         else
           FunApp
-            ( StanLib
+            ( StanLib suffix
             , {name= rename_deprecated deprecated_functions name; id_loc}
             , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e )
-    | FunApp (UserDefined, {name; id_loc}, e) -> (
+    | FunApp (UserDefined suffix, {name; id_loc}, e) -> (
       match String.Map.find deprecated_userdefined name with
       | Some type_ ->
           CondDistApp
-            ( UserDefined
+            ( UserDefined suffix
             , {name= update_suffix name type_; id_loc}
             , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e )
       | None ->
-          FunApp
-            ( UserDefined
-            , {name; id_loc}
-            , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e )
-      )
+          if String.is_suffix name ~suffix:"_cdf" then
+            CondDistApp
+              ( UserDefined suffix
+              , {name; id_loc}
+              , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e
+              )
+          else
+            FunApp
+              ( UserDefined suffix
+              , {name; id_loc}
+              , List.map ~f:(replace_deprecated_expr deprecated_userdefined) e
+              ) )
     | _ ->
         map_expression
           (replace_deprecated_expr deprecated_userdefined)

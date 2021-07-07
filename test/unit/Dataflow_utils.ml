@@ -72,7 +72,7 @@ let%expect_test "Loop test" =
        (5
         ((NRFunApp (CompilerInternal FnPrint)
           (((pattern
-             (FunApp (StanLib Plus__)
+             (FunApp (StanLib Plus__ FnPlain)
               (((pattern (Lit Int 3))
                 (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                ((pattern (Lit Int 4))
@@ -191,7 +191,7 @@ let%expect_test "Statement label map example" =
        (5
         (IfElse
          ((pattern
-           (FunApp (StanLib Less__)
+           (FunApp (StanLib Less__ FnPlain)
             (((pattern (Var i))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Lit Int 0))
@@ -217,7 +217,7 @@ let%expect_test "Statement label map example" =
        (11
         (IfElse
          ((pattern
-           (FunApp (StanLib Greater__)
+           (FunApp (StanLib Greater__ FnPlain)
             (((pattern (Var j))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Lit Int 9))
@@ -230,18 +230,18 @@ let%expect_test "Statement label map example" =
          ((pattern
            (EAnd
             ((pattern
-              (FunApp (StanLib Greater__)
+              (FunApp (StanLib Greater__ FnPlain)
                (((pattern (Var j))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                 ((pattern (Lit Int 8))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
             ((pattern
-              (FunApp (StanLib Less__)
+              (FunApp (StanLib Less__ FnPlain)
                (((pattern (Var i))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
                 ((pattern
-                  (FunApp (StanLib PMinus__)
+                  (FunApp (StanLib PMinus__ FnPlain)
                    (((pattern (Lit Int 1))
                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
@@ -252,7 +252,7 @@ let%expect_test "Statement label map example" =
        (17
         (IfElse
          ((pattern
-           (FunApp (StanLib Greater__)
+           (FunApp (StanLib Greater__ FnPlain)
             (((pattern (Var j))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Lit Int 5))
@@ -265,7 +265,7 @@ let%expect_test "Statement label map example" =
          (((pattern (Lit Str Badger))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
           ((pattern
-            (FunApp (StanLib Plus__)
+            (FunApp (StanLib Plus__ FnPlain)
              (((pattern (Var i))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
               ((pattern (Var j))

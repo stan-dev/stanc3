@@ -48,12 +48,19 @@ let stan2cpp model_name model_string is_flag_set =
         typed_ast_and_warnings
         >>| fun typed_ast_and_warnings ->
         let typed_ast, semantic_warnings = typed_ast_and_warnings in 
+        if is_flag_set "info" then
+          r.return (Result.Ok (Info.info typed_ast), parser_warnings, []) ;
         if is_flag_set "print-canonical" then
           r.return
             ( Result.Ok
                 (Pretty_printing.pretty_print_typed_program
                    (Canonicalize.canonicalize_program typed_ast))
             , parser_warnings
+            , [] ) ;
+        if is_flag_set "debug-generate-data" then
+          r.return
+            ( Result.Ok (Debug_data_generation.print_data_prog typed_ast)
+            , warnings
             , [] ) ;
         let mir = Ast_to_Mir.trans_prog model_name typed_ast in
         let tx_mir = Transform_Mir.trans_prog mir in

@@ -159,7 +159,7 @@ let semantic_check_autodifftype at = Validate.ok at
 (* Probably nothing to do here *)
 let rec semantic_check_unsizedtype : UnsizedType.t -> unit Validate.t =
   function
-  | UFun (l, rt) ->
+  | UFun (l, rt, _) ->
       (* fold over argument types accumulating errors with initial state
        given by validating the return type *)
       List.fold
@@ -220,22 +220,13 @@ let get_arg_types = List.map ~f:arg_type
 
 (* -- Function application -------------------------------------------------- *)
 
-let semantic_check_fn_map_rect ~loc id es =
-  Validate.(
-    match (id.name, es) with
-    | "map_rect", {expr= Variable arg1; _} :: _
-      when String.(
-             is_suffix arg1.name ~suffix:"_lp"
-             || is_suffix arg1.name ~suffix:"_rng") ->
-        Semantic_error.invalid_map_rect_fn loc arg1.name |> error
-    | _ -> ok ())
-
 let semantic_check_fn_conditioning ~loc id =
   Validate.(
     if
       List.exists
         ~f:(fun suffix -> String.is_suffix id.name ~suffix)
         Utils.conditioning_suffices
+      && not (String.is_suffix id.name ~suffix:"_cdf")
     then Semantic_error.conditioning_required loc |> error
     else ok ())
 
@@ -284,23 +275,27 @@ let mk_fun_app ~is_cond_dist (x, y, z) =
 let semantic_check_fn_normal ~is_cond_dist ~loc id es =
   Validate.(
     match Symbol_table.look vm (Utils.normalized_name id.name) with
-    | Some (_, UnsizedType.UFun (_, Void)) ->
+    | Some (_, UnsizedType.UFun (_, Void, _)) ->
         Semantic_error.returning_fn_expected_nonreturning_found loc id.name
         |> error
-    | Some (_, UFun (listedtypes, rt))
-      when not
-             (UnsizedType.check_compatible_arguments_mod_conv id.name
-                listedtypes (get_arg_types es)) ->
-        es
-        |> List.map ~f:type_of_expr_typed
-        |> Semantic_error.illtyped_userdefined_fn_app loc id.name listedtypes
-             rt
-        |> error
-    | Some (_, UFun (_, ReturnType ut)) ->
-        mk_typed_expression
-          ~expr:(mk_fun_app ~is_cond_dist (UserDefined, id, es))
-          ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
-        |> ok
+    | Some (_, UFun (listedtypes, ReturnType ut, _)) -> (
+      match
+        SignatureMismatch.check_compatible_arguments_mod_conv listedtypes
+          (get_arg_types es)
+      with
+      | Some x ->
+          es
+          |> List.map ~f:type_of_expr_typed
+          |> Semantic_error.illtyped_userdefined_fn_app loc id.name listedtypes
+               (ReturnType ut) x
+          |> error
+      | None ->
+          mk_typed_expression
+            ~expr:
+              (mk_fun_app ~is_cond_dist
+                 (UserDefined (Fun_kind.suffix_from_name id.name), id, es))
+            ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
+          |> ok )
     | Some _ ->
         (* Check that Funaps are actually functions *)
         Semantic_error.returning_fn_expected_nonfn_found loc id.name |> error
@@ -310,63 +305,74 @@ let semantic_check_fn_normal ~is_cond_dist ~loc id es =
 
 (* Stan-Math function application *)
 let semantic_check_fn_stan_math ~is_cond_dist ~loc id es =
-  match
-    Stan_math_signatures.stan_math_returntype id.name (get_arg_types es)
-  with
-  | Some UnsizedType.Void ->
+  match SignatureMismatch.stan_math_returntype id.name (get_arg_types es) with
+  | Ok Void ->
       Semantic_error.returning_fn_expected_nonreturning_found loc id.name
       |> Validate.error
-  | Some (UnsizedType.ReturnType ut) ->
+  | Ok (ReturnType ut) ->
       mk_typed_expression
-        ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
+        ~expr:
+          (mk_fun_app ~is_cond_dist
+             (StanLib (Fun_kind.suffix_from_name id.name), id, es))
         ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
       |> Validate.ok
-  | _ ->
+  | Error x ->
       es
       |> List.map ~f:(fun e -> e.emeta.type_)
-      |> Semantic_error.illtyped_stanlib_fn_app loc id.name
+      |> Semantic_error.illtyped_stanlib_fn_app loc id.name x
       |> Validate.error
-
-let arg_match (x_ad, x_t) y =
-  UnsizedType.check_of_same_type_mod_conv "" x_t y.emeta.type_
-  && UnsizedType.autodifftype_can_convert x_ad y.emeta.ad_level
-
-let args_match a b =
-  List.length a = List.length b && List.for_all2_exn ~f:arg_match a b
 
 let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
   match es with
   | { emeta=
         { type_=
             UnsizedType.UFun
-              ( ((_, sliced_arg_fun_type) as sliced_arg_fun)
-                :: (_, UInt) :: (_, UInt) :: fun_args
-              , ReturnType UReal ); _ }; _ }
-    :: sliced :: {emeta= {type_= UInt; _}; _} :: args
-    when arg_match sliced_arg_fun sliced
-         && List.mem Stan_math_signatures.reduce_sum_slice_types
-              sliced.emeta.type_ ~equal:( = )
-         && List.mem Stan_math_signatures.reduce_sum_slice_types
-              sliced_arg_fun_type ~equal:( = ) ->
-      if args_match fun_args args then
-        mk_typed_expression
-          ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
-          ~ad_level:(expr_ad_lub es) ~type_:UnsizedType.UReal ~loc
-        |> Validate.ok
-      else
-        Semantic_error.illtyped_reduce_sum loc id.name
-          (List.map ~f:type_of_expr_typed es)
-          (sliced_arg_fun :: fun_args)
-        |> Validate.error
+              (((_, sliced_arg_fun_type) as sliced_arg_fun) :: _, _, _); _ }; _
+    }
+    :: _
+    when List.mem Stan_math_signatures.reduce_sum_slice_types
+           sliced_arg_fun_type ~equal:( = ) -> (
+      let mandatory_args = [sliced_arg_fun; (AutoDiffable, UInt)] in
+      let mandatory_fun_args =
+        [sliced_arg_fun; (DataOnly, UInt); (DataOnly, UInt)]
+      in
+      match
+        SignatureMismatch.check_variadic_args true mandatory_args
+          mandatory_fun_args UReal (get_arg_types es)
+      with
+      | None ->
+          mk_typed_expression
+            ~expr:(mk_fun_app ~is_cond_dist (StanLib FnPlain, id, es))
+            ~ad_level:(expr_ad_lub es) ~type_:UnsizedType.UReal ~loc
+          |> Validate.ok
+      | Some (expected_args, error) ->
+          Semantic_error.illtyped_reduce_sum loc id.name
+            (List.map ~f:type_of_expr_typed es)
+            expected_args error
+          |> Validate.error )
   | _ ->
-      es
-      |> List.map ~f:type_of_expr_typed
-      |> Semantic_error.illtyped_reduce_sum_generic loc id.name
+      let mandatory_args =
+        UnsizedType.[(AutoDiffable, UArray UReal); (AutoDiffable, UInt)]
+      in
+      let mandatory_fun_args =
+        UnsizedType.
+          [(AutoDiffable, UArray UReal); (DataOnly, UInt); (DataOnly, UInt)]
+      in
+      let expected_args, error =
+        SignatureMismatch.check_variadic_args true mandatory_args
+          mandatory_fun_args UReal (get_arg_types es)
+        |> Option.value_exn
+      in
+      Semantic_error.illtyped_reduce_sum_generic loc id.name
+        (List.map ~f:type_of_expr_typed es)
+        expected_args error
       |> Validate.error
 
 let semantic_check_variadic_ode ~is_cond_dist ~loc id es =
   let optional_tol_mandatory_args =
-    if Stan_math_signatures.is_variadic_ode_tol_fn id.name then
+    if Stan_math_signatures.variadic_ode_adjoint_fn = id.name then
+      Stan_math_signatures.variadic_ode_adjoint_ctl_tol_arg_types
+    else if Stan_math_signatures.is_variadic_ode_nonadjoint_tol_fn id.name then
       Stan_math_signatures.variadic_ode_tol_arg_types
     else []
   in
@@ -374,74 +380,48 @@ let semantic_check_variadic_ode ~is_cond_dist ~loc id es =
     Stan_math_signatures.variadic_ode_mandatory_arg_types
     @ optional_tol_mandatory_args
   in
-  let generic_variadic_ode_semantic_error =
-    Semantic_error.illtyped_variadic_ode loc id.name
-      (List.map ~f:type_of_expr_typed es)
-      []
-    |> Validate.error
-  in
-  let fun_arg_match (x_ad, x_t) (y_ad, y_t) =
-    UnsizedType.check_of_same_type_mod_conv "" x_t y_t
-    && UnsizedType.autodifftype_can_convert x_ad y_ad
-  in
-  let fun_args_match a b =
-    List.length a = List.length b && List.for_all2_exn ~f:fun_arg_match a b
-  in
-  match es with
-  | {emeta= {type_= UnsizedType.UFun (fun_args, ReturnType return_type); _}; _}
-    :: args ->
-      let num_of_mandatory_args =
-        if Stan_math_signatures.is_variadic_ode_tol_fn id.name then 6 else 3
-      in
-      let mandatory_args, variadic_args =
-        List.split_n args num_of_mandatory_args
-      in
-      let mandatory_fun_args, variadic_fun_args = List.split_n fun_args 2 in
-      if
-        fun_args_match mandatory_fun_args
-          Stan_math_signatures.variadic_ode_mandatory_fun_args
-        && UnsizedType.check_of_same_type_mod_conv "" return_type
-             Stan_math_signatures.variadic_ode_fun_return_type
-        && args_match mandatory_arg_types mandatory_args
-      then
-        if args_match variadic_fun_args variadic_args then
-          mk_typed_expression
-            ~expr:(mk_fun_app ~is_cond_dist (StanLib, id, es))
-            ~ad_level:(expr_ad_lub es)
-            ~type_:Stan_math_signatures.variadic_ode_return_type ~loc
-          |> Validate.ok
-        else
-          Semantic_error.illtyped_variadic_ode loc id.name
-            (List.map ~f:type_of_expr_typed es)
-            fun_args
-          |> Validate.error
-      else generic_variadic_ode_semantic_error
-  | _ -> generic_variadic_ode_semantic_error
+  match
+    SignatureMismatch.check_variadic_args false mandatory_arg_types
+      Stan_math_signatures.variadic_ode_mandatory_fun_args
+      Stan_math_signatures.variadic_ode_fun_return_type (get_arg_types es)
+  with
+  | None ->
+      mk_typed_expression
+        ~expr:(mk_fun_app ~is_cond_dist (StanLib FnPlain, id, es))
+        ~ad_level:(expr_ad_lub es)
+        ~type_:Stan_math_signatures.variadic_ode_return_type ~loc
+      |> Validate.ok
+  | Some (expected_args, err) ->
+      Semantic_error.illtyped_variadic_ode loc id.name
+        (List.map ~f:type_of_expr_typed es)
+        expected_args err
+      |> Validate.error
 
 let fn_kind_from_application id es =
   (* We need to check an application here, rather than a mere name of the
      function because, technically, user defined functions can shadow
      constants in StanLib. *)
+  let suffix = Fun_kind.suffix_from_name id.name in
   if
     Stan_math_signatures.stan_math_returntype id.name
       (List.map ~f:(fun x -> (x.emeta.ad_level, x.emeta.type_)) es)
     <> None
     || Symbol_table.look vm id.name = None
        && Stan_math_signatures.is_stan_math_function_name id.name
-  then StanLib
-  else UserDefined
+  then StanLib suffix
+  else UserDefined suffix
 
 (** Determines the function kind based on the identifier and performs the
     corresponding semantic check
 *)
 let semantic_check_fn ~is_cond_dist ~loc id es =
   match fn_kind_from_application id es with
-  | StanLib when Stan_math_signatures.is_reduce_sum_fn id.name ->
+  | StanLib FnPlain when Stan_math_signatures.is_reduce_sum_fn id.name ->
       semantic_check_reduce_sum ~is_cond_dist ~loc id es
-  | StanLib when Stan_math_signatures.is_variadic_ode_fn id.name ->
+  | StanLib FnPlain when Stan_math_signatures.is_variadic_ode_fn id.name ->
       semantic_check_variadic_ode ~is_cond_dist ~loc id es
-  | StanLib -> semantic_check_fn_stan_math ~is_cond_dist ~loc id es
-  | UserDefined -> semantic_check_fn_normal ~is_cond_dist ~loc id es
+  | StanLib _ -> semantic_check_fn_stan_math ~is_cond_dist ~loc id es
+  | UserDefined _ -> semantic_check_fn_normal ~is_cond_dist ~loc id es
 
 (* -- Ternary If ------------------------------------------------------------ *)
 
@@ -453,13 +433,13 @@ let semantic_check_ternary_if loc (pe, te, fe) =
     in
     if pe.emeta.type_ = UInt then
       match UnsizedType.common_type (te.emeta.type_, fe.emeta.type_) with
-      | Some type_ ->
+      | Some type_ when not (UnsizedType.is_fun_type type_) ->
           mk_typed_expression
             ~expr:(TernaryIf (pe, te, fe))
             ~ad_level:(expr_ad_lub [pe; te; fe])
             ~type_ ~loc
           |> ok
-      | None -> error err
+      | Some _ | None -> error err
     else error err)
 
 (* -- Binary (Infix) Operators ---------------------------------------------- *)
@@ -539,6 +519,14 @@ let semantic_check_variable cf loc id =
                 ( (cf.in_fun_def && (cf.in_udf_dist_def || cf.in_lp_fun_def))
                 || cf.current_block = Model ) ->
         Semantic_error.invalid_unnormalized_fn loc |> error
+    | Some (originblock, UFun (args, rt, FnLpdf _)) ->
+        let type_ =
+          UnsizedType.UFun (args, rt, Fun_kind.suffix_from_name id.name)
+        in
+        mk_typed_expression ~expr:(Variable id)
+          ~ad_level:(calculate_autodifftype cf originblock type_)
+          ~type_ ~loc
+        |> ok
     | Some (originblock, type_) ->
         mk_typed_expression ~expr:(Variable id)
           ~ad_level:(calculate_autodifftype cf originblock type_)
@@ -762,9 +750,9 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       mk_typed_expression ~expr:(RealNumeral s) ~ad_level:DataOnly ~type_:UReal
         ~loc:emeta.loc
       |> Validate.ok
-  | FunApp (_, id, es) ->
+  | FunApp ((), id, es) ->
       semantic_check_funapp ~is_cond_dist:false id es cf emeta
-  | CondDistApp (_, id, es) ->
+  | CondDistApp ((), id, es) ->
       semantic_check_funapp ~is_cond_dist:true id es cf emeta
   | GetLP ->
       (* Target+= can only be used in model and functions with right suffix (same for tilde etc) *)
@@ -825,7 +813,6 @@ and semantic_check_funapp ~is_cond_dist id es cf emeta =
     >>= fun ues ->
     semantic_check_fn ~is_cond_dist ~loc:emeta.loc id ues
     |> apply_const (semantic_check_identifier id)
-    |> apply_const (semantic_check_fn_map_rect ~loc:emeta.loc id ues)
     |> apply_const (name_check ~loc:emeta.loc id)
     |> apply_const (semantic_check_fn_target_plus_equals cf ~loc:emeta.loc id)
     |> apply_const (semantic_check_fn_rng cf ~loc:emeta.loc id)
@@ -964,20 +951,23 @@ let semantic_check_nrfn_target ~loc ~cf id =
 let semantic_check_nrfn_normal ~loc id es =
   Validate.(
     match Symbol_table.look vm id.name with
-    | Some (_, UFun (listedtypes, Void))
-      when UnsizedType.check_compatible_arguments_mod_conv id.name listedtypes
-             (get_arg_types es) ->
-        mk_typed_statement
-          ~stmt:(NRFunApp (UserDefined, id, es))
-          ~return_type:NoReturnType ~loc
-        |> ok
-    | Some (_, UFun (listedtypes, Void)) ->
-        es
-        |> List.map ~f:type_of_expr_typed
-        |> Semantic_error.illtyped_userdefined_fn_app loc id.name listedtypes
-             Void
-        |> error
-    | Some (_, UFun (_, ReturnType _)) ->
+    | Some (_, UFun (listedtypes, Void, suffix)) -> (
+      match
+        SignatureMismatch.check_compatible_arguments_mod_conv listedtypes
+          (get_arg_types es)
+      with
+      | None ->
+          mk_typed_statement
+            ~stmt:(NRFunApp (UserDefined suffix, id, es))
+            ~return_type:NoReturnType ~loc
+          |> ok
+      | Some x ->
+          es
+          |> List.map ~f:type_of_expr_typed
+          |> Semantic_error.illtyped_userdefined_fn_app loc id.name listedtypes
+               Void x
+          |> error )
+    | Some (_, UFun (_, ReturnType _, _)) ->
         Semantic_error.nonreturning_fn_expected_returning_found loc id.name
         |> error
     | Some _ ->
@@ -991,26 +981,26 @@ let semantic_check_nrfn_normal ~loc id es =
 let semantic_check_nrfn_stan_math ~loc id es =
   Validate.(
     match
-      Stan_math_signatures.stan_math_returntype id.name (get_arg_types es)
+      SignatureMismatch.stan_math_returntype id.name (get_arg_types es)
     with
-    | Some UnsizedType.Void ->
+    | Ok Void ->
         mk_typed_statement
-          ~stmt:(NRFunApp (StanLib, id, es))
+          ~stmt:(NRFunApp (StanLib FnPlain, id, es))
           ~return_type:NoReturnType ~loc
         |> ok
-    | Some (UnsizedType.ReturnType _) ->
+    | Ok (ReturnType _) ->
         Semantic_error.nonreturning_fn_expected_returning_found loc id.name
         |> error
-    | None ->
+    | Error x ->
         es
         |> List.map ~f:type_of_expr_typed
-        |> Semantic_error.illtyped_stanlib_fn_app loc id.name
+        |> Semantic_error.illtyped_stanlib_fn_app loc id.name x
         |> error)
 
 let semantic_check_nr_fnkind ~loc id es =
   match fn_kind_from_application id es with
-  | StanLib -> semantic_check_nrfn_stan_math ~loc id es
-  | UserDefined -> semantic_check_nrfn_normal ~loc id es
+  | StanLib _ -> semantic_check_nrfn_stan_math ~loc id es
+  | UserDefined _ -> semantic_check_nrfn_normal ~loc id es
 
 let semantic_check_nr_fn_app ~loc ~cf id es =
   Validate.(
@@ -1177,7 +1167,7 @@ let semantic_check_sampling_distribution ~loc id arguments =
   in
   let is_name_w_suffix_udf_sampling_dist suffix =
     match Symbol_table.look vm (name ^ suffix) with
-    | Some (Functions, UFun (listedtypes, ReturnType UReal)) ->
+    | Some (Functions, UFun (listedtypes, ReturnType UReal, FnLpdf _)) ->
         UnsizedType.check_compatible_arguments_mod_conv name listedtypes
           argumenttypes
     | _ -> false
@@ -1202,7 +1192,7 @@ let cumulative_density_is_defined id arguments =
     |> Option.value_map ~default:false ~f:is_real_rt
   and valid_arg_types_for_suffix suffix =
     match Symbol_table.look vm (name ^ suffix) with
-    | Some (Functions, UFun (listedtypes, ReturnType UReal)) ->
+    | Some (Functions, UFun (listedtypes, ReturnType UReal, FnPlain)) ->
         UnsizedType.check_compatible_arguments_mod_conv name listedtypes
           argumenttypes
     | _ -> false
@@ -1607,7 +1597,7 @@ and semantic_check_fundef_overloaded ~loc id arg_tys rt =
     (* User defined functions cannot be overloaded *)
     if Symbol_table.check_is_unassigned vm id.name then
       match Symbol_table.look vm id.name with
-      | Some (Functions, UFun (arg_tys', rt'))
+      | Some (Functions, UFun (arg_tys', rt', _))
         when arg_tys' = arg_tys && rt' = rt ->
           ok ()
       | _ ->
@@ -1725,7 +1715,8 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
     |> apply_const (semantic_check_fundef_decl ~loc id body)
     >>= fun _ ->
     (* WARNING: SIDE EFFECTING *)
-    Symbol_table.enter vm id.name (Functions, UFun (uarg_types, urt)) ;
+    Symbol_table.enter vm id.name
+      (Functions, UFun (uarg_types, urt, Fun_kind.suffix_from_name id.name)) ;
     (* Check that function args and loop identifiers are not modified in
        function. (passed by const ref)*)
     List.iter ~f:(Symbol_table.set_read_only vm) uarg_names ;

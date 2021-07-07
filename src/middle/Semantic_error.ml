@@ -19,23 +19,33 @@ module TypeError = struct
         string
         * UnsizedType.t list
         * (UnsizedType.autodifftype * UnsizedType.t) list
-    | IllTypedReduceSumGeneric of string * UnsizedType.t list
+        * SignatureMismatch.function_mismatch
+    | IllTypedReduceSumGeneric of
+        string
+        * UnsizedType.t list
+        * (UnsizedType.autodifftype * UnsizedType.t) list
+        * SignatureMismatch.function_mismatch
     | IllTypedVariadicODE of
         string
         * UnsizedType.t list
         * (UnsizedType.autodifftype * UnsizedType.t) list
+        * SignatureMismatch.function_mismatch
     | ReturningFnExpectedNonReturningFound of string
     | ReturningFnExpectedNonFnFound of string
     | ReturningFnExpectedUndeclaredIdentFound of string
     | NonReturningFnExpectedReturningFound of string
     | NonReturningFnExpectedNonFnFound of string
     | NonReturningFnExpectedUndeclaredIdentFound of string
-    | IllTypedStanLibFunctionApp of string * UnsizedType.t list
+    | IllTypedStanLibFunctionApp of
+        string
+        * UnsizedType.t list
+        * (SignatureMismatch.signature_error list * bool)
     | IllTypedUserDefinedFunctionApp of
         string
         * (UnsizedType.autodifftype * UnsizedType.t) list
         * UnsizedType.returntype
         * UnsizedType.t list
+        * SignatureMismatch.function_mismatch
     | IllTypedBinaryOperator of Operator.t * UnsizedType.t * UnsizedType.t
     | IllTypedPrefixOperator of Operator.t * UnsizedType.t
     | IllTypedPostfixOperator of Operator.t * UnsizedType.t
@@ -101,6 +111,9 @@ module TypeError = struct
           ( Stan_math_signatures.pretty_print_math_lib_assignmentoperator_sigs
               op
           |> Option.value ~default:"no matching signatures" )
+    | IllTypedTernaryIf (UInt, ut, _) when UnsizedType.is_fun_type ut ->
+        Fmt.pf ppf "Ternary expression cannot have a function type: %a"
+          UnsizedType.pp ut
     | IllTypedTernaryIf (UInt, ut2, ut3) ->
         Fmt.pf ppf
           "Type mismatch in ternary expression, expression when true is: %a; \
@@ -110,116 +123,21 @@ module TypeError = struct
         Fmt.pf ppf
           "Condition in ternary expression must be primitive int; found type=%a"
           UnsizedType.pp ut1
-    | IllTypedReduceSum (name, arg_tys, args) ->
-        let arg_types = List.map ~f:(fun (_, t) -> t) args in
-        let first, rest = List.split_n arg_types 1 in
-        let generate_reduce_sum_sig =
-          List.concat
-            [ [ UnsizedType.UFun
-                  ( List.hd_exn args :: (AutoDiffable, UInt)
-                    :: (AutoDiffable, UInt) :: List.tl_exn args
-                  , ReturnType UReal ) ]
-            ; first; [UInt]; rest ]
-        in
-        Fmt.pf ppf
-          "Ill-typed arguments supplied to function '%s'. Expected \
-           arguments:@[<h>%a@]\n\
-           @[<h>Instead supplied arguments of incompatible type: %a@]"
-          name
-          Fmt.(list UnsizedType.pp ~sep:comma)
-          generate_reduce_sum_sig
-          Fmt.(list UnsizedType.pp ~sep:comma)
-          arg_tys
-    | IllTypedReduceSumGeneric (name, arg_tys) ->
-        let rec n_commas n = if n = 0 then "" else "," ^ n_commas (n - 1) in
-        let type_string (a, b, c, d) i =
-          Fmt.strf "(T[%s], %a, %a, ...) => %a, T[%s], %a, ...\n"
-            (n_commas (i - 1))
-            UnsizedType.pp a UnsizedType.pp b UnsizedType.pp c
-            (n_commas (i - 1))
-            UnsizedType.pp d
-        in
-        let lines =
-          List.map
-            ~f:(fun i -> type_string (UInt, UInt, UReal, UInt) i)
-            Stan_math_signatures.reduce_sum_allowed_dimensionalities
-        in
-        Fmt.pf ppf
-          "Ill-typed arguments supplied to function '%s'. Available arguments:\n\
-           %sWhere T is any one of int, real, vector, row_vector or \
-           matrix.@[<h>Instead supplied arguments of incompatible type: %a@]"
-          name
-          (String.concat ~sep:"" lines)
-          Fmt.(list UnsizedType.pp ~sep:comma)
-          arg_tys
-    | IllTypedVariadicODE (name, arg_tys, args) ->
-        let types x = List.map ~f:snd x in
-        let optional_tol_args =
-          if Stan_math_signatures.is_variadic_ode_tol_fn name then
-            types Stan_math_signatures.variadic_ode_tol_arg_types
-          else []
-        in
-        let generate_ode_sig =
-          [ UnsizedType.UFun
-              ( Stan_math_signatures.variadic_ode_mandatory_fun_args @ args
-              , ReturnType Stan_math_signatures.variadic_ode_fun_return_type )
-          ]
-          @ types Stan_math_signatures.variadic_ode_mandatory_arg_types
-          @ optional_tol_args @ types args
-        in
-        (* This function is used to generate the generic signature for variadic ODEs,
-           i.e. with ... representing the variadic parts of the signature.
-           This should be removed once a type representing variadic arguments is added.
-           The generic signature is printed when there is a semantic error with one of
-            the non-variadic arguments in the signature. If there is a mismatch in the
-            variadic arguments, we print the non-generic expected signature
-            (with explicit types for variadic args). *)
-        let variadic_ode_generic_signature =
-          let optional_tol_args =
-            if Stan_math_signatures.is_variadic_ode_tol_fn name then
-              types Stan_math_signatures.variadic_ode_tol_arg_types
-            else []
-          in
-          match
-            ( types Stan_math_signatures.variadic_ode_mandatory_arg_types
-            , types Stan_math_signatures.variadic_ode_mandatory_fun_args )
-          with
-          | arg0 :: arg1 :: arg2 :: _, fun_arg0 :: fun_arg1 :: _ ->
-              Fmt.strf "(%a, %a, ...) => %a, %a, %a, %a, %a ...\n"
-                UnsizedType.pp fun_arg0 UnsizedType.pp fun_arg1 UnsizedType.pp
-                Stan_math_signatures.variadic_ode_fun_return_type
-                UnsizedType.pp arg0 UnsizedType.pp arg1 UnsizedType.pp arg2
-                Fmt.(list UnsizedType.pp ~sep:comma)
-                optional_tol_args
-          | _ ->
-              raise_s
-                [%message
-                  "This should not happen. Variadic ODE functions have \
-                   exactly three mandatory arguments and the function \
-                   supplied to the variadic ODE function has exactly two \
-                   mandatory arguments."]
-        in
-        if List.length args = 0 then
-          Fmt.pf ppf
-            "Ill-typed arguments supplied to function '%s'. Expected \
-             arguments:@[<h>%a@]\n\
-             @[<h>Instead supplied arguments of incompatible type:\n\
-             %a@]"
-            name
-            Fmt.(list UnsizedType.pp ~sep:comma)
-            generate_ode_sig
-            Fmt.(list UnsizedType.pp ~sep:comma)
-            arg_tys
-        else
-          Fmt.pf ppf
-            "Ill-typed arguments supplied to function '%s'. @[<h>Available \
-             signatures:\n\
-             %s.@]\n\
-             @[<h>Instead supplied arguments of incompatible type:\n\
-             %a.@]"
-            name variadic_ode_generic_signature
-            Fmt.(list UnsizedType.pp ~sep:comma)
-            arg_tys
+    | IllTypedReduceSum (name, arg_tys, expected_args, error) ->
+        SignatureMismatch.pp_signature_mismatch ppf
+          (name, arg_tys, ([((ReturnType UReal, expected_args), error)], false))
+    | IllTypedReduceSumGeneric (name, arg_tys, expected_args, error) ->
+        SignatureMismatch.pp_signature_mismatch ppf
+          (name, arg_tys, ([((ReturnType UReal, expected_args), error)], false))
+    | IllTypedVariadicODE (name, arg_tys, args, error) ->
+        SignatureMismatch.pp_signature_mismatch ppf
+          ( name
+          , arg_tys
+          , ( [ ( ( UnsizedType.ReturnType
+                      Stan_math_signatures.variadic_ode_fun_return_type
+                  , args )
+                , error ) ]
+            , false ) )
     | NotIndexable (ut, nidcs) ->
         Fmt.pf ppf
           "Too many indexes, expression dimensions=%d, indexes found=%d."
@@ -255,24 +173,12 @@ module TypeError = struct
           "A non-returning function was expected but an undeclared identifier \
            '%s' was supplied."
           fn_name
-    | IllTypedStanLibFunctionApp (name, arg_tys) ->
-        Fmt.pf ppf
-          "Ill-typed arguments supplied to function '%s'. Available \
-           signatures: %s@[<h>Instead supplied arguments of incompatible \
-           type: %a.@]"
-          name
-          (Stan_math_signatures.pretty_print_math_sigs name)
-          Fmt.(list UnsizedType.pp ~sep:comma)
-          arg_tys
-    | IllTypedUserDefinedFunctionApp (name, listed_tys, return_ty, arg_tys) ->
-        Fmt.pf ppf
-          "Ill-typed arguments supplied to function '%s'. Available \
-           signatures:%a\n\
-           @[<h>Instead supplied arguments of incompatible type: %a.@]"
-          name UnsizedType.pp
-          (UFun (listed_tys, return_ty))
-          Fmt.(list UnsizedType.pp ~sep:comma)
-          arg_tys
+    | IllTypedStanLibFunctionApp (name, arg_tys, errors) ->
+        SignatureMismatch.pp_signature_mismatch ppf (name, arg_tys, errors)
+    | IllTypedUserDefinedFunctionApp
+        (name, listed_tys, return_ty, arg_tys, error) ->
+        SignatureMismatch.pp_signature_mismatch ppf
+          (name, arg_tys, ([((return_ty, listed_tys), error)], false))
     | IllTypedBinaryOperator (op, lt, rt) ->
         Fmt.pf ppf
           "Ill-typed arguments supplied to infix operator %a. Available \
@@ -371,12 +277,12 @@ module ExpressionError = struct
     | ConditionalNotationNotAllowed ->
         Fmt.pf ppf
           "Only functions with names ending in _lpdf, _lupdf, _lpmf, _lupmf, \
-           _lcdf, _lccdf can make use of conditional notation."
+           _cdf, _lcdf, _lccdf can make use of conditional notation."
     | ConditioningRequired ->
         Fmt.pf ppf
           "Probability functions with suffixes _lpdf, _lupdf, _lpmf, _lupmf, \
-           _lcdf and _lccdf, require a vertical bar (|) between the first two \
-           arguments."
+           _cdf, _lcdf and _lccdf, require a vertical bar (|) between the \
+           first two arguments."
     | NotPrintable -> Fmt.pf ppf "Functions cannot be printed."
     | EmptyArray ->
         Fmt.pf ppf "Array expressions must contain at least one element."
@@ -484,7 +390,7 @@ For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
     | NonRealProbFunDef ->
         Fmt.pf ppf
           "Real return type required for probability functions ending in \
-           _log, _lpdf, _lupdf, _lpmf, _lupmf, _lcdf, or _lccdf."
+           _log, _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf, or _lccdf."
     | ProbDensityNonRealVariate (Some ut) ->
         Fmt.pf ppf
           "Probability density functions require real variates (first \
@@ -569,14 +475,17 @@ let illtyped_ternary_if loc predt lt rt =
 let returning_fn_expected_nonreturning_found loc name =
   TypeError (loc, TypeError.ReturningFnExpectedNonReturningFound name)
 
-let illtyped_reduce_sum loc name arg_tys args =
-  TypeError (loc, TypeError.IllTypedReduceSum (name, arg_tys, args))
+let illtyped_reduce_sum loc name arg_tys args error =
+  TypeError (loc, TypeError.IllTypedReduceSum (name, arg_tys, args, error))
 
-let illtyped_reduce_sum_generic loc name arg_tys =
-  TypeError (loc, TypeError.IllTypedReduceSumGeneric (name, arg_tys))
+let illtyped_reduce_sum_generic loc name arg_tys expected_args error =
+  TypeError
+    ( loc
+    , TypeError.IllTypedReduceSumGeneric (name, arg_tys, expected_args, error)
+    )
 
-let illtyped_variadic_ode loc name arg_tys args =
-  TypeError (loc, TypeError.IllTypedVariadicODE (name, arg_tys, args))
+let illtyped_variadic_ode loc name arg_tys args error =
+  TypeError (loc, TypeError.IllTypedVariadicODE (name, arg_tys, args, error))
 
 let returning_fn_expected_nonfn_found loc name =
   TypeError (loc, TypeError.ReturningFnExpectedNonFnFound name)
@@ -593,14 +502,15 @@ let nonreturning_fn_expected_nonfn_found loc name =
 let nonreturning_fn_expected_undeclaredident_found loc name =
   TypeError (loc, TypeError.NonReturningFnExpectedUndeclaredIdentFound name)
 
-let illtyped_stanlib_fn_app loc name arg_tys =
-  TypeError (loc, TypeError.IllTypedStanLibFunctionApp (name, arg_tys))
+let illtyped_stanlib_fn_app loc name errors arg_tys =
+  TypeError (loc, TypeError.IllTypedStanLibFunctionApp (name, arg_tys, errors))
 
-let illtyped_userdefined_fn_app loc name decl_arg_tys decl_return_ty arg_tys =
+let illtyped_userdefined_fn_app loc name decl_arg_tys decl_return_ty error
+    arg_tys =
   TypeError
     ( loc
     , TypeError.IllTypedUserDefinedFunctionApp
-        (name, decl_arg_tys, decl_return_ty, arg_tys) )
+        (name, decl_arg_tys, decl_return_ty, arg_tys, error) )
 
 let illtyped_binary_op loc op lt rt =
   TypeError (loc, TypeError.IllTypedBinaryOperator (op, lt, rt))

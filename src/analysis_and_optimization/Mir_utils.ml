@@ -30,7 +30,7 @@ let rec num_expr_value (v : Expr.Typed.t) : (float * string) option =
   | {pattern= Fixed.Pattern.Lit (Real, str); _}
    |{pattern= Fixed.Pattern.Lit (Int, str); _} ->
       Some (float_of_string str, str)
-  | {pattern= Fixed.Pattern.FunApp (StanLib "PMinus__", [v]); _} -> (
+  | {pattern= Fixed.Pattern.FunApp (StanLib ("PMinus__", FnPlain), [v]); _} -> (
     match num_expr_value v with
     | Some (v, s) -> Some (-.v, "-" ^ s)
     | None -> None )
@@ -61,9 +61,7 @@ let chop_dist_name (fname : string) : string Option.t =
   List.fold ~init:None ~f:Option.first_some
     (List.map
        ~f:(fun suffix -> String.chop_suffix ~suffix fname)
-       Middle.Utils.unnormalized_suffices)
-
-let is_dist (fname : string) : bool = Option.is_some (chop_dist_name fname)
+       Middle.Utils.distribution_suffices)
 
 let rec top_var_declarations Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
   match pattern with
@@ -296,7 +294,7 @@ let expr_assigned_var Expr.Fixed.({pattern; _}) =
 (** See interface file *)
 let rec summation_terms (Expr.Fixed.({pattern; _}) as rhs) =
   match pattern with
-  | FunApp (StanLib "Plus__", [e1; e2]) ->
+  | FunApp (StanLib ("Plus__", FnPlain), [e1; e2]) ->
       List.append (summation_terms e1) (summation_terms e2)
   | _ -> [rhs]
 

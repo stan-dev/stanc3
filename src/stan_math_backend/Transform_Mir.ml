@@ -51,7 +51,7 @@ let opencl_supported_functions =
 let opencl_suffix = "_opencl__"
 
 let to_matrix_cl e =
-  Expr.Fixed.{e with pattern= FunApp (StanLib "to_matrix_cl", [e])}
+  Expr.Fixed.{e with pattern= FunApp (StanLib ("to_matrix_cl", FnPlain), [e])}
 
 let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
     =
@@ -76,15 +76,11 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
     | Some x when is_restricted args x -> args
     | None | Some _ -> List.map args ~f:to_cl
   in
-  let is_fn_opencl_supported f =
-    Set.mem opencl_supported_functions (Utils.stdlib_distribution_name f)
-  in
+  let is_fn_opencl_supported f = Set.mem opencl_supported_functions f in
   match pattern with
-  | FunApp (StanLib f, args) when is_fn_opencl_supported f ->
-      let trigger =
-        Map.find opencl_trigger_restrictions (Utils.stdlib_distribution_name f)
-      in
-      {e with pattern= FunApp (StanLib f, maybe_map_args args trigger)}
+  | FunApp (StanLib (f, sfx), args) when is_fn_opencl_supported f ->
+      let trigger = Map.find opencl_trigger_restrictions f in
+      {e with pattern= FunApp (StanLib (f, sfx), maybe_map_args args trigger)}
   | x ->
       { e with
         pattern=
@@ -457,8 +453,8 @@ let rec map_fn_names s =
     let pattern =
       Expr.Fixed.(
         match e.pattern with
-        | FunApp (StanLib f, a) when Map.mem fn_name_map f ->
-            Pattern.FunApp (StanLib (Map.find_exn fn_name_map f), a)
+        | FunApp (StanLib (f, sfx), a) when Map.mem fn_name_map f ->
+            Pattern.FunApp (StanLib (Map.find_exn fn_name_map f, sfx), a)
         | expr -> Pattern.map map_fn_names_expr expr)
     in
     {e with pattern}
@@ -466,8 +462,8 @@ let rec map_fn_names s =
   let stmt =
     Stmt.Fixed.(
       match s.pattern with
-      | NRFunApp (StanLib f, a) when Map.mem fn_name_map f ->
-          Pattern.NRFunApp (StanLib (Map.find_exn fn_name_map f), a)
+      | NRFunApp (StanLib (f, sfx), a) when Map.mem fn_name_map f ->
+          Pattern.NRFunApp (StanLib (Map.find_exn fn_name_map f, sfx), a)
       | stmt -> Pattern.map map_fn_names_expr map_fn_names stmt)
   in
   {s with pattern= stmt}
@@ -501,7 +497,8 @@ let%expect_test "collect vars expr" =
   let args = List.map ~f:mkvar ["y"; "x_opencl__"; "z"; "w_opencl__"] in
   let fnapp =
     Expr.
-      {Fixed.pattern= FunApp (StanLib "print", args); meta= Typed.Meta.empty}
+      { Fixed.pattern= FunApp (StanLib ("print", FnPlain), args)
+      ; meta= Typed.Meta.empty }
   in
   Stmt.Fixed.{pattern= TargetPE fnapp; meta= Location_span.empty}
   |> collect_opencl_vars |> String.Set.sexp_of_t |> print_s ;
@@ -630,6 +627,14 @@ let trans_prog (p : Program.Typed.t) =
          [log_prob; generate_quantities])
     |> String.Set.to_list
   in
+  let maybe_add_opencl_events_clear =
+    let event_clear_stmt x =
+      Stmt.Fixed.
+        { pattern= NRFunApp (CompilerInternal (FnReadWriteEventsOpenCL x), [])
+        ; meta= Location_span.empty }
+    in
+    List.map ~f:event_clear_stmt opencl_vars
+  in
   let to_matrix_cl_stmts =
     List.concat_map opencl_vars ~f:(fun vident ->
         let vident_sans_opencl =
@@ -659,7 +664,7 @@ let trans_prog (p : Program.Typed.t) =
   in
   let p =
     { p with
-      log_prob
+      log_prob= log_prob @ maybe_add_opencl_events_clear
     ; prog_name= escape_name p.prog_name
     ; prepare_data=
         init_pos

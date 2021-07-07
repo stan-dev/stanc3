@@ -4,8 +4,7 @@ module Str = Re.Str
 
 let rec sizedtype_to_json (st : Expr.Typed.t SizedType.t) : Yojson.Basic.t =
   let emit_cpp_expr e =
-    Fmt.strf "<< %a >>" Expression_gen.pp_expr e
-    |> Str.global_replace (Str.regexp "[\n\r\t ]+") " "
+    Fmt.strf "+ std::to_string(%a) +" Expression_gen.pp_expr e
   in
   match st with
   | SInt -> `Assoc [("name", `String "int")]
@@ -44,17 +43,20 @@ let%expect_test "outvar to json pretty" =
     "name": "var_one",
     "type": {
       "name": "array",
-      "length": "<< K >>",
-      "element_type": { "name": "vector", "length": "<< N >>" }
+      "length": "+ std::to_string(K) +",
+      "element_type": { "name": "vector", "length": "+ std::to_string(N) +" }
     },
     "block": "parameters"
   } |}]
 
+(*Adds a backslash to all the inner quotes and then
+  unslash the ones near a plus*)
 let replace_cpp_expr s =
   s
   |> Str.global_replace (Str.regexp {|"|}) {|\"|}
-  |> Str.global_replace (Str.regexp {|\\"<<|}) {|" <<|}
-  |> Str.global_replace (Str.regexp {|>>\\"|}) {|<< "|}
+  |> Str.global_replace (Str.regexp {|\\"\+|}) {|" +|}
+  |> Str.global_replace (Str.regexp {|\+\\"|}) {|+ "|}
+  |> Str.global_replace (Str.regexp {|\\n|}) {||}
 
 let wrap_in_quotes s = "\"" ^ s ^ "\""
 
@@ -70,4 +72,4 @@ let%expect_test "outvar to json" =
   |> out_var_interpolated_json_str |> print_endline ;
   [%expect
     {|
-    "[{\"name\":\"var_one\",\"type\":{\"name\":\"array\",\"length\":" << K << ",\"element_type\":{\"name\":\"vector\",\"length\":" << N << "}},\"block\":\"parameters\"}]" |}]
+    "[{\"name\":\"var_one\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(K) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"}]" |}]

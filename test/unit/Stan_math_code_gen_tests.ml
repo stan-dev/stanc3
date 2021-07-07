@@ -12,10 +12,15 @@ let%expect_test "udf" =
   let pp_fun_def_w_rs a b = pp_fun_def a b String.Set.empty String.Set.empty in
   { fdrt= None
   ; fdname= "sars"
+  ; fdsuffix= FnPlain
   ; fdargs= [(DataOnly, "x", UMatrix); (AutoDiffable, "y", URowVector)]
   ; fdbody=
       Stmt.Fixed.Pattern.Return
-        (Some (w @@ FunApp (StanLib "add", [w @@ Var "x"; w @@ Lit (Int, "1")])))
+        (Some
+           ( w
+           @@ FunApp
+                (StanLib ("add", FnPlain), [w @@ Var "x"; w @@ Lit (Int, "1")])
+           ))
       |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
       |> Some
   ; fdloc= Location_span.empty }
@@ -62,6 +67,7 @@ let%expect_test "udf-expressions" =
   let pp_fun_def_w_rs a b = pp_fun_def a b String.Set.empty String.Set.empty in
   { fdrt= Some UMatrix
   ; fdname= "sars"
+  ; fdsuffix= FnPlain
   ; fdargs=
       [ (DataOnly, "x", UMatrix)
       ; (AutoDiffable, "y", URowVector)
@@ -69,7 +75,11 @@ let%expect_test "udf-expressions" =
       ; (AutoDiffable, "w", UArray UMatrix) ]
   ; fdbody=
       Stmt.Fixed.Pattern.Return
-        (Some (w @@ FunApp (StanLib "add", [w @@ Var "x"; w @@ Lit (Int, "1")])))
+        (Some
+           ( w
+           @@ FunApp
+                (StanLib ("add", FnPlain), [w @@ Var "x"; w @@ Lit (Int, "1")])
+           ))
       |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
       |> Some
   ; fdloc= Location_span.empty }

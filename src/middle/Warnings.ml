@@ -8,6 +8,12 @@ let collect () = List.rev !warnings
 
 let add_warning (span : Location_span.t) (message : string) =
   warnings := (span, message) :: !warnings
+let empty file =
+  warnings :=
+    ( Location_span.empty
+    , "Empty file '" ^ file
+      ^ "' detected; this is a valid stan model but likely unintended!" )
+    :: !warnings
 
 let deprecated token (pos, message) =
   (* TODO(seantalts): should we only print deprecation warnings once per token? *)
@@ -28,5 +34,6 @@ let pp ?printed_filename ppf (span, message) =
   in
   Fmt.pf ppf "@[<hov>Warning%s: %s@]" loc_str message
 
-let pp_warnings ?printed_filename ppf =
-  Fmt.(pf ppf "@[<v>%a@]" (list ~sep:cut (pp ?printed_filename)))
+let pp_warnings ?printed_filename ppf warnings =
+  Fmt.(
+    pf ppf "@[<v>%a@]%a" (list ~sep:cut (pp ?printed_filename)) warnings cut ())

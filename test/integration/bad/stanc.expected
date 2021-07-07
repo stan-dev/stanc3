@@ -514,6 +514,8 @@ Semantic error in 'declare-define-var-vec-1.stan', line 6, column 2 to column 23
    -------------------------------------------------
 
 Ill-typed arguments supplied to assignment operator =: lhs has type vector and rhs has type row_vector
+  $ ../../../../install/default/bin/stanc empty.stan
+Warning: Empty file 'empty.stan' detected; this is a valid stan model but likely unintended!
   $ ../../../../install/default/bin/stanc err-bare-type-close-square.stan
 Syntax error in 'err-bare-type-close-square.stan', line 2, column 8 to column 11, parsing error:
    -------------------------------------------------
@@ -1065,7 +1067,7 @@ Semantic error in 'functions-bad17.stan', line 2, column 2 to line 4, column 3:
      4:    }
    -------------------------------------------------
 
-Real return type required for probability functions ending in _log, _lpdf, _lupdf, _lpmf, _lupmf, _lcdf, or _lccdf.
+Real return type required for probability functions ending in _log, _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf, or _lccdf.
   $ ../../../../install/default/bin/stanc functions-bad18.stan
 Semantic error in 'functions-bad18.stan', line 7, column 7 to column 10:
    -------------------------------------------------
@@ -1124,9 +1126,13 @@ Semantic error in 'functions-bad21.stan', line 13, column 11 to column 21:
     15:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'my_fun3'. Available signatures:
+Ill-typed arguments supplied to function 'my_fun3':
+(real)
+Available signatures:
 (data real) => real
-Instead supplied arguments of incompatible type: real.
+  The first argument must be data-only. (Local variables are assumed to
+  depend on parameters; same goes for function inputs unless they are marked
+  with the keyword 'data'.)
   $ ../../../../install/default/bin/stanc functions-bad22-ode.stan
 Semantic error in 'functions-bad22-ode.stan', line 15, column 11 to column 82:
    -------------------------------------------------
@@ -1138,10 +1144,21 @@ Semantic error in 'functions-bad22-ode.stan', line 15, column 11 to column 82:
     17:  
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'integrate_ode_rk45'. Available signatures: 
-((real, array[] real, array[] real, data array[] real, data array[] int) => array[] real, array[] real, real, array[] real, array[] real, data array[] real, data array[] int) => array[,] real
-((real, array[] real, array[] real, data array[] real, data array[] int) => array[] real, array[] real, real, array[] real, array[] real, data array[] real, data array[] int, data real, data real, data real) => array[,] real
-Instead supplied arguments of incompatible type: (real, array[] real, array[] real, array[] real, array[] int) => array[] real, array[] real, real, array[] real, array[] real, array[] real, array[] int.
+Ill-typed arguments supplied to function 'integrate_ode_rk45':
+(<F1>, array[] real, real, array[] real, array[] real, array[] real,
+ array[] int)
+where F1 = (real, array[] real, array[] real, array[] real, array[] int) => array[] real
+Available signatures:
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int) => array[,] real
+where F2 = (real, array[] real, array[] real, data array[] real,
+            data array[] int) => array[] real
+  The 6th argument must be data-only. (Local variables are assumed to depend
+  on parameters; same goes for function inputs unless they are marked with
+  the keyword 'data'.)
+(<F2>, array[] real, real, array[] real, array[] real, data array[] real,
+ data array[] int, data real, data real, data real) => array[,] real
+  Expected 10 arguments but found 7 arguments.
   $ ../../../../install/default/bin/stanc functions-bad23.stan
 Semantic error in 'functions-bad23.stan', line 3, column 4 to column 11:
    -------------------------------------------------
@@ -1716,7 +1733,7 @@ Semantic error in 'prob-fun-args-no-bar.stan', line 5, column 12 to column 32:
      6:  }
    -------------------------------------------------
 
-Probability functions with suffixes _lpdf, _lupdf, _lpmf, _lupmf, _lcdf and _lccdf, require a vertical bar (|) between the first two arguments.
+Probability functions with suffixes _lpdf, _lupdf, _lpmf, _lupmf, _cdf, _lcdf and _lccdf, require a vertical bar (|) between the first two arguments.
   $ ../../../../install/default/bin/stanc prob-poisson_log-trunc-both.stan
 Semantic error in 'prob-poisson_log-trunc-both.stan', line 11, column 2 to column 33:
    -------------------------------------------------
@@ -1759,72 +1776,20 @@ Semantic error in 'propto-bad1.stan', line 2, column 14 to column 37:
      3:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'normal_lupdf'. Available signatures: 
+Ill-typed arguments supplied to function 'normal_lupdf':
+(int, array[] int, int)
+Available signatures:
 (real, real, real) => real
-(real, real, vector) => real
-(real, real, row_vector) => real
+  The second argument must be real but got array[] int
 (real, real, array[] real) => real
+  The second argument must be real but got array[] int
+(real, real, vector) => real
+  The second argument must be real but got array[] int
+(real, real, row_vector) => real
+  The second argument must be real but got array[] int
 (real, vector, real) => real
-(real, vector, vector) => real
-(real, vector, row_vector) => real
-(real, vector, array[] real) => real
-(real, row_vector, real) => real
-(real, row_vector, vector) => real
-(real, row_vector, row_vector) => real
-(real, row_vector, array[] real) => real
-(real, array[] real, real) => real
-(real, array[] real, vector) => real
-(real, array[] real, row_vector) => real
-(real, array[] real, array[] real) => real
-(vector, real, real) => real
-(vector, real, vector) => real
-(vector, real, row_vector) => real
-(vector, real, array[] real) => real
-(vector, vector, real) => real
-(vector, vector, vector) => real
-(vector, vector, row_vector) => real
-(vector, vector, array[] real) => real
-(vector, row_vector, real) => real
-(vector, row_vector, vector) => real
-(vector, row_vector, row_vector) => real
-(vector, row_vector, array[] real) => real
-(vector, array[] real, real) => real
-(vector, array[] real, vector) => real
-(vector, array[] real, row_vector) => real
-(vector, array[] real, array[] real) => real
-(row_vector, real, real) => real
-(row_vector, real, vector) => real
-(row_vector, real, row_vector) => real
-(row_vector, real, array[] real) => real
-(row_vector, vector, real) => real
-(row_vector, vector, vector) => real
-(row_vector, vector, row_vector) => real
-(row_vector, vector, array[] real) => real
-(row_vector, row_vector, real) => real
-(row_vector, row_vector, vector) => real
-(row_vector, row_vector, row_vector) => real
-(row_vector, row_vector, array[] real) => real
-(row_vector, array[] real, real) => real
-(row_vector, array[] real, vector) => real
-(row_vector, array[] real, row_vector) => real
-(row_vector, array[] real, array[] real) => real
-(array[] real, real, real) => real
-(array[] real, real, vector) => real
-(array[] real, real, row_vector) => real
-(array[] real, real, array[] real) => real
-(array[] real, vector, real) => real
-(array[] real, vector, vector) => real
-(array[] real, vector, row_vector) => real
-(array[] real, vector, array[] real) => real
-(array[] real, row_vector, real) => real
-(array[] real, row_vector, vector) => real
-(array[] real, row_vector, row_vector) => real
-(array[] real, row_vector, array[] real) => real
-(array[] real, array[] real, real) => real
-(array[] real, array[] real, vector) => real
-(array[] real, array[] real, row_vector) => real
-(array[] real, array[] real, array[] real) => real
-Instead supplied arguments of incompatible type: int, array[] int, int.
+  The second argument must be vector but got array[] int
+(Additional signatures omitted)
   $ ../../../../install/default/bin/stanc real-pdf.stan
 Semantic error in 'real-pdf.stan', line 2, column 2 to line 4, column 3:
    -------------------------------------------------
@@ -2067,16 +2032,20 @@ Warning in 'signature_function_known.stan', line 8, column 2: increment_log_prob
      9:  }
    -------------------------------------------------
 
-Ill-typed arguments supplied to function 'bernoulli_logit_log'. Available signatures: 
+Ill-typed arguments supplied to function 'bernoulli_logit_log':
+(vector, vector)
+Available signatures:
 (int, real) => real
-(int, vector) => real
-(int, row_vector) => real
+  The first argument must be int but got vector
 (int, array[] real) => real
+  The first argument must be int but got vector
+(int, vector) => real
+  The first argument must be int but got vector
+(int, row_vector) => real
+  The first argument must be int but got vector
 (array[] int, real) => real
-(array[] int, vector) => real
-(array[] int, row_vector) => real
-(array[] int, array[] real) => real
-Instead supplied arguments of incompatible type: vector, vector.
+  The first argument must be array[] int but got vector
+(Additional signatures omitted)
   $ ../../../../install/default/bin/stanc signature_function_unknown.stan
 Warning in 'signature_function_unknown.stan', line 8, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.Semantic error in 'signature_function_unknown.stan', line 8, column 21 to column 45:
    -------------------------------------------------
@@ -2144,6 +2113,18 @@ Semantic error in 'target-reserved.stan', line 2, column 7 to column 13:
    -------------------------------------------------
 
 Identifier 'target' clashes with reserved keyword.
+  $ ../../../../install/default/bin/stanc ternaryif-fntype.stan
+Semantic error in 'ternaryif-fntype.stan', line 13, column 6 to column 28:
+   -------------------------------------------------
+    11:      vector[1] true_states[1];
+    12:      true_states = ode_rk45(
+    13:        t0 < 0 ? rflow : gflow, [1]', t0, {1.}
+               ^
+    14:      );
+    15:  }
+   -------------------------------------------------
+
+Ternary expression cannot have a function type: (real, vector) => vector
   $ ../../../../install/default/bin/stanc tilde-bad.stan
 Semantic error in 'tilde-bad.stan', line 8, column 8 to column 19:
    -------------------------------------------------

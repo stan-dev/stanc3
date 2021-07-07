@@ -59,7 +59,8 @@ let rec dims_of st =
   | SRowVector dim | SVector dim -> [dim]
   | SInt | SReal -> []
 
-let rec get_dims = function
+let rec get_dims st =
+  match st with
   | SInt | SReal -> []
   | SVector d | SRowVector d -> [d]
   | SMatrix (dim1, dim2) -> [dim1; dim2]
