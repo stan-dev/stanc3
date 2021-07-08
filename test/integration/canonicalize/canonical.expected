@@ -76,7 +76,6 @@ generated quantities {
                                                      x_r, x_i);
 }
 
-
 Warning in 'deprecated.stan', line 14, column 11: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
 Warning in 'deprecated.stan', line 14, column 24: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
 Warning in 'deprecated.stan', line 30, column 11: Use of the `abs` function with real-valued arguments is deprecated; use functions `fabs` instead.
@@ -124,6 +123,5 @@ model {
   if ((b < x) && (x < 1)) 
     x + 4 ~ normal(0, 1 + 1) T[0, 8];
 }
-
 
 Warning in 'parenthesize.stan', line 6, column 13: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.

@@ -10,7 +10,6 @@ model {
   y ~ normal(mu, 1);
 }
 
-
 Warning in 'abs-deprecate.stan', line 3, column 7: Use of the `abs` function with real-valued arguments is deprecated; use functions `fabs` instead.
   $ ../../../../install/default/bin/stanc --auto-format algebra_solver_good.stan
 functions {
@@ -2570,7 +2569,6 @@ model {
             + normal_ccdf_log(3, 0, 1);
 }
 
-
 Warning in 'deprecate-old-prob-funs.stan', line 5, column 12: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
 Warning in 'deprecate-old-prob-funs.stan', line 6, column 6: normal_cdf_log is deprecated and will be removed in the future. Use normal_lcdf instead.
 Warning in 'deprecate-old-prob-funs.stan', line 7, column 6: normal_ccdf_log is deprecated and will be removed in the future. Use normal_lccdf instead.
@@ -2589,7 +2587,6 @@ model {
 
 Warning in 'duplicate-warns.stan', line 4, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 Warning in 'duplicate-warns.stan', line 5, column 8: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
-
 Warning in 'duplicate-warns.stan', line 5, column 8: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
 Warning in 'duplicate-warns.stan', line 6, column 8: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
 Warning in 'duplicate-warns.stan', line 7, column 8: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
@@ -2799,7 +2796,6 @@ model {
 }
 
 Warning in 'fun_log_forward_decl.stan', line 17, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-
 Warning in 'fun_log_forward_decl.stan', line 17, column 21: Use of the _log suffix in user defined function n_log is deprecated, use n_lpdf instead.
   $ ../../../../install/default/bin/stanc --auto-format functions-fwd-ref.stan
 functions {
@@ -3016,7 +3012,6 @@ generated quantities {
   z = foo2_rng(1, 2);
 }
 
-
 Warning in 'functions-good1.stan', line 63, column 6: Use of the _log suffix in user defined function foo0_log is deprecated, use foo0_lpmf instead.
 Warning in 'functions-good1.stan', line 64, column 6: Use of the _log suffix in user defined function foo1_log is deprecated, use foo1_lpdf instead.
 Warning in 'functions-good1.stan', line 65, column 6: Use of the _log suffix in user defined function foo2_log is deprecated, use foo2_lpdf instead.
@@ -3127,7 +3122,6 @@ model {
 }
 
 Warning in 'funs1.stan', line 3, column 4: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-
 Warning in 'funs1.stan', line 3, column 23: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
   $ ../../../../install/default/bin/stanc --auto-format funs2.stan
 functions {
@@ -3159,7 +3153,6 @@ model {
   y ~ unit_normal();
 }
 
-
 Warning in 'funs3.stan', line 3, column 11: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
   $ ../../../../install/default/bin/stanc --auto-format funs4.stan
 functions {
@@ -3175,7 +3168,6 @@ model {
 }
 
 Warning in 'funs4.stan', line 10, column 2: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
-
 Warning in 'funs4.stan', line 3, column 11: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
 Warning in 'funs4.stan', line 10, column 21: Use of the _log suffix in user defined function unit_normal_log is deprecated, use unit_normal_lpdf instead.
   $ ../../../../install/default/bin/stanc --auto-format funs5.stan
@@ -3246,7 +3238,6 @@ model {
 }
 
 Warning in 'get-lp-deprecate.stan', line 5, column 19: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
-
 Warning in 'get-lp-deprecate.stan', line 5, column 19: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
   $ ../../../../install/default/bin/stanc --auto-format get-lp-target.stan
 parameters {
@@ -3264,7 +3255,6 @@ model {
 
 Warning in 'get-lp-target.stan', line 6, column 21: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 Warning in 'get-lp-target.stan', line 10, column 21: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
-
 Warning in 'get-lp-target.stan', line 6, column 21: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
 Warning in 'get-lp-target.stan', line 10, column 21: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
   $ ../../../../install/default/bin/stanc --auto-format get_lp_good.stan
@@ -3289,7 +3279,6 @@ model {
 Warning in 'get_lp_good.stan', line 10, column 15: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 Warning in 'get_lp_good.stan', line 18, column 6: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 Warning in 'get_lp_good.stan', line 22, column 6: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
-
 Warning in 'get_lp_good.stan', line 10, column 15: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
 Warning in 'get_lp_good.stan', line 18, column 6: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
 Warning in 'get_lp_good.stan', line 22, column 6: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
@@ -3587,7 +3576,6 @@ generated quantities {
                               1e-10, 1e8);
 }
 
-
 Warning in 'integrate_ode_adams.stan', line 28, column 10: integrate_ode_adams is deprecated and will be removed in the future. Use ode_adams instead. 
 The new interface is slightly different, see: 
 https://mc-stan.org/users/documentation/case-studies/convert_odes.html
@@ -3684,7 +3672,6 @@ generated quantities {
                             1e-10, 1e8);
 }
 
-
 Warning in 'integrate_ode_bdf.stan', line 28, column 10: integrate_ode_bdf is deprecated and will be removed in the future. Use ode_bdf instead. 
 The new interface is slightly different, see: 
 https://mc-stan.org/users/documentation/case-studies/convert_odes.html
@@ -3766,7 +3753,6 @@ generated quantities {
   }
 }
 
-
 Warning in 'integrate_ode_deprecation.stan', line 28, column 10: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead. 
 The new interface is slightly different, see: 
 https://mc-stan.org/users/documentation/case-studies/convert_odes.html
@@ -3807,7 +3793,6 @@ generated quantities {
   y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_d, x, x_int);
   y_hat = integrate_ode_rk45(sho, y0_p, t0, ts, theta_p, x, x_int);
 }
-
 
 Warning in 'integrate_ode_rk45.stan', line 28, column 10: integrate_ode_rk45 is deprecated and will be removed in the future. Use ode_rk45 instead. 
 The new interface is slightly different, see: 
@@ -4040,7 +4025,6 @@ model {
 }
 
 Warning in 'lp_in_fun.stan', line 3, column 21: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
-
 Warning in 'lp_in_fun.stan', line 3, column 21: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
   $ ../../../../install/default/bin/stanc --auto-format lp_transformed_param.stan
 functions {
@@ -4401,7 +4385,6 @@ model {
 
 }
 
-
 Warning in 'ode-int-segments.stan', line 25, column 12: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead. 
 The new interface is slightly different, see: 
 https://mc-stan.org/users/documentation/case-studies/convert_odes.html
@@ -4421,7 +4404,6 @@ transformed data {
 model {
 
 }
-
 
 Warning in 'ode-nested-quotes.stan', line 17, column 6: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead. 
 The new interface is slightly different, see: 
@@ -4466,7 +4448,6 @@ model {
     y[t] ~ normal(y_hat[t], sigma);
 }
 
-
 Warning in 'ode_good.stan', line 27, column 10: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead. 
 The new interface is slightly different, see: 
 https://mc-stan.org/users/documentation/case-studies/convert_odes.html
@@ -4502,7 +4483,6 @@ parameters {
 model {
   y ~ normal(0, 1);
 }
-
 
 Warning in 'old-log-funs.stan', line 3, column 6: multiply_log is deprecated and will be removed in the future. Use lmultiply instead.
 Warning in 'old-log-funs.stan', line 4, column 6: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
@@ -5252,7 +5232,6 @@ parameters {
 model {
   y ~ normal(0, 1);
 }
-
 
 Warning in 'validate_bounds_comparison.stan', line 2, column 13: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.
 Warning in 'validate_bounds_comparison.stan', line 3, column 13: The function `if_else` is deprecated. Use the conditional operator (x ? y : z) instead.

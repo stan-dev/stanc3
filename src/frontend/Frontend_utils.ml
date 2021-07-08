@@ -9,7 +9,11 @@ let untyped_ast_of_string s =
   res
 
 let emit_warnings_and_return_ast (ast, warnings) =
-  Warnings.pp_warnings Fmt.stderr warnings ;
+  let () = 
+  match warnings with
+    [] -> ()
+    | _ -> Warnings.pp_warnings Fmt.stderr warnings
+  in
   ast
 
 let typed_ast_of_string_exn s =
