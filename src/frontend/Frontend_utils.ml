@@ -9,9 +9,9 @@ let untyped_ast_of_string s =
   res
 
 let emit_warnings_and_return_ast (ast, warnings) =
-  let () = 
-  match warnings with
-    [] -> ()
+  let () =
+    match warnings with
+    | [] -> ()
     | _ -> Warnings.pp_warnings Fmt.stderr warnings
   in
   ast
