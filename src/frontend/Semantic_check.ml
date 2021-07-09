@@ -710,7 +710,7 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
             in
             let s =
               Fmt.strf
-                "@[<v>@[<hov 0>Info: Found int division:@]@   @[<hov \
+                "@[<v>@[<hov 0>Found int division:@]@   @[<hov \
                  2>%a@]@,@[<hov>%a@]@   @[<hov 2>%a@]@,@[<hov>%a@]@]"
                 Pretty_printing.pp_expression {expr; emeta} Fmt.text
                 "Values will be rounded towards zero. If rounding is not \
