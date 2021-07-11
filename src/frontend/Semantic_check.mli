@@ -17,7 +17,9 @@ val semantic_check_binop_exn :
 
 val semantic_check_program :
      Ast.untyped_program
-  -> (Ast.typed_program, Middle.Semantic_error.t list) result
+  -> ( Ast.typed_program * Middle.Warnings.t list
+     , Middle.Semantic_error.t list )
+     result
 (** Performs semantic check on AST and returns original AST embellished with type decorations *)
 
 val check_that_all_functions_have_definition : bool ref
