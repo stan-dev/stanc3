@@ -18,6 +18,7 @@ import numpy as np
 import tensorflow as tf
 import tensorflow_probability as tfp
 from os.path import dirname, join
+from glob import glob
 tfb = tfp.bijectors
 
 def significant_digit(x):
@@ -108,6 +109,13 @@ class TestModels(unittest.TestCase):
         self.assertTrue(np.all(theta_lb>=0))
         self.assertTrue(np.all(theta_ub<=1))
 
+    def test_synatx(self):
+        tfp_files = glob(join(dirname(__file__), "tfp_models/*.py"))
+        for file in tfp_files:
+            with open(file, "r") as handle:
+                current_file = handle.read()
+            current_file = current_file[current_file.find('import'):]
+            exec(current_file, {}, {})
 
 if __name__ == '__main__':
     unittest.main()
