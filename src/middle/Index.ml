@@ -1,11 +1,11 @@
 open Core_kernel
 
-type 'a t =
+type 'expr t =
   | All
-  | Single of 'a
-  | Upfrom of 'a
-  | Between of 'a * 'a
-  | MultiIndex of 'a
+  | Single of 'expr
+  | Upfrom of 'expr
+  | Between of 'expr * 'expr
+  | MultiIndex of 'expr
 [@@deriving sexp, hash, map, compare, fold]
 
 let pp pp_e ppf = function
