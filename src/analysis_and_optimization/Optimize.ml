@@ -232,7 +232,7 @@ let rec inline_function_expression propto adt fim
       in
       let es = List.map ~f:(function _, _, x -> x) dse_list in
       match kind with
-      | CompilerInternal _ ->
+      | CompilerInternal _ | Closure _ ->
           (d_list, s_list, {e with pattern= FunApp (kind, es)})
       | UserDefined (fname, suffix) | StanLib (fname, suffix) -> (
           let suffix, fname' =
@@ -382,7 +382,7 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.({pattern; meta}) =
             let es = List.map ~f:(function _, _, x -> x) dse_list in
             slist_concat_no_loc (d_list @ s_list)
               ( match kind with
-              | CompilerInternal _ -> NRFunApp (kind, es)
+              | CompilerInternal _ | Closure _ -> NRFunApp (kind, es)
               | UserDefined (s, _) | StanLib (s, _) -> (
                 match Map.find fim s with
                 | None -> NRFunApp (kind, es)

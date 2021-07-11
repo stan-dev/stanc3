@@ -81,6 +81,15 @@ let calculate_autodifftype cf at ut =
       UnsizedType.AutoDiffable
   | _ -> DataOnly
 
+let calculate_capturetype cf at ut =
+  if UnsizedType.is_scalar_type ut || UnsizedType.is_fun_type ut then
+    UnsizedType.Copy
+  else
+    match at with
+    | (Data | TData) when cf.current_block <> Functions -> Ref
+    | GQuant -> Ref
+    | _ -> Copy
+
 let has_int_type ue = ue.emeta.type_ = UInt
 let has_int_array_type ue = ue.emeta.type_ = UArray UInt
 
@@ -198,7 +207,8 @@ let reserved_keywords =
   ; "for"; "in"; "break"; "continue"; "void"; "int"; "real"; "vector"
   ; "row_vector"; "matrix"; "ordered"; "positive_ordered"; "simplex"
   ; "unit_vector"; "cholesky_factor_corr"; "cholesky_factor_cov"; "corr_matrix"
-  ; "cov_matrix"; "print"; "reject"; "target"; "get_lp"; "profile" ]
+  ; "cov_matrix"; "print"; "reject"; "target"; "get_lp"; "profile"; "function"
+  ]
 
 let semantic_check_identifier id =
   Validate.(
@@ -252,8 +262,9 @@ let semantic_check_fn_rng cf ~loc id =
       Semantic_error.invalid_decl_rng_fn loc |> error
     else if
       String.is_suffix id.name ~suffix:"_rng"
-      && ( (cf.in_fun_def && not cf.in_rng_fun_def)
-         || cf.current_block = TParam || cf.current_block = Model )
+      && (not (cf.in_fun_def && cf.in_rng_fun_def))
+      && ( cf.in_fun_def || cf.current_block = TParam
+         || cf.current_block = Model )
     then Semantic_error.invalid_rng_fn loc |> error
     else ok ())
 
@@ -278,7 +289,7 @@ let semantic_check_fn_normal ~is_cond_dist ~loc id es =
     | Some (_, UnsizedType.UFun (_, Void, _)) ->
         Semantic_error.returning_fn_expected_nonreturning_found loc id.name
         |> error
-    | Some (_, UFun (listedtypes, ReturnType ut, _)) -> (
+    | Some (_, UFun (listedtypes, ReturnType ut, (_, is_closure))) -> (
       match
         SignatureMismatch.check_compatible_arguments_mod_conv listedtypes
           (get_arg_types es)
@@ -290,10 +301,12 @@ let semantic_check_fn_normal ~is_cond_dist ~loc id es =
                (ReturnType ut) x
           |> error
       | None ->
+          let kind =
+            if is_closure then Closure (Fun_kind.suffix_from_name id.name)
+            else UserDefined (Fun_kind.suffix_from_name id.name)
+          in
           mk_typed_expression
-            ~expr:
-              (mk_fun_app ~is_cond_dist
-                 (UserDefined (Fun_kind.suffix_from_name id.name), id, es))
+            ~expr:(mk_fun_app ~is_cond_dist (kind, id, es))
             ~ad_level:(expr_ad_lub es) ~type_:ut ~loc
           |> ok )
     | Some _ ->
@@ -421,7 +434,8 @@ let semantic_check_fn ~is_cond_dist ~loc id es =
   | StanLib FnPlain when Stan_math_signatures.is_variadic_ode_fn id.name ->
       semantic_check_variadic_ode ~is_cond_dist ~loc id es
   | StanLib _ -> semantic_check_fn_stan_math ~is_cond_dist ~loc id es
-  | UserDefined _ -> semantic_check_fn_normal ~is_cond_dist ~loc id es
+  | UserDefined _ | Closure _ ->
+      semantic_check_fn_normal ~is_cond_dist ~loc id es
 
 (* -- Ternary If ------------------------------------------------------------ *)
 
@@ -519,9 +533,10 @@ let semantic_check_variable cf loc id =
                 ( (cf.in_fun_def && (cf.in_udf_dist_def || cf.in_lp_fun_def))
                 || cf.current_block = Model ) ->
         Semantic_error.invalid_unnormalized_fn loc |> error
-    | Some (originblock, UFun (args, rt, FnLpdf _)) ->
+    | Some (originblock, UFun (args, rt, (FnLpdf _, is_closure))) ->
         let type_ =
-          UnsizedType.UFun (args, rt, Fun_kind.suffix_from_name id.name)
+          UnsizedType.UFun
+            (args, rt, (Fun_kind.suffix_from_name id.name, is_closure))
         in
         mk_typed_expression ~expr:(Variable id)
           ~ad_level:(calculate_autodifftype cf originblock type_)
@@ -951,14 +966,17 @@ let semantic_check_nrfn_target ~loc ~cf id =
 let semantic_check_nrfn_normal ~loc id es =
   Validate.(
     match Symbol_table.look vm id.name with
-    | Some (_, UFun (listedtypes, Void, suffix)) -> (
+    | Some (_, UFun (listedtypes, Void, (suffix, is_closure))) -> (
       match
         SignatureMismatch.check_compatible_arguments_mod_conv listedtypes
           (get_arg_types es)
       with
       | None ->
+          let kind =
+            if is_closure then Closure suffix else UserDefined suffix
+          in
           mk_typed_statement
-            ~stmt:(NRFunApp (UserDefined suffix, id, es))
+            ~stmt:(NRFunApp (kind, id, es))
             ~return_type:NoReturnType ~loc
           |> ok
       | Some x ->
@@ -1000,7 +1018,7 @@ let semantic_check_nrfn_stan_math ~loc id es =
 let semantic_check_nr_fnkind ~loc id es =
   match fn_kind_from_application id es with
   | StanLib _ -> semantic_check_nrfn_stan_math ~loc id es
-  | UserDefined _ -> semantic_check_nrfn_normal ~loc id es
+  | UserDefined _ | Closure _ -> semantic_check_nrfn_normal ~loc id es
 
 let semantic_check_nr_fn_app ~loc ~cf id es =
   Validate.(
@@ -1015,8 +1033,10 @@ let semantic_check_nr_fn_app ~loc ~cf id es =
 
 let semantic_check_assignment_read_only ~loc id =
   Validate.(
-    if Symbol_table.get_read_only vm id.name then
-      Semantic_error.cannot_assign_to_read_only loc id.name |> error
+    if
+      Symbol_table.get_read_only vm id.name
+      || not (Symbol_table.check_is_local vm id.name)
+    then Semantic_error.cannot_assign_to_read_only loc id.name |> error
     else ok ())
 
 (* Variables from previous blocks are read-only.
@@ -1167,7 +1187,8 @@ let semantic_check_sampling_distribution ~loc id arguments =
   in
   let is_name_w_suffix_udf_sampling_dist suffix =
     match Symbol_table.look vm (name ^ suffix) with
-    | Some (Functions, UFun (listedtypes, ReturnType UReal, FnLpdf _)) ->
+    | Some (Functions, UFun (listedtypes, ReturnType UReal, (FnLpdf _, false)))
+      ->
         UnsizedType.check_compatible_arguments_mod_conv name listedtypes
           argumenttypes
     | _ -> false
@@ -1192,7 +1213,8 @@ let cumulative_density_is_defined id arguments =
     |> Option.value_map ~default:false ~f:is_real_rt
   and valid_arg_types_for_suffix suffix =
     match Symbol_table.look vm (name ^ suffix) with
-    | Some (Functions, UFun (listedtypes, ReturnType UReal, FnPlain)) ->
+    | Some (Functions, UFun (listedtypes, ReturnType UReal, (FnPlain, false)))
+      ->
         UnsizedType.check_compatible_arguments_mod_conv name listedtypes
           argumenttypes
     | _ -> false
@@ -1608,11 +1630,12 @@ and semantic_check_fundef_overloaded ~loc id arg_tys rt =
     else check_fresh_variable id true)
 
 (** WARNING: side effecting *)
-and semantic_check_fundef_decl ~loc id body =
+and semantic_check_fundef_decl ~loc ~is_closure id body =
   Validate.(
     match body with
     | {stmt= Skip; _} ->
-        if Symbol_table.check_is_unassigned vm id.name then
+        if is_closure then error @@ Semantic_error.closure_without_def loc
+        else if Symbol_table.check_is_unassigned vm id.name then
           error @@ Semantic_error.fn_decl_without_def loc
         else
           let () = Symbol_table.set_is_unassigned vm id.name in
@@ -1692,7 +1715,7 @@ and semantic_check_fundef_return_tys ~loc id return_type body =
     then ok ()
     else error @@ Semantic_error.incompatible_return_types loc)
 
-and semantic_check_fundef ~loc ~cf return_ty id args body =
+and semantic_check_fundef ~loc ~cf ~is_closure return_ty id args body =
   let uargs =
     List.map args ~f:(fun (at, ut, id) ->
         Validate.(
@@ -1712,61 +1735,100 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
     let uarg_identifiers = List.map ~f:(fun (_, _, z) -> z) uargs in
     let uarg_names = List.map ~f:(fun x -> x.name) uarg_identifiers in
     semantic_check_fundef_overloaded ~loc id uarg_types urt
-    |> apply_const (semantic_check_fundef_decl ~loc id body)
-    >>= fun _ ->
+    |> apply_const (semantic_check_fundef_decl ~loc ~is_closure id body)
+    >>= fun () ->
     (* WARNING: SIDE EFFECTING *)
     Symbol_table.enter vm id.name
-      (Functions, UFun (uarg_types, urt, Fun_kind.suffix_from_name id.name)) ;
-    (* Check that function args and loop identifiers are not modified in
-       function. (passed by const ref)*)
-    List.iter ~f:(Symbol_table.set_read_only vm) uarg_names ;
-    semantic_check_fundef_dist_rt ~loc id urt
-    |> apply_const (semantic_check_pdf_fundef_first_arg_ty ~loc id uarg_types)
-    |> apply_const (semantic_check_pmf_fundef_first_arg_ty ~loc id uarg_types)
-    >>= fun _ ->
-    (* WARNING: SIDE EFFECTING *)
-    Symbol_table.begin_scope vm ;
-    List.map ~f:(fun x -> check_fresh_variable x false) uarg_identifiers
-    |> sequence
-    |> apply_const (semantic_check_fundef_distinct_arg_ids ~loc uarg_names)
-    >>= fun _ ->
-    (* TODO: Bob was suggesting that function arguments must be allowed to
-        shadow user defined functions but not library functions.
-        Should we allow for that?
-    *)
-    (* We treat DataOnly arguments as if they are data and AutoDiffable arguments
-        as if they are parameters, for the purposes of type checking.
-    *)
-    (* WARNING: SIDE EFFECTING *)
-    let _ : unit Base.List.Or_unequal_lengths.t =
-      List.iter2 ~f:(Symbol_table.enter vm) uarg_names
-        (List.map
-           ~f:(function
-             | UnsizedType.DataOnly, ut -> (Data, ut)
-             | AutoDiffable, ut -> (Param, ut))
-           uarg_types)
-    and context =
-      let is_udf_dist name =
-        List.exists
-          ~f:(fun suffix -> String.is_suffix name ~suffix)
-          Utils.distribution_suffices
-      in
-      { cf with
-        in_fun_def= true
-      ; in_rng_fun_def= String.is_suffix id.name ~suffix:"_rng"
-      ; in_lp_fun_def= String.is_suffix id.name ~suffix:"_lp"
-      ; in_udf_dist_def= is_udf_dist id.name
-      ; in_returning_fun_def= urt <> Void }
+      ( Functions
+      , UFun (uarg_types, urt, (Fun_kind.suffix_from_name id.name, is_closure))
+      ) ;
+    let body', captures =
+      Symbol_table.with_capturing_scope vm (fun () ->
+          (* Check that function args and loop identifiers are not modified in
+             function. (passed by const ref)*)
+          List.iter ~f:(Symbol_table.set_read_only vm) uarg_names ;
+          semantic_check_fundef_dist_rt ~loc id urt
+          |> apply_const
+               (semantic_check_pdf_fundef_first_arg_ty ~loc id uarg_types)
+          |> apply_const
+               (semantic_check_pmf_fundef_first_arg_ty ~loc id uarg_types)
+          >>= fun () ->
+          List.map
+            ~f:(fun (_, ut, id) ->
+              match ut with
+              | UFun (uarg_types, _, (FnLpdf _, _)) ->
+                  check_fresh_variable id true
+                  |> apply_const
+                       (semantic_check_pdf_fundef_first_arg_ty ~loc:id.id_loc
+                          id uarg_types)
+                  |> apply_const
+                       (semantic_check_pmf_fundef_first_arg_ty ~loc:id.id_loc
+                          id uarg_types)
+              | UFun _ -> check_fresh_variable id true
+              | _ -> check_fresh_variable id false )
+            uargs
+          |> sequence
+          |> map ~f:(List.iter ~f:Fn.id)
+          |> apply_const
+               (semantic_check_fundef_distinct_arg_ids ~loc uarg_names)
+          >>= fun () ->
+          (* We treat DataOnly arguments as if they are data and AutoDiffable arguments
+             as if they are parameters, for the purposes of type checking. *)
+          (* WARNING: SIDE EFFECTING *)
+          List.iter2_exn ~f:(Symbol_table.enter vm) uarg_names
+            (List.map
+               ~f:(function
+                 | UnsizedType.DataOnly, ut -> (Data, ut)
+                 | AutoDiffable, ut -> (Param, ut))
+               uarg_types) ;
+          let context =
+            let is_udf_dist name =
+              List.exists
+                ~f:(fun suffix -> String.is_suffix name ~suffix)
+                Utils.distribution_suffices
+            in
+            { cf with
+              current_block= Functions
+            ; in_fun_def= true
+            ; in_rng_fun_def= String.is_suffix id.name ~suffix:"_rng"
+            ; in_lp_fun_def= String.is_suffix id.name ~suffix:"_lp"
+            ; in_udf_dist_def= is_udf_dist id.name
+            ; in_returning_fun_def= urt <> Void }
+          in
+          semantic_check_statement context body )
     in
-    let body' = semantic_check_statement context body in
-    body'
+    ( if is_closure && Set.mem captures id.name then
+      error (Semantic_error.recursive_closure id.id_loc)
+    else body' )
     >>= fun ub ->
     semantic_check_fundef_return_tys ~loc id urt ub
-    |> map ~f:(fun _ ->
-           (* WARNING: SIDE EFFECTING *)
-           Symbol_table.end_scope vm ;
+    |> map ~f:(fun () ->
+           let closure_info =
+             if is_closure then
+               let loc = id.id_loc.begin_loc in
+               Some
+                 ( Fmt.strf "%s_L%iC%i" id.name loc.line_num loc.col_num
+                 , Set.to_list captures
+                   |> List.filter_map ~f:(fun name ->
+                          match Symbol_table.look vm name with
+                          | None | Some (Functions, UFun (_, _, (_, false))) ->
+                              None
+                          | Some (block, type_) ->
+                              Symbol_table.set_read_only vm name ;
+                              Some
+                                ( calculate_capturetype cf block type_
+                                , calculate_autodifftype cf block type_
+                                , type_
+                                , name ) ) )
+             else None
+           in
            let stmt =
-             FunDef {returntype= urt; funname= id; arguments= uargs; body= ub}
+             FunDef
+               { returntype= urt
+               ; funname= id
+               ; captures= closure_info
+               ; arguments= uargs
+               ; body= ub }
            in
            mk_typed_statement ~return_type:NoReturnType ~loc ~stmt ))
 
@@ -1807,8 +1869,9 @@ and semantic_check_statement cf (s : Ast.untyped_statement) :
       ; is_global } ->
       semantic_check_var_decl ~loc ~cf st transformation identifier
         initial_value is_global
-  | FunDef {returntype; funname; arguments; body} ->
-      semantic_check_fundef ~loc ~cf returntype funname arguments body
+  | FunDef {returntype; funname; captures; arguments; body} ->
+      semantic_check_fundef ~loc ~cf ~is_closure:(is_some captures) returntype
+        funname arguments body
 
 (* == Untyped programs ====================================================== *)
 

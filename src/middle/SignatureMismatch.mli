@@ -5,6 +5,7 @@ type type_mismatch =
   | TypeMismatch of UnsizedType.t * UnsizedType.t * details option
 
 and details =
+  | ClosureError
   | SuffixMismatch of unit Fun_kind.suffix * unit Fun_kind.suffix
   | ReturnTypeMismatch of UnsizedType.returntype * UnsizedType.returntype
   | InputMismatch of function_mismatch

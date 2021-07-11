@@ -97,6 +97,7 @@ let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
     (get_function_calls_stmt ud_dists)
     (fun acc _ -> acc)
     (fun acc _ -> acc)
+    (fun acc _ -> acc)
     acc stmt.stmt
 
 let function_calls ppf p =

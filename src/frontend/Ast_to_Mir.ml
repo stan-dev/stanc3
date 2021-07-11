@@ -14,6 +14,7 @@ let trans_fn_kind kind name =
   match kind with
   | Ast.StanLib suffix -> Fun_kind.StanLib (fname, suffix)
   | UserDefined suffix -> UserDefined (fname, suffix)
+  | Closure suffix -> Closure (fname, suffix)
 
 let without_underscores = String.filter ~f:(( <> ) '_')
 
@@ -35,6 +36,8 @@ let%expect_test "format_number0" =
 let%expect_test "format_number1" =
   format_number ".123_456" |> print_endline ;
   [%expect ".123456"]
+
+let closures = ref String.Map.empty
 
 let rec op_to_funapp op args =
   let argtypes =
@@ -497,9 +500,9 @@ let unwrap_block_or_skip = function
 
 let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
   let stmt_typed = ts.stmt and smeta = ts.smeta.loc in
-  let trans_stmt = trans_stmt ud_dists {declc with dconstrain= None} in
+  let translate_stmt = trans_stmt ud_dists {declc with dconstrain= None} in
   let trans_single_stmt s =
-    match trans_stmt s with
+    match translate_stmt s with
     | [s] -> s
     | s -> Stmt.Fixed.{pattern= SList s; meta= smeta}
   in
@@ -633,7 +636,63 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
           ; meta= smeta }
       in
       Stmt.Helpers.[ensure_var (for_each bodyfn) iteratee' smeta]
-  | Ast.FunDef _ ->
+  | Ast.FunDef
+      { returntype
+      ; funname
+      ; captures= Some (implname, captures)
+      ; arguments
+      ; body } ->
+      let fdsuffix = Fun_kind.suffix_from_name funname.name in
+      if Map.find !closures implname = None then
+        closures :=
+          String.Map.add_exn !closures ~key:implname
+            ~data:
+              { Program.fdrt=
+                  ( match returntype with
+                  | Void -> None
+                  | ReturnType ut -> Some ut )
+              ; fdname= implname
+              ; fdsuffix=
+                  Fun_kind.(
+                    suffix_from_name funname.name |> map_suffix Fn.ignore)
+              ; fdcaptures=
+                  Some
+                    (List.map
+                       ~f:(fun (ref, ad, ty, id) -> (ref, ad, id, ty))
+                       captures)
+              ; fdargs= List.map ~f:trans_arg arguments
+              ; fdbody=
+                  trans_stmt ud_dists
+                    {dconstrain= None; dadlevel= AutoDiffable}
+                    body
+                  |> unwrap_block_or_skip
+              ; fdloc= ts.smeta.loc } ;
+      let arguments = List.map ~f:(fun (ad, ut, _) -> (ad, ut)) arguments in
+      let type_ = UnsizedType.UFun (arguments, returntype, (fdsuffix, true)) in
+      let captures =
+        List.map
+          ~f:(fun (_, adlevel, type_, id) ->
+            Expr.
+              { Fixed.pattern= Var id
+              ; meta= Typed.Meta.{adlevel; type_; loc= mloc} } )
+          captures
+      in
+      [ { pattern=
+            Decl
+              { decl_adtype= AutoDiffable
+              ; decl_id= funname.name
+              ; decl_type= Unsized type_ }
+        ; meta= smeta }
+      ; { pattern=
+            Assignment
+              ( (funname.name, type_, [])
+              , { pattern=
+                    FunApp
+                      ( CompilerInternal FnMakeClosure
+                      , Expr.Helpers.str implname :: captures )
+                ; meta= {type_; adlevel= AutoDiffable; loc= mloc} } )
+        ; meta= smeta } ]
+  | Ast.FunDef {captures= None; _} ->
       raise_s
         [%message
           "Found function definition statement outside of function block"]
@@ -642,9 +701,9 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
       trans_decl declc smeta decl_type
         (Program.map_transformation trans_expr transformation)
         identifier initial_value
-  | Ast.Block stmts -> Block (List.concat_map ~f:trans_stmt stmts) |> swrap
+  | Ast.Block stmts -> Block (List.concat_map ~f:translate_stmt stmts) |> swrap
   | Ast.Profile (name, stmts) ->
-      Profile (name, List.concat_map ~f:trans_stmt stmts) |> swrap
+      Profile (name, List.concat_map ~f:translate_stmt stmts) |> swrap
   | Ast.Return e -> Return (Some (trans_expr e)) |> swrap
   | Ast.ReturnVoid -> Return None |> swrap
   | Ast.Break -> Break |> swrap
@@ -653,13 +712,14 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
 
 let trans_fun_def ud_dists (ts : Ast.typed_statement) =
   match ts.stmt with
-  | Ast.FunDef {returntype; funname; arguments; body} ->
+  | Ast.FunDef {returntype; funname; captures= None; arguments; body} ->
       [ Program.
           { fdrt=
               (match returntype with Void -> None | ReturnType ut -> Some ut)
           ; fdname= funname.name
           ; fdsuffix=
               Fun_kind.(suffix_from_name funname.name |> without_propto)
+          ; fdcaptures= None
           ; fdargs= List.map ~f:trans_arg arguments
           ; fdbody=
               trans_stmt ud_dists
@@ -838,6 +898,7 @@ let migrate_checks_to_end_of_block stmts =
   not_checks @ checks
 
 let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
+  closures := String.Map.empty ;
   let {Ast.functionblock; datablock; transformeddatablock; modelblock; _} =
     p
   in
@@ -945,7 +1006,8 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
       "_" ^ prog_name
     else prog_name
   in
-  { functions_block= map (trans_fun_def ud_dists) functionblock
+  let functions = map (trans_fun_def ud_dists) functionblock in
+  { functions_block= functions @ List.map ~f:snd (Map.to_alist !closures)
   ; input_vars
   ; prepare_data
   ; log_prob
