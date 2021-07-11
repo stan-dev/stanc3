@@ -5,8 +5,6 @@ open Monotone_framework_sigs
 open Mir_utils
 open Middle
 
-let preserve_stability = false
-
 (** Debugging tool to print out MFP sets **)
 let print_mfp to_string (mfp : (int, 'a entry_exit) Map.Poly.t)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) : unit
@@ -294,7 +292,7 @@ let autodiff_level_lattice autodiff_variables =
                    let initial = autodiff_variables end)
 
 (* The transfer function for a constant propagation analysis *)
-let constant_propagation_transfer
+let constant_propagation_transfer ?(preserve_stability = false)
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t) =
   ( module struct
     type labels = int
@@ -340,7 +338,7 @@ let label_top_decls
 
 (** The transfer function for an expression propagation analysis,
     AKA forward substitution (see page 396 of Muchnick) *)
-let expression_propagation_transfer
+let expression_propagation_transfer ?(preserve_stability = false)
     (can_side_effect_expr : Middle.Expr.Typed.t -> bool)
     (flowgraph_to_mir : (int, Middle.Stmt.Located.Non_recursive.t) Map.Poly.t)
     =
