@@ -985,7 +985,7 @@ model {
   y ~ bernoulli_logit(x * beta_inferred + alpha_inferred);
 }
 
-Info: Found int division at 'bernoulli_logit_glm_old_performance.stan', line 10, column 19 to column 20:
+Warning in 'bernoulli_logit_glm_old_performance.stan', line 10, column 19: Found int division:
   j / M
 Values will be rounded towards zero. If rounding is not desired you can write
 the division as
@@ -1019,7 +1019,7 @@ model {
   y ~ bernoulli_logit_glm(x, alpha_inferred, beta_inferred);
 }
 
-Info: Found int division at 'bernoulli_logit_glm_performance.stan', line 10, column 19 to column 20:
+Warning in 'bernoulli_logit_glm_performance.stan', line 10, column 19: Found int division:
   j / M
 Values will be rounded towards zero. If rounding is not desired you can write
 the division as
@@ -3502,7 +3502,7 @@ model {
 
 }
 
-Info: Found int division at 'int_div_user.stan', line 7, column 6 to column 10:
+Warning in 'int_div_user.stan', line 7, column 6: Found int division:
   a[1] / b[2]
 Values will be rounded towards zero. If rounding is not desired you can write
 the division as
@@ -4187,7 +4187,7 @@ model {
   y ~ neg_binomial_2_log(x * beta_inferred + alpha_inferred, sigma);
 }
 
-Info: Found int division at 'neg_binomial_2_log_glm_old_performance.stan', line 11, column 19 to column 20:
+Warning in 'neg_binomial_2_log_glm_old_performance.stan', line 11, column 19: Found int division:
   j / M
 Values will be rounded towards zero. If rounding is not desired you can write
 the division as
@@ -4222,7 +4222,7 @@ model {
   y ~ neg_binomial_2_log_glm(x, alpha_inferred, beta_inferred, sigma);
 }
 
-Info: Found int division at 'neg_binomial_2_log_glm_performance.stan', line 11, column 19 to column 20:
+Warning in 'neg_binomial_2_log_glm_performance.stan', line 11, column 19: Found int division:
   j / M
 Values will be rounded towards zero. If rounding is not desired you can write
 the division as
@@ -4271,7 +4271,7 @@ model {
   y ~ normal(x * beta_inferred + alpha_inferred, sigma);
 }
 
-Info: Found int division at 'normal_id_glm_old_performance.stan', line 11, column 19 to column 20:
+Warning in 'normal_id_glm_old_performance.stan', line 11, column 19: Found int division:
   j / M
 Values will be rounded towards zero. If rounding is not desired you can write
 the division as
@@ -4306,7 +4306,7 @@ model {
   y ~ normal_id_glm(x, alpha_inferred, beta_inferred, sigma);
 }
 
-Info: Found int division at 'normal_id_glm_performance.stan', line 11, column 19 to column 20:
+Warning in 'normal_id_glm_performance.stan', line 11, column 19: Found int division:
   j / M
 Values will be rounded towards zero. If rounding is not desired you can write
 the division as
@@ -4514,7 +4514,7 @@ model {
   y ~ poisson_log(x * beta_inferred + alpha_inferred);
 }
 
-Info: Found int division at 'poisson_log_glm_old_performance.stan', line 10, column 19 to column 20:
+Warning in 'poisson_log_glm_old_performance.stan', line 10, column 19: Found int division:
   j / M
 Values will be rounded towards zero. If rounding is not desired you can write
 the division as
@@ -4548,7 +4548,7 @@ model {
   y ~ poisson_log_glm(x, alpha_inferred, beta_inferred);
 }
 
-Info: Found int division at 'poisson_log_glm_performance.stan', line 10, column 19 to column 20:
+Warning in 'poisson_log_glm_performance.stan', line 10, column 19: Found int division:
   j / M
 Values will be rounded towards zero. If rounding is not desired you can write
 the division as
@@ -5451,7 +5451,7 @@ model {
   y ~ normal(0, 1);
 }
 
-Info: Found int division at 'validate_division_good.stan', line 19, column 7 to column 8:
+Warning in 'validate_division_good.stan', line 19, column 7: Found int division:
   2 / 3
 Values will be rounded towards zero. If rounding is not desired you can write
 the division as
@@ -5473,7 +5473,7 @@ model {
   y ~ normal(0, 1);
 }
 
-Info: Found int division at 'validate_division_int_warning.stan', line 7, column 6 to column 7:
+Warning in 'validate_division_int_warning.stan', line 7, column 6: Found int division:
   j / k
 Values will be rounded towards zero. If rounding is not desired you can write
 the division as

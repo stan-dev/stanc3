@@ -1,9 +1,3 @@
-Info: Found int division at 'stan_models/python_kwrds.stan', line 13, column 12 to column 18:
-  lambda / 3
-Values will be rounded towards zero. If rounding is not desired you can write
-the division as
-  lambda / 3.0
-If rounding is intended please use the integer division operator %/%.
 
 import numpy as np__
 import tensorflow as tf__

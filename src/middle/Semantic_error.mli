@@ -38,17 +38,24 @@ val illtyped_reduce_sum :
      Location_span.t
   -> string
   -> UnsizedType.t list
-  -> Stan_math_signatures.fun_arg list
+  -> (UnsizedType.autodifftype * UnsizedType.t) list
+  -> SignatureMismatch.function_mismatch
   -> t
 
 val illtyped_reduce_sum_generic :
-  Location_span.t -> string -> UnsizedType.t list -> t
+     Location_span.t
+  -> string
+  -> UnsizedType.t list
+  -> (UnsizedType.autodifftype * UnsizedType.t) list
+  -> SignatureMismatch.function_mismatch
+  -> t
 
 val illtyped_variadic_ode :
      Location_span.t
   -> string
+  -> UnsizedType.t list
   -> (UnsizedType.autodifftype * UnsizedType.t) list
-  -> (UnsizedType.autodifftype * UnsizedType.t) list
+  -> SignatureMismatch.function_mismatch
   -> t
 
 val nonreturning_fn_expected_returning_found : Location_span.t -> string -> t
@@ -58,13 +65,18 @@ val nonreturning_fn_expected_undeclaredident_found :
   Location_span.t -> string -> t
 
 val illtyped_stanlib_fn_app :
-  Location_span.t -> string -> UnsizedType.t list -> t
+     Location_span.t
+  -> string
+  -> SignatureMismatch.signature_error list * bool
+  -> UnsizedType.t list
+  -> t
 
 val illtyped_userdefined_fn_app :
      Location_span.t
   -> string
-  -> Stan_math_signatures.fun_arg list
+  -> (UnsizedType.autodifftype * UnsizedType.t) list
   -> UnsizedType.returntype
+  -> SignatureMismatch.function_mismatch
   -> UnsizedType.t list
   -> t
 
