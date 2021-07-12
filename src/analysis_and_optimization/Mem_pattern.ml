@@ -227,7 +227,7 @@ and modify_stmt (mem_pattern : Common.Helpers.mem_pattern)
  **)
 let check_names (base_set : string Set.Poly.t) (alt_set : string Set.Poly.t) :
     bool =
-    Set.Poly.is_empty alt_set || not (Set.Poly.is_subset alt_set ~of_:base_set)
+  Set.Poly.is_empty alt_set || not (Set.Poly.is_subset alt_set ~of_:base_set)
 
 (* Look through a statement to see whether it needs modified from
  * SoA to AoS. Returns the set of object names that need demoted
