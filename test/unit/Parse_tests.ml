@@ -134,7 +134,7 @@ let%expect_test "parse indices, two different colons" =
             (VarDecl
              (decl_type
               (Sized
-               (SMatrix SoA ((expr (IntNumeral 5)) (emeta ((loc <opaque>))))
+               (SMatrix AoS ((expr (IntNumeral 5)) (emeta ((loc <opaque>))))
                 ((expr (IntNumeral 5)) (emeta ((loc <opaque>)))))))
              (transformation Identity) (identifier ((name x) (id_loc <opaque>)))
              (initial_value ()) (is_global false)))

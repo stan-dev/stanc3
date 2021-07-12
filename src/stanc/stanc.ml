@@ -215,7 +215,7 @@ let use_file filename =
     else if !warn_uninitialized then
       Pedantic_analysis.warn_uninitialized mir
       |> pp_stderr (Warnings.pp_warnings ?printed_filename) ;
-    let tx_mir = Transform_Mir.trans_prog mir in
+    let tx_mir = Optimize.optimize_soa (Transform_Mir.trans_prog mir) in
     if !dump_tx_mir then
       Sexp.pp_hum Format.std_formatter
         [%sexp (tx_mir : Middle.Program.Typed.t)] ;

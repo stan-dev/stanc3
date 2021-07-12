@@ -12,7 +12,7 @@ let unwrap_return_exn = function
 let trans_fn_kind kind name =
   let fname = Utils.stdlib_distribution_name name in
   match kind with
-  | Ast.StanLib suffix -> Fun_kind.StanLib (fname, suffix, Common.Helpers.SoA)
+  | Ast.StanLib suffix -> Fun_kind.StanLib (fname, suffix, Common.Helpers.AoS)
   | UserDefined suffix -> UserDefined (fname, suffix)
 
 let without_underscores = String.filter ~f:(( <> ) '_')
@@ -48,7 +48,7 @@ let rec op_to_funapp op args =
   Expr.
     { Fixed.pattern=
         FunApp
-          ( StanLib (Operator.to_string op, FnPlain, Common.Helpers.SoA)
+          ( StanLib (Operator.to_string op, FnPlain, Common.Helpers.AoS)
           , trans_exprs args )
     ; meta= Expr.Typed.Meta.create ~type_ ~adlevel ~loc () }
 
@@ -78,7 +78,7 @@ and trans_expr {Ast.expr; Ast.emeta} =
     ->
       FunApp (trans_fn_kind fn_kind name, trans_exprs args) |> ewrap
   | GetLP | GetTarget ->
-      FunApp (StanLib ("target", FnTarget, Common.Helpers.SoA), []) |> ewrap
+      FunApp (StanLib ("target", FnTarget, Common.Helpers.AoS), []) |> ewrap
   | ArrayExpr eles ->
       FunApp (CompilerInternal FnMakeArray, trans_exprs eles) |> ewrap
   | RowVectorExpr eles ->
@@ -250,7 +250,7 @@ let same_shape decl_id decl_var id var meta =
     [ Stmt.
         { Fixed.pattern=
             NRFunApp
-              ( StanLib ("check_matching_dims", FnPlain, Common.Helpers.SoA)
+              ( StanLib ("check_matching_dims", FnPlain, Common.Helpers.AoS)
               , Expr.Helpers.
                   [str "constraint"; str decl_id; decl_var; str id; var] )
         ; meta } ]
@@ -569,7 +569,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
         in
         if List.exists ~f:(fun (n, _) -> Set.mem possible_names n) ud_dists
         then Fun_kind.UserDefined (name, FnLpdf true)
-        else StanLib (name, FnLpdf true, Common.Helpers.SoA)
+        else StanLib (name, FnLpdf true, Common.Helpers.AoS)
       in
       let add_dist =
         Stmt.Fixed.Pattern.TargetPE
@@ -744,7 +744,7 @@ let trans_sizedtype_decl declc tr name =
                       ( StanLib
                           ( "check_greater_or_equal"
                           , FnPlain
-                          , Common.Helpers.SoA )
+                          , Common.Helpers.AoS )
                       , Expr.Helpers.
                           [ str ("cholesky_factor_cov " ^ name)
                           ; str
@@ -931,7 +931,7 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
   in
   let iexpr pattern = Expr.{pattern; Fixed.meta= Typed.Meta.empty} in
   let fnot e =
-    FunApp (StanLib (Operator.to_string PNot, FnPlain, Common.Helpers.SoA), [e])
+    FunApp (StanLib (Operator.to_string PNot, FnPlain, Common.Helpers.AoS), [e])
     |> iexpr
   in
   let tparam_early_return =

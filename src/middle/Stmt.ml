@@ -290,7 +290,7 @@ module Helpers = struct
             { meta= emeta'
             ; pattern=
                 FunApp
-                  (StanLib ("rows", FnPlain, Common.Helpers.SoA), [iteratee])
+                  (StanLib ("rows", FnPlain, Common.Helpers.AoS), [iteratee])
             }
         in
         mkfor rows (fun e -> for_each bodyfn e smeta) iteratee smeta

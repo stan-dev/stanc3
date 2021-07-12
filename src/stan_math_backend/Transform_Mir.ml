@@ -237,7 +237,9 @@ let param_read smeta
       Expr.(
         Helpers.(
           internal_funapp
-            (FnReadParam (constraint_to_string out_trans Constrain))
+            (FnReadParam
+               ( constraint_to_string out_trans Constrain
+               , SizedType.get_mem_pattern cst ))
             ( transform_args
             @ ( if out_trans = Identity then []
               else [{decl_var with pattern= Var "lp__"}] )
@@ -688,5 +690,4 @@ let trans_prog (p : Program.Typed.t) =
   Program.(
     p
     |> map Fn.id ensure_body_in_block
-    |> map_prog_stmt_lists flatten_slists_list
-    |> Mem_pattern.eval_prog)
+    |> map_prog_stmt_lists flatten_slists_list)

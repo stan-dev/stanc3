@@ -54,6 +54,8 @@ val optimize_ad_levels : Program.Typed.t -> Program.Typed.t
     variables only ever get treated as autodiff variables if they have some
     dependency on a parameter *)
 
+val optimize_soa : Program.Typed.t -> Program.Typed.t
+
 (** Interface for turning individual optimizations on/off. Useful for testing
     and for top-level interface flags. *)
 type optimization_settings =

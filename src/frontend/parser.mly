@@ -376,11 +376,11 @@ sized_basic_type:
   | REAL
     { grammar_logger "REAL_var_type" ; (SizedType.SReal, Identity) }
   | VECTOR LBRACK e=expression RBRACK
-    { grammar_logger "VECTOR_var_type" ; (SizedType.SVector (SoA, e), Identity) }
+    { grammar_logger "VECTOR_var_type" ; (SizedType.SVector (AoS, e), Identity) }
   | ROWVECTOR LBRACK e=expression RBRACK
-    { grammar_logger "ROWVECTOR_var_type" ; (SizedType.SRowVector (SoA, e) , Identity) }
+    { grammar_logger "ROWVECTOR_var_type" ; (SizedType.SRowVector (AoS, e) , Identity) }
   | MATRIX LBRACK e1=expression COMMA e2=expression RBRACK
-    { grammar_logger "MATRIX_var_type" ; (SizedType.SMatrix (SoA, e1, e2), Identity) }
+    { grammar_logger "MATRIX_var_type" ; (SizedType.SMatrix (AoS, e1, e2), Identity) }
 
 top_var_type:
   | INT r=range_constraint
@@ -388,38 +388,38 @@ top_var_type:
   | REAL c=type_constraint
     { grammar_logger "REAL_top_var_type" ; (SReal, c) }
   | VECTOR c=type_constraint LBRACK e=expression RBRACK
-    { grammar_logger "VECTOR_top_var_type" ; (SVector (SoA, e), c) }
+    { grammar_logger "VECTOR_top_var_type" ; (SVector (AoS, e), c) }
   | ROWVECTOR c=type_constraint LBRACK e=expression RBRACK
-    { grammar_logger "ROWVECTOR_top_var_type" ; (SRowVector (SoA, e), c) }
+    { grammar_logger "ROWVECTOR_top_var_type" ; (SRowVector (AoS, e), c) }
   | MATRIX c=type_constraint LBRACK e1=expression COMMA e2=expression RBRACK
-    { grammar_logger "MATRIX_top_var_type" ; (SMatrix (SoA, e1, e2), c) }
+    { grammar_logger "MATRIX_top_var_type" ; (SMatrix (AoS, e1, e2), c) }
   | ORDERED LBRACK e=expression RBRACK
-    { grammar_logger "ORDERED_top_var_type" ; (SVector (SoA, e), Ordered) }
+    { grammar_logger "ORDERED_top_var_type" ; (SVector (AoS, e), Ordered) }
   | POSITIVEORDERED LBRACK e=expression RBRACK
     {
       grammar_logger "POSITIVEORDERED_top_var_type" ;
-      (SVector (SoA, e), PositiveOrdered)
+      (SVector (AoS, e), PositiveOrdered)
     }
   | SIMPLEX LBRACK e=expression RBRACK
-    { grammar_logger "SIMPLEX_top_var_type" ; (SVector (SoA, e), Simplex) }
+    { grammar_logger "SIMPLEX_top_var_type" ; (SVector (AoS, e), Simplex) }
   | UNITVECTOR LBRACK e=expression RBRACK
-    { grammar_logger "UNITVECTOR_top_var_type" ; (SVector (SoA, e), UnitVector) }
+    { grammar_logger "UNITVECTOR_top_var_type" ; (SVector (AoS, e), UnitVector) }
   | CHOLESKYFACTORCORR LBRACK e=expression RBRACK
     {
       grammar_logger "CHOLESKYFACTORCORR_top_var_type" ;
-      (SMatrix (SoA, e, e), CholeskyCorr)
+      (SMatrix (AoS, e, e), CholeskyCorr)
     }
   | CHOLESKYFACTORCOV LBRACK e1=expression oe2=option(pair(COMMA, expression))
     RBRACK
     {
       grammar_logger "CHOLESKYFACTORCOV_top_var_type" ;
-      match oe2 with Some (_,e2) -> ( SMatrix (SoA, e1, e2), CholeskyCov)
-                   | _           ->  (SMatrix (SoA, e1, e1),  CholeskyCov)
+      match oe2 with Some (_,e2) -> ( SMatrix (AoS, e1, e2), CholeskyCov)
+                   | _           ->  (SMatrix (AoS, e1, e1),  CholeskyCov)
     }
   | CORRMATRIX LBRACK e=expression RBRACK
-    { grammar_logger "CORRMATRIX_top_var_type" ; (SMatrix (SoA, e, e), Correlation) }
+    { grammar_logger "CORRMATRIX_top_var_type" ; (SMatrix (AoS, e, e), Correlation) }
   | COVMATRIX LBRACK e=expression RBRACK
-    { grammar_logger "COVMATRIX_top_var_type" ; (SMatrix (SoA, e, e), Covariance) }
+    { grammar_logger "COVMATRIX_top_var_type" ; (SMatrix (AoS, e, e), Covariance) }
 
 type_constraint:
   | r=range_constraint
