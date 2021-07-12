@@ -222,17 +222,12 @@ and modify_stmt (mem_pattern : Common.Helpers.mem_pattern)
   {stmt with pattern= modify_stmt_pattern mem_pattern pattern modifiable_set}
 
 (**
- * Check one set against a base set to validate if anything in the set is 
- * in the base set.
+ * Check one set against a base set to validate if anything in the set is
+ * not in the base set.
  **)
 let check_names (base_set : string Set.Poly.t) (alt_set : string Set.Poly.t) :
     bool =
-  let inter_set = Set.Poly.inter base_set alt_set in
-  let check_single_names (x : string) = Set.Poly.mem inter_set x in
-  Set.Poly.is_empty inter_set
-  || not (Set.Poly.for_all ~f:check_single_names alt_set)
-
-(*let printer intro s = Set.Poly.iter ~f:(printf intro) s*)
+    Set.Poly.is_empty alt_set || not (Set.Poly.is_subset alt_set ~of_:base_set)
 
 (* Look through a statement to see whether it needs modified from
  * SoA to AoS. Returns the set of object names that need demoted
