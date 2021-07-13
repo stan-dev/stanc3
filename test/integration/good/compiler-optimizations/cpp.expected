@@ -12531,7 +12531,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         }
       } 
       current_statement__ = 9;
-      check_simplex(function__, "b", lcm_sym222__);
+      check_simplex(function__, "b", stan::math::value_of(lcm_sym222__));
       current_statement__ = 10;
       if (lcm_sym226__) {
         current_statement__ = 10;

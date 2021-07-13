@@ -373,11 +373,22 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
       pf ppf "%a@," (list ~sep:cut add_to_string) args ;
       pf ppf "throw std::domain_error(%s.str());" err_strm
   | NRFunApp (CompilerInternal (FnCheck check_name), args) ->
+      (*
       let function_arg =
         {Expr.Fixed.pattern= Var "function__"; meta= Expr.Typed.Meta.empty}
       in
-      pf ppf "%s(@[<hov>%a@]);" ("check_" ^ check_name)
-        (list ~sep:comma pp_expr) (function_arg :: args)
+      *)
+      let pp_eigen_value_of ppf arg =
+        match
+          UnsizedType.is_eigen_type (Expr.Typed.type_of arg)
+          && Expr.Typed.adlevel_of arg = UnsizedType.AutoDiffable
+        with
+        | false -> pf ppf "%a" pp_expr arg
+        | true -> pf ppf "stan::math::value_of(%a)" pp_expr arg
+      in
+      pf ppf "%s(@[<hov>%s, %a@]);" ("check_" ^ check_name) "function__"
+        (list ~sep:comma pp_eigen_value_of)
+        args
   | NRFunApp (CompilerInternal FnWriteParam, [var]) ->
       pf ppf "@[<hov 2>vars__.emplace_back(@,%a);@]" pp_expr var
   | NRFunApp (CompilerInternal f, args) ->
