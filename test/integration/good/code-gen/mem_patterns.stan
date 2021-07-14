@@ -24,6 +24,7 @@ parameters {
   row_vector[N] p_soa_lhs_loop_mul;
   vector[N] p_soa_rhs_loop_mul;
   vector[N] p_soa_used_with_aos_in_excluded_fun;
+  vector[N] p_soa_rep_matrix_vec;
   // Should not be SoA
     // because of failed function
   vector[M] p_aos_vec_v_assign_to_aos;
@@ -56,6 +57,7 @@ transformed parameters {
   tp_aos_fail_func_vec_v[1] = p_soa_vec_v[1];
   // Should fail
   vector[M] tp_aos_fail_assign_from_top_idx;
+  matrix[N, 10] tp_soa_rep_matrix_mat = rep_matrix(p_soa_rep_matrix_vec, 10);
   tp_aos_fail_assign_from_top_idx[1:] = p_aos_fail_assign_from_top_idx[1:];
 }
 
