@@ -58,6 +58,7 @@ transformed parameters {
   // Should fail
   vector[M] tp_aos_fail_assign_from_top_idx;
   matrix[N, 10] tp_soa_rep_matrix_mat = rep_matrix(p_soa_rep_matrix_vec, 10);
+  matrix[N, 10] tp_soa_rep_matrix_from_data_mat = rep_matrix(y, 10);
   tp_aos_fail_assign_from_top_idx[1:] = p_aos_fail_assign_from_top_idx[1:];
 }
 
