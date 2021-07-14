@@ -55,8 +55,7 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
-      int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      int pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
       current_statement__ = 1;
@@ -155,8 +154,7 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
     int current_statement__ = 0; 
     
     try {
-      int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      int pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
     } catch (const std::exception& e) {

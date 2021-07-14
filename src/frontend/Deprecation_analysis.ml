@@ -20,7 +20,7 @@ let deprecated_odes =
 let deprecated_distributions =
   String.Map.of_alist_exn
     (List.concat_map Middle.Stan_math_signatures.distributions
-       ~f:(fun (fnkinds, name, _) ->
+       ~f:(fun (fnkinds, name, _, _) ->
          List.filter_map fnkinds ~f:(function
            | Lpdf -> Some (name ^ "_log", name ^ "_lpdf")
            | Lpmf -> Some (name ^ "_log", name ^ "_lpmf")

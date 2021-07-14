@@ -288,7 +288,10 @@ module Helpers = struct
         let rows =
           Expr.Fixed.
             { meta= emeta'
-            ; pattern= FunApp (StanLib ("rows", FnPlain), [iteratee]) }
+            ; pattern=
+                FunApp
+                  (StanLib ("rows", FnPlain, Common.Helpers.AoS), [iteratee])
+            }
         in
         mkfor rows (fun e -> for_each bodyfn e smeta) iteratee smeta
     | UArray _ -> mkfor (len iteratee) bodyfn iteratee smeta
@@ -335,10 +338,13 @@ module Helpers = struct
   let rec for_scalar st bodyfn var smeta =
     match st with
     | SizedType.SInt | SReal -> bodyfn var
-    | SVector d | SRowVector d -> mkfor d bodyfn var smeta
-    | SMatrix (d1, d2) ->
-        mkfor d1 (fun e -> for_scalar (SRowVector d2) bodyfn e smeta) var smeta
-    | SArray (t, d) -> mkfor d (fun e -> for_scalar t bodyfn e smeta) var smeta
+    | SVector (_, dim) | SRowVector (_, dim) -> mkfor dim bodyfn var smeta
+    | SMatrix (mem_type, dim1, dim2) ->
+        mkfor dim1
+          (fun e -> for_scalar (SRowVector (mem_type, dim2)) bodyfn e smeta)
+          var smeta
+    | SArray (t, dim) ->
+        mkfor dim (fun e -> for_scalar t bodyfn e smeta) var smeta
 
   (** Exactly like for_scalar, but iterating through array dimensions in the
   inverted order.*)
@@ -355,9 +361,9 @@ module Helpers = struct
       | SizedType.SArray (t, d) ->
           let bodyfn' var = mkfor d bodyfn var smeta in
           go t bodyfn' var smeta
-      | SMatrix (d1, d2) ->
-          let bodyfn' var = mkfor d1 bodyfn var smeta in
-          go (SRowVector d2) bodyfn' var smeta
+      | SMatrix (mem_type, row_expr, col_expr) ->
+          let bodyfn' var = mkfor row_expr bodyfn var smeta in
+          go (SRowVector (mem_type, col_expr)) bodyfn' var smeta
       | _ -> for_scalar st bodyfn var smeta
     in
     go st (Fn.compose bodyfn invert_index_order) var smeta

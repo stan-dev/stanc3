@@ -67,7 +67,8 @@ type typed_expression = (typed_expr_meta, fun_kind) expr_with
 
 let mk_untyped_expression ~expr ~loc = {expr; emeta= {loc}}
 
-let mk_typed_expression ~expr ~loc ~type_ ~ad_level =
+let mk_typed_expression ~expr ~(loc : Location_span.t) ~(type_ : UnsizedType.t)
+    ~(ad_level : UnsizedType.autodifftype) =
   {expr; emeta= {loc; type_; ad_level}}
 
 let expr_loc_lub exprs =
@@ -77,7 +78,7 @@ let expr_loc_lub exprs =
   | x1 :: tl -> List.fold ~init:x1 ~f:Location_span.merge tl
 
 (** Least upper bound of expression autodiff types *)
-let expr_ad_lub exprs =
+let expr_ad_lub (exprs : typed_expression list) =
   exprs |> List.map ~f:(fun x -> x.emeta.ad_level) |> UnsizedType.lub_ad_type
 
 (** Assignment operators *)
@@ -243,7 +244,8 @@ let rec untyped_lvalue_of_typed_lvalue ({lval; lmeta} : typed_lval) :
   ; lmeta= {loc= lmeta.loc} }
 
 (** Forgetful function from typed to untyped statements *)
-let rec untyped_statement_of_typed_statement {stmt; smeta} =
+let rec untyped_statement_of_typed_statement ({stmt; smeta} : typed_statement)
+    =
   { stmt=
       map_statement untyped_expression_of_typed_expression
         untyped_statement_of_typed_statement untyped_lvalue_of_typed_lvalue
@@ -255,18 +257,18 @@ let rec untyped_statement_of_typed_statement {stmt; smeta} =
 let untyped_program_of_typed_program : typed_program -> untyped_program =
   map_program untyped_statement_of_typed_statement
 
-let rec expr_of_lvalue {lval; lmeta} =
+let rec expr_of_lvalue ({lval; lmeta} : ('e, 'm) lval_with) =
   { expr=
       ( match lval with
       | LVariable s -> Variable s
       | LIndexed (l, i) -> Indexed (expr_of_lvalue l, i) )
   ; emeta= lmeta }
 
-let rec lvalue_of_expr {expr; emeta} =
+let rec lvalue_of_expr ({expr; emeta} : ('m, 'f) expr_with) =
   { lval=
       ( match expr with
       | Variable s -> LVariable s
-      | Indexed (l, i) -> LIndexed (lvalue_of_expr l, i)
+      | Indexed ((l : ('a, 'b) expr_with), i) -> LIndexed (lvalue_of_expr l, i)
       | _ -> failwith "Trying to convert illegal expression to lval." )
   ; lmeta= emeta }
 

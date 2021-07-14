@@ -14,7 +14,7 @@ type 'a fun_def =
       (* If fdbody is None, this is a function declaration without body. *)
   ; fdbody: 'a option
   ; fdloc: Location_span.t sexp_opaque [@compare.ignore] }
-[@@deriving compare, hash, map, sexp, map, fold]
+[@@deriving compare, hash, map, sexp, fold]
 
 type io_block = Parameters | TransformedParameters | GeneratedQuantities
 [@@deriving sexp, hash]
@@ -69,28 +69,29 @@ let pp_fun_arg_decl ppf (autodifftype, name, unsizedtype) =
   Fmt.pf ppf "%a%a %s" UnsizedType.pp_autodifftype autodifftype UnsizedType.pp
     unsizedtype name
 
-let pp_fun_def pp_s ppf = function
-  | {fdrt; fdname; fdargs; fdbody; _} -> (
-      let pp_body_opt ppf = function
-        | None -> Fmt.pf ppf ";"
-        | Some body -> pp_s ppf body
-      in
-      match fdrt with
-      | Some rt ->
-          Fmt.pf ppf {|@[<v2>%a %s%a {@ %a@]@ }|} UnsizedType.pp rt fdname
-            Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
-            fdargs pp_body_opt fdbody
-      | None ->
-          Fmt.pf ppf {|@[<v2>%s %s%a {@ %a@]@ }|} "void" fdname
-            Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
-            fdargs pp_body_opt fdbody )
+let pp_fun_def pp_s ppf fun_def =
+  match fun_def with {fdrt; fdname; fdargs; fdbody; _} -> (
+    let pp_body_opt ppf = function
+      | None -> Fmt.pf ppf ";"
+      | Some body -> pp_s ppf body
+    in
+    match fdrt with
+    | Some rt ->
+        Fmt.pf ppf {|@[<v2>%a %s%a {@ %a@]@ }|} UnsizedType.pp rt fdname
+          Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
+          fdargs pp_body_opt fdbody
+    | None ->
+        Fmt.pf ppf {|@[<v2>%s %s%a {@ %a@]@ }|} "void" fdname
+          Fmt.(list pp_fun_arg_decl ~sep:comma |> parens)
+          fdargs pp_body_opt fdbody )
 
 let pp_io_block ppf = function
   | Parameters -> Fmt.string ppf "parameters"
   | TransformedParameters -> Fmt.string ppf "transformed_parameters"
   | GeneratedQuantities -> Fmt.string ppf "generated_quantities"
 
-let pp_block label pp_elem ppf = function
+let pp_block label pp_elem ppf block =
+  match block with
   | [] -> ()
   | elems ->
       Fmt.pf ppf {|@[<v2>%a {@ %a@]@ }|} pp_keyword label

@@ -5,14 +5,14 @@ module Fixed : sig
   module Pattern : sig
     type litType = Int | Real | Str [@@deriving sexp, hash, compare]
 
-    type 'a t =
+    type 'expr t =
       | Var of string
       | Lit of litType * string
-      | FunApp of Fun_kind.t * 'a list
-      | TernaryIf of 'a * 'a * 'a
-      | EAnd of 'a * 'a
-      | EOr of 'a * 'a
-      | Indexed of 'a * 'a Index.t list
+      | FunApp of Fun_kind.t * 'expr list
+      | TernaryIf of 'expr * 'expr * 'expr
+      | EAnd of 'expr * 'expr
+      | EOr of 'expr * 'expr
+      | Indexed of 'expr * 'expr Index.t list
     [@@deriving sexp, hash, compare]
 
     include Pattern.S with type 'a t := 'a t

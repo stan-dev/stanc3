@@ -51,7 +51,10 @@ let opencl_supported_functions =
 let opencl_suffix = "_opencl__"
 
 let to_matrix_cl e =
-  Expr.Fixed.{e with pattern= FunApp (StanLib ("to_matrix_cl", FnPlain), [e])}
+  Expr.Fixed.
+    { e with
+      pattern=
+        FunApp (StanLib ("to_matrix_cl", FnPlain, Common.Helpers.AoS), [e]) }
 
 let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
     =
@@ -78,9 +81,11 @@ let rec switch_expr_to_opencl available_cl_vars (Expr.Fixed.({pattern; _}) as e)
   in
   let is_fn_opencl_supported f = Set.mem opencl_supported_functions f in
   match pattern with
-  | FunApp (StanLib (f, sfx), args) when is_fn_opencl_supported f ->
+  | FunApp (StanLib (f, sfx, mem_type), args) when is_fn_opencl_supported f ->
       let trigger = Map.find opencl_trigger_restrictions f in
-      {e with pattern= FunApp (StanLib (f, sfx), maybe_map_args args trigger)}
+      { e with
+        pattern=
+          FunApp (StanLib (f, sfx, mem_type), maybe_map_args args trigger) }
   | x ->
       { e with
         pattern=
@@ -218,8 +223,8 @@ let param_read smeta
     let rec constrain_get_dims st =
       match st with
       | SizedType.SInt | SReal -> []
-      | SVector d | SRowVector d -> [d]
-      | SMatrix (_, dim2) -> [dim2]
+      | SVector (_, size) | SRowVector (_, size) -> [size]
+      | SMatrix (_, _, col_expr) -> [col_expr]
       | SArray (t, dim) -> dim :: constrain_get_dims t
     in
     let read_constrain_dims constrain_transform st =
@@ -232,7 +237,9 @@ let param_read smeta
       Expr.(
         Helpers.(
           internal_funapp
-            (FnReadParam (constraint_to_string out_trans Constrain))
+            (FnReadParam
+               ( constraint_to_string out_trans Constrain
+               , SizedType.get_mem_pattern cst ))
             ( transform_args
             @ ( if out_trans = Identity then []
               else [{decl_var with pattern= Var "lp__"}] )
@@ -453,8 +460,10 @@ let rec map_fn_names s =
     let pattern =
       Expr.Fixed.(
         match e.pattern with
-        | FunApp (StanLib (f, sfx), a) when Map.mem fn_name_map f ->
-            Pattern.FunApp (StanLib (Map.find_exn fn_name_map f, sfx), a)
+        | FunApp (StanLib (f, sfx, mem_type), (a : 'a Expr.Fixed.t list))
+          when Map.mem fn_name_map f ->
+            Pattern.FunApp
+              (StanLib (Map.find_exn fn_name_map f, sfx, mem_type), a)
         | expr -> Pattern.map map_fn_names_expr expr)
     in
     {e with pattern}
@@ -462,8 +471,9 @@ let rec map_fn_names s =
   let stmt =
     Stmt.Fixed.(
       match s.pattern with
-      | NRFunApp (StanLib (f, sfx), a) when Map.mem fn_name_map f ->
-          Pattern.NRFunApp (StanLib (Map.find_exn fn_name_map f, sfx), a)
+      | NRFunApp (StanLib (f, sfx, mem_type), a) when Map.mem fn_name_map f ->
+          Pattern.NRFunApp
+            (StanLib (Map.find_exn fn_name_map f, sfx, mem_type), a)
       | stmt -> Pattern.map map_fn_names_expr map_fn_names stmt)
   in
   {s with pattern= stmt}
@@ -497,7 +507,8 @@ let%expect_test "collect vars expr" =
   let args = List.map ~f:mkvar ["y"; "x_opencl__"; "z"; "w_opencl__"] in
   let fnapp =
     Expr.
-      { Fixed.pattern= FunApp (StanLib ("print", FnPlain), args)
+      { Fixed.pattern=
+          FunApp (StanLib ("print", FnPlain, Common.Helpers.AoS), args)
       ; meta= Typed.Meta.empty }
   in
   Stmt.Fixed.{pattern= TargetPE fnapp; meta= Location_span.empty}
