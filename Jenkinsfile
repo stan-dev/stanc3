@@ -67,14 +67,14 @@ pipeline {
                         runShell("""
                             sudo apk add docker
                         """)
-                        runShell("""
+                        echo runShell("""
                             cat scripts/setup_multiarch_docker.sh | sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye /bin/bash
                         """)
 
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --profile static --verbose
-                        """)
+                        //echo runShell("""
+                        //    eval \$(opam env)
+                        //    time dune runtest --profile static --verbose
+                        //""")
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
                         sh "mv `find _build -name stan2tfp.exe` bin/linux-armhf-stan2tfp"
