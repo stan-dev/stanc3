@@ -132,7 +132,7 @@ pipeline {
                         dockerfile {
                             filename 'docker/static/Dockerfile'
                             //Forces image to ignore entrypoint
-                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`:/stanc3"
+                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock -v \${PWD}:/stanc3"
                         }
                     }
                     steps {
