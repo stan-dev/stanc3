@@ -68,8 +68,7 @@ pipeline {
                             sudo apk add docker
                         """)
                         runShell("""
-                            sudo apk add docker
-                            sudo docker run --rm -it --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye /bin/bash << EOF
+                            sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye /bin/bash << EOF
 
                             apt update 
                             apt install opam bzip2 git tar curl ca-certificates openssl m4 bash -y
