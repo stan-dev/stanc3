@@ -137,6 +137,7 @@ pipeline {
                     }
                     steps {
                         runShell("""
+                            sudo apk add docker
                             sudo docker run --rm -it --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye
 
                             apt update 
