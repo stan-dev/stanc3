@@ -68,8 +68,7 @@ pipeline {
                             sudo apk add docker
                         """)
                         runShell("""
-                            cd /stanc3
-                            cat scripts/setup_multiarch_docker.sh | sudo docker run --rm -it --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye /bin/bash
+                            cat scripts/setup_multiarch_docker.sh | sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye /bin/bash
                         """)
 
                         echo runShell("""
