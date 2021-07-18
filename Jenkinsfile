@@ -68,13 +68,12 @@ pipeline {
                             sudo apk add docker
                         """)
                         echo runShell("""
-                            sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye /bin/bash -c "apt update; apt install opam bzip2 git tar curl ca-certificates openssl m4 bash -y; opam init --disable-sandboxing -y; opam switch create 4.07.0; opam switch 4.07.0; eval \$(opam env); opam repo add internet https://opam.ocaml.org; cd /stanc3; bash -x scripts/install_build_deps.sh; dune build @install --profile static; exit"
-                        """)
+                            sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye /bin/bash < scripts/setup_multiarch_docker.sh"")
 
-                        //echo runShell("""
-                        //    eval \$(opam env)
-                        //    time dune runtest --profile static --verbose
-                        //""")
+                        echo runShell("""
+                            eval \$(opam env)
+                            time dune runtest --profile static --verbose
+                        """)
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
                         sh "mv `find _build -name stan2tfp.exe` bin/linux-armhf-stan2tfp"
