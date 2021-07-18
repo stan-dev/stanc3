@@ -327,6 +327,45 @@ pipeline {
                     }
                     post {always { runShell("rm -rf ./*")}}
                 }
+                stage("Build & test a static Linux armhf binary") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/static/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock -v \$(pwd):/stanc3"
+                        }
+                    }
+                    steps {
+                        runShell("""
+                            sudo docker run --rm -it --volumes-from=\$(sudo docker ps -q):rw multiarch/debian-debootstrap:armhf-bullseye
+
+                            apt update 
+                            apt install opam bzip2 git tar curl ca-certificates openssl m4 bash -y
+
+                            opam init --disable-sandboxing -y
+                            opam switch create 4.07.0
+                            opam switch 4.07.0
+                            eval \$(opam env)
+                            opam repo add internet https://opam.ocaml.org
+
+                            cd /stanc3
+                            bash -x scripts/install_build_deps.sh
+                            dune build @install --profile static
+                            exit
+                        """)
+
+                        echo runShell("""
+                            eval \$(opam env)
+                            time dune runtest --profile static --verbose
+                        """)
+
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
+                        sh "mv `find _build -name stan2tfp.exe` bin/linux-armhf-stan2tfp"
+
+                        stash name:'linux-armhf-exe', includes:'bin/*'
+                    }
+                    post {always { runShell("rm -rf ./*")}}
+                }
 
                 stage("Build & test a static Linux ARM binary") {
                     when { anyOf { buildingTag(); branch 'master' } }
