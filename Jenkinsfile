@@ -68,7 +68,8 @@ pipeline {
                             sudo apk add docker
                         """)
                         echo runShell("""
-                            sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye /bin/bash < scripts/setup_multiarch_docker.sh"")
+                            sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye /bin/bash < scripts/setup_multiarch_docker.sh
+                        """)
 
                         echo runShell("""
                             eval \$(opam env)
