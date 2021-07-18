@@ -55,78 +55,6 @@ pipeline {
         stage("Build and test static release binaries") {
             failFast true
             parallel {
-
-                stage("Build & test Mac OS X binary") {
-                    agent { label "osx && ocaml" }
-                    steps {
-                        runShell("""
-                            eval \$(opam env)
-                            opam update || true
-                            bash -x scripts/install_build_deps.sh
-                            dune subst
-                            dune build @install
-                        """)
-
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --verbose
-                        """)
-
-                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
-                        sh "mv _build/default/src/stan2tfp/stan2tfp.exe bin/mac-stan2tfp"
-
-                        stash name:'mac-exe', includes:'bin/*'
-                    }
-                    post { always { runShell("rm -rf ./*") }}
-                }
-                stage("Build stanc.js") {
-                    agent {
-                        dockerfile {
-                            filename 'docker/debian/Dockerfile'
-                            //Forces image to ignore entrypoint
-                            args "-u root --entrypoint=\'\'"
-                        }
-                    }
-                    steps {
-                        runShell("""
-                            eval \$(opam env)
-                            dune subst
-                            dune build --profile release src/stancjs
-                        """)
-
-                        sh "mkdir -p bin && mv `find _build -name stancjs.bc.js` bin/stanc.js"
-                        sh "mv `find _build -name index.html` bin/load_stanc.html"
-                        stash name:'js-exe', includes:'bin/*'
-                    }
-                    post {always { runShell("rm -rf ./*")}}
-                }
-                stage("Build & test a static Linux binary") {
-                    agent {
-                        dockerfile {
-                            filename 'docker/static/Dockerfile'
-                            //Forces image to ignore entrypoint
-                            args "-u 1000 --entrypoint=\'\'"
-                        }
-                    }
-                    steps {
-                        runShell("""
-                            eval \$(opam env)
-                            dune subst
-                            dune build @install --profile static
-                        """)
-
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --profile static --verbose
-                        """)
-
-                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
-                        sh "mv `find _build -name stan2tfp.exe` bin/linux-stan2tfp"
-
-                        stash name:'linux-exe', includes:'bin/*'
-                    }
-                    post {always { runShell("rm -rf ./*")}}
-                }
                 stage("Build & test a static Linux armhf binary") {
                     agent {
                         dockerfile {
@@ -138,7 +66,7 @@ pipeline {
                     steps {
                         runShell("""
                             sudo apk add docker
-                            sudo docker run --rm -it --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye
+                            sudo docker run --rm -it --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye /bin/bash << EOF
 
                             apt update 
                             apt install opam bzip2 git tar curl ca-certificates openssl m4 bash -y
@@ -153,6 +81,7 @@ pipeline {
                             bash -x scripts/install_build_deps.sh
                             dune build @install --profile static
                             exit
+                            EOF
                         """)
 
                         echo runShell("""
@@ -164,69 +93,6 @@ pipeline {
                         sh "mv `find _build -name stan2tfp.exe` bin/linux-armhf-stan2tfp"
 
                         stash name:'linux-armhf-exe', includes:'bin/*'
-                    }
-                    post {always { runShell("rm -rf ./*")}}
-                }
-
-                stage("Build & test a static Linux ARM binary") {
-                    when { anyOf { buildingTag(); branch 'master' } }
-                    agent { label "${buildingAgentARM}" }
-                    steps {
-
-                        runShell("""
-                            bash -x scripts/install_ocaml.sh "--disable-sandboxing -y"
-
-                            opam update; opam install -y js_of_ocaml-compiler.3.4.0 js_of_ocaml-ppx.3.4.0 js_of_ocaml.3.4.0
-                            opam update; bash -x scripts/install_build_deps.sh
-                            opam update; bash -x scripts/install_js_deps.sh
-                        """)
-
-                        runShell("""
-                            eval \$(opam env)
-                            dune subst
-                            dune build @install --profile static
-                        """)
-                        /*
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --profile static --verbose
-                        """)
-                        */
-                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm-stanc"
-                        sh "mv _build/default/src/stan2tfp/stan2tfp.exe bin/linux-arm-stan2tfp"
-
-                        stash name:'linux-arm-exe', includes:'bin/*'
-                    }
-                    post { always { runShell("rm -rf ./*") }}
-                }
-
-                // Cross compiling for windows on debian
-                stage("Build & test static Windows binary") {
-                    agent {
-                        dockerfile {
-                            filename 'docker/debian-windows/Dockerfile'
-                            label 'linux-ec2'
-                            //Forces image to ignore entrypoint
-                            args "-u 1000 --entrypoint=\'\'"
-                        }
-                    }
-                    steps {
-
-                        runShell("""
-                            eval \$(opam env)
-                            dune subst
-                            dune build -x windows
-                        """)
-
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --verbose
-                        """)
-
-                        sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"
-                        sh "mv _build/default.windows/src/stan2tfp/stan2tfp.exe bin/windows-stan2tfp"
-
-                        stash name:'windows-exe', includes:'bin/*'
                     }
                     post {always { runShell("rm -rf ./*")}}
                 }
