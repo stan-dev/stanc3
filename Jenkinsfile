@@ -64,18 +64,20 @@ pipeline {
                         }
                     }
                     steps {
-                        
+                        runShell("""
+                            eval \$(opam env)
+                            dune subst
+                        """)
                         sh "sudo apk add docker"
-                        sh "cd `sudo ls -R | grep workspace/stanc3_PR | grep -v @tmp`"
-                        sh "pwd"
+                        //sh "cd `sudo ls -R | grep workspace/stanc3_PR | grep -v @tmp`"
                         sh "sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye /bin/bash -c \"cd `pwd`;bash -x scripts/setup_multiarch_docker.sh\""
                         //echo runShell("""
                         //    eval \$(opam env)
                         //    time dune runtest --profile static --verbose
                         //""")
 
-                        //sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
-                        //sh "mv `find _build -name stan2tfp.exe` bin/linux-armhf-stan2tfp"
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
+                        sh "mv `find _build -name stan2tfp.exe` bin/linux-armhf-stan2tfp"
 
                         stash name:'linux-armhf-exe', includes:'bin/*'
                     }
