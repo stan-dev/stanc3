@@ -435,8 +435,15 @@ and pp_compiler_internal_fn ad ut f ppf es =
   in
   match f with
   | Internal_fun.FnMakeClosure -> (
-    match es with
-    | {Expr.Fixed.pattern= Lit (Str, implname); _} :: args ->
+    match (ut, es) with
+    | ( UnsizedType.UFun (_, _, (FnPlain, _))
+      , {Expr.Fixed.pattern= Lit (Str, implname); _} :: args ) ->
+        let c = if List.is_empty args then "" else "," in
+        pf ppf
+          "@[<hov 2>from_lambda([](const auto&... s) { return \
+           %s_impl__(s...); }%s@,%a)@]"
+          implname c (list ~sep:comma pp_expr) args
+    | _, {Expr.Fixed.pattern= Lit (Str, implname); _} :: args ->
         gen_fun_app FnPlain ppf (implname ^ "_make__") args
     | _ ->
         raise_s

@@ -387,7 +387,8 @@ class capture_types_model final : public model_base_crtp<capture_types_model> {
       }
       
       current_statement__ = 1;
-      auto capture_data = capture_data_L9C9_make__(v, x, y);
+      auto capture_data = from_lambda([](const auto&... s) { return capture_data_L9C9_impl__(s...); },
+                            v, x, y);
       current_statement__ = 16;
       validate_non_negative_index("pa", "N", N);
       current_statement__ = 17;
@@ -421,7 +422,8 @@ class capture_types_model final : public model_base_crtp<capture_types_model> {
     try {
       
       current_statement__ = 1;
-      auto capture_data = capture_data_L9C9_make__(v, x, y);
+      auto capture_data = from_lambda([](const auto&... s) { return capture_data_L9C9_impl__(s...); },
+                            v, x, y);
       local_scalar_t__ p;
       p = DUMMY_VAR__;
       
@@ -441,7 +443,7 @@ class capture_types_model final : public model_base_crtp<capture_types_model> {
       {
         
         current_statement__ = 5;
-        auto capture_data_and_params = capture_data_and_params_L23C9_make__(
+        auto capture_data_and_params = from_lambda([](const auto&... s) { return capture_data_and_params_L23C9_impl__(s...); },
                                          p, pa, pv, v, x, y);
         current_statement__ = 6;
         lp_accum__.add(
@@ -496,7 +498,8 @@ class capture_types_model final : public model_base_crtp<capture_types_model> {
     try {
       
       current_statement__ = 1;
-      auto capture_data = capture_data_L9C9_make__(v, x, y);
+      auto capture_data = from_lambda([](const auto&... s) { return capture_data_L9C9_impl__(s...); },
+                            v, x, y);
       double p;
       p = std::numeric_limits<double>::quiet_NaN();
       
@@ -548,7 +551,8 @@ class capture_types_model final : public model_base_crtp<capture_types_model> {
     try {
       
       current_statement__ = 1;
-      auto capture_data = capture_data_L9C9_make__(v, x, y);
+      auto capture_data = from_lambda([](const auto&... s) { return capture_data_L9C9_impl__(s...); },
+                            v, x, y);
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
@@ -1113,7 +1117,8 @@ closure_in_closure_L20C9_impl__(const T0__& s, std::ostream* pstream__) {
   try {
     
     current_statement__ = 13;
-    auto gar = gar_L22C13_make__();
+    auto gar = from_lambda([](const auto&... s) { return gar_L22C13_impl__(s...); }
+                 );
     current_statement__ = 14;
     return gar(pstream__, s);
   } catch (const std::exception& e) {
@@ -1196,10 +1201,11 @@ class capture_types2_model final : public model_base_crtp<capture_types2_model> 
       pos__ = 1;
       
       current_statement__ = 1;
-      auto foo = foo_L3C9_make__();
+      auto foo = from_lambda([](const auto&... s) { return foo_L3C9_impl__(s...); }
+                   );
       
       current_statement__ = 2;
-      auto capture_dataonly_closure = capture_dataonly_closure_L7C9_make__(
+      auto capture_dataonly_closure = from_lambda([](const auto&... s) { return capture_dataonly_closure_L7C9_impl__(s...); },
                                         foo);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1230,10 +1236,11 @@ class capture_types2_model final : public model_base_crtp<capture_types2_model> 
     try {
       
       current_statement__ = 1;
-      auto foo = foo_L3C9_make__();
+      auto foo = from_lambda([](const auto&... s) { return foo_L3C9_impl__(s...); }
+                   );
       
       current_statement__ = 2;
-      auto capture_dataonly_closure = capture_dataonly_closure_L7C9_make__(
+      auto capture_dataonly_closure = from_lambda([](const auto&... s) { return capture_dataonly_closure_L7C9_impl__(s...); },
                                         foo);
       local_scalar_t__ alpha;
       alpha = DUMMY_VAR__;
@@ -1242,10 +1249,12 @@ class capture_types2_model final : public model_base_crtp<capture_types2_model> 
       alpha = in__.template read<local_scalar_t__>();
       
       current_statement__ = 4;
-      auto capture_closure = capture_closure_L16C9_make__(foo);
+      auto capture_closure = from_lambda([](const auto&... s) { return capture_closure_L16C9_impl__(s...); },
+                               foo);
       
       current_statement__ = 5;
-      auto closure_in_closure = closure_in_closure_L20C9_make__();
+      auto closure_in_closure = from_lambda([](const auto&... s) { return closure_in_closure_L20C9_impl__(s...); }
+                                  );
       local_scalar_t__ s1;
       s1 = DUMMY_VAR__;
       
@@ -1297,10 +1306,11 @@ class capture_types2_model final : public model_base_crtp<capture_types2_model> 
     try {
       
       current_statement__ = 1;
-      auto foo = foo_L3C9_make__();
+      auto foo = from_lambda([](const auto&... s) { return foo_L3C9_impl__(s...); }
+                   );
       
       current_statement__ = 2;
-      auto capture_dataonly_closure = capture_dataonly_closure_L7C9_make__(
+      auto capture_dataonly_closure = from_lambda([](const auto&... s) { return capture_dataonly_closure_L7C9_impl__(s...); },
                                         foo);
       double alpha;
       alpha = std::numeric_limits<double>::quiet_NaN();
@@ -1324,9 +1334,11 @@ class capture_types2_model final : public model_base_crtp<capture_types2_model> 
         return ;
       } 
       current_statement__ = 4;
-      auto capture_closure = capture_closure_L16C9_make__(foo);
+      auto capture_closure = from_lambda([](const auto&... s) { return capture_closure_L16C9_impl__(s...); },
+                               foo);
       current_statement__ = 5;
-      auto closure_in_closure = closure_in_closure_L20C9_make__();
+      auto closure_in_closure = from_lambda([](const auto&... s) { return closure_in_closure_L20C9_impl__(s...); }
+                                  );
       current_statement__ = 6;
       s1 = capture_dataonly_closure(pstream__, 1.0);
       current_statement__ = 7;
@@ -1362,10 +1374,11 @@ class capture_types2_model final : public model_base_crtp<capture_types2_model> 
     try {
       
       current_statement__ = 1;
-      auto foo = foo_L3C9_make__();
+      auto foo = from_lambda([](const auto&... s) { return foo_L3C9_impl__(s...); }
+                   );
       
       current_statement__ = 2;
-      auto capture_dataonly_closure = capture_dataonly_closure_L7C9_make__(
+      auto capture_dataonly_closure = from_lambda([](const auto&... s) { return capture_dataonly_closure_L7C9_impl__(s...); },
                                         foo);
       int pos__;
       pos__ = std::numeric_limits<int>::min();
@@ -1775,7 +1788,8 @@ higher_order_func(const T0__& g, const T1__& x, std::ostream* pstream__) {
   try {
     
     current_statement__ = 7;
-    auto g2 = g2_L4C13_make__(g, x);
+    auto g2 = from_lambda([](const auto&... s) { return g2_L4C13_impl__(s...); },
+                g, x);
     current_statement__ = 8;
     return g2(pstream__, 1.0);
   } catch (const std::exception& e) {
@@ -1908,7 +1922,8 @@ class higher_order_model final : public model_base_crtp<higher_order_model> {
       x = higher_order_func(from_lambda(func_functor__()), 2.0, pstream__);
       
       current_statement__ = 1;
-      auto data_closure = data_closure_L16C9_make__(x);
+      auto data_closure = from_lambda([](const auto&... s) { return data_closure_L16C9_impl__(s...); },
+                            x);
       current_statement__ = 6;
       z = std::numeric_limits<double>::quiet_NaN();
       
@@ -1943,7 +1958,8 @@ class higher_order_model final : public model_base_crtp<higher_order_model> {
     try {
       
       current_statement__ = 1;
-      auto data_closure = data_closure_L16C9_make__(x);
+      auto data_closure = from_lambda([](const auto&... s) { return data_closure_L16C9_impl__(s...); },
+                            x);
       local_scalar_t__ p;
       p = DUMMY_VAR__;
       
@@ -1951,7 +1967,8 @@ class higher_order_model final : public model_base_crtp<higher_order_model> {
       p = in__.template read<local_scalar_t__>();
       
       current_statement__ = 3;
-      auto closure = closure_L26C9_make__(p);
+      auto closure = from_lambda([](const auto&... s) { return closure_L26C9_impl__(s...); },
+                       p);
       local_scalar_t__ w;
       w = DUMMY_VAR__;
       
@@ -1993,7 +2010,8 @@ class higher_order_model final : public model_base_crtp<higher_order_model> {
     try {
       
       current_statement__ = 1;
-      auto data_closure = data_closure_L16C9_make__(x);
+      auto data_closure = from_lambda([](const auto&... s) { return data_closure_L16C9_impl__(s...); },
+                            x);
       double p;
       p = std::numeric_limits<double>::quiet_NaN();
       
@@ -2009,7 +2027,8 @@ class higher_order_model final : public model_base_crtp<higher_order_model> {
         return ;
       } 
       current_statement__ = 3;
-      auto closure = closure_L26C9_make__(p);
+      auto closure = from_lambda([](const auto&... s) { return closure_L26C9_impl__(s...); },
+                       p);
       current_statement__ = 4;
       w = higher_order_func(closure, 1.0, pstream__);
       if (emit_transformed_parameters__) {
@@ -2039,7 +2058,8 @@ class higher_order_model final : public model_base_crtp<higher_order_model> {
     try {
       
       current_statement__ = 1;
-      auto data_closure = data_closure_L16C9_make__(x);
+      auto data_closure = from_lambda([](const auto&... s) { return data_closure_L16C9_impl__(s...); },
+                            x);
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
@@ -2964,7 +2984,8 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
       pos__ = 1;
       
       current_statement__ = 1;
-      auto hof = hof_L17C9_make__();
+      auto hof = from_lambda([](const auto&... s) { return hof_L17C9_impl__(s...); }
+                   );
       current_statement__ = 11;
       hof(pstream__, rng_from_lambda(ff_rng_functor__()),
         lpdf_from_lambda(ff_lpdf_functor__()),
@@ -2980,7 +3001,8 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
       auto foo_lp = foo_lp_L31C9_make__();
       
       current_statement__ = 5;
-      auto f2 = f2_L35C9_make__();
+      auto f2 = from_lambda([](const auto&... s) { return f2_L35C9_impl__(s...); }
+                  );
       
       current_statement__ = 6;
       auto f3_lpdf = f3_lpdf_L39C9_make__();
@@ -3025,7 +3047,8 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
     try {
       
       current_statement__ = 1;
-      auto hof = hof_L17C9_make__();
+      auto hof = from_lambda([](const auto&... s) { return hof_L17C9_impl__(s...); }
+                   );
       
       current_statement__ = 2;
       auto foo_rng = foo_rng_L23C9_make__();
@@ -3037,7 +3060,8 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
       auto foo_lp = foo_lp_L31C9_make__();
       
       current_statement__ = 5;
-      auto f2 = f2_L35C9_make__();
+      auto f2 = from_lambda([](const auto&... s) { return f2_L35C9_impl__(s...); }
+                  );
       
       current_statement__ = 6;
       auto f3_lpdf = f3_lpdf_L39C9_make__();
@@ -3095,7 +3119,8 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
     try {
       
       current_statement__ = 1;
-      auto hof = hof_L17C9_make__();
+      auto hof = from_lambda([](const auto&... s) { return hof_L17C9_impl__(s...); }
+                   );
       
       current_statement__ = 2;
       auto foo_rng = foo_rng_L23C9_make__();
@@ -3107,7 +3132,8 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
       auto foo_lp = foo_lp_L31C9_make__();
       
       current_statement__ = 5;
-      auto f2 = f2_L35C9_make__();
+      auto f2 = from_lambda([](const auto&... s) { return f2_L35C9_impl__(s...); }
+                  );
       
       current_statement__ = 6;
       auto f3_lpdf = f3_lpdf_L39C9_make__();
@@ -3154,7 +3180,8 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
     try {
       
       current_statement__ = 1;
-      auto hof = hof_L17C9_make__();
+      auto hof = from_lambda([](const auto&... s) { return hof_L17C9_impl__(s...); }
+                   );
       
       current_statement__ = 2;
       auto foo_rng = foo_rng_L23C9_make__();
@@ -3166,7 +3193,8 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
       auto foo_lp = foo_lp_L31C9_make__();
       
       current_statement__ = 5;
-      auto f2 = f2_L35C9_make__();
+      auto f2 = from_lambda([](const auto&... s) { return f2_L35C9_impl__(s...); }
+                  );
       
       current_statement__ = 6;
       auto f3_lpdf = f3_lpdf_L39C9_make__();
@@ -3453,7 +3481,8 @@ integrate(const std::vector<Eigen::Matrix<T0__, -1, 1>>& k,
   try {
     
     current_statement__ = 6;
-    auto harmonic = harmonic_L4C15_make__(k);
+    auto harmonic = from_lambda([](const auto&... s) { return harmonic_L4C15_impl__(s...); },
+                      k);
     current_statement__ = 7;
     return ode_rk45(stan::math::ode_closure_adapter(), init, 0, ts,
              pstream__, harmonic);
@@ -4211,7 +4240,8 @@ class reduce_sum_model final : public model_base_crtp<reduce_sum_model> {
       {
         
         current_statement__ = 3;
-        auto partial_sum_closure = partial_sum_closure_L10C9_make__(mu);
+        auto partial_sum_closure = from_lambda([](const auto&... s) { return partial_sum_closure_L10C9_impl__(s...); },
+                                     mu);
         
         current_statement__ = 4;
         auto closure_dist_lpdf = closure_dist_lpdf_L14C9_make__(mu);
