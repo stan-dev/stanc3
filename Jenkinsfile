@@ -60,13 +60,16 @@ pipeline {
                         dockerfile {
                             filename 'docker/static/Dockerfile'
                             //Forces image to ignore entrypoint
-                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock -v \${PWD}:/stanc3"
+                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
                         }
                     }
                     steps {
                         
                         sh "sudo apk add docker"
-                        sh "sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye ls /home/jenkins-slave/jenkins-slave-files/workspace -R"
+                        sh "cd /home/jenkins-slave/jenkins-slave-files/workspace"
+                        sh "cd */"
+                        sh "pwd"
+                        sh "sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye /bin/bash < scripts/setup_multiarch_docker.sh"
                         //echo runShell("""
                         //    eval \$(opam env)
                         //    time dune runtest --profile static --verbose
