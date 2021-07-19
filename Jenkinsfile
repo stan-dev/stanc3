@@ -66,7 +66,7 @@ pipeline {
                     steps {
                         
                         sh "sudo apk add docker"
-                        sh "sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye ls /home/jenkins-slave/jenkins-slave-files"
+                        sh "sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye ls /home/jenkins-slave/jenkins-slave-files/workspace -R"
                         //echo runShell("""
                         //    eval \$(opam env)
                         //    time dune runtest --profile static --verbose
