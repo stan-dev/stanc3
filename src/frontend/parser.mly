@@ -100,6 +100,13 @@ program:
     EOF
     {
       grammar_logger "program" ;
+      (* check for empty programs*)
+      let () =
+        match (ofb, odb, otdb, opb, otpb, omb, ogb) with
+        | None, None, None, None, None, None, None ->
+            Input_warnings.empty (fst $loc).pos_fname
+        | _ -> ()
+      in
       { functionblock= ofb
       ; datablock= odb
       ; transformeddatablock= otdb
