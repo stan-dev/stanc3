@@ -2253,13 +2253,13 @@ model {
   y_p ~ normal(0, 1);
 }
 
-Info: Found int division at 'operators_int.stan', line 10, column 25 to column 30:
+Warning in 'operators_int.stan', line 10, column 25: Found int division:
   d_int / d_int
 Values will be rounded towards zero. If rounding is not desired you can write
 the division as
   d_int * 1.0 / d_int
 If rounding is intended please use the integer division operator %/%.
-Info: Found int division at 'operators_int.stan', line 26, column 27 to column 32:
+Warning in 'operators_int.stan', line 26, column 27: Found int division:
   d_int / d_int
 Values will be rounded towards zero. If rounding is not desired you can write
 the division as
@@ -2350,13 +2350,13 @@ model {
   y_p ~ normal(0, 1);
 }
 
-Info: Found int division at 'operators_real.stan', line 23, column 26 to column 31:
+Warning in 'operators_real.stan', line 23, column 26: Found int division:
   d_int / d_int
 Values will be rounded towards zero. If rounding is not desired you can write
 the division as
   d_int * 1.0 / d_int
 If rounding is intended please use the integer division operator %/%.
-Info: Found int division at 'operators_real.stan', line 69, column 27 to column 32:
+Warning in 'operators_real.stan', line 69, column 27: Found int division:
   d_int / d_int
 Values will be rounded towards zero. If rounding is not desired you can write
 the division as
