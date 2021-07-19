@@ -69,7 +69,7 @@ pipeline {
                         sh "cd /home/jenkins-slave/jenkins-slave-files/workspace"
                         sh "cd */"
                         sh "pwd"
-                        sh "sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye /bin/bash < scripts/setup_multiarch_docker.sh"
+                        sh "sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye /bin/bash -c \"cd /home/jenkins-slave/jenkins-slave-files/workspace;cd */;bash -x scripts/setup_multiarch_docker.sh\""
                         //echo runShell("""
                         //    eval \$(opam env)
                         //    time dune runtest --profile static --verbose
