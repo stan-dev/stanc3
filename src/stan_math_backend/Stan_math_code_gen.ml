@@ -602,9 +602,16 @@ let pp_constrained_param_names ppf {Program.output_vars; _} =
       (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
       (strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs)
   in
+  let complex_param_names ppf name = 
+    pf ppf "@[<hov 2>param_names__.emplace_back(std::string() + \"%s.real\");@]@," name ;
+    pf ppf "param_names__.emplace_back(std::string() + \"%s.imag\");" name
+  in
   let pp_param_names ppf (decl_id, st) =
-    let dims = List.rev (SizedType.get_dims st) in
-    pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
+    match st with
+    | SizedType.SComplex -> complex_param_names ppf decl_id
+    | _ ->
+       let dims = List.rev (SizedType.get_dims st) in
+       pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
   in
   pp_method ppf "void" "constrained_param_names" params nop
     (fun ppf ->
@@ -656,9 +663,16 @@ let pp_unconstrained_param_names ppf {Program.output_vars; _} =
       (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
       (strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs)
   in
+  let complex_param_names ppf name = 
+    pf ppf "@[<hov 2>param_names__.emplace_back(std::string() + \"%s.real\");@]@," name ;
+    pf ppf "param_names__.emplace_back(std::string() + \"%s.imag\");" name
+  in
   let pp_param_names ppf (decl_id, st) =
-    let dims = List.rev (SizedType.get_dims st) in
-    pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
+    match st with
+    | SizedType.SComplex -> complex_param_names ppf decl_id
+    | _ ->
+       let dims = List.rev (SizedType.get_dims st) in
+       pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
   in
   let cv_attr = ["const"; "final"] in
   pp_method ppf "void" "unconstrained_param_names" params nop
