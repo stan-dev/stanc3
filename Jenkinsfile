@@ -66,8 +66,9 @@ pipeline {
                     steps {
                         
                         sh "sudo apk add docker"
-                        sh "cd `ls -R | grep workspace/stanc3_PR | grep -v @tmp`"
-                        sh "sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye /bin/bash -c \"cd \$(ls -R | grep workspace/stanc3_PR | grep -v @tmp);bash -x scripts/setup_multiarch_docker.sh\""
+                        sh "cd `sudo ls -R | grep workspace/stanc3_PR | grep -v @tmp`"
+                        sh "pwd"
+                        sh "sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye /bin/bash -c \"cd \$(sudo ls -R | grep workspace/stanc3_PR | grep -v @tmp);bash -x scripts/setup_multiarch_docker.sh\""
                         //echo runShell("""
                         //    eval \$(opam env)
                         //    time dune runtest --profile static --verbose
