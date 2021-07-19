@@ -60,13 +60,13 @@ pipeline {
                         dockerfile {
                             filename 'docker/static/Dockerfile'
                             //Forces image to ignore entrypoint
-                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock \${PWD}:/stanc3"
                         }
                     }
                     steps {
                         
                         sh "sudo apk add docker"
-                        sh "sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye ls /home/opam"
+                        sh "sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye ls /home && ls /stanc3"
                         //echo runShell("""
                         //    eval \$(opam env)
                         //    time dune runtest --profile static --verbose
