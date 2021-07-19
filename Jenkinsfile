@@ -66,9 +66,10 @@ pipeline {
                     steps {
                         runShell("""
                             sudo apk add docker
+                            docker_id=`sudo docker ps -q`
                         """)
                         echo runShell("""
-                            sudo docker run --rm --volumes-from=\${BUILD_CONTAINER_ID}:rw multiarch/debian-debootstrap:armhf-bullseye /bin/bash < scripts/setup_multiarch_docker.sh
+                            sudo docker run --rm --volumes-from=`docker_id`:rw multiarch/debian-debootstrap:armhf-bullseye /bin/bash < scripts/setup_multiarch_docker.sh
                             """)
 
                         echo runShell("""
