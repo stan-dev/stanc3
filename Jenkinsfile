@@ -68,8 +68,8 @@ pipeline {
                             sudo apk add docker
                         """)
                         echo runShell("""
-                            sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye /bin/bash -c "apt-get update; apt-get install opam bzip2 git tar curl ca-certificates openssl m4 bash -y; opam init --disable-sandboxing -y; opam switch create 4.07.0; opam switch 4.07.0; eval \$(opam env); opam repo add internet https://opam.ocaml.org; cd /stanc3; bash -x scripts/install_build_deps.sh; dune build @install --profile static; exit"
-                        """)
+                            sudo docker run --rm --pull=always --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye /bin/bash < scripts/setup_multiarch_docker.sh
+                            """)
 
                         echo runShell("""
                             eval \$(opam env)
