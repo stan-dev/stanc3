@@ -66,7 +66,7 @@ pipeline {
                     steps {
                         
                         sh "sudo apk add docker"
-                        sh "sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye /bin/bash ls /"
+                        sh "sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye ls /"
                         echo runShell("""
                             eval \$(opam env)
                             time dune runtest --profile static --verbose
