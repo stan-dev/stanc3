@@ -7,8 +7,7 @@ opam switch 4.07.0
 eval $(opam env)
 opam repo add internet https://opam.ocaml.org
 
-cd /home/jenkins-slave/jenkins-slave-files/workspace
-cd $(ls | grep -v @tmp)
+cd $(ls -R | grep workspace/stanc3_PR | grep -v @tmp)
 bash -x scripts/install_build_deps.sh
 dune build @install --profile static
 exit

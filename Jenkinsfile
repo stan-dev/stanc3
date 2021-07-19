@@ -66,8 +66,7 @@ pipeline {
                     steps {
                         
                         sh "sudo apk add docker"
-                        sh "cd /home/jenkins-slave/jenkins-slave-files/workspace/*/"
-                        sh "pwd"
+                        sh "cd `ls -R | grep workspace/stanc3_PR | grep -v @tmp`"
                         sh "sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye /bin/bash -c \"bash -x /home/jenkins-slave/jenkins-slave-files/workspace/*/scripts/setup_multiarch_docker.sh\""
                         //echo runShell("""
                         //    eval \$(opam env)
