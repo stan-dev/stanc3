@@ -55,6 +55,34 @@ pipeline {
         stage("Build and test static release binaries") {
             failFast true
             parallel {
+                stage("Build & test a static Linux armel binary") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/static/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        }
+                    }
+                    steps {
+                        runShell("""
+                            eval \$(opam env)
+                            dune subst
+                        """)
+                        sh "sudo apk add docker"
+                        sh "sudo bash -x build_multiarch_stanc3.sh armel"
+                        sh "sudo chown -R opam: _build"
+                        echo runShell("""
+                            eval \$(opam env)
+                            time dune runtest --profile static --verbose
+                        """)
+
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
+                        sh "mv `find _build -name stan2tfp.exe` bin/linux-armel-stan2tfp"
+
+                        stash name:'linux-armel-exe', includes:'bin/*'
+                    }
+                    post {always { runShell("rm -rf ./*")}}
+                }
                 stage("Build & test a static Linux armhf binary") {
                     agent {
                         dockerfile {
@@ -69,7 +97,7 @@ pipeline {
                             dune subst
                         """)
                         sh "sudo apk add docker"
-                        sh "sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye /bin/bash -c \"bash -x `pwd`/scripts/setup_multiarch_docker.sh `pwd`\""
+                        sh "sudo bash -x build_multiarch_stanc3.sh armhf"
                         sh "sudo chown -R opam: _build"
                         echo runShell("""
                             eval \$(opam env)
@@ -80,6 +108,90 @@ pipeline {
                         sh "mv `find _build -name stan2tfp.exe` bin/linux-armhf-stan2tfp"
 
                         stash name:'linux-armhf-exe', includes:'bin/*'
+                    }
+                    post {always { runShell("rm -rf ./*")}}
+                }
+                stage("Build & test a static Linux arm64 binary") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/static/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        }
+                    }
+                    steps {
+                        runShell("""
+                            eval \$(opam env)
+                            dune subst
+                        """)
+                        sh "sudo apk add docker"
+                        sh "sudo bash -x build_multiarch_stanc3.sh arm64"
+                        sh "sudo chown -R opam: _build"
+                        echo runShell("""
+                            eval \$(opam env)
+                            time dune runtest --profile static --verbose
+                        """)
+
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm64-stanc"
+                        sh "mv `find _build -name stan2tfp.exe` bin/linux-arm64-stan2tfp"
+
+                        stash name:'linux-arm64-exe', includes:'bin/*'
+                    }
+                    post {always { runShell("rm -rf ./*")}}
+                }
+                stage("Build & test a static Linux mipsel binary") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/static/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        }
+                    }
+                    steps {
+                        runShell("""
+                            eval \$(opam env)
+                            dune subst
+                        """)
+                        sh "sudo apk add docker"
+                        sh "sudo bash -x build_multiarch_stanc3.sh mipsel"
+                        sh "sudo chown -R opam: _build"
+                        echo runShell("""
+                            eval \$(opam env)
+                            time dune runtest --profile static --verbose
+                        """)
+
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-mipsel-stanc"
+                        sh "mv `find _build -name stan2tfp.exe` bin/linux-mipsel-stan2tfp"
+
+                        stash name:'linux-mipsel-exe', includes:'bin/*'
+                    }
+                    post {always { runShell("rm -rf ./*")}}
+                }
+                stage("Build & test a static Linux mips64el binary") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/static/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        }
+                    }
+                    steps {
+                        runShell("""
+                            eval \$(opam env)
+                            dune subst
+                        """)
+                        sh "sudo apk add docker"
+                        sh "sudo bash -x build_multiarch_stanc3.sh mips64el"
+                        sh "sudo chown -R opam: _build"
+                        echo runShell("""
+                            eval \$(opam env)
+                            time dune runtest --profile static --verbose
+                        """)
+
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-mips64el-stanc"
+                        sh "mv `find _build -name stan2tfp.exe` bin/linux-mips64el-stan2tfp"
+
+                        stash name:'linux-mips64el-exe', includes:'bin/*'
                     }
                     post {always { runShell("rm -rf ./*")}}
                 }
@@ -97,7 +209,7 @@ pipeline {
                             dune subst
                         """)
                         sh "sudo apk add docker"
-                        sh "sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:ppc64el-bullseye /bin/bash -c \"bash -x `pwd`/scripts/setup_multiarch_docker.sh `pwd`\""
+                        sh "sudo bash -x build_multiarch_stanc3.sh ppc64el"
                         sh "sudo chown -R opam: _build"
                         echo runShell("""
                             eval \$(opam env)
@@ -108,6 +220,34 @@ pipeline {
                         sh "mv `find _build -name stan2tfp.exe` bin/linux-ppc64el-stan2tfp"
 
                         stash name:'linux-ppc64el-exe', includes:'bin/*'
+                    }
+                    post {always { runShell("rm -rf ./*")}}
+                }
+                stage("Build & test a static Linux s390x binary") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/static/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        }
+                    }
+                    steps {
+                        runShell("""
+                            eval \$(opam env)
+                            dune subst
+                        """)
+                        sh "sudo apk add docker"
+                        sh "sudo bash -x build_multiarch_stanc3.sh s390x"
+                        sh "sudo chown -R opam: _build"
+                        echo runShell("""
+                            eval \$(opam env)
+                            time dune runtest --profile static --verbose
+                        """)
+
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-s390x-stanc"
+                        sh "mv `find _build -name stan2tfp.exe` bin/linux-s390x-stan2tfp"
+
+                        stash name:'linux-s390x-exe', includes:'bin/*'
                     }
                     post {always { runShell("rm -rf ./*")}}
                 }
