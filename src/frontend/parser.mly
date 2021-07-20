@@ -93,7 +93,7 @@ program:
       let () =
         match (ofb, odb, otdb, opb, otpb, omb, ogb) with
         | None, None, None, None, None, None, None ->
-            Warnings.empty (fst $loc).pos_fname
+            Input_warnings.empty (fst $loc).pos_fname
         | _ -> ()
       in
       { functionblock= ofb
