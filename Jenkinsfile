@@ -71,15 +71,43 @@ pipeline {
                         sh "sudo apk add docker"
                         sh "sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:armhf-bullseye /bin/bash -c \"bash -x `pwd`/scripts/setup_multiarch_docker.sh `pwd`\""
                         sh "sudo chown -R opam: _build"
-                        //echo runShell("""
-                        //    eval \$(opam env)
-                        //    time dune runtest --profile static --verbose
-                        //""")
+                        echo runShell("""
+                            eval \$(opam env)
+                            time dune runtest --profile static --verbose
+                        """)
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
                         sh "mv `find _build -name stan2tfp.exe` bin/linux-armhf-stan2tfp"
 
                         stash name:'linux-armhf-exe', includes:'bin/*'
+                    }
+                    post {always { runShell("rm -rf ./*")}}
+                }
+                stage("Build & test a static Linux ppc64el binary") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/static/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        }
+                    }
+                    steps {
+                        runShell("""
+                            eval \$(opam env)
+                            dune subst
+                        """)
+                        sh "sudo apk add docker"
+                        sh "sudo docker run --rm --volumes-from=`sudo docker ps -q`:rw multiarch/debian-debootstrap:ppc64el-bullseye /bin/bash -c \"bash -x `pwd`/scripts/setup_multiarch_docker.sh `pwd`\""
+                        sh "sudo chown -R opam: _build"
+                        echo runShell("""
+                            eval \$(opam env)
+                            time dune runtest --profile static --verbose
+                        """)
+
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-ppc64el-stanc"
+                        sh "mv `find _build -name stan2tfp.exe` bin/linux-ppc64el-stan2tfp"
+
+                        stash name:'linux-ppc64el-exe', includes:'bin/*'
                     }
                     post {always { runShell("rm -rf ./*")}}
                 }
