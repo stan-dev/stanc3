@@ -69,7 +69,7 @@ pipeline {
                             dune subst
                         """)
                         sh "sudo apk add docker"
-                        sh "sudo bash -x build_multiarch_stanc3.sh armel"
+                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh armel"
                         sh "sudo chown -R opam: _build"
                         echo runShell("""
                             eval \$(opam env)
@@ -97,7 +97,7 @@ pipeline {
                             dune subst
                         """)
                         sh "sudo apk add docker"
-                        sh "sudo bash -x build_multiarch_stanc3.sh armhf"
+                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh armhf"
                         sh "sudo chown -R opam: _build"
                         echo runShell("""
                             eval \$(opam env)
@@ -125,7 +125,7 @@ pipeline {
                             dune subst
                         """)
                         sh "sudo apk add docker"
-                        sh "sudo bash -x build_multiarch_stanc3.sh arm64"
+                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh arm64"
                         sh "sudo chown -R opam: _build"
                         echo runShell("""
                             eval \$(opam env)
@@ -153,7 +153,7 @@ pipeline {
                             dune subst
                         """)
                         sh "sudo apk add docker"
-                        sh "sudo bash -x build_multiarch_stanc3.sh mipsel"
+                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh mipsel"
                         sh "sudo chown -R opam: _build"
                         echo runShell("""
                             eval \$(opam env)
@@ -181,7 +181,7 @@ pipeline {
                             dune subst
                         """)
                         sh "sudo apk add docker"
-                        sh "sudo bash -x build_multiarch_stanc3.sh mips64el"
+                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh mips64el"
                         sh "sudo chown -R opam: _build"
                         echo runShell("""
                             eval \$(opam env)
@@ -209,7 +209,7 @@ pipeline {
                             dune subst
                         """)
                         sh "sudo apk add docker"
-                        sh "sudo bash -x build_multiarch_stanc3.sh ppc64el"
+                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh ppc64el"
                         sh "sudo chown -R opam: _build"
                         echo runShell("""
                             eval \$(opam env)
@@ -237,7 +237,7 @@ pipeline {
                             dune subst
                         """)
                         sh "sudo apk add docker"
-                        sh "sudo bash -x build_multiarch_stanc3.sh s390x"
+                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh s390x"
                         sh "sudo chown -R opam: _build"
                         echo runShell("""
                             eval \$(opam env)
