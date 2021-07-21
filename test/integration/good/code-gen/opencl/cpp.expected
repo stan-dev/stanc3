@@ -3520,7 +3520,6 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       std::vector<double> p_real_array;
       p_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
       
-      
       current_statement__ = 2;
       p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
       Eigen::Matrix<double, -1, -1> p_matrix;
@@ -3540,7 +3539,6 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       Eigen::Matrix<double, 1, -1> p_row_vector;
       p_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
       stan::math::fill(p_row_vector, std::numeric_limits<double>::quiet_NaN());
-      
       
       current_statement__ = 5;
       p_row_vector = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(
@@ -6081,7 +6079,6 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       std::vector<double> p_real_array;
       p_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
       
-      
       current_statement__ = 2;
       p_real_array = context__.vals_r("p_real_array");
       Eigen::Matrix<double, -1, -1> p_matrix;
@@ -6129,7 +6126,6 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       Eigen::Matrix<double, 1, -1> p_row_vector;
       p_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
       stan::math::fill(p_row_vector, std::numeric_limits<double>::quiet_NaN());
-      
       
       {
         std::vector<local_scalar_t__> p_row_vector_flat__;
@@ -6723,7 +6719,6 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       std::vector<double> p_real_array;
       p_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
       
-      
       current_statement__ = 2;
       p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
       Eigen::Matrix<double, -1, -1> p_matrix;
@@ -6743,7 +6738,6 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       Eigen::Matrix<double, 1, -1> p_row_vector;
       p_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
       stan::math::fill(p_row_vector, std::numeric_limits<double>::quiet_NaN());
-      
       
       current_statement__ = 5;
       p_row_vector = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(
@@ -6853,7 +6847,6 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       std::vector<double> p_real_array;
       p_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
       
-      
       current_statement__ = 2;
       p_real_array = context__.vals_r("p_real_array");
       Eigen::Matrix<double, -1, -1> p_matrix;
@@ -6901,7 +6894,6 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       Eigen::Matrix<double, 1, -1> p_row_vector;
       p_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
       stan::math::fill(p_row_vector, std::numeric_limits<double>::quiet_NaN());
-      
       
       {
         std::vector<local_scalar_t__> p_row_vector_flat__;

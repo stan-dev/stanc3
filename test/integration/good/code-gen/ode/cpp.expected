@@ -441,7 +441,6 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       std::vector<double> times;
       times = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
-      
       current_statement__ = 4;
       times = in__.template read<std::vector<local_scalar_t__>>(N);
       std::vector<Eigen::Matrix<double, -1, 1>> z;
@@ -542,7 +541,6 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       t0 = context__.vals_r("t0")[(1 - 1)];
       std::vector<double> times;
       times = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
-      
       
       current_statement__ = 4;
       times = context__.vals_r("times");

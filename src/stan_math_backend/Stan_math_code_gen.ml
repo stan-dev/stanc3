@@ -578,6 +578,21 @@ let rec pp_for_loop_iteratee ?(index_ids = []) ppf (iteratee, dims, pp_body) =
           pf ppf "@[%a @]" pp_block
             (pp_for_loop_iteratee ~index_ids:idcs, (i, dims, pp_body)) )
 
+let emit_name ppf (name, idcs) =
+  let to_string = fmt "std::to_string(%s)" in
+  pf ppf "param_names__.emplace_back(std::string() + %a);"
+    (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
+    (strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs)
+
+let emit_complex_name ppf (name, idcs) =
+  let to_string = fmt "std::to_string(%s)" in
+  pf ppf "@[<hov> param_names__.emplace_back(std::string() + %a);@]@,"
+    (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
+    ((strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs) @ ["\"real\""]) ;
+  pf ppf "@[<hov> param_names__.emplace_back(std::string() + %a);@]"
+    (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
+    ((strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs) @ ["\"imag\""])
+
 (** Print the `constrained_param_names` method of the model class. *)
 let pp_constrained_param_names ppf {Program.output_vars; _} =
   let params =
@@ -596,22 +611,20 @@ let pp_constrained_param_names ppf {Program.output_vars; _} =
             `Trd (id, st))
       output_vars
   in
-  let emit_name ppf (name, idcs) =
-    let to_string = fmt "std::to_string(%s)" in
-    pf ppf "param_names__.emplace_back(std::string() + %a);"
-      (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
-      (strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs)
-  in
-  let complex_param_names ppf name = 
-    pf ppf "@[<hov 2>param_names__.emplace_back(std::string() + \"%s.real\");@]@," name ;
-    pf ppf "param_names__.emplace_back(std::string() + \"%s.imag\");" name
-  in
   let pp_param_names ppf (decl_id, st) =
-    match st with
-    | SizedType.SComplex -> complex_param_names ppf decl_id
-    | _ ->
-       let dims = List.rev (SizedType.get_dims st) in
-       pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
+    let dims = List.rev (SizedType.get_dims st) in
+    let rec check_complex st =
+      match st with
+      | SizedType.SComplex -> true
+      | SizedType.SArray (t, _) -> check_complex t
+      | _ -> false
+    in
+    match check_complex st with
+    | true -> (
+      match dims with
+      | _ :: tail -> pp_for_loop_iteratee ppf (decl_id, tail, emit_complex_name)
+      | [] -> pp_for_loop_iteratee ppf (decl_id, [], emit_name) )
+    | false -> pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
   in
   pp_method ppf "void" "constrained_param_names" params nop
     (fun ppf ->
@@ -657,22 +670,20 @@ let pp_unconstrained_param_names ppf {Program.output_vars; _} =
             `Trd (id, st))
       output_vars
   in
-  let emit_name ppf (name, idcs) =
-    let to_string = fmt "std::to_string(%s)" in
-    pf ppf "param_names__.emplace_back(std::string() + %a);"
-      (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
-      (strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs)
-  in
-  let complex_param_names ppf name = 
-    pf ppf "@[<hov 2>param_names__.emplace_back(std::string() + \"%s.real\");@]@," name ;
-    pf ppf "param_names__.emplace_back(std::string() + \"%s.imag\");" name
-  in
   let pp_param_names ppf (decl_id, st) =
-    match st with
-    | SizedType.SComplex -> complex_param_names ppf decl_id
-    | _ ->
-       let dims = List.rev (SizedType.get_dims st) in
-       pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
+    let dims = List.rev (SizedType.get_dims st) in
+    let rec check_complex st =
+      match st with
+      | SizedType.SComplex -> true
+      | SizedType.SArray (t, _) -> check_complex t
+      | _ -> false
+    in
+    match check_complex st with
+    | true -> (
+      match dims with
+      | _ :: tail -> pp_for_loop_iteratee ppf (decl_id, tail, emit_complex_name)
+      | [] -> pp_for_loop_iteratee ppf (decl_id, [], emit_name) )
+    | false -> pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
   in
   let cv_attr = ["const"; "final"] in
   pp_method ppf "void" "unconstrained_param_names" params nop

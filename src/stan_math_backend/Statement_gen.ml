@@ -24,9 +24,10 @@ let rec pp_filler_helper ppf (decl_id, ut, nan_type, needs_filled) =
       pp_filler_helper ppf (decl_id, t, nan_type, needs_filled)
   | true, UMatrix | true, URowVector | true, UVector ->
       pf ppf "@[<hov 2>stan::math::fill(%s, %s);@]@," decl_id nan_type
-  | true, UComplex -> pf ppf "@[%s.imag(%s);@]@," decl_id nan_type
   | _ -> ()
 
+(*  | true, UComplex -> pf ppf "@[%s.imag(%s);@]@," decl_id nan_type
+*)
 (*Fill only needs to happen for containers 
   * Note: This should probably be moved into its own function as data
   * does not need to be filled as we are promised user input data has the correct
@@ -49,6 +50,9 @@ let nan_type (st, adtype) =
   | UnsizedType.AutoDiffable, _ -> "DUMMY_VAR__"
   | DataOnly, _ -> "std::numeric_limits<double>::quiet_NaN()"
 
+let complex_value_type adtype =
+  match adtype with UnsizedType.AutoDiffable -> "T__" | DataOnly -> "double"
+
 (*Pretty printer for the right hand side of expressions to initialize objects.
  * For scalar types this sets the value to NaN and for containers initializes the memory.
  *)
@@ -57,7 +61,10 @@ let rec pp_initialize ppf (st, adtype) =
   match st with
   | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
   | SReal -> pf ppf "%s" init_nan
-  | SComplex -> pf ppf "%s" init_nan
+  | SComplex ->
+      pf ppf "std::complex<%s> (%s, %s)"
+        (complex_value_type adtype)
+        init_nan init_nan
   | SVector d | SRowVector d -> pf ppf "%a(%a)" pp_st (st, adtype) pp_expr d
   | SMatrix (d1, d2) ->
       pf ppf "%a(%a, %a)" pp_st (st, adtype) pp_expr d1 pp_expr d2
@@ -70,7 +77,7 @@ let pp_assign_sized ppf (decl_id, st, adtype) =
   let pp_assign ppf (decl_id, st, adtype) =
     pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_initialize (st, adtype)
   in
-  pf ppf "@[%a%a@]@," pp_assign (decl_id, st, adtype) pp_filler
+  pf ppf "@[<v>%a%a@]" pp_assign (decl_id, st, adtype) pp_filler
     (decl_id, st, init_nan, true)
 
 let%expect_test "set size mat array" =

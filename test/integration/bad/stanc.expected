@@ -771,6 +771,8 @@ Ill-typed arguments supplied to infix operator -. Available signatures:
 (real, vector) => vector
 (vector, real) => vector
 (vector, vector) => vector
+(complex, real) => complex
+(complex, complex) => complex
 (real, row_vector) => row_vector
 (row_vector, real) => row_vector
 (row_vector, row_vector) => row_vector
@@ -1448,6 +1450,8 @@ Ill-typed arguments supplied to infix operator +. Available signatures:
 (real, vector) => vector
 (vector, real) => vector
 (vector, vector) => vector
+(complex, real) => complex
+(complex, complex) => complex
 (real, row_vector) => row_vector
 (row_vector, real) => row_vector
 (row_vector, row_vector) => row_vector
@@ -1472,6 +1476,8 @@ Ill-typed arguments supplied to infix operator /. Available signatures:
 (int, int) => int
 (real, real) => real
 (vector, real) => vector
+(complex, real) => complex
+(complex, complex) => complex
 (row_vector, real) => row_vector
 (matrix, real) => matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
@@ -1492,6 +1498,8 @@ Ill-typed arguments supplied to infix operator /. Available signatures:
 (int, int) => int
 (real, real) => real
 (vector, real) => vector
+(complex, real) => complex
+(complex, complex) => complex
 (row_vector, real) => row_vector
 (matrix, real) => matrix
 Instead supplied arguments of incompatible type: array[] int, matrix.
@@ -1632,6 +1640,7 @@ Ill-typed arguments supplied to prefix operator -. Available signatures:
 (int) => int
 (real) => real
 (vector) => vector
+(complex) => complex
 (row_vector) => row_vector
 (matrix) => matrix
 Instead supplied argument of incompatible type: array[] int.
@@ -1665,6 +1674,8 @@ Ill-typed arguments supplied to infix operator *. Available signatures:
 (real, vector) => vector
 (vector, real) => vector
 (matrix, vector) => vector
+(complex, real) => complex
+(complex, complex) => complex
 (real, row_vector) => row_vector
 (row_vector, real) => row_vector
 (row_vector, matrix) => row_vector
@@ -1689,6 +1700,8 @@ Ill-typed arguments supplied to infix operator -. Available signatures:
 (real, vector) => vector
 (vector, real) => vector
 (vector, vector) => vector
+(complex, real) => complex
+(complex, complex) => complex
 (real, row_vector) => row_vector
 (row_vector, real) => row_vector
 (row_vector, row_vector) => row_vector

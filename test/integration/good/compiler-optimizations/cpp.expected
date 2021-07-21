@@ -301,11 +301,9 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       std::vector<std::vector<local_scalar_t__>> y;
       y = std::vector<std::vector<local_scalar_t__>>(N_t, std::vector<local_scalar_t__>(4, DUMMY_VAR__));
       
-      
       {
         std::vector<double> theta;
         theta = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
-        
         
         assign(lcm_sym28__, std::vector<local_scalar_t__>{beta,
           stan::math::promote_scalar<local_scalar_t__>(1000000), gamma, xi,
@@ -486,7 +484,6 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       std::vector<std::vector<double>> y;
       y = std::vector<std::vector<double>>(N_t, std::vector<double>(4, std::numeric_limits<double>::quiet_NaN()));
       
-      
       vars__.emplace_back(beta);
       vars__.emplace_back(gamma);
       vars__.emplace_back(xi);
@@ -498,7 +495,6 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       {
         std::vector<double> theta;
         theta = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
-        
         
         assign(lcm_sym9__, std::vector<double>{beta,
           stan::math::promote_scalar<double>(1000000), gamma, xi, delta},
@@ -5641,7 +5637,6 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       std::vector<double> sigma;
       sigma = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
-      
       current_statement__ = 2;
       sigma = in__.template read_constrain_lb<std::vector<local_scalar_t__>, jacobian__>(
                 0, lp__, 2);
@@ -5738,12 +5733,10 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       std::vector<double> sigma;
       sigma = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
-      
       current_statement__ = 2;
       sigma = context__.vals_r("sigma");
       std::vector<double> sigma_free__;
       sigma_free__ = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
-      
       
       {
         current_statement__ = 2;
@@ -6171,7 +6164,6 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       std::vector<double> theta;
       theta = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       
-      
       current_statement__ = 2;
       theta = in__.template read<std::vector<local_scalar_t__>>(J);
       double tau;
@@ -6228,7 +6220,6 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       mu = context__.vals_r("mu")[(1 - 1)];
       std::vector<double> theta;
       theta = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
-      
       
       current_statement__ = 2;
       theta = context__.vals_r("theta");
@@ -12940,7 +12931,6 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
           inline_sym27__ = Eigen::Matrix<double, -1, 1>(lcm_sym304__);
           stan::math::fill(inline_sym27__, std::numeric_limits<double>::quiet_NaN());
           
-          
           assign(lcm_sym237__, subtract(1.0, nu),
             "assigning variable lcm_sym237__");
           lcm_sym234__ = logical_gte(lcm_sym303__, 1);
@@ -12950,7 +12940,6 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
             Eigen::Matrix<double, -1, 1> inline_sym28__;
             inline_sym28__ = Eigen::Matrix<double, -1, 1>(lcm_sym304__);
             stan::math::fill(inline_sym28__, std::numeric_limits<double>::quiet_NaN());
-            
             
             assign(lcm_sym239__,
               subtract(1.0, transpose(rvalue(p, "p", index_uni(1)))),
@@ -13148,7 +13137,6 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
               Eigen::Matrix<double, -1, 1> inline_sym28__;
               inline_sym28__ = Eigen::Matrix<double, -1, 1>(lcm_sym304__);
               stan::math::fill(inline_sym28__, std::numeric_limits<double>::quiet_NaN());
-              
               
               assign(lcm_sym238__,
                 subtract(1.0,
@@ -14015,7 +14003,6 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       std::vector<std::vector<int>> z;
       z = std::vector<std::vector<int>>(M, std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
       
-      
       lcm_sym169__ = square(sigma);
       sigma2 = lcm_sym169__;
       current_statement__ = 50;
@@ -14117,7 +14104,6 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
         validate_non_negative_index("recruit", "n_occasions", n_occasions);
         std::vector<std::vector<int>> recruit;
         recruit = std::vector<std::vector<int>>(M, std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
-        
         
         current_statement__ = 53;
         assign(recruit, rep_array(0, M, n_occasions),
@@ -15846,7 +15832,6 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       theta_free__ = std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(J, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(
         (K - 1))));
       stan::math::fill(theta_free__, std::numeric_limits<double>::quiet_NaN());
-      
       
       current_statement__ = 2;
       if (lcm_sym1__) {
@@ -21119,7 +21104,6 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           inline_sym34__ = Eigen::Matrix<double, -1, 1>(lcm_sym311__);
           stan::math::fill(inline_sym34__, std::numeric_limits<double>::quiet_NaN());
           
-          
           assign(lcm_sym249__, subtract(1.0, gamma),
             "assigning variable lcm_sym249__");
           lcm_sym246__ = logical_gte(lcm_sym310__, 1);
@@ -21129,7 +21113,6 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             Eigen::Matrix<double, -1, 1> inline_sym35__;
             inline_sym35__ = Eigen::Matrix<double, -1, 1>(lcm_sym311__);
             stan::math::fill(inline_sym35__, std::numeric_limits<double>::quiet_NaN());
-            
             
             assign(lcm_sym251__,
               subtract(1.0,
@@ -21333,7 +21316,6 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
               Eigen::Matrix<double, -1, 1> inline_sym35__;
               inline_sym35__ = Eigen::Matrix<double, -1, 1>(lcm_sym311__);
               stan::math::fill(inline_sym35__, std::numeric_limits<double>::quiet_NaN());
-              
               
               assign(lcm_sym250__,
                 subtract(1.0,
@@ -22146,7 +22128,6 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       std::vector<std::vector<int>> z;
       z = std::vector<std::vector<int>>(M, std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
       
-      
       current_statement__ = 39;
       if (lcm_sym144__) {
         int q;
@@ -22283,7 +22264,6 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
         validate_non_negative_index("recruit", "n_occasions", n_occasions);
         std::vector<std::vector<int>> recruit;
         recruit = std::vector<std::vector<int>>(M, std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
-        
         
         current_statement__ = 52;
         assign(recruit, rep_array(0, M, n_occasions),
@@ -22544,7 +22524,6 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       Eigen::Matrix<double, -1, 1> gamma_free__;
       gamma_free__ = Eigen::Matrix<double, -1, 1>(n_occasions);
       stan::math::fill(gamma_free__, std::numeric_limits<double>::quiet_NaN());
-      
       
       current_statement__ = 3;
       if (lcm_sym129__) {
@@ -23754,7 +23733,6 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       std::vector<double> theta;
       theta = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       
-      
       current_statement__ = 1;
       theta = in__.template read<std::vector<local_scalar_t__>>(J);
       if (logical_gte(J, 1)) {
@@ -23798,7 +23776,6 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       pos__ = 1;
       std::vector<double> theta;
       theta = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
-      
       
       current_statement__ = 1;
       theta = context__.vals_r("theta");
@@ -27211,7 +27188,6 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       std::vector<double> psi_con;
       psi_con = std::vector<double>(R, std::numeric_limits<double>::quiet_NaN());
       
-      
       std::vector<int> z;
       z = std::vector<int>(R, std::numeric_limits<int>::min());
       
@@ -29707,7 +29683,6 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       Eigen::Matrix<double, -1, 1> x_cov_free__;
       x_cov_free__ = Eigen::Matrix<double, -1, 1>(3);
       stan::math::fill(x_cov_free__, std::numeric_limits<double>::quiet_NaN());
-      
       
       current_statement__ = 5;
       assign(x_cov_free__, stan::math::cov_matrix_free(x_cov),
