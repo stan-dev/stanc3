@@ -283,7 +283,7 @@ let math_sigs =
   ; ([UnaryVectorized], "inv_cloglog", [DDeepVectorized], SoA)
   ; ([UnaryVectorized], "inv_logit", [DDeepVectorized], SoA)
   ; ([UnaryVectorized], "inv_Phi", [DDeepVectorized], SoA)
-  ; ([UnaryVectorized], "inv_sqrt", [DDeepVectorized], AoS)
+  ; ([UnaryVectorized], "inv_sqrt", [DDeepVectorized], SoA)
   ; ([UnaryVectorized], "inv_square", [DDeepVectorized], AoS)
   ; ([UnaryVectorized], "lambert_w0", [DDeepVectorized], SoA)
   ; ([UnaryVectorized], "lambert_wm1", [DDeepVectorized], SoA)
@@ -1973,14 +1973,14 @@ let () =
   add_unqualified ("rank", ReturnType UInt, [UArray UReal; UInt], AoS) ;
   add_unqualified ("rank", ReturnType UInt, [UVector; UInt], AoS) ;
   add_unqualified ("rank", ReturnType UInt, [URowVector; UInt], AoS) ;
-  add_unqualified ("append_row", ReturnType UMatrix, [UMatrix; UMatrix], AoS) ;
-  add_unqualified ("append_row", ReturnType UMatrix, [URowVector; UMatrix], AoS) ;
-  add_unqualified ("append_row", ReturnType UMatrix, [UMatrix; URowVector], AoS) ;
+  add_unqualified ("append_row", ReturnType UMatrix, [UMatrix; UMatrix], SoA) ;
+  add_unqualified ("append_row", ReturnType UMatrix, [URowVector; UMatrix], SoA) ;
+  add_unqualified ("append_row", ReturnType UMatrix, [UMatrix; URowVector], SoA) ;
   add_unqualified
     ("append_row", ReturnType UMatrix, [URowVector; URowVector], AoS) ;
-  add_unqualified ("append_row", ReturnType UVector, [UVector; UVector], AoS) ;
-  add_unqualified ("append_row", ReturnType UVector, [UReal; UVector], AoS) ;
-  add_unqualified ("append_row", ReturnType UVector, [UVector; UReal], AoS) ;
+  add_unqualified ("append_row", ReturnType UVector, [UVector; UVector], SoA) ;
+  add_unqualified ("append_row", ReturnType UVector, [UReal; UVector], SoA) ;
+  add_unqualified ("append_row", ReturnType UVector, [UVector; UReal], SoA) ;
   List.iter
     ~f:(fun t ->
       add_unqualified

@@ -259,7 +259,9 @@ and gen_misc_special_math_app f mem_pattern
           let f = std_prefix_data_scalar f es in
           pp_call ppf (f, pp_expr, es) )
   (*NOTE: Very ad-hoc need to cleanup*)
-  | "rep_matrix" when mem_pattern = Common.Helpers.SoA -> (
+  | "rep_matrix" | "to_vector" | "rep_vector" | "rep_row_vector"
+   |"append_row" | "append_col"
+    when mem_pattern = Common.Helpers.SoA -> (
     match ret_type with
     | Some (UnsizedType.ReturnType t) ->
         Some
