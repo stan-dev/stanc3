@@ -116,6 +116,7 @@ val expression_return_outside_returning_fn : Location_span.t -> t
 val void_ouside_nonreturning_fn : Location_span.t -> t
 val non_data_variable_size_decl : Location_span.t -> t
 val non_int_bounds : Location_span.t -> t
+val complex_bounds : Location_span.t -> t
 val transformed_params_int : Location_span.t -> t
 
 val mismatched_fn_def_decl :

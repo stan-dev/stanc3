@@ -306,6 +306,7 @@ module StatementError = struct
     | VoidReturnOutsideNonReturningFn
     | NonDataVariableSizeDecl
     | NonIntBounds
+    | ComplexBounds
     | TransformedParamsInt
     | MismatchFunDefDecl of string * UnsizedType.t option
     | FunDeclExists of string
@@ -369,6 +370,7 @@ For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
     | NonIntBounds ->
         Fmt.pf ppf
           "Bounds of integer variable must be of type int. Found type real."
+    | ComplexBounds -> Fmt.pf ppf "Complex types do not support bounds."
     | TransformedParamsInt ->
         Fmt.pf ppf "(Transformed) Parameters cannot be integers."
     | MismatchFunDefDecl (name, Some ut) ->
@@ -606,6 +608,7 @@ let non_data_variable_size_decl loc =
   StatementError (loc, StatementError.NonDataVariableSizeDecl)
 
 let non_int_bounds loc = StatementError (loc, StatementError.NonIntBounds)
+let complex_bounds loc = StatementError (loc, StatementError.ComplexBounds)
 
 let transformed_params_int loc =
   StatementError (loc, StatementError.TransformedParamsInt)

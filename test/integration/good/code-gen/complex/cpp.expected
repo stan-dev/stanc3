@@ -203,8 +203,8 @@ class complex_model final : public model_base_crtp<complex_model> {
                                       bool emit_generated_quantities__ = true) const
     final {
     
-     param_names__.emplace_back(std::string() + "b" + '.' + "real");
-     param_names__.emplace_back(std::string() + "b" + '.' + "imag");
+    param_names__.emplace_back(std::string() + "b" + '.' + "real");
+    param_names__.emplace_back(std::string() + "b" + '.' + "imag");
     if (emit_transformed_parameters__) {
       
     }
@@ -221,8 +221,8 @@ class complex_model final : public model_base_crtp<complex_model> {
                                         bool emit_generated_quantities__ = true) const
     final {
     
-     param_names__.emplace_back(std::string() + "b" + '.' + "real");
-     param_names__.emplace_back(std::string() + "b" + '.' + "imag");
+    param_names__.emplace_back(std::string() + "b" + '.' + "real");
+    param_names__.emplace_back(std::string() + "b" + '.' + "imag");
     if (emit_transformed_parameters__) {
       
     }

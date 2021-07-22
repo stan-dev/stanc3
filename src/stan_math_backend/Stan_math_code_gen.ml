@@ -586,10 +586,10 @@ let emit_name ppf (name, idcs) =
 
 let emit_complex_name ppf (name, idcs) =
   let to_string = fmt "std::to_string(%s)" in
-  pf ppf "@[<hov> param_names__.emplace_back(std::string() + %a);@]@,"
+  pf ppf "@[param_names__.emplace_back(std::string() + %a);@]@,"
     (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
     ((strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs) @ ["\"real\""]) ;
-  pf ppf "@[<hov> param_names__.emplace_back(std::string() + %a);@]"
+  pf ppf "param_names__.emplace_back(std::string() + %a);"
     (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
     ((strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs) @ ["\"imag\""])
 

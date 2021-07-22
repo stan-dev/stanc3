@@ -15,19 +15,12 @@ let pp_profile ppf (pp_body, name, body) =
   in
   pf ppf "{@;<1 2>@[<v>%s@;@;%a@]@,}" profile pp_body body
 
-(*Helper function for pp_filler to allow for 
-  * recursive use of unsized types
- *)
-let rec pp_filler_helper ppf (decl_id, ut, nan_type, needs_filled) =
-  match (needs_filled, ut) with
-  | true, UnsizedType.UArray t ->
-      pp_filler_helper ppf (decl_id, t, nan_type, needs_filled)
-  | true, UMatrix | true, URowVector | true, UVector ->
-      pf ppf "@[<hov 2>stan::math::fill(%s, %s);@]@," decl_id nan_type
-  | _ -> ()
+let rec contains_eigen (ut : UnsizedType.t) : bool =
+  match ut with
+  | UnsizedType.UArray t -> contains_eigen t
+  | UMatrix | URowVector | UVector -> true
+  | UInt | UReal | UComplex | UMathLibraryFunction | UFun _ -> false
 
-(*  | true, UComplex -> pf ppf "@[%s.imag(%s);@]@," decl_id nan_type
-*)
 (*Fill only needs to happen for containers 
   * Note: This should probably be moved into its own function as data
   * does not need to be filled as we are promised user input data has the correct
@@ -35,8 +28,10 @@ let rec pp_filler_helper ppf (decl_id, ut, nan_type, needs_filled) =
   * to elements of objects in transform data not being set by the user.
   *)
 let pp_filler ppf (decl_id, st, nan_type, needs_filled) =
-  pp_filler_helper ppf
-    (decl_id, SizedType.to_unsized st, nan_type, needs_filled)
+  match (needs_filled, contains_eigen (SizedType.to_unsized st)) with
+  | true, true ->
+      pf ppf "@[<hov 2>stan::math::fill(%s, %s);@]@," decl_id nan_type
+  | _ -> ()
 
 (*Pretty print a sized type*)
 let pp_st ppf (st, adtype) =

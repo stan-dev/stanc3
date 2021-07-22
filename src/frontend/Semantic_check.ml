@@ -1525,16 +1525,25 @@ and semantic_check_profile ~loc ~cf name stmts =
 (* -- Variable Declarations ------------------------------------------------- *)
 and semantic_check_var_decl_bounds ~loc is_global sized_ty trans =
   let is_real {emeta; _} = emeta.type_ = UReal in
-  let is_valid_transformation =
+  let is_real_transformation =
     match trans with
     | Program.Lower e -> is_real e
     | Upper e -> is_real e
     | LowerUpper (e1, e2) -> is_real e1 || is_real e2
     | _ -> false
   in
+  let is_transformation =
+    match trans with
+    | Program.Lower _ -> true
+    | Upper _ -> true
+    | LowerUpper (_, _) -> true
+    | _ -> false
+  in
   Validate.(
-    if is_global && sized_ty = SizedType.SInt && is_valid_transformation then
+    if is_global && sized_ty = SizedType.SInt && is_real_transformation then
       Semantic_error.non_int_bounds loc |> error
+    else if is_global && sized_ty = SizedType.SComplex && is_transformation
+    then Semantic_error.complex_bounds loc |> error
     else ok ())
 
 and semantic_check_transformed_param_ty ~loc ~cf is_global unsized_ty =
