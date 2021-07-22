@@ -139,34 +139,6 @@ pipeline {
                     }
                     post {always { runShell("rm -rf ./*")}}
                 }
-                stage("Build & test a static Linux mips64el binary") {
-                    agent {
-                        dockerfile {
-                            filename 'docker/static/Dockerfile'
-                            //Forces image to ignore entrypoint
-                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
-                        }
-                    }
-                    steps {
-                        runShell("""
-                            eval \$(opam env)
-                            dune subst
-                        """)
-                        sh "sudo apk add docker"
-                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh mips64el"
-                        sh "sudo chown -R opam: _build"
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --profile static --verbose
-                        """)
-
-                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-mips64el-stanc"
-                        sh "mv `find _build -name stan2tfp.exe` bin/linux-mips64el-stan2tfp"
-
-                        stash name:'linux-mips64el-exe', includes:'bin/*'
-                    }
-                    post {always { runShell("rm -rf ./*")}}
-                }
                 stage("Build & test a static Linux ppc64el binary") {
                     agent {
                         dockerfile {
@@ -203,11 +175,14 @@ pipeline {
             agent { label 'linux' }
             environment { GITHUB_TOKEN = credentials('6e7c1e8f-ca2c-4b11-a70e-d934d3f6b681') }
             steps {
-                unstash 'windows-exe'
-                unstash 'linux-exe'
-                unstash 'mac-exe'
-                unstash 'linux-arm-exe'
-                unstash 'js-exe'
+                //unstash 'windows-exe'
+                //unstash 'linux-exe'
+                //unstash 'mac-exe'
+                unstash 'linux-arm64-exe'
+                unstash 'linux-armhf-exe'
+                unstash 'linux-armel-exe'
+                unstash 'linux-ppc64el-exe'
+                //unstash 'js-exe'
                 runShell("""
                     wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
                     tar -zxvpf ghr_v0.12.1_linux_amd64.tar.gz
