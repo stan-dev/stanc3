@@ -70,7 +70,7 @@ pipeline {
                         """)
                         sh "sudo apk add docker"
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh armel"
-                        sh "sudo chown -R opam: _build"
+                        sh "sudo chown -R opam: `pwd`"
                         echo runShell("""
                             eval \$(opam env)
                             time dune runtest --profile static --verbose
@@ -98,7 +98,7 @@ pipeline {
                         """)
                         sh "sudo apk add docker"
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh armhf"
-                        sh "sudo chown -R opam: _build"
+                        sh "sudo chown -R opam: `pwd`"
                         echo runShell("""
                             eval \$(opam env)
                             time dune runtest --profile static --verbose
@@ -126,7 +126,7 @@ pipeline {
                         """)
                         sh "sudo apk add docker"
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh arm64"
-                        sh "sudo chown -R opam: _build"
+                        sh "sudo chown -R opam: `pwd`"
                         echo runShell("""
                             eval \$(opam env)
                             time dune runtest --profile static --verbose
@@ -154,7 +154,7 @@ pipeline {
                         """)
                         sh "sudo apk add docker"
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh ppc64el"
-                        sh "sudo chown -R opam: _build"
+                        sh "sudo chown -R opam: `pwd`"
                         echo runShell("""
                             eval \$(opam env)
                             time dune runtest --profile static --verbose
