@@ -16,6 +16,7 @@ cd $(pwd)
 
 eval \$(opam env)
 bash -x scripts/install_build_deps.sh
+eval \$(opam env)
 dune build @install --profile static
 " > scripts/build_stanc3.sh
 
