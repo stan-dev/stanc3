@@ -139,34 +139,6 @@ pipeline {
                     }
                     post {always { runShell("rm -rf ./*")}}
                 }
-                stage("Build & test a static Linux mipsel binary") {
-                    agent {
-                        dockerfile {
-                            filename 'docker/static/Dockerfile'
-                            //Forces image to ignore entrypoint
-                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
-                        }
-                    }
-                    steps {
-                        runShell("""
-                            eval \$(opam env)
-                            dune subst
-                        """)
-                        sh "sudo apk add docker"
-                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh mipsel"
-                        sh "sudo chown -R opam: _build"
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --profile static --verbose
-                        """)
-
-                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-mipsel-stanc"
-                        sh "mv `find _build -name stan2tfp.exe` bin/linux-mipsel-stan2tfp"
-
-                        stash name:'linux-mipsel-exe', includes:'bin/*'
-                    }
-                    post {always { runShell("rm -rf ./*")}}
-                }
                 stage("Build & test a static Linux mips64el binary") {
                     agent {
                         dockerfile {
