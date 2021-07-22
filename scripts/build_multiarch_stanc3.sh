@@ -18,7 +18,9 @@ bash -x scripts/install_build_deps.sh
 dune build @install --profile static
 " > scripts/build_stanc3.sh
 
+docker run --rm --privileged multiarch/qemu-user-static:register --reset
 docker build -t $1-build - < $1-dockerfile
 docker run --volumes-from=$(docker ps -q):rw $1-build /bin/bash -c "bash -x $(pwd)/scripts/build_stanc3.sh"
+
 rm $1-dockerfile
 rm scripts/build_stanc3.sh
