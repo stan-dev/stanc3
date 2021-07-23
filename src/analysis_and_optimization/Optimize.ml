@@ -853,14 +853,13 @@ and unenforce_initialize (lst : ('a, 'b) Stmt.Fixed.t list) =
     match pattern with
     | Stmt.Fixed.Pattern.Decl ({decl_id; _} as patt) -> (
       match List.find_map ~f:(find_assignment_idx decl_id) sub_lst with
-      | Some [] | Some [Index.All] ->
+      | Some [] | Some [Index.All] | Some [Index.All; Index.All] ->
           { stmt with
             pattern= Stmt.Fixed.Pattern.Decl {patt with initialize= false} }
       | None | Some _ -> stmt )
     | Block block_lst ->
         {stmt with pattern= Block (unenforce_initialize block_lst)}
-    | SList s_lst ->
-        {stmt with pattern= SList (unenforce_initialize s_lst)}
+    | SList s_lst -> {stmt with pattern= SList (unenforce_initialize s_lst)}
     (*[] here because we do not want to check out of scope*)
     | While (expr, stmt) ->
         {stmt with pattern= While (expr, unenforce_initialize_patt stmt [])}
