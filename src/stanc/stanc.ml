@@ -228,7 +228,7 @@ let use_file filename =
             [%sexp (opt : Middle.Program.Typed.t)] ;
         if !dump_opt_mir_pretty then Program.Typed.pp Format.std_formatter opt ;
         opt )
-      else tx_mir
+      else Optimize.allow_uninitialized_decls tx_mir
     in
     let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir in
     Out_channel.write_all !output_file ~data:cpp ;

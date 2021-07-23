@@ -183,7 +183,9 @@ let%expect_test "Statement label map example" =
   [%expect
     {|
       ((1 (Block (2))) (2 (Block (3 4 5)))
-       (3 (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type (Sized SInt))))
+       (3
+        (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type (Sized SInt))
+         (fill_na true)))
        (4
         (Assignment (i UInt ())
          ((pattern (Lit Int 0))

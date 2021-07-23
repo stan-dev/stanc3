@@ -286,7 +286,7 @@ let%expect_test "list collapsing" =
          (Block
           (((pattern
              (Decl (decl_adtype DataOnly) (decl_id inline_sym1__)
-              (decl_type (Sized SInt))))
+              (decl_type (Sized SInt)) (initialize true)))
             (meta <opaque>))
            ((pattern
              (Assignment (inline_sym1__ UInt ())
@@ -342,11 +342,11 @@ let%expect_test "list collapsing" =
             (meta <opaque>))
            ((pattern
              (Decl (decl_adtype AutoDiffable) (decl_id inline_sym3__)
-              (decl_type (Unsized UReal))))
+              (decl_type (Unsized UReal)) (initialize false)))
             (meta <opaque>))
            ((pattern
              (Decl (decl_adtype DataOnly) (decl_id inline_sym4__)
-              (decl_type (Sized SInt))))
+              (decl_type (Sized SInt)) (initialize true)))
             (meta <opaque>))
            ((pattern
              (Assignment (inline_sym4__ UInt ())
@@ -3307,24 +3307,26 @@ let%expect_test "adlevel_optimization expressions" =
   [%expect
     {|
       (((pattern
-         (Decl (decl_adtype AutoDiffable) (decl_id w) (decl_type (Sized SReal))))
+         (Decl (decl_adtype AutoDiffable) (decl_id w) (decl_type (Sized SReal))
+          (initialize true)))
         (meta <opaque>))
        ((pattern
          (Block
           (((pattern
-             (Decl (decl_adtype DataOnly) (decl_id x) (decl_type (Sized SInt))))
+             (Decl (decl_adtype DataOnly) (decl_id x) (decl_type (Sized SInt))
+              (initialize true)))
             (meta <opaque>))
            ((pattern
-             (Decl (decl_adtype AutoDiffable) (decl_id y)
-              (decl_type (Sized SReal))))
+             (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type (Sized SReal))
+              (initialize true)))
             (meta <opaque>))
            ((pattern
-             (Decl (decl_adtype AutoDiffable) (decl_id z)
-              (decl_type (Sized SReal))))
+             (Decl (decl_adtype AutoDiffable) (decl_id z) (decl_type (Sized SReal))
+              (initialize true)))
             (meta <opaque>))
            ((pattern
              (Decl (decl_adtype DataOnly) (decl_id z_data)
-              (decl_type (Sized SReal))))
+              (decl_type (Sized SReal)) (initialize true)))
             (meta <opaque>))
            ((pattern
              (IfElse

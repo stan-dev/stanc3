@@ -60,23 +60,25 @@ let rec pp_initialize ppf (st, adtype) =
       pf ppf "%a(%a, %a)" pp_st (st, adtype) pp_expr d pp_initialize (t, adtype)
 
 (*Initialize an object of a given size.*)
-let pp_assign_sized ppf (decl_id, st, adtype) =
+let pp_assign_sized ppf (decl_id, st, adtype, initialize) =
   let init_nan = nan_type (st, adtype) in
   let pp_assign ppf (decl_id, st, adtype) =
-    pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_initialize (st, adtype)
+    match initialize with
+    | true -> pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_initialize (st, adtype)
+    | false -> pf ppf ""
   in
   pf ppf "@[%a%a@]@," pp_assign (decl_id, st, adtype) pp_filler
-    (decl_id, st, init_nan, true)
+    (decl_id, st, init_nan, initialize)
 
 let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in
   strf "@[<v>%a@]" pp_assign_sized
-    ("d", SArray (SArray (SMatrix (int 2, int 3), int 4), int 5), DataOnly)
+    ( "d"
+    , SArray (SArray (SMatrix (int 2, int 3), int 4), int 5)
+    , DataOnly
+    , false )
   |> print_endline ;
-  [%expect
-    {|
-      d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3)));
-      stan::math::fill(d, std::numeric_limits<double>::quiet_NaN()); |}]
+  [%expect {| |}]
 
 (* Initialize Data and Transformed Data 
  * This function is used in the model's constructor to
@@ -209,14 +211,15 @@ let pp_unsized_decl ppf (vident, ut, adtype) =
   in
   pf ppf "%a %s;" pp_type (adtype, ut) vident
 
-let pp_sized_decl ppf (vident, st, adtype) =
+let pp_sized_decl ppf (vident, st, adtype, initialize) =
   pf ppf "%a@,%a" pp_unsized_decl
     (vident, SizedType.to_unsized st, adtype)
-    pp_assign_sized (vident, st, adtype)
+    pp_assign_sized
+    (vident, st, adtype, initialize)
 
-let pp_decl ppf (vident, pst, adtype) =
+let pp_decl ppf (vident, pst, adtype, initialize) =
   match pst with
-  | Type.Sized st -> pp_sized_decl ppf (vident, st, adtype)
+  | Type.Sized st -> pp_sized_decl ppf (vident, st, adtype, initialize)
   | Unsized ut -> pp_unsized_decl ppf (vident, ut, adtype)
 
 let math_fn_translations = function
@@ -337,8 +340,8 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
   | Profile (name, ls) -> pp_profile ppf (pp_stmt_list, name, ls)
   | Block ls -> pp_block ppf (pp_stmt_list, ls)
   | SList ls -> pp_stmt_list ppf ls
-  | Decl {decl_adtype; decl_id; decl_type} ->
-      pp_decl ppf (decl_id, decl_type, decl_adtype)
+  | Decl {decl_adtype; decl_id; decl_type; initialize; _} ->
+      pp_decl ppf (decl_id, decl_type, decl_adtype, initialize)
 
 and pp_block_s ppf body =
   match body.pattern with

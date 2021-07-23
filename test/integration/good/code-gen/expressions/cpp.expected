@@ -181,7 +181,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      
       
       pos__ = 1;
       current_statement__ = 1;
@@ -309,7 +309,7 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      
       
       pos__ = 1;
     } catch (const std::exception& e) {

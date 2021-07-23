@@ -164,7 +164,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      
       
       pos__ = 1;
       current_statement__ = 16;
@@ -630,46 +630,46 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      
       
       pos__ = 1;
       double beta;
-      beta = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 1;
       beta = context__.vals_r("beta")[(1 - 1)];
       double beta_free__;
-      beta_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 1;
       beta_free__ = stan::math::lb_free(beta, 0);
       double gamma;
-      gamma = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 2;
       gamma = context__.vals_r("gamma")[(1 - 1)];
       double gamma_free__;
-      gamma_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 2;
       gamma_free__ = stan::math::lb_free(gamma, 0);
       double xi;
-      xi = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 3;
       xi = context__.vals_r("xi")[(1 - 1)];
       double xi_free__;
-      xi_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 3;
       xi_free__ = stan::math::lb_free(xi, 0);
       double delta;
-      delta = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 4;
       delta = context__.vals_r("delta")[(1 - 1)];
       double delta_free__;
-      delta_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 4;
       delta_free__ = stan::math::lb_free(delta, 0);
@@ -4774,7 +4774,7 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
     try {
       
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      
       
       pos__ = 1;
       current_statement__ = 1;
@@ -4897,7 +4897,7 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
     
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      
       
       pos__ = 1;
     } catch (const std::exception& e) {
@@ -5116,7 +5116,7 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
     try {
       
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      
       
       pos__ = 1;
       current_statement__ = 1;
@@ -5238,7 +5238,7 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
     
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      
       
       pos__ = 1;
     } catch (const std::exception& e) {
@@ -22975,7 +22975,7 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
     try {
       
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      
       
       pos__ = 1;
       current_statement__ = 1;
@@ -23095,7 +23095,7 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
     
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      
       
       pos__ = 1;
     } catch (const std::exception& e) {
@@ -23309,7 +23309,7 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      
       
       pos__ = 1;
     } catch (const std::exception& e) {
@@ -23432,11 +23432,11 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      
       
       pos__ = 1;
       double x;
-      x = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 1;
       x = context__.vals_r("x")[(1 - 1)];
@@ -23652,7 +23652,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      
       
       pos__ = 1;
       current_statement__ = 3;
@@ -25787,26 +25787,26 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
     
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      
       
       pos__ = 1;
       double mean_phi;
-      mean_phi = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 1;
       mean_phi = context__.vals_r("mean_phi")[(1 - 1)];
       double mean_phi_free__;
-      mean_phi_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 1;
       mean_phi_free__ = stan::math::lub_free(mean_phi, 0, 1);
       double mean_p;
-      mean_p = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 2;
       mean_p = context__.vals_r("mean_p")[(1 - 1)];
       double mean_p_free__;
-      mean_p_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 2;
       mean_p_free__ = stan::math::lub_free(mean_p, 0, 1);
@@ -26181,7 +26181,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      
       
       pos__ = 1;
       current_statement__ = 9;
@@ -26397,11 +26397,11 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      
       
       pos__ = 1;
       double mu;
-      mu = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 1;
       mu = context__.vals_r("mu")[(1 - 1)];
@@ -27329,26 +27329,26 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      
       
       pos__ = 1;
       double alpha_occ;
-      alpha_occ = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 1;
       alpha_occ = context__.vals_r("alpha_occ")[(1 - 1)];
       double beta_occ;
-      beta_occ = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 2;
       beta_occ = context__.vals_r("beta_occ")[(1 - 1)];
       double alpha_p;
-      alpha_p = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 3;
       alpha_p = context__.vals_r("alpha_p")[(1 - 1)];
       double beta_p;
-      beta_p = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 4;
       beta_p = context__.vals_r("beta_p")[(1 - 1)];
@@ -28785,7 +28785,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      
       
       pos__ = 1;
     } catch (const std::exception& e) {
@@ -31851,7 +31851,7 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      
       
       pos__ = 1;
     } catch (const std::exception& e) {
@@ -32223,7 +32223,7 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
     
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      
       
       pos__ = 1;
     } catch (const std::exception& e) {

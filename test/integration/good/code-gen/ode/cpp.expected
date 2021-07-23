@@ -241,7 +241,7 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      
       
       pos__ = 1;
       current_statement__ = 10;
@@ -342,29 +342,27 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
     
     try {
       local_scalar_t__ y;
-      y = DUMMY_VAR__;
+      
       
       current_statement__ = 1;
       y = in__.template read<local_scalar_t__>();
       Eigen::Matrix<local_scalar_t__, -1, 1> y0;
-      y0 = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-      stan::math::fill(y0, DUMMY_VAR__);
+      
       
       current_statement__ = 2;
       y0 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
       local_scalar_t__ t0;
-      t0 = DUMMY_VAR__;
+      
       
       current_statement__ = 3;
       t0 = in__.template read<local_scalar_t__>();
       std::vector<local_scalar_t__> times;
-      times = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
+      
       
       current_statement__ = 4;
       times = in__.template read<std::vector<local_scalar_t__>>(N);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> z;
-      z = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(M, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
-      stan::math::fill(z, DUMMY_VAR__);
+      
       
       current_statement__ = 6;
       assign(z,
@@ -423,30 +421,27 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
     
     try {
       double y;
-      y = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 1;
       y = in__.template read<local_scalar_t__>();
       Eigen::Matrix<double, -1, 1> y0;
-      y0 = Eigen::Matrix<double, -1, 1>(N);
-      stan::math::fill(y0, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 2;
       y0 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
       double t0;
-      t0 = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 3;
       t0 = in__.template read<local_scalar_t__>();
       std::vector<double> times;
-      times = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
       
       current_statement__ = 4;
       times = in__.template read<std::vector<local_scalar_t__>>(N);
       std::vector<Eigen::Matrix<double, -1, 1>> z;
-      z = std::vector<Eigen::Matrix<double, -1, 1>>(M, Eigen::Matrix<double, -1, 1>(N));
-      stan::math::fill(z, std::numeric_limits<double>::quiet_NaN());
+      
       
       vars__.emplace_back(y);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
@@ -508,11 +503,11 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
     
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
+      
       
       pos__ = 1;
       double y;
-      y = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 1;
       y = context__.vals_r("y")[(1 - 1)];

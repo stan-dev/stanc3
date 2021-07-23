@@ -81,13 +81,14 @@ let slist_concat_no_loc l stmt =
 
 let replace_fresh_local_vars s' =
   let f m = function
-    | Stmt.Fixed.Pattern.Decl {decl_adtype; decl_type; decl_id} ->
+    | Stmt.Fixed.Pattern.Decl {decl_adtype; decl_type; decl_id; initialize} ->
         let new_name =
           match Map.Poly.find m decl_id with
           | Some existing -> existing
           | None -> Gensym.generate ~prefix:"inline_" ()
         in
-        ( Stmt.Fixed.Pattern.Decl {decl_adtype; decl_id= new_name; decl_type}
+        ( Stmt.Fixed.Pattern.Decl
+            {decl_adtype; decl_id= new_name; decl_type; initialize}
         , Map.Poly.set m ~key:decl_id ~data:new_name )
     | Stmt.Fixed.Pattern.For {loopvar; lower; upper; body} ->
         let new_name =
@@ -179,7 +180,10 @@ let handle_early_returns opt_var b =
     [ Stmt.Fixed.
         { pattern=
             Decl
-              {decl_adtype= DataOnly; decl_id= returned; decl_type= Sized SInt}
+              { decl_adtype= DataOnly
+              ; decl_id= returned
+              ; decl_type= Sized SInt
+              ; initialize= true }
         ; meta= Location_span.empty }
     ; Stmt.Fixed.
         { pattern=
@@ -258,7 +262,8 @@ let rec inline_function_expression propto adt fim
                 ( [ Stmt.Fixed.Pattern.Decl
                       { decl_adtype= adt
                       ; decl_id= x
-                      ; decl_type= Option.value_exn rt } ]
+                      ; decl_type= Option.value_exn rt
+                      ; initialize= false } ]
                   (* We should minimize the code that's having its variables
                    replaced to avoid conflict with the (two) new dummy
                    variables introduced by inlining *)
@@ -812,6 +817,95 @@ let dead_code_elimination (mir : Program.Typed.t) =
 
 let partial_evaluation = Partial_evaluator.eval_prog
 
+(**
+ * Given a name and Stmt, search the statement for the first assignment
+ * where that name is the assignee.
+ *)
+let rec find_assignment_idx (name : string) Stmt.Fixed.({pattern; _}) =
+  match pattern with
+  | Stmt.Fixed.Pattern.Assignment
+      ((assign_name, (_ : UnsizedType.t), idx_lst), (_ : 'a Expr.Fixed.t))
+    when name = assign_name ->
+      Some idx_lst
+  | Assignment _ | Decl _ | TargetPE _ | NRFunApp _ | Break | Continue
+   |Return _ | Skip ->
+      None
+  | IfElse ((_ : 'a Expr.Fixed.t), true_stmt, op_false_stmt) -> (
+    match find_assignment_idx name true_stmt with
+    | Some _ as ret -> ret
+    | None -> (
+      match op_false_stmt with
+      | Some false_stmt -> find_assignment_idx name false_stmt
+      | None -> None ) )
+  | While ((_ : 'a Expr.Fixed.t), stmt) -> find_assignment_idx name stmt
+  | For {body; _} -> find_assignment_idx name body
+  | Profile ((_ : string), stmts) | Block stmts | SList stmts ->
+      List.find_map ~f:(find_assignment_idx name) stmts
+
+(**
+ * Given a list of Stmts, find Decls whose objects are fully assigned to
+ *  in their first assignment and mark them as not needing to be 
+ *  initialized.
+ *)
+and unenforce_initialize (lst : ('a, 'b) Stmt.Fixed.t list) =
+  match List.hd lst with
+  | Some (Stmt.Fixed.({pattern; _}) as stmt) -> (
+    match pattern with
+    | Stmt.Fixed.Pattern.Decl {decl_id; decl_adtype; decl_type; initialize}
+      when initialize = true -> (
+      match List.tl lst with
+      | Some sub_lst -> (
+        match List.find_map ~f:(find_assignment_idx decl_id) sub_lst with
+        | Some [] | Some [Index.All] ->
+            let update_decl =
+              { stmt with
+                pattern=
+                  Stmt.Fixed.Pattern.Decl
+                    {decl_id; decl_adtype; decl_type; initialize= false} }
+            in
+            List.concat [[update_decl]; unenforce_initialize sub_lst]
+        | None | Some _ -> lst )
+      | None -> lst )
+    | _ -> (
+      match List.tl lst with
+      | Some sub_lst -> List.concat [[stmt]; unenforce_initialize sub_lst]
+      | None -> lst ) )
+  | None -> lst
+
+(**
+ * Take the Mir and perform a transform that requires searching 
+ *  across the list inside of each piece of the Mir.
+ *  @param mir The mir
+ *  @param transformer a function that takes in and returns a list of 
+ *    Stmts.
+ *)
+let transform_mir_blocks (mir : (Expr.Typed.t, Stmt.Located.t) Program.t)
+    (transformer :
+         (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t sexp_list
+      -> Stmt.Located.t sexp_list) : (Expr.Typed.t, Stmt.Located.t) Program.t =
+  let transformed_functions =
+    List.map mir.functions_block ~f:(fun fs ->
+        let new_body =
+          match fs.fdbody with
+          | Some (Stmt.Fixed.({pattern= SList lst | Block lst; _}) as stmt) ->
+              Some {stmt with pattern= SList (transformer lst)}
+          | alt -> alt
+        in
+        {fs with fdbody= new_body} )
+  in
+  { Program.functions_block= transformed_functions
+  ; input_vars= mir.input_vars
+  ; prepare_data= transformer mir.prepare_data
+  ; log_prob= transformer mir.log_prob
+  ; generate_quantities= transformer mir.generate_quantities
+  ; transform_inits= transformer mir.transform_inits
+  ; output_vars= mir.output_vars
+  ; prog_name= mir.prog_name
+  ; prog_path= mir.prog_path }
+
+let allow_uninitialized_decls mir =
+  transform_mir_blocks mir unenforce_initialize
+
 let lazy_code_motion (mir : Program.Typed.t) =
   (* TODO: clean up this code. It is not very pretty. *)
   (* TODO: make lazy code motion operate on transformed parameters and models blocks
@@ -885,7 +979,8 @@ let lazy_code_motion (mir : Program.Typed.t) =
                 Pattern.Decl
                   { decl_adtype= Expr.Typed.adlevel_of key
                   ; decl_id= data
-                  ; decl_type= Type.Unsized (Expr.Typed.type_of key) }
+                  ; decl_type= Type.Unsized (Expr.Typed.type_of key)
+                  ; initialize= true }
             ; meta= Location_span.empty }
           :: accum )
     in
@@ -1056,12 +1151,12 @@ let optimize_ad_levels (mir : Program.Typed.t) =
           (fun x -> x)
           stmt
       with
-      | Decl {decl_id; decl_type; _}
+      | Decl {decl_id; decl_type; initialize; _}
         when Set.mem autodiffable_variables decl_id ->
           Stmt.Fixed.Pattern.Decl
-            {decl_adtype= AutoDiffable; decl_id; decl_type}
-      | Decl {decl_id; decl_type; _} ->
-          Decl {decl_adtype= DataOnly; decl_id; decl_type}
+            {decl_adtype= AutoDiffable; decl_id; decl_type; initialize}
+      | Decl {decl_id; decl_type; initialize; _} ->
+          Decl {decl_adtype= DataOnly; decl_id; decl_type; initialize}
       | s -> s
     in
     let optimize_ad_levels_stmt =
@@ -1085,7 +1180,8 @@ type optimization_settings =
   ; dead_code_elimination: bool
   ; partial_evaluation: bool
   ; lazy_code_motion: bool
-  ; optimize_ad_levels: bool }
+  ; optimize_ad_levels: bool
+  ; allow_uninitialized_decls: bool }
 
 let settings_const b =
   { function_inlining= b
@@ -1099,7 +1195,8 @@ let settings_const b =
   ; dead_code_elimination= b
   ; partial_evaluation= b
   ; lazy_code_motion= b
-  ; optimize_ad_levels= b }
+  ; optimize_ad_levels= b
+  ; allow_uninitialized_decls= b }
 
 let all_optimizations : optimization_settings = settings_const true
 let no_optimizations : optimization_settings = settings_const false
@@ -1143,7 +1240,8 @@ let optimization_suite ?(settings = all_optimizations) mir =
     ; (optimize_ad_levels, settings.optimize_ad_levels)
       (* Book: Machine idioms and instruction combining *)
       (* Matthijs: Everything < block_fixing *)
-    ; (block_fixing, settings.block_fixing) ]
+    ; (block_fixing, settings.block_fixing)
+    ; (allow_uninitialized_decls, settings.allow_uninitialized_decls) ]
   in
   let optimizations =
     List.filter_map maybe_optimizations ~f:(fun (fn, flag) ->
