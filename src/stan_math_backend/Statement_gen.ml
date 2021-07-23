@@ -80,6 +80,18 @@ let%expect_test "set size mat array" =
   |> print_endline ;
   [%expect {| |}]
 
+let%expect_test "set size mat array" =
+  let int = Expr.Helpers.int in
+  strf "@[<v>%a@]" pp_assign_sized
+    ( "d"
+    , SArray (SArray (SMatrix (int 2, int 3), int 4), int 5)
+    , DataOnly
+    , true )
+  |> print_endline ;
+  [%expect {|
+    d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3)));
+    stan::math::fill(d, std::numeric_limits<double>::quiet_NaN()); |}]
+
 (* Initialize Data and Transformed Data 
  * This function is used in the model's constructor to
  * 1. Initialize memory for the data and transformed data
@@ -113,7 +125,7 @@ let pp_assign_data ppf
     pp_filler
     (decl_id, st, init_nan, needs_filled)
 
-let%expect_test "set size map int array" =
+let%expect_test "set size map int array no initialize" =
   let int = Expr.Helpers.int in
   strf "@[<v>%a@]" pp_assign_data
     ("darrmat", SArray (SArray (SInt, int 4), int 5), false)
