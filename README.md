@@ -42,8 +42,7 @@ To be able to build the project, make sure you have `GNU make`.
 To install OCaml and the dependencies we need to build and do development run the following from the stanc3 directory:
 
 ```
-cd scripts
-bash -x setup_dev_env.sh
+bash -x scripts/setup_dev_env.sh
 ```
 Note that `curl` and `m4` are prerequisites to run the install script.
 
