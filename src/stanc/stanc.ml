@@ -215,7 +215,9 @@ let use_file filename =
     else if !warn_uninitialized then
       Pedantic_analysis.warn_uninitialized mir
       |> pp_stderr (Warnings.pp_warnings ?printed_filename) ;
-    let tx_mir = Transform_Mir.trans_prog mir in
+    let tx_mir =
+      Optimize.allow_uninitialized_decls (Transform_Mir.trans_prog mir)
+    in
     if !dump_tx_mir then
       Sexp.pp_hum Format.std_formatter
         [%sexp (tx_mir : Middle.Program.Typed.t)] ;
@@ -228,7 +230,7 @@ let use_file filename =
             [%sexp (opt : Middle.Program.Typed.t)] ;
         if !dump_opt_mir_pretty then Program.Typed.pp Format.std_formatter opt ;
         opt )
-      else Optimize.allow_uninitialized_decls tx_mir
+      else tx_mir
     in
     let cpp = Fmt.strf "%a" Stan_math_code_gen.pp_prog opt_mir in
     Out_channel.write_all !output_file ~data:cpp ;

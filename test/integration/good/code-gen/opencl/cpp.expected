@@ -6138,7 +6138,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
         }
       }
       double y_p;
-      y_p = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 6;
       y_p = context__.vals_r("y_p")[(1 - 1)];
@@ -6901,7 +6901,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
         }
       }
       double y_p;
-      y_p = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 6;
       y_p = context__.vals_r("y_p")[(1 - 1)];

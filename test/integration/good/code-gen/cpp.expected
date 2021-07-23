@@ -1772,7 +1772,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 787> locations_array__ = 
+static constexpr std::array<const char*, 776> locations_array__ = 
 {" (found before start of program)",
  " (in 'mother.stan', line 555, column 2 to column 14)",
  " (in 'mother.stan', line 556, column 2 to column 29)",
@@ -2392,9 +2392,7 @@ static constexpr std::array<const char*, 787> locations_array__ =
  " (in 'mother.stan', line 64, column 4 to column 26)",
  " (in 'mother.stan', line 62, column 30 to line 65, column 3)",
  " (in 'mother.stan', line 69, column 14 to column 20)",
- " (in 'mother.stan', line 69, column 4 to column 20)",
  " (in 'mother.stan', line 70, column 14 to column 23)",
- " (in 'mother.stan', line 70, column 4 to column 23)",
  " (in 'mother.stan', line 73, column 20 to column 26)",
  " (in 'mother.stan', line 73, column 4 to column 26)",
  " (in 'mother.stan', line 74, column 20 to column 29)",
@@ -2403,21 +2401,17 @@ static constexpr std::array<const char*, 787> locations_array__ =
  " (in 'mother.stan', line 79, column 6 to column 12)",
  " (in 'mother.stan', line 80, column 6 to column 12)",
  " (in 'mother.stan', line 77, column 14 to line 81, column 5)",
- " (in 'mother.stan', line 77, column 4 to line 81, column 5)",
  " (in 'mother.stan', line 87, column 11 to column 17)",
  " (in 'mother.stan', line 86, column 18 to column 24)",
  " (in 'mother.stan', line 86, column 11 to line 87, column 17)",
  " (in 'mother.stan', line 85, column 13 to column 19)",
  " (in 'mother.stan', line 85, column 6 to line 87, column 17)",
  " (in 'mother.stan', line 84, column 14 to line 88, column 5)",
- " (in 'mother.stan', line 84, column 4 to line 88, column 5)",
  " (in 'mother.stan', line 91, column 24 to column 30)",
  " (in 'mother.stan', line 91, column 14 to column 30)",
- " (in 'mother.stan', line 91, column 4 to column 30)",
  " (in 'mother.stan', line 95, column 22 to column 28)",
  " (in 'mother.stan', line 95, column 6 to column 28)",
  " (in 'mother.stan', line 94, column 14 to line 96, column 5)",
- " (in 'mother.stan', line 94, column 4 to line 96, column 5)",
  " (in 'mother.stan', line 100, column 6 to column 19)",
  " (in 'mother.stan', line 101, column 6 to column 12)",
  " (in 'mother.stan', line 102, column 6 to line 105, column 7)",
@@ -2432,7 +2426,6 @@ static constexpr std::array<const char*, 787> locations_array__ =
  " (in 'mother.stan', line 113, column 10 to column 16)",
  " (in 'mother.stan', line 115, column 8 to column 14)",
  " (in 'mother.stan', line 99, column 14 to line 117, column 5)",
- " (in 'mother.stan', line 99, column 4 to line 117, column 5)",
  " (in 'mother.stan', line 121, column 6 to column 13)",
  " (in 'mother.stan', line 122, column 6 to column 21)",
  " (in 'mother.stan', line 123, column 6 to line 126, column 7)",
@@ -2442,7 +2435,6 @@ static constexpr std::array<const char*, 787> locations_array__ =
  " (in 'mother.stan', line 128, column 8 to column 16)",
  " (in 'mother.stan', line 129, column 8 to column 17)",
  " (in 'mother.stan', line 120, column 14 to line 131, column 5)",
- " (in 'mother.stan', line 120, column 4 to line 131, column 5)",
  " (in 'mother.stan', line 135, column 6 to column 13)",
  " (in 'mother.stan', line 136, column 6 to column 19)",
  " (in 'mother.stan', line 137, column 6 to line 140, column 7)",
@@ -2452,7 +2444,6 @@ static constexpr std::array<const char*, 787> locations_array__ =
  " (in 'mother.stan', line 142, column 8 to column 16)",
  " (in 'mother.stan', line 143, column 8 to column 17)",
  " (in 'mother.stan', line 134, column 14 to line 145, column 5)",
- " (in 'mother.stan', line 134, column 4 to line 145, column 5)",
  " (in 'mother.stan', line 149, column 6 to column 13)",
  " (in 'mother.stan', line 150, column 6 to column 23)",
  " (in 'mother.stan', line 151, column 6 to line 154, column 7)",
@@ -2462,7 +2453,6 @@ static constexpr std::array<const char*, 787> locations_array__ =
  " (in 'mother.stan', line 156, column 8 to column 16)",
  " (in 'mother.stan', line 157, column 8 to column 17)",
  " (in 'mother.stan', line 148, column 14 to line 159, column 5)",
- " (in 'mother.stan', line 148, column 4 to line 159, column 5)",
  " (in 'mother.stan', line 163, column 6 to column 12)",
  " (in 'mother.stan', line 164, column 6 to column 12)",
  " (in 'mother.stan', line 166, column 8 to column 14)",
@@ -2470,7 +2460,6 @@ static constexpr std::array<const char*, 787> locations_array__ =
  " (in 'mother.stan', line 168, column 8 to column 14)",
  " (in 'mother.stan', line 165, column 6 to line 169, column 7)",
  " (in 'mother.stan', line 162, column 14 to line 170, column 5)",
- " (in 'mother.stan', line 162, column 4 to line 170, column 5)",
  " (in 'mother.stan', line 172, column 4 to column 13)",
  " (in 'mother.stan', line 67, column 19 to line 173, column 3)",
  " (in 'mother.stan', line 176, column 4 to column 14)",
@@ -2897,34 +2886,34 @@ foo_1(const int& a, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 619;
+    current_statement__ = 618;
     while (1) {
       break;
     }
-    current_statement__ = 621;
+    current_statement__ = 619;
     while (0) {
       continue;
     }
-    current_statement__ = 623;
+    current_statement__ = 621;
     for (int i = 1; i <= 10; ++i) { break;}
-    current_statement__ = 625;
+    current_statement__ = 623;
     for (int i = 1; i <= 10; ++i) { continue;}
-    current_statement__ = 630;
+    current_statement__ = 627;
     while (1) {
       int b;
-      b = std::numeric_limits<int>::min();
       
-      current_statement__ = 627;
+      
+      current_statement__ = 625;
       b = 5;
       break;
     }
-    current_statement__ = 637;
+    current_statement__ = 633;
     while (1) {
-      current_statement__ = 635;
+      current_statement__ = 632;
       if (0) {
         break;
       } else {
-        current_statement__ = 633;
+        current_statement__ = 630;
         if (1) {
           break;
         } else {
@@ -2932,27 +2921,49 @@ foo_1(const int& a, std::ostream* pstream__) {
         }
       }
     }
-    current_statement__ = 640;
+    current_statement__ = 635;
     while (1) {
-      current_statement__ = 639;
+      current_statement__ = 634;
       while (0) {
         break;
       }
     }
-    current_statement__ = 644;
+    current_statement__ = 638;
     while (1) {
-      current_statement__ = 642;
+      current_statement__ = 637;
       for (int i = 1; i <= 10; ++i) { break;}
     }
-    current_statement__ = 659;
+    current_statement__ = 652;
     while (1) {
       std::vector<std::vector<int>> vs;
       vs = std::vector<std::vector<int>>(2, std::vector<int>(3, std::numeric_limits<int>::min()));
       
       
       int z;
-      z = std::numeric_limits<int>::min();
       
+      
+      current_statement__ = 641;
+      for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
+        {
+          std::vector<int> v;
+          current_statement__ = 641;
+          assign(v, vs[(sym1__ - 1)], "assigning variable v");
+          current_statement__ = 642;
+          z = 0;
+          break;
+        }
+      }
+      current_statement__ = 644;
+      for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
+        {
+          std::vector<int> v;
+          current_statement__ = 644;
+          assign(v, vs[(sym1__ - 1)], "assigning variable v");
+          current_statement__ = 645;
+          z = 0;
+          continue;
+        }
+      }
       current_statement__ = 647;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
@@ -2960,166 +2971,144 @@ foo_1(const int& a, std::ostream* pstream__) {
           current_statement__ = 647;
           assign(v, vs[(sym1__ - 1)], "assigning variable v");
           current_statement__ = 648;
-          z = 0;
-          break;
-        }
-      }
-      current_statement__ = 650;
-      for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
-        {
-          std::vector<int> v;
-          current_statement__ = 650;
-          assign(v, vs[(sym1__ - 1)], "assigning variable v");
-          current_statement__ = 651;
-          z = 0;
-          continue;
-        }
-      }
-      current_statement__ = 653;
-      for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
-        {
-          std::vector<int> v;
-          current_statement__ = 653;
-          assign(v, vs[(sym1__ - 1)], "assigning variable v");
-          current_statement__ = 654;
           for (int sym1__ = 1; sym1__ <= stan::math::size(v); ++sym1__) {
             {
               int vv;
-              current_statement__ = 654;
+              current_statement__ = 648;
               vv = v[(sym1__ - 1)];
-              current_statement__ = 655;
+              current_statement__ = 649;
               z = 0;
               break;
             }
           }
-          current_statement__ = 657;
+          current_statement__ = 651;
           z = 1;
         }
       }
     }
-    current_statement__ = 669;
+    current_statement__ = 661;
     while (1) {
       local_scalar_t__ z;
-      z = DUMMY_VAR__;
+      
       
       Eigen::Matrix<local_scalar_t__, -1, -1> vs;
       vs = Eigen::Matrix<local_scalar_t__, -1, -1>(2, 3);
       stan::math::fill(vs, DUMMY_VAR__);
       
-      current_statement__ = 662;
+      current_statement__ = 655;
       for (int sym1__ = 1; sym1__ <= rows(vs); ++sym1__) {
-        current_statement__ = 662;
+        current_statement__ = 655;
         for (int sym2__ = 1;
              sym2__ <= stan::math::size(rvalue(vs, "vs", index_uni(sym1__)));
              ++sym2__) {
           {
             local_scalar_t__ v;
-            current_statement__ = 662;
+            current_statement__ = 655;
             v = rvalue(vs, "vs", index_uni(sym1__), index_uni(sym2__));
-            current_statement__ = 663;
+            current_statement__ = 656;
             z = 0;
             break;
           }
         }
       }
-      current_statement__ = 665;
+      current_statement__ = 658;
       for (int sym1__ = 1; sym1__ <= rows(vs); ++sym1__) {
-        current_statement__ = 665;
+        current_statement__ = 658;
         for (int sym2__ = 1;
              sym2__ <= stan::math::size(rvalue(vs, "vs", index_uni(sym1__)));
              ++sym2__) {
           {
             local_scalar_t__ v;
-            current_statement__ = 665;
+            current_statement__ = 658;
             v = rvalue(vs, "vs", index_uni(sym1__), index_uni(sym2__));
-            current_statement__ = 666;
+            current_statement__ = 659;
             z = 3.1;
             continue;
           }
         }
       }
     }
-    current_statement__ = 679;
+    current_statement__ = 670;
     while (1) {
       local_scalar_t__ z;
-      z = DUMMY_VAR__;
+      
       
       Eigen::Matrix<local_scalar_t__, -1, 1> vs;
       vs = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
       stan::math::fill(vs, DUMMY_VAR__);
       
-      current_statement__ = 672;
+      current_statement__ = 664;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           local_scalar_t__ v;
-          current_statement__ = 672;
+          current_statement__ = 664;
           v = vs[(sym1__ - 1)];
-          current_statement__ = 673;
+          current_statement__ = 665;
           z = 0;
           break;
         }
       }
-      current_statement__ = 675;
+      current_statement__ = 667;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           local_scalar_t__ v;
-          current_statement__ = 675;
+          current_statement__ = 667;
           v = vs[(sym1__ - 1)];
-          current_statement__ = 676;
+          current_statement__ = 668;
           z = 3.2;
           continue;
         }
       }
     }
-    current_statement__ = 689;
+    current_statement__ = 679;
     while (1) {
       local_scalar_t__ z;
-      z = DUMMY_VAR__;
+      
       
       Eigen::Matrix<local_scalar_t__, 1, -1> vs;
       vs = Eigen::Matrix<local_scalar_t__, 1, -1>(2);
       stan::math::fill(vs, DUMMY_VAR__);
       
-      current_statement__ = 682;
+      current_statement__ = 673;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           local_scalar_t__ v;
-          current_statement__ = 682;
+          current_statement__ = 673;
           v = vs[(sym1__ - 1)];
-          current_statement__ = 683;
+          current_statement__ = 674;
           z = 0;
           break;
         }
       }
-      current_statement__ = 685;
+      current_statement__ = 676;
       for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
         {
           local_scalar_t__ v;
-          current_statement__ = 685;
+          current_statement__ = 676;
           v = vs[(sym1__ - 1)];
-          current_statement__ = 686;
+          current_statement__ = 677;
           z = 3.3;
           continue;
         }
       }
     }
-    current_statement__ = 697;
+    current_statement__ = 686;
     while (1) {
       int b;
-      b = std::numeric_limits<int>::min();
       
-      current_statement__ = 691;
+      
+      current_statement__ = 681;
       b = 5;
       {
         int c;
-        c = std::numeric_limits<int>::min();
         
-        current_statement__ = 693;
+        
+        current_statement__ = 683;
         c = 6;
         break;
       }
     }
-    current_statement__ = 698;
+    current_statement__ = 687;
     return 0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3150,19 +3139,19 @@ foo_2(const int& a, std::ostream* pstream__) {
     vs = std::vector<int>(2, std::numeric_limits<int>::min());
     
     int y;
-    y = std::numeric_limits<int>::min();
     
-    current_statement__ = 702;
+    
+    current_statement__ = 691;
     for (int sym1__ = 1; sym1__ <= stan::math::size(vs); ++sym1__) {
       {
         int v;
-        current_statement__ = 702;
+        current_statement__ = 691;
         v = vs[(sym1__ - 1)];
-        current_statement__ = 703;
+        current_statement__ = 692;
         y = v;
       }
     }
-    current_statement__ = 704;
+    current_statement__ = 693;
     return 0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3190,7 +3179,7 @@ foo_3(const T0__& t, const int& n, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 706;
+    current_statement__ = 695;
     return rep_array(t, n);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3219,7 +3208,7 @@ foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 708;
+    current_statement__ = 697;
     return (x + get_lp(lp__, lp_accum__));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3250,7 +3239,7 @@ foo_4(const T0__& x, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 710;
+    current_statement__ = 699;
     std::stringstream errmsg_stream__;
     errmsg_stream__ << "user-specified rejection";
     errmsg_stream__ << x;
@@ -3290,13 +3279,13 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
     local_scalar_t__ avg_scale;
     
     
-    current_statement__ = 714;
+    current_statement__ = 703;
     abs_diff = stan::math::fabs((x - y));
-    current_statement__ = 715;
+    current_statement__ = 704;
     avg_scale = ((stan::math::fabs(x) + stan::math::fabs(y)) / 2);
-    current_statement__ = 717;
+    current_statement__ = 706;
     if (logical_gt((abs_diff / avg_scale), max_)) {
-      current_statement__ = 716;
+      current_statement__ = 705;
       std::stringstream errmsg_stream__;
       errmsg_stream__ << "user-specified rejection, difference above ";
       errmsg_stream__ << max_;
@@ -3306,9 +3295,9 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
       errmsg_stream__ << y;
       throw std::domain_error(errmsg_stream__.str());
     } 
-    current_statement__ = 719;
+    current_statement__ = 708;
     if (logical_lt((abs_diff / avg_scale), min_)) {
-      current_statement__ = 718;
+      current_statement__ = 707;
       std::stringstream errmsg_stream__;
       errmsg_stream__ << "user-specified rejection, difference below ";
       errmsg_stream__ << min_;
@@ -3318,7 +3307,7 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
       errmsg_stream__ << y;
       throw std::domain_error(errmsg_stream__.str());
     } 
-    current_statement__ = 720;
+    current_statement__ = 709;
     return (abs_diff / avg_scale);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3355,7 +3344,7 @@ foo_5(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 722;
+    current_statement__ = 711;
     return (Eigen::Matrix<double,-1,1>(3) << 1, 2, 3).finished();
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3394,7 +3383,7 @@ foo_five_args(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 724;
+    current_statement__ = 713;
     return x1;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3434,7 +3423,7 @@ foo_five_args_lp(const T0__& x1, const T1__& x2, const T2__& x3,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 726;
+    current_statement__ = 715;
     return x1;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3471,22 +3460,22 @@ covsqrt2corsqrt(const T0__& mat_arg__, const int& invert,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 728;
+    current_statement__ = 717;
     validate_non_negative_index("o", "rows(mat)", rows(mat));
-    current_statement__ = 729;
+    current_statement__ = 718;
     validate_non_negative_index("o", "cols(mat)", cols(mat));
     Eigen::Matrix<local_scalar_t__, -1, -1> o;
     
     
-    current_statement__ = 731;
+    current_statement__ = 720;
     assign(o, mat, "assigning variable o");
-    current_statement__ = 732;
+    current_statement__ = 721;
     assign(o, stan::model::deep_copy(rvalue(o, "o", index_uni(2))),
       "assigning variable o", index_uni(1));
-    current_statement__ = 733;
+    current_statement__ = 722;
     assign(o, stan::model::deep_copy(rvalue(o, "o", index_min_max(1, 2))),
       "assigning variable o", index_min_max(3, 4));
-    current_statement__ = 734;
+    current_statement__ = 723;
     return o;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3533,7 +3522,7 @@ f0(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 736;
+    current_statement__ = 725;
     if (pstream__) {
       stan_print(pstream__, "hi");
       stan_print(pstream__, "\n");
@@ -3593,7 +3582,7 @@ f1(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 738;
+    current_statement__ = 727;
     return a1;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3650,7 +3639,7 @@ f2(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 740;
+    current_statement__ = 729;
     return a2;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3707,7 +3696,7 @@ f3(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 742;
+    current_statement__ = 731;
     return a3;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3766,7 +3755,7 @@ f4(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 744;
+    current_statement__ = 733;
     return a4;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3827,7 +3816,7 @@ f5(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 746;
+    current_statement__ = 735;
     return a5;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3888,7 +3877,7 @@ f6(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 748;
+    current_statement__ = 737;
     return a6;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -3949,7 +3938,7 @@ f7(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 750;
+    current_statement__ = 739;
     return a7;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4010,7 +3999,7 @@ f8(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 752;
+    current_statement__ = 741;
     return a8;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4071,7 +4060,7 @@ f9(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 754;
+    current_statement__ = 743;
     return a9;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4132,7 +4121,7 @@ f10(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 756;
+    current_statement__ = 745;
     return a10;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4193,7 +4182,7 @@ f11(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 758;
+    current_statement__ = 747;
     return a11;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4254,7 +4243,7 @@ f12(const int& a1, const std::vector<int>& a2,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 760;
+    current_statement__ = 749;
     return a12;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4308,7 +4297,7 @@ foo_6(std::ostream* pstream__) {
     ar_mat = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(60, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(70, Eigen::Matrix<local_scalar_t__, -1, -1>(40, 50)));
     stan::math::fill(ar_mat, DUMMY_VAR__);
     
-    current_statement__ = 766;
+    current_statement__ = 755;
     assign(ar_mat, b,
       "assigning variable ar_mat", index_uni(1), index_uni(1), index_uni(1),
                                      index_uni(1));
@@ -4337,7 +4326,7 @@ matfoo(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 768;
+    current_statement__ = 757;
     return stan::math::to_matrix(std::vector<Eigen::Matrix<double, 1, -1>>{
         (Eigen::Matrix<double,1,-1>(10) << 1, 2, 3, 4, 5, 6, 7, 8, 9,
         10).finished(), (Eigen::Matrix<double,1,-1>(10) << 1, 2, 3, 4, 5, 6,
@@ -4368,7 +4357,7 @@ vecfoo(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 770;
+    current_statement__ = 759;
     return (Eigen::Matrix<double,-1,1>(10) << 1, 2, 3, 4, 5, 6, 7, 8, 9,
         10).finished();
   } catch (const std::exception& e) {
@@ -4400,9 +4389,9 @@ vecmufoo(const T0__& mu, std::ostream* pstream__) {
     Eigen::Matrix<local_scalar_t__, -1, 1> l;
     
     
-    current_statement__ = 772;
+    current_statement__ = 761;
     assign(l, multiply(mu, vecfoo(pstream__)), "assigning variable l");
-    current_statement__ = 773;
+    current_statement__ = 762;
     return l;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4434,11 +4423,11 @@ vecmubar(const T0__& mu, std::ostream* pstream__) {
     Eigen::Matrix<local_scalar_t__, -1, 1> l;
     
     
-    current_statement__ = 775;
+    current_statement__ = 764;
     assign(l,
       multiply(mu, (Eigen::Matrix<double,-1,1>(10) << 1, 2, 3, 4, 5, 6, 7, 8,
         9, 10).finished()), "assigning variable l");
-    current_statement__ = 776;
+    current_statement__ = 765;
     return rvalue(l, "l", index_multi(std::vector<int>{1, 2, 3, 4, 5}));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4478,15 +4467,15 @@ algebra_system(const T0__& x_arg__, const T1__& y_arg__,
     f_x = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
     stan::math::fill(f_x, DUMMY_VAR__);
     
-    current_statement__ = 779;
+    current_statement__ = 768;
     assign(f_x,
       (rvalue(x, "x", index_uni(1)) - rvalue(y, "y", index_uni(1))),
       "assigning variable f_x", index_uni(1));
-    current_statement__ = 780;
+    current_statement__ = 769;
     assign(f_x,
       (rvalue(x, "x", index_uni(2)) - rvalue(y, "y", index_uni(2))),
       "assigning variable f_x", index_uni(2));
-    current_statement__ = 781;
+    current_statement__ = 770;
     return f_x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -4527,9 +4516,9 @@ binomialf(const T0__& phi_arg__, const T1__& theta_arg__,
     lpmf = Eigen::Matrix<local_scalar_t__, -1, 1>(1);
     stan::math::fill(lpmf, DUMMY_VAR__);
     
-    current_statement__ = 784;
+    current_statement__ = 773;
     assign(lpmf, 0.0, "assigning variable lpmf", index_uni(1));
-    current_statement__ = 785;
+    current_statement__ = 774;
     return lpmf;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -6031,8 +6020,7 @@ class mother_model final : public model_base_crtp<mother_model> {
         current_statement__ = 344;
         for (int j = 1; j <= 5; ++j) {
           Eigen::Matrix<double, -1, -1> l_mat;
-          l_mat = Eigen::Matrix<double, -1, -1>(2, 3);
-          stan::math::fill(l_mat, std::numeric_limits<double>::quiet_NaN());
+          
           
           current_statement__ = 341;
           assign(l_mat,
@@ -6058,7 +6046,7 @@ class mother_model final : public model_base_crtp<mother_model> {
         "assigning variable td_cfcov_33");
       {
         double z;
-        z = std::numeric_limits<double>::quiet_NaN();
+        
         
         Eigen::Matrix<double, 1, -1> blocked_tdata_vs;
         blocked_tdata_vs = Eigen::Matrix<double, 1, -1>(2);
@@ -6077,7 +6065,7 @@ class mother_model final : public model_base_crtp<mother_model> {
           }
         }
         std::vector<int> indices;
-        indices = std::vector<int>(4, std::numeric_limits<int>::min());
+        
         
         current_statement__ = 353;
         assign(indices, std::vector<int>{1, 2, 3, 4},
@@ -7068,35 +7056,28 @@ class mother_model final : public model_base_crtp<mother_model> {
       stan::math::fill(tp_ar_mat, DUMMY_VAR__);
       
       Eigen::Matrix<local_scalar_t__, -1, 1> tp_simplex;
-      tp_simplex = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-      stan::math::fill(tp_simplex, DUMMY_VAR__);
+      
       
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> tp_1d_simplex;
-      tp_1d_simplex = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
-      stan::math::fill(tp_1d_simplex, DUMMY_VAR__);
+      
       
       std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> tp_3d_simplex;
-      tp_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(N))));
-      stan::math::fill(tp_3d_simplex, DUMMY_VAR__);
+      
       
       Eigen::Matrix<local_scalar_t__, -1, -1> tp_cfcov_54;
-      tp_cfcov_54 = Eigen::Matrix<local_scalar_t__, -1, -1>(5, 4);
-      stan::math::fill(tp_cfcov_54, DUMMY_VAR__);
+      
       
       Eigen::Matrix<local_scalar_t__, -1, -1> tp_cfcov_33;
-      tp_cfcov_33 = Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3);
-      stan::math::fill(tp_cfcov_33, DUMMY_VAR__);
+      
       
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> tp_cfcov_33_ar;
-      tp_cfcov_33_ar = std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(K, Eigen::Matrix<local_scalar_t__, -1, -1>(3, 3));
-      stan::math::fill(tp_cfcov_33_ar, DUMMY_VAR__);
+      
       
       Eigen::Matrix<local_scalar_t__, -1, 1> theta_p;
-      theta_p = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
-      stan::math::fill(theta_p, DUMMY_VAR__);
+      
       
       local_scalar_t__ tp_real;
-      tp_real = DUMMY_VAR__;
+      
       
       current_statement__ = 43;
       assign(tp_real_1d_ar, p_real_1d_ar, "assigning variable tp_real_1d_ar");
@@ -7293,12 +7274,12 @@ class mother_model final : public model_base_crtp<mother_model> {
         stan::math::fill(tmp2, DUMMY_VAR__);
         
         local_scalar_t__ r1;
-        r1 = DUMMY_VAR__;
+        
         
         current_statement__ = 156;
         r1 = foo_bar1(p_real, pstream__);
         local_scalar_t__ r2;
-        r2 = DUMMY_VAR__;
+        
         
         current_statement__ = 157;
         r2 = foo_bar1(J, pstream__);
@@ -7607,38 +7588,28 @@ class mother_model final : public model_base_crtp<mother_model> {
       stan::math::fill(tp_ar_mat, std::numeric_limits<double>::quiet_NaN());
       
       Eigen::Matrix<double, -1, 1> tp_simplex;
-      tp_simplex = Eigen::Matrix<double, -1, 1>(N);
-      stan::math::fill(tp_simplex, std::numeric_limits<double>::quiet_NaN());
+      
       
       std::vector<Eigen::Matrix<double, -1, 1>> tp_1d_simplex;
-      tp_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
-      stan::math::fill(tp_1d_simplex, std::numeric_limits<double>::quiet_NaN());
       
       
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> tp_3d_simplex;
-      tp_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
-      stan::math::fill(tp_3d_simplex, std::numeric_limits<double>::quiet_NaN());
       
       
       Eigen::Matrix<double, -1, -1> tp_cfcov_54;
-      tp_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
-      stan::math::fill(tp_cfcov_54, std::numeric_limits<double>::quiet_NaN());
+      
       
       Eigen::Matrix<double, -1, -1> tp_cfcov_33;
-      tp_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
-      stan::math::fill(tp_cfcov_33, std::numeric_limits<double>::quiet_NaN());
+      
       
       std::vector<Eigen::Matrix<double, -1, -1>> tp_cfcov_33_ar;
-      tp_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
-      stan::math::fill(tp_cfcov_33_ar, std::numeric_limits<double>::quiet_NaN());
       
       
       Eigen::Matrix<double, -1, 1> theta_p;
-      theta_p = Eigen::Matrix<double, -1, 1>(2);
-      stan::math::fill(theta_p, std::numeric_limits<double>::quiet_NaN());
+      
       
       double tp_real;
-      tp_real = std::numeric_limits<double>::quiet_NaN();
+      
       
       vars__.emplace_back(p_real);
       vars__.emplace_back(p_upper);
@@ -8075,21 +8046,19 @@ class mother_model final : public model_base_crtp<mother_model> {
         return ;
       } 
       double gq_r1;
-      gq_r1 = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 78;
       gq_r1 = foo_bar1(p_real, pstream__);
       double gq_r2;
-      gq_r2 = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 79;
       gq_r2 = foo_bar1(J, pstream__);
       std::vector<double> gq_real_1d_ar;
-      gq_real_1d_ar = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
       
       std::vector<std::vector<std::vector<double>>> gq_real_3d_ar;
-      gq_real_3d_ar = std::vector<std::vector<std::vector<double>>>(N, std::vector<std::vector<double>>(M, std::vector<double>(K, std::numeric_limits<double>::quiet_NaN())));
       
       
       Eigen::Matrix<double, -1, 1> gq_vec;
@@ -8097,25 +8066,18 @@ class mother_model final : public model_base_crtp<mother_model> {
       stan::math::fill(gq_vec, std::numeric_limits<double>::quiet_NaN());
       
       std::vector<Eigen::Matrix<double, -1, 1>> gq_1d_vec;
-      gq_1d_vec = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
-      stan::math::fill(gq_1d_vec, std::numeric_limits<double>::quiet_NaN());
+      
       
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> gq_3d_vec;
-      gq_3d_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
-      stan::math::fill(gq_3d_vec, std::numeric_limits<double>::quiet_NaN());
+      
       
       Eigen::Matrix<double, 1, -1> gq_row_vec;
-      gq_row_vec = Eigen::Matrix<double, 1, -1>(N);
-      stan::math::fill(gq_row_vec, std::numeric_limits<double>::quiet_NaN());
+      
       
       std::vector<Eigen::Matrix<double, 1, -1>> gq_1d_row_vec;
-      gq_1d_row_vec = std::vector<Eigen::Matrix<double, 1, -1>>(N, Eigen::Matrix<double, 1, -1>(N));
-      stan::math::fill(gq_1d_row_vec, std::numeric_limits<double>::quiet_NaN());
       
       
       std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> gq_3d_row_vec;
-      gq_3d_row_vec = std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, std::vector<Eigen::Matrix<double, 1, -1>>(K, Eigen::Matrix<double, 1, -1>(N))));
-      stan::math::fill(gq_3d_row_vec, std::numeric_limits<double>::quiet_NaN());
       
       
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> gq_ar_mat;
@@ -8123,34 +8085,25 @@ class mother_model final : public model_base_crtp<mother_model> {
       stan::math::fill(gq_ar_mat, std::numeric_limits<double>::quiet_NaN());
       
       Eigen::Matrix<double, -1, 1> gq_simplex;
-      gq_simplex = Eigen::Matrix<double, -1, 1>(N);
-      stan::math::fill(gq_simplex, std::numeric_limits<double>::quiet_NaN());
+      
       
       std::vector<Eigen::Matrix<double, -1, 1>> gq_1d_simplex;
-      gq_1d_simplex = std::vector<Eigen::Matrix<double, -1, 1>>(N, Eigen::Matrix<double, -1, 1>(N));
-      stan::math::fill(gq_1d_simplex, std::numeric_limits<double>::quiet_NaN());
       
       
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> gq_3d_simplex;
-      gq_3d_simplex = std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, std::vector<Eigen::Matrix<double, -1, 1>>(K, Eigen::Matrix<double, -1, 1>(N))));
-      stan::math::fill(gq_3d_simplex, std::numeric_limits<double>::quiet_NaN());
       
       
       Eigen::Matrix<double, -1, -1> gq_cfcov_54;
-      gq_cfcov_54 = Eigen::Matrix<double, -1, -1>(5, 4);
-      stan::math::fill(gq_cfcov_54, std::numeric_limits<double>::quiet_NaN());
+      
       
       Eigen::Matrix<double, -1, -1> gq_cfcov_33;
-      gq_cfcov_33 = Eigen::Matrix<double, -1, -1>(3, 3);
-      stan::math::fill(gq_cfcov_33, std::numeric_limits<double>::quiet_NaN());
+      
       
       std::vector<Eigen::Matrix<double, -1, -1>> gq_cfcov_33_ar;
-      gq_cfcov_33_ar = std::vector<Eigen::Matrix<double, -1, -1>>(K, Eigen::Matrix<double, -1, -1>(3, 3));
-      stan::math::fill(gq_cfcov_33_ar, std::numeric_limits<double>::quiet_NaN());
       
       
       std::vector<int> indices;
-      indices = std::vector<int>(3, std::numeric_limits<int>::min());
+      
       
       current_statement__ = 95;
       assign(indices, std::vector<int>{2, 3, 1}, "assigning variable indices");
@@ -8172,24 +8125,19 @@ class mother_model final : public model_base_crtp<mother_model> {
       stan::math::fill(idx_res3, std::numeric_limits<double>::quiet_NaN());
       
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res11;
-      idx_res11 = std::vector<Eigen::Matrix<double, -1, -1>>(3, Eigen::Matrix<double, -1, -1>(3, 4));
-      stan::math::fill(idx_res11, std::numeric_limits<double>::quiet_NaN());
+      
       
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res21;
-      idx_res21 = std::vector<Eigen::Matrix<double, -1, -1>>(5, Eigen::Matrix<double, -1, -1>(3, 4));
-      stan::math::fill(idx_res21, std::numeric_limits<double>::quiet_NaN());
+      
       
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res31;
-      idx_res31 = std::vector<Eigen::Matrix<double, -1, -1>>(3, Eigen::Matrix<double, -1, -1>(3, 3));
-      stan::math::fill(idx_res31, std::numeric_limits<double>::quiet_NaN());
+      
       
       std::vector<Eigen::Matrix<double, 1, -1>> idx_res4;
-      idx_res4 = std::vector<Eigen::Matrix<double, 1, -1>>(3, Eigen::Matrix<double, 1, -1>(4));
-      stan::math::fill(idx_res4, std::numeric_limits<double>::quiet_NaN());
+      
       
       std::vector<Eigen::Matrix<double, -1, 1>> idx_res5;
-      idx_res5 = std::vector<Eigen::Matrix<double, -1, 1>>(2, Eigen::Matrix<double, -1, 1>(2));
-      stan::math::fill(idx_res5, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 105;
       assign(gq_real_1d_ar,
@@ -8706,7 +8654,6 @@ class mother_model final : public model_base_crtp<mother_model> {
           "assigning variable offset_multiplier_free__", index_uni(sym1__));
       }
       std::vector<double> no_offset_multiplier;
-      no_offset_multiplier = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
       
       
       current_statement__ = 5;
@@ -8724,7 +8671,6 @@ class mother_model final : public model_base_crtp<mother_model> {
           "assigning variable no_offset_multiplier_free__", index_uni(sym1__));
       }
       std::vector<double> offset_no_multiplier;
-      offset_no_multiplier = std::vector<double>(5, std::numeric_limits<double>::quiet_NaN());
       
       
       current_statement__ = 6;
@@ -8742,7 +8688,6 @@ class mother_model final : public model_base_crtp<mother_model> {
           "assigning variable offset_no_multiplier_free__", index_uni(sym1__));
       }
       std::vector<double> p_real_1d_ar;
-      p_real_1d_ar = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
       
       
       current_statement__ = 7;
@@ -9065,8 +9010,6 @@ class mother_model final : public model_base_crtp<mother_model> {
         }
       }
       Eigen::Matrix<double, -1, 1> p_simplex_free__;
-      p_simplex_free__ = Eigen::Matrix<double, -1, 1>((N - 1));
-      stan::math::fill(p_simplex_free__, std::numeric_limits<double>::quiet_NaN());
       
       
       current_statement__ = 17;
@@ -9187,10 +9130,6 @@ class mother_model final : public model_base_crtp<mother_model> {
         }
       }
       Eigen::Matrix<double, -1, 1> p_cfcov_54_free__;
-      p_cfcov_54_free__ = Eigen::Matrix<double, -1, 1>(((((4 * (4 - 1)) / 2)
-                                                          + 4) +
-                                                         ((5 - 4) * 4)));
-      stan::math::fill(p_cfcov_54_free__, std::numeric_limits<double>::quiet_NaN());
       
       
       current_statement__ = 20;
@@ -9220,10 +9159,6 @@ class mother_model final : public model_base_crtp<mother_model> {
         }
       }
       Eigen::Matrix<double, -1, 1> p_cfcov_33_free__;
-      p_cfcov_33_free__ = Eigen::Matrix<double, -1, 1>(((((3 * (3 - 1)) / 2)
-                                                          + 3) +
-                                                         ((3 - 3) * 3)));
-      stan::math::fill(p_cfcov_33_free__, std::numeric_limits<double>::quiet_NaN());
       
       
       current_statement__ = 21;
@@ -11757,7 +11692,6 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
         current_statement__ = 80;
         validate_non_negative_index("y_hat", "T", T);
         std::vector<std::vector<local_scalar_t__>> y_hat;
-        y_hat = std::vector<std::vector<local_scalar_t__>>(T, std::vector<local_scalar_t__>(2, DUMMY_VAR__));
         
         
         current_statement__ = 82;
@@ -11833,7 +11767,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
           integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_p, x,
             x_int, pstream__), "assigning variable y_hat");
         local_scalar_t__ y_1d;
-        y_1d = DUMMY_VAR__;
+        
         
         current_statement__ = 100;
         y_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
@@ -11869,7 +11803,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
         y_1d = integrate_1d(integrand_functor__(), x_r, x_r, x_d_r, x_d_r,
                  x_d_i, pstream__);
         local_scalar_t__ z_1d;
-        z_1d = DUMMY_VAR__;
+        
         
         current_statement__ = 111;
         z_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
@@ -11905,7 +11839,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
         z_1d = integrate_1d(integrand_functor__(), x_r, x_r, x_d_r, x_d_r,
                  x_d_i, pstream__, 1e-8);
         local_scalar_t__ abc_m;
-        abc_m = DUMMY_VAR__;
+        
         
         current_statement__ = 122;
         abc_m = map_rectfake(abc1_p, pstream__);
@@ -12143,7 +12077,6 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
         return ;
       } 
       std::vector<std::vector<double>> y_hat;
-      y_hat = std::vector<std::vector<double>>(T, std::vector<double>(2, std::numeric_limits<double>::quiet_NaN()));
       
       
       current_statement__ = 33;
@@ -12227,7 +12160,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
         integrate_ode_rk45(sho_functor__(), y0_p, t0, ts, theta_p, x, x_int,
           pstream__), "assigning variable y_hat");
       double y_1d;
-      y_1d = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 53;
       y_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
@@ -12242,7 +12175,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       y_1d = integrate_1d(integrand_functor__(), 0.0, 1.0, x, x_d_r, x_d_i,
                pstream__);
       double z_1d;
-      z_1d = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 57;
       z_1d = integrate_1d(integrand_functor__(), 0, 1, x, x_d_r, x_d_i,
@@ -12257,18 +12190,17 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       z_1d = integrate_1d(integrand_functor__(), 0.0, 1.0, x, x_d_r, x_d_i,
                pstream__, 1e-8);
       double abc1_gq;
-      abc1_gq = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 61;
       abc1_gq = map_rectfake(12, pstream__);
       double abc2_gq;
-      abc2_gq = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 62;
       abc2_gq = map_rectfake(abc1_p, pstream__);
       Eigen::Matrix<double, -1, 1> y_hat_gq;
-      y_hat_gq = Eigen::Matrix<double, -1, 1>(3);
-      stan::math::fill(y_hat_gq, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 63;
       assign(y_hat_gq,
@@ -12278,16 +12210,14 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
           map_rect<8, goo_functor__>(shared_params_d, job_params_d, data_r,
             data_i, pstream__)), "assigning variable y_hat_gq");
       Eigen::Matrix<double, -1, 1> yy_hat_gq;
-      yy_hat_gq = Eigen::Matrix<double, -1, 1>(3);
-      stan::math::fill(yy_hat_gq, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 64;
       assign(yy_hat_gq,
         map_rect<9, goo_functor__>(shared_params_d, job_params_d, data_r,
           data_i, pstream__), "assigning variable yy_hat_gq");
       Eigen::Matrix<double, -1, 1> theta_dbl;
-      theta_dbl = Eigen::Matrix<double, -1, 1>(2);
-      stan::math::fill(theta_dbl, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 66;
       assign(theta_dbl,
@@ -12465,7 +12395,7 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
         }
       }
       double x_r;
-      x_r = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 7;
       x_r = context__.vals_r("x_r")[(1 - 1)];
@@ -14581,8 +14511,7 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
         current_statement__ = 401;
         validate_non_negative_index("zm", "N", N);
         std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> zm;
-        zm = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
-        stan::math::fill(zm, DUMMY_VAR__);
+        
         
         current_statement__ = 402;
         assign(zm,
@@ -17537,7 +17466,6 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
           "assigning variable z_init_free__", index_uni(sym1__));
       }
       std::vector<double> sigma;
-      sigma = std::vector<double>(2, std::numeric_limits<double>::quiet_NaN());
       
       
       current_statement__ = 6;
@@ -19094,22 +19022,22 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         }
       }
       double sigma;
-      sigma = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 4;
       sigma = context__.vals_r("sigma")[(1 - 1)];
       double sigma_free__;
-      sigma_free__ = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 4;
       sigma_free__ = stan::math::lb_free(sigma, 0);
       double alpha;
-      alpha = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 5;
       alpha = context__.vals_r("alpha")[(1 - 1)];
       double phi;
-      phi = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 6;
       phi = context__.vals_r("phi")[(1 - 1)];
@@ -22369,7 +22297,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
         }
       }
       std::vector<double> a1;
-      a1 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 8;
       a1 = context__.vals_r("a1");
@@ -22552,7 +22480,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
         }
       }
       std::vector<double> y1;
-      y1 = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 16;
       y1 = context__.vals_r("y1");
@@ -25055,133 +24983,133 @@ r(std::ostream* pstream__) {
     
     
     local_scalar_t__ t1;
-    t1 = DUMMY_VAR__;
+    
     
     current_statement__ = 314;
     t1 = reduce_sum<f1_rsfunctor__>(y1, 1, pstream__);
     local_scalar_t__ t1a;
-    t1a = DUMMY_VAR__;
+    
     
     current_statement__ = 315;
     t1a = (reduce_sum<f1_rsfunctor__>(y1, 1, pstream__) +
             reduce_sum<f1a_rsfunctor__>(y1, 1, pstream__));
     local_scalar_t__ t2;
-    t2 = DUMMY_VAR__;
+    
     
     current_statement__ = 316;
     t2 = reduce_sum<f2_rsfunctor__>(y2, 1, pstream__);
     local_scalar_t__ t3;
-    t3 = DUMMY_VAR__;
+    
     
     current_statement__ = 317;
     t3 = reduce_sum<f3_rsfunctor__>(y3, 1, pstream__);
     local_scalar_t__ t4;
-    t4 = DUMMY_VAR__;
+    
     
     current_statement__ = 318;
     t4 = reduce_sum<f4_rsfunctor__>(y4, 1, pstream__);
     local_scalar_t__ t5;
-    t5 = DUMMY_VAR__;
+    
     
     current_statement__ = 319;
     t5 = reduce_sum<f5_rsfunctor__>(y5, 1, pstream__);
     local_scalar_t__ t6;
-    t6 = DUMMY_VAR__;
+    
     
     current_statement__ = 320;
     t6 = reduce_sum<f6_rsfunctor__>(y6, 1, pstream__);
     local_scalar_t__ t7;
-    t7 = DUMMY_VAR__;
+    
     
     current_statement__ = 321;
     t7 = reduce_sum<f7_rsfunctor__>(y7, 1, pstream__);
     local_scalar_t__ t8;
-    t8 = DUMMY_VAR__;
+    
     
     current_statement__ = 322;
     t8 = reduce_sum<f8_rsfunctor__>(y8, 1, pstream__);
     local_scalar_t__ t9;
-    t9 = DUMMY_VAR__;
+    
     
     current_statement__ = 323;
     t9 = reduce_sum<f9_rsfunctor__>(y14d, 1, pstream__);
     local_scalar_t__ t10;
-    t10 = DUMMY_VAR__;
+    
     
     current_statement__ = 324;
     t10 = reduce_sum<f10_rsfunctor__>(y15d, 1, pstream__);
     local_scalar_t__ t11;
-    t11 = DUMMY_VAR__;
+    
     
     current_statement__ = 325;
     t11 = reduce_sum<f11_rsfunctor__>(y16d, 1, pstream__);
     local_scalar_t__ t12;
-    t12 = DUMMY_VAR__;
+    
     
     current_statement__ = 326;
     t12 = reduce_sum<f12_rsfunctor__>(y17, 1, pstream__);
     local_scalar_t__ tg1;
-    tg1 = DUMMY_VAR__;
+    
     
     current_statement__ = 327;
     tg1 = reduce_sum<g1_rsfunctor__>(y1, 1, pstream__, y9);
     local_scalar_t__ tg2;
-    tg2 = DUMMY_VAR__;
+    
     
     current_statement__ = 328;
     tg2 = reduce_sum<g2_rsfunctor__>(y1, 1, pstream__, y10);
     local_scalar_t__ tg3;
-    tg3 = DUMMY_VAR__;
+    
     
     current_statement__ = 329;
     tg3 = reduce_sum<g3_rsfunctor__>(y1, 1, pstream__, y11);
     local_scalar_t__ tg4;
-    tg4 = DUMMY_VAR__;
+    
     
     current_statement__ = 330;
     tg4 = reduce_sum<g4_rsfunctor__>(y1, 1, pstream__, y12);
     local_scalar_t__ tg5;
-    tg5 = DUMMY_VAR__;
+    
     
     current_statement__ = 331;
     tg5 = reduce_sum<g5_rsfunctor__>(y1, 1, pstream__, y1);
     local_scalar_t__ tg6;
-    tg6 = DUMMY_VAR__;
+    
     
     current_statement__ = 332;
     tg6 = reduce_sum<g6_rsfunctor__>(y1, 1, pstream__, y2);
     local_scalar_t__ tg7;
-    tg7 = DUMMY_VAR__;
+    
     
     current_statement__ = 333;
     tg7 = reduce_sum<g7_rsfunctor__>(y1, 1, pstream__, y3);
     local_scalar_t__ tg8;
-    tg8 = DUMMY_VAR__;
+    
     
     current_statement__ = 334;
     tg8 = reduce_sum<g8_rsfunctor__>(y1, 1, pstream__, y4);
     local_scalar_t__ tg9;
-    tg9 = DUMMY_VAR__;
+    
     
     current_statement__ = 335;
     tg9 = reduce_sum<g9_rsfunctor__>(y1, 1, pstream__, y5);
     local_scalar_t__ tg10;
-    tg10 = DUMMY_VAR__;
+    
     
     current_statement__ = 336;
     tg10 = reduce_sum<g10_rsfunctor__>(y1, 1, pstream__, y6);
     local_scalar_t__ tg11;
-    tg11 = DUMMY_VAR__;
+    
     
     current_statement__ = 337;
     tg11 = reduce_sum<g11_rsfunctor__>(y1, 1, pstream__, y7);
     local_scalar_t__ tg12;
-    tg12 = DUMMY_VAR__;
+    
     
     current_statement__ = 338;
     tg12 = reduce_sum<g12_rsfunctor__>(y1, 1, pstream__, y8);
     local_scalar_t__ ts;
-    ts = DUMMY_VAR__;
+    
     
     current_statement__ = 339;
     ts = reduce_sum<s_rsfunctor__>(y1d, 1, pstream__, y13d, y9, y10, y11,
@@ -26027,139 +25955,139 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
               N, N, N);
       {
         local_scalar_t__ t1;
-        t1 = DUMMY_VAR__;
+        
         
         current_statement__ = 40;
         t1 = reduce_sum<f1_rsfunctor__>(y1, 1, pstream__);
         local_scalar_t__ t1a;
-        t1a = DUMMY_VAR__;
+        
         
         current_statement__ = 41;
         t1a = (reduce_sum<f1_rsfunctor__>(y1, 1, pstream__) +
                 reduce_sum<f1a_rsfunctor__>(y1, 1, pstream__));
         local_scalar_t__ t2;
-        t2 = DUMMY_VAR__;
+        
         
         current_statement__ = 42;
         t2 = reduce_sum<f2_rsfunctor__>(y2, 1, pstream__);
         local_scalar_t__ t3;
-        t3 = DUMMY_VAR__;
+        
         
         current_statement__ = 43;
         t3 = reduce_sum<f3_rsfunctor__>(y3, 1, pstream__);
         local_scalar_t__ t4;
-        t4 = DUMMY_VAR__;
+        
         
         current_statement__ = 44;
         t4 = reduce_sum<f4_rsfunctor__>(y4, 1, pstream__);
         local_scalar_t__ t5;
-        t5 = DUMMY_VAR__;
+        
         
         current_statement__ = 45;
         t5 = reduce_sum<f5_rsfunctor__>(y5, 1, pstream__);
         local_scalar_t__ t6;
-        t6 = DUMMY_VAR__;
+        
         
         current_statement__ = 46;
         t6 = reduce_sum<f6_rsfunctor__>(y6, 1, pstream__);
         local_scalar_t__ t7;
-        t7 = DUMMY_VAR__;
+        
         
         current_statement__ = 47;
         t7 = reduce_sum<f7_rsfunctor__>(y7, 1, pstream__);
         local_scalar_t__ t8;
-        t8 = DUMMY_VAR__;
+        
         
         current_statement__ = 48;
         t8 = reduce_sum<f8_rsfunctor__>(y8, 1, pstream__);
         local_scalar_t__ t9;
-        t9 = DUMMY_VAR__;
+        
         
         current_statement__ = 49;
         t9 = reduce_sum<f9_rsfunctor__>(y14d, 1, pstream__);
         local_scalar_t__ t10;
-        t10 = DUMMY_VAR__;
+        
         
         current_statement__ = 50;
         t10 = reduce_sum<f10_rsfunctor__>(y15d, 1, pstream__);
         local_scalar_t__ t11;
-        t11 = DUMMY_VAR__;
+        
         
         current_statement__ = 51;
         t11 = reduce_sum<f11_rsfunctor__>(y16d, 1, pstream__);
         local_scalar_t__ t12;
-        t12 = DUMMY_VAR__;
+        
         
         current_statement__ = 52;
         t12 = reduce_sum<f12_rsfunctor__>(y17, 1, pstream__);
         local_scalar_t__ tg1;
-        tg1 = DUMMY_VAR__;
+        
         
         current_statement__ = 53;
         tg1 = reduce_sum<g1_rsfunctor__>(y1, 1, pstream__, y9);
         local_scalar_t__ tg2;
-        tg2 = DUMMY_VAR__;
+        
         
         current_statement__ = 54;
         tg2 = reduce_sum<g2_rsfunctor__>(y1, 1, pstream__, y10);
         local_scalar_t__ tg3;
-        tg3 = DUMMY_VAR__;
+        
         
         current_statement__ = 55;
         tg3 = reduce_sum<g3_rsfunctor__>(y1, 1, pstream__, y11);
         local_scalar_t__ tg4;
-        tg4 = DUMMY_VAR__;
+        
         
         current_statement__ = 56;
         tg4 = reduce_sum<g4_rsfunctor__>(y1, 1, pstream__, y12);
         local_scalar_t__ tg5;
-        tg5 = DUMMY_VAR__;
+        
         
         current_statement__ = 57;
         tg5 = reduce_sum<g5_rsfunctor__>(y1, 1, pstream__, y1);
         local_scalar_t__ tg6;
-        tg6 = DUMMY_VAR__;
+        
         
         current_statement__ = 58;
         tg6 = reduce_sum<g6_rsfunctor__>(y1, 1, pstream__, y2);
         local_scalar_t__ tg7;
-        tg7 = DUMMY_VAR__;
+        
         
         current_statement__ = 59;
         tg7 = reduce_sum<g7_rsfunctor__>(y1, 1, pstream__, y3);
         local_scalar_t__ tg8;
-        tg8 = DUMMY_VAR__;
+        
         
         current_statement__ = 60;
         tg8 = reduce_sum<g8_rsfunctor__>(y1, 1, pstream__, y4);
         local_scalar_t__ tg9;
-        tg9 = DUMMY_VAR__;
+        
         
         current_statement__ = 61;
         tg9 = reduce_sum<g9_rsfunctor__>(y1, 1, pstream__, y5);
         local_scalar_t__ tg10;
-        tg10 = DUMMY_VAR__;
+        
         
         current_statement__ = 62;
         tg10 = reduce_sum<g10_rsfunctor__>(y1, 1, pstream__, y6);
         local_scalar_t__ tg11;
-        tg11 = DUMMY_VAR__;
+        
         
         current_statement__ = 63;
         tg11 = reduce_sum<g11_rsfunctor__>(y1, 1, pstream__, y7);
         local_scalar_t__ tg12;
-        tg12 = DUMMY_VAR__;
+        
         
         current_statement__ = 64;
         tg12 = reduce_sum<g12_rsfunctor__>(y1, 1, pstream__, y8);
         local_scalar_t__ ts;
-        ts = DUMMY_VAR__;
+        
         
         current_statement__ = 65;
         ts = reduce_sum<s_rsfunctor__>(y1d, 1, pstream__, y13d, y9, y10, y11,
                y12, y14d, y1, y2, y3, y4, y15d, y5, y6, y7, y8, y16d, y17);
         local_scalar_t__ tt;
-        tt = DUMMY_VAR__;
+        
         
         current_statement__ = 66;
         tt = r(pstream__);
@@ -26720,7 +26648,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
         }
       }
       double y9;
-      y9 = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 9;
       y9 = context__.vals_r("y9")[(1 - 1)];
@@ -30032,7 +29960,7 @@ class transform_model final : public model_base_crtp<transform_model> {
           "assigning variable p_1_free__", index_uni(sym1__));
       }
       std::vector<double> p_2;
-      p_2 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 2;
       p_2 = context__.vals_r("p_2");
@@ -30052,7 +29980,7 @@ class transform_model final : public model_base_crtp<transform_model> {
           "assigning variable p_2_free__", index_uni(sym1__));
       }
       std::vector<double> p_3;
-      p_3 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 3;
       p_3 = context__.vals_r("p_3");
@@ -30076,7 +30004,7 @@ class transform_model final : public model_base_crtp<transform_model> {
           "assigning variable p_3_free__", index_uni(sym1__));
       }
       std::vector<double> p_4;
-      p_4 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 4;
       p_4 = context__.vals_r("p_4");
@@ -30096,7 +30024,7 @@ class transform_model final : public model_base_crtp<transform_model> {
           "assigning variable p_4_free__", index_uni(sym1__));
       }
       std::vector<double> p_5;
-      p_5 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 5;
       p_5 = context__.vals_r("p_5");
@@ -30116,7 +30044,7 @@ class transform_model final : public model_base_crtp<transform_model> {
           "assigning variable p_5_free__", index_uni(sym1__));
       }
       std::vector<double> p_6;
-      p_6 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 6;
       p_6 = context__.vals_r("p_6");
@@ -30136,7 +30064,7 @@ class transform_model final : public model_base_crtp<transform_model> {
           "assigning variable p_6_free__", index_uni(sym1__));
       }
       std::vector<double> p_7;
-      p_7 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 7;
       p_7 = context__.vals_r("p_7");
@@ -30156,7 +30084,7 @@ class transform_model final : public model_base_crtp<transform_model> {
           "assigning variable p_7_free__", index_uni(sym1__));
       }
       std::vector<double> p_8;
-      p_8 = std::vector<double>(k, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 8;
       p_8 = context__.vals_r("p_8");

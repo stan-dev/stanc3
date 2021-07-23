@@ -464,7 +464,7 @@ integrand_ode(const T0__& r, const std::vector<T1__>& f,
     df_dx = std::vector<local_scalar_t__>(1, DUMMY_VAR__);
     
     local_scalar_t__ x;
-    x = DUMMY_VAR__;
+    
     
     current_statement__ = 4;
     x = logit(r);

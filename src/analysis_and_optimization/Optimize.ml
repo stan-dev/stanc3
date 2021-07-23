@@ -848,28 +848,45 @@ let rec find_assignment_idx (name : string) Stmt.Fixed.({pattern; _}) =
  *  initialized.
  *)
 and unenforce_initialize (lst : ('a, 'b) Stmt.Fixed.t list) =
-  match List.hd lst with
-  | Some (Stmt.Fixed.({pattern; _}) as stmt) -> (
+  let rec unenforce_initialize_patt (Stmt.Fixed.({pattern; _}) as stmt) sub_lst
+      =
     match pattern with
-    | Stmt.Fixed.Pattern.Decl {decl_id; decl_adtype; decl_type; initialize}
-      when initialize = true -> (
-      match List.tl lst with
-      | Some sub_lst -> (
-        match List.find_map ~f:(find_assignment_idx decl_id) sub_lst with
-        | Some [] | Some [Index.All] ->
-            let update_decl =
-              { stmt with
-                pattern=
-                  Stmt.Fixed.Pattern.Decl
-                    {decl_id; decl_adtype; decl_type; initialize= false} }
-            in
-            List.concat [[update_decl]; unenforce_initialize sub_lst]
-        | None | Some _ -> lst )
-      | None -> lst )
-    | _ -> (
-      match List.tl lst with
-      | Some sub_lst -> List.concat [[stmt]; unenforce_initialize sub_lst]
-      | None -> lst ) )
+    | Stmt.Fixed.Pattern.Decl ({decl_id; _} as patt) -> (
+      match List.find_map ~f:(find_assignment_idx decl_id) sub_lst with
+      | Some [] | Some [Index.All] ->
+          { stmt with
+            pattern= Stmt.Fixed.Pattern.Decl {patt with initialize= false} }
+      | None | Some _ -> stmt )
+    | Block block_lst ->
+        {stmt with pattern= Block (unenforce_initialize block_lst)}
+    | SList s_lst ->
+        {stmt with pattern= SList (unenforce_initialize s_lst)}
+    (*[] here because we do not want to check out of scope*)
+    | While (expr, stmt) ->
+        {stmt with pattern= While (expr, unenforce_initialize_patt stmt [])}
+    | For ({body; _} as pat) ->
+        { stmt with
+          pattern= For {pat with body= unenforce_initialize_patt body []} }
+    | Profile ((pname : string), stmts) ->
+        {stmt with pattern= Profile (pname, unenforce_initialize stmts)}
+    | IfElse ((expr : 'a Expr.Fixed.t), true_stmt, op_false_stmt) ->
+        let mod_false_stmt =
+          Option.map ~f:(fun x -> unenforce_initialize_patt x []) op_false_stmt
+        in
+        { stmt with
+          pattern=
+            IfElse
+              (expr, unenforce_initialize_patt true_stmt [], mod_false_stmt) }
+    | _ -> stmt
+  in
+  match List.hd lst with
+  | Some stmt -> (
+    match List.tl lst with
+    | Some sub_lst ->
+        List.cons
+          (unenforce_initialize_patt stmt sub_lst)
+          (unenforce_initialize sub_lst)
+    | None -> lst )
   | None -> lst
 
 (**
