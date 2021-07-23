@@ -88,7 +88,8 @@ let%expect_test "set size mat array" =
     , DataOnly
     , true )
   |> print_endline ;
-  [%expect {|
+  [%expect
+    {|
     d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3)));
     stan::math::fill(d, std::numeric_limits<double>::quiet_NaN()); |}]
 
