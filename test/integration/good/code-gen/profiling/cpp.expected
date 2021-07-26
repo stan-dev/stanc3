@@ -84,8 +84,6 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
-      
-      
       pos__ = 1;
       current_statement__ = 21;
       context__.validate_dims("data initialization","N","int",
@@ -166,20 +164,14 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     
     try {
       local_scalar_t__ rho;
-      
-      
       current_statement__ = 1;
       rho = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
               lp__);
       local_scalar_t__ alpha;
-      
-      
       current_statement__ = 2;
       alpha = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
       local_scalar_t__ sigma;
-      
-      
       current_statement__ = 3;
       sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
@@ -189,14 +181,16 @@ class simple_function_model final : public model_base_crtp<simple_function_model
         current_statement__ = 5;
         validate_non_negative_index("cov", "N", N);
         Eigen::Matrix<local_scalar_t__, -1, -1> cov;
-        
+        cov = Eigen::Matrix<local_scalar_t__, -1, -1>(N, N);
+        stan::math::fill(cov, DUMMY_VAR__);
         
         current_statement__ = 7;
         validate_non_negative_index("L_cov", "N", N);
         current_statement__ = 8;
         validate_non_negative_index("L_cov", "N", N);
         Eigen::Matrix<local_scalar_t__, -1, -1> L_cov;
-        
+        L_cov = Eigen::Matrix<local_scalar_t__, -1, -1>(N, N);
+        stan::math::fill(L_cov, DUMMY_VAR__);
         
         current_statement__ = 11;
         {
@@ -275,20 +269,14 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     
     try {
       double rho;
-      
-      
       current_statement__ = 1;
       rho = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
               lp__);
       double alpha;
-      
-      
       current_statement__ = 2;
       alpha = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
       double sigma;
-      
-      
       current_statement__ = 3;
       sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
@@ -322,37 +310,23 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     
     try {
       int pos__;
-      
-      
       pos__ = 1;
       double rho;
-      
-      
       current_statement__ = 1;
       rho = context__.vals_r("rho")[(1 - 1)];
       double rho_free__;
-      
-      
       current_statement__ = 1;
       rho_free__ = stan::math::lb_free(rho, 0);
       double alpha;
-      
-      
       current_statement__ = 2;
       alpha = context__.vals_r("alpha")[(1 - 1)];
       double alpha_free__;
-      
-      
       current_statement__ = 2;
       alpha_free__ = stan::math::lb_free(alpha, 0);
       double sigma;
-      
-      
       current_statement__ = 3;
       sigma = context__.vals_r("sigma")[(1 - 1)];
       double sigma_free__;
-      
-      
       current_statement__ = 3;
       sigma_free__ = stan::math::lb_free(sigma, 0);
       vars__.emplace_back(rho_free__);

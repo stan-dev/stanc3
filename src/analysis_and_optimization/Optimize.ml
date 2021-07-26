@@ -847,16 +847,20 @@ let rec find_assignment_idx (name : string) Stmt.Fixed.({pattern; _}) =
  *  in their first assignment and mark them as not needing to be 
  *  initialized.
  *)
-and unenforce_initialize (lst : ('a, 'b) Stmt.Fixed.t list) =
+and unenforce_initialize
+    (lst : (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t list) =
   let rec unenforce_initialize_patt (Stmt.Fixed.({pattern; _}) as stmt) sub_lst
       =
     match pattern with
     | Stmt.Fixed.Pattern.Decl ({decl_id; _} as patt) -> (
-      match List.find_map ~f:(find_assignment_idx decl_id) sub_lst with
-      | Some [] | Some [Index.All] | Some [Index.All; Index.All] ->
-          { stmt with
-            pattern= Stmt.Fixed.Pattern.Decl {patt with initialize= false} }
-      | None | Some _ -> stmt )
+      match List.hd sub_lst with
+      | Some next_stmt -> (
+        match find_assignment_idx decl_id next_stmt with
+        | Some [] | Some [Index.All] | Some [Index.All; Index.All] ->
+            { stmt with
+              pattern= Stmt.Fixed.Pattern.Decl {patt with initialize= false} }
+        | None | Some _ -> stmt )
+      | None -> stmt )
     | Block block_lst ->
         {stmt with pattern= Block (unenforce_initialize block_lst)}
     | SList s_lst -> {stmt with pattern= SList (unenforce_initialize s_lst)}

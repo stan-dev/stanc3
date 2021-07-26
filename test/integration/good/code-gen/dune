@@ -22,7 +22,7 @@
 
 (rule
  (targets transformed_mir.output)
- (deps (package stanc) (:stanfiles mother.stan))
+ (deps (package stanc) (:stanfiles mother.stan unenforce_initialize.stan))
  (action
   (with-stdout-to %{targets}
    (run %{bin:run_bin_on_args} "%{bin:stanc} --debug-transformed-mir" %{stanfiles}))))

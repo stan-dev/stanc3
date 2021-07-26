@@ -298,8 +298,6 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
-      
-      
       pos__ = 1;
       current_statement__ = 176;
       context__.validate_dims("data initialization","k","int",
@@ -568,50 +566,32 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     
     try {
       Eigen::Matrix<local_scalar_t__, -1, 1> alpha_v;
-      
-      
       current_statement__ = 1;
       alpha_v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
-      
-      
       current_statement__ = 2;
       beta = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
       Eigen::Matrix<local_scalar_t__, -1, 1> cuts;
-      
-      
       current_statement__ = 3;
       cuts = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
       local_scalar_t__ sigma;
-      
-      
       current_statement__ = 4;
       sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
       local_scalar_t__ alpha;
-      
-      
       current_statement__ = 5;
       alpha = in__.template read<local_scalar_t__>();
       local_scalar_t__ phi;
-      
-      
       current_statement__ = 6;
       phi = in__.template read<local_scalar_t__>();
       Eigen::Matrix<local_scalar_t__, -1, -1> X_p;
-      
-      
       current_statement__ = 7;
       X_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, k);
       Eigen::Matrix<local_scalar_t__, -1, -1> beta_m;
-      
-      
       current_statement__ = 8;
       beta_m = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n,
                  k);
       Eigen::Matrix<local_scalar_t__, 1, -1> X_rv_p;
-      
-      
       current_statement__ = 9;
       X_rv_p = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(n);
       {
@@ -1288,50 +1268,32 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     
     try {
       Eigen::Matrix<double, -1, 1> alpha_v;
-      
-      
       current_statement__ = 1;
       alpha_v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
       Eigen::Matrix<double, -1, 1> beta;
-      
-      
       current_statement__ = 2;
       beta = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
       Eigen::Matrix<double, -1, 1> cuts;
-      
-      
       current_statement__ = 3;
       cuts = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
       double sigma;
-      
-      
       current_statement__ = 4;
       sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
       double alpha;
-      
-      
       current_statement__ = 5;
       alpha = in__.template read<local_scalar_t__>();
       double phi;
-      
-      
       current_statement__ = 6;
       phi = in__.template read<local_scalar_t__>();
       Eigen::Matrix<double, -1, -1> X_p;
-      
-      
       current_statement__ = 7;
       X_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, k);
       Eigen::Matrix<double, -1, -1> beta_m;
-      
-      
       current_statement__ = 8;
       beta_m = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n,
                  k);
       Eigen::Matrix<double, 1, -1> X_rv_p;
-      
-      
       current_statement__ = 9;
       X_rv_p = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(n);
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
@@ -1388,8 +1350,6 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     
     try {
       int pos__;
-      
-      
       pos__ = 1;
       Eigen::Matrix<double, -1, 1> alpha_v;
       alpha_v = Eigen::Matrix<double, -1, 1>(k);
@@ -1449,23 +1409,15 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         }
       }
       double sigma;
-      
-      
       current_statement__ = 4;
       sigma = context__.vals_r("sigma")[(1 - 1)];
       double sigma_free__;
-      
-      
       current_statement__ = 4;
       sigma_free__ = stan::math::lb_free(sigma, 0);
       double alpha;
-      
-      
       current_statement__ = 5;
       alpha = context__.vals_r("alpha")[(1 - 1)];
       double phi;
-      
-      
       current_statement__ = 6;
       phi = context__.vals_r("phi")[(1 - 1)];
       Eigen::Matrix<double, -1, -1> X_p;

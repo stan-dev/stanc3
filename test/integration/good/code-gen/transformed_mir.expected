@@ -649,7 +649,7 @@
                (Block
                 (((pattern
                    (Decl (decl_adtype AutoDiffable) (decl_id z)
-                    (decl_type (Sized SReal)) (initialize false)))
+                    (decl_type (Sized SReal)) (initialize true)))
                   (meta <opaque>))
                  ((pattern
                    (Decl (decl_adtype AutoDiffable) (decl_id vs)
@@ -854,7 +854,7 @@
                (Block
                 (((pattern
                    (Decl (decl_adtype AutoDiffable) (decl_id z)
-                    (decl_type (Sized SReal)) (initialize false)))
+                    (decl_type (Sized SReal)) (initialize true)))
                   (meta <opaque>))
                  ((pattern
                    (Decl (decl_adtype AutoDiffable) (decl_id vs)
@@ -980,7 +980,7 @@
                (Block
                 (((pattern
                    (Decl (decl_adtype AutoDiffable) (decl_id z)
-                    (decl_type (Sized SReal)) (initialize false)))
+                    (decl_type (Sized SReal)) (initialize true)))
                   (meta <opaque>))
                  ((pattern
                    (Decl (decl_adtype AutoDiffable) (decl_id vs)
@@ -1269,11 +1269,11 @@
         (SList
          (((pattern
             (Decl (decl_adtype AutoDiffable) (decl_id abs_diff)
-             (decl_type (Sized SReal)) (initialize false)))
+             (decl_type (Sized SReal)) (initialize true)))
            (meta <opaque>))
           ((pattern
             (Decl (decl_adtype AutoDiffable) (decl_id avg_scale)
-             (decl_type (Sized SReal)) (initialize false)))
+             (decl_type (Sized SReal)) (initialize true)))
            (meta <opaque>))
           ((pattern
             (Assignment (abs_diff UReal ())
@@ -7543,7 +7543,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id td_int) (decl_type (Sized SInt))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -7754,7 +7754,7 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 5))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id td_cfcov_33)
@@ -7765,7 +7765,7 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 3))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id x)
@@ -8180,7 +8180,7 @@
      (Block
       (((pattern
          (Decl (decl_adtype DataOnly) (decl_id z) (decl_type (Sized SReal))
-          (initialize false)))
+          (initialize true)))
         (meta <opaque>))
        ((pattern
          (Decl (decl_adtype DataOnly) (decl_id blocked_tdata_vs)
@@ -8431,7 +8431,7 @@
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id transformed_data_real)
-      (decl_type (Sized SReal)) (initialize false)))
+      (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -8449,7 +8449,7 @@
         (SArray SReal
          ((pattern (Var d_int))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -8470,7 +8470,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -8494,7 +8494,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -8523,7 +8523,7 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Var d_int))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -8564,7 +8564,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -8608,7 +8608,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -8655,7 +8655,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -8673,7 +8673,7 @@
         (SVector
          ((pattern (Var d_int))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -8703,7 +8703,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -8736,7 +8736,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -8772,7 +8772,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -8790,7 +8790,7 @@
         (SRowVector
          ((pattern (Var d_int))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -8820,7 +8820,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -8854,7 +8854,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
@@ -8891,7 +8891,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var d_int))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment (transformed_data_real UReal ())
@@ -11858,7 +11858,7 @@
         (SArray SReal
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_real_3d_ar)
@@ -11873,7 +11873,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_vec)
@@ -11882,7 +11882,7 @@
         (SVector
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_1d_vec)
@@ -11894,7 +11894,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_3d_vec)
@@ -11912,7 +11912,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_row_vec)
@@ -11921,7 +11921,7 @@
         (SRowVector
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_1d_row_vec)
@@ -11933,7 +11933,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_3d_row_vec)
@@ -11951,7 +11951,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_mat)
@@ -11962,7 +11962,7 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 4))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_ar_mat)
@@ -11988,7 +11988,7 @@
         (SVector
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_1d_simplex)
@@ -12000,7 +12000,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_3d_simplex)
@@ -12018,7 +12018,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_cfcov_54)
@@ -12029,7 +12029,7 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 4))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_cfcov_33)
@@ -12040,7 +12040,7 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 3))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_cfcov_33_ar)
@@ -12054,7 +12054,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id theta_p)
@@ -12063,11 +12063,11 @@
         (SVector
          ((pattern (Lit Int 2))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype AutoDiffable) (decl_id tp_real)
-      (decl_type (Sized SReal)) (initialize false)))
+      (decl_type (Sized SReal)) (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment (tp_real_1d_ar (UArray UReal) ())
@@ -14347,7 +14347,7 @@
         (SArray SReal
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_real_3d_ar)
@@ -14362,7 +14362,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_vec)
@@ -14371,7 +14371,7 @@
         (SVector
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_1d_vec)
@@ -14383,7 +14383,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_3d_vec)
@@ -14401,7 +14401,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_row_vec)
@@ -14410,7 +14410,7 @@
         (SRowVector
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_1d_row_vec)
@@ -14422,7 +14422,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_3d_row_vec)
@@ -14440,7 +14440,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_mat)
@@ -14451,7 +14451,7 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 4))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_ar_mat)
@@ -14477,7 +14477,7 @@
         (SVector
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_1d_simplex)
@@ -14489,7 +14489,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_3d_simplex)
@@ -14507,7 +14507,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_cfcov_54)
@@ -14518,7 +14518,7 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 4))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_cfcov_33)
@@ -14529,7 +14529,7 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 3))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_cfcov_33_ar)
@@ -14543,7 +14543,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id theta_p)
@@ -14552,11 +14552,11 @@
         (SVector
          ((pattern (Lit Int 2))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_real) (decl_type (Sized SReal))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnWriteParam)
@@ -17597,7 +17597,7 @@
         (SArray SReal
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id gq_real_3d_ar)
@@ -17612,7 +17612,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id gq_vec)
@@ -17633,7 +17633,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id gq_3d_vec)
@@ -17651,7 +17651,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id gq_row_vec)
@@ -17660,7 +17660,7 @@
         (SRowVector
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id gq_1d_row_vec)
@@ -17672,7 +17672,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id gq_3d_row_vec)
@@ -17690,7 +17690,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id gq_ar_mat)
@@ -17716,7 +17716,7 @@
         (SVector
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id gq_1d_simplex)
@@ -17728,7 +17728,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id gq_3d_simplex)
@@ -17746,7 +17746,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id gq_cfcov_54)
@@ -17757,7 +17757,7 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 4))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id gq_cfcov_33)
@@ -17768,7 +17768,7 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 3))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id gq_cfcov_33_ar)
@@ -17782,7 +17782,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var K))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id indices)
@@ -17873,7 +17873,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Lit Int 3))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id idx_res21)
@@ -17887,7 +17887,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Lit Int 5))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id idx_res31)
@@ -17901,7 +17901,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Lit Int 3))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id idx_res4)
@@ -17913,7 +17913,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Lit Int 3))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Decl (decl_adtype DataOnly) (decl_id idx_res5)
@@ -17925,7 +17925,7 @@
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Lit Int 2))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-      (initialize false)))
+      (initialize true)))
     (meta <opaque>))
    ((pattern
      (Assignment (gq_real_1d_ar (UArray UReal) ())
@@ -26222,3 +26222,582 @@ Warning in 'mother.stan', line 63, column 4: increment_log_prob(...); is depreca
 Warning in 'mother.stan', line 187, column 15: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 Warning in 'mother.stan', line 63, column 23: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
 Warning in 'mother.stan', line 187, column 15: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
+  $ ../../../../../install/default/bin/stanc --debug-transformed-mir unenforce_initialize.stan
+((functions_block ()) (input_vars ())
+ (prepare_data
+  (((pattern
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+      (initialize false)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (pos__ UInt ())
+      ((pattern (Lit Int 1))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))))
+ (log_prob
+  (((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type (Sized SReal))
+      (initialize false)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (y UReal ())
+      ((pattern (FunApp (CompilerInternal (FnReadParam ())) ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id p_mat)
+      (decl_type
+       (Sized
+        (SMatrix
+         ((pattern (Lit Int 10))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Lit Int 10))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize false)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (p_mat UMatrix ())
+      ((pattern
+        (FunApp (CompilerInternal (FnReadParam ()))
+         (((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id p) (decl_type (Sized SReal))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id tp_mat)
+      (decl_type
+       (Sized
+        (SMatrix
+         ((pattern (Lit Int 10))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Lit Int 10))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize false)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_mat UMatrix ())
+      ((pattern
+        (FunApp (StanLib rep_matrix FnPlain)
+         (((pattern (Var p))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id r) (decl_type (Sized SReal))
+      (initialize false)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (r UReal ())
+      ((pattern
+        (FunApp (StanLib Times__ FnPlain)
+         (((pattern (Var y))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+          ((pattern (Lit Real 5.0))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id t) (decl_type (Sized SReal))
+      (initialize false)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (t UReal ())
+      ((pattern
+        (FunApp (StanLib Times__ FnPlain)
+         (((pattern (Var p))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+          ((pattern (Lit Real 5.0))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (r UReal ())
+      ((pattern (Lit Real 6.0))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (p UReal ())
+      ((pattern (Lit Real 6.0))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))))
+ (generate_quantities
+  (((pattern
+     (Decl (decl_adtype DataOnly) (decl_id y) (decl_type (Sized SReal))
+      (initialize false)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (y UReal ())
+      ((pattern (FunApp (CompilerInternal (FnReadParam ())) ()))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id p_mat)
+      (decl_type
+       (Sized
+        (SMatrix
+         ((pattern (Lit Int 10))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Lit Int 10))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize false)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (p_mat UMatrix ())
+      ((pattern
+        (FunApp (CompilerInternal (FnReadParam ()))
+         (((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id p) (decl_type (Sized SReal))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id tp_mat)
+      (decl_type
+       (Sized
+        (SMatrix
+         ((pattern (Lit Int 10))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Lit Int 10))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id r) (decl_type (Sized SReal))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id t) (decl_type (Sized SReal))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp (CompilerInternal FnWriteParam)
+      (((pattern (Var y))
+        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar sym1__)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Lit Int 10))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (For (loopvar sym2__)
+              (lower
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (upper
+               ((pattern (Lit Int 10))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (body
+               ((pattern
+                 (Block
+                  (((pattern
+                     (NRFunApp (CompilerInternal FnWriteParam)
+                      (((pattern
+                         (Indexed
+                          ((pattern (Var p_mat))
+                           (meta
+                            ((type_ UMatrix) (loc <opaque>)
+                             (adlevel DataOnly))))
+                          ((Single
+                            ((pattern (Var sym2__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly)))))
+                           (Single
+                            ((pattern (Var sym1__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))))))
+                        (meta
+                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain)
+         (((pattern
+            (EOr
+             ((pattern (Var emit_transformed_parameters__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Var emit_generated_quantities__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>)))))
+       (meta <opaque>))
+      ()))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_mat UMatrix ())
+      ((pattern
+        (FunApp (StanLib rep_matrix FnPlain)
+         (((pattern (Var p))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 10))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UMatrix) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (r UReal ())
+      ((pattern
+        (FunApp (StanLib Times__ FnPlain)
+         (((pattern (Var y))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+          ((pattern (Lit Real 5.0))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (t UReal ())
+      ((pattern
+        (FunApp (StanLib Times__ FnPlain)
+         (((pattern (Var p))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+          ((pattern (Lit Real 5.0))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (r UReal ())
+      ((pattern (Lit Real 6.0))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (p UReal ())
+      ((pattern (Lit Real 6.0))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (IfElse
+      ((pattern (Var emit_transformed_parameters__))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern
+        (Block
+         (((pattern
+            (NRFunApp (CompilerInternal FnWriteParam)
+             (((pattern (Var p))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta <opaque>))
+          ((pattern
+            (For (loopvar sym1__)
+             (lower
+              ((pattern (Lit Int 1))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+             (upper
+              ((pattern (Lit Int 10))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+             (body
+              ((pattern
+                (Block
+                 (((pattern
+                    (For (loopvar sym2__)
+                     (lower
+                      ((pattern (Lit Int 1))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                     (upper
+                      ((pattern (Lit Int 10))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                     (body
+                      ((pattern
+                        (Block
+                         (((pattern
+                            (NRFunApp (CompilerInternal FnWriteParam)
+                             (((pattern
+                                (Indexed
+                                 ((pattern (Var tp_mat))
+                                  (meta
+                                   ((type_ UMatrix) (loc <opaque>)
+                                    (adlevel DataOnly))))
+                                 ((Single
+                                   ((pattern (Var sym2__))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>)
+                                      (adlevel DataOnly)))))
+                                  (Single
+                                   ((pattern (Var sym1__))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>)
+                                      (adlevel DataOnly))))))))
+                               (meta
+                                ((type_ UReal) (loc <opaque>)
+                                 (adlevel DataOnly)))))))
+                           (meta <opaque>)))))
+                       (meta <opaque>)))))
+                   (meta <opaque>)))))
+               (meta <opaque>)))))
+           (meta <opaque>))
+          ((pattern
+            (NRFunApp (CompilerInternal FnWriteParam)
+             (((pattern (Var r))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta <opaque>))
+          ((pattern
+            (NRFunApp (CompilerInternal FnWriteParam)
+             (((pattern (Var t))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta <opaque>)))))
+       (meta <opaque>))
+      ()))
+    (meta <opaque>))
+   ((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain)
+         (((pattern (Var emit_generated_quantities__))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>)))))
+       (meta <opaque>))
+      ()))
+    (meta <opaque>))))
+ (transform_inits
+  (((pattern
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))
+      (initialize false)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (pos__ UInt ())
+      ((pattern (Lit Int 1))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id y) (decl_type (Sized SReal))
+      (initialize false)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (y UReal ())
+      ((pattern
+        (Indexed
+         ((pattern
+           (FunApp (CompilerInternal FnReadData)
+            (((pattern (Lit Str y))
+              (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))
+         ((Single
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id p_mat)
+      (decl_type
+       (Sized
+        (SMatrix
+         ((pattern (Lit Int 10))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Lit Int 10))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id p_mat_flat__)
+          (decl_type (Unsized (UArray UReal))) (initialize false)))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (p_mat_flat__ (UArray UReal) ())
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str p_mat))
+               (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (pos__ UInt ())
+          ((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Lit Int 10))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Lit Int 10))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (Assignment
+                          (p_mat UMatrix
+                           ((Single
+                             ((pattern (Var sym2__))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly)))))
+                            (Single
+                             ((pattern (Var sym1__))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly)))))))
+                          ((pattern
+                            (Indexed
+                             ((pattern (Var p_mat_flat__))
+                              (meta
+                               ((type_ (UArray UReal)) (loc <opaque>)
+                                (adlevel DataOnly))))
+                             ((Single
+                               ((pattern (Var pos__))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>)
+                                  (adlevel DataOnly))))))))
+                           (meta
+                            ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>))
+                       ((pattern
+                         (Assignment (pos__ UInt ())
+                          ((pattern
+                            (FunApp (StanLib Plus__ FnPlain)
+                             (((pattern (Var pos__))
+                               (meta
+                                ((type_ UInt) (loc <opaque>)
+                                 (adlevel DataOnly))))
+                              ((pattern (Lit Int 1))
+                               (meta
+                                ((type_ UInt) (loc <opaque>)
+                                 (adlevel DataOnly)))))))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp (CompilerInternal FnWriteParam)
+      (((pattern (Var y))
+        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar sym1__)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Lit Int 10))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (For (loopvar sym2__)
+              (lower
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (upper
+               ((pattern (Lit Int 10))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (body
+               ((pattern
+                 (Block
+                  (((pattern
+                     (NRFunApp (CompilerInternal FnWriteParam)
+                      (((pattern
+                         (Indexed
+                          ((pattern (Var p_mat))
+                           (meta
+                            ((type_ UMatrix) (loc <opaque>)
+                             (adlevel DataOnly))))
+                          ((Single
+                            ((pattern (Var sym2__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly)))))
+                           (Single
+                            ((pattern (Var sym1__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))))))
+                        (meta
+                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))))
+ (output_vars
+  ((y
+    ((out_unconstrained_st SReal) (out_constrained_st SReal)
+     (out_block Parameters) (out_trans Identity)))
+   (p_mat
+    ((out_unconstrained_st
+      (SMatrix
+       ((pattern (Lit Int 10))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Int 10))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_constrained_st
+      (SMatrix
+       ((pattern (Lit Int 10))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Int 10))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_block Parameters) (out_trans Identity)))
+   (p
+    ((out_unconstrained_st SReal) (out_constrained_st SReal)
+     (out_block TransformedParameters) (out_trans Identity)))
+   (tp_mat
+    ((out_unconstrained_st
+      (SMatrix
+       ((pattern (Lit Int 10))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Int 10))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_constrained_st
+      (SMatrix
+       ((pattern (Lit Int 10))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Int 10))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_block TransformedParameters) (out_trans Identity)))
+   (r
+    ((out_unconstrained_st SReal) (out_constrained_st SReal)
+     (out_block TransformedParameters) (out_trans Identity)))
+   (t
+    ((out_unconstrained_st SReal) (out_constrained_st SReal)
+     (out_block TransformedParameters) (out_trans Identity)))))
+ (prog_name unenforce_initialize_model)
+ (prog_path unenforce_initialize.stan))

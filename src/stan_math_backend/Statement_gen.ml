@@ -63,9 +63,7 @@ let rec pp_initialize ppf (st, adtype) =
 let pp_assign_sized ppf (decl_id, st, adtype, initialize) =
   let init_nan = nan_type (st, adtype) in
   let pp_assign ppf (decl_id, st, adtype) =
-    match initialize with
-    | true -> pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_initialize (st, adtype)
-    | false -> pf ppf ""
+    pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_initialize (st, adtype)
   in
   pf ppf "@[%a%a@]@," pp_assign (decl_id, st, adtype) pp_filler
     (decl_id, st, init_nan, initialize)
@@ -78,7 +76,8 @@ let%expect_test "set size mat array" =
     , DataOnly
     , false )
   |> print_endline ;
-  [%expect {| |}]
+  [%expect
+    {| d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3))); |}]
 
 let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in
@@ -225,10 +224,14 @@ let pp_unsized_decl ppf (vident, ut, adtype) =
   pf ppf "%a %s;" pp_type (adtype, ut) vident
 
 let pp_sized_decl ppf (vident, st, adtype, initialize) =
-  pf ppf "%a@,%a" pp_unsized_decl
-    (vident, SizedType.to_unsized st, adtype)
-    pp_assign_sized
-    (vident, st, adtype, initialize)
+  match initialize with
+  | true ->
+      pf ppf "%a@,%a" pp_unsized_decl
+        (vident, SizedType.to_unsized st, adtype)
+        pp_assign_sized
+        (vident, st, adtype, initialize)
+  | false ->
+      pf ppf "%a" pp_unsized_decl (vident, SizedType.to_unsized st, adtype)
 
 let pp_decl ppf (vident, pst, adtype, initialize) =
   match pst with

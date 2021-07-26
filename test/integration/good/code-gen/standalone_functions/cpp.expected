@@ -141,8 +141,6 @@ my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
     current_statement__ = 7;
     validate_non_negative_index("result", "num_elements(x)", num_elements(x));
     Eigen::Matrix<local_scalar_t__, -1, 1> result;
-    
-    
     current_statement__ = 8;
     assign(result, multiply(x, 5.0), "assigning variable result");
     current_statement__ = 9;
@@ -464,8 +462,6 @@ integrand_ode(const T0__& r, const std::vector<T1__>& f,
     df_dx = std::vector<local_scalar_t__>(1, DUMMY_VAR__);
     
     local_scalar_t__ x;
-    
-    
     current_statement__ = 4;
     x = logit(r);
     current_statement__ = 5;
