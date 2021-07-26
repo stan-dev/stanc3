@@ -55,34 +55,6 @@ pipeline {
         stage("Build and test static release binaries") {
             failFast true
             parallel {
-                stage("Build & test a static Linux armel binary") {
-                    agent {
-                        dockerfile {
-                            filename 'docker/static/Dockerfile'
-                            //Forces image to ignore entrypoint
-                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
-                        }
-                    }
-                    steps {
-                        runShell("""
-                            eval \$(opam env)
-                            dune subst
-                        """)
-                        sh "sudo apk add docker"
-                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh armel"
-                        sh "sudo chown -R opam: `pwd`"
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --profile static --verbose
-                        """)
-
-                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
-                        sh "mv `find _build -name stan2tfp.exe` bin/linux-armel-stan2tfp"
-
-                        stash name:'linux-armel-exe', includes:'bin/*'
-                    }
-                    post {always { runShell("rm -rf ./*")}}
-                }
                 stage("Build & test a static Linux armhf binary") {
                     agent {
                         dockerfile {
@@ -97,8 +69,9 @@ pipeline {
                             dune subst
                         """)
                         sh "sudo apk add docker"
-                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh armhf"
-                        sh "sudo chown -R opam: `pwd`"
+                        sh "sudo docker run --rm --privileged multiarch/qemu-user-static:register --reset"
+                        sh "sudo docker run --volumes-from=\$(docker ps -q):rw andrjohns/stanc3-building:armhf-debootstrap /bin/bash -c \"cd `pwd` && eval \$(opam env) && dune build @install --profile static\""
+                        sh "sudo chown -R opam: _build"
                         echo runShell("""
                             eval \$(opam env)
                             time dune runtest --profile static --verbose
@@ -108,62 +81,6 @@ pipeline {
                         sh "mv `find _build -name stan2tfp.exe` bin/linux-armhf-stan2tfp"
 
                         stash name:'linux-armhf-exe', includes:'bin/*'
-                    }
-                    post {always { runShell("rm -rf ./*")}}
-                }
-                stage("Build & test a static Linux arm64 binary") {
-                    agent {
-                        dockerfile {
-                            filename 'docker/static/Dockerfile'
-                            //Forces image to ignore entrypoint
-                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
-                        }
-                    }
-                    steps {
-                        runShell("""
-                            eval \$(opam env)
-                            dune subst
-                        """)
-                        sh "sudo apk add docker"
-                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh arm64"
-                        sh "sudo chown -R opam: `pwd`"
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --profile static --verbose
-                        """)
-
-                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm64-stanc"
-                        sh "mv `find _build -name stan2tfp.exe` bin/linux-arm64-stan2tfp"
-
-                        stash name:'linux-arm64-exe', includes:'bin/*'
-                    }
-                    post {always { runShell("rm -rf ./*")}}
-                }
-                stage("Build & test a static Linux ppc64el binary") {
-                    agent {
-                        dockerfile {
-                            filename 'docker/static/Dockerfile'
-                            //Forces image to ignore entrypoint
-                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
-                        }
-                    }
-                    steps {
-                        runShell("""
-                            eval \$(opam env)
-                            dune subst
-                        """)
-                        sh "sudo apk add docker"
-                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh ppc64el"
-                        sh "sudo chown -R opam: `pwd`"
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --profile static --verbose
-                        """)
-
-                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-ppc64el-stanc"
-                        sh "mv `find _build -name stan2tfp.exe` bin/linux-ppc64el-stan2tfp"
-
-                        stash name:'linux-ppc64el-exe', includes:'bin/*'
                     }
                     post {always { runShell("rm -rf ./*")}}
                 }
@@ -178,10 +95,10 @@ pipeline {
                 //unstash 'windows-exe'
                 //unstash 'linux-exe'
                 //unstash 'mac-exe'
-                unstash 'linux-arm64-exe'
+                //unstash 'linux-arm64-exe'
                 unstash 'linux-armhf-exe'
-                unstash 'linux-armel-exe'
-                unstash 'linux-ppc64el-exe'
+                //unstash 'linux-armel-exe'
+                //unstash 'linux-ppc64el-exe'
                 //unstash 'js-exe'
                 runShell("""
                     wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz
