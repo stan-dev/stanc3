@@ -70,7 +70,7 @@ pipeline {
                         """)
                         sh "sudo apk add docker"
                         sh "sudo docker run --rm --privileged multiarch/qemu-user-static:register --reset"
-                        sh "sudo docker run --volumes-from=\$(docker ps -q):rw andrjohns/stanc3-building:armhf-debootstrap /bin/bash -c \"cd `pwd` && eval \$(opam env) && dune build @install --profile static\""
+                        sh "sudo docker run --volumes-from=`sudo docker ps -q`:rw andrjohns/stanc3-building:armhf-debootstrap /bin/bash -c \"cd `pwd` && eval \$(opam env) && dune build @install --profile static\""
                         sh "sudo chown -R opam: _build"
                         echo runShell("""
                             eval \$(opam env)
