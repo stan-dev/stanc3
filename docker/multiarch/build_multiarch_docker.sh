@@ -1,8 +1,15 @@
 echo "
   FROM debian:bullseye-slim
   USER root
+  
+  RUN adduser opam --disabled-password
 
   RUN addgroup --gid=1004 jenkins-slave
+
+  RUN delgroup opam nogroup
+
+  RUN addgroup opam opam
+  RUN addgroup opam jenkins-slave
 
   #Set our distro_style
   LABEL distro_style=\"apt\"
@@ -28,6 +35,8 @@ echo "
   RUN cp ./install_build_deps.sh /var/chroot/$1/install_build_deps.sh
 
   RUN chroot /var/chroot/$1 /bin/bash -x ./install_build_deps.sh
+
+  USER opam
 " > $1-dockerfile
 
 cp scripts/install_build_deps.sh install_build_deps.sh
