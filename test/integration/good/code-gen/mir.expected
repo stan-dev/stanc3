@@ -15636,3 +15636,57 @@ Warning in 'mother.stan', line 63, column 4: increment_log_prob(...); is depreca
 Warning in 'mother.stan', line 187, column 15: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.
 Warning in 'mother.stan', line 63, column 23: normal_log is deprecated and will be removed in the future. Use normal_lpdf instead.
 Warning in 'mother.stan', line 187, column 15: The no-argument function `get_lp()` is deprecated. Use the no-argument function `target()` instead.
+Uncaught exception:
+  
+  (Invalid_argument "List.nth_exn 1 called on list of length 1")
+
+Raised at file "stdlib.ml", line 34, characters 20-45
+Called from file "src/stan_math_backend/Expression_gen.ml" (inlined), line 181, characters 16-33
+Called from file "src/stan_math_backend/Expression_gen.ml", line 271, characters 22-33
+Called from file "format.ml", line 1276, characters 4-20
+Called from file "format.ml", line 1337, characters 20-38
+Called from file "list.ml", line 106, characters 12-15
+Called from file "format.ml", line 1288, characters 32-48
+Called from file "format.ml", line 1276, characters 4-20
+Called from file "format.ml", line 1337, characters 20-38
+Called from file "format.ml", line 1276, characters 4-20
+Called from file "format.ml", line 1337, characters 20-38
+Called from file "format.ml", line 1276, characters 4-20
+Called from file "format.ml", line 1286, characters 32-48
+Called from file "format.ml", line 1337, characters 20-38
+Called from file "list.ml", line 106, characters 12-15
+Called from file "format.ml", line 1276, characters 4-20
+Called from file "format.ml", line 1276, characters 4-20
+Called from file "format.ml", line 1288, characters 32-48
+Called from file "format.ml", line 1337, characters 20-38
+Called from file "format.ml", line 1276, characters 4-20
+Called from file "format.ml", line 1337, characters 20-38
+Called from file "list.ml", line 106, characters 12-15
+Called from file "format.ml", line 1276, characters 4-20
+Called from file "format.ml", line 1276, characters 4-20
+Called from file "format.ml", line 1288, characters 32-48
+Called from file "format.ml", line 1337, characters 20-38
+Called from file "list.ml", line 106, characters 12-15
+Called from file "format.ml", line 1276, characters 4-20
+Called from file "format.ml", line 1276, characters 4-20
+Called from file "format.ml", line 1288, characters 32-48
+Called from file "format.ml", line 1337, characters 20-38
+Called from file "format.ml", line 1337, characters 20-38
+Called from file "src/stan_math_backend/Stan_math_code_gen.ml", line 136, characters 2-38
+Called from file "src/stan_math_backend/Stan_math_code_gen.ml", line 477, characters 2-12
+Called from file "format.ml", line 1337, characters 20-38
+Called from file "src/stan_math_backend/Stan_math_code_gen.ml", line 816, characters 2-29
+Called from file "format.ml", line 1276, characters 4-20
+Called from file "format.ml", line 1276, characters 4-20
+Called from file "format.ml", line 1276, characters 4-20
+Called from file "format.ml", line 1286, characters 32-48
+Called from file "format.ml", line 1337, characters 20-38
+Called from file "format.ml", line 1276, characters 4-20
+Called from file "format.ml", line 1288, characters 32-48
+Called from file "format.ml", line 1276, characters 4-20
+Called from file "format.ml", line 1276, characters 4-20
+Called from file "format.ml", line 1337, characters 20-38
+Called from file "src/stan_math_backend/Stan_math_code_gen.ml", line 911, characters 2-305
+Called from file "format.ml", line 1363, characters 4-22
+Called from file "src/stanc/stanc.ml", line 233, characters 14-62
+Called from file "src/stanc/stanc.ml", line 265, characters 9-16
