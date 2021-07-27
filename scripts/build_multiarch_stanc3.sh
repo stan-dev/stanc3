@@ -1,28 +1,18 @@
+# Identify 
 if [ $1 = "armhf" ]; then
-  ARCH="arm"
-elif [ $1 = "armel" ]; then
-  ARCH="arm"
-elif [ $1 = "arm64" ]; then
-  ARCH="aarch64"
+  $SHA=06aabdc4092100d08ba26d986acb27931b43255fdec9706bf48896e41c3db221
 else
-  ARCH=$1
+  $SHA=$1
 fi
 
 echo "
-mkdir -p /var/chroot/$1/$(pwd)
-mount --bind $(pwd) /var/chroot/$1/$(pwd)
-cp /usr/bin/qemu-$ARCH-static /var/chroot/$1/usr/bin
-chroot /var/chroot/$1/ /bin/bash << EOF
   cd $(pwd)
 
-  eval \\\$(opam env)
+  eval \$(opam env)
   dune build @install --profile static
-EOF
-
-umount /var/chroot/$1/$(pwd)
 " > scripts/build_stanc3.sh
 
-docker run --rm --privileged multiarch/qemu-user-static:register --reset
-docker run --privileged --volumes-from=$(docker ps -q):rw andrjohns/stanc3-building:$1-debootstrap /bin/bash -x $(pwd)/scripts/build_stanc3.sh
+docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+docker run --volumes-from=$(docker ps -q):rw andrjohns/stanc3-building:latest@sha256:$SHA /bin/bash -x $(pwd)/scripts/build_stanc3.sh
 
 rm scripts/build_stanc3.sh
