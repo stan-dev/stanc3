@@ -64,6 +64,7 @@ pipeline {
                         }
                     }
                     steps {
+                        sh "ls -la"
                         //runShell("""
                         //    eval \$(opam env)
                         //    dune subst
