@@ -173,9 +173,10 @@ let wrap_fn f =
       let wrapper =
         match suffix with
         | FnPlain -> "from_lambda"
-        | FnLpdf _ -> "lpdf_from_lambda"
+        | FnLpdf true -> "lpdf_from_lambda<propto__>"
+        | FnLpdf false -> "lpdf_from_lambda<false>"
         | FnRng -> "rng_from_lambda"
-        | FnTarget -> "lp_from_lambda"
+        | FnTarget -> "lp_from_lambda<propto__>"
       in
       { Expr.Fixed.meta= {f.meta with type_= UFun (args, rt, (suffix, true))}
       ; pattern= FunApp (StanLib (wrapper, FnPlain), [f]) }
@@ -436,18 +437,37 @@ and pp_compiler_internal_fn ad ut f ppf es =
   match f with
   | Internal_fun.FnMakeClosure -> (
     match (ut, es) with
-    | ( UnsizedType.UFun (_, _, (FnPlain, _))
-      , {Expr.Fixed.pattern= Lit (Str, implname); _} :: args ) ->
-        let c = if List.is_empty args then "" else "," in
-        pf ppf
-          "@[<hov 2>from_lambda([](const auto&... s) { return \
-           %s_impl__(s...); }%s@,%a)@]"
-          implname c (list ~sep:comma pp_expr) args
-    | _, {Expr.Fixed.pattern= Lit (Str, implname); _} :: args ->
-        gen_fun_app FnPlain ppf (implname ^ "_make__") args
+    | ( UnsizedType.UFun (args, _, (sfx, _))
+      , {Expr.Fixed.pattern= Lit (Str, implname); _} :: captured ) -> (
+        let c = if List.is_empty captured then "" else "," in
+        match sfx with
+        | FnPlain ->
+            pf ppf
+              "@[<hov 2>from_lambda([](const auto&... s) { return \
+               %s_impl__(s...); }%s@,%a)@]"
+              implname c (list ~sep:comma pp_expr) captured
+        | FnRng ->
+            let all =
+              List.range 0 (List.length captured + List.length args)
+              |> List.map ~f:(strf "s%d")
+            in
+            let c1 = if List.is_empty all then "" else "," in
+            pf ppf
+              "@[<hov 2>rng_from_lambda([](%a%s@ auto& rng, auto msgs) { \
+               return %s_impl__(%a%s rng, msgs); }%s@ %a)@]"
+              (Fmt.list ~sep:comma (fun ppf -> pf ppf "const auto& %s"))
+              all c1 implname (list ~sep:comma string) all c1 c
+              (list ~sep:comma pp_expr) captured
+        | FnLpdf _ ->
+            pf ppf
+              "@[<hov 2>lpdf_from_lambda<propto__>(%s_pfunctor__()%s@,%a)@]"
+              implname c (list ~sep:comma pp_expr) captured
+        | FnTarget ->
+            pf ppf "@[<hov 2>lp_from_lambda<propto__>(%s_pfunctor__()%s@,%a)@]"
+              implname c (list ~sep:comma pp_expr) captured )
     | _ ->
         raise_s
-          [%message "Missing closure constructor " (es : Expr.Typed.t list)] )
+          [%message "Invalid closure constructor " (es : Expr.Typed.t list)] )
   | FnMakeArray ->
       let ut =
         match ut with
