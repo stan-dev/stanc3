@@ -98,6 +98,8 @@ class arg_type_convert_model final : public model_base_crtp<arg_type_convert_mod
                          unsigned int random_seed__ = 0,
                          std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -220,7 +222,9 @@ class arg_type_convert_model final : public model_base_crtp<arg_type_convert_mod
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       int pos__;
@@ -621,6 +625,8 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
                       unsigned int random_seed__ = 0,
                       std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -780,7 +786,9 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       int pos__;
@@ -2222,6 +2230,8 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
                       unsigned int random_seed__ = 0,
                       std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -2771,7 +2781,9 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       int pos__;
@@ -5993,6 +6005,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
                       unsigned int random_seed__ = 0,
                       std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -7275,7 +7289,9 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       int pos__;

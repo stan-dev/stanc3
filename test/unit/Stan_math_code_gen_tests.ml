@@ -172,56 +172,6 @@ let%expect_test "closure" =
 template <typename T0__, typename T1__>
 void
 sars_impl__(const T0__& x, const T1__& y, std::ostream* pstream__)  ;
-
-template<bool ref__, typename F1__>
-class sars_cfunctor__ {
-  const Eigen::Matrix<double, -1, -1>& x;
-  stan::capture_type_t<Eigen::Matrix<F1__, 1, -1>, ref__> y;
-  public:
-  const size_t vars_count__;
-  sars_cfunctor__(const sars_cfunctor__<ref__, F1__>&) = default ;
-  sars_cfunctor__(sars_cfunctor__<ref__, F1__>&&) = default ;
-  sars_cfunctor__(const Eigen::Matrix<double, -1, -1>& x__,
-                  const Eigen::Matrix<F1__, 1, -1>& y__)
-  : x(x__), y(y__), vars_count__(count_vars(x__, y__)) {}
-  void
-  operator()(std::ostream* pstream__)  const
-  {
-  return sars_impl__(x, y, pstream__);
-  }
-
-  using captured_scalar_t__ = stan::return_type_t<F1__>;
-  using ValueOf__ = sars_cfunctor__<false, double>;
-  using CopyOf__ = sars_cfunctor__<false, stan::capture_type_t<F1__, false>>;
-  size_t count_vars__() const {
-  return vars_count__;
-  }
-  auto value_of__() const {
-  return ValueOf__(x, eval(value_of(y)));
-  }
-  auto deep_copy_vars__() const {
-  return CopyOf__(x, eval(deep_copy_vars(y)));
-  }
-  void zero_adjoints__() {
-  stan::math::zero_adjoints(x);
-  stan::math::zero_adjoints(y);
-  }
-  double* accumulate_adjoints__(double *dest) const {
-  return stan::math::accumulate_adjoints(dest, x, y);
-  }
-  stan::math::vari** save_varis__(stan::math::vari **dest) const {
-  return stan::math::save_varis(dest, x, y);
-  }
-
-
-  };
-template<typename F1__>
-auto sars_make__(const Eigen::Matrix<double, -1, -1>& x,
-                 const Eigen::Matrix<F1__, 1, -1>& y) {
-return sars_cfunctor__<false,
-F1__>(x, y);
-}
-
 template <typename T0__, typename T1__>
 void
 sars_impl__(const T0__& x_arg__, const T1__& y_arg__, std::ostream* pstream__) {

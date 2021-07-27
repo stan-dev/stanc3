@@ -159,6 +159,8 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
                          unsigned int random_seed__ = 0,
                          std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -631,7 +633,9 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       int pos__;
@@ -1273,6 +1277,8 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
                   unsigned int random_seed__ = 0,
                   std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -2864,7 +2870,9 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       double lcm_sym53__;
@@ -3298,6 +3306,8 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
                  unsigned int random_seed__ = 0,
                  std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -4148,7 +4158,9 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       double lcm_sym27__;
@@ -4776,6 +4788,8 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
                              unsigned int random_seed__ = 0,
                              std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -4906,7 +4920,9 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       int pos__;
@@ -5118,6 +5134,8 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
                               unsigned int random_seed__ = 0,
                               std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -5247,7 +5265,9 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       int pos__;
@@ -5465,6 +5485,8 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
                        unsigned int random_seed__ = 0,
                        std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -5700,7 +5722,9 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       double lcm_sym9__;
@@ -6029,6 +6053,8 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -6224,7 +6250,9 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       double lcm_sym3__;
@@ -6562,6 +6590,8 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -7432,7 +7462,9 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       double lcm_sym30__;
@@ -8089,6 +8121,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -8580,7 +8614,9 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       double lcm_sym7__;
@@ -9272,6 +9308,8 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -10770,7 +10808,9 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       double lcm_sym51__;
@@ -12048,6 +12088,8 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -14409,7 +14451,9 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       double lcm_sym128__;
@@ -14967,6 +15011,8 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -15705,7 +15751,9 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       double lcm_sym23__;
@@ -16268,6 +16316,8 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -16660,7 +16710,9 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       double lcm_sym10__;
@@ -17382,6 +17434,8 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
                    unsigned int random_seed__ = 0,
                    std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -18973,7 +19027,9 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       double lcm_sym53__;
@@ -20306,6 +20362,8 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                        unsigned int random_seed__ = 0,
                        std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -22534,7 +22592,9 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       double lcm_sym142__;
@@ -23024,6 +23084,8 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
                        unsigned int random_seed__ = 0,
                        std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -23151,7 +23213,9 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       int pos__;
@@ -23359,6 +23423,8 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
                         unsigned int random_seed__ = 0,
                         std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -23488,7 +23554,9 @@ class lcm_experiment2_model final : public model_base_crtp<lcm_experiment2_model
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       int pos__;
@@ -23702,6 +23770,8 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
                   unsigned int random_seed__ = 0,
                   std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -23846,7 +23916,9 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       double lcm_sym3__;
@@ -24428,6 +24500,8 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
                    unsigned int random_seed__ = 0,
                    std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -25851,7 +25925,9 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       int pos__;
@@ -26248,6 +26324,8 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
                        unsigned int random_seed__ = 0,
                        std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -26470,7 +26548,9 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       int pos__;
@@ -26754,6 +26834,8 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
                 unsigned int random_seed__ = 0,
                 std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -27402,7 +27484,9 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       int pos__;
@@ -27736,6 +27820,8 @@ class off_small_model final : public model_base_crtp<off_small_model> {
                   unsigned int random_seed__ = 0,
                   std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -28262,7 +28348,9 @@ class off_small_model final : public model_base_crtp<off_small_model> {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       double lcm_sym10__;
@@ -28861,6 +28949,8 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
                       unsigned int random_seed__ = 0,
                       std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -29631,7 +29721,9 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       double lcm_sym53__;
@@ -30132,6 +30224,8 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
                      unsigned int random_seed__ = 0,
                      std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -30571,7 +30665,9 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       double lcm_sym10__;
@@ -30963,6 +31059,8 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
                          unsigned int random_seed__ = 0,
                          std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -31417,7 +31515,9 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       double lcm_sym8__;
@@ -31927,6 +32027,8 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
                      unsigned int random_seed__ = 0,
                      std::ostream* pstream__ = nullptr) : model_base_crtp(0) {
     int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__;
     using local_scalar_t__ = double ;
     boost::ecuyer1988 base_rng__ = 
         stan::services::util::create_rng(random_seed__, 0);
@@ -32305,7 +32407,9 @@ class unroll_limit_model final : public model_base_crtp<unroll_limit_model> {
     using local_scalar_t__ = double;
     vars__.clear();
     vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    int current_statement__ = 0;
+    static constexpr bool propto__ = true;
+    (void) propto__; 
     
     try {
       int pos__;
