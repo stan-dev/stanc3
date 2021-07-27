@@ -8,6 +8,8 @@ chroot /var/chroot/$1/ /bin/bash << EOF
   eval \\\$(opam env)
   dune build @install --profile static
 EOF
+
+umount /var/chroot/$1/$(pwd)
 " > scripts/build_stanc3.sh
 
 docker run --privileged --volumes-from=$(docker ps -q):rw andrjohns/stanc3-building:$1-debootstrap /bin/bash -x $(pwd)/scripts/build_stanc3.sh
