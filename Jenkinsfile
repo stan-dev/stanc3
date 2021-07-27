@@ -64,22 +64,22 @@ pipeline {
                         }
                     }
                     steps {
-                        runShell("""
-                            eval \$(opam env)
-                            dune subst
-                        """)
-                        sh "sudo apk add docker"
-                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh armhf"
-                        sh "sudo chown -R opam: _build"
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --profile static --verbose
-                        """)
+                        //runShell("""
+                        //    eval \$(opam env)
+                        //    dune subst
+                        //""")
+                        //sh "sudo apk add docker"
+                        //sh "sudo bash -x scripts/build_multiarch_stanc3.sh armhf"
+                        // sh "sudo chown -R opam: _build"
+                        //echo runShell("""
+                        //    eval \$(opam env)
+                        //    time dune runtest --profile static --verbose
+                        //""")
+                        //
+                        //sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
+                        //sh "mv `find _build -name stan2tfp.exe` bin/linux-armhf-stan2tfp"
 
-                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
-                        sh "mv `find _build -name stan2tfp.exe` bin/linux-armhf-stan2tfp"
-
-                        stash name:'linux-armhf-exe', includes:'bin/*'
+                        //stash name:'linux-armhf-exe', includes:'bin/*'
                     }
                     post {always { runShell("rm -rf ./*")}}
                 }
