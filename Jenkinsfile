@@ -72,6 +72,7 @@ pipeline {
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh armhf"
                         sh "sudo chown -R opam: _build"
                         sh "sudo chown -R opam: src"
+                        sh "sudo chown -R opam: test"
                         echo runShell("""
                             eval \$(opam env)
                             time dune runtest --profile static --verbose
