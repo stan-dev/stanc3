@@ -69,8 +69,8 @@ pipeline {
                             dune subst
                         """)
                         sh "sudo apk add docker"
-                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh armhf"
-                        sh "sudo chown -R opam: _build"
+                        //sh "sudo bash -x scripts/build_multiarch_stanc3.sh armhf"
+                        sh "sudo chown -R opam: `pwd`"
                         echo runShell("""
                             eval \$(opam env)
                             time dune runtest --profile static --verbose
