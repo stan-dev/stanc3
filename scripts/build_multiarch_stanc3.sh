@@ -1,5 +1,5 @@
 echo "
-chroot /var/chroot/$1/ /bin/bash -e \"cd $(pwd) && eval \\$(opam env) && dune build @install --profile static\"
+chroot /var/chroot/$1/ /bin/bash -e \"cd $(pwd) && eval \\\$(opam env) && dune build @install --profile static\"
 " > scripts/build_stanc3.sh
 
 mkdir -p /var/chroot/$1/$(pwd)
