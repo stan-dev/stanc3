@@ -1,6 +1,7 @@
 echo "
 mkdir -p /var/chroot/$1/$(pwd)
 mount --bind $(pwd) /var/chroot/$1/$(pwd)
+mount -t proc proc /var/chroot/$1/proc
 chroot /var/chroot/$1/ /bin/bash << EOF
   cd $(pwd)
 
