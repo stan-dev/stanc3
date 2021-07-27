@@ -9,9 +9,9 @@ else
 fi
 
 echo "
-cp /usr/bin/qemu-$ARCH-static /var/chroot/$1/usr/bin
 mkdir -p /var/chroot/$1/$(pwd)
 mount --bind $(pwd) /var/chroot/$1/$(pwd)
+cp /usr/bin/qemu-$ARCH-static /var/chroot/$1/usr/bin
 chroot /var/chroot/$1/ /bin/bash << EOF
   cd $(pwd)
 
