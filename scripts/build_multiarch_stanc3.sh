@@ -1,4 +1,5 @@
 echo "
+mkdir -p /var/chroot/$1/$(pwd)
 mount --bind $(pwd) /var/chroot/$1/$(pwd)
 chroot /var/chroot/$1/ /bin/bash << EOF
   cd $(pwd)
@@ -7,8 +8,6 @@ chroot /var/chroot/$1/ /bin/bash << EOF
   dune build @install --profile static
 EOF
 " > scripts/build_stanc3.sh
-
-mkdir -p /var/chroot/$1/$(pwd)
 
 docker run --volumes-from=$(docker ps -q):rw andrjohns/stanc3-building:$1-debootstrap /bin/bash -x $(pwd)/scripts/build_stanc3.sh
 
