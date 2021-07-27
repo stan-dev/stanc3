@@ -1,3 +1,13 @@
+if [ $1 = "armhf" ]; then
+  ARCH="arm"
+elif [ $1 = "armel" ]; then
+  ARCH="arm"
+elif [ $1 = "arm64" ]; then
+  ARCH="aarch64"
+else
+  ARCH=$1
+fi
+
 echo "
   FROM debian:bullseye-slim
   USER root
@@ -35,6 +45,8 @@ echo "
   RUN cp ./install_build_deps.sh /var/chroot/$1/install_build_deps.sh
 
   RUN chroot /var/chroot/$1 /bin/bash -x ./install_build_deps.sh
+
+  RUN cp /usr/bin/qemu-$ARCH-static /var/chroot/$1/usr/bin
 
   USER opam
 " > $1-dockerfile
