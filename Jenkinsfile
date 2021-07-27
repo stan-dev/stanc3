@@ -164,7 +164,7 @@ pipeline {
                                 cd performance-tests-cmdstan
                                 mkdir cmdstan/bin
                                 cp ../bin/stanc cmdstan/bin/linux-stanc
-                                cd cmdstan; make clean-all; git pull; cd stan; git checkout fix/indexing-include-orders; cd ..; make -j${env.PARALLEL} build; cd ..                                
+                                cd cmdstan; make clean-all; git pull origin develop; cd stan; git checkout fix/indexing-include-orders; cd ..; make -j${env.PARALLEL} build; cd ..                                
                                 ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ../test/integration/good
                                 ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 example-models
                                 """
