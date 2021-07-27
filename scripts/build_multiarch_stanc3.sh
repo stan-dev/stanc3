@@ -22,6 +22,7 @@ EOF
 umount /var/chroot/$1/$(pwd)
 " > scripts/build_stanc3.sh
 
+docker run --rm --privileged multiarch/qemu-user-static:register --reset
 docker run --privileged --volumes-from=$(docker ps -q):rw andrjohns/stanc3-building:$1-debootstrap /bin/bash -x $(pwd)/scripts/build_stanc3.sh
 
 rm scripts/build_stanc3.sh
