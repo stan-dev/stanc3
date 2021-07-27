@@ -1,6 +1,6 @@
 # Identify 
 if [ $1 = "armhf" ]; then
-  $SHA=06aabdc4092100d08ba26d986acb27931b43255fdec9706bf48896e41c3db221
+  $SHA="06aabdc4092100d08ba26d986acb27931b43255fdec9706bf48896e41c3db221"
 else
   $SHA=$1
 fi
