@@ -52,6 +52,39 @@ pipeline {
                 }
             }
         }
+        stage("Build and test static release binaries") {
+            failFast true
+            parallel {
+                stage("Build & test a static Linux armhf binary") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/static/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        }
+                    }
+                    steps {
+                        runShell("""
+                            eval \$(opam env)
+                            dune subst
+                        """)
+                        sh "sudo apk add docker"
+                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh armhf"
+                        sh "sudo chown -R opam: _build"
+                        echo runShell("""
+                            eval \$(opam env)
+                            time dune runtest --profile static --verbose
+                        """)
+
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
+                        sh "mv `find _build -name stan2tfp.exe` bin/linux-armhf-stan2tfp"
+
+                        stash name:'linux-armhf-exe', includes:'bin/*'
+                    }
+                    post {always { runShell("rm -rf ./*")}}
+                }
+            }
+        }
         stage("Release tag and publish binaries") {
             when { anyOf { buildingTag(); branch 'master' } }
             agent { label 'linux' }
