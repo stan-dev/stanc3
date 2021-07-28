@@ -229,6 +229,32 @@ let check_names (base_set : string Set.Poly.t) (alt_set : string Set.Poly.t) :
     bool =
   Set.Poly.is_empty alt_set || not (Set.Poly.is_subset alt_set ~of_:base_set)
 
+let rec check_funs Expr.Fixed.({pattern; meta= Typed.Meta.({adlevel; _})}) =
+  match adlevel with
+  | UnsizedType.DataOnly -> None
+  | AutoDiffable -> (
+    match pattern with
+    | Expr.Fixed.Pattern.FunApp
+        (Fun_kind.StanLib (_, _, AoS), (_ : Typed.Meta.t Expr.Fixed.t list)) ->
+        Some Common.Helpers.AoS
+    | Expr.Fixed.Pattern.FunApp
+        (Fun_kind.StanLib (_, _, SoA), (_ : Typed.Meta.t Expr.Fixed.t list)) ->
+        None
+    | Expr.Fixed.Pattern.FunApp (_, (exprs : Typed.Meta.t Expr.Fixed.t list))
+      ->
+        List.find_map ~f:check_funs exprs
+    | TernaryIf (predicate, texpr, fexpr) ->
+        List.find_map ~f:check_funs [predicate; texpr; fexpr]
+    | Indexed (idx_expr, _) -> (
+      match check_funs idx_expr with
+      | Some x -> Some x
+      | None -> None (*TODO: Fix this*) )
+    | EAnd (lhs, rhs) -> List.find_map ~f:check_funs [lhs; rhs]
+    | EOr (lhs, rhs) -> List.find_map ~f:check_funs [lhs; rhs]
+    | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string))
+      ->
+        None )
+
 (* Look through a statement to see whether it needs modified from
  * SoA to AoS. Returns the set of object names that need demoted
  * in a statement, if any.
@@ -253,7 +279,10 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
         | false -> Set.Poly.empty
       in
       let lhs_set =
-        match check_names aos_exits all_rhs_eigen_names with
+        match
+          check_names aos_exits all_rhs_eigen_names
+          && Option.is_none (check_funs rhs)
+        with
         | true -> Set.Poly.empty
         | false -> Set.Poly.singleton assign_name
       in

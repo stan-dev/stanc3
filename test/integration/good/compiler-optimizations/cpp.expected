@@ -8110,9 +8110,8 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       
       lcm_sym38__ = inv_sqrt(tau_phi);
       sigma_phi = lcm_sym38__;
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> phi = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN()));
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> phi = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
+                                                   
       
       current_statement__ = 5;
       assign(phi, phi_std_raw,
@@ -26399,9 +26398,8 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       Eigen::Matrix<local_scalar_t__, -1, 1> logit_psi = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(R, DUMMY_VAR__);
                                                          
       
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> logit_p = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>(Eigen::Matrix<double, -1, -1>::Constant(R, T, std::numeric_limits<double>::quiet_NaN()));
-      
+      Eigen::Matrix<local_scalar_t__, -1, -1> logit_p = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(R, T, DUMMY_VAR__);
+                                                        
       
       assign(lcm_sym35__, stan::math::fma(beta_occ, X, alpha_occ),
         "assigning variable lcm_sym35__");
