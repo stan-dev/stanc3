@@ -55,7 +55,7 @@ pipeline {
         stage("Build and test static release binaries") {
             failFast true
             parallel {
-                stage("Build & test a static Linux armhf binary") {
+                stage("Build & test a static Linux mips64el binary") {
                     agent {
                         dockerfile {
                             filename 'docker/static/Dockerfile'
@@ -69,7 +69,7 @@ pipeline {
                             dune subst
                         """)
                         sh "sudo apk add docker"
-                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh armhf"
+                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh mips64el"
                         sh "sudo chown -R opam: _build"
                         sh "sudo chown -R opam: src"
                         sh "sudo chown -R opam: test"
@@ -78,10 +78,10 @@ pipeline {
                             time dune runtest --profile static --verbose
                         """)
 
-                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
-                        sh "mv `find _build -name stan2tfp.exe` bin/linux-armhf-stan2tfp"
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-mips64el-stanc"
+                        sh "mv `find _build -name stan2tfp.exe` bin/linux-mips64el-stan2tfp"
 
-                        stash name:'linux-armhf-exe', includes:'bin/*'
+                        stash name:'linux-mips64el-exe', includes:'bin/*'
                     }
                     post {always { runShell("rm -rf ./*")}}
                 }
@@ -124,7 +124,7 @@ pipeline {
             steps {
                 //unstash 'windows-exe'
                 unstash 'linux-exe'
-                unstash 'linux-armhf-exe'
+                unstash 'linux-mips64el-exe'
                 //unstash 'mac-exe'
                 //unstash 'linux-arm-exe'
                 //unstash 'js-exe'

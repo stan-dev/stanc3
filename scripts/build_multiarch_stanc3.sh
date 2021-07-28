@@ -1,6 +1,6 @@
 # Identify 
-if [ $1 = "armhf" ]; then
-  SHA="06aabdc4092100d08ba26d986acb27931b43255fdec9706bf48896e41c3db221"
+if [ $1 = "mips64el" ]; then
+  SHA="5a13b9b407adebae3e3c32b8a1f68d1aa6e8121769e24d21108f61edaaebc09e"
 else
   SHA=$1
 fi
