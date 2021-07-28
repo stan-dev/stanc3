@@ -658,10 +658,9 @@ let add_binary_vec_int_int name =
 let add_ternary name =
   add_unqualified (name, ReturnType UReal, [UReal; UReal; UReal])
 
-(*Adds functions that operate on matrix, double array, real, and complex types*)
+(*Adds functions that operate on matrix, double array, and real*)
 let add_ternary_vec name =
   add_unqualified (name, ReturnType UReal, [UReal; UReal; UReal]) ;
-  add_unqualified (name, ReturnType UComplex, [UComplex; UComplex; UComplex]) ;
   add_unqualified (name, ReturnType UVector, [UVector; UReal; UReal]) ;
   add_unqualified (name, ReturnType UVector, [UVector; UVector; UReal]) ;
   add_unqualified (name, ReturnType UVector, [UVector; UReal; UVector]) ;
@@ -1331,9 +1330,7 @@ let () =
             logical_binops )
         primitive_types )
     primitive_types ;
-  add_unqualified ("logical_eq", ReturnType UInt, [UComplex; UReal]) ;
   add_unqualified ("logical_eq", ReturnType UInt, [UComplex; UComplex]) ;
-  add_unqualified ("logical_neq", ReturnType UInt, [UComplex; UReal]) ;
   add_unqualified ("logical_neq", ReturnType UInt, [UComplex; UComplex]) ;
   add_nullary "machine_precision" ;
   add_qualified

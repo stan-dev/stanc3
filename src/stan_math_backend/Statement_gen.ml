@@ -45,9 +45,6 @@ let nan_type (st, adtype) =
   | UnsizedType.AutoDiffable, _ -> "DUMMY_VAR__"
   | DataOnly, _ -> "std::numeric_limits<double>::quiet_NaN()"
 
-let complex_value_type adtype =
-  match adtype with UnsizedType.AutoDiffable -> "T__" | DataOnly -> "double"
-
 (*Pretty printer for the right hand side of expressions to initialize objects.
  * For scalar types this sets the value to NaN and for containers initializes the memory.
  *)
@@ -57,9 +54,9 @@ let rec pp_initialize ppf (st, adtype) =
   | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
   | SReal -> pf ppf "%s" init_nan
   | SComplex ->
-      pf ppf "std::complex<%s> (%s, %s)"
-        (complex_value_type adtype)
-        init_nan init_nan
+      pf ppf
+        "std::complex<double> (std::numeric_limits<double>::quiet_NaN(), \
+         std::numeric_limits<double>::quiet_NaN())"
   | SVector d | SRowVector d -> pf ppf "%a(%a)" pp_st (st, adtype) pp_expr d
   | SMatrix (d1, d2) ->
       pf ppf "%a(%a, %a)" pp_st (st, adtype) pp_expr d1 pp_expr d2
