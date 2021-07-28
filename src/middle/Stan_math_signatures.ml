@@ -918,32 +918,32 @@ let () =
     ( "bernoulli_logit_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; UMatrix; UReal; UVector]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "bernoulli_logit_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; UMatrix; UVector; UVector]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "bernoulli_logit_glm_lpmf"
     , ReturnType UReal
     , [UInt; UMatrix; UReal; UVector]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "bernoulli_logit_glm_lpmf"
     , ReturnType UReal
     , [UInt; UMatrix; UVector; UVector]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "bernoulli_logit_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; URowVector; UReal; UVector]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "bernoulli_logit_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; URowVector; UVector; UVector]
-    , SoA ) ;
+    , AoS ) ;
   add_binary_vec_int_real "bessel_first_kind" SoA ;
   add_binary_vec_int_real "bessel_second_kind" SoA ;
   add_binary_vec "beta" SoA ;
@@ -1736,63 +1736,63 @@ let () =
     ( "neg_binomial_2_log_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; UMatrix; UReal; UVector; UReal]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "neg_binomial_2_log_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; UMatrix; UVector; UVector; UReal]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "neg_binomial_2_log_glm_lpmf"
     , ReturnType UReal
     , [UInt; UMatrix; UReal; UVector; UReal]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "neg_binomial_2_log_glm_lpmf"
     , ReturnType UReal
     , [UInt; UMatrix; UVector; UVector; UReal]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "neg_binomial_2_log_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; URowVector; UReal; UVector; UReal]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "neg_binomial_2_log_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; URowVector; UVector; UVector; UReal]
-    , SoA ) ;
+    , AoS ) ;
   add_nullary "negative_infinity" ;
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
     , [UVector; UMatrix; UReal; UVector; UReal]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
     , [UVector; UMatrix; UVector; UVector; UReal]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
     , [UReal; UMatrix; UReal; UVector; UVector]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
     , [UReal; UMatrix; UVector; UVector; UVector]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
     , [UVector; URowVector; UReal; UVector; UVector]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "normal_id_glm_lpdf"
     , ReturnType UReal
     , [UVector; URowVector; UVector; UVector; UVector]
-    , SoA ) ;
+    , AoS ) ;
   add_nullary "not_a_number" ;
   add_unqualified ("num_elements", ReturnType UInt, [UMatrix], AoS) ;
   add_unqualified ("num_elements", ReturnType UInt, [UVector], AoS) ;
@@ -1820,22 +1820,22 @@ let () =
     ( "ordered_logistic_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; UMatrix; UVector; UVector]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "ordered_logistic_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; URowVector; UVector; UVector]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "ordered_logistic_glm_lpmf"
     , ReturnType UReal
     , [UInt; UMatrix; UVector; UVector]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "ordered_logistic_glm_lpmf"
     , ReturnType UReal
     , [UInt; URowVector; UVector; UVector]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ("ordered_logistic_log", ReturnType UReal, [UInt; UReal; UVector], SoA) ;
   add_unqualified
@@ -1898,32 +1898,32 @@ let () =
     ( "poisson_log_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; UMatrix; UReal; UVector]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "poisson_log_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; UMatrix; UVector; UVector]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "poisson_log_glm_lpmf"
     , ReturnType UReal
     , [UInt; UMatrix; UReal; UVector]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "poisson_log_glm_lpmf"
     , ReturnType UReal
     , [UInt; UMatrix; UVector; UVector]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "poisson_log_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; URowVector; UReal; UVector]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "poisson_log_glm_lpmf"
     , ReturnType UReal
     , [UArray UInt; URowVector; UVector; UVector]
-    , SoA ) ;
+    , AoS ) ;
   add_nullary "positive_infinity" ;
   add_binary_vec "pow" AoS ;
   add_unqualified ("prod", ReturnType UInt, [UArray UInt], SoA) ;
