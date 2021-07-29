@@ -376,7 +376,8 @@ let dist_name_suffix udf_names name =
   | Some hd -> hd
   | None -> raise_s [%message "Couldn't find distribution " name]
 
-let operator_to_stan_math_fns = function
+let operator_to_stan_math_fns op =
+  match op with
   | Operator.Plus -> ["add"]
   | PPlus -> ["plus"]
   | Minus -> ["subtract"]
@@ -1632,8 +1633,8 @@ let () =
   add_unqualified ("min", ReturnType UReal, [URowVector], AoS) ;
   add_unqualified ("min", ReturnType UReal, [UMatrix], AoS) ;
   add_unqualified ("min", ReturnType UInt, [UInt; UInt], AoS) ;
-  add_unqualified ("minus", ReturnType UInt, [UInt], AoS) ;
-  add_unqualified ("minus", ReturnType UReal, [UReal], AoS) ;
+  add_unqualified ("minus", ReturnType UInt, [UInt], SoA) ;
+  add_unqualified ("minus", ReturnType UReal, [UReal], SoA) ;
   add_unqualified ("minus", ReturnType UVector, [UVector], SoA) ;
   add_unqualified ("minus", ReturnType URowVector, [URowVector], SoA) ;
   add_unqualified ("minus", ReturnType UMatrix, [UMatrix], SoA) ;

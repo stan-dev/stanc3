@@ -1163,10 +1163,15 @@ let optimize_soa (mir : Program.Typed.t) =
          ~f:(Mem_pattern.query_initial_demotable_stmt false)
          mir.log_prob)
   in
-  let all_eigen_types =
-    Set.Poly.union_list (List.map ~f:Mem_pattern.get_eigen_decls mir.log_prob)
+  let log_prob_obj_names =
+    Set.Poly.union_list (List.map ~f:Mem_pattern.get_all_decls mir.log_prob)
   in
-  let promotable_types = Set.Poly.diff all_eigen_types initial_variables in
+  let data_obj_names =
+    Set.Poly.union_list
+      (List.map ~f:Mem_pattern.get_all_decls mir.prepare_data)
+  in
+  let all_obj_names = Set.Poly.union log_prob_obj_names data_obj_names in
+  let promotable_types = Set.Poly.diff all_obj_names initial_variables in
   let promote_stmt stmt =
     Mem_pattern.modify_stmt Common.Helpers.SoA stmt promotable_types
   in

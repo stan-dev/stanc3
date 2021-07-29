@@ -1735,12 +1735,11 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       current_statement__ = 16;
       p_aos_loop_mat_uni_uni_idx = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                                      N, M);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> p_aos_loop_mat_multi_uni_uni_idx = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>(Eigen::Matrix<double, -1, -1>::Constant(N, M, std::numeric_limits<double>::quiet_NaN()));
-      
+      Eigen::Matrix<local_scalar_t__, -1, -1> p_aos_loop_mat_multi_uni_uni_idx = 
+      Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(N, M, DUMMY_VAR__);
       
       current_statement__ = 17;
-      p_aos_loop_mat_multi_uni_uni_idx = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
+      p_aos_loop_mat_multi_uni_uni_idx = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                                            N, M);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_aos_mat = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(N, M, DUMMY_VAR__);
                                                           
@@ -1789,9 +1788,8 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       current_statement__ = 25;
       assign(tp_soa_rep_matrix_mat, rep_matrix(p_soa_rep_matrix_vec, 10),
         "assigning variable tp_soa_rep_matrix_mat");
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> tp_soa_rep_matrix_from_data_mat = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>(Eigen::Matrix<double, -1, -1>::Constant(N, 10, std::numeric_limits<double>::quiet_NaN()));
-      
+      Eigen::Matrix<local_scalar_t__, -1, -1> tp_soa_rep_matrix_from_data_mat = 
+      Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(N, 10, DUMMY_VAR__);
       
       current_statement__ = 26;
       assign(tp_soa_rep_matrix_from_data_mat, rep_matrix(y, 10),

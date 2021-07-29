@@ -30,40 +30,54 @@ let rec get_eigen_decls Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
   | Skip | Break | Continue -> Set.Poly.empty
   | _ -> Set.Poly.empty
 
+(**
+ * Recursivly look in Decls for sized types that hold matrices or vectors
+ *)
+let rec get_all_decls Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
+  match pattern with
+  | Stmt.Fixed.Pattern.Decl {decl_id; decl_type= Type.Sized _; _} ->
+      Set.Poly.singleton decl_id
+  | IfElse
+      ( (_ : Expr.Typed.t)
+      , (true_stmt : (Typed.Meta.t, 'a) Stmt.Fixed.t)
+      , (false_stmt : (Typed.Meta.t, 'a) Stmt.Fixed.t option) ) ->
+      let false_op =
+        match false_stmt with
+        | Some x -> get_all_decls x
+        | None -> Set.Poly.empty
+      in
+      Set.Poly.union (get_all_decls true_stmt) false_op
+  | For {body; _} -> get_all_decls body
+  | While (_, stmt) -> get_all_decls stmt
+  | SList stmt_lst | Block stmt_lst | Profile ((_ : string), stmt_lst) ->
+      Set.Poly.union_list (List.map ~f:get_all_decls stmt_lst)
+  | Skip | Break | Continue -> Set.Poly.empty
+  | _ -> Set.Poly.empty
+
 (** See interface file *)
-let rec expr_eigen_set
-    Expr.Fixed.({pattern; meta= Expr.Typed.Meta.({type_; adlevel; _}) as meta})
-    =
+let rec expr_eigen_set Expr.Fixed.({pattern; meta}) =
   let union_recur exprs =
     Set.Poly.union_list (List.map exprs ~f:expr_eigen_set)
   in
-  match
-    UnsizedType.contains_eigen_type type_ && adlevel = UnsizedType.AutoDiffable
-  with
-  | false -> Set.Poly.empty
-  | true -> (
-    match pattern with
-    | Var s -> Set.Poly.singleton (Dataflow_types.VVar s, meta)
-    | Lit _ -> Set.Poly.empty
-    | FunApp (_, exprs) -> union_recur exprs
-    | TernaryIf (expr1, expr2, expr3) -> union_recur [expr1; expr2; expr3]
-    | Indexed (expr, ix) ->
-        let apply_idx =
-          Index.apply ~default:Set.Poly.empty ~merge:Set.Poly.union
-            expr_eigen_set
-        in
-        Set.Poly.union_list (expr_eigen_set expr :: List.map ix ~f:apply_idx)
-    | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2] )
+  match pattern with
+  | Var s -> Set.Poly.singleton (Dataflow_types.VVar s, meta)
+  | Lit _ -> Set.Poly.empty
+  | FunApp (_, exprs) -> union_recur exprs
+  | TernaryIf (expr1, expr2, expr3) -> union_recur [expr1; expr2; expr3]
+  | Indexed (expr, ix) ->
+      let apply_idx =
+        Index.apply ~default:Set.Poly.empty ~merge:Set.Poly.union
+          expr_eigen_set
+      in
+      Set.Poly.union_list (expr_eigen_set expr :: List.map ix ~f:apply_idx)
+  | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
 
 (**
  * Search through an expression for the names of all types that hold matrices 
  *  and vectors.
  **)
 let query_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) : string Set.Poly.t =
-  let get_expr_eigen_names (Dataflow_types.VVar s, Expr.Typed.Meta.({type_; _}))
-      =
-    if UnsizedType.contains_eigen_type type_ then Some s else None
-  in
+  let get_expr_eigen_names (Dataflow_types.VVar s, _) = Some s in
   Set.Poly.filter_map ~f:get_expr_eigen_names (expr_eigen_set expr)
 
 (**
@@ -237,12 +251,11 @@ let rec check_funs Expr.Fixed.({pattern; meta= Typed.Meta.({adlevel; _})}) =
     | Expr.Fixed.Pattern.FunApp
         (Fun_kind.StanLib (_, _, AoS), (_ : Typed.Meta.t Expr.Fixed.t list)) ->
         Some Common.Helpers.AoS
-    | FunApp (CompilerInternal (((Internal_fun.FnMakeArray | FnMakeRowVec))), _) -> Some AoS
-    | FunApp
-        (StanLib (_, _, SoA), (_ : Typed.Meta.t Expr.Fixed.t list)) ->
+    | FunApp (CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec), _) ->
+        Some AoS
+    | FunApp (StanLib (_, _, SoA), (_ : Typed.Meta.t Expr.Fixed.t list)) ->
         None
-    | FunApp (_, (exprs : Typed.Meta.t Expr.Fixed.t list))
-      ->
+    | FunApp (_, (exprs : Typed.Meta.t Expr.Fixed.t list)) ->
         List.find_map ~f:check_funs exprs
     | TernaryIf (predicate, texpr, fexpr) ->
         List.find_map ~f:check_funs [predicate; texpr; fexpr]
