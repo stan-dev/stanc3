@@ -5531,10 +5531,10 @@ covsqrt2corsqrt(const T0__& mat_arg__, const int& invert,
     current_statement__ = 731;
     assign(o, mat, "assigning variable o");
     current_statement__ = 732;
-    assign(o, stan::model::deep_copy(rvalue(o, "o", index_uni(2))),
+    assign(o, rvalue(o, "o", index_uni(2)),
       "assigning variable o", index_uni(1));
     current_statement__ = 733;
-    assign(o, stan::model::deep_copy(rvalue(o, "o", index_min_max(1, 2))),
+    assign(o, rvalue(o, "o", index_min_max(1, 2)),
       "assigning variable o", index_min_max(3, 4));
     current_statement__ = 734;
     return o;
@@ -8143,8 +8143,7 @@ class mother_model final : public model_base_crtp<mother_model> {
         }
       }
       current_statement__ = 357;
-      assign(td_1dk,
-        rvalue(td_1d, "td_1d", index_multi(stan::model::deep_copy(td_1dk))),
+      assign(td_1dk, rvalue(td_1d, "td_1d", index_multi(td_1dk)),
         "assigning variable td_1dk");
       current_statement__ = 358;
       assign(td_simplex,

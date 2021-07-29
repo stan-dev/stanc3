@@ -336,7 +336,7 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
   | Assignment ((assignee, _, idcs), rhs) ->
       (* XXX I think in general we don't need to do a deepcopy if e is nested
        inside some function call - the function should get its own copy
-       (in all cases???) *)
+       (in all cases???) 
       let rec maybe_deep_copy e =
         let recurse (e : 'a Expr.Fixed.t) =
           { e with
@@ -352,10 +352,11 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
               Expr.Fixed.pattern= FunApp (CompilerInternal FnDeepCopy, [e]) }
         | _ -> recurse e
       in
+      *)
       let rhs =
         match rhs.pattern with
         | FunApp (CompilerInternal (FnConstrain _ | FnUnconstrain _), _) -> rhs
-        | _ -> maybe_deep_copy rhs
+        | _ -> rhs
       in
       pf ppf "@[<hov 2>assign(@,%s,@ %a,@ %S%s%a@]);" assignee pp_expr rhs
         (strf "assigning variable %s" assignee)

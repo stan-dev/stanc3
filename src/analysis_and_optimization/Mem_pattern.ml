@@ -237,10 +237,11 @@ let rec check_funs Expr.Fixed.({pattern; meta= Typed.Meta.({adlevel; _})}) =
     | Expr.Fixed.Pattern.FunApp
         (Fun_kind.StanLib (_, _, AoS), (_ : Typed.Meta.t Expr.Fixed.t list)) ->
         Some Common.Helpers.AoS
-    | Expr.Fixed.Pattern.FunApp
-        (Fun_kind.StanLib (_, _, SoA), (_ : Typed.Meta.t Expr.Fixed.t list)) ->
+    | FunApp (CompilerInternal (((Internal_fun.FnMakeArray | FnMakeRowVec))), _) -> Some AoS
+    | FunApp
+        (StanLib (_, _, SoA), (_ : Typed.Meta.t Expr.Fixed.t list)) ->
         None
-    | Expr.Fixed.Pattern.FunApp (_, (exprs : Typed.Meta.t Expr.Fixed.t list))
+    | FunApp (_, (exprs : Typed.Meta.t Expr.Fixed.t list))
       ->
         List.find_map ~f:check_funs exprs
     | TernaryIf (predicate, texpr, fexpr) ->
@@ -440,6 +441,8 @@ and query_initial_demotable_funs (in_loop : bool) (kind : Fun_kind.t)
       in
       if is_fun_support then Set.Poly.union_list (List.map ~f:query_expr exprs)
       else all_eigen_names
+  | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) ->
+      all_eigen_names
   | CompilerInternal (_ : Internal_fun.t) -> Set.Poly.empty
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) -> all_eigen_names
 

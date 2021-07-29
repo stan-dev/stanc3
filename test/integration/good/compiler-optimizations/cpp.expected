@@ -8119,8 +8119,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       current_statement__ = 6;
       assign(phi, -sum(phi_std_raw), "assigning variable phi", index_uni(N));
       current_statement__ = 7;
-      assign(phi, multiply(stan::model::deep_copy(phi), lcm_sym38__),
-        "assigning variable phi");
+      assign(phi, multiply(phi, lcm_sym38__), "assigning variable phi");
       current_statement__ = 3;
       check_greater_or_equal(function__, "sigma_phi", lcm_sym38__, 0);
       {
@@ -8228,8 +8227,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       current_statement__ = 6;
       assign(phi, -sum(phi_std_raw), "assigning variable phi", index_uni(N));
       current_statement__ = 7;
-      assign(phi, multiply(stan::model::deep_copy(phi), lcm_sym16__),
-        "assigning variable phi");
+      assign(phi, multiply(phi, lcm_sym16__), "assigning variable phi");
       current_statement__ = 3;
       check_greater_or_equal(function__, "sigma_phi", lcm_sym16__, 0);
       if (emit_transformed_parameters__) {
@@ -15010,7 +15008,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
             for (int j = 2; j <= J; ++j) {
               current_statement__ = 15;
               assign(log_q,
-                add(stan::model::deep_copy(log_q),
+                add(log_q,
                   to_vector(
                     stan::math::log(
                       rvalue(theta, "theta",
@@ -15045,7 +15043,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
               for (int j = 2; j <= J; ++j) {
                 current_statement__ = 15;
                 assign(log_q,
-                  add(stan::model::deep_copy(log_q),
+                  add(log_q,
                     to_vector(
                       stan::math::log(
                         rvalue(theta, "theta",
@@ -15226,7 +15224,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
           for (int j = 2; j <= J; ++j) {
             current_statement__ = 6;
             assign(log_q,
-              add(stan::model::deep_copy(log_q),
+              add(log_q,
                 to_vector(
                   stan::math::log(
                     rvalue(theta, "theta",
@@ -15260,7 +15258,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
             for (int j = 2; j <= J; ++j) {
               current_statement__ = 6;
               assign(log_q,
-                add(stan::model::deep_copy(log_q),
+                add(log_q,
                   to_vector(
                     stan::math::log(
                       rvalue(theta, "theta",
@@ -16101,8 +16099,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       current_statement__ = 9;
       assign(phi, phi_std_raw, "assigning variable phi", index_min_max(1, N));
       current_statement__ = 10;
-      assign(phi, multiply(stan::model::deep_copy(phi), lcm_sym24__),
-        "assigning variable phi");
+      assign(phi, multiply(phi, lcm_sym24__), "assigning variable phi");
       current_statement__ = 7;
       check_greater_or_equal(function__, "sigma_phi", lcm_sym24__, 0);
       {
@@ -16216,8 +16213,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       current_statement__ = 9;
       assign(phi, phi_std_raw, "assigning variable phi", index_min_max(1, N));
       current_statement__ = 10;
-      assign(phi, multiply(stan::model::deep_copy(phi), lcm_sym15__),
-        "assigning variable phi");
+      assign(phi, multiply(phi, lcm_sym15__), "assigning variable phi");
       current_statement__ = 7;
       check_greater_or_equal(function__, "sigma_phi", lcm_sym15__, 0);
       if (emit_transformed_parameters__) {
