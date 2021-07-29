@@ -757,14 +757,14 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_rep_matrix_vec)
       (decl_type
        (Sized
-        (SVector SoA
+        (SVector AoS
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
      (Assignment (p_soa_rep_matrix_vec UVector ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () SoA))
+        (FunApp (CompilerInternal (FnReadParam () AoS))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -1009,7 +1009,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id tp_soa_rep_matrix_mat)
       (decl_type
        (Sized
-        (SMatrix SoA
+        (SMatrix AoS
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10))
@@ -1018,7 +1018,7 @@
    ((pattern
      (Assignment (tp_soa_rep_matrix_mat UMatrix ())
       ((pattern
-        (FunApp (StanLib rep_matrix FnPlain SoA)
+        (FunApp (StanLib rep_matrix FnPlain AoS)
          (((pattern (Var p_soa_rep_matrix_vec))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern (Lit Int 10))
