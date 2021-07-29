@@ -448,16 +448,106 @@ and query_initial_demotable_funs (in_loop : bool) (kind : Fun_kind.t)
           Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
         (adlevel, type_)
       in
+      let fun_args = List.map ~f:find_args exprs in
       let is_fun_support =
-        Stan_math_signatures.query_stan_math_mem_pattern_support name
-          (List.map ~f:find_args exprs)
+        Stan_math_signatures.query_stan_math_mem_pattern_support name fun_args
       in
-      if is_fun_support then Set.Poly.union_list (List.map ~f:query_expr exprs)
+      (*Right now we can't handle AD real and data matrix combos that return a matrix :-/*)
+      let is_args_autodiff_real_data_matrix =
+        List.exists
+          ~f:(fun (x, y) ->
+            match (x, y) with
+            | UnsizedType.AutoDiffable, UnsizedType.UReal -> true
+            | _ -> false )
+          fun_args
+        && List.exists
+             ~f:(fun (x, y) ->
+               match (x, UnsizedType.contains_eigen_type y) with
+               | UnsizedType.DataOnly, true -> true
+               | _ -> false )
+             fun_args
+        &&
+        match Stan_math_signatures.stan_math_returntype name fun_args with
+        | Some (UnsizedType.ReturnType x) -> UnsizedType.contains_eigen_type x
+        | _ -> false
+      in
+      if is_fun_support && not is_args_autodiff_real_data_matrix then
+        Set.Poly.union_list (List.map ~f:query_expr exprs)
       else all_eigen_names
   | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) ->
       all_eigen_names
   | CompilerInternal (_ : Internal_fun.t) -> Set.Poly.empty
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) -> all_eigen_names
+
+(**
+ * Query to find the initial set of objects that cannot be SoA.
+ *  This is mostly recursing over expressions, with the exceptions
+ *  being functions and indexing expressions.
+ * @param in_loop a boolean to signify if the expression exists inside
+ *  of a loop. If so, the names of matrix and vector like objects
+ *   will be returned if the matrix or vector is accessed by single 
+ *    cell indexing.
+ *)
+let rec query_bad_assign Expr.Fixed.({pattern; meta}) : bool =
+  let query_expr = query_bad_assign in
+  match pattern with
+  | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
+      query_bad_assign_fun kind exprs meta
+  | Indexed (expr, indexed) ->
+      let index_set =
+        List.exists
+          ~f:(Index.apply ~default:false ~merge:(fun x y -> x = y) query_expr)
+          indexed
+      in
+      index_set || query_expr expr
+  | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
+      false
+  | TernaryIf (predicate, texpr, fexpr) ->
+      query_expr predicate || query_expr texpr || query_expr fexpr
+  | EAnd (lhs, rhs) | EOr (lhs, rhs) -> query_expr lhs || query_expr rhs
+
+(**
+* Query a function to detect if it or any of its used 
+*  expression's objects or expressions should be demoted to AoS.
+* @param in_loop A boolean to specify the logic of indexing expressions. See
+*  `query_initial_demotable_expr` for an explanation of the logic.
+* @param kind The function type, for StanLib functions we check if the 
+*  function supports SoA and for UserDefined functions we always fail 
+*  and return back all of the names of the objects passed in expressions
+*  to the UDF.
+* exprs The expression list passed to the functions.
+*)
+and query_bad_assign_fun (kind : Fun_kind.t)
+    (exprs : Typed.Meta.t Expr.Fixed.t list) Expr.Typed.Meta.({type_; _}) :
+    bool =
+  let query_expr = query_bad_assign in
+  match kind with
+  | Fun_kind.StanLib (_, (_ : bool Fun_kind.suffix), _) ->
+      let find_args
+          Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
+        (adlevel, type_)
+      in
+      let fun_args = List.map ~f:find_args exprs in
+      (*Right now we can't handle AD real and data matrix combos that return a matrix :-/*)
+      let is_args_autodiff_real_data_matrix =
+        List.exists
+          ~f:(fun (x, y) ->
+            match (x, y) with
+            | UnsizedType.AutoDiffable, UnsizedType.UReal -> true
+            | _ -> false )
+          fun_args
+        && List.exists
+             ~f:(fun (x, y) ->
+               match (x, UnsizedType.contains_eigen_type y) with
+               | UnsizedType.DataOnly, true -> true
+               | _ -> false )
+             fun_args
+        && UnsizedType.contains_eigen_type type_
+      in
+      is_args_autodiff_real_data_matrix || List.exists ~f:query_expr exprs
+  | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) -> true
+  | CompilerInternal (_ : Internal_fun.t) -> false
+  | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) -> false
 
 (**
  * Query to find the initial set of objects in statements that cannot be SoA.
@@ -492,7 +582,8 @@ let rec query_initial_demotable_stmt (in_loop : bool)
       in
       let check_rhs = query_expr rhs in
       let both_sides = Set.Poly.union check_lhs check_rhs in
-      if Set.Poly.length check_rhs > 0 then Set.Poly.add both_sides name
+      if Set.Poly.length check_rhs > 0 || query_bad_assign rhs then
+        Set.Poly.add both_sides name
       else both_sides
   | NRFunApp (kind, exprs) -> query_initial_demotable_funs in_loop kind exprs
   | IfElse (predicate, lhs, rhs) ->

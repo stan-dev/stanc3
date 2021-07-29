@@ -1012,26 +1012,26 @@ let () =
   add_unqualified ("columns_dot_self", ReturnType URowVector, [URowVector], AoS) ;
   add_unqualified ("columns_dot_self", ReturnType URowVector, [UMatrix], AoS) ;
   add_unqualified
-    ("cov_exp_quad", ReturnType UMatrix, [UArray UReal; UReal; UReal], SoA) ;
+    ("cov_exp_quad", ReturnType UMatrix, [UArray UReal; UReal; UReal], AoS) ;
   add_unqualified
-    ("cov_exp_quad", ReturnType UMatrix, [UArray UVector; UReal; UReal], SoA) ;
+    ("cov_exp_quad", ReturnType UMatrix, [UArray UVector; UReal; UReal], AoS) ;
   add_unqualified
-    ("cov_exp_quad", ReturnType UMatrix, [UArray URowVector; UReal; UReal], SoA) ;
+    ("cov_exp_quad", ReturnType UMatrix, [UArray URowVector; UReal; UReal], AoS) ;
   add_unqualified
     ( "cov_exp_quad"
     , ReturnType UMatrix
     , [UArray UReal; UArray UReal; UReal; UReal]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "cov_exp_quad"
     , ReturnType UMatrix
     , [UArray UVector; UArray UVector; UReal; UReal]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified
     ( "cov_exp_quad"
     , ReturnType UMatrix
     , [UArray URowVector; UArray URowVector; UReal; UReal]
-    , SoA ) ;
+    , AoS ) ;
   add_unqualified ("crossprod", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified
     ( "csr_matrix_times_vector"
@@ -1730,7 +1730,7 @@ let () =
   add_unqualified ("multiply", ReturnType UVector, [UReal; UVector], SoA) ;
   add_unqualified ("multiply", ReturnType URowVector, [UReal; URowVector], SoA) ;
   add_unqualified ("multiply", ReturnType UMatrix, [UReal; UMatrix], SoA) ;
-  add_binary_vec "multiply_log" SoA ;
+  add_binary_vec "multiply_log" AoS ;
   add_unqualified
     ("multiply_lower_tri_self_transpose", ReturnType UMatrix, [UMatrix], SoA) ;
   add_unqualified
@@ -2015,8 +2015,8 @@ let () =
   add_unqualified ("rep_matrix", ReturnType UMatrix, [UReal; UInt; UInt], AoS) ;
   add_unqualified ("rep_matrix", ReturnType UMatrix, [UVector; UInt], AoS) ;
   add_unqualified ("rep_matrix", ReturnType UMatrix, [URowVector; UInt], AoS) ;
-  add_unqualified ("rep_row_vector", ReturnType URowVector, [UReal; UInt], SoA) ;
-  add_unqualified ("rep_vector", ReturnType UVector, [UReal; UInt], SoA) ;
+  add_unqualified ("rep_row_vector", ReturnType URowVector, [UReal; UInt], AoS) ;
+  add_unqualified ("rep_vector", ReturnType UVector, [UReal; UInt], AoS) ;
   add_unqualified ("reverse", ReturnType UVector, [UVector], SoA) ;
   add_unqualified ("reverse", ReturnType URowVector, [URowVector], SoA) ;
   List.iter

@@ -1166,7 +1166,7 @@
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib multiply FnPlain SoA)
+                (FunApp (StanLib multiply FnPlain AoS)
                  (((pattern (Var dat_x))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern
@@ -1194,7 +1194,7 @@
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib multiply FnPlain SoA)
+                (FunApp (StanLib multiply FnPlain AoS)
                  (((pattern (Var dat_x))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern
@@ -1229,7 +1229,7 @@
              (((pattern (Var y))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
-                (FunApp (StanLib multiply FnPlain SoA)
+                (FunApp (StanLib multiply FnPlain AoS)
                  (((pattern (Var dat_x))
                    (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
                   ((pattern
@@ -1432,7 +1432,7 @@
                        (meta
                         ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain SoA)
+                        (FunApp (StanLib multiply FnPlain AoS)
                          (((pattern (Var dat_x))
                            (meta
                             ((type_ UMatrix) (loc <opaque>)
@@ -1468,7 +1468,7 @@
                        (meta
                         ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain SoA)
+                        (FunApp (StanLib multiply FnPlain AoS)
                          (((pattern (Var dat_x))
                            (meta
                             ((type_ UMatrix) (loc <opaque>)
@@ -1505,7 +1505,7 @@
                        (meta
                         ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain SoA)
+                        (FunApp (StanLib multiply FnPlain AoS)
                          (((pattern
                             (Indexed
                              ((pattern (Var p_soa_loop_mat_uni_col_idx))
@@ -1542,7 +1542,7 @@
                        (meta
                         ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain SoA)
+                        (FunApp (StanLib multiply FnPlain AoS)
                          (((pattern (Var dat_x))
                            (meta
                             ((type_ UMatrix) (loc <opaque>)
@@ -1584,7 +1584,7 @@
                        (meta
                         ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain SoA)
+                        (FunApp (StanLib multiply FnPlain AoS)
                          (((pattern (Var dat_x))
                            (meta
                             ((type_ UMatrix) (loc <opaque>)
@@ -1629,7 +1629,7 @@
                        (meta
                         ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain SoA)
+                        (FunApp (StanLib multiply FnPlain AoS)
                          (((pattern (Var dat_x))
                            (meta
                             ((type_ UMatrix) (loc <opaque>)
@@ -1670,7 +1670,7 @@
                        (meta
                         ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                       ((pattern
-                        (FunApp (StanLib multiply FnPlain SoA)
+                        (FunApp (StanLib multiply FnPlain AoS)
                          (((pattern (Var dat_x))
                            (meta
                             ((type_ UMatrix) (loc <opaque>)
@@ -1856,7 +1856,7 @@
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
                      (((pattern (Var y))
                        (meta
                         ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
@@ -1903,7 +1903,7 @@
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
                      (((pattern (Var y))
                        (meta
                         ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
@@ -1955,7 +1955,7 @@
                ((pattern
                  (TargetPE
                   ((pattern
-                    (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+                    (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
                      (((pattern (Var y))
                        (meta
                         ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
