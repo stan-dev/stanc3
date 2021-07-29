@@ -1007,9 +1007,9 @@ let () =
     , AoS ) ;
   add_unqualified
     ("columns_dot_product", ReturnType URowVector, [UMatrix; UMatrix], AoS) ;
-  add_unqualified ("columns_dot_self", ReturnType URowVector, [UVector], SoA) ;
-  add_unqualified ("columns_dot_self", ReturnType URowVector, [URowVector], SoA) ;
-  add_unqualified ("columns_dot_self", ReturnType URowVector, [UMatrix], SoA) ;
+  add_unqualified ("columns_dot_self", ReturnType URowVector, [UVector], AoS) ;
+  add_unqualified ("columns_dot_self", ReturnType URowVector, [URowVector], AoS) ;
+  add_unqualified ("columns_dot_self", ReturnType URowVector, [UMatrix], AoS) ;
   add_unqualified
     ("cov_exp_quad", ReturnType UMatrix, [UArray UReal; UReal; UReal], SoA) ;
   add_unqualified
@@ -1096,8 +1096,8 @@ let () =
   add_unqualified ("dot_self", ReturnType UReal, [UVector], SoA) ;
   add_unqualified ("dot_self", ReturnType UReal, [URowVector], SoA) ;
   add_nullary "e" ;
-  add_unqualified ("eigenvalues_sym", ReturnType UVector, [UMatrix], SoA) ;
-  add_unqualified ("eigenvectors_sym", ReturnType UMatrix, [UMatrix], SoA) ;
+  add_unqualified ("eigenvalues_sym", ReturnType UVector, [UMatrix], AoS) ;
+  add_unqualified ("eigenvectors_sym", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified ("generalized_inverse", ReturnType UMatrix, [UMatrix], SoA) ;
   add_unqualified ("qr_Q", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified ("qr_R", ReturnType UMatrix, [UMatrix], AoS) ;
@@ -1497,7 +1497,7 @@ let () =
     ("inv_wishart_lpdf", ReturnType UReal, [UMatrix; UReal; UMatrix], SoA) ;
   add_unqualified ("inv_wishart_rng", ReturnType UMatrix, [UReal; UMatrix], SoA) ;
   add_unqualified ("inverse", ReturnType UMatrix, [UMatrix], SoA) ;
-  add_unqualified ("inverse_spd", ReturnType UMatrix, [UMatrix], SoA) ;
+  add_unqualified ("inverse_spd", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified ("is_inf", ReturnType UInt, [UReal], AoS) ;
   add_unqualified ("is_nan", ReturnType UInt, [UReal], AoS) ;
   add_binary_vec "lbeta" AoS ;
@@ -1567,11 +1567,11 @@ let () =
   in
   List.iter
     ~f:(fun t1 ->
-      add_unqualified ("logical_negation", ReturnType UInt, [t1], SoA) ;
+      add_unqualified ("logical_negation", ReturnType UInt, [t1], AoS) ;
       List.iter
         ~f:(fun t2 ->
           List.iter
-            ~f:(fun o -> add_unqualified (o, ReturnType UInt, [t1; t2], SoA))
+            ~f:(fun o -> add_unqualified (o, ReturnType UInt, [t1; t2], AoS))
             logical_binops )
         primitive_types )
     primitive_types ;
@@ -1926,11 +1926,11 @@ let () =
     , AoS ) ;
   add_nullary "positive_infinity" ;
   add_binary_vec "pow" AoS ;
-  add_unqualified ("prod", ReturnType UInt, [UArray UInt], SoA) ;
-  add_unqualified ("prod", ReturnType UReal, [UArray UReal], SoA) ;
-  add_unqualified ("prod", ReturnType UReal, [UVector], SoA) ;
-  add_unqualified ("prod", ReturnType UReal, [URowVector], SoA) ;
-  add_unqualified ("prod", ReturnType UReal, [UMatrix], SoA) ;
+  add_unqualified ("prod", ReturnType UInt, [UArray UInt], AoS) ;
+  add_unqualified ("prod", ReturnType UReal, [UArray UReal], AoS) ;
+  add_unqualified ("prod", ReturnType UReal, [UVector], AoS) ;
+  add_unqualified ("prod", ReturnType UReal, [URowVector], AoS) ;
+  add_unqualified ("prod", ReturnType UReal, [UMatrix], AoS) ;
   add_unqualified ("quad_form", ReturnType UReal, [UMatrix; UVector], SoA) ;
   add_unqualified ("quad_form", ReturnType UMatrix, [UMatrix; UMatrix], SoA) ;
   add_unqualified ("quad_form_sym", ReturnType UReal, [UMatrix; UVector], AoS) ;
@@ -1973,14 +1973,14 @@ let () =
   add_unqualified ("rank", ReturnType UInt, [UArray UReal; UInt], AoS) ;
   add_unqualified ("rank", ReturnType UInt, [UVector; UInt], AoS) ;
   add_unqualified ("rank", ReturnType UInt, [URowVector; UInt], AoS) ;
-  add_unqualified ("append_row", ReturnType UMatrix, [UMatrix; UMatrix], SoA) ;
-  add_unqualified ("append_row", ReturnType UMatrix, [URowVector; UMatrix], SoA) ;
-  add_unqualified ("append_row", ReturnType UMatrix, [UMatrix; URowVector], SoA) ;
+  add_unqualified ("append_row", ReturnType UMatrix, [UMatrix; UMatrix], AoS) ;
+  add_unqualified ("append_row", ReturnType UMatrix, [URowVector; UMatrix], AoS) ;
+  add_unqualified ("append_row", ReturnType UMatrix, [UMatrix; URowVector], AoS) ;
   add_unqualified
     ("append_row", ReturnType UMatrix, [URowVector; URowVector], AoS) ;
-  add_unqualified ("append_row", ReturnType UVector, [UVector; UVector], SoA) ;
-  add_unqualified ("append_row", ReturnType UVector, [UReal; UVector], SoA) ;
-  add_unqualified ("append_row", ReturnType UVector, [UVector; UReal], SoA) ;
+  add_unqualified ("append_row", ReturnType UVector, [UVector; UVector], AoS) ;
+  add_unqualified ("append_row", ReturnType UVector, [UReal; UVector], AoS) ;
+  add_unqualified ("append_row", ReturnType UVector, [UVector; UReal], AoS) ;
   List.iter
     ~f:(fun t ->
       add_unqualified
@@ -2172,42 +2172,42 @@ let () =
     (List.range 1 10) ;
   add_unqualified
     ("to_array_2d", ReturnType (bare_array_type (UReal, 2)), [UMatrix], AoS) ;
-  add_unqualified ("to_matrix", ReturnType UMatrix, [UMatrix], SoA) ;
-  add_unqualified ("to_matrix", ReturnType UMatrix, [UMatrix; UInt; UInt], SoA) ;
+  add_unqualified ("to_matrix", ReturnType UMatrix, [UMatrix], AoS) ;
+  add_unqualified ("to_matrix", ReturnType UMatrix, [UMatrix; UInt; UInt], AoS) ;
   add_unqualified
-    ("to_matrix", ReturnType UMatrix, [UMatrix; UInt; UInt; UInt], SoA) ;
-  add_unqualified ("to_matrix", ReturnType UMatrix, [UVector], SoA) ;
-  add_unqualified ("to_matrix", ReturnType UMatrix, [UVector; UInt; UInt], SoA) ;
+    ("to_matrix", ReturnType UMatrix, [UMatrix; UInt; UInt; UInt], AoS) ;
+  add_unqualified ("to_matrix", ReturnType UMatrix, [UVector], AoS) ;
+  add_unqualified ("to_matrix", ReturnType UMatrix, [UVector; UInt; UInt], AoS) ;
   add_unqualified
-    ("to_matrix", ReturnType UMatrix, [UVector; UInt; UInt; UInt], SoA) ;
-  add_unqualified ("to_matrix", ReturnType UMatrix, [URowVector], SoA) ;
-  add_unqualified ("to_matrix", ReturnType UMatrix, [UArray URowVector], SoA) ;
+    ("to_matrix", ReturnType UMatrix, [UVector; UInt; UInt; UInt], AoS) ;
+  add_unqualified ("to_matrix", ReturnType UMatrix, [URowVector], AoS) ;
+  add_unqualified ("to_matrix", ReturnType UMatrix, [UArray URowVector], AoS) ;
   add_unqualified
-    ("to_matrix", ReturnType UMatrix, [URowVector; UInt; UInt], SoA) ;
+    ("to_matrix", ReturnType UMatrix, [URowVector; UInt; UInt], AoS) ;
   add_unqualified
-    ("to_matrix", ReturnType UMatrix, [URowVector; UInt; UInt; UInt], SoA) ;
+    ("to_matrix", ReturnType UMatrix, [URowVector; UInt; UInt; UInt], AoS) ;
   add_unqualified
-    ("to_matrix", ReturnType UMatrix, [UArray UReal; UInt; UInt], SoA) ;
+    ("to_matrix", ReturnType UMatrix, [UArray UReal; UInt; UInt], AoS) ;
   add_unqualified
-    ("to_matrix", ReturnType UMatrix, [UArray UReal; UInt; UInt; UInt], SoA) ;
+    ("to_matrix", ReturnType UMatrix, [UArray UReal; UInt; UInt; UInt], AoS) ;
   add_unqualified
-    ("to_matrix", ReturnType UMatrix, [UArray UInt; UInt; UInt], SoA) ;
+    ("to_matrix", ReturnType UMatrix, [UArray UInt; UInt; UInt], AoS) ;
   add_unqualified
-    ("to_matrix", ReturnType UMatrix, [UArray UInt; UInt; UInt; UInt], SoA) ;
+    ("to_matrix", ReturnType UMatrix, [UArray UInt; UInt; UInt; UInt], AoS) ;
   add_unqualified
-    ("to_matrix", ReturnType UMatrix, [bare_array_type (UReal, 2)], SoA) ;
+    ("to_matrix", ReturnType UMatrix, [bare_array_type (UReal, 2)], AoS) ;
   add_unqualified
-    ("to_matrix", ReturnType UMatrix, [bare_array_type (UInt, 2)], SoA) ;
+    ("to_matrix", ReturnType UMatrix, [bare_array_type (UInt, 2)], AoS) ;
   add_unqualified ("to_row_vector", ReturnType URowVector, [UMatrix], AoS) ;
   add_unqualified ("to_row_vector", ReturnType URowVector, [UVector], AoS) ;
   add_unqualified ("to_row_vector", ReturnType URowVector, [URowVector], AoS) ;
   add_unqualified ("to_row_vector", ReturnType URowVector, [UArray UReal], AoS) ;
   add_unqualified ("to_row_vector", ReturnType URowVector, [UArray UInt], AoS) ;
-  add_unqualified ("to_vector", ReturnType UVector, [UMatrix], SoA) ;
-  add_unqualified ("to_vector", ReturnType UVector, [UVector], SoA) ;
-  add_unqualified ("to_vector", ReturnType UVector, [URowVector], SoA) ;
-  add_unqualified ("to_vector", ReturnType UVector, [UArray UReal], SoA) ;
-  add_unqualified ("to_vector", ReturnType UVector, [UArray UInt], SoA) ;
+  add_unqualified ("to_vector", ReturnType UVector, [UMatrix], AoS) ;
+  add_unqualified ("to_vector", ReturnType UVector, [UVector], AoS) ;
+  add_unqualified ("to_vector", ReturnType UVector, [URowVector], AoS) ;
+  add_unqualified ("to_vector", ReturnType UVector, [UArray UReal], AoS) ;
+  add_unqualified ("to_vector", ReturnType UVector, [UArray UInt], AoS) ;
   add_unqualified ("trace", ReturnType UReal, [UMatrix], AoS) ;
   add_unqualified
     ("trace_gen_quad_form", ReturnType UReal, [UMatrix; UMatrix; UMatrix], SoA) ;
