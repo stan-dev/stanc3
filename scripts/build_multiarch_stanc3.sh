@@ -1,13 +1,13 @@
 # Identify 
 if [ $1 = "mips64el" ]; then
   ARCH="linux/mips64le"
-else if [ $1 = "arm64" ]; then
+elif [ $1 = "arm64" ]; then
   ARCH="linux/arm64"
-else if [ $1 = "ppc64el" ]; then
+elif [ $1 = "ppc64el" ]; then
   ARCH="linux/ppc64le"
-else if [ $1 = "armhf" ]; then
+elif [ $1 = "armhf" ]; then
   ARCH="linux/arm/v7"
-else if [ $1 = "armel" ]; then
+elif [ $1 = "armel" ]; then
   ARCH="linux/arm/v6"
 else
   ARCH=$1
