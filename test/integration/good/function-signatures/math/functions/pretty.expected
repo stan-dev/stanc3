@@ -2851,17 +2851,25 @@ model {
   y_p ~ normal(0, 1);
 }
 
-Semantic error in 'to_complex.stan', line 37, column 2 to column 48:
+Semantic error in 'to_complex.stan', line 21, column 29 to column 50:
    -------------------------------------------------
-    35:    transformed_param_complex =  to_complex(d_int, r_real);
-    36:    transformed_param_complex =  to_complex(d_real, r_real);
-    37:    transformed_data_complex = to_complex(d_real);
-           ^
-    38:    transformed_data_complex = to_complex(d_int);
-    39:    transformed_data_complex = to_complex();
+    19:    transformed_data_complex = to_complex();
+    20:  
+    21:    transformed_data_complex = to_complex(d_complex);
+                                      ^
+    22:    transformed_data_complex_2 = to_complex(transformed_data_complex);
+    23:  
    -------------------------------------------------
 
-Cannot assign to global variable 'transformed_data_complex' declared in previous blocks.
+Ill-typed arguments supplied to function 'to_complex':
+(complex)
+Available signatures:
+(real) => complex
+  The first argument must be real but got complex
+(real, real) => complex
+  Expected 2 arguments but found 1 arguments.
+() => complex
+  Expected 0 arguments but found 1 arguments.
   $ ../../../../../../../install/default/bin/stanc --auto-format trigamma.stan
 data {
   int d_int;

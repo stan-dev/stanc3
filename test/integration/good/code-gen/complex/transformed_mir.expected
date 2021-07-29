@@ -1,31 +1,5 @@
-  $ ../../../../../../install/default/bin/stanc --debug-transformed-mir complex.stan
-((functions_block
-  (((fdrt (UComplex)) (fdname foo) (fdsuffix FnPlain)
-    (fdargs ((AutoDiffable r UReal) (AutoDiffable i UReal)))
-    (fdbody
-     (((pattern
-        (Block
-         (((pattern
-            (Return
-             (((pattern
-                (FunApp (StanLib to_complex FnPlain)
-                 (((pattern (Var r))
-                   (meta
-                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-                  ((pattern (Var i))
-                   (meta
-                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
-               (meta
-                ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable)))))))
-           (meta <opaque>)))))
-       (meta <opaque>))))
-    (fdloc <opaque>))))
- (input_vars
-  ((d_z SComplex)
-   (d_z_ar
-    (SArray SComplex
-     ((pattern (Lit Int 5))
-      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+  $ ../../../../../../install/default/bin/stanc --debug-transformed-mir complex_math.stan
+((functions_block ()) (input_vars ())
  (prepare_data
   (((pattern
      (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))))
@@ -34,165 +8,26 @@
      (Assignment (pos__ UInt ())
       ((pattern (Lit Int 1))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))
-   ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id d_z) (decl_type (Sized SComplex))))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (d_z UComplex ())
-      ((pattern
-        (Indexed
-         ((pattern
-           (FunApp (CompilerInternal FnReadData)
-            (((pattern (Lit Str d_z))
-              (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
-          (meta
-           ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))
-         ((Single
-           ((pattern (Lit Int 1))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))
-   ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id d_z_ar)
-      (decl_type
-       (Sized
-        (SArray SComplex
-         ((pattern (Lit Int 5))
-          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
-    (meta <opaque>))
-   ((pattern
-     (Block
-      (((pattern
-         (Decl (decl_adtype AutoDiffable) (decl_id d_z_ar_flat__)
-          (decl_type (Unsized (UArray UComplex)))))
-        (meta <opaque>))
-       ((pattern
-         (Assignment (d_z_ar_flat__ (UArray UComplex) ())
-          ((pattern
-            (FunApp (CompilerInternal FnReadData)
-             (((pattern (Lit Str d_z_ar))
-               (meta
-                ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly)))))))
-           (meta
-            ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))))
-        (meta <opaque>))
-       ((pattern
-         (Assignment (pos__ UInt ())
-          ((pattern (Lit Int 1))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-        (meta <opaque>))
-       ((pattern
-         (For (loopvar sym1__)
-          (lower
-           ((pattern (Lit Int 1))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          (upper
-           ((pattern (Lit Int 5))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-          (body
-           ((pattern
-             (Block
-              (((pattern
-                 (Assignment
-                  (d_z_ar (UArray UComplex)
-                   ((Single
-                     ((pattern (Var sym1__))
-                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                  ((pattern
-                    (Indexed
-                     ((pattern (Var d_z_ar_flat__))
-                      (meta
-                       ((type_ (UArray UComplex)) (loc <opaque>)
-                        (adlevel DataOnly))))
-                     ((Single
-                       ((pattern (Var pos__))
-                        (meta
-                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-                   (meta
-                    ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
-                (meta <opaque>))
-               ((pattern
-                 (Assignment (pos__ UInt ())
-                  ((pattern
-                    (FunApp (StanLib Plus__ FnPlain)
-                     (((pattern (Var pos__))
-                       (meta
-                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                      ((pattern (Lit Int 1))
-                       (meta
-                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-                (meta <opaque>)))))
-            (meta <opaque>)))))
-        (meta <opaque>)))))
     (meta <opaque>))))
  (log_prob
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id p_z)
+     (Decl (decl_adtype AutoDiffable) (decl_id x)
       (decl_type (Sized SComplex))))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_z UComplex ())
+     (Assignment (x UComplex ())
       ((pattern
         (FunApp (CompilerInternal (FnReadParam ()))
          (((pattern (Lit Int 2))
            (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable))))))
-    (meta <opaque>))
-   ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id p_z_ar)
-      (decl_type
-       (Sized
-        (SArray SComplex
-         ((pattern (Lit Int 5))
-          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (p_z_ar (UArray UComplex) ())
-      ((pattern
-        (FunApp (CompilerInternal (FnReadParam ()))
-         (((pattern (Lit Int 5))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Lit Int 2))
-           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta
-        ((type_ (UArray UComplex)) (loc <opaque>) (adlevel AutoDiffable))))))
-    (meta <opaque>))
-   ((pattern
-     (Block
-      (((pattern
-         (Decl (decl_adtype AutoDiffable) (decl_id m_z)
-          (decl_type (Sized SComplex))))
-        (meta <opaque>))
-       ((pattern
-         (Assignment (m_z UInt ())
-          ((pattern (Lit Int 1))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-        (meta <opaque>))
-       ((pattern
-         (TargetPE
-          ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true))
-             (((pattern
-                (FunApp (StanLib abs FnPlain)
-                 (((pattern (Var m_z))
-                   (meta
-                    ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable)))))))
-               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-              ((pattern (Lit Int 0))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-              ((pattern (Lit Int 1))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
-        (meta <opaque>)))))
     (meta <opaque>))))
  (generate_quantities
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id p_z) (decl_type (Sized SComplex))))
+     (Decl (decl_adtype DataOnly) (decl_id x) (decl_type (Sized SComplex))))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_z UComplex ())
+     (Assignment (x UComplex ())
       ((pattern
         (FunApp (CompilerInternal (FnReadParam ()))
          (((pattern (Lit Int 2))
@@ -200,54 +35,9 @@
        (meta ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id p_z_ar)
-      (decl_type
-       (Sized
-        (SArray SComplex
-         ((pattern (Lit Int 5))
-          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (p_z_ar (UArray UComplex) ())
-      ((pattern
-        (FunApp (CompilerInternal (FnReadParam ()))
-         (((pattern (Lit Int 5))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Lit Int 2))
-           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta
-        ((type_ (UArray UComplex)) (loc <opaque>) (adlevel AutoDiffable))))))
-    (meta <opaque>))
-   ((pattern
      (NRFunApp (CompilerInternal FnWriteParam)
-      (((pattern (Var p_z))
+      (((pattern (Var x))
         (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
-    (meta <opaque>))
-   ((pattern
-     (For (loopvar sym1__)
-      (lower
-       ((pattern (Lit Int 1))
-        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-      (upper
-       ((pattern (Lit Int 5))
-        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-      (body
-       ((pattern
-         (Block
-          (((pattern
-             (NRFunApp (CompilerInternal FnWriteParam)
-              (((pattern
-                 (Indexed
-                  ((pattern (Var p_z_ar))
-                   (meta
-                    ((type_ (UArray UComplex)) (loc <opaque>)
-                     (adlevel DataOnly))))
-                  ((Single
-                    ((pattern (Var sym1__))
-                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-                (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
-            (meta <opaque>)))))
-        (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
      (IfElse
@@ -277,181 +67,280 @@
       ()))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id gq_z_1)
-      (decl_type (Sized SComplex))))
+     (Decl (decl_adtype DataOnly) (decl_id y) (decl_type (Sized SComplex))))
     (meta <opaque>))
    ((pattern
-     (Assignment (gq_z_1 UComplex ())
-      ((pattern (FunApp (StanLib to_complex FnPlain) ()))
-       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))
-   ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id gq_z_2)
-      (decl_type (Sized SComplex))))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (gq_z_2 UComplex ())
+     (Assignment (y UComplex ())
       ((pattern
-        (FunApp (UserDefined foo FnPlain)
-         (((pattern (Lit Int 1))
+        (FunApp (StanLib to_complex FnPlain)
+         (((pattern (Lit Int 3))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Lit Int 2))
+          ((pattern (Lit Int 4))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id r_1) (decl_type (Sized SReal))))
+     (Decl (decl_adtype DataOnly) (decl_id z) (decl_type (Sized SComplex))))
     (meta <opaque>))
    ((pattern
-     (Assignment (r_1 UReal ())
-      ((pattern
-        (FunApp (StanLib get_real FnPlain)
-         (((pattern (Var gq_z_2))
-           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+     (Decl (decl_adtype DataOnly) (decl_id i) (decl_type (Sized SInt))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id i_1) (decl_type (Sized SReal))))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (i_1 UReal ())
-      ((pattern
-        (FunApp (StanLib get_imag FnPlain)
-         (((pattern (Var gq_z_2))
-           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))
-   ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id i_2) (decl_type (Sized SInt))))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (i_2 UInt ())
-      ((pattern
-        (FunApp (StanLib Equals__ FnPlain)
-         (((pattern
-            (FunApp (StanLib to_complex FnPlain)
-             (((pattern (Var gq_z_1))
-               (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
-           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var gq_z_1))
-           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))
-   ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id a) (decl_type (Sized SInt))))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (a UInt ())
+     (Assignment (i UInt ())
       ((pattern (Lit Int 1))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id b) (decl_type (Sized SReal))))
+     (Decl (decl_adtype DataOnly) (decl_id r) (decl_type (Sized SReal))))
     (meta <opaque>))
    ((pattern
-     (Assignment (b UReal ())
-      ((pattern (Lit Real 1.1))
+     (Assignment (r UReal ())
+      ((pattern (Lit Real 1.0))
        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (gq_z_1 UComplex ())
-      ((pattern (Var a))
+     (Assignment (z UComplex ())
+      ((pattern
+        (FunApp (StanLib Plus__ FnPlain)
+         (((pattern (Var x))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var y))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (z UComplex ())
+      ((pattern
+        (FunApp (StanLib Plus__ FnPlain)
+         (((pattern (Var x))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var r))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (z UComplex ())
+      ((pattern
+        (FunApp (StanLib Plus__ FnPlain)
+         (((pattern (Var r))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var x))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (z UComplex ())
+      ((pattern
+        (FunApp (StanLib Plus__ FnPlain)
+         (((pattern (Var x))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var i))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (z UComplex ())
+      ((pattern
+        (FunApp (StanLib Plus__ FnPlain)
+         (((pattern (Var i))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var x))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (z UComplex ())
+      ((pattern
+        (FunApp (StanLib Minus__ FnPlain)
+         (((pattern (Var x))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var y))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (z UComplex ())
+      ((pattern
+        (FunApp (StanLib Minus__ FnPlain)
+         (((pattern (Var x))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var r))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (z UComplex ())
+      ((pattern
+        (FunApp (StanLib Minus__ FnPlain)
+         (((pattern (Var r))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var x))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (z UComplex ())
+      ((pattern
+        (FunApp (StanLib Minus__ FnPlain)
+         (((pattern (Var x))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var i))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (z UComplex ())
+      ((pattern
+        (FunApp (StanLib Minus__ FnPlain)
+         (((pattern (Var i))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var x))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (z UComplex ())
+      ((pattern
+        (FunApp (StanLib Times__ FnPlain)
+         (((pattern (Var x))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var y))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (z UComplex ())
+      ((pattern
+        (FunApp (StanLib Times__ FnPlain)
+         (((pattern (Var x))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var r))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (z UComplex ())
+      ((pattern
+        (FunApp (StanLib Times__ FnPlain)
+         (((pattern (Var r))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var x))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (z UComplex ())
+      ((pattern
+        (FunApp (StanLib Times__ FnPlain)
+         (((pattern (Var x))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var i))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (z UComplex ())
+      ((pattern
+        (FunApp (StanLib Times__ FnPlain)
+         (((pattern (Var i))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var x))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (z UComplex ())
+      ((pattern
+        (FunApp (StanLib Divide__ FnPlain)
+         (((pattern (Var x))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var y))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (z UComplex ())
+      ((pattern
+        (FunApp (StanLib Divide__ FnPlain)
+         (((pattern (Var x))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var r))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (z UComplex ())
+      ((pattern
+        (FunApp (StanLib Divide__ FnPlain)
+         (((pattern (Var r))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var x))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (z UComplex ())
+      ((pattern
+        (FunApp (StanLib Divide__ FnPlain)
+         (((pattern (Var x))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var i))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (z UComplex ())
+      ((pattern
+        (FunApp (StanLib Divide__ FnPlain)
+         (((pattern (Var i))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var x))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (z UComplex ())
+      ((pattern
+        (FunApp (StanLib PMinus__ FnPlain)
+         (((pattern (Var x))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (z UComplex ())
+      ((pattern
+        (FunApp (StanLib PMinus__ FnPlain)
+         (((pattern (Var r))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (z UComplex ())
+      ((pattern
+        (FunApp (StanLib PMinus__ FnPlain)
+         (((pattern (Var i))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (gq_z_1 UComplex ())
-      ((pattern (Var b))
-       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))
-   ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id gq_z_ar)
-      (decl_type
-       (Sized
-        (SArray SComplex
-         ((pattern (Lit Int 5))
-          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
-    (meta <opaque>))
-   ((pattern
-     (Assignment (gq_z_ar (UArray UComplex) ())
-      ((pattern
-        (FunApp (CompilerInternal FnMakeArray)
-         (((pattern (Var gq_z_1))
-           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern
-            (FunApp (StanLib to_complex FnPlain)
-             (((pattern (Lit Int 1))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-              ((pattern (Lit Int 2))
-               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var a))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Lit Int 0))
-           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Lit Real 2.4))
-           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-       (meta ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))))
-    (meta <opaque>))
-   ((pattern
      (NRFunApp (CompilerInternal FnWriteParam)
-      (((pattern (Var gq_z_1))
+      (((pattern (Var y))
         (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnWriteParam)
-      (((pattern (Var gq_z_2))
+      (((pattern (Var z))
         (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnWriteParam)
-      (((pattern (Var r_1))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-    (meta <opaque>))
-   ((pattern
-     (NRFunApp (CompilerInternal FnWriteParam)
-      (((pattern (Var i_1))
-        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-    (meta <opaque>))
-   ((pattern
-     (NRFunApp (CompilerInternal FnWriteParam)
-      (((pattern (Var i_2))
+      (((pattern (Var i))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnWriteParam)
-      (((pattern (Var a))
-        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-    (meta <opaque>))
-   ((pattern
-     (NRFunApp (CompilerInternal FnWriteParam)
-      (((pattern (Var b))
+      (((pattern (Var r))
         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
-    (meta <opaque>))
-   ((pattern
-     (For (loopvar sym1__)
-      (lower
-       ((pattern (Lit Int 1))
-        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-      (upper
-       ((pattern (Lit Int 5))
-        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-      (body
-       ((pattern
-         (Block
-          (((pattern
-             (NRFunApp (CompilerInternal FnWriteParam)
-              (((pattern
-                 (Indexed
-                  ((pattern (Var gq_z_ar))
-                   (meta
-                    ((type_ (UArray UComplex)) (loc <opaque>)
-                     (adlevel DataOnly))))
-                  ((Single
-                    ((pattern (Var sym1__))
-                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-                (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
-            (meta <opaque>)))))
-        (meta <opaque>)))))
     (meta <opaque>))))
  (transform_inits
   (((pattern
@@ -463,15 +352,15 @@
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id p_z) (decl_type (Sized SComplex))))
+     (Decl (decl_adtype DataOnly) (decl_id x) (decl_type (Sized SComplex))))
     (meta <opaque>))
    ((pattern
-     (Assignment (p_z UComplex ())
+     (Assignment (x UComplex ())
       ((pattern
         (Indexed
          ((pattern
            (FunApp (CompilerInternal FnReadData)
-            (((pattern (Lit Str p_z))
+            (((pattern (Lit Str x))
               (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
           (meta
            ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))
@@ -481,24 +370,219 @@
        (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id p_z_ar)
+     (NRFunApp (CompilerInternal FnWriteParam)
+      (((pattern (Var x))
+        (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+    (meta <opaque>))))
+ (output_vars
+  ((x
+    ((out_unconstrained_st SComplex) (out_constrained_st SComplex)
+     (out_block Parameters) (out_trans Identity)))
+   (y
+    ((out_unconstrained_st SComplex) (out_constrained_st SComplex)
+     (out_block GeneratedQuantities) (out_trans Identity)))
+   (z
+    ((out_unconstrained_st SComplex) (out_constrained_st SComplex)
+     (out_block GeneratedQuantities) (out_trans Identity)))
+   (i
+    ((out_unconstrained_st SInt) (out_constrained_st SInt)
+     (out_block GeneratedQuantities) (out_trans Identity)))
+   (r
+    ((out_unconstrained_st SReal) (out_constrained_st SReal)
+     (out_block GeneratedQuantities) (out_trans Identity)))))
+ (prog_name complex_math_model) (prog_path complex_math.stan))
+  $ ../../../../../../install/default/bin/stanc --debug-transformed-mir complex_scalar.stan
+((functions_block
+  (((fdrt (UComplex)) (fdname foo) (fdsuffix FnPlain) (fdargs ())
+    (fdbody
+     (((pattern
+        (Block
+         (((pattern
+            (Return
+             (((pattern (FunApp (StanLib to_complex FnPlain) ()))
+               (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta <opaque>)))))
+       (meta <opaque>))))
+    (fdloc <opaque>))
+   ((fdrt (UReal)) (fdname foo1) (fdsuffix FnPlain)
+    (fdargs ((AutoDiffable z UComplex)))
+    (fdbody
+     (((pattern
+        (Block
+         (((pattern
+            (Return
+             (((pattern (Lit Real 1.0))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta <opaque>)))))
+       (meta <opaque>))))
+    (fdloc <opaque>))
+   ((fdrt (UComplex)) (fdname foo2) (fdsuffix FnPlain)
+    (fdargs ((AutoDiffable r UReal)))
+    (fdbody
+     (((pattern
+        (Block
+         (((pattern
+            (Return
+             (((pattern
+                (FunApp (StanLib to_complex FnPlain)
+                 (((pattern (Var r))
+                   (meta
+                    ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+               (meta
+                ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable)))))))
+           (meta <opaque>)))))
+       (meta <opaque>))))
+    (fdloc <opaque>))
+   ((fdrt (UComplex)) (fdname foo3) (fdsuffix FnPlain)
+    (fdargs ((AutoDiffable z UComplex)))
+    (fdbody
+     (((pattern
+        (Block
+         (((pattern
+            (Return
+             (((pattern (Var z))
+               (meta
+                ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable)))))))
+           (meta <opaque>)))))
+       (meta <opaque>))))
+    (fdloc <opaque>))
+   ((fdrt ((UArray UComplex))) (fdname foo4) (fdsuffix FnPlain) (fdargs ())
+    (fdbody
+     (((pattern
+        (Block
+         (((pattern
+            (Return
+             (((pattern
+                (FunApp (CompilerInternal FnMakeArray)
+                 (((pattern (FunApp (StanLib to_complex FnPlain) ()))
+                   (meta
+                    ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
+                  ((pattern (FunApp (StanLib to_complex FnPlain) ()))
+                   (meta
+                    ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+               (meta
+                ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta <opaque>)))))
+       (meta <opaque>))))
+    (fdloc <opaque>))
+   ((fdrt (UReal)) (fdname foo5) (fdsuffix FnPlain)
+    (fdargs ((AutoDiffable z (UArray UComplex))))
+    (fdbody
+     (((pattern
+        (Block
+         (((pattern
+            (Return
+             (((pattern (Lit Real 1.0))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta <opaque>)))))
+       (meta <opaque>))))
+    (fdloc <opaque>))
+   ((fdrt ((UArray UComplex))) (fdname foo6) (fdsuffix FnPlain)
+    (fdargs ((AutoDiffable r UReal)))
+    (fdbody
+     (((pattern
+        (Block
+         (((pattern
+            (Return
+             (((pattern
+                (FunApp (CompilerInternal FnMakeArray)
+                 (((pattern
+                    (FunApp (StanLib to_complex FnPlain)
+                     (((pattern (Var r))
+                       (meta
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+                   (meta
+                    ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable))))
+                  ((pattern
+                    (FunApp (StanLib to_complex FnPlain)
+                     (((pattern (Var r))
+                       (meta
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+                      ((pattern (Var r))
+                       (meta
+                        ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
+                   (meta
+                    ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable)))))))
+               (meta
+                ((type_ (UArray UComplex)) (loc <opaque>)
+                 (adlevel AutoDiffable)))))))
+           (meta <opaque>)))))
+       (meta <opaque>))))
+    (fdloc <opaque>))
+   ((fdrt ((UArray UComplex))) (fdname foo7) (fdsuffix FnPlain)
+    (fdargs ((AutoDiffable z (UArray UComplex))))
+    (fdbody
+     (((pattern
+        (Block
+         (((pattern
+            (Return
+             (((pattern (Var z))
+               (meta
+                ((type_ (UArray UComplex)) (loc <opaque>)
+                 (adlevel AutoDiffable)))))))
+           (meta <opaque>)))))
+       (meta <opaque>))))
+    (fdloc <opaque>))))
+ (input_vars
+  ((d_complex SComplex)
+   (d_complex_array
+    (SArray SComplex
+     ((pattern (Lit Int 2))
+      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+   (d_complex_array_2d
+    (SArray
+     (SArray SComplex
+      ((pattern (Lit Int 3))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+     ((pattern (Lit Int 2))
+      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+ (prepare_data
+  (((pattern
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (pos__ UInt ())
+      ((pattern (Lit Int 1))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id d_complex)
+      (decl_type (Sized SComplex))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (d_complex UComplex ())
+      ((pattern
+        (Indexed
+         ((pattern
+           (FunApp (CompilerInternal FnReadData)
+            (((pattern (Lit Str d_complex))
+              (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta
+           ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))
+         ((Single
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id d_complex_array)
       (decl_type
        (Sized
         (SArray SComplex
-         ((pattern (Lit Int 5))
+         ((pattern (Lit Int 2))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
      (Block
       (((pattern
-         (Decl (decl_adtype AutoDiffable) (decl_id p_z_ar_flat__)
+         (Decl (decl_adtype AutoDiffable) (decl_id d_complex_array_flat__)
           (decl_type (Unsized (UArray UComplex)))))
         (meta <opaque>))
        ((pattern
-         (Assignment (p_z_ar_flat__ (UArray UComplex) ())
+         (Assignment (d_complex_array_flat__ (UArray UComplex) ())
           ((pattern
             (FunApp (CompilerInternal FnReadData)
-             (((pattern (Lit Str p_z_ar))
+             (((pattern (Lit Str d_complex_array))
                (meta
                 ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly)))))))
            (meta
@@ -515,20 +599,20 @@
            ((pattern (Lit Int 1))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           (upper
-           ((pattern (Lit Int 5))
+           ((pattern (Lit Int 2))
             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
           (body
            ((pattern
              (Block
               (((pattern
                  (Assignment
-                  (p_z_ar (UArray UComplex)
+                  (d_complex_array (UArray UComplex)
                    ((Single
                      ((pattern (Var sym1__))
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                   ((pattern
                     (Indexed
-                     ((pattern (Var p_z_ar_flat__))
+                     ((pattern (Var d_complex_array_flat__))
                       (meta
                        ((type_ (UArray UComplex)) (loc <opaque>)
                         (adlevel DataOnly))))
@@ -555,8 +639,649 @@
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id d_complex_array_2d)
+      (decl_type
+       (Sized
+        (SArray
+         (SArray SComplex
+          ((pattern (Lit Int 3))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+         ((pattern (Lit Int 2))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id d_complex_array_2d_flat__)
+          (decl_type (Unsized (UArray UComplex)))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (d_complex_array_2d_flat__ (UArray UComplex) ())
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str d_complex_array_2d))
+               (meta
+                ((type_ (UArray (UArray UComplex))) (loc <opaque>)
+                 (adlevel DataOnly)))))))
+           (meta
+            ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (pos__ UInt ())
+          ((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Lit Int 3))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Lit Int 2))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (Assignment
+                          (d_complex_array_2d (UArray (UArray UComplex))
+                           ((Single
+                             ((pattern (Var sym2__))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly)))))
+                            (Single
+                             ((pattern (Var sym1__))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly)))))))
+                          ((pattern
+                            (Indexed
+                             ((pattern (Var d_complex_array_2d_flat__))
+                              (meta
+                               ((type_ (UArray UComplex)) (loc <opaque>)
+                                (adlevel DataOnly))))
+                             ((Single
+                               ((pattern (Var pos__))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>)
+                                  (adlevel DataOnly))))))))
+                           (meta
+                            ((type_ UComplex) (loc <opaque>)
+                             (adlevel DataOnly))))))
+                        (meta <opaque>))
+                       ((pattern
+                         (Assignment (pos__ UInt ())
+                          ((pattern
+                            (FunApp (StanLib Plus__ FnPlain)
+                             (((pattern (Var pos__))
+                               (meta
+                                ((type_ UInt) (loc <opaque>)
+                                 (adlevel DataOnly))))
+                              ((pattern (Lit Int 1))
+                               (meta
+                                ((type_ UInt) (loc <opaque>)
+                                 (adlevel DataOnly)))))))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id td_complex)
+      (decl_type (Sized SComplex))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (td_complex UComplex ())
+      ((pattern (Var d_complex))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (td_complex UComplex ())
+      ((pattern (Lit Int 1))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (td_complex UComplex ())
+      ((pattern
+        (FunApp (StanLib to_complex FnPlain)
+         (((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 2))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id td_complex_array)
+      (decl_type
+       (Sized
+        (SArray SComplex
+         ((pattern (Lit Int 2))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (td_complex_array (UArray UComplex) ())
+      ((pattern (Var d_complex_array))
+       (meta ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id td_complex_array_2d)
+      (decl_type
+       (Sized
+        (SArray
+         (SArray SComplex
+          ((pattern (Lit Int 3))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+         ((pattern (Lit Int 2))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id td_r) (decl_type (Sized SReal))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (td_r UReal ())
+      ((pattern
+        (FunApp (StanLib get_real FnPlain)
+         (((pattern (Var td_complex))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (td_r UReal ())
+      ((pattern
+        (FunApp (StanLib get_imag FnPlain)
+         (((pattern (Var td_complex))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (td_r UReal ())
+      ((pattern
+        (FunApp (StanLib get_real FnPlain)
+         (((pattern
+            (Indexed
+             ((pattern (Var td_complex_array))
+              (meta
+               ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))
+             ((Single
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (td_r UReal ())
+      ((pattern
+        (FunApp (StanLib get_imag FnPlain)
+         (((pattern
+            (Indexed
+             ((pattern (Var td_complex_array))
+              (meta
+               ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))
+             ((Single
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar td_i)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Lit Int 2))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (For (loopvar td_j)
+              (lower
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (upper
+               ((pattern (Lit Int 3))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (body
+               ((pattern
+                 (Block
+                  (((pattern
+                     (Assignment
+                      (td_complex_array_2d (UArray (UArray UComplex))
+                       ((Single
+                         ((pattern (Var td_i))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                        (Single
+                         ((pattern (Var td_j))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      ((pattern
+                        (FunApp (StanLib to_complex FnPlain)
+                         (((pattern (Lit Int 1))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                          ((pattern (Lit Real 2.2))
+                           (meta
+                            ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                       (meta
+                        ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))))
+ (log_prob
+  (((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id p_complex)
+      (decl_type (Sized SComplex))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (p_complex UComplex ())
+      ((pattern
+        (FunApp (CompilerInternal (FnReadParam ()))
+         (((pattern (Lit Int 2))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id p_complex_array)
+      (decl_type
+       (Sized
+        (SArray SComplex
+         ((pattern (Lit Int 2))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (p_complex_array (UArray UComplex) ())
+      ((pattern
+        (FunApp (CompilerInternal (FnReadParam ()))
+         (((pattern (Lit Int 2))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 2))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta
+        ((type_ (UArray UComplex)) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id p_complex_array_2d)
+      (decl_type
+       (Sized
+        (SArray
+         (SArray SComplex
+          ((pattern (Lit Int 3))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+         ((pattern (Lit Int 2))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (p_complex_array_2d (UArray (UArray UComplex)) ())
+      ((pattern
+        (FunApp (CompilerInternal (FnReadParam ()))
+         (((pattern (Lit Int 2))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 3))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 2))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta
+        ((type_ (UArray (UArray UComplex))) (loc <opaque>)
+         (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id tp_r)
+      (decl_type (Sized SReal))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id tp_complex)
+      (decl_type (Sized SComplex))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id tp_complex_array)
+      (decl_type
+       (Sized
+        (SArray SComplex
+         ((pattern (Lit Int 2))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id tp_complex_array_2d)
+      (decl_type
+       (Sized
+        (SArray
+         (SArray SComplex
+          ((pattern (Lit Int 3))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+         ((pattern (Lit Int 2))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_complex UComplex ())
+      ((pattern (Lit Int 1))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_complex UComplex ())
+      ((pattern (Lit Real 1.1))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_complex UComplex ())
+      ((pattern (Var p_complex))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_complex UComplex ())
+      ((pattern
+        (Indexed
+         ((pattern (Var p_complex_array))
+          (meta
+           ((type_ (UArray UComplex)) (loc <opaque>) (adlevel AutoDiffable))))
+         ((Single
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_complex UComplex ())
+      ((pattern (FunApp (StanLib to_complex FnPlain) ()))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_complex UComplex ())
+      ((pattern
+        (FunApp (StanLib to_complex FnPlain)
+         (((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_complex UComplex ())
+      ((pattern
+        (FunApp (StanLib to_complex FnPlain)
+         (((pattern (Lit Real 1.2))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_complex UComplex ())
+      ((pattern
+        (FunApp (StanLib to_complex FnPlain)
+         (((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 2))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_complex UComplex ())
+      ((pattern
+        (FunApp (StanLib to_complex FnPlain)
+         (((pattern (Lit Real 1.1))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 2))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_complex UComplex ())
+      ((pattern
+        (FunApp (StanLib to_complex FnPlain)
+         (((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Real 2.2))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_complex UComplex ())
+      ((pattern
+        (FunApp (StanLib to_complex FnPlain)
+         (((pattern (Lit Real 1.1))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Real 2.2))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_r UReal ())
+      ((pattern
+        (FunApp (StanLib get_real FnPlain)
+         (((pattern (Var tp_complex))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_r UReal ())
+      ((pattern
+        (FunApp (StanLib get_imag FnPlain)
+         (((pattern (Var tp_complex))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_r UReal ())
+      ((pattern
+        (FunApp (StanLib get_real FnPlain)
+         (((pattern
+            (Indexed
+             ((pattern (Var tp_complex_array))
+              (meta
+               ((type_ (UArray UComplex)) (loc <opaque>)
+                (adlevel AutoDiffable))))
+             ((Single
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_r UReal ())
+      ((pattern
+        (FunApp (StanLib get_imag FnPlain)
+         (((pattern
+            (Indexed
+             ((pattern (Var tp_complex_array))
+              (meta
+               ((type_ (UArray UComplex)) (loc <opaque>)
+                (adlevel AutoDiffable))))
+             ((Single
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar tp_i)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Lit Int 2))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (For (loopvar tp_j)
+              (lower
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (upper
+               ((pattern (Lit Int 3))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (body
+               ((pattern
+                 (Block
+                  (((pattern
+                     (Assignment
+                      (tp_complex_array_2d (UArray (UArray UComplex))
+                       ((Single
+                         ((pattern (Var tp_i))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                        (Single
+                         ((pattern (Var tp_j))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      ((pattern
+                        (FunApp (StanLib to_complex FnPlain)
+                         (((pattern (Lit Int 1))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                          ((pattern (Lit Real 2.2))
+                           (meta
+                            ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                       (meta
+                        ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id m_complex)
+          (decl_type (Sized SComplex))))
+        (meta <opaque>))
+       ((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id m_complex_array)
+          (decl_type
+           (Sized
+            (SArray SComplex
+             ((pattern (Lit Int 2))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+        (meta <opaque>))
+       ((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id m_complex_array_2d)
+          (decl_type
+           (Sized
+            (SArray
+             (SArray SComplex
+              ((pattern (Lit Int 3))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+             ((pattern (Lit Int 2))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+        (meta <opaque>))
+       ((pattern
+         (TargetPE
+          ((pattern
+            (FunApp (StanLib normal_lpdf (FnLpdf true))
+             (((pattern
+                (FunApp (StanLib abs FnPlain)
+                 (((pattern (Var p_complex))
+                   (meta
+                    ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable)))))))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+              ((pattern (Lit Int 0))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern (Lit Int 1))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+        (meta <opaque>)))))
+    (meta <opaque>))))
+ (generate_quantities
+  (((pattern
+     (Decl (decl_adtype DataOnly) (decl_id p_complex)
+      (decl_type (Sized SComplex))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (p_complex UComplex ())
+      ((pattern
+        (FunApp (CompilerInternal (FnReadParam ()))
+         (((pattern (Lit Int 2))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id p_complex_array)
+      (decl_type
+       (Sized
+        (SArray SComplex
+         ((pattern (Lit Int 2))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (p_complex_array (UArray UComplex) ())
+      ((pattern
+        (FunApp (CompilerInternal (FnReadParam ()))
+         (((pattern (Lit Int 2))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 2))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta
+        ((type_ (UArray UComplex)) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id p_complex_array_2d)
+      (decl_type
+       (Sized
+        (SArray
+         (SArray SComplex
+          ((pattern (Lit Int 3))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+         ((pattern (Lit Int 2))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (p_complex_array_2d (UArray (UArray UComplex)) ())
+      ((pattern
+        (FunApp (CompilerInternal (FnReadParam ()))
+         (((pattern (Lit Int 2))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 3))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 2))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta
+        ((type_ (UArray (UArray UComplex))) (loc <opaque>)
+         (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id tp_r) (decl_type (Sized SReal))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id tp_complex)
+      (decl_type (Sized SComplex))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id tp_complex_array)
+      (decl_type
+       (Sized
+        (SArray SComplex
+         ((pattern (Lit Int 2))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id tp_complex_array_2d)
+      (decl_type
+       (Sized
+        (SArray
+         (SArray SComplex
+          ((pattern (Lit Int 3))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+         ((pattern (Lit Int 2))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+    (meta <opaque>))
+   ((pattern
      (NRFunApp (CompilerInternal FnWriteParam)
-      (((pattern (Var p_z))
+      (((pattern (Var p_complex))
         (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
@@ -565,7 +1290,7 @@
        ((pattern (Lit Int 1))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
       (upper
-       ((pattern (Lit Int 5))
+       ((pattern (Lit Int 2))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
       (body
        ((pattern
@@ -574,7 +1299,7 @@
              (NRFunApp (CompilerInternal FnWriteParam)
               (((pattern
                  (Indexed
-                  ((pattern (Var p_z_ar))
+                  ((pattern (Var p_complex_array))
                    (meta
                     ((type_ (UArray UComplex)) (loc <opaque>)
                      (adlevel DataOnly))))
@@ -584,50 +1309,1291 @@
                 (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
             (meta <opaque>)))))
         (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar sym1__)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Lit Int 3))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (For (loopvar sym2__)
+              (lower
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (upper
+               ((pattern (Lit Int 2))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (body
+               ((pattern
+                 (Block
+                  (((pattern
+                     (NRFunApp (CompilerInternal FnWriteParam)
+                      (((pattern
+                         (Indexed
+                          ((pattern (Var p_complex_array_2d))
+                           (meta
+                            ((type_ (UArray (UArray UComplex)))
+                             (loc <opaque>) (adlevel DataOnly))))
+                          ((Single
+                            ((pattern (Var sym2__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly)))))
+                           (Single
+                            ((pattern (Var sym1__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))))))
+                        (meta
+                         ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain)
+         (((pattern
+            (EOr
+             ((pattern (Var emit_transformed_parameters__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+             ((pattern (Var emit_generated_quantities__))
+              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>)))))
+       (meta <opaque>))
+      ()))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_complex UComplex ())
+      ((pattern (Lit Int 1))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_complex UComplex ())
+      ((pattern (Lit Real 1.1))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_complex UComplex ())
+      ((pattern (Var p_complex))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_complex UComplex ())
+      ((pattern
+        (Indexed
+         ((pattern (Var p_complex_array))
+          (meta
+           ((type_ (UArray UComplex)) (loc <opaque>) (adlevel AutoDiffable))))
+         ((Single
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_complex UComplex ())
+      ((pattern (FunApp (StanLib to_complex FnPlain) ()))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_complex UComplex ())
+      ((pattern
+        (FunApp (StanLib to_complex FnPlain)
+         (((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_complex UComplex ())
+      ((pattern
+        (FunApp (StanLib to_complex FnPlain)
+         (((pattern (Lit Real 1.2))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_complex UComplex ())
+      ((pattern
+        (FunApp (StanLib to_complex FnPlain)
+         (((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 2))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_complex UComplex ())
+      ((pattern
+        (FunApp (StanLib to_complex FnPlain)
+         (((pattern (Lit Real 1.1))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 2))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_complex UComplex ())
+      ((pattern
+        (FunApp (StanLib to_complex FnPlain)
+         (((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Real 2.2))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_complex UComplex ())
+      ((pattern
+        (FunApp (StanLib to_complex FnPlain)
+         (((pattern (Lit Real 1.1))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Real 2.2))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_r UReal ())
+      ((pattern
+        (FunApp (StanLib get_real FnPlain)
+         (((pattern (Var tp_complex))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_r UReal ())
+      ((pattern
+        (FunApp (StanLib get_imag FnPlain)
+         (((pattern (Var tp_complex))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_r UReal ())
+      ((pattern
+        (FunApp (StanLib get_real FnPlain)
+         (((pattern
+            (Indexed
+             ((pattern (Var tp_complex_array))
+              (meta
+               ((type_ (UArray UComplex)) (loc <opaque>)
+                (adlevel AutoDiffable))))
+             ((Single
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (tp_r UReal ())
+      ((pattern
+        (FunApp (StanLib get_imag FnPlain)
+         (((pattern
+            (Indexed
+             ((pattern (Var tp_complex_array))
+              (meta
+               ((type_ (UArray UComplex)) (loc <opaque>)
+                (adlevel AutoDiffable))))
+             ((Single
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel AutoDiffable)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar tp_i)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Lit Int 2))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (For (loopvar tp_j)
+              (lower
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (upper
+               ((pattern (Lit Int 3))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (body
+               ((pattern
+                 (Block
+                  (((pattern
+                     (Assignment
+                      (tp_complex_array_2d (UArray (UArray UComplex))
+                       ((Single
+                         ((pattern (Var tp_i))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                        (Single
+                         ((pattern (Var tp_j))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      ((pattern
+                        (FunApp (StanLib to_complex FnPlain)
+                         (((pattern (Lit Int 1))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                          ((pattern (Lit Real 2.2))
+                           (meta
+                            ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                       (meta
+                        ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (IfElse
+      ((pattern (Var emit_transformed_parameters__))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern
+        (Block
+         (((pattern
+            (NRFunApp (CompilerInternal FnWriteParam)
+             (((pattern (Var tp_r))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta <opaque>))
+          ((pattern
+            (NRFunApp (CompilerInternal FnWriteParam)
+             (((pattern (Var tp_complex))
+               (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta <opaque>))
+          ((pattern
+            (For (loopvar sym1__)
+             (lower
+              ((pattern (Lit Int 1))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+             (upper
+              ((pattern (Lit Int 2))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+             (body
+              ((pattern
+                (Block
+                 (((pattern
+                    (NRFunApp (CompilerInternal FnWriteParam)
+                     (((pattern
+                        (Indexed
+                         ((pattern (Var tp_complex_array))
+                          (meta
+                           ((type_ (UArray UComplex)) (loc <opaque>)
+                            (adlevel DataOnly))))
+                         ((Single
+                           ((pattern (Var sym1__))
+                            (meta
+                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                       (meta
+                        ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta <opaque>)))))
+               (meta <opaque>)))))
+           (meta <opaque>))
+          ((pattern
+            (For (loopvar sym1__)
+             (lower
+              ((pattern (Lit Int 1))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+             (upper
+              ((pattern (Lit Int 3))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+             (body
+              ((pattern
+                (Block
+                 (((pattern
+                    (For (loopvar sym2__)
+                     (lower
+                      ((pattern (Lit Int 1))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                     (upper
+                      ((pattern (Lit Int 2))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                     (body
+                      ((pattern
+                        (Block
+                         (((pattern
+                            (NRFunApp (CompilerInternal FnWriteParam)
+                             (((pattern
+                                (Indexed
+                                 ((pattern (Var tp_complex_array_2d))
+                                  (meta
+                                   ((type_ (UArray (UArray UComplex)))
+                                    (loc <opaque>) (adlevel DataOnly))))
+                                 ((Single
+                                   ((pattern (Var sym2__))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>)
+                                      (adlevel DataOnly)))))
+                                  (Single
+                                   ((pattern (Var sym1__))
+                                    (meta
+                                     ((type_ UInt) (loc <opaque>)
+                                      (adlevel DataOnly))))))))
+                               (meta
+                                ((type_ UComplex) (loc <opaque>)
+                                 (adlevel DataOnly)))))))
+                           (meta <opaque>)))))
+                       (meta <opaque>)))))
+                   (meta <opaque>)))))
+               (meta <opaque>)))))
+           (meta <opaque>)))))
+       (meta <opaque>))
+      ()))
+    (meta <opaque>))
+   ((pattern
+     (IfElse
+      ((pattern
+        (FunApp (StanLib PNot__ FnPlain)
+         (((pattern (Var emit_generated_quantities__))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+      ((pattern (Block (((pattern (Return ())) (meta <opaque>)))))
+       (meta <opaque>))
+      ()))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id gq_i) (decl_type (Sized SInt))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_i UInt ())
+      ((pattern (Lit Int 1))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id gq_r) (decl_type (Sized SReal))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_r UReal ())
+      ((pattern (Lit Real 1.1))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id gq_complex)
+      (decl_type (Sized SComplex))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id gq_complex_array)
+      (decl_type
+       (Sized
+        (SArray SComplex
+         ((pattern (Lit Int 2))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id gq_complex_array_2d)
+      (decl_type
+       (Sized
+        (SArray
+         (SArray SComplex
+          ((pattern (Lit Int 3))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+         ((pattern (Lit Int 2))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_complex UComplex ())
+      ((pattern (Var gq_i))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_complex UComplex ())
+      ((pattern (Var gq_r))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_complex UComplex ())
+      ((pattern (Lit Int 1))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_complex UComplex ())
+      ((pattern (Lit Real 1.1))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_complex UComplex ())
+      ((pattern (Var d_complex))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_complex UComplex ())
+      ((pattern
+        (Indexed
+         ((pattern (Var d_complex_array))
+          (meta
+           ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))
+         ((Single
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_complex UComplex ())
+      ((pattern (FunApp (StanLib to_complex FnPlain) ()))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_complex UComplex ())
+      ((pattern
+        (FunApp (StanLib to_complex FnPlain)
+         (((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_complex UComplex ())
+      ((pattern
+        (FunApp (StanLib to_complex FnPlain)
+         (((pattern (Lit Real 1.2))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_complex UComplex ())
+      ((pattern
+        (FunApp (StanLib to_complex FnPlain)
+         (((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 2))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_complex UComplex ())
+      ((pattern
+        (FunApp (StanLib to_complex FnPlain)
+         (((pattern (Lit Real 1.1))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 2))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_complex UComplex ())
+      ((pattern
+        (FunApp (StanLib to_complex FnPlain)
+         (((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Real 2.2))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_complex UComplex ())
+      ((pattern
+        (FunApp (StanLib to_complex FnPlain)
+         (((pattern (Lit Real 1.1))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Real 2.2))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_complex_array (UArray UComplex) ())
+      ((pattern (Var d_complex_array))
+       (meta ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_complex_array (UArray UComplex) ())
+      ((pattern
+        (FunApp (CompilerInternal FnMakeArray)
+         (((pattern (Var gq_complex))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern
+            (FunApp (StanLib to_complex FnPlain)
+             (((pattern (Lit Int 2))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern (Lit Int 3))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment
+      (gq_complex_array (UArray UComplex)
+       ((Single
+         ((pattern (Lit Int 1))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      ((pattern
+        (FunApp (StanLib to_complex FnPlain)
+         (((pattern (Lit Real 5.1))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 6))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_complex_array_2d (UArray (UArray UComplex)) ())
+      ((pattern (Var d_complex_array_2d))
+       (meta
+        ((type_ (UArray (UArray UComplex))) (loc <opaque>)
+         (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_complex_array_2d (UArray (UArray UComplex)) ())
+      ((pattern
+        (FunApp (CompilerInternal FnMakeArray)
+         (((pattern
+            (FunApp (CompilerInternal FnMakeArray)
+             (((pattern (Lit Int 1))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern (Var gq_complex))
+               (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern (Lit Int 3))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta
+            ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern
+            (FunApp (CompilerInternal FnMakeArray)
+             (((pattern (FunApp (StanLib to_complex FnPlain) ()))
+               (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern
+                (FunApp (StanLib to_complex FnPlain)
+                 (((pattern (Lit Real 1.1))
+                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+               (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern
+                (FunApp (StanLib to_complex FnPlain)
+                 (((pattern (Lit Int 1))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                  ((pattern (Lit Real 2.1))
+                   (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+               (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta
+            ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta
+        ((type_ (UArray (UArray UComplex))) (loc <opaque>)
+         (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment
+      (gq_complex_array_2d (UArray (UArray UComplex))
+       ((Single
+         ((pattern (Lit Int 1))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+        (Single
+         ((pattern (Lit Int 1))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      ((pattern
+        (FunApp (StanLib to_complex FnPlain)
+         (((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Int 2))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment
+      (gq_complex_array_2d (UArray (UArray UComplex))
+       ((Single
+         ((pattern (Lit Int 1))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      ((pattern (Var gq_complex_array))
+       (meta ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment
+      (gq_complex_array_2d (UArray (UArray UComplex))
+       ((Single
+         ((pattern (Lit Int 1))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      ((pattern
+        (FunApp (CompilerInternal FnMakeArray)
+         (((pattern (Var gq_complex))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern
+            (FunApp (StanLib to_complex FnPlain)
+             (((pattern (Lit Int 1))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern (Lit Int 2))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Lit Real 2.4))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_r UReal ())
+      ((pattern
+        (FunApp (StanLib get_real FnPlain)
+         (((pattern (Var gq_complex))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_r UReal ())
+      ((pattern
+        (FunApp (StanLib get_imag FnPlain)
+         (((pattern (Var gq_complex))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_r UReal ())
+      ((pattern
+        (FunApp (StanLib get_real FnPlain)
+         (((pattern
+            (Indexed
+             ((pattern (Var gq_complex_array))
+              (meta
+               ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))
+             ((Single
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_r UReal ())
+      ((pattern
+        (FunApp (StanLib get_imag FnPlain)
+         (((pattern
+            (Indexed
+             ((pattern (Var gq_complex_array))
+              (meta
+               ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))
+             ((Single
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_complex UComplex ())
+      ((pattern (FunApp (UserDefined foo FnPlain) ()))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_r UReal ())
+      ((pattern
+        (FunApp (UserDefined foo1 FnPlain)
+         (((pattern (Var gq_complex))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_complex UComplex ())
+      ((pattern
+        (FunApp (UserDefined foo2 FnPlain)
+         (((pattern (Var gq_r))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_complex UComplex ())
+      ((pattern
+        (FunApp (UserDefined foo3 FnPlain)
+         (((pattern (Var gq_complex))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_complex_array (UArray UComplex) ())
+      ((pattern (FunApp (UserDefined foo4 FnPlain) ()))
+       (meta ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_r UReal ())
+      ((pattern
+        (FunApp (UserDefined foo5 FnPlain)
+         (((pattern (Var gq_complex_array))
+           (meta
+            ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_complex_array (UArray UComplex) ())
+      ((pattern
+        (FunApp (UserDefined foo6 FnPlain)
+         (((pattern (Var gq_r))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_complex_array (UArray UComplex) ())
+      ((pattern
+        (FunApp (UserDefined foo7 FnPlain)
+         (((pattern (Var gq_complex_array))
+           (meta
+            ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_i UInt ())
+      ((pattern
+        (FunApp (StanLib Equals__ FnPlain)
+         (((pattern (Var gq_complex))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern (Var gq_complex))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_i UInt ())
+      ((pattern
+        (FunApp (StanLib Equals__ FnPlain)
+         (((pattern
+            (Indexed
+             ((pattern (Var gq_complex_array))
+              (meta
+               ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))
+             ((Single
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern
+            (Indexed
+             ((pattern (Var gq_complex_array))
+              (meta
+               ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))
+             ((Single
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_i UInt ())
+      ((pattern
+        (FunApp (StanLib Equals__ FnPlain)
+         (((pattern
+            (Indexed
+             ((pattern (Var gq_complex_array_2d))
+              (meta
+               ((type_ (UArray (UArray UComplex))) (loc <opaque>)
+                (adlevel DataOnly))))
+             ((Single
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (Single
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern
+            (Indexed
+             ((pattern (Var gq_complex_array))
+              (meta
+               ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))
+             ((Single
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (gq_i UInt ())
+      ((pattern
+        (FunApp (StanLib Equals__ FnPlain)
+         (((pattern
+            (Indexed
+             ((pattern (Var gq_complex_array_2d))
+              (meta
+               ((type_ (UArray (UArray UComplex))) (loc <opaque>)
+                (adlevel DataOnly))))
+             ((Single
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (Single
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))
+          ((pattern
+            (Indexed
+             ((pattern (Var gq_complex_array_2d))
+              (meta
+               ((type_ (UArray (UArray UComplex))) (loc <opaque>)
+                (adlevel DataOnly))))
+             ((Single
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (Single
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+           (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp (CompilerInternal FnWriteParam)
+      (((pattern (Var gq_i))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp (CompilerInternal FnWriteParam)
+      (((pattern (Var gq_r))
+        (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp (CompilerInternal FnWriteParam)
+      (((pattern (Var gq_complex))
+        (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar sym1__)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Lit Int 2))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (NRFunApp (CompilerInternal FnWriteParam)
+              (((pattern
+                 (Indexed
+                  ((pattern (Var gq_complex_array))
+                   (meta
+                    ((type_ (UArray UComplex)) (loc <opaque>)
+                     (adlevel DataOnly))))
+                  ((Single
+                    ((pattern (Var sym1__))
+                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar sym1__)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Lit Int 3))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (For (loopvar sym2__)
+              (lower
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (upper
+               ((pattern (Lit Int 2))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (body
+               ((pattern
+                 (Block
+                  (((pattern
+                     (NRFunApp (CompilerInternal FnWriteParam)
+                      (((pattern
+                         (Indexed
+                          ((pattern (Var gq_complex_array_2d))
+                           (meta
+                            ((type_ (UArray (UArray UComplex)))
+                             (loc <opaque>) (adlevel DataOnly))))
+                          ((Single
+                            ((pattern (Var sym2__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly)))))
+                           (Single
+                            ((pattern (Var sym1__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))))))
+                        (meta
+                         ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))))
+ (transform_inits
+  (((pattern
+     (Decl (decl_adtype DataOnly) (decl_id pos__) (decl_type (Sized SInt))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (pos__ UInt ())
+      ((pattern (Lit Int 1))
+       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id p_complex)
+      (decl_type (Sized SComplex))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment (p_complex UComplex ())
+      ((pattern
+        (Indexed
+         ((pattern
+           (FunApp (CompilerInternal FnReadData)
+            (((pattern (Lit Str p_complex))
+              (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+          (meta
+           ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))
+         ((Single
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+       (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id p_complex_array)
+      (decl_type
+       (Sized
+        (SArray SComplex
+         ((pattern (Lit Int 2))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id p_complex_array_flat__)
+          (decl_type (Unsized (UArray UComplex)))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (p_complex_array_flat__ (UArray UComplex) ())
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str p_complex_array))
+               (meta
+                ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta
+            ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (pos__ UInt ())
+          ((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Lit Int 2))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (Assignment
+                  (p_complex_array (UArray UComplex)
+                   ((Single
+                     ((pattern (Var sym1__))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  ((pattern
+                    (Indexed
+                     ((pattern (Var p_complex_array_flat__))
+                      (meta
+                       ((type_ (UArray UComplex)) (loc <opaque>)
+                        (adlevel DataOnly))))
+                     ((Single
+                       ((pattern (Var pos__))
+                        (meta
+                         ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                   (meta
+                    ((type_ UComplex) (loc <opaque>) (adlevel DataOnly))))))
+                (meta <opaque>))
+               ((pattern
+                 (Assignment (pos__ UInt ())
+                  ((pattern
+                    (FunApp (StanLib Plus__ FnPlain)
+                     (((pattern (Var pos__))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                      ((pattern (Lit Int 1))
+                       (meta
+                        ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id p_complex_array_2d)
+      (decl_type
+       (Sized
+        (SArray
+         (SArray SComplex
+          ((pattern (Lit Int 3))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+         ((pattern (Lit Int 2))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+    (meta <opaque>))
+   ((pattern
+     (Block
+      (((pattern
+         (Decl (decl_adtype AutoDiffable) (decl_id p_complex_array_2d_flat__)
+          (decl_type (Unsized (UArray UComplex)))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (p_complex_array_2d_flat__ (UArray UComplex) ())
+          ((pattern
+            (FunApp (CompilerInternal FnReadData)
+             (((pattern (Lit Str p_complex_array_2d))
+               (meta
+                ((type_ (UArray (UArray UComplex))) (loc <opaque>)
+                 (adlevel DataOnly)))))))
+           (meta
+            ((type_ (UArray UComplex)) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (Assignment (pos__ UInt ())
+          ((pattern (Lit Int 1))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+        (meta <opaque>))
+       ((pattern
+         (For (loopvar sym1__)
+          (lower
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (upper
+           ((pattern (Lit Int 3))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+          (body
+           ((pattern
+             (Block
+              (((pattern
+                 (For (loopvar sym2__)
+                  (lower
+                   ((pattern (Lit Int 1))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (upper
+                   ((pattern (Lit Int 2))
+                    (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+                  (body
+                   ((pattern
+                     (Block
+                      (((pattern
+                         (Assignment
+                          (p_complex_array_2d (UArray (UArray UComplex))
+                           ((Single
+                             ((pattern (Var sym2__))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly)))))
+                            (Single
+                             ((pattern (Var sym1__))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly)))))))
+                          ((pattern
+                            (Indexed
+                             ((pattern (Var p_complex_array_2d_flat__))
+                              (meta
+                               ((type_ (UArray UComplex)) (loc <opaque>)
+                                (adlevel DataOnly))))
+                             ((Single
+                               ((pattern (Var pos__))
+                                (meta
+                                 ((type_ UInt) (loc <opaque>)
+                                  (adlevel DataOnly))))))))
+                           (meta
+                            ((type_ UComplex) (loc <opaque>)
+                             (adlevel DataOnly))))))
+                        (meta <opaque>))
+                       ((pattern
+                         (Assignment (pos__ UInt ())
+                          ((pattern
+                            (FunApp (StanLib Plus__ FnPlain)
+                             (((pattern (Var pos__))
+                               (meta
+                                ((type_ UInt) (loc <opaque>)
+                                 (adlevel DataOnly))))
+                              ((pattern (Lit Int 1))
+                               (meta
+                                ((type_ UInt) (loc <opaque>)
+                                 (adlevel DataOnly)))))))
+                           (meta
+                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+                        (meta <opaque>)))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp (CompilerInternal FnWriteParam)
+      (((pattern (Var p_complex))
+        (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar sym1__)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Lit Int 2))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (NRFunApp (CompilerInternal FnWriteParam)
+              (((pattern
+                 (Indexed
+                  ((pattern (Var p_complex_array))
+                   (meta
+                    ((type_ (UArray UComplex)) (loc <opaque>)
+                     (adlevel DataOnly))))
+                  ((Single
+                    ((pattern (Var sym1__))
+                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+                (meta ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
+    (meta <opaque>))
+   ((pattern
+     (For (loopvar sym1__)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Lit Int 2))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (For (loopvar sym2__)
+              (lower
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (upper
+               ((pattern (Lit Int 3))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (body
+               ((pattern
+                 (Block
+                  (((pattern
+                     (NRFunApp (CompilerInternal FnWriteParam)
+                      (((pattern
+                         (Indexed
+                          ((pattern (Var p_complex_array_2d))
+                           (meta
+                            ((type_ (UArray (UArray UComplex)))
+                             (loc <opaque>) (adlevel DataOnly))))
+                          ((Single
+                            ((pattern (Var sym1__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly)))))
+                           (Single
+                            ((pattern (Var sym2__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))))))
+                        (meta
+                         ((type_ UComplex) (loc <opaque>) (adlevel DataOnly)))))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
     (meta <opaque>))))
  (output_vars
-  ((p_z
+  ((p_complex
     ((out_unconstrained_st SComplex) (out_constrained_st SComplex)
      (out_block Parameters) (out_trans Identity)))
-   (p_z_ar
+   (p_complex_array
     ((out_unconstrained_st
       (SArray SComplex
-       ((pattern (Lit Int 5))
+       ((pattern (Lit Int 2))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
       (SArray SComplex
-       ((pattern (Lit Int 5))
+       ((pattern (Lit Int 2))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
-   (gq_z_1
+   (p_complex_array_2d
+    ((out_unconstrained_st
+      (SArray
+       (SArray SComplex
+        ((pattern (Lit Int 3))
+         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+       ((pattern (Lit Int 2))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_constrained_st
+      (SArray
+       (SArray SComplex
+        ((pattern (Lit Int 3))
+         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+       ((pattern (Lit Int 2))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_block Parameters) (out_trans Identity)))
+   (tp_r
+    ((out_unconstrained_st SReal) (out_constrained_st SReal)
+     (out_block TransformedParameters) (out_trans Identity)))
+   (tp_complex
     ((out_unconstrained_st SComplex) (out_constrained_st SComplex)
-     (out_block GeneratedQuantities) (out_trans Identity)))
-   (gq_z_2
-    ((out_unconstrained_st SComplex) (out_constrained_st SComplex)
-     (out_block GeneratedQuantities) (out_trans Identity)))
-   (r_1
-    ((out_unconstrained_st SReal) (out_constrained_st SReal)
-     (out_block GeneratedQuantities) (out_trans Identity)))
-   (i_1
-    ((out_unconstrained_st SReal) (out_constrained_st SReal)
-     (out_block GeneratedQuantities) (out_trans Identity)))
-   (i_2
-    ((out_unconstrained_st SInt) (out_constrained_st SInt)
-     (out_block GeneratedQuantities) (out_trans Identity)))
-   (a
-    ((out_unconstrained_st SInt) (out_constrained_st SInt)
-     (out_block GeneratedQuantities) (out_trans Identity)))
-   (b
-    ((out_unconstrained_st SReal) (out_constrained_st SReal)
-     (out_block GeneratedQuantities) (out_trans Identity)))
-   (gq_z_ar
+     (out_block TransformedParameters) (out_trans Identity)))
+   (tp_complex_array
     ((out_unconstrained_st
       (SArray SComplex
-       ((pattern (Lit Int 5))
+       ((pattern (Lit Int 2))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_constrained_st
       (SArray SComplex
-       ((pattern (Lit Int 5))
+       ((pattern (Lit Int 2))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_block TransformedParameters) (out_trans Identity)))
+   (tp_complex_array_2d
+    ((out_unconstrained_st
+      (SArray
+       (SArray SComplex
+        ((pattern (Lit Int 3))
+         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+       ((pattern (Lit Int 2))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_constrained_st
+      (SArray
+       (SArray SComplex
+        ((pattern (Lit Int 3))
+         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+       ((pattern (Lit Int 2))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_block TransformedParameters) (out_trans Identity)))
+   (gq_i
+    ((out_unconstrained_st SInt) (out_constrained_st SInt)
+     (out_block GeneratedQuantities) (out_trans Identity)))
+   (gq_r
+    ((out_unconstrained_st SReal) (out_constrained_st SReal)
+     (out_block GeneratedQuantities) (out_trans Identity)))
+   (gq_complex
+    ((out_unconstrained_st SComplex) (out_constrained_st SComplex)
+     (out_block GeneratedQuantities) (out_trans Identity)))
+   (gq_complex_array
+    ((out_unconstrained_st
+      (SArray SComplex
+       ((pattern (Lit Int 2))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_constrained_st
+      (SArray SComplex
+       ((pattern (Lit Int 2))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_block GeneratedQuantities) (out_trans Identity)))
+   (gq_complex_array_2d
+    ((out_unconstrained_st
+      (SArray
+       (SArray SComplex
+        ((pattern (Lit Int 3))
+         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+       ((pattern (Lit Int 2))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_constrained_st
+      (SArray
+       (SArray SComplex
+        ((pattern (Lit Int 3))
+         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+       ((pattern (Lit Int 2))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block GeneratedQuantities) (out_trans Identity)))))
- (prog_name complex_model) (prog_path complex.stan))
+ (prog_name complex_scalar_model) (prog_path complex_scalar.stan))
