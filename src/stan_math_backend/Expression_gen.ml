@@ -267,7 +267,8 @@ and gen_misc_special_math_app f mem_pattern
         Some
           (fun ppf es ->
             pf ppf "rep_matrix<stan::math::var_value<%a>>(@,%a)"
-              pp_unsizedtype_local (UnsizedType.DataOnly, t) (list ~sep:comma pp_expr) es )
+              pp_unsizedtype_local (UnsizedType.DataOnly, t)
+              (list ~sep:comma pp_expr) es )
     | Some Void -> None
     | None -> None )
   | f when Map.mem fn_renames f ->
