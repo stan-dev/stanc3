@@ -52,7 +52,206 @@ pipeline {
                 }
             }
         }
+        stage("Build") {
+            agent {
+                dockerfile {
+                    filename 'docker/debian/Dockerfile'
+                    //Forces image to ignore entrypoint
+                    args "-u root --entrypoint=\'\'"
+                }
+            }
+            steps {
+                sh 'printenv'
+                runShell("""
+                    eval \$(opam env)
+                    dune build @install
+                """)
+                
+                sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
+                stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
+            }
+            post { always { runShell("rm -rf ./*") }}
+        }
+        stage("Code formatting") {
+            agent {
+                dockerfile {
+                    filename 'docker/debian/Dockerfile'
+                    //Forces image to ignore entrypoint
+                    args "-u root --entrypoint=\'\'"
+                }
+            }
+            steps {
+                sh 'printenv'
+                sh """
+                    eval \$(opam env)
+                    make format  ||
+                    (
+                        set +x &&
+                        echo "The source code was not formatted. Please run 'make format; dune promote' and push the changes." &&
+                        echo "Please consider installing the pre-commit git hook for formatting with the above command." &&
+                        echo "Our hook can be installed with bash ./scripts/hooks/install_hooks.sh" &&
+                        exit 1;
+                    )
+                """
+            }
+            post { always { runShell("rm -rf ./*") }}
+        }
+        stage("OCaml tests") {
+            parallel {
+                stage("Dune tests") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/debian/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u root --entrypoint=\'\'"
+                        }
+                    }
+                    steps {
+                        sh 'printenv'
+                        runShell("""
+                            eval \$(opam env)
+                            dune runtest
+                        """)
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+                stage("TFP tests") {
+                    agent {
+                        docker {
+                            image 'tensorflow/tensorflow@sha256:08901711826b185136886c7b8271b9fdbe86b8ccb598669781a1f5cb340184eb'
+                            args '-u root'
+                        }
+                    }
+                    steps {
+                        sh "pip3 install tfp-nightly==0.11.0.dev20200516"
+                        sh "python3 test/integration/tfp/tests.py"
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+                stage("stancjs tests") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/debian/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u root --entrypoint=\'\'"
+                        }
+                    }
+                    steps {
+                        sh 'printenv'
+                        runShell("""
+                            eval \$(opam env)
+                            dune build @runjstest
+                        """)
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+            }
+        }
+        stage("CmdStan & Math tests") {
+            parallel {
+                stage("Compile tests") {
+                    agent { label 'linux' }
+                    steps {
+                        script {
+                            unstash 'ubuntu-exe'
+                            sh """
+                                git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                            """
 
+                            writeFile(file:"performance-tests-cmdstan/cmdstan/make/local",
+                                    text:"O=0\nCXX=${CXX}")
+                            sh """
+                                cd performance-tests-cmdstan
+                                mkdir cmdstan/bin
+                                cp ../bin/stanc cmdstan/bin/linux-stanc
+                                cd cmdstan; make clean-all; make -j${env.PARALLEL} build; cd ..                                
+                                ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ../test/integration/good
+                                ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 example-models
+                                """
+                        }
+
+                        xunit([GoogleTest(
+                            deleteOutputFiles: false,
+                            failIfNotNew: true,
+                            pattern: 'performance-tests-cmdstan/performance.xml',
+                            skipNoTestFiles: false,
+                            stopProcessingIfError: false)
+                        ])
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+                stage("Model end-to-end tests") {
+                    agent { label 'linux' }
+                    steps {
+                        unstash 'ubuntu-exe'
+                        sh """
+                            git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                        """
+                        sh """
+                            cd performance-tests-cmdstan
+                            git show HEAD --stat
+                            echo "example-models/regression_tests/mother.stan" > all.tests
+                            cat known_good_perf_all.tests >> all.tests
+                            echo "" >> all.tests
+                            cat shotgun_perf_all.tests >> all.tests
+                            cat all.tests
+                            echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
+                            cd cmdstan; make clean-all; git show HEAD --stat; make -j4 build; cd ..
+                            CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
+                        """
+
+                        xunit([GoogleTest(
+                            deleteOutputFiles: false,
+                            failIfNotNew: true,
+                            pattern: 'performance-tests-cmdstan/performance.xml',
+                            skipNoTestFiles: false,
+                            stopProcessingIfError: false)
+                        ])
+
+                        archiveArtifacts 'performance-tests-cmdstan/performance.xml'
+
+                        perfReport modePerformancePerTestCase: true,
+                            sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+                            modeThroughput: false,
+                            excludeResponseTime: true,
+                            errorFailedThreshold: 100,
+                            errorUnstableThreshold: 100
+                    }
+                    post { always { runShell("rm -rf ./*") }}
+                }
+                stage('Math functions expressions test') {
+                    when {
+                        expression {
+                            !skipExpressionTests
+                        }
+                    }
+                    agent any
+                    steps {
+
+                        unstash 'ubuntu-exe'
+
+                        sh """
+                            git clone --recursive https://github.com/stan-dev/math.git
+                            cp bin/stanc math/test/expressions/stanc
+                        """
+
+                        script {
+                            dir("math") {
+                                sh """
+                                    echo O=0 >> make/local
+                                    echo "CXX=${env.CXX} -Werror " >> make/local
+                                """
+                                withEnv(['PATH+TBB=./lib/tbb']) {
+                                    try { sh "./runTests.py -j${env.PARALLEL} test/expressions" }
+                                    finally { junit 'test/**/*.xml' }
+                                }
+                            }
+                        }
+                    }
+                    post { always { deleteDir() } }
+                }
+            }
+        }
         stage("Build and test static release binaries") {
             failFast true
             parallel {
