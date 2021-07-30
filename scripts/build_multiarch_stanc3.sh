@@ -25,6 +25,12 @@ elif [ $1 = "s390x" ]; then
   QEMU_ARCH="s390x"
 fi
 
+curl https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/x86_64/containers-common-0.38.11-r0.apk -o cont.apk
+curl https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/x86_64/skopeo-1.3.1-r0.apk -o skopeo.apk
+
+apk add cont.apk
+apk add skopeo.apk
+
 SHA=$(skopeo inspect --raw docker://andrjohns/stanc3-building:latest | jq '.manifests | .[] | select(.platform.architecture==env.DOCK_ARCH and .platform.variant==(if env.DOCK_VARIANT == "" then null else env.DOCK_VARIANT end)).digest')
 
 # Download QEMU translation binary for desired architecture
