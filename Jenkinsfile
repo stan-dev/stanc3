@@ -142,7 +142,8 @@ pipeline {
                             eval \$(opam env)
                             dune subst
                         """)
-                        sh "sudo apk add docker skopeo jq"
+                        sh "sudo apk add docker jq"
+                        sh "curl https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/x86_64/skopeo-1.3.1-r0.apk | sudo apk add"
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh mips64el"
                         sh "sudo chown -R opam: _build"
                         sh "sudo chown -R opam: src"
@@ -173,7 +174,8 @@ pipeline {
                             eval \$(opam env)
                             dune subst
                         """)
-                        sh "sudo apk add docker skopeo jq"
+                        sh "sudo apk add docker jq"
+                        sh "curl https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/x86_64/skopeo-1.3.1-r0.apk | sudo apk add"
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh ppc64el"
                         sh "sudo chown -R opam: _build"
                         sh "sudo chown -R opam: src"
@@ -204,7 +206,8 @@ pipeline {
                             eval \$(opam env)
                             dune subst
                         """)
-                        sh "sudo apk add docker skopeo jq"
+                        sh "sudo apk add docker jq"
+                        sh "curl https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/x86_64/skopeo-1.3.1-r0.apk | sudo apk add"
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh s390x"
                         sh "sudo chown -R opam: _build"
                         sh "sudo chown -R opam: src"
@@ -235,7 +238,8 @@ pipeline {
                             eval \$(opam env)
                             dune subst
                         """)
-                        sh "sudo apk add docker skopeo jq"
+                        sh "sudo apk add docker jq"
+                        sh "curl https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/x86_64/skopeo-1.3.1-r0.apk | sudo apk add"
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh arm64"
                         sh "sudo chown -R opam: _build"
                         sh "sudo chown -R opam: src"
@@ -266,7 +270,8 @@ pipeline {
                             eval \$(opam env)
                             dune subst
                         """)
-                        sh "sudo apk add docker skopeo jq"
+                        sh "sudo apk add docker jq"
+                        sh "curl https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/x86_64/skopeo-1.3.1-r0.apk | sudo apk add"
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh armhf"
                         sh "sudo chown -R opam: _build"
                         sh "sudo chown -R opam: src"
@@ -297,7 +302,8 @@ pipeline {
                             eval \$(opam env)
                             dune subst
                         """)
-                        sh "sudo apk add docker skopeo jq"
+                        sh "sudo apk add docker jq"
+                        sh "curl https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/x86_64/skopeo-1.3.1-r0.apk | sudo apk add"
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh armel"
                         sh "sudo chown -R opam: _build"
                         sh "sudo chown -R opam: src"
