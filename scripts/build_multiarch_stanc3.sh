@@ -31,7 +31,7 @@ curl https://dl-cdn.alpinelinux.org/alpine/latest-stable/community/x86_64/skopeo
 apk add cont.apk
 apk add skopeo.apk
 
-SHA=$(skopeo inspect --raw docker://andrjohns/stanc3-building:latest | jq '.manifests | .[] | select(.platform.architecture==env.DOCK_ARCH and .platform.variant==(if env.DOCK_VARIANT == "" then null else env.DOCK_VARIANT end)).digest')
+SHA=$(skopeo inspect --raw docker://andrjohns/stanc3-building:latest | jq '.manifests | .[] | select(.platform.architecture==env.DOCK_ARCH and .platform.variant==(if env.DOCK_VARIANT == "" then null else env.DOCK_VARIANT end)).digest' | tr -d '"')
 
 # Download QEMU translation binary for desired architecture
 docker create --name dummy multiarch/qemu-user-static:x86_64-$QEMU_ARCH bash
@@ -44,3 +44,6 @@ docker run --rm --privileged multiarch/qemu-user-static --reset
 # Run docker, inheriting mounted volumes from sibling container (including stanc3 directory)
 docker run --volumes-from=$(docker ps -q):rw -v $(pwd)/qemu-$QEMU_ARCH-static:/usr/bin/qemu-$QEMU_ARCH-static andrjohns/stanc3-building:latest@$SHA /bin/bash -c "cd $(pwd) && eval \$(opam env) && dune build @install --profile static"
 
+chown -R opam: _build
+chown -R opam: src
+chown -R opam: test
