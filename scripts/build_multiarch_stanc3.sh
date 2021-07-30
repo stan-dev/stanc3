@@ -25,7 +25,7 @@ elif [ $1 = "s390x" ]; then
   QEMU_ARCH="s390x"
 fi
 
-SHA=$(docker manifest inspect andrjohns/stanc3-building:latest | jq '.manifests | .[] | select(.platform.architecture==env.DOCK_ARCH and .platform.variant==(if env.DOCK_VARIANT == "" then null else env.DOCK_VARIANT end)).digest')
+SHA=$(skopeo inspect --raw docker://andrjohns/stanc3-building:latest | jq '.manifests | .[] | select(.platform.architecture==env.DOCK_ARCH and .platform.variant==(if env.DOCK_VARIANT == "" then null else env.DOCK_VARIANT end)).digest')
 
 # Download QEMU translation binary for desired architecture
 docker create --name dummy multiarch/qemu-user-static:x86_64-$QEMU_ARCH bash
