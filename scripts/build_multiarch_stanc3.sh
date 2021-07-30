@@ -30,9 +30,9 @@ docker rm -f dummy
 docker run --rm --privileged multiarch/qemu-user-static --reset
 
 # Run docker, inheriting mounted volumes from sibling container (including stanc3 directory)
-docker run --volumes-from=$(docker ps -q):rw \
+docker run --volumes-from=$(docker ps -q):rw \\
            # Mount downloaded QEMU binary in container
-           -v $(pwd)/qemu-$ARCH-static:/usr/bin/qemu-$ARCH-static \
-           andrjohns/stanc3-building:latest@$SHA \
+           -v $(pwd)/qemu-$ARCH-static:/usr/bin/qemu-$ARCH-static \\
+           andrjohns/stanc3-building:latest@$SHA \\
            /bin/bash -c "cd $(pwd) && eval \$(opam env) && dune build @install --profile static"
 
