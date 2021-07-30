@@ -35,7 +35,7 @@ parameters {
   // Because of multi index assign
   vector[M] p_aos_fail_assign_from_top_idx;
   matrix[N,M] p_aos_loop_mat_uni_uni_idx;
-  matrix[N,M] p_aos_loop_mat_multi_uni_uni_idx;
+  matrix[N,M] p_soa_loop_mat_multi_uni_uni_idx;
   // Because used in sub-function that supports 
   // SoA but outer function does not
   matrix[N, M] p_aos_mat;
@@ -84,7 +84,7 @@ model {
     y ~ normal(multiply(dat_x, p_soa_loop_mat_uni_col_idx[i,]'), 1.0);
     y ~ normal(multiply(dat_x, p_soa_loop_mat_uni_col_idx[1:N, 1]), 1.0);
     y ~ normal(multiply(dat_x, p_soa_loop_mat_uni_col_idx[i]'), 1.0);
-    y ~ normal(multiply(dat_x, p_aos_loop_mat_multi_uni_uni_idx[idx_tester[i],]'), 1.0);
+    y ~ normal(multiply(dat_x, p_soa_loop_mat_multi_uni_uni_idx[idx_tester[i],]'), 1.0);
   }
   // SHOULD NOT BE SOA
   vector[N] tp_aos_loop_vec_v_uni_idx;

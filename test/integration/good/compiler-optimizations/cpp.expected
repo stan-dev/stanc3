@@ -8088,7 +8088,6 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       double lcm_sym36__;
       Eigen::Matrix<double, -1, 1> lcm_sym35__;
       double lcm_sym34__;
-      int lcm_sym33__;
       int lcm_sym39__;
       local_scalar_t__ tau_phi = DUMMY_VAR__;
       
@@ -8099,9 +8098,9 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
                                                              (N - 1), DUMMY_VAR__);
                                                            
       
-      current_statement__ = 2;
+      lcm_sym39__ = (N - 1);
       phi_std_raw = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
-                      (N - 1));
+                      lcm_sym39__);
       local_scalar_t__ sigma_phi = DUMMY_VAR__;
       
       lcm_sym38__ = inv_sqrt(tau_phi);
@@ -8111,7 +8110,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       
       current_statement__ = 5;
       assign(phi, phi_std_raw,
-        "assigning variable phi", index_min_max(1, (N - 1)));
+        "assigning variable phi", index_min_max(1, lcm_sym39__));
       current_statement__ = 6;
       assign(phi, -sum(phi_std_raw), "assigning variable phi", index_uni(N));
       current_statement__ = 7;
@@ -27234,10 +27233,10 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       double lcm_sym36__;
       double lcm_sym35__;
       double lcm_sym34__;
-      double lcm_sym33__;
-      double lcm_sym32__;
-      Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym31__;
-      Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym30__;
+      Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym33__;
+      Eigen::Matrix<local_scalar_t__, -1, 1> lcm_sym32__;
+      double lcm_sym31__;
+      double lcm_sym30__;
       int lcm_sym29__;
       local_scalar_t__ beta = DUMMY_VAR__;
       
@@ -27285,37 +27284,37 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       Eigen::Matrix<local_scalar_t__, -1, 1> y_hat = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
                                                      
       
-      assign(lcm_sym30__,
+      assign(lcm_sym32__,
         stan::math::fma(10, mu_a1, multiply(sigma_a1, eta1)),
-        "assigning variable lcm_sym30__");
-      assign(a1, lcm_sym30__, "assigning variable a1");
-      assign(lcm_sym31__,
+        "assigning variable lcm_sym32__");
+      assign(a1, lcm_sym32__, "assigning variable a1");
+      assign(lcm_sym33__,
         stan::math::fma(0.1, mu_a2, multiply(sigma_a2, eta2)),
-        "assigning variable lcm_sym31__");
-      assign(a2, lcm_sym31__, "assigning variable a2");
+        "assigning variable lcm_sym33__");
+      assign(a2, lcm_sym33__, "assigning variable a2");
       current_statement__ = 13;
       if (logical_gte(N, 1)) {
         current_statement__ = 12;
         assign(y_hat,
           stan::math::fma(
-            rvalue(lcm_sym31__, "lcm_sym31__",
+            rvalue(lcm_sym33__, "lcm_sym33__",
               index_uni(rvalue(person, "person", index_uni(1)))),
             rvalue(time, "time", index_uni(1)),
             stan::math::fma((beta * rvalue(time, "time", index_uni(1))),
               rvalue(treatment, "treatment", index_uni(1)),
-              rvalue(lcm_sym30__, "lcm_sym30__",
+              rvalue(lcm_sym32__, "lcm_sym32__",
                 index_uni(rvalue(person, "person", index_uni(1)))))),
           "assigning variable y_hat", index_uni(1));
         for (int i = 2; i <= N; ++i) {
           current_statement__ = 12;
           assign(y_hat,
             stan::math::fma(
-              rvalue(lcm_sym31__, "lcm_sym31__",
+              rvalue(lcm_sym33__, "lcm_sym33__",
                 index_uni(rvalue(person, "person", index_uni(i)))),
               rvalue(time, "time", index_uni(i)),
               stan::math::fma((beta * rvalue(time, "time", index_uni(i))),
                 rvalue(treatment, "treatment", index_uni(i)),
-                rvalue(lcm_sym30__, "lcm_sym30__",
+                rvalue(lcm_sym32__, "lcm_sym32__",
                   index_uni(rvalue(person, "person", index_uni(i)))))),
             "assigning variable y_hat", index_uni(i));
         }

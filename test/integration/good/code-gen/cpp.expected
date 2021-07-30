@@ -1575,9 +1575,9 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       current_statement__ = 92;
       validate_non_negative_index("p_aos_loop_mat_uni_uni_idx", "M", M);
       current_statement__ = 93;
-      validate_non_negative_index("p_aos_loop_mat_multi_uni_uni_idx", "N", N);
+      validate_non_negative_index("p_soa_loop_mat_multi_uni_uni_idx", "N", N);
       current_statement__ = 94;
-      validate_non_negative_index("p_aos_loop_mat_multi_uni_uni_idx", "M", M);
+      validate_non_negative_index("p_soa_loop_mat_multi_uni_uni_idx", "M", M);
       current_statement__ = 95;
       validate_non_negative_index("p_aos_mat", "N", N);
       current_statement__ = 96;
@@ -1732,11 +1732,12 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       current_statement__ = 16;
       p_aos_loop_mat_uni_uni_idx = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                                      N, M);
-      Eigen::Matrix<local_scalar_t__, -1, -1> p_aos_loop_mat_multi_uni_uni_idx = 
-      Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(N, M, DUMMY_VAR__);
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> p_soa_loop_mat_multi_uni_uni_idx = 
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>(Eigen::Matrix<double, -1, -1>::Constant(N, M, std::numeric_limits<double>::quiet_NaN()));
+      
       
       current_statement__ = 17;
-      p_aos_loop_mat_multi_uni_uni_idx = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+      p_soa_loop_mat_multi_uni_uni_idx = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
                                            N, M);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_aos_mat = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(N, M, DUMMY_VAR__);
                                                           
@@ -1785,8 +1786,9 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       current_statement__ = 25;
       assign(tp_soa_rep_matrix_mat, rep_matrix(p_soa_rep_matrix_vec, 10),
         "assigning variable tp_soa_rep_matrix_mat");
-      Eigen::Matrix<local_scalar_t__, -1, -1> tp_soa_rep_matrix_from_data_mat = 
-      Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(N, 10, DUMMY_VAR__);
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> tp_soa_rep_matrix_from_data_mat = 
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>(Eigen::Matrix<double, -1, -1>::Constant(N, 10, std::numeric_limits<double>::quiet_NaN()));
+      
       
       current_statement__ = 26;
       assign(tp_soa_rep_matrix_from_data_mat, rep_matrix(y, 10),
@@ -1921,8 +1923,8 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
             normal_lpdf<propto__>(y,
               multiply(dat_x,
                 transpose(
-                  rvalue(p_aos_loop_mat_multi_uni_uni_idx,
-                    "p_aos_loop_mat_multi_uni_uni_idx",
+                  rvalue(p_soa_loop_mat_multi_uni_uni_idx,
+                    "p_soa_loop_mat_multi_uni_uni_idx",
                     index_uni(rvalue(idx_tester, "idx_tester", index_uni(i))),
                       index_omni()))), 1.0));
         }
@@ -2105,12 +2107,12 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       current_statement__ = 16;
       p_aos_loop_mat_uni_uni_idx = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                                      N, M);
-      Eigen::Matrix<double, -1, -1> p_aos_loop_mat_multi_uni_uni_idx = 
+      Eigen::Matrix<double, -1, -1> p_soa_loop_mat_multi_uni_uni_idx = 
       Eigen::Matrix<double, -1, -1>::Constant(N, M, std::numeric_limits<double>::quiet_NaN());
       
       
       current_statement__ = 17;
-      p_aos_loop_mat_multi_uni_uni_idx = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+      p_soa_loop_mat_multi_uni_uni_idx = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                                            N, M);
       Eigen::Matrix<double, -1, -1> p_aos_mat = Eigen::Matrix<double, -1, -1>::Constant(N, M, std::numeric_limits<double>::quiet_NaN());
                                                 
@@ -2219,8 +2221,8 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.emplace_back(
-            rvalue(p_aos_loop_mat_multi_uni_uni_idx,
-              "p_aos_loop_mat_multi_uni_uni_idx",
+            rvalue(p_soa_loop_mat_multi_uni_uni_idx,
+              "p_soa_loop_mat_multi_uni_uni_idx",
               index_uni(sym2__), index_uni(sym1__)));
         }
       }
@@ -2631,14 +2633,14 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
           }
         }
       }
-      Eigen::Matrix<double, -1, -1> p_aos_loop_mat_multi_uni_uni_idx = 
+      Eigen::Matrix<double, -1, -1> p_soa_loop_mat_multi_uni_uni_idx = 
       Eigen::Matrix<double, -1, -1>::Constant(N, M, std::numeric_limits<double>::quiet_NaN());
       
       
       {
-        std::vector<local_scalar_t__> p_aos_loop_mat_multi_uni_uni_idx_flat__;
+        std::vector<local_scalar_t__> p_soa_loop_mat_multi_uni_uni_idx_flat__;
         current_statement__ = 17;
-        p_aos_loop_mat_multi_uni_uni_idx_flat__ = context__.vals_r("p_aos_loop_mat_multi_uni_uni_idx");
+        p_soa_loop_mat_multi_uni_uni_idx_flat__ = context__.vals_r("p_soa_loop_mat_multi_uni_uni_idx");
         current_statement__ = 17;
         pos__ = 1;
         current_statement__ = 17;
@@ -2646,9 +2648,9 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
           current_statement__ = 17;
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             current_statement__ = 17;
-            assign(p_aos_loop_mat_multi_uni_uni_idx,
-              p_aos_loop_mat_multi_uni_uni_idx_flat__[(pos__ - 1)],
-              "assigning variable p_aos_loop_mat_multi_uni_uni_idx", 
+            assign(p_soa_loop_mat_multi_uni_uni_idx,
+              p_soa_loop_mat_multi_uni_uni_idx_flat__[(pos__ - 1)],
+              "assigning variable p_soa_loop_mat_multi_uni_uni_idx", 
               index_uni(sym2__), index_uni(sym1__));
             current_statement__ = 17;
             pos__ = (pos__ + 1);
@@ -2793,8 +2795,8 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           vars__.emplace_back(
-            rvalue(p_aos_loop_mat_multi_uni_uni_idx,
-              "p_aos_loop_mat_multi_uni_uni_idx",
+            rvalue(p_soa_loop_mat_multi_uni_uni_idx,
+              "p_soa_loop_mat_multi_uni_uni_idx",
               index_uni(sym2__), index_uni(sym1__)));
         }
       }
@@ -2837,7 +2839,7 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       "p_soa_rep_matrix_vec", "p_aos_vec_v_assign_to_aos",
       "p_aos_vec_v_tp_fails_func", "p_aos_loop_vec_v_uni_idx",
       "p_aos_fail_assign_from_top_idx", "p_aos_loop_mat_uni_uni_idx",
-      "p_aos_loop_mat_multi_uni_uni_idx", "p_aos_mat",
+      "p_soa_loop_mat_multi_uni_uni_idx", "p_aos_mat",
       "p_aos_mat_fail_func_uni_uni_idx1", "p_aos_mat_fail_func_uni_uni_idx2",
       "tp_real_from_aos", "tp_aos_vec_v", "tp_aos_fail_func_vec_v",
       "tp_aos_fail_assign_from_top_idx", "tp_soa_rep_matrix_mat",
@@ -2981,7 +2983,7 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           {
-            param_names__.emplace_back(std::string() + "p_aos_loop_mat_multi_uni_uni_idx" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            param_names__.emplace_back(std::string() + "p_soa_loop_mat_multi_uni_uni_idx" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
           } 
         }
       } 
@@ -3162,7 +3164,7 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           {
-            param_names__.emplace_back(std::string() + "p_aos_loop_mat_multi_uni_uni_idx" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
+            param_names__.emplace_back(std::string() + "p_soa_loop_mat_multi_uni_uni_idx" + '.' + std::to_string(sym2__) + '.' + std::to_string(sym1__));
           } 
         }
       } 
@@ -3239,13 +3241,13 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
     
   inline std::string get_constrained_sizedtypes() const {
     
-    return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_soa_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_arr_vec_v\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"p_soa_mat_uni_col_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_vec_uni_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_loop_mat_uni_col_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_lhs_loop_mul\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_rhs_loop_mul\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_used_with_aos_in_excluded_fun\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_rep_matrix_vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_vec_v_assign_to_aos\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_vec_v_tp_fails_func\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_vec_v_uni_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_fail_assign_from_top_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_mat_uni_uni_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_mat_multi_uni_uni_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat_fail_func_uni_uni_idx1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat_fail_func_uni_uni_idx2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"tp_real_from_aos\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_fail_func_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_fail_assign_from_top_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_soa_rep_matrix_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_soa_rep_matrix_from_data_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_soa_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_arr_vec_v\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"p_soa_mat_uni_col_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_vec_uni_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_loop_mat_uni_col_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_lhs_loop_mul\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_rhs_loop_mul\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_used_with_aos_in_excluded_fun\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_rep_matrix_vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_vec_v_assign_to_aos\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_vec_v_tp_fails_func\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_vec_v_uni_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_fail_assign_from_top_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_mat_uni_uni_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_loop_mat_multi_uni_uni_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat_fail_func_uni_uni_idx1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat_fail_func_uni_uni_idx2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"tp_real_from_aos\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_fail_func_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_fail_assign_from_top_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_soa_rep_matrix_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_soa_rep_matrix_from_data_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
     
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
     
-    return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_soa_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_arr_vec_v\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"p_soa_mat_uni_col_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_vec_uni_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_loop_mat_uni_col_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_lhs_loop_mul\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_rhs_loop_mul\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_used_with_aos_in_excluded_fun\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_rep_matrix_vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_vec_v_assign_to_aos\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_vec_v_tp_fails_func\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_vec_v_uni_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_fail_assign_from_top_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_mat_uni_uni_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_mat_multi_uni_uni_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat_fail_func_uni_uni_idx1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat_fail_func_uni_uni_idx2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"tp_real_from_aos\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_fail_func_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_fail_assign_from_top_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_soa_rep_matrix_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_soa_rep_matrix_from_data_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"alpha\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_soa_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_arr_vec_v\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(10) + ",\"element_type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "}},\"block\":\"parameters\"},{\"name\":\"p_soa_mat_uni_col_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_vec_uni_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_loop_mat_uni_col_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_lhs_loop_mul\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_rhs_loop_mul\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_used_with_aos_in_excluded_fun\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_rep_matrix_vec\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_vec_v_assign_to_aos\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_vec_v_tp_fails_func\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_vec_v_uni_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_fail_assign_from_top_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_loop_mat_uni_uni_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_soa_loop_mat_multi_uni_uni_idx\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat_fail_func_uni_uni_idx1\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"p_aos_mat_fail_func_uni_uni_idx2\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(M) + "},\"block\":\"parameters\"},{\"name\":\"tp_real_from_aos\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_fail_func_vec_v\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_aos_fail_assign_from_top_idx\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(M) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_soa_rep_matrix_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"},{\"name\":\"tp_soa_rep_matrix_from_data_mat\",\"type\":{\"name\":\"matrix\",\"rows\":" + std::to_string(N) + ",\"cols\":" + std::to_string(10) + "},\"block\":\"transformed_parameters\"}]");
     
     } // get_unconstrained_sizedtypes() 
     

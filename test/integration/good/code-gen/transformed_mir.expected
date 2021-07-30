@@ -11189,7 +11189,7 @@
     (meta <opaque>))
    ((pattern
      (Assignment (p_real UReal ())
-      ((pattern (FunApp (CompilerInternal (FnReadParam () AoS)) ()))
+      ((pattern (FunApp (CompilerInternal (FnReadParam () SoA)) ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -11300,7 +11300,7 @@
    ((pattern
      (Assignment (p_real_1d_ar (UArray UReal) ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam (lb) AoS))
+        (FunApp (CompilerInternal (FnReadParam (lb) SoA))
          (((pattern (Lit Int 0))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
           ((pattern (Var lp__))
@@ -12933,7 +12933,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
              (((pattern (Var offset_multiplier))
                (meta
                 ((type_ (UArray UReal)) (loc <opaque>)
@@ -12947,7 +12947,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
              (((pattern (Var no_offset_multiplier))
                (meta
                 ((type_ (UArray UReal)) (loc <opaque>)
@@ -12961,7 +12961,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
              (((pattern (Var offset_no_multiplier))
                (meta
                 ((type_ (UArray UReal)) (loc <opaque>)
@@ -13124,7 +13124,7 @@
                                  (TargetPE
                                   ((pattern
                                     (FunApp
-                                     (StanLib normal_lpdf (FnLpdf true) SoA)
+                                     (StanLib normal_lpdf (FnLpdf true) AoS)
                                      (((pattern
                                         (FunApp
                                          (StanLib to_vector FnPlain AoS)
@@ -13197,7 +13197,7 @@
                                  (TargetPE
                                   ((pattern
                                     (FunApp
-                                     (StanLib normal_lpdf (FnLpdf true) SoA)
+                                     (StanLib normal_lpdf (FnLpdf true) AoS)
                                      (((pattern
                                         (FunApp
                                          (StanLib to_vector FnPlain AoS)
@@ -13272,7 +13272,7 @@
                                  (TargetPE
                                   ((pattern
                                     (FunApp
-                                     (StanLib normal_lpdf (FnLpdf true) SoA)
+                                     (StanLib normal_lpdf (FnLpdf true) AoS)
                                      (((pattern
                                         (FunApp
                                          (StanLib to_vector FnPlain AoS)
@@ -13345,7 +13345,7 @@
                                  (TargetPE
                                   ((pattern
                                     (FunApp
-                                     (StanLib normal_lpdf (FnLpdf true) SoA)
+                                     (StanLib normal_lpdf (FnLpdf true) AoS)
                                      (((pattern
                                         (Indexed
                                          ((pattern (Var p_real_3d_ar))
@@ -13527,7 +13527,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
+            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
              (((pattern
                 (FunApp (StanLib to_vector FnPlain AoS)
                  (((pattern (Var p_vec))

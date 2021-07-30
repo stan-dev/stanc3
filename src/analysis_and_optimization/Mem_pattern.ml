@@ -55,12 +55,17 @@ let rec get_all_decls Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
   | _ -> Set.Poly.empty
 
 (** See interface file *)
-let rec expr_eigen_set Expr.Fixed.({pattern; meta=Expr.Typed.Meta.({type_;adlevel;_}) as meta}) =
+let rec expr_eigen_set
+    Expr.Fixed.({pattern; meta= Expr.Typed.Meta.({type_; adlevel; _}) as meta})
+    =
   let union_recur exprs =
     Set.Poly.union_list (List.map exprs ~f:expr_eigen_set)
   in
   match pattern with
-  | Var s when UnsizedType.contains_eigen_type type_ && adlevel = UnsizedType.AutoDiffable ->  Set.Poly.singleton (Dataflow_types.VVar s, meta)
+  | Var s
+    when UnsizedType.contains_eigen_type type_
+         && adlevel = UnsizedType.AutoDiffable ->
+      Set.Poly.singleton (Dataflow_types.VVar s, meta)
   | Var _ -> Set.Poly.empty
   | Lit _ -> Set.Poly.empty
   | FunApp (_, exprs) -> union_recur exprs
@@ -73,23 +78,20 @@ let rec expr_eigen_set Expr.Fixed.({pattern; meta=Expr.Typed.Meta.({type_;adleve
       Set.Poly.union_list (expr_eigen_set expr :: List.map ix ~f:apply_idx)
   | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
 
-  let rec expr_set Expr.Fixed.({pattern; meta}) =
-    let union_recur exprs =
-      Set.Poly.union_list (List.map exprs ~f:expr_set)
-    in
-    match pattern with
-    | Var s -> Set.Poly.singleton (Dataflow_types.VVar s, meta)
-    | Lit _ -> Set.Poly.empty
-    | FunApp (_, exprs) -> union_recur exprs
-    | TernaryIf (expr1, expr2, expr3) -> union_recur [expr1; expr2; expr3]
-    | Indexed (expr, ix) ->
-        let apply_idx =
-          Index.apply ~default:Set.Poly.empty ~merge:Set.Poly.union
-            expr_set
-        in
-        Set.Poly.union_list (expr_set expr :: List.map ix ~f:apply_idx)
-    | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
-  
+let rec expr_set Expr.Fixed.({pattern; meta}) =
+  let union_recur exprs = Set.Poly.union_list (List.map exprs ~f:expr_set) in
+  match pattern with
+  | Var s -> Set.Poly.singleton (Dataflow_types.VVar s, meta)
+  | Lit _ -> Set.Poly.empty
+  | FunApp (_, exprs) -> union_recur exprs
+  | TernaryIf (expr1, expr2, expr3) -> union_recur [expr1; expr2; expr3]
+  | Indexed (expr, ix) ->
+      let apply_idx =
+        Index.apply ~default:Set.Poly.empty ~merge:Set.Poly.union expr_set
+      in
+      Set.Poly.union_list (expr_set expr :: List.map ix ~f:apply_idx)
+  | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
+
 (**
  * Search through an expression for the names of all types that hold matrices 
  *  and vectors.
@@ -101,7 +103,7 @@ let query_names (expr : Typed.Meta.t Expr.Fixed.t) : string Set.Poly.t =
 let query_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) : string Set.Poly.t =
   let get_expr_eigen_names (Dataflow_types.VVar s, _) = Some s in
   Set.Poly.filter_map ~f:get_expr_eigen_names (expr_eigen_set expr)
-  
+
 (**
  * Query an expression to check if any of it's named types exists in a set.
  *  Return true if any of the names in `name_set` are in the expression.
