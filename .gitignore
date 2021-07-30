@@ -32,3 +32,6 @@ test/*.log
 
 # Mac OS X hidden files
 *.DS_Store
+
+# local cmdstan
+local/*
