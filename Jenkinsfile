@@ -85,6 +85,36 @@ pipeline {
                     }
                     post {always { runShell("rm -rf ./*")}}
                 }
+                stage("Build & test a static Linux s390x binary") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/static/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        }
+                    }
+                    steps {
+                        runShell("""
+                            eval \$(opam env)
+                            dune subst
+                        """)
+                        sh "sudo apk add docker"
+                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh s390x"
+                        sh "sudo chown -R opam: _build"
+                        sh "sudo chown -R opam: src"
+                        sh "sudo chown -R opam: test"
+                        echo runShell("""
+                            eval \$(opam env)
+                            time dune runtest --profile static --verbose
+                        """)
+
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-s390x-stanc"
+                        sh "mv `find _build -name stan2tfp.exe` bin/linux-s390x-stan2tfp"
+
+                        stash name:'linux-s390x-exe', includes:'bin/*'
+                    }
+                    post {always { runShell("rm -rf ./*")}}
+                }
                 stage("Build & test a static Linux ppc64el binary") {
                     agent {
                         dockerfile {
@@ -245,12 +275,13 @@ pipeline {
                 //unstash 'windows-exe'
                 unstash 'linux-exe'
                 unstash 'linux-mips64el-exe'
+                unstash 'linux-s390x-exe'
                 unstash 'linux-ppc64el-exe'
                 unstash 'linux-armel-exe'
                 unstash 'linux-armhf-exe'
                 unstash 'linux-arm64-exe'
                 //unstash 'mac-exe'
-                //unstash 'linux-arm-exe'
+                unstash 'linux-arm-exe'
                 //unstash 'js-exe'
                 runShell("""
                     wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz

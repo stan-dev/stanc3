@@ -1,20 +1,23 @@
 # Identify 
 if [ $1 = "mips64el" ]; then
-  SHA="sha256:85cc1b0be45320410ea10e607c7db8d90f6448945b0e27675f3ea7150245d618"
+  SHA="sha256:f674ab3524ccdc9af392e50c3fa0be937c0bb8df54be1b4b671460197d3efebd"
   ARCH="mips64el"
 elif [ $1 = "arm64" ]; then
-  SHA="sha256:241805782f6acc79d623f4d0bbf09138bf700e2b1ff37fd7527b8411a932ea9c"
+  SHA="sha256:d9311875f5fcd5f9b2221efb9d8a10ea8a159ca0e30cc60f04a0333ba14a4371"
   ARCH="aarch64"
   FLAGS="export CFLAGS=\"\$CFLAGS -fPIC\" &&"
 elif [ $1 = "ppc64el" ]; then
-  SHA="sha256:52a733211ee03875fc7be1e16853d7752b8d2b39a239bce76a54d98eb58083cb"
+  SHA="sha256:cce409af4067aa8f6825dc07c04a7038c025a4a9b7b71355ce04e066f2c65b07"
   ARCH="ppc64le"
 elif [ $1 = "armhf" ]; then
-  SHA="sha256:0fa3787e3fb8a0ef6d1a11cb388c0ed8ad3c8a196d680021d089de167db5c1c4"
+  SHA="sha256:55d95cae75451deb2dde29437edea9375c6334b4fb05abd63f1e04006101cf69"
   ARCH="arm"
 elif [ $1 = "armel" ]; then
-  SHA="sha256:e128ba728675e89404383b82b487f639baa70f0d25c0d1db8c6eb34f9a23b920"
+  SHA="sha256:6d5de11aaafa16126eae8bcb314dfb9d50fb7052c2a6d116e0de800699363cc6"
   ARCH="arm"
+elif [ $1 = "s390x" ]; then
+  SHA="sha256:a323d161c8addae675c1af740e6ee62ddae76c8ac7e9e1100b834aab703a78ad"
+  ARCH="s390x"
 else
   SHA=$1
   FLAGS=""

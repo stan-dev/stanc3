@@ -1,17 +1,17 @@
-FROM debian:bullseye-slim
+FROM debian:buster-slim
 
 RUN apt-get update
 RUN apt-get install opam curl bzip2 git tar curl ca-certificates openssl m4 bash -y
 
-
+RUN update-ca-certificates -f
 RUN opam init --disable-sandboxing -y
 RUN eval $(opam env)
 
 # Native-code compilation not available on MIPS, fall back to bytecode
 RUN if [ $(dpkg --print-architecture) = "mips64el" ]; then \
-    opam switch create -j1 4.07.0+bytecode-only && opam switch 4.07.0+bytecode-only; \
+    opam switch create 4.07.0+bytecode-only && opam switch 4.07.0+bytecode-only; \
   else \
-    opam switch create 4.07.0 -j1 && opam switch 4.07.0; \
+    opam switch create 4.07.0 && opam switch 4.07.0; \
   fi
   
 RUN eval $(opam env) && opam repo add internet https://opam.ocaml.org
