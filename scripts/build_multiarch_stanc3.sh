@@ -1,27 +1,27 @@
 # Identify the sha256 tag of desired docker image architecture and name of QEMU architecture
 if [ $1 = "mips64el" ]; then
-  DOCK_ARCH="mips64le"
-  DOCK_VARIANT=""
+  export DOCK_ARCH="mips64le"
+  export DOCK_VARIANT=""
   QEMU_ARCH="mips64el"
 elif [ $1 = "arm64" ]; then
-  DOCK_ARCH="arm64"
-  DOCK_VARIANT=""
+  export DOCK_ARCH="arm64"
+  export DOCK_VARIANT=""
   QEMU_ARCH="aarch64"
 elif [ $1 = "ppc64el" ]; then
-  DOCK_ARCH="ppc64le"
-  DOCK_VARIANT=""
+  export DOCK_ARCH="ppc64le"
+  export DOCK_VARIANT=""
   QEMU_ARCH="ppc64le"
 elif [ $1 = "armhf" ]; then
-  DOCK_ARCH="arm"
-  DOCK_VARIANT="v7"
+  export DOCK_ARCH="arm"
+  export DOCK_VARIANT="v7"
   QEMU_ARCH="arm"
 elif [ $1 = "armel" ]; then
-  DOCK_ARCH="arm"
-  DOCK_VARIANT="v6"
+  export DOCK_ARCH="arm"
+  export DOCK_VARIANT="v6"
   QEMU_ARCH="arm"
 elif [ $1 = "s390x" ]; then
-  DOCK_ARCH="s390x"
-  DOCK_VARIANT=""
+  export DOCK_ARCH="s390x"
+  export DOCK_VARIANT=""
   QEMU_ARCH="s390x"
 fi
 
