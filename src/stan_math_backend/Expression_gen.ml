@@ -555,9 +555,12 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
   | EOr (e1, e2) -> pp_logical_op ppf "||" e1 e2
   | TernaryIf (ec, et, ef) ->
       let promoted ppf (t, e) =
-        pf ppf "stan::math::promote_scalar<%s>(%a)"
-          Expr.Typed.(local_scalar (type_of t) (adlevel_of t))
-          pp_expr e
+        match UnsizedType.contains_eigen_type (Expr.Typed.type_of e) with
+        | false ->
+            pf ppf "stan::math::promote_scalar<%s>(%a)"
+              Expr.Typed.(local_scalar (type_of t) (adlevel_of t))
+              pp_expr e
+        | true -> pf ppf "%a" pp_expr e
       in
       let tform ppf = pf ppf "(@[<hov 2>@,%a@ ?@ %a@ :@ %a@])" in
       if types_match et ef then tform ppf pp_expr ec pp_expr et pp_expr ef
