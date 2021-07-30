@@ -1199,7 +1199,29 @@ let optimize_soa (mir : Program.Typed.t) =
         raise
           (Failure "Something went wrong with program transformation packing!")
   in
-  {mir with log_prob= transform' forced_logprob}
+  let new_logprob = transform' forced_logprob in
+  let new_names =
+    Set.Poly.union_list
+      (List.map ~f:Mem_pattern.get_eigen_aos_decls new_logprob)
+  in
+  let transform2 stmt =
+    optimize_minimal_variables ~gen_variables:gen_aos_variables
+      ~update_expr:demote_exprs ~update_stmt:modify_stmt_pattern
+      ~initial_variables:new_names stmt ~extra_variables:(fun _ ->
+        Set.Poly.empty )
+  in
+  let transform2' s =
+    match transform2 {pattern= SList s; meta= Location_span.empty} with
+    | { pattern=
+          SList
+            (l : (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t list); _
+      } ->
+        l
+    | _ ->
+        raise
+          (Failure "Something went wrong with program transformation packing!")
+  in
+  {mir with log_prob= transform2' new_logprob}
 
 (* Apparently you need to completely copy/paste type definitions between
    ml and mli files?*)

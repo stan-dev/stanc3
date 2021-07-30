@@ -1633,12 +1633,11 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       
       current_statement__ = 1;
       alpha = in__.template read<local_scalar_t__>();
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> p_soa_vec_v = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(M, std::numeric_limits<double>::quiet_NaN()));
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_soa_vec_v = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(M, DUMMY_VAR__);
+                                                           
       
       current_statement__ = 2;
-      p_soa_vec_v = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+      p_soa_vec_v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                       M);
       stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> p_soa_mat = 
       stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>(Eigen::Matrix<double, -1, -1>::Constant(N, M, std::numeric_limits<double>::quiet_NaN()));
@@ -1675,19 +1674,17 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       current_statement__ = 7;
       p_soa_loop_mat_uni_col_idx = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
                                      N, M);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>> p_soa_lhs_loop_mul = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>>(Eigen::Matrix<double, 1, -1>::Constant(N, std::numeric_limits<double>::quiet_NaN()));
-      
+      Eigen::Matrix<local_scalar_t__, 1, -1> p_soa_lhs_loop_mul = Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(N, DUMMY_VAR__);
+                                                                  
       
       current_statement__ = 8;
-      p_soa_lhs_loop_mul = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>>>(
+      p_soa_lhs_loop_mul = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(
                              N);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> p_soa_rhs_loop_mul = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN()));
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_soa_rhs_loop_mul = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
+                                                                  
       
       current_statement__ = 9;
-      p_soa_rhs_loop_mul = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+      p_soa_rhs_loop_mul = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                              N);
       stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> p_soa_used_with_aos_in_excluded_fun = 
       stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN()));
@@ -1786,9 +1783,8 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       current_statement__ = 25;
       assign(tp_soa_rep_matrix_mat, rep_matrix(p_soa_rep_matrix_vec, 10),
         "assigning variable tp_soa_rep_matrix_mat");
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> tp_soa_rep_matrix_from_data_mat = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>(Eigen::Matrix<double, -1, -1>::Constant(N, 10, std::numeric_limits<double>::quiet_NaN()));
-      
+      Eigen::Matrix<local_scalar_t__, -1, -1> tp_soa_rep_matrix_from_data_mat = 
+      Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(N, 10, DUMMY_VAR__);
       
       current_statement__ = 26;
       assign(tp_soa_rep_matrix_from_data_mat, rep_matrix(y, 10),
@@ -1866,9 +1862,8 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
           "assigning variable tp_soa_single_assign", index_uni(1));
         current_statement__ = 42;
         validate_non_negative_index("tp_soa_single_assign_from_soa", "N", N);
-        stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> tp_soa_single_assign_from_soa = 
-        stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN()));
-        
+        Eigen::Matrix<local_scalar_t__, -1, 1> tp_soa_single_assign_from_soa = 
+        Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
         
         current_statement__ = 44;
         assign(tp_soa_single_assign_from_soa,

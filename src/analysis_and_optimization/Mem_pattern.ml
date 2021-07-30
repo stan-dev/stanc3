@@ -33,6 +33,35 @@ let rec get_eigen_decls Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
 (**
  * Recursivly look in Decls for sized types that hold matrices or vectors
  *)
+let rec get_eigen_aos_decls Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
+  match pattern with
+  | Stmt.Fixed.Pattern.Decl
+      { decl_adtype= UnsizedType.AutoDiffable
+      ; decl_id
+      ; decl_type= Type.Sized sized_type }
+    when SizedType.contains_eigen_type sized_type
+         && not (SizedType.contains_soa sized_type) ->
+      Set.Poly.singleton decl_id
+  | IfElse
+      ( (_ : Expr.Typed.t)
+      , (true_stmt : (Typed.Meta.t, 'a) Stmt.Fixed.t)
+      , (false_stmt : (Typed.Meta.t, 'a) Stmt.Fixed.t option) ) ->
+      let false_op =
+        match false_stmt with
+        | Some x -> get_eigen_aos_decls x
+        | None -> Set.Poly.empty
+      in
+      Set.Poly.union (get_eigen_aos_decls true_stmt) false_op
+  | For {body; _} -> get_eigen_aos_decls body
+  | While (_, stmt) -> get_eigen_aos_decls stmt
+  | SList stmt_lst | Block stmt_lst | Profile ((_ : string), stmt_lst) ->
+      Set.Poly.union_list (List.map ~f:get_eigen_aos_decls stmt_lst)
+  | Skip | Break | Continue -> Set.Poly.empty
+  | _ -> Set.Poly.empty
+
+(**
+ * Recursivly look in Decls for sized types that hold matrices or vectors
+ *)
 let rec get_all_decls Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
   match pattern with
   | Stmt.Fixed.Pattern.Decl {decl_id; decl_type= Type.Sized _; _} ->
@@ -56,15 +85,12 @@ let rec get_all_decls Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
 
 (** See interface file *)
 let rec expr_eigen_set
-    Expr.Fixed.({pattern; meta= Expr.Typed.Meta.({type_; adlevel; _}) as meta})
-    =
+    Expr.Fixed.({pattern; meta= Expr.Typed.Meta.({type_; _}) as meta}) =
   let union_recur exprs =
     Set.Poly.union_list (List.map exprs ~f:expr_eigen_set)
   in
   match pattern with
-  | Var s
-    when UnsizedType.contains_eigen_type type_
-         && adlevel = UnsizedType.AutoDiffable ->
+  | Var s when UnsizedType.contains_eigen_type type_ ->
       Set.Poly.singleton (Dataflow_types.VVar s, meta)
   | Var _ -> Set.Poly.empty
   | Lit _ -> Set.Poly.empty
@@ -308,20 +334,17 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
         , (_ : Expr.Typed.t Index.t list) )
       , rhs ) ->
       let all_rhs_eigen_names = query_eigen_names rhs in
-      let rhs_type_eigen =
-        UnsizedType.contains_eigen_type (Expr.Typed.type_of rhs)
-      in
       let rhs_set =
-        match Set.Poly.mem aos_exits assign_name && rhs_type_eigen with
+        match Set.Poly.mem aos_exits assign_name with
         | true -> all_rhs_eigen_names
-        | false -> Set.Poly.empty
+        | false -> aos_exits
       in
       let lhs_set =
         match
           check_names aos_exits all_rhs_eigen_names
           && Option.is_none (check_funs rhs)
         with
-        | true -> Set.Poly.empty
+        | true -> aos_exits
         | false -> Set.Poly.singleton assign_name
       in
       Set.Poly.union rhs_set lhs_set
@@ -336,7 +359,7 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
    |SList (_ : int list)
    |Block (_ : int list)
    |Profile ((_ : string), (_ : int list)) ->
-      Set.Poly.empty
+      aos_exits
 
 (**
  * Check an expression to count how many times we see a single index.
@@ -444,8 +467,8 @@ let rec query_initial_demotable_expr (in_loop : bool) Expr.Fixed.({pattern; _})
       Set.Poly.empty
   | TernaryIf (predicate, texpr, fexpr) ->
       Set.Poly.union
-        (Set.Poly.union (query_expr predicate) (query_expr texpr))
-        (query_expr fexpr)
+        (Set.Poly.union (query_expr predicate) (query_eigen_names texpr))
+        (query_eigen_names fexpr)
   | EAnd (lhs, rhs) | EOr (lhs, rhs) ->
       Set.Poly.union (query_expr lhs) (query_expr rhs)
 

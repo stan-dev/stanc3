@@ -1084,9 +1084,9 @@ let () =
   add_unqualified ("distance", ReturnType UReal, [URowVector; UVector], SoA) ;
   add_unqualified ("divide", ReturnType UInt, [UInt; UInt], SoA) ;
   add_unqualified ("divide", ReturnType UReal, [UReal; UReal], SoA) ;
-  add_unqualified ("divide", ReturnType UVector, [UVector; UReal], SoA) ;
-  add_unqualified ("divide", ReturnType URowVector, [URowVector; UReal], SoA) ;
-  add_unqualified ("divide", ReturnType UMatrix, [UMatrix; UReal], SoA) ;
+  add_unqualified ("divide", ReturnType UVector, [UVector; UReal], AoS) ;
+  add_unqualified ("divide", ReturnType URowVector, [URowVector; UReal], AoS) ;
+  add_unqualified ("divide", ReturnType UMatrix, [UMatrix; UReal], AoS) ;
   add_unqualified ("dot_product", ReturnType UReal, [UVector; UVector], SoA) ;
   add_unqualified
     ("dot_product", ReturnType UReal, [URowVector; URowVector], SoA) ;

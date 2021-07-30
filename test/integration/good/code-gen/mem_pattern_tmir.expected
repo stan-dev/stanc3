@@ -594,14 +594,14 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_vec_v)
       (decl_type
        (Sized
-        (SVector SoA
+        (SVector AoS
          ((pattern (Var M))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
      (Assignment (p_soa_vec_v UVector ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () SoA))
+        (FunApp (CompilerInternal (FnReadParam () AoS))
          (((pattern (Var M))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -708,14 +708,14 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_lhs_loop_mul)
       (decl_type
        (Sized
-        (SRowVector SoA
+        (SRowVector AoS
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
      (Assignment (p_soa_lhs_loop_mul URowVector ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () SoA))
+        (FunApp (CompilerInternal (FnReadParam () AoS))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -724,14 +724,14 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_soa_rhs_loop_mul)
       (decl_type
        (Sized
-        (SVector SoA
+        (SVector AoS
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
      (Assignment (p_soa_rhs_loop_mul UVector ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () SoA))
+        (FunApp (CompilerInternal (FnReadParam () AoS))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -1030,7 +1030,7 @@
       (decl_id tp_soa_rep_matrix_from_data_mat)
       (decl_type
        (Sized
-        (SMatrix SoA
+        (SMatrix AoS
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
          ((pattern (Lit Int 10))
@@ -1107,7 +1107,7 @@
                    (meta
                     ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
-                    (FunApp (StanLib multiply FnPlain SoA)
+                    (FunApp (StanLib multiply FnPlain AoS)
                      (((pattern (Var dat_x))
                        (meta
                         ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
@@ -1144,7 +1144,7 @@
                    (meta
                     ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
                   ((pattern
-                    (FunApp (StanLib multiply FnPlain SoA)
+                    (FunApp (StanLib multiply FnPlain AoS)
                      (((pattern (Var dat_x))
                        (meta
                         ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
@@ -1394,7 +1394,7 @@
           (decl_id tp_soa_single_assign_from_soa)
           (decl_type
            (Sized
-            (SVector SoA
+            (SVector AoS
              ((pattern (Var N))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
         (meta <opaque>))
@@ -1405,7 +1405,7 @@
              ((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
           ((pattern
-            (FunApp (StanLib multiply FnPlain SoA)
+            (FunApp (StanLib multiply FnPlain AoS)
              (((pattern (Var p_soa_lhs_loop_mul))
                (meta
                 ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))
@@ -1770,7 +1770,7 @@
                      ((pattern (Var i))
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                   ((pattern
-                    (FunApp (StanLib multiply FnPlain SoA)
+                    (FunApp (StanLib multiply FnPlain AoS)
                      (((pattern (Var p_soa_lhs_loop_mul))
                        (meta
                         ((type_ URowVector) (loc <opaque>)
@@ -1798,7 +1798,7 @@
                             ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                   ((pattern
-                    (FunApp (StanLib multiply FnPlain SoA)
+                    (FunApp (StanLib multiply FnPlain AoS)
                      (((pattern (Var p_soa_lhs_loop_mul))
                        (meta
                         ((type_ URowVector) (loc <opaque>)

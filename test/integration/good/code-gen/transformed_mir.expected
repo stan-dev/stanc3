@@ -13124,7 +13124,7 @@
                                  (TargetPE
                                   ((pattern
                                     (FunApp
-                                     (StanLib normal_lpdf (FnLpdf true) AoS)
+                                     (StanLib normal_lpdf (FnLpdf true) SoA)
                                      (((pattern
                                         (FunApp
                                          (StanLib to_vector FnPlain AoS)
@@ -13197,7 +13197,7 @@
                                  (TargetPE
                                   ((pattern
                                     (FunApp
-                                     (StanLib normal_lpdf (FnLpdf true) AoS)
+                                     (StanLib normal_lpdf (FnLpdf true) SoA)
                                      (((pattern
                                         (FunApp
                                          (StanLib to_vector FnPlain AoS)
@@ -13272,7 +13272,7 @@
                                  (TargetPE
                                   ((pattern
                                     (FunApp
-                                     (StanLib normal_lpdf (FnLpdf true) AoS)
+                                     (StanLib normal_lpdf (FnLpdf true) SoA)
                                      (((pattern
                                         (FunApp
                                          (StanLib to_vector FnPlain AoS)
@@ -13527,7 +13527,7 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
              (((pattern
                 (FunApp (StanLib to_vector FnPlain AoS)
                  (((pattern (Var p_vec))
