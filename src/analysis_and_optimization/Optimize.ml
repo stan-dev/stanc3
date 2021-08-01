@@ -1074,6 +1074,7 @@ let optimize_minimal_variables
   in
   map_rec_stmt_loc_num flowgraph_to_mir optimize_min_vars_stmt_base
     (Map.find_exn flowgraph_to_mir 1)
+    
 
 let optimize_ad_levels (mir : Program.Typed.t) =
   let gen_ad_variables
@@ -1136,6 +1137,157 @@ let gen_aos_variables
     Mem_pattern.query_demotable_stmt aos_variables stmt
 
 (**
+ * Modify a function and it's subexpressions from SoA <-> AoS and vice versa.
+ * @param modifiable_set The set of eigen names that are either demotable 
+ *  to AoS or promotable to SoA.
+ * @param mem_pattern If AoS, checks if all names in the functions
+ *  expressions are in the modifiable set and demotes the function to SoA.
+ *  Else if SoA, checks if any of the names in the modifiable set
+ *   and if so then promotes the function to SoA.
+ * @param exprs A list of expressions going into the function.
+ **)
+let modify_kind (modifiable_set : string Set.Poly.t) (kind : Fun_kind.t)
+    (exprs : Expr.Typed.Meta.t Expr.Fixed.t list) : Fun_kind.t =
+  let find_eigen_names = Mem_pattern.contains_eigen_names modifiable_set in
+  let is_all_in_list = List.for_all ~f:find_eigen_names exprs in
+  match kind with
+  | Fun_kind.StanLib (name, sfx, (_ : Common.Helpers.mem_pattern)) ->
+      if is_all_in_list then Fun_kind.StanLib (name, sfx, Common.Helpers.AoS)
+      else Fun_kind.StanLib (name, sfx, AoS)
+  | (_ : Fun_kind.t) -> kind
+
+(** 
+* Modify the expressions to demote/promote from AoS <-> SoA and vice versa
+* The only real path in the below is on the functions.
+*
+* For AoS, we check that *all* of the matrix and vector names
+*  in the list of expressions are in the `modifiable_set` and if so
+*  make the function AoS. 
+* For SoA, we check that *any* of the matrix and vector names
+*  in the list of expressions are in the `modifiable_set` and if so
+*  make the function SoA. 
+* @param mem_pattern The memory pattern to change functions to.
+* @param modifiable_set The name of the variables whose
+*  associated expressions we want to modify.
+* @param pattern The expression to modify.
+*)
+let rec modify_expr_pattern (modifiable_set : string Set.Poly.t)
+    (pattern : Expr.Typed.Meta.t Expr.Fixed.t Expr.Fixed.Pattern.t) =
+  let mod_expr = modify_expr modifiable_set in
+  match pattern with
+  | Expr.Fixed.Pattern.FunApp
+      (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
+      let new_exprs = List.map ~f:mod_expr exprs in
+      let mod_kind = modify_kind modifiable_set in
+      Expr.Fixed.Pattern.FunApp (mod_kind kind new_exprs, new_exprs)
+  | TernaryIf (predicate, texpr, fexpr) ->
+      TernaryIf (mod_expr predicate, mod_expr texpr, mod_expr fexpr)
+  | Indexed (idx_expr, indexed) ->
+      Indexed (mod_expr idx_expr, List.map ~f:(Index.map mod_expr) indexed)
+  | EAnd (lhs, rhs) -> EAnd (mod_expr lhs, mod_expr rhs)
+  | EOr (lhs, rhs) -> EOr (mod_expr lhs, mod_expr rhs)
+  | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
+      pattern
+
+(** 
+* Given a Set of strings containing the names of objects that can be 
+* modified from AoS <-> SoA and vice versa, modify them within the expression.
+* @param mem_pattern The memory pattern to change expressions to.
+* @param modifiable_set The name of the variables whose
+*  associated expressions we want to modify.
+* @param expr the expression to modify.
+*)
+and modify_expr (modifiable_set : string Set.Poly.t)
+    (Expr.Fixed.({pattern; _}) as expr) =
+  {expr with pattern= modify_expr_pattern modifiable_set pattern}
+
+(**
+ * Modify statement patterns in the MIR from AoS <-> SoA and vice versa 
+ * @param mem_pattern A mem_pattern to modify expressions to. For the 
+ *  given memory pattern, this modifies 
+ *  statement patterns and expressions to it.
+ * @param pattern The statement pattern to modify 
+ * @param modifiable_set The name of the variable we are searching for.
+ *)
+let rec modify_stmt_pattern
+    (pattern :
+      ( Expr.Typed.Meta.t Expr.Fixed.t
+      , (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t )
+      Stmt.Fixed.Pattern.t) (modifiable_set : string Core_kernel.Set.Poly.t) =
+  let mod_expr = Mir_utils.map_rec_expr (modify_expr_pattern modifiable_set) in
+  let mod_stmt stmt = modify_stmt stmt modifiable_set in
+  match pattern with
+  | Stmt.Fixed.Pattern.Decl
+      ({decl_id; decl_type= Type.Sized sized_type; _} as decl) ->
+      if Set.Poly.mem modifiable_set decl_id then
+        Stmt.Fixed.Pattern.Decl
+          { decl with
+            decl_type=
+              Type.Sized (SizedType.modify_sizedtype_mem AoS sized_type) }
+      else
+        Decl
+          { decl with
+            decl_type=
+              Type.Sized (SizedType.modify_sizedtype_mem SoA sized_type) }
+  | NRFunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
+      let new_exprs = List.map ~f:mod_expr exprs in
+      let mod_kind = modify_kind modifiable_set kind new_exprs in
+      NRFunApp (mod_kind, new_exprs)
+  | Assignment
+      ( (name, ut, lhs)
+      , ( { pattern=
+              FunApp (CompilerInternal (FnReadParam (constrain_op, _)), args); _
+          } as assigner ) ) ->
+      if Set.Poly.mem modifiable_set name then
+        Assignment
+          ( (name, ut, List.map ~f:(Index.map mod_expr) lhs)
+          , { assigner with
+              pattern=
+                FunApp
+                  ( CompilerInternal (FnReadParam (constrain_op, AoS))
+                  , List.map ~f:mod_expr args ) } )
+      else
+        Assignment
+          ( (name, ut, List.map ~f:(Index.map mod_expr) lhs)
+          , { assigner with
+              pattern=
+                FunApp
+                  ( CompilerInternal (FnReadParam (constrain_op, SoA))
+                  , List.map ~f:mod_expr args ) } )
+  | Assignment (((name : string), (ut : UnsizedType.t), lhs), rhs) ->
+      Assignment
+        ((name, ut, List.map ~f:(Index.map mod_expr) lhs), mod_expr rhs)
+  | IfElse (predicate, true_stmt, op_false_stmt) ->
+      IfElse
+        ( mod_expr predicate
+        , mod_stmt true_stmt
+        , Option.map ~f:mod_stmt op_false_stmt )
+  | Block stmts -> Block (List.map ~f:mod_stmt stmts)
+  | SList stmts -> SList (List.map ~f:mod_stmt stmts)
+  | For ({lower; upper; body; _} as loop) ->
+      Stmt.Fixed.Pattern.For
+        { loop with
+          lower= mod_expr lower; upper= mod_expr upper; body= mod_stmt body }
+  | TargetPE expr -> TargetPE (mod_expr expr)
+  | Return optional_expr -> Return (Option.map ~f:mod_expr optional_expr)
+  | Profile ((p_name : string), stmt) ->
+      Profile (p_name, List.map ~f:mod_stmt stmt)
+  | While (predicate, body) -> While (mod_expr predicate, mod_stmt body)
+  | Skip | Break | Continue | Decl _ -> pattern
+
+(**
+ * Modify statement patterns in the MIR from AoS <-> SoA and vice versa 
+ * @param mem_pattern A mem_pattern to modify expressions to. For the 
+ *  given memory pattern, this modifies 
+ *  statement patterns and expressions to it.
+ * @param stmt The statement to modify. 
+ * @param modifiable_set The name of the variable we are searching for.
+ *)
+and modify_stmt (Stmt.Fixed.({pattern; _}) as stmt)
+    (modifiable_set : string Set.Poly.t) =
+  {stmt with pattern= modify_stmt_pattern pattern modifiable_set}
+
+(**
 * Deduces whether types can be Structures of Arrays (SoA/fast) or
 *  Arrays of Structs (AoS/slow). See the docs in
 *  Mem_pattern.query_demote_stmt/exprs* functions for 
@@ -1163,30 +1315,24 @@ let optimize_soa (mir : Program.Typed.t) =
          ~f:(Mem_pattern.query_initial_demotable_stmt false)
          mir.log_prob)
   in
-  let log_prob_obj_names =
-    Set.Poly.union_list (List.map ~f:Mem_pattern.get_all_decls mir.log_prob)
+  let print_set (s : string Set.Poly.t) = 
+    Set.Poly.iter ~f:print_endline s in
+  let () =
+    let () = printf "\n-----------\n" in 
+    let () = printf "lhs_set:" in 
+    let () = printf "\n-----------\n" in 
+    print_set initial_variables in 
+
+  let mod_exprs aos_exits mod_expr =
+    Mir_utils.map_rec_expr (modify_expr_pattern aos_exits) mod_expr
   in
-  let data_obj_names =
-    Set.Poly.union_list
-      (List.map ~f:Mem_pattern.get_all_decls mir.prepare_data)
-  in
-  let all_obj_names = Set.Poly.union log_prob_obj_names data_obj_names in
-  let promotable_types = Set.Poly.diff all_obj_names initial_variables in
-  let promote_stmt stmt =
-    Mem_pattern.modify_stmt Common.Helpers.SoA stmt promotable_types
-  in
-  let forced_logprob = List.map ~f:promote_stmt mir.log_prob in
-  let demote_exprs aos_exits =
-    Mir_utils.map_rec_expr
-      (Mem_pattern.modify_expr_pattern Common.Helpers.AoS aos_exits)
-  in
-  let modify_stmt_pattern =
-    Mem_pattern.modify_stmt_pattern Common.Helpers.AoS
+  let modify_stmt_patt stmt_pattern variable_set =
+    modify_stmt_pattern stmt_pattern variable_set
   in
   let transform stmt =
     optimize_minimal_variables ~gen_variables:gen_aos_variables
-      ~update_expr:demote_exprs ~update_stmt:modify_stmt_pattern
-      ~initial_variables stmt ~extra_variables:(fun _ -> Set.Poly.empty )
+      ~update_expr:mod_exprs ~update_stmt:modify_stmt_patt ~initial_variables
+      stmt ~extra_variables:(fun _ -> Set.Poly.empty )
   in
   let transform' s =
     match transform {pattern= SList s; meta= Location_span.empty} with
@@ -1199,29 +1345,7 @@ let optimize_soa (mir : Program.Typed.t) =
         raise
           (Failure "Something went wrong with program transformation packing!")
   in
-  let new_logprob = transform' forced_logprob in
-  let new_names =
-    Set.Poly.union_list
-      (List.map ~f:Mem_pattern.get_eigen_aos_decls new_logprob)
-  in
-  let transform2 stmt =
-    optimize_minimal_variables ~gen_variables:gen_aos_variables
-      ~update_expr:demote_exprs ~update_stmt:modify_stmt_pattern
-      ~initial_variables:new_names stmt ~extra_variables:(fun _ ->
-        Set.Poly.empty )
-  in
-  let transform2' s =
-    match transform2 {pattern= SList s; meta= Location_span.empty} with
-    | { pattern=
-          SList
-            (l : (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t list); _
-      } ->
-        l
-    | _ ->
-        raise
-          (Failure "Something went wrong with program transformation packing!")
-  in
-  {mir with log_prob= transform2' new_logprob}
+  {mir with log_prob= transform' mir.log_prob}
 
 (* Apparently you need to completely copy/paste type definitions between
    ml and mli files?*)
