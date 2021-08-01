@@ -127,10 +127,14 @@ let query_names (expr : Typed.Meta.t Expr.Fixed.t) : string Set.Poly.t =
   Set.Poly.filter_map ~f:get_expr_names (expr_eigen_set expr)
 
 let query_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) : string Set.Poly.t =
-  let get_expr_eigen_names (Dataflow_types.VVar s, Expr.Typed.Meta.({adlevel; type_; _})) = 
-    if UnsizedType.contains_eigen_type type_ && adlevel = UnsizedType.AutoDiffable then 
-    Some s
-    else None  in
+  let get_expr_eigen_names
+      (Dataflow_types.VVar s, Expr.Typed.Meta.({adlevel; type_; _})) =
+    if
+      UnsizedType.contains_eigen_type type_
+      && adlevel = UnsizedType.AutoDiffable
+    then Some s
+    else None
+  in
   Set.Poly.filter_map ~f:get_expr_eigen_names (expr_set expr)
 
 (**
@@ -140,7 +144,6 @@ let query_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) : string Set.Poly.t =
 let contains_eigen_names (name_set : string Set.Poly.t)
     (expr : Typed.Meta.t Expr.Fixed.t) : bool =
   not (Set.Poly.is_empty (Set.inter name_set (query_eigen_names expr)))
-
 
 (* Look through a statement to see whether it needs modified from
  * SoA to AoS. Returns the set of object names that need demoted
@@ -163,39 +166,44 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
         | false -> Set.Poly.empty
       in
       let lhs_set =
-        match Set.Poly.is_subset ~of_:aos_exits all_rhs_eigen_names 
-        && not (Set.Poly.is_empty aos_exits)
-        && not (Set.Poly.is_empty all_rhs_eigen_names) with
+        match
+          Set.Poly.is_subset ~of_:aos_exits all_rhs_eigen_names
+          && (not (Set.Poly.is_empty aos_exits))
+          && not (Set.Poly.is_empty all_rhs_eigen_names)
+        with
         | true -> Set.Poly.singleton assign_name
         | false -> Set.Poly.empty
       in
-      (*
-      let print_set (s : string Set.Poly.t) = 
-        Set.Poly.iter ~f:print_endline s in
-        let () = printf "\n----BEGIN ASSIGN CHECK------\n" in
-        let () = printf "\nAssign Name: %s\n" assign_name in
-        let () =
-          let () = printf "\n-----------\n" in 
-          let () = printf "all rhs eigens:" in 
-          let () = printf "\n-----------\n" in 
-          print_set all_rhs_eigen_names in 
-        let () =
-        let () = printf "\n-----------\n" in 
-        let () = printf "aos_exits:" in 
-        let () = printf "\n-----------\n" in 
-        print_set aos_exits in 
+      let print_set (s : string Set.Poly.t) =
+        Set.Poly.iter ~f:print_endline s
+      in
+      let () = printf "\n----BEGIN ASSIGN CHECK------\n" in
+      let () = printf "\nAssign Name: %s\n" assign_name in
       let () =
-        let () = printf "\n-----------\n" in 
-        let () = printf "lhs_set:" in 
-        let () = printf "\n-----------\n" in 
-        print_set lhs_set in 
-        let () =
-          let () = printf "\n-----------\n" in 
-          let () = printf "rhs_set:" in 
-          let () = printf "\n-----------\n" in 
-          print_set rhs_set in   
+        let () = printf "\n-----------\n" in
+        let () = printf "all rhs eigens:" in
+        let () = printf "\n-----------\n" in
+        print_set all_rhs_eigen_names
+      in
+      let () =
+        let () = printf "\n-----------\n" in
+        let () = printf "aos_exits:" in
+        let () = printf "\n-----------\n" in
+        print_set aos_exits
+      in
+      let () =
+        let () = printf "\n-----------\n" in
+        let () = printf "lhs_set:" in
+        let () = printf "\n-----------\n" in
+        print_set lhs_set
+      in
+      let () =
+        let () = printf "\n-----------\n" in
+        let () = printf "rhs_set:" in
+        let () = printf "\n-----------\n" in
+        print_set rhs_set
+      in
       let () = printf "\n----END ASSIGN CHECK------\n" in
-      *)
       Set.Poly.union rhs_set lhs_set
   | Decl _
    |NRFunApp ((_ : Fun_kind.t), (_ : Expr.Typed.t list))
@@ -501,3 +509,169 @@ let rec query_initial_demotable_stmt (in_loop : bool)
   | While (predicate, body) ->
       Set.Poly.union (query_expr predicate) (query_inner_stmt true body)
   | Skip | Break | Continue | Decl _ -> Set.Poly.empty
+
+(**
+ * Modify a function and it's subexpressions from SoA <-> AoS and vice versa.
+ * @param modifiable_set The set of eigen names that are either demotable 
+ *  to AoS or promotable to SoA.
+ * @param mem_pattern If AoS, checks if all names in the functions
+ *  expressions are in the modifiable set and demotes the function to SoA.
+ *  Else if SoA, checks if any of the names in the modifiable set
+ *   and if so then promotes the function to SoA.
+ * @param exprs A list of expressions going into the function.
+ **)
+let modify_kind (modifiable_set : string Set.Poly.t) (kind : Fun_kind.t)
+    (exprs : Expr.Typed.Meta.t Expr.Fixed.t list) : Fun_kind.t =
+  let expr_names = Set.Poly.union_list (List.map ~f:query_eigen_names exprs) in
+  let is_all_in_list = Set.Poly.is_subset ~of_:modifiable_set expr_names in
+  match kind with
+  | Fun_kind.StanLib (name, sfx, (_ : Common.Helpers.mem_pattern)) ->
+      if is_all_in_list then Fun_kind.StanLib (name, sfx, Common.Helpers.AoS)
+      else Fun_kind.StanLib (name, sfx, AoS)
+  | (_ : Fun_kind.t) -> kind
+
+(** 
+* Modify the expressions to demote/promote from AoS <-> SoA and vice versa
+* The only real path in the below is on the functions.
+*
+* For AoS, we check that *all* of the matrix and vector names
+*  in the list of expressions are in the `modifiable_set` and if so
+*  make the function AoS. 
+* For SoA, we check that *any* of the matrix and vector names
+*  in the list of expressions are in the `modifiable_set` and if so
+*  make the function SoA. 
+* @param mem_pattern The memory pattern to change functions to.
+* @param modifiable_set The name of the variables whose
+*  associated expressions we want to modify.
+* @param pattern The expression to modify.
+*)
+let rec modify_expr_pattern (modifiable_set : string Set.Poly.t)
+    (pattern : Expr.Typed.Meta.t Expr.Fixed.t Expr.Fixed.Pattern.t) =
+  let mod_expr = modify_expr modifiable_set in
+  match pattern with
+  | Expr.Fixed.Pattern.FunApp
+      (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
+      let new_exprs = List.map ~f:mod_expr exprs in
+      let mod_kind = modify_kind modifiable_set in
+      Expr.Fixed.Pattern.FunApp (mod_kind kind new_exprs, new_exprs)
+  | TernaryIf (predicate, texpr, fexpr) ->
+      TernaryIf (mod_expr predicate, mod_expr texpr, mod_expr fexpr)
+  | Indexed (idx_expr, indexed) ->
+      Indexed (mod_expr idx_expr, List.map ~f:(Index.map mod_expr) indexed)
+  | EAnd (lhs, rhs) -> EAnd (mod_expr lhs, mod_expr rhs)
+  | EOr (lhs, rhs) -> EOr (mod_expr lhs, mod_expr rhs)
+  | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
+      pattern
+
+(** 
+* Given a Set of strings containing the names of objects that can be 
+* modified from AoS <-> SoA and vice versa, modify them within the expression.
+* @param mem_pattern The memory pattern to change expressions to.
+* @param modifiable_set The name of the variables whose
+*  associated expressions we want to modify.
+* @param expr the expression to modify.
+*)
+and modify_expr (modifiable_set : string Set.Poly.t)
+    (Expr.Fixed.({pattern; _}) as expr) =
+  {expr with pattern= modify_expr_pattern modifiable_set pattern}
+
+(**
+* Modify statement patterns in the MIR from AoS <-> SoA and vice versa 
+* @param mem_pattern A mem_pattern to modify expressions to. For the 
+*  given memory pattern, this modifies 
+*  statement patterns and expressions to it.
+* @param pattern The statement pattern to modify 
+* @param modifiable_set The name of the variable we are searching for.
+*)
+let rec modify_stmt_pattern
+    (pattern :
+      ( Expr.Typed.Meta.t Expr.Fixed.t
+      , (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t )
+      Stmt.Fixed.Pattern.t) (modifiable_set : string Core_kernel.Set.Poly.t) =
+  let mod_expr = Mir_utils.map_rec_expr (modify_expr_pattern modifiable_set) in
+  let mod_stmt stmt = modify_stmt stmt modifiable_set in
+  match pattern with
+  | Stmt.Fixed.Pattern.Decl
+      ({decl_id; decl_type= Type.Sized sized_type; _} as decl) ->
+      let print_set (s : string Set.Poly.t) =
+        Set.Poly.iter ~f:print_endline s
+      in
+      let () = printf "\n----BEGIN DECL MOD------\n" in
+      let () = printf "\nDecl Name: %s\n" decl_id in
+      let () =
+        let () = printf "\n-----------\n" in
+        let () = printf "modifiable_set:" in
+        let () = printf "\n-----------\n" in
+        print_set modifiable_set
+      in
+      if Set.Poly.mem modifiable_set decl_id then
+        let () = printf "\n----Downgrade Chosen------\n" in
+        let () = printf "\n----END DECL MOD------\n" in
+        Stmt.Fixed.Pattern.Decl
+          { decl with
+            decl_type=
+              Type.Sized (SizedType.modify_sizedtype_mem AoS sized_type) }
+      else
+        let () = printf "\nUpgrade Chosen\n" in
+        let () = printf "\n----END DECL MOD------\n" in
+        Decl
+          { decl with
+            decl_type=
+              Type.Sized (SizedType.modify_sizedtype_mem SoA sized_type) }
+  | NRFunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
+      let new_exprs = List.map ~f:mod_expr exprs in
+      let mod_kind = modify_kind modifiable_set kind new_exprs in
+      NRFunApp (mod_kind, new_exprs)
+  | Assignment
+      ( (name, ut, lhs)
+      , ( { pattern=
+              FunApp (CompilerInternal (FnReadParam (constrain_op, _)), args); _
+          } as assigner ) ) ->
+      if Set.Poly.mem modifiable_set name then
+        Assignment
+          ( (name, ut, List.map ~f:(Index.map mod_expr) lhs)
+          , { assigner with
+              pattern=
+                FunApp
+                  ( CompilerInternal (FnReadParam (constrain_op, AoS))
+                  , List.map ~f:mod_expr args ) } )
+      else
+        Assignment
+          ( (name, ut, List.map ~f:(Index.map mod_expr) lhs)
+          , { assigner with
+              pattern=
+                FunApp
+                  ( CompilerInternal (FnReadParam (constrain_op, SoA))
+                  , List.map ~f:mod_expr args ) } )
+  | Assignment (((name : string), (ut : UnsizedType.t), lhs), rhs) ->
+      Assignment
+        ((name, ut, List.map ~f:(Index.map mod_expr) lhs), mod_expr rhs)
+  | IfElse (predicate, true_stmt, op_false_stmt) ->
+      IfElse
+        ( mod_expr predicate
+        , mod_stmt true_stmt
+        , Option.map ~f:mod_stmt op_false_stmt )
+  | Block stmts -> Block (List.map ~f:mod_stmt stmts)
+  | SList stmts -> SList (List.map ~f:mod_stmt stmts)
+  | For ({lower; upper; body; _} as loop) ->
+      Stmt.Fixed.Pattern.For
+        { loop with
+          lower= mod_expr lower; upper= mod_expr upper; body= mod_stmt body }
+  | TargetPE expr -> TargetPE (mod_expr expr)
+  | Return optional_expr -> Return (Option.map ~f:mod_expr optional_expr)
+  | Profile ((p_name : string), stmt) ->
+      Profile (p_name, List.map ~f:mod_stmt stmt)
+  | While (predicate, body) -> While (mod_expr predicate, mod_stmt body)
+  | Skip | Break | Continue | Decl _ -> pattern
+
+(**
+* Modify statement patterns in the MIR from AoS <-> SoA and vice versa 
+* @param mem_pattern A mem_pattern to modify expressions to. For the 
+*  given memory pattern, this modifies 
+*  statement patterns and expressions to it.
+* @param stmt The statement to modify. 
+* @param modifiable_set The name of the variable we are searching for.
+*)
+and modify_stmt (Stmt.Fixed.({pattern; _}) as stmt)
+    (modifiable_set : string Set.Poly.t) =
+  {stmt with pattern= modify_stmt_pattern pattern modifiable_set}

@@ -1074,7 +1074,6 @@ let optimize_minimal_variables
   in
   map_rec_stmt_loc_num flowgraph_to_mir optimize_min_vars_stmt_base
     (Map.find_exn flowgraph_to_mir 1)
-    
 
 let optimize_ad_levels (mir : Program.Typed.t) =
   let gen_ad_variables
@@ -1123,227 +1122,110 @@ let optimize_ad_levels (mir : Program.Typed.t) =
   in
   transform_program_blockwise mir transform
 
-(**
- * The gen function for the monotone framework for deducing
- *  the statements and expressions that must be demoted to AoS.
- * Returns a Set of strings where the strings are the names of 
- * variables that must be demoted from SoA -> AoS.
- *)
-let gen_aos_variables
-    (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
-    (l : int) (aos_variables : string Set.Poly.t) =
-  let mir_node mir_idx = Map.find_exn flowgraph_to_mir mir_idx in
-  match (mir_node l).pattern with stmt ->
-    Mem_pattern.query_demotable_stmt aos_variables stmt
+let optimize_minimal_variables2
+    ~(gen_variables :
+          (int, Stmt.Located.Non_recursive.t) Map.Poly.t
+       -> int
+       -> string Set.Poly.t
+       -> string Set.Poly.t)
+    ~(update_expr : string Set.Poly.t -> Expr.Typed.t -> Expr.Typed.t)
+    ~(update_stmt :
+          ( Expr.Typed.Meta.t Expr.Fixed.t
+          , (Expr.Typed.Meta.t, 'a) Stmt.Fixed.t )
+          Stmt.Fixed.Pattern.t
+       -> string Core_kernel.Set.Poly.t
+       -> ( Expr.Typed.Meta.t Expr.Fixed.t
+          , (Expr.Typed.Meta.t, 'a) Stmt.Fixed.t )
+          Stmt.Fixed.Pattern.t)
+    ~(extra_variables : string -> string Set.Poly.t)
+    ~(initial_variables : string Set.Poly.t) (stmt : Stmt.Located.t) =
+  let rev_flowgraph, flowgraph_to_mir =
+    Monotone_framework.inverse_flowgraph_of_stmt stmt
+  in
+  let fwd_flowgraph = Monotone_framework.reverse rev_flowgraph in
+  let (module Rev_Flowgraph) = rev_flowgraph in
+  let (module Fwd_Flowgraph) = fwd_flowgraph in
+  let ad_levels =
+    Monotone_framework.minimal_variables_mfp2
+      (module Fwd_Flowgraph)
+      (module Rev_Flowgraph)
+      flowgraph_to_mir initial_variables gen_variables
+  in
+  let optimize_min_vars_stmt_base i stmt_pattern =
+    let variable_set =
+      let exits = (Map.find_exn ad_levels i).exit in
+      Set.Poly.union exits (union_map exits ~f:extra_variables)
+    in
+    let stmt_val =
+      Stmt.Fixed.Pattern.map (update_expr variable_set)
+        (fun x -> x)
+        stmt_pattern
+    in
+    update_stmt stmt_val variable_set
+  in
+  map_rec_stmt_loc_num flowgraph_to_mir optimize_min_vars_stmt_base
+    (Map.find_exn flowgraph_to_mir 1)
 
 (**
- * Modify a function and it's subexpressions from SoA <-> AoS and vice versa.
- * @param modifiable_set The set of eigen names that are either demotable 
- *  to AoS or promotable to SoA.
- * @param mem_pattern If AoS, checks if all names in the functions
- *  expressions are in the modifiable set and demotes the function to SoA.
- *  Else if SoA, checks if any of the names in the modifiable set
- *   and if so then promotes the function to SoA.
- * @param exprs A list of expressions going into the function.
- **)
-let modify_kind (modifiable_set : string Set.Poly.t) (kind : Fun_kind.t)
-    (exprs : Expr.Typed.Meta.t Expr.Fixed.t list) : Fun_kind.t =
-  let expr_names = Set.Poly.union_list (List.map ~f:Mem_pattern.query_eigen_names exprs) in
-  let is_all_in_list = Set.Poly.is_subset ~of_:modifiable_set expr_names in
-  match kind with
-  | Fun_kind.StanLib (name, sfx, (_ : Common.Helpers.mem_pattern)) ->
-      if is_all_in_list then Fun_kind.StanLib (name, sfx, Common.Helpers.AoS)
-      else Fun_kind.StanLib (name, sfx, AoS)
-  | (_ : Fun_kind.t) -> kind
-
-(** 
-* Modify the expressions to demote/promote from AoS <-> SoA and vice versa
-* The only real path in the below is on the functions.
-*
-* For AoS, we check that *all* of the matrix and vector names
-*  in the list of expressions are in the `modifiable_set` and if so
-*  make the function AoS. 
-* For SoA, we check that *any* of the matrix and vector names
-*  in the list of expressions are in the `modifiable_set` and if so
-*  make the function SoA. 
-* @param mem_pattern The memory pattern to change functions to.
-* @param modifiable_set The name of the variables whose
-*  associated expressions we want to modify.
-* @param pattern The expression to modify.
-*)
-let rec modify_expr_pattern (modifiable_set : string Set.Poly.t)
-    (pattern : Expr.Typed.Meta.t Expr.Fixed.t Expr.Fixed.Pattern.t) =
-  let mod_expr = modify_expr modifiable_set in
-  match pattern with
-  | Expr.Fixed.Pattern.FunApp
-      (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
-      let new_exprs = List.map ~f:mod_expr exprs in
-      let mod_kind = modify_kind modifiable_set in
-      Expr.Fixed.Pattern.FunApp (mod_kind kind new_exprs, new_exprs)
-  | TernaryIf (predicate, texpr, fexpr) ->
-      TernaryIf (mod_expr predicate, mod_expr texpr, mod_expr fexpr)
-  | Indexed (idx_expr, indexed) ->
-      Indexed (mod_expr idx_expr, List.map ~f:(Index.map mod_expr) indexed)
-  | EAnd (lhs, rhs) -> EAnd (mod_expr lhs, mod_expr rhs)
-  | EOr (lhs, rhs) -> EOr (mod_expr lhs, mod_expr rhs)
-  | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
-      pattern
-
-(** 
-* Given a Set of strings containing the names of objects that can be 
-* modified from AoS <-> SoA and vice versa, modify them within the expression.
-* @param mem_pattern The memory pattern to change expressions to.
-* @param modifiable_set The name of the variables whose
-*  associated expressions we want to modify.
-* @param expr the expression to modify.
-*)
-and modify_expr (modifiable_set : string Set.Poly.t)
-    (Expr.Fixed.({pattern; _}) as expr) =
-  {expr with pattern= modify_expr_pattern modifiable_set pattern}
-
-(**
- * Modify statement patterns in the MIR from AoS <-> SoA and vice versa 
- * @param mem_pattern A mem_pattern to modify expressions to. For the 
- *  given memory pattern, this modifies 
- *  statement patterns and expressions to it.
- * @param pattern The statement pattern to modify 
- * @param modifiable_set The name of the variable we are searching for.
- *)
-let rec modify_stmt_pattern
-    (pattern :
-      ( Expr.Typed.Meta.t Expr.Fixed.t
-      , (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t )
-      Stmt.Fixed.Pattern.t) (modifiable_set : string Core_kernel.Set.Poly.t) =
-  let mod_expr = Mir_utils.map_rec_expr (modify_expr_pattern modifiable_set) in
-  let mod_stmt stmt = modify_stmt stmt modifiable_set in
-  match pattern with
-  | Stmt.Fixed.Pattern.Decl
-      ({decl_id; decl_type= Type.Sized sized_type; _} as decl) ->
-      let print_set (s : string Set.Poly.t) = 
-        Set.Poly.iter ~f:print_endline s in
-        let () = printf "\n----BEGIN DECL MOD------\n" in
-        let () = printf "\nDecl Name: %s\n" decl_id in
-        let () =
-        let () = printf "\n-----------\n" in 
-        let () = printf "modifiable_set:" in 
-        let () = printf "\n-----------\n" in 
-        print_set modifiable_set in 
-        let () = printf "\n----END DECL MOD------\n" in
-
-      if Set.Poly.mem modifiable_set decl_id then
-      let () = printf "\n----Downgrade Chosen------\n" in
-      Stmt.Fixed.Pattern.Decl
-          { decl with
-            decl_type=
-              Type.Sized (SizedType.modify_sizedtype_mem AoS sized_type) }
-      else
-      let () = printf "\nUpgrade Chosen\n" in
-      Decl
-          { decl with
-            decl_type=
-              Type.Sized (SizedType.modify_sizedtype_mem SoA sized_type) }
-  | NRFunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
-      let new_exprs = List.map ~f:mod_expr exprs in
-      let mod_kind = modify_kind modifiable_set kind new_exprs in
-      NRFunApp (mod_kind, new_exprs)
-  | Assignment
-      ( (name, ut, lhs)
-      , ( { pattern=
-              FunApp (CompilerInternal (FnReadParam (constrain_op, _)), args); _
-          } as assigner ) ) ->
-      if Set.Poly.mem modifiable_set name then
-        Assignment
-          ( (name, ut, List.map ~f:(Index.map mod_expr) lhs)
-          , { assigner with
-              pattern=
-                FunApp
-                  ( CompilerInternal (FnReadParam (constrain_op, AoS))
-                  , List.map ~f:mod_expr args ) } )
-      else
-        Assignment
-          ( (name, ut, List.map ~f:(Index.map mod_expr) lhs)
-          , { assigner with
-              pattern=
-                FunApp
-                  ( CompilerInternal (FnReadParam (constrain_op, SoA))
-                  , List.map ~f:mod_expr args ) } )
-  | Assignment (((name : string), (ut : UnsizedType.t), lhs), rhs) ->
-      Assignment
-        ((name, ut, List.map ~f:(Index.map mod_expr) lhs), mod_expr rhs)
-  | IfElse (predicate, true_stmt, op_false_stmt) ->
-      IfElse
-        ( mod_expr predicate
-        , mod_stmt true_stmt
-        , Option.map ~f:mod_stmt op_false_stmt )
-  | Block stmts -> Block (List.map ~f:mod_stmt stmts)
-  | SList stmts -> SList (List.map ~f:mod_stmt stmts)
-  | For ({lower; upper; body; _} as loop) ->
-      Stmt.Fixed.Pattern.For
-        { loop with
-          lower= mod_expr lower; upper= mod_expr upper; body= mod_stmt body }
-  | TargetPE expr -> TargetPE (mod_expr expr)
-  | Return optional_expr -> Return (Option.map ~f:mod_expr optional_expr)
-  | Profile ((p_name : string), stmt) ->
-      Profile (p_name, List.map ~f:mod_stmt stmt)
-  | While (predicate, body) -> While (mod_expr predicate, mod_stmt body)
-  | Skip | Break | Continue | Decl _ -> pattern
-
-(**
- * Modify statement patterns in the MIR from AoS <-> SoA and vice versa 
- * @param mem_pattern A mem_pattern to modify expressions to. For the 
- *  given memory pattern, this modifies 
- *  statement patterns and expressions to it.
- * @param stmt The statement to modify. 
- * @param modifiable_set The name of the variable we are searching for.
- *)
-and modify_stmt (Stmt.Fixed.({pattern; _}) as stmt)
-    (modifiable_set : string Set.Poly.t) =
-  {stmt with pattern= modify_stmt_pattern pattern modifiable_set}
-
-(**
-* Deduces whether types can be Structures of Arrays (SoA/fast) or
-*  Arrays of Structs (AoS/slow). See the docs in
-*  Mem_pattern.query_demote_stmt/exprs* functions for 
-*  details on the rules surrounding when demotion from
-*  SoA -> AoS needs to happen.
-*
-* This first does a simple iter over
-* the log_prob portion of the MIR, finding the names of all matrices
-* (and arrays of matrices) where either the Stan math function
-* does not support SoA or is the object is single cell accesed within a 
-* For or While loop. These are the initial variables
-* given to the monotone framework. Then log_prob has all matrix like objects
-* and the functions that use them to SoA. After that the 
-* Monotone framework is used to deduce assignment paths of AoS -> SoA
-* and vice versa which need to be demoted to AoS as well as updating 
-* functions and objects after these assignment passes that then 
-* also need to be AoS.
-*
-* @param mir: The program's whole MIR.
-*)
+  * Deduces whether types can be Structures of Arrays (SoA/fast) or
+  *  Arrays of Structs (AoS/slow). See the docs in
+  *  Mem_pattern.query_demote_stmt/exprs* functions for 
+  *  details on the rules surrounding when demotion from
+  *  SoA -> AoS needs to happen.
+  *
+  * This first does a simple iter over
+  * the log_prob portion of the MIR, finding the names of all matrices
+  * (and arrays of matrices) where either the Stan math function
+  * does not support SoA or is the object is single cell accesed within a 
+  * For or While loop. These are the initial variables
+  * given to the monotone framework. Then log_prob has all matrix like objects
+  * and the functions that use them to SoA. After that the 
+  * Monotone framework is used to deduce assignment paths of AoS -> SoA
+  * and vice versa which need to be demoted to AoS as well as updating 
+  * functions and objects after these assignment passes that then 
+  * also need to be AoS.
+  *
+  * @param mir: The program's whole MIR.
+  *)
 let optimize_soa (mir : Program.Typed.t) =
+  let gen_aos_variables
+      (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
+      (l : int) (aos_variables : string Set.Poly.t) =
+    let mir_node mir_idx = Map.find_exn flowgraph_to_mir mir_idx in
+    match (mir_node l).pattern with stmt ->
+      Mem_pattern.query_demotable_stmt aos_variables stmt
+  in
   let initial_variables =
     Set.Poly.union_list
       (List.map
          ~f:(Mem_pattern.query_initial_demotable_stmt false)
          mir.log_prob)
   in
-  let print_set (s : string Set.Poly.t) = 
-    Set.Poly.iter ~f:print_endline s in
+  (*
+  let initial_variables =
+    Set.Poly.of_list
+      (List.filter_map
+         ~f:(fun (v, Program.({out_block; _})) ->
+           match out_block with Parameters | TransformedParameters -> Some v | _ -> None )
+         mir.output_vars)
+  in
+  *)
+  (*  let initial_variables = Set.Poly.union_list (List.map ~f:Mem_pattern.get_eigen_decls mir.log_prob) in*)
+  let print_set (s : string Set.Poly.t) = Set.Poly.iter ~f:print_endline s in
   let () =
-    let () = printf "\n-----------\n" in 
-    let () = printf "Initial Nonos:" in 
-    let () = printf "\n-----------\n" in 
-    print_set initial_variables in 
-
+    let () = printf "\n-----------\n" in
+    let () = printf "Initial Nonos:" in
+    let () = printf "\n-----------\n" in
+    print_set initial_variables
+  in
   let mod_exprs aos_exits mod_expr =
-    Mir_utils.map_rec_expr (modify_expr_pattern aos_exits) mod_expr
+    Mir_utils.map_rec_expr (Mem_pattern.modify_expr_pattern aos_exits) mod_expr
   in
   let modify_stmt_patt stmt_pattern variable_set =
-    modify_stmt_pattern stmt_pattern variable_set
+    Mem_pattern.modify_stmt_pattern stmt_pattern variable_set
   in
   let transform stmt =
-    optimize_minimal_variables ~gen_variables:gen_aos_variables
+    optimize_minimal_variables2 ~gen_variables:gen_aos_variables
       ~update_expr:mod_exprs ~update_stmt:modify_stmt_patt ~initial_variables
       stmt ~extra_variables:(fun _ -> Set.Poly.empty )
   in
