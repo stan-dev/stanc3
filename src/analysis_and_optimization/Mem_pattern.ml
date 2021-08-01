@@ -145,81 +145,6 @@ let contains_eigen_names (name_set : string Set.Poly.t)
     (expr : Typed.Meta.t Expr.Fixed.t) : bool =
   not (Set.Poly.is_empty (Set.inter name_set (query_eigen_names expr)))
 
-(* Look through a statement to see whether it needs modified from
- * SoA to AoS. Returns the set of object names that need demoted
- * in a statement, if any.
- * @param aos_exits A set of variables that can be demoted.
- * @param pattern The Stmt pattern to query.
- *)
-let query_demotable_stmt (aos_exits : string Set.Poly.t)
-    (pattern : (Typed.t, int) Stmt.Fixed.Pattern.t) : string Set.Poly.t =
-  match pattern with
-  | Stmt.Fixed.Pattern.Assignment
-      ( ( (assign_name : string)
-        , (_ : UnsizedType.t)
-        , (_ : Expr.Typed.t Index.t list) )
-      , rhs ) ->
-      let all_rhs_eigen_names = query_eigen_names rhs in
-      let rhs_set =
-        match Set.Poly.mem aos_exits assign_name with
-        | true -> all_rhs_eigen_names
-        | false -> Set.Poly.empty
-      in
-      let lhs_set =
-        match
-          Set.Poly.is_subset ~of_:aos_exits all_rhs_eigen_names
-          && (not (Set.Poly.is_empty aos_exits))
-          && not (Set.Poly.is_empty all_rhs_eigen_names)
-        with
-        | true -> Set.Poly.singleton assign_name
-        | false -> Set.Poly.empty
-      in
-      (*
-      let print_set (s : string Set.Poly.t) =
-        Set.Poly.iter ~f:print_endline s
-      in
-      let () = printf "\n----BEGIN ASSIGN CHECK------\n" in
-      let () = printf "\nAssign Name: %s\n" assign_name in
-      let () =
-        let () = printf "\n-----------\n" in
-        let () = printf "all rhs eigens:" in
-        let () = printf "\n-----------\n" in
-        print_set all_rhs_eigen_names
-      in
-      let () =
-        let () = printf "\n-----------\n" in
-        let () = printf "aos_exits:" in
-        let () = printf "\n-----------\n" in
-        print_set aos_exits
-      in
-      let () =
-        let () = printf "\n-----------\n" in
-        let () = printf "lhs_set:" in
-        let () = printf "\n-----------\n" in
-        print_set lhs_set
-      in
-      let () =
-        let () = printf "\n-----------\n" in
-        let () = printf "rhs_set:" in
-        let () = printf "\n-----------\n" in
-        print_set rhs_set
-      in
-      let () = printf "\n----END ASSIGN CHECK------\n" in
-      *)
-      Set.Poly.union rhs_set lhs_set
-  | Decl _
-   |NRFunApp ((_ : Fun_kind.t), (_ : Expr.Typed.t list))
-   |Return (_ : Expr.Typed.t option)
-   |TargetPE (_ : Expr.Typed.t)
-   |IfElse ((_ : Expr.Typed.t), (_ : int), (_ : int option))
-   |For _
-   |While ((_ : Expr.Typed.t), (_ : int))
-   |Skip | Break | Continue
-   |SList (_ : int list)
-   |Block (_ : int list)
-   |Profile ((_ : string), (_ : int list)) ->
-      Set.Poly.empty
-
 (**
  * Check an expression to count how many times we see a single index.
  * @param acc An accumulator from previous folds of multiple expressions.
@@ -424,33 +349,18 @@ let rec query_bad_assign Expr.Fixed.({pattern; meta}) : bool =
 * exprs The expression list passed to the functions.
 *)
 and query_bad_assign_fun (kind : Fun_kind.t)
-    (exprs : Typed.Meta.t Expr.Fixed.t list) Expr.Typed.Meta.({type_; _}) :
-    bool =
-  let query_expr = query_bad_assign in
+    (exprs : Typed.Meta.t Expr.Fixed.t list) _ : bool =
   match kind with
-  | Fun_kind.StanLib (_, (_ : bool Fun_kind.suffix), _) ->
+  | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) ->
       let find_args
           Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
         (adlevel, type_)
       in
       let fun_args = List.map ~f:find_args exprs in
-      (*Right now we can't handle AD real and data matrix combos that return a matrix :-/*)
-      let is_args_autodiff_real_data_matrix =
-        List.exists
-          ~f:(fun (x, y) ->
-            match (x, y) with
-            | UnsizedType.AutoDiffable, UnsizedType.UReal -> true
-            | _ -> false )
-          fun_args
-        && List.exists
-             ~f:(fun (x, y) ->
-               match (x, UnsizedType.contains_eigen_type y) with
-               | UnsizedType.DataOnly, true -> true
-               | _ -> false )
-             fun_args
-        && UnsizedType.contains_eigen_type type_
+      let is_fun_support =
+        Stan_math_signatures.query_stan_math_mem_pattern_support name fun_args
       in
-      is_args_autodiff_real_data_matrix || List.exists ~f:query_expr exprs
+      (not is_fun_support) || List.for_all ~f:query_bad_assign exprs
   | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) -> true
   | CompilerInternal (_ : Internal_fun.t) -> false
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) -> false
@@ -467,9 +377,6 @@ let rec query_initial_demotable_stmt (in_loop : bool)
       (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t) :
     string Set.Poly.t =
   let query_expr = query_initial_demotable_expr in_loop in
-  let query_inner_stmt checking_loop =
-    query_initial_demotable_stmt checking_loop
-  in
   match pattern with
   | Stmt.Fixed.Pattern.Assignment
       (((name : string), (ut : UnsizedType.t), lhs), rhs) ->
@@ -494,23 +401,103 @@ let rec query_initial_demotable_stmt (in_loop : bool)
   | NRFunApp (kind, exprs) -> query_initial_demotable_funs in_loop kind exprs
   | IfElse (predicate, lhs, rhs) ->
       let query_rhs =
-        Option.value_map ~f:(query_inner_stmt in_loop) ~default:Set.Poly.empty
-          rhs
+        Option.value_map
+          ~f:(query_initial_demotable_stmt in_loop)
+          ~default:Set.Poly.empty rhs
       in
       Set.Poly.union_list
-        [query_expr predicate; query_inner_stmt in_loop lhs; query_rhs]
+        [ query_expr predicate
+        ; query_initial_demotable_stmt in_loop lhs
+        ; query_rhs ]
   | Return optional_expr ->
       Option.value_map ~f:query_expr ~default:Set.Poly.empty optional_expr
   | SList lst | Profile (_, lst) | Block lst ->
-      Set.Poly.union_list (List.map ~f:(query_inner_stmt in_loop) lst)
+      Set.Poly.union_list
+        (List.map ~f:(query_initial_demotable_stmt in_loop) lst)
   | TargetPE expr -> query_expr expr
   | For {lower; upper; body; _} ->
       Set.Poly.union
         (Set.Poly.union (query_expr lower) (query_expr upper))
-        (query_inner_stmt true body)
+        (query_initial_demotable_stmt true body)
   | While (predicate, body) ->
-      Set.Poly.union (query_expr predicate) (query_inner_stmt true body)
+      Set.Poly.union (query_expr predicate)
+        (query_initial_demotable_stmt true body)
   | Skip | Break | Continue | Decl _ -> Set.Poly.empty
+
+(* Look through a statement to see whether it needs modified from
+ * SoA to AoS. Returns the set of object names that need demoted
+ * in a statement, if any.
+ * @param aos_exits A set of variables that can be demoted.
+ * @param pattern The Stmt pattern to query.
+ *)
+let query_demotable_stmt (aos_exits : string Set.Poly.t)
+    (pattern : (Typed.t, int) Stmt.Fixed.Pattern.t) : string Set.Poly.t =
+  match pattern with
+  | Stmt.Fixed.Pattern.Assignment
+      ( ( (assign_name : string)
+        , (_ : UnsizedType.t)
+        , (_ : Expr.Typed.t Index.t list) )
+      , rhs ) ->
+      let all_rhs_eigen_names = query_eigen_names rhs in
+      let rhs_set =
+        match Set.Poly.mem aos_exits assign_name with
+        | true -> all_rhs_eigen_names
+        | false -> Set.Poly.empty
+      in
+      let lhs_set =
+        match
+          Set.Poly.is_subset ~of_:aos_exits all_rhs_eigen_names
+          && (not (Set.Poly.is_empty aos_exits))
+          && not (Set.Poly.is_empty all_rhs_eigen_names)
+        with
+        | true -> Set.Poly.singleton assign_name
+        | false -> Set.Poly.empty
+      in
+      (*
+   let print_set (s : string Set.Poly.t) =
+     Set.Poly.iter ~f:print_endline s
+   in
+   let () = printf "\n----BEGIN ASSIGN CHECK------\n" in
+   let () = printf "\nAssign Name: %s\n" assign_name in
+   let () =
+     let () = printf "\n-----------\n" in
+     let () = printf "all rhs eigens:" in
+     let () = printf "\n-----------\n" in
+     print_set all_rhs_eigen_names
+   in
+   let () =
+     let () = printf "\n-----------\n" in
+     let () = printf "aos_exits:" in
+     let () = printf "\n-----------\n" in
+     print_set aos_exits
+   in
+   let () =
+     let () = printf "\n-----------\n" in
+     let () = printf "lhs_set:" in
+     let () = printf "\n-----------\n" in
+     print_set lhs_set
+   in
+   let () =
+     let () = printf "\n-----------\n" in
+     let () = printf "rhs_set:" in
+     let () = printf "\n-----------\n" in
+     print_set rhs_set
+   in
+   let () = printf "\n----END ASSIGN CHECK------\n" in
+   *)
+      Set.Poly.union rhs_set lhs_set
+  | Decl _
+   |NRFunApp ((_ : Fun_kind.t), (_ : Expr.Typed.t list))
+   |Return (_ : Expr.Typed.t option)
+   |TargetPE (_ : Expr.Typed.t)
+   |IfElse ((_ : Expr.Typed.t), (_ : int), (_ : int option))
+   |For _
+   |While ((_ : Expr.Typed.t), (_ : int))
+   |Skip | Break | Continue
+   |SList (_ : int list)
+   |Block (_ : int list)
+   |Profile ((_ : string), (_ : int list)) ->
+      Set.Poly.empty
 
 (**
  * Modify a function and it's subexpressions from SoA <-> AoS and vice versa.

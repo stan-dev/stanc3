@@ -35,3 +35,6 @@ test/*.log
 
 # local cmdstan
 local/*
+
+# hpp files in test 
+test/**/*.hpp

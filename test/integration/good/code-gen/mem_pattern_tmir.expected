@@ -585,14 +585,14 @@
      (Decl (decl_adtype AutoDiffable) (decl_id h)
       (decl_type
        (Sized
-        (SVector AoS
+        (SVector SoA
          ((pattern (Var Nr))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
      (Assignment (h UVector ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () AoS))
+        (FunApp (CompilerInternal (FnReadParam () SoA))
          (((pattern (Var Nr))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -1149,7 +1149,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id h_i_mean)
       (decl_type
        (Sized
-        (SVector AoS
+        (SVector SoA
          ((pattern (Var Nr))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
@@ -1157,7 +1157,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id h_i_sigma)
       (decl_type
        (Sized
-        (SVector SoA
+        (SVector AoS
          ((pattern (Var Nr))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
@@ -1267,7 +1267,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id h_sigma)
       (decl_type
        (Sized
-        (SVector AoS
+        (SVector SoA
          ((pattern (Var Nr))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))

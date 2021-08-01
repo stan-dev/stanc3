@@ -231,7 +231,8 @@ and gen_operator_app = function
   | Greater -> fun ppf es -> pp_binary_f ppf "logical_gt" es
   | Geq -> fun ppf es -> pp_binary_f ppf "logical_gte" es
 
-and gen_misc_special_math_app f _ (_ : UnsizedType.returntype option) =
+and gen_misc_special_math_app f mem_pattern
+    (ret_type : UnsizedType.returntype option) =
   match f with
   | "lmultiply" ->
       Some (fun ppf es -> pp_binary ppf "multiply_log(@,%a,@ %a)" es)
@@ -257,7 +258,7 @@ and gen_misc_special_math_app f _ (_ : UnsizedType.returntype option) =
         (fun ppf es ->
           let f = std_prefix_data_scalar f es in
           pp_call ppf (f, pp_expr, es) )
-  (*NOTE: Very ad-hoc need to cleanup
+  (*NOTE: Very ad-hoc need to cleanup*)
   | "rep_matrix" | "to_vector" | "rep_vector" | "rep_row_vector"
    |"append_row" | "append_col"
     when mem_pattern = Common.Helpers.SoA -> (
@@ -265,11 +266,10 @@ and gen_misc_special_math_app f _ (_ : UnsizedType.returntype option) =
     | Some (UnsizedType.ReturnType t) ->
         Some
           (fun ppf es ->
-            pf ppf "rep_matrix<stan::math::var_value<%a>>(@,%a)"
-              pp_unsizedtype_local (UnsizedType.DataOnly, t)
-              (list ~sep:comma pp_expr) es )
+            pf ppf "%s<stan::math::var_value<%a>>(@,%a)" f pp_unsizedtype_local
+              (UnsizedType.DataOnly, t) (list ~sep:comma pp_expr) es )
     | Some Void -> None
-    | None -> None )*)
+    | None -> None )
   | f when Map.mem fn_renames f ->
       Some (fun ppf es -> pp_call ppf (Map.find_exn fn_renames f, pp_expr, es))
   | _ -> None
