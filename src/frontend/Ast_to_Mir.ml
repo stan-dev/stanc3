@@ -244,6 +244,18 @@ let constraint_forl = function
    |CholeskyCov | Correlation | Covariance ->
       Stmt.Helpers.for_eigen
 
+let constraint_forl2 transform st =
+  match SizedType.is_eigen st with
+  | true -> Stmt.Helpers.for_eigen
+  | false -> (
+    match transform with
+    | Program.Identity | Offset _ | Multiplier _ | OffsetMultiplier _
+     |Lower _ | Upper _ | LowerUpper _ ->
+        Stmt.Helpers.for_scalar
+    | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
+     |CholeskyCov | Correlation | Covariance ->
+        Stmt.Helpers.for_eigen )
+
 let same_shape decl_id decl_var id var meta =
   if UnsizedType.is_scalar_type (Expr.Typed.type_of var) then []
   else
@@ -417,7 +429,7 @@ let rec check_decl var decl_type' decl_id decl_trans smeta adlevel =
           Stmt.Helpers.internal_nrfunapp (FnCheck fn) (id_str :: id :: args)
             smeta
         in
-        [(constraint_forl decl_trans) decl_type check_id var smeta]
+        [(constraint_forl2 decl_trans decl_type) decl_type check_id var smeta]
     | None -> [] )
 
 let check_sizedtype name =

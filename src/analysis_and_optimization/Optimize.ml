@@ -1202,15 +1202,6 @@ let optimize_soa (mir : Program.Typed.t) =
          mir.log_prob)
   in
   (*
-  let initial_variables =
-    Set.Poly.of_list
-      (List.filter_map
-         ~f:(fun (v, Program.({out_block; _})) ->
-           match out_block with Parameters | TransformedParameters -> Some v | _ -> None )
-         mir.output_vars)
-  in
-  *)
-  (*  let initial_variables = Set.Poly.union_list (List.map ~f:Mem_pattern.get_eigen_decls mir.log_prob) in*)
   let print_set (s : string Set.Poly.t) = Set.Poly.iter ~f:print_endline s in
   let () =
     let () = printf "\n-----------\n" in
@@ -1218,6 +1209,7 @@ let optimize_soa (mir : Program.Typed.t) =
     let () = printf "\n-----------\n" in
     print_set initial_variables
   in
+  *)
   let mod_exprs aos_exits mod_expr =
     Mir_utils.map_rec_expr (Mem_pattern.modify_expr_pattern aos_exits) mod_expr
   in

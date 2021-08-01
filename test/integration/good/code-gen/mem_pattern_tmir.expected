@@ -383,7 +383,7 @@
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
-      (((pattern (Lit Str prices_p))
+      (((pattern (Lit Str Ys_p))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -401,7 +401,7 @@
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
-      (((pattern (Lit Str bQ_price_mean))
+      (((pattern (Lit Str bQ_Y_mean))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str K))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -410,7 +410,7 @@
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
-      (((pattern (Lit Str bQ_price_sigma))
+      (((pattern (Lit Str bQ_Y_sigma))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str K))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -428,7 +428,7 @@
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
-      (((pattern (Lit Str mu_prices))
+      (((pattern (Lit Str mu_Ys))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -437,7 +437,7 @@
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
-      (((pattern (Lit Str sigma_prices))
+      (((pattern (Lit Str sigma_Ys))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -446,7 +446,7 @@
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
-      (((pattern (Lit Str price_tmp))
+      (((pattern (Lit Str Y_tmp))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -455,7 +455,7 @@
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
-      (((pattern (Lit Str prices))
+      (((pattern (Lit Str Ys))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -464,7 +464,7 @@
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
-      (((pattern (Lit Str prices_diff))
+      (((pattern (Lit Str Ys_diff))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str Nr))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -518,17 +518,17 @@
     (meta <opaque>))))
  (log_prob
   (((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id prices_p)
+     (Decl (decl_adtype AutoDiffable) (decl_id Ys_p)
       (decl_type
        (Sized
-        (SVector SoA
+        (SVector AoS
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (prices_p UVector ())
+     (Assignment (Ys_p UVector ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () SoA))
+        (FunApp (CompilerInternal (FnReadParam () AoS))
          (((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -537,46 +537,46 @@
      (Decl (decl_adtype AutoDiffable) (decl_id bQ_model)
       (decl_type
        (Sized
-        (SVector SoA
+        (SVector AoS
          ((pattern (Var K))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
      (Assignment (bQ_model UVector ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () SoA))
+        (FunApp (CompilerInternal (FnReadParam () AoS))
          (((pattern (Var K))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id bQ_price_mean)
+     (Decl (decl_adtype AutoDiffable) (decl_id bQ_Y_mean)
       (decl_type
        (Sized
-        (SVector SoA
+        (SVector AoS
          ((pattern (Var K))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (bQ_price_mean UVector ())
+     (Assignment (bQ_Y_mean UVector ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () SoA))
+        (FunApp (CompilerInternal (FnReadParam () AoS))
          (((pattern (Var K))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id bQ_price_sigma)
+     (Decl (decl_adtype AutoDiffable) (decl_id bQ_Y_sigma)
       (decl_type
        (Sized
-        (SVector SoA
+        (SVector AoS
          ((pattern (Var K))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (bQ_price_sigma UVector ())
+     (Assignment (bQ_Y_sigma UVector ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () SoA))
+        (FunApp (CompilerInternal (FnReadParam () AoS))
          (((pattern (Var K))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -585,14 +585,14 @@
      (Decl (decl_adtype AutoDiffable) (decl_id h)
       (decl_type
        (Sized
-        (SVector SoA
+        (SVector AoS
          ((pattern (Var Nr))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
      (Assignment (h UVector ())
       ((pattern
-        (FunApp (CompilerInternal (FnReadParam () SoA))
+        (FunApp (CompilerInternal (FnReadParam () AoS))
          (((pattern (Var Nr))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -661,77 +661,77 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id mu_prices)
+     (Decl (decl_adtype AutoDiffable) (decl_id mu_Ys)
       (decl_type
        (Sized
-        (SVector SoA
+        (SVector AoS
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (mu_prices UVector ())
+     (Assignment (mu_Ys UVector ())
       ((pattern
         (FunApp (StanLib Times__ FnPlain AoS)
          (((pattern (Var X))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var bQ_price_mean))
+          ((pattern (Var bQ_Y_mean))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id sigma_prices)
+     (Decl (decl_adtype AutoDiffable) (decl_id sigma_Ys)
       (decl_type
        (Sized
-        (SVector SoA
+        (SVector AoS
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (sigma_prices UVector ())
+     (Assignment (sigma_Ys UVector ())
       ((pattern
         (FunApp (StanLib exp FnPlain AoS)
          (((pattern
             (FunApp (StanLib Times__ FnPlain AoS)
              (((pattern (Var X))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
-              ((pattern (Var bQ_price_sigma))
+              ((pattern (Var bQ_Y_sigma))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id price_tmp)
+     (Decl (decl_adtype AutoDiffable) (decl_id Y_tmp)
       (decl_type
        (Sized
-        (SVector SoA
+        (SVector AoS
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (price_tmp UVector ())
+     (Assignment (Y_tmp UVector ())
       ((pattern
         (FunApp (StanLib Plus__ FnPlain AoS)
          (((pattern
             (FunApp (StanLib EltTimes__ FnPlain AoS)
-             (((pattern (Var prices_p))
+             (((pattern (Var Ys_p))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
-              ((pattern (Var sigma_prices))
+              ((pattern (Var sigma_Ys))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
-          ((pattern (Var mu_prices))
+          ((pattern (Var mu_Ys))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id prices)
+     (Decl (decl_adtype AutoDiffable) (decl_id Ys)
       (decl_type
        (Sized
-        (SVector SoA
+        (SVector AoS
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (prices UVector ())
+     (Assignment (Ys UVector ())
       ((pattern
         (FunApp (StanLib Plus__ FnPlain AoS)
          (((pattern
@@ -740,7 +740,7 @@
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
                 (FunApp (StanLib inv_logit FnPlain AoS)
-                 (((pattern (Var price_tmp))
+                 (((pattern (Var Y_tmp))
                    (meta
                     ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -757,7 +757,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype AutoDiffable) (decl_id prices_diff)
+     (Decl (decl_adtype AutoDiffable) (decl_id Ys_diff)
       (decl_type
        (Sized
         (SVector AoS
@@ -765,14 +765,14 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (prices_diff UVector ())
+     (Assignment (Ys_diff UVector ())
       ((pattern
         (FunApp (StanLib EltDivide__ FnPlain AoS)
          (((pattern
             (FunApp (StanLib Minus__ FnPlain AoS)
              (((pattern
                 (Indexed
-                 ((pattern (Var prices))
+                 ((pattern (Var Ys))
                   (meta
                    ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
                  ((Between
@@ -783,7 +783,7 @@
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
                 (Indexed
-                 ((pattern (Var prices))
+                 ((pattern (Var Ys))
                   (meta
                    ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
                  ((Between
@@ -802,7 +802,7 @@
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern
             (Indexed
-             ((pattern (Var prices))
+             ((pattern (Var Ys))
               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
              ((Between
                ((pattern (Lit Int 1))
@@ -889,7 +889,7 @@
         (FunApp (StanLib Minus__ FnPlain AoS)
          (((pattern
             (Indexed
-             ((pattern (Var prices_diff))
+             ((pattern (Var Ys_diff))
               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
              ((Single
                ((pattern (Lit Int 1))
@@ -945,7 +945,7 @@
                 (FunApp (StanLib Times__ FnPlain AoS)
                  (((pattern
                     (Indexed
-                     ((pattern (Var prices_diff))
+                     ((pattern (Var Ys_diff))
                       (meta
                        ((type_ UVector) (loc <opaque>)
                         (adlevel AutoDiffable))))
@@ -981,7 +981,7 @@
         (FunApp (StanLib Minus__ FnPlain AoS)
          (((pattern
             (Indexed
-             ((pattern (Var prices_diff))
+             ((pattern (Var Ys_diff))
               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
              ((Single
                ((pattern (Lit Int 2))
@@ -1065,7 +1065,7 @@
                         (FunApp (StanLib dot_product FnPlain AoS)
                          (((pattern
                             (Indexed
-                             ((pattern (Var prices_diff))
+                             ((pattern (Var Ys_diff))
                               (meta
                                ((type_ UVector) (loc <opaque>)
                                 (adlevel AutoDiffable))))
@@ -1119,7 +1119,7 @@
                 (FunApp (StanLib Minus__ FnPlain AoS)
                  (((pattern
                     (Indexed
-                     ((pattern (Var prices_diff))
+                     ((pattern (Var Ys_diff))
                       (meta
                        ((type_ UVector) (loc <opaque>)
                         (adlevel AutoDiffable))))
@@ -1267,7 +1267,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id h_sigma)
       (decl_type
        (Sized
-        (SVector SoA
+        (SVector AoS
          ((pattern (Var Nr))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
@@ -1335,33 +1335,13 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (For (loopvar sym1__)
-      (lower
-       ((pattern (Lit Int 1))
-        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-      (upper
-       ((pattern (Var Nr))
-        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-      (body
-       ((pattern
-         (Block
-          (((pattern
-             (NRFunApp (CompilerInternal (FnCheck greater_or_equal))
-              (((pattern (Lit Str h_i_sigma[sym1__]))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-               ((pattern
-                 (Indexed
-                  ((pattern (Var h_i_sigma))
-                   (meta
-                    ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
-                  ((Single
-                    ((pattern (Var sym1__))
-                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
-               ((pattern (Lit Int 0))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-            (meta <opaque>)))))
-        (meta <opaque>)))))
+     (NRFunApp (CompilerInternal (FnCheck greater_or_equal))
+      (((pattern (Lit Str h_i_sigma))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Var h_i_sigma))
+        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
+       ((pattern (Lit Int 0))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
      (Block
@@ -1441,7 +1421,7 @@
          (TargetPE
           ((pattern
             (FunApp (StanLib student_t_lpdf (FnLpdf true) AoS)
-             (((pattern (Var sigma_prices))
+             (((pattern (Var sigma_Ys))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Lit Int 10))
                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -1455,7 +1435,7 @@
          (TargetPE
           ((pattern
             (FunApp (StanLib std_normal_lpdf (FnLpdf true) AoS)
-             (((pattern (Var prices_p))
+             (((pattern (Var Ys_p))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
         (meta <opaque>))
@@ -1463,7 +1443,7 @@
          (TargetPE
           ((pattern
             (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
-             (((pattern (Var prices_diff))
+             (((pattern (Var Ys_diff))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern (Var mu))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
@@ -1474,7 +1454,7 @@
     (meta <opaque>))))
  (generate_quantities
   (((pattern
-     (Decl (decl_adtype DataOnly) (decl_id prices_p)
+     (Decl (decl_adtype DataOnly) (decl_id Ys_p)
       (decl_type
        (Sized
         (SVector AoS
@@ -1482,7 +1462,7 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (prices_p UVector ())
+     (Assignment (Ys_p UVector ())
       ((pattern
         (FunApp (CompilerInternal (FnReadParam () AoS))
          (((pattern (Var N))
@@ -1506,7 +1486,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id bQ_price_mean)
+     (Decl (decl_adtype DataOnly) (decl_id bQ_Y_mean)
       (decl_type
        (Sized
         (SVector AoS
@@ -1514,7 +1494,7 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (bQ_price_mean UVector ())
+     (Assignment (bQ_Y_mean UVector ())
       ((pattern
         (FunApp (CompilerInternal (FnReadParam () AoS))
          (((pattern (Var K))
@@ -1522,7 +1502,7 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id bQ_price_sigma)
+     (Decl (decl_adtype DataOnly) (decl_id bQ_Y_sigma)
       (decl_type
        (Sized
         (SVector AoS
@@ -1530,7 +1510,7 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (bQ_price_sigma UVector ())
+     (Assignment (bQ_Y_sigma UVector ())
       ((pattern
         (FunApp (CompilerInternal (FnReadParam () AoS))
          (((pattern (Var K))
@@ -1616,7 +1596,7 @@
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id mu_prices)
+     (Decl (decl_adtype DataOnly) (decl_id mu_Ys)
       (decl_type
        (Sized
         (SVector AoS
@@ -1624,7 +1604,7 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id sigma_prices)
+     (Decl (decl_adtype DataOnly) (decl_id sigma_Ys)
       (decl_type
        (Sized
         (SVector AoS
@@ -1632,7 +1612,7 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id price_tmp)
+     (Decl (decl_adtype DataOnly) (decl_id Y_tmp)
       (decl_type
        (Sized
         (SVector AoS
@@ -1640,7 +1620,7 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id prices)
+     (Decl (decl_adtype DataOnly) (decl_id Ys)
       (decl_type
        (Sized
         (SVector AoS
@@ -1648,7 +1628,7 @@
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id prices_diff)
+     (Decl (decl_adtype DataOnly) (decl_id Ys_diff)
       (decl_type
        (Sized
         (SVector AoS
@@ -1716,7 +1696,7 @@
              (NRFunApp (CompilerInternal FnWriteParam)
               (((pattern
                  (Indexed
-                  ((pattern (Var prices_p))
+                  ((pattern (Var Ys_p))
                    (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                   ((Single
                     ((pattern (Var sym1__))
@@ -1764,7 +1744,7 @@
              (NRFunApp (CompilerInternal FnWriteParam)
               (((pattern
                  (Indexed
-                  ((pattern (Var bQ_price_mean))
+                  ((pattern (Var bQ_Y_mean))
                    (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                   ((Single
                     ((pattern (Var sym1__))
@@ -1788,7 +1768,7 @@
              (NRFunApp (CompilerInternal FnWriteParam)
               (((pattern
                  (Indexed
-                  ((pattern (Var bQ_price_sigma))
+                  ((pattern (Var bQ_Y_sigma))
                    (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                   ((Single
                     ((pattern (Var sym1__))
@@ -1882,45 +1862,45 @@
       ()))
     (meta <opaque>))
    ((pattern
-     (Assignment (mu_prices UVector ())
+     (Assignment (mu_Ys UVector ())
       ((pattern
         (FunApp (StanLib Times__ FnPlain AoS)
          (((pattern (Var X))
            (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
-          ((pattern (Var bQ_price_mean))
+          ((pattern (Var bQ_Y_mean))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (sigma_prices UVector ())
+     (Assignment (sigma_Ys UVector ())
       ((pattern
         (FunApp (StanLib exp FnPlain AoS)
          (((pattern
             (FunApp (StanLib Times__ FnPlain AoS)
              (((pattern (Var X))
                (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly))))
-              ((pattern (Var bQ_price_sigma))
+              ((pattern (Var bQ_Y_sigma))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (price_tmp UVector ())
+     (Assignment (Y_tmp UVector ())
       ((pattern
         (FunApp (StanLib Plus__ FnPlain AoS)
          (((pattern
             (FunApp (StanLib EltTimes__ FnPlain AoS)
-             (((pattern (Var prices_p))
+             (((pattern (Var Ys_p))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
-              ((pattern (Var sigma_prices))
+              ((pattern (Var sigma_Ys))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
-          ((pattern (Var mu_prices))
+          ((pattern (Var mu_Ys))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (prices UVector ())
+     (Assignment (Ys UVector ())
       ((pattern
         (FunApp (StanLib Plus__ FnPlain AoS)
          (((pattern
@@ -1929,7 +1909,7 @@
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
               ((pattern
                 (FunApp (StanLib inv_logit FnPlain AoS)
-                 (((pattern (Var price_tmp))
+                 (((pattern (Var Y_tmp))
                    (meta
                     ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
@@ -1946,14 +1926,14 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
-     (Assignment (prices_diff UVector ())
+     (Assignment (Ys_diff UVector ())
       ((pattern
         (FunApp (StanLib EltDivide__ FnPlain AoS)
          (((pattern
             (FunApp (StanLib Minus__ FnPlain AoS)
              (((pattern
                 (Indexed
-                 ((pattern (Var prices))
+                 ((pattern (Var Ys))
                   (meta
                    ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
                  ((Between
@@ -1964,7 +1944,7 @@
                (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
               ((pattern
                 (Indexed
-                 ((pattern (Var prices))
+                 ((pattern (Var Ys))
                   (meta
                    ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
                  ((Between
@@ -1983,7 +1963,7 @@
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern
             (Indexed
-             ((pattern (Var prices))
+             ((pattern (Var Ys))
               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
              ((Between
                ((pattern (Lit Int 1))
@@ -2046,7 +2026,7 @@
         (FunApp (StanLib Minus__ FnPlain AoS)
          (((pattern
             (Indexed
-             ((pattern (Var prices_diff))
+             ((pattern (Var Ys_diff))
               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
              ((Single
                ((pattern (Lit Int 1))
@@ -2102,7 +2082,7 @@
                 (FunApp (StanLib Times__ FnPlain AoS)
                  (((pattern
                     (Indexed
-                     ((pattern (Var prices_diff))
+                     ((pattern (Var Ys_diff))
                       (meta
                        ((type_ UVector) (loc <opaque>)
                         (adlevel AutoDiffable))))
@@ -2138,7 +2118,7 @@
         (FunApp (StanLib Minus__ FnPlain AoS)
          (((pattern
             (Indexed
-             ((pattern (Var prices_diff))
+             ((pattern (Var Ys_diff))
               (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))
              ((Single
                ((pattern (Lit Int 2))
@@ -2222,7 +2202,7 @@
                         (FunApp (StanLib dot_product FnPlain AoS)
                          (((pattern
                             (Indexed
-                             ((pattern (Var prices_diff))
+                             ((pattern (Var Ys_diff))
                               (meta
                                ((type_ UVector) (loc <opaque>)
                                 (adlevel AutoDiffable))))
@@ -2276,7 +2256,7 @@
                 (FunApp (StanLib Minus__ FnPlain AoS)
                  (((pattern
                     (Indexed
-                     ((pattern (Var prices_diff))
+                     ((pattern (Var Ys_diff))
                       (meta
                        ((type_ UVector) (loc <opaque>)
                         (adlevel AutoDiffable))))
@@ -2468,32 +2448,13 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
-     (For (loopvar sym1__)
-      (lower
-       ((pattern (Lit Int 1))
-        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-      (upper
-       ((pattern (Var Nr))
-        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
-      (body
-       ((pattern
-         (Block
-          (((pattern
-             (NRFunApp (CompilerInternal (FnCheck greater_or_equal))
-              (((pattern (Lit Str h_i_sigma[sym1__]))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-               ((pattern
-                 (Indexed
-                  ((pattern (Var h_i_sigma))
-                   (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
-                  ((Single
-                    ((pattern (Var sym1__))
-                     (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
-                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly))))
-               ((pattern (Lit Int 0))
-                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
-            (meta <opaque>)))))
-        (meta <opaque>)))))
+     (NRFunApp (CompilerInternal (FnCheck greater_or_equal))
+      (((pattern (Lit Str h_i_sigma))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Var h_i_sigma))
+        (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Int 0))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))
    ((pattern
      (IfElse
@@ -2516,7 +2477,7 @@
                     (NRFunApp (CompilerInternal FnWriteParam)
                      (((pattern
                         (Indexed
-                         ((pattern (Var mu_prices))
+                         ((pattern (Var mu_Ys))
                           (meta
                            ((type_ UVector) (loc <opaque>)
                             (adlevel DataOnly))))
@@ -2544,7 +2505,7 @@
                     (NRFunApp (CompilerInternal FnWriteParam)
                      (((pattern
                         (Indexed
-                         ((pattern (Var sigma_prices))
+                         ((pattern (Var sigma_Ys))
                           (meta
                            ((type_ UVector) (loc <opaque>)
                             (adlevel DataOnly))))
@@ -2572,7 +2533,7 @@
                     (NRFunApp (CompilerInternal FnWriteParam)
                      (((pattern
                         (Indexed
-                         ((pattern (Var price_tmp))
+                         ((pattern (Var Y_tmp))
                           (meta
                            ((type_ UVector) (loc <opaque>)
                             (adlevel DataOnly))))
@@ -2600,7 +2561,7 @@
                     (NRFunApp (CompilerInternal FnWriteParam)
                      (((pattern
                         (Indexed
-                         ((pattern (Var prices))
+                         ((pattern (Var Ys))
                           (meta
                            ((type_ UVector) (loc <opaque>)
                             (adlevel DataOnly))))
@@ -2628,7 +2589,7 @@
                     (NRFunApp (CompilerInternal FnWriteParam)
                      (((pattern
                         (Indexed
-                         ((pattern (Var prices_diff))
+                         ((pattern (Var Ys_diff))
                           (meta
                            ((type_ UVector) (loc <opaque>)
                             (adlevel DataOnly))))
@@ -2815,7 +2776,7 @@
        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id prices_p)
+     (Decl (decl_adtype DataOnly) (decl_id Ys_p)
       (decl_type
        (Sized
         (SVector AoS
@@ -2825,14 +2786,14 @@
    ((pattern
      (Block
       (((pattern
-         (Decl (decl_adtype AutoDiffable) (decl_id prices_p_flat__)
+         (Decl (decl_adtype AutoDiffable) (decl_id Ys_p_flat__)
           (decl_type (Unsized (UArray UReal)))))
         (meta <opaque>))
        ((pattern
-         (Assignment (prices_p_flat__ (UArray UReal) ())
+         (Assignment (Ys_p_flat__ (UArray UReal) ())
           ((pattern
             (FunApp (CompilerInternal FnReadData)
-             (((pattern (Lit Str prices_p))
+             (((pattern (Lit Str Ys_p))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
@@ -2854,13 +2815,13 @@
              (Block
               (((pattern
                  (Assignment
-                  (prices_p UVector
+                  (Ys_p UVector
                    ((Single
                      ((pattern (Var sym1__))
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                   ((pattern
                     (Indexed
-                     ((pattern (Var prices_p_flat__))
+                     ((pattern (Var Ys_p_flat__))
                       (meta
                        ((type_ (UArray UReal)) (loc <opaque>)
                         (adlevel DataOnly))))
@@ -2957,7 +2918,7 @@
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id bQ_price_mean)
+     (Decl (decl_adtype DataOnly) (decl_id bQ_Y_mean)
       (decl_type
        (Sized
         (SVector AoS
@@ -2967,14 +2928,14 @@
    ((pattern
      (Block
       (((pattern
-         (Decl (decl_adtype AutoDiffable) (decl_id bQ_price_mean_flat__)
+         (Decl (decl_adtype AutoDiffable) (decl_id bQ_Y_mean_flat__)
           (decl_type (Unsized (UArray UReal)))))
         (meta <opaque>))
        ((pattern
-         (Assignment (bQ_price_mean_flat__ (UArray UReal) ())
+         (Assignment (bQ_Y_mean_flat__ (UArray UReal) ())
           ((pattern
             (FunApp (CompilerInternal FnReadData)
-             (((pattern (Lit Str bQ_price_mean))
+             (((pattern (Lit Str bQ_Y_mean))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
@@ -2996,13 +2957,13 @@
              (Block
               (((pattern
                  (Assignment
-                  (bQ_price_mean UVector
+                  (bQ_Y_mean UVector
                    ((Single
                      ((pattern (Var sym1__))
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                   ((pattern
                     (Indexed
-                     ((pattern (Var bQ_price_mean_flat__))
+                     ((pattern (Var bQ_Y_mean_flat__))
                       (meta
                        ((type_ (UArray UReal)) (loc <opaque>)
                         (adlevel DataOnly))))
@@ -3028,7 +2989,7 @@
         (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
-     (Decl (decl_adtype DataOnly) (decl_id bQ_price_sigma)
+     (Decl (decl_adtype DataOnly) (decl_id bQ_Y_sigma)
       (decl_type
        (Sized
         (SVector AoS
@@ -3038,14 +2999,14 @@
    ((pattern
      (Block
       (((pattern
-         (Decl (decl_adtype AutoDiffable) (decl_id bQ_price_sigma_flat__)
+         (Decl (decl_adtype AutoDiffable) (decl_id bQ_Y_sigma_flat__)
           (decl_type (Unsized (UArray UReal)))))
         (meta <opaque>))
        ((pattern
-         (Assignment (bQ_price_sigma_flat__ (UArray UReal) ())
+         (Assignment (bQ_Y_sigma_flat__ (UArray UReal) ())
           ((pattern
             (FunApp (CompilerInternal FnReadData)
-             (((pattern (Lit Str bQ_price_sigma))
+             (((pattern (Lit Str bQ_Y_sigma))
                (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly))))))
         (meta <opaque>))
@@ -3067,13 +3028,13 @@
              (Block
               (((pattern
                  (Assignment
-                  (bQ_price_sigma UVector
+                  (bQ_Y_sigma UVector
                    ((Single
                      ((pattern (Var sym1__))
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                   ((pattern
                     (Indexed
-                     ((pattern (Var bQ_price_sigma_flat__))
+                     ((pattern (Var bQ_Y_sigma_flat__))
                       (meta
                        ((type_ (UArray UReal)) (loc <opaque>)
                         (adlevel DataOnly))))
@@ -3355,7 +3316,7 @@
              (NRFunApp (CompilerInternal FnWriteParam)
               (((pattern
                  (Indexed
-                  ((pattern (Var prices_p))
+                  ((pattern (Var Ys_p))
                    (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                   ((Single
                     ((pattern (Var sym1__))
@@ -3403,7 +3364,7 @@
              (NRFunApp (CompilerInternal FnWriteParam)
               (((pattern
                  (Indexed
-                  ((pattern (Var bQ_price_mean))
+                  ((pattern (Var bQ_Y_mean))
                    (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                   ((Single
                     ((pattern (Var sym1__))
@@ -3427,7 +3388,7 @@
              (NRFunApp (CompilerInternal FnWriteParam)
               (((pattern
                  (Indexed
-                  ((pattern (Var bQ_price_sigma))
+                  ((pattern (Var bQ_Y_sigma))
                    (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly))))
                   ((Single
                     ((pattern (Var sym1__))
@@ -3505,7 +3466,7 @@
         (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
     (meta <opaque>))))
  (output_vars
-  ((prices_p
+  ((Ys_p
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var N))
@@ -3525,7 +3486,7 @@
        ((pattern (Var K))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
-   (bQ_price_mean
+   (bQ_Y_mean
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var K))
@@ -3535,7 +3496,7 @@
        ((pattern (Var K))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block Parameters) (out_trans Identity)))
-   (bQ_price_sigma
+   (bQ_Y_sigma
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var K))
@@ -3587,7 +3548,7 @@
    (Intercept
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block Parameters) (out_trans Identity)))
-   (mu_prices
+   (mu_Ys
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var N))
@@ -3597,7 +3558,7 @@
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
-   (sigma_prices
+   (sigma_Ys
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var N))
@@ -3607,7 +3568,7 @@
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
-   (price_tmp
+   (Y_tmp
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var N))
@@ -3617,7 +3578,7 @@
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
-   (prices
+   (Ys
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var N))
@@ -3627,7 +3588,7 @@
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
      (out_block TransformedParameters) (out_trans Identity)))
-   (prices_diff
+   (Ys_diff
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var Nr))

@@ -174,6 +174,7 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
         | true -> Set.Poly.singleton assign_name
         | false -> Set.Poly.empty
       in
+      (*
       let print_set (s : string Set.Poly.t) =
         Set.Poly.iter ~f:print_endline s
       in
@@ -204,6 +205,7 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
         print_set rhs_set
       in
       let () = printf "\n----END ASSIGN CHECK------\n" in
+      *)
       Set.Poly.union rhs_set lhs_set
   | Decl _
    |NRFunApp ((_ : Fun_kind.t), (_ : Expr.Typed.t list))
@@ -593,6 +595,7 @@ let rec modify_stmt_pattern
   match pattern with
   | Stmt.Fixed.Pattern.Decl
       ({decl_id; decl_type= Type.Sized sized_type; _} as decl) ->
+      (*
       let print_set (s : string Set.Poly.t) =
         Set.Poly.iter ~f:print_endline s
       in
@@ -604,16 +607,21 @@ let rec modify_stmt_pattern
         let () = printf "\n-----------\n" in
         print_set modifiable_set
       in
+      *)
       if Set.Poly.mem modifiable_set decl_id then
+        (*
         let () = printf "\n----Downgrade Chosen------\n" in
         let () = printf "\n----END DECL MOD------\n" in
+        *)
         Stmt.Fixed.Pattern.Decl
           { decl with
             decl_type=
               Type.Sized (SizedType.modify_sizedtype_mem AoS sized_type) }
       else
+        (*
         let () = printf "\nUpgrade Chosen\n" in
         let () = printf "\n----END DECL MOD------\n" in
+        *)
         Decl
           { decl with
             decl_type=

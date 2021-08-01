@@ -42,6 +42,11 @@ let rec to_unsized = function
   | SMatrix _ -> UMatrix
   | SArray (t, _) -> UArray (to_unsized t)
 
+let is_eigen st =
+  match st with
+  | SVector _ | SRowVector _ | SMatrix _ -> true
+  | SInt | SReal | SArray _ -> false
+
 let rec associate ?init:(assocs = Label.Int_label.Map.empty) = function
   | SInt | SReal -> assocs
   | SVector (_, expr) | SRowVector (_, expr) ->

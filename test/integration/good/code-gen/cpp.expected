@@ -812,21 +812,21 @@ using namespace stan::math;
 stan::math::profile_map profiles__;
 static constexpr std::array<const char*, 68> locations_array__ = 
 {" (found before start of program)",
- " (in 'alt_mem_patterns.stan', line 12, column 2 to column 21)",
+ " (in 'alt_mem_patterns.stan', line 12, column 2 to column 17)",
  " (in 'alt_mem_patterns.stan', line 13, column 2 to column 21)",
- " (in 'alt_mem_patterns.stan', line 14, column 2 to column 26)",
- " (in 'alt_mem_patterns.stan', line 15, column 2 to column 27)",
+ " (in 'alt_mem_patterns.stan', line 14, column 2 to column 22)",
+ " (in 'alt_mem_patterns.stan', line 15, column 2 to column 23)",
  " (in 'alt_mem_patterns.stan', line 16, column 2 to column 15)",
  " (in 'alt_mem_patterns.stan', line 17, column 2 to column 15)",
  " (in 'alt_mem_patterns.stan', line 18, column 2 to column 10)",
  " (in 'alt_mem_patterns.stan', line 19, column 2 to column 33)",
  " (in 'alt_mem_patterns.stan', line 20, column 2 to column 23)",
  " (in 'alt_mem_patterns.stan', line 21, column 2 to column 17)",
- " (in 'alt_mem_patterns.stan', line 25, column 2 to column 42)",
- " (in 'alt_mem_patterns.stan', line 26, column 2 to column 52)",
- " (in 'alt_mem_patterns.stan', line 27, column 2 to column 61)",
- " (in 'alt_mem_patterns.stan', line 28, column 2 to column 83)",
- " (in 'alt_mem_patterns.stan', line 29, column 2 to column 82)",
+ " (in 'alt_mem_patterns.stan', line 25, column 2 to column 34)",
+ " (in 'alt_mem_patterns.stan', line 26, column 2 to column 44)",
+ " (in 'alt_mem_patterns.stan', line 27, column 2 to column 45)",
+ " (in 'alt_mem_patterns.stan', line 28, column 2 to column 75)",
+ " (in 'alt_mem_patterns.stan', line 29, column 2 to column 66)",
  " (in 'alt_mem_patterns.stan', line 30, column 2 to column 56)",
  " (in 'alt_mem_patterns.stan', line 31, column 2 to column 37)",
  " (in 'alt_mem_patterns.stan', line 32, column 2 to column 43)",
@@ -834,11 +834,11 @@ static constexpr std::array<const char*, 68> locations_array__ =
  " (in 'alt_mem_patterns.stan', line 45, column 2 to column 22)",
  " (in 'alt_mem_patterns.stan', line 46, column 2 to column 32)",
  " (in 'alt_mem_patterns.stan', line 51, column 2 to column 59)",
- " (in 'alt_mem_patterns.stan', line 36, column 2 to column 34)",
- " (in 'alt_mem_patterns.stan', line 37, column 2 to column 48)",
- " (in 'alt_mem_patterns.stan', line 38, column 2 to column 34)",
- " (in 'alt_mem_patterns.stan', line 40, column 4 to column 77)",
- " (in 'alt_mem_patterns.stan', line 41, column 4 to column 36)",
+ " (in 'alt_mem_patterns.stan', line 36, column 2 to column 30)",
+ " (in 'alt_mem_patterns.stan', line 37, column 2 to column 44)",
+ " (in 'alt_mem_patterns.stan', line 38, column 2 to column 30)",
+ " (in 'alt_mem_patterns.stan', line 40, column 4 to column 73)",
+ " (in 'alt_mem_patterns.stan', line 41, column 4 to column 32)",
  " (in 'alt_mem_patterns.stan', line 39, column 18 to line 42, column 3)",
  " (in 'alt_mem_patterns.stan', line 39, column 2 to line 42, column 3)",
  " (in 'alt_mem_patterns.stan', line 47, column 2 to column 18)",
@@ -851,9 +851,9 @@ static constexpr std::array<const char*, 68> locations_array__ =
  " (in 'alt_mem_patterns.stan', line 58, column 2 to column 21)",
  " (in 'alt_mem_patterns.stan', line 59, column 2 to column 21)",
  " (in 'alt_mem_patterns.stan', line 60, column 2 to column 34)",
- " (in 'alt_mem_patterns.stan', line 61, column 2 to column 37)",
- " (in 'alt_mem_patterns.stan', line 62, column 2 to column 26)",
- " (in 'alt_mem_patterns.stan', line 63, column 2 to column 36)",
+ " (in 'alt_mem_patterns.stan', line 61, column 2 to column 33)",
+ " (in 'alt_mem_patterns.stan', line 62, column 2 to column 22)",
+ " (in 'alt_mem_patterns.stan', line 63, column 2 to column 32)",
  " (in 'alt_mem_patterns.stan', line 2, column 2 to column 8)",
  " (in 'alt_mem_patterns.stan', line 3, column 2 to column 9)",
  " (in 'alt_mem_patterns.stan', line 4, column 2 to column 8)",
@@ -1025,25 +1025,25 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
         }
       }
       current_statement__ = 53;
-      validate_non_negative_index("prices_p", "N", N);
+      validate_non_negative_index("Ys_p", "N", N);
       current_statement__ = 54;
       validate_non_negative_index("bQ_model", "K", K);
       current_statement__ = 55;
-      validate_non_negative_index("bQ_price_mean", "K", K);
+      validate_non_negative_index("bQ_Y_mean", "K", K);
       current_statement__ = 56;
-      validate_non_negative_index("bQ_price_sigma", "K", K);
+      validate_non_negative_index("bQ_Y_sigma", "K", K);
       current_statement__ = 57;
       validate_non_negative_index("h", "Nr", Nr);
       current_statement__ = 58;
-      validate_non_negative_index("mu_prices", "N", N);
+      validate_non_negative_index("mu_Ys", "N", N);
       current_statement__ = 59;
-      validate_non_negative_index("sigma_prices", "N", N);
+      validate_non_negative_index("sigma_Ys", "N", N);
       current_statement__ = 60;
-      validate_non_negative_index("price_tmp", "N", N);
+      validate_non_negative_index("Y_tmp", "N", N);
       current_statement__ = 61;
-      validate_non_negative_index("prices", "N", N);
+      validate_non_negative_index("Ys", "N", N);
       current_statement__ = 62;
-      validate_non_negative_index("prices_diff", "Nr", Nr);
+      validate_non_negative_index("Ys_diff", "Nr", Nr);
       current_statement__ = 63;
       validate_non_negative_index("mu", "Nr", Nr);
       current_statement__ = 64;
@@ -1081,41 +1081,34 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
     (void) function__;  // suppress unused var warning
     
     try {
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> prices_p = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN()));
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> Ys_p = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
+                                                    
       
       current_statement__ = 1;
-      prices_p = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-                   N);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> bQ_model = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(K, std::numeric_limits<double>::quiet_NaN()));
-      
+      Ys_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
+      Eigen::Matrix<local_scalar_t__, -1, 1> bQ_model = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(K, DUMMY_VAR__);
+                                                        
       
       current_statement__ = 2;
-      bQ_model = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+      bQ_model = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                    K);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> bQ_price_mean = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(K, std::numeric_limits<double>::quiet_NaN()));
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> bQ_Y_mean = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(K, DUMMY_VAR__);
+                                                         
       
       current_statement__ = 3;
-      bQ_price_mean = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-                        K);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> bQ_price_sigma = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(K, std::numeric_limits<double>::quiet_NaN()));
-      
+      bQ_Y_mean = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                    K);
+      Eigen::Matrix<local_scalar_t__, -1, 1> bQ_Y_sigma = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(K, DUMMY_VAR__);
+                                                          
       
       current_statement__ = 4;
-      bQ_price_sigma = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-                         K);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> h = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(Nr, std::numeric_limits<double>::quiet_NaN()));
-      
+      bQ_Y_sigma = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                     K);
+      Eigen::Matrix<local_scalar_t__, -1, 1> h = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(Nr, DUMMY_VAR__);
+                                                 
       
       current_statement__ = 5;
-      h = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-            Nr);
+      h = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(Nr);
       Eigen::Matrix<local_scalar_t__, -1, 1> ar = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(2, DUMMY_VAR__);
                                                   
       
@@ -1139,46 +1132,41 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
       
       current_statement__ = 10;
       Intercept = in__.template read<local_scalar_t__>();
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> mu_prices = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN()));
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> mu_Ys = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
+                                                     
       
       current_statement__ = 11;
-      assign(mu_prices, multiply(X, bQ_price_mean),
-        "assigning variable mu_prices");
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> sigma_prices = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN()));
-      
+      assign(mu_Ys, multiply(X, bQ_Y_mean), "assigning variable mu_Ys");
+      Eigen::Matrix<local_scalar_t__, -1, 1> sigma_Ys = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
+                                                        
       
       current_statement__ = 12;
-      assign(sigma_prices, stan::math::exp(multiply(X, bQ_price_sigma)),
-        "assigning variable sigma_prices");
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> price_tmp = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN()));
-      
+      assign(sigma_Ys, stan::math::exp(multiply(X, bQ_Y_sigma)),
+        "assigning variable sigma_Ys");
+      Eigen::Matrix<local_scalar_t__, -1, 1> Y_tmp = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
+                                                     
       
       current_statement__ = 13;
-      assign(price_tmp, add(elt_multiply(prices_p, sigma_prices), mu_prices),
-        "assigning variable price_tmp");
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> prices = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN()));
-      
+      assign(Y_tmp, add(elt_multiply(Ys_p, sigma_Ys), mu_Ys),
+        "assigning variable Y_tmp");
+      Eigen::Matrix<local_scalar_t__, -1, 1> Ys = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
+                                                  
       
       current_statement__ = 14;
-      assign(prices,
-        add(elt_multiply(low_high_diff, inv_logit(price_tmp)),
+      assign(Ys,
+        add(elt_multiply(low_high_diff, inv_logit(Y_tmp)),
           rvalue(low_high_real, "low_high_real", index_omni(), index_uni(1))),
-        "assigning variable prices");
-      Eigen::Matrix<local_scalar_t__, -1, 1> prices_diff = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(Nr, DUMMY_VAR__);
-                                                           
+        "assigning variable Ys");
+      Eigen::Matrix<local_scalar_t__, -1, 1> Ys_diff = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(Nr, DUMMY_VAR__);
+                                                       
       
       current_statement__ = 15;
-      assign(prices_diff,
+      assign(Ys_diff,
         elt_divide(
-          subtract(rvalue(prices, "prices", index_min_max(2, N)),
-            rvalue(prices, "prices", index_min_max(1, (N - 1)))),
-          rvalue(prices, "prices", index_min_max(1, (N - 1)))),
-        "assigning variable prices_diff");
+          subtract(rvalue(Ys, "Ys", index_min_max(2, N)),
+            rvalue(Ys, "Ys", index_min_max(1, (N - 1)))),
+          rvalue(Ys, "Ys", index_min_max(1, (N - 1)))),
+        "assigning variable Ys_diff");
       local_scalar_t__ phi = DUMMY_VAR__;
       
       current_statement__ = 16;
@@ -1198,19 +1186,19 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
       
       current_statement__ = 23;
       assign(err,
-        (rvalue(prices_diff, "prices_diff", index_uni(1)) -
+        (rvalue(Ys_diff, "Ys_diff", index_uni(1)) -
           rvalue(mu, "mu", index_uni(1))),
         "assigning variable err", index_uni(1));
       current_statement__ = 24;
       assign(mu,
         (rvalue(mu, "mu", index_uni(2)) +
           ((rvalue(err, "err", index_uni(1)) * ma) +
-            (rvalue(prices_diff, "prices_diff", index_uni(1)) *
+            (rvalue(Ys_diff, "Ys_diff", index_uni(1)) *
               rvalue(ar, "ar", index_uni(1))))),
         "assigning variable mu", index_uni(2));
       current_statement__ = 25;
       assign(err,
-        (rvalue(prices_diff, "prices_diff", index_uni(2)) -
+        (rvalue(Ys_diff, "Ys_diff", index_uni(2)) -
           rvalue(mu, "mu", index_uni(2))),
         "assigning variable err", index_uni(2));
       current_statement__ = 29;
@@ -1220,12 +1208,11 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
           (rvalue(mu, "mu", index_uni(n)) +
             ((rvalue(err, "err", index_uni((n - 1))) * ma) +
               dot_product(
-                rvalue(prices_diff, "prices_diff",
-                  index_min_max((n - 2), (n - 1))), ar))),
-          "assigning variable mu", index_uni(n));
+                rvalue(Ys_diff, "Ys_diff", index_min_max((n - 2), (n - 1))),
+                ar))), "assigning variable mu", index_uni(n));
         current_statement__ = 27;
         assign(err,
-          (rvalue(prices_diff, "prices_diff", index_uni(n)) -
+          (rvalue(Ys_diff, "Ys_diff", index_uni(n)) -
             rvalue(mu, "mu", index_uni(n))),
           "assigning variable err", index_uni(n));
       }
@@ -1250,9 +1237,8 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
           subtract(rvalue(h, "h", index_min_max(1, (Nr - 1))),
             rvalue(mu, "mu", index_min_max(2, Nr)))),
         "assigning variable h_i_mean", index_min_max(2, Nr));
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> h_sigma = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(Nr, std::numeric_limits<double>::quiet_NaN()));
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> h_sigma = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(Nr, DUMMY_VAR__);
+                                                       
       
       current_statement__ = 22;
       assign(h_sigma,
@@ -1265,11 +1251,8 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
       current_statement__ = 17;
       check_greater_or_equal(function__, "sigma", sigma, 0);
       current_statement__ = 21;
-      for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
-        current_statement__ = 21;
-        check_greater_or_equal(function__, "h_i_sigma[sym1__]",
-                               h_i_sigma[(sym1__ - 1)], 0);
-      }
+      check_greater_or_equal(function__, "h_i_sigma",
+                             stan::math::value_of(h_i_sigma), 0);
       {
         current_statement__ = 34;
         lp_accum__.add(normal_lpdf<propto__>(Intercept, 0, 1));
@@ -1284,11 +1267,11 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
         current_statement__ = 39;
         lp_accum__.add(normal_lpdf<propto__>(h, h_i_mean, h_i_sigma));
         current_statement__ = 40;
-        lp_accum__.add(student_t_lpdf<propto__>(sigma_prices, 10, 0, 5));
+        lp_accum__.add(student_t_lpdf<propto__>(sigma_Ys, 10, 0, 5));
         current_statement__ = 41;
-        lp_accum__.add(std_normal_lpdf<propto__>(prices_p));
+        lp_accum__.add(std_normal_lpdf<propto__>(Ys_p));
         current_statement__ = 42;
-        lp_accum__.add(normal_lpdf<propto__>(prices_diff, mu, h_sigma));
+        lp_accum__.add(normal_lpdf<propto__>(Ys_diff, mu, h_sigma));
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1324,30 +1307,29 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
     (void) function__;  // suppress unused var warning
     
     try {
-      Eigen::Matrix<double, -1, 1> prices_p = Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN());
-                                              
+      Eigen::Matrix<double, -1, 1> Ys_p = Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN());
+                                          
       
       current_statement__ = 1;
-      prices_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
-                   N);
+      Ys_p = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
       Eigen::Matrix<double, -1, 1> bQ_model = Eigen::Matrix<double, -1, 1>::Constant(K, std::numeric_limits<double>::quiet_NaN());
                                               
       
       current_statement__ = 2;
       bQ_model = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                    K);
-      Eigen::Matrix<double, -1, 1> bQ_price_mean = Eigen::Matrix<double, -1, 1>::Constant(K, std::numeric_limits<double>::quiet_NaN());
-                                                   
+      Eigen::Matrix<double, -1, 1> bQ_Y_mean = Eigen::Matrix<double, -1, 1>::Constant(K, std::numeric_limits<double>::quiet_NaN());
+                                               
       
       current_statement__ = 3;
-      bQ_price_mean = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
-                        K);
-      Eigen::Matrix<double, -1, 1> bQ_price_sigma = Eigen::Matrix<double, -1, 1>::Constant(K, std::numeric_limits<double>::quiet_NaN());
-                                                    
+      bQ_Y_mean = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                    K);
+      Eigen::Matrix<double, -1, 1> bQ_Y_sigma = Eigen::Matrix<double, -1, 1>::Constant(K, std::numeric_limits<double>::quiet_NaN());
+                                                
       
       current_statement__ = 4;
-      bQ_price_sigma = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
-                         K);
+      bQ_Y_sigma = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+                     K);
       Eigen::Matrix<double, -1, 1> h = Eigen::Matrix<double, -1, 1>::Constant(Nr, std::numeric_limits<double>::quiet_NaN());
                                        
       
@@ -1376,20 +1358,20 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
       
       current_statement__ = 10;
       Intercept = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<double, -1, 1> mu_prices = Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN());
-                                               
+      Eigen::Matrix<double, -1, 1> mu_Ys = Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN());
+                                           
       
-      Eigen::Matrix<double, -1, 1> sigma_prices = Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN());
-                                                  
+      Eigen::Matrix<double, -1, 1> sigma_Ys = Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN());
+                                              
       
-      Eigen::Matrix<double, -1, 1> price_tmp = Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN());
-                                               
+      Eigen::Matrix<double, -1, 1> Y_tmp = Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN());
+                                           
       
-      Eigen::Matrix<double, -1, 1> prices = Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN());
-                                            
+      Eigen::Matrix<double, -1, 1> Ys = Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN());
+                                        
       
-      Eigen::Matrix<double, -1, 1> prices_diff = Eigen::Matrix<double, -1, 1>::Constant(Nr, std::numeric_limits<double>::quiet_NaN());
-                                                 
+      Eigen::Matrix<double, -1, 1> Ys_diff = Eigen::Matrix<double, -1, 1>::Constant(Nr, std::numeric_limits<double>::quiet_NaN());
+                                             
       
       double phi = std::numeric_limits<double>::quiet_NaN();
       
@@ -1411,16 +1393,16 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
                                              
       
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(prices_p[(sym1__ - 1)]);
+        vars__.emplace_back(Ys_p[(sym1__ - 1)]);
       }
       for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
         vars__.emplace_back(bQ_model[(sym1__ - 1)]);
       }
       for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        vars__.emplace_back(bQ_price_mean[(sym1__ - 1)]);
+        vars__.emplace_back(bQ_Y_mean[(sym1__ - 1)]);
       }
       for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        vars__.emplace_back(bQ_price_sigma[(sym1__ - 1)]);
+        vars__.emplace_back(bQ_Y_sigma[(sym1__ - 1)]);
       }
       for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
         vars__.emplace_back(h[(sym1__ - 1)]);
@@ -1437,26 +1419,25 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
         return ;
       } 
       current_statement__ = 11;
-      assign(mu_prices, multiply(X, bQ_price_mean),
-        "assigning variable mu_prices");
+      assign(mu_Ys, multiply(X, bQ_Y_mean), "assigning variable mu_Ys");
       current_statement__ = 12;
-      assign(sigma_prices, stan::math::exp(multiply(X, bQ_price_sigma)),
-        "assigning variable sigma_prices");
+      assign(sigma_Ys, stan::math::exp(multiply(X, bQ_Y_sigma)),
+        "assigning variable sigma_Ys");
       current_statement__ = 13;
-      assign(price_tmp, add(elt_multiply(prices_p, sigma_prices), mu_prices),
-        "assigning variable price_tmp");
+      assign(Y_tmp, add(elt_multiply(Ys_p, sigma_Ys), mu_Ys),
+        "assigning variable Y_tmp");
       current_statement__ = 14;
-      assign(prices,
-        add(elt_multiply(low_high_diff, inv_logit(price_tmp)),
+      assign(Ys,
+        add(elt_multiply(low_high_diff, inv_logit(Y_tmp)),
           rvalue(low_high_real, "low_high_real", index_omni(), index_uni(1))),
-        "assigning variable prices");
+        "assigning variable Ys");
       current_statement__ = 15;
-      assign(prices_diff,
+      assign(Ys_diff,
         elt_divide(
-          subtract(rvalue(prices, "prices", index_min_max(2, N)),
-            rvalue(prices, "prices", index_min_max(1, (N - 1)))),
-          rvalue(prices, "prices", index_min_max(1, (N - 1)))),
-        "assigning variable prices_diff");
+          subtract(rvalue(Ys, "Ys", index_min_max(2, N)),
+            rvalue(Ys, "Ys", index_min_max(1, (N - 1)))),
+          rvalue(Ys, "Ys", index_min_max(1, (N - 1)))),
+        "assigning variable Ys_diff");
       current_statement__ = 16;
       phi = stan::math::fma(phi_beta, 2.0, -1.0);
       current_statement__ = 17;
@@ -1466,19 +1447,19 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
         "assigning variable mu");
       current_statement__ = 23;
       assign(err,
-        (rvalue(prices_diff, "prices_diff", index_uni(1)) -
+        (rvalue(Ys_diff, "Ys_diff", index_uni(1)) -
           rvalue(mu, "mu", index_uni(1))),
         "assigning variable err", index_uni(1));
       current_statement__ = 24;
       assign(mu,
         (rvalue(mu, "mu", index_uni(2)) +
           ((rvalue(err, "err", index_uni(1)) * ma) +
-            (rvalue(prices_diff, "prices_diff", index_uni(1)) *
+            (rvalue(Ys_diff, "Ys_diff", index_uni(1)) *
               rvalue(ar, "ar", index_uni(1))))),
         "assigning variable mu", index_uni(2));
       current_statement__ = 25;
       assign(err,
-        (rvalue(prices_diff, "prices_diff", index_uni(2)) -
+        (rvalue(Ys_diff, "Ys_diff", index_uni(2)) -
           rvalue(mu, "mu", index_uni(2))),
         "assigning variable err", index_uni(2));
       current_statement__ = 29;
@@ -1488,12 +1469,11 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
           (rvalue(mu, "mu", index_uni(n)) +
             ((rvalue(err, "err", index_uni((n - 1))) * ma) +
               dot_product(
-                rvalue(prices_diff, "prices_diff",
-                  index_min_max((n - 2), (n - 1))), ar))),
-          "assigning variable mu", index_uni(n));
+                rvalue(Ys_diff, "Ys_diff", index_min_max((n - 2), (n - 1))),
+                ar))), "assigning variable mu", index_uni(n));
         current_statement__ = 27;
         assign(err,
-          (rvalue(prices_diff, "prices_diff", index_uni(n)) -
+          (rvalue(Ys_diff, "Ys_diff", index_uni(n)) -
             rvalue(mu, "mu", index_uni(n))),
           "assigning variable err", index_uni(n));
       }
@@ -1522,26 +1502,22 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
       current_statement__ = 17;
       check_greater_or_equal(function__, "sigma", sigma, 0);
       current_statement__ = 21;
-      for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
-        current_statement__ = 21;
-        check_greater_or_equal(function__, "h_i_sigma[sym1__]",
-                               h_i_sigma[(sym1__ - 1)], 0);
-      }
+      check_greater_or_equal(function__, "h_i_sigma", h_i_sigma, 0);
       if (emit_transformed_parameters__) {
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          vars__.emplace_back(mu_prices[(sym1__ - 1)]);
+          vars__.emplace_back(mu_Ys[(sym1__ - 1)]);
         }
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          vars__.emplace_back(sigma_prices[(sym1__ - 1)]);
+          vars__.emplace_back(sigma_Ys[(sym1__ - 1)]);
         }
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          vars__.emplace_back(price_tmp[(sym1__ - 1)]);
+          vars__.emplace_back(Y_tmp[(sym1__ - 1)]);
         }
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          vars__.emplace_back(prices[(sym1__ - 1)]);
+          vars__.emplace_back(Ys[(sym1__ - 1)]);
         }
         for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
-          vars__.emplace_back(prices_diff[(sym1__ - 1)]);
+          vars__.emplace_back(Ys_diff[(sym1__ - 1)]);
         }
         vars__.emplace_back(phi);
         vars__.emplace_back(sigma);
@@ -1586,20 +1562,20 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
       int pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      Eigen::Matrix<double, -1, 1> prices_p = Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN());
-                                              
+      Eigen::Matrix<double, -1, 1> Ys_p = Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN());
+                                          
       
       {
-        std::vector<local_scalar_t__> prices_p_flat__;
+        std::vector<local_scalar_t__> Ys_p_flat__;
         current_statement__ = 1;
-        prices_p_flat__ = context__.vals_r("prices_p");
+        Ys_p_flat__ = context__.vals_r("Ys_p");
         current_statement__ = 1;
         pos__ = 1;
         current_statement__ = 1;
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           current_statement__ = 1;
-          assign(prices_p, prices_p_flat__[(pos__ - 1)],
-            "assigning variable prices_p", index_uni(sym1__));
+          assign(Ys_p, Ys_p_flat__[(pos__ - 1)],
+            "assigning variable Ys_p", index_uni(sym1__));
           current_statement__ = 1;
           pos__ = (pos__ + 1);
         }
@@ -1622,38 +1598,38 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
           pos__ = (pos__ + 1);
         }
       }
-      Eigen::Matrix<double, -1, 1> bQ_price_mean = Eigen::Matrix<double, -1, 1>::Constant(K, std::numeric_limits<double>::quiet_NaN());
-                                                   
+      Eigen::Matrix<double, -1, 1> bQ_Y_mean = Eigen::Matrix<double, -1, 1>::Constant(K, std::numeric_limits<double>::quiet_NaN());
+                                               
       
       {
-        std::vector<local_scalar_t__> bQ_price_mean_flat__;
+        std::vector<local_scalar_t__> bQ_Y_mean_flat__;
         current_statement__ = 3;
-        bQ_price_mean_flat__ = context__.vals_r("bQ_price_mean");
+        bQ_Y_mean_flat__ = context__.vals_r("bQ_Y_mean");
         current_statement__ = 3;
         pos__ = 1;
         current_statement__ = 3;
         for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
           current_statement__ = 3;
-          assign(bQ_price_mean, bQ_price_mean_flat__[(pos__ - 1)],
-            "assigning variable bQ_price_mean", index_uni(sym1__));
+          assign(bQ_Y_mean, bQ_Y_mean_flat__[(pos__ - 1)],
+            "assigning variable bQ_Y_mean", index_uni(sym1__));
           current_statement__ = 3;
           pos__ = (pos__ + 1);
         }
       }
-      Eigen::Matrix<double, -1, 1> bQ_price_sigma = Eigen::Matrix<double, -1, 1>::Constant(K, std::numeric_limits<double>::quiet_NaN());
-                                                    
+      Eigen::Matrix<double, -1, 1> bQ_Y_sigma = Eigen::Matrix<double, -1, 1>::Constant(K, std::numeric_limits<double>::quiet_NaN());
+                                                
       
       {
-        std::vector<local_scalar_t__> bQ_price_sigma_flat__;
+        std::vector<local_scalar_t__> bQ_Y_sigma_flat__;
         current_statement__ = 4;
-        bQ_price_sigma_flat__ = context__.vals_r("bQ_price_sigma");
+        bQ_Y_sigma_flat__ = context__.vals_r("bQ_Y_sigma");
         current_statement__ = 4;
         pos__ = 1;
         current_statement__ = 4;
         for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
           current_statement__ = 4;
-          assign(bQ_price_sigma, bQ_price_sigma_flat__[(pos__ - 1)],
-            "assigning variable bQ_price_sigma", index_uni(sym1__));
+          assign(bQ_Y_sigma, bQ_Y_sigma_flat__[(pos__ - 1)],
+            "assigning variable bQ_Y_sigma", index_uni(sym1__));
           current_statement__ = 4;
           pos__ = (pos__ + 1);
         }
@@ -1719,16 +1695,16 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
       current_statement__ = 10;
       Intercept = context__.vals_r("Intercept")[(1 - 1)];
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(prices_p[(sym1__ - 1)]);
+        vars__.emplace_back(Ys_p[(sym1__ - 1)]);
       }
       for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
         vars__.emplace_back(bQ_model[(sym1__ - 1)]);
       }
       for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        vars__.emplace_back(bQ_price_mean[(sym1__ - 1)]);
+        vars__.emplace_back(bQ_Y_mean[(sym1__ - 1)]);
       }
       for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
-        vars__.emplace_back(bQ_price_sigma[(sym1__ - 1)]);
+        vars__.emplace_back(bQ_Y_sigma[(sym1__ - 1)]);
       }
       for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
         vars__.emplace_back(h[(sym1__ - 1)]);
@@ -1749,11 +1725,10 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__ = std::vector<std::string>{"prices_p", "bQ_model",
-      "bQ_price_mean", "bQ_price_sigma", "h", "ar", "ma", "phi_beta",
-      "sigma2", "Intercept", "mu_prices", "sigma_prices", "price_tmp",
-      "prices", "prices_diff", "phi", "sigma", "mu", "err", "h_i_mean",
-      "h_i_sigma", "h_sigma"};
+    names__ = std::vector<std::string>{"Ys_p", "bQ_model", "bQ_Y_mean",
+      "bQ_Y_sigma", "h", "ar", "ma", "phi_beta", "sigma2", "Intercept",
+      "mu_Ys", "sigma_Ys", "Y_tmp", "Ys", "Ys_diff", "phi", "sigma", "mu",
+      "err", "h_i_mean", "h_i_sigma", "h_sigma"};
     
     } // get_param_names() 
     
@@ -1789,7 +1764,7 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
     
     for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       {
-        param_names__.emplace_back(std::string() + "prices_p" + '.' + std::to_string(sym1__));
+        param_names__.emplace_back(std::string() + "Ys_p" + '.' + std::to_string(sym1__));
       } 
     }
     for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
@@ -1799,12 +1774,12 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
     }
     for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
       {
-        param_names__.emplace_back(std::string() + "bQ_price_mean" + '.' + std::to_string(sym1__));
+        param_names__.emplace_back(std::string() + "bQ_Y_mean" + '.' + std::to_string(sym1__));
       } 
     }
     for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
       {
-        param_names__.emplace_back(std::string() + "bQ_price_sigma" + '.' + std::to_string(sym1__));
+        param_names__.emplace_back(std::string() + "bQ_Y_sigma" + '.' + std::to_string(sym1__));
       } 
     }
     for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
@@ -1824,27 +1799,27 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
     if (emit_transformed_parameters__) {
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         {
-          param_names__.emplace_back(std::string() + "mu_prices" + '.' + std::to_string(sym1__));
+          param_names__.emplace_back(std::string() + "mu_Ys" + '.' + std::to_string(sym1__));
         } 
       }
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         {
-          param_names__.emplace_back(std::string() + "sigma_prices" + '.' + std::to_string(sym1__));
+          param_names__.emplace_back(std::string() + "sigma_Ys" + '.' + std::to_string(sym1__));
         } 
       }
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         {
-          param_names__.emplace_back(std::string() + "price_tmp" + '.' + std::to_string(sym1__));
+          param_names__.emplace_back(std::string() + "Y_tmp" + '.' + std::to_string(sym1__));
         } 
       }
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         {
-          param_names__.emplace_back(std::string() + "prices" + '.' + std::to_string(sym1__));
+          param_names__.emplace_back(std::string() + "Ys" + '.' + std::to_string(sym1__));
         } 
       }
       for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
         {
-          param_names__.emplace_back(std::string() + "prices_diff" + '.' + std::to_string(sym1__));
+          param_names__.emplace_back(std::string() + "Ys_diff" + '.' + std::to_string(sym1__));
         } 
       }
       param_names__.emplace_back(std::string() + "phi");
@@ -1890,7 +1865,7 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
     
     for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
       {
-        param_names__.emplace_back(std::string() + "prices_p" + '.' + std::to_string(sym1__));
+        param_names__.emplace_back(std::string() + "Ys_p" + '.' + std::to_string(sym1__));
       } 
     }
     for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
@@ -1900,12 +1875,12 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
     }
     for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
       {
-        param_names__.emplace_back(std::string() + "bQ_price_mean" + '.' + std::to_string(sym1__));
+        param_names__.emplace_back(std::string() + "bQ_Y_mean" + '.' + std::to_string(sym1__));
       } 
     }
     for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
       {
-        param_names__.emplace_back(std::string() + "bQ_price_sigma" + '.' + std::to_string(sym1__));
+        param_names__.emplace_back(std::string() + "bQ_Y_sigma" + '.' + std::to_string(sym1__));
       } 
     }
     for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
@@ -1925,27 +1900,27 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
     if (emit_transformed_parameters__) {
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         {
-          param_names__.emplace_back(std::string() + "mu_prices" + '.' + std::to_string(sym1__));
+          param_names__.emplace_back(std::string() + "mu_Ys" + '.' + std::to_string(sym1__));
         } 
       }
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         {
-          param_names__.emplace_back(std::string() + "sigma_prices" + '.' + std::to_string(sym1__));
+          param_names__.emplace_back(std::string() + "sigma_Ys" + '.' + std::to_string(sym1__));
         } 
       }
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         {
-          param_names__.emplace_back(std::string() + "price_tmp" + '.' + std::to_string(sym1__));
+          param_names__.emplace_back(std::string() + "Y_tmp" + '.' + std::to_string(sym1__));
         } 
       }
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         {
-          param_names__.emplace_back(std::string() + "prices" + '.' + std::to_string(sym1__));
+          param_names__.emplace_back(std::string() + "Ys" + '.' + std::to_string(sym1__));
         } 
       }
       for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
         {
-          param_names__.emplace_back(std::string() + "prices_diff" + '.' + std::to_string(sym1__));
+          param_names__.emplace_back(std::string() + "Ys_diff" + '.' + std::to_string(sym1__));
         } 
       }
       param_names__.emplace_back(std::string() + "phi");
@@ -1985,13 +1960,13 @@ class alt_mem_patterns_model final : public model_base_crtp<alt_mem_patterns_mod
     
   inline std::string get_constrained_sizedtypes() const {
     
-    return std::string("[{\"name\":\"prices_p\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"bQ_model\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"bQ_price_mean\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"bQ_price_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"h\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"parameters\"},{\"name\":\"ar\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"ma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi_beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"Intercept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mu_prices\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"sigma_prices\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"price_tmp\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"prices\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"prices_diff\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"mu\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"err\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_i_mean\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_i_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"Ys_p\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"bQ_model\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"bQ_Y_mean\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"bQ_Y_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"h\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"parameters\"},{\"name\":\"ar\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"ma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi_beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"Intercept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mu_Ys\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"sigma_Ys\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"Y_tmp\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"Ys\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"Ys_diff\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"mu\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"err\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_i_mean\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_i_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"}]");
     
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
     
-    return std::string("[{\"name\":\"prices_p\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"bQ_model\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"bQ_price_mean\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"bQ_price_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"h\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"parameters\"},{\"name\":\"ar\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"ma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi_beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"Intercept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mu_prices\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"sigma_prices\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"price_tmp\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"prices\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"prices_diff\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"mu\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"err\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_i_mean\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_i_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"}]");
+    return std::string("[{\"name\":\"Ys_p\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"parameters\"},{\"name\":\"bQ_model\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"bQ_Y_mean\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"bQ_Y_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(K) + "},\"block\":\"parameters\"},{\"name\":\"h\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"parameters\"},{\"name\":\"ar\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(2) + "},\"block\":\"parameters\"},{\"name\":\"ma\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"phi_beta\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"sigma2\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"Intercept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mu_Ys\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"sigma_Ys\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"Y_tmp\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"Ys\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(N) + "},\"block\":\"transformed_parameters\"},{\"name\":\"Ys_diff\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"phi\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"sigma\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"mu\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"err\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_i_mean\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_i_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"},{\"name\":\"h_sigma\",\"type\":{\"name\":\"vector\",\"length\":" + std::to_string(Nr) + "},\"block\":\"transformed_parameters\"}]");
     
     } // get_unconstrained_sizedtypes() 
     
@@ -2922,12 +2897,11 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       
       current_statement__ = 1;
       alpha = in__.template read<local_scalar_t__>();
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> p_soa_vec_v = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(M, std::numeric_limits<double>::quiet_NaN()));
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_soa_vec_v = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(M, DUMMY_VAR__);
+                                                           
       
       current_statement__ = 2;
-      p_soa_vec_v = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+      p_soa_vec_v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                       M);
       stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> p_soa_mat = 
       stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>(Eigen::Matrix<double, -1, -1>::Constant(N, M, std::numeric_limits<double>::quiet_NaN()));
@@ -2964,19 +2938,17 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       current_statement__ = 7;
       p_soa_loop_mat_uni_col_idx = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
                                      N, M);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>> p_soa_lhs_loop_mul = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>>(Eigen::Matrix<double, 1, -1>::Constant(N, std::numeric_limits<double>::quiet_NaN()));
-      
+      Eigen::Matrix<local_scalar_t__, 1, -1> p_soa_lhs_loop_mul = Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(N, DUMMY_VAR__);
+                                                                  
       
       current_statement__ = 8;
-      p_soa_lhs_loop_mul = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>>>(
+      p_soa_lhs_loop_mul = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(
                              N);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> p_soa_rhs_loop_mul = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN()));
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_soa_rhs_loop_mul = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
+                                                                  
       
       current_statement__ = 9;
-      p_soa_rhs_loop_mul = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+      p_soa_rhs_loop_mul = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                              N);
       stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> p_soa_used_with_aos_in_excluded_fun = 
       stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN()));
@@ -2997,12 +2969,11 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       current_statement__ = 12;
       p_aos_vec_v_assign_to_aos = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                                     M);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> p_aos_vec_v_tp_fails_func = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(M, std::numeric_limits<double>::quiet_NaN()));
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_aos_vec_v_tp_fails_func = 
+      Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(M, DUMMY_VAR__);
       
       current_statement__ = 13;
-      p_aos_vec_v_tp_fails_func = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+      p_aos_vec_v_tp_fails_func = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                                     M);
       Eigen::Matrix<local_scalar_t__, -1, 1> p_aos_loop_vec_v_uni_idx = 
       Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(M, DUMMY_VAR__);
@@ -3010,12 +2981,11 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
       current_statement__ = 14;
       p_aos_loop_vec_v_uni_idx = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                                    M);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> p_aos_fail_assign_from_top_idx = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(M, std::numeric_limits<double>::quiet_NaN()));
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_aos_fail_assign_from_top_idx = 
+      Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(M, DUMMY_VAR__);
       
       current_statement__ = 15;
-      p_aos_fail_assign_from_top_idx = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+      p_aos_fail_assign_from_top_idx = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                                          M);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_aos_loop_mat_uni_uni_idx = 
       Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(N, M, DUMMY_VAR__);
@@ -3157,9 +3127,8 @@ class mem_patterns_model final : public model_base_crtp<mem_patterns_model> {
           "assigning variable tp_soa_single_assign", index_uni(1));
         current_statement__ = 42;
         validate_non_negative_index("tp_soa_single_assign_from_soa", "N", N);
-        stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> tp_soa_single_assign_from_soa = 
-        stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN()));
-        
+        Eigen::Matrix<local_scalar_t__, -1, 1> tp_soa_single_assign_from_soa = 
+        Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
         
         current_statement__ = 44;
         assign(tp_soa_single_assign_from_soa,
@@ -10369,24 +10338,23 @@ class mother_model final : public model_base_crtp<mother_model> {
       Eigen::Matrix<local_scalar_t__, -1, 1> tp_vec = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
                                                       
       
-      stan::conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> tp_1d_vec = 
-      std::vector<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN())));
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> tp_1d_vec = 
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__));
       
       
-      stan::conditional_var_value_t<local_scalar_t__, std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>> tp_3d_vec = 
-      std::vector<std::vector<std::vector<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>>>(N, std::vector<std::vector<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>>(M, std::vector<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(K, stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN())))));
+      std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> tp_3d_vec = 
+      std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__))));
       
       
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>> tp_row_vec = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>>(Eigen::Matrix<double, 1, -1>::Constant(N, std::numeric_limits<double>::quiet_NaN()));
+      Eigen::Matrix<local_scalar_t__, 1, -1> tp_row_vec = Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(N, DUMMY_VAR__);
+                                                          
+      
+      std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> tp_1d_row_vec = 
+      std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(N, DUMMY_VAR__));
       
       
-      stan::conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> tp_1d_row_vec = 
-      std::vector<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>>(Eigen::Matrix<double, 1, -1>::Constant(N, std::numeric_limits<double>::quiet_NaN())));
-      
-      
-      stan::conditional_var_value_t<local_scalar_t__, std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>> tp_3d_row_vec = 
-      std::vector<std::vector<std::vector<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>>>>>(N, std::vector<std::vector<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>>>>(M, std::vector<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>>>(K, stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>>(Eigen::Matrix<double, 1, -1>::Constant(N, std::numeric_limits<double>::quiet_NaN())))));
+      std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>> tp_3d_row_vec = 
+      std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(K, Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(N, DUMMY_VAR__))));
       
       
       stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> tp_mat = 
@@ -10397,28 +10365,25 @@ class mother_model final : public model_base_crtp<mother_model> {
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(4, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(5, Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(2, 3, DUMMY_VAR__)));
       
       
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> tp_simplex = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN()));
+      Eigen::Matrix<local_scalar_t__, -1, 1> tp_simplex = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
+                                                          
+      
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> tp_1d_simplex = 
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(N, Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__));
       
       
-      stan::conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> tp_1d_simplex = 
-      std::vector<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN())));
+      std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>> tp_3d_simplex = 
+      std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(M, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__))));
       
       
-      stan::conditional_var_value_t<local_scalar_t__, std::vector<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>> tp_3d_simplex = 
-      std::vector<std::vector<std::vector<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>>>(N, std::vector<std::vector<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>>(M, std::vector<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(K, stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(N, std::numeric_limits<double>::quiet_NaN())))));
+      Eigen::Matrix<local_scalar_t__, -1, -1> tp_cfcov_54 = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(5, 4, DUMMY_VAR__);
+                                                            
       
+      Eigen::Matrix<local_scalar_t__, -1, -1> tp_cfcov_33 = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(3, 3, DUMMY_VAR__);
+                                                            
       
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> tp_cfcov_54 = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>(Eigen::Matrix<double, -1, -1>::Constant(5, 4, std::numeric_limits<double>::quiet_NaN()));
-      
-      
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> tp_cfcov_33 = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>(Eigen::Matrix<double, -1, -1>::Constant(3, 3, std::numeric_limits<double>::quiet_NaN()));
-      
-      
-      stan::conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> tp_cfcov_33_ar = 
-      std::vector<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(K, stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>(Eigen::Matrix<double, -1, -1>::Constant(3, 3, std::numeric_limits<double>::quiet_NaN())));
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> tp_cfcov_33_ar = 
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(K, Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(3, 3, DUMMY_VAR__));
       
       
       Eigen::Matrix<local_scalar_t__, -1, 1> theta_p = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(2, DUMMY_VAR__);
@@ -10535,11 +10500,8 @@ class mother_model final : public model_base_crtp<mother_model> {
         }
       }
       current_statement__ = 27;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 27;
-        check_less_or_equal(function__, "tp_vec[sym1__]",
-                            tp_vec[(sym1__ - 1)], 0);
-      }
+      check_less_or_equal(function__, "tp_vec", stan::math::value_of(tp_vec),
+                          0);
       current_statement__ = 34;
       for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
         current_statement__ = 34;
@@ -11197,11 +11159,7 @@ class mother_model final : public model_base_crtp<mother_model> {
         }
       }
       current_statement__ = 27;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 27;
-        check_less_or_equal(function__, "tp_vec[sym1__]",
-                            tp_vec[(sym1__ - 1)], 0);
-      }
+      check_less_or_equal(function__, "tp_vec", tp_vec, 0);
       current_statement__ = 34;
       for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
         current_statement__ = 34;
@@ -11668,11 +11626,7 @@ class mother_model final : public model_base_crtp<mother_model> {
         }
       }
       current_statement__ = 82;
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        current_statement__ = 82;
-        check_less_or_equal(function__, "gq_vec[sym1__]",
-                            gq_vec[(sym1__ - 1)], 1);
-      }
+      check_less_or_equal(function__, "gq_vec", gq_vec, 1);
       current_statement__ = 88;
       for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
         current_statement__ = 88;
@@ -21487,13 +21441,11 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> alpha_v = 
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>(Eigen::Matrix<double, -1, 1>::Constant(k, std::numeric_limits<double>::quiet_NaN()));
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> alpha_v = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(k, DUMMY_VAR__);
+                                                       
       
       current_statement__ = 1;
-      alpha_v = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-                  k);
+      alpha_v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
       Eigen::Matrix<local_scalar_t__, -1, 1> beta = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(k, DUMMY_VAR__);
                                                     
       
@@ -24933,12 +24885,12 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      stan::conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>> a8 = 
-      std::vector<std::vector<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>>(N, std::vector<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>(Eigen::Matrix<double, -1, -1>::Constant(N, N, std::numeric_limits<double>::quiet_NaN()))));
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> a8 = 
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(N, N, DUMMY_VAR__)));
       
       
       current_statement__ = 1;
-      a8 = in__.template read<stan::conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>>(
+      a8 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
              N, N, N, N);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> a7 = 
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(N, DUMMY_VAR__)));
@@ -32140,20 +32092,12 @@ class transform_model final : public model_base_crtp<transform_model> {
         }
       }
       current_statement__ = 29;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 29;
-        check_greater_or_equal(function__, "tpv_1[sym1__]",
-                               tpv_1[(sym1__ - 1)],
-                               rvalue(dv, "dv", index_uni(1), index_uni(1))[
-                               (sym1__ - 1)]);
-      }
+      check_greater_or_equal(function__, "tpv_1",
+                             stan::math::value_of(tpv_1),
+                             rvalue(dv, "dv", index_uni(1), index_uni(1)));
       current_statement__ = 29;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 29;
-        check_less_or_equal(function__, "tpv_1[sym1__]", tpv_1[(sym1__ - 1)],
-                            rvalue(dv, "dv", index_uni(1), index_uni(2))[
-                            (sym1__ - 1)]);
-      }
+      check_less_or_equal(function__, "tpv_1", stan::math::value_of(tpv_1),
+                          rvalue(dv, "dv", index_uni(1), index_uni(2)));
       current_statement__ = 30;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 30;
@@ -32180,20 +32124,12 @@ class transform_model final : public model_base_crtp<transform_model> {
         }
       }
       current_statement__ = 32;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 32;
-        check_greater_or_equal(function__, "tpr_1[sym1__]",
-                               tpr_1[(sym1__ - 1)],
-                               rvalue(dr, "dr", index_uni(1), index_uni(1))[
-                               (sym1__ - 1)]);
-      }
+      check_greater_or_equal(function__, "tpr_1",
+                             stan::math::value_of(tpr_1),
+                             rvalue(dr, "dr", index_uni(1), index_uni(1)));
       current_statement__ = 32;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 32;
-        check_less_or_equal(function__, "tpr_1[sym1__]", tpr_1[(sym1__ - 1)],
-                            rvalue(dr, "dr", index_uni(1), index_uni(2))[
-                            (sym1__ - 1)]);
-      }
+      check_less_or_equal(function__, "tpr_1", stan::math::value_of(tpr_1),
+                          rvalue(dr, "dr", index_uni(1), index_uni(2)));
       current_statement__ = 33;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 33;
@@ -32220,18 +32156,9 @@ class transform_model final : public model_base_crtp<transform_model> {
         }
       }
       current_statement__ = 35;
-      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
-        current_statement__ = 35;
-        for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
-          current_statement__ = 35;
-          check_greater_or_equal(function__, "tpm_1[sym1__, sym2__]",
-                                 rvalue(tpm_1, "tpm_1",
-                                   index_uni(sym1__), index_uni(sym2__)),
-                                 rvalue(rvalue(dm, "dm", index_uni(1)),
-                                   "dm[1]",
-                                   index_uni(sym1__), index_uni(sym2__)));
-        }
-      }
+      check_greater_or_equal(function__, "tpm_1",
+                             stan::math::value_of(tpm_1),
+                             rvalue(dm, "dm", index_uni(1)));
       current_statement__ = 36;
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 36;
@@ -32803,20 +32730,11 @@ class transform_model final : public model_base_crtp<transform_model> {
         }
       }
       current_statement__ = 29;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 29;
-        check_greater_or_equal(function__, "tpv_1[sym1__]",
-                               tpv_1[(sym1__ - 1)],
-                               rvalue(dv, "dv", index_uni(1), index_uni(1))[
-                               (sym1__ - 1)]);
-      }
+      check_greater_or_equal(function__, "tpv_1", tpv_1,
+                             rvalue(dv, "dv", index_uni(1), index_uni(1)));
       current_statement__ = 29;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 29;
-        check_less_or_equal(function__, "tpv_1[sym1__]", tpv_1[(sym1__ - 1)],
-                            rvalue(dv, "dv", index_uni(1), index_uni(2))[
-                            (sym1__ - 1)]);
-      }
+      check_less_or_equal(function__, "tpv_1", tpv_1,
+                          rvalue(dv, "dv", index_uni(1), index_uni(2)));
       current_statement__ = 30;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 30;
@@ -32843,20 +32761,11 @@ class transform_model final : public model_base_crtp<transform_model> {
         }
       }
       current_statement__ = 32;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 32;
-        check_greater_or_equal(function__, "tpr_1[sym1__]",
-                               tpr_1[(sym1__ - 1)],
-                               rvalue(dr, "dr", index_uni(1), index_uni(1))[
-                               (sym1__ - 1)]);
-      }
+      check_greater_or_equal(function__, "tpr_1", tpr_1,
+                             rvalue(dr, "dr", index_uni(1), index_uni(1)));
       current_statement__ = 32;
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        current_statement__ = 32;
-        check_less_or_equal(function__, "tpr_1[sym1__]", tpr_1[(sym1__ - 1)],
-                            rvalue(dr, "dr", index_uni(1), index_uni(2))[
-                            (sym1__ - 1)]);
-      }
+      check_less_or_equal(function__, "tpr_1", tpr_1,
+                          rvalue(dr, "dr", index_uni(1), index_uni(2)));
       current_statement__ = 33;
       for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
         current_statement__ = 33;
@@ -32883,18 +32792,8 @@ class transform_model final : public model_base_crtp<transform_model> {
         }
       }
       current_statement__ = 35;
-      for (int sym1__ = 1; sym1__ <= m; ++sym1__) {
-        current_statement__ = 35;
-        for (int sym2__ = 1; sym2__ <= k; ++sym2__) {
-          current_statement__ = 35;
-          check_greater_or_equal(function__, "tpm_1[sym1__, sym2__]",
-                                 rvalue(tpm_1, "tpm_1",
-                                   index_uni(sym1__), index_uni(sym2__)),
-                                 rvalue(rvalue(dm, "dm", index_uni(1)),
-                                   "dm[1]",
-                                   index_uni(sym1__), index_uni(sym2__)));
-        }
-      }
+      check_greater_or_equal(function__, "tpm_1", tpm_1,
+                             rvalue(dm, "dm", index_uni(1)));
       current_statement__ = 36;
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         current_statement__ = 36;
