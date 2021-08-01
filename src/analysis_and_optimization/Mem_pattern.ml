@@ -169,9 +169,10 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
         | true -> Set.Poly.singleton assign_name
         | false -> Set.Poly.empty
       in
+      (*
       let print_set (s : string Set.Poly.t) = 
         Set.Poly.iter ~f:print_endline s in
-        let () = printf "\n----BEGIN------\n" in
+        let () = printf "\n----BEGIN ASSIGN CHECK------\n" in
         let () = printf "\nAssign Name: %s\n" assign_name in
         let () =
           let () = printf "\n-----------\n" in 
@@ -193,7 +194,8 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
           let () = printf "rhs_set:" in 
           let () = printf "\n-----------\n" in 
           print_set rhs_set in   
-      let () = printf "\n----END------\n" in
+      let () = printf "\n----END ASSIGN CHECK------\n" in
+      *)
       Set.Poly.union rhs_set lhs_set
   | Decl _
    |NRFunApp ((_ : Fun_kind.t), (_ : Expr.Typed.t list))

@@ -1148,8 +1148,8 @@ let gen_aos_variables
  **)
 let modify_kind (modifiable_set : string Set.Poly.t) (kind : Fun_kind.t)
     (exprs : Expr.Typed.Meta.t Expr.Fixed.t list) : Fun_kind.t =
-  let find_eigen_names = Mem_pattern.contains_eigen_names modifiable_set in
-  let is_all_in_list = List.for_all ~f:find_eigen_names exprs in
+  let expr_names = Set.Poly.union_list (List.map ~f:Mem_pattern.query_eigen_names exprs) in
+  let is_all_in_list = Set.Poly.is_subset ~of_:modifiable_set expr_names in
   match kind with
   | Fun_kind.StanLib (name, sfx, (_ : Common.Helpers.mem_pattern)) ->
       if is_all_in_list then Fun_kind.StanLib (name, sfx, Common.Helpers.AoS)
@@ -1219,13 +1219,26 @@ let rec modify_stmt_pattern
   match pattern with
   | Stmt.Fixed.Pattern.Decl
       ({decl_id; decl_type= Type.Sized sized_type; _} as decl) ->
+      let print_set (s : string Set.Poly.t) = 
+        Set.Poly.iter ~f:print_endline s in
+        let () = printf "\n----BEGIN DECL MOD------\n" in
+        let () = printf "\nDecl Name: %s\n" decl_id in
+        let () =
+        let () = printf "\n-----------\n" in 
+        let () = printf "modifiable_set:" in 
+        let () = printf "\n-----------\n" in 
+        print_set modifiable_set in 
+        let () = printf "\n----END DECL MOD------\n" in
+
       if Set.Poly.mem modifiable_set decl_id then
-        Stmt.Fixed.Pattern.Decl
+      let () = printf "\n----Downgrade Chosen------\n" in
+      Stmt.Fixed.Pattern.Decl
           { decl with
             decl_type=
               Type.Sized (SizedType.modify_sizedtype_mem AoS sized_type) }
       else
-        Decl
+      let () = printf "\nUpgrade Chosen\n" in
+      Decl
           { decl with
             decl_type=
               Type.Sized (SizedType.modify_sizedtype_mem SoA sized_type) }
@@ -1319,7 +1332,7 @@ let optimize_soa (mir : Program.Typed.t) =
     Set.Poly.iter ~f:print_endline s in
   let () =
     let () = printf "\n-----------\n" in 
-    let () = printf "lhs_set:" in 
+    let () = printf "Initial Nonos:" in 
     let () = printf "\n-----------\n" in 
     print_set initial_variables in 
 
