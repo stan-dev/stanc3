@@ -2204,8 +2204,8 @@ let () =
   add_unqualified ("to_row_vector", ReturnType URowVector, [URowVector], AoS) ;
   add_unqualified ("to_row_vector", ReturnType URowVector, [UArray UReal], AoS) ;
   add_unqualified ("to_row_vector", ReturnType URowVector, [UArray UInt], AoS) ;
-  add_unqualified ("to_vector", ReturnType UVector, [UMatrix], SoA) ;
-  add_unqualified ("to_vector", ReturnType UVector, [UVector], SoA) ;
+  add_unqualified ("to_vector", ReturnType UVector, [UMatrix], AoS) ;
+  add_unqualified ("to_vector", ReturnType UVector, [UVector], AoS) ;
   add_unqualified ("to_vector", ReturnType UVector, [URowVector], AoS) ;
   add_unqualified ("to_vector", ReturnType UVector, [UArray UReal], AoS) ;
   add_unqualified ("to_vector", ReturnType UVector, [UArray UInt], AoS) ;
