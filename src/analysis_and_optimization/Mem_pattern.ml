@@ -364,7 +364,7 @@ and query_bad_assign_fun (kind : Fun_kind.t)
   | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) -> (
     match name with
     | "check_matching_dims" -> false
-    | name -> (
+    | _ -> (
         let fun_args = List.map ~f:find_args exprs in
         (*
         let is_fun_support = is_fun_soa_supported name exprs in
@@ -386,12 +386,7 @@ and query_bad_assign_fun (kind : Fun_kind.t)
                  | _ -> false )
                fun_args
         in
-        let is_return_eigen =
-          Option.value_map ~default:false
-            ~f:UnsizedType.return_contains_eigen_type
-            (Stan_math_signatures.stan_math_returntype name fun_args)
-        in
-        match is_return_eigen && is_args_autodiff_real_data_matrix with
+        match is_args_autodiff_real_data_matrix with
         | true -> true
         | false -> List.exists ~f:query_bad_assign exprs ) )
   | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) -> true
@@ -412,7 +407,9 @@ let rec query_initial_demotable_stmt (in_loop : bool)
   let query_expr = query_initial_demotable_expr in_loop in
   match pattern with
   | Stmt.Fixed.Pattern.Assignment
-      (((name : string), (ut : UnsizedType.t), lhs), rhs) ->
+      ( ((name : string), (ut : UnsizedType.t), lhs)
+      , (Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) as rhs)
+      ) ->
       let check_lhs =
         let lhs_list =
           Set.Poly.union_list
@@ -428,7 +425,15 @@ let rec query_initial_demotable_stmt (in_loop : bool)
       in
       let check_rhs = query_expr rhs in
       let both_sides = Set.Poly.union check_lhs check_rhs in
-      if Set.Poly.length check_rhs > 0 || query_bad_assign rhs then
+      let check_bad_assign =
+        match
+          ( UnsizedType.contains_eigen_type type_
+          , adlevel = UnsizedType.AutoDiffable )
+        with
+        | true, true -> query_bad_assign rhs
+        | _ -> false
+      in
+      if Set.Poly.length check_rhs > 0 || check_bad_assign then
         Set.Poly.add both_sides name
       else both_sides
   | NRFunApp (kind, exprs) -> query_initial_demotable_funs in_loop kind exprs
