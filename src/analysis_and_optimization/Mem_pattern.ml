@@ -299,7 +299,7 @@ and query_initial_demotable_funs (in_loop : bool) (kind : Fun_kind.t)
           Stan_math_signatures.query_stan_math_mem_pattern_support name
             fun_args
         in
-          (*
+        (*
           (*If there are no autodiffable matrices*)
           let is_no_autodiff_matrix = (not
                 (List.exists
@@ -322,7 +322,7 @@ and query_initial_demotable_funs (in_loop : bool) (kind : Fun_kind.t)
             print_matches
               (Set.Poly.union_list (List.map ~f:query_expr exprs))
               name false
-        | false -> print_matches all_eigen_names name false ))
+        | false -> print_matches all_eigen_names name false ) )
   | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) ->
       all_eigen_names
   | CompilerInternal (_ : Internal_fun.t) -> Set.Poly.empty
@@ -384,13 +384,14 @@ and query_bad_assign_fun (kind : Fun_kind.t)
                  match (x, UnsizedType.is_container y) with
                  | UnsizedType.DataOnly, true -> true
                  | _ -> false )
-               fun_args in
+               fun_args
+        in
         let is_return_eigen =
           Option.value_map ~default:false
             ~f:UnsizedType.return_contains_eigen_type
             (Stan_math_signatures.stan_math_returntype name fun_args)
         in
-        match (is_return_eigen && is_args_autodiff_real_data_matrix) with
+        match is_return_eigen && is_args_autodiff_real_data_matrix with
         | true -> true
         | false -> List.exists ~f:query_bad_assign exprs ) )
   | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) -> true
@@ -427,7 +428,8 @@ let rec query_initial_demotable_stmt (in_loop : bool)
       in
       let check_rhs = query_expr rhs in
       let both_sides = Set.Poly.union check_lhs check_rhs in
-      if Set.Poly.length check_rhs > 0 || query_bad_assign rhs then Set.Poly.add both_sides name
+      if Set.Poly.length check_rhs > 0 || query_bad_assign rhs then
+        Set.Poly.add both_sides name
       else both_sides
   | NRFunApp (kind, exprs) -> query_initial_demotable_funs in_loop kind exprs
   | IfElse (predicate, lhs, rhs) ->
