@@ -242,7 +242,13 @@ let param_read smeta
                , SizedType.get_mem_pattern cst ))
             ( transform_args
             @ ( if out_trans = Identity then []
-              else [{decl_var with pattern= Var "lp__"}] )
+              else
+                [ Expr.Fixed.
+                    { pattern= Var "lp__"
+                    ; meta=
+                        Expr.Typed.Meta.create ~loc:smeta
+                          ~type_:UnsizedType.UReal ~adlevel:AutoDiffable () }
+                ] )
             @ read_constrain_dims out_trans cst ))
           Typed.Meta.{decl_var.meta with type_= ut})
     in

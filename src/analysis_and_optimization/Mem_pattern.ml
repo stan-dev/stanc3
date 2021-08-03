@@ -124,7 +124,7 @@ let rec expr_set Expr.Fixed.({pattern; meta}) =
  **)
 let query_names (expr : Typed.Meta.t Expr.Fixed.t) : string Set.Poly.t =
   let get_expr_names (Dataflow_types.VVar s, _) = Some s in
-  Set.Poly.filter_map ~f:get_expr_names (expr_eigen_set expr)
+  Set.Poly.filter_map ~f:get_expr_names (expr_set expr)
 
 let query_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) : string Set.Poly.t =
   let get_expr_eigen_names
@@ -220,6 +220,8 @@ let rec is_uni_eigen_loop_indexing in_loop (ut : UnsizedType.t)
           false
       | (UVector | URowVector | UMatrix), _ -> false )
 
+let print_set (s : string Set.Poly.t) = Set.Poly.iter ~f:print_endline s
+
 (**
  * Query to find the initial set of objects that cannot be SoA.
  *  This is mostly recursing over expressions, with the exceptions
@@ -256,6 +258,16 @@ let rec query_initial_demotable_expr (in_loop : bool) Expr.Fixed.({pattern; _})
   | EAnd (lhs, rhs) | EOr (lhs, rhs) ->
       Set.Poly.union (query_expr lhs) (query_expr rhs)
 
+and print_matches blah str debug =
+  match (Set.Poly.length blah, debug) with
+  | 0, _ -> blah
+  | _, true ->
+      let () = printf "\n %s: \n" str in
+      let () = print_set blah in
+      let () = printf "End %s Check\n" str in
+      blah
+  | _, false -> blah
+
 (**
  * Query a function to detect if it or any of its used 
  *  expression's objects or expressions should be demoted to AoS.
@@ -274,37 +286,26 @@ and query_initial_demotable_funs (in_loop : bool) (kind : Fun_kind.t)
     Set.Poly.union_list (List.map ~f:query_eigen_names exprs)
   in
   match kind with
-  | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) ->
-      let find_args
-          Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
-        (adlevel, type_)
-      in
-      let fun_args = List.map ~f:find_args exprs in
-      let is_fun_support =
-        Stan_math_signatures.query_stan_math_mem_pattern_support name fun_args
-      in
-      (*Right now we can't handle AD real and data matrix combos that return a matrix :-/*)
-      let is_args_autodiff_real_data_matrix =
-        List.exists
-          ~f:(fun (x, y) ->
-            match (x, y) with
-            | UnsizedType.AutoDiffable, UnsizedType.UReal -> true
-            | _ -> false )
-          fun_args
-        && List.exists
-             ~f:(fun (x, y) ->
-               match (x, UnsizedType.contains_eigen_type y) with
-               | UnsizedType.DataOnly, true -> true
-               | _ -> false )
-             fun_args
-        &&
-        match Stan_math_signatures.stan_math_returntype name fun_args with
-        | Some (UnsizedType.ReturnType x) -> UnsizedType.contains_eigen_type x
-        | _ -> false
-      in
-      if is_fun_support && not is_args_autodiff_real_data_matrix then
-        Set.Poly.union_list (List.map ~f:query_expr exprs)
-      else all_eigen_names
+  | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) -> (
+    match name with
+    | "check_matching_dims" -> Set.Poly.empty
+    | name -> (
+        let find_args
+            Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
+          (adlevel, type_)
+        in
+        let fun_args = List.map ~f:find_args exprs in
+        let is_fun_support =
+          Stan_math_signatures.query_stan_math_mem_pattern_support name
+            fun_args
+        in
+        (*Right now we can't handle AD real and data matrix combos that return a matrix :-/*)
+        match is_fun_support with
+        | true ->
+            print_matches
+              (Set.Poly.union_list (List.map ~f:query_expr exprs))
+              name false
+        | false -> print_matches all_eigen_names name false ) )
   | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) ->
       all_eigen_names
   | CompilerInternal (_ : Internal_fun.t) -> Set.Poly.empty
@@ -319,23 +320,35 @@ and query_initial_demotable_funs (in_loop : bool) (kind : Fun_kind.t)
  *   will be returned if the matrix or vector is accessed by single 
  *    cell indexing.
  *)
-let rec query_bad_assign Expr.Fixed.({pattern; meta}) : bool =
-  let query_expr = query_bad_assign in
-  match pattern with
-  | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
-      query_bad_assign_fun kind exprs meta
-  | Indexed (expr, indexed) ->
-      let index_set =
-        List.exists
-          ~f:(Index.apply ~default:false ~merge:(fun x y -> x = y) query_expr)
-          indexed
-      in
-      index_set || query_expr expr
-  | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string)) ->
-      false
-  | TernaryIf (predicate, texpr, fexpr) ->
-      query_expr predicate || query_expr texpr || query_expr fexpr
-  | EAnd (lhs, rhs) | EOr (lhs, rhs) -> query_expr lhs || query_expr rhs
+let rec query_bad_assign
+    Expr.Fixed.({pattern; meta= Expr.Typed.Meta.({adlevel; _})}) : bool =
+  if adlevel = UnsizedType.DataOnly then false
+  else
+    let query_expr = query_bad_assign in
+    match pattern with
+    | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
+        query_bad_assign_fun kind exprs
+    | Indexed (expr, indexed) ->
+        let index_set =
+          List.exists
+            ~f:
+              (Index.apply ~default:false ~merge:(fun x y -> x || y) query_expr)
+            indexed
+        in
+        index_set || query_expr expr
+    | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string))
+      ->
+        false
+    | TernaryIf (predicate, texpr, fexpr) ->
+        query_expr predicate || query_expr texpr || query_expr fexpr
+    | EAnd (lhs, rhs) | EOr (lhs, rhs) -> query_expr lhs || query_expr rhs
+
+and find_args Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
+  (adlevel, type_)
+
+and is_fun_soa_supported name exprs =
+  let fun_args = List.map ~f:find_args exprs in
+  Stan_math_signatures.query_stan_math_mem_pattern_support name fun_args
 
 (**
 * Query a function to detect if it or any of its used 
@@ -349,18 +362,23 @@ let rec query_bad_assign Expr.Fixed.({pattern; meta}) : bool =
 * exprs The expression list passed to the functions.
 *)
 and query_bad_assign_fun (kind : Fun_kind.t)
-    (exprs : Typed.Meta.t Expr.Fixed.t list) _ : bool =
+    (exprs : Typed.Meta.t Expr.Fixed.t list) : bool =
   match kind with
-  | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) ->
-      let find_args
-          Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
-        (adlevel, type_)
-      in
-      let fun_args = List.map ~f:find_args exprs in
-      let is_fun_support =
-        Stan_math_signatures.query_stan_math_mem_pattern_support name fun_args
-      in
-      (not is_fun_support) || List.for_all ~f:query_bad_assign exprs
+  | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) -> (
+    match name with
+    | "check_matching_dims" -> false
+    | name -> (
+        let fun_args = List.map ~f:find_args exprs in
+        let is_fun_support = is_fun_soa_supported name exprs in
+        let is_return_eigen =
+          Option.value_map ~default:false
+            ~f:UnsizedType.return_contains_eigen_type
+            (Stan_math_signatures.stan_math_returntype name fun_args)
+        in
+        match is_return_eigen with
+        | true ->
+            (not is_fun_support) || List.for_all ~f:query_bad_assign exprs
+        | false -> false ) )
   | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) -> true
   | CompilerInternal (_ : Internal_fun.t) -> false
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) -> false
@@ -395,8 +413,7 @@ let rec query_initial_demotable_stmt (in_loop : bool)
       in
       let check_rhs = query_expr rhs in
       let both_sides = Set.Poly.union check_lhs check_rhs in
-      if Set.Poly.length check_rhs > 0 || query_bad_assign rhs then
-        Set.Poly.add both_sides name
+      if Set.Poly.length check_rhs > 0 then Set.Poly.add both_sides name
       else both_sides
   | NRFunApp (kind, exprs) -> query_initial_demotable_funs in_loop kind exprs
   | IfElse (predicate, lhs, rhs) ->
@@ -509,15 +526,25 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
  *   and if so then promotes the function to SoA.
  * @param exprs A list of expressions going into the function.
  **)
-let modify_kind (modifiable_set : string Set.Poly.t) (kind : Fun_kind.t)
-    (exprs : Expr.Typed.Meta.t Expr.Fixed.t list) : Fun_kind.t =
-  let expr_names = Set.Poly.union_list (List.map ~f:query_eigen_names exprs) in
-  let is_all_in_list = Set.Poly.is_subset ~of_:modifiable_set expr_names in
+let rec modify_kind (modifiable_set : string Set.Poly.t) (kind : Fun_kind.t)
+    (exprs : Expr.Typed.Meta.t Expr.Fixed.t list) =
+  let expr_names = Set.Poly.union_list (List.map ~f:query_names exprs) in
+  let is_all_in_list =
+    Set.Poly.is_subset ~of_:modifiable_set expr_names
+    && (not (Set.Poly.is_empty modifiable_set))
+    && not (Set.Poly.is_empty expr_names)
+  in
   match kind with
   | Fun_kind.StanLib (name, sfx, (_ : Common.Helpers.mem_pattern)) ->
-      if is_all_in_list then Fun_kind.StanLib (name, sfx, Common.Helpers.AoS)
-      else Fun_kind.StanLib (name, sfx, AoS)
-  | (_ : Fun_kind.t) -> kind
+      let is_fun_supported = is_fun_soa_supported name exprs in
+      if is_all_in_list || not is_fun_supported then
+        (*Force demotion of all subexprs*)
+        let exprs' = List.map ~f:(modify_expr expr_names) exprs in
+        (Fun_kind.StanLib (name, sfx, Common.Helpers.AoS), exprs')
+      else
+        ( Fun_kind.StanLib (name, sfx, SoA)
+        , List.map ~f:(modify_expr modifiable_set) exprs )
+  | (_ : Fun_kind.t) -> (kind, List.map ~f:(modify_expr modifiable_set) exprs)
 
 (** 
 * Modify the expressions to demote/promote from AoS <-> SoA and vice versa
@@ -534,15 +561,14 @@ let modify_kind (modifiable_set : string Set.Poly.t) (kind : Fun_kind.t)
 *  associated expressions we want to modify.
 * @param pattern The expression to modify.
 *)
-let rec modify_expr_pattern (modifiable_set : string Set.Poly.t)
+and modify_expr_pattern (modifiable_set : string Set.Poly.t)
     (pattern : Expr.Typed.Meta.t Expr.Fixed.t Expr.Fixed.Pattern.t) =
   let mod_expr = modify_expr modifiable_set in
   match pattern with
   | Expr.Fixed.Pattern.FunApp
       (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
-      let new_exprs = List.map ~f:mod_expr exprs in
-      let mod_kind = modify_kind modifiable_set in
-      Expr.Fixed.Pattern.FunApp (mod_kind kind new_exprs, new_exprs)
+      let kind', expr' = modify_kind modifiable_set kind exprs in
+      Expr.Fixed.Pattern.FunApp (kind', expr')
   | TernaryIf (predicate, texpr, fexpr) ->
       TernaryIf (mod_expr predicate, mod_expr texpr, mod_expr fexpr)
   | Indexed (idx_expr, indexed) ->
@@ -614,9 +640,8 @@ let rec modify_stmt_pattern
             decl_type=
               Type.Sized (SizedType.modify_sizedtype_mem SoA sized_type) }
   | NRFunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
-      let new_exprs = List.map ~f:mod_expr exprs in
-      let mod_kind = modify_kind modifiable_set kind new_exprs in
-      NRFunApp (mod_kind, new_exprs)
+      let kind', exprs' = modify_kind modifiable_set kind exprs in
+      NRFunApp (kind', exprs')
   | Assignment
       ( (name, ut, lhs)
       , ( { pattern=
@@ -639,8 +664,18 @@ let rec modify_stmt_pattern
                   ( CompilerInternal (FnReadParam (constrain_op, SoA))
                   , List.map ~f:mod_expr args ) } )
   | Assignment (((name : string), (ut : UnsizedType.t), lhs), rhs) ->
-      Assignment
-        ((name, ut, List.map ~f:(Index.map mod_expr) lhs), mod_expr rhs)
+      if Set.Poly.mem modifiable_set name then
+        (*Force demotion of functions*)
+        let all_expr_var_names = query_names rhs in
+        let mod_assign_expr =
+          Mir_utils.map_rec_expr (modify_expr_pattern all_expr_var_names)
+        in
+        Assignment
+          ( (name, ut, List.map ~f:(Index.map mod_assign_expr) lhs)
+          , mod_assign_expr rhs )
+      else
+        Assignment
+          ((name, ut, List.map ~f:(Index.map mod_expr) lhs), mod_expr rhs)
   | IfElse (predicate, true_stmt, op_false_stmt) ->
       IfElse
         ( mod_expr predicate

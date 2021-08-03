@@ -152,6 +152,9 @@ let is_eigen_type ut =
 
 let is_fun_type = function UFun _ -> true | _ -> false
 
+let return_contains_eigen_type ret =
+  match ret with ReturnType t -> contains_eigen_type t | Void -> false
+
 (** Detect if type contains an integer *)
 let rec contains_int ut =
   match ut with UInt -> true | UArray ut -> contains_int ut | _ -> false

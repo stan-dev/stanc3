@@ -31,18 +31,6 @@
  (name runtest)
  (action (diff transformed_mir.expected transformed_mir.output)))
 
-(rule
- (targets mem_pattern_tmir.output)
- (deps (package stanc) (:stanfiles (glob_files *mem_pattern*.stan)))
- (action
-  (with-stdout-to %{targets}
-   (run %{bin:run_bin_on_args} "%{bin:stanc} --debug-transformed-mir" %{stanfiles}))))
-
-(alias
- (name runtest)
- (action (diff mem_pattern_tmir.expected mem_pattern_tmir.output)))
-
-
 
 (rule
  (targets cl.output)
