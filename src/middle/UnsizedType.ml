@@ -152,6 +152,14 @@ let is_eigen_type ut =
 
 let is_fun_type = function UFun _ -> true | _ -> false
 
+(*Returns true for Eigen matrices and arrays of scalars*)
+let rec is_container ut = 
+  match ut with 
+  | UVector | URowVector | UMatrix | UArray _ -> true
+  | UReal | UInt | UFun(_, Void, _, _) -> false
+  | UFun (_, ReturnType t, _, _) -> is_container t
+  | UMathLibraryFunction -> false
+
 let return_contains_eigen_type ret =
   match ret with ReturnType t -> contains_eigen_type t | Void -> false
 

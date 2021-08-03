@@ -299,27 +299,35 @@ and query_initial_demotable_funs (in_loop : bool) (kind : Fun_kind.t)
           Stan_math_signatures.query_stan_math_mem_pattern_support name
             fun_args
         in
-        (*Right now we can't handle AD real and data matrix combos that return a matrix :-/*)
+          (*
+          (*If there are no autodiffable matrices*)
+          let is_no_autodiff_matrix = (not
+                (List.exists
+                   ~f:(fun (x, y) ->
+                     match (x, UnsizedType.contains_eigen_type y) with
+                     | UnsizedType.AutoDiffable, true -> true
+                     | _ -> false )
+                   fun_args))
+          in 
+          (*If the return type is a matrix*)
+          let is_return_type_autodiff_matrix =
+          match Stan_math_signatures.stan_math_returntype name fun_args with
+          | Some (UnsizedType.ReturnType x) ->
+              UnsizedType.contains_eigen_type x
+          | _ -> true
+        in
+          *)
         match is_fun_support with
         | true ->
             print_matches
               (Set.Poly.union_list (List.map ~f:query_expr exprs))
               name false
-        | false -> print_matches all_eigen_names name false ) )
+        | false -> print_matches all_eigen_names name false ))
   | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) ->
       all_eigen_names
   | CompilerInternal (_ : Internal_fun.t) -> Set.Poly.empty
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) -> all_eigen_names
 
-(**
- * Query to find the initial set of objects that cannot be SoA.
- *  This is mostly recursing over expressions, with the exceptions
- *  being functions and indexing expressions.
- * @param in_loop a boolean to signify if the expression exists inside
- *  of a loop. If so, the names of matrix and vector like objects
- *   will be returned if the matrix or vector is accessed by single 
- *    cell indexing.
- *)
 let rec query_bad_assign
     Expr.Fixed.({pattern; meta= Expr.Typed.Meta.({adlevel; _})}) : bool =
   if adlevel = UnsizedType.DataOnly then false
@@ -350,17 +358,6 @@ and is_fun_soa_supported name exprs =
   let fun_args = List.map ~f:find_args exprs in
   Stan_math_signatures.query_stan_math_mem_pattern_support name fun_args
 
-(**
-* Query a function to detect if it or any of its used 
-*  expression's objects or expressions should be demoted to AoS.
-* @param in_loop A boolean to specify the logic of indexing expressions. See
-*  `query_initial_demotable_expr` for an explanation of the logic.
-* @param kind The function type, for StanLib functions we check if the 
-*  function supports SoA and for UserDefined functions we always fail 
-*  and return back all of the names of the objects passed in expressions
-*  to the UDF.
-* exprs The expression list passed to the functions.
-*)
 and query_bad_assign_fun (kind : Fun_kind.t)
     (exprs : Typed.Meta.t Expr.Fixed.t list) : bool =
   match kind with
@@ -369,16 +366,33 @@ and query_bad_assign_fun (kind : Fun_kind.t)
     | "check_matching_dims" -> false
     | name -> (
         let fun_args = List.map ~f:find_args exprs in
+        (*
         let is_fun_support = is_fun_soa_supported name exprs in
+        *)
+        (*Right now we can't handle AD real and data matrix combos that return a matrix :-/*)
+        let is_args_autodiff_real_data_matrix =
+          (*If there are any autodiffable vars*)
+          List.exists
+            ~f:(fun (x, y) ->
+              match (x, y) with
+              | UnsizedType.AutoDiffable, UnsizedType.UReal -> true
+              | _ -> false )
+            fun_args
+          (*If there are any data matrices*)
+          && List.exists
+               ~f:(fun (x, y) ->
+                 match (x, UnsizedType.is_container y) with
+                 | UnsizedType.DataOnly, true -> true
+                 | _ -> false )
+               fun_args in
         let is_return_eigen =
           Option.value_map ~default:false
             ~f:UnsizedType.return_contains_eigen_type
             (Stan_math_signatures.stan_math_returntype name fun_args)
         in
-        match is_return_eigen with
-        | true ->
-            (not is_fun_support) || List.for_all ~f:query_bad_assign exprs
-        | false -> false ) )
+        match (is_return_eigen && is_args_autodiff_real_data_matrix) with
+        | true -> true
+        | false -> List.exists ~f:query_bad_assign exprs ) )
   | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) -> true
   | CompilerInternal (_ : Internal_fun.t) -> false
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) -> false
@@ -413,7 +427,7 @@ let rec query_initial_demotable_stmt (in_loop : bool)
       in
       let check_rhs = query_expr rhs in
       let both_sides = Set.Poly.union check_lhs check_rhs in
-      if Set.Poly.length check_rhs > 0 then Set.Poly.add both_sides name
+      if Set.Poly.length check_rhs > 0 || query_bad_assign rhs then Set.Poly.add both_sides name
       else both_sides
   | NRFunApp (kind, exprs) -> query_initial_demotable_funs in_loop kind exprs
   | IfElse (predicate, lhs, rhs) ->
