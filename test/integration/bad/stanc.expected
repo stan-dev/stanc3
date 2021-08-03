@@ -773,6 +773,7 @@ Ill-typed arguments supplied to infix operator -. Available signatures:
 (vector, vector) => vector
 (complex, real) => complex
 (complex, complex) => complex
+(complex, complex) => complex
 (real, row_vector) => row_vector
 (row_vector, real) => row_vector
 (row_vector, row_vector) => row_vector
@@ -1701,6 +1702,7 @@ Ill-typed arguments supplied to infix operator -. Available signatures:
 (vector, real) => vector
 (vector, vector) => vector
 (complex, real) => complex
+(complex, complex) => complex
 (complex, complex) => complex
 (real, row_vector) => row_vector
 (row_vector, real) => row_vector

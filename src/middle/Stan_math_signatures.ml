@@ -451,7 +451,9 @@ let pretty_print_math_lib_assignmentoperator_sigs op =
   | _ -> None
 
 (* -- Some helper definitions to populate stan_math_signatures -- *)
-let bare_types = [UnsizedType.UInt; UReal; UVector; URowVector; UMatrix]
+let bare_types =
+  [UnsizedType.UInt; UReal; UComplex; UVector; URowVector; UMatrix]
+
 let bare_types_size = List.length bare_types
 let vector_types = [UnsizedType.UReal; UArray UReal; UVector; URowVector]
 let vector_types_size = List.length vector_types
@@ -698,7 +700,6 @@ let () =
     ~f:(fun x -> add_unqualified ("add", ReturnType x, [x; x]))
     bare_types ;
   add_unqualified ("add", ReturnType UComplex, [UComplex; UReal]) ;
-  add_unqualified ("add", ReturnType UComplex, [UComplex; UComplex]) ;
   add_unqualified ("add", ReturnType UVector, [UVector; UReal]) ;
   add_unqualified ("add", ReturnType URowVector, [URowVector; UReal]) ;
   add_unqualified ("add", ReturnType UMatrix, [UMatrix; UReal]) ;
@@ -764,6 +765,7 @@ let () =
             , [bare_array_type (t, i); bare_array_type (t, i)] ) )
         bare_types )
     (List.range 1 8) ;
+  add_unqualified ("arg", ReturnType UReal, [UReal]) ;
   add_unqualified ("arg", ReturnType UReal, [UComplex]) ;
   add_unqualified ("asin", ReturnType UComplex, [UComplex]) ;
   add_unqualified ("asinh", ReturnType UComplex, [UComplex]) ;
@@ -850,6 +852,7 @@ let () =
   add_unqualified ("columns_dot_self", ReturnType URowVector, [UVector]) ;
   add_unqualified ("columns_dot_self", ReturnType URowVector, [URowVector]) ;
   add_unqualified ("columns_dot_self", ReturnType URowVector, [UMatrix]) ;
+  add_unqualified ("conj", ReturnType UComplex, [UReal]) ;
   add_unqualified ("conj", ReturnType UComplex, [UComplex]) ;
   add_unqualified ("cos", ReturnType UComplex, [UComplex]) ;
   add_unqualified ("cosh", ReturnType UComplex, [UComplex]) ;
@@ -981,7 +984,9 @@ let () =
     ( "gaussian_dlm_obs_lpdf"
     , ReturnType UReal
     , [UMatrix; UMatrix; UMatrix; UVector; UMatrix; UVector; UMatrix] ) ;
+  add_unqualified ("get_imag", ReturnType UReal, [UReal]) ;
   add_unqualified ("get_imag", ReturnType UReal, [UComplex]) ;
+  add_unqualified ("get_real", ReturnType UReal, [UReal]) ;
   add_unqualified ("get_real", ReturnType UReal, [UComplex]) ;
   add_unqualified ("gp_dot_prod_cov", ReturnType UMatrix, [UArray UReal; UReal]) ;
   add_unqualified
@@ -1341,7 +1346,9 @@ let () =
             logical_binops )
         primitive_types )
     primitive_types ;
+  add_unqualified ("logical_eq", ReturnType UInt, [UComplex; UReal]) ;
   add_unqualified ("logical_eq", ReturnType UInt, [UComplex; UComplex]) ;
+  add_unqualified ("logical_neq", ReturnType UInt, [UComplex; UReal]) ;
   add_unqualified ("logical_neq", ReturnType UInt, [UComplex; UComplex]) ;
   add_nullary "machine_precision" ;
   add_qualified
@@ -1495,6 +1502,7 @@ let () =
     , ReturnType UReal
     , [UArray UInt; URowVector; UVector; UVector; UReal] ) ;
   add_nullary "negative_infinity" ;
+  add_unqualified ("norm", ReturnType UReal, [UReal]) ;
   add_unqualified ("norm", ReturnType UReal, [UComplex]) ;
   add_unqualified
     ( "normal_id_glm_lpdf"
@@ -1630,6 +1638,7 @@ let () =
   add_unqualified ("prod", ReturnType UReal, [UVector]) ;
   add_unqualified ("prod", ReturnType UReal, [URowVector]) ;
   add_unqualified ("prod", ReturnType UReal, [UMatrix]) ;
+  add_unqualified ("proj", ReturnType UComplex, [UReal]) ;
   add_unqualified ("proj", ReturnType UComplex, [UComplex]) ;
   add_unqualified ("quad_form", ReturnType UReal, [UMatrix; UVector]) ;
   add_unqualified ("quad_form", ReturnType UMatrix, [UMatrix; UMatrix]) ;
