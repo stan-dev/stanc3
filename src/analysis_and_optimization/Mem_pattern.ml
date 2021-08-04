@@ -328,6 +328,41 @@ and query_initial_demotable_funs (in_loop : bool) (kind : Fun_kind.t)
   | CompilerInternal (_ : Internal_fun.t) -> Set.Poly.empty
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) -> all_eigen_names
 
+let find_args Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
+  (adlevel, type_)
+
+let is_fun_soa_supported name exprs =
+  let fun_args = List.map ~f:find_args exprs in
+  Stan_math_signatures.query_stan_math_mem_pattern_support name fun_args
+
+let rec query_bad_assign2
+    Expr.Fixed.({pattern; meta= Expr.Typed.Meta.({adlevel; _})}) : bool =
+  if adlevel = UnsizedType.DataOnly then true
+  else
+    let query_expr = query_bad_assign2 in
+    match pattern with
+    | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
+        query_bad_assign_fun2 kind exprs
+    | Indexed (expr, (_ : Typed.Meta.t Fixed.t Index.t sexp_list)) ->
+        query_expr expr
+    | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string))
+      ->
+        true
+    | TernaryIf _ -> false
+    (*I think we can just return true for this?*)
+    | EAnd (lhs, rhs) | EOr (lhs, rhs) -> query_expr lhs && query_expr rhs
+
+and query_bad_assign_fun2 (kind : Fun_kind.t)
+    (exprs : Typed.Meta.t Expr.Fixed.t list) : bool =
+  match kind with
+  | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) -> false
+  | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) -> false
+  | CompilerInternal (_ : Internal_fun.t) -> true
+  | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) -> (
+    match name with
+    | "check_matching_dims" -> true
+    | _ -> is_fun_soa_supported name exprs )
+
 let rec query_bad_assign
     Expr.Fixed.({pattern; meta= Expr.Typed.Meta.({adlevel; _})}) : bool =
   if adlevel = UnsizedType.DataOnly then false
@@ -350,13 +385,6 @@ let rec query_bad_assign
     | TernaryIf (predicate, texpr, fexpr) ->
         query_expr predicate || query_expr texpr || query_expr fexpr
     | EAnd (lhs, rhs) | EOr (lhs, rhs) -> query_expr lhs || query_expr rhs
-
-and find_args Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
-  (adlevel, type_)
-
-and is_fun_soa_supported name exprs =
-  let fun_args = List.map ~f:find_args exprs in
-  Stan_math_signatures.query_stan_math_mem_pattern_support name fun_args
 
 and query_bad_assign_fun (kind : Fun_kind.t)
     (exprs : Typed.Meta.t Expr.Fixed.t list) : bool =
@@ -430,7 +458,7 @@ let rec query_initial_demotable_stmt (in_loop : bool)
           ( UnsizedType.contains_eigen_type type_
           , adlevel = UnsizedType.AutoDiffable )
         with
-        | true, true -> query_bad_assign rhs
+        | true, true -> query_bad_assign rhs || not (query_bad_assign2 rhs)
         | _ -> false
       in
       if Set.Poly.length check_rhs > 0 || check_bad_assign then
