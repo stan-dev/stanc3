@@ -557,8 +557,15 @@ let rec modify_kind (modifiable_set : string Set.Poly.t) (kind : Fun_kind.t)
   in
   match kind with
   | Fun_kind.StanLib (name, sfx, (_ : Common.Helpers.mem_pattern)) ->
-      let is_fun_supported = is_fun_soa_supported name exprs in
-      if is_all_in_list || not is_fun_supported then
+      let find_args
+          Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
+        (adlevel, type_)
+      in
+      let fun_args = List.map ~f:find_args exprs in
+      let is_fun_support =
+        Stan_math_signatures.query_stan_math_mem_pattern_support name fun_args
+      in
+      if is_all_in_list || not is_fun_support then
         (*Force demotion of all subexprs*)
         let exprs' = List.map ~f:(modify_expr expr_names) exprs in
         (Fun_kind.StanLib (name, sfx, Common.Helpers.AoS), exprs')
