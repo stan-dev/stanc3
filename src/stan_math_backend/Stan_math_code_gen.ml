@@ -357,26 +357,10 @@ let includes = "#include <stan/model/model_header.hpp>"
 let pp_validate_data ppf (name, st) =
   if String.is_suffix ~suffix:"__" name then ()
   else
-    let rec base_type_complex = function
-      | UnsizedType.UComplex -> true
-      | UArray t -> base_type_complex t
-      | _ -> false
-    in
     let pp_stdvector ppf args =
       let pp_cast ppf x = pf ppf "static_cast<size_t>(%a)" pp_expr x in
-      if base_type_complex (SizedType.to_unsized st) then
-        match List.rev args with
-        | [arg] ->
-            pf ppf "@[<hov 2> std::vector<size_t>{@,static_cast<size_t>(%a)}@]"
-              pp_expr arg
-        | hd :: tl ->
-            pf ppf "@[<hov 2> std::vector<size_t>{@,%a@]"
-              (list ~sep:comma pp_cast) (List.rev tl) ;
-            pf ppf " * static_cast<size_t>(%a)}" pp_expr hd
-        | [] -> pf ppf "@[<hov 2> std::vector<size_t>{}@]"
-      else
-        pf ppf "@[<hov 2> std::vector<size_t>{@,%a}@]"
-          (list ~sep:comma pp_cast) args
+      pf ppf "@[<hov 2> std::vector<size_t>{@,%a}@]" (list ~sep:comma pp_cast)
+        args
     in
     pf ppf "@[<hov 4>context__.validate_dims(@,%S,@,%S,@,%S,@,%a);@]@ "
       "data initialization" name

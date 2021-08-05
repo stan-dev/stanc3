@@ -325,14 +325,6 @@ generated quantities {
     gq_complex = acosh(p_complex);
     gq_complex = acosh(d_complex);
 
-    gq_r = arg(z);
-    gq_r = arg(gq_r);
-    gq_r = arg(p_complex);
-    gq_r = arg(p_r);
-    gq_r = arg(d_complex);
-    gq_r = arg(d_r);
-    gq_r = arg(gq_i);
-
     gq_complex = asin(z);
     gq_complex = asin(p_complex);
     gq_complex = asin(d_complex);
@@ -350,12 +342,8 @@ generated quantities {
     gq_complex = atanh(d_complex);
 
     gq_complex = conj(z);
-    gq_complex = conj(gq_r);
     gq_complex = conj(p_complex);
-    gq_complex = conj(p_r);
     gq_complex = conj(d_complex);
-    gq_complex = conj(d_r);
-    gq_complex = conj(gq_i);
 
     gq_complex = cos(z);
     gq_complex = cos(p_complex);
@@ -377,20 +365,12 @@ generated quantities {
     gq_complex = exp(d_complex);
 
     gq_r = get_imag(z);
-    gq_r = get_imag(gq_r);
     gq_r = get_imag(p_complex);
-    gq_r = get_imag(p_r);
     gq_r = get_imag(d_complex);
-    gq_r = get_imag(d_r);
-    gq_r = get_imag(gq_i);
     
     gq_r = get_real(z);
-    gq_r = get_real(gq_r);
     gq_r = get_real(p_complex);
-    gq_r = get_real(p_r);
     gq_r = get_real(d_complex);
-    gq_r = get_real(d_r);
-    gq_r = get_real(gq_i);
 
     gq_complex_array = head(gq_complex_array, 1);
     gq_complex_array = head(p_complex_array, 1);
@@ -437,12 +417,8 @@ generated quantities {
     gq_complex = pow(d_complex, p_complex);
 
     gq_complex = proj(z);
-    gq_complex = proj(gq_r);
     gq_complex = proj(p_complex);
-    gq_complex = proj(p_r);
     gq_complex = proj(d_complex);
-    gq_complex = proj(d_r);
-    gq_complex = proj(gq_i);
 
     gq_complex_array = reverse(gq_complex_array);
     gq_complex_array = reverse(p_complex_array);

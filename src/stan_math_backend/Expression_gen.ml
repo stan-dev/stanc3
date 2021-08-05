@@ -469,9 +469,12 @@ and pp_promoted ad ut ppf e =
       pp_expr ppf e
   | {pattern= FunApp (CompilerInternal Internal_fun.FnMakeArray, es); _} ->
       pp_compiler_internal_fn ad ut Internal_fun.FnMakeArray ppf es
-  | _ ->
-      pf ppf "stan::math::promote_scalar<%s>(@[<hov>%a@])" (local_scalar ut ad)
-        pp_expr e
+  | _ -> (
+    match ut with
+    | UnsizedType.UComplex -> pf ppf "@[<hov>%a@]" pp_expr e
+    | _ ->
+        pf ppf "stan::math::promote_scalar<%s>(@[<hov>%a@])"
+          (local_scalar ut ad) pp_expr e )
 
 and pp_indexed ppf (vident, indices, pretty) =
   pf ppf "@[<hov 2>rvalue(@,%s,@ %S,@ %a)@]" vident pretty pp_indexes indices
