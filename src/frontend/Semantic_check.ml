@@ -33,6 +33,8 @@ let check_of_compatible_return_type rt1 srt2 =
      |Void, AnyReturnType ->
         true
     | ReturnType UReal, Complete (ReturnType UInt) -> true
+    | ReturnType UComplex, Complete (ReturnType UReal) -> true
+    | ReturnType UComplex, Complete (ReturnType UInt) -> true
     | ReturnType rt1, Complete (ReturnType rt2) -> rt1 = rt2
     | ReturnType _, AnyReturnType -> true
     | _ -> false)

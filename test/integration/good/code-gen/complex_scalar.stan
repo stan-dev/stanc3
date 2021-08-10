@@ -23,7 +23,13 @@ functions {
     complex[] foo7(complex[] z){
         return z;
     }
-    complex[,] foo8(complex[,] z){
+    real foo8(complex[,] z){
+        return 1.0;
+    }
+    complex[,] foo9(real r){
+        return {{to_complex(r), to_complex(r), to_complex(r)}, {to_complex(r), to_complex(r), to_complex(r)}};
+    }
+    complex[,] foo10(complex[,] z){
         return z;
     }
 }
@@ -87,7 +93,9 @@ transformed data {
     td_r = foo5(td_complex_array);
     td_complex_array = foo6(td_r);
     td_complex_array = foo7(td_complex_array);
-    td_complex_array_2d = foo8(td_complex_array_2d);
+    td_r = foo8(td_complex_array_2d);
+    td_complex_array_2d = foo9(td_r);
+    td_complex_array_2d = foo10(td_complex_array_2d);
 }
 parameters {
     real p_r;
@@ -151,7 +159,9 @@ transformed parameters {
     tp_r = foo5(tp_complex_array);
     tp_complex_array = foo6(tp_r);
     tp_complex_array = foo7(tp_complex_array);
-    tp_complex_array_2d = foo8(tp_complex_array_2d);
+    tp_r = foo8(tp_complex_array_2d);
+    tp_complex_array_2d = foo9(tp_r);
+    tp_complex_array_2d = foo10(tp_complex_array_2d);
 }
 model {
     complex m_complex;
@@ -218,8 +228,9 @@ generated quantities {
     gq_r = foo5(gq_complex_array);
     gq_complex_array = foo6(gq_r);
     gq_complex_array = foo7(gq_complex_array);
-    gq_complex_array_2d = foo8(gq_complex_array_2d);
-
+    gq_r = foo8(gq_complex_array_2d);
+    gq_complex_array_2d = foo9(gq_r);
+    gq_complex_array_2d = foo10(gq_complex_array_2d);
 
     complex z = to_complex(1,2);
     complex y = to_complex(3,4);
@@ -312,7 +323,6 @@ generated quantities {
     gq_i = (p_r != d_complex);
     gq_i = (p_complex != d_r);
     
-
     gq_r = abs(z);
     gq_r = abs(p_complex);
     gq_r = abs(d_complex);
