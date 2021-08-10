@@ -827,329 +827,335 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 402> locations_array__ = 
+static constexpr std::array<const char*, 411> locations_array__ = 
 {" (found before start of program)",
- " (in 'complex_scalar.stan', line 101, column 4 to column 13)",
- " (in 'complex_scalar.stan', line 102, column 4 to column 22)",
- " (in 'complex_scalar.stan', line 103, column 4 to column 31)",
- " (in 'complex_scalar.stan', line 104, column 4 to column 37)",
- " (in 'complex_scalar.stan', line 107, column 4 to column 20)",
- " (in 'complex_scalar.stan', line 108, column 4 to column 23)",
- " (in 'complex_scalar.stan', line 109, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 110, column 4 to column 38)",
- " (in 'complex_scalar.stan', line 112, column 4 to column 22)",
- " (in 'complex_scalar.stan', line 113, column 4 to column 21)",
- " (in 'complex_scalar.stan', line 114, column 4 to column 21)",
- " (in 'complex_scalar.stan', line 115, column 4 to column 21)",
- " (in 'complex_scalar.stan', line 116, column 4 to column 19)",
+ " (in 'complex_scalar.stan', line 105, column 4 to column 13)",
+ " (in 'complex_scalar.stan', line 106, column 4 to column 22)",
+ " (in 'complex_scalar.stan', line 107, column 4 to column 31)",
+ " (in 'complex_scalar.stan', line 108, column 4 to column 37)",
+ " (in 'complex_scalar.stan', line 111, column 4 to column 20)",
+ " (in 'complex_scalar.stan', line 112, column 4 to column 23)",
+ " (in 'complex_scalar.stan', line 113, column 4 to column 32)",
+ " (in 'complex_scalar.stan', line 114, column 4 to column 38)",
+ " (in 'complex_scalar.stan', line 116, column 4 to column 22)",
  " (in 'complex_scalar.stan', line 117, column 4 to column 21)",
- " (in 'complex_scalar.stan', line 118, column 4 to column 27)",
- " (in 'complex_scalar.stan', line 119, column 4 to column 36)",
- " (in 'complex_scalar.stan', line 120, column 4 to column 27)",
- " (in 'complex_scalar.stan', line 121, column 4 to column 36)",
- " (in 'complex_scalar.stan', line 122, column 4 to column 30)",
- " (in 'complex_scalar.stan', line 123, column 4 to column 31)",
- " (in 'complex_scalar.stan', line 124, column 4 to column 33)",
- " (in 'complex_scalar.stan', line 125, column 4 to column 34)",
- " (in 'complex_scalar.stan', line 126, column 4 to column 36)",
- " (in 'complex_scalar.stan', line 127, column 4 to column 36)",
- " (in 'complex_scalar.stan', line 128, column 4 to column 38)",
- " (in 'complex_scalar.stan', line 130, column 4 to column 39)",
- " (in 'complex_scalar.stan', line 131, column 4 to column 39)",
- " (in 'complex_scalar.stan', line 132, column 4 to column 56)",
- " (in 'complex_scalar.stan', line 133, column 4 to column 44)",
- " (in 'complex_scalar.stan', line 135, column 4 to column 45)",
- " (in 'complex_scalar.stan', line 136, column 4 to column 45)",
- " (in 'complex_scalar.stan', line 137, column 4 to column 99)",
- " (in 'complex_scalar.stan', line 138, column 4 to column 47)",
- " (in 'complex_scalar.stan', line 139, column 4 to column 33)",
- " (in 'complex_scalar.stan', line 140, column 4 to column 46)",
- " (in 'complex_scalar.stan', line 141, column 4 to column 64)",
- " (in 'complex_scalar.stan', line 145, column 12 to column 65)",
- " (in 'complex_scalar.stan', line 144, column 26 to line 145, column 66)",
- " (in 'complex_scalar.stan', line 144, column 8 to line 145, column 66)",
- " (in 'complex_scalar.stan', line 143, column 22 to line 145, column 67)",
- " (in 'complex_scalar.stan', line 143, column 4 to line 145, column 67)",
- " (in 'complex_scalar.stan', line 147, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 148, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 149, column 4 to column 41)",
- " (in 'complex_scalar.stan', line 150, column 4 to column 41)",
- " (in 'complex_scalar.stan', line 151, column 4 to column 46)",
- " (in 'complex_scalar.stan', line 152, column 4 to column 46)",
- " (in 'complex_scalar.stan', line 154, column 4 to column 23)",
- " (in 'complex_scalar.stan', line 155, column 4 to column 28)",
- " (in 'complex_scalar.stan', line 156, column 4 to column 28)",
- " (in 'complex_scalar.stan', line 157, column 4 to column 34)",
- " (in 'complex_scalar.stan', line 158, column 4 to column 30)",
- " (in 'complex_scalar.stan', line 159, column 4 to column 34)",
- " (in 'complex_scalar.stan', line 160, column 4 to column 34)",
- " (in 'complex_scalar.stan', line 161, column 4 to column 46)",
- " (in 'complex_scalar.stan', line 162, column 4 to column 37)",
- " (in 'complex_scalar.stan', line 163, column 4 to column 37)",
- " (in 'complex_scalar.stan', line 164, column 4 to column 53)",
- " (in 'complex_scalar.stan', line 174, column 4 to column 17)",
- " (in 'complex_scalar.stan', line 175, column 4 to column 20)",
- " (in 'complex_scalar.stan', line 176, column 4 to column 23)",
- " (in 'complex_scalar.stan', line 177, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 178, column 4 to column 38)",
- " (in 'complex_scalar.stan', line 180, column 4 to column 22)",
- " (in 'complex_scalar.stan', line 181, column 4 to column 22)",
- " (in 'complex_scalar.stan', line 182, column 4 to column 21)",
- " (in 'complex_scalar.stan', line 183, column 4 to column 21)",
- " (in 'complex_scalar.stan', line 184, column 4 to column 21)",
- " (in 'complex_scalar.stan', line 185, column 4 to column 19)",
- " (in 'complex_scalar.stan', line 186, column 4 to column 21)",
- " (in 'complex_scalar.stan', line 187, column 4 to column 27)",
- " (in 'complex_scalar.stan', line 188, column 4 to column 36)",
- " (in 'complex_scalar.stan', line 189, column 4 to column 27)",
- " (in 'complex_scalar.stan', line 190, column 4 to column 36)",
- " (in 'complex_scalar.stan', line 191, column 4 to column 30)",
- " (in 'complex_scalar.stan', line 192, column 4 to column 31)",
- " (in 'complex_scalar.stan', line 193, column 4 to column 33)",
- " (in 'complex_scalar.stan', line 194, column 4 to column 34)",
- " (in 'complex_scalar.stan', line 195, column 4 to column 36)",
+ " (in 'complex_scalar.stan', line 118, column 4 to column 21)",
+ " (in 'complex_scalar.stan', line 119, column 4 to column 21)",
+ " (in 'complex_scalar.stan', line 120, column 4 to column 19)",
+ " (in 'complex_scalar.stan', line 121, column 4 to column 21)",
+ " (in 'complex_scalar.stan', line 122, column 4 to column 27)",
+ " (in 'complex_scalar.stan', line 123, column 4 to column 36)",
+ " (in 'complex_scalar.stan', line 124, column 4 to column 27)",
+ " (in 'complex_scalar.stan', line 125, column 4 to column 36)",
+ " (in 'complex_scalar.stan', line 126, column 4 to column 30)",
+ " (in 'complex_scalar.stan', line 127, column 4 to column 31)",
+ " (in 'complex_scalar.stan', line 128, column 4 to column 33)",
+ " (in 'complex_scalar.stan', line 129, column 4 to column 34)",
+ " (in 'complex_scalar.stan', line 130, column 4 to column 36)",
+ " (in 'complex_scalar.stan', line 131, column 4 to column 36)",
+ " (in 'complex_scalar.stan', line 132, column 4 to column 38)",
+ " (in 'complex_scalar.stan', line 134, column 4 to column 39)",
+ " (in 'complex_scalar.stan', line 135, column 4 to column 39)",
+ " (in 'complex_scalar.stan', line 136, column 4 to column 56)",
+ " (in 'complex_scalar.stan', line 137, column 4 to column 44)",
+ " (in 'complex_scalar.stan', line 139, column 4 to column 45)",
+ " (in 'complex_scalar.stan', line 140, column 4 to column 45)",
+ " (in 'complex_scalar.stan', line 141, column 4 to column 99)",
+ " (in 'complex_scalar.stan', line 142, column 4 to column 47)",
+ " (in 'complex_scalar.stan', line 143, column 4 to column 33)",
+ " (in 'complex_scalar.stan', line 144, column 4 to column 46)",
+ " (in 'complex_scalar.stan', line 145, column 4 to column 64)",
+ " (in 'complex_scalar.stan', line 149, column 12 to column 65)",
+ " (in 'complex_scalar.stan', line 148, column 26 to line 149, column 66)",
+ " (in 'complex_scalar.stan', line 148, column 8 to line 149, column 66)",
+ " (in 'complex_scalar.stan', line 147, column 22 to line 149, column 67)",
+ " (in 'complex_scalar.stan', line 147, column 4 to line 149, column 67)",
+ " (in 'complex_scalar.stan', line 151, column 4 to line 153, column 32)",
+ " (in 'complex_scalar.stan', line 152, column 8 to line 153, column 31)",
+ " (in 'complex_scalar.stan', line 153, column 12 to column 30)",
+ " (in 'complex_scalar.stan', line 155, column 4 to column 32)",
+ " (in 'complex_scalar.stan', line 156, column 4 to column 32)",
+ " (in 'complex_scalar.stan', line 157, column 4 to column 41)",
+ " (in 'complex_scalar.stan', line 158, column 4 to column 41)",
+ " (in 'complex_scalar.stan', line 159, column 4 to column 46)",
+ " (in 'complex_scalar.stan', line 160, column 4 to column 46)",
+ " (in 'complex_scalar.stan', line 162, column 4 to column 23)",
+ " (in 'complex_scalar.stan', line 163, column 4 to column 28)",
+ " (in 'complex_scalar.stan', line 164, column 4 to column 28)",
+ " (in 'complex_scalar.stan', line 165, column 4 to column 34)",
+ " (in 'complex_scalar.stan', line 166, column 4 to column 30)",
+ " (in 'complex_scalar.stan', line 167, column 4 to column 34)",
+ " (in 'complex_scalar.stan', line 168, column 4 to column 34)",
+ " (in 'complex_scalar.stan', line 169, column 4 to column 46)",
+ " (in 'complex_scalar.stan', line 170, column 4 to column 37)",
+ " (in 'complex_scalar.stan', line 171, column 4 to column 37)",
+ " (in 'complex_scalar.stan', line 172, column 4 to column 53)",
+ " (in 'complex_scalar.stan', line 182, column 4 to column 17)",
+ " (in 'complex_scalar.stan', line 183, column 4 to column 20)",
+ " (in 'complex_scalar.stan', line 184, column 4 to column 23)",
+ " (in 'complex_scalar.stan', line 185, column 4 to column 32)",
+ " (in 'complex_scalar.stan', line 186, column 4 to column 38)",
+ " (in 'complex_scalar.stan', line 188, column 4 to column 22)",
+ " (in 'complex_scalar.stan', line 189, column 4 to column 22)",
+ " (in 'complex_scalar.stan', line 190, column 4 to column 21)",
+ " (in 'complex_scalar.stan', line 191, column 4 to column 21)",
+ " (in 'complex_scalar.stan', line 192, column 4 to column 21)",
+ " (in 'complex_scalar.stan', line 193, column 4 to column 19)",
+ " (in 'complex_scalar.stan', line 194, column 4 to column 21)",
+ " (in 'complex_scalar.stan', line 195, column 4 to column 27)",
  " (in 'complex_scalar.stan', line 196, column 4 to column 36)",
- " (in 'complex_scalar.stan', line 197, column 4 to column 38)",
- " (in 'complex_scalar.stan', line 199, column 4 to column 39)",
- " (in 'complex_scalar.stan', line 200, column 4 to column 39)",
- " (in 'complex_scalar.stan', line 201, column 4 to column 56)",
- " (in 'complex_scalar.stan', line 202, column 4 to column 44)",
- " (in 'complex_scalar.stan', line 204, column 4 to column 45)",
- " (in 'complex_scalar.stan', line 205, column 4 to column 45)",
- " (in 'complex_scalar.stan', line 206, column 4 to column 99)",
- " (in 'complex_scalar.stan', line 207, column 4 to column 47)",
- " (in 'complex_scalar.stan', line 208, column 4 to column 33)",
- " (in 'complex_scalar.stan', line 209, column 4 to column 46)",
- " (in 'complex_scalar.stan', line 210, column 4 to column 64)",
- " (in 'complex_scalar.stan', line 214, column 12 to column 65)",
- " (in 'complex_scalar.stan', line 213, column 26 to line 214, column 66)",
- " (in 'complex_scalar.stan', line 213, column 8 to line 214, column 66)",
- " (in 'complex_scalar.stan', line 212, column 22 to line 214, column 67)",
- " (in 'complex_scalar.stan', line 212, column 4 to line 214, column 67)",
- " (in 'complex_scalar.stan', line 216, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 217, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 218, column 4 to column 41)",
- " (in 'complex_scalar.stan', line 219, column 4 to column 41)",
- " (in 'complex_scalar.stan', line 220, column 4 to column 46)",
- " (in 'complex_scalar.stan', line 221, column 4 to column 46)",
- " (in 'complex_scalar.stan', line 223, column 4 to column 23)",
- " (in 'complex_scalar.stan', line 224, column 4 to column 28)",
- " (in 'complex_scalar.stan', line 225, column 4 to column 28)",
- " (in 'complex_scalar.stan', line 226, column 4 to column 34)",
- " (in 'complex_scalar.stan', line 227, column 4 to column 30)",
- " (in 'complex_scalar.stan', line 228, column 4 to column 34)",
- " (in 'complex_scalar.stan', line 229, column 4 to column 34)",
- " (in 'complex_scalar.stan', line 230, column 4 to column 46)",
- " (in 'complex_scalar.stan', line 231, column 4 to column 37)",
- " (in 'complex_scalar.stan', line 232, column 4 to column 37)",
- " (in 'complex_scalar.stan', line 233, column 4 to column 53)",
- " (in 'complex_scalar.stan', line 235, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 236, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 237, column 4 to column 17)",
- " (in 'complex_scalar.stan', line 238, column 4 to column 19)",
- " (in 'complex_scalar.stan', line 240, column 4 to column 21)",
- " (in 'complex_scalar.stan', line 241, column 4 to column 24)",
- " (in 'complex_scalar.stan', line 242, column 4 to column 24)",
- " (in 'complex_scalar.stan', line 243, column 4 to column 24)",
- " (in 'complex_scalar.stan', line 244, column 4 to column 24)",
- " (in 'complex_scalar.stan', line 245, column 4 to column 37)",
- " (in 'complex_scalar.stan', line 246, column 4 to column 31)",
- " (in 'complex_scalar.stan', line 247, column 4 to column 31)",
- " (in 'complex_scalar.stan', line 248, column 4 to column 31)",
- " (in 'complex_scalar.stan', line 249, column 4 to column 31)",
- " (in 'complex_scalar.stan', line 250, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 251, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 253, column 4 to column 21)",
+ " (in 'complex_scalar.stan', line 197, column 4 to column 27)",
+ " (in 'complex_scalar.stan', line 198, column 4 to column 36)",
+ " (in 'complex_scalar.stan', line 199, column 4 to column 30)",
+ " (in 'complex_scalar.stan', line 200, column 4 to column 31)",
+ " (in 'complex_scalar.stan', line 201, column 4 to column 33)",
+ " (in 'complex_scalar.stan', line 202, column 4 to column 34)",
+ " (in 'complex_scalar.stan', line 203, column 4 to column 36)",
+ " (in 'complex_scalar.stan', line 204, column 4 to column 36)",
+ " (in 'complex_scalar.stan', line 205, column 4 to column 38)",
+ " (in 'complex_scalar.stan', line 207, column 4 to column 39)",
+ " (in 'complex_scalar.stan', line 208, column 4 to column 39)",
+ " (in 'complex_scalar.stan', line 209, column 4 to column 56)",
+ " (in 'complex_scalar.stan', line 210, column 4 to column 44)",
+ " (in 'complex_scalar.stan', line 212, column 4 to column 45)",
+ " (in 'complex_scalar.stan', line 213, column 4 to column 45)",
+ " (in 'complex_scalar.stan', line 214, column 4 to column 99)",
+ " (in 'complex_scalar.stan', line 215, column 4 to column 47)",
+ " (in 'complex_scalar.stan', line 216, column 4 to column 33)",
+ " (in 'complex_scalar.stan', line 217, column 4 to column 46)",
+ " (in 'complex_scalar.stan', line 218, column 4 to column 64)",
+ " (in 'complex_scalar.stan', line 222, column 12 to column 65)",
+ " (in 'complex_scalar.stan', line 221, column 26 to line 222, column 66)",
+ " (in 'complex_scalar.stan', line 221, column 8 to line 222, column 66)",
+ " (in 'complex_scalar.stan', line 220, column 22 to line 222, column 67)",
+ " (in 'complex_scalar.stan', line 220, column 4 to line 222, column 67)",
+ " (in 'complex_scalar.stan', line 224, column 4 to line 226, column 32)",
+ " (in 'complex_scalar.stan', line 225, column 8 to line 226, column 31)",
+ " (in 'complex_scalar.stan', line 226, column 12 to column 30)",
+ " (in 'complex_scalar.stan', line 228, column 4 to column 32)",
+ " (in 'complex_scalar.stan', line 229, column 4 to column 32)",
+ " (in 'complex_scalar.stan', line 230, column 4 to column 41)",
+ " (in 'complex_scalar.stan', line 231, column 4 to column 41)",
+ " (in 'complex_scalar.stan', line 232, column 4 to column 46)",
+ " (in 'complex_scalar.stan', line 233, column 4 to column 46)",
+ " (in 'complex_scalar.stan', line 235, column 4 to column 23)",
+ " (in 'complex_scalar.stan', line 236, column 4 to column 28)",
+ " (in 'complex_scalar.stan', line 237, column 4 to column 28)",
+ " (in 'complex_scalar.stan', line 238, column 4 to column 34)",
+ " (in 'complex_scalar.stan', line 239, column 4 to column 30)",
+ " (in 'complex_scalar.stan', line 240, column 4 to column 34)",
+ " (in 'complex_scalar.stan', line 241, column 4 to column 34)",
+ " (in 'complex_scalar.stan', line 242, column 4 to column 46)",
+ " (in 'complex_scalar.stan', line 243, column 4 to column 37)",
+ " (in 'complex_scalar.stan', line 244, column 4 to column 37)",
+ " (in 'complex_scalar.stan', line 245, column 4 to column 53)",
+ " (in 'complex_scalar.stan', line 247, column 4 to column 32)",
+ " (in 'complex_scalar.stan', line 248, column 4 to column 32)",
+ " (in 'complex_scalar.stan', line 249, column 4 to column 17)",
+ " (in 'complex_scalar.stan', line 250, column 4 to column 19)",
+ " (in 'complex_scalar.stan', line 252, column 4 to column 21)",
+ " (in 'complex_scalar.stan', line 253, column 4 to column 24)",
  " (in 'complex_scalar.stan', line 254, column 4 to column 24)",
  " (in 'complex_scalar.stan', line 255, column 4 to column 24)",
  " (in 'complex_scalar.stan', line 256, column 4 to column 24)",
- " (in 'complex_scalar.stan', line 257, column 4 to column 24)",
- " (in 'complex_scalar.stan', line 258, column 4 to column 37)",
+ " (in 'complex_scalar.stan', line 257, column 4 to column 37)",
+ " (in 'complex_scalar.stan', line 258, column 4 to column 31)",
  " (in 'complex_scalar.stan', line 259, column 4 to column 31)",
  " (in 'complex_scalar.stan', line 260, column 4 to column 31)",
  " (in 'complex_scalar.stan', line 261, column 4 to column 31)",
- " (in 'complex_scalar.stan', line 262, column 4 to column 31)",
+ " (in 'complex_scalar.stan', line 262, column 4 to column 32)",
  " (in 'complex_scalar.stan', line 263, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 264, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 266, column 4 to column 21)",
+ " (in 'complex_scalar.stan', line 265, column 4 to column 21)",
+ " (in 'complex_scalar.stan', line 266, column 4 to column 24)",
  " (in 'complex_scalar.stan', line 267, column 4 to column 24)",
  " (in 'complex_scalar.stan', line 268, column 4 to column 24)",
  " (in 'complex_scalar.stan', line 269, column 4 to column 24)",
- " (in 'complex_scalar.stan', line 270, column 4 to column 24)",
- " (in 'complex_scalar.stan', line 271, column 4 to column 37)",
+ " (in 'complex_scalar.stan', line 270, column 4 to column 37)",
+ " (in 'complex_scalar.stan', line 271, column 4 to column 31)",
  " (in 'complex_scalar.stan', line 272, column 4 to column 31)",
  " (in 'complex_scalar.stan', line 273, column 4 to column 31)",
  " (in 'complex_scalar.stan', line 274, column 4 to column 31)",
- " (in 'complex_scalar.stan', line 275, column 4 to column 31)",
+ " (in 'complex_scalar.stan', line 275, column 4 to column 32)",
  " (in 'complex_scalar.stan', line 276, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 277, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 279, column 4 to column 21)",
+ " (in 'complex_scalar.stan', line 278, column 4 to column 21)",
+ " (in 'complex_scalar.stan', line 279, column 4 to column 24)",
  " (in 'complex_scalar.stan', line 280, column 4 to column 24)",
  " (in 'complex_scalar.stan', line 281, column 4 to column 24)",
  " (in 'complex_scalar.stan', line 282, column 4 to column 24)",
- " (in 'complex_scalar.stan', line 283, column 4 to column 24)",
- " (in 'complex_scalar.stan', line 284, column 4 to column 37)",
+ " (in 'complex_scalar.stan', line 283, column 4 to column 37)",
+ " (in 'complex_scalar.stan', line 284, column 4 to column 31)",
  " (in 'complex_scalar.stan', line 285, column 4 to column 31)",
  " (in 'complex_scalar.stan', line 286, column 4 to column 31)",
  " (in 'complex_scalar.stan', line 287, column 4 to column 31)",
- " (in 'complex_scalar.stan', line 288, column 4 to column 31)",
+ " (in 'complex_scalar.stan', line 288, column 4 to column 32)",
  " (in 'complex_scalar.stan', line 289, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 290, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 292, column 4 to column 20)",
- " (in 'complex_scalar.stan', line 293, column 4 to column 23)",
- " (in 'complex_scalar.stan', line 294, column 4 to column 23)",
- " (in 'complex_scalar.stan', line 295, column 4 to column 28)",
- " (in 'complex_scalar.stan', line 296, column 4 to column 22)",
- " (in 'complex_scalar.stan', line 297, column 4 to column 28)",
- " (in 'complex_scalar.stan', line 298, column 4 to column 22)",
- " (in 'complex_scalar.stan', line 300, column 4 to column 30)",
- " (in 'complex_scalar.stan', line 301, column 4 to column 38)",
- " (in 'complex_scalar.stan', line 302, column 4 to column 38)",
+ " (in 'complex_scalar.stan', line 291, column 4 to column 21)",
+ " (in 'complex_scalar.stan', line 292, column 4 to column 24)",
+ " (in 'complex_scalar.stan', line 293, column 4 to column 24)",
+ " (in 'complex_scalar.stan', line 294, column 4 to column 24)",
+ " (in 'complex_scalar.stan', line 295, column 4 to column 24)",
+ " (in 'complex_scalar.stan', line 296, column 4 to column 37)",
+ " (in 'complex_scalar.stan', line 297, column 4 to column 31)",
+ " (in 'complex_scalar.stan', line 298, column 4 to column 31)",
+ " (in 'complex_scalar.stan', line 299, column 4 to column 31)",
+ " (in 'complex_scalar.stan', line 300, column 4 to column 31)",
+ " (in 'complex_scalar.stan', line 301, column 4 to column 32)",
+ " (in 'complex_scalar.stan', line 302, column 4 to column 32)",
  " (in 'complex_scalar.stan', line 304, column 4 to column 20)",
  " (in 'complex_scalar.stan', line 305, column 4 to column 23)",
  " (in 'complex_scalar.stan', line 306, column 4 to column 23)",
  " (in 'complex_scalar.stan', line 307, column 4 to column 28)",
- " (in 'complex_scalar.stan', line 308, column 4 to column 28)",
- " (in 'complex_scalar.stan', line 309, column 4 to column 36)",
- " (in 'complex_scalar.stan', line 310, column 4 to column 30)",
- " (in 'complex_scalar.stan', line 311, column 4 to column 30)",
+ " (in 'complex_scalar.stan', line 308, column 4 to column 22)",
+ " (in 'complex_scalar.stan', line 309, column 4 to column 28)",
+ " (in 'complex_scalar.stan', line 310, column 4 to column 22)",
  " (in 'complex_scalar.stan', line 312, column 4 to column 30)",
- " (in 'complex_scalar.stan', line 313, column 4 to column 30)",
- " (in 'complex_scalar.stan', line 315, column 4 to column 20)",
- " (in 'complex_scalar.stan', line 316, column 4 to column 23)",
+ " (in 'complex_scalar.stan', line 313, column 4 to column 38)",
+ " (in 'complex_scalar.stan', line 314, column 4 to column 38)",
+ " (in 'complex_scalar.stan', line 316, column 4 to column 20)",
  " (in 'complex_scalar.stan', line 317, column 4 to column 23)",
- " (in 'complex_scalar.stan', line 318, column 4 to column 28)",
+ " (in 'complex_scalar.stan', line 318, column 4 to column 23)",
  " (in 'complex_scalar.stan', line 319, column 4 to column 28)",
- " (in 'complex_scalar.stan', line 320, column 4 to column 36)",
- " (in 'complex_scalar.stan', line 321, column 4 to column 30)",
+ " (in 'complex_scalar.stan', line 320, column 4 to column 28)",
+ " (in 'complex_scalar.stan', line 321, column 4 to column 36)",
  " (in 'complex_scalar.stan', line 322, column 4 to column 30)",
  " (in 'complex_scalar.stan', line 323, column 4 to column 30)",
  " (in 'complex_scalar.stan', line 324, column 4 to column 30)",
- " (in 'complex_scalar.stan', line 326, column 4 to column 18)",
- " (in 'complex_scalar.stan', line 327, column 4 to column 26)",
- " (in 'complex_scalar.stan', line 328, column 4 to column 26)",
- " (in 'complex_scalar.stan', line 330, column 4 to column 25)",
- " (in 'complex_scalar.stan', line 331, column 4 to column 33)",
- " (in 'complex_scalar.stan', line 332, column 4 to column 33)",
- " (in 'complex_scalar.stan', line 334, column 4 to column 26)",
- " (in 'complex_scalar.stan', line 335, column 4 to column 34)",
- " (in 'complex_scalar.stan', line 336, column 4 to column 34)",
- " (in 'complex_scalar.stan', line 338, column 4 to column 25)",
- " (in 'complex_scalar.stan', line 339, column 4 to column 33)",
- " (in 'complex_scalar.stan', line 340, column 4 to column 33)",
- " (in 'complex_scalar.stan', line 342, column 4 to column 26)",
- " (in 'complex_scalar.stan', line 343, column 4 to column 34)",
- " (in 'complex_scalar.stan', line 344, column 4 to column 34)",
- " (in 'complex_scalar.stan', line 346, column 4 to column 25)",
- " (in 'complex_scalar.stan', line 347, column 4 to column 33)",
- " (in 'complex_scalar.stan', line 348, column 4 to column 33)",
- " (in 'complex_scalar.stan', line 350, column 4 to column 26)",
- " (in 'complex_scalar.stan', line 351, column 4 to column 34)",
- " (in 'complex_scalar.stan', line 352, column 4 to column 34)",
- " (in 'complex_scalar.stan', line 354, column 4 to column 25)",
- " (in 'complex_scalar.stan', line 355, column 4 to column 33)",
- " (in 'complex_scalar.stan', line 356, column 4 to column 33)",
- " (in 'complex_scalar.stan', line 358, column 4 to column 24)",
- " (in 'complex_scalar.stan', line 359, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 360, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 362, column 4 to column 25)",
- " (in 'complex_scalar.stan', line 363, column 4 to column 33)",
- " (in 'complex_scalar.stan', line 364, column 4 to column 33)",
- " (in 'complex_scalar.stan', line 366, column 4 to column 20)",
- " (in 'complex_scalar.stan', line 367, column 4 to column 28)",
- " (in 'complex_scalar.stan', line 368, column 4 to column 28)",
- " (in 'complex_scalar.stan', line 369, column 4 to column 37)",
- " (in 'complex_scalar.stan', line 370, column 4 to column 36)",
- " (in 'complex_scalar.stan', line 371, column 4 to column 36)",
- " (in 'complex_scalar.stan', line 373, column 4 to column 24)",
- " (in 'complex_scalar.stan', line 374, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 375, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 377, column 4 to column 23)",
- " (in 'complex_scalar.stan', line 378, column 4 to column 31)",
- " (in 'complex_scalar.stan', line 379, column 4 to column 31)",
- " (in 'complex_scalar.stan', line 381, column 4 to column 23)",
- " (in 'complex_scalar.stan', line 382, column 4 to column 31)",
- " (in 'complex_scalar.stan', line 383, column 4 to column 31)",
- " (in 'complex_scalar.stan', line 385, column 4 to column 49)",
- " (in 'complex_scalar.stan', line 386, column 4 to column 48)",
- " (in 'complex_scalar.stan', line 387, column 4 to column 48)",
- " (in 'complex_scalar.stan', line 389, column 4 to column 24)",
- " (in 'complex_scalar.stan', line 390, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 391, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 393, column 4 to column 26)",
- " (in 'complex_scalar.stan', line 394, column 4 to column 34)",
- " (in 'complex_scalar.stan', line 395, column 4 to column 34)",
- " (in 'complex_scalar.stan', line 397, column 4 to column 19)",
- " (in 'complex_scalar.stan', line 398, column 4 to column 27)",
- " (in 'complex_scalar.stan', line 399, column 4 to column 27)",
- " (in 'complex_scalar.stan', line 401, column 4 to column 42)",
- " (in 'complex_scalar.stan', line 402, column 4 to column 41)",
- " (in 'complex_scalar.stan', line 403, column 4 to column 41)",
- " (in 'complex_scalar.stan', line 405, column 4 to column 35)",
- " (in 'complex_scalar.stan', line 406, column 4 to column 35)",
- " (in 'complex_scalar.stan', line 407, column 4 to column 35)",
- " (in 'complex_scalar.stan', line 408, column 4 to column 35)",
- " (in 'complex_scalar.stan', line 409, column 4 to column 34)",
- " (in 'complex_scalar.stan', line 410, column 4 to column 34)",
- " (in 'complex_scalar.stan', line 411, column 4 to column 33)",
- " (in 'complex_scalar.stan', line 413, column 4 to column 30)",
- " (in 'complex_scalar.stan', line 414, column 4 to column 30)",
- " (in 'complex_scalar.stan', line 415, column 4 to column 27)",
- " (in 'complex_scalar.stan', line 416, column 4 to column 37)",
- " (in 'complex_scalar.stan', line 417, column 4 to column 37)",
- " (in 'complex_scalar.stan', line 418, column 4 to column 38)",
+ " (in 'complex_scalar.stan', line 325, column 4 to column 30)",
+ " (in 'complex_scalar.stan', line 327, column 4 to column 20)",
+ " (in 'complex_scalar.stan', line 328, column 4 to column 23)",
+ " (in 'complex_scalar.stan', line 329, column 4 to column 23)",
+ " (in 'complex_scalar.stan', line 330, column 4 to column 28)",
+ " (in 'complex_scalar.stan', line 331, column 4 to column 28)",
+ " (in 'complex_scalar.stan', line 332, column 4 to column 36)",
+ " (in 'complex_scalar.stan', line 333, column 4 to column 30)",
+ " (in 'complex_scalar.stan', line 334, column 4 to column 30)",
+ " (in 'complex_scalar.stan', line 335, column 4 to column 30)",
+ " (in 'complex_scalar.stan', line 336, column 4 to column 30)",
+ " (in 'complex_scalar.stan', line 338, column 4 to column 18)",
+ " (in 'complex_scalar.stan', line 339, column 4 to column 26)",
+ " (in 'complex_scalar.stan', line 340, column 4 to column 26)",
+ " (in 'complex_scalar.stan', line 342, column 4 to column 25)",
+ " (in 'complex_scalar.stan', line 343, column 4 to column 33)",
+ " (in 'complex_scalar.stan', line 344, column 4 to column 33)",
+ " (in 'complex_scalar.stan', line 346, column 4 to column 26)",
+ " (in 'complex_scalar.stan', line 347, column 4 to column 34)",
+ " (in 'complex_scalar.stan', line 348, column 4 to column 34)",
+ " (in 'complex_scalar.stan', line 350, column 4 to column 25)",
+ " (in 'complex_scalar.stan', line 351, column 4 to column 33)",
+ " (in 'complex_scalar.stan', line 352, column 4 to column 33)",
+ " (in 'complex_scalar.stan', line 354, column 4 to column 26)",
+ " (in 'complex_scalar.stan', line 355, column 4 to column 34)",
+ " (in 'complex_scalar.stan', line 356, column 4 to column 34)",
+ " (in 'complex_scalar.stan', line 358, column 4 to column 25)",
+ " (in 'complex_scalar.stan', line 359, column 4 to column 33)",
+ " (in 'complex_scalar.stan', line 360, column 4 to column 33)",
+ " (in 'complex_scalar.stan', line 362, column 4 to column 26)",
+ " (in 'complex_scalar.stan', line 363, column 4 to column 34)",
+ " (in 'complex_scalar.stan', line 364, column 4 to column 34)",
+ " (in 'complex_scalar.stan', line 366, column 4 to column 25)",
+ " (in 'complex_scalar.stan', line 367, column 4 to column 33)",
+ " (in 'complex_scalar.stan', line 368, column 4 to column 33)",
+ " (in 'complex_scalar.stan', line 370, column 4 to column 24)",
+ " (in 'complex_scalar.stan', line 371, column 4 to column 32)",
+ " (in 'complex_scalar.stan', line 372, column 4 to column 32)",
+ " (in 'complex_scalar.stan', line 374, column 4 to column 25)",
+ " (in 'complex_scalar.stan', line 375, column 4 to column 33)",
+ " (in 'complex_scalar.stan', line 376, column 4 to column 33)",
+ " (in 'complex_scalar.stan', line 378, column 4 to column 20)",
+ " (in 'complex_scalar.stan', line 379, column 4 to column 28)",
+ " (in 'complex_scalar.stan', line 380, column 4 to column 28)",
+ " (in 'complex_scalar.stan', line 381, column 4 to column 37)",
+ " (in 'complex_scalar.stan', line 382, column 4 to column 36)",
+ " (in 'complex_scalar.stan', line 383, column 4 to column 36)",
+ " (in 'complex_scalar.stan', line 385, column 4 to column 24)",
+ " (in 'complex_scalar.stan', line 386, column 4 to column 32)",
+ " (in 'complex_scalar.stan', line 387, column 4 to column 32)",
+ " (in 'complex_scalar.stan', line 389, column 4 to column 23)",
+ " (in 'complex_scalar.stan', line 390, column 4 to column 31)",
+ " (in 'complex_scalar.stan', line 391, column 4 to column 31)",
+ " (in 'complex_scalar.stan', line 393, column 4 to column 23)",
+ " (in 'complex_scalar.stan', line 394, column 4 to column 31)",
+ " (in 'complex_scalar.stan', line 395, column 4 to column 31)",
+ " (in 'complex_scalar.stan', line 397, column 4 to column 49)",
+ " (in 'complex_scalar.stan', line 398, column 4 to column 48)",
+ " (in 'complex_scalar.stan', line 399, column 4 to column 48)",
+ " (in 'complex_scalar.stan', line 401, column 4 to column 24)",
+ " (in 'complex_scalar.stan', line 402, column 4 to column 32)",
+ " (in 'complex_scalar.stan', line 403, column 4 to column 32)",
+ " (in 'complex_scalar.stan', line 405, column 4 to column 26)",
+ " (in 'complex_scalar.stan', line 406, column 4 to column 34)",
+ " (in 'complex_scalar.stan', line 407, column 4 to column 34)",
+ " (in 'complex_scalar.stan', line 409, column 4 to column 19)",
+ " (in 'complex_scalar.stan', line 410, column 4 to column 27)",
+ " (in 'complex_scalar.stan', line 411, column 4 to column 27)",
+ " (in 'complex_scalar.stan', line 413, column 4 to column 42)",
+ " (in 'complex_scalar.stan', line 414, column 4 to column 41)",
+ " (in 'complex_scalar.stan', line 415, column 4 to column 41)",
+ " (in 'complex_scalar.stan', line 417, column 4 to column 35)",
+ " (in 'complex_scalar.stan', line 418, column 4 to column 35)",
  " (in 'complex_scalar.stan', line 419, column 4 to column 35)",
- " (in 'complex_scalar.stan', line 420, column 4 to column 43)",
- " (in 'complex_scalar.stan', line 421, column 4 to column 43)",
- " (in 'complex_scalar.stan', line 422, column 4 to column 37)",
- " (in 'complex_scalar.stan', line 423, column 4 to column 37)",
- " (in 'complex_scalar.stan', line 424, column 4 to column 38)",
- " (in 'complex_scalar.stan', line 425, column 4 to column 35)",
- " (in 'complex_scalar.stan', line 426, column 4 to column 43)",
- " (in 'complex_scalar.stan', line 427, column 4 to column 43)",
- " (in 'complex_scalar.stan', line 429, column 4 to column 25)",
- " (in 'complex_scalar.stan', line 430, column 4 to column 33)",
- " (in 'complex_scalar.stan', line 431, column 4 to column 33)",
- " (in 'complex_scalar.stan', line 433, column 4 to column 49)",
- " (in 'complex_scalar.stan', line 434, column 4 to column 48)",
- " (in 'complex_scalar.stan', line 435, column 4 to column 48)",
- " (in 'complex_scalar.stan', line 437, column 4 to column 24)",
- " (in 'complex_scalar.stan', line 438, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 439, column 4 to column 32)",
+ " (in 'complex_scalar.stan', line 420, column 4 to column 35)",
+ " (in 'complex_scalar.stan', line 421, column 4 to column 34)",
+ " (in 'complex_scalar.stan', line 422, column 4 to column 34)",
+ " (in 'complex_scalar.stan', line 423, column 4 to column 33)",
+ " (in 'complex_scalar.stan', line 425, column 4 to column 30)",
+ " (in 'complex_scalar.stan', line 426, column 4 to column 30)",
+ " (in 'complex_scalar.stan', line 427, column 4 to column 27)",
+ " (in 'complex_scalar.stan', line 428, column 4 to column 37)",
+ " (in 'complex_scalar.stan', line 429, column 4 to column 37)",
+ " (in 'complex_scalar.stan', line 430, column 4 to column 38)",
+ " (in 'complex_scalar.stan', line 431, column 4 to column 35)",
+ " (in 'complex_scalar.stan', line 432, column 4 to column 43)",
+ " (in 'complex_scalar.stan', line 433, column 4 to column 43)",
+ " (in 'complex_scalar.stan', line 434, column 4 to column 37)",
+ " (in 'complex_scalar.stan', line 435, column 4 to column 37)",
+ " (in 'complex_scalar.stan', line 436, column 4 to column 38)",
+ " (in 'complex_scalar.stan', line 437, column 4 to column 35)",
+ " (in 'complex_scalar.stan', line 438, column 4 to column 43)",
+ " (in 'complex_scalar.stan', line 439, column 4 to column 43)",
  " (in 'complex_scalar.stan', line 441, column 4 to column 25)",
  " (in 'complex_scalar.stan', line 442, column 4 to column 33)",
  " (in 'complex_scalar.stan', line 443, column 4 to column 33)",
- " (in 'complex_scalar.stan', line 445, column 4 to column 34)",
- " (in 'complex_scalar.stan', line 446, column 4 to column 33)",
- " (in 'complex_scalar.stan', line 447, column 4 to column 33)",
- " (in 'complex_scalar.stan', line 449, column 4 to column 25)",
- " (in 'complex_scalar.stan', line 450, column 4 to column 33)",
- " (in 'complex_scalar.stan', line 451, column 4 to column 33)",
- " (in 'complex_scalar.stan', line 453, column 4 to column 49)",
- " (in 'complex_scalar.stan', line 454, column 4 to column 48)",
- " (in 'complex_scalar.stan', line 455, column 4 to column 48)",
- " (in 'complex_scalar.stan', line 457, column 4 to column 24)",
- " (in 'complex_scalar.stan', line 458, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 459, column 4 to column 32)",
+ " (in 'complex_scalar.stan', line 445, column 4 to column 49)",
+ " (in 'complex_scalar.stan', line 446, column 4 to column 48)",
+ " (in 'complex_scalar.stan', line 447, column 4 to column 48)",
+ " (in 'complex_scalar.stan', line 449, column 4 to column 24)",
+ " (in 'complex_scalar.stan', line 450, column 4 to column 32)",
+ " (in 'complex_scalar.stan', line 451, column 4 to column 32)",
+ " (in 'complex_scalar.stan', line 453, column 4 to column 25)",
+ " (in 'complex_scalar.stan', line 454, column 4 to column 33)",
+ " (in 'complex_scalar.stan', line 455, column 4 to column 33)",
+ " (in 'complex_scalar.stan', line 457, column 4 to column 34)",
+ " (in 'complex_scalar.stan', line 458, column 4 to column 33)",
+ " (in 'complex_scalar.stan', line 459, column 4 to column 33)",
  " (in 'complex_scalar.stan', line 461, column 4 to column 25)",
  " (in 'complex_scalar.stan', line 462, column 4 to column 33)",
  " (in 'complex_scalar.stan', line 463, column 4 to column 33)",
- " (in 'complex_scalar.stan', line 465, column 4 to column 30)",
- " (in 'complex_scalar.stan', line 466, column 4 to column 40)",
- " (in 'complex_scalar.stan', line 467, column 4 to column 40)",
- " (in 'complex_scalar.stan', line 468, column 4 to column 40)",
- " (in 'complex_scalar.stan', line 469, column 4 to column 40)",
- " (in 'complex_scalar.stan', line 470, column 4 to column 34)",
- " (in 'complex_scalar.stan', line 471, column 4 to column 34)",
- " (in 'complex_scalar.stan', line 472, column 4 to column 39)",
- " (in 'complex_scalar.stan', line 473, column 4 to column 38)",
- " (in 'complex_scalar.stan', line 474, column 4 to column 39)",
+ " (in 'complex_scalar.stan', line 465, column 4 to column 49)",
+ " (in 'complex_scalar.stan', line 466, column 4 to column 48)",
+ " (in 'complex_scalar.stan', line 467, column 4 to column 48)",
+ " (in 'complex_scalar.stan', line 469, column 4 to column 24)",
+ " (in 'complex_scalar.stan', line 470, column 4 to column 32)",
+ " (in 'complex_scalar.stan', line 471, column 4 to column 32)",
+ " (in 'complex_scalar.stan', line 473, column 4 to column 25)",
+ " (in 'complex_scalar.stan', line 474, column 4 to column 33)",
  " (in 'complex_scalar.stan', line 475, column 4 to column 33)",
- " (in 'complex_scalar.stan', line 476, column 4 to column 33)",
- " (in 'complex_scalar.stan', line 167, column 4 to column 22)",
- " (in 'complex_scalar.stan', line 168, column 4 to column 31)",
- " (in 'complex_scalar.stan', line 169, column 4 to column 37)",
- " (in 'complex_scalar.stan', line 171, column 4 to column 34)",
+ " (in 'complex_scalar.stan', line 477, column 4 to column 30)",
+ " (in 'complex_scalar.stan', line 478, column 4 to column 40)",
+ " (in 'complex_scalar.stan', line 479, column 4 to column 40)",
+ " (in 'complex_scalar.stan', line 480, column 4 to column 40)",
+ " (in 'complex_scalar.stan', line 481, column 4 to column 40)",
+ " (in 'complex_scalar.stan', line 482, column 4 to column 34)",
+ " (in 'complex_scalar.stan', line 483, column 4 to column 34)",
+ " (in 'complex_scalar.stan', line 484, column 4 to column 39)",
+ " (in 'complex_scalar.stan', line 485, column 4 to column 38)",
+ " (in 'complex_scalar.stan', line 486, column 4 to column 39)",
+ " (in 'complex_scalar.stan', line 487, column 4 to column 33)",
+ " (in 'complex_scalar.stan', line 488, column 4 to column 33)",
+ " (in 'complex_scalar.stan', line 175, column 4 to column 22)",
+ " (in 'complex_scalar.stan', line 176, column 4 to column 31)",
+ " (in 'complex_scalar.stan', line 177, column 4 to column 37)",
+ " (in 'complex_scalar.stan', line 179, column 4 to column 34)",
  " (in 'complex_scalar.stan', line 37, column 4 to column 12)",
  " (in 'complex_scalar.stan', line 38, column 4 to column 13)",
  " (in 'complex_scalar.stan', line 39, column 4 to column 22)",
@@ -1189,25 +1195,28 @@ static constexpr std::array<const char*, 402> locations_array__ =
  " (in 'complex_scalar.stan', line 78, column 8 to line 79, column 66)",
  " (in 'complex_scalar.stan', line 77, column 22 to line 79, column 67)",
  " (in 'complex_scalar.stan', line 77, column 4 to line 79, column 67)",
- " (in 'complex_scalar.stan', line 81, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 82, column 4 to column 32)",
- " (in 'complex_scalar.stan', line 83, column 4 to column 41)",
- " (in 'complex_scalar.stan', line 84, column 4 to column 41)",
- " (in 'complex_scalar.stan', line 85, column 4 to column 46)",
- " (in 'complex_scalar.stan', line 86, column 4 to column 46)",
- " (in 'complex_scalar.stan', line 88, column 4 to column 23)",
- " (in 'complex_scalar.stan', line 89, column 4 to column 28)",
- " (in 'complex_scalar.stan', line 90, column 4 to column 28)",
- " (in 'complex_scalar.stan', line 91, column 4 to column 34)",
- " (in 'complex_scalar.stan', line 92, column 4 to column 30)",
- " (in 'complex_scalar.stan', line 93, column 4 to column 34)",
- " (in 'complex_scalar.stan', line 94, column 4 to column 34)",
- " (in 'complex_scalar.stan', line 95, column 4 to column 46)",
- " (in 'complex_scalar.stan', line 96, column 4 to column 37)",
- " (in 'complex_scalar.stan', line 97, column 4 to column 37)",
- " (in 'complex_scalar.stan', line 98, column 4 to column 53)",
- " (in 'complex_scalar.stan', line 237, column 14 to column 15)",
- " (in 'complex_scalar.stan', line 238, column 16 to column 17)",
+ " (in 'complex_scalar.stan', line 81, column 4 to line 83, column 32)",
+ " (in 'complex_scalar.stan', line 82, column 8 to line 83, column 31)",
+ " (in 'complex_scalar.stan', line 83, column 12 to column 30)",
+ " (in 'complex_scalar.stan', line 85, column 4 to column 32)",
+ " (in 'complex_scalar.stan', line 86, column 4 to column 32)",
+ " (in 'complex_scalar.stan', line 87, column 4 to column 41)",
+ " (in 'complex_scalar.stan', line 88, column 4 to column 41)",
+ " (in 'complex_scalar.stan', line 89, column 4 to column 46)",
+ " (in 'complex_scalar.stan', line 90, column 4 to column 46)",
+ " (in 'complex_scalar.stan', line 92, column 4 to column 23)",
+ " (in 'complex_scalar.stan', line 93, column 4 to column 28)",
+ " (in 'complex_scalar.stan', line 94, column 4 to column 28)",
+ " (in 'complex_scalar.stan', line 95, column 4 to column 34)",
+ " (in 'complex_scalar.stan', line 96, column 4 to column 30)",
+ " (in 'complex_scalar.stan', line 97, column 4 to column 34)",
+ " (in 'complex_scalar.stan', line 98, column 4 to column 34)",
+ " (in 'complex_scalar.stan', line 99, column 4 to column 46)",
+ " (in 'complex_scalar.stan', line 100, column 4 to column 37)",
+ " (in 'complex_scalar.stan', line 101, column 4 to column 37)",
+ " (in 'complex_scalar.stan', line 102, column 4 to column 53)",
+ " (in 'complex_scalar.stan', line 249, column 14 to column 15)",
+ " (in 'complex_scalar.stan', line 250, column 16 to column 17)",
  " (in 'complex_scalar.stan', line 3, column 8 to column 28)",
  " (in 'complex_scalar.stan', line 2, column 17 to line 4, column 5)",
  " (in 'complex_scalar.stan', line 6, column 8 to column 19)",
@@ -1241,7 +1250,7 @@ foo(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 380;
+    current_statement__ = 389;
     return to_complex();
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1269,7 +1278,7 @@ foo1(const std::complex<T0__>& z, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 382;
+    current_statement__ = 391;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1298,7 +1307,7 @@ foo2(const T0__& r, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 384;
+    current_statement__ = 393;
     return to_complex(r);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1327,7 +1336,7 @@ foo3(const std::complex<T0__>& z, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 386;
+    current_statement__ = 395;
     return z;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1355,7 +1364,7 @@ foo4(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 388;
+    current_statement__ = 397;
     return std::vector<std::complex<double>>{to_complex(), to_complex()};
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1383,7 +1392,7 @@ foo5(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 390;
+    current_statement__ = 399;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1412,7 +1421,7 @@ foo6(const T0__& r, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 392;
+    current_statement__ = 401;
     return std::vector<std::complex<local_scalar_t__>>{to_complex(r),
         to_complex(r, r)};
   } catch (const std::exception& e) {
@@ -1442,7 +1451,7 @@ foo7(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 394;
+    current_statement__ = 403;
     return z;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1472,7 +1481,7 @@ foo8(const std::vector<std::vector<std::complex<T0__>>>& z,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 396;
+    current_statement__ = 405;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1502,7 +1511,7 @@ foo9(const T0__& r, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 398;
+    current_statement__ = 407;
     return std::vector<std::vector<std::complex<local_scalar_t__>>>{
         std::vector<std::complex<local_scalar_t__>>{to_complex(r),
         to_complex(r), to_complex(r)},
@@ -1536,7 +1545,7 @@ foo10(const std::vector<std::vector<std::complex<T0__>>>& z,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 400;
+    current_statement__ = 409;
     return z;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1598,30 +1607,30 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      current_statement__ = 322;
+      current_statement__ = 328;
       context__.validate_dims("data initialization","d_i","int",
            std::vector<size_t>{});
       d_i = std::numeric_limits<int>::min();
       
-      current_statement__ = 322;
+      current_statement__ = 328;
       d_i = context__.vals_i("d_i")[(1 - 1)];
-      current_statement__ = 323;
+      current_statement__ = 329;
       context__.validate_dims("data initialization","d_r","double",
            std::vector<size_t>{});
       d_r = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 323;
+      current_statement__ = 329;
       d_r = context__.vals_r("d_r")[(1 - 1)];
-      current_statement__ = 324;
+      current_statement__ = 330;
       context__.validate_dims("data initialization","d_complex","double",
            std::vector<size_t>{static_cast<size_t>(2)});
       d_complex = std::complex<double> (std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN());
       
       
-      current_statement__ = 324;
+      current_statement__ = 330;
       assign(d_complex, context__.vals_c("d_complex")[(1 - 1)],
         "assigning variable d_complex");
-      current_statement__ = 325;
+      current_statement__ = 331;
       context__.validate_dims("data initialization","d_complex_array",
           "double",
            std::vector<size_t>{static_cast<size_t>(2),
@@ -1631,20 +1640,20 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       
       {
         std::vector<std::complex<local_scalar_t__>> d_complex_array_flat__;
-        current_statement__ = 325;
+        current_statement__ = 331;
         d_complex_array_flat__ = context__.vals_c("d_complex_array");
-        current_statement__ = 325;
+        current_statement__ = 331;
         pos__ = 1;
-        current_statement__ = 325;
+        current_statement__ = 331;
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          current_statement__ = 325;
+          current_statement__ = 331;
           assign(d_complex_array, d_complex_array_flat__[(pos__ - 1)],
             "assigning variable d_complex_array", index_uni(sym1__));
-          current_statement__ = 325;
+          current_statement__ = 331;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 326;
+      current_statement__ = 332;
       context__.validate_dims("data initialization","d_complex_array_2d",
           "double",
            std::vector<size_t>{static_cast<size_t>(2),
@@ -1654,172 +1663,192 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       
       {
         std::vector<std::complex<local_scalar_t__>> d_complex_array_2d_flat__;
-        current_statement__ = 326;
+        current_statement__ = 332;
         d_complex_array_2d_flat__ = context__.vals_c("d_complex_array_2d");
-        current_statement__ = 326;
+        current_statement__ = 332;
         pos__ = 1;
-        current_statement__ = 326;
+        current_statement__ = 332;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 326;
+          current_statement__ = 332;
           for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            current_statement__ = 326;
+            current_statement__ = 332;
             assign(d_complex_array_2d,
               d_complex_array_2d_flat__[(pos__ - 1)],
               "assigning variable d_complex_array_2d", index_uni(sym2__),
                                                          index_uni(sym1__));
-            current_statement__ = 326;
+            current_statement__ = 332;
             pos__ = (pos__ + 1);
           }
         }
       }
-      current_statement__ = 327;
+      current_statement__ = 333;
       td_i = std::numeric_limits<int>::min();
       
-      current_statement__ = 327;
+      current_statement__ = 333;
       td_i = 1;
-      current_statement__ = 328;
+      current_statement__ = 334;
       td_r = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 328;
+      current_statement__ = 334;
       td_r = 1.1;
-      current_statement__ = 329;
+      current_statement__ = 335;
       td_complex = std::complex<double> (std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN());
       
       
-      current_statement__ = 330;
+      current_statement__ = 336;
       td_complex_array = std::vector<std::complex<double>>(2, std::complex<double> (std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()));
       
       
-      current_statement__ = 331;
+      current_statement__ = 337;
       td_complex_array_2d = std::vector<std::vector<std::complex<double>>>(2, std::vector<std::complex<double>>(3, std::complex<double> (std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN())));
       
       
-      current_statement__ = 332;
-      td_complex = td_i;
-      current_statement__ = 333;
-      td_complex = td_r;
-      current_statement__ = 334;
-      td_complex = d_i;
-      current_statement__ = 335;
-      td_complex = d_r;
-      current_statement__ = 336;
-      td_complex = 1;
-      current_statement__ = 337;
-      td_complex = 1.1;
       current_statement__ = 338;
-      assign(td_complex, d_complex, "assigning variable td_complex");
+      td_complex = td_i;
       current_statement__ = 339;
+      td_complex = td_r;
+      current_statement__ = 340;
+      td_complex = d_i;
+      current_statement__ = 341;
+      td_complex = d_r;
+      current_statement__ = 342;
+      td_complex = 1;
+      current_statement__ = 343;
+      td_complex = 1.1;
+      current_statement__ = 344;
+      assign(td_complex, d_complex, "assigning variable td_complex");
+      current_statement__ = 345;
       assign(td_complex,
         rvalue(d_complex_array, "d_complex_array", index_uni(1)),
         "assigning variable td_complex");
-      current_statement__ = 340;
-      assign(td_complex, to_complex(), "assigning variable td_complex");
-      current_statement__ = 341;
-      assign(td_complex, to_complex(1), "assigning variable td_complex");
-      current_statement__ = 342;
-      assign(td_complex, to_complex(1.2), "assigning variable td_complex");
-      current_statement__ = 343;
-      assign(td_complex, to_complex(1, 2), "assigning variable td_complex");
-      current_statement__ = 344;
-      assign(td_complex, to_complex(1.1, 2), "assigning variable td_complex");
-      current_statement__ = 345;
-      assign(td_complex, to_complex(1, 2.2), "assigning variable td_complex");
       current_statement__ = 346;
+      assign(td_complex, to_complex(), "assigning variable td_complex");
+      current_statement__ = 347;
+      assign(td_complex, to_complex(1), "assigning variable td_complex");
+      current_statement__ = 348;
+      assign(td_complex, to_complex(1.2), "assigning variable td_complex");
+      current_statement__ = 349;
+      assign(td_complex, to_complex(1, 2), "assigning variable td_complex");
+      current_statement__ = 350;
+      assign(td_complex, to_complex(1.1, 2), "assigning variable td_complex");
+      current_statement__ = 351;
+      assign(td_complex, to_complex(1, 2.2), "assigning variable td_complex");
+      current_statement__ = 352;
       assign(td_complex, to_complex(1.1, 2.2),
         "assigning variable td_complex");
-      current_statement__ = 347;
+      current_statement__ = 353;
       assign(td_complex_array, d_complex_array,
         "assigning variable td_complex_array");
-      current_statement__ = 348;
+      current_statement__ = 354;
       assign(td_complex_array, std::vector<std::complex<double>>{td_complex,
         1, to_complex(2, 3)}, "assigning variable td_complex_array");
-      current_statement__ = 349;
+      current_statement__ = 355;
       assign(td_complex_array, to_complex(5.1, 6),
         "assigning variable td_complex_array", index_uni(1));
-      current_statement__ = 350;
+      current_statement__ = 356;
       assign(td_complex_array_2d, d_complex_array_2d,
         "assigning variable td_complex_array_2d");
-      current_statement__ = 351;
+      current_statement__ = 357;
       assign(td_complex_array_2d,
         std::vector<std::vector<std::complex<double>>>{
         std::vector<std::complex<double>>{1, td_complex, 3},
         std::vector<std::complex<double>>{to_complex(), to_complex(1.1),
         to_complex(1, 2.1)}}, "assigning variable td_complex_array_2d");
-      current_statement__ = 352;
+      current_statement__ = 358;
       assign(td_complex_array_2d, to_complex(1, 2),
         "assigning variable td_complex_array_2d", index_uni(1), index_uni(1));
-      current_statement__ = 353;
+      current_statement__ = 359;
       assign(td_complex_array_2d, 1,
         "assigning variable td_complex_array_2d", index_uni(1), index_uni(1));
-      current_statement__ = 354;
+      current_statement__ = 360;
       assign(td_complex_array_2d, td_complex_array,
         "assigning variable td_complex_array_2d", index_uni(1));
-      current_statement__ = 355;
+      current_statement__ = 361;
       assign(td_complex_array_2d, std::vector<std::complex<double>>{
         td_complex, to_complex(1, 2), 2.4},
         "assigning variable td_complex_array_2d", index_uni(1));
-      current_statement__ = 360;
+      current_statement__ = 366;
       for (int td_j = 1; td_j <= 2; ++td_j) {
-        current_statement__ = 358;
+        current_statement__ = 364;
         for (int td_k = 1; td_k <= 3; ++td_k) {
-          current_statement__ = 356;
+          current_statement__ = 362;
           assign(td_complex_array_2d, to_complex(1, 2.2),
             "assigning variable td_complex_array_2d", index_uni(td_j),
                                                         index_uni(td_k));
         }
       }
-      current_statement__ = 361;
-      td_r = get_real(td_complex);
-      current_statement__ = 362;
-      td_r = get_imag(td_complex);
-      current_statement__ = 363;
-      td_r = get_real(
-               rvalue(td_complex_array, "td_complex_array", index_uni(1)));
-      current_statement__ = 364;
-      td_r = get_imag(
-               rvalue(td_complex_array, "td_complex_array", index_uni(1)));
-      current_statement__ = 365;
-      td_r = get_real(
-               rvalue(td_complex_array_2d, "td_complex_array_2d",
-                 index_uni(1), index_uni(1)));
-      current_statement__ = 366;
-      td_r = get_imag(
-               rvalue(td_complex_array_2d, "td_complex_array_2d",
-                 index_uni(1), index_uni(1)));
       current_statement__ = 367;
+      for (int sym1__ = 1; sym1__ <= stan::math::size(td_complex_array_2d);
+           ++sym1__) {
+        {
+          std::vector<std::complex<double>> td_j;
+          current_statement__ = 367;
+          assign(td_j, td_complex_array_2d[(sym1__ - 1)],
+            "assigning variable td_j");
+          current_statement__ = 368;
+          for (int sym1__ = 1; sym1__ <= stan::math::size(td_j); ++sym1__) {
+            {
+              std::complex<double> td_k;
+              current_statement__ = 368;
+              assign(td_k, td_j[(sym1__ - 1)], "assigning variable td_k");
+              current_statement__ = 369;
+              assign(td_complex, td_k, "assigning variable td_complex");
+            }
+          }
+        }
+      }
+      current_statement__ = 370;
+      td_r = get_real(td_complex);
+      current_statement__ = 371;
+      td_r = get_imag(td_complex);
+      current_statement__ = 372;
+      td_r = get_real(
+               rvalue(td_complex_array, "td_complex_array", index_uni(1)));
+      current_statement__ = 373;
+      td_r = get_imag(
+               rvalue(td_complex_array, "td_complex_array", index_uni(1)));
+      current_statement__ = 374;
+      td_r = get_real(
+               rvalue(td_complex_array_2d, "td_complex_array_2d",
+                 index_uni(1), index_uni(1)));
+      current_statement__ = 375;
+      td_r = get_imag(
+               rvalue(td_complex_array_2d, "td_complex_array_2d",
+                 index_uni(1), index_uni(1)));
+      current_statement__ = 376;
       assign(td_complex, foo(pstream__), "assigning variable td_complex");
-      current_statement__ = 368;
+      current_statement__ = 377;
       td_r = foo1(td_complex, pstream__);
-      current_statement__ = 369;
+      current_statement__ = 378;
       assign(td_complex, foo2(td_r, pstream__),
         "assigning variable td_complex");
-      current_statement__ = 370;
+      current_statement__ = 379;
       assign(td_complex, foo3(stan::model::deep_copy(td_complex), pstream__),
         "assigning variable td_complex");
-      current_statement__ = 371;
+      current_statement__ = 380;
       assign(td_complex_array, foo4(pstream__),
         "assigning variable td_complex_array");
-      current_statement__ = 372;
+      current_statement__ = 381;
       td_r = foo5(td_complex_array, pstream__);
-      current_statement__ = 373;
+      current_statement__ = 382;
       assign(td_complex_array, foo6(td_r, pstream__),
         "assigning variable td_complex_array");
-      current_statement__ = 374;
+      current_statement__ = 383;
       assign(td_complex_array,
         foo7(stan::model::deep_copy(td_complex_array), pstream__),
         "assigning variable td_complex_array");
-      current_statement__ = 375;
+      current_statement__ = 384;
       td_r = foo8(td_complex_array_2d, pstream__);
-      current_statement__ = 376;
+      current_statement__ = 385;
       assign(td_complex_array_2d, foo9(td_r, pstream__),
         "assigning variable td_complex_array_2d");
-      current_statement__ = 377;
+      current_statement__ = 386;
       assign(td_complex_array_2d,
         foo10(stan::model::deep_copy(td_complex_array_2d), pstream__),
         "assigning variable td_complex_array_2d");
-      current_statement__ = 378;
+      current_statement__ = 387;
       validate_non_negative_index("i_arr", "0", 0);
-      current_statement__ = 379;
+      current_statement__ = 388;
       validate_non_negative_index("i_arr_1", "1", 1);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1974,51 +2003,71 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         }
       }
       current_statement__ = 42;
-      tp_r = get_real(tp_complex);
-      current_statement__ = 43;
-      tp_r = get_imag(tp_complex);
-      current_statement__ = 44;
-      tp_r = get_real(
-               rvalue(tp_complex_array, "tp_complex_array", index_uni(1)));
+      for (int sym1__ = 1; sym1__ <= stan::math::size(tp_complex_array_2d);
+           ++sym1__) {
+        {
+          std::vector<std::complex<local_scalar_t__>> tp_j;
+          current_statement__ = 42;
+          assign(tp_j, tp_complex_array_2d[(sym1__ - 1)],
+            "assigning variable tp_j");
+          current_statement__ = 43;
+          for (int sym1__ = 1; sym1__ <= stan::math::size(tp_j); ++sym1__) {
+            {
+              std::complex<local_scalar_t__> tp_k;
+              current_statement__ = 43;
+              assign(tp_k, tp_j[(sym1__ - 1)], "assigning variable tp_k");
+              current_statement__ = 44;
+              assign(tp_complex, tp_k, "assigning variable tp_complex");
+            }
+          }
+        }
+      }
       current_statement__ = 45;
+      tp_r = get_real(tp_complex);
+      current_statement__ = 46;
+      tp_r = get_imag(tp_complex);
+      current_statement__ = 47;
+      tp_r = get_real(
+               rvalue(tp_complex_array, "tp_complex_array", index_uni(1)));
+      current_statement__ = 48;
       tp_r = get_imag(
                rvalue(tp_complex_array, "tp_complex_array", index_uni(1)));
-      current_statement__ = 46;
+      current_statement__ = 49;
       tp_r = get_real(
                rvalue(tp_complex_array_2d, "tp_complex_array_2d",
                  index_uni(1), index_uni(1)));
-      current_statement__ = 47;
+      current_statement__ = 50;
       tp_r = get_imag(
                rvalue(tp_complex_array_2d, "tp_complex_array_2d",
                  index_uni(1), index_uni(1)));
-      current_statement__ = 48;
+      current_statement__ = 51;
       assign(tp_complex, foo(pstream__), "assigning variable tp_complex");
-      current_statement__ = 49;
+      current_statement__ = 52;
       tp_r = foo1(tp_complex, pstream__);
-      current_statement__ = 50;
+      current_statement__ = 53;
       assign(tp_complex, foo2(tp_r, pstream__),
         "assigning variable tp_complex");
-      current_statement__ = 51;
+      current_statement__ = 54;
       assign(tp_complex, foo3(stan::model::deep_copy(tp_complex), pstream__),
         "assigning variable tp_complex");
-      current_statement__ = 52;
+      current_statement__ = 55;
       assign(tp_complex_array, foo4(pstream__),
         "assigning variable tp_complex_array");
-      current_statement__ = 53;
+      current_statement__ = 56;
       tp_r = foo5(tp_complex_array, pstream__);
-      current_statement__ = 54;
+      current_statement__ = 57;
       assign(tp_complex_array, foo6(tp_r, pstream__),
         "assigning variable tp_complex_array");
-      current_statement__ = 55;
+      current_statement__ = 58;
       assign(tp_complex_array,
         foo7(stan::model::deep_copy(tp_complex_array), pstream__),
         "assigning variable tp_complex_array");
-      current_statement__ = 56;
+      current_statement__ = 59;
       tp_r = foo8(tp_complex_array_2d, pstream__);
-      current_statement__ = 57;
+      current_statement__ = 60;
       assign(tp_complex_array_2d, foo9(tp_r, pstream__),
         "assigning variable tp_complex_array_2d");
-      current_statement__ = 58;
+      current_statement__ = 61;
       assign(tp_complex_array_2d,
         foo10(stan::model::deep_copy(tp_complex_array_2d), pstream__),
         "assigning variable tp_complex_array_2d");
@@ -2032,7 +2081,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         std::vector<std::vector<std::complex<local_scalar_t__>>> m_complex_array_2d;
         m_complex_array_2d = std::vector<std::vector<std::complex<local_scalar_t__>>>(2, std::vector<std::complex<local_scalar_t__>>(3, std::complex<double> (std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN())));
         
-        current_statement__ = 321;
+        current_statement__ = 327;
         lp_accum__.add(
           normal_lpdf<propto__>(stan::math::abs(p_complex), 0, 1));
       }
@@ -2213,51 +2262,71 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         }
       }
       current_statement__ = 42;
-      tp_r = get_real(tp_complex);
-      current_statement__ = 43;
-      tp_r = get_imag(tp_complex);
-      current_statement__ = 44;
-      tp_r = get_real(
-               rvalue(tp_complex_array, "tp_complex_array", index_uni(1)));
+      for (int sym1__ = 1; sym1__ <= stan::math::size(tp_complex_array_2d);
+           ++sym1__) {
+        {
+          std::vector<std::complex<local_scalar_t__>> tp_j;
+          current_statement__ = 42;
+          assign(tp_j, tp_complex_array_2d[(sym1__ - 1)],
+            "assigning variable tp_j");
+          current_statement__ = 43;
+          for (int sym1__ = 1; sym1__ <= stan::math::size(tp_j); ++sym1__) {
+            {
+              std::complex<local_scalar_t__> tp_k;
+              current_statement__ = 43;
+              assign(tp_k, tp_j[(sym1__ - 1)], "assigning variable tp_k");
+              current_statement__ = 44;
+              assign(tp_complex, tp_k, "assigning variable tp_complex");
+            }
+          }
+        }
+      }
       current_statement__ = 45;
+      tp_r = get_real(tp_complex);
+      current_statement__ = 46;
+      tp_r = get_imag(tp_complex);
+      current_statement__ = 47;
+      tp_r = get_real(
+               rvalue(tp_complex_array, "tp_complex_array", index_uni(1)));
+      current_statement__ = 48;
       tp_r = get_imag(
                rvalue(tp_complex_array, "tp_complex_array", index_uni(1)));
-      current_statement__ = 46;
+      current_statement__ = 49;
       tp_r = get_real(
                rvalue(tp_complex_array_2d, "tp_complex_array_2d",
                  index_uni(1), index_uni(1)));
-      current_statement__ = 47;
+      current_statement__ = 50;
       tp_r = get_imag(
                rvalue(tp_complex_array_2d, "tp_complex_array_2d",
                  index_uni(1), index_uni(1)));
-      current_statement__ = 48;
+      current_statement__ = 51;
       assign(tp_complex, foo(pstream__), "assigning variable tp_complex");
-      current_statement__ = 49;
+      current_statement__ = 52;
       tp_r = foo1(tp_complex, pstream__);
-      current_statement__ = 50;
+      current_statement__ = 53;
       assign(tp_complex, foo2(tp_r, pstream__),
         "assigning variable tp_complex");
-      current_statement__ = 51;
+      current_statement__ = 54;
       assign(tp_complex, foo3(stan::model::deep_copy(tp_complex), pstream__),
         "assigning variable tp_complex");
-      current_statement__ = 52;
+      current_statement__ = 55;
       assign(tp_complex_array, foo4(pstream__),
         "assigning variable tp_complex_array");
-      current_statement__ = 53;
+      current_statement__ = 56;
       tp_r = foo5(tp_complex_array, pstream__);
-      current_statement__ = 54;
+      current_statement__ = 57;
       assign(tp_complex_array, foo6(tp_r, pstream__),
         "assigning variable tp_complex_array");
-      current_statement__ = 55;
+      current_statement__ = 58;
       assign(tp_complex_array,
         foo7(stan::model::deep_copy(tp_complex_array), pstream__),
         "assigning variable tp_complex_array");
-      current_statement__ = 56;
+      current_statement__ = 59;
       tp_r = foo8(tp_complex_array_2d, pstream__);
-      current_statement__ = 57;
+      current_statement__ = 60;
       assign(tp_complex_array_2d, foo9(tp_r, pstream__),
         "assigning variable tp_complex_array_2d");
-      current_statement__ = 58;
+      current_statement__ = 61;
       assign(tp_complex_array_2d,
         foo10(stan::model::deep_copy(tp_complex_array_2d), pstream__),
         "assigning variable tp_complex_array_2d");
@@ -2284,12 +2353,12 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       int gq_i;
       gq_i = std::numeric_limits<int>::min();
       
-      current_statement__ = 59;
+      current_statement__ = 62;
       gq_i = 1;
       double gq_r;
       gq_r = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 60;
+      current_statement__ = 63;
       gq_r = 1.1;
       std::complex<double> gq_complex;
       gq_complex = std::complex<double> (std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN());
@@ -2300,152 +2369,172 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       std::vector<std::vector<std::complex<double>>> gq_complex_array_2d;
       gq_complex_array_2d = std::vector<std::vector<std::complex<double>>>(2, std::vector<std::complex<double>>(3, std::complex<double> (std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN())));
       
-      current_statement__ = 64;
-      gq_complex = gq_i;
-      current_statement__ = 65;
-      gq_complex = gq_r;
-      current_statement__ = 66;
-      gq_complex = d_i;
       current_statement__ = 67;
-      gq_complex = d_r;
+      gq_complex = gq_i;
       current_statement__ = 68;
-      gq_complex = p_r;
+      gq_complex = gq_r;
       current_statement__ = 69;
-      gq_complex = 1;
+      gq_complex = d_i;
       current_statement__ = 70;
-      gq_complex = 1.1;
+      gq_complex = d_r;
       current_statement__ = 71;
-      assign(gq_complex, d_complex, "assigning variable gq_complex");
+      gq_complex = p_r;
       current_statement__ = 72;
+      gq_complex = 1;
+      current_statement__ = 73;
+      gq_complex = 1.1;
+      current_statement__ = 74;
+      assign(gq_complex, d_complex, "assigning variable gq_complex");
+      current_statement__ = 75;
       assign(gq_complex,
         rvalue(d_complex_array, "d_complex_array", index_uni(1)),
         "assigning variable gq_complex");
-      current_statement__ = 73;
+      current_statement__ = 76;
       assign(gq_complex, p_complex, "assigning variable gq_complex");
-      current_statement__ = 74;
+      current_statement__ = 77;
       assign(gq_complex,
         rvalue(p_complex_array, "p_complex_array", index_uni(1)),
         "assigning variable gq_complex");
-      current_statement__ = 75;
-      assign(gq_complex, to_complex(), "assigning variable gq_complex");
-      current_statement__ = 76;
-      assign(gq_complex, to_complex(1), "assigning variable gq_complex");
-      current_statement__ = 77;
-      assign(gq_complex, to_complex(1.2), "assigning variable gq_complex");
       current_statement__ = 78;
-      assign(gq_complex, to_complex(1, 2), "assigning variable gq_complex");
+      assign(gq_complex, to_complex(), "assigning variable gq_complex");
       current_statement__ = 79;
-      assign(gq_complex, to_complex(1.1, 2), "assigning variable gq_complex");
+      assign(gq_complex, to_complex(1), "assigning variable gq_complex");
       current_statement__ = 80;
-      assign(gq_complex, to_complex(1, 2.2), "assigning variable gq_complex");
+      assign(gq_complex, to_complex(1.2), "assigning variable gq_complex");
       current_statement__ = 81;
+      assign(gq_complex, to_complex(1, 2), "assigning variable gq_complex");
+      current_statement__ = 82;
+      assign(gq_complex, to_complex(1.1, 2), "assigning variable gq_complex");
+      current_statement__ = 83;
+      assign(gq_complex, to_complex(1, 2.2), "assigning variable gq_complex");
+      current_statement__ = 84;
       assign(gq_complex, to_complex(1.1, 2.2),
         "assigning variable gq_complex");
-      current_statement__ = 82;
+      current_statement__ = 85;
       assign(gq_complex_array, d_complex_array,
         "assigning variable gq_complex_array");
-      current_statement__ = 83;
+      current_statement__ = 86;
       assign(gq_complex_array, p_complex_array,
         "assigning variable gq_complex_array");
-      current_statement__ = 84;
+      current_statement__ = 87;
       assign(gq_complex_array, std::vector<std::complex<double>>{gq_complex,
         1, to_complex(2, 3)}, "assigning variable gq_complex_array");
-      current_statement__ = 85;
+      current_statement__ = 88;
       assign(gq_complex_array, to_complex(5.1, 6),
         "assigning variable gq_complex_array", index_uni(1));
-      current_statement__ = 86;
+      current_statement__ = 89;
       assign(gq_complex_array_2d, d_complex_array_2d,
         "assigning variable gq_complex_array_2d");
-      current_statement__ = 87;
+      current_statement__ = 90;
       assign(gq_complex_array_2d, p_complex_array_2d,
         "assigning variable gq_complex_array_2d");
-      current_statement__ = 88;
+      current_statement__ = 91;
       assign(gq_complex_array_2d,
         std::vector<std::vector<std::complex<double>>>{
         std::vector<std::complex<double>>{1, gq_complex, 3},
         std::vector<std::complex<double>>{to_complex(), to_complex(1.1),
         to_complex(1, 2.1)}}, "assigning variable gq_complex_array_2d");
-      current_statement__ = 89;
+      current_statement__ = 92;
       assign(gq_complex_array_2d, to_complex(1, 2),
         "assigning variable gq_complex_array_2d", index_uni(1), index_uni(1));
-      current_statement__ = 90;
+      current_statement__ = 93;
       assign(gq_complex_array_2d, 1,
         "assigning variable gq_complex_array_2d", index_uni(1), index_uni(1));
-      current_statement__ = 91;
+      current_statement__ = 94;
       assign(gq_complex_array_2d, gq_complex_array,
         "assigning variable gq_complex_array_2d", index_uni(1));
-      current_statement__ = 92;
+      current_statement__ = 95;
       assign(gq_complex_array_2d, std::vector<std::complex<double>>{
         gq_complex, to_complex(1, 2), 2.4},
         "assigning variable gq_complex_array_2d", index_uni(1));
-      current_statement__ = 97;
+      current_statement__ = 100;
       for (int gq_j = 1; gq_j <= 2; ++gq_j) {
-        current_statement__ = 95;
+        current_statement__ = 98;
         for (int gq_k = 1; gq_k <= 3; ++gq_k) {
-          current_statement__ = 93;
+          current_statement__ = 96;
           assign(gq_complex_array_2d, to_complex(1, 2.2),
             "assigning variable gq_complex_array_2d", index_uni(gq_j),
                                                         index_uni(gq_k));
         }
       }
-      current_statement__ = 98;
-      gq_r = get_real(gq_complex);
-      current_statement__ = 99;
-      gq_r = get_imag(gq_complex);
-      current_statement__ = 100;
-      gq_r = get_real(
-               rvalue(gq_complex_array, "gq_complex_array", index_uni(1)));
       current_statement__ = 101;
+      for (int sym1__ = 1; sym1__ <= stan::math::size(gq_complex_array_2d);
+           ++sym1__) {
+        {
+          std::vector<std::complex<double>> gq_j;
+          current_statement__ = 101;
+          assign(gq_j, gq_complex_array_2d[(sym1__ - 1)],
+            "assigning variable gq_j");
+          current_statement__ = 102;
+          for (int sym1__ = 1; sym1__ <= stan::math::size(gq_j); ++sym1__) {
+            {
+              std::complex<double> gq_k;
+              current_statement__ = 102;
+              assign(gq_k, gq_j[(sym1__ - 1)], "assigning variable gq_k");
+              current_statement__ = 103;
+              assign(gq_complex, gq_k, "assigning variable gq_complex");
+            }
+          }
+        }
+      }
+      current_statement__ = 104;
+      gq_r = get_real(gq_complex);
+      current_statement__ = 105;
+      gq_r = get_imag(gq_complex);
+      current_statement__ = 106;
+      gq_r = get_real(
+               rvalue(gq_complex_array, "gq_complex_array", index_uni(1)));
+      current_statement__ = 107;
       gq_r = get_imag(
                rvalue(gq_complex_array, "gq_complex_array", index_uni(1)));
-      current_statement__ = 102;
+      current_statement__ = 108;
       gq_r = get_real(
                rvalue(gq_complex_array_2d, "gq_complex_array_2d",
                  index_uni(1), index_uni(1)));
-      current_statement__ = 103;
+      current_statement__ = 109;
       gq_r = get_imag(
                rvalue(gq_complex_array_2d, "gq_complex_array_2d",
                  index_uni(1), index_uni(1)));
-      current_statement__ = 104;
+      current_statement__ = 110;
       assign(gq_complex, foo(pstream__), "assigning variable gq_complex");
-      current_statement__ = 105;
+      current_statement__ = 111;
       gq_r = foo1(gq_complex, pstream__);
-      current_statement__ = 106;
+      current_statement__ = 112;
       assign(gq_complex, foo2(gq_r, pstream__),
         "assigning variable gq_complex");
-      current_statement__ = 107;
+      current_statement__ = 113;
       assign(gq_complex, foo3(stan::model::deep_copy(gq_complex), pstream__),
         "assigning variable gq_complex");
-      current_statement__ = 108;
+      current_statement__ = 114;
       assign(gq_complex_array, foo4(pstream__),
         "assigning variable gq_complex_array");
-      current_statement__ = 109;
+      current_statement__ = 115;
       gq_r = foo5(gq_complex_array, pstream__);
-      current_statement__ = 110;
+      current_statement__ = 116;
       assign(gq_complex_array, foo6(gq_r, pstream__),
         "assigning variable gq_complex_array");
-      current_statement__ = 111;
+      current_statement__ = 117;
       assign(gq_complex_array,
         foo7(stan::model::deep_copy(gq_complex_array), pstream__),
         "assigning variable gq_complex_array");
-      current_statement__ = 112;
+      current_statement__ = 118;
       gq_r = foo8(gq_complex_array_2d, pstream__);
-      current_statement__ = 113;
+      current_statement__ = 119;
       assign(gq_complex_array_2d, foo9(gq_r, pstream__),
         "assigning variable gq_complex_array_2d");
-      current_statement__ = 114;
+      current_statement__ = 120;
       assign(gq_complex_array_2d,
         foo10(stan::model::deep_copy(gq_complex_array_2d), pstream__),
         "assigning variable gq_complex_array_2d");
       std::complex<double> z;
       z = std::complex<double> (std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 115;
+      current_statement__ = 121;
       assign(z, to_complex(1, 2), "assigning variable z");
       std::complex<double> y;
       y = std::complex<double> (std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN());
       
-      current_statement__ = 116;
+      current_statement__ = 122;
       assign(y, to_complex(3, 4), "assigning variable y");
       std::vector<int> i_arr;
       i_arr = std::vector<int>(0, std::numeric_limits<int>::min());
@@ -2453,470 +2542,470 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       std::vector<int> i_arr_1;
       i_arr_1 = std::vector<int>(1, std::numeric_limits<int>::min());
       
-      current_statement__ = 119;
+      current_statement__ = 125;
       assign(gq_complex, (z + y), "assigning variable gq_complex");
-      current_statement__ = 120;
+      current_statement__ = 126;
       assign(gq_complex, (z + gq_r), "assigning variable gq_complex");
-      current_statement__ = 121;
+      current_statement__ = 127;
       assign(gq_complex, (gq_r + z), "assigning variable gq_complex");
-      current_statement__ = 122;
+      current_statement__ = 128;
       assign(gq_complex, (z + gq_i), "assigning variable gq_complex");
-      current_statement__ = 123;
+      current_statement__ = 129;
       assign(gq_complex, (gq_i + z), "assigning variable gq_complex");
-      current_statement__ = 124;
+      current_statement__ = 130;
       assign(gq_complex, (d_complex + p_complex),
         "assigning variable gq_complex");
-      current_statement__ = 125;
-      assign(gq_complex, (d_complex + d_r), "assigning variable gq_complex");
-      current_statement__ = 126;
-      assign(gq_complex, (d_complex + p_r), "assigning variable gq_complex");
-      current_statement__ = 127;
-      assign(gq_complex, (d_r + p_complex), "assigning variable gq_complex");
-      current_statement__ = 128;
-      assign(gq_complex, (p_complex + p_r), "assigning variable gq_complex");
-      current_statement__ = 129;
-      assign(gq_complex, (d_complex + gq_i), "assigning variable gq_complex");
-      current_statement__ = 130;
-      assign(gq_complex, (gq_i + p_complex), "assigning variable gq_complex");
       current_statement__ = 131;
-      assign(gq_complex, (z - y), "assigning variable gq_complex");
+      assign(gq_complex, (d_complex + d_r), "assigning variable gq_complex");
       current_statement__ = 132;
-      assign(gq_complex, (z - gq_r), "assigning variable gq_complex");
+      assign(gq_complex, (d_complex + p_r), "assigning variable gq_complex");
       current_statement__ = 133;
-      assign(gq_complex, (gq_r - z), "assigning variable gq_complex");
+      assign(gq_complex, (d_r + p_complex), "assigning variable gq_complex");
       current_statement__ = 134;
-      assign(gq_complex, (z - gq_i), "assigning variable gq_complex");
+      assign(gq_complex, (p_complex + p_r), "assigning variable gq_complex");
       current_statement__ = 135;
-      assign(gq_complex, (gq_i - z), "assigning variable gq_complex");
+      assign(gq_complex, (d_complex + gq_i), "assigning variable gq_complex");
       current_statement__ = 136;
+      assign(gq_complex, (gq_i + p_complex), "assigning variable gq_complex");
+      current_statement__ = 137;
+      assign(gq_complex, (z - y), "assigning variable gq_complex");
+      current_statement__ = 138;
+      assign(gq_complex, (z - gq_r), "assigning variable gq_complex");
+      current_statement__ = 139;
+      assign(gq_complex, (gq_r - z), "assigning variable gq_complex");
+      current_statement__ = 140;
+      assign(gq_complex, (z - gq_i), "assigning variable gq_complex");
+      current_statement__ = 141;
+      assign(gq_complex, (gq_i - z), "assigning variable gq_complex");
+      current_statement__ = 142;
       assign(gq_complex, (d_complex - p_complex),
         "assigning variable gq_complex");
-      current_statement__ = 137;
-      assign(gq_complex, (d_complex - d_r), "assigning variable gq_complex");
-      current_statement__ = 138;
-      assign(gq_complex, (d_complex - p_r), "assigning variable gq_complex");
-      current_statement__ = 139;
-      assign(gq_complex, (d_r - p_complex), "assigning variable gq_complex");
-      current_statement__ = 140;
-      assign(gq_complex, (p_complex - p_r), "assigning variable gq_complex");
-      current_statement__ = 141;
-      assign(gq_complex, (d_complex - gq_i), "assigning variable gq_complex");
-      current_statement__ = 142;
-      assign(gq_complex, (gq_i - p_complex), "assigning variable gq_complex");
       current_statement__ = 143;
-      assign(gq_complex, (z * y), "assigning variable gq_complex");
+      assign(gq_complex, (d_complex - d_r), "assigning variable gq_complex");
       current_statement__ = 144;
-      assign(gq_complex, (z * gq_r), "assigning variable gq_complex");
+      assign(gq_complex, (d_complex - p_r), "assigning variable gq_complex");
       current_statement__ = 145;
-      assign(gq_complex, (gq_r * z), "assigning variable gq_complex");
+      assign(gq_complex, (d_r - p_complex), "assigning variable gq_complex");
       current_statement__ = 146;
-      assign(gq_complex, (z * gq_i), "assigning variable gq_complex");
+      assign(gq_complex, (p_complex - p_r), "assigning variable gq_complex");
       current_statement__ = 147;
-      assign(gq_complex, (gq_i * z), "assigning variable gq_complex");
+      assign(gq_complex, (d_complex - gq_i), "assigning variable gq_complex");
       current_statement__ = 148;
+      assign(gq_complex, (gq_i - p_complex), "assigning variable gq_complex");
+      current_statement__ = 149;
+      assign(gq_complex, (z * y), "assigning variable gq_complex");
+      current_statement__ = 150;
+      assign(gq_complex, (z * gq_r), "assigning variable gq_complex");
+      current_statement__ = 151;
+      assign(gq_complex, (gq_r * z), "assigning variable gq_complex");
+      current_statement__ = 152;
+      assign(gq_complex, (z * gq_i), "assigning variable gq_complex");
+      current_statement__ = 153;
+      assign(gq_complex, (gq_i * z), "assigning variable gq_complex");
+      current_statement__ = 154;
       assign(gq_complex, (d_complex * p_complex),
         "assigning variable gq_complex");
-      current_statement__ = 149;
-      assign(gq_complex, (d_complex * d_r), "assigning variable gq_complex");
-      current_statement__ = 150;
-      assign(gq_complex, (d_complex * p_r), "assigning variable gq_complex");
-      current_statement__ = 151;
-      assign(gq_complex, (d_r * p_complex), "assigning variable gq_complex");
-      current_statement__ = 152;
-      assign(gq_complex, (p_complex * p_r), "assigning variable gq_complex");
-      current_statement__ = 153;
-      assign(gq_complex, (d_complex * gq_i), "assigning variable gq_complex");
-      current_statement__ = 154;
-      assign(gq_complex, (gq_i * p_complex), "assigning variable gq_complex");
       current_statement__ = 155;
-      assign(gq_complex, (z / y), "assigning variable gq_complex");
+      assign(gq_complex, (d_complex * d_r), "assigning variable gq_complex");
       current_statement__ = 156;
-      assign(gq_complex, (z / gq_r), "assigning variable gq_complex");
+      assign(gq_complex, (d_complex * p_r), "assigning variable gq_complex");
       current_statement__ = 157;
-      assign(gq_complex, (gq_r / z), "assigning variable gq_complex");
+      assign(gq_complex, (d_r * p_complex), "assigning variable gq_complex");
       current_statement__ = 158;
-      assign(gq_complex, (z / gq_i), "assigning variable gq_complex");
+      assign(gq_complex, (p_complex * p_r), "assigning variable gq_complex");
       current_statement__ = 159;
-      assign(gq_complex, (gq_i / z), "assigning variable gq_complex");
+      assign(gq_complex, (d_complex * gq_i), "assigning variable gq_complex");
       current_statement__ = 160;
+      assign(gq_complex, (gq_i * p_complex), "assigning variable gq_complex");
+      current_statement__ = 161;
+      assign(gq_complex, (z / y), "assigning variable gq_complex");
+      current_statement__ = 162;
+      assign(gq_complex, (z / gq_r), "assigning variable gq_complex");
+      current_statement__ = 163;
+      assign(gq_complex, (gq_r / z), "assigning variable gq_complex");
+      current_statement__ = 164;
+      assign(gq_complex, (z / gq_i), "assigning variable gq_complex");
+      current_statement__ = 165;
+      assign(gq_complex, (gq_i / z), "assigning variable gq_complex");
+      current_statement__ = 166;
       assign(gq_complex, (d_complex / p_complex),
         "assigning variable gq_complex");
-      current_statement__ = 161;
-      assign(gq_complex, (d_complex / d_r), "assigning variable gq_complex");
-      current_statement__ = 162;
-      assign(gq_complex, (d_complex / p_r), "assigning variable gq_complex");
-      current_statement__ = 163;
-      assign(gq_complex, (d_r / p_complex), "assigning variable gq_complex");
-      current_statement__ = 164;
-      assign(gq_complex, (p_complex / p_r), "assigning variable gq_complex");
-      current_statement__ = 165;
-      assign(gq_complex, (d_complex / gq_i), "assigning variable gq_complex");
-      current_statement__ = 166;
-      assign(gq_complex, (gq_i / p_complex), "assigning variable gq_complex");
       current_statement__ = 167;
-      assign(gq_complex, -z, "assigning variable gq_complex");
+      assign(gq_complex, (d_complex / d_r), "assigning variable gq_complex");
       current_statement__ = 168;
-      gq_complex = -gq_r;
+      assign(gq_complex, (d_complex / p_r), "assigning variable gq_complex");
       current_statement__ = 169;
-      gq_complex = -gq_i;
+      assign(gq_complex, (d_r / p_complex), "assigning variable gq_complex");
       current_statement__ = 170;
-      assign(gq_complex, -d_complex, "assigning variable gq_complex");
+      assign(gq_complex, (p_complex / p_r), "assigning variable gq_complex");
       current_statement__ = 171;
-      gq_complex = -d_r;
+      assign(gq_complex, (d_complex / gq_i), "assigning variable gq_complex");
       current_statement__ = 172;
-      assign(gq_complex, -p_complex, "assigning variable gq_complex");
+      assign(gq_complex, (gq_i / p_complex), "assigning variable gq_complex");
       current_statement__ = 173;
-      gq_complex = -p_r;
+      assign(gq_complex, -z, "assigning variable gq_complex");
       current_statement__ = 174;
-      assign(gq_complex, (gq_i ? z : y), "assigning variable gq_complex");
+      gq_complex = -gq_r;
       current_statement__ = 175;
+      gq_complex = -gq_i;
+      current_statement__ = 176;
+      assign(gq_complex, -d_complex, "assigning variable gq_complex");
+      current_statement__ = 177;
+      gq_complex = -d_r;
+      current_statement__ = 178;
+      assign(gq_complex, -p_complex, "assigning variable gq_complex");
+      current_statement__ = 179;
+      gq_complex = -p_r;
+      current_statement__ = 180;
+      assign(gq_complex, (gq_i ? z : y), "assigning variable gq_complex");
+      current_statement__ = 181;
       assign(gq_complex, (gq_i ? p_complex : z),
         "assigning variable gq_complex");
-      current_statement__ = 176;
+      current_statement__ = 182;
       assign(gq_complex, (gq_i ? d_complex : z),
         "assigning variable gq_complex");
-      current_statement__ = 177;
-      gq_i = logical_eq(z, z);
-      current_statement__ = 178;
-      gq_i = logical_eq(z, gq_r);
-      current_statement__ = 179;
-      gq_i = logical_eq(z, gq_i);
-      current_statement__ = 180;
-      gq_i = logical_eq(p_complex, z);
-      current_statement__ = 181;
-      gq_i = logical_eq(d_complex, z);
-      current_statement__ = 182;
-      gq_i = logical_eq(p_complex, d_complex);
       current_statement__ = 183;
-      gq_i = logical_eq(p_complex, p_r);
+      gq_i = logical_eq(z, z);
       current_statement__ = 184;
-      gq_i = logical_eq(d_complex, d_r);
+      gq_i = logical_eq(z, gq_r);
       current_statement__ = 185;
-      gq_i = logical_eq(p_r, d_complex);
+      gq_i = logical_eq(z, gq_i);
       current_statement__ = 186;
-      gq_i = logical_eq(p_complex, d_r);
+      gq_i = logical_eq(p_complex, z);
       current_statement__ = 187;
-      gq_i = logical_neq(z, z);
+      gq_i = logical_eq(d_complex, z);
       current_statement__ = 188;
-      gq_i = logical_neq(z, gq_r);
+      gq_i = logical_eq(p_complex, d_complex);
       current_statement__ = 189;
-      gq_i = logical_neq(z, gq_i);
+      gq_i = logical_eq(p_complex, p_r);
       current_statement__ = 190;
-      gq_i = logical_neq(p_complex, z);
+      gq_i = logical_eq(d_complex, d_r);
       current_statement__ = 191;
-      gq_i = logical_neq(d_complex, z);
+      gq_i = logical_eq(p_r, d_complex);
       current_statement__ = 192;
-      gq_i = logical_neq(p_complex, d_complex);
+      gq_i = logical_eq(p_complex, d_r);
       current_statement__ = 193;
-      gq_i = logical_neq(p_complex, p_r);
+      gq_i = logical_neq(z, z);
       current_statement__ = 194;
-      gq_i = logical_neq(d_complex, d_r);
+      gq_i = logical_neq(z, gq_r);
       current_statement__ = 195;
-      gq_i = logical_neq(p_r, d_complex);
+      gq_i = logical_neq(z, gq_i);
       current_statement__ = 196;
-      gq_i = logical_neq(p_complex, d_r);
+      gq_i = logical_neq(p_complex, z);
       current_statement__ = 197;
-      gq_r = stan::math::abs(z);
+      gq_i = logical_neq(d_complex, z);
       current_statement__ = 198;
-      gq_r = stan::math::abs(p_complex);
+      gq_i = logical_neq(p_complex, d_complex);
       current_statement__ = 199;
-      gq_r = stan::math::abs(d_complex);
+      gq_i = logical_neq(p_complex, p_r);
       current_statement__ = 200;
-      assign(gq_complex, stan::math::acos(z), "assigning variable gq_complex");
+      gq_i = logical_neq(d_complex, d_r);
       current_statement__ = 201;
+      gq_i = logical_neq(p_r, d_complex);
+      current_statement__ = 202;
+      gq_i = logical_neq(p_complex, d_r);
+      current_statement__ = 203;
+      gq_r = stan::math::abs(z);
+      current_statement__ = 204;
+      gq_r = stan::math::abs(p_complex);
+      current_statement__ = 205;
+      gq_r = stan::math::abs(d_complex);
+      current_statement__ = 206;
+      assign(gq_complex, stan::math::acos(z), "assigning variable gq_complex");
+      current_statement__ = 207;
       assign(gq_complex, stan::math::acos(p_complex),
         "assigning variable gq_complex");
-      current_statement__ = 202;
+      current_statement__ = 208;
       assign(gq_complex, stan::math::acos(d_complex),
         "assigning variable gq_complex");
-      current_statement__ = 203;
+      current_statement__ = 209;
       assign(gq_complex, stan::math::acosh(z),
         "assigning variable gq_complex");
-      current_statement__ = 204;
+      current_statement__ = 210;
       assign(gq_complex, stan::math::acosh(p_complex),
         "assigning variable gq_complex");
-      current_statement__ = 205;
+      current_statement__ = 211;
       assign(gq_complex, stan::math::acosh(d_complex),
         "assigning variable gq_complex");
-      current_statement__ = 206;
+      current_statement__ = 212;
       assign(gq_complex, stan::math::asin(z), "assigning variable gq_complex");
-      current_statement__ = 207;
+      current_statement__ = 213;
       assign(gq_complex, stan::math::asin(p_complex),
         "assigning variable gq_complex");
-      current_statement__ = 208;
+      current_statement__ = 214;
       assign(gq_complex, stan::math::asin(d_complex),
         "assigning variable gq_complex");
-      current_statement__ = 209;
+      current_statement__ = 215;
       assign(gq_complex, stan::math::asinh(z),
         "assigning variable gq_complex");
-      current_statement__ = 210;
+      current_statement__ = 216;
       assign(gq_complex, stan::math::asinh(p_complex),
         "assigning variable gq_complex");
-      current_statement__ = 211;
+      current_statement__ = 217;
       assign(gq_complex, stan::math::asinh(d_complex),
         "assigning variable gq_complex");
-      current_statement__ = 212;
+      current_statement__ = 218;
       assign(gq_complex, stan::math::atan(z), "assigning variable gq_complex");
-      current_statement__ = 213;
+      current_statement__ = 219;
       assign(gq_complex, stan::math::atan(p_complex),
         "assigning variable gq_complex");
-      current_statement__ = 214;
+      current_statement__ = 220;
       assign(gq_complex, stan::math::atan(d_complex),
         "assigning variable gq_complex");
-      current_statement__ = 215;
+      current_statement__ = 221;
       assign(gq_complex, stan::math::atanh(z),
         "assigning variable gq_complex");
-      current_statement__ = 216;
+      current_statement__ = 222;
       assign(gq_complex, stan::math::atanh(p_complex),
         "assigning variable gq_complex");
-      current_statement__ = 217;
+      current_statement__ = 223;
       assign(gq_complex, stan::math::atanh(d_complex),
         "assigning variable gq_complex");
-      current_statement__ = 218;
+      current_statement__ = 224;
       assign(gq_complex, conj(z), "assigning variable gq_complex");
-      current_statement__ = 219;
+      current_statement__ = 225;
       assign(gq_complex, conj(p_complex), "assigning variable gq_complex");
-      current_statement__ = 220;
+      current_statement__ = 226;
       assign(gq_complex, conj(d_complex), "assigning variable gq_complex");
-      current_statement__ = 221;
+      current_statement__ = 227;
       assign(gq_complex, stan::math::cos(z), "assigning variable gq_complex");
-      current_statement__ = 222;
+      current_statement__ = 228;
       assign(gq_complex, stan::math::cos(p_complex),
         "assigning variable gq_complex");
-      current_statement__ = 223;
+      current_statement__ = 229;
       assign(gq_complex, stan::math::cos(d_complex),
         "assigning variable gq_complex");
-      current_statement__ = 224;
+      current_statement__ = 230;
       assign(gq_complex, stan::math::cosh(z), "assigning variable gq_complex");
-      current_statement__ = 225;
+      current_statement__ = 231;
       assign(gq_complex, stan::math::cosh(p_complex),
         "assigning variable gq_complex");
-      current_statement__ = 226;
+      current_statement__ = 232;
       assign(gq_complex, stan::math::cosh(d_complex),
         "assigning variable gq_complex");
-      current_statement__ = 227;
-      assign(i_arr, dims(z), "assigning variable i_arr");
-      current_statement__ = 228;
-      assign(i_arr, dims(p_complex), "assigning variable i_arr");
-      current_statement__ = 229;
-      assign(i_arr, dims(d_complex), "assigning variable i_arr");
-      current_statement__ = 230;
-      assign(i_arr_1, dims(gq_complex_array), "assigning variable i_arr_1");
-      current_statement__ = 231;
-      assign(i_arr_1, dims(p_complex_array), "assigning variable i_arr_1");
-      current_statement__ = 232;
-      assign(i_arr_1, dims(d_complex_array), "assigning variable i_arr_1");
       current_statement__ = 233;
-      assign(gq_complex, stan::math::exp(z), "assigning variable gq_complex");
+      assign(i_arr, dims(z), "assigning variable i_arr");
       current_statement__ = 234;
+      assign(i_arr, dims(p_complex), "assigning variable i_arr");
+      current_statement__ = 235;
+      assign(i_arr, dims(d_complex), "assigning variable i_arr");
+      current_statement__ = 236;
+      assign(i_arr_1, dims(gq_complex_array), "assigning variable i_arr_1");
+      current_statement__ = 237;
+      assign(i_arr_1, dims(p_complex_array), "assigning variable i_arr_1");
+      current_statement__ = 238;
+      assign(i_arr_1, dims(d_complex_array), "assigning variable i_arr_1");
+      current_statement__ = 239;
+      assign(gq_complex, stan::math::exp(z), "assigning variable gq_complex");
+      current_statement__ = 240;
       assign(gq_complex, stan::math::exp(p_complex),
         "assigning variable gq_complex");
-      current_statement__ = 235;
+      current_statement__ = 241;
       assign(gq_complex, stan::math::exp(d_complex),
         "assigning variable gq_complex");
-      current_statement__ = 236;
-      gq_r = get_imag(z);
-      current_statement__ = 237;
-      gq_r = get_imag(p_complex);
-      current_statement__ = 238;
-      gq_r = get_imag(d_complex);
-      current_statement__ = 239;
-      gq_r = get_real(z);
-      current_statement__ = 240;
-      gq_r = get_real(p_complex);
-      current_statement__ = 241;
-      gq_r = get_real(d_complex);
       current_statement__ = 242;
+      gq_r = get_imag(z);
+      current_statement__ = 243;
+      gq_r = get_imag(p_complex);
+      current_statement__ = 244;
+      gq_r = get_imag(d_complex);
+      current_statement__ = 245;
+      gq_r = get_real(z);
+      current_statement__ = 246;
+      gq_r = get_real(p_complex);
+      current_statement__ = 247;
+      gq_r = get_real(d_complex);
+      current_statement__ = 248;
       assign(gq_complex_array,
         head(stan::model::deep_copy(gq_complex_array), 1),
         "assigning variable gq_complex_array");
-      current_statement__ = 243;
+      current_statement__ = 249;
       assign(gq_complex_array, head(p_complex_array, 1),
         "assigning variable gq_complex_array");
-      current_statement__ = 244;
+      current_statement__ = 250;
       assign(gq_complex_array, head(d_complex_array, 1),
         "assigning variable gq_complex_array");
-      current_statement__ = 245;
+      current_statement__ = 251;
       assign(gq_complex, stan::math::log(z), "assigning variable gq_complex");
-      current_statement__ = 246;
+      current_statement__ = 252;
       assign(gq_complex, stan::math::log(p_complex),
         "assigning variable gq_complex");
-      current_statement__ = 247;
+      current_statement__ = 253;
       assign(gq_complex, stan::math::log(d_complex),
         "assigning variable gq_complex");
-      current_statement__ = 248;
+      current_statement__ = 254;
       assign(gq_complex, stan::math::log10(z),
         "assigning variable gq_complex");
-      current_statement__ = 249;
+      current_statement__ = 255;
       assign(gq_complex, stan::math::log10(p_complex),
         "assigning variable gq_complex");
-      current_statement__ = 250;
+      current_statement__ = 256;
       assign(gq_complex, stan::math::log10(d_complex),
         "assigning variable gq_complex");
-      current_statement__ = 251;
-      gq_r = norm(z);
-      current_statement__ = 252;
-      gq_r = norm(p_complex);
-      current_statement__ = 253;
-      gq_r = norm(d_complex);
-      current_statement__ = 254;
-      gq_i = num_elements(gq_complex_array);
-      current_statement__ = 255;
-      gq_i = num_elements(p_complex_array);
-      current_statement__ = 256;
-      gq_i = num_elements(d_complex_array);
       current_statement__ = 257;
-      assign(gq_complex, polar(gq_r, gq_r), "assigning variable gq_complex");
+      gq_r = norm(z);
       current_statement__ = 258;
-      assign(gq_complex, polar(gq_i, gq_i), "assigning variable gq_complex");
+      gq_r = norm(p_complex);
       current_statement__ = 259;
-      assign(gq_complex, polar(gq_r, gq_i), "assigning variable gq_complex");
+      gq_r = norm(d_complex);
       current_statement__ = 260;
-      assign(gq_complex, polar(gq_i, gq_r), "assigning variable gq_complex");
+      gq_i = num_elements(gq_complex_array);
       current_statement__ = 261;
-      assign(gq_complex, polar(p_r, gq_r), "assigning variable gq_complex");
+      gq_i = num_elements(p_complex_array);
       current_statement__ = 262;
-      assign(gq_complex, polar(d_r, gq_r), "assigning variable gq_complex");
+      gq_i = num_elements(d_complex_array);
       current_statement__ = 263;
-      assign(gq_complex, polar(p_r, d_r), "assigning variable gq_complex");
+      assign(gq_complex, polar(gq_r, gq_r), "assigning variable gq_complex");
       current_statement__ = 264;
-      assign(gq_complex, pow(z, gq_r), "assigning variable gq_complex");
+      assign(gq_complex, polar(gq_i, gq_i), "assigning variable gq_complex");
       current_statement__ = 265;
-      assign(gq_complex, pow(z, gq_i), "assigning variable gq_complex");
+      assign(gq_complex, polar(gq_r, gq_i), "assigning variable gq_complex");
       current_statement__ = 266;
-      assign(gq_complex, pow(z, z), "assigning variable gq_complex");
+      assign(gq_complex, polar(gq_i, gq_r), "assigning variable gq_complex");
       current_statement__ = 267;
-      assign(gq_complex, pow(p_complex, p_r), "assigning variable gq_complex");
+      assign(gq_complex, polar(p_r, gq_r), "assigning variable gq_complex");
       current_statement__ = 268;
-      assign(gq_complex, pow(p_complex, d_r), "assigning variable gq_complex");
+      assign(gq_complex, polar(d_r, gq_r), "assigning variable gq_complex");
       current_statement__ = 269;
+      assign(gq_complex, polar(p_r, d_r), "assigning variable gq_complex");
+      current_statement__ = 270;
+      assign(gq_complex, pow(z, gq_r), "assigning variable gq_complex");
+      current_statement__ = 271;
+      assign(gq_complex, pow(z, gq_i), "assigning variable gq_complex");
+      current_statement__ = 272;
+      assign(gq_complex, pow(z, z), "assigning variable gq_complex");
+      current_statement__ = 273;
+      assign(gq_complex, pow(p_complex, p_r), "assigning variable gq_complex");
+      current_statement__ = 274;
+      assign(gq_complex, pow(p_complex, d_r), "assigning variable gq_complex");
+      current_statement__ = 275;
       assign(gq_complex, pow(p_complex, gq_r),
         "assigning variable gq_complex");
-      current_statement__ = 270;
+      current_statement__ = 276;
       assign(gq_complex, pow(p_complex, z), "assigning variable gq_complex");
-      current_statement__ = 271;
+      current_statement__ = 277;
       assign(gq_complex, pow(p_complex, d_complex),
         "assigning variable gq_complex");
-      current_statement__ = 272;
+      current_statement__ = 278;
       assign(gq_complex, pow(p_complex, p_complex),
         "assigning variable gq_complex");
-      current_statement__ = 273;
+      current_statement__ = 279;
       assign(gq_complex, pow(d_complex, p_r), "assigning variable gq_complex");
-      current_statement__ = 274;
+      current_statement__ = 280;
       assign(gq_complex, pow(d_complex, d_r), "assigning variable gq_complex");
-      current_statement__ = 275;
+      current_statement__ = 281;
       assign(gq_complex, pow(d_complex, gq_r),
         "assigning variable gq_complex");
-      current_statement__ = 276;
+      current_statement__ = 282;
       assign(gq_complex, pow(d_complex, z), "assigning variable gq_complex");
-      current_statement__ = 277;
+      current_statement__ = 283;
       assign(gq_complex, pow(d_complex, d_complex),
         "assigning variable gq_complex");
-      current_statement__ = 278;
+      current_statement__ = 284;
       assign(gq_complex, pow(d_complex, p_complex),
         "assigning variable gq_complex");
-      current_statement__ = 279;
+      current_statement__ = 285;
       assign(gq_complex, proj(z), "assigning variable gq_complex");
-      current_statement__ = 280;
+      current_statement__ = 286;
       assign(gq_complex, proj(p_complex), "assigning variable gq_complex");
-      current_statement__ = 281;
+      current_statement__ = 287;
       assign(gq_complex, proj(d_complex), "assigning variable gq_complex");
-      current_statement__ = 282;
+      current_statement__ = 288;
       assign(gq_complex_array,
         reverse(stan::model::deep_copy(gq_complex_array)),
         "assigning variable gq_complex_array");
-      current_statement__ = 283;
+      current_statement__ = 289;
       assign(gq_complex_array, reverse(p_complex_array),
         "assigning variable gq_complex_array");
-      current_statement__ = 284;
+      current_statement__ = 290;
       assign(gq_complex_array, reverse(d_complex_array),
         "assigning variable gq_complex_array");
-      current_statement__ = 285;
+      current_statement__ = 291;
       assign(gq_complex, stan::math::sin(z), "assigning variable gq_complex");
-      current_statement__ = 286;
+      current_statement__ = 292;
       assign(gq_complex, stan::math::sin(p_complex),
         "assigning variable gq_complex");
-      current_statement__ = 287;
+      current_statement__ = 293;
       assign(gq_complex, stan::math::sin(d_complex),
         "assigning variable gq_complex");
-      current_statement__ = 288;
+      current_statement__ = 294;
       assign(gq_complex, stan::math::sinh(z), "assigning variable gq_complex");
-      current_statement__ = 289;
+      current_statement__ = 295;
       assign(gq_complex, stan::math::sinh(p_complex),
         "assigning variable gq_complex");
-      current_statement__ = 290;
+      current_statement__ = 296;
       assign(gq_complex, stan::math::sinh(d_complex),
         "assigning variable gq_complex");
-      current_statement__ = 291;
+      current_statement__ = 297;
       gq_i = size(gq_complex_array);
-      current_statement__ = 292;
+      current_statement__ = 298;
       gq_i = size(p_complex_array);
-      current_statement__ = 293;
+      current_statement__ = 299;
       gq_i = size(d_complex_array);
-      current_statement__ = 294;
+      current_statement__ = 300;
       assign(gq_complex, stan::math::sqrt(z), "assigning variable gq_complex");
-      current_statement__ = 295;
+      current_statement__ = 301;
       assign(gq_complex, stan::math::sqrt(p_complex),
         "assigning variable gq_complex");
-      current_statement__ = 296;
+      current_statement__ = 302;
       assign(gq_complex, stan::math::sqrt(d_complex),
         "assigning variable gq_complex");
-      current_statement__ = 297;
+      current_statement__ = 303;
       assign(gq_complex_array,
         tail(stan::model::deep_copy(gq_complex_array), 1),
         "assigning variable gq_complex_array");
-      current_statement__ = 298;
+      current_statement__ = 304;
       assign(gq_complex_array, tail(p_complex_array, 1),
         "assigning variable gq_complex_array");
-      current_statement__ = 299;
+      current_statement__ = 305;
       assign(gq_complex_array, tail(d_complex_array, 1),
         "assigning variable gq_complex_array");
-      current_statement__ = 300;
+      current_statement__ = 306;
       assign(gq_complex, stan::math::tan(z), "assigning variable gq_complex");
-      current_statement__ = 301;
+      current_statement__ = 307;
       assign(gq_complex, stan::math::tan(p_complex),
         "assigning variable gq_complex");
-      current_statement__ = 302;
+      current_statement__ = 308;
       assign(gq_complex, stan::math::tan(d_complex),
         "assigning variable gq_complex");
-      current_statement__ = 303;
+      current_statement__ = 309;
       assign(gq_complex, stan::math::tanh(z), "assigning variable gq_complex");
-      current_statement__ = 304;
+      current_statement__ = 310;
       assign(gq_complex, stan::math::tanh(p_complex),
         "assigning variable gq_complex");
-      current_statement__ = 305;
+      current_statement__ = 311;
       assign(gq_complex, stan::math::tanh(d_complex),
         "assigning variable gq_complex");
-      current_statement__ = 306;
+      current_statement__ = 312;
       assign(gq_complex, to_complex(), "assigning variable gq_complex");
-      current_statement__ = 307;
+      current_statement__ = 313;
       assign(gq_complex, to_complex(gq_r, gq_r),
         "assigning variable gq_complex");
-      current_statement__ = 308;
+      current_statement__ = 314;
       assign(gq_complex, to_complex(gq_i, gq_i),
         "assigning variable gq_complex");
-      current_statement__ = 309;
+      current_statement__ = 315;
       assign(gq_complex, to_complex(gq_r, gq_i),
         "assigning variable gq_complex");
-      current_statement__ = 310;
+      current_statement__ = 316;
       assign(gq_complex, to_complex(gq_i, gq_r),
         "assigning variable gq_complex");
-      current_statement__ = 311;
+      current_statement__ = 317;
       assign(gq_complex, to_complex(gq_r), "assigning variable gq_complex");
-      current_statement__ = 312;
+      current_statement__ = 318;
       assign(gq_complex, to_complex(gq_i), "assigning variable gq_complex");
-      current_statement__ = 313;
+      current_statement__ = 319;
       assign(gq_complex, to_complex(p_r, gq_r),
         "assigning variable gq_complex");
-      current_statement__ = 314;
+      current_statement__ = 320;
       assign(gq_complex, to_complex(p_r, d_r),
         "assigning variable gq_complex");
-      current_statement__ = 315;
+      current_statement__ = 321;
       assign(gq_complex, to_complex(d_r, gq_r),
         "assigning variable gq_complex");
-      current_statement__ = 316;
+      current_statement__ = 322;
       assign(gq_complex, to_complex(p_r), "assigning variable gq_complex");
-      current_statement__ = 317;
+      current_statement__ = 323;
       assign(gq_complex, to_complex(d_r), "assigning variable gq_complex");
       vars__.emplace_back(gq_i);
       vars__.emplace_back(gq_r);

@@ -78,6 +78,10 @@ transformed data {
         for (td_k in 1:3) {
             td_complex_array_2d[td_j, td_k] = to_complex(1, 2.2);}}
     
+    for (td_j in td_complex_array_2d){
+        for (td_k in td_j){
+            td_complex = td_k;}}
+    
     td_r = get_real(td_complex);
     td_r = get_imag(td_complex);
     td_r = get_real(td_complex_array[1]);
@@ -143,6 +147,10 @@ transformed parameters {
     for (tp_j in 1:2) {
         for (tp_k in 1:3) {
             tp_complex_array_2d[tp_j, tp_k] = to_complex(1, 2.2);}}
+
+    for (tp_j in tp_complex_array_2d){
+        for (tp_k in tp_j){
+            tp_complex = tp_k;}}
     
     tp_r = get_real(tp_complex);
     tp_r = get_imag(tp_complex);
@@ -212,6 +220,10 @@ generated quantities {
     for (gq_j in 1:2) {
         for (gq_k in 1:3) {
             gq_complex_array_2d[gq_j, gq_k] = to_complex(1, 2.2);}}
+
+    for (gq_j in gq_complex_array_2d){
+        for (gq_k in gq_j){
+            gq_complex = gq_k;}}
     
     gq_r = get_real(gq_complex);
     gq_r = get_imag(gq_complex);
