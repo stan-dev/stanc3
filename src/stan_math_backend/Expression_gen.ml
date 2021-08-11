@@ -466,9 +466,8 @@ and pp_compiler_internal_fn ad ut f ppf es =
             "Unexpected type for row vector literal" (ut : UnsizedType.t)] )
   | FnReadData -> read_data ut ppf es
   | FnReadDataSerializer ->
-      pf ppf "@[<hov 2>in__.read<%a>(@,%a)@]" pp_unsizedtype_local
-        (UnsizedType.AutoDiffable, ut)
-        (list ~sep:comma pp_expr) es
+      pf ppf "@[<hov 2>in__.read<%a>(@,)@]" pp_unsizedtype_local
+        (UnsizedType.AutoDiffable, UnsizedType.UReal)
   | FnReadParam {constrain; dims} -> (
       let constrain_opt = constraint_to_string constrain in
       match constrain_opt with
