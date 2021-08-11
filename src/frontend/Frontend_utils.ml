@@ -8,6 +8,10 @@ let untyped_ast_of_string s =
   Fmt.epr "%a" (Fmt.list ~sep:Fmt.nop Warnings.pp) warnings ;
   res
 
+let emit_warnings_and_return_ast (ast, warnings) =
+  if List.length warnings > 0 then Warnings.pp_warnings Fmt.stderr warnings ;
+  ast
+
 let typed_ast_of_string_exn s =
   Result.(
     untyped_ast_of_string s
@@ -19,7 +23,7 @@ let typed_ast_of_string_exn s =
              failwith
                "Internal compiler error: no message from Semantic_check." ))
   |> Result.map_error ~f:Errors.to_string
-  |> Result.ok_or_failwith
+  |> Result.ok_or_failwith |> emit_warnings_and_return_ast
 
 let get_ast_or_exit ?printed_filename ?(print_warnings = true) filename =
   let res, warnings = Parse.parse_file Parser.Incremental.program filename in
@@ -34,7 +38,7 @@ let get_ast_or_exit ?printed_filename ?(print_warnings = true) filename =
 let type_ast_or_exit ast =
   try
     match Semantic_check.semantic_check_program ast with
-    | Result.Ok prog -> prog
+    | Result.Ok p -> emit_warnings_and_return_ast p
     | Result.Error (error :: _) ->
         Errors.pp_semantic_error Fmt.stderr error ;
         exit 1

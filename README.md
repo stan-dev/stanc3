@@ -5,10 +5,19 @@ We're testing [these models](https://jenkins.mc-stan.org/job/stanc3/job/master/)
 [![Build Status](http://d1m1s1b1.stat.columbia.edu:8080/job/stanc3/job/master/badge/icon)](http://d1m1s1b1.stat.columbia.edu:8080/job/stanc3/job/master/)
 
 ## High-level concepts, invariants, and 30,000-ft view
-Stanc3 has 3 main src packages: `frontend`, `middle`, and `stan_math_backend`. The Middle contains the MIR and currently any types or functions used by the two ends.
-The entrypoint for the compiler is in `src/stanc/stanc.ml` which sequences the various components together.
+Stanc3 has 3 main src packages: `frontend`, `middle`, and `stan_math_backend`.
 
-### Distinct Stanc Phases
+![top-level stanc3 architecture](docs/img/architecture.png)
+
+The Middle contains the MIR and currently any types or functions used by the two ends.
+The entrypoint for the compiler is in `src/stanc/stanc.ml` which sequences the various components together.  
+
+### Distinct stanc Phases
+
+The phases of stanc are summarized in the following information flowchart and list.
+
+![stanc3 information flow](docs/img/information-flow.png)
+
 1. [Lex](src/frontend/lexer.mll) the Stan language into tokens.
 1. [Parse](src/frontend/parser.mly) Stan language into AST that represents the syntax quite closely and aides in development of pretty-printers and linters. `stanc --debug-ast` to print this out.
 1. Typecheck & add type information [Semantic_check.ml](src/frontend/Semantic_check.ml).  `stanc --debug-decorated-ast`
@@ -33,8 +42,7 @@ To be able to build the project, make sure you have `GNU make`.
 To install OCaml and the dependencies we need to build and do development run the following from the stanc3 directory:
 
 ```
-cd scripts
-bash -x setup_dev_env.sh
+bash -x scripts/setup_dev_env.sh
 ```
 Note that `curl` and `m4` are prerequisites to run the install script.
 

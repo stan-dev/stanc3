@@ -1,6 +1,9 @@
   $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format Brilleman_copyright.stan
 
+Warning: Empty file 'Brilleman_copyright.stan' detected; this is a valid stan model but likely unintended!
   $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format Columbia_copyright.stan
 
+Warning: Empty file 'Columbia_copyright.stan' detected; this is a valid stan model but likely unintended!
   $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format license.stan
 
+Warning: Empty file 'license.stan' detected; this is a valid stan model but likely unintended!

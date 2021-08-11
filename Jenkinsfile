@@ -3,6 +3,7 @@ import org.stan.Utils
 
 def utils = new org.stan.Utils()
 def skipExpressionTests = false
+def buildingAgentARM = "linux"
 /* Functions that runs a sh command and returns the stdout */
 def runShell(String command){
     def output = sh (returnStdout: true, script: "${command}").trim()
@@ -18,6 +19,7 @@ def tagName() {
         'unknown-tag'
     }
 }
+
 pipeline {
     agent none
     parameters {
@@ -43,6 +45,10 @@ pipeline {
 
                     def stanMathSigs = ['test/integration/signatures/stan_math_sigs.expected'].join(" ")
                     skipExpressionTests = utils.verifyChanges(stanMathSigs)
+                    
+                    if (buildingTag()) {
+                        buildingAgentARM = "arm-ec2"
+                    }
                 }
             }
         }
@@ -60,6 +66,7 @@ pipeline {
                     eval \$(opam env)
                     dune build @install
                 """)
+                
                 sh "mkdir -p bin && mv _build/default/src/stanc/stanc.exe bin/stanc"
                 stash name:'ubuntu-exe', includes:'bin/stanc, notes/working-models.txt'
             }
@@ -155,9 +162,10 @@ pipeline {
                                     text:"O=0\nCXX=${CXX}")
                             sh """
                                 cd performance-tests-cmdstan
-                                cd cmdstan; make clean-all; make -j${env.PARALLEL} build; cd ..
-                                cp ../bin/stanc cmdstan/bin/stanc
-                                ./runPerformanceTests.py -j7 --runs=0 ../test/integration/good
+                                mkdir cmdstan/bin
+                                cp ../bin/stanc cmdstan/bin/linux-stanc
+                                cd cmdstan; make clean-all; make -j${env.PARALLEL} build; cd ..                                
+                                ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ../test/integration/good
                                 ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 example-models
                                 """
                         }
@@ -188,8 +196,12 @@ pipeline {
                             cat shotgun_perf_all.tests >> all.tests
                             cat all.tests
                             echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
+<<<<<<< HEAD
                             echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
                             cd cmdstan; git show HEAD --stat; make clean-all; make -j4 build; cd ..
+=======
+                            cd cmdstan; make clean-all; git show HEAD --stat; make -j4 build; cd ..
+>>>>>>> upstream/master
                             CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
                         """
 
@@ -321,36 +333,172 @@ pipeline {
                     post {always { runShell("rm -rf ./*")}}
                 }
 
-                stage("Build & test a static Linux ARM binary") {
-                    when { anyOf { buildingTag(); branch 'master' } }
-                    agent { label "arm-ec2" }
+                stage("Build & test a static Linux mips64el binary") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/static/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        }
+                    }
                     steps {
-
-                        runShell("""
-                            bash -x scripts/install_ocaml.sh "--disable-sandboxing -y"
-
-                            opam update; opam install -y js_of_ocaml-compiler.3.4.0 js_of_ocaml-ppx.3.4.0 js_of_ocaml.3.4.0
-                            opam update; bash -x scripts/install_build_deps.sh
-                            opam update; bash -x scripts/install_js_deps.sh
-                        """)
-
                         runShell("""
                             eval \$(opam env)
                             dune subst
-                            dune build @install --profile static
                         """)
-                        /*
+                        sh "sudo apk add docker jq"
+                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh mips64el"
                         echo runShell("""
                             eval \$(opam env)
                             time dune runtest --profile static --verbose
                         """)
-                        */
-                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm-stanc"
-                        sh "mv _build/default/src/stan2tfp/stan2tfp.exe bin/linux-arm-stan2tfp"
 
-                        stash name:'linux-arm-exe', includes:'bin/*'
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-mips64el-stanc"
+                        sh "mv `find _build -name stan2tfp.exe` bin/linux-mips64el-stan2tfp"
+
+                        stash name:'linux-mips64el-exe', includes:'bin/*'
                     }
-                    post { always { runShell("rm -rf ./*") }}
+                    post {always { runShell("rm -rf ./*")}}
+                }
+
+                stage("Build & test a static Linux ppc64el binary") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/static/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        }
+                    }
+                    steps {
+                        runShell("""
+                            eval \$(opam env)
+                            dune subst
+                        """)
+                        sh "sudo apk add docker jq"
+                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh ppc64el"
+                        echo runShell("""
+                            eval \$(opam env)
+                            time dune runtest --profile static --verbose
+                        """)
+
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-ppc64el-stanc"
+                        sh "mv `find _build -name stan2tfp.exe` bin/linux-ppc64el-stan2tfp"
+
+                        stash name:'linux-ppc64el-exe', includes:'bin/*'
+                    }
+                    post {always { runShell("rm -rf ./*")}}
+                }
+
+                stage("Build & test a static Linux s390x binary") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/static/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        }
+                    }
+                    steps {
+                        runShell("""
+                            eval \$(opam env)
+                            dune subst
+                        """)
+                        sh "sudo apk add docker jq"
+                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh s390x"
+                        echo runShell("""
+                            eval \$(opam env)
+                            time dune runtest --profile static --verbose
+                        """)
+
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-s390x-stanc"
+                        sh "mv `find _build -name stan2tfp.exe` bin/linux-s390x-stan2tfp"
+
+                        stash name:'linux-s390x-exe', includes:'bin/*'
+                    }
+                    post {always { runShell("rm -rf ./*")}}
+                }
+
+                stage("Build & test a static Linux arm64 binary") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/static/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        }
+                    }
+                    steps {
+                        runShell("""
+                            eval \$(opam env)
+                            dune subst
+                        """)
+                        sh "sudo apk add docker jq"
+                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh arm64"
+                        echo runShell("""
+                            eval \$(opam env)
+                            time dune runtest --profile static --verbose
+                        """)
+
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm64-stanc"
+                        sh "mv `find _build -name stan2tfp.exe` bin/linux-arm64-stan2tfp"
+
+                        stash name:'linux-arm64-exe', includes:'bin/*'
+                    }
+                    post {always { runShell("rm -rf ./*")}}
+                }
+
+                stage("Build & test a static Linux armhf binary") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/static/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        }
+                    }
+                    steps {
+                        runShell("""
+                            eval \$(opam env)
+                            dune subst
+                        """)
+                        sh "sudo apk add docker jq"
+                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh armhf"
+                        echo runShell("""
+                            eval \$(opam env)
+                            time dune runtest --profile static --verbose
+                        """)
+
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
+                        sh "mv `find _build -name stan2tfp.exe` bin/linux-armhf-stan2tfp"
+
+                        stash name:'linux-armhf-exe', includes:'bin/*'
+                    }
+                    post {always { runShell("rm -rf ./*")}}
+                }
+
+                stage("Build & test a static Linux armel binary") {
+                    agent {
+                        dockerfile {
+                            filename 'docker/static/Dockerfile'
+                            //Forces image to ignore entrypoint
+                            args "-u 1000 --entrypoint=\'\' -v /var/run/docker.sock:/var/run/docker.sock"
+                        }
+                    }
+                    steps {
+                        runShell("""
+                            eval \$(opam env)
+                            dune subst
+                        """)
+                        sh "sudo apk add docker jq"
+                        sh "sudo bash -x scripts/build_multiarch_stanc3.sh armel"
+                        echo runShell("""
+                            eval \$(opam env)
+                            time dune runtest --profile static --verbose
+                        """)
+
+                        sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
+                        sh "mv `find _build -name stan2tfp.exe` bin/linux-armel-stan2tfp"
+
+                        stash name:'linux-armel-exe', includes:'bin/*'
+                    }
+                    post {always { runShell("rm -rf ./*")}}
                 }
 
                 // Cross compiling for windows on debian
@@ -394,7 +542,12 @@ pipeline {
                 unstash 'windows-exe'
                 unstash 'linux-exe'
                 unstash 'mac-exe'
-                unstash 'linux-arm-exe'
+                unstash 'linux-mips64el-exe'
+                unstash 'linux-ppc64el-exe'
+                unstash 'linux-s390x-exe'
+                unstash 'linux-arm64-exe'
+                unstash 'linux-armhf-exe'
+                unstash 'linux-armel-exe'
                 unstash 'js-exe'
                 runShell("""
                     wget https://github.com/tcnksm/ghr/releases/download/v0.12.1/ghr_v0.12.1_linux_amd64.tar.gz

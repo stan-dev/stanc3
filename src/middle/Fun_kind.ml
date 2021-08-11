@@ -3,6 +3,8 @@ open Core_kernel
 type 'propto suffix = FnPlain | FnRng | FnLpdf of 'propto | FnTarget
 [@@deriving compare, sexp, hash, map]
 
+let without_propto = map_suffix (function true | false -> ())
+
 type 'e t =
   | StanLib of string * bool suffix
   | CompilerInternal of 'e Internal_fun.t
