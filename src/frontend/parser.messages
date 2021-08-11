@@ -9527,4 +9527,4 @@ program: DATABLOCK LBRACE COMPLEX UNREACHABLE
 ## COMPLEX
 ##
 
-Expected top-level variable declaration or "}".
+Expected identifier as part of top-level variable declaration.
