@@ -216,7 +216,8 @@ let use_file filename =
       Pedantic_analysis.warn_uninitialized mir
       |> pp_stderr (Warnings.pp_warnings ?printed_filename) ;
     let tx_mir =
-      Optimize.allow_uninitialized_decls (Transform_Mir.trans_prog mir)
+      Optimize.optimization_suite ~settings:Optimize.settings_default
+        (Transform_Mir.trans_prog mir)
     in
     if !dump_tx_mir then
       Sexp.pp_hum Format.std_formatter

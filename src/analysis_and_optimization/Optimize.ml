@@ -1194,14 +1194,14 @@ type optimization_settings =
   ; one_step_loop_unrolling: bool
   ; list_collapsing: bool
   ; block_fixing: bool
+  ; allow_uninitialized_decls: bool
   ; constant_propagation: bool
   ; expression_propagation: bool
   ; copy_propagation: bool
   ; dead_code_elimination: bool
   ; partial_evaluation: bool
   ; lazy_code_motion: bool
-  ; optimize_ad_levels: bool
-  ; allow_uninitialized_decls: bool }
+  ; optimize_ad_levels: bool }
 
 let settings_const b =
   { function_inlining= b
@@ -1209,17 +1209,21 @@ let settings_const b =
   ; one_step_loop_unrolling= b
   ; list_collapsing= b
   ; block_fixing= b
+  ; allow_uninitialized_decls= b
   ; constant_propagation= b
   ; expression_propagation= b
   ; copy_propagation= b
   ; dead_code_elimination= b
   ; partial_evaluation= b
   ; lazy_code_motion= b
-  ; optimize_ad_levels= b
-  ; allow_uninitialized_decls= b }
+  ; optimize_ad_levels= b }
 
 let all_optimizations : optimization_settings = settings_const true
 let no_optimizations : optimization_settings = settings_const false
+
+let settings_default : optimization_settings =
+  let xx = settings_const false in
+  {xx with allow_uninitialized_decls= true}
 
 let optimization_suite ?(settings = all_optimizations) mir =
   let maybe_optimizations =
@@ -1251,6 +1255,8 @@ let optimization_suite ?(settings = all_optimizations) mir =
     ; (constant_propagation, settings.constant_propagation)
       (* Book: Loop simplification *)
     ; (static_loop_unrolling, settings.static_loop_unrolling)
+      (*Remove decls immediately assigned to*)
+      ; (allow_uninitialized_decls, settings.allow_uninitialized_decls)
       (* Book: Dead-code elimination *)
       (* Matthijs: Everything < Dead-code elimination *)
     ; (dead_code_elimination, settings.dead_code_elimination)
@@ -1260,8 +1266,7 @@ let optimization_suite ?(settings = all_optimizations) mir =
     ; (optimize_ad_levels, settings.optimize_ad_levels)
       (* Book: Machine idioms and instruction combining *)
       (* Matthijs: Everything < block_fixing *)
-    ; (block_fixing, settings.block_fixing)
-    ; (allow_uninitialized_decls, settings.allow_uninitialized_decls) ]
+    ; (block_fixing, settings.block_fixing) ]
   in
   let optimizations =
     List.filter_map maybe_optimizations ~f:(fun (fn, flag) ->

@@ -67,17 +67,18 @@ type optimization_settings =
   ; one_step_loop_unrolling: bool
   ; list_collapsing: bool
   ; block_fixing: bool
+  ; allow_uninitialized_decls: bool
   ; constant_propagation: bool
   ; expression_propagation: bool
   ; copy_propagation: bool
   ; dead_code_elimination: bool
   ; partial_evaluation: bool
   ; lazy_code_motion: bool
-  ; optimize_ad_levels: bool
-  ; allow_uninitialized_decls: bool }
+  ; optimize_ad_levels: bool }
 
 val all_optimizations : optimization_settings
 val no_optimizations : optimization_settings
+val settings_default : optimization_settings
 
 val optimization_suite :
   ?settings:optimization_settings -> Program.Typed.t -> Program.Typed.t
