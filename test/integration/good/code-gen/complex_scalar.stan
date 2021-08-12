@@ -301,6 +301,19 @@ generated quantities {
     gq_complex = d_complex/gq_i;
     gq_complex = gq_i/p_complex;
 
+    gq_complex = z^y;
+    gq_complex = z^gq_r;
+    gq_complex = gq_r^z;
+    gq_complex = z^gq_i;
+    gq_complex = gq_i^z;
+    gq_complex = d_complex^p_complex;
+    gq_complex = d_complex^d_r;
+    gq_complex = d_complex^p_r;
+    gq_complex = d_r^p_complex;
+    gq_complex = p_complex^p_r;
+    gq_complex = d_complex^gq_i;
+    gq_complex = gq_i^p_complex;
+
     gq_complex = -z;
     gq_complex = -gq_r;
     gq_complex = -gq_i;
