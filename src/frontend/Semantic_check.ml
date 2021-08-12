@@ -1716,12 +1716,22 @@ and semantic_check_fundef_return_tys ~loc id return_type body =
     else error @@ Semantic_error.incompatible_return_types loc)
 
 and semantic_check_fundef ~loc ~cf ~is_closure return_ty id args body =
+  let suffix = Fun_kind.suffix_from_name id.name in
   let uargs =
     List.map args ~f:(fun (at, ut, id) ->
         Validate.(
           semantic_check_autodifftype at
           |> apply_const (semantic_check_unsizedtype ut)
           |> apply_const (semantic_check_identifier id)
+          |> apply_const
+               ( match ut with
+               | UnsizedType.UFun (_, _, (FnRng, _)) when suffix <> FnRng ->
+                   Semantic_error.invalid_rng_fn id.id_loc |> Validate.error
+               | UFun (_, _, (FnTarget, _)) when suffix <> FnTarget ->
+                   Semantic_error.target_plusequals_outisde_model_or_logprob
+                     id.id_loc
+                   |> Validate.error
+               | _ -> Validate.ok () )
           |> map ~f:(fun at -> (at, ut, id))) )
     |> Validate.sequence
   in
@@ -1739,9 +1749,7 @@ and semantic_check_fundef ~loc ~cf ~is_closure return_ty id args body =
     >>= fun () ->
     (* WARNING: SIDE EFFECTING *)
     Symbol_table.enter vm id.name
-      ( Functions
-      , UFun (uarg_types, urt, (Fun_kind.suffix_from_name id.name, is_closure))
-      ) ;
+      (Functions, UFun (uarg_types, urt, (suffix, is_closure))) ;
     let body', captures =
       Symbol_table.with_capturing_scope vm (fun () ->
           (* Check that function args and loop identifiers are not modified in

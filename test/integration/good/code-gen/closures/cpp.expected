@@ -677,12 +677,12 @@ static constexpr std::array<const char*, 20> locations_array__ =
  " (in 'capture_types2.stan', line 22, column 25 to line 24, column 9)"};
 
 template <typename T0__, typename T1__>
-stan::promote_args_t<typename T0__::captured_scalar_t__,
+stan::promote_args_t<stan::return_type_t<T0__>,
 T1__>
 capture_closure_L16C9_impl__(const T0__& foo, const T1__& y,
                              std::ostream* pstream__)  ;
 template <typename T0__, typename T1__>
-stan::promote_args_t<typename T0__::captured_scalar_t__,
+stan::promote_args_t<stan::return_type_t<T0__>,
 T1__>
 capture_dataonly_closure_L7C9_impl__(const T0__& foo, const T1__& y,
                                      std::ostream* pstream__)  ;
@@ -696,11 +696,11 @@ template <typename T0__>
 stan::promote_args_t<T0__>
 gar_L22C13_impl__(const T0__& b, std::ostream* pstream__)  ;
 template <typename T0__, typename T1__>
-stan::promote_args_t<typename T0__::captured_scalar_t__,
+stan::promote_args_t<stan::return_type_t<T0__>,
 T1__>
 capture_closure_L16C9_impl__(const T0__& foo, const T1__& y,
                              std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<typename T0__::captured_scalar_t__,
+  using local_scalar_t__ = stan::promote_args_t<stan::return_type_t<T0__>,
           T1__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -718,11 +718,11 @@ capture_closure_L16C9_impl__(const T0__& foo, const T1__& y,
   
 }
 template <typename T0__, typename T1__>
-stan::promote_args_t<typename T0__::captured_scalar_t__,
+stan::promote_args_t<stan::return_type_t<T0__>,
 T1__>
 capture_dataonly_closure_L7C9_impl__(const T0__& foo, const T1__& y,
                                      std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<typename T0__::captured_scalar_t__,
+  using local_scalar_t__ = stan::promote_args_t<stan::return_type_t<T0__>,
           T1__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -1224,13 +1224,13 @@ static constexpr std::array<const char*, 18> locations_array__ =
  " (in 'higher_order.stan', line 4, column 24 to line 6, column 9)"};
 
 template <typename T0__, typename T1__>
-stan::promote_args_t<typename T0__::captured_scalar_t__,
+stan::promote_args_t<stan::return_type_t<T0__>,
 T1__>
 higher_order_func(const T0__& g, const T1__& x, std::ostream* pstream__) ;
 
 struct higher_order_func_functor__ {
 template <typename T0__, typename T1__>
-stan::promote_args_t<typename T0__::captured_scalar_t__,
+stan::promote_args_t<stan::return_type_t<T0__>,
 T1__>
 operator()(const T0__& g, const T1__& x, std::ostream* pstream__)  const 
 {
@@ -1260,15 +1260,15 @@ stan::promote_args_t<T1__>
 data_closure_L16C9_impl__(const double& x, const T1__& y,
                           std::ostream* pstream__)  ;
 template <typename T0__, typename T1__, typename T2__>
-stan::promote_args_t<typename T0__::captured_scalar_t__, T1__,
+stan::promote_args_t<stan::return_type_t<T0__>, T1__,
 T2__>
 g2_L4C13_impl__(const T0__& g, const T1__& x, const T2__& y,
                 std::ostream* pstream__)  ;
 template <typename T0__, typename T1__>
-stan::promote_args_t<typename T0__::captured_scalar_t__,
+stan::promote_args_t<stan::return_type_t<T0__>,
 T1__>
 higher_order_func(const T0__& g, const T1__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<typename T0__::captured_scalar_t__,
+  using local_scalar_t__ = stan::promote_args_t<stan::return_type_t<T0__>,
           T1__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -1349,11 +1349,11 @@ data_closure_L16C9_impl__(const double& x, const T1__& y,
   
 }
 template <typename T0__, typename T1__, typename T2__>
-stan::promote_args_t<typename T0__::captured_scalar_t__, T1__,
+stan::promote_args_t<stan::return_type_t<T0__>, T1__,
 T2__>
 g2_L4C13_impl__(const T0__& g, const T1__& x, const T2__& y,
                 std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<typename T0__::captured_scalar_t__,
+  using local_scalar_t__ = stan::promote_args_t<stan::return_type_t<T0__>,
           T1__,
           T2__>;
   int current_statement__ = 0; 
@@ -1734,20 +1734,24 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 37> locations_array__ = 
+static constexpr std::array<const char*, 46> locations_array__ = 
 {" (found before start of program)",
  " (in 'higher_order_suffixes.stan', line 16, column 4 to line 19, column 5)",
- " (in 'higher_order_suffixes.stan', line 22, column 4 to line 25, column 5)",
- " (in 'higher_order_suffixes.stan', line 26, column 4 to line 29, column 5)",
- " (in 'higher_order_suffixes.stan', line 30, column 4 to line 33, column 5)",
- " (in 'higher_order_suffixes.stan', line 34, column 4 to line 37, column 5)",
- " (in 'higher_order_suffixes.stan', line 38, column 4 to line 41, column 5)",
- " (in 'higher_order_suffixes.stan', line 42, column 4 to line 45, column 5)",
- " (in 'higher_order_suffixes.stan', line 46, column 4 to line 49, column 5)",
- " (in 'higher_order_suffixes.stan', line 53, column 4 to column 27)",
- " (in 'higher_order_suffixes.stan', line 56, column 4 to column 36)",
- " (in 'higher_order_suffixes.stan', line 20, column 4 to column 32)",
- " (in 'higher_order_suffixes.stan', line 50, column 4 to column 30)",
+ " (in 'higher_order_suffixes.stan', line 20, column 4 to line 23, column 5)",
+ " (in 'higher_order_suffixes.stan', line 24, column 4 to line 27, column 5)",
+ " (in 'higher_order_suffixes.stan', line 31, column 4 to line 34, column 5)",
+ " (in 'higher_order_suffixes.stan', line 35, column 4 to line 38, column 5)",
+ " (in 'higher_order_suffixes.stan', line 39, column 4 to line 42, column 5)",
+ " (in 'higher_order_suffixes.stan', line 43, column 4 to line 46, column 5)",
+ " (in 'higher_order_suffixes.stan', line 47, column 4 to line 50, column 5)",
+ " (in 'higher_order_suffixes.stan', line 51, column 4 to line 54, column 5)",
+ " (in 'higher_order_suffixes.stan', line 55, column 4 to line 58, column 5)",
+ " (in 'higher_order_suffixes.stan', line 62, column 4 to column 27)",
+ " (in 'higher_order_suffixes.stan', line 63, column 4 to column 21)",
+ " (in 'higher_order_suffixes.stan', line 66, column 4 to column 36)",
+ " (in 'higher_order_suffixes.stan', line 28, column 4 to column 26)",
+ " (in 'higher_order_suffixes.stan', line 29, column 4 to column 24)",
+ " (in 'higher_order_suffixes.stan', line 59, column 4 to column 30)",
  " (in 'higher_order_suffixes.stan', line 3, column 8 to column 38)",
  " (in 'higher_order_suffixes.stan', line 4, column 8 to column 17)",
  " (in 'higher_order_suffixes.stan', line 2, column 25 to line 5, column 5)",
@@ -1757,21 +1761,26 @@ static constexpr std::array<const char*, 37> locations_array__ =
  " (in 'higher_order_suffixes.stan', line 11, column 8 to column 26)",
  " (in 'higher_order_suffixes.stan', line 12, column 8 to column 17)",
  " (in 'higher_order_suffixes.stan', line 10, column 23 to line 13, column 5)",
- " (in 'higher_order_suffixes.stan', line 36, column 8 to column 17)",
- " (in 'higher_order_suffixes.stan', line 35, column 20 to line 37, column 5)",
- " (in 'higher_order_suffixes.stan', line 40, column 8 to column 17)",
- " (in 'higher_order_suffixes.stan', line 39, column 25 to line 41, column 5)",
- " (in 'higher_order_suffixes.stan', line 44, column 8 to column 17)",
- " (in 'higher_order_suffixes.stan', line 43, column 24 to line 45, column 5)",
- " (in 'higher_order_suffixes.stan', line 48, column 8 to column 17)",
- " (in 'higher_order_suffixes.stan', line 47, column 23 to line 49, column 5)",
- " (in 'higher_order_suffixes.stan', line 32, column 8 to column 25)",
- " (in 'higher_order_suffixes.stan', line 31, column 35 to line 33, column 5)",
- " (in 'higher_order_suffixes.stan', line 28, column 8 to column 28)",
- " (in 'higher_order_suffixes.stan', line 27, column 48 to line 29, column 5)",
- " (in 'higher_order_suffixes.stan', line 24, column 8 to column 27)",
- " (in 'higher_order_suffixes.stan', line 23, column 38 to line 25, column 5)",
- " (in 'higher_order_suffixes.stan', line 17, column 66 to line 19, column 5)"};
+ " (in 'higher_order_suffixes.stan', line 45, column 8 to column 17)",
+ " (in 'higher_order_suffixes.stan', line 44, column 20 to line 46, column 5)",
+ " (in 'higher_order_suffixes.stan', line 49, column 8 to column 17)",
+ " (in 'higher_order_suffixes.stan', line 48, column 25 to line 50, column 5)",
+ " (in 'higher_order_suffixes.stan', line 53, column 8 to column 17)",
+ " (in 'higher_order_suffixes.stan', line 52, column 24 to line 54, column 5)",
+ " (in 'higher_order_suffixes.stan', line 57, column 8 to column 17)",
+ " (in 'higher_order_suffixes.stan', line 56, column 23 to line 58, column 5)",
+ " (in 'higher_order_suffixes.stan', line 41, column 8 to column 25)",
+ " (in 'higher_order_suffixes.stan', line 40, column 35 to line 42, column 5)",
+ " (in 'higher_order_suffixes.stan', line 37, column 8 to column 28)",
+ " (in 'higher_order_suffixes.stan', line 36, column 48 to line 38, column 5)",
+ " (in 'higher_order_suffixes.stan', line 33, column 8 to column 27)",
+ " (in 'higher_order_suffixes.stan', line 32, column 38 to line 34, column 5)",
+ " (in 'higher_order_suffixes.stan', line 18, column 8 to column 28)",
+ " (in 'higher_order_suffixes.stan', line 17, column 32 to line 19, column 5)",
+ " (in 'higher_order_suffixes.stan', line 26, column 8 to column 26)",
+ " (in 'higher_order_suffixes.stan', line 25, column 41 to line 27, column 5)",
+ " (in 'higher_order_suffixes.stan', line 22, column 8 to column 26)",
+ " (in 'higher_order_suffixes.stan', line 21, column 35 to line 23, column 5)"};
 
 template <bool propto__, typename T0__>
 stan::promote_args_t<T0__>
@@ -1795,7 +1804,7 @@ template <typename T0__, typename RNG>
 stan::promote_args_t<T0__>
 operator()(const T0__& x, RNG& base_rng__, std::ostream* pstream__)  const 
 {
-return ff_rng(x, pstream__);
+return ff_rng(x, base_rng__, pstream__);
 }
 };
 
@@ -1812,75 +1821,92 @@ stan::promote_args_t<T0__>
 operator()(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
            std::ostream* pstream__)  const 
 {
-return ff_lp(x, pstream__);
+return ff_lp<propto__>(x, lp__, lp_accum__, pstream__);
 }
 };
 
 template <typename T0__>
 stan::promote_args_t<T0__>
-f2_L35C9_impl__(const T0__& x, std::ostream* pstream__)  ;
+f2_L44C9_impl__(const T0__& x, std::ostream* pstream__)  ;
 template <bool propto__, typename T0__>
 stan::promote_args_t<T0__>
-f3_lpdf_L39C9_impl__(const T0__& x, std::ostream* pstream__)  ;struct f3_lpdf_L39C9_pfunctor__ {
+f3_lpdf_L48C9_impl__(const T0__& x, std::ostream* pstream__)  ;struct f3_lpdf_L48C9_pfunctor__ {
 template <bool propto__, typename T0__>
 stan::promote_args_t<T0__>
 operator()(const T0__& x, std::ostream* pstream__) const {
-return f3_lpdf_L39C9_impl__<propto__>(x, pstream__);
+return f3_lpdf_L48C9_impl__<propto__>(x, pstream__);
 }
 };
 
 template <typename T0__, typename RNG>
 stan::promote_args_t<T0__>
-f4_rng_L43C9_impl__(const T0__& x, RNG& base_rng__, std::ostream* pstream__)  ;
+f4_rng_L52C9_impl__(const T0__& x, RNG& base_rng__, std::ostream* pstream__)  ;
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
 stan::promote_args_t<T0__>
-f5_lp_L47C9_impl__(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
-                   std::ostream* pstream__)  ;struct f5_lp_L47C9_pfunctor__ {
+f5_lp_L56C9_impl__(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
+                   std::ostream* pstream__)  ;struct f5_lp_L56C9_pfunctor__ {
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
 stan::promote_args_t<T0__>
 operator()(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
            std::ostream* pstream__) const {
-return f5_lp_L47C9_impl__<propto__>(x, lp__, lp_accum__, pstream__);
+return f5_lp_L56C9_impl__<propto__>(x, lp__, lp_accum__, pstream__);
 }
 };
 
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
-stan::promote_args_t<typename T0__::captured_scalar_t__>
-foo_lp_L31C9_impl__(const T0__& bar_lp, T_lp__& lp__,
-                    T_lp_accum__& lp_accum__, std::ostream* pstream__)  ;struct foo_lp_L31C9_pfunctor__ {
+stan::promote_args_t<stan::return_type_t<T0__>>
+foo_lp_L40C9_impl__(const T0__& bar_lp, T_lp__& lp__,
+                    T_lp_accum__& lp_accum__, std::ostream* pstream__)  ;struct foo_lp_L40C9_pfunctor__ {
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
-stan::promote_args_t<typename T0__::captured_scalar_t__>
+stan::promote_args_t<stan::return_type_t<T0__>>
 operator()(const T0__& bar_lp, T_lp__& lp__, T_lp_accum__& lp_accum__,
            std::ostream* pstream__) const {
-return foo_lp_L31C9_impl__<propto__>(bar_lp, lp__, lp_accum__, pstream__);
+return foo_lp_L40C9_impl__<propto__>(bar_lp, lp__, lp_accum__, pstream__);
 }
 };
 
 template <bool propto__, typename T0__, typename T1__>
 stan::promote_args_t<T0__,
-typename T1__::captured_scalar_t__>
-foo_lpdf_L27C9_impl__(const T0__& zz, const T1__& bar_lpdf,
-                      std::ostream* pstream__)  ;struct foo_lpdf_L27C9_pfunctor__ {
+stan::return_type_t<T1__>>
+foo_lpdf_L36C9_impl__(const T0__& zz, const T1__& bar_lpdf,
+                      std::ostream* pstream__)  ;struct foo_lpdf_L36C9_pfunctor__ {
 template <bool propto__, typename T0__, typename T1__>
 stan::promote_args_t<T0__,
-typename T1__::captured_scalar_t__>
+stan::return_type_t<T1__>>
 operator()(const T0__& zz, const T1__& bar_lpdf, std::ostream* pstream__) const {
-return foo_lpdf_L27C9_impl__<propto__>(zz, bar_lpdf, pstream__);
+return foo_lpdf_L36C9_impl__<propto__>(zz, bar_lpdf, pstream__);
 }
 };
 
 template <typename T0__, typename RNG>
-stan::promote_args_t<typename T0__::captured_scalar_t__>
-foo_rng_L23C9_impl__(const T0__& bar_lpdf, RNG& base_rng__,
+stan::promote_args_t<stan::return_type_t<T0__>>
+foo_rng_L32C9_impl__(const T0__& bar_lpdf, RNG& base_rng__,
                      std::ostream* pstream__)  ;
-template <typename T0__, typename T1__, typename T2__>
+template <typename T0__>
+stan::promote_args_t<stan::return_type_t<T0__>>
+hof_L17C9_impl__(const T0__& s_lpdf, std::ostream* pstream__)  ;
+template <bool propto__, typename T0__, typename T1__, typename T_lp__,
+typename T_lp_accum__>
 void
-hof_L17C9_impl__(const T0__& s_rng, const T1__& s_lpdf, const T2__& s_lp,
-                 std::ostream* pstream__)  ;
+hof_lp_L25C9_impl__(const T0__& s_lp, const T1__& a, T_lp__& lp__,
+                    T_lp_accum__& lp_accum__, std::ostream* pstream__)  ;struct hof_lp_L25C9_pfunctor__ {
+template <bool propto__, typename T0__, typename T1__, typename T_lp__,
+typename T_lp_accum__>
+void
+operator()(const T0__& s_lp, const T1__& a, T_lp__& lp__,
+           T_lp_accum__& lp_accum__, std::ostream* pstream__) const {
+return hof_lp_L25C9_impl__<propto__>(s_lp, a, lp__, lp_accum__, pstream__);
+}
+};
+
+template <typename T0__, typename RNG>
+stan::promote_args_t<stan::return_type_t<T0__>>
+hof_rng_L21C9_impl__(const T0__& s_rng, RNG& base_rng__,
+                     std::ostream* pstream__)  ;
 template <bool propto__, typename T0__>
 stan::promote_args_t<T0__>
 ff_lpdf(const T0__& x, std::ostream* pstream__) {
@@ -1892,9 +1918,9 @@ ff_lpdf(const T0__& x, std::ostream* pstream__) {
     local_scalar_t__ s;
     s = DUMMY_VAR__;
     
-    current_statement__ = 13;
+    current_statement__ = 17;
     s = std_normal_lpdf<propto__>(0);
-    current_statement__ = 14;
+    current_statement__ = 18;
     return x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1916,9 +1942,9 @@ ff_rng(const T0__& x, RNG& base_rng__, std::ostream* pstream__) {
     local_scalar_t__ s;
     s = DUMMY_VAR__;
     
-    current_statement__ = 16;
+    current_statement__ = 20;
     s = std_normal_rng(base_rng__);
-    current_statement__ = 17;
+    current_statement__ = 21;
     return x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1940,9 +1966,9 @@ ff_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
     local_scalar_t__ s;
     s = DUMMY_VAR__;
     
-    current_statement__ = 19;
+    current_statement__ = 23;
     s = get_lp(lp__, lp_accum__);
-    current_statement__ = 20;
+    current_statement__ = 24;
     return x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1953,43 +1979,7 @@ ff_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
 }
 template <typename T0__>
 stan::promote_args_t<T0__>
-f2_L35C9_impl__(const T0__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
-  int current_statement__ = 0; 
-  static constexpr bool propto__ = true;
-  (void) propto__;
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 22;
-    return x;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-  }
-  
-}
-template <bool propto__, typename T0__>
-stan::promote_args_t<T0__>
-f3_lpdf_L39C9_impl__(const T0__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
-  int current_statement__ = 0; 
-  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
-  (void) DUMMY_VAR__;  // suppress unused var warning
-  try {
-    current_statement__ = 24;
-    return x;
-  } catch (const std::exception& e) {
-    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
-  }
-  
-}
-template <typename T0__, typename RNG>
-stan::promote_args_t<T0__>
-f4_rng_L43C9_impl__(const T0__& x, RNG& base_rng__, std::ostream* pstream__) {
+f2_L44C9_impl__(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -2006,11 +1996,9 @@ f4_rng_L43C9_impl__(const T0__& x, RNG& base_rng__, std::ostream* pstream__) {
   }
   
 }
-template <bool propto__, typename T0__, typename T_lp__,
-typename T_lp_accum__>
+template <bool propto__, typename T0__>
 stan::promote_args_t<T0__>
-f5_lp_L47C9_impl__(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
-                   std::ostream* pstream__) {
+f3_lpdf_L48C9_impl__(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -2025,17 +2013,55 @@ f5_lp_L47C9_impl__(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
   }
   
 }
-template <bool propto__, typename T0__, typename T_lp__,
-typename T_lp_accum__>
-stan::promote_args_t<typename T0__::captured_scalar_t__>
-foo_lp_L31C9_impl__(const T0__& bar_lp, T_lp__& lp__,
-                    T_lp_accum__& lp_accum__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<typename T0__::captured_scalar_t__>;
+template <typename T0__, typename RNG>
+stan::promote_args_t<T0__>
+f4_rng_L52C9_impl__(const T0__& x, RNG& base_rng__, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0; 
+  static constexpr bool propto__ = true;
+  (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 30;
+    return x;
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+template <bool propto__, typename T0__, typename T_lp__,
+typename T_lp_accum__>
+stan::promote_args_t<T0__>
+f5_lp_L56C9_impl__(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
+                   std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
+  int current_statement__ = 0; 
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
+  try {
+    current_statement__ = 32;
+    return x;
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+template <bool propto__, typename T0__, typename T_lp__,
+typename T_lp_accum__>
+stan::promote_args_t<stan::return_type_t<T0__>>
+foo_lp_L40C9_impl__(const T0__& bar_lp, T_lp__& lp__,
+                    T_lp_accum__& lp_accum__, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::return_type_t<T0__>>;
+  int current_statement__ = 0; 
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
+  try {
+    current_statement__ = 34;
     return bar_lp.template operator()<propto__>(lp__, lp_accum__, pstream__, 
              1);
   } catch (const std::exception& e) {
@@ -2047,16 +2073,16 @@ foo_lp_L31C9_impl__(const T0__& bar_lp, T_lp__& lp__,
 }
 template <bool propto__, typename T0__, typename T1__>
 stan::promote_args_t<T0__,
-typename T1__::captured_scalar_t__>
-foo_lpdf_L27C9_impl__(const T0__& zz, const T1__& bar_lpdf,
+stan::return_type_t<T1__>>
+foo_lpdf_L36C9_impl__(const T0__& zz, const T1__& bar_lpdf,
                       std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__,
-          typename T1__::captured_scalar_t__>;
+          stan::return_type_t<T1__>>;
   int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 32;
+    current_statement__ = 36;
     return bar_lpdf.template operator()<propto__>(pstream__, 1);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2066,17 +2092,17 @@ foo_lpdf_L27C9_impl__(const T0__& zz, const T1__& bar_lpdf,
   
 }
 template <typename T0__, typename RNG>
-stan::promote_args_t<typename T0__::captured_scalar_t__>
-foo_rng_L23C9_impl__(const T0__& bar_lpdf, RNG& base_rng__,
+stan::promote_args_t<stan::return_type_t<T0__>>
+foo_rng_L32C9_impl__(const T0__& bar_lpdf, RNG& base_rng__,
                      std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<typename T0__::captured_scalar_t__>;
+  using local_scalar_t__ = stan::promote_args_t<stan::return_type_t<T0__>>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 34;
+    current_statement__ = 38;
     return bar_lpdf.template operator()<false>(pstream__, 1);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2085,20 +2111,59 @@ foo_rng_L23C9_impl__(const T0__& bar_lpdf, RNG& base_rng__,
   }
   
 }
-template <typename T0__, typename T1__, typename T2__>
-void
-hof_L17C9_impl__(const T0__& s_rng, const T1__& s_lpdf, const T2__& s_lp,
-                 std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<typename T0__::captured_scalar_t__,
-          typename T1__::captured_scalar_t__,
-          typename T2__::captured_scalar_t__>;
+template <typename T0__>
+stan::promote_args_t<stan::return_type_t<T0__>>
+hof_L17C9_impl__(const T0__& s_lpdf, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::return_type_t<T0__>>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    
+    current_statement__ = 40;
+    return s_lpdf.template operator()<false>(pstream__, 1.0);
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+template <bool propto__, typename T0__, typename T1__, typename T_lp__,
+typename T_lp_accum__>
+void
+hof_lp_L25C9_impl__(const T0__& s_lp, const T1__& a, T_lp__& lp__,
+                    T_lp_accum__& lp_accum__, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::return_type_t<T0__>,
+          T1__>;
+  int current_statement__ = 0; 
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
+  try {
+    current_statement__ = 42;
+    lp_accum__.add(
+      s_lp.template operator()<propto__>(lp__, lp_accum__, pstream__, a));
+  } catch (const std::exception& e) {
+    stan::lang::rethrow_located(e, locations_array__[current_statement__]);
+      // Next line prevents compiler griping about no return
+      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
+  }
+  
+}
+template <typename T0__, typename RNG>
+stan::promote_args_t<stan::return_type_t<T0__>>
+hof_rng_L21C9_impl__(const T0__& s_rng, RNG& base_rng__,
+                     std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::return_type_t<T0__>>;
+  int current_statement__ = 0; 
+  static constexpr bool propto__ = true;
+  (void) propto__;
+  local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
+  (void) DUMMY_VAR__;  // suppress unused var warning
+  try {
+    current_statement__ = 44;
+    return s_rng(base_rng__, pstream__, 1.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -2109,6 +2174,7 @@ hof_L17C9_impl__(const T0__& s_rng, const T1__& s_lpdf, const T2__& s_lp,
 class higher_order_suffixes_model final : public model_base_crtp<higher_order_suffixes_model> {
 
  private:
+  double a;
   double z; 
   
  
@@ -2145,40 +2211,51 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
       current_statement__ = 1;
       auto hof = from_lambda([](const auto&... s) { return hof_L17C9_impl__(s...); }
                    );
-      current_statement__ = 11;
-      hof(pstream__, rng_from_lambda(ff_rng_functor__()),
-        lpdf_from_lambda<false>(ff_lpdf_functor__()),
-        lp_from_lambda<propto__>(ff_lp_functor__()));
       
       current_statement__ = 2;
-      auto foo_rng = rng_from_lambda([](const auto& s0,
-                       auto& rng, auto msgs) { return foo_rng_L23C9_impl__(s0, rng, msgs); }
+      auto hof_rng = rng_from_lambda([](const auto& s0,
+                       auto& rng, auto msgs) { return hof_rng_L21C9_impl__(s0, rng, msgs); }
                        );
       
       current_statement__ = 3;
-      auto foo_lpdf = lpdf_from_lambda<propto__>(foo_lpdf_L27C9_pfunctor__());
+      auto hof_lp = lp_from_lambda<propto__>(hof_lp_L25C9_pfunctor__());
+      current_statement__ = 14;
+      a = std::numeric_limits<double>::quiet_NaN();
+      
+      current_statement__ = 14;
+      a = hof(pstream__, lpdf_from_lambda<false>(ff_lpdf_functor__()));
+      current_statement__ = 15;
+      a = hof_rng(base_rng__, pstream__, rng_from_lambda(ff_rng_functor__()));
       
       current_statement__ = 4;
-      auto foo_lp = lp_from_lambda<propto__>(foo_lp_L31C9_pfunctor__());
+      auto foo_rng = rng_from_lambda([](const auto& s0,
+                       auto& rng, auto msgs) { return foo_rng_L32C9_impl__(s0, rng, msgs); }
+                       );
       
       current_statement__ = 5;
-      auto f2 = from_lambda([](const auto&... s) { return f2_L35C9_impl__(s...); }
-                  );
+      auto foo_lpdf = lpdf_from_lambda<propto__>(foo_lpdf_L36C9_pfunctor__());
       
       current_statement__ = 6;
-      auto f3_lpdf = lpdf_from_lambda<propto__>(f3_lpdf_L39C9_pfunctor__());
+      auto foo_lp = lp_from_lambda<propto__>(foo_lp_L40C9_pfunctor__());
       
       current_statement__ = 7;
-      auto f4_rng = rng_from_lambda([](const auto& s0,
-                      auto& rng, auto msgs) { return f4_rng_L43C9_impl__(s0, rng, msgs); }
-                      );
+      auto f2 = from_lambda([](const auto&... s) { return f2_L44C9_impl__(s...); }
+                  );
       
       current_statement__ = 8;
-      auto f5_lp = lp_from_lambda<propto__>(f5_lp_L47C9_pfunctor__());
-      current_statement__ = 12;
+      auto f3_lpdf = lpdf_from_lambda<propto__>(f3_lpdf_L48C9_pfunctor__());
+      
+      current_statement__ = 9;
+      auto f4_rng = rng_from_lambda([](const auto& s0,
+                      auto& rng, auto msgs) { return f4_rng_L52C9_impl__(s0, rng, msgs); }
+                      );
+      
+      current_statement__ = 10;
+      auto f5_lp = lp_from_lambda<propto__>(f5_lp_L56C9_pfunctor__());
+      current_statement__ = 16;
       z = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 12;
+      current_statement__ = 16;
       z = foo_rng(base_rng__, pstream__, 
             f3_lpdf.template with_propto<false>());
     } catch (const std::exception& e) {
@@ -2214,38 +2291,49 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
                    );
       
       current_statement__ = 2;
-      auto foo_rng = rng_from_lambda([](const auto& s0,
-                       auto& rng, auto msgs) { return foo_rng_L23C9_impl__(s0, rng, msgs); }
+      auto hof_rng = rng_from_lambda([](const auto& s0,
+                       auto& rng, auto msgs) { return hof_rng_L21C9_impl__(s0, rng, msgs); }
                        );
       
       current_statement__ = 3;
-      auto foo_lpdf = lpdf_from_lambda<propto__>(foo_lpdf_L27C9_pfunctor__());
+      auto hof_lp = lp_from_lambda<propto__>(hof_lp_L25C9_pfunctor__());
       
       current_statement__ = 4;
-      auto foo_lp = lp_from_lambda<propto__>(foo_lp_L31C9_pfunctor__());
+      auto foo_rng = rng_from_lambda([](const auto& s0,
+                       auto& rng, auto msgs) { return foo_rng_L32C9_impl__(s0, rng, msgs); }
+                       );
       
       current_statement__ = 5;
-      auto f2 = from_lambda([](const auto&... s) { return f2_L35C9_impl__(s...); }
-                  );
+      auto foo_lpdf = lpdf_from_lambda<propto__>(foo_lpdf_L36C9_pfunctor__());
       
       current_statement__ = 6;
-      auto f3_lpdf = lpdf_from_lambda<propto__>(f3_lpdf_L39C9_pfunctor__());
+      auto foo_lp = lp_from_lambda<propto__>(foo_lp_L40C9_pfunctor__());
       
       current_statement__ = 7;
-      auto f4_rng = rng_from_lambda([](const auto& s0,
-                      auto& rng, auto msgs) { return f4_rng_L43C9_impl__(s0, rng, msgs); }
-                      );
+      auto f2 = from_lambda([](const auto&... s) { return f2_L44C9_impl__(s...); }
+                  );
       
       current_statement__ = 8;
-      auto f5_lp = lp_from_lambda<propto__>(f5_lp_L47C9_pfunctor__());
+      auto f3_lpdf = lpdf_from_lambda<propto__>(f3_lpdf_L48C9_pfunctor__());
+      
+      current_statement__ = 9;
+      auto f4_rng = rng_from_lambda([](const auto& s0,
+                      auto& rng, auto msgs) { return f4_rng_L52C9_impl__(s0, rng, msgs); }
+                      );
+      
+      current_statement__ = 10;
+      auto f5_lp = lp_from_lambda<propto__>(f5_lp_L56C9_pfunctor__());
       local_scalar_t__ s;
       s = DUMMY_VAR__;
       
-      current_statement__ = 9;
+      current_statement__ = 11;
       s = foo_lp.template operator()<propto__>(lp__, lp_accum__, pstream__, 
             f5_lp);
+      current_statement__ = 12;
+      hof_lp.template operator()<propto__>(lp__, lp_accum__, pstream__, 
+        lp_from_lambda<propto__>(ff_lp_functor__()), s);
       {
-        current_statement__ = 10;
+        current_statement__ = 13;
         lp_accum__.add(
           foo_lpdf.template operator()<propto__>(pstream__, 1,
             f3_lpdf.template with_propto<propto__>()));
@@ -2290,30 +2378,38 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
                    );
       
       current_statement__ = 2;
-      auto foo_rng = rng_from_lambda([](const auto& s0,
-                       auto& rng, auto msgs) { return foo_rng_L23C9_impl__(s0, rng, msgs); }
+      auto hof_rng = rng_from_lambda([](const auto& s0,
+                       auto& rng, auto msgs) { return hof_rng_L21C9_impl__(s0, rng, msgs); }
                        );
       
       current_statement__ = 3;
-      auto foo_lpdf = lpdf_from_lambda<propto__>(foo_lpdf_L27C9_pfunctor__());
+      auto hof_lp = lp_from_lambda<propto__>(hof_lp_L25C9_pfunctor__());
       
       current_statement__ = 4;
-      auto foo_lp = lp_from_lambda<propto__>(foo_lp_L31C9_pfunctor__());
+      auto foo_rng = rng_from_lambda([](const auto& s0,
+                       auto& rng, auto msgs) { return foo_rng_L32C9_impl__(s0, rng, msgs); }
+                       );
       
       current_statement__ = 5;
-      auto f2 = from_lambda([](const auto&... s) { return f2_L35C9_impl__(s...); }
-                  );
+      auto foo_lpdf = lpdf_from_lambda<propto__>(foo_lpdf_L36C9_pfunctor__());
       
       current_statement__ = 6;
-      auto f3_lpdf = lpdf_from_lambda<propto__>(f3_lpdf_L39C9_pfunctor__());
+      auto foo_lp = lp_from_lambda<propto__>(foo_lp_L40C9_pfunctor__());
       
       current_statement__ = 7;
-      auto f4_rng = rng_from_lambda([](const auto& s0,
-                      auto& rng, auto msgs) { return f4_rng_L43C9_impl__(s0, rng, msgs); }
-                      );
+      auto f2 = from_lambda([](const auto&... s) { return f2_L44C9_impl__(s...); }
+                  );
       
       current_statement__ = 8;
-      auto f5_lp = lp_from_lambda<propto__>(f5_lp_L47C9_pfunctor__());
+      auto f3_lpdf = lpdf_from_lambda<propto__>(f3_lpdf_L48C9_pfunctor__());
+      
+      current_statement__ = 9;
+      auto f4_rng = rng_from_lambda([](const auto& s0,
+                      auto& rng, auto msgs) { return f4_rng_L52C9_impl__(s0, rng, msgs); }
+                      );
+      
+      current_statement__ = 10;
+      auto f5_lp = lp_from_lambda<propto__>(f5_lp_L56C9_pfunctor__());
       double s;
       s = std::numeric_limits<double>::quiet_NaN();
       
@@ -2321,9 +2417,12 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
             primitive_value(emit_generated_quantities__)))) {
         return ;
       } 
-      current_statement__ = 9;
+      current_statement__ = 11;
       s = foo_lp.template operator()<propto__>(lp__, lp_accum__, pstream__, 
             f5_lp);
+      current_statement__ = 12;
+      hof_lp.template operator()<propto__>(lp__, lp_accum__, pstream__, 
+        lp_from_lambda<propto__>(ff_lp_functor__()), s);
       if (emit_transformed_parameters__) {
         vars__.emplace_back(s);
       } 
@@ -2357,30 +2456,38 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
                    );
       
       current_statement__ = 2;
-      auto foo_rng = rng_from_lambda([](const auto& s0,
-                       auto& rng, auto msgs) { return foo_rng_L23C9_impl__(s0, rng, msgs); }
+      auto hof_rng = rng_from_lambda([](const auto& s0,
+                       auto& rng, auto msgs) { return hof_rng_L21C9_impl__(s0, rng, msgs); }
                        );
       
       current_statement__ = 3;
-      auto foo_lpdf = lpdf_from_lambda<propto__>(foo_lpdf_L27C9_pfunctor__());
+      auto hof_lp = lp_from_lambda<propto__>(hof_lp_L25C9_pfunctor__());
       
       current_statement__ = 4;
-      auto foo_lp = lp_from_lambda<propto__>(foo_lp_L31C9_pfunctor__());
+      auto foo_rng = rng_from_lambda([](const auto& s0,
+                       auto& rng, auto msgs) { return foo_rng_L32C9_impl__(s0, rng, msgs); }
+                       );
       
       current_statement__ = 5;
-      auto f2 = from_lambda([](const auto&... s) { return f2_L35C9_impl__(s...); }
-                  );
+      auto foo_lpdf = lpdf_from_lambda<propto__>(foo_lpdf_L36C9_pfunctor__());
       
       current_statement__ = 6;
-      auto f3_lpdf = lpdf_from_lambda<propto__>(f3_lpdf_L39C9_pfunctor__());
+      auto foo_lp = lp_from_lambda<propto__>(foo_lp_L40C9_pfunctor__());
       
       current_statement__ = 7;
-      auto f4_rng = rng_from_lambda([](const auto& s0,
-                      auto& rng, auto msgs) { return f4_rng_L43C9_impl__(s0, rng, msgs); }
-                      );
+      auto f2 = from_lambda([](const auto&... s) { return f2_L44C9_impl__(s...); }
+                  );
       
       current_statement__ = 8;
-      auto f5_lp = lp_from_lambda<propto__>(f5_lp_L47C9_pfunctor__());
+      auto f3_lpdf = lpdf_from_lambda<propto__>(f3_lpdf_L48C9_pfunctor__());
+      
+      current_statement__ = 9;
+      auto f4_rng = rng_from_lambda([](const auto& s0,
+                      auto& rng, auto msgs) { return f4_rng_L52C9_impl__(s0, rng, msgs); }
+                      );
+      
+      current_statement__ = 10;
+      auto f5_lp = lp_from_lambda<propto__>(f5_lp_L56C9_pfunctor__());
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       

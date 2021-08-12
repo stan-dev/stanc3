@@ -2720,7 +2720,7 @@ T1__>
 operator()(const T0__& mu, const T1__& sigma, RNG& base_rng__,
            std::ostream* pstream__)  const 
 {
-return foo_rng(mu, sigma, pstream__);
+return foo_rng(mu, sigma, base_rng__, pstream__);
 }
 };
 
@@ -2737,7 +2737,7 @@ void
 operator()(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
            std::ostream* pstream__)  const 
 {
-return unit_normal_lp(u, pstream__);
+return unit_normal_lp<propto__>(u, lp__, lp_accum__, pstream__);
 }
 };
 
@@ -2789,7 +2789,7 @@ stan::promote_args_t<T0__>
 operator()(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
            std::ostream* pstream__)  const 
 {
-return foo_lp(x, pstream__);
+return foo_lp<propto__>(x, lp__, lp_accum__, pstream__);
 }
 };
 
@@ -2881,7 +2881,8 @@ operator()(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
            const T4__& x5, const T5__& x6, T_lp__& lp__,
            T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
 {
-return foo_five_args_lp(x1, x2, x3, x4, x5, x6, pstream__);
+return foo_five_args_lp<propto__>(x1, x2, x3, x4, x5, x6, lp__, lp_accum__,
+         pstream__);
 }
 };
 
@@ -21243,7 +21244,7 @@ double
 operator()(const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
            std::ostream* pstream__)  const 
 {
-return foo4_lp(y, pstream__);
+return foo4_lp<propto__>(y, lp__, lp_accum__, pstream__);
 }
 };
 
@@ -21286,7 +21287,7 @@ stan::promote_args_t<T0__>
 operator()(const T0__& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
            std::ostream* pstream__)  const 
 {
-return foo5_lp(y, pstream__);
+return foo5_lp<propto__>(y, lp__, lp_accum__, pstream__);
 }
 };
 

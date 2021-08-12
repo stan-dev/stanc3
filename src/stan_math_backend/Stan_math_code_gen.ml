@@ -88,7 +88,7 @@ let return_arg_types (args : Program.fun_arg_decl) =
   List.mapi args ~f:(fun i ((_, _, ut) as a) ->
       if not (needs_template a) then None
       else if UnsizedType.is_fun_type ut then
-        Some (sprintf "typename %s%d__::captured_scalar_t__" prefix i)
+        Some (sprintf "stan::return_type_t<%s%d__>" prefix i)
       else if UnsizedType.is_eigen_type ut then
         Some (sprintf "stan::value_type_t<%s%d__>" prefix i)
       else Some (sprintf "%s%d__" prefix i) )
@@ -336,12 +336,21 @@ let pp_forward_decl funs_used_in_reduce_sum ppf
       if fdbody <> None then (
         if Set.mem funs_used_in_reduce_sum fdname then
           pp_rs_functor ppf (fdrt, fdsuffix, fdname, fdargs) ;
+        let extra =
+          match fdsuffix with
+          | Fun_kind.FnTarget -> ["lp__"; "lp_accum__"]
+          | FnRng -> ["base_rng__"]
+          | FnLpdf _ | FnPlain -> []
+        in
         pf ppf "@,@,struct %s%s {@,%a const @,{@,return %a;@,}@,};@," fdname
           functor_suffix pp_sig
           (fdrt, "operator()", fdargs)
           pp_call_str
-          ( (if fdsuffix = FnLpdf () then fdname ^ "<propto__>" else fdname)
-          , List.map ~f:(fun (_, name, _) -> name) fdargs @ ["pstream__"] ) )
+          ( ( match fdsuffix with
+            | FnLpdf () | FnTarget -> fdname ^ "<propto__>"
+            | FnRng | FnPlain -> fdname )
+          , List.map ~f:(fun (_, name, _) -> name) fdargs
+            @ extra @ ["pstream__"] ) )
   | Some captures -> (
       let all_args = Program.captures_to_args captures @ fdargs in
       pf ppf "%a ;" pp_sig (fdrt, fdname ^ "_impl__", all_args) ;

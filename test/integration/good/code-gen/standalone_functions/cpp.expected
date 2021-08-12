@@ -128,7 +128,7 @@ void
 operator()(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
            std::ostream* pstream__)  const 
 {
-return test_lp(a, pstream__);
+return test_lp<propto__>(a, lp__, lp_accum__, pstream__);
 }
 };
 
@@ -141,7 +141,7 @@ template <typename T0__, typename RNG>
 stan::promote_args_t<T0__>
 operator()(const T0__& a, RNG& base_rng__, std::ostream* pstream__)  const 
 {
-return test_rng(a, pstream__);
+return test_rng(a, base_rng__, pstream__);
 }
 };
 

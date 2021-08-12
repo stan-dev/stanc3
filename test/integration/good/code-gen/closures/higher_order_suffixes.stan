@@ -14,10 +14,19 @@ functions {
 }
 transformed data {
     function
-    void hof(real(real) s_rng,real(real) s_lpdf, real(real) s_lp) {
-        // nothing
+    real hof(real(real) s_lpdf) {
+        return s_lpdf(1.0|);
     }
-    hof(ff_rng, ff_lpdf, ff_lp);
+    function
+    real hof_rng(real(real) s_rng) {
+        return s_rng(1.0);
+    }
+    function
+    void hof_lp(real(real) s_lp, real a) {
+        target += s_lp(a);
+    }
+    real a = hof(ff_lpdf);
+    a = hof_rng(ff_rng);
 
     function
     real foo_rng(real(real) bar_lpdf) {
@@ -51,6 +60,7 @@ transformed data {
 }
 transformed parameters {
     real s = foo_lp(f5_lp);
+    hof_lp(ff_lp, s);
 }
 model {
     target += foo_lupdf(1|f3_lupdf);
