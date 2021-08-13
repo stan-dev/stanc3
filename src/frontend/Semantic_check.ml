@@ -865,42 +865,44 @@ let rec semantic_check_sizedtype cf = function
 
 (* -- Transformations ------------------------------------------------------- *)
 let semantic_check_transformation cf ut = function
-  | Program.Identity -> Validate.ok Program.Identity
+  | Transformation.Identity -> Validate.ok Transformation.Identity
   | Lower e ->
       semantic_check_expression_of_scalar_or_type cf ut e "Lower bound"
-      |> Validate.map ~f:(fun ue -> Program.Lower ue)
+      |> Validate.map ~f:(fun ue -> Transformation.Lower ue)
   | Upper e ->
       semantic_check_expression_of_scalar_or_type cf ut e "Upper bound"
-      |> Validate.map ~f:(fun ue -> Program.Upper ue)
+      |> Validate.map ~f:(fun ue -> Transformation.Upper ue)
   | LowerUpper (e1, e2) ->
       let ue1 =
         semantic_check_expression_of_scalar_or_type cf ut e1 "Lower bound"
       and ue2 =
         semantic_check_expression_of_scalar_or_type cf ut e2 "Upper bound"
       in
-      Validate.liftA2 (fun ue1 ue2 -> Program.LowerUpper (ue1, ue2)) ue1 ue2
+      Validate.liftA2
+        (fun ue1 ue2 -> Transformation.LowerUpper (ue1, ue2))
+        ue1 ue2
   | Offset e ->
       semantic_check_expression_of_scalar_or_type cf ut e "Offset"
-      |> Validate.map ~f:(fun ue -> Program.Offset ue)
+      |> Validate.map ~f:(fun ue -> Transformation.Offset ue)
   | Multiplier e ->
       semantic_check_expression_of_scalar_or_type cf ut e "Multiplier"
-      |> Validate.map ~f:(fun ue -> Program.Multiplier ue)
+      |> Validate.map ~f:(fun ue -> Transformation.Multiplier ue)
   | OffsetMultiplier (e1, e2) ->
       let ue1 = semantic_check_expression_of_scalar_or_type cf ut e1 "Offset"
       and ue2 =
         semantic_check_expression_of_scalar_or_type cf ut e2 "Multiplier"
       in
       Validate.liftA2
-        (fun ue1 ue2 -> Program.OffsetMultiplier (ue1, ue2))
+        (fun ue1 ue2 -> Transformation.OffsetMultiplier (ue1, ue2))
         ue1 ue2
-  | Ordered -> Validate.ok Program.Ordered
-  | PositiveOrdered -> Validate.ok Program.PositiveOrdered
-  | Simplex -> Validate.ok Program.Simplex
-  | UnitVector -> Validate.ok Program.UnitVector
-  | CholeskyCorr -> Validate.ok Program.CholeskyCorr
-  | CholeskyCov -> Validate.ok Program.CholeskyCov
-  | Correlation -> Validate.ok Program.Correlation
-  | Covariance -> Validate.ok Program.Covariance
+  | Ordered -> Validate.ok Transformation.Ordered
+  | PositiveOrdered -> Validate.ok Transformation.PositiveOrdered
+  | Simplex -> Validate.ok Transformation.Simplex
+  | UnitVector -> Validate.ok Transformation.UnitVector
+  | CholeskyCorr -> Validate.ok Transformation.CholeskyCorr
+  | CholeskyCov -> Validate.ok Transformation.CholeskyCov
+  | Correlation -> Validate.ok Transformation.Correlation
+  | Covariance -> Validate.ok Transformation.Covariance
 
 (* -- Printables ------------------------------------------------------------ *)
 
@@ -1522,7 +1524,7 @@ and semantic_check_var_decl_bounds ~loc is_global sized_ty trans =
   let is_real {emeta; _} = emeta.type_ = UReal in
   let is_valid_transformation =
     match trans with
-    | Program.Lower e -> is_real e
+    | Transformation.Lower e -> is_real e
     | Upper e -> is_real e
     | LowerUpper (e1, e2) -> is_real e1 || is_real e2
     | _ -> false

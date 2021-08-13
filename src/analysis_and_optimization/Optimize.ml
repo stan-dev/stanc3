@@ -695,13 +695,8 @@ and accum_any pred b e = b || expr_any pred e
 let can_side_effect_top_expr (e : Expr.Typed.t) =
   match e.pattern with
   | FunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget)), _) -> true
-  | FunApp
-      ( CompilerInternal
-          ( FnReadParam _ | FnReadData | FnWriteParam | FnConstrain _
-          | FnValidateSize | FnValidateSizeSimplex | FnValidateSizeUnitVector
-          | FnUnconstrain _ )
-      , _ ) ->
-      true
+  | FunApp (CompilerInternal internal_fn, _) ->
+      Internal_fun.can_side_effect internal_fn
   | _ -> false
 
 let cannot_duplicate_expr (e : Expr.Typed.t) =
@@ -1256,7 +1251,7 @@ let optimization_suite ?(settings = all_optimizations) mir =
       (* Book: Loop simplification *)
     ; (static_loop_unrolling, settings.static_loop_unrolling)
       (*Remove decls immediately assigned to*)
-      ; (allow_uninitialized_decls, settings.allow_uninitialized_decls)
+    ; (allow_uninitialized_decls, settings.allow_uninitialized_decls)
       (* Book: Dead-code elimination *)
       (* Matthijs: Everything < Dead-code elimination *)
     ; (dead_code_elimination, settings.dead_code_elimination)
