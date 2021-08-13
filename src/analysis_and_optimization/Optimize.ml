@@ -1256,7 +1256,7 @@ let optimization_suite ?(settings = all_optimizations) mir =
       (* Book: Loop simplification *)
     ; (static_loop_unrolling, settings.static_loop_unrolling)
       (*Remove decls immediately assigned to*)
-      ; (allow_uninitialized_decls, settings.allow_uninitialized_decls)
+    ; (allow_uninitialized_decls, settings.allow_uninitialized_decls)
       (* Book: Dead-code elimination *)
       (* Matthijs: Everything < Dead-code elimination *)
     ; (dead_code_elimination, settings.dead_code_elimination)
