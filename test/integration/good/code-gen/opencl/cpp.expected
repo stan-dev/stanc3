@@ -3497,8 +3497,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
     (void) propto__;
     double lp__ = 0.0;
@@ -3553,24 +3553,12 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       double transformed_param_real;
       transformed_param_real = std::numeric_limits<double>::quiet_NaN();
       
-      vars__.emplace_back(p_real);
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_real_array[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
-          vars__.emplace_back(
-            rvalue(p_matrix, "p_matrix",
-              index_uni(sym2__), index_uni(sym1__)));
-        }
-      }
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_vector[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_row_vector[(sym1__ - 1)]);
-      }
-      vars__.emplace_back(y_p);
+      out__.write(p_real);
+      out__.write(p_real_array);
+      out__.write(p_matrix);
+      out__.write(p_vector);
+      out__.write(p_row_vector);
+      out__.write(y_p);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -6045,7 +6033,7 @@ class distributions_model final : public model_base_crtp<distributions_model> {
                                  to_matrix_cl(p_row_vector),
                                  to_matrix_cl(p_row_vector));
       if (emit_transformed_parameters__) {
-        vars__.emplace_back(transformed_param_real);
+        out__.write(transformed_param_real);
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -6060,115 +6048,67 @@ class distributions_model final : public model_base_crtp<distributions_model> {
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      double p_real;
-      p_real = std::numeric_limits<double>::quiet_NaN();
+      local_scalar_t__ p_real;
+      p_real = DUMMY_VAR__;
       
-      current_statement__ = 1;
-      p_real = context__.vals_r("p_real")[(1 - 1)];
-      std::vector<double> p_real_array;
-      p_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
+      p_real = in__.read<local_scalar_t__>();
+      out__.write(p_real);
+      std::vector<local_scalar_t__> p_real_array;
+      p_real_array = std::vector<local_scalar_t__>(d_int, DUMMY_VAR__);
       
-      
-      current_statement__ = 2;
-      p_real_array = context__.vals_r("p_real_array");
-      Eigen::Matrix<double, -1, -1> p_matrix;
-      p_matrix = Eigen::Matrix<double, -1, -1>(d_int, d_int);
-      stan::math::fill(p_matrix, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> p_matrix_flat__;
-        current_statement__ = 3;
-        p_matrix_flat__ = context__.vals_r("p_matrix");
-        current_statement__ = 3;
-        pos__ = 1;
-        current_statement__ = 3;
-        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-          current_statement__ = 3;
-          for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
-            current_statement__ = 3;
-            assign(p_matrix, p_matrix_flat__[(pos__ - 1)],
-              "assigning variable p_matrix", index_uni(sym2__),
-                                               index_uni(sym1__));
-            current_statement__ = 3;
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
-      Eigen::Matrix<double, -1, 1> p_vector;
-      p_vector = Eigen::Matrix<double, -1, 1>(d_int);
-      stan::math::fill(p_vector, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> p_vector_flat__;
-        current_statement__ = 4;
-        p_vector_flat__ = context__.vals_r("p_vector");
-        current_statement__ = 4;
-        pos__ = 1;
-        current_statement__ = 4;
-        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-          current_statement__ = 4;
-          assign(p_vector, p_vector_flat__[(pos__ - 1)],
-            "assigning variable p_vector", index_uni(sym1__));
-          current_statement__ = 4;
-          pos__ = (pos__ + 1);
-        }
-      }
-      Eigen::Matrix<double, 1, -1> p_row_vector;
-      p_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
-      stan::math::fill(p_row_vector, std::numeric_limits<double>::quiet_NaN());
-      
-      
-      {
-        std::vector<local_scalar_t__> p_row_vector_flat__;
-        current_statement__ = 5;
-        p_row_vector_flat__ = context__.vals_r("p_row_vector");
-        current_statement__ = 5;
-        pos__ = 1;
-        current_statement__ = 5;
-        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-          current_statement__ = 5;
-          assign(p_row_vector, p_row_vector_flat__[(pos__ - 1)],
-            "assigning variable p_row_vector", index_uni(sym1__));
-          current_statement__ = 5;
-          pos__ = (pos__ + 1);
-        }
-      }
-      double y_p;
-      y_p = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 6;
-      y_p = context__.vals_r("y_p")[(1 - 1)];
-      vars__.emplace_back(p_real);
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_real_array[(sym1__ - 1)]);
+        p_real_array[(sym1__ - 1)] = in__.read<local_scalar_t__>();
       }
+      out__.write(p_real_array);
+      Eigen::Matrix<local_scalar_t__, -1, -1> p_matrix;
+      p_matrix = Eigen::Matrix<local_scalar_t__, -1, -1>(d_int, d_int);
+      stan::math::fill(p_matrix, DUMMY_VAR__);
+      
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
-          vars__.emplace_back(
-            rvalue(p_matrix, "p_matrix",
-              index_uni(sym2__), index_uni(sym1__)));
+          assign(p_matrix, in__.read<local_scalar_t__>(),
+            "assigning variable p_matrix", index_uni(sym2__),
+                                             index_uni(sym1__));
         }
       }
+      out__.write(p_matrix);
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_vector;
+      p_vector = Eigen::Matrix<local_scalar_t__, -1, 1>(d_int);
+      stan::math::fill(p_vector, DUMMY_VAR__);
+      
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_vector[(sym1__ - 1)]);
+        assign(p_vector, in__.read<local_scalar_t__>(),
+          "assigning variable p_vector", index_uni(sym1__));
       }
+      out__.write(p_vector);
+      Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vector;
+      p_row_vector = Eigen::Matrix<local_scalar_t__, 1, -1>(d_int);
+      stan::math::fill(p_row_vector, DUMMY_VAR__);
+      
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_row_vector[(sym1__ - 1)]);
+        assign(p_row_vector, in__.read<local_scalar_t__>(),
+          "assigning variable p_row_vector", index_uni(sym1__));
       }
-      vars__.emplace_back(y_p);
+      out__.write(p_row_vector);
+      local_scalar_t__ y_p;
+      y_p = DUMMY_VAR__;
+      
+      y_p = in__.read<local_scalar_t__>();
+      out__.write(y_p);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -6300,8 +6240,13 @@ class distributions_model final : public model_base_crtp<distributions_model> {
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      std::vector<double> vars_vec;
-      vars_vec.reserve(vars.size());
+      const size_t num_params__ = 
+  (((((1 + d_int) + (d_int * d_int)) + d_int) + d_int) + 1);
+      const size_t num_transformed = 1;
+      const size_t num_gen_quantities = 0;
+      std::vector<double> vars_vec(num_params__
+       + (emit_transformed_parameters * num_transformed)
+       + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
       write_array_impl(base_rng, params_r, params_i, vars_vec,
           emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -6316,8 +6261,14 @@ class distributions_model final : public model_base_crtp<distributions_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      write_array_impl(base_rng, params_r, params_i, vars,
-       emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_params__ = 
+  (((((1 + d_int) + (d_int * d_int)) + d_int) + d_int) + 1);
+      const size_t num_transformed = 1;
+      const size_t num_gen_quantities = 0;
+      vars.resize(num_params__
+        + (emit_transformed_parameters * num_transformed)
+        + (emit_generated_quantities * num_gen_quantities));
+      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -6338,20 +6289,33 @@ class distributions_model final : public model_base_crtp<distributions_model> {
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
                          std::ostream* pstream = nullptr) const final {
-      std::vector<double> params_r_vec;
-      params_r_vec.reserve(params_r.size());
+      std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
         params_r_vec.data(), params_r_vec.size());
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    const std::array<std::string, 7> names__ = std::array<std::string, 7>{"p_real",
+      "p_real_array", "p_matrix", "p_vector", "p_row_vector", "y_p",
+      "transformed_param_real"};
+    
+     std::vector<double> params_r_flat__;
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 using stan_model = distributions_model_namespace::distributions_model;
@@ -6700,8 +6664,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
     (void) propto__;
     double lp__ = 0.0;
@@ -6756,24 +6720,12 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       double transformed_param_real;
       transformed_param_real = std::numeric_limits<double>::quiet_NaN();
       
-      vars__.emplace_back(p_real);
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_real_array[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
-          vars__.emplace_back(
-            rvalue(p_matrix, "p_matrix",
-              index_uni(sym2__), index_uni(sym1__)));
-        }
-      }
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_vector[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_row_vector[(sym1__ - 1)]);
-      }
-      vars__.emplace_back(y_p);
+      out__.write(p_real);
+      out__.write(p_real_array);
+      out__.write(p_matrix);
+      out__.write(p_vector);
+      out__.write(p_row_vector);
+      out__.write(y_p);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -6817,7 +6769,7 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       transformed_param_real = uniform_lpdf<false>(d_vector_opencl__, p_real,
                                  p_real);
       if (emit_transformed_parameters__) {
-        vars__.emplace_back(transformed_param_real);
+        out__.write(transformed_param_real);
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -6832,115 +6784,67 @@ class restricted_model final : public model_base_crtp<restricted_model> {
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      double p_real;
-      p_real = std::numeric_limits<double>::quiet_NaN();
+      local_scalar_t__ p_real;
+      p_real = DUMMY_VAR__;
       
-      current_statement__ = 1;
-      p_real = context__.vals_r("p_real")[(1 - 1)];
-      std::vector<double> p_real_array;
-      p_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
+      p_real = in__.read<local_scalar_t__>();
+      out__.write(p_real);
+      std::vector<local_scalar_t__> p_real_array;
+      p_real_array = std::vector<local_scalar_t__>(d_int, DUMMY_VAR__);
       
-      
-      current_statement__ = 2;
-      p_real_array = context__.vals_r("p_real_array");
-      Eigen::Matrix<double, -1, -1> p_matrix;
-      p_matrix = Eigen::Matrix<double, -1, -1>(d_int, d_int);
-      stan::math::fill(p_matrix, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> p_matrix_flat__;
-        current_statement__ = 3;
-        p_matrix_flat__ = context__.vals_r("p_matrix");
-        current_statement__ = 3;
-        pos__ = 1;
-        current_statement__ = 3;
-        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-          current_statement__ = 3;
-          for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
-            current_statement__ = 3;
-            assign(p_matrix, p_matrix_flat__[(pos__ - 1)],
-              "assigning variable p_matrix", index_uni(sym2__),
-                                               index_uni(sym1__));
-            current_statement__ = 3;
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
-      Eigen::Matrix<double, -1, 1> p_vector;
-      p_vector = Eigen::Matrix<double, -1, 1>(d_int);
-      stan::math::fill(p_vector, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> p_vector_flat__;
-        current_statement__ = 4;
-        p_vector_flat__ = context__.vals_r("p_vector");
-        current_statement__ = 4;
-        pos__ = 1;
-        current_statement__ = 4;
-        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-          current_statement__ = 4;
-          assign(p_vector, p_vector_flat__[(pos__ - 1)],
-            "assigning variable p_vector", index_uni(sym1__));
-          current_statement__ = 4;
-          pos__ = (pos__ + 1);
-        }
-      }
-      Eigen::Matrix<double, 1, -1> p_row_vector;
-      p_row_vector = Eigen::Matrix<double, 1, -1>(d_int);
-      stan::math::fill(p_row_vector, std::numeric_limits<double>::quiet_NaN());
-      
-      
-      {
-        std::vector<local_scalar_t__> p_row_vector_flat__;
-        current_statement__ = 5;
-        p_row_vector_flat__ = context__.vals_r("p_row_vector");
-        current_statement__ = 5;
-        pos__ = 1;
-        current_statement__ = 5;
-        for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-          current_statement__ = 5;
-          assign(p_row_vector, p_row_vector_flat__[(pos__ - 1)],
-            "assigning variable p_row_vector", index_uni(sym1__));
-          current_statement__ = 5;
-          pos__ = (pos__ + 1);
-        }
-      }
-      double y_p;
-      y_p = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 6;
-      y_p = context__.vals_r("y_p")[(1 - 1)];
-      vars__.emplace_back(p_real);
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_real_array[(sym1__ - 1)]);
+        p_real_array[(sym1__ - 1)] = in__.read<local_scalar_t__>();
       }
+      out__.write(p_real_array);
+      Eigen::Matrix<local_scalar_t__, -1, -1> p_matrix;
+      p_matrix = Eigen::Matrix<local_scalar_t__, -1, -1>(d_int, d_int);
+      stan::math::fill(p_matrix, DUMMY_VAR__);
+      
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
-          vars__.emplace_back(
-            rvalue(p_matrix, "p_matrix",
-              index_uni(sym2__), index_uni(sym1__)));
+          assign(p_matrix, in__.read<local_scalar_t__>(),
+            "assigning variable p_matrix", index_uni(sym2__),
+                                             index_uni(sym1__));
         }
       }
+      out__.write(p_matrix);
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_vector;
+      p_vector = Eigen::Matrix<local_scalar_t__, -1, 1>(d_int);
+      stan::math::fill(p_vector, DUMMY_VAR__);
+      
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_vector[(sym1__ - 1)]);
+        assign(p_vector, in__.read<local_scalar_t__>(),
+          "assigning variable p_vector", index_uni(sym1__));
       }
+      out__.write(p_vector);
+      Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vector;
+      p_row_vector = Eigen::Matrix<local_scalar_t__, 1, -1>(d_int);
+      stan::math::fill(p_row_vector, DUMMY_VAR__);
+      
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        vars__.emplace_back(p_row_vector[(sym1__ - 1)]);
+        assign(p_row_vector, in__.read<local_scalar_t__>(),
+          "assigning variable p_row_vector", index_uni(sym1__));
       }
-      vars__.emplace_back(y_p);
+      out__.write(p_row_vector);
+      local_scalar_t__ y_p;
+      y_p = DUMMY_VAR__;
+      
+      y_p = in__.read<local_scalar_t__>();
+      out__.write(y_p);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -7072,8 +6976,13 @@ class restricted_model final : public model_base_crtp<restricted_model> {
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      std::vector<double> vars_vec;
-      vars_vec.reserve(vars.size());
+      const size_t num_params__ = 
+  (((((1 + d_int) + (d_int * d_int)) + d_int) + d_int) + 1);
+      const size_t num_transformed = 1;
+      const size_t num_gen_quantities = 0;
+      std::vector<double> vars_vec(num_params__
+       + (emit_transformed_parameters * num_transformed)
+       + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
       write_array_impl(base_rng, params_r, params_i, vars_vec,
           emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -7088,8 +6997,14 @@ class restricted_model final : public model_base_crtp<restricted_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      write_array_impl(base_rng, params_r, params_i, vars,
-       emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_params__ = 
+  (((((1 + d_int) + (d_int * d_int)) + d_int) + d_int) + 1);
+      const size_t num_transformed = 1;
+      const size_t num_gen_quantities = 0;
+      vars.resize(num_params__
+        + (emit_transformed_parameters * num_transformed)
+        + (emit_generated_quantities * num_gen_quantities));
+      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -7110,20 +7025,33 @@ class restricted_model final : public model_base_crtp<restricted_model> {
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
                          std::ostream* pstream = nullptr) const final {
-      std::vector<double> params_r_vec;
-      params_r_vec.reserve(params_r.size());
+      std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
         params_r_vec.data(), params_r_vec.size());
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    const std::array<std::string, 7> names__ = std::array<std::string, 7>{"p_real",
+      "p_real_array", "p_matrix", "p_vector", "p_row_vector", "y_p",
+      "transformed_param_real"};
+    
+     std::vector<double> params_r_flat__;
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 using stan_model = restricted_model_namespace::restricted_model;

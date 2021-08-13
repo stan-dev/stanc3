@@ -261,8 +261,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
     (void) propto__;
     double lp__ = 0.0;
@@ -294,9 +294,9 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       current_statement__ = 3;
       sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                 0, lp__);
-      vars__.emplace_back(rho);
-      vars__.emplace_back(alpha);
-      vars__.emplace_back(sigma);
+      out__.write(rho);
+      out__.write(alpha);
+      out__.write(sigma);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -314,52 +314,35 @@ class simple_function_model final : public model_base_crtp<simple_function_model
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      double rho;
-      rho = std::numeric_limits<double>::quiet_NaN();
+      local_scalar_t__ rho;
+      rho = DUMMY_VAR__;
       
-      current_statement__ = 1;
-      rho = context__.vals_r("rho")[(1 - 1)];
-      double rho_free__;
-      rho_free__ = std::numeric_limits<double>::quiet_NaN();
+      rho = in__.read<local_scalar_t__>();
+      out__.write_free_lb(0, rho);
+      local_scalar_t__ alpha;
+      alpha = DUMMY_VAR__;
       
-      current_statement__ = 1;
-      rho_free__ = stan::math::lb_free(rho, 0);
-      double alpha;
-      alpha = std::numeric_limits<double>::quiet_NaN();
+      alpha = in__.read<local_scalar_t__>();
+      out__.write_free_lb(0, alpha);
+      local_scalar_t__ sigma;
+      sigma = DUMMY_VAR__;
       
-      current_statement__ = 2;
-      alpha = context__.vals_r("alpha")[(1 - 1)];
-      double alpha_free__;
-      alpha_free__ = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 2;
-      alpha_free__ = stan::math::lb_free(alpha, 0);
-      double sigma;
-      sigma = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 3;
-      sigma = context__.vals_r("sigma")[(1 - 1)];
-      double sigma_free__;
-      sigma_free__ = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 3;
-      sigma_free__ = stan::math::lb_free(sigma, 0);
-      vars__.emplace_back(rho_free__);
-      vars__.emplace_back(alpha_free__);
-      vars__.emplace_back(sigma_free__);
+      sigma = in__.read<local_scalar_t__>();
+      out__.write_free_lb(0, sigma);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -439,8 +422,13 @@ class simple_function_model final : public model_base_crtp<simple_function_model
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      std::vector<double> vars_vec;
-      vars_vec.reserve(vars.size());
+      const size_t num_params__ = 
+  ((1 + 1) + 1);
+      const size_t num_transformed = 0;
+      const size_t num_gen_quantities = 0;
+      std::vector<double> vars_vec(num_params__
+       + (emit_transformed_parameters * num_transformed)
+       + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
       write_array_impl(base_rng, params_r, params_i, vars_vec,
           emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -455,8 +443,14 @@ class simple_function_model final : public model_base_crtp<simple_function_model
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      write_array_impl(base_rng, params_r, params_i, vars,
-       emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_params__ = 
+  ((1 + 1) + 1);
+      const size_t num_transformed = 0;
+      const size_t num_gen_quantities = 0;
+      vars.resize(num_params__
+        + (emit_transformed_parameters * num_transformed)
+        + (emit_generated_quantities * num_gen_quantities));
+      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -477,20 +471,32 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
                          std::ostream* pstream = nullptr) const final {
-      std::vector<double> params_r_vec;
-      params_r_vec.reserve(params_r.size());
+      std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
         params_r_vec.data(), params_r_vec.size());
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    const std::array<std::string, 3> names__ = std::array<std::string, 3>{"rho",
+      "alpha", "sigma"};
+    
+     std::vector<double> params_r_flat__;
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 using stan_model = simple_function_model_namespace::simple_function_model;

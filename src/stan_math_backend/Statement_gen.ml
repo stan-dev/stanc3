@@ -227,10 +227,9 @@ let math_fn_translations = function
   | FnReadWriteEventsOpenCL x -> Some (x ^ ".wait_for_read_write_events", [])
   | _ -> None
 
-let trans_math_fn fname =
+let trans_math_fn f =
   Option.(
-    value ~default:(fname, [])
-      (bind (Internal_fun.of_string_opt fname) ~f:math_fn_translations))
+    value ~default:(Internal_fun.to_string f, []) (math_fn_translations f))
 
 let pp_bool_expr ppf expr =
   match Expr.Typed.type_of expr with
@@ -277,11 +276,7 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
               Expr.Fixed.pattern= FunApp (CompilerInternal FnDeepCopy, [e]) }
         | _ -> recurse e
       in
-      let rhs =
-        match rhs.pattern with
-        | FunApp (CompilerInternal (FnConstrain _ | FnUnconstrain _), _) -> rhs
-        | _ -> maybe_deep_copy rhs
-      in
+      let rhs = maybe_deep_copy rhs in
       pf ppf "@[<hov 2>assign(@,%s,@ %a,@ %S%s%a@]);" assignee pp_expr rhs
         (strf "assigning variable %s" assignee)
         (if List.length idcs = 0 then "" else ", ")
@@ -297,17 +292,27 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
       pf ppf "std::stringstream %s;@," err_strm ;
       pf ppf "%a@," (list ~sep:cut add_to_string) args ;
       pf ppf "throw std::domain_error(%s.str());" err_strm
-  | NRFunApp (CompilerInternal (FnCheck check_name), args) ->
-      let function_arg =
-        {Expr.Fixed.pattern= Var "function__"; meta= Expr.Typed.Meta.empty}
-      in
-      pf ppf "%s(@[<hov>%a@]);" ("check_" ^ check_name)
-        (list ~sep:comma pp_expr) (function_arg :: args)
-  | NRFunApp (CompilerInternal FnWriteParam, [var]) ->
-      pf ppf "@[<hov 2>vars__.emplace_back(@,%a);@]" pp_expr var
+  | NRFunApp (CompilerInternal (FnCheck {trans; var_name; var}), args) ->
+      Option.iter (check_to_string trans) ~f:(fun check_name ->
+          let function_arg = Expr.Helpers.variable "function__" in
+          pf ppf "%s(@[<hov>%a@]);" ("check_" ^ check_name)
+            (list ~sep:comma pp_expr)
+            (function_arg :: Expr.Helpers.str var_name :: var :: args) )
+  | NRFunApp (CompilerInternal (FnWriteParam {unconstrain_opt; var}), _) -> (
+    match
+      (unconstrain_opt, Option.bind ~f:constraint_to_string unconstrain_opt)
+    with
+    (* When the current block or this transformation doesn't require unconstraining,
+       use vanilla write *)
+    | None, _ | _, None -> pf ppf "@[<hov 2>out__.write(@,%a);@]" pp_expr var
+    (* Otherwise, use stan::io::serializer's write_free functions *)
+    | Some trans, Some unconstrain_string ->
+        let unconstrain_args = transform_args trans in
+        pf ppf "@[<hov 2>out__.write_free_%s(@,%a);@]" unconstrain_string
+          (list ~sep:comma pp_expr)
+          (unconstrain_args @ [var]) )
   | NRFunApp (CompilerInternal f, args) ->
-      let fname = Internal_fun.to_string f in
-      let fname, extra_args = trans_math_fn fname in
+      let fname, extra_args = trans_math_fn f in
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)
         (extra_args @ args)
   | NRFunApp (StanLib (fname, _), args) ->

@@ -539,8 +539,9 @@ let pp_write_array ppf {Program.prog_name; generate_quantities; _} =
   in
   let intro ppf () =
     pf ppf "%a@ %a@ %a" (list ~sep:cut string)
-      [ "using local_scalar_t__ = double;"; "vars__.resize(0);"
+      [ "using local_scalar_t__ = double;"
       ; "stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);"
+      ; "stan::io::serializer<local_scalar_t__> out__(vars__);"
       ; "static constexpr bool propto__ = true;"; "(void) propto__;"
       ; "double lp__ = 0.0;"
       ; "(void) lp__;  // dummy to suppress unused var warning"
@@ -671,20 +672,23 @@ let pp_unconstrained_param_names ppf {Program.output_vars; _} =
     ~cv_attr
 
 (** Print the `transform_inits` method of the model class *)
-let pp_transform_inits ppf {Program.transform_inits; _} =
+let pp_transform_inits_impl ppf {Program.transform_inits; _} =
   pf ppf
     "template <typename VecVar, typename VecI, @ \
      stan::require_std_vector_t<VecVar>* = nullptr, @ \
      stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> @ " ;
   let params =
-    [ "const stan::io::var_context& context__"; "VecI& params_i__"
-    ; "VecVar& vars__"; "std::ostream* pstream__ = nullptr" ]
+    [ "VecVar& params_r__"; "VecI& params_i__"; "VecVar& vars__"
+    ; "std::ostream* pstream__ = nullptr" ]
   in
   let intro ppf () =
-    pf ppf
-      "using local_scalar_t__ = \
-       double;@,vars__.clear();@,vars__.reserve(num_params_r__);@ int \
-       current_statement__ = 0; "
+    pf ppf "%a" (list ~sep:cut string)
+      [ "using local_scalar_t__ = double;"
+      ; "stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);"
+      ; "stan::io::serializer<local_scalar_t__> out__(vars__);"
+      ; "int current_statement__ = 0;"
+      ; "local_scalar_t__ \
+         DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());" ]
   in
   let cv_attr = ["const"] in
   pp_method_b ppf "void" "transform_inits_impl" params intro transform_inits
@@ -746,7 +750,25 @@ let pp_constrained_types ppf {Program.output_vars; _} =
   pp_outvar_metadata ppf ("get_constrained_sizedtypes", outvars)
 
 (** Print the generic method overloads needed in the model class. *)
-let pp_overloads ppf () =
+let pp_overloads ppf {Program.output_vars; _} =
+  (* An expression for the number of individual parameters in a list of output variables *)
+  let num_outvars (outvars : Expr.Typed.t Program.outvar list) =
+    Expr.Helpers.binop_list
+      (List.map
+         ~f:(fun outvar ->
+           SizedType.num_elems_expr outvar.Program.out_constrained_st )
+         outvars)
+      Operator.Plus ~default:(Expr.Helpers.int 0)
+  in
+  (* The list of output variables that came from a particular block *)
+  let block_outvars (block : Program.io_block) =
+    List.filter_map output_vars
+      ~f:(fun ((_ : string), (outvar : Expr.Typed.t Program.outvar)) ->
+        if outvar.out_block = block then Some outvar else None )
+  in
+  let num_gen_quantities = num_outvars (block_outvars GeneratedQuantities) in
+  let num_params = num_outvars (block_outvars Parameters) in
+  let num_transformed = num_outvars (block_outvars TransformedParameters) in
   pf ppf
     {|
     // Begin method overload boilerplate
@@ -757,8 +779,12 @@ let pp_overloads ppf () =
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      std::vector<double> vars_vec;
-      vars_vec.reserve(vars.size());
+      const size_t num_params__ = %a;
+      const size_t num_transformed = %a;
+      const size_t num_gen_quantities = %a;
+      std::vector<double> vars_vec(num_params__
+       + (emit_transformed_parameters * num_transformed)
+       + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
       write_array_impl(base_rng, params_r, params_i, vars_vec,
           emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -773,8 +799,13 @@ let pp_overloads ppf () =
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      write_array_impl(base_rng, params_r, params_i, vars,
-       emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_params__ = %a;
+      const size_t num_transformed = %a;
+      const size_t num_gen_quantities = %a;
+      vars.resize(num_params__
+        + (emit_transformed_parameters * num_transformed)
+        + (emit_generated_quantities * num_gen_quantities));
+      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -795,27 +826,54 @@ let pp_overloads ppf () =
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
                          std::ostream* pstream = nullptr) const final {
-      std::vector<double> params_r_vec;
-      params_r_vec.reserve(params_r.size());
+      std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
         params_r_vec.data(), params_r_vec.size());
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 |}
+    pp_expr num_params pp_expr num_transformed pp_expr num_gen_quantities
+    pp_expr num_params pp_expr num_transformed pp_expr num_gen_quantities
+
+(** Print the `get_constrained_sizedtypes` method of the model class *)
+let pp_transform_inits ppf {Program.output_vars; _} =
+  let params =
+    [ "const stan::io::var_context& context"; "std::vector<int>& params_i"
+    ; "std::vector<double>& vars"; "std::ostream* pstream__ = nullptr" ]
+  in
+  let list_len = List.length output_vars in
+  let get_names ppf () =
+    let add_param = fmt "%S" in
+    pf ppf
+      "@[<hov 2>const std::array<std::string, %i> names__ = \
+       std::array<std::string, %i>{%a};@]@,"
+      list_len list_len
+      (list ~sep:comma add_param)
+      (List.map ~f:fst output_vars)
+  in
+  let pp_body ppf =
+    pf ppf "%a" (list ~sep:cut string)
+      [ " std::vector<double> params_r_flat__;"
+      ; " for (auto&& param_name__ : names__) {"
+      ; "   const auto param_vec__ = context.vals_r(param_name__);"
+      ; "   params_r_flat__.reserve(params_r_flat__.size() + \
+         param_vec__.size());"; "   for (auto&& param_val__ : param_vec__) {"
+      ; "     params_r_flat__.push_back(param_val__);"; "   }"; " }"
+      ; "vars.resize(params_r_flat__.size());"
+      ; "transform_inits_impl(params_r_flat__, params_i, vars, pstream__);" ]
+  in
+  let cv_attr = ["const"] in
+  pp_method ppf "void" "transform_inits" params get_names
+    (fun ppf -> pp_body ppf)
+    ~cv_attr
 
 (** Print the public parts of the model class *)
 let pp_model_public ppf p =
   pf ppf "@ %a" pp_ctor p ;
   pf ppf "@ %a" pp_log_prob p ;
   pf ppf "@ %a" pp_write_array p ;
-  pf ppf "@ %a" pp_transform_inits p ;
+  pf ppf "@ %a" pp_transform_inits_impl p ;
   (* Begin metadata methods *)
   pf ppf "@ %a" pp_get_param_names p ;
   (* Post-data metadata methods *)
@@ -825,7 +883,8 @@ let pp_model_public ppf p =
   pf ppf "@ %a" pp_constrained_types p ;
   pf ppf "@ %a" pp_unconstrained_types p ;
   (* Boilerplate *)
-  pf ppf "@ %a" pp_overloads ()
+  pf ppf "@ %a" pp_overloads p ;
+  pf ppf "@ %a" pp_transform_inits p
 
 let model_prefix = "model_"
 

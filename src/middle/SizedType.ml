@@ -66,6 +66,20 @@ let rec get_dims st =
   | SMatrix (dim1, dim2) -> [dim1; dim2]
   | SArray (t, dim) -> dim :: get_dims t
 
+(* Return a type's array dimensions and the type inside the (possibly nested) array *)
+let rec get_array_dims st =
+  match st with
+  | SInt | SReal -> (st, [])
+  | SVector d | SRowVector d -> (st, [d])
+  | SMatrix (d1, d2) -> (st, [d1; d2])
+  | SArray (st, dim) ->
+      let st', dims = get_array_dims st in
+      (st', dim :: dims)
+
+let num_elems_expr st =
+  Expr.Helpers.binop_list (get_dims st) Operator.Times
+    ~default:(Expr.Helpers.int 1)
+
 let%expect_test "dims" =
   let open Fmt in
   strf "@[%a@]" (list ~sep:comma string)

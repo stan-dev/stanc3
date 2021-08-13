@@ -1278,8 +1278,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
     (void) propto__;
     double lp__ = 0.0;
@@ -1346,33 +1346,15 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       
       current_statement__ = 9;
       X_rv_p = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(n);
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(alpha_v[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(beta[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(cuts[(sym1__ - 1)]);
-      }
-      vars__.emplace_back(sigma);
-      vars__.emplace_back(alpha);
-      vars__.emplace_back(phi);
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-          vars__.emplace_back(
-            rvalue(X_p, "X_p", index_uni(sym2__), index_uni(sym1__)));
-        }
-      }
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-          vars__.emplace_back(
-            rvalue(beta_m, "beta_m", index_uni(sym2__), index_uni(sym1__)));
-        }
-      }
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        vars__.emplace_back(X_rv_p[(sym1__ - 1)]);
-      }
+      out__.write(alpha_v);
+      out__.write(beta);
+      out__.write(cuts);
+      out__.write(sigma);
+      out__.write(alpha);
+      out__.write(phi);
+      out__.write(X_p);
+      out__.write(beta_m);
+      out__.write(X_rv_p);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -1390,187 +1372,93 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
-    int current_statement__ = 0; 
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
+    int current_statement__ = 0;
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
       pos__ = std::numeric_limits<int>::min();
       
       pos__ = 1;
-      Eigen::Matrix<double, -1, 1> alpha_v;
-      alpha_v = Eigen::Matrix<double, -1, 1>(k);
-      stan::math::fill(alpha_v, std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<local_scalar_t__, -1, 1> alpha_v;
+      alpha_v = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
+      stan::math::fill(alpha_v, DUMMY_VAR__);
       
-      {
-        std::vector<local_scalar_t__> alpha_v_flat__;
-        current_statement__ = 1;
-        alpha_v_flat__ = context__.vals_r("alpha_v");
-        current_statement__ = 1;
-        pos__ = 1;
-        current_statement__ = 1;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 1;
-          assign(alpha_v, alpha_v_flat__[(pos__ - 1)],
-            "assigning variable alpha_v", index_uni(sym1__));
-          current_statement__ = 1;
-          pos__ = (pos__ + 1);
-        }
-      }
-      Eigen::Matrix<double, -1, 1> beta;
-      beta = Eigen::Matrix<double, -1, 1>(k);
-      stan::math::fill(beta, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> beta_flat__;
-        current_statement__ = 2;
-        beta_flat__ = context__.vals_r("beta");
-        current_statement__ = 2;
-        pos__ = 1;
-        current_statement__ = 2;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 2;
-          assign(beta, beta_flat__[(pos__ - 1)],
-            "assigning variable beta", index_uni(sym1__));
-          current_statement__ = 2;
-          pos__ = (pos__ + 1);
-        }
-      }
-      Eigen::Matrix<double, -1, 1> cuts;
-      cuts = Eigen::Matrix<double, -1, 1>(k);
-      stan::math::fill(cuts, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> cuts_flat__;
-        current_statement__ = 3;
-        cuts_flat__ = context__.vals_r("cuts");
-        current_statement__ = 3;
-        pos__ = 1;
-        current_statement__ = 3;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 3;
-          assign(cuts, cuts_flat__[(pos__ - 1)],
-            "assigning variable cuts", index_uni(sym1__));
-          current_statement__ = 3;
-          pos__ = (pos__ + 1);
-        }
-      }
-      double sigma;
-      sigma = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 4;
-      sigma = context__.vals_r("sigma")[(1 - 1)];
-      double sigma_free__;
-      sigma_free__ = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 4;
-      sigma_free__ = stan::math::lb_free(sigma, 0);
-      double alpha;
-      alpha = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 5;
-      alpha = context__.vals_r("alpha")[(1 - 1)];
-      double phi;
-      phi = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 6;
-      phi = context__.vals_r("phi")[(1 - 1)];
-      Eigen::Matrix<double, -1, -1> X_p;
-      X_p = Eigen::Matrix<double, -1, -1>(n, k);
-      stan::math::fill(X_p, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> X_p_flat__;
-        current_statement__ = 7;
-        X_p_flat__ = context__.vals_r("X_p");
-        current_statement__ = 7;
-        pos__ = 1;
-        current_statement__ = 7;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 7;
-          for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-            current_statement__ = 7;
-            assign(X_p, X_p_flat__[(pos__ - 1)],
-              "assigning variable X_p", index_uni(sym2__), index_uni(sym1__));
-            current_statement__ = 7;
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
-      Eigen::Matrix<double, -1, -1> beta_m;
-      beta_m = Eigen::Matrix<double, -1, -1>(n, k);
-      stan::math::fill(beta_m, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> beta_m_flat__;
-        current_statement__ = 8;
-        beta_m_flat__ = context__.vals_r("beta_m");
-        current_statement__ = 8;
-        pos__ = 1;
-        current_statement__ = 8;
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          current_statement__ = 8;
-          for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-            current_statement__ = 8;
-            assign(beta_m, beta_m_flat__[(pos__ - 1)],
-              "assigning variable beta_m", index_uni(sym2__),
-                                             index_uni(sym1__));
-            current_statement__ = 8;
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
-      Eigen::Matrix<double, 1, -1> X_rv_p;
-      X_rv_p = Eigen::Matrix<double, 1, -1>(n);
-      stan::math::fill(X_rv_p, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> X_rv_p_flat__;
-        current_statement__ = 9;
-        X_rv_p_flat__ = context__.vals_r("X_rv_p");
-        current_statement__ = 9;
-        pos__ = 1;
-        current_statement__ = 9;
-        for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-          current_statement__ = 9;
-          assign(X_rv_p, X_rv_p_flat__[(pos__ - 1)],
-            "assigning variable X_rv_p", index_uni(sym1__));
-          current_statement__ = 9;
-          pos__ = (pos__ + 1);
-        }
-      }
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(alpha_v[(sym1__ - 1)]);
+        assign(alpha_v, in__.read<local_scalar_t__>(),
+          "assigning variable alpha_v", index_uni(sym1__));
       }
+      out__.write(alpha_v);
+      Eigen::Matrix<local_scalar_t__, -1, 1> beta;
+      beta = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
+      stan::math::fill(beta, DUMMY_VAR__);
+      
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(beta[(sym1__ - 1)]);
+        assign(beta, in__.read<local_scalar_t__>(),
+          "assigning variable beta", index_uni(sym1__));
       }
+      out__.write(beta);
+      Eigen::Matrix<local_scalar_t__, -1, 1> cuts;
+      cuts = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
+      stan::math::fill(cuts, DUMMY_VAR__);
+      
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        vars__.emplace_back(cuts[(sym1__ - 1)]);
+        assign(cuts, in__.read<local_scalar_t__>(),
+          "assigning variable cuts", index_uni(sym1__));
       }
-      vars__.emplace_back(sigma_free__);
-      vars__.emplace_back(alpha);
-      vars__.emplace_back(phi);
+      out__.write(cuts);
+      local_scalar_t__ sigma;
+      sigma = DUMMY_VAR__;
+      
+      sigma = in__.read<local_scalar_t__>();
+      out__.write_free_lb(0, sigma);
+      local_scalar_t__ alpha;
+      alpha = DUMMY_VAR__;
+      
+      alpha = in__.read<local_scalar_t__>();
+      out__.write(alpha);
+      local_scalar_t__ phi;
+      phi = DUMMY_VAR__;
+      
+      phi = in__.read<local_scalar_t__>();
+      out__.write(phi);
+      Eigen::Matrix<local_scalar_t__, -1, -1> X_p;
+      X_p = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
+      stan::math::fill(X_p, DUMMY_VAR__);
+      
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-          vars__.emplace_back(
-            rvalue(X_p, "X_p", index_uni(sym2__), index_uni(sym1__)));
+          assign(X_p, in__.read<local_scalar_t__>(),
+            "assigning variable X_p", index_uni(sym2__), index_uni(sym1__));
         }
       }
+      out__.write(X_p);
+      Eigen::Matrix<local_scalar_t__, -1, -1> beta_m;
+      beta_m = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
+      stan::math::fill(beta_m, DUMMY_VAR__);
+      
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-          vars__.emplace_back(
-            rvalue(beta_m, "beta_m", index_uni(sym2__), index_uni(sym1__)));
+          assign(beta_m, in__.read<local_scalar_t__>(),
+            "assigning variable beta_m", index_uni(sym2__), index_uni(sym1__));
         }
       }
+      out__.write(beta_m);
+      Eigen::Matrix<local_scalar_t__, 1, -1> X_rv_p;
+      X_rv_p = Eigen::Matrix<local_scalar_t__, 1, -1>(n);
+      stan::math::fill(X_rv_p, DUMMY_VAR__);
+      
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        vars__.emplace_back(X_rv_p[(sym1__ - 1)]);
+        assign(X_rv_p, in__.read<local_scalar_t__>(),
+          "assigning variable X_rv_p", index_uni(sym1__));
       }
+      out__.write(X_rv_p);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -1734,8 +1622,13 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      std::vector<double> vars_vec;
-      vars_vec.reserve(vars.size());
+      const size_t num_params__ = 
+  ((((((((k + k) + k) + 1) + 1) + 1) + (n * k)) + (n * k)) + n);
+      const size_t num_transformed = 0;
+      const size_t num_gen_quantities = 0;
+      std::vector<double> vars_vec(num_params__
+       + (emit_transformed_parameters * num_transformed)
+       + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
       write_array_impl(base_rng, params_r, params_i, vars_vec,
           emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -1750,8 +1643,14 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      write_array_impl(base_rng, params_r, params_i, vars,
-       emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_params__ = 
+  ((((((((k + k) + k) + 1) + 1) + 1) + (n * k)) + (n * k)) + n);
+      const size_t num_transformed = 0;
+      const size_t num_gen_quantities = 0;
+      vars.resize(num_params__
+        + (emit_transformed_parameters * num_transformed)
+        + (emit_generated_quantities * num_gen_quantities));
+      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -1772,20 +1671,32 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
                          std::ostream* pstream = nullptr) const final {
-      std::vector<double> params_r_vec;
-      params_r_vec.reserve(params_r.size());
+      std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
         params_r_vec.data(), params_r_vec.size());
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    const std::array<std::string, 9> names__ = std::array<std::string, 9>{"alpha_v",
+      "beta", "cuts", "sigma", "alpha", "phi", "X_p", "beta_m", "X_rv_p"};
+    
+     std::vector<double> params_r_flat__;
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 using stan_model = optimize_glm_model_namespace::optimize_glm_model;

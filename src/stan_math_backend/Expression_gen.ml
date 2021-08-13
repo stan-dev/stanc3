@@ -152,6 +152,40 @@ let functor_suffix_select hof =
       variadic_ode_functor_suffix
   | _ -> functor_suffix
 
+let constraint_to_string = function
+  | Transformation.Ordered -> Some "ordered"
+  | PositiveOrdered -> Some "positive_ordered"
+  | Simplex -> Some "simplex"
+  | UnitVector -> Some "unit_vector"
+  | CholeskyCorr -> Some "cholesky_factor_corr"
+  | CholeskyCov -> Some "cholesky_factor_cov"
+  | Correlation -> Some "corr_matrix"
+  | Covariance -> Some "cov_matrix"
+  | Lower _ -> Some "lb"
+  | Upper _ -> Some "ub"
+  | LowerUpper _ -> Some "lub"
+  | Offset _ | Multiplier _ | OffsetMultiplier _ -> Some "offset_multiplier"
+  | Identity -> None
+
+let check_to_string = function
+  | Transformation.Lower _ -> Some "greater_or_equal"
+  | Upper _ -> Some "less_or_equal"
+  | CholeskyCov -> Some "cholesky_factor"
+  | LowerUpper _ ->
+      raise_s [%message "LowerUpper is really two other checks tied together"]
+  | Offset _ | Multiplier _ | OffsetMultiplier _ -> None
+  | t -> constraint_to_string t
+
+let default_multiplier = 1
+let default_offset = 0
+
+let transform_args = function
+  | Transformation.Offset offset ->
+      [offset; Expr.Helpers.int default_multiplier]
+  | Multiplier multiplier -> [Expr.Helpers.int default_offset; multiplier]
+  | transform ->
+      Transformation.fold (fun args arg -> args @ [arg]) [] transform
+
 let rec pp_index ppf = function
   | Index.All -> pf ppf "index_omni()"
   | Single e -> pf ppf "index_uni(%a)" pp_expr e
@@ -430,22 +464,28 @@ and pp_compiler_internal_fn ad ut f ppf es =
         raise_s
           [%message
             "Unexpected type for row vector literal" (ut : UnsizedType.t)] )
-  | FnConstrain flavor -> pp_constrain_funapp "constrain" flavor ppf es
-  | FnUnconstrain flavor -> pp_constrain_funapp "free" flavor ppf es
   | FnReadData -> read_data ut ppf es
-  | FnReadParam constraint_opt ->
-      let constraint_suffix_opt =
-        Option.map
-          ~f:(fun constraint_string -> "_constrain_" ^ constraint_string)
-          constraint_opt
-      in
-      let jacobian_param_opt =
-        Option.map ~f:(fun _ -> ", jacobian__") constraint_opt
-      in
-      pf ppf "@[<hov 2>in__.template read%a<%a%a>(@,%a)@]"
-        (Fmt.option Fmt.string) constraint_suffix_opt pp_unsizedtype_local
-        (UnsizedType.AutoDiffable, ut)
-        (Fmt.option Fmt.string) jacobian_param_opt (list ~sep:comma pp_expr) es
+  | FnReadDataSerializer ->
+      pf ppf "@[<hov 2>in__.read<%a>(@,)@]" pp_unsizedtype_local
+        (UnsizedType.AutoDiffable, UnsizedType.UReal)
+  | FnReadParam {constrain; dims} -> (
+      let constrain_opt = constraint_to_string constrain in
+      match constrain_opt with
+      | None ->
+          pf ppf "@[<hov 2>in__.template read<%a>(@,%a)@]" pp_unsizedtype_local
+            (UnsizedType.AutoDiffable, ut)
+            (list ~sep:comma pp_expr) dims
+      | Some constraint_string ->
+          let constraint_args = transform_args constrain in
+          let lp =
+            Expr.Fixed.{pattern= Var "lp__"; meta= Expr.Typed.Meta.empty}
+          in
+          let args = constraint_args @ [lp] @ dims in
+          pf ppf
+            "@[<hov 2>in__.template read_constrain_%s<%a, jacobian__>(@,%a)@]"
+            constraint_string pp_unsizedtype_local
+            (UnsizedType.AutoDiffable, ut)
+            (list ~sep:comma pp_expr) args )
   | FnDeepCopy -> gen_fun_app FnPlain ppf "stan::model::deep_copy" es
   | _ -> gen_fun_app FnPlain ppf (Internal_fun.to_string f) es
 
