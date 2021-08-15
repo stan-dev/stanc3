@@ -329,6 +329,7 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux mips64el binary") {
+                    when { anyOf { buildingTag(); branch 'master' } }
                     agent {
                         dockerfile {
                             filename 'docker/static/Dockerfile'
@@ -357,6 +358,7 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux ppc64el binary") {
+                    when { anyOf { buildingTag(); branch 'master' } }
                     agent {
                         dockerfile {
                             filename 'docker/static/Dockerfile'
@@ -385,6 +387,7 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux s390x binary") {
+                    when { anyOf { buildingTag(); branch 'master' } }
                     agent {
                         dockerfile {
                             filename 'docker/static/Dockerfile'
@@ -441,6 +444,7 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux armhf binary") {
+                    when { anyOf { buildingTag(); branch 'master' } }
                     agent {
                         dockerfile {
                             filename 'docker/static/Dockerfile'
@@ -469,6 +473,7 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux armel binary") {
+                    when { anyOf { buildingTag(); branch 'master' } }
                     agent {
                         dockerfile {
                             filename 'docker/static/Dockerfile'
