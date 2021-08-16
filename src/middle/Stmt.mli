@@ -21,7 +21,8 @@ module Fixed : sig
       | Decl of
           { decl_adtype: UnsizedType.autodifftype
           ; decl_id: string
-          ; decl_type: 'a Type.t }
+          ; decl_type: 'a Type.t
+          ; initialize: bool }
     [@@deriving sexp, hash, compare]
 
     and 'a lvalue = string * UnsizedType.t * 'a Index.t list

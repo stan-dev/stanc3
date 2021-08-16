@@ -24,7 +24,8 @@ module Fixed = struct
       | Decl of
           { decl_adtype: UnsizedType.autodifftype
           ; decl_id: string
-          ; decl_type: 'a Type.t }
+          ; decl_type: 'a Type.t
+          ; initialize: bool }
     [@@deriving sexp, hash, map, fold, compare]
 
     and 'a lvalue = string * UnsizedType.t * 'a Index.t list
@@ -66,7 +67,7 @@ module Fixed = struct
             Fmt.(list pp_s ~sep:Fmt.cut)
             stmts
       | SList stmts -> Fmt.(list pp_s ~sep:Fmt.cut |> vbox) ppf stmts
-      | Decl {decl_adtype; decl_id; decl_type} ->
+      | Decl {decl_adtype; decl_id; decl_type; _} ->
           Fmt.pf ppf {|%a%a %s;|} UnsizedType.pp_autodifftype decl_adtype
             (Type.pp pp_e) decl_type decl_id
 
@@ -239,7 +240,8 @@ module Helpers = struct
               Decl
                 { decl_adtype= Expr.Typed.adlevel_of expr
                 ; decl_id= symbol
-                ; decl_type= Unsized (Expr.Typed.type_of expr) } }
+                ; decl_type= Unsized (Expr.Typed.type_of expr)
+                ; initialize= true } }
         in
         let assign =
           { body with

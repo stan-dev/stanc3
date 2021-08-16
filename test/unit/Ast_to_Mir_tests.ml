@@ -46,7 +46,8 @@ let%expect_test "Prefix-Op-Example" =
       (((pattern
          (Block
           (((pattern
-             (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type (Sized SInt))))
+             (Decl (decl_adtype AutoDiffable) (decl_id i) (decl_type (Sized SInt))
+              (initialize true)))
             (meta <opaque>))
            ((pattern
              (IfElse
@@ -85,7 +86,8 @@ let%expect_test "read data" =
             ((pattern (Lit Int 20))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Lit Int 5))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+        (initialize true)))
       (meta <opaque>))) |}]
 
 let%expect_test "read param" =
@@ -104,7 +106,8 @@ let%expect_test "read param" =
             ((pattern (Lit Int 20))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Lit Int 5))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+        (initialize true)))
       (meta <opaque>))) |}]
 
 let%expect_test "gen quant" =
@@ -148,7 +151,8 @@ let%expect_test "gen quant" =
             ((pattern (Lit Int 20))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Lit Int 5))
-            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+        (initialize true)))
       (meta <opaque>))
      ((pattern
        (For (loopvar sym1__)
