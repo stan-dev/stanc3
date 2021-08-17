@@ -3518,22 +3518,10 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       transformed_param_real = std::numeric_limits<double>::quiet_NaN();
       
       out__.write(p_real);
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        out__.write(p_real_array[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
-          out__.write(
-            rvalue(p_matrix, "p_matrix",
-              index_uni(sym2__), index_uni(sym1__)));
-        }
-      }
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        out__.write(p_vector[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        out__.write(p_row_vector[(sym1__ - 1)]);
-      }
+      out__.write(p_real_array);
+      out__.write(p_matrix);
+      out__.write(p_vector);
+      out__.write(p_row_vector);
       out__.write(y_p);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
@@ -6655,22 +6643,10 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       transformed_param_real = std::numeric_limits<double>::quiet_NaN();
       
       out__.write(p_real);
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        out__.write(p_real_array[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
-          out__.write(
-            rvalue(p_matrix, "p_matrix",
-              index_uni(sym2__), index_uni(sym1__)));
-        }
-      }
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        out__.write(p_vector[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
-        out__.write(p_row_vector[(sym1__ - 1)]);
-      }
+      out__.write(p_real_array);
+      out__.write(p_matrix);
+      out__.write(p_vector);
+      out__.write(p_row_vector);
       out__.write(y_p);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {

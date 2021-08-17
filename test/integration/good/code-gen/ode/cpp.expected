@@ -425,13 +425,9 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       stan::math::fill(z, std::numeric_limits<double>::quiet_NaN());
       
       out__.write(y);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        out__.write(y0[(sym1__ - 1)]);
-      }
+      out__.write(y0);
       out__.write(t0);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        out__.write(times[(sym1__ - 1)]);
-      }
+      out__.write(times);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;

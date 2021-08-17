@@ -212,9 +212,7 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       
       out__.write(mu);
       out__.write(tau);
-      for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
-        out__.write(theta_tilde[(sym1__ - 1)]);
-      }
+      out__.write(theta_tilde);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -223,9 +221,7 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       assign(theta, add(mu, multiply(tau, theta_tilde)),
         "assigning variable theta");
       if (emit_transformed_parameters__) {
-        for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
-          out__.write(theta[(sym1__ - 1)]);
-        }
+        out__.write(theta);
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -1010,9 +1006,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       
       out__.write(mu);
       out__.write(tau);
-      for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
-        out__.write(theta_tilde[(sym1__ - 1)]);
-      }
+      out__.write(theta_tilde);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -1021,9 +1015,7 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       assign(theta, add(mu, multiply(tau, theta_tilde)),
         "assigning variable theta");
       if (emit_transformed_parameters__) {
-        for (int sym1__ = 1; sym1__ <= J; ++sym1__) {
-          out__.write(theta[(sym1__ - 1)]);
-        }
+        out__.write(theta);
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -1426,9 +1418,7 @@ class mixed_type_arrays_model final : public model_base_crtp<mixed_type_arrays_m
       td_arr33 = std::vector<std::vector<double>>(3, std::vector<double>(3, std::numeric_limits<double>::quiet_NaN()));
       
       
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        out__.write(xx[(sym1__ - 1)]);
-      }
+      out__.write(xx);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -7516,18 +7506,10 @@ class mother_model final : public model_base_crtp<mother_model> {
       out__.write(p_real);
       out__.write(p_upper);
       out__.write(p_lower);
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        out__.write(offset_multiplier[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        out__.write(no_offset_multiplier[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= 5; ++sym1__) {
-        out__.write(offset_no_multiplier[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        out__.write(p_real_1d_ar[(sym1__ - 1)]);
-      }
+      out__.write(offset_multiplier);
+      out__.write(no_offset_multiplier);
+      out__.write(offset_no_multiplier);
+      out__.write(p_real_1d_ar);
       for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
@@ -7536,9 +7518,7 @@ class mother_model final : public model_base_crtp<mother_model> {
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        out__.write(p_vec[(sym1__ - 1)]);
-      }
+      out__.write(p_vec);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           out__.write(p_1d_vec[(sym2__ - 1)][(sym1__ - 1)]);
@@ -7555,9 +7535,7 @@ class mother_model final : public model_base_crtp<mother_model> {
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        out__.write(p_row_vec[(sym1__ - 1)]);
-      }
+      out__.write(p_row_vec);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           out__.write(p_1d_row_vec[(sym2__ - 1)][(sym1__ - 1)]);
@@ -7574,12 +7552,7 @@ class mother_model final : public model_base_crtp<mother_model> {
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
-          out__.write(
-            rvalue(p_mat, "p_mat", index_uni(sym2__), index_uni(sym1__)));
-        }
-      }
+      out__.write(p_mat);
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
@@ -7592,9 +7565,7 @@ class mother_model final : public model_base_crtp<mother_model> {
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        out__.write(p_simplex[(sym1__ - 1)]);
-      }
+      out__.write(p_simplex);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           out__.write(p_1d_simplex[(sym2__ - 1)][(sym1__ - 1)]);
@@ -7611,20 +7582,8 @@ class mother_model final : public model_base_crtp<mother_model> {
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
-          out__.write(
-            rvalue(p_cfcov_54, "p_cfcov_54",
-              index_uni(sym2__), index_uni(sym1__)));
-        }
-      }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          out__.write(
-            rvalue(p_cfcov_33, "p_cfcov_33",
-              index_uni(sym2__), index_uni(sym1__)));
-        }
-      }
+      out__.write(p_cfcov_54);
+      out__.write(p_cfcov_33);
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
@@ -7634,12 +7593,8 @@ class mother_model final : public model_base_crtp<mother_model> {
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        out__.write(x_p[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        out__.write(y_p[(sym1__ - 1)]);
-      }
+      out__.write(x_p);
+      out__.write(y_p);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -7830,9 +7785,7 @@ class mother_model final : public model_base_crtp<mother_model> {
                               tp_cfcov_33_ar[(sym1__ - 1)]);
       }
       if (emit_transformed_parameters__) {
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          out__.write(tp_real_1d_ar[(sym1__ - 1)]);
-        }
+        out__.write(tp_real_1d_ar);
         for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
             for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
@@ -7841,9 +7794,7 @@ class mother_model final : public model_base_crtp<mother_model> {
             }
           }
         }
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          out__.write(tp_vec[(sym1__ - 1)]);
-        }
+        out__.write(tp_vec);
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             out__.write(tp_1d_vec[(sym2__ - 1)][(sym1__ - 1)]);
@@ -7860,9 +7811,7 @@ class mother_model final : public model_base_crtp<mother_model> {
             }
           }
         }
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          out__.write(tp_row_vec[(sym1__ - 1)]);
-        }
+        out__.write(tp_row_vec);
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             out__.write(tp_1d_row_vec[(sym2__ - 1)][(sym1__ - 1)]);
@@ -7879,12 +7828,7 @@ class mother_model final : public model_base_crtp<mother_model> {
             }
           }
         }
-        for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
-            out__.write(
-              rvalue(tp_mat, "tp_mat", index_uni(sym2__), index_uni(sym1__)));
-          }
-        }
+        out__.write(tp_mat);
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
             for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
@@ -7897,9 +7841,7 @@ class mother_model final : public model_base_crtp<mother_model> {
             }
           }
         }
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          out__.write(tp_simplex[(sym1__ - 1)]);
-        }
+        out__.write(tp_simplex);
         for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
             out__.write(tp_1d_simplex[(sym2__ - 1)][(sym1__ - 1)]);
@@ -7916,20 +7858,8 @@ class mother_model final : public model_base_crtp<mother_model> {
             }
           }
         }
-        for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
-            out__.write(
-              rvalue(tp_cfcov_54, "tp_cfcov_54",
-                index_uni(sym2__), index_uni(sym1__)));
-          }
-        }
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-            out__.write(
-              rvalue(tp_cfcov_33, "tp_cfcov_33",
-                index_uni(sym2__), index_uni(sym1__)));
-          }
-        }
+        out__.write(tp_cfcov_54);
+        out__.write(tp_cfcov_33);
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
             for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
@@ -7939,9 +7869,7 @@ class mother_model final : public model_base_crtp<mother_model> {
             }
           }
         }
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          out__.write(theta_p[(sym1__ - 1)]);
-        }
+        out__.write(theta_p);
         out__.write(tp_real);
       } 
       if (logical_negation(emit_generated_quantities__)) {
@@ -8328,9 +8256,7 @@ class mother_model final : public model_base_crtp<mother_model> {
       }
       out__.write(gq_r1);
       out__.write(gq_r2);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        out__.write(gq_real_1d_ar[(sym1__ - 1)]);
-      }
+      out__.write(gq_real_1d_ar);
       for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
@@ -8339,9 +8265,7 @@ class mother_model final : public model_base_crtp<mother_model> {
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        out__.write(gq_vec[(sym1__ - 1)]);
-      }
+      out__.write(gq_vec);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           out__.write(gq_1d_vec[(sym2__ - 1)][(sym1__ - 1)]);
@@ -8358,9 +8282,7 @@ class mother_model final : public model_base_crtp<mother_model> {
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        out__.write(gq_row_vec[(sym1__ - 1)]);
-      }
+      out__.write(gq_row_vec);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           out__.write(gq_1d_row_vec[(sym2__ - 1)][(sym1__ - 1)]);
@@ -8389,9 +8311,7 @@ class mother_model final : public model_base_crtp<mother_model> {
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        out__.write(gq_simplex[(sym1__ - 1)]);
-      }
+      out__.write(gq_simplex);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           out__.write(gq_1d_simplex[(sym2__ - 1)][(sym1__ - 1)]);
@@ -8408,20 +8328,8 @@ class mother_model final : public model_base_crtp<mother_model> {
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
-          out__.write(
-            rvalue(gq_cfcov_54, "gq_cfcov_54",
-              index_uni(sym2__), index_uni(sym1__)));
-        }
-      }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
-          out__.write(
-            rvalue(gq_cfcov_33, "gq_cfcov_33",
-              index_uni(sym2__), index_uni(sym1__)));
-        }
-      }
+      out__.write(gq_cfcov_54);
+      out__.write(gq_cfcov_33);
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
@@ -8431,9 +8339,7 @@ class mother_model final : public model_base_crtp<mother_model> {
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        out__.write(indices[(sym1__ - 1)]);
-      }
+      out__.write(indices);
       for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
@@ -11389,21 +11295,11 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       y_p = Eigen::Matrix<double, -1, 1>(2);
       stan::math::fill(y_p, std::numeric_limits<double>::quiet_NaN());
       
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        out__.write(y0_p[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        out__.write(theta_p[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        out__.write(x_p[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        out__.write(x_p_v[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        out__.write(shared_params_p[(sym1__ - 1)]);
-      }
+      out__.write(y0_p);
+      out__.write(theta_p);
+      out__.write(x_p);
+      out__.write(x_p_v);
+      out__.write(shared_params_p);
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
           out__.write(job_params_p[(sym2__ - 1)][(sym1__ - 1)]);
@@ -11492,27 +11388,13 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
         out__.write(abc1_p);
         out__.write(abc2_p);
         out__.write(abc3_p);
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          out__.write(y_hat_tp1[(sym1__ - 1)]);
-        }
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          out__.write(y_hat_tp2[(sym1__ - 1)]);
-        }
-        for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          out__.write(y_hat_tp3[(sym1__ - 1)]);
-        }
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          out__.write(theta_p_as[(sym1__ - 1)]);
-        }
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          out__.write(x_v[(sym1__ - 1)]);
-        }
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          out__.write(y_v[(sym1__ - 1)]);
-        }
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          out__.write(y_p[(sym1__ - 1)]);
-        }
+        out__.write(y_hat_tp1);
+        out__.write(y_hat_tp2);
+        out__.write(y_hat_tp3);
+        out__.write(theta_p_as);
+        out__.write(x_v);
+        out__.write(y_v);
+        out__.write(y_p);
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
@@ -11709,15 +11591,9 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       out__.write(z_1d);
       out__.write(abc1_gq);
       out__.write(abc2_gq);
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        out__.write(y_hat_gq[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-        out__.write(yy_hat_gq[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        out__.write(theta_dbl[(sym1__ - 1)]);
-      }
+      out__.write(y_hat_gq);
+      out__.write(yy_hat_gq);
+      out__.write(theta_dbl);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -14658,12 +14534,8 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       stan::math::fill(z, std::numeric_limits<double>::quiet_NaN());
       
       out__.write(r);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        out__.write(ra[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        out__.write(v[(sym1__ - 1)]);
-      }
+      out__.write(ra);
+      out__.write(v);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -16710,12 +16582,8 @@ class old_integrate_interface_model final : public model_base_crtp<old_integrate
       out__.write(beta);
       out__.write(gamma);
       out__.write(delta);
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        out__.write(z_init[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        out__.write(sigma[(sym1__ - 1)]);
-      }
+      out__.write(z_init);
+      out__.write(sigma);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -18188,33 +18056,15 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       Eigen::Matrix<double, 1, -1> X_rv_p;
       current_statement__ = 9;
       X_rv_p = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(n);
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        out__.write(alpha_v[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        out__.write(beta[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        out__.write(cuts[(sym1__ - 1)]);
-      }
+      out__.write(alpha_v);
+      out__.write(beta);
+      out__.write(cuts);
       out__.write(sigma);
       out__.write(alpha);
       out__.write(phi);
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-          out__.write(
-            rvalue(X_p, "X_p", index_uni(sym2__), index_uni(sym1__)));
-        }
-      }
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-          out__.write(
-            rvalue(beta_m, "beta_m", index_uni(sym2__), index_uni(sym1__)));
-        }
-      }
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        out__.write(X_rv_p[(sym1__ - 1)]);
-      }
+      out__.write(X_p);
+      out__.write(beta_m);
+      out__.write(X_rv_p);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -18741,9 +18591,7 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= NS; ++sym1__) {
-        out__.write(z1[(sym1__ - 1)]);
-      }
+      out__.write(z1);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -19336,15 +19184,9 @@ class reduce_sum_m1_model final : public model_base_crtp<reduce_sum_m1_model> {
       std::vector<double> y3;
       current_statement__ = 3;
       y3 = in__.template read<std::vector<local_scalar_t__>>(N);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        out__.write(y1[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        out__.write(y2[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        out__.write(y3[(sym1__ - 1)]);
-      }
+      out__.write(y1);
+      out__.write(y2);
+      out__.write(y3);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -21099,9 +20941,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
           out__.write(a2[(sym2__ - 1)][(sym1__ - 1)]);
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        out__.write(a1[(sym1__ - 1)]);
-      }
+      out__.write(a1);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
@@ -21152,9 +20992,7 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
           out__.write(y2[(sym2__ - 1)][(sym1__ - 1)]);
         }
       }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        out__.write(y1[(sym1__ - 1)]);
-      }
+      out__.write(y1);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -24857,9 +24695,7 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       current_statement__ = 13;
       y17 = in__.template read<std::vector<std::vector<std::vector<local_scalar_t__>>>>(
               N, N, N);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        out__.write(y1[(sym1__ - 1)]);
-      }
+      out__.write(y1);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           out__.write(y2[(sym2__ - 1)][(sym1__ - 1)]);
@@ -24911,18 +24747,9 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
         }
       }
       out__.write(y9);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        out__.write(y10[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        out__.write(y11[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
-          out__.write(
-            rvalue(y12, "y12", index_uni(sym2__), index_uni(sym1__)));
-        }
-      }
+      out__.write(y10);
+      out__.write(y11);
+      out__.write(y12);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
@@ -27780,30 +27607,14 @@ class transform_model final : public model_base_crtp<transform_model> {
       tpm_2 = std::vector<Eigen::Matrix<double, -1, -1>>(n, Eigen::Matrix<double, -1, -1>(m, k));
       stan::math::fill(tpm_2, std::numeric_limits<double>::quiet_NaN());
       
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        out__.write(p_1[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        out__.write(p_2[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        out__.write(p_3[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        out__.write(p_4[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        out__.write(p_5[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        out__.write(p_6[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        out__.write(p_7[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        out__.write(p_8[(sym1__ - 1)]);
-      }
+      out__.write(p_1);
+      out__.write(p_2);
+      out__.write(p_3);
+      out__.write(p_4);
+      out__.write(p_5);
+      out__.write(p_6);
+      out__.write(p_7);
+      out__.write(p_8);
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
           out__.write(p_9[(sym2__ - 1)][(sym1__ - 1)]);
@@ -27816,9 +27627,7 @@ class transform_model final : public model_base_crtp<transform_model> {
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        out__.write(pv_1[(sym1__ - 1)]);
-      }
+      out__.write(pv_1);
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
           out__.write(pv_2[(sym2__ - 1)][(sym1__ - 1)]);
@@ -27831,9 +27640,7 @@ class transform_model final : public model_base_crtp<transform_model> {
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        out__.write(pr_1[(sym1__ - 1)]);
-      }
+      out__.write(pr_1);
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
           out__.write(pr_2[(sym2__ - 1)][(sym1__ - 1)]);
@@ -27846,12 +27653,7 @@ class transform_model final : public model_base_crtp<transform_model> {
           }
         }
       }
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-          out__.write(
-            rvalue(pm_1, "pm_1", index_uni(sym2__), index_uni(sym1__)));
-        }
-      }
+      out__.write(pm_1);
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= n; ++sym3__) {
@@ -28178,30 +27980,14 @@ class transform_model final : public model_base_crtp<transform_model> {
         }
       }
       if (emit_transformed_parameters__) {
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          out__.write(tp_1[(sym1__ - 1)]);
-        }
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          out__.write(tp_2[(sym1__ - 1)]);
-        }
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          out__.write(tp_3[(sym1__ - 1)]);
-        }
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          out__.write(tp_4[(sym1__ - 1)]);
-        }
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          out__.write(tp_5[(sym1__ - 1)]);
-        }
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          out__.write(tp_6[(sym1__ - 1)]);
-        }
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          out__.write(tp_7[(sym1__ - 1)]);
-        }
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          out__.write(tp_8[(sym1__ - 1)]);
-        }
+        out__.write(tp_1);
+        out__.write(tp_2);
+        out__.write(tp_3);
+        out__.write(tp_4);
+        out__.write(tp_5);
+        out__.write(tp_6);
+        out__.write(tp_7);
+        out__.write(tp_8);
         for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
             out__.write(tp_9[(sym2__ - 1)][(sym1__ - 1)]);
@@ -28214,9 +28000,7 @@ class transform_model final : public model_base_crtp<transform_model> {
             }
           }
         }
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          out__.write(tpv_1[(sym1__ - 1)]);
-        }
+        out__.write(tpv_1);
         for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
             out__.write(tpv_2[(sym2__ - 1)][(sym1__ - 1)]);
@@ -28229,9 +28013,7 @@ class transform_model final : public model_base_crtp<transform_model> {
             }
           }
         }
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          out__.write(tpr_1[(sym1__ - 1)]);
-        }
+        out__.write(tpr_1);
         for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
             out__.write(tpr_2[(sym2__ - 1)][(sym1__ - 1)]);
@@ -28244,12 +28026,7 @@ class transform_model final : public model_base_crtp<transform_model> {
             }
           }
         }
-        for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-          for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
-            out__.write(
-              rvalue(tpm_1, "tpm_1", index_uni(sym2__), index_uni(sym1__)));
-          }
-        }
+        out__.write(tpm_1);
         for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
             for (int sym3__ = 1; sym3__ <= n; ++sym3__) {

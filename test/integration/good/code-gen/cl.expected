@@ -1296,33 +1296,15 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       Eigen::Matrix<double, 1, -1> X_rv_p;
       current_statement__ = 9;
       X_rv_p = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(n);
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        out__.write(alpha_v[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        out__.write(beta[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        out__.write(cuts[(sym1__ - 1)]);
-      }
+      out__.write(alpha_v);
+      out__.write(beta);
+      out__.write(cuts);
       out__.write(sigma);
       out__.write(alpha);
       out__.write(phi);
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-          out__.write(
-            rvalue(X_p, "X_p", index_uni(sym2__), index_uni(sym1__)));
-        }
-      }
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-          out__.write(
-            rvalue(beta_m, "beta_m", index_uni(sym2__), index_uni(sym1__)));
-        }
-      }
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        out__.write(X_rv_p[(sym1__ - 1)]);
-      }
+      out__.write(X_p);
+      out__.write(beta_m);
+      out__.write(X_rv_p);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
