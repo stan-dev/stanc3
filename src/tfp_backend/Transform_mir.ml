@@ -65,13 +65,15 @@ let translate_funapps_and_kwrds e =
   let open Expr.Fixed in
   let f ({pattern; _} as expr) =
     match pattern with
-    | FunApp (StanLib (fname, suffix), args) ->
+    | FunApp (StanLib (fname, suffix, mem_pattern), args) ->
         let prefix =
           if Utils.is_distribution_name fname then dist_prefix else ""
         in
         let fname = remove_stan_dist_suffix fname in
         let fname, args = map_functions fname args in
-        {expr with pattern= FunApp (StanLib (prefix ^ fname, suffix), args)}
+        { expr with
+          pattern= FunApp (StanLib (prefix ^ fname, suffix, mem_pattern), args)
+        }
     | FunApp (UserDefined (fname, suffix), args) ->
         { expr with
           pattern=
@@ -86,16 +88,17 @@ let%expect_test "nested dist prefixes translated" =
   let e pattern = {Expr.Fixed.pattern; meta= Expr.Typed.Meta.empty} in
   let f =
     FunApp
-      ( Fun_kind.StanLib ("normal_lpdf", FnLpdf false)
-      , [FunApp (Fun_kind.StanLib ("normal_lpdf", FnLpdf false), []) |> e] )
+      ( Fun_kind.StanLib ("normal_lpdf", FnLpdf false, AoS)
+      , [FunApp (Fun_kind.StanLib ("normal_lpdf", FnLpdf false, AoS), []) |> e]
+      )
     |> e |> translate_funapps_and_kwrds
   in
   print_s [%sexp (f : Expr.Typed.Meta.t Expr.Fixed.t)] ;
   [%expect
     {|
     ((pattern
-      (FunApp (StanLib tfd__.Normal (FnLpdf false))
-       (((pattern (FunApp (StanLib tfd__.Normal (FnLpdf false)) ()))
+      (FunApp (StanLib tfd__.Normal (FnLpdf false) AoS)
+       (((pattern (FunApp (StanLib tfd__.Normal (FnLpdf false) AoS) ()))
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))) |}]
 
@@ -121,7 +124,7 @@ let rec change_kwrds_stmts s =
     | Decl e -> Decl {e with decl_id= add_suffix_to_kwrds e.decl_id}
     | NRFunApp (UserDefined (s, sfx), e) ->
         NRFunApp (UserDefined (add_suffix_to_kwrds s, sfx), e)
-    | NRFunApp (StanLib (s, sfx), e) ->
+    | NRFunApp (StanLib (s, sfx, _), e) ->
         NRFunApp (UserDefined (add_suffix_to_kwrds s, sfx), e)
     | Assignment ((s, t, e1), e2) ->
         Assignment ((add_suffix_to_kwrds s, t, e1), e2)
