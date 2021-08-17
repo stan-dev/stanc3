@@ -69,9 +69,7 @@ let rec get_dims st =
 (* Return a type's array dimensions and the type inside the (possibly nested) array *)
 let rec get_array_dims st =
   match st with
-  | SInt | SReal -> (st, [])
-  | SVector d | SRowVector d -> (st, [d])
-  | SMatrix (d1, d2) -> (st, [d1; d2])
+  | SInt | SReal | SVector _ | SRowVector _ | SMatrix _ -> (st, [])
   | SArray (st, dim) ->
       let st', dims = get_array_dims st in
       (st', dim :: dims)

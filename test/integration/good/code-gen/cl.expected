@@ -1335,31 +1335,16 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       int pos__;
       pos__ = 1;
       Eigen::Matrix<local_scalar_t__, -1, 1> alpha_v;
-      alpha_v = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
-      stan::math::fill(alpha_v, DUMMY_VAR__);
-      
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        assign(alpha_v, in__.read<local_scalar_t__>(),
-          "assigning variable alpha_v", index_uni(sym1__));
-      }
+      assign(alpha_v, in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k),
+        "assigning variable alpha_v");
       out__.write(alpha_v);
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
-      beta = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
-      stan::math::fill(beta, DUMMY_VAR__);
-      
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        assign(beta, in__.read<local_scalar_t__>(),
-          "assigning variable beta", index_uni(sym1__));
-      }
+      assign(beta, in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k),
+        "assigning variable beta");
       out__.write(beta);
       Eigen::Matrix<local_scalar_t__, -1, 1> cuts;
-      cuts = Eigen::Matrix<local_scalar_t__, -1, 1>(k);
-      stan::math::fill(cuts, DUMMY_VAR__);
-      
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        assign(cuts, in__.read<local_scalar_t__>(),
-          "assigning variable cuts", index_uni(sym1__));
-      }
+      assign(cuts, in__.read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k),
+        "assigning variable cuts");
       out__.write(cuts);
       local_scalar_t__ sigma;
       sigma = in__.read<local_scalar_t__>();
@@ -1371,35 +1356,17 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       phi = in__.read<local_scalar_t__>();
       out__.write(phi);
       Eigen::Matrix<local_scalar_t__, -1, -1> X_p;
-      X_p = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
-      stan::math::fill(X_p, DUMMY_VAR__);
-      
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-          assign(X_p, in__.read<local_scalar_t__>(),
-            "assigning variable X_p", index_uni(sym2__), index_uni(sym1__));
-        }
-      }
+      assign(X_p, in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, k),
+        "assigning variable X_p");
       out__.write(X_p);
       Eigen::Matrix<local_scalar_t__, -1, -1> beta_m;
-      beta_m = Eigen::Matrix<local_scalar_t__, -1, -1>(n, k);
-      stan::math::fill(beta_m, DUMMY_VAR__);
-      
-      for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
-          assign(beta_m, in__.read<local_scalar_t__>(),
-            "assigning variable beta_m", index_uni(sym2__), index_uni(sym1__));
-        }
-      }
+      assign(beta_m,
+        in__.read<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, k),
+        "assigning variable beta_m");
       out__.write(beta_m);
       Eigen::Matrix<local_scalar_t__, 1, -1> X_rv_p;
-      X_rv_p = Eigen::Matrix<local_scalar_t__, 1, -1>(n);
-      stan::math::fill(X_rv_p, DUMMY_VAR__);
-      
-      for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
-        assign(X_rv_p, in__.read<local_scalar_t__>(),
-          "assigning variable X_rv_p", index_uni(sym1__));
-      }
+      assign(X_rv_p, in__.read<Eigen::Matrix<local_scalar_t__, 1, -1>>(n),
+        "assigning variable X_rv_p");
       out__.write(X_rv_p);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
