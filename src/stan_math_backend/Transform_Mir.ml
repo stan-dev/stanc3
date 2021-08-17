@@ -446,16 +446,7 @@ let trans_prog (p : Program.Typed.t) =
     Stmt.Helpers.for_scalar_inv out_constrained_st bodyfn expr
       Location_span.empty
   in
-  let param_writes, tparam_writes, _ =
-    List.map p.output_vars ~f:(fun (name, outvar) ->
-        (outvar.Program.out_block, gen_write (name, outvar)) )
-    |> List.partition3_map ~f:(fun (b, x) ->
-           match b with
-           | Parameters -> `Fst x
-           | TransformedParameters -> `Snd x
-           | GeneratedQuantities -> `Trd x )
-  in
-  let _, _, gq_writes =
+  let param_writes, tparam_writes, gq_writes =
     List.map p.output_vars ~f:(fun (name, outvar) ->
         (outvar.Program.out_block, gq_write (name, outvar)) )
     |> List.partition3_map ~f:(fun (b, x) ->

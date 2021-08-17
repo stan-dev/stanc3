@@ -425,9 +425,13 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       stan::math::fill(z, std::numeric_limits<double>::quiet_NaN());
       
       out__.write(y);
-      out__.write(y0);
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        out__.write(y0[(sym1__ - 1)]);
+      }
       out__.write(t0);
-      out__.write(times);
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        out__.write(times[(sym1__ - 1)]);
+      }
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -451,7 +455,11 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
           max_num_steps, num_checkpoints, interpolation_polynomial, solver_f,
           solver_b, pstream__, i, y), "assigning variable z");
       if (emit_transformed_parameters__) {
-        out__.write(z);
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+            out__.write(z[(sym2__ - 1)][(sym1__ - 1)]);
+          }
+        }
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
