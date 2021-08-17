@@ -314,6 +314,39 @@ let gen_write ?(unconstrain = false)
        {unconstrain_opt= Option.some_if unconstrain out_trans; var= decl_var})
     [] Location_span.empty
 
+(**
+ * Generate write instructions for unconstrained types. For scalars,
+ *  matrices, vectors, and arrays with one dimension we can write
+ *  these directly, but for arrays of arrays/vectors/matrices we
+ *  need to use for_scalar_inv to write them in "column major order"
+ *)
+let gen_unconstrained_write (decl_id, Program.({out_constrained_st; _})) =
+  if SizedType.is_recursive_container out_constrained_st then
+    let bodyfn var =
+      Stmt.Helpers.internal_nrfunapp
+        (FnWriteParam {unconstrain_opt= None; var})
+        [var] Location_span.empty
+    in
+    let meta =
+      { Expr.Typed.Meta.empty with
+        type_= SizedType.to_unsized out_constrained_st }
+    in
+    let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
+    Stmt.Helpers.for_scalar_inv out_constrained_st bodyfn expr
+      Location_span.empty
+  else
+    let decl_var =
+      { Expr.Fixed.pattern= Var decl_id
+      ; meta=
+          Expr.Typed.Meta.
+            { loc= Location_span.empty
+            ; type_= SizedType.to_unsized out_constrained_st
+            ; adlevel= DataOnly } }
+    in
+    Stmt.Helpers.internal_nrfunapp
+      (FnWriteParam {unconstrain_opt= None; var= decl_var})
+      [] Location_span.empty
+
 (* Statements to read, unconstrain and assign a parameter then write it back *)
 let data_unconstrain_transform smeta (decl_id, outvar) =
   [ Stmt.Fixed.
@@ -434,7 +467,7 @@ let trans_prog (p : Program.Typed.t) =
   in
   let param_writes, tparam_writes, gq_writes =
     List.map p.output_vars ~f:(fun (name, outvar) ->
-        (outvar.Program.out_block, gen_write (name, outvar)) )
+        (outvar.Program.out_block, gen_unconstrained_write (name, outvar)) )
     |> List.partition3_map ~f:(fun (b, x) ->
            match b with
            | Parameters -> `Fst x
