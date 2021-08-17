@@ -149,6 +149,23 @@ let is_fun_type = function UFun _ -> true | _ -> false
 let rec contains_int ut =
   match ut with UInt -> true | UArray ut -> contains_int ut | _ -> false
 
+let rec contains_eigen_type ut =
+  match ut with
+  | UInt -> false
+  | UReal | UMathLibraryFunction | UFun (_, Void, _, _) -> false
+  | UVector | URowVector | UMatrix -> true
+  | UArray t | UFun (_, ReturnType t, _, _) -> contains_eigen_type t
+  
+let rec is_container ut =
+  match ut with
+  | UVector | URowVector | UMatrix | UArray _ -> true
+  | UReal | UInt | UFun (_, Void, _, _) -> false
+  | UFun (_, ReturnType t, _, _) -> is_container t
+  | UMathLibraryFunction -> false
+
+let return_contains_eigen_type ret =
+  match ret with ReturnType t -> contains_eigen_type t | Void -> false
+  
 let rec is_indexing_matrix = function
   | UArray t, _ :: idcs -> is_indexing_matrix (t, idcs)
   | UMatrix, [] -> false
