@@ -8108,31 +8108,185 @@ class mother_model final : public model_base_crtp<mother_model> {
       }
       out__.write(gq_r1);
       out__.write(gq_r2);
-      out__.write(gq_real_1d_ar);
-      out__.write(gq_real_3d_ar);
-      out__.write(gq_vec);
-      out__.write(gq_1d_vec);
-      out__.write(gq_3d_vec);
-      out__.write(gq_row_vec);
-      out__.write(gq_1d_row_vec);
-      out__.write(gq_3d_row_vec);
-      out__.write(gq_ar_mat);
-      out__.write(gq_simplex);
-      out__.write(gq_1d_simplex);
-      out__.write(gq_3d_simplex);
-      out__.write(gq_cfcov_54);
-      out__.write(gq_cfcov_33);
-      out__.write(gq_cfcov_33_ar);
-      out__.write(indices);
-      out__.write(indexing_mat);
-      out__.write(idx_res1);
-      out__.write(idx_res2);
-      out__.write(idx_res3);
-      out__.write(idx_res11);
-      out__.write(idx_res21);
-      out__.write(idx_res31);
-      out__.write(idx_res4);
-      out__.write(idx_res5);
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        out__.write(gq_real_1d_ar[(sym1__ - 1)]);
+      }
+      for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
+            out__.write(
+              gq_real_3d_ar[(sym3__ - 1)][(sym2__ - 1)][(sym1__ - 1)]);
+          }
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        out__.write(gq_vec[(sym1__ - 1)]);
+      }
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          out__.write(gq_1d_vec[(sym2__ - 1)][(sym1__ - 1)]);
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
+            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+              out__.write(
+                gq_3d_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][(sym1__ -
+                                                                    1)]);
+            }
+          }
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        out__.write(gq_row_vec[(sym1__ - 1)]);
+      }
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          out__.write(gq_1d_row_vec[(sym2__ - 1)][(sym1__ - 1)]);
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
+            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+              out__.write(
+                gq_3d_row_vec[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][
+                (sym1__ - 1)]);
+            }
+          }
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+            for (int sym4__ = 1; sym4__ <= 4; ++sym4__) {
+              out__.write(
+                rvalue(gq_ar_mat, "gq_ar_mat",
+                  index_uni(sym4__), index_uni(sym3__), index_uni(sym2__),
+                    index_uni(sym1__)));
+            }
+          }
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        out__.write(gq_simplex[(sym1__ - 1)]);
+      }
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          out__.write(gq_1d_simplex[(sym2__ - 1)][(sym1__ - 1)]);
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
+            for (int sym4__ = 1; sym4__ <= N; ++sym4__) {
+              out__.write(
+                gq_3d_simplex[(sym4__ - 1)][(sym3__ - 1)][(sym2__ - 1)][
+                (sym1__ - 1)]);
+            }
+          }
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
+          out__.write(
+            rvalue(gq_cfcov_54, "gq_cfcov_54",
+              index_uni(sym2__), index_uni(sym1__)));
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+          out__.write(
+            rvalue(gq_cfcov_33, "gq_cfcov_33",
+              index_uni(sym2__), index_uni(sym1__)));
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
+            out__.write(
+              rvalue(gq_cfcov_33_ar, "gq_cfcov_33_ar",
+                index_uni(sym3__), index_uni(sym2__), index_uni(sym1__)));
+          }
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        out__.write(indices[(sym1__ - 1)]);
+      }
+      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+            out__.write(
+              rvalue(indexing_mat, "indexing_mat",
+                index_uni(sym3__), index_uni(sym2__), index_uni(sym1__)));
+          }
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+            out__.write(
+              rvalue(idx_res1, "idx_res1",
+                index_uni(sym3__), index_uni(sym2__), index_uni(sym1__)));
+          }
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+            out__.write(
+              rvalue(idx_res2, "idx_res2",
+                index_uni(sym3__), index_uni(sym2__), index_uni(sym1__)));
+          }
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+            out__.write(
+              rvalue(idx_res3, "idx_res3",
+                index_uni(sym3__), index_uni(sym2__), index_uni(sym1__)));
+          }
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+            out__.write(
+              rvalue(idx_res11, "idx_res11",
+                index_uni(sym3__), index_uni(sym2__), index_uni(sym1__)));
+          }
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
+            out__.write(
+              rvalue(idx_res21, "idx_res21",
+                index_uni(sym3__), index_uni(sym2__), index_uni(sym1__)));
+          }
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+          for (int sym3__ = 1; sym3__ <= 3; ++sym3__) {
+            out__.write(
+              rvalue(idx_res31, "idx_res31",
+                index_uni(sym3__), index_uni(sym2__), index_uni(sym1__)));
+          }
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 4; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
+          out__.write(idx_res4[(sym2__ - 1)][(sym1__ - 1)]);
+        }
+      }
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
+          out__.write(idx_res5[(sym2__ - 1)][(sym1__ - 1)]);
+        }
+      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -11298,14 +11452,24 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       assign(theta_dbl,
         algebra_solver_newton(algebra_system_functor__(), x_p_v, y_p, x_d_r,
           x_d_i, pstream__, 0.01, 0.01, 10), "assigning variable theta_dbl");
-      out__.write(y_hat);
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= T; ++sym2__) {
+          out__.write(y_hat[(sym2__ - 1)][(sym1__ - 1)]);
+        }
+      }
       out__.write(y_1d);
       out__.write(z_1d);
       out__.write(abc1_gq);
       out__.write(abc2_gq);
-      out__.write(y_hat_gq);
-      out__.write(yy_hat_gq);
-      out__.write(theta_dbl);
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        out__.write(y_hat_gq[(sym1__ - 1)]);
+      }
+      for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
+        out__.write(yy_hat_gq[(sym1__ - 1)]);
+      }
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        out__.write(theta_dbl[(sym1__ - 1)]);
+      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -15645,7 +15809,11 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       current_statement__ = 399;
       assign(zg, ode_bdf(f_odefunctor__(), v, r, ra, pstream__, r, v),
         "assigning variable zg");
-      out__.write(zg);
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
+          out__.write(zg[(sym2__ - 1)][(sym1__ - 1)]);
+        }
+      }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return

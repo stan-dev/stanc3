@@ -432,9 +432,32 @@ let trans_prog (p : Program.Typed.t) =
     |> List.map ~f:(fun pattern ->
            Stmt.Fixed.{pattern; meta= Location_span.empty} )
   in
-  let param_writes, tparam_writes, gq_writes =
+  let gq_write (decl_id, Program.({out_constrained_st; _})) =
+    let bodyfn var =
+      Stmt.Helpers.internal_nrfunapp
+        (FnWriteParam {unconstrain_opt= None; var})
+        [var] Location_span.empty
+    in
+    let meta =
+      { Expr.Typed.Meta.empty with
+        type_= SizedType.to_unsized out_constrained_st }
+    in
+    let expr = Expr.Fixed.{meta; pattern= Var decl_id} in
+    Stmt.Helpers.for_scalar_inv out_constrained_st bodyfn expr
+      Location_span.empty
+  in
+  let param_writes, tparam_writes, _ =
     List.map p.output_vars ~f:(fun (name, outvar) ->
         (outvar.Program.out_block, gen_write (name, outvar)) )
+    |> List.partition3_map ~f:(fun (b, x) ->
+           match b with
+           | Parameters -> `Fst x
+           | TransformedParameters -> `Snd x
+           | GeneratedQuantities -> `Trd x )
+  in
+  let _, _, gq_writes =
+    List.map p.output_vars ~f:(fun (name, outvar) ->
+        (outvar.Program.out_block, gq_write (name, outvar)) )
     |> List.partition3_map ~f:(fun (b, x) ->
            match b with
            | Parameters -> `Fst x
