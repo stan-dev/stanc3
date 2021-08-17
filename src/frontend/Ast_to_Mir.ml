@@ -214,7 +214,7 @@ let same_shape decl_id decl_var id var meta =
                   [str "constraint"; str decl_id; decl_var; str id; var] )
         ; meta } ]
 
-let check_transform_shape decl_id decl_var meta = function
+let check_transform_shape_prim decl_id decl_var meta = function
   | Transformation.Offset e -> same_shape decl_id decl_var "offset" e meta
   | Multiplier e -> same_shape decl_id decl_var "multiplier" e meta
   | Lower e -> same_shape decl_id decl_var "lower" e meta
@@ -228,6 +228,12 @@ let check_transform_shape decl_id decl_var meta = function
   | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
    |PositiveOrdered | Simplex | UnitVector | Identity ->
       []
+
+let check_transform_shape decl_id decl_var meta = function
+  | Transformation.Single t ->
+      check_transform_shape_prim decl_id decl_var meta t
+  | Chain ts ->
+      List.concat_map ~f:(check_transform_shape_prim decl_id decl_var meta) ts
 
 let copy_indices indexed (var : Expr.Typed.t) =
   if UnsizedType.is_scalar_type var.meta.type_ then var
@@ -276,29 +282,32 @@ let param_size transform sizedtype =
     Expr.Helpers.(binop (binop k Times (binop k Minus (int 1))) Divide (int 2))
   in
   match transform with
-  | Transformation.Identity | Lower _ | Upper _
-   |LowerUpper (_, _)
-   |Offset _ | Multiplier _
-   |OffsetMultiplier (_, _)
-   |Ordered | PositiveOrdered | UnitVector ->
-      sizedtype
-  | Simplex ->
-      shrink_eigen (fun d -> Expr.Helpers.(binop d Minus (int 1))) sizedtype
-  | CholeskyCorr | Correlation -> shrink_eigen k_choose_2 sizedtype
-  | CholeskyCov ->
-      (* (N * (N + 1)) / 2 + (M - N) * N *)
-      shrink_eigen_mat
-        (fun m n ->
-          Expr.Helpers.(
-            binop
-              (binop (k_choose_2 n) Plus n)
-              Plus
-              (binop (binop m Minus n) Times n)) )
+  | Transformation.Single t -> (
+    match t with
+    | Identity | Lower _ | Upper _
+     |LowerUpper (_, _)
+     |Offset _ | Multiplier _
+     |OffsetMultiplier (_, _)
+     |Ordered | PositiveOrdered | UnitVector ->
         sizedtype
-  | Covariance ->
-      shrink_eigen
-        (fun k -> Expr.Helpers.(binop k Plus (k_choose_2 k)))
-        sizedtype
+    | Simplex ->
+        shrink_eigen (fun d -> Expr.Helpers.(binop d Minus (int 1))) sizedtype
+    | CholeskyCorr | Correlation -> shrink_eigen k_choose_2 sizedtype
+    | CholeskyCov ->
+        (* (N * (N + 1)) / 2 + (M - N) * N *)
+        shrink_eigen_mat
+          (fun m n ->
+            Expr.Helpers.(
+              binop
+                (binop (k_choose_2 n) Plus n)
+                Plus
+                (binop (binop m Minus n) Times n)) )
+          sizedtype
+    | Covariance ->
+        shrink_eigen
+          (fun k -> Expr.Helpers.(binop k Plus (k_choose_2 k)))
+          sizedtype )
+  | Chain _ -> failwith "TR TODO: param size"
 
 let remove_possibly_exn pst action loc =
   match pst with
@@ -310,20 +319,26 @@ let remove_possibly_exn pst action loc =
 
 let rec check_decl var decl_type' decl_id decl_trans smeta adlevel =
   let decl_type = remove_possibly_exn decl_type' "check" smeta in
+  let check_single trans =
+    match trans with
+    | Transformation.LowerUpper (lb, ub) ->
+        check_decl var decl_type' decl_id (Transformation.Single (Lower lb))
+          smeta adlevel
+        @ check_decl var decl_type' decl_id (Single (Upper ub)) smeta adlevel
+    | _ when Transformation.has_check decl_trans ->
+        let check_id id =
+          let var_name = Fmt.strf "%a" Expr.Typed.pp id in
+          let args = extract_transform_args id trans in
+          Stmt.Helpers.internal_nrfunapp
+            (FnCheck {trans= decl_trans; var_name; var= id})
+            args smeta
+        in
+        [(constraint_forl trans) decl_type check_id var smeta]
+    | _ -> []
+  in
   match decl_trans with
-  | Transformation.LowerUpper (lb, ub) ->
-      check_decl var decl_type' decl_id (Lower lb) smeta adlevel
-      @ check_decl var decl_type' decl_id (Upper ub) smeta adlevel
-  | _ when Transformation.has_check decl_trans ->
-      let check_id id =
-        let var_name = Fmt.strf "%a" Expr.Typed.pp id in
-        let args = extract_transform_args id decl_trans in
-        Stmt.Helpers.internal_nrfunapp
-          (FnCheck {trans= decl_trans; var_name; var= id})
-          args smeta
-      in
-      [(constraint_forl decl_trans) decl_type check_id var smeta]
-  | _ -> []
+  | Transformation.Single t -> check_single t
+  | Chain ts -> List.concat_map ~f:check_single ts
 
 let check_sizedtype name =
   let check x = function
@@ -357,8 +372,8 @@ let check_sizedtype name =
       (ll, Type.Sized st)
   | Unsized ut -> ([], Unsized ut)
 
-let trans_decl {transform_action; dadlevel} smeta decl_type transform
-    identifier initial_value =
+let trans_decl {transform_action; dadlevel} smeta decl_type
+    (transform : Expr.Typed.t Transformation.t) identifier initial_value =
   let decl_id = identifier.Ast.name in
   let rhs = Option.map ~f:trans_expr initial_value in
   let size_checks, dt = check_sizedtype identifier.name decl_type in
@@ -629,9 +644,9 @@ let trans_sizedtype_decl declc tr name =
     | SVector s ->
         let fn =
           match (declc.transform_action, tr) with
-          | Constrain, Transformation.Simplex ->
+          | Constrain, Transformation.Single Simplex ->
               Internal_fun.FnValidateSizeSimplex
-          | Constrain, UnitVector -> FnValidateSizeUnitVector
+          | Constrain, Single UnitVector -> FnValidateSizeUnitVector
           | _ -> FnValidateSize
         in
         let l, s = grab_size fn n s in
@@ -644,7 +659,7 @@ let trans_sizedtype_decl declc tr name =
         let l2, c = grab_size FnValidateSize (n + 1) c in
         let cf_cov =
           match (declc.transform_action, tr) with
-          | Constrain, CholeskyCov ->
+          | Constrain, Single CholeskyCov ->
               [ { Stmt.Fixed.pattern=
                     NRFunApp
                       ( StanLib ("check_greater_or_equal", FnPlain)

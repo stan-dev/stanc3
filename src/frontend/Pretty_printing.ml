@@ -229,20 +229,22 @@ and pp_transformed_type ppf (pst, trans) =
     | _ -> Fmt.nop
   in
   match trans with
-  | Middle.Transformation.Identity ->
-      Fmt.pf ppf "%a%a" unsizedtype_fmt () sizes_fmt ()
-  | Lower _ | Upper _ | LowerUpper _ | Offset _ | Multiplier _
-   |OffsetMultiplier _ ->
-      Fmt.pf ppf "%a%a%a" unsizedtype_fmt () pp_transformation trans sizes_fmt
-        ()
-  | Ordered -> Fmt.pf ppf "ordered%a" sizes_fmt ()
-  | PositiveOrdered -> Fmt.pf ppf "positive_ordered%a" sizes_fmt ()
-  | Simplex -> Fmt.pf ppf "simplex%a" sizes_fmt ()
-  | UnitVector -> Fmt.pf ppf "unit_vector%a" sizes_fmt ()
-  | CholeskyCorr -> Fmt.pf ppf "cholesky_factor_corr%a" cov_sizes_fmt ()
-  | CholeskyCov -> Fmt.pf ppf "cholesky_factor_cov%a" cov_sizes_fmt ()
-  | Correlation -> Fmt.pf ppf "corr_matrix%a" cov_sizes_fmt ()
-  | Covariance -> Fmt.pf ppf "cov_matrix%a" cov_sizes_fmt ()
+  | Middle.Transformation.Single t -> (
+    match t with
+    | Middle.Transformation.Identity ->
+        Fmt.pf ppf "%a%a" unsizedtype_fmt () sizes_fmt ()
+    | Lower _ | Upper _ | LowerUpper _ | Offset _ | Multiplier _
+     |OffsetMultiplier _ ->
+        Fmt.pf ppf "%a%a%a" unsizedtype_fmt () pp_transformation t sizes_fmt ()
+    | Ordered -> Fmt.pf ppf "ordered%a" sizes_fmt ()
+    | PositiveOrdered -> Fmt.pf ppf "positive_ordered%a" sizes_fmt ()
+    | Simplex -> Fmt.pf ppf "simplex%a" sizes_fmt ()
+    | UnitVector -> Fmt.pf ppf "unit_vector%a" sizes_fmt ()
+    | CholeskyCorr -> Fmt.pf ppf "cholesky_factor_corr%a" cov_sizes_fmt ()
+    | CholeskyCov -> Fmt.pf ppf "cholesky_factor_cov%a" cov_sizes_fmt ()
+    | Correlation -> Fmt.pf ppf "corr_matrix%a" cov_sizes_fmt ()
+    | Covariance -> Fmt.pf ppf "cov_matrix%a" cov_sizes_fmt () )
+  | Chain _ -> failwith "TR TODO: pprint"
 
 and pp_array_dims ppf = function
   | [] -> Fmt.pf ppf ""

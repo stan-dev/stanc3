@@ -173,9 +173,11 @@ let read_constrain_dims constrain_transform st =
     | SArray (t, dim) -> dim :: constrain_get_dims t
   in
   match constrain_transform with
-  | Transformation.CholeskyCorr | Correlation | Covariance ->
-      constrain_get_dims st
-  | _ -> SizedType.get_dims st
+  | Transformation.Single t -> (
+    match t with
+    | CholeskyCorr | Correlation | Covariance -> constrain_get_dims st
+    | _ -> SizedType.get_dims st )
+  | Chain _ -> failwith "TR TODO: read_constrain_dims"
 
 let data_serializer_read loc out_constrained_st =
   let ut = SizedType.to_unsized out_constrained_st in

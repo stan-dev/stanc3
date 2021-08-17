@@ -379,15 +379,15 @@ top_var_decl_no_assign:
 
 sized_basic_type:
   | INT
-    { grammar_logger "INT_var_type" ; (SizedType.SInt, Identity) }
+    { grammar_logger "INT_var_type" ; (SizedType.SInt, Single Identity) }
   | REAL
-    { grammar_logger "REAL_var_type" ; (SizedType.SReal, Identity) }
+    { grammar_logger "REAL_var_type" ; (SizedType.SReal, Single Identity) }
   | VECTOR LBRACK e=expression RBRACK
-    { grammar_logger "VECTOR_var_type" ; (SizedType.SVector e, Identity) }
+    { grammar_logger "VECTOR_var_type" ; (SizedType.SVector e, Single Identity) }
   | ROWVECTOR LBRACK e=expression RBRACK
-    { grammar_logger "ROWVECTOR_var_type" ; (SizedType.SRowVector e , Identity) }
+    { grammar_logger "ROWVECTOR_var_type" ; (SizedType.SRowVector e , Single Identity) }
   | MATRIX LBRACK e1=expression COMMA e2=expression RBRACK
-    { grammar_logger "MATRIX_var_type" ; (SizedType.SMatrix (e1, e2), Identity) }
+    { grammar_logger "MATRIX_var_type" ; (SizedType.SMatrix (e1, e2), Single Identity) }
 
 top_var_type:
   | INT r=range_constraint
@@ -401,49 +401,49 @@ top_var_type:
   | MATRIX c=type_constraint LBRACK e1=expression COMMA e2=expression RBRACK
     { grammar_logger "MATRIX_top_var_type" ; (SMatrix (e1, e2), c) }
   | ORDERED LBRACK e=expression RBRACK
-    { grammar_logger "ORDERED_top_var_type" ; (SVector e, Ordered) }
+    { grammar_logger "ORDERED_top_var_type" ; (SVector e, Single Ordered) }
   | POSITIVEORDERED LBRACK e=expression RBRACK
     {
       grammar_logger "POSITIVEORDERED_top_var_type" ;
-      (SVector e, PositiveOrdered)
+      (SVector e, Single PositiveOrdered)
     }
   | SIMPLEX LBRACK e=expression RBRACK
-    { grammar_logger "SIMPLEX_top_var_type" ; (SVector e, Simplex) }
+    { grammar_logger "SIMPLEX_top_var_type" ; (SVector e, Single Simplex) }
   | UNITVECTOR LBRACK e=expression RBRACK
-    { grammar_logger "UNITVECTOR_top_var_type" ; (SVector e, UnitVector) }
+    { grammar_logger "UNITVECTOR_top_var_type" ; (SVector e, Single UnitVector) }
   | CHOLESKYFACTORCORR LBRACK e=expression RBRACK
     {
       grammar_logger "CHOLESKYFACTORCORR_top_var_type" ;
-      (SMatrix (e, e), CholeskyCorr)
+      (SMatrix (e, e), Single CholeskyCorr)
     }
   | CHOLESKYFACTORCOV LBRACK e1=expression oe2=option(pair(COMMA, expression))
     RBRACK
     {
       grammar_logger "CHOLESKYFACTORCOV_top_var_type" ;
-      match oe2 with Some (_,e2) -> ( SMatrix (e1, e2), CholeskyCov)
-                   | _           ->  (SMatrix (e1, e1),  CholeskyCov)
+      match oe2 with Some (_,e2) -> ( SMatrix (e1, e2), Single CholeskyCov)
+                   | _           ->  (SMatrix (e1, e1),  Single CholeskyCov)
     }
   | CORRMATRIX LBRACK e=expression RBRACK
-    { grammar_logger "CORRMATRIX_top_var_type" ; (SMatrix (e, e), Correlation) }
+    { grammar_logger "CORRMATRIX_top_var_type" ; (SMatrix (e, e), Single Correlation) }
   | COVMATRIX LBRACK e=expression RBRACK
-    { grammar_logger "COVMATRIX_top_var_type" ; (SMatrix (e, e), Covariance) }
+    { grammar_logger "COVMATRIX_top_var_type" ; (SMatrix (e, e), Single Covariance) }
 
 type_constraint:
   | r=range_constraint
     {  grammar_logger "type_constraint_range" ; r }
   | LABRACK l=offset_mult RABRACK
-    {  grammar_logger "type_constraint_offset_mult" ; l }
+    {  grammar_logger "type_constraint_offset_mult" ; Single l }
 
 range_constraint:
   | (* nothing *)
-    { grammar_logger "empty_constraint" ; Transformation.Identity }
+    { grammar_logger "empty_constraint" ; Transformation.Single Identity }
   | LABRACK r=range RABRACK
-    {  grammar_logger "range_constraint" ; r }
+    {  grammar_logger "range_constraint" ; Single r }
 
 range:
   | LOWER ASSIGN e1=constr_expression COMMA UPPER ASSIGN e2=constr_expression
   | UPPER ASSIGN e2=constr_expression COMMA LOWER ASSIGN e1=constr_expression
-    { grammar_logger "lower_upper_range" ; Transformation.LowerUpper (e1, e2) }
+    { grammar_logger "lower_upper_range" ; Transformation.(LowerUpper (e1, e2)) }
   | LOWER ASSIGN e=constr_expression
     {  grammar_logger "lower_range" ; Lower e }
   | UPPER ASSIGN e=constr_expression

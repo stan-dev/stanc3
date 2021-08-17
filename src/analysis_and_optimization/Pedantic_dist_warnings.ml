@@ -79,9 +79,11 @@ let bounds_out_of_range (range : range) (bounds : bound_values) : bool =
 (* Check for inconsistency between a distribution argument's constraint and the
    constraint transformation of a variable *)
 let transform_mismatch_constraint (constr : var_constraint)
-    (trans : Expr.Typed.t Transformation.t) : bool =
+    (trans : Expr.Typed.t Transformation.primitive) : bool =
   match constr with
-  | Range range -> bounds_out_of_range range (trans_bounds_values trans)
+  | Range range ->
+      bounds_out_of_range range
+        (trans_bounds_values Transformation.(Single trans))
   | Ordered -> trans <> Transformation.Ordered
   | PositiveOrdered -> trans <> PositiveOrdered
   | Simplex -> trans <> Simplex
@@ -170,7 +172,8 @@ let constr_mismatch_warning (constr : var_constraint_named) (arg : arg_info)
         raise (Failure arg_fail_msg)
   in
   match v with
-  | Param (pname, trans), meta ->
+  | Param (pname, Transformation.Single trans), meta ->
+      (* TR TODO: constr_mismatch_warning *)
       if transform_mismatch_constraint constr.constr trans then
         Some (meta.loc, constr_mismatch_message name pname arg constr.name)
       else None

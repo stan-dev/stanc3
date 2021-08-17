@@ -212,20 +212,28 @@ let pp_shapes ppf p =
 let pp_bijector ppf trans =
   let pp_call_expr ppf (name, args) = pp_call ppf (name, pp_expr, args) in
   let components =
+    let single trans =
+      match trans with
+      | Transformation.Identity -> []
+      | Lower lb -> [("Exp", []); ("Shift", [lb])]
+      | Upper ub ->
+          [("Exp", []); ("Scale", [Expr.Helpers.float (-1.)]); ("Shift", [ub])]
+      | LowerUpper (lb, ub) -> [("Sigmoid", [lb; ub])]
+      | Offset o -> [("Shift", [o])]
+      | Multiplier m -> [("Scale", [m])]
+      | OffsetMultiplier (o, m) -> [("Scale", [m]); ("Shift", [o])]
+      | CholeskyCorr -> [("CorrelationCholesky", [])]
+      | Correlation ->
+          [("CorrelationCholesky", []); ("CholeskyOuterProduct", [])]
+      | _ ->
+          raise_s
+            [%message
+              "Unsupported " (trans : Expr.Typed.t Transformation.primitive)]
+    in
     match trans with
-    | Transformation.Identity -> []
-    | Lower lb -> [("Exp", []); ("Shift", [lb])]
-    | Upper ub ->
-        [("Exp", []); ("Scale", [Expr.Helpers.float (-1.)]); ("Shift", [ub])]
-    | LowerUpper (lb, ub) -> [("Sigmoid", [lb; ub])]
-    | Offset o -> [("Shift", [o])]
-    | Multiplier m -> [("Scale", [m])]
-    | OffsetMultiplier (o, m) -> [("Scale", [m]); ("Shift", [o])]
-    | CholeskyCorr -> [("CorrelationCholesky", [])]
-    | Correlation -> [("CorrelationCholesky", []); ("CholeskyOuterProduct", [])]
-    | _ ->
-        raise_s
-          [%message "Unsupported " (trans : Expr.Typed.t Transformation.t)]
+    | Transformation.Single trans -> single trans
+    | Chain trans -> List.concat_map ~f:single trans
+    (* TR TODO check order here *)
   in
   match components with
   | [] -> pf ppf "tfb__.Identity()"

@@ -46,16 +46,19 @@ let trans_bounds_values (trans : Expr.Typed.t Transformation.t) : bound_values
     match num_expr_value e with None -> `Nonlit | Some (f, _) -> `Lit f
   in
   match trans with
-  | Lower lower -> {lower= bound_value lower; upper= `None}
-  | Upper upper -> {lower= `None; upper= bound_value upper}
-  | LowerUpper (lower, upper) ->
-      {lower= bound_value lower; upper= bound_value upper}
-  | Simplex -> {lower= `Lit 0.; upper= `Lit 1.}
-  | PositiveOrdered -> {lower= `Lit 0.; upper= `None}
-  | UnitVector -> {lower= `Lit (-1.); upper= `Lit 1.}
-  | CholeskyCorr | CholeskyCov | Correlation | Covariance | Ordered
-   |Offset _ | Multiplier _ | OffsetMultiplier _ | Identity ->
-      {lower= `None; upper= `None}
+  | Single t -> (
+    match t with
+    | Lower lower -> {lower= bound_value lower; upper= `None}
+    | Upper upper -> {lower= `None; upper= bound_value upper}
+    | LowerUpper (lower, upper) ->
+        {lower= bound_value lower; upper= bound_value upper}
+    | Simplex -> {lower= `Lit 0.; upper= `Lit 1.}
+    | PositiveOrdered -> {lower= `Lit 0.; upper= `None}
+    | UnitVector -> {lower= `Lit (-1.); upper= `Lit 1.}
+    | CholeskyCorr | CholeskyCov | Correlation | Covariance | Ordered
+     |Offset _ | Multiplier _ | OffsetMultiplier _ | Identity ->
+        {lower= `None; upper= `None} )
+  | Chain _ -> failwith "TR TODO: trans_bounds_values"
 
 let chop_dist_name (fname : string) : string Option.t =
   (* Slightly inefficient, would be better to short-circuit *)

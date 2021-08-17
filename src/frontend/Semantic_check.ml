@@ -864,7 +864,7 @@ let rec semantic_check_sizedtype cf = function
       Validate.liftA2 (fun ust ue -> SizedType.SArray (ust, ue)) ust ue
 
 (* -- Transformations ------------------------------------------------------- *)
-let semantic_check_transformation cf ut = function
+let semantic_check_transformation_prim cf ut = function
   | Transformation.Identity -> Validate.ok Transformation.Identity
   | Lower e ->
       semantic_check_expression_of_scalar_or_type cf ut e "Lower bound"
@@ -903,6 +903,16 @@ let semantic_check_transformation cf ut = function
   | CholeskyCov -> Validate.ok Transformation.CholeskyCov
   | Correlation -> Validate.ok Transformation.Correlation
   | Covariance -> Validate.ok Transformation.Covariance
+
+let semantic_check_transformation cf ut trans =
+  match trans with
+  | Transformation.Single t ->
+      semantic_check_transformation_prim cf ut t
+      |> Validate.map ~f:(fun u -> Transformation.Single u)
+  | Chain ts ->
+      List.map ~f:(semantic_check_transformation_prim cf ut) ts
+      |> Validate.sequence
+      |> Validate.map ~f:(fun us -> Transformation.Chain us)
 
 (* -- Printables ------------------------------------------------------------ *)
 
@@ -1520,14 +1530,21 @@ and semantic_check_profile ~loc ~cf name stmts =
         mk_typed_statement ~stmt:(Profile (name, xs)) ~return_type ~loc ))
 
 (* -- Variable Declarations ------------------------------------------------- *)
-and semantic_check_var_decl_bounds ~loc is_global sized_ty trans =
+and semantic_check_var_decl_bounds ~loc is_global sized_ty
+    (trans : typed_expression Transformation.t) =
   let is_real {emeta; _} = emeta.type_ = UReal in
-  let is_valid_transformation =
-    match trans with
-    | Transformation.Lower e -> is_real e
-    | Upper e -> is_real e
-    | LowerUpper (e1, e2) -> is_real e1 || is_real e2
-    | _ -> false
+  let is_valid_transformation : bool =
+    Transformation.fold_prims
+      (fun x t ->
+        x
+        ||
+        match t with
+        (* TR TODO: Valid? Should it be &&? *)
+        | Transformation.Lower e -> is_real e
+        | Upper e -> is_real e
+        | LowerUpper (e1, e2) -> is_real e1 || is_real e2
+        | _ -> false )
+      false trans
   in
   Validate.(
     if is_global && sized_ty = SizedType.SInt && is_valid_transformation then
