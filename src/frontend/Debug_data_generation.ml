@@ -305,12 +305,8 @@ let var_decl_gen_val m d =
       let t =
         match transformation with
         | Single trans -> trans
-        | Chain (trans :: _) -> trans (* TR TODO: Valid? *)
-        | Chain _ ->
-            raise_s
-              [%message
-                "Empty chain transformation in debug generation.\n"
-                  "Please report a bug!"]
+        | Chain ts -> List.hd_exn (List.rev ts)
+        (* TR TODO: Valid? Final transform usually determines the shape of output *)
       in
       generate_value m sizedtype t
   | _ -> failwith "This should never happen."

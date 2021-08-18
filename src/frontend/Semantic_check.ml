@@ -1533,18 +1533,22 @@ and semantic_check_profile ~loc ~cf name stmts =
 and semantic_check_var_decl_bounds ~loc is_global sized_ty
     (trans : typed_expression Transformation.t) =
   let is_real {emeta; _} = emeta.type_ = UReal in
+  let is_valid t other =
+    match t with
+    | Transformation.Lower e -> is_real e
+    | Upper e -> is_real e
+    | LowerUpper (e1, e2) -> is_real e1 || is_real e2
+    | _ -> other
+  in
   let is_valid_transformation : bool =
-    Transformation.fold_prims
-      (fun x t ->
-        x
-        ||
-        match t with
-        (* TR TODO: Valid? Should it be &&? *)
-        | Transformation.Lower e -> is_real e
-        | Upper e -> is_real e
-        | LowerUpper (e1, e2) -> is_real e1 || is_real e2
-        | _ -> false )
-      false trans
+    match trans with
+    | Transformation.Single t -> is_valid t false
+    | Chain ts ->
+        (* TR TODO: Think about this more*)
+        (* at least one is a bound *)
+        List.fold ~f:(fun x y -> x && is_valid y false) ~init:false ts
+        (* all are valid*)
+        && List.fold ~f:(fun x y -> x && is_valid y true) ~init:true ts
   in
   Validate.(
     if is_global && sized_ty = SizedType.SInt && is_valid_transformation then

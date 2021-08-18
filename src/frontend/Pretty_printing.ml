@@ -244,7 +244,10 @@ and pp_transformed_type ppf (pst, trans) =
     | CholeskyCov -> Fmt.pf ppf "cholesky_factor_cov%a" cov_sizes_fmt ()
     | Correlation -> Fmt.pf ppf "corr_matrix%a" cov_sizes_fmt ()
     | Covariance -> Fmt.pf ppf "cov_matrix%a" cov_sizes_fmt () )
-  | Chain _ -> failwith "TR TODO: pprint"
+  | Chain ts ->
+      Fmt.pf ppf "%a%a%a" unsizedtype_fmt ()
+        (Fmt.list ~sep:Fmt.sp pp_transformation)
+        ts sizes_fmt ()
 
 and pp_array_dims ppf = function
   | [] -> Fmt.pf ppf ""
