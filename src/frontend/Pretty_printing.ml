@@ -245,6 +245,7 @@ and pp_transformed_type ppf (pst, trans) =
     | Correlation -> Fmt.pf ppf "corr_matrix%a" cov_sizes_fmt ()
     | Covariance -> Fmt.pf ppf "cov_matrix%a" cov_sizes_fmt () )
   | Chain ts ->
+      (* TR TODO: Currently this would only print the lower/upper and offset/mult *)
       Fmt.pf ppf "%a%a%a" unsizedtype_fmt ()
         (Fmt.list ~sep:Fmt.sp pp_transformation)
         ts sizes_fmt ()
