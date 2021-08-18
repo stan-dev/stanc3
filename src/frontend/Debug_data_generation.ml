@@ -306,7 +306,11 @@ let var_decl_gen_val m d =
         match transformation with
         | Single trans -> trans
         | Chain (trans :: _) -> trans (* TR TODO: Valid? *)
-        | Chain _ -> failwith "TR TODO: Debug gen: Shoud be impossible"
+        | Chain _ ->
+            raise_s
+              [%message
+                "Empty chain transformation in debug generation.\n"
+                  "Please report a bug!"]
       in
       generate_value m sizedtype t
   | _ -> failwith "This should never happen."

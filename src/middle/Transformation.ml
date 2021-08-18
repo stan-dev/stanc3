@@ -1,5 +1,6 @@
 open Core_kernel
-(** Transformations (constraints) for global variable declarations *)
+
+(** A primitive (basic) transformation. One or many of these makes up a transformation *)
 type 'e primitive =
   | Identity
   | Lower of 'e
@@ -18,24 +19,22 @@ type 'e primitive =
   | Covariance
 [@@deriving sexp, compare, map, hash, fold]
 
+(** Transformations (constraints) for global variable declarations *)
 type 'e t =
   | Single of 'e primitive
   (* given in CONSTRAINING ORDER
-   * e.g. x_con = f(g(x_unc)) is written [f; g]
-  *)
-  | Chain of (('e primitive) list)  
+   * e.g. x_con = f(g(x_unc)) is written [g;f]
+   * = "When constraining, first do g, then do f." 
+   *)
+  | Chain of 'e primitive list
 [@@deriving sexp, compare, map, hash, fold]
 
 let fold_prims f acc = function
   | Single t -> f acc t
-  | Chain ts -> List.fold ts ~init:acc ~f:f
+  | Chain ts -> List.fold ts ~init:acc ~f
 
-let has_check_prim = function
+let primitive_has_check = function
   | Identity | Offset _ | Multiplier _ | OffsetMultiplier _ -> false
   | _ -> true
 
-let has_check (trans: 'e t) = fold_prims (fun x y -> x || has_check_prim y) false trans
-
-let has_transform = function
-  | Single Identity -> false
-  | _ -> true
+let has_transform = function Single Identity -> false | _ -> true

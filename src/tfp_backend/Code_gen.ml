@@ -232,8 +232,7 @@ let pp_bijector ppf trans =
     in
     match trans with
     | Transformation.Single trans -> single trans
-    | Chain trans -> List.concat_map ~f:single trans
-    (* TR TODO check order here *)
+    | Chain trans -> List.concat_map ~f:single (List.rev trans)
   in
   match components with
   | [] -> pf ppf "tfb__.Identity()"

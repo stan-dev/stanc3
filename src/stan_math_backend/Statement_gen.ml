@@ -331,10 +331,10 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
   | NRFunApp (CompilerInternal (FnWriteParam {unconstrain_opt; var}), _) -> (
     match unconstrain_opt with
     (* When the current block or this transformation doesn't require unconstraining,
-                   use vanilla write *)
+                     use vanilla write *)
     | None | Some Transformation.(Single Identity) ->
         pf ppf "@[<hov 2>out__.write(@,%a);@]" pp_expr var
-    (* Otherwise, use stan::io::serializer's write_free functions *)
+    (* Otherwise, chain together some free functions first *)
     | Some trans ->
         pp_unconstraining ppf var trans ;
         pf ppf "@,@[<hov 2>out__.write(@,%a);@]" pp_expr var )

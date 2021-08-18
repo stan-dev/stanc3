@@ -168,17 +168,13 @@ let constraint_to_string = function
   | Identity -> None
 
 let check_to_string = function
-  | Transformation.Single t -> (
-    match t with
-    | Transformation.Lower _ -> Some "greater_or_equal"
-    | Upper _ -> Some "less_or_equal"
-    | CholeskyCov -> Some "cholesky_factor"
-    | LowerUpper _ ->
-        raise_s
-          [%message "LowerUpper is really two other checks tied together"]
-    | Offset _ | Multiplier _ | OffsetMultiplier _ -> None
-    | _ -> constraint_to_string t )
-  | Chain _ -> failwith "TR TODO: check_to_string"
+  | Transformation.Lower _ -> Some "greater_or_equal"
+  | Upper _ -> Some "less_or_equal"
+  | CholeskyCov -> Some "cholesky_factor"
+  | LowerUpper _ ->
+      raise_s [%message "LowerUpper is really two other checks tied together"]
+  | Offset _ | Multiplier _ | OffsetMultiplier _ -> None
+  | t -> constraint_to_string t
 
 let default_multiplier = 1
 let default_offset = 0

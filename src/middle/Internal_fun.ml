@@ -14,7 +14,10 @@ type 'expr t =
   | FnValidateSize
   | FnValidateSizeSimplex
   | FnValidateSizeUnitVector
-  | FnCheck of {trans: 'expr Transformation.t; var_name: string; var: 'expr}
+  | FnCheck of
+      { trans: 'expr Transformation.primitive
+      ; var_name: string
+      ; var: 'expr }
   | FnPrint
   | FnReject
   | FnResizeToMatch

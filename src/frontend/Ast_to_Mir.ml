@@ -325,12 +325,12 @@ let rec check_decl var decl_type' decl_id decl_trans smeta adlevel =
         check_decl var decl_type' decl_id (Transformation.Single (Lower lb))
           smeta adlevel
         @ check_decl var decl_type' decl_id (Single (Upper ub)) smeta adlevel
-    | _ when Transformation.has_check decl_trans ->
+    | _ when Transformation.primitive_has_check trans ->
         let check_id id =
           let var_name = Fmt.strf "%a" Expr.Typed.pp id in
           let args = extract_transform_args id trans in
           Stmt.Helpers.internal_nrfunapp
-            (FnCheck {trans= decl_trans; var_name; var= id})
+            (FnCheck {trans; var_name; var= id})
             args smeta
         in
         [(constraint_forl trans) decl_type check_id var smeta]
@@ -338,6 +338,10 @@ let rec check_decl var decl_type' decl_id decl_trans smeta adlevel =
   in
   match decl_trans with
   | Transformation.Single t -> check_single t
+  (* TR TODO: This currently concatinates all checks in a way that is invalid, 
+   * e.g. lower(0), upper(10), will not yield values in [0,10].
+   * Unclear if this is a concern
+   *)
   | Chain ts -> List.concat_map ~f:check_single ts
 
 let check_sizedtype name =
