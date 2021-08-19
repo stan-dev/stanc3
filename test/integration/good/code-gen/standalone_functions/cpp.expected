@@ -43,8 +43,9 @@ static constexpr std::array<const char*, 21> locations_array__ =
 
 
 template <typename T0__>
-auto my_log1p_exp(const T0__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<double, T0__>;
+inline stan::return_type_t<T0__>
+my_log1p_exp(const T0__& x, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -63,15 +64,17 @@ auto my_log1p_exp(const T0__& x, std::ostream* pstream__) {
 
 struct my_log1p_exp_functor__ {
 template <typename T0__>
-auto operator()(const T0__& x, std::ostream* pstream__)  const 
+inline stan::return_type_t<T0__>
+operator()(const T0__& x, std::ostream* pstream__)  const 
 {
 return my_log1p_exp(x, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__>
-auto array_fun(const std::vector<T0__, Alloc0__>& a, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<double, T0__>;
+inline stan::return_type_t<T0__>
+array_fun(const std::vector<T0__, Alloc0__>& a, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -90,16 +93,17 @@ auto array_fun(const std::vector<T0__, Alloc0__>& a, std::ostream* pstream__) {
 
 struct array_fun_functor__ {
 template <typename T0__, typename Alloc0__>
-auto operator()(const std::vector<T0__, Alloc0__>& a, std::ostream* pstream__)  const 
+inline stan::return_type_t<T0__>
+operator()(const std::vector<T0__, Alloc0__>& a, std::ostream* pstream__)  const 
 {
 return array_fun(a, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__>
-auto int_array_fun(const std::vector<T0__, Alloc0__>& a,
-                   std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<double, T0__>;
+inline stan::return_type_t<T0__>
+int_array_fun(const std::vector<T0__, Alloc0__>& a, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -118,15 +122,17 @@ auto int_array_fun(const std::vector<T0__, Alloc0__>& a,
 
 struct int_array_fun_functor__ {
 template <typename T0__, typename Alloc0__>
-auto operator()(const std::vector<T0__, Alloc0__>& a, std::ostream* pstream__)  const 
+inline stan::return_type_t<T0__>
+operator()(const std::vector<T0__, Alloc0__>& a, std::ostream* pstream__)  const 
 {
 return int_array_fun(a, pstream__);
 }
 };
 
 template <typename T0__>
-auto my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<double, T0__>;
+inline Eigen::Matrix<stan::return_type_t<T0__>, -1, 1>
+my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
   const auto& x = to_ref(x_arg__);
   static constexpr bool propto__ = true;
@@ -140,7 +146,7 @@ auto my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
     current_statement__ = 8;
     assign(result, multiply(x, 5.0), "assigning variable result");
     current_statement__ = 9;
-    return stan::math::eval(result);
+    return result;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -151,15 +157,16 @@ auto my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
 
 struct my_vector_mul_by_5_functor__ {
 template <typename T0__>
-auto operator()(const T0__& x, std::ostream* pstream__)  const 
+inline Eigen::Matrix<stan::return_type_t<T0__>, -1, 1>
+operator()(const T0__& x, std::ostream* pstream__)  const 
 {
 return my_vector_mul_by_5(x, pstream__);
 }
 };
 
-auto int_only_multiplication(const int& a, const int& b,
-                             std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<double>;
+inline int
+int_only_multiplication(const int& a, const int& b, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -177,15 +184,17 @@ auto int_only_multiplication(const int& a, const int& b,
 }
 
 struct int_only_multiplication_functor__ {
-auto operator()(const int& a, const int& b, std::ostream* pstream__)  const 
+inline int
+operator()(const int& a, const int& b, std::ostream* pstream__)  const 
 {
 return int_only_multiplication(a, b, pstream__);
 }
 };
 
 template <typename T0__>
-auto test_lgamma(const T0__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<double, T0__>;
+inline stan::return_type_t<T0__>
+test_lgamma(const T0__& x, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -204,7 +213,8 @@ auto test_lgamma(const T0__& x, std::ostream* pstream__) {
 
 struct test_lgamma_functor__ {
 template <typename T0__>
-auto operator()(const T0__& x, std::ostream* pstream__)  const 
+inline stan::return_type_t<T0__>
+operator()(const T0__& x, std::ostream* pstream__)  const 
 {
 return test_lgamma(x, pstream__);
 }
@@ -212,9 +222,10 @@ return test_lgamma(x, pstream__);
 
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
-auto test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
-             std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<double, T0__>;
+inline void
+test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
+        std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -232,16 +243,18 @@ auto test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
 struct test_lp_functor__ {
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
-auto operator()(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
-                std::ostream* pstream__)  const 
+inline void
+operator()(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
+           std::ostream* pstream__)  const 
 {
 return test_lp<propto__>(a, lp__, lp_accum__, pstream__);
 }
 };
 
 template <typename T0__, typename RNG>
-auto test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<double, T0__>;
+inline stan::return_type_t<T0__>
+test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -260,15 +273,17 @@ auto test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
 
 struct test_rng_functor__ {
 template <typename T0__, typename RNG>
-auto operator()(const T0__& a, RNG& base_rng__, std::ostream* pstream__)  const 
+inline stan::return_type_t<T0__>
+operator()(const T0__& a, RNG& base_rng__, std::ostream* pstream__)  const 
 {
 return test_rng(a, base_rng__, pstream__);
 }
 };
 
 template <bool propto__, typename T0__, typename T1__>
-auto test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<double, T0__, T1__>;
+inline stan::return_type_t<T0__, T1__>
+test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<T0__, T1__>;
   int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -285,7 +300,8 @@ auto test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
 
 struct test_lpdf_functor__ {
 template <bool propto__, typename T0__, typename T1__>
-auto operator()(const T0__& a, const T1__& b, std::ostream* pstream__)  const 
+inline stan::return_type_t<T0__, T1__>
+operator()(const T0__& a, const T1__& b, std::ostream* pstream__)  const 
 {
 return test_lpdf<propto__>(a, b, pstream__);
 }
@@ -400,8 +416,9 @@ static constexpr std::array<const char*, 11> locations_array__ =
 
 
 template <typename T0__>
-auto integrand(const T0__& x_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<double, T0__>;
+inline Eigen::Matrix<stan::return_type_t<T0__>, -1, 1>
+integrand(const T0__& x_arg__, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<T0__>;
   int current_statement__ = 0; 
   const auto& x = to_ref(x_arg__);
   static constexpr bool propto__ = true;
@@ -410,7 +427,7 @@ auto integrand(const T0__& x_arg__, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 1;
-    return stan::math::eval(stan::math::exp(minus(square(x))));
+    return stan::math::exp(minus(square(x)));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -421,7 +438,8 @@ auto integrand(const T0__& x_arg__, std::ostream* pstream__) {
 
 struct integrand_functor__ {
 template <typename T0__>
-auto operator()(const T0__& x, std::ostream* pstream__)  const 
+inline Eigen::Matrix<stan::return_type_t<T0__>, -1, 1>
+operator()(const T0__& x, std::ostream* pstream__)  const 
 {
 return integrand(x, pstream__);
 }
@@ -430,12 +448,12 @@ return integrand(x, pstream__);
 template <typename T0__, typename T1__, typename Alloc1__, typename T2__,
 typename Alloc2__, typename T3__, typename Alloc3__, typename T4__,
 typename Alloc4__>
-auto integrand_ode(const T0__& r, const std::vector<T1__, Alloc1__>& f,
-                   const std::vector<T2__, Alloc2__>& theta,
-                   const std::vector<T3__, Alloc3__>& x_r,
-                   const std::vector<T4__, Alloc4__>& x_i,
-                   std::ostream* pstream__) {
-  using local_scalar_t__ = stan::return_type_t<double, T0__, T1__, T2__, T3__, T4__>;
+inline std::vector<stan::return_type_t<T0__, T1__, T2__, T3__, T4__>>
+integrand_ode(const T0__& r, const std::vector<T1__, Alloc1__>& f,
+              const std::vector<T2__, Alloc2__>& theta,
+              const std::vector<T3__, Alloc3__>& x_r,
+              const std::vector<T4__, Alloc4__>& x_i, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<T0__, T1__, T2__, T3__, T4__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -465,17 +483,18 @@ struct integrand_ode_functor__ {
 template <typename T0__, typename T1__, typename Alloc1__, typename T2__,
 typename Alloc2__, typename T3__, typename Alloc3__, typename T4__,
 typename Alloc4__>
-auto operator()(const T0__& r, const std::vector<T1__, Alloc1__>& f,
-                const std::vector<T2__, Alloc2__>& theta,
-                const std::vector<T3__, Alloc3__>& x_r,
-                const std::vector<T4__, Alloc4__>& x_i,
-                std::ostream* pstream__)  const 
+inline std::vector<stan::return_type_t<T0__, T1__, T2__, T3__, T4__>>
+operator()(const T0__& r, const std::vector<T1__, Alloc1__>& f,
+           const std::vector<T2__, Alloc2__>& theta,
+           const std::vector<T3__, Alloc3__>& x_r,
+           const std::vector<T4__, Alloc4__>& x_i, std::ostream* pstream__)  const 
 {
 return integrand_ode(r, f, theta, x_r, x_i, pstream__);
 }
 };
 
-auto ode_integrate(std::ostream* pstream__) {
+inline double
+ode_integrate(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -502,7 +521,8 @@ auto ode_integrate(std::ostream* pstream__) {
 }
 
 struct ode_integrate_functor__ {
-auto operator()(std::ostream* pstream__)  const 
+inline double
+operator()(std::ostream* pstream__)  const 
 {
 return ode_integrate(pstream__);
 }

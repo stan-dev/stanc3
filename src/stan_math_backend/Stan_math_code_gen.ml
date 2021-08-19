@@ -96,11 +96,12 @@ let pp_promoted_scalar ppf args =
   | _ ->
       let blah init xx =
         match xx with
-        | Some x -> String.concat ~sep:", " [init; x]
+        | Some x when init <> "" -> String.concat ~sep:", " [init; x]
+        | Some x -> String.concat ~sep:", " [x]
         | None -> init
       in
       pf ppf "stan::return_type_t<%s>"
-        (List.fold ~init:"double" ~f:blah (return_arg_types args))
+        (List.fold ~init:"" ~f:blah (return_arg_types args))
 
 (** Pretty-prints a function's return-type, taking into account templated argument
     promotion.*)
@@ -108,9 +109,9 @@ let pp_returntype ppf arg_types rt =
   let scalar = strf "%a" pp_promoted_scalar arg_types in
   match rt with
   | Some ut when UnsizedType.contains_int ut ->
-      pf ppf "%a@," pp_unsizedtype_custom_scalar ("int", ut)
-  | Some ut -> pf ppf "%a@," pp_unsizedtype_custom_scalar (scalar, ut)
-  | None -> pf ppf "void@,"
+      pf ppf "inline %a@," pp_unsizedtype_custom_scalar ("int", ut)
+  | Some ut -> pf ppf "inline %a@," pp_unsizedtype_custom_scalar (scalar, ut)
+  | None -> pf ppf "inline void@,"
 
 let pp_eigen_arg_to_ref ppf arg_types =
   let pp_ref ppf name =
@@ -217,7 +218,7 @@ let mk_extra_args templates args =
   Refactor this please - one idea might be to have different functions for
    printing user defined distributions vs rngs vs regular functions.
 *)
-let pp_fun_def ppf Program.({fdname; fdsuffix; fdargs; fdbody; _})
+let pp_fun_def ppf Program.({fdrt; fdname; fdsuffix; fdargs; fdbody; _})
     funs_used_in_reduce_sum funs_used_in_variadic_ode =
   let extra, extra_templates =
     match fdsuffix with
@@ -256,7 +257,7 @@ let pp_fun_def ppf Program.({fdname; fdsuffix; fdargs; fdbody; _})
     | (FnLpdf _ | FnTarget), `None ->
         pp_template_decorator ppf ("bool propto__" :: templates)
     | _ -> pp_template_decorator ppf templates ) ;
-    pf ppf "auto " ;
+    pp_returntype ppf fdargs fdrt ;
     let args, variadic_args =
       match variadic with
       | `ReduceSum -> List.split_n args 3
