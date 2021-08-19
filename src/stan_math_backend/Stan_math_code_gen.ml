@@ -76,8 +76,7 @@ let maybe_templated_arg_types (args : Program.fun_arg_decl) =
 
 let return_arg_types (args : Program.fun_arg_decl) =
   List.mapi args ~f:(fun i ((_, _, ut) as a) ->
-      if not (UnsizedType.is_scalar_type ut) then
-        Some (sprintf "T%d__" i)
+      if not (UnsizedType.is_scalar_type ut) then Some (sprintf "T%d__" i)
       else if arg_needs_template a then Some (sprintf "T%d__" i)
       else None )
 
@@ -94,12 +93,15 @@ let%expect_test "arg types templated correctly" =
 let pp_promoted_scalar ppf args =
   match args with
   | [] -> pf ppf "double"
-  | _ -> 
-    let blah init xx = match xx with 
-    | Some x -> String.concat ~sep:", " [init; x]
-    | None -> init
- in
-    pf ppf "stan::return_type_t<%s>" (List.fold ~init:"double" ~f:blah (return_arg_types args))
+  | _ ->
+      let blah init xx =
+        match xx with
+        | Some x -> String.concat ~sep:", " [init; x]
+        | None -> init
+      in
+      pf ppf "stan::return_type_t<%s>"
+        (List.fold ~init:"double" ~f:blah (return_arg_types args))
+
 (** Pretty-prints a function's return-type, taking into account templated argument
     promotion.*)
 let pp_returntype ppf arg_types rt =
@@ -254,7 +256,7 @@ let pp_fun_def ppf Program.({fdname; fdsuffix; fdargs; fdbody; _})
     | (FnLpdf _ | FnTarget), `None ->
         pp_template_decorator ppf ("bool propto__" :: templates)
     | _ -> pp_template_decorator ppf templates ) ;
-    pf ppf "auto ";
+    pf ppf "auto " ;
     let args, variadic_args =
       match variadic with
       | `ReduceSum -> List.split_n args 3
