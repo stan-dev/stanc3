@@ -34,17 +34,10 @@ static constexpr std::array<const char*, 11> locations_array__ =
 
 template <typename T0__, typename T2__, typename Alloc2__, typename T3__,
 typename T4__, typename T5__>
-stan::promote_args_t<T0__, T2__, stan::value_type_t<T3__>,
-stan::value_type_t<T4__>,
-stan::value_type_t<T5__>>
-foo1(const T0__& a, const int& b, const std::vector<T2__, Alloc2__>& c,
-     const T3__& d_arg__, const T4__& e_arg__, const T5__& f_arg__,
-     std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__,
-          T2__,
-          stan::value_type_t<T3__>,
-          stan::value_type_t<T4__>,
-          stan::value_type_t<T5__>>;
+auto foo1(const T0__& a, const int& b, const std::vector<T2__, Alloc2__>& c,
+          const T3__& d_arg__, const T4__& e_arg__, const T5__& f_arg__,
+          std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T2__, T3__, T4__, T5__>;
   int current_statement__ = 0; 
   const auto& d = to_ref(d_arg__);
   const auto& e = to_ref(e_arg__);
@@ -67,12 +60,9 @@ foo1(const T0__& a, const int& b, const std::vector<T2__, Alloc2__>& c,
 struct foo1_functor__ {
 template <typename T0__, typename T2__, typename Alloc2__, typename T3__,
 typename T4__, typename T5__>
-stan::promote_args_t<T0__, T2__, stan::value_type_t<T3__>,
-stan::value_type_t<T4__>,
-stan::value_type_t<T5__>>
-operator()(const T0__& a, const int& b, const std::vector<T2__, Alloc2__>& c,
-           const T3__& d, const T4__& e, const T5__& f,
-           std::ostream* pstream__)  const 
+auto operator()(const T0__& a, const int& b,
+                const std::vector<T2__, Alloc2__>& c, const T3__& d,
+                const T4__& e, const T5__& f, std::ostream* pstream__)  const 
 {
 return foo1(a, b, c, d, e, f, pstream__);
 }
@@ -80,13 +70,9 @@ return foo1(a, b, c, d, e, f, pstream__);
 
 template <typename T0__, typename T1__, typename Alloc1__, typename T2__,
 typename Alloc2__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, T1__,
-T2__>, -1, 1>
-foo2(const T0__& a_arg__, const std::vector<T1__, Alloc1__>& b,
-     const std::vector<T2__, Alloc2__>& c, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-          T1__,
-          T2__>;
+auto foo2(const T0__& a_arg__, const std::vector<T1__, Alloc1__>& b,
+          const std::vector<T2__, Alloc2__>& c, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T1__, T2__>;
   int current_statement__ = 0; 
   const auto& a = to_ref(a_arg__);
   static constexpr bool propto__ = true;
@@ -95,7 +81,7 @@ foo2(const T0__& a_arg__, const std::vector<T1__, Alloc1__>& b,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 7;
-    return a;
+    return stan::math::eval(a);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -107,21 +93,16 @@ foo2(const T0__& a_arg__, const std::vector<T1__, Alloc1__>& b,
 struct foo2_functor__ {
 template <typename T0__, typename T1__, typename Alloc1__, typename T2__,
 typename Alloc2__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, T1__,
-T2__>, -1, 1>
-operator()(const T0__& a, const std::vector<T1__, Alloc1__>& b,
-           const std::vector<T2__, Alloc2__>& c, std::ostream* pstream__)  const 
+auto operator()(const T0__& a, const std::vector<T1__, Alloc1__>& b,
+                const std::vector<T2__, Alloc2__>& c, std::ostream* pstream__)  const 
 {
 return foo2(a, b, c, pstream__);
 }
 };
 
 template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-stan::value_type_t<T1__>>, -1, -1>
-foo3(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-          stan::value_type_t<T1__>>;
+auto foo3(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T1__>;
   int current_statement__ = 0; 
   const auto& a = to_ref(a_arg__);
   const auto& b = to_ref(b_arg__);
@@ -131,7 +112,7 @@ foo3(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 9;
-    return b;
+    return stan::math::eval(b);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -142,9 +123,7 @@ foo3(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
 
 struct foo3_functor__ {
 template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-stan::value_type_t<T1__>>, -1, -1>
-operator()(const T0__& a, const T1__& b, std::ostream* pstream__)  const 
+auto operator()(const T0__& a, const T1__& b, std::ostream* pstream__)  const 
 {
 return foo3(a, b, pstream__);
 }

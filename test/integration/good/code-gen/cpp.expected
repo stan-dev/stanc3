@@ -2529,12 +2529,10 @@ static constexpr std::array<const char*, 776> locations_array__ =
  " (in 'mother.stan', line 309, column 78 to line 313, column 3)"};
 
 
-int
-foo(const int& n, std::ostream* pstream__) ;
+auto foo(const int& n, std::ostream* pstream__) ;
 
-int
-foo(const int& n, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
+auto foo(const int& n, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -2557,8 +2555,7 @@ foo(const int& n, std::ostream* pstream__) {
 }
 
 struct foo_functor__ {
-int
-operator()(const int& n, std::ostream* pstream__)  const 
+auto operator()(const int& n, std::ostream* pstream__)  const 
 {
 return foo(n, pstream__);
 }
@@ -2567,23 +2564,19 @@ return foo(n, pstream__);
 template <typename T0__, typename T1__, typename Alloc1__, typename T2__,
 typename Alloc2__, typename T3__, typename Alloc3__, typename T4__,
 typename Alloc4__>
-std::vector<stan::promote_args_t<T0__, T1__,
-T2__>>
-sho(const T0__& t, const std::vector<T1__, Alloc1__>& y,
-    const std::vector<T2__, Alloc2__>& theta,
-    const std::vector<T3__, Alloc3__>& x,
-    const std::vector<T4__, Alloc4__>& x_int, std::ostream* pstream__) ;
+auto sho(const T0__& t, const std::vector<T1__, Alloc1__>& y,
+         const std::vector<T2__, Alloc2__>& theta,
+         const std::vector<T3__, Alloc3__>& x,
+         const std::vector<T4__, Alloc4__>& x_int, std::ostream* pstream__) ;
 
 template <typename T0__, typename T1__, typename Alloc1__, typename T2__,
 typename Alloc2__, typename T3__, typename Alloc3__, typename T4__,
 typename Alloc4__>
-std::vector<stan::promote_args_t<T0__, T1__,
-T2__>>
-sho(const T0__& t, const std::vector<T1__, Alloc1__>& y,
-    const std::vector<T2__, Alloc2__>& theta,
-    const std::vector<T3__, Alloc3__>& x,
-    const std::vector<T4__, Alloc4__>& x_int, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__>;
+auto sho(const T0__& t, const std::vector<T1__, Alloc1__>& y,
+         const std::vector<T2__, Alloc2__>& theta,
+         const std::vector<T3__, Alloc3__>& x,
+         const std::vector<T4__, Alloc4__>& x_int, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T1__, T2__, T3__, T4__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -2615,19 +2608,17 @@ struct sho_functor__ {
 template <typename T0__, typename T1__, typename Alloc1__, typename T2__,
 typename Alloc2__, typename T3__, typename Alloc3__, typename T4__,
 typename Alloc4__>
-std::vector<stan::promote_args_t<T0__, T1__,
-T2__>>
-operator()(const T0__& t, const std::vector<T1__, Alloc1__>& y,
-           const std::vector<T2__, Alloc2__>& theta,
-           const std::vector<T3__, Alloc3__>& x,
-           const std::vector<T4__, Alloc4__>& x_int, std::ostream* pstream__)  const 
+auto operator()(const T0__& t, const std::vector<T1__, Alloc1__>& y,
+                const std::vector<T2__, Alloc2__>& theta,
+                const std::vector<T3__, Alloc3__>& x,
+                const std::vector<T4__, Alloc4__>& x_int,
+                std::ostream* pstream__)  const 
 {
 return sho(t, y, theta, x, x_int, pstream__);
 }
 };
 
-double
-foo_bar0(std::ostream* pstream__) {
+auto foo_bar0(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -2646,17 +2637,15 @@ foo_bar0(std::ostream* pstream__) {
 }
 
 struct foo_bar0_functor__ {
-double
-operator()(std::ostream* pstream__)  const 
+auto operator()(std::ostream* pstream__)  const 
 {
 return foo_bar0(pstream__);
 }
 };
 
 template <typename T0__>
-stan::promote_args_t<T0__>
-foo_bar1(const T0__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto foo_bar1(const T0__& x, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -2675,18 +2664,15 @@ foo_bar1(const T0__& x, std::ostream* pstream__) {
 
 struct foo_bar1_functor__ {
 template <typename T0__>
-stan::promote_args_t<T0__>
-operator()(const T0__& x, std::ostream* pstream__)  const 
+auto operator()(const T0__& x, std::ostream* pstream__)  const 
 {
 return foo_bar1(x, pstream__);
 }
 };
 
 template <typename T0__, typename T1__>
-stan::promote_args_t<T0__,
-T1__>
-foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
+auto foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T1__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -2705,18 +2691,15 @@ foo_bar2(const T0__& x, const T1__& y, std::ostream* pstream__) {
 
 struct foo_bar2_functor__ {
 template <typename T0__, typename T1__>
-stan::promote_args_t<T0__,
-T1__>
-operator()(const T0__& x, const T1__& y, std::ostream* pstream__)  const 
+auto operator()(const T0__& x, const T1__& y, std::ostream* pstream__)  const 
 {
 return foo_bar2(x, y, pstream__);
 }
 };
 
 template <bool propto__, typename T1__>
-stan::promote_args_t<T1__>
-foo_lpmf(const int& y, const T1__& lambda, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T1__>;
+auto foo_lpmf(const int& y, const T1__& lambda, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T1__>;
   int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -2733,17 +2716,15 @@ foo_lpmf(const int& y, const T1__& lambda, std::ostream* pstream__) {
 
 struct foo_lpmf_functor__ {
 template <bool propto__, typename T1__>
-stan::promote_args_t<T1__>
-operator()(const int& y, const T1__& lambda, std::ostream* pstream__)  const 
+auto operator()(const int& y, const T1__& lambda, std::ostream* pstream__)  const 
 {
 return foo_lpmf<propto__>(y, lambda, pstream__);
 }
 };
 
 template <typename T1__>
-stan::promote_args_t<T1__>
-foo_lcdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T1__>;
+auto foo_lcdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T1__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -2762,17 +2743,15 @@ foo_lcdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
 
 struct foo_lcdf_functor__ {
 template <typename T1__>
-stan::promote_args_t<T1__>
-operator()(const int& y, const T1__& lambda, std::ostream* pstream__)  const 
+auto operator()(const int& y, const T1__& lambda, std::ostream* pstream__)  const 
 {
 return foo_lcdf(y, lambda, pstream__);
 }
 };
 
 template <typename T1__>
-stan::promote_args_t<T1__>
-foo_lccdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T1__>;
+auto foo_lccdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T1__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -2791,19 +2770,16 @@ foo_lccdf(const int& y, const T1__& lambda, std::ostream* pstream__) {
 
 struct foo_lccdf_functor__ {
 template <typename T1__>
-stan::promote_args_t<T1__>
-operator()(const int& y, const T1__& lambda, std::ostream* pstream__)  const 
+auto operator()(const int& y, const T1__& lambda, std::ostream* pstream__)  const 
 {
 return foo_lccdf(y, lambda, pstream__);
 }
 };
 
 template <typename T0__, typename T1__, typename RNG>
-stan::promote_args_t<T0__,
-T1__>
-foo_rng(const T0__& mu, const T1__& sigma, RNG& base_rng__,
-        std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
+auto foo_rng(const T0__& mu, const T1__& sigma, RNG& base_rng__,
+             std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T1__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -2822,10 +2798,8 @@ foo_rng(const T0__& mu, const T1__& sigma, RNG& base_rng__,
 
 struct foo_rng_functor__ {
 template <typename T0__, typename T1__, typename RNG>
-stan::promote_args_t<T0__,
-T1__>
-operator()(const T0__& mu, const T1__& sigma, RNG& base_rng__,
-           std::ostream* pstream__)  const 
+auto operator()(const T0__& mu, const T1__& sigma, RNG& base_rng__,
+                std::ostream* pstream__)  const 
 {
 return foo_rng(mu, sigma, base_rng__, pstream__);
 }
@@ -2833,10 +2807,9 @@ return foo_rng(mu, sigma, base_rng__, pstream__);
 
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
-void
-unit_normal_lp(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
-               std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto unit_normal_lp(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
+                    std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -2856,17 +2829,15 @@ unit_normal_lp(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
 struct unit_normal_lp_functor__ {
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
-void
-operator()(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
-           std::ostream* pstream__)  const 
+auto operator()(const T0__& u, T_lp__& lp__, T_lp_accum__& lp_accum__,
+                std::ostream* pstream__)  const 
 {
 return unit_normal_lp<propto__>(u, lp__, lp_accum__, pstream__);
 }
 };
 
-int
-foo_1(const int& a, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
+auto foo_1(const int& a, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -3098,16 +3069,14 @@ foo_1(const int& a, std::ostream* pstream__) {
 }
 
 struct foo_1_functor__ {
-int
-operator()(const int& a, std::ostream* pstream__)  const 
+auto operator()(const int& a, std::ostream* pstream__)  const 
 {
 return foo_1(a, pstream__);
 }
 };
 
-int
-foo_2(const int& a, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
+auto foo_2(const int& a, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -3139,17 +3108,15 @@ foo_2(const int& a, std::ostream* pstream__) {
 }
 
 struct foo_2_functor__ {
-int
-operator()(const int& a, std::ostream* pstream__)  const 
+auto operator()(const int& a, std::ostream* pstream__)  const 
 {
 return foo_2(a, pstream__);
 }
 };
 
 template <typename T0__>
-std::vector<stan::promote_args_t<T0__>>
-foo_3(const T0__& t, const int& n, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto foo_3(const T0__& t, const int& n, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -3168,8 +3135,7 @@ foo_3(const T0__& t, const int& n, std::ostream* pstream__) {
 
 struct foo_3_functor__ {
 template <typename T0__>
-std::vector<stan::promote_args_t<T0__>>
-operator()(const T0__& t, const int& n, std::ostream* pstream__)  const 
+auto operator()(const T0__& t, const int& n, std::ostream* pstream__)  const 
 {
 return foo_3(t, n, pstream__);
 }
@@ -3177,10 +3143,9 @@ return foo_3(t, n, pstream__);
 
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
-stan::promote_args_t<T0__>
-foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
-       std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
+            std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -3198,18 +3163,16 @@ foo_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
 struct foo_lp_functor__ {
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
-stan::promote_args_t<T0__>
-operator()(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
-           std::ostream* pstream__)  const 
+auto operator()(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
+                std::ostream* pstream__)  const 
 {
 return foo_lp<propto__>(x, lp__, lp_accum__, pstream__);
 }
 };
 
 template <typename T0__>
-void
-foo_4(const T0__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto foo_4(const T0__& x, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -3231,19 +3194,16 @@ foo_4(const T0__& x, std::ostream* pstream__) {
 
 struct foo_4_functor__ {
 template <typename T0__>
-void
-operator()(const T0__& x, std::ostream* pstream__)  const 
+auto operator()(const T0__& x, std::ostream* pstream__)  const 
 {
 return foo_4(x, pstream__);
 }
 };
 
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-stan::promote_args_t<T0__, T1__, T2__,
-T3__>
-relative_diff(const T0__& x, const T1__& y, const T2__& max_,
-              const T3__& min_, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__, T3__>;
+auto relative_diff(const T0__& x, const T1__& y, const T2__& max_,
+                   const T3__& min_, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T1__, T2__, T3__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -3296,10 +3256,8 @@ relative_diff(const T0__& x, const T1__& y, const T2__& max_,
 
 struct relative_diff_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-stan::promote_args_t<T0__, T1__, T2__,
-T3__>
-operator()(const T0__& x, const T1__& y, const T2__& max_, const T3__& min_,
-           std::ostream* pstream__)  const 
+auto operator()(const T0__& x, const T1__& y, const T2__& max_,
+                const T3__& min_, std::ostream* pstream__)  const 
 {
 return relative_diff(x, y, max_, min_, pstream__);
 }
@@ -3307,13 +3265,10 @@ return relative_diff(x, y, max_, min_, pstream__);
 
 template <typename T0__, typename T1__, typename T2__, typename Alloc2__,
 typename T3__, typename Alloc3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-stan::value_type_t<T1__>>, -1, 1>
-foo_5(const T0__& shared_params_arg__, const T1__& job_params_arg__,
-      const std::vector<T2__, Alloc2__>& data_r,
-      const std::vector<T3__, Alloc3__>& data_i, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-          stan::value_type_t<T1__>>;
+auto foo_5(const T0__& shared_params_arg__, const T1__& job_params_arg__,
+           const std::vector<T2__, Alloc2__>& data_r,
+           const std::vector<T3__, Alloc3__>& data_i, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T1__, T2__, T3__>;
   int current_statement__ = 0; 
   const auto& shared_params = to_ref(shared_params_arg__);
   const auto& job_params = to_ref(job_params_arg__);
@@ -3323,7 +3278,8 @@ foo_5(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 711;
-    return (Eigen::Matrix<double,-1,1>(3) << 1, 2, 3).finished();
+    return stan::math::eval((Eigen::Matrix<double,-1,1>(3) << 1, 2,
+        3).finished());
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -3335,11 +3291,10 @@ foo_5(const T0__& shared_params_arg__, const T1__& job_params_arg__,
 struct foo_5_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename Alloc2__,
 typename T3__, typename Alloc3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-stan::value_type_t<T1__>>, -1, 1>
-operator()(const T0__& shared_params, const T1__& job_params,
-           const std::vector<T2__, Alloc2__>& data_r,
-           const std::vector<T3__, Alloc3__>& data_i, std::ostream* pstream__)  const 
+auto operator()(const T0__& shared_params, const T1__& job_params,
+                const std::vector<T2__, Alloc2__>& data_r,
+                const std::vector<T3__, Alloc3__>& data_i,
+                std::ostream* pstream__)  const 
 {
 return foo_5(shared_params, job_params, data_r, data_i, pstream__);
 }
@@ -3347,15 +3302,9 @@ return foo_5(shared_params, job_params, data_r, data_i, pstream__);
 
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__>
-stan::promote_args_t<T0__, T1__, T2__, T3__,
-T4__>
-foo_five_args(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
-              const T4__& x5, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__,
-          T1__,
-          T2__,
-          T3__,
-          T4__>;
+auto foo_five_args(const T0__& x1, const T1__& x2, const T2__& x3,
+                   const T3__& x4, const T4__& x5, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T1__, T2__, T3__, T4__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -3375,10 +3324,8 @@ foo_five_args(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
 struct foo_five_args_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__,
 typename T4__>
-stan::promote_args_t<T0__, T1__, T2__, T3__,
-T4__>
-operator()(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
-           const T4__& x5, std::ostream* pstream__)  const 
+auto operator()(const T0__& x1, const T1__& x2, const T2__& x3,
+                const T3__& x4, const T4__& x5, std::ostream* pstream__)  const 
 {
 return foo_five_args(x1, x2, x3, x4, x5, pstream__);
 }
@@ -3387,17 +3334,11 @@ return foo_five_args(x1, x2, x3, x4, x5, pstream__);
 template <bool propto__, typename T0__, typename T1__, typename T2__,
 typename T3__, typename T4__, typename T5__, typename T_lp__,
 typename T_lp_accum__>
-stan::promote_args_t<T0__, T1__, T2__, T3__,
-T4__, stan::promote_args_t<T5__>>
-foo_five_args_lp(const T0__& x1, const T1__& x2, const T2__& x3,
-                 const T3__& x4, const T4__& x5, const T5__& x6,
-                 T_lp__& lp__, T_lp_accum__& lp_accum__,
-                 std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__,
-          T1__,
-          T2__,
-          T3__,
-          T4__, stan::promote_args_t<T5__>>;
+auto foo_five_args_lp(const T0__& x1, const T1__& x2, const T2__& x3,
+                      const T3__& x4, const T4__& x5, const T5__& x6,
+                      T_lp__& lp__, T_lp_accum__& lp_accum__,
+                      std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T1__, T2__, T3__, T4__, T5__>;
   int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -3416,11 +3357,9 @@ struct foo_five_args_lp_functor__ {
 template <bool propto__, typename T0__, typename T1__, typename T2__,
 typename T3__, typename T4__, typename T5__, typename T_lp__,
 typename T_lp_accum__>
-stan::promote_args_t<T0__, T1__, T2__, T3__,
-T4__, stan::promote_args_t<T5__>>
-operator()(const T0__& x1, const T1__& x2, const T2__& x3, const T3__& x4,
-           const T4__& x5, const T5__& x6, T_lp__& lp__,
-           T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
+auto operator()(const T0__& x1, const T1__& x2, const T2__& x3,
+                const T3__& x4, const T4__& x5, const T5__& x6, T_lp__& lp__,
+                T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
 {
 return foo_five_args_lp<propto__>(x1, x2, x3, x4, x5, x6, lp__, lp_accum__,
          pstream__);
@@ -3428,10 +3367,9 @@ return foo_five_args_lp<propto__>(x1, x2, x3, x4, x5, x6, lp__, lp_accum__,
 };
 
 template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, -1>
-covsqrt2corsqrt(const T0__& mat_arg__, const int& invert,
-                std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
+auto covsqrt2corsqrt(const T0__& mat_arg__, const int& invert,
+                     std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   const auto& mat = to_ref(mat_arg__);
   static constexpr bool propto__ = true;
@@ -3453,7 +3391,7 @@ covsqrt2corsqrt(const T0__& mat_arg__, const int& invert,
     assign(o, stan::model::deep_copy(rvalue(o, "o", index_min_max(1, 2))),
       "assigning variable o", index_min_max(3, 4));
     current_statement__ = 723;
-    return o;
+    return stan::math::eval(o);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -3464,8 +3402,7 @@ covsqrt2corsqrt(const T0__& mat_arg__, const int& invert,
 
 struct covsqrt2corsqrt_functor__ {
 template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, -1>
-operator()(const T0__& mat, const int& invert, std::ostream* pstream__)  const 
+auto operator()(const T0__& mat, const int& invert, std::ostream* pstream__)  const 
 {
 return covsqrt2corsqrt(mat, invert, pstream__);
 }
@@ -3476,23 +3413,15 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-void
-f0(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-   const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-   const std::vector<T4__, Alloc4__>& a5,
-   const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
-   const std::vector<T7__, Alloc7__>& a8,
-   const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
-   const std::vector<T10__, Alloc10__>& a11,
-   const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T3__,
-          T4__,
-          T5__,
-          stan::value_type_t<T6__>,
-          T7__, stan::promote_args_t<T8__,
-          stan::value_type_t<T9__>,
-          T10__,
-          T11__>>;
+auto f0(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+        const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+        const std::vector<T4__, Alloc4__>& a5,
+        const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
+        const std::vector<T7__, Alloc7__>& a8,
+        const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
+        const std::vector<T10__, Alloc10__>& a11,
+        const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T1__, T2__, T3__, T4__, T5__, T6__, T7__, T8__, T9__, T10__, T11__>;
   int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
@@ -3520,15 +3449,15 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-void
-operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-           const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-           const std::vector<T4__, Alloc4__>& a5,
-           const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
-           const std::vector<T7__, Alloc7__>& a8,
-           const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
-           const std::vector<T10__, Alloc10__>& a11,
-           const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__)  const 
+auto operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+                const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+                const std::vector<T4__, Alloc4__>& a5,
+                const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
+                const std::vector<T7__, Alloc7__>& a8,
+                const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
+                const std::vector<T10__, Alloc10__>& a11,
+                const std::vector<T11__, Alloc11__>& a12,
+                std::ostream* pstream__)  const 
 {
 return f0(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
@@ -3539,23 +3468,15 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-int
-f1(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-   const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-   const std::vector<T4__, Alloc4__>& a5,
-   const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
-   const std::vector<T7__, Alloc7__>& a8,
-   const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
-   const std::vector<T10__, Alloc10__>& a11,
-   const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T3__,
-          T4__,
-          T5__,
-          stan::value_type_t<T6__>,
-          T7__, stan::promote_args_t<T8__,
-          stan::value_type_t<T9__>,
-          T10__,
-          T11__>>;
+auto f1(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+        const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+        const std::vector<T4__, Alloc4__>& a5,
+        const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
+        const std::vector<T7__, Alloc7__>& a8,
+        const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
+        const std::vector<T10__, Alloc10__>& a11,
+        const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T1__, T2__, T3__, T4__, T5__, T6__, T7__, T8__, T9__, T10__, T11__>;
   int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
@@ -3580,15 +3501,15 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-int
-operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-           const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-           const std::vector<T4__, Alloc4__>& a5,
-           const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
-           const std::vector<T7__, Alloc7__>& a8,
-           const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
-           const std::vector<T10__, Alloc10__>& a11,
-           const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__)  const 
+auto operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+                const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+                const std::vector<T4__, Alloc4__>& a5,
+                const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
+                const std::vector<T7__, Alloc7__>& a8,
+                const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
+                const std::vector<T10__, Alloc10__>& a11,
+                const std::vector<T11__, Alloc11__>& a12,
+                std::ostream* pstream__)  const 
 {
 return f1(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
@@ -3599,23 +3520,15 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-std::vector<int>
-f2(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-   const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-   const std::vector<T4__, Alloc4__>& a5,
-   const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
-   const std::vector<T7__, Alloc7__>& a8,
-   const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
-   const std::vector<T10__, Alloc10__>& a11,
-   const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T3__,
-          T4__,
-          T5__,
-          stan::value_type_t<T6__>,
-          T7__, stan::promote_args_t<T8__,
-          stan::value_type_t<T9__>,
-          T10__,
-          T11__>>;
+auto f2(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+        const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+        const std::vector<T4__, Alloc4__>& a5,
+        const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
+        const std::vector<T7__, Alloc7__>& a8,
+        const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
+        const std::vector<T10__, Alloc10__>& a11,
+        const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T1__, T2__, T3__, T4__, T5__, T6__, T7__, T8__, T9__, T10__, T11__>;
   int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
@@ -3640,15 +3553,15 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-std::vector<int>
-operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-           const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-           const std::vector<T4__, Alloc4__>& a5,
-           const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
-           const std::vector<T7__, Alloc7__>& a8,
-           const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
-           const std::vector<T10__, Alloc10__>& a11,
-           const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__)  const 
+auto operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+                const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+                const std::vector<T4__, Alloc4__>& a5,
+                const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
+                const std::vector<T7__, Alloc7__>& a8,
+                const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
+                const std::vector<T10__, Alloc10__>& a11,
+                const std::vector<T11__, Alloc11__>& a12,
+                std::ostream* pstream__)  const 
 {
 return f2(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
@@ -3659,23 +3572,15 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-std::vector<std::vector<int>>
-f3(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-   const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-   const std::vector<T4__, Alloc4__>& a5,
-   const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
-   const std::vector<T7__, Alloc7__>& a8,
-   const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
-   const std::vector<T10__, Alloc10__>& a11,
-   const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T3__,
-          T4__,
-          T5__,
-          stan::value_type_t<T6__>,
-          T7__, stan::promote_args_t<T8__,
-          stan::value_type_t<T9__>,
-          T10__,
-          T11__>>;
+auto f3(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+        const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+        const std::vector<T4__, Alloc4__>& a5,
+        const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
+        const std::vector<T7__, Alloc7__>& a8,
+        const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
+        const std::vector<T10__, Alloc10__>& a11,
+        const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T1__, T2__, T3__, T4__, T5__, T6__, T7__, T8__, T9__, T10__, T11__>;
   int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
@@ -3700,15 +3605,15 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-std::vector<std::vector<int>>
-operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-           const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-           const std::vector<T4__, Alloc4__>& a5,
-           const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
-           const std::vector<T7__, Alloc7__>& a8,
-           const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
-           const std::vector<T10__, Alloc10__>& a11,
-           const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__)  const 
+auto operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+                const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+                const std::vector<T4__, Alloc4__>& a5,
+                const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
+                const std::vector<T7__, Alloc7__>& a8,
+                const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
+                const std::vector<T10__, Alloc10__>& a11,
+                const std::vector<T11__, Alloc11__>& a12,
+                std::ostream* pstream__)  const 
 {
 return f3(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
@@ -3719,25 +3624,15 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
-T7__, stan::promote_args_t<T8__, stan::value_type_t<T9__>, T10__,
-T11__>>
-f4(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-   const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-   const std::vector<T4__, Alloc4__>& a5,
-   const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
-   const std::vector<T7__, Alloc7__>& a8,
-   const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
-   const std::vector<T10__, Alloc10__>& a11,
-   const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T3__,
-          T4__,
-          T5__,
-          stan::value_type_t<T6__>,
-          T7__, stan::promote_args_t<T8__,
-          stan::value_type_t<T9__>,
-          T10__,
-          T11__>>;
+auto f4(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+        const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+        const std::vector<T4__, Alloc4__>& a5,
+        const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
+        const std::vector<T7__, Alloc7__>& a8,
+        const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
+        const std::vector<T10__, Alloc10__>& a11,
+        const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T1__, T2__, T3__, T4__, T5__, T6__, T7__, T8__, T9__, T10__, T11__>;
   int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
@@ -3762,17 +3657,15 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
-T7__, stan::promote_args_t<T8__, stan::value_type_t<T9__>, T10__,
-T11__>>
-operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-           const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-           const std::vector<T4__, Alloc4__>& a5,
-           const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
-           const std::vector<T7__, Alloc7__>& a8,
-           const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
-           const std::vector<T10__, Alloc10__>& a11,
-           const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__)  const 
+auto operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+                const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+                const std::vector<T4__, Alloc4__>& a5,
+                const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
+                const std::vector<T7__, Alloc7__>& a8,
+                const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
+                const std::vector<T10__, Alloc10__>& a11,
+                const std::vector<T11__, Alloc11__>& a12,
+                std::ostream* pstream__)  const 
 {
 return f4(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
@@ -3783,25 +3676,15 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-std::vector<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
-T7__, stan::promote_args_t<T8__, stan::value_type_t<T9__>, T10__,
-T11__>>>
-f5(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-   const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-   const std::vector<T4__, Alloc4__>& a5,
-   const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
-   const std::vector<T7__, Alloc7__>& a8,
-   const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
-   const std::vector<T10__, Alloc10__>& a11,
-   const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T3__,
-          T4__,
-          T5__,
-          stan::value_type_t<T6__>,
-          T7__, stan::promote_args_t<T8__,
-          stan::value_type_t<T9__>,
-          T10__,
-          T11__>>;
+auto f5(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+        const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+        const std::vector<T4__, Alloc4__>& a5,
+        const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
+        const std::vector<T7__, Alloc7__>& a8,
+        const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
+        const std::vector<T10__, Alloc10__>& a11,
+        const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T1__, T2__, T3__, T4__, T5__, T6__, T7__, T8__, T9__, T10__, T11__>;
   int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
@@ -3826,17 +3709,15 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-std::vector<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
-T7__, stan::promote_args_t<T8__, stan::value_type_t<T9__>, T10__,
-T11__>>>
-operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-           const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-           const std::vector<T4__, Alloc4__>& a5,
-           const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
-           const std::vector<T7__, Alloc7__>& a8,
-           const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
-           const std::vector<T10__, Alloc10__>& a11,
-           const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__)  const 
+auto operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+                const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+                const std::vector<T4__, Alloc4__>& a5,
+                const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
+                const std::vector<T7__, Alloc7__>& a8,
+                const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
+                const std::vector<T10__, Alloc10__>& a11,
+                const std::vector<T11__, Alloc11__>& a12,
+                std::ostream* pstream__)  const 
 {
 return f5(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
@@ -3847,25 +3728,15 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-std::vector<std::vector<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
-T7__, stan::promote_args_t<T8__, stan::value_type_t<T9__>, T10__,
-T11__>>>>
-f6(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-   const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-   const std::vector<T4__, Alloc4__>& a5,
-   const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
-   const std::vector<T7__, Alloc7__>& a8,
-   const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
-   const std::vector<T10__, Alloc10__>& a11,
-   const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T3__,
-          T4__,
-          T5__,
-          stan::value_type_t<T6__>,
-          T7__, stan::promote_args_t<T8__,
-          stan::value_type_t<T9__>,
-          T10__,
-          T11__>>;
+auto f6(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+        const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+        const std::vector<T4__, Alloc4__>& a5,
+        const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
+        const std::vector<T7__, Alloc7__>& a8,
+        const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
+        const std::vector<T10__, Alloc10__>& a11,
+        const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T1__, T2__, T3__, T4__, T5__, T6__, T7__, T8__, T9__, T10__, T11__>;
   int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
@@ -3890,17 +3761,15 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-std::vector<std::vector<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
-T7__, stan::promote_args_t<T8__, stan::value_type_t<T9__>, T10__,
-T11__>>>>
-operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-           const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-           const std::vector<T4__, Alloc4__>& a5,
-           const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
-           const std::vector<T7__, Alloc7__>& a8,
-           const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
-           const std::vector<T10__, Alloc10__>& a11,
-           const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__)  const 
+auto operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+                const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+                const std::vector<T4__, Alloc4__>& a5,
+                const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
+                const std::vector<T7__, Alloc7__>& a8,
+                const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
+                const std::vector<T10__, Alloc10__>& a11,
+                const std::vector<T11__, Alloc11__>& a12,
+                std::ostream* pstream__)  const 
 {
 return f6(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
@@ -3911,25 +3780,15 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
-T7__, stan::promote_args_t<T8__, stan::value_type_t<T9__>, T10__,
-T11__>>, -1, 1>
-f7(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-   const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-   const std::vector<T4__, Alloc4__>& a5,
-   const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
-   const std::vector<T7__, Alloc7__>& a8,
-   const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
-   const std::vector<T10__, Alloc10__>& a11,
-   const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T3__,
-          T4__,
-          T5__,
-          stan::value_type_t<T6__>,
-          T7__, stan::promote_args_t<T8__,
-          stan::value_type_t<T9__>,
-          T10__,
-          T11__>>;
+auto f7(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+        const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+        const std::vector<T4__, Alloc4__>& a5,
+        const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
+        const std::vector<T7__, Alloc7__>& a8,
+        const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
+        const std::vector<T10__, Alloc10__>& a11,
+        const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T1__, T2__, T3__, T4__, T5__, T6__, T7__, T8__, T9__, T10__, T11__>;
   int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
@@ -3939,7 +3798,7 @@ f7(const int& a1, const std::vector<T1__, Alloc1__>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 739;
-    return a7;
+    return stan::math::eval(a7);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -3954,17 +3813,15 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
-T7__, stan::promote_args_t<T8__, stan::value_type_t<T9__>, T10__,
-T11__>>, -1, 1>
-operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-           const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-           const std::vector<T4__, Alloc4__>& a5,
-           const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
-           const std::vector<T7__, Alloc7__>& a8,
-           const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
-           const std::vector<T10__, Alloc10__>& a11,
-           const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__)  const 
+auto operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+                const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+                const std::vector<T4__, Alloc4__>& a5,
+                const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
+                const std::vector<T7__, Alloc7__>& a8,
+                const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
+                const std::vector<T10__, Alloc10__>& a11,
+                const std::vector<T11__, Alloc11__>& a12,
+                std::ostream* pstream__)  const 
 {
 return f7(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
@@ -3975,25 +3832,15 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
-T7__, stan::promote_args_t<T8__, stan::value_type_t<T9__>, T10__,
-T11__>>, -1, 1>>
-f8(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-   const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-   const std::vector<T4__, Alloc4__>& a5,
-   const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
-   const std::vector<T7__, Alloc7__>& a8,
-   const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
-   const std::vector<T10__, Alloc10__>& a11,
-   const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T3__,
-          T4__,
-          T5__,
-          stan::value_type_t<T6__>,
-          T7__, stan::promote_args_t<T8__,
-          stan::value_type_t<T9__>,
-          T10__,
-          T11__>>;
+auto f8(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+        const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+        const std::vector<T4__, Alloc4__>& a5,
+        const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
+        const std::vector<T7__, Alloc7__>& a8,
+        const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
+        const std::vector<T10__, Alloc10__>& a11,
+        const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T1__, T2__, T3__, T4__, T5__, T6__, T7__, T8__, T9__, T10__, T11__>;
   int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
@@ -4018,17 +3865,15 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
-T7__, stan::promote_args_t<T8__, stan::value_type_t<T9__>, T10__,
-T11__>>, -1, 1>>
-operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-           const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-           const std::vector<T4__, Alloc4__>& a5,
-           const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
-           const std::vector<T7__, Alloc7__>& a8,
-           const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
-           const std::vector<T10__, Alloc10__>& a11,
-           const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__)  const 
+auto operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+                const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+                const std::vector<T4__, Alloc4__>& a5,
+                const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
+                const std::vector<T7__, Alloc7__>& a8,
+                const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
+                const std::vector<T10__, Alloc10__>& a11,
+                const std::vector<T11__, Alloc11__>& a12,
+                std::ostream* pstream__)  const 
 {
 return f8(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
@@ -4039,25 +3884,15 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-std::vector<std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
-T7__, stan::promote_args_t<T8__, stan::value_type_t<T9__>, T10__,
-T11__>>, -1, 1>>>
-f9(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-   const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-   const std::vector<T4__, Alloc4__>& a5,
-   const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
-   const std::vector<T7__, Alloc7__>& a8,
-   const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
-   const std::vector<T10__, Alloc10__>& a11,
-   const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T3__,
-          T4__,
-          T5__,
-          stan::value_type_t<T6__>,
-          T7__, stan::promote_args_t<T8__,
-          stan::value_type_t<T9__>,
-          T10__,
-          T11__>>;
+auto f9(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+        const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+        const std::vector<T4__, Alloc4__>& a5,
+        const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
+        const std::vector<T7__, Alloc7__>& a8,
+        const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
+        const std::vector<T10__, Alloc10__>& a11,
+        const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T1__, T2__, T3__, T4__, T5__, T6__, T7__, T8__, T9__, T10__, T11__>;
   int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
@@ -4082,17 +3917,15 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-std::vector<std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
-T7__, stan::promote_args_t<T8__, stan::value_type_t<T9__>, T10__,
-T11__>>, -1, 1>>>
-operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-           const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-           const std::vector<T4__, Alloc4__>& a5,
-           const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
-           const std::vector<T7__, Alloc7__>& a8,
-           const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
-           const std::vector<T10__, Alloc10__>& a11,
-           const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__)  const 
+auto operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+                const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+                const std::vector<T4__, Alloc4__>& a5,
+                const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
+                const std::vector<T7__, Alloc7__>& a8,
+                const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
+                const std::vector<T10__, Alloc10__>& a11,
+                const std::vector<T11__, Alloc11__>& a12,
+                std::ostream* pstream__)  const 
 {
 return f9(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
@@ -4103,25 +3936,15 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
-T7__, stan::promote_args_t<T8__, stan::value_type_t<T9__>, T10__,
-T11__>>, -1, -1>
-f10(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-    const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-    const std::vector<T4__, Alloc4__>& a5,
-    const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
-    const std::vector<T7__, Alloc7__>& a8,
-    const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
-    const std::vector<T10__, Alloc10__>& a11,
-    const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T3__,
-          T4__,
-          T5__,
-          stan::value_type_t<T6__>,
-          T7__, stan::promote_args_t<T8__,
-          stan::value_type_t<T9__>,
-          T10__,
-          T11__>>;
+auto f10(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+         const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+         const std::vector<T4__, Alloc4__>& a5,
+         const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
+         const std::vector<T7__, Alloc7__>& a8,
+         const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
+         const std::vector<T10__, Alloc10__>& a11,
+         const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T1__, T2__, T3__, T4__, T5__, T6__, T7__, T8__, T9__, T10__, T11__>;
   int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
@@ -4131,7 +3954,7 @@ f10(const int& a1, const std::vector<T1__, Alloc1__>& a2,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 745;
-    return a10;
+    return stan::math::eval(a10);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -4146,17 +3969,15 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
-T7__, stan::promote_args_t<T8__, stan::value_type_t<T9__>, T10__,
-T11__>>, -1, -1>
-operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-           const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-           const std::vector<T4__, Alloc4__>& a5,
-           const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
-           const std::vector<T7__, Alloc7__>& a8,
-           const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
-           const std::vector<T10__, Alloc10__>& a11,
-           const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__)  const 
+auto operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+                const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+                const std::vector<T4__, Alloc4__>& a5,
+                const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
+                const std::vector<T7__, Alloc7__>& a8,
+                const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
+                const std::vector<T10__, Alloc10__>& a11,
+                const std::vector<T11__, Alloc11__>& a12,
+                std::ostream* pstream__)  const 
 {
 return f10(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
@@ -4167,25 +3988,15 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
-T7__, stan::promote_args_t<T8__, stan::value_type_t<T9__>, T10__,
-T11__>>, -1, -1>>
-f11(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-    const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-    const std::vector<T4__, Alloc4__>& a5,
-    const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
-    const std::vector<T7__, Alloc7__>& a8,
-    const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
-    const std::vector<T10__, Alloc10__>& a11,
-    const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T3__,
-          T4__,
-          T5__,
-          stan::value_type_t<T6__>,
-          T7__, stan::promote_args_t<T8__,
-          stan::value_type_t<T9__>,
-          T10__,
-          T11__>>;
+auto f11(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+         const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+         const std::vector<T4__, Alloc4__>& a5,
+         const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
+         const std::vector<T7__, Alloc7__>& a8,
+         const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
+         const std::vector<T10__, Alloc10__>& a11,
+         const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T1__, T2__, T3__, T4__, T5__, T6__, T7__, T8__, T9__, T10__, T11__>;
   int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
@@ -4210,17 +4021,15 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
-T7__, stan::promote_args_t<T8__, stan::value_type_t<T9__>, T10__,
-T11__>>, -1, -1>>
-operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-           const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-           const std::vector<T4__, Alloc4__>& a5,
-           const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
-           const std::vector<T7__, Alloc7__>& a8,
-           const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
-           const std::vector<T10__, Alloc10__>& a11,
-           const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__)  const 
+auto operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+                const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+                const std::vector<T4__, Alloc4__>& a5,
+                const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
+                const std::vector<T7__, Alloc7__>& a8,
+                const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
+                const std::vector<T10__, Alloc10__>& a11,
+                const std::vector<T11__, Alloc11__>& a12,
+                std::ostream* pstream__)  const 
 {
 return f11(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
@@ -4231,25 +4040,15 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-std::vector<std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
-T7__, stan::promote_args_t<T8__, stan::value_type_t<T9__>, T10__,
-T11__>>, -1, -1>>>
-f12(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-    const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-    const std::vector<T4__, Alloc4__>& a5,
-    const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
-    const std::vector<T7__, Alloc7__>& a8,
-    const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
-    const std::vector<T10__, Alloc10__>& a11,
-    const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T3__,
-          T4__,
-          T5__,
-          stan::value_type_t<T6__>,
-          T7__, stan::promote_args_t<T8__,
-          stan::value_type_t<T9__>,
-          T10__,
-          T11__>>;
+auto f12(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+         const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+         const std::vector<T4__, Alloc4__>& a5,
+         const std::vector<T5__, Alloc5__>& a6, const T6__& a7_arg__,
+         const std::vector<T7__, Alloc7__>& a8,
+         const std::vector<T8__, Alloc8__>& a9, const T9__& a10_arg__,
+         const std::vector<T10__, Alloc10__>& a11,
+         const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T1__, T2__, T3__, T4__, T5__, T6__, T7__, T8__, T9__, T10__, T11__>;
   int current_statement__ = 0; 
   const auto& a7 = to_ref(a7_arg__);
   const auto& a10 = to_ref(a10_arg__);
@@ -4274,24 +4073,21 @@ typename T3__, typename T4__, typename Alloc4__, typename T5__,
 typename Alloc5__, typename T6__, typename T7__, typename Alloc7__,
 typename T8__, typename Alloc8__, typename T9__, typename T10__,
 typename Alloc10__, typename T11__, typename Alloc11__>
-std::vector<std::vector<Eigen::Matrix<stan::promote_args_t<T3__, T4__, T5__, stan::value_type_t<T6__>,
-T7__, stan::promote_args_t<T8__, stan::value_type_t<T9__>, T10__,
-T11__>>, -1, -1>>>
-operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
-           const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
-           const std::vector<T4__, Alloc4__>& a5,
-           const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
-           const std::vector<T7__, Alloc7__>& a8,
-           const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
-           const std::vector<T10__, Alloc10__>& a11,
-           const std::vector<T11__, Alloc11__>& a12, std::ostream* pstream__)  const 
+auto operator()(const int& a1, const std::vector<T1__, Alloc1__>& a2,
+                const std::vector<T2__, Alloc2__>& a3, const T3__& a4,
+                const std::vector<T4__, Alloc4__>& a5,
+                const std::vector<T5__, Alloc5__>& a6, const T6__& a7,
+                const std::vector<T7__, Alloc7__>& a8,
+                const std::vector<T8__, Alloc8__>& a9, const T9__& a10,
+                const std::vector<T10__, Alloc10__>& a11,
+                const std::vector<T11__, Alloc11__>& a12,
+                std::ostream* pstream__)  const 
 {
 return f12(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, pstream__);
 }
 };
 
-void
-foo_6(std::ostream* pstream__) {
+auto foo_6(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -4326,15 +4122,13 @@ foo_6(std::ostream* pstream__) {
 }
 
 struct foo_6_functor__ {
-void
-operator()(std::ostream* pstream__)  const 
+auto operator()(std::ostream* pstream__)  const 
 {
 return foo_6(pstream__);
 }
 };
 
-Eigen::Matrix<double, -1, -1>
-matfoo(std::ostream* pstream__) {
+auto matfoo(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -4343,11 +4137,12 @@ matfoo(std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 757;
-    return stan::math::to_matrix(std::vector<Eigen::Matrix<double, 1, -1>>{
+    return stan::math::eval(stan::math::to_matrix(
+        std::vector<Eigen::Matrix<double, 1, -1>>{
         (Eigen::Matrix<double,1,-1>(10) << 1, 2, 3, 4, 5, 6, 7, 8, 9,
         10).finished(), (Eigen::Matrix<double,1,-1>(10) << 1, 2, 3, 4, 5, 6,
         7, 8, 9, 10).finished(), (Eigen::Matrix<double,1,-1>(10) << 1, 2, 3,
-        4, 5, 6, 7, 8, 9, 10).finished()});
+        4, 5, 6, 7, 8, 9, 10).finished()}));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -4357,15 +4152,13 @@ matfoo(std::ostream* pstream__) {
 }
 
 struct matfoo_functor__ {
-Eigen::Matrix<double, -1, -1>
-operator()(std::ostream* pstream__)  const 
+auto operator()(std::ostream* pstream__)  const 
 {
 return matfoo(pstream__);
 }
 };
 
-Eigen::Matrix<double, -1, 1>
-vecfoo(std::ostream* pstream__) {
+auto vecfoo(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -4374,8 +4167,8 @@ vecfoo(std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 759;
-    return (Eigen::Matrix<double,-1,1>(10) << 1, 2, 3, 4, 5, 6, 7, 8, 9,
-        10).finished();
+    return stan::math::eval((Eigen::Matrix<double,-1,1>(10) << 1, 2, 3, 4, 5,
+        6, 7, 8, 9, 10).finished());
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -4385,17 +4178,15 @@ vecfoo(std::ostream* pstream__) {
 }
 
 struct vecfoo_functor__ {
-Eigen::Matrix<double, -1, 1>
-operator()(std::ostream* pstream__)  const 
+auto operator()(std::ostream* pstream__)  const 
 {
 return vecfoo(pstream__);
 }
 };
 
 template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
-vecmufoo(const T0__& mu, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto vecmufoo(const T0__& mu, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -4406,7 +4197,7 @@ vecmufoo(const T0__& mu, std::ostream* pstream__) {
     current_statement__ = 761;
     assign(l, multiply(mu, vecfoo(pstream__)), "assigning variable l");
     current_statement__ = 762;
-    return l;
+    return stan::math::eval(l);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -4417,17 +4208,15 @@ vecmufoo(const T0__& mu, std::ostream* pstream__) {
 
 struct vecmufoo_functor__ {
 template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
-operator()(const T0__& mu, std::ostream* pstream__)  const 
+auto operator()(const T0__& mu, std::ostream* pstream__)  const 
 {
 return vecmufoo(mu, pstream__);
 }
 };
 
 template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
-vecmubar(const T0__& mu, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto vecmubar(const T0__& mu, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -4440,7 +4229,8 @@ vecmubar(const T0__& mu, std::ostream* pstream__) {
       multiply(mu, (Eigen::Matrix<double,-1,1>(10) << 1, 2, 3, 4, 5, 6, 7, 8,
         9, 10).finished()), "assigning variable l");
     current_statement__ = 765;
-    return rvalue(l, "l", index_multi(std::vector<int>{1, 2, 3, 4, 5}));
+    return stan::math::eval(rvalue(l, "l",
+                              index_multi(std::vector<int>{1, 2, 3, 4, 5})));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -4451,8 +4241,7 @@ vecmubar(const T0__& mu, std::ostream* pstream__) {
 
 struct vecmubar_functor__ {
 template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<T0__>, -1, 1>
-operator()(const T0__& mu, std::ostream* pstream__)  const 
+auto operator()(const T0__& mu, std::ostream* pstream__)  const 
 {
 return vecmubar(mu, pstream__);
 }
@@ -4460,15 +4249,11 @@ return vecmubar(mu, pstream__);
 
 template <typename T0__, typename T1__, typename T2__, typename Alloc2__,
 typename T3__, typename Alloc3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>,
-T2__>, -1, 1>
-algebra_system(const T0__& x_arg__, const T1__& y_arg__,
-               const std::vector<T2__, Alloc2__>& dat,
-               const std::vector<T3__, Alloc3__>& dat_int,
-               std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-          stan::value_type_t<T1__>,
-          T2__>;
+auto algebra_system(const T0__& x_arg__, const T1__& y_arg__,
+                    const std::vector<T2__, Alloc2__>& dat,
+                    const std::vector<T3__, Alloc3__>& dat_int,
+                    std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T1__, T2__, T3__>;
   int current_statement__ = 0; 
   const auto& x = to_ref(x_arg__);
   const auto& y = to_ref(y_arg__);
@@ -4490,7 +4275,7 @@ algebra_system(const T0__& x_arg__, const T1__& y_arg__,
       (rvalue(x, "x", index_uni(2)) - rvalue(y, "y", index_uni(2))),
       "assigning variable f_x", index_uni(2));
     current_statement__ = 770;
-    return f_x;
+    return stan::math::eval(f_x);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -4502,12 +4287,10 @@ algebra_system(const T0__& x_arg__, const T1__& y_arg__,
 struct algebra_system_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename Alloc2__,
 typename T3__, typename Alloc3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>,
-T2__>, -1, 1>
-operator()(const T0__& x, const T1__& y,
-           const std::vector<T2__, Alloc2__>& dat,
-           const std::vector<T3__, Alloc3__>& dat_int,
-           std::ostream* pstream__)  const 
+auto operator()(const T0__& x, const T1__& y,
+                const std::vector<T2__, Alloc2__>& dat,
+                const std::vector<T3__, Alloc3__>& dat_int,
+                std::ostream* pstream__)  const 
 {
 return algebra_system(x, y, dat, dat_int, pstream__);
 }
@@ -4515,13 +4298,11 @@ return algebra_system(x, y, dat, dat_int, pstream__);
 
 template <typename T0__, typename T1__, typename T2__, typename Alloc2__,
 typename T3__, typename Alloc3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-stan::value_type_t<T1__>>, -1, 1>
-binomialf(const T0__& phi_arg__, const T1__& theta_arg__,
-          const std::vector<T2__, Alloc2__>& x_r,
-          const std::vector<T3__, Alloc3__>& x_i, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-          stan::value_type_t<T1__>>;
+auto binomialf(const T0__& phi_arg__, const T1__& theta_arg__,
+               const std::vector<T2__, Alloc2__>& x_r,
+               const std::vector<T3__, Alloc3__>& x_i,
+               std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T1__, T2__, T3__>;
   int current_statement__ = 0; 
   const auto& phi = to_ref(phi_arg__);
   const auto& theta = to_ref(theta_arg__);
@@ -4537,7 +4318,7 @@ binomialf(const T0__& phi_arg__, const T1__& theta_arg__,
     current_statement__ = 773;
     assign(lpmf, 0.0, "assigning variable lpmf", index_uni(1));
     current_statement__ = 774;
-    return lpmf;
+    return stan::math::eval(lpmf);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -4549,11 +4330,10 @@ binomialf(const T0__& phi_arg__, const T1__& theta_arg__,
 struct binomialf_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename Alloc2__,
 typename T3__, typename Alloc3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-stan::value_type_t<T1__>>, -1, 1>
-operator()(const T0__& phi, const T1__& theta,
-           const std::vector<T2__, Alloc2__>& x_r,
-           const std::vector<T3__, Alloc3__>& x_i, std::ostream* pstream__)  const 
+auto operator()(const T0__& phi, const T1__& theta,
+                const std::vector<T2__, Alloc2__>& x_r,
+                const std::vector<T3__, Alloc3__>& x_i,
+                std::ostream* pstream__)  const 
 {
 return binomialf(phi, theta, x_r, x_i, pstream__);
 }
@@ -10511,13 +10291,11 @@ static constexpr std::array<const char*, 158> locations_array__ =
 template <typename T0__, typename T1__, typename Alloc1__, typename T2__,
 typename Alloc2__, typename T3__, typename Alloc3__, typename T4__,
 typename Alloc4__>
-std::vector<stan::promote_args_t<T0__, T1__, T2__,
-T3__>>
-sho(const T0__& t, const std::vector<T1__, Alloc1__>& y,
-    const std::vector<T2__, Alloc2__>& theta,
-    const std::vector<T3__, Alloc3__>& x,
-    const std::vector<T4__, Alloc4__>& x_int, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__, T3__>;
+auto sho(const T0__& t, const std::vector<T1__, Alloc1__>& y,
+         const std::vector<T2__, Alloc2__>& theta,
+         const std::vector<T3__, Alloc3__>& x,
+         const std::vector<T4__, Alloc4__>& x_int, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T1__, T2__, T3__, T4__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -10549,12 +10327,11 @@ struct sho_functor__ {
 template <typename T0__, typename T1__, typename Alloc1__, typename T2__,
 typename Alloc2__, typename T3__, typename Alloc3__, typename T4__,
 typename Alloc4__>
-std::vector<stan::promote_args_t<T0__, T1__, T2__,
-T3__>>
-operator()(const T0__& t, const std::vector<T1__, Alloc1__>& y,
-           const std::vector<T2__, Alloc2__>& theta,
-           const std::vector<T3__, Alloc3__>& x,
-           const std::vector<T4__, Alloc4__>& x_int, std::ostream* pstream__)  const 
+auto operator()(const T0__& t, const std::vector<T1__, Alloc1__>& y,
+                const std::vector<T2__, Alloc2__>& theta,
+                const std::vector<T3__, Alloc3__>& x,
+                const std::vector<T4__, Alloc4__>& x_int,
+                std::ostream* pstream__)  const 
 {
 return sho(t, y, theta, x, x_int, pstream__);
 }
@@ -10562,13 +10339,12 @@ return sho(t, y, theta, x, x_int, pstream__);
 
 template <typename T0__, typename T1__, typename T2__, typename Alloc2__,
 typename T3__, typename Alloc3__, typename T4__, typename Alloc4__>
-stan::promote_args_t<T0__, T1__, T2__,
-T3__>
-integrand(const T0__& x, const T1__& xc,
-          const std::vector<T2__, Alloc2__>& theta,
-          const std::vector<T3__, Alloc3__>& x_r,
-          const std::vector<T4__, Alloc4__>& x_i, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__, T3__>;
+auto integrand(const T0__& x, const T1__& xc,
+               const std::vector<T2__, Alloc2__>& theta,
+               const std::vector<T3__, Alloc3__>& x_r,
+               const std::vector<T4__, Alloc4__>& x_i,
+               std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T1__, T2__, T3__, T4__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -10588,12 +10364,11 @@ integrand(const T0__& x, const T1__& xc,
 struct integrand_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename Alloc2__,
 typename T3__, typename Alloc3__, typename T4__, typename Alloc4__>
-stan::promote_args_t<T0__, T1__, T2__,
-T3__>
-operator()(const T0__& x, const T1__& xc,
-           const std::vector<T2__, Alloc2__>& theta,
-           const std::vector<T3__, Alloc3__>& x_r,
-           const std::vector<T4__, Alloc4__>& x_i, std::ostream* pstream__)  const 
+auto operator()(const T0__& x, const T1__& xc,
+                const std::vector<T2__, Alloc2__>& theta,
+                const std::vector<T3__, Alloc3__>& x_r,
+                const std::vector<T4__, Alloc4__>& x_i,
+                std::ostream* pstream__)  const 
 {
 return integrand(x, xc, theta, x_r, x_i, pstream__);
 }
@@ -10601,14 +10376,10 @@ return integrand(x, xc, theta, x_r, x_i, pstream__);
 
 template <typename T0__, typename T1__, typename T2__, typename Alloc2__,
 typename T3__, typename Alloc3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>,
-T2__>, -1, 1>
-foo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
-    const std::vector<T2__, Alloc2__>& data_r,
-    const std::vector<T3__, Alloc3__>& data_i, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-          stan::value_type_t<T1__>,
-          T2__>;
+auto foo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
+         const std::vector<T2__, Alloc2__>& data_r,
+         const std::vector<T3__, Alloc3__>& data_i, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T1__, T2__, T3__>;
   int current_statement__ = 0; 
   const auto& shared_params = to_ref(shared_params_arg__);
   const auto& job_params = to_ref(job_params_arg__);
@@ -10618,7 +10389,8 @@ foo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 147;
-    return (Eigen::Matrix<double,-1,1>(3) << 1, 2, 3).finished();
+    return stan::math::eval((Eigen::Matrix<double,-1,1>(3) << 1, 2,
+        3).finished());
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -10630,11 +10402,10 @@ foo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
 struct foo_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename Alloc2__,
 typename T3__, typename Alloc3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>,
-T2__>, -1, 1>
-operator()(const T0__& shared_params, const T1__& job_params,
-           const std::vector<T2__, Alloc2__>& data_r,
-           const std::vector<T3__, Alloc3__>& data_i, std::ostream* pstream__)  const 
+auto operator()(const T0__& shared_params, const T1__& job_params,
+                const std::vector<T2__, Alloc2__>& data_r,
+                const std::vector<T3__, Alloc3__>& data_i,
+                std::ostream* pstream__)  const 
 {
 return foo(shared_params, job_params, data_r, data_i, pstream__);
 }
@@ -10642,14 +10413,10 @@ return foo(shared_params, job_params, data_r, data_i, pstream__);
 
 template <typename T0__, typename T1__, typename T2__, typename Alloc2__,
 typename T3__, typename Alloc3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>,
-T2__>, -1, 1>
-goo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
-    const std::vector<T2__, Alloc2__>& data_r,
-    const std::vector<T3__, Alloc3__>& data_i, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-          stan::value_type_t<T1__>,
-          T2__>;
+auto goo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
+         const std::vector<T2__, Alloc2__>& data_r,
+         const std::vector<T3__, Alloc3__>& data_i, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T1__, T2__, T3__>;
   int current_statement__ = 0; 
   const auto& shared_params = to_ref(shared_params_arg__);
   const auto& job_params = to_ref(job_params_arg__);
@@ -10659,7 +10426,8 @@ goo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 149;
-    return (Eigen::Matrix<double,-1,1>(3) << 4, 5, 6).finished();
+    return stan::math::eval((Eigen::Matrix<double,-1,1>(3) << 4, 5,
+        6).finished());
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -10671,20 +10439,18 @@ goo(const T0__& shared_params_arg__, const T1__& job_params_arg__,
 struct goo_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename Alloc2__,
 typename T3__, typename Alloc3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>,
-T2__>, -1, 1>
-operator()(const T0__& shared_params, const T1__& job_params,
-           const std::vector<T2__, Alloc2__>& data_r,
-           const std::vector<T3__, Alloc3__>& data_i, std::ostream* pstream__)  const 
+auto operator()(const T0__& shared_params, const T1__& job_params,
+                const std::vector<T2__, Alloc2__>& data_r,
+                const std::vector<T3__, Alloc3__>& data_i,
+                std::ostream* pstream__)  const 
 {
 return goo(shared_params, job_params, data_r, data_i, pstream__);
 }
 };
 
 template <typename T0__>
-stan::promote_args_t<T0__>
-map_rectfake(const T0__& x, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto map_rectfake(const T0__& x, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -10703,8 +10469,7 @@ map_rectfake(const T0__& x, std::ostream* pstream__) {
 
 struct map_rectfake_functor__ {
 template <typename T0__>
-stan::promote_args_t<T0__>
-operator()(const T0__& x, std::ostream* pstream__)  const 
+auto operator()(const T0__& x, std::ostream* pstream__)  const 
 {
 return map_rectfake(x, pstream__);
 }
@@ -10712,15 +10477,11 @@ return map_rectfake(x, pstream__);
 
 template <typename T0__, typename T1__, typename T2__, typename Alloc2__,
 typename T3__, typename Alloc3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>,
-T2__>, -1, 1>
-algebra_system(const T0__& x_arg__, const T1__& y_arg__,
-               const std::vector<T2__, Alloc2__>& dat,
-               const std::vector<T3__, Alloc3__>& dat_int,
-               std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
-          stan::value_type_t<T1__>,
-          T2__>;
+auto algebra_system(const T0__& x_arg__, const T1__& y_arg__,
+                    const std::vector<T2__, Alloc2__>& dat,
+                    const std::vector<T3__, Alloc3__>& dat_int,
+                    std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T1__, T2__, T3__>;
   int current_statement__ = 0; 
   const auto& x = to_ref(x_arg__);
   const auto& y = to_ref(y_arg__);
@@ -10742,7 +10503,7 @@ algebra_system(const T0__& x_arg__, const T1__& y_arg__,
       (rvalue(x, "x", index_uni(2)) - rvalue(y, "y", index_uni(2))),
       "assigning variable f_x", index_uni(2));
     current_statement__ = 156;
-    return f_x;
+    return stan::math::eval(f_x);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -10754,12 +10515,10 @@ algebra_system(const T0__& x_arg__, const T1__& y_arg__,
 struct algebra_system_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename Alloc2__,
 typename T3__, typename Alloc3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>,
-T2__>, -1, 1>
-operator()(const T0__& x, const T1__& y,
-           const std::vector<T2__, Alloc2__>& dat,
-           const std::vector<T3__, Alloc3__>& dat_int,
-           std::ostream* pstream__)  const 
+auto operator()(const T0__& x, const T1__& y,
+                const std::vector<T2__, Alloc2__>& dat,
+                const std::vector<T3__, Alloc3__>& dat_int,
+                std::ostream* pstream__)  const 
 {
 return algebra_system(x, y, dat, dat_int, pstream__);
 }
@@ -12921,14 +12680,9 @@ static constexpr std::array<const char*, 630> locations_array__ =
 
 
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>, T2__,
-stan::value_type_t<T3__>>, -1, 1>
-f(const T0__& t, const T1__& z_arg__, const T2__& a, const T3__& b_arg__,
-  std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__,
-          stan::value_type_t<T1__>,
-          T2__,
-          stan::value_type_t<T3__>>;
+auto f(const T0__& t, const T1__& z_arg__, const T2__& a,
+       const T3__& b_arg__, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T1__, T2__, T3__>;
   int current_statement__ = 0; 
   const auto& z = to_ref(z_arg__);
   const auto& b = to_ref(b_arg__);
@@ -12938,7 +12692,7 @@ f(const T0__& t, const T1__& z_arg__, const T2__& a, const T3__& b_arg__,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     current_statement__ = 628;
-    return z;
+    return stan::math::eval(z);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -12949,10 +12703,8 @@ f(const T0__& t, const T1__& z_arg__, const T2__& a, const T3__& b_arg__,
 
 struct f_functor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>, T2__,
-stan::value_type_t<T3__>>, -1, 1>
-operator()(const T0__& t, const T1__& z, const T2__& a, const T3__& b,
-           std::ostream* pstream__)  const 
+auto operator()(const T0__& t, const T1__& z, const T2__& a, const T3__& b,
+                std::ostream* pstream__)  const 
 {
 return f(t, z, a, b, pstream__);
 }
@@ -12961,10 +12713,8 @@ return f(t, z, a, b, pstream__);
 
 struct f_odefunctor__ {
 template <typename T0__, typename T1__, typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>, T2__,
-stan::value_type_t<T3__>>, -1, 1>
-operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
-           const T2__& a, const T3__& b)  const 
+auto operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
+                const T2__& a, const T3__& b)  const 
 {
 return f(t, z, a, b, pstream__);
 }
@@ -16351,13 +16101,11 @@ static constexpr std::array<const char*, 35> locations_array__ =
 template <typename T0__, typename T1__, typename Alloc1__, typename T2__,
 typename Alloc2__, typename T3__, typename Alloc3__, typename T4__,
 typename Alloc4__>
-std::vector<stan::promote_args_t<T0__, T1__, T2__,
-T3__>>
-dz_dt(const T0__& t, const std::vector<T1__, Alloc1__>& z,
-      const std::vector<T2__, Alloc2__>& theta,
-      const std::vector<T3__, Alloc3__>& x_r,
-      const std::vector<T4__, Alloc4__>& x_i, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__, T3__>;
+auto dz_dt(const T0__& t, const std::vector<T1__, Alloc1__>& z,
+           const std::vector<T2__, Alloc2__>& theta,
+           const std::vector<T3__, Alloc3__>& x_r,
+           const std::vector<T4__, Alloc4__>& x_i, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T1__, T2__, T3__, T4__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -16402,12 +16150,11 @@ struct dz_dt_functor__ {
 template <typename T0__, typename T1__, typename Alloc1__, typename T2__,
 typename Alloc2__, typename T3__, typename Alloc3__, typename T4__,
 typename Alloc4__>
-std::vector<stan::promote_args_t<T0__, T1__, T2__,
-T3__>>
-operator()(const T0__& t, const std::vector<T1__, Alloc1__>& z,
-           const std::vector<T2__, Alloc2__>& theta,
-           const std::vector<T3__, Alloc3__>& x_r,
-           const std::vector<T4__, Alloc4__>& x_i, std::ostream* pstream__)  const 
+auto operator()(const T0__& t, const std::vector<T1__, Alloc1__>& z,
+                const std::vector<T2__, Alloc2__>& theta,
+                const std::vector<T3__, Alloc3__>& x_r,
+                const std::vector<T4__, Alloc4__>& x_i,
+                std::ostream* pstream__)  const 
 {
 return dz_dt(t, z, theta, x_r, x_i, pstream__);
 }
@@ -18991,10 +18738,9 @@ struct h_rsfunctor__;
 template <bool propto__>
 struct foo_lpdf_rsfunctor__;
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-g(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-  const int& end, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto g(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+       const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -19019,9 +18765,8 @@ g(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g_functor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return g(y_slice, start, end, pstream__);
 }
@@ -19030,21 +18775,18 @@ return g(y_slice, start, end, pstream__);
 
 struct g_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return g(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-h(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-  const int& end, const std::vector<T3__, Alloc3__>& a,
-  std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+auto h(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+       const int& end, const std::vector<T3__, Alloc3__>& a,
+       std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T3__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -19070,11 +18812,9 @@ h(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct h_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, const std::vector<T3__, Alloc3__>& a,
-           std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, const std::vector<T3__, Alloc3__>& a,
+                std::ostream* pstream__)  const 
 {
 return h(y_slice, start, end, a, pstream__);
 }
@@ -19083,21 +18823,18 @@ return h(y_slice, start, end, a, pstream__);
 
 struct h_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__,
-           const std::vector<T3__, Alloc3__>& a)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__,
+                const std::vector<T3__, Alloc3__>& a)  const 
 {
 return h(y_slice, start + 1, end + 1, a, pstream__);
 }
 };
 
 template <bool propto__, typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-foo_lpdf(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-         const int& end, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto foo_lpdf(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+              const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -19114,9 +18851,8 @@ foo_lpdf(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct foo_lpdf_functor__ {
 template <bool propto__, typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return foo_lpdf<propto__>(y_slice, start, end, pstream__);
 }
@@ -19126,9 +18862,8 @@ return foo_lpdf<propto__>(y_slice, start, end, pstream__);
 template <bool propto__>
 struct foo_lpdf_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return foo_lpdf<propto__>(y_slice, start + 1, end + 1, pstream__);
 }
@@ -19743,10 +19478,9 @@ struct h6_rsfunctor__;
 struct h7_rsfunctor__;
 struct h8_rsfunctor__;
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-g1(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto g1(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -19765,9 +19499,8 @@ g1(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g1_functor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return g1(y_slice, start, end, pstream__);
 }
@@ -19776,19 +19509,17 @@ return g1(y_slice, start, end, pstream__);
 
 struct g1_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return g1(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-g2(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto g2(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -19817,9 +19548,8 @@ g2(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g2_functor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return g2(y_slice, start, end, pstream__);
 }
@@ -19828,19 +19558,17 @@ return g2(y_slice, start, end, pstream__);
 
 struct g2_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return g2(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-g3(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto g3(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -19869,9 +19597,8 @@ g3(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g3_functor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return g3(y_slice, start, end, pstream__);
 }
@@ -19880,19 +19607,17 @@ return g3(y_slice, start, end, pstream__);
 
 struct g3_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return g3(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-g4(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto g4(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -19922,9 +19647,8 @@ g4(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g4_functor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return g4(y_slice, start, end, pstream__);
 }
@@ -19933,19 +19657,17 @@ return g4(y_slice, start, end, pstream__);
 
 struct g4_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return g4(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-g5(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto g5(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -19979,9 +19701,8 @@ g5(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g5_functor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return g5(y_slice, start, end, pstream__);
 }
@@ -19990,19 +19711,17 @@ return g5(y_slice, start, end, pstream__);
 
 struct g5_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return g5(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-g6(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto g6(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -20037,9 +19756,8 @@ g6(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g6_functor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return g6(y_slice, start, end, pstream__);
 }
@@ -20048,19 +19766,17 @@ return g6(y_slice, start, end, pstream__);
 
 struct g6_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return g6(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-g7(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto g7(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -20095,9 +19811,8 @@ g7(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g7_functor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return g7(y_slice, start, end, pstream__);
 }
@@ -20106,19 +19821,17 @@ return g7(y_slice, start, end, pstream__);
 
 struct g7_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return g7(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-g8(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto g8(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -20153,9 +19866,8 @@ g8(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g8_functor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return g8(y_slice, start, end, pstream__);
 }
@@ -20164,20 +19876,18 @@ return g8(y_slice, start, end, pstream__);
 
 struct g8_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return g8(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-h1(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
-   const std::vector<T3__, Alloc3__>& a, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+auto h1(const std::vector<T0__, Alloc0__>& y, const int& start,
+        const int& end, const std::vector<T3__, Alloc3__>& a,
+        std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T3__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -20197,11 +19907,9 @@ h1(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
 
 struct h1_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
-           const int& end, const std::vector<T3__, Alloc3__>& a,
-           std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
+                const int& end, const std::vector<T3__, Alloc3__>& a,
+                std::ostream* pstream__)  const 
 {
 return h1(y, start, end, a, pstream__);
 }
@@ -20210,22 +19918,19 @@ return h1(y, start, end, a, pstream__);
 
 struct h1_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
-           const int& end, std::ostream* pstream__,
-           const std::vector<T3__, Alloc3__>& a)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
+                const int& end, std::ostream* pstream__,
+                const std::vector<T3__, Alloc3__>& a)  const 
 {
 return h1(y, start + 1, end + 1, a, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-h2(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
-   const std::vector<T3__, Alloc3__>& a, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+auto h2(const std::vector<T0__, Alloc0__>& y, const int& start,
+        const int& end, const std::vector<T3__, Alloc3__>& a,
+        std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T3__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -20253,11 +19958,9 @@ h2(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
 
 struct h2_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
-           const int& end, const std::vector<T3__, Alloc3__>& a,
-           std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
+                const int& end, const std::vector<T3__, Alloc3__>& a,
+                std::ostream* pstream__)  const 
 {
 return h2(y, start, end, a, pstream__);
 }
@@ -20266,22 +19969,19 @@ return h2(y, start, end, a, pstream__);
 
 struct h2_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
-           const int& end, std::ostream* pstream__,
-           const std::vector<T3__, Alloc3__>& a)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
+                const int& end, std::ostream* pstream__,
+                const std::vector<T3__, Alloc3__>& a)  const 
 {
 return h2(y, start + 1, end + 1, a, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-h3(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
-   const std::vector<T3__, Alloc3__>& a, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+auto h3(const std::vector<T0__, Alloc0__>& y, const int& start,
+        const int& end, const std::vector<T3__, Alloc3__>& a,
+        std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T3__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -20309,11 +20009,9 @@ h3(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
 
 struct h3_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
-           const int& end, const std::vector<T3__, Alloc3__>& a,
-           std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
+                const int& end, const std::vector<T3__, Alloc3__>& a,
+                std::ostream* pstream__)  const 
 {
 return h3(y, start, end, a, pstream__);
 }
@@ -20322,22 +20020,19 @@ return h3(y, start, end, a, pstream__);
 
 struct h3_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
-           const int& end, std::ostream* pstream__,
-           const std::vector<T3__, Alloc3__>& a)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
+                const int& end, std::ostream* pstream__,
+                const std::vector<T3__, Alloc3__>& a)  const 
 {
 return h3(y, start + 1, end + 1, a, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-h4(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
-   const std::vector<T3__, Alloc3__>& a, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+auto h4(const std::vector<T0__, Alloc0__>& y, const int& start,
+        const int& end, const std::vector<T3__, Alloc3__>& a,
+        std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T3__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -20366,11 +20061,9 @@ h4(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
 
 struct h4_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
-           const int& end, const std::vector<T3__, Alloc3__>& a,
-           std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
+                const int& end, const std::vector<T3__, Alloc3__>& a,
+                std::ostream* pstream__)  const 
 {
 return h4(y, start, end, a, pstream__);
 }
@@ -20379,22 +20072,19 @@ return h4(y, start, end, a, pstream__);
 
 struct h4_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
-           const int& end, std::ostream* pstream__,
-           const std::vector<T3__, Alloc3__>& a)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
+                const int& end, std::ostream* pstream__,
+                const std::vector<T3__, Alloc3__>& a)  const 
 {
 return h4(y, start + 1, end + 1, a, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-h5(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
-   const std::vector<T3__, Alloc3__>& a, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+auto h5(const std::vector<T0__, Alloc0__>& y, const int& start,
+        const int& end, const std::vector<T3__, Alloc3__>& a,
+        std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T3__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -20426,11 +20116,9 @@ h5(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
 
 struct h5_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
-           const int& end, const std::vector<T3__, Alloc3__>& a,
-           std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
+                const int& end, const std::vector<T3__, Alloc3__>& a,
+                std::ostream* pstream__)  const 
 {
 return h5(y, start, end, a, pstream__);
 }
@@ -20439,22 +20127,19 @@ return h5(y, start, end, a, pstream__);
 
 struct h5_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
-           const int& end, std::ostream* pstream__,
-           const std::vector<T3__, Alloc3__>& a)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
+                const int& end, std::ostream* pstream__,
+                const std::vector<T3__, Alloc3__>& a)  const 
 {
 return h5(y, start + 1, end + 1, a, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-h6(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
-   const std::vector<T3__, Alloc3__>& a, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+auto h6(const std::vector<T0__, Alloc0__>& y, const int& start,
+        const int& end, const std::vector<T3__, Alloc3__>& a,
+        std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T3__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -20487,11 +20172,9 @@ h6(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
 
 struct h6_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
-           const int& end, const std::vector<T3__, Alloc3__>& a,
-           std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
+                const int& end, const std::vector<T3__, Alloc3__>& a,
+                std::ostream* pstream__)  const 
 {
 return h6(y, start, end, a, pstream__);
 }
@@ -20500,22 +20183,19 @@ return h6(y, start, end, a, pstream__);
 
 struct h6_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
-           const int& end, std::ostream* pstream__,
-           const std::vector<T3__, Alloc3__>& a)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
+                const int& end, std::ostream* pstream__,
+                const std::vector<T3__, Alloc3__>& a)  const 
 {
 return h6(y, start + 1, end + 1, a, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-h7(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
-   const std::vector<T3__, Alloc3__>& a, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+auto h7(const std::vector<T0__, Alloc0__>& y, const int& start,
+        const int& end, const std::vector<T3__, Alloc3__>& a,
+        std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T3__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -20548,11 +20228,9 @@ h7(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
 
 struct h7_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
-           const int& end, const std::vector<T3__, Alloc3__>& a,
-           std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
+                const int& end, const std::vector<T3__, Alloc3__>& a,
+                std::ostream* pstream__)  const 
 {
 return h7(y, start, end, a, pstream__);
 }
@@ -20561,22 +20239,19 @@ return h7(y, start, end, a, pstream__);
 
 struct h7_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
-           const int& end, std::ostream* pstream__,
-           const std::vector<T3__, Alloc3__>& a)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
+                const int& end, std::ostream* pstream__,
+                const std::vector<T3__, Alloc3__>& a)  const 
 {
 return h7(y, start + 1, end + 1, a, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-h8(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
-   const std::vector<T3__, Alloc3__>& a, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+auto h8(const std::vector<T0__, Alloc0__>& y, const int& start,
+        const int& end, const std::vector<T3__, Alloc3__>& a,
+        std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T3__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -20609,11 +20284,9 @@ h8(const std::vector<T0__, Alloc0__>& y, const int& start, const int& end,
 
 struct h8_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
-           const int& end, const std::vector<T3__, Alloc3__>& a,
-           std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
+                const int& end, const std::vector<T3__, Alloc3__>& a,
+                std::ostream* pstream__)  const 
 {
 return h8(y, start, end, a, pstream__);
 }
@@ -20622,11 +20295,9 @@ return h8(y, start, end, a, pstream__);
 
 struct h8_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
-           const int& end, std::ostream* pstream__,
-           const std::vector<T3__, Alloc3__>& a)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y, const int& start,
+                const int& end, std::ostream* pstream__,
+                const std::vector<T3__, Alloc3__>& a)  const 
 {
 return h8(y, start + 1, end + 1, a, pstream__);
 }
@@ -22255,10 +21926,9 @@ struct g8_rsfunctor__;
 struct g9_rsfunctor__;
 struct s_rsfunctor__;
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-f1(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto f1(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -22277,9 +21947,8 @@ f1(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f1_functor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f1(y_slice, start, end, pstream__);
 }
@@ -22288,19 +21957,17 @@ return f1(y_slice, start, end, pstream__);
 
 struct f1_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f1(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-f1a(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-    const int& end, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto f1a(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+         const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -22319,9 +21986,8 @@ f1a(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f1a_functor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f1a(y_slice, start, end, pstream__);
 }
@@ -22330,19 +21996,17 @@ return f1a(y_slice, start, end, pstream__);
 
 struct f1a_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f1a(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-f2(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto f2(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -22361,9 +22025,8 @@ f2(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f2_functor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f2(y_slice, start, end, pstream__);
 }
@@ -22372,19 +22035,17 @@ return f2(y_slice, start, end, pstream__);
 
 struct f2_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f2(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-f3(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto f3(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -22403,9 +22064,8 @@ f3(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f3_functor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f3(y_slice, start, end, pstream__);
 }
@@ -22414,19 +22074,17 @@ return f3(y_slice, start, end, pstream__);
 
 struct f3_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f3(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-f4(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto f4(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -22445,9 +22103,8 @@ f4(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f4_functor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f4(y_slice, start, end, pstream__);
 }
@@ -22456,19 +22113,17 @@ return f4(y_slice, start, end, pstream__);
 
 struct f4_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f4(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-f5(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto f5(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -22487,9 +22142,8 @@ f5(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f5_functor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f5(y_slice, start, end, pstream__);
 }
@@ -22498,19 +22152,17 @@ return f5(y_slice, start, end, pstream__);
 
 struct f5_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f5(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-f6(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto f6(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -22529,9 +22181,8 @@ f6(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f6_functor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f6(y_slice, start, end, pstream__);
 }
@@ -22540,19 +22191,17 @@ return f6(y_slice, start, end, pstream__);
 
 struct f6_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f6(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-f7(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto f7(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -22571,9 +22220,8 @@ f7(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f7_functor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f7(y_slice, start, end, pstream__);
 }
@@ -22582,19 +22230,17 @@ return f7(y_slice, start, end, pstream__);
 
 struct f7_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f7(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-f8(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto f8(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -22613,9 +22259,8 @@ f8(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f8_functor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f8(y_slice, start, end, pstream__);
 }
@@ -22624,19 +22269,17 @@ return f8(y_slice, start, end, pstream__);
 
 struct f8_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f8(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__>
-double
-f9(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
+auto f9(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -22655,9 +22298,8 @@ f9(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f9_functor__ {
 template <typename T0__, typename Alloc0__>
-double
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f9(y_slice, start, end, pstream__);
 }
@@ -22666,19 +22308,17 @@ return f9(y_slice, start, end, pstream__);
 
 struct f9_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-double
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f9(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__>
-double
-f10(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-    const int& end, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
+auto f10(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+         const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -22697,9 +22337,8 @@ f10(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f10_functor__ {
 template <typename T0__, typename Alloc0__>
-double
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f10(y_slice, start, end, pstream__);
 }
@@ -22708,19 +22347,17 @@ return f10(y_slice, start, end, pstream__);
 
 struct f10_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-double
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f10(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__>
-double
-f11(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-    const int& end, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
+auto f11(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+         const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -22739,9 +22376,8 @@ f11(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f11_functor__ {
 template <typename T0__, typename Alloc0__>
-double
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f11(y_slice, start, end, pstream__);
 }
@@ -22750,19 +22386,17 @@ return f11(y_slice, start, end, pstream__);
 
 struct f11_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-double
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f11(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-f12(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-    const int& end, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto f12(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+         const int& end, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -22781,9 +22415,8 @@ f12(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct f12_functor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f12(y_slice, start, end, pstream__);
 }
@@ -22792,20 +22425,17 @@ return f12(y_slice, start, end, pstream__);
 
 struct f12_rsfunctor__ {
 template <typename T0__, typename Alloc0__>
-stan::promote_args_t<T0__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__)  const 
 {
 return f12(y_slice, start + 1, end + 1, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__, typename T3__>
-stan::promote_args_t<T0__,
-T3__>
-g1(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, const T3__& a, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+auto g1(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, const T3__& a, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T3__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -22824,10 +22454,8 @@ g1(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g1_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, const T3__& a, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, const T3__& a, std::ostream* pstream__)  const 
 {
 return g1(y_slice, start, end, a, pstream__);
 }
@@ -22836,22 +22464,17 @@ return g1(y_slice, start, end, a, pstream__);
 
 struct g1_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__, const T3__& a)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__, const T3__& a)  const 
 {
 return g1(y_slice, start + 1, end + 1, a, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__, typename T3__>
-stan::promote_args_t<T0__,
-stan::value_type_t<T3__>>
-g2(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, const T3__& a_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__,
-          stan::value_type_t<T3__>>;
+auto g2(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, const T3__& a_arg__, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T3__>;
   int current_statement__ = 0; 
   const auto& a = to_ref(a_arg__);
   static constexpr bool propto__ = true;
@@ -22871,10 +22494,8 @@ g2(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g2_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__>
-stan::promote_args_t<T0__,
-stan::value_type_t<T3__>>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, const T3__& a, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, const T3__& a, std::ostream* pstream__)  const 
 {
 return g2(y_slice, start, end, a, pstream__);
 }
@@ -22883,22 +22504,17 @@ return g2(y_slice, start, end, a, pstream__);
 
 struct g2_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__>
-stan::promote_args_t<T0__,
-stan::value_type_t<T3__>>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__, const T3__& a)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__, const T3__& a)  const 
 {
 return g2(y_slice, start + 1, end + 1, a, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__, typename T3__>
-stan::promote_args_t<T0__,
-stan::value_type_t<T3__>>
-g3(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, const T3__& a_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__,
-          stan::value_type_t<T3__>>;
+auto g3(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, const T3__& a_arg__, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T3__>;
   int current_statement__ = 0; 
   const auto& a = to_ref(a_arg__);
   static constexpr bool propto__ = true;
@@ -22918,10 +22534,8 @@ g3(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g3_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__>
-stan::promote_args_t<T0__,
-stan::value_type_t<T3__>>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, const T3__& a, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, const T3__& a, std::ostream* pstream__)  const 
 {
 return g3(y_slice, start, end, a, pstream__);
 }
@@ -22930,22 +22544,17 @@ return g3(y_slice, start, end, a, pstream__);
 
 struct g3_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__>
-stan::promote_args_t<T0__,
-stan::value_type_t<T3__>>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__, const T3__& a)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__, const T3__& a)  const 
 {
 return g3(y_slice, start + 1, end + 1, a, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__, typename T3__>
-stan::promote_args_t<T0__,
-stan::value_type_t<T3__>>
-g4(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, const T3__& a_arg__, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__,
-          stan::value_type_t<T3__>>;
+auto g4(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, const T3__& a_arg__, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T3__>;
   int current_statement__ = 0; 
   const auto& a = to_ref(a_arg__);
   static constexpr bool propto__ = true;
@@ -22965,10 +22574,8 @@ g4(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g4_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__>
-stan::promote_args_t<T0__,
-stan::value_type_t<T3__>>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, const T3__& a, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, const T3__& a, std::ostream* pstream__)  const 
 {
 return g4(y_slice, start, end, a, pstream__);
 }
@@ -22977,22 +22584,18 @@ return g4(y_slice, start, end, a, pstream__);
 
 struct g4_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__>
-stan::promote_args_t<T0__,
-stan::value_type_t<T3__>>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__, const T3__& a)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__, const T3__& a)  const 
 {
 return g4(y_slice, start + 1, end + 1, a, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-g5(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, const std::vector<T3__, Alloc3__>& a,
-   std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+auto g5(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, const std::vector<T3__, Alloc3__>& a,
+        std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T3__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -23011,11 +22614,9 @@ g5(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g5_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, const std::vector<T3__, Alloc3__>& a,
-           std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, const std::vector<T3__, Alloc3__>& a,
+                std::ostream* pstream__)  const 
 {
 return g5(y_slice, start, end, a, pstream__);
 }
@@ -23024,23 +22625,19 @@ return g5(y_slice, start, end, a, pstream__);
 
 struct g5_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__,
-           const std::vector<T3__, Alloc3__>& a)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__,
+                const std::vector<T3__, Alloc3__>& a)  const 
 {
 return g5(y_slice, start + 1, end + 1, a, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-g6(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, const std::vector<T3__, Alloc3__>& a,
-   std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+auto g6(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, const std::vector<T3__, Alloc3__>& a,
+        std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T3__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -23059,11 +22656,9 @@ g6(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g6_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, const std::vector<T3__, Alloc3__>& a,
-           std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, const std::vector<T3__, Alloc3__>& a,
+                std::ostream* pstream__)  const 
 {
 return g6(y_slice, start, end, a, pstream__);
 }
@@ -23072,23 +22667,19 @@ return g6(y_slice, start, end, a, pstream__);
 
 struct g6_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__,
-           const std::vector<T3__, Alloc3__>& a)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__,
+                const std::vector<T3__, Alloc3__>& a)  const 
 {
 return g6(y_slice, start + 1, end + 1, a, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-g7(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, const std::vector<T3__, Alloc3__>& a,
-   std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+auto g7(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, const std::vector<T3__, Alloc3__>& a,
+        std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T3__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -23107,11 +22698,9 @@ g7(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g7_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, const std::vector<T3__, Alloc3__>& a,
-           std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, const std::vector<T3__, Alloc3__>& a,
+                std::ostream* pstream__)  const 
 {
 return g7(y_slice, start, end, a, pstream__);
 }
@@ -23120,23 +22709,19 @@ return g7(y_slice, start, end, a, pstream__);
 
 struct g7_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__,
-           const std::vector<T3__, Alloc3__>& a)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__,
+                const std::vector<T3__, Alloc3__>& a)  const 
 {
 return g7(y_slice, start + 1, end + 1, a, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-g8(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, const std::vector<T3__, Alloc3__>& a,
-   std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+auto g8(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, const std::vector<T3__, Alloc3__>& a,
+        std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T3__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -23155,11 +22740,9 @@ g8(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g8_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, const std::vector<T3__, Alloc3__>& a,
-           std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, const std::vector<T3__, Alloc3__>& a,
+                std::ostream* pstream__)  const 
 {
 return g8(y_slice, start, end, a, pstream__);
 }
@@ -23168,23 +22751,19 @@ return g8(y_slice, start, end, a, pstream__);
 
 struct g8_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__,
-           const std::vector<T3__, Alloc3__>& a)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__,
+                const std::vector<T3__, Alloc3__>& a)  const 
 {
 return g8(y_slice, start + 1, end + 1, a, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-g9(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-   const int& end, const std::vector<T3__, Alloc3__>& a,
-   std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+auto g9(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+        const int& end, const std::vector<T3__, Alloc3__>& a,
+        std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T3__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -23203,11 +22782,9 @@ g9(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g9_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, const std::vector<T3__, Alloc3__>& a,
-           std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, const std::vector<T3__, Alloc3__>& a,
+                std::ostream* pstream__)  const 
 {
 return g9(y_slice, start, end, a, pstream__);
 }
@@ -23216,23 +22793,19 @@ return g9(y_slice, start, end, a, pstream__);
 
 struct g9_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__,
-           const std::vector<T3__, Alloc3__>& a)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__,
+                const std::vector<T3__, Alloc3__>& a)  const 
 {
 return g9(y_slice, start + 1, end + 1, a, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-g10(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-    const int& end, const std::vector<T3__, Alloc3__>& a,
-    std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+auto g10(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+         const int& end, const std::vector<T3__, Alloc3__>& a,
+         std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T3__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -23251,11 +22824,9 @@ g10(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g10_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, const std::vector<T3__, Alloc3__>& a,
-           std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, const std::vector<T3__, Alloc3__>& a,
+                std::ostream* pstream__)  const 
 {
 return g10(y_slice, start, end, a, pstream__);
 }
@@ -23264,23 +22835,19 @@ return g10(y_slice, start, end, a, pstream__);
 
 struct g10_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__,
-           const std::vector<T3__, Alloc3__>& a)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__,
+                const std::vector<T3__, Alloc3__>& a)  const 
 {
 return g10(y_slice, start + 1, end + 1, a, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-g11(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-    const int& end, const std::vector<T3__, Alloc3__>& a,
-    std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+auto g11(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+         const int& end, const std::vector<T3__, Alloc3__>& a,
+         std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T3__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -23299,11 +22866,9 @@ g11(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g11_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, const std::vector<T3__, Alloc3__>& a,
-           std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, const std::vector<T3__, Alloc3__>& a,
+                std::ostream* pstream__)  const 
 {
 return g11(y_slice, start, end, a, pstream__);
 }
@@ -23312,23 +22877,19 @@ return g11(y_slice, start, end, a, pstream__);
 
 struct g11_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__,
-           const std::vector<T3__, Alloc3__>& a)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__,
+                const std::vector<T3__, Alloc3__>& a)  const 
 {
 return g11(y_slice, start + 1, end + 1, a, pstream__);
 }
 };
 
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-g12(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-    const int& end, const std::vector<T3__, Alloc3__>& a,
-    std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T3__>;
+auto g12(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+         const int& end, const std::vector<T3__, Alloc3__>& a,
+         std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T3__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -23347,11 +22908,9 @@ g12(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
 
 struct g12_functor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, const std::vector<T3__, Alloc3__>& a,
-           std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, const std::vector<T3__, Alloc3__>& a,
+                std::ostream* pstream__)  const 
 {
 return g12(y_slice, start, end, a, pstream__);
 }
@@ -23360,11 +22919,9 @@ return g12(y_slice, start, end, a, pstream__);
 
 struct g12_rsfunctor__ {
 template <typename T0__, typename Alloc0__, typename T3__, typename Alloc3__>
-stan::promote_args_t<T0__,
-T3__>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__,
-           const std::vector<T3__, Alloc3__>& a)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__,
+                const std::vector<T3__, Alloc3__>& a)  const 
 {
 return g12(y_slice, start + 1, end + 1, a, pstream__);
 }
@@ -23378,37 +22935,22 @@ typename T13__, typename Alloc13__, typename T14__, typename Alloc14__,
 typename T15__, typename Alloc15__, typename T16__, typename Alloc16__,
 typename T17__, typename Alloc17__, typename T18__, typename Alloc18__,
 typename T19__, typename Alloc19__>
-stan::promote_args_t<T0__, T4__, stan::value_type_t<T5__>,
-stan::value_type_t<T6__>,
-stan::value_type_t<T7__>, stan::promote_args_t<T9__, T10__, T11__, T12__,
-T14__, stan::promote_args_t<T15__, T16__, T17__,
-T19__>>>
-s(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-  const int& end, const int& a, const T4__& b, const T5__& c_arg__,
-  const T6__& d_arg__, const T7__& e_arg__,
-  const std::vector<T8__, Alloc8__>& f, const std::vector<T9__, Alloc9__>& g,
-  const std::vector<T10__, Alloc10__>& h,
-  const std::vector<T11__, Alloc11__>& i,
-  const std::vector<T12__, Alloc12__>& j,
-  const std::vector<T13__, Alloc13__>& k,
-  const std::vector<T14__, Alloc14__>& l,
-  const std::vector<T15__, Alloc15__>& m,
-  const std::vector<T16__, Alloc16__>& n,
-  const std::vector<T17__, Alloc17__>& o,
-  const std::vector<T18__, Alloc18__>& p,
-  const std::vector<T19__, Alloc19__>& q, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__,
-          T4__,
-          stan::value_type_t<T5__>,
-          stan::value_type_t<T6__>,
-          stan::value_type_t<T7__>, stan::promote_args_t<T9__,
-          T10__,
-          T11__,
-          T12__,
-          T14__, stan::promote_args_t<T15__,
-          T16__,
-          T17__,
-          T19__>>>;
+auto s(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+       const int& end, const int& a, const T4__& b, const T5__& c_arg__,
+       const T6__& d_arg__, const T7__& e_arg__,
+       const std::vector<T8__, Alloc8__>& f,
+       const std::vector<T9__, Alloc9__>& g,
+       const std::vector<T10__, Alloc10__>& h,
+       const std::vector<T11__, Alloc11__>& i,
+       const std::vector<T12__, Alloc12__>& j,
+       const std::vector<T13__, Alloc13__>& k,
+       const std::vector<T14__, Alloc14__>& l,
+       const std::vector<T15__, Alloc15__>& m,
+       const std::vector<T16__, Alloc16__>& n,
+       const std::vector<T17__, Alloc17__>& o,
+       const std::vector<T18__, Alloc18__>& p,
+       const std::vector<T19__, Alloc19__>& q, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T4__, T5__, T6__, T7__, T8__, T9__, T10__, T11__, T12__, T13__, T14__, T15__, T16__, T17__, T18__, T19__>;
   int current_statement__ = 0; 
   const auto& c = to_ref(c_arg__);
   const auto& d = to_ref(d_arg__);
@@ -23438,26 +22980,22 @@ typename T13__, typename Alloc13__, typename T14__, typename Alloc14__,
 typename T15__, typename Alloc15__, typename T16__, typename Alloc16__,
 typename T17__, typename Alloc17__, typename T18__, typename Alloc18__,
 typename T19__, typename Alloc19__>
-stan::promote_args_t<T0__, T4__, stan::value_type_t<T5__>,
-stan::value_type_t<T6__>,
-stan::value_type_t<T7__>, stan::promote_args_t<T9__, T10__, T11__, T12__,
-T14__, stan::promote_args_t<T15__, T16__, T17__,
-T19__>>>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, const int& a, const T4__& b, const T5__& c,
-           const T6__& d, const T7__& e,
-           const std::vector<T8__, Alloc8__>& f,
-           const std::vector<T9__, Alloc9__>& g,
-           const std::vector<T10__, Alloc10__>& h,
-           const std::vector<T11__, Alloc11__>& i,
-           const std::vector<T12__, Alloc12__>& j,
-           const std::vector<T13__, Alloc13__>& k,
-           const std::vector<T14__, Alloc14__>& l,
-           const std::vector<T15__, Alloc15__>& m,
-           const std::vector<T16__, Alloc16__>& n,
-           const std::vector<T17__, Alloc17__>& o,
-           const std::vector<T18__, Alloc18__>& p,
-           const std::vector<T19__, Alloc19__>& q, std::ostream* pstream__)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, const int& a, const T4__& b, const T5__& c,
+                const T6__& d, const T7__& e,
+                const std::vector<T8__, Alloc8__>& f,
+                const std::vector<T9__, Alloc9__>& g,
+                const std::vector<T10__, Alloc10__>& h,
+                const std::vector<T11__, Alloc11__>& i,
+                const std::vector<T12__, Alloc12__>& j,
+                const std::vector<T13__, Alloc13__>& k,
+                const std::vector<T14__, Alloc14__>& l,
+                const std::vector<T15__, Alloc15__>& m,
+                const std::vector<T16__, Alloc16__>& n,
+                const std::vector<T17__, Alloc17__>& o,
+                const std::vector<T18__, Alloc18__>& p,
+                const std::vector<T19__, Alloc19__>& q,
+                std::ostream* pstream__)  const 
 {
 return s(y_slice, start, end, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p,
          q, pstream__);
@@ -23474,34 +23012,28 @@ typename T13__, typename Alloc13__, typename T14__, typename Alloc14__,
 typename T15__, typename Alloc15__, typename T16__, typename Alloc16__,
 typename T17__, typename Alloc17__, typename T18__, typename Alloc18__,
 typename T19__, typename Alloc19__>
-stan::promote_args_t<T0__, T4__, stan::value_type_t<T5__>,
-stan::value_type_t<T6__>,
-stan::value_type_t<T7__>, stan::promote_args_t<T9__, T10__, T11__, T12__,
-T14__, stan::promote_args_t<T15__, T16__, T17__,
-T19__>>>
-operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
-           const int& end, std::ostream* pstream__, const int& a,
-           const T4__& b, const T5__& c, const T6__& d, const T7__& e,
-           const std::vector<T8__, Alloc8__>& f,
-           const std::vector<T9__, Alloc9__>& g,
-           const std::vector<T10__, Alloc10__>& h,
-           const std::vector<T11__, Alloc11__>& i,
-           const std::vector<T12__, Alloc12__>& j,
-           const std::vector<T13__, Alloc13__>& k,
-           const std::vector<T14__, Alloc14__>& l,
-           const std::vector<T15__, Alloc15__>& m,
-           const std::vector<T16__, Alloc16__>& n,
-           const std::vector<T17__, Alloc17__>& o,
-           const std::vector<T18__, Alloc18__>& p,
-           const std::vector<T19__, Alloc19__>& q)  const 
+auto operator()(const std::vector<T0__, Alloc0__>& y_slice, const int& start,
+                const int& end, std::ostream* pstream__, const int& a,
+                const T4__& b, const T5__& c, const T6__& d, const T7__& e,
+                const std::vector<T8__, Alloc8__>& f,
+                const std::vector<T9__, Alloc9__>& g,
+                const std::vector<T10__, Alloc10__>& h,
+                const std::vector<T11__, Alloc11__>& i,
+                const std::vector<T12__, Alloc12__>& j,
+                const std::vector<T13__, Alloc13__>& k,
+                const std::vector<T14__, Alloc14__>& l,
+                const std::vector<T15__, Alloc15__>& m,
+                const std::vector<T16__, Alloc16__>& n,
+                const std::vector<T17__, Alloc17__>& o,
+                const std::vector<T18__, Alloc18__>& p,
+                const std::vector<T19__, Alloc19__>& q)  const 
 {
 return s(y_slice, start + 1, end + 1, a, b, c, d, e, f, g, h, i, j, k, l, m,
          n, o, p, q, pstream__);
 }
 };
 
-double
-r(std::ostream* pstream__) {
+auto r(std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -23837,8 +23369,7 @@ r(std::ostream* pstream__) {
 }
 
 struct r_functor__ {
-double
-operator()(std::ostream* pstream__)  const 
+auto operator()(std::ostream* pstream__)  const 
 {
 return r(pstream__);
 }
@@ -25688,9 +25219,8 @@ static constexpr std::array<const char*, 13> locations_array__ =
 
 
 template <bool propto__>
-double
-foo0_log(const int& y, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
+auto foo0_log(const int& y, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double>;
   int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -25707,17 +25237,15 @@ foo0_log(const int& y, std::ostream* pstream__) {
 
 struct foo0_log_functor__ {
 template <bool propto__>
-double
-operator()(const int& y, std::ostream* pstream__)  const 
+auto operator()(const int& y, std::ostream* pstream__)  const 
 {
 return foo0_log<propto__>(y, pstream__);
 }
 };
 
 template <bool propto__>
-double
-foo1_lpmf(const int& y, std::ostream* pstream__) {
-  using local_scalar_t__ = double;
+auto foo1_lpmf(const int& y, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double>;
   int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -25734,18 +25262,16 @@ foo1_lpmf(const int& y, std::ostream* pstream__) {
 
 struct foo1_lpmf_functor__ {
 template <bool propto__>
-double
-operator()(const int& y, std::ostream* pstream__)  const 
+auto operator()(const int& y, std::ostream* pstream__)  const 
 {
 return foo1_lpmf<propto__>(y, pstream__);
 }
 };
 
 template <bool propto__, typename T_lp__, typename T_lp_accum__>
-double
-foo4_lp(const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
-        std::ostream* pstream__) {
-  using local_scalar_t__ = double;
+auto foo4_lp(const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
+             std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double>;
   int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -25762,18 +25288,16 @@ foo4_lp(const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
 
 struct foo4_lp_functor__ {
 template <bool propto__, typename T_lp__, typename T_lp_accum__>
-double
-operator()(const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
-           std::ostream* pstream__)  const 
+auto operator()(const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
+                std::ostream* pstream__)  const 
 {
 return foo4_lp<propto__>(y, lp__, lp_accum__, pstream__);
 }
 };
 
 template <bool propto__, typename T0__>
-stan::promote_args_t<T0__>
-foo2_log(const T0__& y, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto foo2_log(const T0__& y, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -25790,17 +25314,15 @@ foo2_log(const T0__& y, std::ostream* pstream__) {
 
 struct foo2_log_functor__ {
 template <bool propto__, typename T0__>
-stan::promote_args_t<T0__>
-operator()(const T0__& y, std::ostream* pstream__)  const 
+auto operator()(const T0__& y, std::ostream* pstream__)  const 
 {
 return foo2_log<propto__>(y, pstream__);
 }
 };
 
 template <bool propto__, typename T0__>
-stan::promote_args_t<T0__>
-foo3_lpdf(const T0__& y, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto foo3_lpdf(const T0__& y, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -25817,8 +25339,7 @@ foo3_lpdf(const T0__& y, std::ostream* pstream__) {
 
 struct foo3_lpdf_functor__ {
 template <bool propto__, typename T0__>
-stan::promote_args_t<T0__>
-operator()(const T0__& y, std::ostream* pstream__)  const 
+auto operator()(const T0__& y, std::ostream* pstream__)  const 
 {
 return foo3_lpdf<propto__>(y, pstream__);
 }
@@ -25826,10 +25347,9 @@ return foo3_lpdf<propto__>(y, pstream__);
 
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
-stan::promote_args_t<T0__>
-foo5_lp(const T0__& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
-        std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto foo5_lp(const T0__& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
+             std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
@@ -25847,9 +25367,8 @@ foo5_lp(const T0__& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
 struct foo5_lp_functor__ {
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
-stan::promote_args_t<T0__>
-operator()(const T0__& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
-           std::ostream* pstream__)  const 
+auto operator()(const T0__& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
+                std::ostream* pstream__)  const 
 {
 return foo5_lp<propto__>(y, lp__, lp_accum__, pstream__);
 }
@@ -29626,9 +29145,8 @@ static constexpr std::array<const char*, 5> locations_array__ =
 
 
 template <typename T0__>
-stan::promote_args_t<T0__>
-normal(const T0__& a, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__>;
+auto normal(const T0__& a, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -29647,8 +29165,7 @@ normal(const T0__& a, std::ostream* pstream__) {
 
 struct normal_functor__ {
 template <typename T0__>
-stan::promote_args_t<T0__>
-operator()(const T0__& a, std::ostream* pstream__)  const 
+auto operator()(const T0__& a, std::ostream* pstream__)  const 
 {
 return normal(a, pstream__);
 }
@@ -29988,10 +29505,8 @@ static constexpr std::array<const char*, 5> locations_array__ =
 
 
 template <typename T0__, typename T1__>
-stan::promote_args_t<T0__,
-T1__>
-lb_constrain(const T0__& x, const T1__& y, std::ostream* pstream__) {
-  using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
+auto lb_constrain(const T0__& x, const T1__& y, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::return_type_t<double, T0__, T1__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -30010,9 +29525,7 @@ lb_constrain(const T0__& x, const T1__& y, std::ostream* pstream__) {
 
 struct lb_constrain_functor__ {
 template <typename T0__, typename T1__>
-stan::promote_args_t<T0__,
-T1__>
-operator()(const T0__& x, const T1__& y, std::ostream* pstream__)  const 
+auto operator()(const T0__& x, const T1__& y, std::ostream* pstream__)  const 
 {
 return lb_constrain(x, y, pstream__);
 }

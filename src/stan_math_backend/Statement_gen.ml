@@ -340,7 +340,15 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
       pf ppf "%a;" pp_user_defined_fun (fname, suffix, args)
   | Break -> string ppf "break;"
   | Continue -> string ppf "continue;"
-  | Return e -> pf ppf "@[<hov 4>return %a;@]" (option pp_expr) e
+  | Return option_e -> (
+    match option_e with
+    | None -> pf ppf "@[<hov 4>return ;@]"
+    | Some e -> (
+      match e with
+      | Expr.Fixed.({meta= Expr.Typed.Meta.({type_; _}); _})
+        when UnsizedType.is_eigen_type type_ ->
+          pf ppf "@[<hov 4>return stan::math::eval(%a);@]" pp_expr e
+      | _ -> pf ppf "@[<hov 4>return %a;@]" pp_expr e ) )
   | Skip -> string ppf ";"
   | IfElse (cond, ifbranch, elsebranch) ->
       let pp_else ppf x = pf ppf "else %a" pp_statement x in
