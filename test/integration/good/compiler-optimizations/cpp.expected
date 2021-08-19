@@ -55,12 +55,14 @@ static constexpr std::array<const char*, 34> locations_array__ =
  " (in 'ad-level-failing.stan', line 24, column 4 to column 16)"};
 
 
-template <typename T0__, typename T1__, typename T2__, typename T3__>
-std::vector<stan::promote_args_t<T0__, T1__, T2__,
-T3__>>
-simple_SIR(const T0__& t, const std::vector<T1__>& y,
-           const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
-           const std::vector<int>& x_i, std::ostream* pstream__) {
+template <typename T0__, typename T1__, typename Alloc1__, typename T2__,
+typename Alloc2__, typename T3__, typename Alloc3__, typename T4__,
+typename Alloc4__>
+auto simple_SIR(const T0__& t, const std::vector<T1__, Alloc1__>& y,
+                const std::vector<T2__, Alloc2__>& theta,
+                const std::vector<T3__, Alloc3__>& x_r,
+                const std::vector<T4__, Alloc4__>& x_i,
+                std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T1__, T2__, T3__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -111,12 +113,14 @@ simple_SIR(const T0__& t, const std::vector<T1__>& y,
 }
 
 struct simple_SIR_functor__ {
-template <typename T0__, typename T1__, typename T2__, typename T3__>
-std::vector<stan::promote_args_t<T0__, T1__, T2__,
-T3__>>
-operator()(const T0__& t, const std::vector<T1__>& y,
-           const std::vector<T2__>& theta, const std::vector<T3__>& x_r,
-           const std::vector<int>& x_i, std::ostream* pstream__)  const 
+template <typename T0__, typename T1__, typename Alloc1__, typename T2__,
+typename Alloc2__, typename T3__, typename Alloc3__, typename T4__,
+typename Alloc4__>
+auto operator()(const T0__& t, const std::vector<T1__, Alloc1__>& y,
+                const std::vector<T2__, Alloc2__>& theta,
+                const std::vector<T3__, Alloc3__>& x_r,
+                const std::vector<T4__, Alloc4__>& x_i,
+                std::ostream* pstream__)  const 
 {
 return simple_SIR(t, y, theta, x_r, x_i, pstream__);
 }
@@ -904,8 +908,9 @@ static constexpr std::array<const char*, 68> locations_array__ =
  " (in 'copy_fail.stan', line 45, column 4 to column 15)"};
 
 
-int
-first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
+template <typename T0__, typename Alloc0__>
+auto first_capture(const std::vector<T0__, Alloc0__>& y_i,
+                   std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -943,15 +948,17 @@ first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
 }
 
 struct first_capture_functor__ {
-int
-operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
+template <typename T0__, typename Alloc0__>
+auto operator()(const std::vector<T0__, Alloc0__>& y_i,
+                std::ostream* pstream__)  const 
 {
 return first_capture(y_i, pstream__);
 }
 };
 
-int
-last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
+template <typename T0__, typename Alloc0__>
+auto last_capture(const std::vector<T0__, Alloc0__>& y_i,
+                  std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -995,18 +1002,18 @@ last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
 }
 
 struct last_capture_functor__ {
-int
-operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
+template <typename T0__, typename Alloc0__>
+auto operator()(const std::vector<T0__, Alloc0__>& y_i,
+                std::ostream* pstream__)  const 
 {
 return last_capture(y_i, pstream__);
 }
 };
 
 template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
-stan::value_type_t<T3__>>, -1, -1>
-prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
-                const T3__& phi_arg__, std::ostream* pstream__) {
+auto prob_uncaptured(const int& nind, const int& n_occasions,
+                     const T2__& p_arg__, const T3__& phi_arg__,
+                     std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
           stan::value_type_t<T3__>>;
   int current_statement__ = 0; 
@@ -1121,10 +1128,8 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
 
 struct prob_uncaptured_functor__ {
 template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
-stan::value_type_t<T3__>>, -1, -1>
-operator()(const int& nind, const int& n_occasions, const T2__& p,
-           const T3__& phi, std::ostream* pstream__)  const 
+auto operator()(const int& nind, const int& n_occasions, const T2__& p,
+                const T3__& phi, std::ostream* pstream__)  const 
 {
 return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
 }
@@ -7993,8 +7998,9 @@ static constexpr std::array<const char*, 70> locations_array__ =
  " (in 'expr-prop-fail5.stan', line 47, column 4 to column 15)"};
 
 
-int
-first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
+template <typename T0__, typename Alloc0__>
+auto first_capture(const std::vector<T0__, Alloc0__>& y_i,
+                   std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -8032,15 +8038,17 @@ first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
 }
 
 struct first_capture_functor__ {
-int
-operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
+template <typename T0__, typename Alloc0__>
+auto operator()(const std::vector<T0__, Alloc0__>& y_i,
+                std::ostream* pstream__)  const 
 {
 return first_capture(y_i, pstream__);
 }
 };
 
-int
-last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
+template <typename T0__, typename Alloc0__>
+auto last_capture(const std::vector<T0__, Alloc0__>& y_i,
+                  std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -8084,18 +8092,18 @@ last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
 }
 
 struct last_capture_functor__ {
-int
-operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
+template <typename T0__, typename Alloc0__>
+auto operator()(const std::vector<T0__, Alloc0__>& y_i,
+                std::ostream* pstream__)  const 
 {
 return last_capture(y_i, pstream__);
 }
 };
 
 template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
-stan::value_type_t<T3__>>, -1, -1>
-prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
-                const T3__& phi_arg__, std::ostream* pstream__) {
+auto prob_uncaptured(const int& nind, const int& n_occasions,
+                     const T2__& p_arg__, const T3__& phi_arg__,
+                     std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
           stan::value_type_t<T3__>>;
   int current_statement__ = 0; 
@@ -8210,10 +8218,8 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
 
 struct prob_uncaptured_functor__ {
 template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
-stan::value_type_t<T3__>>, -1, -1>
-operator()(const int& nind, const int& n_occasions, const T2__& p,
-           const T3__& phi, std::ostream* pstream__)  const 
+auto operator()(const int& nind, const int& n_occasions, const T2__& p,
+                const T3__& phi, std::ostream* pstream__)  const 
 {
 return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
 }
@@ -10094,8 +10100,9 @@ static constexpr std::array<const char*, 145> locations_array__ =
  " (in 'expr-prop-fail6.stan', line 86, column 4 to line 142, column 5)"};
 
 
-int
-first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
+template <typename T0__, typename Alloc0__>
+auto first_capture(const std::vector<T0__, Alloc0__>& y_i,
+                   std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -10133,15 +10140,17 @@ first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
 }
 
 struct first_capture_functor__ {
-int
-operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
+template <typename T0__, typename Alloc0__>
+auto operator()(const std::vector<T0__, Alloc0__>& y_i,
+                std::ostream* pstream__)  const 
 {
 return first_capture(y_i, pstream__);
 }
 };
 
-int
-last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
+template <typename T0__, typename Alloc0__>
+auto last_capture(const std::vector<T0__, Alloc0__>& y_i,
+                  std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -10185,18 +10194,17 @@ last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
 }
 
 struct last_capture_functor__ {
-int
-operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
+template <typename T0__, typename Alloc0__>
+auto operator()(const std::vector<T0__, Alloc0__>& y_i,
+                std::ostream* pstream__)  const 
 {
 return last_capture(y_i, pstream__);
 }
 };
 
 template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-stan::value_type_t<T1__>>, -1, -1>
-prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
-                std::ostream* pstream__) {
+auto prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
+                     std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
           stan::value_type_t<T1__>>;
   int current_statement__ = 0; 
@@ -10313,22 +10321,22 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
 
 struct prob_uncaptured_functor__ {
 template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-stan::value_type_t<T1__>>, -1, -1>
-operator()(const T0__& p, const T1__& phi, std::ostream* pstream__)  const 
+auto operator()(const T0__& p, const T1__& phi, std::ostream* pstream__)  const 
 {
 return prob_uncaptured(p, phi, pstream__);
 }
 };
 
-template <bool propto__, typename T3__, typename T4__, typename T5__,
-typename T6__, typename T7__, typename T_lp__, typename T_lp_accum__>
-void
-js_super_lp(const std::vector<std::vector<int>>& y,
-            const std::vector<int>& first, const std::vector<int>& last,
-            const T3__& p_arg__, const T4__& phi_arg__, const T5__& psi,
-            const T6__& nu_arg__, const T7__& chi_arg__, T_lp__& lp__,
-            T_lp_accum__& lp_accum__, std::ostream* pstream__) {
+template <bool propto__, typename T0__, typename Alloc0__, typename T1__,
+typename Alloc1__, typename T2__, typename Alloc2__, typename T3__,
+typename T4__, typename T5__, typename T6__, typename T7__, typename T_lp__,
+typename T_lp_accum__>
+auto js_super_lp(const std::vector<T0__, Alloc0__>& y,
+                 const std::vector<T1__, Alloc1__>& first,
+                 const std::vector<T2__, Alloc2__>& last,
+                 const T3__& p_arg__, const T4__& phi_arg__, const T5__& psi,
+                 const T6__& nu_arg__, const T7__& chi_arg__, T_lp__& lp__,
+                 T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T3__>,
           stan::value_type_t<T4__>,
           T5__,
@@ -10766,14 +10774,16 @@ js_super_lp(const std::vector<std::vector<int>>& y,
 }
 
 struct js_super_lp_functor__ {
-template <bool propto__, typename T3__, typename T4__, typename T5__,
-typename T6__, typename T7__, typename T_lp__, typename T_lp_accum__>
-void
-operator()(const std::vector<std::vector<int>>& y,
-           const std::vector<int>& first, const std::vector<int>& last,
-           const T3__& p, const T4__& phi, const T5__& psi, const T6__& nu,
-           const T7__& chi, T_lp__& lp__, T_lp_accum__& lp_accum__,
-           std::ostream* pstream__)  const 
+template <bool propto__, typename T0__, typename Alloc0__, typename T1__,
+typename Alloc1__, typename T2__, typename Alloc2__, typename T3__,
+typename T4__, typename T5__, typename T6__, typename T7__, typename T_lp__,
+typename T_lp_accum__>
+auto operator()(const std::vector<T0__, Alloc0__>& y,
+                const std::vector<T1__, Alloc1__>& first,
+                const std::vector<T2__, Alloc2__>& last, const T3__& p,
+                const T4__& phi, const T5__& psi, const T6__& nu,
+                const T7__& chi, T_lp__& lp__, T_lp_accum__& lp_accum__,
+                std::ostream* pstream__)  const 
 {
 return js_super_lp<propto__>(y, first, last, p, phi, psi, nu, chi, lp__,
          lp_accum__, pstream__);
@@ -15262,8 +15272,9 @@ static constexpr std::array<const char*, 68> locations_array__ =
  " (in 'fails-test.stan', line 45, column 4 to column 15)"};
 
 
-int
-first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
+template <typename T0__, typename Alloc0__>
+auto first_capture(const std::vector<T0__, Alloc0__>& y_i,
+                   std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -15301,15 +15312,17 @@ first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
 }
 
 struct first_capture_functor__ {
-int
-operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
+template <typename T0__, typename Alloc0__>
+auto operator()(const std::vector<T0__, Alloc0__>& y_i,
+                std::ostream* pstream__)  const 
 {
 return first_capture(y_i, pstream__);
 }
 };
 
-int
-last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
+template <typename T0__, typename Alloc0__>
+auto last_capture(const std::vector<T0__, Alloc0__>& y_i,
+                  std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -15353,18 +15366,18 @@ last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
 }
 
 struct last_capture_functor__ {
-int
-operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
+template <typename T0__, typename Alloc0__>
+auto operator()(const std::vector<T0__, Alloc0__>& y_i,
+                std::ostream* pstream__)  const 
 {
 return last_capture(y_i, pstream__);
 }
 };
 
 template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
-stan::value_type_t<T3__>>, -1, -1>
-prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
-                const T3__& phi_arg__, std::ostream* pstream__) {
+auto prob_uncaptured(const int& nind, const int& n_occasions,
+                     const T2__& p_arg__, const T3__& phi_arg__,
+                     std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
           stan::value_type_t<T3__>>;
   int current_statement__ = 0; 
@@ -15479,10 +15492,8 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
 
 struct prob_uncaptured_functor__ {
 template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
-stan::value_type_t<T3__>>, -1, -1>
-operator()(const int& nind, const int& n_occasions, const T2__& p,
-           const T3__& phi, std::ostream* pstream__)  const 
+auto operator()(const int& nind, const int& n_occasions, const T2__& p,
+                const T3__& phi, std::ostream* pstream__)  const 
 {
 return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
 }
@@ -17452,8 +17463,9 @@ static constexpr std::array<const char*, 143> locations_array__ =
  " (in 'inlining-fail2.stan', line 156, column 4 to column 26)"};
 
 
-int
-first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
+template <typename T0__, typename Alloc0__>
+auto first_capture(const std::vector<T0__, Alloc0__>& y_i,
+                   std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -17491,15 +17503,17 @@ first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
 }
 
 struct first_capture_functor__ {
-int
-operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
+template <typename T0__, typename Alloc0__>
+auto operator()(const std::vector<T0__, Alloc0__>& y_i,
+                std::ostream* pstream__)  const 
 {
 return first_capture(y_i, pstream__);
 }
 };
 
-int
-last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
+template <typename T0__, typename Alloc0__>
+auto last_capture(const std::vector<T0__, Alloc0__>& y_i,
+                  std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -17543,18 +17557,17 @@ last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
 }
 
 struct last_capture_functor__ {
-int
-operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
+template <typename T0__, typename Alloc0__>
+auto operator()(const std::vector<T0__, Alloc0__>& y_i,
+                std::ostream* pstream__)  const 
 {
 return last_capture(y_i, pstream__);
 }
 };
 
 template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-stan::value_type_t<T1__>>, -1, -1>
-prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
-                std::ostream* pstream__) {
+auto prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
+                     std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
           stan::value_type_t<T1__>>;
   int current_statement__ = 0; 
@@ -17671,22 +17684,23 @@ prob_uncaptured(const T0__& p_arg__, const T1__& phi_arg__,
 
 struct prob_uncaptured_functor__ {
 template <typename T0__, typename T1__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>,
-stan::value_type_t<T1__>>, -1, -1>
-operator()(const T0__& p, const T1__& phi, std::ostream* pstream__)  const 
+auto operator()(const T0__& p, const T1__& phi, std::ostream* pstream__)  const 
 {
 return prob_uncaptured(p, phi, pstream__);
 }
 };
 
-template <bool propto__, typename T3__, typename T4__, typename T5__,
-typename T6__, typename T_lp__, typename T_lp_accum__>
-void
-jolly_seber_lp(const std::vector<std::vector<int>>& y,
-               const std::vector<int>& first, const std::vector<int>& last,
-               const T3__& p_arg__, const T4__& phi_arg__,
-               const T5__& gamma_arg__, const T6__& chi_arg__, T_lp__& lp__,
-               T_lp_accum__& lp_accum__, std::ostream* pstream__) {
+template <bool propto__, typename T0__, typename Alloc0__, typename T1__,
+typename Alloc1__, typename T2__, typename Alloc2__, typename T3__,
+typename T4__, typename T5__, typename T6__, typename T_lp__,
+typename T_lp_accum__>
+auto jolly_seber_lp(const std::vector<T0__, Alloc0__>& y,
+                    const std::vector<T1__, Alloc1__>& first,
+                    const std::vector<T2__, Alloc2__>& last,
+                    const T3__& p_arg__, const T4__& phi_arg__,
+                    const T5__& gamma_arg__, const T6__& chi_arg__,
+                    T_lp__& lp__, T_lp_accum__& lp_accum__,
+                    std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T3__>,
           stan::value_type_t<T4__>,
           stan::value_type_t<T5__>,
@@ -18120,14 +18134,16 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
 }
 
 struct jolly_seber_lp_functor__ {
-template <bool propto__, typename T3__, typename T4__, typename T5__,
-typename T6__, typename T_lp__, typename T_lp_accum__>
-void
-operator()(const std::vector<std::vector<int>>& y,
-           const std::vector<int>& first, const std::vector<int>& last,
-           const T3__& p, const T4__& phi, const T5__& gamma,
-           const T6__& chi, T_lp__& lp__, T_lp_accum__& lp_accum__,
-           std::ostream* pstream__)  const 
+template <bool propto__, typename T0__, typename Alloc0__, typename T1__,
+typename Alloc1__, typename T2__, typename Alloc2__, typename T3__,
+typename T4__, typename T5__, typename T6__, typename T_lp__,
+typename T_lp_accum__>
+auto operator()(const std::vector<T0__, Alloc0__>& y,
+                const std::vector<T1__, Alloc1__>& first,
+                const std::vector<T2__, Alloc2__>& last, const T3__& p,
+                const T4__& phi, const T5__& gamma, const T6__& chi,
+                T_lp__& lp__, T_lp_accum__& lp_accum__,
+                std::ostream* pstream__)  const 
 {
 return jolly_seber_lp<propto__>(y, first, last, p, phi, gamma, chi, lp__,
          lp_accum__, pstream__);
@@ -18135,8 +18151,7 @@ return jolly_seber_lp<propto__>(y, first, last, p, phi, gamma, chi, lp__,
 };
 
 template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
-seq_cprob(const T0__& gamma_arg__, std::ostream* pstream__) {
+auto seq_cprob(const T0__& gamma_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
   int current_statement__ = 0; 
   const auto& gamma = to_ref(gamma_arg__);
@@ -18192,8 +18207,7 @@ seq_cprob(const T0__& gamma_arg__, std::ostream* pstream__) {
 
 struct seq_cprob_functor__ {
 template <typename T0__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>>, -1, 1>
-operator()(const T0__& gamma, std::ostream* pstream__)  const 
+auto operator()(const T0__& gamma, std::ostream* pstream__)  const 
 {
 return seq_cprob(gamma, pstream__);
 }
@@ -21803,8 +21817,9 @@ static constexpr std::array<const char*, 64> locations_array__ =
  " (in 'lcm-fails2.stan', line 45, column 4 to column 15)"};
 
 
-int
-first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
+template <typename T0__, typename Alloc0__>
+auto first_capture(const std::vector<T0__, Alloc0__>& y_i,
+                   std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -21842,15 +21857,17 @@ first_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
 }
 
 struct first_capture_functor__ {
-int
-operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
+template <typename T0__, typename Alloc0__>
+auto operator()(const std::vector<T0__, Alloc0__>& y_i,
+                std::ostream* pstream__)  const 
 {
 return first_capture(y_i, pstream__);
 }
 };
 
-int
-last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
+template <typename T0__, typename Alloc0__>
+auto last_capture(const std::vector<T0__, Alloc0__>& y_i,
+                  std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -21894,18 +21911,18 @@ last_capture(const std::vector<int>& y_i, std::ostream* pstream__) {
 }
 
 struct last_capture_functor__ {
-int
-operator()(const std::vector<int>& y_i, std::ostream* pstream__)  const 
+template <typename T0__, typename Alloc0__>
+auto operator()(const std::vector<T0__, Alloc0__>& y_i,
+                std::ostream* pstream__)  const 
 {
 return last_capture(y_i, pstream__);
 }
 };
 
 template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
-stan::value_type_t<T3__>>, -1, -1>
-prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
-                const T3__& phi_arg__, std::ostream* pstream__) {
+auto prob_uncaptured(const int& nind, const int& n_occasions,
+                     const T2__& p_arg__, const T3__& phi_arg__,
+                     std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T2__>,
           stan::value_type_t<T3__>>;
   int current_statement__ = 0; 
@@ -22020,10 +22037,8 @@ prob_uncaptured(const int& nind, const int& n_occasions, const T2__& p_arg__,
 
 struct prob_uncaptured_functor__ {
 template <typename T2__, typename T3__>
-Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T2__>,
-stan::value_type_t<T3__>>, -1, -1>
-operator()(const int& nind, const int& n_occasions, const T2__& p,
-           const T3__& phi, std::ostream* pstream__)  const 
+auto operator()(const int& nind, const int& n_occasions, const T2__& p,
+                const T3__& phi, std::ostream* pstream__)  const 
 {
 return prob_uncaptured(nind, n_occasions, p, phi, pstream__);
 }
@@ -23674,9 +23689,7 @@ static constexpr std::array<const char*, 13> locations_array__ =
 
 
 template <bool propto__, typename T0__, typename T1__>
-stan::promote_args_t<T0__,
-T1__>
-foo_lpdf(const T0__& x, const T1__& mu, std::ostream* pstream__) {
+auto foo_lpdf(const T0__& x, const T1__& mu, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__, T1__>;
   int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -23695,17 +23708,14 @@ foo_lpdf(const T0__& x, const T1__& mu, std::ostream* pstream__) {
 
 struct foo_lpdf_functor__ {
 template <bool propto__, typename T0__, typename T1__>
-stan::promote_args_t<T0__,
-T1__>
-operator()(const T0__& x, const T1__& mu, std::ostream* pstream__)  const 
+auto operator()(const T0__& x, const T1__& mu, std::ostream* pstream__)  const 
 {
 return foo_lpdf<propto__>(x, mu, pstream__);
 }
 };
 
 template <bool propto__, typename T1__>
-stan::promote_args_t<T1__>
-bar_lpmf(const int& n, const T1__& mu, std::ostream* pstream__) {
+auto bar_lpmf(const int& n, const T1__& mu, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T1__>;
   int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -23724,16 +23734,14 @@ bar_lpmf(const int& n, const T1__& mu, std::ostream* pstream__) {
 
 struct bar_lpmf_functor__ {
 template <bool propto__, typename T1__>
-stan::promote_args_t<T1__>
-operator()(const int& n, const T1__& mu, std::ostream* pstream__)  const 
+auto operator()(const int& n, const T1__& mu, std::ostream* pstream__)  const 
 {
 return bar_lpmf<propto__>(n, mu, pstream__);
 }
 };
 
 template <bool propto__, typename T0__>
-stan::promote_args_t<T0__>
-baz_lpdf(const T0__& x, std::ostream* pstream__) {
+auto baz_lpdf(const T0__& x, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -23752,8 +23760,7 @@ baz_lpdf(const T0__& x, std::ostream* pstream__) {
 
 struct baz_lpdf_functor__ {
 template <bool propto__, typename T0__>
-stan::promote_args_t<T0__>
-operator()(const T0__& x, std::ostream* pstream__)  const 
+auto operator()(const T0__& x, std::ostream* pstream__)  const 
 {
 return baz_lpdf<propto__>(x, pstream__);
 }
@@ -26056,9 +26063,8 @@ static constexpr std::array<const char*, 93> locations_array__ =
 
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
-void
-nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
-         std::ostream* pstream__) {
+auto nrfun_lp(const T0__& x, const int& y, T_lp__& lp__,
+              T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -26083,16 +26089,14 @@ nrfun_lp(const T0__& x, const int& y, T_lp__& lp__, T_lp_accum__& lp_accum__,
 struct nrfun_lp_functor__ {
 template <bool propto__, typename T0__, typename T_lp__,
 typename T_lp_accum__>
-void
-operator()(const T0__& x, const int& y, T_lp__& lp__,
-           T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
+auto operator()(const T0__& x, const int& y, T_lp__& lp__,
+                T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
 {
 return nrfun_lp<propto__>(x, y, lp__, lp_accum__, pstream__);
 }
 };
 
-int
-rfun(const int& y, std::ostream* pstream__) {
+auto rfun(const int& y, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -26119,16 +26123,14 @@ rfun(const int& y, std::ostream* pstream__) {
 }
 
 struct rfun_functor__ {
-int
-operator()(const int& y, std::ostream* pstream__)  const 
+auto operator()(const int& y, std::ostream* pstream__)  const 
 {
 return rfun(y, pstream__);
 }
 };
 
 template <bool propto__, typename T_lp__, typename T_lp_accum__>
-int
-rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
+auto rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -26148,8 +26150,8 @@ rfun_lp(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__) {
 
 struct rfun_lp_functor__ {
 template <bool propto__, typename T_lp__, typename T_lp_accum__>
-int
-operator()(T_lp__& lp__, T_lp_accum__& lp_accum__, std::ostream* pstream__)  const 
+auto operator()(T_lp__& lp__, T_lp_accum__& lp_accum__,
+                std::ostream* pstream__)  const 
 {
 return rfun_lp<propto__>(lp__, lp_accum__, pstream__);
 }

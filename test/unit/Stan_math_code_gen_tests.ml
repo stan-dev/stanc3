@@ -29,8 +29,7 @@ let%expect_test "udf" =
   [%expect
     {|
     template <typename T0__, typename T1__>
-    void
-    sars(const T0__& x_arg__, const T1__& y_arg__, std::ostream* pstream__) {
+    auto sars(const T0__& x_arg__, const T1__& y_arg__, std::ostream* pstream__) {
       using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
               stan::value_type_t<T1__>>;
       int current_statement__ = 0;
@@ -52,8 +51,7 @@ let%expect_test "udf" =
 
     struct sars_functor__ {
     template <typename T0__, typename T1__>
-    void
-    operator()(const T0__& x, const T1__& y, std::ostream* pstream__)  const
+    auto operator()(const T0__& x, const T1__& y, std::ostream* pstream__)  const
     {
     return sars(x, y, pstream__);
     }
@@ -87,13 +85,10 @@ let%expect_test "udf-expressions" =
   |> print_endline ;
   [%expect
     {|
-    template <typename T0__, typename T1__, typename T2__, typename T3__>
-    Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>,
-    stan::value_type_t<T2__>,
-    T3__>, -1, -1>
-    sars(const T0__& x_arg__, const T1__& y_arg__, const T2__& z_arg__,
-         const std::vector<Eigen::Matrix<T3__, -1, -1>>& w,
-         std::ostream* pstream__) {
+    template <typename T0__, typename T1__, typename T2__, typename T3__,
+    typename Alloc3__>
+    auto sars(const T0__& x_arg__, const T1__& y_arg__, const T2__& z_arg__,
+              const std::vector<T3__, Alloc3__>& w, std::ostream* pstream__) {
       using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>,
               stan::value_type_t<T1__>,
               stan::value_type_t<T2__>,
@@ -117,13 +112,10 @@ let%expect_test "udf-expressions" =
     }
 
     struct sars_functor__ {
-    template <typename T0__, typename T1__, typename T2__, typename T3__>
-    Eigen::Matrix<stan::promote_args_t<stan::value_type_t<T0__>, stan::value_type_t<T1__>,
-    stan::value_type_t<T2__>,
-    T3__>, -1, -1>
-    operator()(const T0__& x, const T1__& y, const T2__& z,
-               const std::vector<Eigen::Matrix<T3__, -1, -1>>& w,
-               std::ostream* pstream__)  const
+    template <typename T0__, typename T1__, typename T2__, typename T3__,
+    typename Alloc3__>
+    auto operator()(const T0__& x, const T1__& y, const T2__& z,
+                    const std::vector<T3__, Alloc3__>& w, std::ostream* pstream__)  const
     {
     return sars(x, y, z, w, pstream__);
     }
