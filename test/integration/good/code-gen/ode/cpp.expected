@@ -58,7 +58,9 @@ static constexpr std::array<const char*, 36> locations_array__ =
 
 
 template <typename T0__, typename T1__>
-auto f_0_arg(const T0__& t, const T1__& z_arg__, std::ostream* pstream__) {
+Eigen::Matrix<stan::promote_args_t<T0__,
+stan::value_type_t<T1__>>, -1, 1>
+f_0_arg(const T0__& t, const T1__& z_arg__, std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__,
           stan::value_type_t<T1__>>;
   int current_statement__ = 0; 
@@ -80,7 +82,9 @@ auto f_0_arg(const T0__& t, const T1__& z_arg__, std::ostream* pstream__) {
 
 struct f_0_arg_functor__ {
 template <typename T0__, typename T1__>
-auto operator()(const T0__& t, const T1__& z, std::ostream* pstream__)  const 
+Eigen::Matrix<stan::promote_args_t<T0__,
+stan::value_type_t<T1__>>, -1, 1>
+operator()(const T0__& t, const T1__& z, std::ostream* pstream__)  const 
 {
 return f_0_arg(t, z, pstream__);
 }
@@ -89,15 +93,19 @@ return f_0_arg(t, z, pstream__);
 
 struct f_0_arg_odefunctor__ {
 template <typename T0__, typename T1__>
-auto operator()(const T0__& t, const T1__& z, std::ostream* pstream__)  const 
+Eigen::Matrix<stan::promote_args_t<T0__,
+stan::value_type_t<T1__>>, -1, 1>
+operator()(const T0__& t, const T1__& z, std::ostream* pstream__)  const 
 {
 return f_0_arg(t, z, pstream__);
 }
 };
 
 template <typename T0__, typename T1__, typename T2__>
-auto f_1_arg(const T0__& t, const T1__& z_arg__, const T2__& a,
-             std::ostream* pstream__) {
+Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
+T2__>, -1, 1>
+f_1_arg(const T0__& t, const T1__& z_arg__, const T2__& a,
+        std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__,
           stan::value_type_t<T1__>,
           T2__>;
@@ -120,8 +128,10 @@ auto f_1_arg(const T0__& t, const T1__& z_arg__, const T2__& a,
 
 struct f_1_arg_functor__ {
 template <typename T0__, typename T1__, typename T2__>
-auto operator()(const T0__& t, const T1__& z, const T2__& a,
-                std::ostream* pstream__)  const 
+Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
+T2__>, -1, 1>
+operator()(const T0__& t, const T1__& z, const T2__& a,
+           std::ostream* pstream__)  const 
 {
 return f_1_arg(t, z, a, pstream__);
 }
@@ -130,16 +140,20 @@ return f_1_arg(t, z, a, pstream__);
 
 struct f_1_arg_odefunctor__ {
 template <typename T0__, typename T1__, typename T2__>
-auto operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
-                const T2__& a)  const 
+Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
+T2__>, -1, 1>
+operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
+           const T2__& a)  const 
 {
 return f_1_arg(t, z, a, pstream__);
 }
 };
 
 template <typename T0__, typename T1__, typename T3__>
-auto f_2_arg(const T0__& t, const T1__& z_arg__, const int& b, const T3__& a,
-             std::ostream* pstream__) {
+Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
+T3__>, -1, 1>
+f_2_arg(const T0__& t, const T1__& z_arg__, const int& b, const T3__& a,
+        std::ostream* pstream__) {
   using local_scalar_t__ = stan::promote_args_t<T0__,
           stan::value_type_t<T1__>,
           T3__>;
@@ -162,8 +176,10 @@ auto f_2_arg(const T0__& t, const T1__& z_arg__, const int& b, const T3__& a,
 
 struct f_2_arg_functor__ {
 template <typename T0__, typename T1__, typename T3__>
-auto operator()(const T0__& t, const T1__& z, const int& b, const T3__& a,
-                std::ostream* pstream__)  const 
+Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
+T3__>, -1, 1>
+operator()(const T0__& t, const T1__& z, const int& b, const T3__& a,
+           std::ostream* pstream__)  const 
 {
 return f_2_arg(t, z, b, a, pstream__);
 }
@@ -172,8 +188,10 @@ return f_2_arg(t, z, b, a, pstream__);
 
 struct f_2_arg_odefunctor__ {
 template <typename T0__, typename T1__, typename T3__>
-auto operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
-                const int& b, const T3__& a)  const 
+Eigen::Matrix<stan::promote_args_t<T0__, stan::value_type_t<T1__>,
+T3__>, -1, 1>
+operator()(const T0__& t, const T1__& z, std::ostream* pstream__,
+           const int& b, const T3__& a)  const 
 {
 return f_2_arg(t, z, b, a, pstream__);
 }

@@ -223,7 +223,7 @@ let mk_extra_args templates args =
   Refactor this please - one idea might be to have different functions for
    printing user defined distributions vs rngs vs regular functions.
 *)
-let pp_fun_def ppf Program.({fdname; fdsuffix; fdargs; fdbody; _})
+let pp_fun_def ppf Program.({fdrt; fdname; fdsuffix; fdargs; fdbody; _})
     funs_used_in_reduce_sum funs_used_in_variadic_ode =
   let extra, extra_templates =
     match fdsuffix with
@@ -262,7 +262,7 @@ let pp_fun_def ppf Program.({fdname; fdsuffix; fdargs; fdbody; _})
     | (FnLpdf _ | FnTarget), `None ->
         pp_template_decorator ppf ("bool propto__" :: templates)
     | _ -> pp_template_decorator ppf templates ) ;
-    pf ppf "auto " ;
+    pp_returntype ppf fdargs fdrt ;
     let args, variadic_args =
       match variadic with
       | `ReduceSum -> List.split_n args 3
