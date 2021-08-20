@@ -1877,15 +1877,15 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       p_r = in__.template read<local_scalar_t__>();
       std::complex<local_scalar_t__> p_complex;
       current_statement__ = 2;
-      p_complex = in__.template read<std::complex<local_scalar_t__>>(2);
+      p_complex = in__.template read<std::complex<local_scalar_t__>>();
       std::vector<std::complex<local_scalar_t__>> p_complex_array;
       current_statement__ = 3;
       p_complex_array = in__.template read<std::vector<std::complex<local_scalar_t__>>>(
-                          2, 2);
+                          2);
       std::vector<std::vector<std::complex<local_scalar_t__>>> p_complex_array_2d;
       current_statement__ = 4;
       p_complex_array_2d = in__.template read<std::vector<std::vector<std::complex<local_scalar_t__>>>>(
-                             2, 3, 2);
+                             2, 3);
       local_scalar_t__ tp_r;
       current_statement__ = 5;
       tp_r = 1.1;
@@ -2115,15 +2115,15 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       p_r = in__.template read<local_scalar_t__>();
       std::complex<double> p_complex;
       current_statement__ = 2;
-      p_complex = in__.template read<std::complex<local_scalar_t__>>(2);
+      p_complex = in__.template read<std::complex<local_scalar_t__>>();
       std::vector<std::complex<double>> p_complex_array;
       current_statement__ = 3;
       p_complex_array = in__.template read<std::vector<std::complex<local_scalar_t__>>>(
-                          2, 2);
+                          2);
       std::vector<std::vector<std::complex<double>>> p_complex_array_2d;
       current_statement__ = 4;
       p_complex_array_2d = in__.template read<std::vector<std::vector<std::complex<local_scalar_t__>>>>(
-                             2, 3, 2);
+                             2, 3);
       double tp_r;
       tp_r = std::numeric_limits<double>::quiet_NaN();
       

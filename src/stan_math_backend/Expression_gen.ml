@@ -475,26 +475,24 @@ and pp_compiler_internal_fn ad ut f ppf es =
         (UnsizedType.AutoDiffable, UnsizedType.UReal)
   | FnReadParam {constrain; dims} -> (
       let constrain_opt = constraint_to_string constrain in
+      let rec check_complex ut es =
+        match ut with
+        | UnsizedType.UComplex -> []
+        | UArray t -> (
+          match es with hd :: tail -> hd :: check_complex t tail | _ -> [] )
+        | _ -> es
+      in
       match constrain_opt with
       | None ->
           pf ppf "@[<hov 2>in__.template read<%a>(@,%a)@]" pp_unsizedtype_local
             (UnsizedType.AutoDiffable, ut)
-            (list ~sep:comma pp_expr) dims
+            (list ~sep:comma pp_expr) (check_complex ut dims)
       | Some constraint_string ->
           let constraint_args = transform_args constrain in
           let lp =
             Expr.Fixed.{pattern= Var "lp__"; meta= Expr.Typed.Meta.empty}
           in
           let args = constraint_args @ [lp] @ dims in
-          let rec check_complex ut es =
-            match ut with
-            | UnsizedType.UComplex -> []
-            | UArray t -> (
-              match es with
-              | hd :: tail -> hd :: check_complex t tail
-              | _ -> [] )
-            | _ -> es
-          in
           pf ppf
             "@[<hov 2>in__.template read_constrain_%s<%a, jacobian__>(@,%a)@]"
             constraint_string pp_unsizedtype_local
