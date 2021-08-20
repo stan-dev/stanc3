@@ -165,16 +165,16 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     try {
       local_scalar_t__ rho;
       current_statement__ = 1;
-      rho = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
-              lp__);
+      rho = in__.template read<local_scalar_t__>();
+      rho = lb_constrain<jacobian__>(0, rho, lp__);
       local_scalar_t__ alpha;
       current_statement__ = 2;
-      alpha = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                0, lp__);
+      alpha = in__.template read<local_scalar_t__>();
+      alpha = lb_constrain<jacobian__>(0, alpha, lp__);
       local_scalar_t__ sigma;
       current_statement__ = 3;
-      sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                0, lp__);
+      sigma = in__.template read<local_scalar_t__>();
+      sigma = lb_constrain<jacobian__>(0, sigma, lp__);
       {
         current_statement__ = 4;
         validate_non_negative_index("cov", "N", N);
@@ -270,16 +270,16 @@ class simple_function_model final : public model_base_crtp<simple_function_model
     try {
       double rho;
       current_statement__ = 1;
-      rho = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
-              lp__);
+      rho = in__.template read<local_scalar_t__>();
+      rho = lb_constrain<jacobian__>(0, rho, lp__);
       double alpha;
       current_statement__ = 2;
-      alpha = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                0, lp__);
+      alpha = in__.template read<local_scalar_t__>();
+      alpha = lb_constrain<jacobian__>(0, alpha, lp__);
       double sigma;
       current_statement__ = 3;
-      sigma = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
-                0, lp__);
+      sigma = in__.template read<local_scalar_t__>();
+      sigma = lb_constrain<jacobian__>(0, sigma, lp__);
       out__.write(rho);
       out__.write(alpha);
       out__.write(sigma);
@@ -314,13 +314,16 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       pos__ = 1;
       local_scalar_t__ rho;
       rho = in__.read<local_scalar_t__>();
-      out__.write_free_lb(0, rho);
+      rho = lb_free(0, rho);
+      out__.write(rho);
       local_scalar_t__ alpha;
       alpha = in__.read<local_scalar_t__>();
-      out__.write_free_lb(0, alpha);
+      alpha = lb_free(0, alpha);
+      out__.write(alpha);
       local_scalar_t__ sigma;
       sigma = in__.read<local_scalar_t__>();
-      out__.write_free_lb(0, sigma);
+      sigma = lb_free(0, sigma);
+      out__.write(sigma);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
