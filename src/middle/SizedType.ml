@@ -76,3 +76,36 @@ let rec get_dims st =
   | SVector d | SRowVector d -> [d]
   | SMatrix (dim1, dim2) -> [dim1; dim2]
   | SArray (t, dim) -> dim :: get_dims t
+
+(**
+ * Check whether a SizedType holds indexable SizedTypes.
+ *)
+let is_recursive_container st =
+  match st with
+  | SInt | SReal | SComplex | SVector _ | SRowVector _ | SMatrix _
+   |SArray ((SInt | SReal), _) ->
+      false
+  | SArray _ -> true
+
+(* Return a type's array dimensions and the type inside the (possibly nested) array *)
+let rec get_array_dims st =
+  match st with
+  | SInt | SReal | SComplex -> (st, [])
+  | SVector d | SRowVector d -> (st, [d])
+  | SMatrix (d1, d2) -> (st, [d1; d2])
+  | SArray (st, dim) ->
+      let st', dims = get_array_dims st in
+      (st', dim :: dims)
+
+let num_elems_expr st =
+  Expr.Helpers.binop_list (get_dims st) Operator.Times
+    ~default:(Expr.Helpers.int 1)
+
+(*
+let%expect_test "dims" =
+  let open Fmt in
+  strf "@[%a@]" (list ~sep:comma string)
+    (get_dims (SArray (SMatrix ("x", "y"), "z")))
+  |> print_endline ;
+  [%expect {| z, x, y |}]
+*)

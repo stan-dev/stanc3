@@ -286,7 +286,7 @@ let%expect_test "list collapsing" =
          (Block
           (((pattern
              (Decl (decl_adtype DataOnly) (decl_id inline_sym1__)
-              (decl_type (Sized SInt))))
+              (decl_type (Sized SInt)) (initialize true)))
             (meta <opaque>))
            ((pattern
              (Assignment (inline_sym1__ UInt ())
@@ -342,11 +342,11 @@ let%expect_test "list collapsing" =
             (meta <opaque>))
            ((pattern
              (Decl (decl_adtype AutoDiffable) (decl_id inline_sym3__)
-              (decl_type (Unsized UReal))))
+              (decl_type (Unsized UReal)) (initialize false)))
             (meta <opaque>))
            ((pattern
              (Decl (decl_adtype DataOnly) (decl_id inline_sym4__)
-              (decl_type (Sized SInt))))
+              (decl_type (Sized SInt)) (initialize true)))
             (meta <opaque>))
            ((pattern
              (Assignment (inline_sym4__ UInt ())
@@ -2408,18 +2408,6 @@ model {
         if(PNot__(emit_generated_quantities__)) return;
       }
 
-      transform_inits {
-        data matrix[3, 2] x_matrix;
-        data matrix[2, 4] y_matrix;
-        data matrix[4, 2] z_matrix;
-        data vector[2] x_vector;
-        data vector[3] y_vector;
-        data matrix[2, 2] x_cov;
-        data vector[3] x_cov_free__;
-        x_cov_free__ = (FnUnconstrain cov_matrix)__(x_cov);
-        data real theta_u;
-        data real phi_u;
-      }
 
       output_vars {
         parameters matrix[3, 2] x_matrix; //matrix[3, 2]
@@ -3267,9 +3255,6 @@ let%expect_test "adlevel_optimization" =
         if(PNot__(emit_generated_quantities__)) return;
       }
 
-      transform_inits {
-        data real w;
-      }
 
       output_vars {
         parameters real w; //real
@@ -3307,24 +3292,26 @@ let%expect_test "adlevel_optimization expressions" =
   [%expect
     {|
       (((pattern
-         (Decl (decl_adtype AutoDiffable) (decl_id w) (decl_type (Sized SReal))))
+         (Decl (decl_adtype AutoDiffable) (decl_id w) (decl_type (Sized SReal))
+          (initialize true)))
         (meta <opaque>))
        ((pattern
          (Block
           (((pattern
-             (Decl (decl_adtype DataOnly) (decl_id x) (decl_type (Sized SInt))))
+             (Decl (decl_adtype DataOnly) (decl_id x) (decl_type (Sized SInt))
+              (initialize true)))
             (meta <opaque>))
            ((pattern
-             (Decl (decl_adtype AutoDiffable) (decl_id y)
-              (decl_type (Sized SReal))))
+             (Decl (decl_adtype AutoDiffable) (decl_id y) (decl_type (Sized SReal))
+              (initialize true)))
             (meta <opaque>))
            ((pattern
-             (Decl (decl_adtype AutoDiffable) (decl_id z)
-              (decl_type (Sized SReal))))
+             (Decl (decl_adtype AutoDiffable) (decl_id z) (decl_type (Sized SReal))
+              (initialize true)))
             (meta <opaque>))
            ((pattern
              (Decl (decl_adtype DataOnly) (decl_id z_data)
-              (decl_type (Sized SReal))))
+              (decl_type (Sized SReal)) (initialize true)))
             (meta <opaque>))
            ((pattern
              (IfElse
@@ -3468,11 +3455,22 @@ let%expect_test "adlevel_optimization 2" =
         if(PNot__(emit_generated_quantities__)) return;
       }
 
-      transform_inits {
-        data real w;
-      }
 
       output_vars {
         parameters real w; //real
         transformed_parameters real w_trans; //real
       } |}]
+
+let%expect_test "Mapping acts recursively" =
+  let from = Expr.Helpers.variable "x" in
+  let into = Expr.Helpers.variable "y" in
+  let unpattern p = {Stmt.Fixed.pattern= p; meta= Location_span.empty} in
+  let s =
+    Stmt.Fixed.Pattern.NRFunApp
+      ( CompilerInternal (FnWriteParam {var= from; unconstrain_opt= None})
+      , [from] )
+  in
+  let m = Expr.Typed.Map.of_alist_exn [(from, into)] in
+  let s' = expr_subst_stmt_base m s in
+  Fmt.strf "@[<v>%a@]" Stmt.Located.pp (unpattern s') |> print_endline ;
+  [%expect {| (FnWriteParam(unconstrain_opt())(var y))__(y); |}]

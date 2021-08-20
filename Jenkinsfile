@@ -267,11 +267,6 @@ pipeline {
                             dune build @install
                         """)
 
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --verbose
-                        """)
-
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/mac-stanc"
                         sh "mv _build/default/src/stan2tfp/stan2tfp.exe bin/mac-stan2tfp"
 
@@ -315,11 +310,6 @@ pipeline {
                             dune build @install --profile static
                         """)
 
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --profile static --verbose
-                        """)
-
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-stanc"
                         sh "mv `find _build -name stan2tfp.exe` bin/linux-stan2tfp"
 
@@ -329,6 +319,7 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux mips64el binary") {
+                    when { anyOf { buildingTag(); branch 'master' } }
                     agent {
                         dockerfile {
                             filename 'docker/static/Dockerfile'
@@ -343,10 +334,6 @@ pipeline {
                         """)
                         sh "sudo apk add docker jq"
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh mips64el"
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --profile static --verbose
-                        """)
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-mips64el-stanc"
                         sh "mv `find _build -name stan2tfp.exe` bin/linux-mips64el-stan2tfp"
@@ -357,6 +344,7 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux ppc64el binary") {
+                    when { anyOf { buildingTag(); branch 'master' } }
                     agent {
                         dockerfile {
                             filename 'docker/static/Dockerfile'
@@ -371,10 +359,6 @@ pipeline {
                         """)
                         sh "sudo apk add docker jq"
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh ppc64el"
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --profile static --verbose
-                        """)
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-ppc64el-stanc"
                         sh "mv `find _build -name stan2tfp.exe` bin/linux-ppc64el-stan2tfp"
@@ -385,6 +369,7 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux s390x binary") {
+                    when { anyOf { buildingTag(); branch 'master' } }
                     agent {
                         dockerfile {
                             filename 'docker/static/Dockerfile'
@@ -399,10 +384,6 @@ pipeline {
                         """)
                         sh "sudo apk add docker jq"
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh s390x"
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --profile static --verbose
-                        """)
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-s390x-stanc"
                         sh "mv `find _build -name stan2tfp.exe` bin/linux-s390x-stan2tfp"
@@ -427,10 +408,6 @@ pipeline {
                         """)
                         sh "sudo apk add docker jq"
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh arm64"
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --profile static --verbose
-                        """)
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-arm64-stanc"
                         sh "mv `find _build -name stan2tfp.exe` bin/linux-arm64-stan2tfp"
@@ -441,6 +418,7 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux armhf binary") {
+                    when { anyOf { buildingTag(); branch 'master' } }
                     agent {
                         dockerfile {
                             filename 'docker/static/Dockerfile'
@@ -455,10 +433,6 @@ pipeline {
                         """)
                         sh "sudo apk add docker jq"
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh armhf"
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --profile static --verbose
-                        """)
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armhf-stanc"
                         sh "mv `find _build -name stan2tfp.exe` bin/linux-armhf-stan2tfp"
@@ -469,6 +443,7 @@ pipeline {
                 }
 
                 stage("Build & test a static Linux armel binary") {
+                    when { anyOf { buildingTag(); branch 'master' } }
                     agent {
                         dockerfile {
                             filename 'docker/static/Dockerfile'
@@ -483,10 +458,6 @@ pipeline {
                         """)
                         sh "sudo apk add docker jq"
                         sh "sudo bash -x scripts/build_multiarch_stanc3.sh armel"
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --profile static --verbose
-                        """)
 
                         sh "mkdir -p bin && mv `find _build -name stanc.exe` bin/linux-armel-stanc"
                         sh "mv `find _build -name stan2tfp.exe` bin/linux-armel-stan2tfp"
@@ -512,11 +483,6 @@ pipeline {
                             eval \$(opam env)
                             dune subst
                             dune build -x windows
-                        """)
-
-                        echo runShell("""
-                            eval \$(opam env)
-                            time dune runtest --verbose
                         """)
 
                         sh "mkdir -p bin && mv _build/default.windows/src/stanc/stanc.exe bin/windows-stanc"

@@ -40,7 +40,8 @@ type bound_values =
   { lower: [`None | `Nonlit | `Lit of float]
   ; upper: [`None | `Nonlit | `Lit of float] }
 
-let trans_bounds_values (trans : Expr.Typed.t transformation) : bound_values =
+let trans_bounds_values (trans : Expr.Typed.t Transformation.t) : bound_values
+    =
   let bound_value e =
     match num_expr_value e with None -> `Nonlit | Some (f, _) -> `Lit f
   in
@@ -132,8 +133,7 @@ let map_rec_expr_state f state e =
 
 let rec map_rec_stmt_loc f stmt =
   let recurse = map_rec_stmt_loc f in
-  Stmt.Fixed.
-    {stmt with pattern= f (Pattern.map (fun x -> x) recurse stmt.pattern)}
+  Stmt.Fixed.{stmt with pattern= f (Pattern.map Fn.id recurse stmt.pattern)}
 
 let rec top_down_map_rec_stmt_loc f stmt =
   let recurse = top_down_map_rec_stmt_loc f in
@@ -250,7 +250,7 @@ let rec expr_var_set Expr.Fixed.({pattern; meta}) =
   match pattern with
   | Var s -> Set.Poly.singleton (VVar s, meta)
   | Lit _ -> Set.Poly.empty
-  | FunApp (_, exprs) -> union_recur exprs
+  | FunApp (kind, exprs) -> union_recur (exprs @ Fun_kind.collect_exprs kind)
   | TernaryIf (expr1, expr2, expr3) -> union_recur [expr1; expr2; expr3]
   | Indexed (expr, ix) ->
       Set.Poly.union_list (expr_var_set expr :: List.map ix ~f:index_var_set)
@@ -268,7 +268,8 @@ and index_var_set ix =
 let stmt_rhs stmt =
   match stmt with
   | Stmt.Fixed.Pattern.For vars -> Set.Poly.of_list [vars.lower; vars.upper]
-  | NRFunApp (_, exprs) -> Set.Poly.of_list exprs
+  | NRFunApp (kind, exprs) ->
+      Set.Poly.of_list (exprs @ Fun_kind.collect_exprs kind)
   | IfElse (rhs, _, _)
    |While (rhs, _)
    |Assignment (_, rhs)
@@ -354,7 +355,8 @@ let expr_subst_stmt m = map_rec_stmt_loc (expr_subst_stmt_base m)
 let rec expr_depth Expr.Fixed.({pattern; _}) =
   match pattern with
   | Var _ | Lit (_, _) -> 0
-  | FunApp (_, l) ->
+  | FunApp (kind, args) ->
+      let l = args @ Fun_kind.collect_exprs kind in
       1
       + Option.value ~default:0
           (List.max_elt ~compare:compare_int (List.map ~f:expr_depth l))
@@ -393,8 +395,11 @@ let rec update_expr_ad_levels autodiffable_variables
       else {e with meta= {e.meta with adlevel= DataOnly}}
   | Lit (_, _) -> {e with meta= {e.meta with adlevel= DataOnly}}
   | FunApp (kind, l) ->
+      let kind' =
+        Fun_kind.map (update_expr_ad_levels autodiffable_variables) kind
+      in
       let l = List.map ~f:(update_expr_ad_levels autodiffable_variables) l in
-      {pattern= FunApp (kind, l); meta= {e.meta with adlevel= ad_level_sup l}}
+      {pattern= FunApp (kind', l); meta= {e.meta with adlevel= ad_level_sup l}}
   | TernaryIf (e1, e2, e3) ->
       let e1 = update_expr_ad_levels autodiffable_variables e1 in
       let e2 = update_expr_ad_levels autodiffable_variables e2 in

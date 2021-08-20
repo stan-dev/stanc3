@@ -64,23 +64,37 @@ let rec pp_initialize ppf (st, adtype) =
       pf ppf "%a(%a, %a)" pp_st (st, adtype) pp_expr d pp_initialize (t, adtype)
 
 (*Initialize an object of a given size.*)
-let pp_assign_sized ppf (decl_id, st, adtype) =
+let pp_assign_sized ppf (decl_id, st, adtype, initialize) =
   let init_nan = nan_type (st, adtype) in
   let pp_assign ppf (decl_id, st, adtype) =
     pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_initialize (st, adtype)
   in
-  pf ppf "@[<v>%a%a@]" pp_assign (decl_id, st, adtype) pp_filler
-    (decl_id, st, init_nan, true)
+  pf ppf "@[%a%a@]@," pp_assign (decl_id, st, adtype) pp_filler
+    (decl_id, st, init_nan, initialize)
 
 let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in
   strf "@[<v>%a@]" pp_assign_sized
-    ("d", SArray (SArray (SMatrix (int 2, int 3), int 4), int 5), DataOnly)
+    ( "d"
+    , SArray (SArray (SMatrix (int 2, int 3), int 4), int 5)
+    , DataOnly
+    , false )
+  |> print_endline ;
+  [%expect
+    {| d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3))); |}]
+
+let%expect_test "set size mat array" =
+  let int = Expr.Helpers.int in
+  strf "@[<v>%a@]" pp_assign_sized
+    ( "d"
+    , SArray (SArray (SMatrix (int 2, int 3), int 4), int 5)
+    , DataOnly
+    , true )
   |> print_endline ;
   [%expect
     {|
-      d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3)));
-      stan::math::fill(d, std::numeric_limits<double>::quiet_NaN()); |}]
+    d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3)));
+    stan::math::fill(d, std::numeric_limits<double>::quiet_NaN()); |}]
 
 (* Initialize Data and Transformed Data 
  * This function is used in the model's constructor to
@@ -115,7 +129,7 @@ let pp_assign_data ppf
     pp_filler
     (decl_id, st, init_nan, needs_filled)
 
-let%expect_test "set size map int array" =
+let%expect_test "set size map int array no initialize" =
   let int = Expr.Helpers.int in
   strf "@[<v>%a@]" pp_assign_data
     ("darrmat", SArray (SArray (SInt, int 4), int 5), false)
@@ -221,14 +235,19 @@ let pp_unsized_decl ppf (vident, ut, adtype) =
   in
   pf ppf "%a %s;" pp_type (adtype, ut) vident
 
-let pp_sized_decl ppf (vident, st, adtype) =
-  pf ppf "%a@,%a" pp_unsized_decl
-    (vident, SizedType.to_unsized st, adtype)
-    pp_assign_sized (vident, st, adtype)
+let pp_sized_decl ppf (vident, st, adtype, initialize) =
+  match initialize with
+  | true ->
+      pf ppf "%a@,%a" pp_unsized_decl
+        (vident, SizedType.to_unsized st, adtype)
+        pp_assign_sized
+        (vident, st, adtype, initialize)
+  | false ->
+      pf ppf "%a" pp_unsized_decl (vident, SizedType.to_unsized st, adtype)
 
-let pp_decl ppf (vident, pst, adtype) =
+let pp_decl ppf (vident, pst, adtype, initialize) =
   match pst with
-  | Type.Sized st -> pp_sized_decl ppf (vident, st, adtype)
+  | Type.Sized st -> pp_sized_decl ppf (vident, st, adtype, initialize)
   | Unsized ut -> pp_unsized_decl ppf (vident, ut, adtype)
 
 let math_fn_translations = function
@@ -239,10 +258,9 @@ let math_fn_translations = function
   | FnReadWriteEventsOpenCL x -> Some (x ^ ".wait_for_read_write_events", [])
   | _ -> None
 
-let trans_math_fn fname =
+let trans_math_fn f =
   Option.(
-    value ~default:(fname, [])
-      (bind (Internal_fun.of_string_opt fname) ~f:math_fn_translations))
+    value ~default:(Internal_fun.to_string f, []) (math_fn_translations f))
 
 let pp_bool_expr ppf expr =
   match Expr.Typed.type_of expr with
@@ -289,11 +307,7 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
               Expr.Fixed.pattern= FunApp (CompilerInternal FnDeepCopy, [e]) }
         | _ -> recurse e
       in
-      let rhs =
-        match rhs.pattern with
-        | FunApp (CompilerInternal (FnConstrain _ | FnUnconstrain _), _) -> rhs
-        | _ -> maybe_deep_copy rhs
-      in
+      let rhs = maybe_deep_copy rhs in
       pf ppf "@[<hov 2>assign(@,%s,@ %a,@ %S%s%a@]);" assignee pp_expr rhs
         (strf "assigning variable %s" assignee)
         (if List.length idcs = 0 then "" else ", ")
@@ -309,16 +323,27 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
       pf ppf "std::stringstream %s;@," err_strm ;
       pf ppf "%a@," (list ~sep:cut add_to_string) args ;
       pf ppf "throw std::domain_error(%s.str());" err_strm
-  | NRFunApp (CompilerInternal (FnCheck check_name), args) ->
-      let function_arg =
-        {Expr.Fixed.pattern= Var "function__"; meta= Expr.Typed.Meta.empty}
-      in
-      pf ppf "%s(@[<hov>%a@]);" ("check_" ^ check_name)
-        (list ~sep:comma pp_expr) (function_arg :: args)
-  | NRFunApp (CompilerInternal FnWriteParam, [var]) -> pp_emplace_var ppf var
+  | NRFunApp (CompilerInternal (FnCheck {trans; var_name; var}), args) ->
+      Option.iter (check_to_string trans) ~f:(fun check_name ->
+          let function_arg = Expr.Helpers.variable "function__" in
+          pf ppf "%s(@[<hov>%a@]);" ("check_" ^ check_name)
+            (list ~sep:comma pp_expr)
+            (function_arg :: Expr.Helpers.str var_name :: var :: args) )
+  | NRFunApp (CompilerInternal (FnWriteParam {unconstrain_opt; var}), _) -> (
+    match
+      (unconstrain_opt, Option.bind ~f:constraint_to_string unconstrain_opt)
+    with
+    (* When the current block or this transformation doesn't require unconstraining,
+       use vanilla write *)
+    | None, _ | _, None -> pf ppf "@[<hov 2>out__.write(@,%a);@]" pp_expr var
+    (* Otherwise, use stan::io::serializer's write_free functions *)
+    | Some trans, Some unconstrain_string ->
+        let unconstrain_args = transform_args trans in
+        pf ppf "@[<hov 2>out__.write_free_%s(@,%a);@]" unconstrain_string
+          (list ~sep:comma pp_expr)
+          (unconstrain_args @ [var]) )
   | NRFunApp (CompilerInternal f, args) ->
-      let fname = Internal_fun.to_string f in
-      let fname, extra_args = trans_math_fn fname in
+      let fname, extra_args = trans_math_fn f in
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)
         (extra_args @ args)
   | NRFunApp (StanLib (fname, _), args) ->
@@ -348,8 +373,8 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
   | Profile (name, ls) -> pp_profile ppf (pp_stmt_list, name, ls)
   | Block ls -> pp_block ppf (pp_stmt_list, ls)
   | SList ls -> pp_stmt_list ppf ls
-  | Decl {decl_adtype; decl_id; decl_type} ->
-      pp_decl ppf (decl_id, decl_type, decl_adtype)
+  | Decl {decl_adtype; decl_id; decl_type; initialize; _} ->
+      pp_decl ppf (decl_id, decl_type, decl_adtype, initialize)
 
 and pp_block_s ppf body =
   match body.pattern with

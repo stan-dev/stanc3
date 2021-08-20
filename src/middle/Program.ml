@@ -19,30 +19,11 @@ type 'a fun_def =
 type io_block = Parameters | TransformedParameters | GeneratedQuantities
 [@@deriving sexp, hash]
 
-(** Transformations (constraints) for global variable declarations *)
-type 'e transformation =
-  | Identity
-  | Lower of 'e
-  | Upper of 'e
-  | LowerUpper of 'e * 'e
-  | Offset of 'e
-  | Multiplier of 'e
-  | OffsetMultiplier of 'e * 'e
-  | Ordered
-  | PositiveOrdered
-  | Simplex
-  | UnitVector
-  | CholeskyCorr
-  | CholeskyCov
-  | Correlation
-  | Covariance
-[@@deriving sexp, compare, map, hash, fold]
-
 type 'e outvar =
   { out_unconstrained_st: 'e SizedType.t
   ; out_constrained_st: 'e SizedType.t
   ; out_block: io_block
-  ; out_trans: 'e transformation }
+  ; out_trans: 'e Transformation.t }
 [@@deriving sexp, map, hash, fold]
 
 type ('a, 'b) t =
