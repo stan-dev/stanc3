@@ -211,15 +211,15 @@ let fwd_traverse_statement stmt ~init ~f =
         let s', c = f init vars.body in
         (s', For {vars with body= c})
     | Profile (name, stmts) ->
-    let s', ls =
-      List.fold_left stmts
-        ~f:(fun (s, l) stmt ->
-          let s', c = f s stmt in
-          (s', List.cons c l) )
-        ~init:(init, [])
-    in
-    (s', Profile (name, List.rev ls))
-| Block stmts ->
+        let s', ls =
+          List.fold_left stmts
+            ~f:(fun (s, l) stmt ->
+              let s', c = f s stmt in
+              (s', List.cons c l) )
+            ~init:(init, [])
+        in
+        (s', Profile (name, List.rev ls))
+    | Block stmts ->
         let s', ls =
           List.fold_left stmts
             ~f:(fun (s, l) stmt ->

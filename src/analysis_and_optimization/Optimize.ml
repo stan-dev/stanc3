@@ -446,8 +446,9 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.({pattern; meta}) =
                                ( [inline_function_statement propto adt fim body]
                                @ map_no_loc s_upper )
                          ; meta= Location_span.empty } ) })
-        | Profile (name, l) -> 
-        Profile (name, List.map l ~f:(inline_function_statement propto adt fim))
+        | Profile (name, l) ->
+            Profile
+              (name, List.map l ~f:(inline_function_statement propto adt fim))
         | Block l ->
             Block (List.map l ~f:(inline_function_statement propto adt fim))
         | SList l ->
@@ -595,8 +596,8 @@ let unroll_loop_one_step_statement _ =
           IfElse
             ( Expr.Fixed.
                 { lower with
-                  pattern= FunApp (StanLib ("Geq__", FnPlain, AoS), [upper; lower])
-                }
+                  pattern=
+                    FunApp (StanLib ("Geq__", FnPlain, AoS), [upper; lower]) }
             , { pattern=
                   (let body_unrolled =
                      subst_args_stmt [loopvar] [lower]
@@ -799,9 +800,9 @@ let dead_code_elimination (mir : Program.Typed.t) =
           then Skip
           else For {loopvar; lower; upper; body}
       | Profile (name, l) ->
-      let l' = List.filter ~f:(fun x -> x.pattern <> Skip) l in
-      if List.length l' = 0 then Skip else Profile (name, l')
-  | Block l ->
+          let l' = List.filter ~f:(fun x -> x.pattern <> Skip) l in
+          if List.length l' = 0 then Skip else Profile (name, l')
+      | Block l ->
           let l' = List.filter ~f:(fun x -> x.pattern <> Skip) l in
           if List.length l' = 0 then Skip else Block l'
       | SList l ->
@@ -1141,7 +1142,7 @@ let block_fixing mir =
  * @param initial_variables: the initial known members of the set of variables
  * @param stmt the MIR statement to optimize.
 *)
-let optimize_minimal_variables
+let optimize_minimal_variables allow_kill
     ~(gen_variables :
           (int, Stmt.Located.Non_recursive.t) Map.Poly.t
        -> int
@@ -1165,7 +1166,7 @@ let optimize_minimal_variables
   let (module Rev_Flowgraph) = rev_flowgraph in
   let (module Fwd_Flowgraph) = fwd_flowgraph in
   let ad_levels =
-    Monotone_framework.minimal_variables_mfp
+    Monotone_framework.minimal_variables_mfp allow_kill
       (module Fwd_Flowgraph)
       (module Rev_Flowgraph)
       flowgraph_to_mir initial_variables gen_variables
@@ -1225,13 +1226,12 @@ let optimize_ad_levels (mir : Program.Typed.t) =
     | s -> s
   in
   let transform fundef_opt stmt =
-    optimize_minimal_variables ~gen_variables:gen_ad_variables
+    optimize_minimal_variables true ~gen_variables:gen_ad_variables
       ~update_expr:update_expr_ad_levels ~update_stmt ~extra_variables
       ~initial_variables:(initial_ad_variables fundef_opt stmt)
       stmt
   in
   transform_program_blockwise mir transform
-
 
 (**
   * Deduces whether types can be Structures of Arrays (SoA/fast) or
@@ -1254,21 +1254,21 @@ let optimize_ad_levels (mir : Program.Typed.t) =
   *
   * @param mir: The program's whole MIR.
   *)
-  let optimize_soa (mir : Program.Typed.t) =
-    let gen_aos_variables
-        (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
-        (l : int) (aos_variables : string Set.Poly.t) =
-      let mir_node mir_idx = Map.find_exn flowgraph_to_mir mir_idx in
-      match (mir_node l).pattern with stmt ->
-        Mem_pattern.query_demotable_stmt aos_variables stmt
-    in
-    let initial_variables =
-      Set.Poly.union_list
-        (List.map
-           ~f:(Mem_pattern.query_initial_demotable_stmt false)
-           mir.log_prob)
-    in
-    (*
+let optimize_soa (mir : Program.Typed.t) =
+  let gen_aos_variables
+      (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
+      (l : int) (aos_variables : string Set.Poly.t) =
+    let mir_node mir_idx = Map.find_exn flowgraph_to_mir mir_idx in
+    match (mir_node l).pattern with stmt ->
+      Mem_pattern.query_demotable_stmt aos_variables stmt
+  in
+  let initial_variables =
+    Set.Poly.union_list
+      (List.map
+         ~f:(Mem_pattern.query_initial_demotable_stmt false)
+         mir.log_prob)
+  in
+  (*
     let print_set (s : string Set.Poly.t) = Set.Poly.iter ~f:print_endline s in
     let () =
       let () = printf "\n-----------\n" in
@@ -1277,35 +1277,34 @@ let optimize_ad_levels (mir : Program.Typed.t) =
       print_set initial_variables
     in
     *)
-    let mod_exprs aos_exits mod_expr =
-      Mir_utils.map_rec_expr (Mem_pattern.modify_expr_pattern aos_exits) mod_expr
-    in
-    let modify_stmt_patt stmt_pattern variable_set =
-      Mem_pattern.modify_stmt_pattern stmt_pattern variable_set
-    in
-    let transform stmt =
-      optimize_minimal_variables ~gen_variables:gen_aos_variables
-        ~update_expr:mod_exprs ~update_stmt:modify_stmt_patt ~initial_variables
-        stmt ~extra_variables:(fun _ -> Set.Poly.empty )
-    in
-    let transform' s =
-      match transform {pattern= SList s; meta= Location_span.empty} with
-      | { pattern=
-            SList
-              (l : (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t list); _
-        } ->
-          l
-      | _ ->
-          raise
-            (Failure "Something went wrong with program transformation packing!")
-    in
-    {mir with log_prob= transform' mir.log_prob}
+  let mod_exprs aos_exits mod_expr =
+    Mir_utils.map_rec_expr (Mem_pattern.modify_expr_pattern aos_exits) mod_expr
+  in
+  let modify_stmt_patt stmt_pattern variable_set =
+    Mem_pattern.modify_stmt_pattern stmt_pattern variable_set
+  in
+  let transform stmt =
+    optimize_minimal_variables true ~gen_variables:gen_aos_variables
+      ~update_expr:mod_exprs ~update_stmt:modify_stmt_patt ~initial_variables
+      stmt ~extra_variables:(fun _ -> Set.Poly.empty )
+  in
+  let transform' s =
+    match transform {pattern= SList s; meta= Location_span.empty} with
+    | { pattern=
+          SList
+            (l : (Expr.Typed.Meta.t, Stmt.Located.Meta.t) Stmt.Fixed.t list); _
+      } ->
+        l
+    | _ ->
+        raise
+          (Failure "Something went wrong with program transformation packing!")
+  in
+  {mir with log_prob= transform' mir.log_prob}
 
 (* Apparently you need to completely copy/paste type definitions between
    ml and mli files?*)
 type optimization_settings =
-  {
-    optimize_soa: bool
+  { optimize_soa: bool
   ; function_inlining: bool
   ; static_loop_unrolling: bool
   ; one_step_loop_unrolling: bool
@@ -1321,7 +1320,7 @@ type optimization_settings =
   ; optimize_ad_levels: bool }
 
 let settings_const b =
-  { optimize_soa=b
+  { optimize_soa= b
   ; function_inlining= b
   ; static_loop_unrolling= b
   ; one_step_loop_unrolling= b
@@ -1341,16 +1340,15 @@ let no_optimizations : optimization_settings = settings_const false
 
 let settings_default : optimization_settings =
   let xx = settings_const false in
-  {xx with allow_uninitialized_decls= true; optimize_soa=true}
+  {xx with allow_uninitialized_decls= true; optimize_soa= true}
 
 let optimization_suite ?(settings = all_optimizations) mir =
   let maybe_optimizations =
-    [ 
-      (* Phase order. See phase-ordering-nodes.org for details *)
+    [ (* Phase order. See phase-ordering-nodes.org for details *)
       (* Book section A *)
       (* Book section B *)
       (* Book: Procedure integration *)
-    (function_inlining, settings.function_inlining)
+      (function_inlining, settings.function_inlining)
       (* Book: Sparse conditional constant propagation *)
     ; (constant_propagation, settings.constant_propagation)
       (* Book section C *)
@@ -1386,10 +1384,10 @@ let optimization_suite ?(settings = all_optimizations) mir =
       (* Book: Machine idioms and instruction combining *)
       (* Matthijs: Everything < block_fixing *)
     ; (block_fixing, settings.block_fixing)
-    ;       (optimize_soa, settings.optimize_soa)]
+    ; (optimize_soa, settings.optimize_soa) ]
   in
   let optimizations =
     List.filter_map maybe_optimizations ~f:(fun (fn, flag) ->
         if flag then Some fn else None )
   in
-  List.fold  optimizations ~init:mir ~f:(fun mir opt -> opt mir)
+  List.fold optimizations ~init:mir ~f:(fun mir opt -> opt mir)

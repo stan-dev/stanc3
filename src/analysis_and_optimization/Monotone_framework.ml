@@ -773,7 +773,7 @@ let used_not_latest_expressions_transfer
     with type labels = int and type properties = Expr.Typed.Set.t )
 
 (** The transfer function for the first forward analysis part of determining optimal ad-levels for variables *)
-let minimal_variables_fwd1_transfer
+let minimal_variables_fwd1_transfer allow_kill
     (gen_variable :
          (int, Stmt.Located.Non_recursive.t) Map.Poly.t
       -> int
@@ -788,9 +788,9 @@ let minimal_variables_fwd1_transfer
       let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
       let gen = gen_variable flowgraph_to_mir l p in
       let kill =
-        match mir_node with
+        match (allow_kill, mir_node) with
         (* This probably isn't necessary because Stan doesn't allow shadowing, right? *)
-        | Decl {decl_id; decl_adtype= DataOnly; _} ->
+        | true, Decl {decl_id; decl_adtype= DataOnly; _} ->
             Set.Poly.singleton decl_id
         | _ -> Set.Poly.empty
       in
@@ -800,7 +800,7 @@ let minimal_variables_fwd1_transfer
     with type labels = int and type properties = string Set.Poly.t )
 
 (** The transfer function for the reverse analysis part of determining optimal ad-levels for variables *)
-let minimal_variables_rev_transfer
+let minimal_variables_rev_transfer allow_kill
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
     (fwd_min_vars : (int, string Set.Poly.t) Map.Poly.t) =
   ( module struct
@@ -811,8 +811,8 @@ let minimal_variables_rev_transfer
       let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
       let gen = Map.find_exn fwd_min_vars l in
       let kill =
-        match mir_node with
-        | Decl {decl_id; _} -> Set.Poly.singleton decl_id
+        match (allow_kill, mir_node) with
+        | true, Decl {decl_id; _} -> Set.Poly.singleton decl_id
         | _ -> Set.Poly.empty
       in
       transfer_gen_kill_alt p gen kill
@@ -823,7 +823,7 @@ let minimal_variables_rev_transfer
     with type labels = int and type properties = string Set.Poly.t )
 
 (** The transfer function for the second forward analysis part of determining optimal ad-levels for variables *)
-let minimal_variables_fwd2_transfer
+let minimal_variables_fwd2_transfer allow_kill
     (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
     (rev_min_vars : (int, string Set.Poly.t) Map.Poly.t) =
   ( module struct
@@ -834,15 +834,14 @@ let minimal_variables_fwd2_transfer
       let mir_node = (Map.find_exn flowgraph_to_mir l).pattern in
       let gen = Map.find_exn rev_min_vars l in
       let kill =
-        match mir_node with
-        | Decl {decl_id; _} -> Set.Poly.singleton decl_id
+        match (allow_kill, mir_node) with
+        | true, Decl {decl_id; _} -> Set.Poly.singleton decl_id
         | _ -> Set.Poly.empty
       in
       transfer_gen_kill p gen kill
   end
   : TRANSFER_FUNCTION
     with type labels = int and type properties = string Set.Poly.t )
-
 
 (** The central definition of a monotone dataflow analysis framework.
     Given a compatible flowgraph, lattice and transfer function, we can
@@ -1110,56 +1109,56 @@ let lazy_expressions_mfp
   let used_not_latest_expressions_mfp = Mf4.mfp () in
   (latest_expr, used_not_latest_expressions_mfp)
 
-let rec minimal_variables_mfp
-  (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
-    with type labels = int)
-  (module Rev_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
-    with type labels = int)
-  (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
-  (initial_variables : string Set.Poly.t)
-  (gen_variable :
-       (int, Stmt.Located.Non_recursive.t) Map.Poly.t
-    -> int
-    -> string Set.Poly.t
-    -> string Set.Poly.t) =
-let (module Lattice1) = minimal_variables_lattice initial_variables in
-let (module Lattice2) = minimal_variables_lattice Set.Poly.empty in
-let (module Transfer1) =
-  minimal_variables_fwd1_transfer gen_variable flowgraph_to_mir
-in
-let (module Mf1) =
-  monotone_framework (module Flowgraph) (module Lattice1) (module Transfer1)
-in
-let fwd1_min_vars_mfp = Mf1.mfp () in
-let (module Transfer2) =
-  minimal_variables_rev_transfer flowgraph_to_mir
-    (Map.map ~f:(fun x -> x.exit) fwd1_min_vars_mfp)
-in
-let (module Mf2) =
-  monotone_framework
-    (module Rev_Flowgraph)
-    (module Lattice2)
-    (module Transfer2)
-in
-let rev_min_vars_mfp = Mf2.mfp () in
-let (module Transfer3) =
-  minimal_variables_fwd2_transfer flowgraph_to_mir
-    (Map.map ~f:(fun x -> x.entry) rev_min_vars_mfp)
-in
-let (module Mf3) =
-  monotone_framework (module Flowgraph) (module Lattice2) (module Transfer3)
-in
-let fwd2_min_vars_mfp = Mf3.mfp () in
-let get_names ~key ~(data : Lattice2.properties entry_exit) acc :
-Lattice2.properties =
-match key with _ -> Set.Poly.union acc data.exit
-in
-let variable_set =
-Map.fold ~init:Set.Poly.empty ~f:get_names fwd2_min_vars_mfp
-in
-if Set.Poly.length initial_variables <> Set.Poly.length variable_set then
-minimal_variables_mfp
-(module Flowgraph)
-(module Rev_Flowgraph)
-flowgraph_to_mir variable_set gen_variable
-else fwd2_min_vars_mfp
+let rec minimal_variables_mfp allow_kill
+    (module Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int)
+    (module Rev_Flowgraph : Monotone_framework_sigs.FLOWGRAPH
+      with type labels = int)
+    (flowgraph_to_mir : (int, Stmt.Located.Non_recursive.t) Map.Poly.t)
+    (initial_variables : string Set.Poly.t)
+    (gen_variable :
+         (int, Stmt.Located.Non_recursive.t) Map.Poly.t
+      -> int
+      -> string Set.Poly.t
+      -> string Set.Poly.t) =
+  let (module Lattice1) = minimal_variables_lattice initial_variables in
+  let (module Lattice2) = minimal_variables_lattice Set.Poly.empty in
+  let (module Transfer1) =
+    minimal_variables_fwd1_transfer allow_kill gen_variable flowgraph_to_mir
+  in
+  let (module Mf1) =
+    monotone_framework (module Flowgraph) (module Lattice1) (module Transfer1)
+  in
+  let fwd1_min_vars_mfp = Mf1.mfp () in
+  let (module Transfer2) =
+    minimal_variables_rev_transfer allow_kill flowgraph_to_mir
+      (Map.map ~f:(fun x -> x.exit) fwd1_min_vars_mfp)
+  in
+  let (module Mf2) =
+    monotone_framework
+      (module Rev_Flowgraph)
+      (module Lattice2)
+      (module Transfer2)
+  in
+  let rev_min_vars_mfp = Mf2.mfp () in
+  let (module Transfer3) =
+    minimal_variables_fwd2_transfer allow_kill flowgraph_to_mir
+      (Map.map ~f:(fun x -> x.entry) rev_min_vars_mfp)
+  in
+  let (module Mf3) =
+    monotone_framework (module Flowgraph) (module Lattice2) (module Transfer3)
+  in
+  let fwd2_min_vars_mfp = Mf3.mfp () in
+  let get_names ~key ~(data : Lattice2.properties entry_exit) acc :
+      Lattice2.properties =
+    match key with _ -> Set.Poly.union acc data.exit
+  in
+  let variable_set =
+    Map.fold ~init:Set.Poly.empty ~f:get_names fwd2_min_vars_mfp
+  in
+  if Set.Poly.length initial_variables <> Set.Poly.length variable_set then
+    minimal_variables_mfp allow_kill
+      (module Flowgraph)
+      (module Rev_Flowgraph)
+      flowgraph_to_mir variable_set gen_variable
+  else fwd2_min_vars_mfp

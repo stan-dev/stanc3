@@ -119,6 +119,16 @@ let pp_unsizedtype_local ppf (adtype, ut) =
 let pp_expr_type ppf e =
   pp_unsizedtype_local ppf Expr.Typed.(adlevel_of e, type_of e)
 
+let pp_possibly_var_decl ppf (adtype, ut, mem_pattern) =
+  let scalar = local_scalar ut adtype in
+  match
+    mem_pattern = Common.Helpers.SoA && UnsizedType.contains_eigen_type ut
+  with
+  | true ->
+      pf ppf "stan::conditional_var_value_t<%s, %a>" scalar
+        pp_unsizedtype_local (adtype, ut)
+  | false -> pf ppf "%a" pp_unsizedtype_local (adtype, ut)
+
 let suffix_args = function
   | Fun_kind.FnRng -> ["base_rng__"]
   | FnTarget -> ["lp__"; "lp_accum__"]
@@ -470,12 +480,12 @@ and pp_compiler_internal_fn ad ut f ppf es =
   | FnReadDataSerializer ->
       pf ppf "@[<hov 2>in__.read<%a>(@,)@]" pp_unsizedtype_local
         (UnsizedType.AutoDiffable, UnsizedType.UReal)
-  | FnReadParam {constrain; dims; _} -> (
+  | FnReadParam {constrain; dims; mem_pattern} -> (
       let constrain_opt = constraint_to_string constrain in
       match constrain_opt with
       | None ->
-          pf ppf "@[<hov 2>in__.template read<%a>(@,%a)@]" pp_unsizedtype_local
-            (UnsizedType.AutoDiffable, ut)
+          pf ppf "@[<hov 2>in__.template read<%a>(@,%a)@]" pp_possibly_var_decl
+            (UnsizedType.AutoDiffable, ut, mem_pattern)
             (list ~sep:comma pp_expr) dims
       | Some constraint_string ->
           let constraint_args = transform_args constrain in
@@ -485,8 +495,8 @@ and pp_compiler_internal_fn ad ut f ppf es =
           let args = constraint_args @ [lp] @ dims in
           pf ppf
             "@[<hov 2>in__.template read_constrain_%s<%a, jacobian__>(@,%a)@]"
-            constraint_string pp_unsizedtype_local
-            (UnsizedType.AutoDiffable, ut)
+            constraint_string pp_possibly_var_decl
+            (UnsizedType.AutoDiffable, ut, mem_pattern)
             (list ~sep:comma pp_expr) args )
   | FnDeepCopy -> gen_fun_app FnPlain ppf "stan::model::deep_copy" es AoS
   | _ -> gen_fun_app FnPlain ppf (Internal_fun.to_string f) es AoS

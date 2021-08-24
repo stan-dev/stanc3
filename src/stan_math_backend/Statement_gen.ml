@@ -226,15 +226,24 @@ let pp_unsized_decl ppf (vident, ut, adtype) =
   in
   pf ppf "%a %s;" pp_type (adtype, ut) vident
 
+let pp_possibly_opencl_decl ppf (vident, st, adtype) =
+  let ut = SizedType.to_unsized st in
+  let mem_pattern = SizedType.get_mem_pattern st in
+  let pp_type =
+    match (Transform_Mir.is_opencl_var vident, ut) with
+    | _, UnsizedType.(UInt | UReal) | false, _ -> pp_possibly_var_decl
+    | true, UArray UInt -> fun ppf _ -> pf ppf "matrix_cl<int>"
+    | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>"
+  in
+  pf ppf "%a %s;" pp_type (adtype, ut, mem_pattern) vident
+
 let pp_sized_decl ppf (vident, st, adtype, initialize) =
   match initialize with
   | true ->
-      pf ppf "%a@,%a" pp_unsized_decl
-        (vident, SizedType.to_unsized st, adtype)
+      pf ppf "%a@,%a" pp_possibly_opencl_decl (vident, st, adtype)
         pp_assign_sized
         (vident, st, adtype, initialize)
-  | false ->
-      pf ppf "%a" pp_unsized_decl (vident, SizedType.to_unsized st, adtype)
+  | false -> pf ppf "%a" pp_possibly_opencl_decl (vident, st, adtype)
 
 let pp_decl ppf (vident, pst, adtype, initialize) =
   match pst with

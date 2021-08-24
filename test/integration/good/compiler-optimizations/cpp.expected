@@ -7359,14 +7359,14 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       current_statement__ = 1;
       tau_phi = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                   0, lp__);
-      Eigen::Matrix<local_scalar_t__, -1, 1> phi_std_raw;
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> phi_std_raw;
       lcm_sym22__ = (N - 1);
-      phi_std_raw = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+      phi_std_raw = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                       lcm_sym22__);
       local_scalar_t__ sigma_phi;
       lcm_sym21__ = inv_sqrt(tau_phi);
       sigma_phi = lcm_sym21__;
-      Eigen::Matrix<local_scalar_t__, -1, 1> phi;
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> phi;
       phi = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(phi, DUMMY_VAR__);
       
@@ -11658,14 +11658,14 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
           lcm_sym275__ = rvalue(dims(y), "dims(y)", index_uni(2));
           current_statement__ = 79;
           validate_non_negative_index("qnu", "n_occasions", lcm_sym275__);
-          Eigen::Matrix<double, -1, 1> inline_sym27__;
+          stan::conditional_var_value_t<double, Eigen::Matrix<double, -1, 1>> inline_sym27__;
           assign(lcm_sym208__, subtract(1.0, nu),
             "assigning variable lcm_sym208__");
           lcm_sym205__ = logical_gte(lcm_sym274__, 1);
           if (lcm_sym205__) {
             current_statement__ = 81;
             validate_non_negative_index("qp", "n_occasions", lcm_sym275__);
-            Eigen::Matrix<double, -1, 1> inline_sym28__;
+            stan::conditional_var_value_t<double, Eigen::Matrix<double, -1, 1>> inline_sym28__;
             assign(lcm_sym210__,
               subtract(1.0, transpose(rvalue(p, "p", index_uni(1)))),
               "assigning variable lcm_sym210__");
@@ -11859,7 +11859,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                  ++inline_sym31__) {
               current_statement__ = 81;
               validate_non_negative_index("qp", "n_occasions", lcm_sym275__);
-              Eigen::Matrix<double, -1, 1> inline_sym28__;
+              stan::conditional_var_value_t<double, Eigen::Matrix<double, -1, 1>> inline_sym28__;
               assign(lcm_sym209__,
                 subtract(1.0,
                   transpose(rvalue(p, "p", index_uni(inline_sym31__)))),
@@ -14627,18 +14627,18 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       current_statement__ = 4;
       tau_phi = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
                   0, lp__);
-      Eigen::Matrix<local_scalar_t__, -1, 1> theta_std;
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> theta_std;
       current_statement__ = 5;
-      theta_std = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+      theta_std = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                     N);
-      Eigen::Matrix<local_scalar_t__, -1, 1> phi_std_raw;
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> phi_std_raw;
       current_statement__ = 6;
-      phi_std_raw = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+      phi_std_raw = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                       N);
       local_scalar_t__ sigma_phi;
       lcm_sym8__ = inv_sqrt(tau_phi);
       sigma_phi = lcm_sym8__;
-      Eigen::Matrix<local_scalar_t__, -1, 1> phi;
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> phi;
       phi = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(phi, DUMMY_VAR__);
       
@@ -18927,14 +18927,14 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
           lcm_sym278__ = rvalue(dims(y), "dims(y)", index_uni(2));
           current_statement__ = 77;
           validate_non_negative_index("qgamma", "n_occasions", lcm_sym278__);
-          Eigen::Matrix<double, -1, 1> inline_sym34__;
+          stan::conditional_var_value_t<double, Eigen::Matrix<double, -1, 1>> inline_sym34__;
           assign(lcm_sym216__, subtract(1.0, gamma),
             "assigning variable lcm_sym216__");
           lcm_sym213__ = logical_gte(lcm_sym277__, 1);
           if (lcm_sym213__) {
             current_statement__ = 79;
             validate_non_negative_index("qp", "n_occasions", lcm_sym278__);
-            Eigen::Matrix<double, -1, 1> inline_sym35__;
+            stan::conditional_var_value_t<double, Eigen::Matrix<double, -1, 1>> inline_sym35__;
             assign(lcm_sym218__,
               subtract(1.0,
                 transpose(rvalue(lcm_sym262__, "lcm_sym262__", index_uni(1)))),
@@ -19134,7 +19134,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                  ++inline_sym38__) {
               current_statement__ = 79;
               validate_non_negative_index("qp", "n_occasions", lcm_sym278__);
-              Eigen::Matrix<double, -1, 1> inline_sym35__;
+              stan::conditional_var_value_t<double, Eigen::Matrix<double, -1, 1>> inline_sym35__;
               assign(lcm_sym217__,
                 subtract(1.0,
                   transpose(
@@ -26068,17 +26068,17 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       local_scalar_t__ phi;
       current_statement__ = 2;
       phi = in__.template read<local_scalar_t__>();
-      Eigen::Matrix<local_scalar_t__, -1, -1> x_matrix;
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> x_matrix;
       current_statement__ = 3;
-      x_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+      x_matrix = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
                    3, 2);
-      Eigen::Matrix<local_scalar_t__, -1, 1> x_vector;
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> x_vector;
       current_statement__ = 4;
-      x_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+      x_vector = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                    2);
-      Eigen::Matrix<local_scalar_t__, -1, -1> x_cov;
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> x_cov;
       current_statement__ = 5;
-      x_cov = in__.template read_constrain_cov_matrix<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
+      x_cov = in__.template read_constrain_cov_matrix<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
                 lp__, 2);
       {
         double x;
@@ -28010,9 +28010,9 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       current_statement__ = 5;
       tau = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
               lp__);
-      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> b;
+      stan::conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> b;
       current_statement__ = 6;
-      b = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+      b = in__.template read<stan::conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
             I, 8);
       local_scalar_t__ sigma;
       lcm_sym5__ = (1 / stan::math::sqrt(tau));

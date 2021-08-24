@@ -10,7 +10,7 @@ let rec get_eigen_decls Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
   | Stmt.Fixed.Pattern.Decl
       { decl_adtype= UnsizedType.AutoDiffable
       ; decl_id
-      ; decl_type= Type.Sized sized_type ; _}
+      ; decl_type= Type.Sized sized_type; _ }
     when SizedType.contains_eigen_type sized_type ->
       Set.Poly.singleton decl_id
   | IfElse
@@ -38,7 +38,7 @@ let rec get_eigen_aos_decls Stmt.Fixed.({pattern; _}) : string Set.Poly.t =
   | Stmt.Fixed.Pattern.Decl
       { decl_adtype= UnsizedType.AutoDiffable
       ; decl_id
-      ; decl_type= Type.Sized sized_type ; _}
+      ; decl_type= Type.Sized sized_type; _ }
     when SizedType.contains_eigen_type sized_type
          && not (SizedType.contains_soa sized_type) ->
       Set.Poly.singleton decl_id
@@ -582,7 +582,8 @@ let rec modify_kind (modifiable_set : string Set.Poly.t) (kind : 'a Fun_kind.t)
       else
         ( Fun_kind.StanLib (name, sfx, SoA)
         , List.map ~f:(modify_expr modifiable_set) exprs )
-  | (_ : 'a Fun_kind.t) -> (kind, List.map ~f:(modify_expr modifiable_set) exprs)
+  | (_ : 'a Fun_kind.t) ->
+      (kind, List.map ~f:(modify_expr modifiable_set) exprs)
 
 (** 
 * Modify the expressions to demote/promote from AoS <-> SoA and vice versa
@@ -682,16 +683,16 @@ let rec modify_stmt_pattern
       NRFunApp (kind', exprs')
   | Assignment
       ( (name, ut, lhs)
-      , ( { pattern=
-              FunApp (CompilerInternal (FnReadParam read_param), args); _
-          } as assigner ) ) ->
+      , ( {pattern= FunApp (CompilerInternal (FnReadParam read_param), args); _}
+        as assigner ) ) ->
       if Set.Poly.mem modifiable_set name then
         Assignment
           ( (name, ut, List.map ~f:(Index.map mod_expr) lhs)
           , { assigner with
               pattern=
                 FunApp
-                  ( CompilerInternal (FnReadParam {read_param with mem_pattern=AoS})
+                  ( CompilerInternal
+                      (FnReadParam {read_param with mem_pattern= AoS})
                   , List.map ~f:mod_expr args ) } )
       else
         Assignment
@@ -699,7 +700,8 @@ let rec modify_stmt_pattern
           , { assigner with
               pattern=
                 FunApp
-                  ( CompilerInternal (FnReadParam {read_param with mem_pattern=SoA})
+                  ( CompilerInternal
+                      (FnReadParam {read_param with mem_pattern= SoA})
                   , List.map ~f:mod_expr args ) } )
   | Assignment (((name : string), (ut : UnsizedType.t), lhs), rhs) ->
       if Set.Poly.mem modifiable_set name then

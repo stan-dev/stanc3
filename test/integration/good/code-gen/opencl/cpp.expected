@@ -966,9 +966,9 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       std::vector<local_scalar_t__> p_real_array;
       current_statement__ = 2;
       p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
-      Eigen::Matrix<local_scalar_t__, -1, -1> p_matrix;
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> p_matrix;
       current_statement__ = 3;
-      p_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+      p_matrix = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
                    d_int, d_int);
       Eigen::Matrix<local_scalar_t__, -1, 1> p_vector;
       current_statement__ = 4;
@@ -6525,17 +6525,17 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       std::vector<local_scalar_t__> p_real_array;
       current_statement__ = 2;
       p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
-      Eigen::Matrix<local_scalar_t__, -1, -1> p_matrix;
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> p_matrix;
       current_statement__ = 3;
-      p_matrix = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+      p_matrix = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
                    d_int, d_int);
-      Eigen::Matrix<local_scalar_t__, -1, 1> p_vector;
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> p_vector;
       current_statement__ = 4;
-      p_vector = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
+      p_vector = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                    d_int);
-      Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vector;
+      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>> p_row_vector;
       current_statement__ = 5;
-      p_row_vector = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(
+      p_row_vector = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>>>(
                        d_int);
       local_scalar_t__ y_p;
       current_statement__ = 6;
