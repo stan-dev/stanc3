@@ -227,7 +227,8 @@ and pp_scalar_binary ppf scalar_fmt generic_fmt es =
     else generic_fmt )
     es
 
-and gen_operator_app = function
+and gen_operator_app op_expr =
+  match op_expr with
   | Operator.Plus ->
       fun ppf es -> pp_scalar_binary ppf "(%a@ +@ %a)" "add(@,%a,@ %a)" es
   | PMinus ->
@@ -272,7 +273,9 @@ and gen_operator_app = function
   | Greater -> fun ppf es -> pp_binary_f ppf "logical_gt" es
   | Geq -> fun ppf es -> pp_binary_f ppf "logical_gte" es
 
-and gen_misc_special_math_app f =
+and gen_misc_special_math_app (f : string)
+    (mem_pattern : Common.Helpers.mem_pattern)
+    (ret_type : UnsizedType.returntype option) =
   match f with
   | "lmultiply" ->
       Some (fun ppf es -> pp_binary ppf "multiply_log(@,%a,@ %a)" es)
@@ -300,6 +303,18 @@ and gen_misc_special_math_app f =
           pp_call ppf (f, pp_expr, es) )
   | f when Map.mem fn_renames f ->
       Some (fun ppf es -> pp_call ppf (Map.find_exn fn_renames f, pp_expr, es))
+  | "rep_matrix" | "rep_vector" | "rep_row_vector" | "append_row"
+   |"append_col"
+    when mem_pattern = Common.Helpers.SoA -> (
+    match ret_type with
+    | Some (UnsizedType.ReturnType t) ->
+        Some
+          (fun ppf es ->
+            pf ppf "%s<%a>(@,%a)" f pp_possibly_var_decl
+              (UnsizedType.AutoDiffable, t, mem_pattern)
+              (list ~sep:comma pp_expr) es )
+    | Some Void -> None
+    | None -> None )
   | _ -> None
 
 and read_data ut ppf es =
@@ -313,8 +328,12 @@ and read_data ut ppf es =
   in
   pf ppf "context__.vals_%s(%a)" i_or_r pp_expr (List.hd_exn es)
 
+and find_args Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
+  (adlevel, type_)
+
 (* assumes everything well formed from parser checks *)
-and gen_fun_app suffix ppf fname es mem_pattern =
+and gen_fun_app suffix ppf fname es mem_pattern
+    (ret_type : UnsizedType.returntype option) =
   let default ppf es =
     let to_var s = Expr.{Fixed.pattern= Var s; meta= Typed.Meta.empty} in
     let convert_hof_vars = function
@@ -429,7 +448,7 @@ and gen_fun_app suffix ppf fname es mem_pattern =
   in
   let pp =
     [ Option.map ~f:gen_operator_app (Operator.of_string_opt fname)
-    ; gen_misc_special_math_app fname ]
+    ; gen_misc_special_math_app fname mem_pattern ret_type ]
     |> List.filter_opt |> List.hd |> Option.value ~default
   in
   pf ppf "@[<hov 2>%a@]" pp es
@@ -498,8 +517,12 @@ and pp_compiler_internal_fn ad ut f ppf es =
             constraint_string pp_possibly_var_decl
             (UnsizedType.AutoDiffable, ut, mem_pattern)
             (list ~sep:comma pp_expr) args )
-  | FnDeepCopy -> gen_fun_app FnPlain ppf "stan::model::deep_copy" es AoS
-  | _ -> gen_fun_app FnPlain ppf (Internal_fun.to_string f) es AoS
+  | FnDeepCopy ->
+      gen_fun_app FnPlain ppf "stan::model::deep_copy" es Common.Helpers.AoS
+        (Some UnsizedType.Void)
+  | _ ->
+      gen_fun_app FnPlain ppf (Internal_fun.to_string f) es Common.Helpers.AoS
+        (Some UnsizedType.Void)
 
 and pp_promoted ad ut ppf e =
   match e with
@@ -553,7 +576,9 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
         pf ppf "(Eigen::Matrix<%s,-1,1>(%d) <<@ %a).finished()" st
           (List.length es) (list ~sep:comma pp_expr) es
   | FunApp (StanLib (f, suffix, mem_pattern), es) ->
-      gen_fun_app suffix ppf f es mem_pattern
+      let fun_args = List.map ~f:find_args es in
+      let ret_type = Stan_math_signatures.stan_math_returntype f fun_args in
+      gen_fun_app suffix ppf f es mem_pattern ret_type
   | FunApp (CompilerInternal f, es) ->
       pp_compiler_internal_fn meta.adlevel meta.type_ f ppf es
       (* stan_namespace_qualify?  *)

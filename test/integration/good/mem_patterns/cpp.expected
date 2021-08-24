@@ -592,7 +592,9 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       assign(h_i_sigma, pow((1 - square(phi)), -0.5),
         "assigning variable h_i_sigma", index_uni(1));
       current_statement__ = 38;
-      assign(h_i_sigma, rep_vector(1.0, (Nr - 1)),
+      assign(h_i_sigma,
+        rep_vector<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+          1.0, (Nr - 1)),
         "assigning variable h_i_sigma", index_min_max(2, Nr));
       current_statement__ = 39;
       assign(h_i_mean,
@@ -2088,12 +2090,15 @@ class indexing_model final : public model_base_crtp<indexing_model> {
       
       stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> tp_soa_rep_matrix_mat;
       current_statement__ = 25;
-      assign(tp_soa_rep_matrix_mat, rep_matrix(p_soa_rep_matrix_vec, 10),
+      assign(tp_soa_rep_matrix_mat,
+        rep_matrix<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
+          p_soa_rep_matrix_vec, 10),
         "assigning variable tp_soa_rep_matrix_mat");
       stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> tp_soa_rep_matrix_from_data_mat;
       current_statement__ = 26;
-      assign(tp_soa_rep_matrix_from_data_mat, rep_matrix(y, 10),
-        "assigning variable tp_soa_rep_matrix_from_data_mat");
+      assign(tp_soa_rep_matrix_from_data_mat,
+        rep_matrix<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
+          y, 10), "assigning variable tp_soa_rep_matrix_from_data_mat");
       current_statement__ = 28;
       assign(tp_aos_fail_assign_from_top_idx,
         rvalue(p_aos_fail_assign_from_top_idx,
