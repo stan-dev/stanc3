@@ -1284,7 +1284,7 @@ let optimize_soa (mir : Program.Typed.t) =
     Mem_pattern.modify_stmt_pattern stmt_pattern variable_set
   in
   let transform stmt =
-    optimize_minimal_variables true ~gen_variables:gen_aos_variables
+    optimize_minimal_variables false ~gen_variables:gen_aos_variables
       ~update_expr:mod_exprs ~update_stmt:modify_stmt_patt ~initial_variables
       stmt ~extra_variables:(fun _ -> Set.Poly.empty )
   in

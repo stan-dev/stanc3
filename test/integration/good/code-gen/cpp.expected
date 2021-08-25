@@ -17126,10 +17126,9 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> alpha_v;
+      Eigen::Matrix<local_scalar_t__, -1, 1> alpha_v;
       current_statement__ = 1;
-      alpha_v = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-                  k);
+      alpha_v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
       current_statement__ = 2;
       beta = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
@@ -20392,9 +20391,9 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      stan::conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>> a8;
+      std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> a8;
       current_statement__ = 1;
-      a8 = in__.template read<stan::conditional_var_value_t<local_scalar_t__, std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>>(
+      a8 = in__.template read<std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>>(
              N, N, N, N);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>> a7;
       current_statement__ = 2;
