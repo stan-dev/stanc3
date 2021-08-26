@@ -12,7 +12,7 @@ let unwrap_return_exn = function
 let trans_fn_kind kind name =
   let fname = Utils.stdlib_distribution_name name in
   match kind with
-  | Ast.StanLib suffix -> Fun_kind.StanLib (fname, suffix)
+  | Ast.StanLib suffix -> Fun_kind.StanLib (fname, suffix, AoS)
   | UserDefined suffix -> UserDefined (fname, suffix)
 
 let without_underscores = String.filter ~f:(( <> ) '_')
@@ -47,7 +47,7 @@ let rec op_to_funapp op args =
   and adlevel = Ast.expr_ad_lub args in
   Expr.
     { Fixed.pattern=
-        FunApp (StanLib (Operator.to_string op, FnPlain), trans_exprs args)
+        FunApp (StanLib (Operator.to_string op, FnPlain, AoS), trans_exprs args)
     ; meta= Expr.Typed.Meta.create ~type_ ~adlevel ~loc () }
 
 and trans_expr {Ast.expr; Ast.emeta} =
@@ -75,7 +75,8 @@ and trans_expr {Ast.expr; Ast.emeta} =
   | FunApp (fn_kind, {name; _}, args) | CondDistApp (fn_kind, {name; _}, args)
     ->
       FunApp (trans_fn_kind fn_kind name, trans_exprs args) |> ewrap
-  | GetLP | GetTarget -> FunApp (StanLib ("target", FnTarget), []) |> ewrap
+  | GetLP | GetTarget ->
+      FunApp (StanLib ("target", FnTarget, AoS), []) |> ewrap
   | ArrayExpr eles ->
       FunApp (CompilerInternal FnMakeArray, trans_exprs eles) |> ewrap
   | RowVectorExpr eles ->
@@ -209,7 +210,7 @@ let same_shape decl_id decl_var id var meta =
     [ Stmt.
         { Fixed.pattern=
             NRFunApp
-              ( StanLib ("check_matching_dims", FnPlain)
+              ( StanLib ("check_matching_dims", FnPlain, AoS)
               , Expr.Helpers.
                   [str "constraint"; str decl_id; decl_var; str id; var] )
         ; meta } ]
@@ -258,7 +259,8 @@ let param_size transform sizedtype =
   let rec shrink_eigen f st =
     match st with
     | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen f t, d)
-    | SVector d | SMatrix (d, _) -> SVector (f d)
+    | SVector (mem_pattern, d) | SMatrix (mem_pattern, d, _) ->
+        SVector (mem_pattern, f d)
     | SInt | SReal | SRowVector _ ->
         raise_s
           [%message
@@ -267,7 +269,7 @@ let param_size transform sizedtype =
   let rec shrink_eigen_mat f st =
     match st with
     | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen_mat f t, d)
-    | SMatrix (d1, d2) -> SVector (f d1 d2)
+    | SMatrix (mem_pattern, d1, d2) -> SVector (mem_pattern, f d1 d2)
     | SInt | SReal | SRowVector _ | SVector _ ->
         raise_s
           [%message "Expecting SMatrix, got " (st : Expr.Typed.t SizedType.t)]
@@ -336,16 +338,16 @@ let check_sizedtype name =
   in
   let rec sizedtype = function
     | SizedType.(SInt | SReal) as t -> ([], t)
-    | SVector s ->
+    | SVector (mem_pattern, s) ->
         let e = trans_expr s in
-        (check s e, SizedType.SVector e)
-    | SRowVector s ->
+        (check s e, SizedType.SVector (mem_pattern, e))
+    | SRowVector (mem_pattern, s) ->
         let e = trans_expr s in
-        (check s e, SizedType.SRowVector e)
-    | SMatrix (r, c) ->
+        (check s e, SizedType.SRowVector (mem_pattern, e))
+    | SMatrix (mem_pattern, r, c) ->
         let er = trans_expr r in
         let ec = trans_expr c in
-        (check r er @ check c ec, SizedType.SMatrix (er, ec))
+        (check r er @ check c ec, SizedType.SMatrix (mem_pattern, er, ec))
     | SArray (t, s) ->
         let e = trans_expr s in
         let ll, t = sizedtype t in
@@ -477,7 +479,7 @@ let rec trans_stmt ud_dists (declc : decl_context) (ts : Ast.typed_statement) =
         in
         if List.exists ~f:(fun (n, _) -> Set.mem possible_names n) ud_dists
         then Fun_kind.UserDefined (name, FnLpdf true)
-        else StanLib (name, FnLpdf true)
+        else StanLib (name, FnLpdf true, AoS)
       in
       let add_dist =
         Stmt.Fixed.Pattern.TargetPE
@@ -633,7 +635,7 @@ let trans_sizedtype_decl declc tr name =
   in
   let rec go n = function
     | SizedType.(SInt | SReal) as t -> ([], t)
-    | SVector s ->
+    | SVector (mem_pattern, s) ->
         let fn =
           match (declc.transform_action, tr) with
           | Constrain, Transformation.Simplex ->
@@ -642,11 +644,11 @@ let trans_sizedtype_decl declc tr name =
           | _ -> FnValidateSize
         in
         let l, s = grab_size fn n s in
-        (l, SizedType.SVector s)
-    | SRowVector s ->
+        (l, SizedType.SVector (mem_pattern, s))
+    | SRowVector (mem_pattern, s) ->
         let l, s = grab_size FnValidateSize n s in
-        (l, SizedType.SRowVector s)
-    | SMatrix (r, c) ->
+        (l, SizedType.SRowVector (mem_pattern, s))
+    | SMatrix (mem_pattern, r, c) ->
         let l1, r = grab_size FnValidateSize n r in
         let l2, c = grab_size FnValidateSize (n + 1) c in
         let cf_cov =
@@ -654,7 +656,7 @@ let trans_sizedtype_decl declc tr name =
           | Constrain, CholeskyCov ->
               [ { Stmt.Fixed.pattern=
                     NRFunApp
-                      ( StanLib ("check_greater_or_equal", FnPlain)
+                      ( StanLib ("check_greater_or_equal", FnPlain, AoS)
                       , Expr.Helpers.
                           [ str ("cholesky_factor_cov " ^ name)
                           ; str
@@ -663,7 +665,7 @@ let trans_sizedtype_decl declc tr name =
                 ; meta= r.Expr.Fixed.meta.Expr.Typed.Meta.loc } ]
           | _ -> []
         in
-        (l1 @ l2 @ cf_cov, SizedType.SMatrix (r, c))
+        (l1 @ l2 @ cf_cov, SizedType.SMatrix (mem_pattern, r, c))
     | SArray (t, s) ->
         let l, s = grab_size FnValidateSize n s in
         let ll, t = go (n + 1) t in
@@ -843,7 +845,7 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
   in
   let iexpr pattern = Expr.{pattern; Fixed.meta= Typed.Meta.empty} in
   let fnot e =
-    FunApp (StanLib (Operator.to_string PNot, FnPlain), [e]) |> iexpr
+    FunApp (StanLib (Operator.to_string PNot, FnPlain, AoS), [e]) |> iexpr
   in
   let tparam_early_return =
     let to_var fv = iexpr (Var (Flag_vars.to_string fv)) in

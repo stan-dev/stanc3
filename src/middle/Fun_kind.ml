@@ -6,7 +6,7 @@ type 'propto suffix = FnPlain | FnRng | FnLpdf of 'propto | FnTarget
 let without_propto = map_suffix (function true | false -> ())
 
 type 'e t =
-  | StanLib of string * bool suffix
+  | StanLib of string * bool suffix * Common.Helpers.mem_pattern
   | CompilerInternal of 'e Internal_fun.t
   | UserDefined of string * bool suffix
 [@@deriving compare, sexp, hash, map, fold]
@@ -27,10 +27,10 @@ let suffix_from_name fname =
   else FnPlain
 
 let pp pp_expr ppf = function
-  | StanLib (s, FnLpdf true) | UserDefined (s, FnLpdf true) ->
+  | StanLib (s, FnLpdf true, _) | UserDefined (s, FnLpdf true) ->
       Fmt.string ppf
         (Utils.with_unnormalized_suffix s |> Option.value ~default:s)
-  | StanLib (s, _) | UserDefined (s, _) -> Fmt.string ppf s
+  | StanLib (s, _, _) | UserDefined (s, _) -> Fmt.string ppf s
   | CompilerInternal internal -> Internal_fun.pp pp_expr ppf internal
 
 let collect_exprs fn = fold (fun accum e -> e :: accum) [] fn

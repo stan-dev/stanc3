@@ -159,7 +159,7 @@ let semantic_check_autodifftype at = Validate.ok at
 (* Probably nothing to do here *)
 let rec semantic_check_unsizedtype : UnsizedType.t -> unit Validate.t =
   function
-  | UFun (l, rt, _) ->
+  | UFun (l, rt, _, _) ->
       (* fold over argument types accumulating errors with initial state
        given by validating the return type *)
       List.fold
@@ -275,10 +275,10 @@ let mk_fun_app ~is_cond_dist (x, y, z) =
 let semantic_check_fn_normal ~is_cond_dist ~loc id es =
   Validate.(
     match Symbol_table.look vm (Utils.normalized_name id.name) with
-    | Some (_, UnsizedType.UFun (_, Void, _)) ->
+    | Some (_, UnsizedType.UFun (_, Void, _, _)) ->
         Semantic_error.returning_fn_expected_nonreturning_found loc id.name
         |> error
-    | Some (_, UFun (listedtypes, ReturnType ut, _)) -> (
+    | Some (_, UFun (listedtypes, ReturnType ut, _, _)) -> (
       match
         SignatureMismatch.check_compatible_arguments_mod_conv listedtypes
           (get_arg_types es)
@@ -327,8 +327,8 @@ let semantic_check_reduce_sum ~is_cond_dist ~loc id es =
   | { emeta=
         { type_=
             UnsizedType.UFun
-              (((_, sliced_arg_fun_type) as sliced_arg_fun) :: _, _, _); _ }; _
-    }
+              (((_, sliced_arg_fun_type) as sliced_arg_fun) :: _, _, _, _); _
+        }; _ }
     :: _
     when List.mem Stan_math_signatures.reduce_sum_slice_types
            sliced_arg_fun_type ~equal:( = ) -> (
@@ -519,9 +519,10 @@ let semantic_check_variable cf loc id =
                 ( (cf.in_fun_def && (cf.in_udf_dist_def || cf.in_lp_fun_def))
                 || cf.current_block = Model ) ->
         Semantic_error.invalid_unnormalized_fn loc |> error
-    | Some (originblock, UFun (args, rt, FnLpdf _)) ->
+    | Some (originblock, UFun (args, rt, FnLpdf _, mem_pattern)) ->
         let type_ =
-          UnsizedType.UFun (args, rt, Fun_kind.suffix_from_name id.name)
+          UnsizedType.UFun
+            (args, rt, Fun_kind.suffix_from_name id.name, mem_pattern)
         in
         mk_typed_expression ~expr:(Variable id)
           ~ad_level:(calculate_autodifftype cf originblock type_)
@@ -848,16 +849,18 @@ let semantic_check_expression_of_scalar_or_type cf t e name =
 let rec semantic_check_sizedtype cf = function
   | SizedType.SInt -> Validate.ok SizedType.SInt
   | SReal -> Validate.ok SizedType.SReal
-  | SVector e ->
+  | SVector (mem_pattern, e) ->
       semantic_check_expression_of_int_type cf e "Vector sizes"
-      |> Validate.map ~f:(fun ue -> SizedType.SVector ue)
-  | SRowVector e ->
+      |> Validate.map ~f:(fun ue -> SizedType.SVector (mem_pattern, ue))
+  | SRowVector (mem_pattern, e) ->
       semantic_check_expression_of_int_type cf e "Row vector sizes"
-      |> Validate.map ~f:(fun ue -> SizedType.SRowVector ue)
-  | SMatrix (e1, e2) ->
+      |> Validate.map ~f:(fun ue -> SizedType.SRowVector (mem_pattern, ue))
+  | SMatrix (mem_pattern, e1, e2) ->
       let ue1 = semantic_check_expression_of_int_type cf e1 "Matrix sizes"
       and ue2 = semantic_check_expression_of_int_type cf e2 "Matrix sizes" in
-      Validate.liftA2 (fun ue1 ue2 -> SizedType.SMatrix (ue1, ue2)) ue1 ue2
+      Validate.liftA2
+        (fun ue1 ue2 -> SizedType.SMatrix (mem_pattern, ue1, ue2))
+        ue1 ue2
   | SArray (st, e) ->
       let ust = semantic_check_sizedtype cf st
       and ue = semantic_check_expression_of_int_type cf e "Array sizes" in
@@ -953,7 +956,7 @@ let semantic_check_nrfn_target ~loc ~cf id =
 let semantic_check_nrfn_normal ~loc id es =
   Validate.(
     match Symbol_table.look vm id.name with
-    | Some (_, UFun (listedtypes, Void, suffix)) -> (
+    | Some (_, UFun (listedtypes, Void, suffix, _)) -> (
       match
         SignatureMismatch.check_compatible_arguments_mod_conv listedtypes
           (get_arg_types es)
@@ -969,7 +972,7 @@ let semantic_check_nrfn_normal ~loc id es =
           |> Semantic_error.illtyped_userdefined_fn_app loc id.name listedtypes
                Void x
           |> error )
-    | Some (_, UFun (_, ReturnType _, _)) ->
+    | Some (_, UFun (_, ReturnType _, _, _)) ->
         Semantic_error.nonreturning_fn_expected_returning_found loc id.name
         |> error
     | Some _ ->
@@ -1169,7 +1172,7 @@ let semantic_check_sampling_distribution ~loc id arguments =
   in
   let is_name_w_suffix_udf_sampling_dist suffix =
     match Symbol_table.look vm (name ^ suffix) with
-    | Some (Functions, UFun (listedtypes, ReturnType UReal, FnLpdf _)) ->
+    | Some (Functions, UFun (listedtypes, ReturnType UReal, FnLpdf _, _)) ->
         UnsizedType.check_compatible_arguments_mod_conv name listedtypes
           argumenttypes
     | _ -> false
@@ -1194,7 +1197,7 @@ let cumulative_density_is_defined id arguments =
     |> Option.value_map ~default:false ~f:is_real_rt
   and valid_arg_types_for_suffix suffix =
     match Symbol_table.look vm (name ^ suffix) with
-    | Some (Functions, UFun (listedtypes, ReturnType UReal, FnPlain)) ->
+    | Some (Functions, UFun (listedtypes, ReturnType UReal, FnPlain, _)) ->
         UnsizedType.check_compatible_arguments_mod_conv name listedtypes
           argumenttypes
     | _ -> false
@@ -1599,7 +1602,7 @@ and semantic_check_fundef_overloaded ~loc id arg_tys rt =
     (* User defined functions cannot be overloaded *)
     if Symbol_table.check_is_unassigned vm id.name then
       match Symbol_table.look vm id.name with
-      | Some (Functions, UFun (arg_tys', rt', _))
+      | Some (Functions, UFun (arg_tys', rt', _, _))
         when arg_tys' = arg_tys && rt' = rt ->
           ok ()
       | _ ->
@@ -1718,7 +1721,8 @@ and semantic_check_fundef ~loc ~cf return_ty id args body =
     >>= fun _ ->
     (* WARNING: SIDE EFFECTING *)
     Symbol_table.enter vm id.name
-      (Functions, UFun (uarg_types, urt, Fun_kind.suffix_from_name id.name)) ;
+      ( Functions
+      , UFun (uarg_types, urt, Fun_kind.suffix_from_name id.name, AoS) ) ;
     (* Check that function args and loop identifiers are not modified in
        function. (passed by const ref)*)
     List.iter ~f:(Symbol_table.set_read_only vm) uarg_names ;
