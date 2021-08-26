@@ -23,7 +23,7 @@ let extract_factors_statement stmt =
   | Stmt.Fixed.Pattern.TargetPE e ->
       List.map (summation_terms e) ~f:(fun x -> TargetTerm x)
   | NRFunApp (CompilerInternal FnReject, _) -> [Reject]
-  | NRFunApp ((UserDefined (s, FnTarget) | StanLib (s, FnTarget)), args) ->
+  | NRFunApp ((UserDefined (s, FnTarget) | StanLib (s, FnTarget, _)), args) ->
       [LPFunction (s, args)]
   | Assignment (_, _)
    |NRFunApp (_, _)

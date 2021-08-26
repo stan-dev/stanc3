@@ -281,9 +281,9 @@ let rec generate_value m st t =
   | SComplex ->
       (* when serialzied, a complex number looks just like a 2-array of reals *)
       generate_value m (SArray (SReal, wrap_int 2)) t
-  | SVector e -> gen_vector m (unwrap_int_exn m e) t
-  | SRowVector e -> gen_row_vector m (unwrap_int_exn m e) t
-  | SMatrix (e1, e2) ->
+  | SVector (_, e) -> gen_vector m (unwrap_int_exn m e) t
+  | SRowVector (_, e) -> gen_row_vector m (unwrap_int_exn m e) t
+  | SMatrix (_, e1, e2) ->
       gen_matrix m (unwrap_int_exn m e1) (unwrap_int_exn m e2) t
   | SArray (st, e) ->
       let element () = generate_value m st t in

@@ -9,7 +9,11 @@ type t =
   | URowVector
   | UMatrix
   | UArray of t
-  | UFun of (autodifftype * t) list * returntype * bool Fun_kind.suffix
+  | UFun of
+      (autodifftype * t) list
+      * returntype
+      * bool Fun_kind.suffix
+      * Common.Helpers.mem_pattern
   | UMathLibraryFunction
 
 and autodifftype = DataOnly | AutoDiffable
@@ -51,7 +55,7 @@ let rec pp ppf = function
       let ut2, d = unwind_array_type ut in
       let array_str = "[" ^ String.make d ',' ^ "]" in
       Fmt.pf ppf "array%s %a" array_str pp ut2
-  | UFun (argtypes, rt, _) ->
+  | UFun (argtypes, rt, _, _) ->
       Fmt.pf ppf {|@[<h>(%a) => %a@]|}
         Fmt.(list pp_fun_arg ~sep:comma)
         argtypes pp_returntype rt
@@ -84,7 +88,7 @@ let check_of_same_type_mod_conv name t1 t2 =
     | UReal, UInt -> true
     | UComplex, UInt -> true
     | UComplex, UReal -> true
-    | UFun (l1, rt1, s1), UFun (l2, rt2, s2) -> (
+    | UFun (l1, rt1, s1, _), UFun (l2, rt2, s2, _) -> (
         s1 = s2 && rt1 = rt2
         &&
         match
