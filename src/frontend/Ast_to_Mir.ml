@@ -337,7 +337,7 @@ let check_sizedtype name =
             n.meta.loc ]
   in
   let rec sizedtype = function
-    | SizedType.(SInt | SReal | SComplex ) as t -> ([], t)
+    | SizedType.(SInt | SReal | SComplex) as t -> ([], t)
     | SVector (mem_pattern, s) ->
         let e = trans_expr s in
         (check s e, SizedType.SVector (mem_pattern, e))

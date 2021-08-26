@@ -370,7 +370,8 @@ For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
     | NonIntBounds ->
         Fmt.pf ppf
           "Bounds of integer variable must be of type int. Found type real."
-    | ComplexTransform -> Fmt.pf ppf "Complex types do not support transformations."
+    | ComplexTransform ->
+        Fmt.pf ppf "Complex types do not support transformations."
     | TransformedParamsInt ->
         Fmt.pf ppf "(Transformed) Parameters cannot be integers."
     | MismatchFunDefDecl (name, Some ut) ->
@@ -608,7 +609,9 @@ let non_data_variable_size_decl loc =
   StatementError (loc, StatementError.NonDataVariableSizeDecl)
 
 let non_int_bounds loc = StatementError (loc, StatementError.NonIntBounds)
-let complex_transform loc = StatementError (loc, StatementError.ComplexTransform)
+
+let complex_transform loc =
+  StatementError (loc, StatementError.ComplexTransform)
 
 let transformed_params_int loc =
   StatementError (loc, StatementError.TransformedParamsInt)

@@ -356,7 +356,7 @@ module Helpers = struct
 *)
   let rec for_scalar st bodyfn var smeta =
     match st with
-    | SizedType.SInt | SReal | SComplex  -> bodyfn var
+    | SizedType.SInt | SReal | SComplex -> bodyfn var
     | SVector (_, d) | SRowVector (_, d) -> mk_for_iteratee d bodyfn var smeta
     | SMatrix (mem_pattern, d1, d2) ->
         mk_for_iteratee d1
