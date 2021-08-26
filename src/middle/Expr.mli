@@ -3,7 +3,7 @@ open Common
 
 module Fixed : sig
   module Pattern : sig
-    type litType = Int | Real | Complex | Str
+    type litType = Int | Real | Str
     [@@deriving sexp, hash, compare]
 
     type 'a t =

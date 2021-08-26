@@ -9686,7 +9686,6 @@ hypot(array[,,,,,,,] real, array[,,,,,,,] real) => array[,,,,,,,] real
 identity_matrix(int) => matrix
 if_else(int, int, int) => int
 if_else(int, real, real) => real
-if_else(int, complex, complex) => complex
 inc_beta(real, real, real) => real
 int_step(int) => int
 int_step(real) => int
