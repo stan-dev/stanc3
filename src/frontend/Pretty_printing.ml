@@ -112,7 +112,6 @@ and pp_expression ppf {expr= e_content; _} =
   | Variable id -> pp_identifier ppf id
   | IntNumeral i -> Fmt.pf ppf "%s" i
   | RealNumeral r -> Fmt.pf ppf "%s" r
-  | ComplexNumeral c -> Fmt.pf ppf "%s" c
   | FunApp (_, id, es) ->
       Fmt.pf ppf "%a(" pp_identifier id ;
       with_box ppf 0 (fun () -> Fmt.pf ppf "%a)" pp_list_of_expression es)

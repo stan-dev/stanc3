@@ -72,7 +72,6 @@ and trans_expr {Ast.expr; Ast.emeta} =
   | Variable {name; _} -> Var name |> ewrap
   | IntNumeral x -> Lit (Int, format_number x) |> ewrap
   | RealNumeral x -> Lit (Real, format_number x) |> ewrap
-  | ComplexNumeral x -> Lit (Complex, format_number x) |> ewrap
   | FunApp (fn_kind, {name; _}, args) | CondDistApp (fn_kind, {name; _}, args)
     ->
       FunApp (trans_fn_kind fn_kind name, trans_exprs args) |> ewrap
