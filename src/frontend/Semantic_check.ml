@@ -1533,17 +1533,16 @@ and semantic_check_var_decl_bounds ~loc is_global sized_ty trans =
     | _ -> false
   in
   let is_transformation =
-    match trans with
-    | Transformation.Lower _ -> true
-    | Upper _ -> true
-    | LowerUpper (_, _) -> true
-    | _ -> false
+    match trans with Transformation.Identity -> false | _ -> true
   in
   Validate.(
     if is_global && sized_ty = SizedType.SInt && is_real_transformation then
       Semantic_error.non_int_bounds loc |> error
-    else if is_global && sized_ty = SizedType.SComplex && is_transformation
-    then Semantic_error.complex_bounds loc |> error
+    else if
+      is_global
+      && SizedType.(inner_type sized_ty = SComplex)
+      && is_transformation
+    then Semantic_error.complex_transform loc |> error
     else ok ())
 
 and semantic_check_transformed_param_ty ~loc ~cf is_global unsized_ty =
