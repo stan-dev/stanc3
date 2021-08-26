@@ -2837,7 +2837,6 @@ data {
   int r_int;
   real d_real;
   real r_real;
-  complex d_complex;
 }
 transformed data {
   complex transformed_data_complex;
@@ -2849,8 +2848,6 @@ transformed data {
   transformed_data_complex = to_complex(d_real);
   transformed_data_complex = to_complex(d_int);
   transformed_data_complex = to_complex();
-  transformed_data_complex = to_complex(d_complex);
-  transformed_data_complex_2 = to_complex(transformed_data_complex);
 }
 parameters {
   real p_real;
@@ -2863,41 +2860,20 @@ transformed parameters {
   transformed_param_complex = to_complex(d_real, r_int);
   transformed_param_complex = to_complex(d_int, r_real);
   transformed_param_complex = to_complex(d_real, r_real);
-  transformed_data_complex = to_complex(d_real);
-  transformed_data_complex = to_complex(d_int);
-  transformed_data_complex = to_complex();
-  transformed_param_complex = to_complex(d_complex);
-  transformed_param_complex_2 = to_complex(transformed_data_complex);
+  transformed_param_complex = to_complex(d_real);
+  transformed_param_complex = to_complex(d_int);
+  transformed_param_complex = to_complex();
   transformed_param_complex = to_complex(p_real, r_int);
   transformed_param_complex = to_complex(p_real, r_real);
   transformed_param_complex = to_complex(r_int, p_real);
   transformed_param_complex = to_complex(r_real, r_real);
   transformed_param_complex = to_complex(p_real, p_real);
-  transformed_data_complex = to_complex(p_real);
+  transformed_param_complex = to_complex(p_real);
 }
 model {
   y_p ~ normal(0, 1);
 }
 
-Semantic error in 'to_complex.stan', line 21, column 29 to column 50:
-   -------------------------------------------------
-    19:    transformed_data_complex = to_complex();
-    20:  
-    21:    transformed_data_complex = to_complex(d_complex);
-                                      ^
-    22:    transformed_data_complex_2 = to_complex(transformed_data_complex);
-    23:  
-   -------------------------------------------------
-
-Ill-typed arguments supplied to function 'to_complex':
-(complex)
-Available signatures:
-(real) => complex
-  The first argument must be real but got complex
-(real, real) => complex
-  Expected 2 arguments but found 1 arguments.
-() => complex
-  Expected 0 arguments but found 1 arguments.
   $ ../../../../../../../install/default/bin/stanc --auto-format trigamma.stan
 data {
   int d_int;
