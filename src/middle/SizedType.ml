@@ -68,6 +68,16 @@ let rec get_dims st =
   | SMatrix (_, dim1, dim2) -> [dim1; dim2]
   | SArray (t, dim) -> dim :: get_dims t
 
+(**
+ * Check whether a SizedType holds indexable SizedTypes.
+ *)
+let is_recursive_container st =
+  match st with
+  | SInt | SReal | SVector _ | SRowVector _ | SMatrix _
+   |SArray ((SInt | SReal), _) ->
+      false
+  | SArray _ -> true
+
 (* Return a type's array dimensions and the type inside the (possibly nested) array *)
 let rec get_array_dims st =
   match st with

@@ -2427,7 +2427,11 @@ class indexing_model final : public model_base_crtp<indexing_model> {
       out__.write(alpha);
       out__.write(p_soa_vec_v);
       out__.write(p_soa_mat);
-      out__.write(p_soa_arr_vec_v);
+      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+        for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
+          out__.write(p_soa_arr_vec_v[(sym2__ - 1)][(sym1__ - 1)]);
+        }
+      }
       out__.write(p_soa_mat_uni_col_idx);
       out__.write(p_soa_vec_uni_idx);
       out__.write(p_soa_loop_mat_uni_col_idx);

@@ -7814,13 +7814,72 @@
       ()))
     (meta <opaque>))
    ((pattern
-     (NRFunApp
-      (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
-        (var
-         ((pattern (Var p_soa_arr_vec_v))
-          (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly)))))))
-      ()))
+     (For (loopvar sym1__)
+      (lower
+       ((pattern (Lit Int 1))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (upper
+       ((pattern (Var N))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+      (body
+       ((pattern
+         (Block
+          (((pattern
+             (For (loopvar sym2__)
+              (lower
+               ((pattern (Lit Int 1))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (upper
+               ((pattern (Lit Int 10))
+                (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
+              (body
+               ((pattern
+                 (Block
+                  (((pattern
+                     (NRFunApp
+                      (CompilerInternal
+                       (FnWriteParam (unconstrain_opt ())
+                        (var
+                         ((pattern
+                           (Indexed
+                            ((pattern (Var p_soa_arr_vec_v))
+                             (meta
+                              ((type_ (UArray UVector)) (loc <opaque>)
+                               (adlevel DataOnly))))
+                            ((Single
+                              ((pattern (Var sym2__))
+                               (meta
+                                ((type_ UInt) (loc <opaque>)
+                                 (adlevel DataOnly)))))
+                             (Single
+                              ((pattern (Var sym1__))
+                               (meta
+                                ((type_ UInt) (loc <opaque>)
+                                 (adlevel DataOnly))))))))
+                          (meta
+                           ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                      (((pattern
+                         (Indexed
+                          ((pattern (Var p_soa_arr_vec_v))
+                           (meta
+                            ((type_ (UArray UVector)) (loc <opaque>)
+                             (adlevel DataOnly))))
+                          ((Single
+                            ((pattern (Var sym2__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly)))))
+                           (Single
+                            ((pattern (Var sym1__))
+                             (meta
+                              ((type_ UInt) (loc <opaque>)
+                               (adlevel DataOnly))))))))
+                        (meta
+                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
+                    (meta <opaque>)))))
+                (meta <opaque>)))))
+            (meta <opaque>)))))
+        (meta <opaque>)))))
     (meta <opaque>))
    ((pattern
      (NRFunApp

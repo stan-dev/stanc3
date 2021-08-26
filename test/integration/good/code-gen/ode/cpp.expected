@@ -451,7 +451,11 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
           max_num_steps, num_checkpoints, interpolation_polynomial, solver_f,
           solver_b, pstream__, i, y), "assigning variable z");
       if (emit_transformed_parameters__) {
-        out__.write(z);
+        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
+          for (int sym2__ = 1; sym2__ <= M; ++sym2__) {
+            out__.write(z[(sym2__ - 1)][(sym1__ - 1)]);
+          }
+        }
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
