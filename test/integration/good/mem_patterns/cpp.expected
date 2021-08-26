@@ -615,11 +615,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       current_statement__ = 24;
       check_greater_or_equal(function__, "sigma", sigma, 0);
       current_statement__ = 30;
-      for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
-        current_statement__ = 30;
-        check_greater_or_equal(function__, "h_i_sigma[sym1__]",
-                               h_i_sigma[(sym1__ - 1)], 0);
-      }
+      check_greater_or_equal(function__, "h_i_sigma", h_i_sigma, 0);
       {
         current_statement__ = 40;
         lp_accum__.add(multiply(-2, stan::math::log(sigma_price)));
@@ -910,11 +906,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       current_statement__ = 24;
       check_greater_or_equal(function__, "sigma", sigma, 0);
       current_statement__ = 30;
-      for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
-        current_statement__ = 30;
-        check_greater_or_equal(function__, "h_i_sigma[sym1__]",
-                               h_i_sigma[(sym1__ - 1)], 0);
-      }
+      check_greater_or_equal(function__, "h_i_sigma", h_i_sigma, 0);
       if (emit_transformed_parameters__) {
         out__.write(phi);
         out__.write(sigma);
