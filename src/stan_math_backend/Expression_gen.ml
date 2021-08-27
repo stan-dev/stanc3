@@ -119,15 +119,21 @@ let pp_unsizedtype_local ppf (adtype, ut) =
 let pp_expr_type ppf e =
   pp_unsizedtype_local ppf Expr.Typed.(adlevel_of e, type_of e)
 
-let pp_possibly_var_decl ppf (adtype, ut, mem_pattern) =
+let rec pp_possibly_var_decl ppf (adtype, ut, mem_pattern) =
   let scalar = local_scalar ut adtype in
-  match
-    mem_pattern = Common.Helpers.SoA && UnsizedType.contains_eigen_type ut
-  with
-  | true ->
-      pf ppf "@[<hov 2>stan::conditional_var_value_t<@,%s, @,%a>@]" scalar
-        pp_unsizedtype_local (adtype, ut)
-  | false -> pf ppf "%a" pp_unsizedtype_local (adtype, ut)
+  let pp_var_decl ppf p_ut =
+    if mem_pattern = Common.Helpers.SoA then
+      pf ppf "@[<hov 2>stan::conditional_var_value_t<%s,@, %a>@]" scalar
+        pp_unsizedtype_local (adtype, p_ut)
+    else pf ppf "%a" pp_unsizedtype_local (adtype, p_ut)
+  in
+  match ut with
+  | UArray t ->
+      pf ppf "@[<hov 2>std::vector<@,%a>@]" pp_possibly_var_decl
+        (adtype, t, mem_pattern)
+  | UMatrix | UVector | URowVector -> pf ppf "%a" pp_var_decl ut
+  | UReal | UInt -> pf ppf "%a" pp_unsizedtype_local (adtype, ut)
+  | x -> raise_s [%message (x : UnsizedType.t) "not implemented yet"]
 
 let suffix_args = function
   | Fun_kind.FnRng -> ["base_rng__"]
@@ -497,13 +503,14 @@ and pp_compiler_internal_fn ad ut f ppf es =
             "Unexpected type for row vector literal" (ut : UnsizedType.t)] )
   | FnReadData -> read_data ut ppf es
   | FnReadDataSerializer ->
-      pf ppf "@[<hov 2>in__.read<%a>(@,)@]" pp_unsizedtype_local
+      pf ppf "@[<hov 2>in__.read<@,%a>(@,)@]" pp_unsizedtype_local
         (UnsizedType.AutoDiffable, UnsizedType.UReal)
   | FnReadParam {constrain; dims; mem_pattern} -> (
       let constrain_opt = constraint_to_string constrain in
       match constrain_opt with
       | None ->
-          pf ppf "@[<hov 2>in__.template read<%a>(@,%a)@]" pp_possibly_var_decl
+          pf ppf "@[<hov 2>in__.template read<@,%a>(@,%a)@]"
+            pp_possibly_var_decl
             (UnsizedType.AutoDiffable, ut, mem_pattern)
             (list ~sep:comma pp_expr) dims
       | Some constraint_string ->
@@ -513,7 +520,8 @@ and pp_compiler_internal_fn ad ut f ppf es =
           in
           let args = constraint_args @ [lp] @ dims in
           pf ppf
-            "@[<hov 2>in__.template read_constrain_%s<%a, jacobian__>(@,%a)@]"
+            "@[<hov 2>in__.template read_constrain_%s<@,%a,@, \
+             jacobian__>(@,%a)@]"
             constraint_string pp_possibly_var_decl
             (UnsizedType.AutoDiffable, ut, mem_pattern)
             (list ~sep:comma pp_expr) args )
