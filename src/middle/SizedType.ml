@@ -70,7 +70,7 @@ let rec get_dims st =
       [ Expr.Fixed.
           { meta=
               Expr.Typed.Meta.
-                { type_= UnsizedType.UComplex
+                { type_= UnsizedType.UInt
                 ; loc= Location_span.empty
                 ; adlevel= DataOnly }
           ; pattern= Lit (Int, "2") } ]

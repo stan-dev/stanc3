@@ -478,18 +478,11 @@ and pp_compiler_internal_fn ad ut f ppf es =
         (UnsizedType.AutoDiffable, UnsizedType.UReal)
   | FnReadParam {constrain; dims; _} -> (
       let constrain_opt = constraint_to_string constrain in
-      let rec check_complex ut es =
-        match ut with
-        | UnsizedType.UComplex -> []
-        | UArray t -> (
-          match es with hd :: tail -> hd :: check_complex t tail | _ -> [] )
-        | _ -> es
-      in
       match constrain_opt with
       | None ->
           pf ppf "@[<hov 2>in__.template read<%a>(@,%a)@]" pp_unsizedtype_local
             (UnsizedType.AutoDiffable, ut)
-            (list ~sep:comma pp_expr) (check_complex ut dims)
+            (list ~sep:comma pp_expr) dims
       | Some constraint_string ->
           let constraint_args = transform_args constrain in
           let lp =
@@ -500,7 +493,7 @@ and pp_compiler_internal_fn ad ut f ppf es =
             "@[<hov 2>in__.template read_constrain_%s<%a, jacobian__>(@,%a)@]"
             constraint_string pp_unsizedtype_local
             (UnsizedType.AutoDiffable, ut)
-            (list ~sep:comma pp_expr) (check_complex ut args) )
+            (list ~sep:comma pp_expr) args )
   | FnDeepCopy -> gen_fun_app FnPlain ppf "stan::model::deep_copy" es AoS
   | _ -> gen_fun_app FnPlain ppf (Internal_fun.to_string f) es AoS
 
