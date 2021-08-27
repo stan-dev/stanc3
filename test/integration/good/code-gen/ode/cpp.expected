@@ -247,12 +247,14 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
            std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 10;
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 11;
       context__.validate_dims("data initialization","M","int",
            std::vector<size_t>{});
       M = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 11;
       M = context__.vals_i("M")[(1 - 1)];
@@ -261,52 +263,62 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
            std::vector<size_t>{});
       i = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 12;
       i = context__.vals_i("i")[(1 - 1)];
       current_statement__ = 13;
       rel_tol_f = std::numeric_limits<double>::quiet_NaN();
       
+      
       current_statement__ = 14;
       validate_non_negative_index("abs_tol_f", "N", N);
       current_statement__ = 15;
-      abs_tol_f__ = Eigen::Matrix<double, -1, 1>::Constant(
-                      N, std::numeric_limits<double>::quiet_NaN());
+      abs_tol_f = 
+        Eigen::Matrix<double, -1, 1>::Constant(
+          N, std::numeric_limits<double>::quiet_NaN());
       new (&abs_tol_f) Eigen::Map<Eigen::Matrix<double, -1, 1>>(abs_tol_f__.data(), N);
-      stan::math::initialize_fill(abs_tol_f, std::numeric_limits<double>::quiet_NaN());
-      
+        
       
       current_statement__ = 16;
       rel_tol_b = std::numeric_limits<double>::quiet_NaN();
       
+      
       current_statement__ = 17;
       validate_non_negative_index("abs_tol_b", "N", N);
       current_statement__ = 18;
-      abs_tol_b__ = Eigen::Matrix<double, -1, 1>::Constant(
-                      N, std::numeric_limits<double>::quiet_NaN());
+      abs_tol_b = 
+        Eigen::Matrix<double, -1, 1>::Constant(
+          N, std::numeric_limits<double>::quiet_NaN());
       new (&abs_tol_b) Eigen::Map<Eigen::Matrix<double, -1, 1>>(abs_tol_b__.data(), N);
-      stan::math::initialize_fill(abs_tol_b, std::numeric_limits<double>::quiet_NaN());
-      
+        
       
       current_statement__ = 19;
       rel_tol_q = std::numeric_limits<double>::quiet_NaN();
       
+      
       current_statement__ = 20;
       abs_tol_q = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 21;
       max_num_steps = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 22;
       num_checkpoints = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 23;
       interpolation_polynomial = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 24;
       solver_f = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 25;
       solver_b = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 26;
       validate_non_negative_index("y0", "N", N);

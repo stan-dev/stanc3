@@ -93,19 +93,16 @@ let rec pp_initialize ppf (st, adtype) =
           pp_expr d pp_initialize (t, adtype)
 
 (*Initialize an object of a given size.*)
-let pp_assign_sized ppf (decl_id, st, adtype, initialize) =
+let pp_assign_sized ppf (st, adtype, initialize) =
   if initialize then
-    let pp_assign ppf (_, st, adtype) =
-      pf ppf "%a" pp_initialize (st, adtype)
-    in
-    pf ppf "%a" pp_assign (decl_id, st, adtype)
+    let pp_assign ppf (st, adtype) = pf ppf "%a" pp_initialize (st, adtype) in
+    pf ppf "%a" pp_assign (st, adtype)
   else pf ppf ""
 
 let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in
   strf "@[<v>%a@]" pp_assign_sized
-    ( "d"
-    , SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5)
+    ( SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5)
     , DataOnly
     , false )
   |> print_endline ;
@@ -114,8 +111,7 @@ let%expect_test "set size mat array" =
 let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in
   strf "@[<v>%a@]" pp_assign_sized
-    ( "d"
-    , SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5)
+    ( SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5)
     , DataOnly
     , true )
   |> print_endline ;
@@ -136,15 +132,7 @@ let%expect_test "set size mat array" =
  * @param st The type of the class member
  *)
 let pp_assign_data ppf
-    ((decl_id, st, needs_filled) : string * Expr.Typed.t SizedType.t * bool) =
-  let init_nan = nan_type (st, DataOnly) in
-  let pp_assign ppf (decl_id, st) =
-    match st with
-    | SizedType.SVector _ | SRowVector _ | SMatrix _ ->
-        pf ppf "@[<hov 2>%s__ = %a;@]@," decl_id pp_initialize (st, DataOnly)
-    | SInt | SReal | SArray _ ->
-        pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_initialize (st, DataOnly)
-  in
+    ((decl_id, st, _) : string * Expr.Typed.t SizedType.t * bool) =
   let pp_placement_new ppf (decl_id, st) =
     match st with
     | SizedType.SVector (_, d) | SRowVector (_, d) ->
@@ -155,9 +143,8 @@ let pp_assign_data ppf
           decl_id pp_st (st, DataOnly) decl_id pp_expr d1 pp_expr d2
     | _ -> ()
   in
-  pf ppf "@[%a%a%a@]@," pp_assign (decl_id, st) pp_placement_new (decl_id, st)
-    pp_filler
-    (decl_id, st, init_nan, needs_filled)
+  pf ppf "@[<hov 2>%s = @,%a;@]@,@[<hov 2>%a@]@," decl_id pp_assign_sized
+    (st, DataOnly, true) pp_placement_new (decl_id, st)
 
 let%expect_test "set size map int array no initialize" =
   let int = Expr.Helpers.int in
@@ -166,8 +153,9 @@ let%expect_test "set size map int array no initialize" =
   |> print_endline ;
   [%expect
     {|
-  darrmat = std::vector<std::vector<int>>(5,
-              std::vector<int>(4, std::numeric_limits<int>::min())); |}]
+  darrmat =
+    std::vector<std::vector<int>>(5,
+      std::vector<int>(4, std::numeric_limits<int>::min())); |}]
 
 let%expect_test "set size map mat array" =
   let int = Expr.Helpers.int in
@@ -178,11 +166,11 @@ let%expect_test "set size map mat array" =
   |> print_endline ;
   [%expect
     {|
-    darrmat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5,
-                std::vector<Eigen::Matrix<double, -1, -1>>(4,
-                  Eigen::Matrix<double, -1, -1>::Constant(
-                    2, 3, std::numeric_limits<double>::quiet_NaN())));
-    stan::math::initialize_fill(darrmat, std::numeric_limits<double>::quiet_NaN()); |}]
+    darrmat =
+      std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5,
+        std::vector<Eigen::Matrix<double, -1, -1>>(4,
+          Eigen::Matrix<double, -1, -1>::Constant(
+            2, 3, std::numeric_limits<double>::quiet_NaN()))); |}]
 
 let%expect_test "set size map mat" =
   let int = Expr.Helpers.int in
@@ -190,8 +178,9 @@ let%expect_test "set size map mat" =
   |> print_endline ;
   [%expect
     {|
-    dmat__ = Eigen::Matrix<double, -1, -1>::Constant(
-               2, 3, std::numeric_limits<double>::quiet_NaN());
+    dmat =
+      Eigen::Matrix<double, -1, -1>::Constant(
+        2, 3, std::numeric_limits<double>::quiet_NaN());
     new (&dmat) Eigen::Map<Eigen::Matrix<double, -1, -1>>(dmat__.data(), 2, 3); |}]
 
 let%expect_test "set size map int" =
@@ -279,8 +268,7 @@ let pp_sized_decl ppf (vident, st, adtype, initialize) =
   match initialize with
   | true ->
       pf ppf "@[<hov 2>%a@, = %a;@]" pp_possibly_opencl_decl
-        (vident, st, adtype) pp_assign_sized
-        (vident, st, adtype, initialize)
+        (vident, st, adtype) pp_assign_sized (st, adtype, initialize)
   | false -> pf ppf "%a;" pp_possibly_opencl_decl (vident, st, adtype)
 
 let pp_decl ppf (vident, pst, adtype, initialize) =

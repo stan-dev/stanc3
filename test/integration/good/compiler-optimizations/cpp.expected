@@ -164,6 +164,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
            std::vector<size_t>{});
       N_t = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 16;
       N_t = context__.vals_i("N_t")[(1 - 1)];
       current_statement__ = 16;
@@ -175,12 +176,14 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
            std::vector<size_t>{static_cast<size_t>(N_t)});
       t = std::vector<double>(N_t, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 18;
       t = context__.vals_r("t");
       current_statement__ = 19;
       context__.validate_dims("data initialization","y0","double",
            std::vector<size_t>{static_cast<size_t>(4)});
       y0 = std::vector<double>(4, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 19;
       y0 = context__.vals_r("y0");
@@ -191,6 +194,7 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
            std::vector<size_t>{static_cast<size_t>(N_t)});
       stoi_hat = std::vector<int>(N_t, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 21;
       stoi_hat = context__.vals_i("stoi_hat");
       current_statement__ = 22;
@@ -198,8 +202,8 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       current_statement__ = 23;
       context__.validate_dims("data initialization","B_hat","double",
            std::vector<size_t>{static_cast<size_t>(N_t)});
-      B_hat = std::vector<double>(N_t, 
-                std::numeric_limits<double>::quiet_NaN());
+      B_hat = 
+        std::vector<double>(N_t, std::numeric_limits<double>::quiet_NaN());
       
       
       current_statement__ = 23;
@@ -207,18 +211,22 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       current_statement__ = 24;
       t0 = std::numeric_limits<double>::quiet_NaN();
       
+      
       current_statement__ = 24;
       t0 = 0;
       current_statement__ = 25;
       kappa = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 25;
       kappa = 1000000;
       current_statement__ = 26;
       x_r = std::vector<double>(0, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 27;
       x_i = std::vector<int>(0, std::numeric_limits<int>::min());
+      
       
       current_statement__ = 25;
       check_greater_or_equal(function__, "kappa", 1000000, 0);
@@ -1095,6 +1103,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
            std::vector<size_t>{});
       nind = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 32;
       nind = context__.vals_i("nind")[(1 - 1)];
       current_statement__ = 32;
@@ -1103,6 +1112,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       context__.validate_dims("data initialization","n_occasions","int",
            std::vector<size_t>{});
       n_occasions = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 33;
       n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
@@ -1116,8 +1126,9 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       context__.validate_dims("data initialization","y","int",
            std::vector<size_t>{static_cast<size_t>(nind),
             static_cast<size_t>(n_occasions)});
-      y = std::vector<std::vector<int>>(nind, 
-            std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
+      y = 
+        std::vector<std::vector<int>>(nind, 
+          std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
       
       
       {
@@ -1176,6 +1187,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
            std::vector<size_t>{});
       max_age = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 37;
       max_age = context__.vals_i("max_age")[(1 - 1)];
       current_statement__ = 37;
@@ -1188,8 +1200,9 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       context__.validate_dims("data initialization","x","int",
            std::vector<size_t>{static_cast<size_t>(nind),
             static_cast<size_t>(lcm_sym114__)});
-      x = std::vector<std::vector<int>>(nind, 
-            std::vector<int>(lcm_sym114__, std::numeric_limits<int>::min()));
+      x = 
+        std::vector<std::vector<int>>(nind, 
+          std::vector<int>(lcm_sym114__, std::numeric_limits<int>::min()));
       
       
       {
@@ -1242,6 +1255,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       current_statement__ = 40;
       n_occ_minus_1 = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 40;
       n_occ_minus_1 = lcm_sym114__;
       current_statement__ = 41;
@@ -1249,10 +1263,12 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       current_statement__ = 42;
       first = std::vector<int>(nind, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 43;
       validate_non_negative_index("last", "nind", nind);
       current_statement__ = 44;
       last = std::vector<int>(nind, std::numeric_limits<int>::min());
+      
       
       current_statement__ = 49;
       if (lcm_sym112__) {
@@ -2393,6 +2409,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
            std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 39;
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 39;
@@ -2401,6 +2418,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       context__.validate_dims("data initialization","n_age","int",
            std::vector<size_t>{});
       n_age = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 40;
       n_age = context__.vals_i("n_age")[(1 - 1)];
@@ -2411,6 +2429,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
            std::vector<size_t>{});
       n_edu = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 41;
       n_edu = context__.vals_i("n_edu")[(1 - 1)];
       current_statement__ = 41;
@@ -2420,6 +2439,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
            std::vector<size_t>{});
       n_region = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 42;
       n_region = context__.vals_i("n_region")[(1 - 1)];
       current_statement__ = 42;
@@ -2428,6 +2448,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       context__.validate_dims("data initialization","n_state","int",
            std::vector<size_t>{});
       n_state = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 43;
       n_state = context__.vals_i("n_state")[(1 - 1)];
@@ -2439,6 +2460,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       context__.validate_dims("data initialization","female","int",
            std::vector<size_t>{static_cast<size_t>(N)});
       female = std::vector<int>(N, std::numeric_limits<int>::min());
+      
       
       current_statement__ = 45;
       female = context__.vals_i("female");
@@ -2453,6 +2475,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
            std::vector<size_t>{static_cast<size_t>(N)});
       black = std::vector<int>(N, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 47;
       black = context__.vals_i("black");
       current_statement__ = 47;
@@ -2465,6 +2488,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       context__.validate_dims("data initialization","age","int",
            std::vector<size_t>{static_cast<size_t>(N)});
       age = std::vector<int>(N, std::numeric_limits<int>::min());
+      
       
       current_statement__ = 49;
       age = context__.vals_i("age");
@@ -2479,6 +2503,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
            std::vector<size_t>{static_cast<size_t>(N)});
       edu = std::vector<int>(N, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 51;
       edu = context__.vals_i("edu");
       current_statement__ = 51;
@@ -2491,6 +2516,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       context__.validate_dims("data initialization","region","int",
            std::vector<size_t>{static_cast<size_t>(n_state)});
       region = std::vector<int>(n_state, std::numeric_limits<int>::min());
+      
       
       current_statement__ = 53;
       region = context__.vals_i("region");
@@ -2505,6 +2531,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
            std::vector<size_t>{static_cast<size_t>(N)});
       state = std::vector<int>(N, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 55;
       state = context__.vals_i("state");
       current_statement__ = 55;
@@ -2518,6 +2545,7 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
            std::vector<size_t>{static_cast<size_t>(N)});
       y = std::vector<int>(N, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 57;
       y = context__.vals_i("y");
       current_statement__ = 57;
@@ -2529,10 +2557,11 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       current_statement__ = 59;
       context__.validate_dims("data initialization","v_prev","double",
            std::vector<size_t>{static_cast<size_t>(n_state)});
-      v_prev__ = Eigen::Matrix<double, -1, 1>::Constant(
-                   n_state, std::numeric_limits<double>::quiet_NaN());
+      v_prev = 
+        Eigen::Matrix<double, -1, 1>::Constant(
+          n_state, std::numeric_limits<double>::quiet_NaN());
       new (&v_prev) Eigen::Map<Eigen::Matrix<double, -1, 1>>(v_prev__.data(), n_state);
-      
+        
       
       {
         std::vector<double> v_prev_flat__;
@@ -3408,19 +3437,24 @@ class expr_prop_experiment_model final : public model_base_crtp<expr_prop_experi
            std::vector<size_t>{});
       j = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 1;
       j = context__.vals_i("j")[(1 - 1)];
       current_statement__ = 2;
       z = std::numeric_limits<double>::quiet_NaN();
       
+      
       current_statement__ = 3;
       x = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 4;
       y = std::numeric_limits<double>::quiet_NaN();
       
+      
       current_statement__ = 5;
       i = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 5;
       i = normal_rng(5, 1, base_rng__);
@@ -3767,15 +3801,18 @@ class expr_prop_experiment2_model final : public model_base_crtp<expr_prop_exper
            std::vector<size_t>{});
       j = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 1;
       j = context__.vals_i("j")[(1 - 1)];
       current_statement__ = 2;
       z = std::numeric_limits<double>::quiet_NaN();
       
+      
       current_statement__ = 2;
       z = 1;
       current_statement__ = 3;
       y = std::numeric_limits<double>::quiet_NaN();
+      
       
       {
         double x;
@@ -4132,6 +4169,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
            std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 9;
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 9;
@@ -4141,8 +4179,9 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
       current_statement__ = 11;
       context__.validate_dims("data initialization","y","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      y__ = Eigen::Matrix<double, -1, 1>::Constant(
-              N, std::numeric_limits<double>::quiet_NaN());
+      y = 
+        Eigen::Matrix<double, -1, 1>::Constant(
+          N, std::numeric_limits<double>::quiet_NaN());
       new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y__.data(), N);
       
       {
@@ -4615,6 +4654,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
            std::vector<size_t>{});
       J = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 6;
       J = context__.vals_i("J")[(1 - 1)];
       current_statement__ = 6;
@@ -4626,6 +4666,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
            std::vector<size_t>{static_cast<size_t>(J)});
       y = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       
+      
       current_statement__ = 8;
       y = context__.vals_r("y");
       current_statement__ = 9;
@@ -4633,8 +4674,8 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       current_statement__ = 10;
       context__.validate_dims("data initialization","sigma","double",
            std::vector<size_t>{static_cast<size_t>(J)});
-      sigma = std::vector<double>(J, 
-                std::numeric_limits<double>::quiet_NaN());
+      sigma = 
+        std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
       
       
       current_statement__ = 10;
@@ -5111,6 +5152,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
            std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 22;
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 22;
@@ -5119,6 +5161,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       context__.validate_dims("data initialization","n_age","int",
            std::vector<size_t>{});
       n_age = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 23;
       n_age = context__.vals_i("n_age")[(1 - 1)];
@@ -5129,6 +5172,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
            std::vector<size_t>{});
       n_age_edu = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 24;
       n_age_edu = context__.vals_i("n_age_edu")[(1 - 1)];
       current_statement__ = 24;
@@ -5137,6 +5181,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       context__.validate_dims("data initialization","n_edu","int",
            std::vector<size_t>{});
       n_edu = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 25;
       n_edu = context__.vals_i("n_edu")[(1 - 1)];
@@ -5147,6 +5192,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
            std::vector<size_t>{});
       n_region_full = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 26;
       n_region_full = context__.vals_i("n_region_full")[(1 - 1)];
       current_statement__ = 26;
@@ -5155,6 +5201,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       context__.validate_dims("data initialization","n_state","int",
            std::vector<size_t>{});
       n_state = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 27;
       n_state = context__.vals_i("n_state")[(1 - 1)];
@@ -5166,6 +5213,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       context__.validate_dims("data initialization","age","int",
            std::vector<size_t>{static_cast<size_t>(N)});
       age = std::vector<int>(N, std::numeric_limits<int>::min());
+      
       
       current_statement__ = 29;
       age = context__.vals_i("age");
@@ -5180,6 +5228,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
            std::vector<size_t>{static_cast<size_t>(N)});
       age_edu = std::vector<int>(N, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 31;
       age_edu = context__.vals_i("age_edu");
       current_statement__ = 31;
@@ -5191,10 +5240,11 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       current_statement__ = 33;
       context__.validate_dims("data initialization","black","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      black__ = Eigen::Matrix<double, -1, 1>::Constant(
-                  N, std::numeric_limits<double>::quiet_NaN());
+      black = 
+        Eigen::Matrix<double, -1, 1>::Constant(
+          N, std::numeric_limits<double>::quiet_NaN());
       new (&black) Eigen::Map<Eigen::Matrix<double, -1, 1>>(black__.data(), N);
-      
+        
       
       {
         std::vector<double> black_flat__;
@@ -5229,6 +5279,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
            std::vector<size_t>{static_cast<size_t>(N)});
       edu = std::vector<int>(N, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 35;
       edu = context__.vals_i("edu");
       current_statement__ = 35;
@@ -5240,10 +5291,11 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       current_statement__ = 37;
       context__.validate_dims("data initialization","female","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      female__ = Eigen::Matrix<double, -1, 1>::Constant(
-                   N, std::numeric_limits<double>::quiet_NaN());
+      female = 
+        Eigen::Matrix<double, -1, 1>::Constant(
+          N, std::numeric_limits<double>::quiet_NaN());
       new (&female) Eigen::Map<Eigen::Matrix<double, -1, 1>>(female__.data(), N);
-      
+        
       
       {
         std::vector<double> female_flat__;
@@ -5279,6 +5331,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
            std::vector<size_t>{static_cast<size_t>(N)});
       region_full = std::vector<int>(N, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 39;
       region_full = context__.vals_i("region_full");
       current_statement__ = 39;
@@ -5293,6 +5346,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
            std::vector<size_t>{static_cast<size_t>(N)});
       state = std::vector<int>(N, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 41;
       state = context__.vals_i("state");
       current_statement__ = 41;
@@ -5304,10 +5358,11 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       current_statement__ = 43;
       context__.validate_dims("data initialization","v_prev_full","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      v_prev_full__ = Eigen::Matrix<double, -1, 1>::Constant(
-                        N, std::numeric_limits<double>::quiet_NaN());
+      v_prev_full = 
+        Eigen::Matrix<double, -1, 1>::Constant(
+          N, std::numeric_limits<double>::quiet_NaN());
       new (&v_prev_full) Eigen::Map<Eigen::Matrix<double, -1, 1>>(v_prev_full__.data(), N);
-      
+        
       
       {
         std::vector<double> v_prev_full_flat__;
@@ -5338,6 +5393,7 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       context__.validate_dims("data initialization","y","int",
            std::vector<size_t>{static_cast<size_t>(N)});
       y = std::vector<int>(N, std::numeric_limits<int>::min());
+      
       
       current_statement__ = 45;
       y = context__.vals_i("y");
@@ -6168,6 +6224,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
            std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 27;
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 27;
@@ -6176,6 +6233,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       context__.validate_dims("data initialization","N_edges","int",
            std::vector<size_t>{});
       N_edges = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 28;
       N_edges = context__.vals_i("N_edges")[(1 - 1)];
@@ -6187,6 +6245,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       context__.validate_dims("data initialization","node1","int",
            std::vector<size_t>{static_cast<size_t>(N_edges)});
       node1 = std::vector<int>(N_edges, std::numeric_limits<int>::min());
+      
       
       current_statement__ = 30;
       node1 = context__.vals_i("node1");
@@ -6201,6 +6260,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
            std::vector<size_t>{static_cast<size_t>(N_edges)});
       node2 = std::vector<int>(N_edges, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 32;
       node2 = context__.vals_i("node2");
       current_statement__ = 32;
@@ -6212,8 +6272,9 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       current_statement__ = 34;
       context__.validate_dims("data initialization","E","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      E__ = Eigen::Matrix<double, -1, 1>::Constant(
-              N, std::numeric_limits<double>::quiet_NaN());
+      E = 
+        Eigen::Matrix<double, -1, 1>::Constant(
+          N, std::numeric_limits<double>::quiet_NaN());
       new (&E) Eigen::Map<Eigen::Matrix<double, -1, 1>>(E__.data(), N);
       
       {
@@ -6243,16 +6304,17 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       current_statement__ = 35;
       validate_non_negative_index("log_E", "N", N);
       current_statement__ = 36;
-      log_E__ = Eigen::Matrix<double, -1, 1>::Constant(
-                  N, std::numeric_limits<double>::quiet_NaN());
+      log_E = 
+        Eigen::Matrix<double, -1, 1>::Constant(
+          N, std::numeric_limits<double>::quiet_NaN());
       new (&log_E) Eigen::Map<Eigen::Matrix<double, -1, 1>>(log_E__.data(), N);
-      stan::math::initialize_fill(log_E, std::numeric_limits<double>::quiet_NaN());
-      
+        
       
       current_statement__ = 36;
       assign(log_E, stan::math::log(E), "assigning variable log_E");
       current_statement__ = 37;
       phi_std_raw_1dim__ = std::numeric_limits<int>::min();
+      
       
       lcm_sym24__ = (N - 1);
       phi_std_raw_1dim__ = lcm_sym24__;
@@ -7181,6 +7243,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
            std::vector<size_t>{});
       nind = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 37;
       nind = context__.vals_i("nind")[(1 - 1)];
       current_statement__ = 37;
@@ -7189,6 +7252,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       context__.validate_dims("data initialization","n_occasions","int",
            std::vector<size_t>{});
       n_occasions = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 38;
       n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
@@ -7202,8 +7266,9 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       context__.validate_dims("data initialization","y","int",
            std::vector<size_t>{static_cast<size_t>(nind),
             static_cast<size_t>(n_occasions)});
-      y = std::vector<std::vector<int>>(nind, 
-            std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
+      y = 
+        std::vector<std::vector<int>>(nind, 
+          std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
       
       
       {
@@ -7260,6 +7325,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       current_statement__ = 42;
       n_occ_minus_1 = std::numeric_limits<int>::min();
       
+      
       lcm_sym113__ = (n_occasions - 1);
       n_occ_minus_1 = lcm_sym113__;
       current_statement__ = 43;
@@ -7267,10 +7333,12 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       current_statement__ = 44;
       first = std::vector<int>(nind, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 45;
       validate_non_negative_index("last", "nind", nind);
       current_statement__ = 46;
       last = std::vector<int>(nind, std::numeric_limits<int>::min());
+      
       
       current_statement__ = 51;
       if (lcm_sym112__) {
@@ -9233,6 +9301,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
            std::vector<size_t>{});
       M = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 105;
       M = context__.vals_i("M")[(1 - 1)];
       current_statement__ = 105;
@@ -9241,6 +9310,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       context__.validate_dims("data initialization","n_occasions","int",
            std::vector<size_t>{});
       n_occasions = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 106;
       n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
@@ -9254,8 +9324,9 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       context__.validate_dims("data initialization","y","int",
            std::vector<size_t>{static_cast<size_t>(M),
             static_cast<size_t>(n_occasions)});
-      y = std::vector<std::vector<int>>(M, 
-            std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
+      y = 
+        std::vector<std::vector<int>>(M, 
+          std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
       
       
       {
@@ -9314,10 +9385,12 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       current_statement__ = 111;
       first = std::vector<int>(M, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 112;
       validate_non_negative_index("last", "M", M);
       current_statement__ = 113;
       last = std::vector<int>(M, std::numeric_limits<int>::min());
+      
       
       current_statement__ = 115;
       if (lcm_sym245__) {
@@ -9444,6 +9517,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       validate_non_negative_index("phi", "M", M);
       current_statement__ = 126;
       phi_2dim__ = std::numeric_limits<int>::min();
+      
       
       lcm_sym247__ = (n_occasions - 1);
       phi_2dim__ = lcm_sym247__;
@@ -11240,6 +11314,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
            std::vector<size_t>{});
       K = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 20;
       K = context__.vals_i("K")[(1 - 1)];
       current_statement__ = 20;
@@ -11249,6 +11324,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
            std::vector<size_t>{});
       I = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 21;
       I = context__.vals_i("I")[(1 - 1)];
       current_statement__ = 21;
@@ -11257,6 +11333,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       context__.validate_dims("data initialization","J","int",
            std::vector<size_t>{});
       J = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 22;
       J = context__.vals_i("J")[(1 - 1)];
@@ -11270,8 +11347,9 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       context__.validate_dims("data initialization","y","int",
            std::vector<size_t>{static_cast<size_t>(I),
             static_cast<size_t>(J)});
-      y = std::vector<std::vector<int>>(I, 
-            std::vector<int>(J, std::numeric_limits<int>::min()));
+      y = 
+        std::vector<std::vector<int>>(I, 
+          std::vector<int>(J, std::numeric_limits<int>::min()));
       
       
       {
@@ -11326,10 +11404,11 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       current_statement__ = 27;
       context__.validate_dims("data initialization","alpha","double",
            std::vector<size_t>{static_cast<size_t>(K)});
-      alpha__ = Eigen::Matrix<double, -1, 1>::Constant(
-                  K, std::numeric_limits<double>::quiet_NaN());
+      alpha = 
+        Eigen::Matrix<double, -1, 1>::Constant(
+          K, std::numeric_limits<double>::quiet_NaN());
       new (&alpha) Eigen::Map<Eigen::Matrix<double, -1, 1>>(alpha__.data(), K);
-      
+        
       
       {
         std::vector<double> alpha_flat__;
@@ -11363,9 +11442,10 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
       context__.validate_dims("data initialization","beta","double",
            std::vector<size_t>{static_cast<size_t>(K),
             static_cast<size_t>(K)});
-      beta = std::vector<Eigen::Matrix<double, -1, 1>>(K, 
-               Eigen::Matrix<double, -1, 1>::Constant(
-                 K, std::numeric_limits<double>::quiet_NaN()));
+      beta = 
+        std::vector<Eigen::Matrix<double, -1, 1>>(K, 
+          Eigen::Matrix<double, -1, 1>::Constant(
+            K, std::numeric_limits<double>::quiet_NaN()));
       
       
       {
@@ -12228,6 +12308,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
            std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 12;
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 12;
@@ -12236,6 +12317,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       context__.validate_dims("data initialization","N_edges","int",
            std::vector<size_t>{});
       N_edges = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 13;
       N_edges = context__.vals_i("N_edges")[(1 - 1)];
@@ -12247,6 +12329,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       context__.validate_dims("data initialization","node1","int",
            std::vector<size_t>{static_cast<size_t>(N_edges)});
       node1 = std::vector<int>(N_edges, std::numeric_limits<int>::min());
+      
       
       current_statement__ = 15;
       node1 = context__.vals_i("node1");
@@ -12261,6 +12344,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
            std::vector<size_t>{static_cast<size_t>(N_edges)});
       node2 = std::vector<int>(N_edges, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 17;
       node2 = context__.vals_i("node2");
       current_statement__ = 17;
@@ -12274,6 +12358,7 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
            std::vector<size_t>{static_cast<size_t>(N)});
       y = std::vector<int>(N, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 19;
       y = context__.vals_i("y");
       current_statement__ = 19;
@@ -12283,8 +12368,9 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       current_statement__ = 21;
       context__.validate_dims("data initialization","x","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      x__ = Eigen::Matrix<double, -1, 1>::Constant(
-              N, std::numeric_limits<double>::quiet_NaN());
+      x = 
+        Eigen::Matrix<double, -1, 1>::Constant(
+          N, std::numeric_limits<double>::quiet_NaN());
       new (&x) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x__.data(), N);
       
       {
@@ -13155,6 +13241,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
            std::vector<size_t>{});
       nind = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 32;
       nind = context__.vals_i("nind")[(1 - 1)];
       current_statement__ = 32;
@@ -13163,6 +13250,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       context__.validate_dims("data initialization","n_occasions","int",
            std::vector<size_t>{});
       n_occasions = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 33;
       n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
@@ -13176,8 +13264,9 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       context__.validate_dims("data initialization","y","int",
            std::vector<size_t>{static_cast<size_t>(nind),
             static_cast<size_t>(n_occasions)});
-      y = std::vector<std::vector<int>>(nind, 
-            std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
+      y = 
+        std::vector<std::vector<int>>(nind, 
+          std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
       
       
       {
@@ -13236,6 +13325,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
            std::vector<size_t>{});
       max_age = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 37;
       max_age = context__.vals_i("max_age")[(1 - 1)];
       current_statement__ = 37;
@@ -13248,8 +13338,9 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       context__.validate_dims("data initialization","x","int",
            std::vector<size_t>{static_cast<size_t>(nind),
             static_cast<size_t>(lcm_sym114__)});
-      x = std::vector<std::vector<int>>(nind, 
-            std::vector<int>(lcm_sym114__, std::numeric_limits<int>::min()));
+      x = 
+        std::vector<std::vector<int>>(nind, 
+          std::vector<int>(lcm_sym114__, std::numeric_limits<int>::min()));
       
       
       {
@@ -13302,6 +13393,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       current_statement__ = 40;
       n_occ_minus_1 = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 40;
       n_occ_minus_1 = lcm_sym114__;
       current_statement__ = 41;
@@ -13309,10 +13401,12 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       current_statement__ = 42;
       first = std::vector<int>(nind, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 43;
       validate_non_negative_index("last", "nind", nind);
       current_statement__ = 44;
       last = std::vector<int>(nind, std::numeric_limits<int>::min());
+      
       
       current_statement__ = 49;
       if (lcm_sym112__) {
@@ -15288,6 +15382,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
            std::vector<size_t>{});
       M = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 102;
       M = context__.vals_i("M")[(1 - 1)];
       current_statement__ = 102;
@@ -15296,6 +15391,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       context__.validate_dims("data initialization","n_occasions","int",
            std::vector<size_t>{});
       n_occasions = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 103;
       n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
@@ -15309,8 +15405,9 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       context__.validate_dims("data initialization","y","int",
            std::vector<size_t>{static_cast<size_t>(M),
             static_cast<size_t>(n_occasions)});
-      y = std::vector<std::vector<int>>(M, 
-            std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
+      y = 
+        std::vector<std::vector<int>>(M, 
+          std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
       
       
       {
@@ -15369,10 +15466,12 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       current_statement__ = 108;
       first = std::vector<int>(M, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 109;
       validate_non_negative_index("last", "M", M);
       current_statement__ = 110;
       last = std::vector<int>(M, std::numeric_limits<int>::min());
+      
       
       current_statement__ = 112;
       if (lcm_sym262__) {
@@ -15496,6 +15595,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       current_statement__ = 121;
       epsilon_1dim__ = std::numeric_limits<int>::min();
       
+      
       lcm_sym264__ = (n_occasions - 1);
       epsilon_1dim__ = lcm_sym264__;
       current_statement__ = 121;
@@ -15504,6 +15604,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       validate_non_negative_index("phi", "M", M);
       current_statement__ = 123;
       phi_2dim__ = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 123;
       phi_2dim__ = lcm_sym264__;
@@ -17197,15 +17298,18 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
            std::vector<size_t>{});
       j = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 1;
       j = context__.vals_i("j")[(1 - 1)];
       current_statement__ = 2;
       z = std::numeric_limits<double>::quiet_NaN();
       
+      
       current_statement__ = 2;
       z = 1;
       current_statement__ = 3;
       x = std::numeric_limits<double>::quiet_NaN();
+      
       
       {
         current_statement__ = 4;
@@ -17215,6 +17319,7 @@ class lcm_experiment_model final : public model_base_crtp<lcm_experiment_model> 
       }
       current_statement__ = 6;
       i = std::numeric_limits<double>::quiet_NaN();
+      
       
       current_statement__ = 6;
       i = normal_rng(lcm_sym3__, 1, base_rng__);
@@ -17899,6 +18004,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
            std::vector<size_t>{});
       J = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 3;
       J = context__.vals_i("J")[(1 - 1)];
       current_statement__ = 3;
@@ -17909,6 +18015,7 @@ class lcm_fails_model final : public model_base_crtp<lcm_fails_model> {
       context__.validate_dims("data initialization","y","double",
            std::vector<size_t>{static_cast<size_t>(J)});
       y = std::vector<double>(J, std::numeric_limits<double>::quiet_NaN());
+      
       
       current_statement__ = 5;
       y = context__.vals_r("y");
@@ -18592,6 +18699,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
            std::vector<size_t>{});
       nind = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 32;
       nind = context__.vals_i("nind")[(1 - 1)];
       current_statement__ = 32;
@@ -18600,6 +18708,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       context__.validate_dims("data initialization","n_occasions","int",
            std::vector<size_t>{});
       n_occasions = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 33;
       n_occasions = context__.vals_i("n_occasions")[(1 - 1)];
@@ -18613,8 +18722,9 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       context__.validate_dims("data initialization","y","int",
            std::vector<size_t>{static_cast<size_t>(nind),
             static_cast<size_t>(n_occasions)});
-      y = std::vector<std::vector<int>>(nind, 
-            std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
+      y = 
+        std::vector<std::vector<int>>(nind, 
+          std::vector<int>(n_occasions, std::numeric_limits<int>::min()));
       
       
       {
@@ -18671,6 +18781,7 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       current_statement__ = 37;
       n_occ_minus_1 = std::numeric_limits<int>::min();
       
+      
       lcm_sym104__ = (n_occasions - 1);
       n_occ_minus_1 = lcm_sym104__;
       current_statement__ = 38;
@@ -18678,10 +18789,12 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       current_statement__ = 39;
       first = std::vector<int>(nind, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 40;
       validate_non_negative_index("last", "nind", nind);
       current_statement__ = 41;
       last = std::vector<int>(nind, std::numeric_limits<int>::min());
+      
       
       current_statement__ = 46;
       if (lcm_sym103__) {
@@ -19785,6 +19898,7 @@ class lupdf_inlining_model final : public model_base_crtp<lupdf_inlining_model> 
            std::vector<size_t>{});
       n = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 9;
       n = context__.vals_i("n")[(1 - 1)];
     } catch (const std::exception& e) {
@@ -20287,6 +20401,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
            std::vector<size_t>{});
       R = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 31;
       R = context__.vals_i("R")[(1 - 1)];
       current_statement__ = 31;
@@ -20295,6 +20410,7 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       context__.validate_dims("data initialization","T","int",
            std::vector<size_t>{});
       T = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 32;
       T = context__.vals_i("T")[(1 - 1)];
@@ -20308,8 +20424,9 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       context__.validate_dims("data initialization","y","int",
            std::vector<size_t>{static_cast<size_t>(R),
             static_cast<size_t>(T)});
-      y = std::vector<std::vector<int>>(R, 
-            std::vector<int>(T, std::numeric_limits<int>::min()));
+      y = 
+        std::vector<std::vector<int>>(R, 
+          std::vector<int>(T, std::numeric_limits<int>::min()));
       
       
       {
@@ -20368,8 +20485,9 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       current_statement__ = 37;
       context__.validate_dims("data initialization","X","double",
            std::vector<size_t>{static_cast<size_t>(R)});
-      X__ = Eigen::Matrix<double, -1, 1>::Constant(
-              R, std::numeric_limits<double>::quiet_NaN());
+      X = 
+        Eigen::Matrix<double, -1, 1>::Constant(
+          R, std::numeric_limits<double>::quiet_NaN());
       new (&X) Eigen::Map<Eigen::Matrix<double, -1, 1>>(X__.data(), R);
       
       {
@@ -20399,8 +20517,10 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       current_statement__ = 39;
       sum_y = std::vector<int>(R, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 40;
       occ_obs = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 41;
       occ_obs = 0;
@@ -21104,6 +21224,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
            std::vector<size_t>{});
       J = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 20;
       J = context__.vals_i("J")[(1 - 1)];
       current_statement__ = 20;
@@ -21112,6 +21233,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       context__.validate_dims("data initialization","N","int",
            std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 21;
       N = context__.vals_i("N")[(1 - 1)];
@@ -21124,6 +21246,7 @@ class off_small_model final : public model_base_crtp<off_small_model> {
            std::vector<size_t>{static_cast<size_t>(N)});
       person = std::vector<int>(N, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 23;
       person = context__.vals_i("person");
       current_statement__ = 23;
@@ -21135,8 +21258,9 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       current_statement__ = 25;
       context__.validate_dims("data initialization","time","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      time__ = Eigen::Matrix<double, -1, 1>::Constant(
-                 N, std::numeric_limits<double>::quiet_NaN());
+      time = 
+        Eigen::Matrix<double, -1, 1>::Constant(
+          N, std::numeric_limits<double>::quiet_NaN());
       new (&time) Eigen::Map<Eigen::Matrix<double, -1, 1>>(time__.data(), N);
       
       {
@@ -21166,10 +21290,11 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       current_statement__ = 27;
       context__.validate_dims("data initialization","treatment","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      treatment__ = Eigen::Matrix<double, -1, 1>::Constant(
-                      N, std::numeric_limits<double>::quiet_NaN());
+      treatment = 
+        Eigen::Matrix<double, -1, 1>::Constant(
+          N, std::numeric_limits<double>::quiet_NaN());
       new (&treatment) Eigen::Map<Eigen::Matrix<double, -1, 1>>(treatment__.data(), N);
-      
+        
       
       {
         std::vector<double> treatment_flat__;
@@ -21199,8 +21324,9 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       current_statement__ = 29;
       context__.validate_dims("data initialization","y","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      y__ = Eigen::Matrix<double, -1, 1>::Constant(
-              N, std::numeric_limits<double>::quiet_NaN());
+      y = 
+        Eigen::Matrix<double, -1, 1>::Constant(
+          N, std::numeric_limits<double>::quiet_NaN());
       new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y__.data(), N);
       
       {
@@ -23075,6 +23201,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
            std::vector<size_t>{});
       N = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 13;
       N = context__.vals_i("N")[(1 - 1)];
       current_statement__ = 13;
@@ -23083,6 +23210,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       context__.validate_dims("data initialization","n_pair","int",
            std::vector<size_t>{});
       n_pair = std::numeric_limits<int>::min();
+      
       
       current_statement__ = 14;
       n_pair = context__.vals_i("n_pair")[(1 - 1)];
@@ -23095,6 +23223,7 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
            std::vector<size_t>{static_cast<size_t>(N)});
       pair = std::vector<int>(N, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 16;
       pair = context__.vals_i("pair");
       current_statement__ = 16;
@@ -23106,10 +23235,11 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       current_statement__ = 18;
       context__.validate_dims("data initialization","pre_test","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      pre_test__ = Eigen::Matrix<double, -1, 1>::Constant(
-                     N, std::numeric_limits<double>::quiet_NaN());
+      pre_test = 
+        Eigen::Matrix<double, -1, 1>::Constant(
+          N, std::numeric_limits<double>::quiet_NaN());
       new (&pre_test) Eigen::Map<Eigen::Matrix<double, -1, 1>>(pre_test__.data(), N);
-      
+        
       
       {
         std::vector<double> pre_test_flat__;
@@ -23139,10 +23269,11 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       current_statement__ = 20;
       context__.validate_dims("data initialization","treatment","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      treatment__ = Eigen::Matrix<double, -1, 1>::Constant(
-                      N, std::numeric_limits<double>::quiet_NaN());
+      treatment = 
+        Eigen::Matrix<double, -1, 1>::Constant(
+          N, std::numeric_limits<double>::quiet_NaN());
       new (&treatment) Eigen::Map<Eigen::Matrix<double, -1, 1>>(treatment__.data(), N);
-      
+        
       
       {
         std::vector<double> treatment_flat__;
@@ -23176,8 +23307,9 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       current_statement__ = 22;
       context__.validate_dims("data initialization","y","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      y__ = Eigen::Matrix<double, -1, 1>::Constant(
-              N, std::numeric_limits<double>::quiet_NaN());
+      y = 
+        Eigen::Matrix<double, -1, 1>::Constant(
+          N, std::numeric_limits<double>::quiet_NaN());
       new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y__.data(), N);
       
       {
@@ -23765,6 +23897,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
            std::vector<size_t>{});
       I = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 17;
       I = context__.vals_i("I")[(1 - 1)];
       current_statement__ = 17;
@@ -23775,6 +23908,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       context__.validate_dims("data initialization","n","int",
            std::vector<size_t>{static_cast<size_t>(I)});
       n = std::vector<int>(I, std::numeric_limits<int>::min());
+      
       
       current_statement__ = 19;
       n = context__.vals_i("n");
@@ -23787,6 +23921,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
            std::vector<size_t>{static_cast<size_t>(I)});
       N = std::vector<int>(I, std::numeric_limits<int>::min());
       
+      
       current_statement__ = 21;
       N = context__.vals_i("N");
       current_statement__ = 21;
@@ -23796,8 +23931,9 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       current_statement__ = 23;
       context__.validate_dims("data initialization","x1","double",
            std::vector<size_t>{static_cast<size_t>(I)});
-      x1__ = Eigen::Matrix<double, -1, 1>::Constant(
-               I, std::numeric_limits<double>::quiet_NaN());
+      x1 = 
+        Eigen::Matrix<double, -1, 1>::Constant(
+          I, std::numeric_limits<double>::quiet_NaN());
       new (&x1) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x1__.data(), I);
       
       {
@@ -23827,8 +23963,9 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       current_statement__ = 25;
       context__.validate_dims("data initialization","x2","double",
            std::vector<size_t>{static_cast<size_t>(I)});
-      x2__ = Eigen::Matrix<double, -1, 1>::Constant(
-               I, std::numeric_limits<double>::quiet_NaN());
+      x2 = 
+        Eigen::Matrix<double, -1, 1>::Constant(
+          I, std::numeric_limits<double>::quiet_NaN());
       new (&x2) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x2__.data(), I);
       
       {
@@ -23856,14 +23993,14 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       current_statement__ = 26;
       K = std::numeric_limits<int>::min();
       
+      
       current_statement__ = 27;
       validate_non_negative_index("x1x2", "I", I);
       current_statement__ = 28;
-      x1x2__ = Eigen::Matrix<double, -1, 1>::Constant(
-                 I, std::numeric_limits<double>::quiet_NaN());
+      x1x2 = 
+        Eigen::Matrix<double, -1, 1>::Constant(
+          I, std::numeric_limits<double>::quiet_NaN());
       new (&x1x2) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x1x2__.data(), I);
-      stan::math::initialize_fill(x1x2, std::numeric_limits<double>::quiet_NaN());
-      
       
       current_statement__ = 29;
       K = 8;
