@@ -5028,7 +5028,8 @@ class mother_model final : public model_base_crtp<mother_model> {
         }
       }
       current_statement__ = 228;
-      check_simplex(function__, "d_simplex", d_simplex);
+      check_simplex(function__, "d_simplex",
+                       stan::math::value_of_rec(d_simplex));
       current_statement__ = 229;
       validate_non_negative_index("d_1d_simplex", "N", N);
       current_statement__ = 230;
@@ -5145,7 +5146,8 @@ class mother_model final : public model_base_crtp<mother_model> {
         }
       }
       current_statement__ = 237;
-      check_cholesky_factor(function__, "d_cfcov_54", d_cfcov_54);
+      check_cholesky_factor(function__, "d_cfcov_54",
+                               stan::math::value_of_rec(d_cfcov_54));
       current_statement__ = 238;
       context__.validate_dims("data initialization","d_cfcov_33","double",
            std::vector<size_t>{static_cast<size_t>(3),
@@ -5176,7 +5178,8 @@ class mother_model final : public model_base_crtp<mother_model> {
         }
       }
       current_statement__ = 238;
-      check_cholesky_factor(function__, "d_cfcov_33", d_cfcov_33);
+      check_cholesky_factor(function__, "d_cfcov_33",
+                               stan::math::value_of_rec(d_cfcov_33));
       current_statement__ = 239;
       validate_non_negative_index("d_cfcov_33_ar", "K", K);
       current_statement__ = 240;
@@ -6667,15 +6670,18 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 300;
       check_less_or_equal(function__, "td_ar_mat", td_ar_mat, 1);
       current_statement__ = 302;
-      check_simplex(function__, "td_simplex", td_simplex);
+      check_simplex(function__, "td_simplex",
+                       stan::math::value_of_rec(td_simplex));
       current_statement__ = 305;
       check_simplex(function__, "td_1d_simplex", td_1d_simplex);
       current_statement__ = 310;
       check_simplex(function__, "td_3d_simplex", td_3d_simplex);
       current_statement__ = 311;
-      check_cholesky_factor(function__, "td_cfcov_54", td_cfcov_54);
+      check_cholesky_factor(function__, "td_cfcov_54",
+                               stan::math::value_of_rec(td_cfcov_54));
       current_statement__ = 312;
-      check_cholesky_factor(function__, "td_cfcov_33", td_cfcov_33);
+      check_cholesky_factor(function__, "td_cfcov_33",
+                               stan::math::value_of_rec(td_cfcov_33));
       current_statement__ = 511;
       validate_non_negative_index("p_real_1d_ar", "N", N);
       current_statement__ = 512;
@@ -7223,21 +7229,25 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 26;
       check_greater_or_equal(function__, "tp_real_3d_ar", tp_real_3d_ar, 0);
       current_statement__ = 27;
-      check_less_or_equal(function__, "tp_vec", tp_vec, 0);
+      check_less_or_equal(function__, "tp_vec",
+                             stan::math::value_of_rec(tp_vec), 0);
       current_statement__ = 34;
       check_greater_or_equal(function__, "tp_ar_mat", tp_ar_mat, 0);
       current_statement__ = 34;
       check_less_or_equal(function__, "tp_ar_mat", tp_ar_mat, 1);
       current_statement__ = 35;
-      check_simplex(function__, "tp_simplex", tp_simplex);
+      check_simplex(function__, "tp_simplex",
+                       stan::math::value_of_rec(tp_simplex));
       current_statement__ = 36;
       check_simplex(function__, "tp_1d_simplex", tp_1d_simplex);
       current_statement__ = 37;
       check_simplex(function__, "tp_3d_simplex", tp_3d_simplex);
       current_statement__ = 38;
-      check_cholesky_factor(function__, "tp_cfcov_54", tp_cfcov_54);
+      check_cholesky_factor(function__, "tp_cfcov_54",
+                               stan::math::value_of_rec(tp_cfcov_54));
       current_statement__ = 39;
-      check_cholesky_factor(function__, "tp_cfcov_33", tp_cfcov_33);
+      check_cholesky_factor(function__, "tp_cfcov_33",
+                               stan::math::value_of_rec(tp_cfcov_33));
       current_statement__ = 40;
       check_cholesky_factor(function__, "tp_cfcov_33_ar", tp_cfcov_33_ar);
       {
@@ -7737,21 +7747,25 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 26;
       check_greater_or_equal(function__, "tp_real_3d_ar", tp_real_3d_ar, 0);
       current_statement__ = 27;
-      check_less_or_equal(function__, "tp_vec", tp_vec, 0);
+      check_less_or_equal(function__, "tp_vec",
+                             stan::math::value_of_rec(tp_vec), 0);
       current_statement__ = 34;
       check_greater_or_equal(function__, "tp_ar_mat", tp_ar_mat, 0);
       current_statement__ = 34;
       check_less_or_equal(function__, "tp_ar_mat", tp_ar_mat, 1);
       current_statement__ = 35;
-      check_simplex(function__, "tp_simplex", tp_simplex);
+      check_simplex(function__, "tp_simplex",
+                       stan::math::value_of_rec(tp_simplex));
       current_statement__ = 36;
       check_simplex(function__, "tp_1d_simplex", tp_1d_simplex);
       current_statement__ = 37;
       check_simplex(function__, "tp_3d_simplex", tp_3d_simplex);
       current_statement__ = 38;
-      check_cholesky_factor(function__, "tp_cfcov_54", tp_cfcov_54);
+      check_cholesky_factor(function__, "tp_cfcov_54",
+                               stan::math::value_of_rec(tp_cfcov_54));
       current_statement__ = 39;
-      check_cholesky_factor(function__, "tp_cfcov_33", tp_cfcov_33);
+      check_cholesky_factor(function__, "tp_cfcov_33",
+                               stan::math::value_of_rec(tp_cfcov_33));
       current_statement__ = 40;
       check_cholesky_factor(function__, "tp_cfcov_33_ar", tp_cfcov_33_ar);
       if (emit_transformed_parameters__) {
@@ -8130,21 +8144,25 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 81;
       check_greater_or_equal(function__, "gq_real_3d_ar", gq_real_3d_ar, 0);
       current_statement__ = 82;
-      check_less_or_equal(function__, "gq_vec", gq_vec, 1);
+      check_less_or_equal(function__, "gq_vec",
+                             stan::math::value_of_rec(gq_vec), 1);
       current_statement__ = 88;
       check_greater_or_equal(function__, "gq_ar_mat", gq_ar_mat, 0);
       current_statement__ = 88;
       check_less_or_equal(function__, "gq_ar_mat", gq_ar_mat, 1);
       current_statement__ = 89;
-      check_simplex(function__, "gq_simplex", gq_simplex);
+      check_simplex(function__, "gq_simplex",
+                       stan::math::value_of_rec(gq_simplex));
       current_statement__ = 90;
       check_simplex(function__, "gq_1d_simplex", gq_1d_simplex);
       current_statement__ = 91;
       check_simplex(function__, "gq_3d_simplex", gq_3d_simplex);
       current_statement__ = 92;
-      check_cholesky_factor(function__, "gq_cfcov_54", gq_cfcov_54);
+      check_cholesky_factor(function__, "gq_cfcov_54",
+                               stan::math::value_of_rec(gq_cfcov_54));
       current_statement__ = 93;
-      check_cholesky_factor(function__, "gq_cfcov_33", gq_cfcov_33);
+      check_cholesky_factor(function__, "gq_cfcov_33",
+                               stan::math::value_of_rec(gq_cfcov_33));
       current_statement__ = 94;
       check_cholesky_factor(function__, "gq_cfcov_33_ar", gq_cfcov_33_ar);
       out__.write(gq_r1);
@@ -27128,29 +27146,29 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "tpm_2", tpm_2, "upper", dm);
       current_statement__ = 19;
       check_greater_or_equal(function__, "tp_1", tp_1,
-                             rvalue(ds, "ds", index_uni(1), index_uni(1)));
+                                rvalue(ds, "ds", index_uni(1), index_uni(1)));
       current_statement__ = 20;
       check_less_or_equal(function__, "tp_2", tp_2,
-                          rvalue(ds, "ds", index_uni(1), index_uni(1)));
-      current_statement__ = 21;
-      check_greater_or_equal(function__, "tp_3", tp_3,
                              rvalue(ds, "ds", index_uni(1), index_uni(1)));
       current_statement__ = 21;
+      check_greater_or_equal(function__, "tp_3", tp_3,
+                                rvalue(ds, "ds", index_uni(1), index_uni(1)));
+      current_statement__ = 21;
       check_less_or_equal(function__, "tp_3", tp_3,
-                          rvalue(ds, "ds", index_uni(1), index_uni(2)));
+                             rvalue(ds, "ds", index_uni(1), index_uni(2)));
       current_statement__ = 22;
       check_greater_or_equal(function__, "tp_4", tp_4, 0);
       current_statement__ = 22;
       check_less_or_equal(function__, "tp_4", tp_4,
-                          rvalue(ds, "ds", index_uni(1), index_uni(2)));
+                             rvalue(ds, "ds", index_uni(1), index_uni(2)));
       current_statement__ = 23;
       check_greater_or_equal(function__, "tp_5", tp_5,
-                             rvalue(ds, "ds", index_uni(1), index_uni(1)));
+                                rvalue(ds, "ds", index_uni(1), index_uni(1)));
       current_statement__ = 23;
       check_less_or_equal(function__, "tp_5", tp_5, 1);
       current_statement__ = 27;
       check_greater_or_equal(function__, "tp_9", tp_9,
-                             rvalue(ds, "ds", index_uni(1)));
+                                rvalue(ds, "ds", index_uni(1)));
       current_statement__ = 27;
       check_less_or_equal(function__, "tp_9", tp_9, 1);
       current_statement__ = 28;
@@ -27158,30 +27176,35 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 28;
       check_less_or_equal(function__, "tp_10", tp_10, ds);
       current_statement__ = 29;
-      check_greater_or_equal(function__, "tpv_1", tpv_1,
-                             rvalue(dv, "dv", index_uni(1), index_uni(1)));
+      check_greater_or_equal(function__, "tpv_1",
+                                stan::math::value_of_rec(tpv_1),
+                                rvalue(dv, "dv", index_uni(1), index_uni(1)));
       current_statement__ = 29;
-      check_less_or_equal(function__, "tpv_1", tpv_1,
-                          rvalue(dv, "dv", index_uni(1), index_uni(2)));
+      check_less_or_equal(function__, "tpv_1",
+                             stan::math::value_of_rec(tpv_1),
+                             rvalue(dv, "dv", index_uni(1), index_uni(2)));
       current_statement__ = 30;
       check_greater_or_equal(function__, "tpv_2", tpv_2,
-                             rvalue(dv, "dv", index_uni(1)));
+                                rvalue(dv, "dv", index_uni(1)));
       current_statement__ = 31;
       check_less_or_equal(function__, "tpv_3", tpv_3, dv);
       current_statement__ = 32;
-      check_greater_or_equal(function__, "tpr_1", tpr_1,
-                             rvalue(dr, "dr", index_uni(1), index_uni(1)));
+      check_greater_or_equal(function__, "tpr_1",
+                                stan::math::value_of_rec(tpr_1),
+                                rvalue(dr, "dr", index_uni(1), index_uni(1)));
       current_statement__ = 32;
-      check_less_or_equal(function__, "tpr_1", tpr_1,
-                          rvalue(dr, "dr", index_uni(1), index_uni(2)));
+      check_less_or_equal(function__, "tpr_1",
+                             stan::math::value_of_rec(tpr_1),
+                             rvalue(dr, "dr", index_uni(1), index_uni(2)));
       current_statement__ = 33;
       check_greater_or_equal(function__, "tpr_2", tpr_2,
-                             rvalue(dr, "dr", index_uni(1)));
+                                rvalue(dr, "dr", index_uni(1)));
       current_statement__ = 34;
       check_less_or_equal(function__, "tpr_3", tpr_3, dr);
       current_statement__ = 35;
-      check_greater_or_equal(function__, "tpm_1", tpm_1,
-                             rvalue(dm, "dm", index_uni(1)));
+      check_greater_or_equal(function__, "tpm_1",
+                                stan::math::value_of_rec(tpm_1),
+                                rvalue(dm, "dm", index_uni(1)));
       current_statement__ = 36;
       check_less_or_equal(function__, "tpm_2", tpm_2, dm);
     } catch (const std::exception& e) {
@@ -27570,29 +27593,29 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "tpm_2", tpm_2, "upper", dm);
       current_statement__ = 19;
       check_greater_or_equal(function__, "tp_1", tp_1,
-                             rvalue(ds, "ds", index_uni(1), index_uni(1)));
+                                rvalue(ds, "ds", index_uni(1), index_uni(1)));
       current_statement__ = 20;
       check_less_or_equal(function__, "tp_2", tp_2,
-                          rvalue(ds, "ds", index_uni(1), index_uni(1)));
-      current_statement__ = 21;
-      check_greater_or_equal(function__, "tp_3", tp_3,
                              rvalue(ds, "ds", index_uni(1), index_uni(1)));
       current_statement__ = 21;
+      check_greater_or_equal(function__, "tp_3", tp_3,
+                                rvalue(ds, "ds", index_uni(1), index_uni(1)));
+      current_statement__ = 21;
       check_less_or_equal(function__, "tp_3", tp_3,
-                          rvalue(ds, "ds", index_uni(1), index_uni(2)));
+                             rvalue(ds, "ds", index_uni(1), index_uni(2)));
       current_statement__ = 22;
       check_greater_or_equal(function__, "tp_4", tp_4, 0);
       current_statement__ = 22;
       check_less_or_equal(function__, "tp_4", tp_4,
-                          rvalue(ds, "ds", index_uni(1), index_uni(2)));
+                             rvalue(ds, "ds", index_uni(1), index_uni(2)));
       current_statement__ = 23;
       check_greater_or_equal(function__, "tp_5", tp_5,
-                             rvalue(ds, "ds", index_uni(1), index_uni(1)));
+                                rvalue(ds, "ds", index_uni(1), index_uni(1)));
       current_statement__ = 23;
       check_less_or_equal(function__, "tp_5", tp_5, 1);
       current_statement__ = 27;
       check_greater_or_equal(function__, "tp_9", tp_9,
-                             rvalue(ds, "ds", index_uni(1)));
+                                rvalue(ds, "ds", index_uni(1)));
       current_statement__ = 27;
       check_less_or_equal(function__, "tp_9", tp_9, 1);
       current_statement__ = 28;
@@ -27600,30 +27623,35 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 28;
       check_less_or_equal(function__, "tp_10", tp_10, ds);
       current_statement__ = 29;
-      check_greater_or_equal(function__, "tpv_1", tpv_1,
-                             rvalue(dv, "dv", index_uni(1), index_uni(1)));
+      check_greater_or_equal(function__, "tpv_1",
+                                stan::math::value_of_rec(tpv_1),
+                                rvalue(dv, "dv", index_uni(1), index_uni(1)));
       current_statement__ = 29;
-      check_less_or_equal(function__, "tpv_1", tpv_1,
-                          rvalue(dv, "dv", index_uni(1), index_uni(2)));
+      check_less_or_equal(function__, "tpv_1",
+                             stan::math::value_of_rec(tpv_1),
+                             rvalue(dv, "dv", index_uni(1), index_uni(2)));
       current_statement__ = 30;
       check_greater_or_equal(function__, "tpv_2", tpv_2,
-                             rvalue(dv, "dv", index_uni(1)));
+                                rvalue(dv, "dv", index_uni(1)));
       current_statement__ = 31;
       check_less_or_equal(function__, "tpv_3", tpv_3, dv);
       current_statement__ = 32;
-      check_greater_or_equal(function__, "tpr_1", tpr_1,
-                             rvalue(dr, "dr", index_uni(1), index_uni(1)));
+      check_greater_or_equal(function__, "tpr_1",
+                                stan::math::value_of_rec(tpr_1),
+                                rvalue(dr, "dr", index_uni(1), index_uni(1)));
       current_statement__ = 32;
-      check_less_or_equal(function__, "tpr_1", tpr_1,
-                          rvalue(dr, "dr", index_uni(1), index_uni(2)));
+      check_less_or_equal(function__, "tpr_1",
+                             stan::math::value_of_rec(tpr_1),
+                             rvalue(dr, "dr", index_uni(1), index_uni(2)));
       current_statement__ = 33;
       check_greater_or_equal(function__, "tpr_2", tpr_2,
-                             rvalue(dr, "dr", index_uni(1)));
+                                rvalue(dr, "dr", index_uni(1)));
       current_statement__ = 34;
       check_less_or_equal(function__, "tpr_3", tpr_3, dr);
       current_statement__ = 35;
-      check_greater_or_equal(function__, "tpm_1", tpm_1,
-                             rvalue(dm, "dm", index_uni(1)));
+      check_greater_or_equal(function__, "tpm_1",
+                                stan::math::value_of_rec(tpm_1),
+                                rvalue(dm, "dm", index_uni(1)));
       current_statement__ = 36;
       check_less_or_equal(function__, "tpm_2", tpm_2, dm);
       if (emit_transformed_parameters__) {
