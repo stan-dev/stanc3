@@ -273,7 +273,7 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       current_statement__ = 14;
       validate_non_negative_index("abs_tol_f", "N", N);
       current_statement__ = 15;
-      abs_tol_f = 
+      abs_tol_f__ = 
         Eigen::Matrix<double, -1, 1>::Constant(
           N, std::numeric_limits<double>::quiet_NaN());
       new (&abs_tol_f) Eigen::Map<Eigen::Matrix<double, -1, 1>>(abs_tol_f__.data(), N);
@@ -286,7 +286,7 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       current_statement__ = 17;
       validate_non_negative_index("abs_tol_b", "N", N);
       current_statement__ = 18;
-      abs_tol_b = 
+      abs_tol_b__ = 
         Eigen::Matrix<double, -1, 1>::Constant(
           N, std::numeric_limits<double>::quiet_NaN());
       new (&abs_tol_b) Eigen::Map<Eigen::Matrix<double, -1, 1>>(abs_tol_b__.data(), N);

@@ -143,8 +143,13 @@ let pp_assign_data ppf
           decl_id pp_st (st, DataOnly) decl_id pp_expr d1 pp_expr d2
     | _ -> ()
   in
-  pf ppf "@[<hov 2>%s = @,%a;@]@,@[<hov 2>%a@]@," decl_id pp_assign_sized
-    (st, DataOnly, true) pp_placement_new (decl_id, st)
+  let pp_underlying ppf (decl_id, st) =
+    match st with
+    | SizedType.SVector _ | SRowVector _ | SMatrix _ -> pf ppf "%s__" decl_id
+    | SInt | SReal | SArray _ -> pf ppf "%s" decl_id
+  in
+  pf ppf "@[<hov 2>%a = @,%a;@]@,@[<hov 2>%a@]@," pp_underlying (decl_id, st)
+    pp_assign_sized (st, DataOnly, true) pp_placement_new (decl_id, st)
 
 let%expect_test "set size map int array no initialize" =
   let int = Expr.Helpers.int in
@@ -178,7 +183,7 @@ let%expect_test "set size map mat" =
   |> print_endline ;
   [%expect
     {|
-    dmat =
+    dmat__ =
       Eigen::Matrix<double, -1, -1>::Constant(
         2, 3, std::numeric_limits<double>::quiet_NaN());
     new (&dmat) Eigen::Map<Eigen::Matrix<double, -1, -1>>(dmat__.data(), 2, 3); |}]
