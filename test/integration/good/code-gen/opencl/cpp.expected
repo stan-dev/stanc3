@@ -862,7 +862,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       current_statement__ = 761;
       context__.validate_dims("data initialization","d_real_array","double",
            std::vector<size_t>{static_cast<size_t>(d_int)});
-      d_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
+      d_real_array = std::vector<double>(d_int, 
+                       std::numeric_limits<double>::quiet_NaN());
       
       
       current_statement__ = 761;
@@ -872,7 +873,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       current_statement__ = 763;
       context__.validate_dims("data initialization","d_vector","double",
            std::vector<size_t>{static_cast<size_t>(d_int)});
-      d_vector__ = Eigen::Matrix<double, -1, 1>(d_int);
+      d_vector__ = Eigen::Matrix<double, -1, 1>::Constant(
+                     d_int, std::numeric_limits<double>::quiet_NaN());
       new (&d_vector) Eigen::Map<Eigen::Matrix<double, -1, 1>>(d_vector__.data(), d_int);
       
       
@@ -896,7 +898,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       current_statement__ = 765;
       context__.validate_dims("data initialization","d_row_vector","double",
            std::vector<size_t>{static_cast<size_t>(d_int)});
-      d_row_vector__ = Eigen::Matrix<double, 1, -1>(d_int);
+      d_row_vector__ = Eigen::Matrix<double, 1, -1>::Constant(
+                         d_int, std::numeric_limits<double>::quiet_NaN());
       new (&d_row_vector) Eigen::Map<Eigen::Matrix<double, 1, -1>>(d_row_vector__.data(), d_int);
       
       
@@ -966,9 +969,12 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       std::vector<local_scalar_t__> p_real_array;
       current_statement__ = 2;
       p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> p_matrix;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, -1>> p_matrix;
       current_statement__ = 3;
-      p_matrix = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
+      p_matrix = in__.template read<stan::conditional_var_value_t<
+                                      local_scalar_t__, 
+                                      Eigen::Matrix<local_scalar_t__, -1, -1>>>(
                    d_int, d_int);
       Eigen::Matrix<local_scalar_t__, -1, 1> p_vector;
       current_statement__ = 4;
@@ -3514,9 +3520,8 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       double y_p;
       current_statement__ = 6;
       y_p = in__.template read<local_scalar_t__>();
-      double transformed_param_real;
-      transformed_param_real = std::numeric_limits<double>::quiet_NaN();
-      
+      double transformed_param_real
+         = std::numeric_limits<double>::quiet_NaN();
       out__.write(p_real);
       out__.write(p_real_array);
       out__.write(p_matrix);
@@ -6027,17 +6032,15 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       local_scalar_t__ p_real;
       p_real = in__.read<local_scalar_t__>();
       out__.write(p_real);
-      std::vector<local_scalar_t__> p_real_array;
-      p_real_array = std::vector<local_scalar_t__>(d_int, DUMMY_VAR__);
-      
+      std::vector<local_scalar_t__> p_real_array
+         = local_scalar_t__(d_int, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         p_real_array[(sym1__ - 1)] = in__.read<local_scalar_t__>();
       }
       out__.write(p_real_array);
-      Eigen::Matrix<local_scalar_t__, -1, -1> p_matrix;
-      p_matrix = Eigen::Matrix<local_scalar_t__, -1, -1>(d_int, d_int);
-      stan::math::fill(p_matrix, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, -1> p_matrix
+         = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
+             d_int, d_int, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
           assign(p_matrix, in__.read<local_scalar_t__>(),
@@ -6046,19 +6049,17 @@ class distributions_model final : public model_base_crtp<distributions_model> {
         }
       }
       out__.write(p_matrix);
-      Eigen::Matrix<local_scalar_t__, -1, 1> p_vector;
-      p_vector = Eigen::Matrix<local_scalar_t__, -1, 1>(d_int);
-      stan::math::fill(p_vector, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_vector
+         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(
+             d_int, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         assign(p_vector, in__.read<local_scalar_t__>(),
           "assigning variable p_vector", index_uni(sym1__));
       }
       out__.write(p_vector);
-      Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vector;
-      p_row_vector = Eigen::Matrix<local_scalar_t__, 1, -1>(d_int);
-      stan::math::fill(p_row_vector, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vector
+         = Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(
+             d_int, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         assign(p_row_vector, in__.read<local_scalar_t__>(),
           "assigning variable p_row_vector", index_uni(sym1__));
@@ -6427,7 +6428,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       current_statement__ = 30;
       context__.validate_dims("data initialization","d_real_array","double",
            std::vector<size_t>{static_cast<size_t>(d_int)});
-      d_real_array = std::vector<double>(d_int, std::numeric_limits<double>::quiet_NaN());
+      d_real_array = std::vector<double>(d_int, 
+                       std::numeric_limits<double>::quiet_NaN());
       
       
       current_statement__ = 30;
@@ -6437,7 +6439,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       current_statement__ = 32;
       context__.validate_dims("data initialization","d_vector","double",
            std::vector<size_t>{static_cast<size_t>(d_int)});
-      d_vector__ = Eigen::Matrix<double, -1, 1>(d_int);
+      d_vector__ = Eigen::Matrix<double, -1, 1>::Constant(
+                     d_int, std::numeric_limits<double>::quiet_NaN());
       new (&d_vector) Eigen::Map<Eigen::Matrix<double, -1, 1>>(d_vector__.data(), d_int);
       
       
@@ -6461,7 +6464,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       current_statement__ = 34;
       context__.validate_dims("data initialization","d_row_vector","double",
            std::vector<size_t>{static_cast<size_t>(d_int)});
-      d_row_vector__ = Eigen::Matrix<double, 1, -1>(d_int);
+      d_row_vector__ = Eigen::Matrix<double, 1, -1>::Constant(
+                         d_int, std::numeric_limits<double>::quiet_NaN());
       new (&d_row_vector) Eigen::Map<Eigen::Matrix<double, 1, -1>>(d_row_vector__.data(), d_int);
       
       
@@ -6525,17 +6529,26 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       std::vector<local_scalar_t__> p_real_array;
       current_statement__ = 2;
       p_real_array = in__.template read<std::vector<local_scalar_t__>>(d_int);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> p_matrix;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, -1>> p_matrix;
       current_statement__ = 3;
-      p_matrix = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
+      p_matrix = in__.template read<stan::conditional_var_value_t<
+                                      local_scalar_t__, 
+                                      Eigen::Matrix<local_scalar_t__, -1, -1>>>(
                    d_int, d_int);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> p_vector;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> p_vector;
       current_statement__ = 4;
-      p_vector = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+      p_vector = in__.template read<stan::conditional_var_value_t<
+                                      local_scalar_t__, 
+                                      Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                    d_int);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>> p_row_vector;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, 1, -1>> p_row_vector;
       current_statement__ = 5;
-      p_row_vector = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>>>(
+      p_row_vector = in__.template read<stan::conditional_var_value_t<
+                                          local_scalar_t__, 
+                                          Eigen::Matrix<local_scalar_t__, 1, -1>>>(
                        d_int);
       local_scalar_t__ y_p;
       current_statement__ = 6;
@@ -6639,9 +6652,8 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       double y_p;
       current_statement__ = 6;
       y_p = in__.template read<local_scalar_t__>();
-      double transformed_param_real;
-      transformed_param_real = std::numeric_limits<double>::quiet_NaN();
-      
+      double transformed_param_real
+         = std::numeric_limits<double>::quiet_NaN();
       out__.write(p_real);
       out__.write(p_real_array);
       out__.write(p_matrix);
@@ -6721,17 +6733,15 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       local_scalar_t__ p_real;
       p_real = in__.read<local_scalar_t__>();
       out__.write(p_real);
-      std::vector<local_scalar_t__> p_real_array;
-      p_real_array = std::vector<local_scalar_t__>(d_int, DUMMY_VAR__);
-      
+      std::vector<local_scalar_t__> p_real_array
+         = local_scalar_t__(d_int, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         p_real_array[(sym1__ - 1)] = in__.read<local_scalar_t__>();
       }
       out__.write(p_real_array);
-      Eigen::Matrix<local_scalar_t__, -1, -1> p_matrix;
-      p_matrix = Eigen::Matrix<local_scalar_t__, -1, -1>(d_int, d_int);
-      stan::math::fill(p_matrix, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, -1> p_matrix
+         = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
+             d_int, d_int, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= d_int; ++sym2__) {
           assign(p_matrix, in__.read<local_scalar_t__>(),
@@ -6740,19 +6750,17 @@ class restricted_model final : public model_base_crtp<restricted_model> {
         }
       }
       out__.write(p_matrix);
-      Eigen::Matrix<local_scalar_t__, -1, 1> p_vector;
-      p_vector = Eigen::Matrix<local_scalar_t__, -1, 1>(d_int);
-      stan::math::fill(p_vector, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_vector
+         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(
+             d_int, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         assign(p_vector, in__.read<local_scalar_t__>(),
           "assigning variable p_vector", index_uni(sym1__));
       }
       out__.write(p_vector);
-      Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vector;
-      p_row_vector = Eigen::Matrix<local_scalar_t__, 1, -1>(d_int);
-      stan::math::fill(p_row_vector, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vector
+         = Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(
+             d_int, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= d_int; ++sym1__) {
         assign(p_row_vector, in__.read<local_scalar_t__>(),
           "assigning variable p_row_vector", index_uni(sym1__));

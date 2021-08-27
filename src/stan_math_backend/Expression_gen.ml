@@ -125,7 +125,7 @@ let pp_possibly_var_decl ppf (adtype, ut, mem_pattern) =
     mem_pattern = Common.Helpers.SoA && UnsizedType.contains_eigen_type ut
   with
   | true ->
-      pf ppf "stan::conditional_var_value_t<%s, %a>" scalar
+      pf ppf "@[<hov 2>stan::conditional_var_value_t<@,%s, @,%a>@]" scalar
         pp_unsizedtype_local (adtype, ut)
   | false -> pf ppf "%a" pp_unsizedtype_local (adtype, ut)
 

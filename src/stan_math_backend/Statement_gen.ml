@@ -30,7 +30,7 @@ let rec contains_eigen (ut : UnsizedType.t) : bool =
 let pp_filler ppf (decl_id, st, nan_type, needs_filled) =
   match (needs_filled, contains_eigen (SizedType.to_unsized st)) with
   | true, true ->
-      pf ppf "@[<hov 2>stan::math::fill(%s, %s);@]@," decl_id nan_type
+    pf ppf "@[<hov 2>stan::math::initialize_fill(%s, %s);@]@," decl_id nan_type
   | _ -> ()
 
 (*Pretty print a sized type*)
@@ -50,24 +50,53 @@ let nan_type (st, adtype) =
  *)
 let rec pp_initialize ppf (st, adtype) =
   let init_nan = nan_type (st, adtype) in
+  if adtype = UnsizedType.DataOnly then
   match st with
   | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
   | SReal -> pf ppf "%s" init_nan
-  | SVector (_, d) | SRowVector (_, d) ->
-      pf ppf "%a(%a)" pp_st (st, adtype) pp_expr d
+  | SVector (_, size) | SRowVector (_, size) ->
+      pf ppf "@[<hov 2>%a::Constant(@,%a, %s)@]" pp_st (st, adtype) pp_expr size init_nan
   | SMatrix (_, d1, d2) ->
-      pf ppf "%a(%a, %a)" pp_st (st, adtype) pp_expr d1 pp_expr d2
+      pf ppf "@[<hov 2>%a::Constant(@,%a, %a, %s)@]" pp_st (st, adtype) pp_expr d1 pp_expr
+        d2 init_nan
   | SArray (t, d) ->
-      pf ppf "%a(%a, %a)" pp_st (st, adtype) pp_expr d pp_initialize (t, adtype)
+      pf ppf "@[<hov 2>%a(@,%a, @,%a)@]" pp_st (st, adtype) pp_expr d pp_initialize
+        (t, adtype)
+else
+  let scalar = local_scalar (SizedType.to_unsized st) adtype in
+  match st with
+  | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
+  | SReal -> pf ppf "%s" init_nan
+  | SVector (AoS, size) | SRowVector (AoS, size) ->
+      pf ppf "@[<hov 2>%a::Constant(@,%a, %s)@]" pp_st (st, adtype) pp_expr size init_nan
+  | SMatrix (AoS, d1, d2) ->
+      pf ppf "@[<hov 2>%a::Constant(@,%a, %a, %s)@]" pp_st (st, adtype) pp_expr d1 pp_expr
+        d2 init_nan
+  | SVector (SoA, size) ->
+      pf ppf "@[<hov 2>stan::conditional_var_value_t<@,%s, @,%a>(@,%a)@]" scalar pp_st
+        (st, adtype) pp_initialize
+        (SizedType.SVector (AoS, size), DataOnly)
+  | SRowVector (SoA, size) ->
+      pf ppf "@[<hov 2>stan::conditional_var_value_t<@,%s, @,%a>(@,%a)@]" scalar pp_st
+        (st, adtype) pp_initialize
+        (SizedType.SRowVector (AoS, size), DataOnly)
+  | SMatrix (SoA, d1, d2) ->
+      pf ppf "@[<hov 2>stan::conditional_var_value_t<@,%s, @,%a>(@,%a)@]" scalar pp_st
+        (st, adtype) pp_initialize
+        (SizedType.SMatrix (AoS, d1, d2), DataOnly)
+  | SArray (t, d) ->
+      pf ppf "@[<hov 2>%a(@,%a, @,%a)@]" pp_possibly_var_decl (adtype, SizedType.to_unsized t, SizedType.get_mem_pattern t) pp_expr d
+        pp_initialize (t, adtype)
 
 (*Initialize an object of a given size.*)
 let pp_assign_sized ppf (decl_id, st, adtype, initialize) =
-  let init_nan = nan_type (st, adtype) in
-  let pp_assign ppf (decl_id, st, adtype) =
-    pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_initialize (st, adtype)
+  if initialize then 
+  let pp_assign ppf (_, st, adtype) =
+    pf ppf "%a" pp_initialize (st, adtype)
   in
-  pf ppf "@[%a%a@]@," pp_assign (decl_id, st, adtype) pp_filler
-    (decl_id, st, init_nan, initialize)
+  pf ppf "%a" pp_assign (decl_id, st, adtype) 
+  else 
+  pf ppf "" 
 
 let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in
@@ -78,7 +107,7 @@ let%expect_test "set size mat array" =
     , false )
   |> print_endline ;
   [%expect
-    {| d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3))); |}]
+    {| |}]
 
 let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in
@@ -90,8 +119,10 @@ let%expect_test "set size mat array" =
   |> print_endline ;
   [%expect
     {|
-    d = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3)));
-    stan::math::fill(d, std::numeric_limits<double>::quiet_NaN()); |}]
+    std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5,
+      std::vector<Eigen::Matrix<double, -1, -1>>(4,
+        Eigen::Matrix<double, -1, -1>::Constant(
+          2, 3, std::numeric_limits<double>::quiet_NaN()))) |}]
 
 (* Initialize Data and Transformed Data 
  * This function is used in the model's constructor to
@@ -133,7 +164,8 @@ let%expect_test "set size map int array no initialize" =
   |> print_endline ;
   [%expect
     {|
-  darrmat = std::vector<std::vector<int>>(5, std::vector<int>(4, std::numeric_limits<int>::min())); |}]
+  darrmat = std::vector<std::vector<int>>(5,
+              std::vector<int>(4, std::numeric_limits<int>::min())); |}]
 
 let%expect_test "set size map mat array" =
   let int = Expr.Helpers.int in
@@ -144,8 +176,11 @@ let%expect_test "set size map mat array" =
   |> print_endline ;
   [%expect
     {|
-    darrmat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5, std::vector<Eigen::Matrix<double, -1, -1>>(4, Eigen::Matrix<double, -1, -1>(2, 3)));
-    stan::math::fill(darrmat, std::numeric_limits<double>::quiet_NaN()); |}]
+    darrmat = std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5,
+                std::vector<Eigen::Matrix<double, -1, -1>>(4,
+                  Eigen::Matrix<double, -1, -1>::Constant(
+                    2, 3, std::numeric_limits<double>::quiet_NaN())));
+    stan::math::initialize_fill(darrmat, std::numeric_limits<double>::quiet_NaN()); |}]
 
 let%expect_test "set size map mat" =
   let int = Expr.Helpers.int in
@@ -153,7 +188,8 @@ let%expect_test "set size map mat" =
   |> print_endline ;
   [%expect
     {|
-    dmat__ = Eigen::Matrix<double, -1, -1>(2, 3);
+    dmat__ = Eigen::Matrix<double, -1, -1>::Constant(
+               2, 3, std::numeric_limits<double>::quiet_NaN());
     new (&dmat) Eigen::Map<Eigen::Matrix<double, -1, -1>>(dmat__.data(), 2, 3); |}]
 
 let%expect_test "set size map int" =
@@ -235,15 +271,15 @@ let pp_possibly_opencl_decl ppf (vident, st, adtype) =
     | true, UArray UInt -> fun ppf _ -> pf ppf "matrix_cl<int>"
     | true, _ -> fun ppf _ -> pf ppf "matrix_cl<double>"
   in
-  pf ppf "%a %s;" pp_type (adtype, ut, mem_pattern) vident
+  pf ppf "%a %s" pp_type (adtype, ut, mem_pattern) vident
 
 let pp_sized_decl ppf (vident, st, adtype, initialize) =
   match initialize with
   | true ->
-      pf ppf "%a@,%a" pp_possibly_opencl_decl (vident, st, adtype)
+      pf ppf "@[<hov 2>%a@, = %a;@]" pp_possibly_opencl_decl (vident, st, adtype)
         pp_assign_sized
         (vident, st, adtype, initialize)
-  | false -> pf ppf "%a" pp_possibly_opencl_decl (vident, st, adtype)
+  | false -> pf ppf "%a;" pp_possibly_opencl_decl (vident, st, adtype)
 
 let pp_decl ppf (vident, pst, adtype, initialize) =
   match pst with

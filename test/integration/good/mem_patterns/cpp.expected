@@ -183,7 +183,8 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       current_statement__ = 54;
       context__.validate_dims("data initialization","diff_low_mid","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      diff_low_mid__ = Eigen::Matrix<double, -1, 1>(N);
+      diff_low_mid__ = Eigen::Matrix<double, -1, 1>::Constant(
+                         N, std::numeric_limits<double>::quiet_NaN());
       new (&diff_low_mid) Eigen::Map<Eigen::Matrix<double, -1, 1>>(diff_low_mid__.data(), N);
       
       
@@ -207,7 +208,8 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       current_statement__ = 56;
       context__.validate_dims("data initialization","diff_high_mid","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      diff_high_mid__ = Eigen::Matrix<double, -1, 1>(N);
+      diff_high_mid__ = Eigen::Matrix<double, -1, 1>::Constant(
+                          N, std::numeric_limits<double>::quiet_NaN());
       new (&diff_high_mid) Eigen::Map<Eigen::Matrix<double, -1, 1>>(diff_high_mid__.data(), N);
       
       
@@ -231,7 +233,8 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       current_statement__ = 58;
       context__.validate_dims("data initialization","mid_price","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      mid_price__ = Eigen::Matrix<double, -1, 1>(N);
+      mid_price__ = Eigen::Matrix<double, -1, 1>::Constant(
+                      N, std::numeric_limits<double>::quiet_NaN());
       new (&mid_price) Eigen::Map<Eigen::Matrix<double, -1, 1>>(mid_price__.data(), N);
       
       
@@ -258,7 +261,8 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       context__.validate_dims("data initialization","X_all","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(K)});
-      X_all__ = Eigen::Matrix<double, -1, -1>(N, K);
+      X_all__ = Eigen::Matrix<double, -1, -1>::Constant(
+                  N, K, std::numeric_limits<double>::quiet_NaN());
       new (&X_all) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_all__.data(), N, K);
       
       
@@ -427,9 +431,12 @@ class constraints_model final : public model_base_crtp<constraints_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> high_low_est;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> high_low_est;
       current_statement__ = 1;
-      high_low_est = in__.template read_constrain_lub<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+      high_low_est = in__.template read_constrain_lub<stan::conditional_var_value_t<
+                                                        local_scalar_t__, 
+                                                        Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
                        diff_low_mid, diff_high_mid, lp__, N);
       current_statement__ = 1;
       check_matching_dims("constraint", "high_low_est", high_low_est,
@@ -437,18 +444,22 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       current_statement__ = 1;
       check_matching_dims("constraint", "high_low_est", high_low_est,
                           "upper", diff_high_mid);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> b;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> b;
       current_statement__ = 2;
-      b = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-            K);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> h;
+      b = in__.template read<stan::conditional_var_value_t<local_scalar_t__, 
+                               Eigen::Matrix<local_scalar_t__, -1, 1>>>(K);
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> h;
       current_statement__ = 3;
-      h = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-            Nr);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> ar;
+      h = in__.template read<stan::conditional_var_value_t<local_scalar_t__, 
+                               Eigen::Matrix<local_scalar_t__, -1, 1>>>(Nr);
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> ar;
       current_statement__ = 4;
-      ar = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-             2);
+      ar = in__.template read<stan::conditional_var_value_t<
+                                local_scalar_t__, 
+                                Eigen::Matrix<local_scalar_t__, -1, 1>>>(2);
       local_scalar_t__ ma;
       current_statement__ = 5;
       ma = in__.template read<local_scalar_t__>();
@@ -463,24 +474,36 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       local_scalar_t__ Intercept;
       current_statement__ = 8;
       Intercept = in__.template read<local_scalar_t__>();
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> mean_price;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> mean_price;
       current_statement__ = 9;
-      mean_price = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+      mean_price = in__.template read<stan::conditional_var_value_t<
+                                        local_scalar_t__, 
+                                        Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                      N);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> sigma_price;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> sigma_price;
       current_statement__ = 10;
-      sigma_price = in__.template read_constrain_lb<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+      sigma_price = in__.template read_constrain_lb<stan::conditional_var_value_t<
+                                                      local_scalar_t__, 
+                                                      Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
                       0.0, lp__, N);
       local_scalar_t__ theta;
       current_statement__ = 11;
       theta = in__.template read<local_scalar_t__>();
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> upper_test;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> upper_test;
       current_statement__ = 12;
-      upper_test = in__.template read_constrain_ub<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+      upper_test = in__.template read_constrain_ub<stan::conditional_var_value_t<
+                                                     local_scalar_t__, 
+                                                     Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
                      ma, lp__, N);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> lower_upper_test;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> lower_upper_test;
       current_statement__ = 13;
-      lower_upper_test = in__.template read_constrain_lub<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+      lower_upper_test = in__.template read_constrain_lub<stan::conditional_var_value_t<
+                                                            local_scalar_t__, 
+                                                            Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
                            sigma_price, upper_test, lp__, N);
       current_statement__ = 13;
       check_matching_dims("constraint", "lower_upper_test", lower_upper_test,
@@ -488,9 +511,12 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       current_statement__ = 13;
       check_matching_dims("constraint", "lower_upper_test", lower_upper_test,
                           "upper", upper_test);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>> row_vec_lower_upper_test;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, 1, -1>> row_vec_lower_upper_test;
       current_statement__ = 14;
-      row_vec_lower_upper_test = in__.template read_constrain_lub<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, 1, -1>>, jacobian__>(
+      row_vec_lower_upper_test = in__.template read_constrain_lub<stan::conditional_var_value_t<
+                                                                    local_scalar_t__, 
+                                                                    Eigen::Matrix<local_scalar_t__, 1, -1>>, jacobian__>(
                                    transpose(sigma_price),
                                    transpose(upper_test), lp__, N);
       current_statement__ = 14;
@@ -501,9 +527,12 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       check_matching_dims("constraint", "row_vec_lower_upper_test",
                           row_vec_lower_upper_test, "upper",
                           transpose(upper_test));
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> offset_mult_test;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> offset_mult_test;
       current_statement__ = 15;
-      offset_mult_test = in__.template read_constrain_offset_multiplier<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+      offset_mult_test = in__.template read_constrain_offset_multiplier<
+                           stan::conditional_var_value_t<local_scalar_t__, 
+                             Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
                            mean_price, sigma_price, lp__, N);
       current_statement__ = 15;
       check_matching_dims("constraint", "offset_mult_test", offset_mult_test,
@@ -511,33 +540,54 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       current_statement__ = 15;
       check_matching_dims("constraint", "offset_mult_test", offset_mult_test,
                           "multiplier", sigma_price);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> ordered_test;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> ordered_test;
       current_statement__ = 16;
-      ordered_test = in__.template read_constrain_ordered<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+      ordered_test = in__.template read_constrain_ordered<stan::conditional_var_value_t<
+                                                            local_scalar_t__, 
+                                                            Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
                        lp__, N);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> unit_vec_test;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> unit_vec_test;
       current_statement__ = 17;
-      unit_vec_test = in__.template read_constrain_unit_vector<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+      unit_vec_test = in__.template read_constrain_unit_vector<stan::conditional_var_value_t<
+                                                                 local_scalar_t__, 
+                                                                 Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
                         lp__, N);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> pos_ordered_test;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> pos_ordered_test;
       current_statement__ = 18;
-      pos_ordered_test = in__.template read_constrain_positive_ordered<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+      pos_ordered_test = in__.template read_constrain_positive_ordered<
+                           stan::conditional_var_value_t<local_scalar_t__, 
+                             Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
                            lp__, N);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> corr_matrix_test;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, -1>> corr_matrix_test;
       current_statement__ = 19;
-      corr_matrix_test = in__.template read_constrain_corr_matrix<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+      corr_matrix_test = in__.template read_constrain_corr_matrix<stan::conditional_var_value_t<
+                                                                    local_scalar_t__, 
+                                                                    Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
                            lp__, N);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> cov_matrix_test;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, -1>> cov_matrix_test;
       current_statement__ = 20;
-      cov_matrix_test = in__.template read_constrain_cov_matrix<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+      cov_matrix_test = in__.template read_constrain_cov_matrix<stan::conditional_var_value_t<
+                                                                  local_scalar_t__, 
+                                                                  Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
                           lp__, N);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> chol_fac_cov_test;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, -1>> chol_fac_cov_test;
       current_statement__ = 21;
-      chol_fac_cov_test = in__.template read_constrain_cholesky_factor_cov<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+      chol_fac_cov_test = in__.template read_constrain_cholesky_factor_cov<
+                            stan::conditional_var_value_t<local_scalar_t__, 
+                              Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
                             lp__, K, K);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> chol_fac_corr_test;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, -1>> chol_fac_corr_test;
       current_statement__ = 22;
-      chol_fac_corr_test = in__.template read_constrain_cholesky_factor_corr<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+      chol_fac_corr_test = in__.template read_constrain_cholesky_factor_corr<
+                             stan::conditional_var_value_t<local_scalar_t__, 
+                               Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
                              lp__, K);
       local_scalar_t__ phi;
       current_statement__ = 23;
@@ -545,20 +595,24 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       local_scalar_t__ sigma;
       current_statement__ = 24;
       sigma = stan::math::sqrt(sigma2);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> prices;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> prices;
       current_statement__ = 25;
       assign(prices, add(mid_price, high_low_est),
         "assigning variable prices");
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> prices_diff;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> prices_diff;
       current_statement__ = 26;
       assign(prices_diff,
         subtract(rvalue(prices, "prices", index_min_max(2, N)),
           rvalue(prices, "prices", index_min_max(1, (N - 1)))),
         "assigning variable prices_diff");
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> mu;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> mu;
       current_statement__ = 27;
       assign(mu, add(Intercept, multiply(X_all, b)), "assigning variable mu");
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> err;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> err;
       current_statement__ = 32;
       assign(err, subtract(prices_diff, mu), "assigning variable err");
       current_statement__ = 33;
@@ -578,14 +632,18 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         "assigning variable mu", index_min_max(3, Nr));
       current_statement__ = 35;
       assign(err, subtract(prices_diff, mu), "assigning variable err");
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> h_i_mean;
-      h_i_mean = Eigen::Matrix<local_scalar_t__, -1, 1>(Nr);
-      stan::math::fill(h_i_mean, DUMMY_VAR__);
-      
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> h_i_sigma;
-      h_i_sigma = Eigen::Matrix<local_scalar_t__, -1, 1>(Nr);
-      stan::math::fill(h_i_sigma, DUMMY_VAR__);
-      
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> h_i_mean
+         = stan::conditional_var_value_t<local_scalar_t__, 
+             Eigen::Matrix<local_scalar_t__, -1, 1>>(
+             Eigen::Matrix<double, -1, 1>::Constant(
+               Nr, std::numeric_limits<double>::quiet_NaN()));
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> h_i_sigma
+         = stan::conditional_var_value_t<local_scalar_t__, 
+             Eigen::Matrix<local_scalar_t__, -1, 1>>(
+             Eigen::Matrix<double, -1, 1>::Constant(
+               Nr, std::numeric_limits<double>::quiet_NaN()));
       current_statement__ = 36;
       assign(h_i_mean, 0.0, "assigning variable h_i_mean", index_uni(1));
       current_statement__ = 37;
@@ -593,8 +651,8 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         "assigning variable h_i_sigma", index_uni(1));
       current_statement__ = 38;
       assign(h_i_sigma,
-        rep_vector<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
-          1.0, (Nr - 1)),
+        rep_vector<stan::conditional_var_value_t<local_scalar_t__, 
+                     Eigen::Matrix<local_scalar_t__, -1, 1>>>(1.0, (Nr - 1)),
         "assigning variable h_i_sigma", index_min_max(2, Nr));
       current_statement__ = 39;
       assign(h_i_mean,
@@ -602,7 +660,8 @@ class constraints_model final : public model_base_crtp<constraints_model> {
           multiply(theta,
             square(rvalue(err, "err", index_min_max(1, (Nr - 1)))))),
         "assigning variable h_i_mean", index_min_max(2, Nr));
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> h_sigma;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> h_sigma;
       current_statement__ = 31;
       assign(h_sigma,
         add(
@@ -787,40 +846,29 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       current_statement__ = 22;
       chol_fac_corr_test = in__.template read_constrain_cholesky_factor_corr<Eigen::Matrix<local_scalar_t__, -1, -1>, jacobian__>(
                              lp__, K);
-      double phi;
-      phi = std::numeric_limits<double>::quiet_NaN();
-      
-      double sigma;
-      sigma = std::numeric_limits<double>::quiet_NaN();
-      
-      Eigen::Matrix<double, -1, 1> prices;
-      prices = Eigen::Matrix<double, -1, 1>(N);
-      stan::math::fill(prices, std::numeric_limits<double>::quiet_NaN());
-      
-      Eigen::Matrix<double, -1, 1> prices_diff;
-      prices_diff = Eigen::Matrix<double, -1, 1>(Nr);
-      stan::math::fill(prices_diff, std::numeric_limits<double>::quiet_NaN());
-      
-      Eigen::Matrix<double, -1, 1> mu;
-      mu = Eigen::Matrix<double, -1, 1>(Nr);
-      stan::math::fill(mu, std::numeric_limits<double>::quiet_NaN());
-      
-      Eigen::Matrix<double, -1, 1> err;
-      err = Eigen::Matrix<double, -1, 1>(Nr);
-      stan::math::fill(err, std::numeric_limits<double>::quiet_NaN());
-      
-      Eigen::Matrix<double, -1, 1> h_i_mean;
-      h_i_mean = Eigen::Matrix<double, -1, 1>(Nr);
-      stan::math::fill(h_i_mean, std::numeric_limits<double>::quiet_NaN());
-      
-      Eigen::Matrix<double, -1, 1> h_i_sigma;
-      h_i_sigma = Eigen::Matrix<double, -1, 1>(Nr);
-      stan::math::fill(h_i_sigma, std::numeric_limits<double>::quiet_NaN());
-      
-      Eigen::Matrix<double, -1, 1> h_sigma;
-      h_sigma = Eigen::Matrix<double, -1, 1>(Nr);
-      stan::math::fill(h_sigma, std::numeric_limits<double>::quiet_NaN());
-      
+      double phi = std::numeric_limits<double>::quiet_NaN();
+      double sigma = std::numeric_limits<double>::quiet_NaN();
+      Eigen::Matrix<double, -1, 1> prices
+         = Eigen::Matrix<double, -1, 1>::Constant(
+             N, std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, -1, 1> prices_diff
+         = Eigen::Matrix<double, -1, 1>::Constant(
+             Nr, std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, -1, 1> mu
+         = Eigen::Matrix<double, -1, 1>::Constant(
+             Nr, std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, -1, 1> err
+         = Eigen::Matrix<double, -1, 1>::Constant(
+             Nr, std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, -1, 1> h_i_mean
+         = Eigen::Matrix<double, -1, 1>::Constant(
+             Nr, std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, -1, 1> h_i_sigma
+         = Eigen::Matrix<double, -1, 1>::Constant(
+             Nr, std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, -1, 1> h_sigma
+         = Eigen::Matrix<double, -1, 1>::Constant(
+             Nr, std::numeric_limits<double>::quiet_NaN());
       out__.write(high_low_est);
       out__.write(b);
       out__.write(h);
@@ -943,37 +991,29 @@ class constraints_model final : public model_base_crtp<constraints_model> {
     try {
       int pos__;
       pos__ = 1;
-      Eigen::Matrix<local_scalar_t__, -1, 1> high_low_est;
-      high_low_est = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-      stan::math::fill(high_low_est, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> high_low_est
+         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         assign(high_low_est, in__.read<local_scalar_t__>(),
           "assigning variable high_low_est", index_uni(sym1__));
       }
       out__.write_free_lub(diff_low_mid, diff_high_mid, high_low_est);
-      Eigen::Matrix<local_scalar_t__, -1, 1> b;
-      b = Eigen::Matrix<local_scalar_t__, -1, 1>(K);
-      stan::math::fill(b, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> b
+         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(K, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
         assign(b, in__.read<local_scalar_t__>(),
           "assigning variable b", index_uni(sym1__));
       }
       out__.write(b);
-      Eigen::Matrix<local_scalar_t__, -1, 1> h;
-      h = Eigen::Matrix<local_scalar_t__, -1, 1>(Nr);
-      stan::math::fill(h, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> h
+         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(Nr, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= Nr; ++sym1__) {
         assign(h, in__.read<local_scalar_t__>(),
           "assigning variable h", index_uni(sym1__));
       }
       out__.write(h);
-      Eigen::Matrix<local_scalar_t__, -1, 1> ar;
-      ar = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
-      stan::math::fill(ar, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> ar
+         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(2, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         assign(ar, in__.read<local_scalar_t__>(),
           "assigning variable ar", index_uni(sym1__));
@@ -991,19 +1031,15 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       local_scalar_t__ Intercept;
       Intercept = in__.read<local_scalar_t__>();
       out__.write(Intercept);
-      Eigen::Matrix<local_scalar_t__, -1, 1> mean_price;
-      mean_price = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-      stan::math::fill(mean_price, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> mean_price
+         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         assign(mean_price, in__.read<local_scalar_t__>(),
           "assigning variable mean_price", index_uni(sym1__));
       }
       out__.write(mean_price);
-      Eigen::Matrix<local_scalar_t__, -1, 1> sigma_price;
-      sigma_price = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-      stan::math::fill(sigma_price, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> sigma_price
+         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         assign(sigma_price, in__.read<local_scalar_t__>(),
           "assigning variable sigma_price", index_uni(sym1__));
@@ -1012,75 +1048,60 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       local_scalar_t__ theta;
       theta = in__.read<local_scalar_t__>();
       out__.write(theta);
-      Eigen::Matrix<local_scalar_t__, -1, 1> upper_test;
-      upper_test = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-      stan::math::fill(upper_test, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> upper_test
+         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         assign(upper_test, in__.read<local_scalar_t__>(),
           "assigning variable upper_test", index_uni(sym1__));
       }
       out__.write_free_ub(ma, upper_test);
-      Eigen::Matrix<local_scalar_t__, -1, 1> lower_upper_test;
-      lower_upper_test = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-      stan::math::fill(lower_upper_test, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> lower_upper_test
+         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         assign(lower_upper_test, in__.read<local_scalar_t__>(),
           "assigning variable lower_upper_test", index_uni(sym1__));
       }
       out__.write_free_lub(sigma_price, upper_test, lower_upper_test);
-      Eigen::Matrix<local_scalar_t__, 1, -1> row_vec_lower_upper_test;
-      row_vec_lower_upper_test = Eigen::Matrix<local_scalar_t__, 1, -1>(N);
-      stan::math::fill(row_vec_lower_upper_test, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, 1, -1> row_vec_lower_upper_test
+         = Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(N, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         assign(row_vec_lower_upper_test, in__.read<local_scalar_t__>(),
           "assigning variable row_vec_lower_upper_test", index_uni(sym1__));
       }
       out__.write_free_lub(transpose(sigma_price), transpose(upper_test),
         row_vec_lower_upper_test);
-      Eigen::Matrix<local_scalar_t__, -1, 1> offset_mult_test;
-      offset_mult_test = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-      stan::math::fill(offset_mult_test, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> offset_mult_test
+         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         assign(offset_mult_test, in__.read<local_scalar_t__>(),
           "assigning variable offset_mult_test", index_uni(sym1__));
       }
       out__.write_free_offset_multiplier(mean_price, sigma_price,
         offset_mult_test);
-      Eigen::Matrix<local_scalar_t__, -1, 1> ordered_test;
-      ordered_test = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-      stan::math::fill(ordered_test, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> ordered_test
+         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         assign(ordered_test, in__.read<local_scalar_t__>(),
           "assigning variable ordered_test", index_uni(sym1__));
       }
       out__.write_free_ordered(ordered_test);
-      Eigen::Matrix<local_scalar_t__, -1, 1> unit_vec_test;
-      unit_vec_test = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-      stan::math::fill(unit_vec_test, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> unit_vec_test
+         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         assign(unit_vec_test, in__.read<local_scalar_t__>(),
           "assigning variable unit_vec_test", index_uni(sym1__));
       }
       out__.write_free_unit_vector(unit_vec_test);
-      Eigen::Matrix<local_scalar_t__, -1, 1> pos_ordered_test;
-      pos_ordered_test = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-      stan::math::fill(pos_ordered_test, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> pos_ordered_test
+         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         assign(pos_ordered_test, in__.read<local_scalar_t__>(),
           "assigning variable pos_ordered_test", index_uni(sym1__));
       }
       out__.write_free_positive_ordered(pos_ordered_test);
-      Eigen::Matrix<local_scalar_t__, -1, -1> corr_matrix_test;
-      corr_matrix_test = Eigen::Matrix<local_scalar_t__, -1, -1>(N, N);
-      stan::math::fill(corr_matrix_test, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, -1> corr_matrix_test
+         = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
+             N, N, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           assign(corr_matrix_test, in__.read<local_scalar_t__>(),
@@ -1089,10 +1110,9 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         }
       }
       out__.write_free_corr_matrix(corr_matrix_test);
-      Eigen::Matrix<local_scalar_t__, -1, -1> cov_matrix_test;
-      cov_matrix_test = Eigen::Matrix<local_scalar_t__, -1, -1>(N, N);
-      stan::math::fill(cov_matrix_test, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, -1> cov_matrix_test
+         = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
+             N, N, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           assign(cov_matrix_test, in__.read<local_scalar_t__>(),
@@ -1101,10 +1121,9 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         }
       }
       out__.write_free_cov_matrix(cov_matrix_test);
-      Eigen::Matrix<local_scalar_t__, -1, -1> chol_fac_cov_test;
-      chol_fac_cov_test = Eigen::Matrix<local_scalar_t__, -1, -1>(K, K);
-      stan::math::fill(chol_fac_cov_test, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, -1> chol_fac_cov_test
+         = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
+             K, K, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
           assign(chol_fac_cov_test, in__.read<local_scalar_t__>(),
@@ -1113,10 +1132,9 @@ class constraints_model final : public model_base_crtp<constraints_model> {
         }
       }
       out__.write_free_cholesky_factor_cov(chol_fac_cov_test);
-      Eigen::Matrix<local_scalar_t__, -1, -1> chol_fac_corr_test;
-      chol_fac_corr_test = Eigen::Matrix<local_scalar_t__, -1, -1>(K, K);
-      stan::math::fill(chol_fac_corr_test, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, -1> chol_fac_corr_test
+         = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
+             K, K, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= K; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
           assign(chol_fac_corr_test, in__.read<local_scalar_t__>(),
@@ -1833,7 +1851,8 @@ class indexing_model final : public model_base_crtp<indexing_model> {
       context__.validate_dims("data initialization","dat_x","double",
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(M)});
-      dat_x__ = Eigen::Matrix<double, -1, -1>(N, M);
+      dat_x__ = Eigen::Matrix<double, -1, -1>::Constant(
+                  N, M, std::numeric_limits<double>::quiet_NaN());
       new (&dat_x) Eigen::Map<Eigen::Matrix<double, -1, -1>>(dat_x__.data(), N, M);
       
       
@@ -1861,7 +1880,8 @@ class indexing_model final : public model_base_crtp<indexing_model> {
       current_statement__ = 71;
       context__.validate_dims("data initialization","y","double",
            std::vector<size_t>{static_cast<size_t>(N)});
-      y__ = Eigen::Matrix<double, -1, 1>(N);
+      y__ = Eigen::Matrix<double, -1, 1>::Constant(
+              N, std::numeric_limits<double>::quiet_NaN());
       new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y__.data(), N);
       
       {
@@ -1985,29 +2005,47 @@ class indexing_model final : public model_base_crtp<indexing_model> {
       local_scalar_t__ alpha;
       current_statement__ = 1;
       alpha = in__.template read<local_scalar_t__>();
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> p_soa_vec_v;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> p_soa_vec_v;
       current_statement__ = 2;
-      p_soa_vec_v = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+      p_soa_vec_v = in__.template read<stan::conditional_var_value_t<
+                                         local_scalar_t__, 
+                                         Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                       M);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> p_soa_mat;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, -1>> p_soa_mat;
       current_statement__ = 3;
-      p_soa_mat = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
+      p_soa_mat = in__.template read<stan::conditional_var_value_t<
+                                       local_scalar_t__, 
+                                       Eigen::Matrix<local_scalar_t__, -1, -1>>>(
                     N, M);
-      stan::conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> p_soa_arr_vec_v;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> p_soa_arr_vec_v;
       current_statement__ = 4;
-      p_soa_arr_vec_v = in__.template read<stan::conditional_var_value_t<local_scalar_t__, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
+      p_soa_arr_vec_v = in__.template read<stan::conditional_var_value_t<
+                                             local_scalar_t__, 
+                                             std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>>(
                           10, N);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> p_soa_mat_uni_col_idx;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, -1>> p_soa_mat_uni_col_idx;
       current_statement__ = 5;
-      p_soa_mat_uni_col_idx = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
+      p_soa_mat_uni_col_idx = in__.template read<stan::conditional_var_value_t<
+                                                   local_scalar_t__, 
+                                                   Eigen::Matrix<local_scalar_t__, -1, -1>>>(
                                 N, M);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> p_soa_vec_uni_idx;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> p_soa_vec_uni_idx;
       current_statement__ = 6;
-      p_soa_vec_uni_idx = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+      p_soa_vec_uni_idx = in__.template read<stan::conditional_var_value_t<
+                                               local_scalar_t__, 
+                                               Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                             N);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> p_soa_loop_mat_uni_col_idx;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, -1>> p_soa_loop_mat_uni_col_idx;
       current_statement__ = 7;
-      p_soa_loop_mat_uni_col_idx = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
+      p_soa_loop_mat_uni_col_idx = in__.template read<stan::conditional_var_value_t<
+                                                        local_scalar_t__, 
+                                                        Eigen::Matrix<local_scalar_t__, -1, -1>>>(
                                      N, M);
       Eigen::Matrix<local_scalar_t__, 1, -1> p_soa_lhs_loop_mul;
       current_statement__ = 8;
@@ -2017,41 +2055,62 @@ class indexing_model final : public model_base_crtp<indexing_model> {
       current_statement__ = 9;
       p_soa_rhs_loop_mul = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                              N);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> p_soa_used_with_aos_in_excluded_fun;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> p_soa_used_with_aos_in_excluded_fun;
       current_statement__ = 10;
-      p_soa_used_with_aos_in_excluded_fun = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+      p_soa_used_with_aos_in_excluded_fun = in__.template read<stan::conditional_var_value_t<
+                                                                 local_scalar_t__, 
+                                                                 Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                                               N);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> p_soa_rep_matrix_vec;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> p_soa_rep_matrix_vec;
       current_statement__ = 11;
-      p_soa_rep_matrix_vec = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+      p_soa_rep_matrix_vec = in__.template read<stan::conditional_var_value_t<
+                                                  local_scalar_t__, 
+                                                  Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                                N);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> p_aos_vec_v_assign_to_aos;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> p_aos_vec_v_assign_to_aos;
       current_statement__ = 12;
-      p_aos_vec_v_assign_to_aos = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+      p_aos_vec_v_assign_to_aos = in__.template read<stan::conditional_var_value_t<
+                                                       local_scalar_t__, 
+                                                       Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                                     M);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> p_aos_vec_v_tp_fails_func;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> p_aos_vec_v_tp_fails_func;
       current_statement__ = 13;
-      p_aos_vec_v_tp_fails_func = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+      p_aos_vec_v_tp_fails_func = in__.template read<stan::conditional_var_value_t<
+                                                       local_scalar_t__, 
+                                                       Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                                     M);
       Eigen::Matrix<local_scalar_t__, -1, 1> p_aos_loop_vec_v_uni_idx;
       current_statement__ = 14;
       p_aos_loop_vec_v_uni_idx = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                                    M);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> p_aos_fail_assign_from_top_idx;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> p_aos_fail_assign_from_top_idx;
       current_statement__ = 15;
-      p_aos_fail_assign_from_top_idx = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>>>(
+      p_aos_fail_assign_from_top_idx = in__.template read<stan::conditional_var_value_t<
+                                                            local_scalar_t__, 
+                                                            Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                                          M);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_aos_loop_mat_uni_uni_idx;
       current_statement__ = 16;
       p_aos_loop_mat_uni_uni_idx = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                                      N, M);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> p_soa_loop_mat_multi_uni_uni_idx;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, -1>> p_soa_loop_mat_multi_uni_uni_idx;
       current_statement__ = 17;
-      p_soa_loop_mat_multi_uni_uni_idx = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
+      p_soa_loop_mat_multi_uni_uni_idx = in__.template read<stan::conditional_var_value_t<
+                                                              local_scalar_t__, 
+                                                              Eigen::Matrix<local_scalar_t__, -1, -1>>>(
                                            N, M);
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> p_aos_mat;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, -1>> p_aos_mat;
       current_statement__ = 18;
-      p_aos_mat = in__.template read<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
+      p_aos_mat = in__.template read<stan::conditional_var_value_t<
+                                       local_scalar_t__, 
+                                       Eigen::Matrix<local_scalar_t__, -1, -1>>>(
                     N, M);
       Eigen::Matrix<local_scalar_t__, -1, -1> p_aos_mat_fail_func_uni_uni_idx1;
       current_statement__ = 19;
@@ -2064,11 +2123,13 @@ class indexing_model final : public model_base_crtp<indexing_model> {
       local_scalar_t__ tp_real_from_aos;
       current_statement__ = 21;
       tp_real_from_aos = rvalue(p_soa_vec_v, "p_soa_vec_v", index_uni(1));
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> tp_aos_vec_v;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> tp_aos_vec_v;
       current_statement__ = 22;
       assign(tp_aos_vec_v, inv(p_aos_vec_v_assign_to_aos),
         "assigning variable tp_aos_vec_v");
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> tp_aos_fail_func_vec_v;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> tp_aos_fail_func_vec_v;
       current_statement__ = 23;
       assign(tp_aos_fail_func_vec_v, p_aos_vec_v_tp_fails_func,
         "assigning variable tp_aos_fail_func_vec_v");
@@ -2076,21 +2137,27 @@ class indexing_model final : public model_base_crtp<indexing_model> {
       assign(tp_aos_fail_func_vec_v,
         rvalue(p_soa_vec_v, "p_soa_vec_v", index_uni(1)),
         "assigning variable tp_aos_fail_func_vec_v", index_uni(1));
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> tp_aos_fail_assign_from_top_idx;
-      tp_aos_fail_assign_from_top_idx = Eigen::Matrix<local_scalar_t__, -1, 1>(M);
-      stan::math::fill(tp_aos_fail_assign_from_top_idx, DUMMY_VAR__);
-      
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> tp_soa_rep_matrix_mat;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> tp_aos_fail_assign_from_top_idx
+         = stan::conditional_var_value_t<local_scalar_t__, 
+             Eigen::Matrix<local_scalar_t__, -1, 1>>(
+             Eigen::Matrix<double, -1, 1>::Constant(
+               M, std::numeric_limits<double>::quiet_NaN()));
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, -1>> tp_soa_rep_matrix_mat;
       current_statement__ = 25;
       assign(tp_soa_rep_matrix_mat,
-        rep_matrix<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
+        rep_matrix<stan::conditional_var_value_t<local_scalar_t__, 
+                     Eigen::Matrix<local_scalar_t__, -1, -1>>>(
           p_soa_rep_matrix_vec, 10),
         "assigning variable tp_soa_rep_matrix_mat");
-      stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>> tp_soa_rep_matrix_from_data_mat;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, -1>> tp_soa_rep_matrix_from_data_mat;
       current_statement__ = 26;
       assign(tp_soa_rep_matrix_from_data_mat,
-        rep_matrix<stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, -1>>>(
-          y, 10), "assigning variable tp_soa_rep_matrix_from_data_mat");
+        rep_matrix<stan::conditional_var_value_t<local_scalar_t__, 
+                     Eigen::Matrix<local_scalar_t__, -1, -1>>>(y, 10),
+        "assigning variable tp_soa_rep_matrix_from_data_mat");
       current_statement__ = 28;
       assign(tp_aos_fail_assign_from_top_idx,
         rvalue(p_aos_fail_assign_from_top_idx,
@@ -2100,7 +2167,8 @@ class indexing_model final : public model_base_crtp<indexing_model> {
         current_statement__ = 29;
         validate_non_negative_index("tp_soa_used_with_aos_in_excluded_fun",
                                     "N", N);
-        stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> tp_soa_used_with_aos_in_excluded_fun;
+        stan::conditional_var_value_t<local_scalar_t__, 
+          Eigen::Matrix<local_scalar_t__, -1, 1>> tp_soa_used_with_aos_in_excluded_fun;
         current_statement__ = 30;
         assign(tp_soa_used_with_aos_in_excluded_fun,
           multiply(p_soa_used_with_aos_in_excluded_fun, size(tp_aos_vec_v)),
@@ -2152,19 +2220,19 @@ class indexing_model final : public model_base_crtp<indexing_model> {
             rvalue(p_soa_vec_uni_idx, "p_soa_vec_uni_idx", index_uni(N))));
         current_statement__ = 39;
         validate_non_negative_index("tp_soa_single_assign", "N", N);
-        stan::conditional_var_value_t<local_scalar_t__, Eigen::Matrix<local_scalar_t__, -1, 1>> tp_soa_single_assign;
-        tp_soa_single_assign = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-        stan::math::fill(tp_soa_single_assign, DUMMY_VAR__);
-        
+        stan::conditional_var_value_t<local_scalar_t__, 
+          Eigen::Matrix<local_scalar_t__, -1, 1>> tp_soa_single_assign
+           = stan::conditional_var_value_t<local_scalar_t__, 
+               Eigen::Matrix<local_scalar_t__, -1, 1>>(
+               Eigen::Matrix<double, -1, 1>::Constant(
+                 N, std::numeric_limits<double>::quiet_NaN()));
         current_statement__ = 41;
         assign(tp_soa_single_assign, 2.0,
           "assigning variable tp_soa_single_assign", index_uni(1));
         current_statement__ = 42;
         validate_non_negative_index("tp_soa_single_assign_from_soa", "N", N);
-        Eigen::Matrix<local_scalar_t__, -1, 1> tp_soa_single_assign_from_soa;
-        tp_soa_single_assign_from_soa = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-        stan::math::fill(tp_soa_single_assign_from_soa, DUMMY_VAR__);
-        
+        Eigen::Matrix<local_scalar_t__, -1, 1> tp_soa_single_assign_from_soa
+           = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
         current_statement__ = 44;
         assign(tp_soa_single_assign_from_soa,
           multiply(p_soa_lhs_loop_mul, p_soa_rhs_loop_mul),
@@ -2225,16 +2293,12 @@ class indexing_model final : public model_base_crtp<indexing_model> {
         }
         current_statement__ = 54;
         validate_non_negative_index("tp_aos_loop_vec_v_uni_idx", "N", N);
-        Eigen::Matrix<local_scalar_t__, -1, 1> tp_aos_loop_vec_v_uni_idx;
-        tp_aos_loop_vec_v_uni_idx = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-        stan::math::fill(tp_aos_loop_vec_v_uni_idx, DUMMY_VAR__);
-        
+        Eigen::Matrix<local_scalar_t__, -1, 1> tp_aos_loop_vec_v_uni_idx
+           = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
         current_statement__ = 56;
         validate_non_negative_index("tp_aos_loop_vec_v_multi_uni_idx", "N", N);
-        Eigen::Matrix<local_scalar_t__, -1, 1> tp_aos_loop_vec_v_multi_uni_idx;
-        tp_aos_loop_vec_v_multi_uni_idx = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-        stan::math::fill(tp_aos_loop_vec_v_multi_uni_idx, DUMMY_VAR__);
-        
+        Eigen::Matrix<local_scalar_t__, -1, 1> tp_aos_loop_vec_v_multi_uni_idx
+           = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
         current_statement__ = 64;
         for (int i = 1; i <= N; ++i) {
           current_statement__ = 58;
@@ -2388,34 +2452,22 @@ class indexing_model final : public model_base_crtp<indexing_model> {
       current_statement__ = 20;
       p_aos_mat_fail_func_uni_uni_idx2 = in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
                                            N, M);
-      double tp_real_from_aos;
-      tp_real_from_aos = std::numeric_limits<double>::quiet_NaN();
-      
-      Eigen::Matrix<double, -1, 1> tp_aos_vec_v;
-      tp_aos_vec_v = Eigen::Matrix<double, -1, 1>(M);
-      stan::math::fill(tp_aos_vec_v, std::numeric_limits<double>::quiet_NaN());
-      
-      
-      Eigen::Matrix<double, -1, 1> tp_aos_fail_func_vec_v;
-      tp_aos_fail_func_vec_v = Eigen::Matrix<double, -1, 1>(M);
-      stan::math::fill(tp_aos_fail_func_vec_v, std::numeric_limits<double>::quiet_NaN());
-      
-      
-      Eigen::Matrix<double, -1, 1> tp_aos_fail_assign_from_top_idx;
-      tp_aos_fail_assign_from_top_idx = Eigen::Matrix<double, -1, 1>(M);
-      stan::math::fill(tp_aos_fail_assign_from_top_idx, std::numeric_limits<double>::quiet_NaN());
-      
-      
-      Eigen::Matrix<double, -1, -1> tp_soa_rep_matrix_mat;
-      tp_soa_rep_matrix_mat = Eigen::Matrix<double, -1, -1>(N, 10);
-      stan::math::fill(tp_soa_rep_matrix_mat, std::numeric_limits<double>::quiet_NaN());
-      
-      
-      Eigen::Matrix<double, -1, -1> tp_soa_rep_matrix_from_data_mat;
-      tp_soa_rep_matrix_from_data_mat = Eigen::Matrix<double, -1, -1>(N, 10);
-      stan::math::fill(tp_soa_rep_matrix_from_data_mat, std::numeric_limits<double>::quiet_NaN());
-      
-      
+      double tp_real_from_aos = std::numeric_limits<double>::quiet_NaN();
+      Eigen::Matrix<double, -1, 1> tp_aos_vec_v
+         = Eigen::Matrix<double, -1, 1>::Constant(
+             M, std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, -1, 1> tp_aos_fail_func_vec_v
+         = Eigen::Matrix<double, -1, 1>::Constant(
+             M, std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, -1, 1> tp_aos_fail_assign_from_top_idx
+         = Eigen::Matrix<double, -1, 1>::Constant(
+             M, std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, -1, -1> tp_soa_rep_matrix_mat
+         = Eigen::Matrix<double, -1, -1>::Constant(
+             N, 10, std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, -1, -1> tp_soa_rep_matrix_from_data_mat
+         = Eigen::Matrix<double, -1, -1>::Constant(
+             N, 10, std::numeric_limits<double>::quiet_NaN());
       out__.write(alpha);
       out__.write(p_soa_vec_v);
       out__.write(p_soa_mat);
@@ -2503,19 +2555,16 @@ class indexing_model final : public model_base_crtp<indexing_model> {
       local_scalar_t__ alpha;
       alpha = in__.read<local_scalar_t__>();
       out__.write(alpha);
-      Eigen::Matrix<local_scalar_t__, -1, 1> p_soa_vec_v;
-      p_soa_vec_v = Eigen::Matrix<local_scalar_t__, -1, 1>(M);
-      stan::math::fill(p_soa_vec_v, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_soa_vec_v
+         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(M, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
         assign(p_soa_vec_v, in__.read<local_scalar_t__>(),
           "assigning variable p_soa_vec_v", index_uni(sym1__));
       }
       out__.write(p_soa_vec_v);
-      Eigen::Matrix<local_scalar_t__, -1, -1> p_soa_mat;
-      p_soa_mat = Eigen::Matrix<local_scalar_t__, -1, -1>(N, M);
-      stan::math::fill(p_soa_mat, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, -1> p_soa_mat
+         = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
+             N, M, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           assign(p_soa_mat, in__.read<local_scalar_t__>(),
@@ -2524,10 +2573,9 @@ class indexing_model final : public model_base_crtp<indexing_model> {
         }
       }
       out__.write(p_soa_mat);
-      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_soa_arr_vec_v;
-      p_soa_arr_vec_v = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(10, Eigen::Matrix<local_scalar_t__, -1, 1>(N));
-      stan::math::fill(p_soa_arr_vec_v, DUMMY_VAR__);
-      
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> p_soa_arr_vec_v
+         = Eigen::Matrix<local_scalar_t__, -1, 1>(10, 
+             Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__));
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 10; ++sym2__) {
           assign(p_soa_arr_vec_v, in__.read<local_scalar_t__>(),
@@ -2536,10 +2584,9 @@ class indexing_model final : public model_base_crtp<indexing_model> {
         }
       }
       out__.write(p_soa_arr_vec_v);
-      Eigen::Matrix<local_scalar_t__, -1, -1> p_soa_mat_uni_col_idx;
-      p_soa_mat_uni_col_idx = Eigen::Matrix<local_scalar_t__, -1, -1>(N, M);
-      stan::math::fill(p_soa_mat_uni_col_idx, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, -1> p_soa_mat_uni_col_idx
+         = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
+             N, M, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           assign(p_soa_mat_uni_col_idx, in__.read<local_scalar_t__>(),
@@ -2548,19 +2595,16 @@ class indexing_model final : public model_base_crtp<indexing_model> {
         }
       }
       out__.write(p_soa_mat_uni_col_idx);
-      Eigen::Matrix<local_scalar_t__, -1, 1> p_soa_vec_uni_idx;
-      p_soa_vec_uni_idx = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-      stan::math::fill(p_soa_vec_uni_idx, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_soa_vec_uni_idx
+         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         assign(p_soa_vec_uni_idx, in__.read<local_scalar_t__>(),
           "assigning variable p_soa_vec_uni_idx", index_uni(sym1__));
       }
       out__.write(p_soa_vec_uni_idx);
-      Eigen::Matrix<local_scalar_t__, -1, -1> p_soa_loop_mat_uni_col_idx;
-      p_soa_loop_mat_uni_col_idx = Eigen::Matrix<local_scalar_t__, -1, -1>(N, M);
-      stan::math::fill(p_soa_loop_mat_uni_col_idx, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, -1> p_soa_loop_mat_uni_col_idx
+         = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
+             N, M, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           assign(p_soa_loop_mat_uni_col_idx, in__.read<local_scalar_t__>(),
@@ -2569,83 +2613,66 @@ class indexing_model final : public model_base_crtp<indexing_model> {
         }
       }
       out__.write(p_soa_loop_mat_uni_col_idx);
-      Eigen::Matrix<local_scalar_t__, 1, -1> p_soa_lhs_loop_mul;
-      p_soa_lhs_loop_mul = Eigen::Matrix<local_scalar_t__, 1, -1>(N);
-      stan::math::fill(p_soa_lhs_loop_mul, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, 1, -1> p_soa_lhs_loop_mul
+         = Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(N, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         assign(p_soa_lhs_loop_mul, in__.read<local_scalar_t__>(),
           "assigning variable p_soa_lhs_loop_mul", index_uni(sym1__));
       }
       out__.write(p_soa_lhs_loop_mul);
-      Eigen::Matrix<local_scalar_t__, -1, 1> p_soa_rhs_loop_mul;
-      p_soa_rhs_loop_mul = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-      stan::math::fill(p_soa_rhs_loop_mul, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_soa_rhs_loop_mul
+         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         assign(p_soa_rhs_loop_mul, in__.read<local_scalar_t__>(),
           "assigning variable p_soa_rhs_loop_mul", index_uni(sym1__));
       }
       out__.write(p_soa_rhs_loop_mul);
-      Eigen::Matrix<local_scalar_t__, -1, 1> p_soa_used_with_aos_in_excluded_fun;
-      p_soa_used_with_aos_in_excluded_fun = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-      stan::math::fill(p_soa_used_with_aos_in_excluded_fun, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_soa_used_with_aos_in_excluded_fun
+         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         assign(p_soa_used_with_aos_in_excluded_fun,
           in__.read<local_scalar_t__>(),
           "assigning variable p_soa_used_with_aos_in_excluded_fun", index_uni(sym1__));
       }
       out__.write(p_soa_used_with_aos_in_excluded_fun);
-      Eigen::Matrix<local_scalar_t__, -1, 1> p_soa_rep_matrix_vec;
-      p_soa_rep_matrix_vec = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-      stan::math::fill(p_soa_rep_matrix_vec, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_soa_rep_matrix_vec
+         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         assign(p_soa_rep_matrix_vec, in__.read<local_scalar_t__>(),
           "assigning variable p_soa_rep_matrix_vec", index_uni(sym1__));
       }
       out__.write(p_soa_rep_matrix_vec);
-      Eigen::Matrix<local_scalar_t__, -1, 1> p_aos_vec_v_assign_to_aos;
-      p_aos_vec_v_assign_to_aos = Eigen::Matrix<local_scalar_t__, -1, 1>(M);
-      stan::math::fill(p_aos_vec_v_assign_to_aos, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_aos_vec_v_assign_to_aos
+         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(M, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
         assign(p_aos_vec_v_assign_to_aos, in__.read<local_scalar_t__>(),
           "assigning variable p_aos_vec_v_assign_to_aos", index_uni(sym1__));
       }
       out__.write(p_aos_vec_v_assign_to_aos);
-      Eigen::Matrix<local_scalar_t__, -1, 1> p_aos_vec_v_tp_fails_func;
-      p_aos_vec_v_tp_fails_func = Eigen::Matrix<local_scalar_t__, -1, 1>(M);
-      stan::math::fill(p_aos_vec_v_tp_fails_func, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_aos_vec_v_tp_fails_func
+         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(M, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
         assign(p_aos_vec_v_tp_fails_func, in__.read<local_scalar_t__>(),
           "assigning variable p_aos_vec_v_tp_fails_func", index_uni(sym1__));
       }
       out__.write(p_aos_vec_v_tp_fails_func);
-      Eigen::Matrix<local_scalar_t__, -1, 1> p_aos_loop_vec_v_uni_idx;
-      p_aos_loop_vec_v_uni_idx = Eigen::Matrix<local_scalar_t__, -1, 1>(M);
-      stan::math::fill(p_aos_loop_vec_v_uni_idx, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_aos_loop_vec_v_uni_idx
+         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(M, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
         assign(p_aos_loop_vec_v_uni_idx, in__.read<local_scalar_t__>(),
           "assigning variable p_aos_loop_vec_v_uni_idx", index_uni(sym1__));
       }
       out__.write(p_aos_loop_vec_v_uni_idx);
-      Eigen::Matrix<local_scalar_t__, -1, 1> p_aos_fail_assign_from_top_idx;
-      p_aos_fail_assign_from_top_idx = Eigen::Matrix<local_scalar_t__, -1, 1>(M);
-      stan::math::fill(p_aos_fail_assign_from_top_idx, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_aos_fail_assign_from_top_idx
+         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(M, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
         assign(p_aos_fail_assign_from_top_idx, in__.read<local_scalar_t__>(),
           "assigning variable p_aos_fail_assign_from_top_idx", index_uni(sym1__));
       }
       out__.write(p_aos_fail_assign_from_top_idx);
-      Eigen::Matrix<local_scalar_t__, -1, -1> p_aos_loop_mat_uni_uni_idx;
-      p_aos_loop_mat_uni_uni_idx = Eigen::Matrix<local_scalar_t__, -1, -1>(N, M);
-      stan::math::fill(p_aos_loop_mat_uni_uni_idx, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, -1> p_aos_loop_mat_uni_uni_idx
+         = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
+             N, M, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           assign(p_aos_loop_mat_uni_uni_idx, in__.read<local_scalar_t__>(),
@@ -2654,10 +2681,9 @@ class indexing_model final : public model_base_crtp<indexing_model> {
         }
       }
       out__.write(p_aos_loop_mat_uni_uni_idx);
-      Eigen::Matrix<local_scalar_t__, -1, -1> p_soa_loop_mat_multi_uni_uni_idx;
-      p_soa_loop_mat_multi_uni_uni_idx = Eigen::Matrix<local_scalar_t__, -1, -1>(N, M);
-      stan::math::fill(p_soa_loop_mat_multi_uni_uni_idx, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, -1> p_soa_loop_mat_multi_uni_uni_idx
+         = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
+             N, M, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           assign(p_soa_loop_mat_multi_uni_uni_idx,
@@ -2667,10 +2693,9 @@ class indexing_model final : public model_base_crtp<indexing_model> {
         }
       }
       out__.write(p_soa_loop_mat_multi_uni_uni_idx);
-      Eigen::Matrix<local_scalar_t__, -1, -1> p_aos_mat;
-      p_aos_mat = Eigen::Matrix<local_scalar_t__, -1, -1>(N, M);
-      stan::math::fill(p_aos_mat, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, -1> p_aos_mat
+         = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
+             N, M, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           assign(p_aos_mat, in__.read<local_scalar_t__>(),
@@ -2679,10 +2704,9 @@ class indexing_model final : public model_base_crtp<indexing_model> {
         }
       }
       out__.write(p_aos_mat);
-      Eigen::Matrix<local_scalar_t__, -1, -1> p_aos_mat_fail_func_uni_uni_idx1;
-      p_aos_mat_fail_func_uni_uni_idx1 = Eigen::Matrix<local_scalar_t__, -1, -1>(N, M);
-      stan::math::fill(p_aos_mat_fail_func_uni_uni_idx1, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, -1> p_aos_mat_fail_func_uni_uni_idx1
+         = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
+             N, M, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           assign(p_aos_mat_fail_func_uni_uni_idx1,
@@ -2692,10 +2716,9 @@ class indexing_model final : public model_base_crtp<indexing_model> {
         }
       }
       out__.write(p_aos_mat_fail_func_uni_uni_idx1);
-      Eigen::Matrix<local_scalar_t__, -1, -1> p_aos_mat_fail_func_uni_uni_idx2;
-      p_aos_mat_fail_func_uni_uni_idx2 = Eigen::Matrix<local_scalar_t__, -1, -1>(N, M);
-      stan::math::fill(p_aos_mat_fail_func_uni_uni_idx2, DUMMY_VAR__);
-      
+      Eigen::Matrix<local_scalar_t__, -1, -1> p_aos_mat_fail_func_uni_uni_idx2
+         = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
+             N, M, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= M; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           assign(p_aos_mat_fail_func_uni_uni_idx2,
