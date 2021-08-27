@@ -1361,22 +1361,22 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
     try {
       int pos__;
       pos__ = 1;
-      Eigen::Matrix<local_scalar_t__, -1, 1> alpha_v
-         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(k, DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> alpha_v =
+         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(k, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         assign(alpha_v, in__.read<local_scalar_t__>(),
           "assigning variable alpha_v", index_uni(sym1__));
       }
       out__.write(alpha_v);
-      Eigen::Matrix<local_scalar_t__, -1, 1> beta
-         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(k, DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> beta =
+         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(k, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         assign(beta, in__.read<local_scalar_t__>(),
           "assigning variable beta", index_uni(sym1__));
       }
       out__.write(beta);
-      Eigen::Matrix<local_scalar_t__, -1, 1> cuts
-         = Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(k, DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__, -1, 1> cuts =
+         Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(k, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         assign(cuts, in__.read<local_scalar_t__>(),
           "assigning variable cuts", index_uni(sym1__));
@@ -1391,9 +1391,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       local_scalar_t__ phi;
       phi = in__.read<local_scalar_t__>();
       out__.write(phi);
-      Eigen::Matrix<local_scalar_t__, -1, -1> X_p
-         = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
-             n, k, DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__, -1, -1> X_p =
+         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(n, k, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
           assign(X_p, in__.read<local_scalar_t__>(),
@@ -1401,9 +1400,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         }
       }
       out__.write(X_p);
-      Eigen::Matrix<local_scalar_t__, -1, -1> beta_m
-         = Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
-             n, k, DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__, -1, -1> beta_m =
+         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(n, k, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= n; ++sym2__) {
           assign(beta_m, in__.read<local_scalar_t__>(),
@@ -1411,8 +1409,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
         }
       }
       out__.write(beta_m);
-      Eigen::Matrix<local_scalar_t__, 1, -1> X_rv_p
-         = Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(n, DUMMY_VAR__);
+      Eigen::Matrix<local_scalar_t__, 1, -1> X_rv_p =
+         Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(n, DUMMY_VAR__);
       for (int sym1__ = 1; sym1__ <= n; ++sym1__) {
         assign(X_rv_p, in__.read<local_scalar_t__>(),
           "assigning variable X_rv_p", index_uni(sym1__));

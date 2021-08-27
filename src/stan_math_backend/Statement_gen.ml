@@ -89,15 +89,12 @@ let rec pp_initialize ppf (st, adtype) =
           (SizedType.SMatrix (AoS, d1, d2), DataOnly)
     | SArray (t, d) ->
         pf ppf "@[<hov 2>%a(@,%a, @,%a)@]" pp_possibly_var_decl
-          (adtype, SizedType.to_unsized t, SizedType.get_mem_pattern t)
+          (adtype, SizedType.to_unsized st, SizedType.get_mem_pattern t)
           pp_expr d pp_initialize (t, adtype)
 
 (*Initialize an object of a given size.*)
 let pp_assign_sized ppf (st, adtype, initialize) =
-  if initialize then
-    let pp_assign ppf (st, adtype) = pf ppf "%a" pp_initialize (st, adtype) in
-    pf ppf "%a" pp_assign (st, adtype)
-  else pf ppf ""
+  if initialize then pf ppf "%a" pp_initialize (st, adtype) else pf ppf ""
 
 let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in
@@ -272,7 +269,7 @@ let pp_possibly_opencl_decl ppf (vident, st, adtype) =
 let pp_sized_decl ppf (vident, st, adtype, initialize) =
   match initialize with
   | true ->
-      pf ppf "@[<hov 2>%a@, = %a;@]" pp_possibly_opencl_decl
+      pf ppf "@[<hov 2>%a =@, %a;@]" pp_possibly_opencl_decl
         (vident, st, adtype) pp_assign_sized (st, adtype, initialize)
   | false -> pf ppf "%a;" pp_possibly_opencl_decl (vident, st, adtype)
 
