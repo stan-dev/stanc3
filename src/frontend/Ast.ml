@@ -304,7 +304,9 @@ let rec get_loc_expr (e : untyped_expression) =
 let get_loc_dt (t : untyped_expression Type.t) =
   match t with
   | Type.Unsized _ | Sized (SInt | SReal) -> None
-  | Sized (SVector (_,e) | SRowVector (_,e) | SMatrix (_,e, _) | SArray (_, e)) ->
+  | Sized
+      (SVector (_, e) | SRowVector (_, e) | SMatrix (_, e, _) | SArray (_, e))
+    ->
       Some e.emeta.loc.begin_loc
 
 let get_loc_tf (t : untyped_expression Transformation.t) =
@@ -332,11 +334,10 @@ let get_first_loc (s : untyped_statement) =
    |IfThenElse (e, _, _)
    |While (e, _) ->
       e.emeta.loc.begin_loc
-  | Profile (_, s :: _) | Block (s :: _) -> s.smeta.loc.begin_loc
+  | Profile _ | Block _ -> s.smeta.loc.begin_loc
   | Tilde {arg; _} -> get_loc_expr arg
   | Break | Continue | ReturnVoid | Print _ | Reject _ | Skip
-   |Profile (_, [])
-   |Block [] ->
+    ->
       s.smeta.loc.end_loc
   | VarDecl {decl_type; transformation; identifier; _} -> (
     match get_loc_dt decl_type with

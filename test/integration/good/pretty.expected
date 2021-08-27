@@ -1324,7 +1324,6 @@ functions {
     while (1) {
       int b;
       b = 5;
-      
       {
         int c;
         c = 6;
@@ -1904,7 +1903,6 @@ generated quantities {
   $ ../../../../install/default/bin/stanc --auto-format declare-define-gq-local-rng.stan
 transformed data {
   int a = categorical_rng(rep_vector(0.1, 10));
-  
   {
     int b = categorical_rng(rep_vector(0.1, 10));
   }
@@ -2515,7 +2513,6 @@ transformed data {
   print("td5: ", td5);
   print("td_a2: ", td_a2);
   print("td_a4: ", td_a4);
-  
   {
     real ltd1 = 1; /* real_d = int_d  */
     real ltd2 = 2.0; /* real_d = real_d */
@@ -2570,7 +2567,6 @@ transformed parameters {
   print("tp5: ", tp5);
   tp1 = foo(tp3);
   print("tp1: ", tp1);
-  
   {
     real lp1 = td0; /* real_p = int_d  */
     real lp2 = 9.0; /* real_p = real_d */
@@ -2617,7 +2613,6 @@ generated quantities {
   print("gq_p_tp4 = ", gq_p_tp4);
   print("gq_p_tp_a1 = ", gq_p_tp_a1);
   print("gq_p_tp_a2 = ", gq_p_tp_a2);
-  
   {
     real lgq1 = 1; /* real_d = int_d */
     real lgq2 = 2.0; /* real_d = real_d */
@@ -2666,7 +2661,6 @@ transformed data {
 }
 transformed parameters {
   real p1;
-  
   {
     int lp1 = 1;
     print("transformed param ", lp1);
@@ -2682,7 +2676,6 @@ generated quantities {
   int gq1 = 1;
   print("gq1 ", gq1);
   gq1 = 2;
-  
   {
     int lgq1 = 2;
     print("gq2 ", lgq1);
@@ -2726,7 +2719,6 @@ transformed parameters {
   print("tp_m4 = ", tp_m4);
   print("tp_m5 = ", tp_m5);
   print("tp_m_ar6 = ", tp_m_ar6);
-  
   {
     matrix[d, d] local_m1 = d_m;
     matrix[d, d] local_m2 = d_m_ar[1];
@@ -4909,7 +4901,6 @@ parameters {
 }
 transformed parameters {
   array[T, 2] real y_hat;
-  
   {
     int N = 0;
     y_hat = integrate_ode(ode, y0, t0, segment(ts, 0, N), theta, x, x_int);
@@ -5156,7 +5147,6 @@ data {
 }
 transformed data {
   real sum_y;
-  
   profile("sum") {
     sum_y = sum(y);
   }
@@ -5169,15 +5159,12 @@ parameters {
 model {
   matrix[N, N] cov;
   matrix[N, N] L_cov;
-  
   profile("cov_exp_quad") {
     cov = gp_exp_quad_cov(x, alpha, rho) + diag_matrix(rep_vector(sigma, N));
   }
-  
   profile("cholesky_decompose") {
     L_cov = cholesky_decompose(cov);
   }
-  
   profile("multi_normal_cholesky") {
     rho ~ gamma(25, 4);
     alpha ~ normal(0, 2);
@@ -6758,7 +6745,6 @@ transformed data {
   array[arrlen] row_vector[veclen] td_rv_ar = d_rv_ar;
   matrix[nrows, ncols] td_m = d_m;
   array[arrlen] matrix[nrows, ncols] td_m_ar = d_m_ar;
-  
   {
     array[arrlen] real local_real_ar = d_real_ar;
     vector[veclen] local_v = d_v;
@@ -6788,7 +6774,6 @@ transformed parameters {
   array[arrlen] row_vector[veclen] tp_rv_ar = d_rv_ar;
   matrix[nrows, ncols] tp_m = d_m;
   array[arrlen] matrix[nrows, ncols] tp_m_ar = d_m_ar;
-  
   {
     array[arrlen] real local2_real_ar = d_real_ar;
     vector[veclen] local2_v = d_v;
@@ -6818,7 +6803,6 @@ generated quantities {
   array[arrlen] row_vector[veclen] gq_rv_ar = d_rv_ar;
   matrix[nrows, ncols] gq_m = d_m;
   array[arrlen] matrix[nrows, ncols] gq_m_ar = d_m_ar;
-  
   {
     array[arrlen] real local4_real_ar = d_real_ar;
     vector[veclen] local4_v = d_v;

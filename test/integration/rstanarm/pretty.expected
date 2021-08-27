@@ -6553,10 +6553,9 @@ model {
       glm_lp(yReal3, yInt3, yEta3, yAux3, family[3], link[3], sum_log_y3,
              sqrt_y3, log_y3);
   }
-  
-  /*---- Log likelihood for event submodel (GK quadrature) */
-  
   {
+    /*---- Log likelihood for event submodel (GK quadrature) */
+    
     vector[nrow_e_Xq] e_eta_q; /* eta for event submodel (at event and quad times) */
     
     /* Event submodel: linear predictor at event and quad times */
@@ -7068,9 +7067,10 @@ model {
       }
     }
     
-    /* declares log_basehaz, log_{haz_q,haz_etimes,surv_etimes,event} */
-    /* increments target with event log-lik */
     {
+      /* declares log_basehaz, log_{haz_q,haz_etimes,surv_etimes,event} */
+      /* increments target with event log-lik */
+      
       vector[nrow_e_Xq] log_basehaz; /* log baseline hazard AT event time and quadrature points */
       vector[nrow_e_Xq] log_haz_q; /* log hazard AT event time and quadrature points */
       vector[Nevents] log_haz_etimes; /* log hazard AT the event time only */
@@ -7197,7 +7197,6 @@ generated quantities {
   vector[bN2 * bK2] b2 = to_vector(bMat2');
   
   /* Evaluate mean_PPD */
-  
   {
     int bMat1_colshift = 0; /* column shift in bMat1 */
     int bMat2_colshift = 0; /* column shift in bMat2 */
@@ -9268,7 +9267,6 @@ generated quantities {
   vector[bN2 * bK2] b2 = to_vector(bMat2');
   
   /* Evaluate mean_PPD */
-  
   {
     int bMat1_colshift = 0; /* column shift in bMat1 */
     int bMat2_colshift = 0; /* column shift in bMat2 */
@@ -9605,7 +9603,6 @@ parameters {
 transformed parameters {
   vector[K] beta;
   vector[J - 1] cutpoints;
-  
   {
     real Delta_y;
     if (K > 1) {
@@ -9672,7 +9669,6 @@ generated quantities {
     zeta = cutpoints;
   if (J == 2) 
     zeta *= -1.0;
-  
   {
     vector[N] eta; /* linear predictor */
     if (K > 0) {

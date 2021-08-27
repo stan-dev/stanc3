@@ -4531,7 +4531,6 @@ parameters {
 }
 transformed parameters {
   real v;
-  
   {
     array[5] int u_p;
     u_p = csr_extract_u(a_d);
@@ -4557,7 +4556,6 @@ parameters {
 }
 transformed parameters {
   real v;
-  
   {
     array[5] int v_p;
     v_p = csr_extract_v(a_d);
@@ -9183,9 +9181,8 @@ parameters {
 }
 transformed parameters {
   matrix[N, N] L_K;
-  
-  /* dot product covariance matrix */
   {
+    /* dot product covariance matrix */
     matrix[N, N] K = gp_dot_prod_cov(x, sig); /* dot product kernel 1-D */
     matrix[N, N] K2 = gp_dot_prod_cov(x1, sig); /* dot product N-D */
     matrix[N, N] K3 = gp_dot_prod_cov(x, x, sig); /* dot product cross covariance 1-D */
@@ -20150,7 +20147,6 @@ transformed parameters {
   array[d_int] real transformed_param_real_array;
   vector[d_int] transformed_param_vector;
   row_vector[d_int] transformed_param_row_vector;
-  
   {
     array[d_int] int local_int_array;
     
@@ -20212,7 +20208,6 @@ transformed parameters {
   array[d_int] real transformed_param_real_array;
   vector[d_int] transformed_param_vector;
   row_vector[d_int] transformed_param_row_vector;
-  
   {
     array[d_int] int local_int_array;
     

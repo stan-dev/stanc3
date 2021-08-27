@@ -670,12 +670,12 @@ statement:
   | s=atomic_statement
     {  grammar_logger "atomic_statement" ;
        {stmt= s;
-        smeta= { loc=Location_span.of_positions_exn $loc} }
+        smeta= { loc=Location_span.of_positions_exn $sloc} }
     }
   | s=nested_statement
     {  grammar_logger "nested_statement" ;
        {stmt= s;
-        smeta={loc = Location_span.of_positions_exn $loc} }
+        smeta={loc = Location_span.of_positions_exn $sloc} }
     }
 
 atomic_statement:

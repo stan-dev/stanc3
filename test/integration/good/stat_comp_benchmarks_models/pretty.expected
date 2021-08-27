@@ -119,7 +119,6 @@ generated quantities {
   array[11] real x = {-10, -8, -6, -4, -2, 0.0, 2, 4, 6, 8, 10};
   vector[11] y;
   array[11] int k;
-  
   {
     matrix[N, N] cov = cov_exp_quad(x, alpha, rho)
                        + diag_matrix(rep_vector(1e-10, N));
@@ -147,7 +146,6 @@ parameters {
 }
 transformed parameters {
   vector[N] f;
-  
   {
     matrix[N, N] cov = cov_exp_quad(x, alpha, rho)
                        + diag_matrix(rep_vector(1e-10, N));
@@ -346,7 +344,6 @@ parameters {
 }
 transformed parameters {
   array[N_t, 1] real C;
-  
   {
     array[3] real theta = {k_a, K_m, V_m};
     C = integrate_ode_bdf(one_comp_mm_elim_abs, C0, t0, times, theta, 
@@ -481,7 +478,6 @@ parameters {
 }
 transformed parameters {
   array[N_t, 4] real<lower=0> y;
-  
   {
     array[5] real theta = {beta, kappa, gamma, xi, delta};
     y = integrate_ode_rk45(simple_SIR, y0, t0, t, theta, x_r, x_i);
