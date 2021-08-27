@@ -89,6 +89,13 @@ program:
     EOF
     {
       grammar_logger "program" ;
+      (* check for empty programs*)
+      let () =
+        match (ofb, odb, otdb, opb, otpb, omb, ogb) with
+        | None, None, None, None, None, None, None ->
+            Input_warnings.empty (fst $loc).pos_fname
+        | _ -> ()
+      in
       { functionblock= ofb
       ; datablock= odb
       ; transformeddatablock= otdb
@@ -384,11 +391,11 @@ sized_basic_type:
   | REAL
     { grammar_logger "REAL_var_type" ; (SizedType.SReal, Identity) }
   | VECTOR LBRACK e=expression RBRACK
-    { grammar_logger "VECTOR_var_type" ; (SizedType.SVector e, Identity) }
+    { grammar_logger "VECTOR_var_type" ; (SizedType.SVector (Common.Helpers.AoS, e), Identity) }
   | ROWVECTOR LBRACK e=expression RBRACK
-    { grammar_logger "ROWVECTOR_var_type" ; (SizedType.SRowVector e , Identity) }
+    { grammar_logger "ROWVECTOR_var_type" ; (SizedType.SRowVector (AoS, e) , Identity) }
   | MATRIX LBRACK e1=expression COMMA e2=expression RBRACK
-    { grammar_logger "MATRIX_var_type" ; (SizedType.SMatrix (e1, e2), Identity) }
+    { grammar_logger "MATRIX_var_type" ; (SizedType.SMatrix (AoS, e1, e2), Identity) }
 
 top_var_type:
   | INT r=range_constraint
@@ -396,38 +403,38 @@ top_var_type:
   | REAL c=type_constraint
     { grammar_logger "REAL_top_var_type" ; (SReal, c) }
   | VECTOR c=type_constraint LBRACK e=expression RBRACK
-    { grammar_logger "VECTOR_top_var_type" ; (SVector e, c) }
+    { grammar_logger "VECTOR_top_var_type" ; (SVector (AoS, e), c) }
   | ROWVECTOR c=type_constraint LBRACK e=expression RBRACK
-    { grammar_logger "ROWVECTOR_top_var_type" ; (SRowVector e, c) }
+    { grammar_logger "ROWVECTOR_top_var_type" ; (SRowVector (AoS, e), c) }
   | MATRIX c=type_constraint LBRACK e1=expression COMMA e2=expression RBRACK
-    { grammar_logger "MATRIX_top_var_type" ; (SMatrix (e1, e2), c) }
+    { grammar_logger "MATRIX_top_var_type" ; (SMatrix (AoS, e1, e2), c) }
   | ORDERED LBRACK e=expression RBRACK
-    { grammar_logger "ORDERED_top_var_type" ; (SVector e, Ordered) }
+    { grammar_logger "ORDERED_top_var_type" ; (SVector (AoS, e), Ordered) }
   | POSITIVEORDERED LBRACK e=expression RBRACK
     {
       grammar_logger "POSITIVEORDERED_top_var_type" ;
-      (SVector e, PositiveOrdered)
+      (SVector (AoS, e), PositiveOrdered)
     }
   | SIMPLEX LBRACK e=expression RBRACK
-    { grammar_logger "SIMPLEX_top_var_type" ; (SVector e, Simplex) }
+    { grammar_logger "SIMPLEX_top_var_type" ; (SVector (AoS, e), Simplex) }
   | UNITVECTOR LBRACK e=expression RBRACK
-    { grammar_logger "UNITVECTOR_top_var_type" ; (SVector e, UnitVector) }
+    { grammar_logger "UNITVECTOR_top_var_type" ; (SVector (AoS, e), UnitVector) }
   | CHOLESKYFACTORCORR LBRACK e=expression RBRACK
     {
       grammar_logger "CHOLESKYFACTORCORR_top_var_type" ;
-      (SMatrix (e, e), CholeskyCorr)
+      (SMatrix (AoS, e, e), CholeskyCorr)
     }
   | CHOLESKYFACTORCOV LBRACK e1=expression oe2=option(pair(COMMA, expression))
     RBRACK
     {
       grammar_logger "CHOLESKYFACTORCOV_top_var_type" ;
-      match oe2 with Some (_,e2) -> ( SMatrix (e1, e2), CholeskyCov)
-                   | _           ->  (SMatrix (e1, e1),  CholeskyCov)
+      match oe2 with Some (_,e2) -> ( SMatrix (AoS, e1, e2), CholeskyCov)
+                   | _           ->  (SMatrix (AoS, e1, e1),  CholeskyCov)
     }
   | CORRMATRIX LBRACK e=expression RBRACK
-    { grammar_logger "CORRMATRIX_top_var_type" ; (SMatrix (e, e), Correlation) }
+    { grammar_logger "CORRMATRIX_top_var_type" ; (SMatrix (AoS, e, e), Correlation) }
   | COVMATRIX LBRACK e=expression RBRACK
-    { grammar_logger "COVMATRIX_top_var_type" ; (SMatrix (e, e), Covariance) }
+    { grammar_logger "COVMATRIX_top_var_type" ; (SMatrix (AoS, e, e), Covariance) }
 
 type_constraint:
   | r=range_constraint
@@ -437,14 +444,14 @@ type_constraint:
 
 range_constraint:
   | (* nothing *)
-    { grammar_logger "empty_constraint" ; Program.Identity }
+    { grammar_logger "empty_constraint" ; Transformation.Identity }
   | LABRACK r=range RABRACK
     {  grammar_logger "range_constraint" ; r }
 
 range:
   | LOWER ASSIGN e1=constr_expression COMMA UPPER ASSIGN e2=constr_expression
   | UPPER ASSIGN e2=constr_expression COMMA LOWER ASSIGN e1=constr_expression
-    { grammar_logger "lower_upper_range" ; Program.LowerUpper (e1, e2) }
+    { grammar_logger "lower_upper_range" ; Transformation.LowerUpper (e1, e2) }
   | LOWER ASSIGN e=constr_expression
     {  grammar_logger "lower_range" ; Lower e }
   | UPPER ASSIGN e=constr_expression
@@ -453,7 +460,7 @@ range:
 offset_mult:
   | OFFSET ASSIGN e1=constr_expression COMMA MULTIPLIER ASSIGN e2=constr_expression
   | MULTIPLIER ASSIGN e2=constr_expression COMMA OFFSET ASSIGN e1=constr_expression
-    { grammar_logger "offset_mult" ; Program.OffsetMultiplier (e1, e2) }
+    { grammar_logger "offset_mult" ; Transformation.OffsetMultiplier (e1, e2) }
   | OFFSET ASSIGN e=constr_expression
     { grammar_logger "offset" ; Offset e }
   | MULTIPLIER ASSIGN e=constr_expression

@@ -150,7 +150,7 @@ type ('e, 's, 'l, 'f) statement =
   | Block of 's list
   | VarDecl of
       { decl_type: 'e Middle.Type.t
-      ; transformation: 'e Middle.Program.transformation
+      ; transformation: 'e Transformation.t
       ; identifier: identifier
       ; initial_value: 'e option
       ; is_global: bool }
@@ -304,10 +304,10 @@ let rec get_loc_expr (e : untyped_expression) =
 let get_loc_dt (t : untyped_expression Type.t) =
   match t with
   | Type.Unsized _ | Sized (SInt | SReal) -> None
-  | Sized (SVector e | SRowVector e | SMatrix (e, _) | SArray (_, e)) ->
+  | Sized (SVector (_,e) | SRowVector (_,e) | SMatrix (_,e, _) | SArray (_, e)) ->
       Some e.emeta.loc.begin_loc
 
-let get_loc_tf (t : untyped_expression Program.transformation) =
+let get_loc_tf (t : untyped_expression Transformation.t) =
   match t with
   | Lower e
    |Upper e

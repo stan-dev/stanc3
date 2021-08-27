@@ -152,45 +152,45 @@ let%expect_test "parse indices, two different colons" =
   print_ast_of_string "model { matrix[5, 5] x; print(x[2 - 3 ? 3 : 4 : 2]); }" ;
   [%expect
     {|
-      ((functionblock ()) (datablock ()) (transformeddatablock ())
-       (parametersblock ()) (transformedparametersblock ())
-       (modelblock
-        (((stmts
-           (((stmt
-              (VarDecl
-               (decl_type
-                (Sized
-                 (SMatrix ((expr (IntNumeral 5)) (emeta ((loc <opaque>))))
-                  ((expr (IntNumeral 5)) (emeta ((loc <opaque>)))))))
-               (transformation Identity) (identifier ((name x) (id_loc <opaque>)))
-               (initial_value ()) (is_global false)))
-             (smeta ((loc <opaque>))))
-            ((stmt
-              (Print
-               ((PExpr
-                 ((expr
-                   (Indexed
-                    ((expr (Variable ((name x) (id_loc <opaque>))))
-                     (emeta ((loc <opaque>))))
-                    ((Between
-                      ((expr
-                        (TernaryIf
-                         ((expr
-                           (BinOp ((expr (IntNumeral 2)) (emeta ((loc <opaque>))))
-                            Minus ((expr (IntNumeral 3)) (emeta ((loc <opaque>))))))
-                          (emeta ((loc <opaque>))))
-                         ((expr (IntNumeral 3)) (emeta ((loc <opaque>))))
-                         ((expr (IntNumeral 4)) (emeta ((loc <opaque>))))))
-                       (emeta ((loc <opaque>))))
-                      ((expr (IntNumeral 2)) (emeta ((loc <opaque>))))))))
-                  (emeta ((loc <opaque>))))))))
-             (smeta ((loc <opaque>))))))
-          (xloc
-           ((begin_loc
-             ((filename string) (line_num 1) (col_num 0) (included_from ())))
-            (end_loc
-             ((filename string) (line_num 1) (col_num 54) (included_from ()))))))))
-       (generatedquantitiesblock ()) (comments <opaque>)) |}]
+((functionblock ()) (datablock ()) (transformeddatablock ())
+ (parametersblock ()) (transformedparametersblock ())
+ (modelblock
+  (((stmts
+     (((stmt
+        (VarDecl
+         (decl_type
+          (Sized
+           (SMatrix AoS ((expr (IntNumeral 5)) (emeta ((loc <opaque>))))
+            ((expr (IntNumeral 5)) (emeta ((loc <opaque>)))))))
+         (transformation Identity) (identifier ((name x) (id_loc <opaque>)))
+         (initial_value ()) (is_global false)))
+       (smeta ((loc <opaque>))))
+      ((stmt
+        (Print
+         ((PExpr
+           ((expr
+             (Indexed
+              ((expr (Variable ((name x) (id_loc <opaque>))))
+               (emeta ((loc <opaque>))))
+              ((Between
+                ((expr
+                  (TernaryIf
+                   ((expr
+                     (BinOp ((expr (IntNumeral 2)) (emeta ((loc <opaque>))))
+                      Minus ((expr (IntNumeral 3)) (emeta ((loc <opaque>))))))
+                    (emeta ((loc <opaque>))))
+                   ((expr (IntNumeral 3)) (emeta ((loc <opaque>))))
+                   ((expr (IntNumeral 4)) (emeta ((loc <opaque>))))))
+                 (emeta ((loc <opaque>))))
+                ((expr (IntNumeral 2)) (emeta ((loc <opaque>))))))))
+            (emeta ((loc <opaque>))))))))
+       (smeta ((loc <opaque>))))))
+    (xloc
+     ((begin_loc
+       ((filename string) (line_num 1) (col_num 0) (included_from ())))
+      (end_loc
+       ((filename string) (line_num 1) (col_num 54) (included_from ()))))))))
+ (generatedquantitiesblock ()) (comments <opaque>)) |}]
 
 let%expect_test "parse operator precedence" =
   print_ast_of_string

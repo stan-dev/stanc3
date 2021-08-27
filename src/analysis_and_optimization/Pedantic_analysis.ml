@@ -238,7 +238,7 @@ let list_non_one_priors (fg : factor_graph) (mir : Program.Typed.t) :
 (* Collect useful information about an expression that's available at
    compile-time into a convenient form. *)
 let compiletime_value_of_expr
-    (params : (string * Expr.Typed.t Program.transformation) Set.Poly.t)
+    (params : (string * Expr.Typed.t Transformation.t) Set.Poly.t)
     (data : string Set.Poly.t) (expr : Expr.Typed.t) :
     compiletime_val * Expr.Typed.Meta.t =
   let v =
@@ -263,7 +263,7 @@ let compiletime_value_of_expr
 let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
   let take_dist (expr : Expr.Typed.t) =
     match expr.pattern with
-    | Expr.Fixed.Pattern.FunApp (StanLib (fname, FnLpdf true), arg_exprs) ->
+    | Expr.Fixed.Pattern.FunApp (StanLib (fname, FnLpdf true, _), arg_exprs) ->
         let fname = chop_dist_name fname |> Option.value_exn in
         let params = parameter_set mir in
         let data = data_set mir in

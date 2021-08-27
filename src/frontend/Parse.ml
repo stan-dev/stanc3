@@ -5,7 +5,7 @@ open Core_kernel
 open Middle
 
 let parse parse_fun lexbuf =
-  Warnings.init () ;
+  Input_warnings.init () ;
   Lexer.comments := [] ;
   (* see the Menhir manual for the description of
      error messages support *)
@@ -61,7 +61,7 @@ let parse parse_fun lexbuf =
     with Errors.SyntaxError err -> Result.Error (Errors.Syntax_error err)
   in
   Lexer.comments := [] ;
-  (result, Warnings.collect ())
+  (result, Input_warnings.collect ())
 
 let parse_string parse_fun str =
   let lexbuf =

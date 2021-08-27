@@ -23,11 +23,57 @@ model {
   y ~ normal(0, 1);
 }
 
+$ node data-generation.js
+{
+"x": [[6, 2, 4, 2], [3, 2, 6, 2], [6, 3, 4, 2]],
+"y":
+  [[[6, 5, 5, 5], [6, 3, 2, 5]], [[6, 2, 6, 6], [2, 5, 5, 2]],
+    [[4, 4, 4, 3], [2, 4, 6, 2]], [[2, 5, 3, 6], [5, 5, 6, 5]],
+    [[6, 6, 5, 3], [3, 4, 2, 5]]],
+"z":
+  [[5.8530474347281336, 6.3955297933730639, 6.4404632518168468,
+     5.8926590620580992],
+    [5.8815901469879766, 3.9191590616049568, 3.7206314135215708,
+      2.171635388977561],
+    [4.925001387848174, 6.97212837743693, 2.8719106043920211,
+      5.3835056697400123]],
+"w": [2.9621789585306804, 5.5083017771155482, 5.505904011446936],
+"p":
+  [[5.2217505923869556, 2.0493220812048105, 3.1335081619228875],
+    [2.3086085754863221, 5.0735880143406691, 4.9955866267343172],
+    [6.7239589323018487, 6.0503609645580525, 6.1832136714928119],
+    [2.9385807829191903, 5.5620586856883119, 6.2768699310734206]]
+}
 $ node filename.js
 Semantic error in 'good_filename', line 6, column 4 to column 5: 
 Identifier 'z' not in scope.
 Semantic error in 'string', line 6, column 4 to column 5: 
 Identifier 'z' not in scope.
+$ node info.js
+{ "inputs": { "a": { "type": "int", "dimensions": 0},
+              "b": { "type": "real", "dimensions": 0},
+              "c": { "type": "real", "dimensions": 1},
+              "d": { "type": "real", "dimensions": 1},
+              "e": { "type": "real", "dimensions": 2},
+              "f": { "type": "int", "dimensions": 1},
+              "g": { "type": "real", "dimensions": 1},
+              "h": { "type": "real", "dimensions": 2},
+              "i": { "type": "real", "dimensions": 3},
+              "j": { "type": "int", "dimensions": 3} },
+  "parameters": { "l": { "type": "real", "dimensions": 1},
+                  "m": { "type": "real", "dimensions": 1},
+                  "n": { "type": "real", "dimensions": 1},
+                  "o": { "type": "real", "dimensions": 1},
+                  "p": { "type": "real", "dimensions": 2},
+                  "q": { "type": "real", "dimensions": 2},
+                  "r": { "type": "real", "dimensions": 2},
+                  "s": { "type": "real", "dimensions": 2},
+                  "y": { "type": "real", "dimensions": 0} },
+  "transformed parameters": {  },
+  "generated quantities": {  },
+  "functions": [  ],
+  "distributions": [  ] }
+
 $ node optimization.js
 Semantic error in 'string', line 3, column 4 to column 20: 
 Some function is declared without specifying a definition.

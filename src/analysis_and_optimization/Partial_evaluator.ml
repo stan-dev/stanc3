@@ -88,7 +88,7 @@ let rec eval_expr (e : Expr.Typed.t) =
           let l = List.map ~f:eval_expr l in
           match kind with
           | UserDefined _ | CompilerInternal _ -> FunApp (kind, l)
-          | StanLib (f, suffix) ->
+          | StanLib (f, suffix, mem_type) ->
               let get_fun_or_op_rt_opt name l' =
                 let argument_types =
                   List.map
@@ -107,11 +107,14 @@ let rec eval_expr (e : Expr.Typed.t) =
               let try_partially_evaluate_stanlib e =
                 Expr.Fixed.Pattern.(
                   match e with
-                  | FunApp (StanLib (f', suffix'), l') -> (
+                  | FunApp (StanLib (f', suffix', mem_type), l') -> (
                     match get_fun_or_op_rt_opt f' l' with
-                    | Some _ -> FunApp (StanLib (f', suffix'), l')
-                    | None -> FunApp (StanLib (f, suffix), l) )
+                    | Some _ -> FunApp (StanLib (f', suffix', mem_type), l')
+                    | None -> FunApp (StanLib (f, suffix, mem_type), l) )
                   | e -> e)
+              in
+              let lub_mem_pat lst =
+                Common.Helpers.lub_mem_pat (List.cons mem_type lst)
               in
               try_partially_evaluate_stanlib
                 ( match (f, l) with
@@ -120,643 +123,775 @@ let rec eval_expr (e : Expr.Typed.t) =
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("inv_logit", FnPlain)
+                            ( StanLib ("inv_logit", FnPlain, mem1)
                             , [ { pattern=
                                     FunApp
-                                      ( StanLib ("Plus__", FnPlain)
+                                      ( StanLib ("Plus__", FnPlain, mem2)
                                       , [ alpha
                                         ; { pattern=
                                               FunApp
-                                                ( StanLib ("Times__", FnPlain)
+                                                ( StanLib
+                                                    ("Times__", FnPlain, mem3)
                                                 , [x; beta] ); _ } ] ); _ } ] ); _
                       } ] )
                   when Expr.Typed.type_of x = UMatrix ->
+                    let lub_mem = lub_mem_pat [mem1; mem2; mem3] in
                     FunApp
-                      ( StanLib ("bernoulli_logit_glm_lpmf", suffix)
+                      ( StanLib ("bernoulli_logit_glm_lpmf", suffix, lub_mem)
                       , [y; x; alpha; beta] )
                 | ( "bernoulli_lpmf"
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("inv_logit", FnPlain)
+                            ( StanLib ("inv_logit", FnPlain, mem1)
                             , [ { pattern=
                                     FunApp
-                                      ( StanLib ("Plus__", FnPlain)
+                                      ( StanLib ("Plus__", FnPlain, mem2)
                                       , [ { pattern=
                                               FunApp
-                                                ( StanLib ("Times__", FnPlain)
+                                                ( StanLib
+                                                    ("Times__", FnPlain, mem3)
                                                 , [x; beta] ); _ }
                                         ; alpha ] ); _ } ] ); _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
+                    let lub_mem = lub_mem_pat [mem1; mem2; mem3] in
                     FunApp
-                      ( StanLib ("bernoulli_logit_glm_lpmf", suffix)
+                      ( StanLib ("bernoulli_logit_glm_lpmf", suffix, lub_mem)
                       , [y; x; alpha; beta] )
                 | ( "bernoulli_lpmf"
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("inv_logit", FnPlain)
+                            ( StanLib ("inv_logit", FnPlain, mem1)
                             , [ { pattern=
                                     FunApp
-                                      (StanLib ("Times__", FnPlain), [x; beta]); _
-                                } ] ); _ } ] )
+                                      ( StanLib ("Times__", FnPlain, mem2)
+                                      , [x; beta] ); _ } ] ); _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
+                    let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp
-                      ( StanLib ("bernoulli_logit_glm_lpmf", suffix)
+                      ( StanLib ("bernoulli_logit_glm_lpmf", suffix, lub_mem)
                       , [y; x; Expr.Helpers.zero; beta] )
                 | ( "bernoulli_logit_lpmf"
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("Plus__", FnPlain)
+                            ( StanLib ("Plus__", FnPlain, mem1)
                             , [ alpha
                               ; { pattern=
                                     FunApp
-                                      (StanLib ("Times__", FnPlain), [x; beta]); _
-                                } ] ); _ } ] )
+                                      ( StanLib ("Times__", FnPlain, mem2)
+                                      , [x; beta] ); _ } ] ); _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
+                    let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp
-                      ( StanLib ("bernoulli_logit_glm_lpmf", suffix)
+                      ( StanLib ("bernoulli_logit_glm_lpmf", suffix, lub_mem)
                       , [y; x; alpha; beta] )
                 | ( "bernoulli_logit_lpmf"
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("Plus__", FnPlain)
+                            ( StanLib ("Plus__", FnPlain, mem1)
                             , [ { pattern=
                                     FunApp
-                                      (StanLib ("Times__", FnPlain), [x; beta]); _
-                                }
+                                      ( StanLib ("Times__", FnPlain, mem2)
+                                      , [x; beta] ); _ }
                               ; alpha ] ); _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
+                    let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp
-                      ( StanLib ("bernoulli_logit_glm_lpmf", suffix)
+                      ( StanLib ("bernoulli_logit_glm_lpmf", suffix, lub_mem)
                       , [y; x; alpha; beta] )
                 | ( "bernoulli_logit_lpmf"
                   , [ y
                     ; { pattern=
-                          FunApp (StanLib ("Times__", FnPlain), [x; beta]); _
+                          FunApp (StanLib ("Times__", FnPlain, mem), [x; beta]); _
                       } ] )
                   when Expr.Typed.type_of x = UMatrix ->
                     FunApp
-                      ( StanLib ("bernoulli_logit_glm_lpmf", suffix)
+                      ( StanLib
+                          ( "bernoulli_logit_glm_lpmf"
+                          , suffix
+                          , lub_mem_pat [mem] )
                       , [y; x; Expr.Helpers.zero; beta] )
                 | ( "bernoulli_lpmf"
                   , [ y
                     ; { pattern=
-                          FunApp (StanLib ("inv_logit", FnPlain), [alpha]); _
+                          FunApp (StanLib ("inv_logit", FnPlain, mem), [alpha]); _
                       } ] ) ->
                     FunApp
-                      (StanLib ("bernoulli_logit_lpmf", suffix), [y; alpha])
+                      ( StanLib
+                          ("bernoulli_logit_lpmf", suffix, lub_mem_pat [mem])
+                      , [y; alpha] )
                 | ( "bernoulli_rng"
                   , [ { pattern=
-                          FunApp (StanLib ("inv_logit", FnPlain), [alpha]); _
+                          FunApp (StanLib ("inv_logit", FnPlain, mem), [alpha]); _
                       } ] ) ->
-                    FunApp (StanLib ("bernoulli_logit_rng", suffix), [alpha])
+                    FunApp
+                      ( StanLib
+                          ("bernoulli_logit_rng", suffix, lub_mem_pat [mem])
+                      , [alpha] )
                 | ( "binomial_lpmf"
                   , [ y
                     ; n
                     ; { pattern=
-                          FunApp (StanLib ("inv_logit", FnPlain), [alpha]); _
+                          FunApp (StanLib ("inv_logit", FnPlain, mem), [alpha]); _
                       } ] ) ->
                     FunApp
-                      (StanLib ("binomial_logit_lpmf", suffix), [y; n; alpha])
+                      ( StanLib
+                          ("binomial_logit_lpmf", suffix, lub_mem_pat [mem])
+                      , [y; n; alpha] )
                 | ( "categorical_lpmf"
                   , [ y
                     ; { pattern=
-                          FunApp (StanLib ("inv_logit", FnPlain), [alpha]); _
+                          FunApp (StanLib ("inv_logit", FnPlain, mem), [alpha]); _
                       } ] ) ->
                     FunApp
-                      (StanLib ("categorical_logit_lpmf", suffix), [y; alpha])
+                      ( StanLib
+                          ("categorical_logit_lpmf", suffix, lub_mem_pat [mem])
+                      , [y; alpha] )
                 | ( "categorical_rng"
                   , [ { pattern=
-                          FunApp (StanLib ("inv_logit", FnPlain), [alpha]); _
+                          FunApp (StanLib ("inv_logit", FnPlain, mem), [alpha]); _
                       } ] ) ->
-                    FunApp (StanLib ("categorical_logit_rng", suffix), [alpha])
+                    FunApp
+                      ( StanLib
+                          ("categorical_logit_rng", suffix, lub_mem_pat [mem])
+                      , [alpha] )
                 | "columns_dot_product", [x; y] when Expr.Typed.equal x y ->
-                    FunApp (StanLib ("columns_dot_self", suffix), [x])
+                    FunApp (StanLib ("columns_dot_self", suffix, mem_type), [x])
                 | "dot_product", [x; y] when Expr.Typed.equal x y ->
-                    FunApp (StanLib ("dot_self", suffix), [x])
-                | "inv", [{pattern= FunApp (StanLib ("sqrt", FnPlain), l); _}]
-                  ->
-                    FunApp (StanLib ("inv_sqrt", suffix), l)
+                    FunApp (StanLib ("dot_self", suffix, mem_type), [x])
                 | ( "inv"
-                  , [{pattern= FunApp (StanLib ("square", FnPlain), [x]); _}] )
-                  ->
-                    FunApp (StanLib ("inv_square", suffix), [x])
+                  , [{pattern= FunApp (StanLib ("sqrt", FnPlain, mem), l); _}]
+                  ) ->
+                    FunApp (StanLib ("inv_sqrt", suffix, mem), l)
+                | ( "inv"
+                  , [ { pattern= FunApp (StanLib ("square", FnPlain, mem), [x]); _
+                      } ] ) ->
+                    FunApp
+                      (StanLib ("inv_square", suffix, lub_mem_pat [mem]), [x])
                 | ( "log"
                   , [ { pattern=
                           FunApp
-                            ( StanLib ("Minus__", FnPlain)
+                            ( StanLib ("Minus__", FnPlain, mem1)
                             , [ y
                               ; { pattern=
-                                    FunApp (StanLib ("exp", FnPlain), [x]); _
+                                    FunApp (StanLib ("exp", FnPlain, mem2), [x]); _
                                 } ] ); _ } ] )
                   when is_int 1 y && not preserve_stability ->
-                    FunApp (StanLib ("log1m_exp", suffix), [x])
+                    let lub_mem = lub_mem_pat [mem1; mem2] in
+                    FunApp (StanLib ("log1m_exp", suffix, lub_mem), [x])
                 | ( "log"
                   , [ { pattern=
                           FunApp
-                            ( StanLib ("Minus__", FnPlain)
+                            ( StanLib ("Minus__", FnPlain, mem1)
                             , [ y
                               ; { pattern=
-                                    FunApp (StanLib ("inv_logit", FnPlain), [x]); _
-                                } ] ); _ } ] )
+                                    FunApp
+                                      ( StanLib ("inv_logit", FnPlain, mem2)
+                                      , [x] ); _ } ] ); _ } ] )
                   when is_int 1 y && not preserve_stability ->
-                    FunApp (StanLib ("log1m_inv_logit", suffix), [x])
+                    let lub_mem = lub_mem_pat [mem1; mem2] in
+                    FunApp (StanLib ("log1m_inv_logit", suffix, lub_mem), [x])
                 | ( "log"
-                  , [ { pattern= FunApp (StanLib ("Minus__", FnPlain), [y; x]); _
+                  , [ { pattern=
+                          FunApp (StanLib ("Minus__", FnPlain, mem), [y; x]); _
                       } ] )
                   when is_int 1 y && not preserve_stability ->
-                    FunApp (StanLib ("log1m", suffix), [x])
+                    FunApp (StanLib ("log1m", suffix, lub_mem_pat [mem]), [x])
                 | ( "log"
                   , [ { pattern=
                           FunApp
-                            ( StanLib ("Plus__", FnPlain)
+                            ( StanLib ("Plus__", FnPlain, mem1)
                             , [ y
                               ; { pattern=
-                                    FunApp (StanLib ("exp", FnPlain), [x]); _
+                                    FunApp (StanLib ("exp", FnPlain, mem2), [x]); _
                                 } ] ); _ } ] )
                   when is_int 1 y && not preserve_stability ->
-                    FunApp (StanLib ("log1p_exp", suffix), [x])
+                    let lub_mem = lub_mem_pat [mem1; mem2] in
+                    FunApp (StanLib ("log1p_exp", suffix, lub_mem), [x])
                 | ( "log"
-                  , [{pattern= FunApp (StanLib ("Plus__", FnPlain), [y; x]); _}]
-                  )
+                  , [ { pattern=
+                          FunApp (StanLib ("Plus__", FnPlain, mem), [y; x]); _
+                      } ] )
                   when is_int 1 y && not preserve_stability ->
-                    FunApp (StanLib ("log1p", suffix), [x])
+                    FunApp (StanLib ("log1p", suffix, lub_mem_pat [mem]), [x])
                 | ( "log"
                   , [ { pattern=
                           FunApp
-                            ( StanLib ("fabs", FnPlain)
+                            ( StanLib ("fabs", FnPlain, mem1)
                             , [ { pattern=
                                     FunApp
-                                      (StanLib ("determinant", FnPlain), [x]); _
-                                } ] ); _ } ] ) ->
-                    FunApp (StanLib ("log_determinant", suffix), [x])
+                                      ( StanLib ("determinant", FnPlain, mem2)
+                                      , [x] ); _ } ] ); _ } ] ) ->
+                    let lub_mem = lub_mem_pat [mem1; mem2] in
+                    FunApp (StanLib ("log_determinant", suffix, lub_mem), [x])
                 | ( "log"
                   , [ { pattern=
                           FunApp
-                            ( StanLib ("Minus__", FnPlain)
+                            ( StanLib ("Minus__", FnPlain, mem1)
                             , [ { pattern=
-                                    FunApp (StanLib ("exp", FnPlain), [x]); _
+                                    FunApp (StanLib ("exp", FnPlain, mem2), [x]); _
                                 }
                               ; { pattern=
-                                    FunApp (StanLib ("exp", FnPlain), [y]); _
+                                    FunApp (StanLib ("exp", FnPlain, mem3), [y]); _
                                 } ] ); _ } ] ) ->
-                    FunApp (StanLib ("log_diff_exp", suffix), [x; y])
+                    let lub_mem = lub_mem_pat [mem1; mem2; mem3] in
+                    FunApp (StanLib ("log_diff_exp", suffix, lub_mem), [x; y])
                 (* TODO: log_mix?*)
                 | ( "log"
                   , [ { pattern=
-                          FunApp (StanLib ("falling_factorial", FnPlain), l); _
+                          FunApp
+                            (StanLib ("falling_factorial", FnPlain, mem), l); _
                       } ] ) ->
-                    FunApp (StanLib ("log_falling_factorial", suffix), l)
+                    FunApp
+                      ( StanLib
+                          ("log_falling_factorial", suffix, lub_mem_pat [mem])
+                      , l )
                 | ( "log"
                   , [ { pattern=
-                          FunApp (StanLib ("rising_factorial", FnPlain), l); _
+                          FunApp (StanLib ("rising_factorial", FnPlain, mem), l); _
                       } ] ) ->
-                    FunApp (StanLib ("log_rising_factorial", suffix), l)
+                    FunApp
+                      ( StanLib
+                          ("log_rising_factorial", suffix, lub_mem_pat [mem])
+                      , l )
                 | ( "log"
-                  , [{pattern= FunApp (StanLib ("inv_logit", FnPlain), l); _}]
-                  ) ->
-                    FunApp (StanLib ("log_inv_logit", suffix), l)
+                  , [ { pattern= FunApp (StanLib ("inv_logit", FnPlain, mem), l); _
+                      } ] ) ->
+                    FunApp
+                      (StanLib ("log_inv_logit", suffix, lub_mem_pat [mem]), l)
                 | ( "log"
-                  , [{pattern= FunApp (StanLib ("softmax", FnPlain), l); _}] )
-                  ->
-                    FunApp (StanLib ("log_softmax", suffix), l)
+                  , [ { pattern= FunApp (StanLib ("softmax", FnPlain, mem), l); _
+                      } ] ) ->
+                    FunApp
+                      (StanLib ("log_softmax", suffix, lub_mem_pat [mem]), l)
                 | ( "log"
                   , [ { pattern=
                           FunApp
-                            ( StanLib ("sum", FnPlain)
-                            , [ { pattern= FunApp (StanLib ("exp", FnPlain), l); _
-                                } ] ); _ } ] ) ->
-                    FunApp (StanLib ("log_sum_exp", suffix), l)
-                | ( "log"
-                  , [ { pattern=
-                          FunApp
-                            ( StanLib ("Plus__", FnPlain)
+                            ( StanLib ("sum", FnPlain, mem1)
                             , [ { pattern=
-                                    FunApp (StanLib ("exp", FnPlain), [x]); _
+                                    FunApp (StanLib ("exp", FnPlain, mem2), l); _
+                                } ] ); _ } ] ) ->
+                    let lub_mem = lub_mem_pat [mem1; mem2] in
+                    FunApp (StanLib ("log_sum_exp", suffix, lub_mem), l)
+                | ( "log"
+                  , [ { pattern=
+                          FunApp
+                            ( StanLib ("Plus__", FnPlain, mem1)
+                            , [ { pattern=
+                                    FunApp (StanLib ("exp", FnPlain, mem2), [x]); _
                                 }
                               ; { pattern=
-                                    FunApp (StanLib ("exp", FnPlain), [y]); _
+                                    FunApp (StanLib ("exp", FnPlain, mem3), [y]); _
                                 } ] ); _ } ] ) ->
-                    FunApp (StanLib ("log_sum_exp", suffix), [x; y])
+                    let lub_mem = lub_mem_pat [mem1; mem2; mem3] in
+                    FunApp (StanLib ("log_sum_exp", suffix, lub_mem), [x; y])
                 | ( "multi_normal_lpdf"
                   , [ y
                     ; mu
-                    ; {pattern= FunApp (StanLib ("inverse", FnPlain), [tau]); _}
-                    ] ) ->
+                    ; { pattern=
+                          FunApp (StanLib ("inverse", FnPlain, mem), [tau]); _
+                      } ] ) ->
+                    let lub_mem = lub_mem_pat [mem] in
                     FunApp
-                      (StanLib ("multi_normal_prec_lpdf", suffix), [y; mu; tau])
+                      ( StanLib ("multi_normal_prec_lpdf", suffix, lub_mem)
+                      , [y; mu; tau] )
                 | ( "neg_binomial_2_lpmf"
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("exp", FnPlain)
+                            ( StanLib ("exp", FnPlain, mem1)
                             , [ { pattern=
                                     FunApp
-                                      ( StanLib ("Plus__", FnPlain)
+                                      ( StanLib ("Plus__", FnPlain, mem2)
                                       , [ alpha
                                         ; { pattern=
                                               FunApp
-                                                ( StanLib ("Times__", FnPlain)
+                                                ( StanLib
+                                                    ("Times__", FnPlain, mem3)
                                                 , [x; beta] ); _ } ] ); _ } ] ); _
                       }
                     ; sigma ] )
                   when Expr.Typed.type_of x = UMatrix ->
+                    let lub_mem = lub_mem_pat [mem1; mem2; mem3] in
                     FunApp
-                      ( StanLib ("neg_binomial_2_log_glm_lpmf", suffix)
+                      ( StanLib ("neg_binomial_2_log_glm_lpmf", suffix, lub_mem)
                       , [y; x; alpha; beta; sigma] )
                 | ( "neg_binomial_2_lpmf"
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("exp", FnPlain)
+                            ( StanLib ("exp", FnPlain, mem1)
                             , [ { pattern=
                                     FunApp
-                                      ( StanLib ("Plus__", FnPlain)
+                                      ( StanLib ("Plus__", FnPlain, mem2)
                                       , [ { pattern=
                                               FunApp
-                                                ( StanLib ("Times__", FnPlain)
+                                                ( StanLib
+                                                    ("Times__", FnPlain, mem3)
                                                 , [x; beta] ); _ }
                                         ; alpha ] ); _ } ] ); _ }
                     ; sigma ] )
                   when Expr.Typed.type_of x = UMatrix ->
+                    let lub_mem = lub_mem_pat [mem1; mem2; mem3] in
                     FunApp
-                      ( StanLib ("neg_binomial_2_log_glm_lpmf", suffix)
+                      ( StanLib ("neg_binomial_2_log_glm_lpmf", suffix, lub_mem)
                       , [y; x; alpha; beta; sigma] )
                 | ( "neg_binomial_2_lpmf"
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("exp", FnPlain)
+                            ( StanLib ("exp", FnPlain, mem1)
                             , [ { pattern=
                                     FunApp
-                                      (StanLib ("Times__", FnPlain), [x; beta]); _
-                                } ] ); _ }
+                                      ( StanLib ("Times__", FnPlain, mem2)
+                                      , [x; beta] ); _ } ] ); _ }
                     ; sigma ] )
                   when Expr.Typed.type_of x = UMatrix ->
+                    let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp
-                      ( StanLib ("neg_binomial_2_log_glm_lpmf", suffix)
+                      ( StanLib ("neg_binomial_2_log_glm_lpmf", suffix, lub_mem)
                       , [y; x; Expr.Helpers.zero; beta; sigma] )
                 | ( "neg_binomial_2_log_lpmf"
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("Plus__", FnPlain)
+                            ( StanLib ("Plus__", FnPlain, mem1)
                             , [ alpha
                               ; { pattern=
                                     FunApp
-                                      (StanLib ("Times__", FnPlain), [x; beta]); _
-                                } ] ); _ }
+                                      ( StanLib ("Times__", FnPlain, mem2)
+                                      , [x; beta] ); _ } ] ); _ }
                     ; sigma ] )
                   when Expr.Typed.type_of x = UMatrix ->
+                    let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp
-                      ( StanLib ("neg_binomial_2_log_glm_lpmf", suffix)
+                      ( StanLib ("neg_binomial_2_log_glm_lpmf", suffix, lub_mem)
                       , [y; x; alpha; beta; sigma] )
                 | ( "neg_binomial_2_log_lpmf"
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("Plus__", FnPlain)
+                            ( StanLib ("Plus__", FnPlain, mem1)
                             , [ { pattern=
                                     FunApp
-                                      (StanLib ("Times__", FnPlain), [x; beta]); _
-                                }
+                                      ( StanLib ("Times__", FnPlain, mem2)
+                                      , [x; beta] ); _ }
                               ; alpha ] ); _ }
                     ; sigma ] )
                   when Expr.Typed.type_of x = UMatrix ->
+                    let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp
-                      ( StanLib ("neg_binomial_2_log_glm_lpmf", suffix)
+                      ( StanLib ("neg_binomial_2_log_glm_lpmf", suffix, lub_mem)
                       , [y; x; alpha; beta; sigma] )
                 | ( "neg_binomial_2_log_lpmf"
                   , [ y
                     ; { pattern=
-                          FunApp (StanLib ("Times__", FnPlain), [x; beta]); _
+                          FunApp (StanLib ("Times__", FnPlain, mem), [x; beta]); _
                       }
                     ; sigma ] )
                   when Expr.Typed.type_of x = UMatrix ->
+                    let lub_mem = lub_mem_pat [mem] in
                     FunApp
-                      ( StanLib ("neg_binomial_2_log_glm_lpmf", suffix)
+                      ( StanLib ("neg_binomial_2_log_glm_lpmf", suffix, lub_mem)
                       , [y; x; Expr.Helpers.zero; beta; sigma] )
                 | ( "neg_binomial_2_lpmf"
                   , [ y
-                    ; {pattern= FunApp (StanLib ("exp", FnPlain), [eta]); _}
+                    ; { pattern= FunApp (StanLib ("exp", FnPlain, mem), [eta]); _
+                      }
                     ; phi ] ) ->
+                    let lub_mem = lub_mem_pat [mem] in
                     FunApp
-                      ( StanLib ("neg_binomial_2_log_lpmf", suffix)
+                      ( StanLib ("neg_binomial_2_log_lpmf", suffix, lub_mem)
                       , [y; eta; phi] )
                 | ( "neg_binomial_2_rng"
-                  , [ {pattern= FunApp (StanLib ("exp", FnPlain), [eta]); _}
+                  , [ { pattern= FunApp (StanLib ("exp", FnPlain, mem), [eta]); _
+                      }
                     ; phi ] ) ->
+                    let lub_mem = lub_mem_pat [mem] in
                     FunApp
-                      (StanLib ("neg_binomial_2_log_rng", suffix), [eta; phi])
+                      ( StanLib ("neg_binomial_2_log_rng", suffix, lub_mem)
+                      , [eta; phi] )
                 | ( "normal_lpdf"
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("Plus__", FnPlain)
+                            ( StanLib ("Plus__", FnPlain, mem1)
                             , [ alpha
                               ; { pattern=
                                     FunApp
-                                      (StanLib ("Times__", FnPlain), [x; beta]); _
-                                } ] ); _ }
+                                      ( StanLib ("Times__", FnPlain, mem2)
+                                      , [x; beta] ); _ } ] ); _ }
                     ; sigma ] )
                   when Expr.Typed.type_of x = UMatrix ->
+                    let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp
-                      ( StanLib ("normal_id_glm_lpdf", suffix)
+                      ( StanLib ("normal_id_glm_lpdf", suffix, lub_mem)
                       , [y; x; alpha; beta; sigma] )
                 | ( "normal_lpdf"
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("Plus__", FnPlain)
+                            ( StanLib ("Plus__", FnPlain, mem1)
                             , [ { pattern=
                                     FunApp
-                                      (StanLib ("Times__", FnPlain), [x; beta]); _
-                                }
+                                      ( StanLib ("Times__", FnPlain, mem2)
+                                      , [x; beta] ); _ }
                               ; alpha ] ); _ }
                     ; sigma ] )
                   when Expr.Typed.type_of x = UMatrix ->
+                    let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp
-                      ( StanLib ("normal_id_glm_lpdf", suffix)
+                      ( StanLib ("normal_id_glm_lpdf", suffix, lub_mem)
                       , [y; x; alpha; beta; sigma] )
                 | ( "normal_lpdf"
                   , [ y
                     ; { pattern=
-                          FunApp (StanLib ("Times__", FnPlain), [x; beta]); _
+                          FunApp (StanLib ("Times__", FnPlain, mem), [x; beta]); _
                       }
                     ; sigma ] )
                   when Expr.Typed.type_of x = UMatrix ->
+                    let lub_mem = lub_mem_pat [mem] in
                     FunApp
-                      ( StanLib ("normal_id_glm_lpdf", suffix)
+                      ( StanLib ("normal_id_glm_lpdf", suffix, lub_mem)
                       , [y; x; Expr.Helpers.zero; beta; sigma] )
                 | ( "poisson_lpmf"
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("exp", FnPlain)
+                            ( StanLib ("exp", FnPlain, mem1)
                             , [ { pattern=
                                     FunApp
-                                      ( StanLib ("Plus__", FnPlain)
+                                      ( StanLib ("Plus__", FnPlain, mem2)
                                       , [ alpha
                                         ; { pattern=
                                               FunApp
-                                                ( StanLib ("Times__", FnPlain)
+                                                ( StanLib
+                                                    ("Times__", FnPlain, mem3)
                                                 , [x; beta] ); _ } ] ); _ } ] ); _
                       } ] )
                   when Expr.Typed.type_of x = UMatrix ->
+                    let lub_mem = lub_mem_pat [mem1; mem2; mem3] in
                     FunApp
-                      ( StanLib ("poisson_log_glm_lpmf", suffix)
+                      ( StanLib ("poisson_log_glm_lpmf", suffix, lub_mem)
                       , [y; x; alpha; beta] )
                 | ( "poisson_lpmf"
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("exp", FnPlain)
+                            ( StanLib ("exp", FnPlain, mem1)
                             , [ { pattern=
                                     FunApp
-                                      ( StanLib ("Plus__", FnPlain)
+                                      ( StanLib ("Plus__", FnPlain, mem2)
                                       , [ { pattern=
                                               FunApp
-                                                ( StanLib ("Times__", FnPlain)
+                                                ( StanLib
+                                                    ("Times__", FnPlain, mem3)
                                                 , [x; beta] ); _ }
                                         ; alpha ] ); _ } ] ); _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
+                    let lub_mem = lub_mem_pat [mem1; mem2; mem3] in
                     FunApp
-                      ( StanLib ("poisson_log_glm_lpmf", suffix)
+                      ( StanLib ("poisson_log_glm_lpmf", suffix, lub_mem)
                       , [y; x; alpha; beta] )
                 | ( "poisson_lpmf"
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("exp", FnPlain)
+                            ( StanLib ("exp", FnPlain, mem1)
                             , [ { pattern=
                                     FunApp
-                                      (StanLib ("Times__", FnPlain), [x; beta]); _
-                                } ] ); _ } ] )
+                                      ( StanLib ("Times__", FnPlain, mem2)
+                                      , [x; beta] ); _ } ] ); _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
+                    let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp
-                      ( StanLib ("poisson_log_glm_lpmf", suffix)
+                      ( StanLib ("poisson_log_glm_lpmf", suffix, lub_mem)
                       , [y; x; Expr.Helpers.zero; beta] )
                 | ( "poisson_log_lpmf"
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("Plus__", FnPlain)
+                            ( StanLib ("Plus__", FnPlain, mem1)
                             , [ alpha
                               ; { pattern=
                                     FunApp
-                                      (StanLib ("Times__", FnPlain), [x; beta]); _
-                                } ] ); _ } ] )
+                                      ( StanLib ("Times__", FnPlain, mem2)
+                                      , [x; beta] ); _ } ] ); _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
+                    let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp
-                      ( StanLib ("poisson_log_glm_lpmf", suffix)
+                      ( StanLib ("poisson_log_glm_lpmf", suffix, lub_mem)
                       , [y; x; alpha; beta] )
                 | ( "poisson_log_lpmf"
                   , [ y
                     ; { pattern=
                           FunApp
-                            ( StanLib ("Plus__", FnPlain)
+                            ( StanLib ("Plus__", FnPlain, mem1)
                             , [ { pattern=
                                     FunApp
-                                      (StanLib ("Times__", FnPlain), [x; beta]); _
-                                }
+                                      ( StanLib ("Times__", FnPlain, mem2)
+                                      , [x; beta] ); _ }
                               ; alpha ] ); _ } ] )
                   when Expr.Typed.type_of x = UMatrix ->
+                    let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp
-                      ( StanLib ("poisson_log_glm_lpmf", suffix)
+                      ( StanLib ("poisson_log_glm_lpmf", suffix, lub_mem)
                       , [y; x; alpha; beta] )
                 | ( "poisson_log_lpmf"
                   , [ y
                     ; { pattern=
-                          FunApp (StanLib ("Times__", FnPlain), [x; beta]); _
+                          FunApp (StanLib ("Times__", FnPlain, mem), [x; beta]); _
                       } ] )
                   when Expr.Typed.type_of x = UMatrix ->
+                    let lub_mem = lub_mem_pat [mem] in
                     FunApp
-                      ( StanLib ("poisson_log_glm_lpmf", suffix)
+                      ( StanLib ("poisson_log_glm_lpmf", suffix, lub_mem)
                       , [y; x; Expr.Helpers.zero; beta] )
                 | ( "poisson_lpmf"
-                  , [y; {pattern= FunApp (StanLib ("exp", FnPlain), [eta]); _}]
-                  ) ->
-                    FunApp (StanLib ("poisson_log_lpmf", suffix), [y; eta])
+                  , [ y
+                    ; { pattern= FunApp (StanLib ("exp", FnPlain, mem), [eta]); _
+                      } ] ) ->
+                    let lub_mem = lub_mem_pat [mem] in
+                    FunApp
+                      (StanLib ("poisson_log_lpmf", suffix, lub_mem), [y; eta])
                 | ( "poisson_rng"
-                  , [{pattern= FunApp (StanLib ("exp", FnPlain), [eta]); _}] )
-                  ->
-                    FunApp (StanLib ("poisson_log_rng", suffix), [eta])
+                  , [ { pattern= FunApp (StanLib ("exp", FnPlain, mem), [eta]); _
+                      } ] ) ->
+                    let lub_mem = lub_mem_pat [mem] in
+                    FunApp (StanLib ("poisson_log_rng", suffix, lub_mem), [eta])
                 | "pow", [y; x] when is_int 2 y ->
-                    FunApp (StanLib ("exp2", suffix), [x])
+                    FunApp (StanLib ("exp2", suffix, mem_type), [x])
                 | "rows_dot_product", [x; y] when Expr.Typed.equal x y ->
-                    FunApp (StanLib ("rows_dot_self", suffix), [x])
+                    FunApp (StanLib ("rows_dot_self", suffix, mem_type), [x])
                 | "pow", [x; {pattern= Lit (Int, "2"); _}] ->
-                    FunApp (StanLib ("square", suffix), [x])
+                    FunApp (StanLib ("square", suffix, mem_type), [x])
                 | "pow", [x; {pattern= Lit (Real, "0.5"); _}] ->
-                    FunApp (StanLib ("sqrt", suffix), [x])
+                    FunApp (StanLib ("sqrt", suffix, mem_type), [x])
                 | ( "pow"
                   , [ x
-                    ; { pattern= FunApp (StanLib ("Divide__", FnPlain), [y; z]); _
+                    ; { pattern=
+                          FunApp (StanLib ("Divide__", FnPlain, mem), [y; z]); _
                       } ] )
                   when is_int 1 y && is_int 2 z ->
-                    FunApp (StanLib ("sqrt", suffix), [x])
+                    let lub_mem = lub_mem_pat [mem] in
+                    FunApp (StanLib ("sqrt", suffix, lub_mem), [x])
                     (* This is wrong; if both are type UInt the exponent is rounds down to zero. *)
                 | ( "square"
-                  , [{pattern= FunApp (StanLib ("sd", FnPlain), [x]); _}] ) ->
-                    FunApp (StanLib ("variance", suffix), [x])
+                  , [{pattern= FunApp (StanLib ("sd", FnPlain, mem), [x]); _}]
+                  ) ->
+                    let lub_mem = lub_mem_pat [mem] in
+                    FunApp (StanLib ("variance", suffix, lub_mem), [x])
                 | "sqrt", [x] when is_int 2 x ->
-                    FunApp (StanLib ("sqrt2", suffix), [])
+                    FunApp (StanLib ("sqrt2", suffix, mem_type), [])
                 | ( "sum"
                   , [ { pattern=
                           FunApp
-                            ( StanLib ("square", FnPlain)
+                            ( StanLib ("square", FnPlain, mem1)
                             , [ { pattern=
                                     FunApp
-                                      (StanLib ("Minus__", FnPlain), [x; y]); _
-                                } ] ); _ } ] ) ->
-                    FunApp (StanLib ("squared_distance", suffix), [x; y])
+                                      ( StanLib ("Minus__", FnPlain, mem2)
+                                      , [x; y] ); _ } ] ); _ } ] ) ->
+                    let lub_mem = lub_mem_pat [mem1; mem2] in
+                    FunApp
+                      (StanLib ("squared_distance", suffix, lub_mem), [x; y])
                 | ( "sum"
-                  , [{pattern= FunApp (StanLib ("diagonal", FnPlain), l); _}] )
-                  ->
-                    FunApp (StanLib ("trace", suffix), l)
+                  , [ { pattern= FunApp (StanLib ("diagonal", FnPlain, mem), l); _
+                      } ] ) ->
+                    let lub_mem = lub_mem_pat [mem] in
+                    FunApp (StanLib ("trace", suffix, lub_mem), l)
                 | ( "trace"
                   , [ { pattern=
                           FunApp
-                            ( StanLib ("Times__", FnPlain)
+                            ( StanLib ("Times__", FnPlain, mem1)
                             , [ { pattern=
                                     FunApp
-                                      ( StanLib ("Times__", FnPlain)
+                                      ( StanLib ("Times__", FnPlain, mem2)
                                       , [ { pattern=
                                               FunApp
-                                                ( StanLib ("Times__", FnPlain)
+                                                ( StanLib
+                                                    ("Times__", FnPlain, mem3)
                                                 , [ d
                                                   ; { pattern=
                                                         FunApp
                                                           ( StanLib
                                                               ( "transpose"
-                                                              , FnPlain )
+                                                              , FnPlain
+                                                              , mem4 )
                                                           , [b] ); _ } ] ); _
                                           }
                                         ; a ] ); _ }
                               ; c ] ); _ } ] )
                   when Expr.Typed.equal b c ->
-                    FunApp (StanLib ("trace_gen_quad_form", suffix), [d; a; b])
+                    let lub_mem = lub_mem_pat [mem1; mem2; mem3; mem4] in
+                    FunApp
+                      ( StanLib ("trace_gen_quad_form", suffix, lub_mem)
+                      , [d; a; b] )
                 | ( "trace"
-                  , [ { pattern= FunApp (StanLib ("quad_form", FnPlain), [a; b]); _
+                  , [ { pattern=
+                          FunApp (StanLib ("quad_form", FnPlain, mem), [a; b]); _
                       } ] ) ->
-                    FunApp (StanLib ("trace_quad_form", suffix), [a; b])
+                    let lub_mem = lub_mem_pat [mem] in
+                    FunApp
+                      (StanLib ("trace_quad_form", suffix, lub_mem), [a; b])
                 | ( "Minus__"
-                  , [x; {pattern= FunApp (StanLib ("erf", FnPlain), l); _}] )
+                  , [x; {pattern= FunApp (StanLib ("erf", FnPlain, mem), l); _}]
+                  )
                   when is_int 1 x ->
-                    FunApp (StanLib ("erfc", suffix), l)
+                    let lub_mem = lub_mem_pat [mem] in
+                    FunApp (StanLib ("erfc", suffix, lub_mem), l)
                 | ( "Minus__"
-                  , [x; {pattern= FunApp (StanLib ("erfc", FnPlain), l); _}] )
+                  , [ x
+                    ; {pattern= FunApp (StanLib ("erfc", FnPlain, mem), l); _}
+                    ] )
                   when is_int 1 x ->
-                    FunApp (StanLib ("erf", suffix), l)
+                    let lub_mem = lub_mem_pat [mem] in
+                    FunApp (StanLib ("erf", suffix, lub_mem), l)
                 | ( "Minus__"
-                  , [{pattern= FunApp (StanLib ("exp", FnPlain), l'); _}; x] )
+                  , [ {pattern= FunApp (StanLib ("exp", FnPlain, mem), l'); _}
+                    ; x ] )
                   when is_int 1 x && not preserve_stability ->
-                    FunApp (StanLib ("expm1", suffix), l')
+                    let lub_mem = lub_mem_pat [mem] in
+                    FunApp (StanLib ("expm1", suffix, lub_mem), l')
                 | ( "Plus__"
-                  , [ { pattern= FunApp (StanLib ("Times__", FnPlain), [x; y]); _
+                  , [ { pattern=
+                          FunApp (StanLib ("Times__", FnPlain, mem), [x; y]); _
                       }
                     ; z ] )
                  |( "Plus__"
                   , [ z
-                    ; { pattern= FunApp (StanLib ("Times__", FnPlain), [x; y]); _
+                    ; { pattern=
+                          FunApp (StanLib ("Times__", FnPlain, mem), [x; y]); _
                       } ] )
                   when not preserve_stability ->
-                    FunApp (StanLib ("fma", suffix), [x; y; z])
+                    let lub_mem = lub_mem_pat [mem] in
+                    FunApp (StanLib ("fma", suffix, lub_mem), [x; y; z])
                 | ( "Minus__"
-                  , [x; {pattern= FunApp (StanLib ("gamma_p", FnPlain), l); _}]
-                  )
+                  , [ x
+                    ; { pattern= FunApp (StanLib ("gamma_p", FnPlain, mem), l); _
+                      } ] )
                   when is_int 1 x ->
-                    FunApp (StanLib ("gamma_q", suffix), l)
+                    let lub_mem = lub_mem_pat [mem] in
+                    FunApp (StanLib ("gamma_q", suffix, lub_mem), l)
                 | ( "Minus__"
-                  , [x; {pattern= FunApp (StanLib ("gamma_q", FnPlain), l); _}]
-                  )
+                  , [ x
+                    ; { pattern= FunApp (StanLib ("gamma_q", FnPlain, mem), l); _
+                      } ] )
                   when is_int 1 x ->
-                    FunApp (StanLib ("gamma_p", suffix), l)
+                    let lub_mem = lub_mem_pat [mem] in
+                    FunApp (StanLib ("gamma_p", suffix, lub_mem), l)
                 | ( "Times__"
                   , [ { pattern=
                           FunApp
-                            ( StanLib ("matrix_exp", FnPlain)
+                            ( StanLib ("matrix_exp", FnPlain, mem1)
                             , [ { pattern=
                                     FunApp
-                                      (StanLib ("Times__", FnPlain), [t; a]); _
-                                } ] ); _ }
+                                      ( StanLib ("Times__", FnPlain, mem2)
+                                      , [t; a] ); _ } ] ); _ }
                     ; b ] )
                   when Expr.Typed.type_of t = UInt
                        || Expr.Typed.type_of t = UReal ->
+                    let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp
-                      (StanLib ("scale_matrix_exp_multiply", suffix), [t; a; b])
+                      ( StanLib ("scale_matrix_exp_multiply", suffix, lub_mem)
+                      , [t; a; b] )
                 | ( "Times__"
                   , [ { pattern=
                           FunApp
-                            ( StanLib ("matrix_exp", FnPlain)
+                            ( StanLib ("matrix_exp", FnPlain, mem1)
                             , [ { pattern=
                                     FunApp
-                                      (StanLib ("Times__", FnPlain), [a; t]); _
-                                } ] ); _ }
+                                      ( StanLib ("Times__", FnPlain, mem2)
+                                      , [a; t] ); _ } ] ); _ }
                     ; b ] )
                   when Expr.Typed.type_of t = UInt
                        || Expr.Typed.type_of t = UReal ->
+                    let lub_mem = lub_mem_pat [mem1; mem2] in
                     FunApp
-                      (StanLib ("scale_matrix_exp_multiply", suffix), [t; a; b])
+                      ( StanLib ("scale_matrix_exp_multiply", suffix, lub_mem)
+                      , [t; a; b] )
                 | ( "Times__"
-                  , [ { pattern= FunApp (StanLib ("matrix_exp", FnPlain), [a]); _
+                  , [ { pattern=
+                          FunApp (StanLib ("matrix_exp", FnPlain, mem), [a]); _
                       }
                     ; b ] ) ->
-                    FunApp (StanLib ("matrix_exp_multiply", suffix), [a; b])
+                    let lub_mem = lub_mem_pat [mem] in
+                    FunApp
+                      (StanLib ("matrix_exp_multiply", suffix, lub_mem), [a; b])
                 | ( "Times__"
-                  , [x; {pattern= FunApp (StanLib ("log", FnPlain), [y]); _}] )
+                  , [ x
+                    ; {pattern= FunApp (StanLib ("log", FnPlain, mem), [y]); _}
+                    ] )
                  |( "Times__"
-                  , [{pattern= FunApp (StanLib ("log", FnPlain), [y]); _}; x] )
+                  , [ {pattern= FunApp (StanLib ("log", FnPlain, mem), [y]); _}
+                    ; x ] )
                   when not preserve_stability ->
-                    FunApp (StanLib ("lmultiply", suffix), [x; y])
+                    let lub_mem = lub_mem_pat [mem] in
+                    FunApp (StanLib ("lmultiply", suffix, lub_mem), [x; y])
                 | ( "Times__"
-                  , [ { pattern= FunApp (StanLib ("diag_matrix", FnPlain), [v]); _
+                  , [ { pattern=
+                          FunApp (StanLib ("diag_matrix", FnPlain, mem1), [v]); _
                       }
                     ; { pattern=
                           FunApp
-                            (StanLib ("diag_post_multiply", FnPlain), [a; w]); _
-                      } ] )
+                            ( StanLib ("diag_post_multiply", FnPlain, mem2)
+                            , [a; w] ); _ } ] )
                   when Expr.Typed.equal v w ->
-                    FunApp (StanLib ("quad_form_diag", suffix), [a; v])
+                    let lub_mem = lub_mem_pat [mem1; mem2] in
+                    FunApp (StanLib ("quad_form_diag", suffix, lub_mem), [a; v])
                 | ( "Times__"
                   , [ { pattern=
                           FunApp
-                            (StanLib ("diag_pre_multiply", FnPlain), [v; a]); _
-                      }
-                    ; { pattern= FunApp (StanLib ("diag_matrix", FnPlain), [w]); _
+                            ( StanLib ("diag_pre_multiply", FnPlain, mem1)
+                            , [v; a] ); _ }
+                    ; { pattern=
+                          FunApp (StanLib ("diag_matrix", FnPlain, mem2), [w]); _
                       } ] )
                   when Expr.Typed.equal v w ->
-                    FunApp (StanLib ("quad_form_diag", suffix), [a; v])
+                    let lub_mem = lub_mem_pat [mem1; mem2] in
+                    FunApp (StanLib ("quad_form_diag", suffix, lub_mem), [a; v])
                 | ( "Times__"
-                  , [ {pattern= FunApp (StanLib ("transpose", FnPlain), [b]); _}
-                    ; { pattern= FunApp (StanLib ("Times__", FnPlain), [a; c]); _
+                  , [ { pattern=
+                          FunApp (StanLib ("transpose", FnPlain, mem1), [b]); _
+                      }
+                    ; { pattern=
+                          FunApp (StanLib ("Times__", FnPlain, mem2), [a; c]); _
                       } ] )
                   when Expr.Typed.equal b c ->
-                    FunApp (StanLib ("quad_form", suffix), [a; b])
+                    let lub_mem = lub_mem_pat [mem1; mem2] in
+                    FunApp (StanLib ("quad_form", suffix, lub_mem), [a; b])
                 | ( "Times__"
                   , [ { pattern=
                           FunApp
-                            ( StanLib ("Times__", FnPlain)
+                            ( StanLib ("Times__", FnPlain, mem1)
                             , [ { pattern=
-                                    FunApp (StanLib ("transpose", FnPlain), [b]); _
-                                }
+                                    FunApp
+                                      ( StanLib ("transpose", FnPlain, mem2)
+                                      , [b] ); _ }
                               ; a ] ); _ }
                     ; c ] )
                   when Expr.Typed.equal b c ->
-                    FunApp (StanLib ("quad_form", suffix), [a; b])
+                    let lub_mem = lub_mem_pat [mem1; mem2] in
+                    FunApp (StanLib ("quad_form", suffix, lub_mem), [a; b])
                 | ( "Times__"
                   , [ e1'
-                    ; { pattern= FunApp (StanLib ("diag_matrix", FnPlain), [v]); _
+                    ; { pattern=
+                          FunApp (StanLib ("diag_matrix", FnPlain, mem), [v]); _
                       } ] ) ->
-                    FunApp (StanLib ("diag_post_multiply", suffix), [e1'; v])
+                    let lub_mem = lub_mem_pat [mem] in
+                    FunApp
+                      ( StanLib ("diag_post_multiply", suffix, lub_mem)
+                      , [e1'; v] )
                 | ( "Times__"
-                  , [ { pattern= FunApp (StanLib ("diag_matrix", FnPlain), [v]); _
+                  , [ { pattern=
+                          FunApp (StanLib ("diag_matrix", FnPlain, mem), [v]); _
                       }
                     ; e2' ] ) ->
-                    FunApp (StanLib ("diag_pre_multiply", suffix), [v; e2'])
+                    let lub_mem = lub_mem_pat [mem] in
+                    FunApp
+                      (StanLib ("diag_pre_multiply", suffix, lub_mem), [v; e2'])
                     (* Constant folding for operators *)
                 | op, [{pattern= Lit (Int, i); _}] -> (
                   match op with

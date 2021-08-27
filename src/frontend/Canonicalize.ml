@@ -154,7 +154,7 @@ let rec parens_stmt {stmt; smeta} =
         ; is_global } ->
         VarDecl
           { decl_type= Middle.Type.map no_parens d
-          ; transformation= Middle.Program.map_transformation keep_parens t
+          ; transformation= Middle.Transformation.map keep_parens t
           ; identifier
           ; initial_value= Option.map ~f:no_parens init
           ; is_global }
