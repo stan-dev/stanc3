@@ -614,12 +614,7 @@ let pp_constrained_param_names ppf {Program.output_vars; _} =
   in
   let pp_param_names ppf (decl_id, st) =
     let dims = List.rev (SizedType.get_dims st) in
-    let rec check_complex st =
-      match st with
-      | SizedType.SComplex -> true
-      | SizedType.SArray (t, _) -> check_complex t
-      | _ -> false
-    in
+    let check_complex st = SizedType.(inner_type st = SComplex) in
     match check_complex st with
     | true -> (
       match dims with
@@ -673,12 +668,7 @@ let pp_unconstrained_param_names ppf {Program.output_vars; _} =
   in
   let pp_param_names ppf (decl_id, st) =
     let dims = List.rev (SizedType.get_dims st) in
-    let rec check_complex st =
-      match st with
-      | SizedType.SComplex -> true
-      | SizedType.SArray (t, _) -> check_complex t
-      | _ -> false
-    in
+    let check_complex st = SizedType.(inner_type st = SComplex) in
     match check_complex st with
     | true -> (
       match dims with
