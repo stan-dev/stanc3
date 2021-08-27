@@ -54,7 +54,6 @@ let rec associate ?init:(assocs = Label.Int_label.Map.empty) = function
   | SArray (st, e) ->
       associate ~init:(Expr.Labelled.associate ~init:assocs e) st
 
-let is_scalar = function SInt | SReal -> true | _ -> false
 let rec inner_type = function SArray (t, _) -> inner_type t | t -> t
 
 let rec dims_of st =

@@ -26,7 +26,8 @@ let types_match e1 e2 =
 
 let is_stan_math f = ends_with "__" f || starts_with "stan::math::" f
 
-(* retun true if the tpe of the expression is integer or real *)
+(* retun true if the type of the expression 
+  is integer, real, or complex (e.g. not a container) *)
 let is_scalar e =
   match Expr.Typed.type_of e with
   | UInt | UReal | UComplex -> true
