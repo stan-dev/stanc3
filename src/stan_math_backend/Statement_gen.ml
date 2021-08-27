@@ -355,7 +355,7 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
       (*FIXME: This is stupid, need to make a fix in the C++ templates*)
       let check_eigen_type Expr.Fixed.({meta= Expr.Typed.Meta.({type_; _}); _})
           =
-        UnsizedType.is_eigen_type type_
+        UnsizedType.contains_eigen_type type_
       in
       let value_of_rec_wrap ppf blah2 =
         if check_eigen_type blah2 then

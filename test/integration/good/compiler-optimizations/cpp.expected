@@ -11517,7 +11517,8 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         } 
       }
       current_statement__ = 30;
-      check_greater_or_equal(function__, "beta", beta, 0);
+      check_greater_or_equal(function__, "beta",
+                                stan::math::value_of_rec(beta), 0);
       current_statement__ = 31;
       validate_positive_index("pi", "K", K);
       current_statement__ = 32;
