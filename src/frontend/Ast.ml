@@ -212,7 +212,8 @@ let mk_typed_statement ~stmt ~loc ~return_type =
 type 's block = {stmts: 's list; xloc: Middle.Location_span.t [@ignore]}
 
 and comment_type =
-  | Comment of string list * Middle.Location_span.t
+  | LineComment of string * Middle.Location_span.t
+  | BlockComment of string list * Middle.Location_span.t
   | Comma of Middle.Location.t
 
 and 's program =
@@ -336,8 +337,7 @@ let get_first_loc (s : untyped_statement) =
       e.emeta.loc.begin_loc
   | Profile _ | Block _ -> s.smeta.loc.begin_loc
   | Tilde {arg; _} -> get_loc_expr arg
-  | Break | Continue | ReturnVoid | Print _ | Reject _ | Skip
-    ->
+  | Break | Continue | ReturnVoid | Print _ | Reject _ | Skip ->
       s.smeta.loc.end_loc
   | VarDecl {decl_type; transformation; identifier; _} -> (
     match get_loc_dt decl_type with

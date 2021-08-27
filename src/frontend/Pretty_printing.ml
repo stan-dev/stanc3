@@ -1,10 +1,12 @@
 (** Some helpers to produce nice error messages and for auto-formatting Stan programs *)
 
-(* TODO: to preserve comments during pretty printing, we should capture them during parsing and attach them to AST nodes *)
-
 open Core_kernel
 open Ast
 
+(* To avoid cluttering the AST, comments are not associated with any particular AST node but instead come in a separate list.
+   The pretty printer uses the AST nodes' location metadata to insert whitespace and comments.
+   The comment list is stored in a global state that is accessed by set_comments, get_comments, and skip_comments.
+ *)
 let comments : comment_type list ref = ref []
 let skipped = ref []
 let set_comments ls = comments := ls
@@ -12,9 +14,12 @@ let set_comments ls = comments := ls
 let get_comments end_loc =
   let rec go ls =
     match ls with
-    | Comment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
+    | LineComment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
       when Middle.Location.compare_loc begin_loc end_loc < 0 ->
-        (s, loc) :: go tl
+        (false, [s], loc) :: go tl
+    | BlockComment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
+      when Middle.Location.compare_loc begin_loc end_loc < 0 ->
+        (true, s, loc) :: go tl
     | Comma loc :: tl when Middle.Location.compare_loc loc end_loc < 0 -> go tl
     | _ ->
         comments := ls ;
@@ -25,9 +30,12 @@ let get_comments end_loc =
 let get_comments_until_comma end_loc =
   let rec go ls =
     match ls with
-    | Comment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
+    | LineComment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
       when Middle.Location.compare_loc begin_loc end_loc < 0 ->
-        (s, loc) :: go tl
+        (false, [s], loc) :: go tl
+    | BlockComment (s, ({Middle.Location_span.begin_loc; _} as loc)) :: tl
+      when Middle.Location.compare_loc begin_loc end_loc < 0 ->
+        (true, s, loc) :: go tl
     | _ ->
         comments := ls ;
         []
@@ -38,15 +46,16 @@ let skip_comments loc =
   skipped :=
     !skipped
     @ List.filter_map (get_comments loc) ~f:(function
-        | s :: l, loc -> Some ((" ^^^:" ^ s) :: l, loc)
-        | [], _ -> None )
+        | x, s :: l, loc -> Some (x, (" ^^^:" ^ s) :: l, loc)
+        | _, [], _ -> None )
 
 let remaining_comments () =
   let x =
     !skipped
     @ List.filter_map !comments ~f:(function
-        | Comment (a, b) -> Some (a, b)
-        | _ -> None )
+        | LineComment (a, b) -> Some (false, [a], b)
+        | BlockComment (a, b) -> Some (true, a, b)
+        | Comma _ -> None )
   in
   skipped := [] ;
   comments := [] ;
@@ -62,7 +71,8 @@ let pp_space newline ppf (prev_loc, begin_loc) =
     Fmt.pf ppf "@,"
   else Fmt.pf ppf " "
 
-let pp_comment ppf (lines, {Middle.Location_span.begin_loc= {col_num; _}; _}) =
+let pp_comment ppf
+    (is_block, lines, {Middle.Location_span.begin_loc= {col_num; _}; _}) =
   let trim init lines =
     let padding =
       List.fold lines ~init ~f:(fun m x ->
@@ -75,18 +85,20 @@ let pp_comment ppf (lines, {Middle.Location_span.begin_loc= {col_num; _}; _}) =
   let trim_tail col_num lines =
     match lines with [] -> [] | hd :: tl -> hd :: trim (col_num - 2) tl
   in
-  Fmt.pf ppf "@[<v>/*%a*/@]" Fmt.(list string) (trim_tail col_num lines)
+  if is_block then
+    Fmt.pf ppf "@[<v>/*%a*/@]" Fmt.(list string) (trim_tail col_num lines)
+  else Fmt.pf ppf "@[<v>/*%a */@]" Fmt.(list string) lines
 
 let pp_spacing ?(newline = true) prev_loc next_loc ppf ls =
   let rec recurse prev_loc = function
-    | ((_, {Middle.Location_span.begin_loc; end_loc}) as hd) :: tl ->
+    | ((_, _, {Middle.Location_span.begin_loc; end_loc}) as hd) :: tl ->
         pp_space false ppf (prev_loc, begin_loc) ;
         pp_comment ppf hd ;
         recurse end_loc tl
     | [] -> prev_loc
   in
   match ls with
-  | ((_, {Middle.Location_span.begin_loc; end_loc}) as hd) :: tl ->
+  | ((_, _, {Middle.Location_span.begin_loc; end_loc}) as hd) :: tl ->
       Option.iter prev_loc ~f:(fun prev_loc ->
           pp_space false ppf (prev_loc, begin_loc) ) ;
       pp_comment ppf hd ;
@@ -196,7 +208,9 @@ let pp_list_of pp (loc_of : 'a -> Middle.Location_span.t) ppf
         let next_loc = (loc_of next).begin_loc in
         pp_maybe_space true (get_comments_until_comma next_loc) ;
         let rec comment_after_comma_on_the_same_line = function
-          | ( (_, {Middle.Location_span.begin_loc= {filename; line_num; _}; _})
+          | ( ( _
+              , _
+              , {Middle.Location_span.begin_loc= {filename; line_num; _}; _} )
             as c )
             :: ls
             when line_num = prev_line && prev_file = filename ->

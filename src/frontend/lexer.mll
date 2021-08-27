@@ -20,12 +20,12 @@ let comments : Ast.comment_type list ref = ref []
 (* Store comments *)
   let add_comment (begin_pos, buffer) end_pos =
     comments :=
-        Comment ( [Buffer.contents buffer ^ " "]
+        LineComment ( Buffer.contents buffer
                 , Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
       :: !comments
   let add_multi_comment begin_pos lines end_pos =
     comments :=
-        Comment ( lines, Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
+        BlockComment ( lines, Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
       :: !comments
 }
 
