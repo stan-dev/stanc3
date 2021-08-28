@@ -945,9 +945,9 @@ let () =
     , ReturnType UReal
     , [UArray UInt; URowVector; UVector; UVector]
     , AoS ) ;
-  add_binary_vec_int_real "bessel_first_kind" AoS ;
-  add_binary_vec_int_real "bessel_second_kind" AoS ;
-  add_binary_vec "beta" AoS ;
+  add_binary_vec_int_real "bessel_first_kind" SoA ;
+  add_binary_vec_int_real "bessel_second_kind" SoA ;
+  add_binary_vec "beta" SoA ;
   (* XXX For some reason beta_proportion_rng doesn't take ints as first arg *)
   for_vector_types (fun t ->
       for_all_vector_types (fun u ->
@@ -1060,7 +1060,7 @@ let () =
     ("diag_pre_multiply", ReturnType UMatrix, [UVector; UMatrix], SoA) ;
   add_unqualified
     ("diag_pre_multiply", ReturnType UMatrix, [URowVector; UMatrix], SoA) ;
-  add_unqualified ("diagonal", ReturnType UVector, [UMatrix], AoS) ;
+  add_unqualified ("diagonal", ReturnType UVector, [UMatrix], SoA) ;
   add_unqualified ("dims", ReturnType (UArray UInt), [UInt], SoA) ;
   add_unqualified ("dims", ReturnType (UArray UInt), [UReal], SoA) ;
   add_unqualified ("dims", ReturnType (UArray UInt), [UVector], SoA) ;
@@ -1078,10 +1078,10 @@ let () =
         bare_types )
     (List.range 0 8) ;
   add_unqualified ("dirichlet_rng", ReturnType UVector, [UVector], AoS) ;
-  add_unqualified ("distance", ReturnType UReal, [UVector; UVector], AoS) ;
-  add_unqualified ("distance", ReturnType UReal, [URowVector; URowVector], AoS) ;
-  add_unqualified ("distance", ReturnType UReal, [UVector; URowVector], AoS) ;
-  add_unqualified ("distance", ReturnType UReal, [URowVector; UVector], AoS) ;
+  add_unqualified ("distance", ReturnType UReal, [UVector; UVector], SoA) ;
+  add_unqualified ("distance", ReturnType UReal, [URowVector; URowVector], SoA) ;
+  add_unqualified ("distance", ReturnType UReal, [UVector; URowVector], SoA) ;
+  add_unqualified ("distance", ReturnType UReal, [URowVector; UVector], SoA) ;
   add_unqualified ("divide", ReturnType UInt, [UInt; UInt], SoA) ;
   add_unqualified ("divide", ReturnType UReal, [UReal; UReal], SoA) ;
   add_unqualified ("divide", ReturnType UVector, [UVector; UReal], SoA) ;
@@ -1097,8 +1097,8 @@ let () =
   add_unqualified ("dot_self", ReturnType UReal, [UVector], SoA) ;
   add_unqualified ("dot_self", ReturnType UReal, [URowVector], SoA) ;
   add_nullary "e" ;
-  add_unqualified ("eigenvalues_sym", ReturnType UVector, [UMatrix], AoS) ;
-  add_unqualified ("eigenvectors_sym", ReturnType UMatrix, [UMatrix], AoS) ;
+  add_unqualified ("eigenvalues_sym", ReturnType UVector, [UMatrix], SoA) ;
+  add_unqualified ("eigenvectors_sym", ReturnType UMatrix, [UMatrix], SoA) ;
   add_unqualified ("generalized_inverse", ReturnType UMatrix, [UMatrix], SoA) ;
   add_unqualified ("qr_Q", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified ("qr_R", ReturnType UMatrix, [UMatrix], AoS) ;
@@ -1124,8 +1124,8 @@ let () =
   add_unqualified
     ("elt_multiply", ReturnType URowVector, [URowVector; URowVector], SoA) ;
   add_unqualified ("elt_multiply", ReturnType UMatrix, [UMatrix; UMatrix], SoA) ;
-  add_binary_vec_int_int "falling_factorial" AoS ;
-  add_binary_vec_real_int "falling_factorial" AoS ;
+  add_binary_vec_int_int "falling_factorial" SoA ;
+  add_binary_vec_real_int "falling_factorial" SoA ;
   add_binary_vec "fdim" AoS ;
   add_ternary_vec "fma" SoA ;
   add_binary_vec "fmax" AoS ;
@@ -1795,9 +1795,9 @@ let () =
     , [UVector; URowVector; UVector; UVector; UVector]
     , AoS ) ;
   add_nullary "not_a_number" ;
-  add_unqualified ("num_elements", ReturnType UInt, [UMatrix], AoS) ;
-  add_unqualified ("num_elements", ReturnType UInt, [UVector], AoS) ;
-  add_unqualified ("num_elements", ReturnType UInt, [URowVector], AoS) ;
+  add_unqualified ("num_elements", ReturnType UInt, [UMatrix], SoA) ;
+  add_unqualified ("num_elements", ReturnType UInt, [UVector], SoA) ;
+  add_unqualified ("num_elements", ReturnType UInt, [URowVector], SoA) ;
   List.iter
     ~f:(fun i ->
       List.iter

@@ -159,7 +159,7 @@ pipeline {
                             """
 
                             writeFile(file:"performance-tests-cmdstan/cmdstan/make/local",
-                                    text:"O=0\nCXX=${CXX}")
+                                    text:"O=0\nCXX=${CXX}\nDEPFLAGS_OS=-M -E")
                             sh """
                                 cd performance-tests-cmdstan
                                 mkdir cmdstan/bin
@@ -190,7 +190,7 @@ pipeline {
                             """
 
                             writeFile(file:"performance-tests-cmdstan/cmdstan/make/local",
-                                    text:"O=3\nCXX=${CXX}\nPRECOMPILED_HEADERS=false")
+                                    text:"O=3\nCXX=${CXX}\nDEPFLAGS_OS=-M -E")
                             sh """
                                 cd performance-tests-cmdstan
                                 echo "example-models/regression_tests/mother.stan" > all.tests
@@ -241,6 +241,7 @@ pipeline {
                                 sh """
                                     echo O=0 >> make/local
                                     echo "CXX=${env.CXX} -Werror " >> make/local
+                                    echo "DEPFLAGS_OS=-M -E" >> make/local
                                 """
                                 withEnv(['PATH+TBB=./lib/tbb']) {
                                     try { sh "./runTests.py -j${env.PARALLEL} test/expressions" }
