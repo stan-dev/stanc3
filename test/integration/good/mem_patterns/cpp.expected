@@ -449,8 +449,8 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       current_statement__ = 1;
       high_low_est = in__.template read_constrain_lub<
                        stan::conditional_var_value_t<local_scalar_t__, 
-                         Eigen::Matrix<local_scalar_t__, -1, 1>>,
-                        jacobian__>(diff_low_mid, diff_high_mid, lp__, N);
+                         Eigen::Matrix<local_scalar_t__, -1, 1>>, 
+                       jacobian__>(diff_low_mid, diff_high_mid, lp__, N);
       current_statement__ = 1;
       check_matching_dims("constraint", "high_low_est", high_low_est,
                           "lower", diff_low_mid);
@@ -480,8 +480,8 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       ma = in__.template read<local_scalar_t__>();
       local_scalar_t__ phi_beta;
       current_statement__ = 6;
-      phi_beta = in__.template read_constrain_lub<local_scalar_t__,
-                    jacobian__>(0, 1, lp__);
+      phi_beta = in__.template read_constrain_lub<local_scalar_t__, 
+                   jacobian__>(0, 1, lp__);
       local_scalar_t__ sigma2;
       current_statement__ = 7;
       sigma2 = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
@@ -517,8 +517,8 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       current_statement__ = 13;
       lower_upper_test = in__.template read_constrain_lub<
                            stan::conditional_var_value_t<local_scalar_t__, 
-                             Eigen::Matrix<local_scalar_t__, -1, 1>>,
-                            jacobian__>(sigma_price, upper_test, lp__, N);
+                             Eigen::Matrix<local_scalar_t__, -1, 1>>, 
+                           jacobian__>(sigma_price, upper_test, lp__, N);
       current_statement__ = 13;
       check_matching_dims("constraint", "lower_upper_test", lower_upper_test,
                           "lower", sigma_price);
@@ -530,8 +530,8 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       current_statement__ = 14;
       row_vec_lower_upper_test = in__.template read_constrain_lub<
                                    stan::conditional_var_value_t<local_scalar_t__,
-                                     Eigen::Matrix<local_scalar_t__, 1, -1>>,
-                                    jacobian__>(transpose(sigma_price),
+                                     Eigen::Matrix<local_scalar_t__, 1, -1>>, 
+                                   jacobian__>(transpose(sigma_price),
                                    transpose(upper_test), lp__, N);
       current_statement__ = 14;
       check_matching_dims("constraint", "row_vec_lower_upper_test",
@@ -546,8 +546,8 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       current_statement__ = 15;
       offset_mult_test = in__.template read_constrain_offset_multiplier<
                            stan::conditional_var_value_t<local_scalar_t__, 
-                             Eigen::Matrix<local_scalar_t__, -1, 1>>,
-                            jacobian__>(mean_price, sigma_price, lp__, N);
+                             Eigen::Matrix<local_scalar_t__, -1, 1>>, 
+                           jacobian__>(mean_price, sigma_price, lp__, N);
       current_statement__ = 15;
       check_matching_dims("constraint", "offset_mult_test", offset_mult_test,
                           "offset", mean_price);
@@ -559,50 +559,50 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       current_statement__ = 16;
       ordered_test = in__.template read_constrain_ordered<
                        stan::conditional_var_value_t<local_scalar_t__, 
-                         Eigen::Matrix<local_scalar_t__, -1, 1>>,
-                        jacobian__>(lp__, N);
+                         Eigen::Matrix<local_scalar_t__, -1, 1>>, 
+                       jacobian__>(lp__, N);
       stan::conditional_var_value_t<local_scalar_t__, 
         Eigen::Matrix<local_scalar_t__, -1, 1>> unit_vec_test;
       current_statement__ = 17;
       unit_vec_test = in__.template read_constrain_unit_vector<
                         stan::conditional_var_value_t<local_scalar_t__, 
-                          Eigen::Matrix<local_scalar_t__, -1, 1>>,
-                         jacobian__>(lp__, N);
+                          Eigen::Matrix<local_scalar_t__, -1, 1>>, 
+                        jacobian__>(lp__, N);
       stan::conditional_var_value_t<local_scalar_t__, 
         Eigen::Matrix<local_scalar_t__, -1, 1>> pos_ordered_test;
       current_statement__ = 18;
       pos_ordered_test = in__.template read_constrain_positive_ordered<
                            stan::conditional_var_value_t<local_scalar_t__, 
-                             Eigen::Matrix<local_scalar_t__, -1, 1>>,
-                            jacobian__>(lp__, N);
+                             Eigen::Matrix<local_scalar_t__, -1, 1>>, 
+                           jacobian__>(lp__, N);
       stan::conditional_var_value_t<local_scalar_t__, 
         Eigen::Matrix<local_scalar_t__, -1, -1>> corr_matrix_test;
       current_statement__ = 19;
       corr_matrix_test = in__.template read_constrain_corr_matrix<
                            stan::conditional_var_value_t<local_scalar_t__, 
-                             Eigen::Matrix<local_scalar_t__, -1, -1>>,
-                            jacobian__>(lp__, N);
+                             Eigen::Matrix<local_scalar_t__, -1, -1>>, 
+                           jacobian__>(lp__, N);
       stan::conditional_var_value_t<local_scalar_t__, 
         Eigen::Matrix<local_scalar_t__, -1, -1>> cov_matrix_test;
       current_statement__ = 20;
       cov_matrix_test = in__.template read_constrain_cov_matrix<
                           stan::conditional_var_value_t<local_scalar_t__, 
-                            Eigen::Matrix<local_scalar_t__, -1, -1>>,
-                           jacobian__>(lp__, N);
+                            Eigen::Matrix<local_scalar_t__, -1, -1>>, 
+                          jacobian__>(lp__, N);
       stan::conditional_var_value_t<local_scalar_t__, 
         Eigen::Matrix<local_scalar_t__, -1, -1>> chol_fac_cov_test;
       current_statement__ = 21;
       chol_fac_cov_test = in__.template read_constrain_cholesky_factor_cov<
                             stan::conditional_var_value_t<local_scalar_t__, 
-                              Eigen::Matrix<local_scalar_t__, -1, -1>>,
-                             jacobian__>(lp__, K, K);
+                              Eigen::Matrix<local_scalar_t__, -1, -1>>, 
+                            jacobian__>(lp__, K, K);
       stan::conditional_var_value_t<local_scalar_t__, 
         Eigen::Matrix<local_scalar_t__, -1, -1>> chol_fac_corr_test;
       current_statement__ = 22;
       chol_fac_corr_test = in__.template read_constrain_cholesky_factor_corr<
                              stan::conditional_var_value_t<local_scalar_t__, 
-                               Eigen::Matrix<local_scalar_t__, -1, -1>>,
-                              jacobian__>(lp__, K);
+                               Eigen::Matrix<local_scalar_t__, -1, -1>>, 
+                             jacobian__>(lp__, K);
       local_scalar_t__ phi;
       current_statement__ = 23;
       phi = stan::math::fma(phi_beta, 2.0, -1.0);
@@ -777,8 +777,8 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       ma = in__.template read<local_scalar_t__>();
       double phi_beta;
       current_statement__ = 6;
-      phi_beta = in__.template read_constrain_lub<local_scalar_t__,
-                    jacobian__>(0, 1, lp__);
+      phi_beta = in__.template read_constrain_lub<local_scalar_t__, 
+                   jacobian__>(0, 1, lp__);
       double sigma2;
       current_statement__ = 7;
       sigma2 = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(
@@ -806,8 +806,8 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       Eigen::Matrix<double, -1, 1> lower_upper_test;
       current_statement__ = 13;
       lower_upper_test = in__.template read_constrain_lub<
-                           Eigen::Matrix<local_scalar_t__, -1, 1>,
-                            jacobian__>(sigma_price, upper_test, lp__, N);
+                           Eigen::Matrix<local_scalar_t__, -1, 1>, 
+                           jacobian__>(sigma_price, upper_test, lp__, N);
       current_statement__ = 13;
       check_matching_dims("constraint", "lower_upper_test", lower_upper_test,
                           "lower", sigma_price);
@@ -817,8 +817,8 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       Eigen::Matrix<double, 1, -1> row_vec_lower_upper_test;
       current_statement__ = 14;
       row_vec_lower_upper_test = in__.template read_constrain_lub<
-                                   Eigen::Matrix<local_scalar_t__, 1, -1>,
-                                    jacobian__>(transpose(sigma_price),
+                                   Eigen::Matrix<local_scalar_t__, 1, -1>, 
+                                   jacobian__>(transpose(sigma_price),
                                    transpose(upper_test), lp__, N);
       current_statement__ = 14;
       check_matching_dims("constraint", "row_vec_lower_upper_test",
@@ -831,8 +831,8 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       Eigen::Matrix<double, -1, 1> offset_mult_test;
       current_statement__ = 15;
       offset_mult_test = in__.template read_constrain_offset_multiplier<
-                           Eigen::Matrix<local_scalar_t__, -1, 1>,
-                            jacobian__>(mean_price, sigma_price, lp__, N);
+                           Eigen::Matrix<local_scalar_t__, -1, 1>, 
+                           jacobian__>(mean_price, sigma_price, lp__, N);
       current_statement__ = 15;
       check_matching_dims("constraint", "offset_mult_test", offset_mult_test,
                           "offset", mean_price);
@@ -852,28 +852,28 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       Eigen::Matrix<double, -1, 1> pos_ordered_test;
       current_statement__ = 18;
       pos_ordered_test = in__.template read_constrain_positive_ordered<
-                           Eigen::Matrix<local_scalar_t__, -1, 1>,
-                            jacobian__>(lp__, N);
+                           Eigen::Matrix<local_scalar_t__, -1, 1>, 
+                           jacobian__>(lp__, N);
       Eigen::Matrix<double, -1, -1> corr_matrix_test;
       current_statement__ = 19;
       corr_matrix_test = in__.template read_constrain_corr_matrix<
-                           Eigen::Matrix<local_scalar_t__, -1, -1>,
-                            jacobian__>(lp__, N);
+                           Eigen::Matrix<local_scalar_t__, -1, -1>, 
+                           jacobian__>(lp__, N);
       Eigen::Matrix<double, -1, -1> cov_matrix_test;
       current_statement__ = 20;
       cov_matrix_test = in__.template read_constrain_cov_matrix<
-                          Eigen::Matrix<local_scalar_t__, -1, -1>,
-                           jacobian__>(lp__, N);
+                          Eigen::Matrix<local_scalar_t__, -1, -1>, 
+                          jacobian__>(lp__, N);
       Eigen::Matrix<double, -1, -1> chol_fac_cov_test;
       current_statement__ = 21;
       chol_fac_cov_test = in__.template read_constrain_cholesky_factor_cov<
-                            Eigen::Matrix<local_scalar_t__, -1, -1>,
-                             jacobian__>(lp__, K, K);
+                            Eigen::Matrix<local_scalar_t__, -1, -1>, 
+                            jacobian__>(lp__, K, K);
       Eigen::Matrix<double, -1, -1> chol_fac_corr_test;
       current_statement__ = 22;
       chol_fac_corr_test = in__.template read_constrain_cholesky_factor_corr<
-                             Eigen::Matrix<local_scalar_t__, -1, -1>,
-                              jacobian__>(lp__, K);
+                             Eigen::Matrix<local_scalar_t__, -1, -1>, 
+                             jacobian__>(lp__, K);
       double phi = std::numeric_limits<double>::quiet_NaN();
       double sigma = std::numeric_limits<double>::quiet_NaN();
       Eigen::Matrix<double, -1, 1> prices =

@@ -183,40 +183,40 @@ pipeline {
                 stage("Model end-to-end tests") {
                     agent { label 'linux' }
                     steps {
-                        unstash 'ubuntu-exe'
-                        sh """
-                            git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-                        """
-                        sh """
-                            cd performance-tests-cmdstan
-                            git show HEAD --stat
-                            echo "example-models/regression_tests/mother.stan" > all.tests
-                            cat known_good_perf_all.tests >> all.tests
-                            echo "" >> all.tests
-                            cat shotgun_perf_all.tests >> all.tests
-                            cat all.tests
-                            echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
-                            rm cmdstan/stan/src/stan/model/model_header.hpp.gch || true
-                            cd cmdstan; make clean-all; git show HEAD --stat; cd ..
-                            CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
-                        """
+                        script {
+                            unstash 'ubuntu-exe'
+                            sh """
+                                git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                            """
 
-                        xunit([GoogleTest(
-                            deleteOutputFiles: false,
-                            failIfNotNew: true,
-                            pattern: 'performance-tests-cmdstan/performance.xml',
-                            skipNoTestFiles: false,
-                            stopProcessingIfError: false)
-                        ])
+                            writeFile(file:"performance-tests-cmdstan/cmdstan/make/local",
+                                    text:"O=3\nCXX=${CXX}")
+                            sh """
+                                cd performance-tests-cmdstan
+                                echo "example-models/regression_tests/mother.stan" > all.tests
+                                cat known_good_perf_all.tests >> all.tests
+                                echo "" >> all.tests
+                                cat shotgun_perf_all.tests >> all.tests
+                                ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
+                            """
 
-                        archiveArtifacts 'performance-tests-cmdstan/performance.xml'
+                            xunit([GoogleTest(
+                                deleteOutputFiles: false,
+                                failIfNotNew: true,
+                                pattern: 'performance-tests-cmdstan/performance.xml',
+                                skipNoTestFiles: false,
+                                stopProcessingIfError: false)
+                            ])
 
-                        perfReport modePerformancePerTestCase: true,
-                            sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-                            modeThroughput: false,
-                            excludeResponseTime: true,
-                            errorFailedThreshold: 100,
-                            errorUnstableThreshold: 100
+                            archiveArtifacts 'performance-tests-cmdstan/performance.xml'
+
+                            perfReport modePerformancePerTestCase: true,
+                                sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+                                modeThroughput: false,
+                                excludeResponseTime: true,
+                                errorFailedThreshold: 100,
+                                errorUnstableThreshold: 100
+                        }
                     }
                     post { always { runShell("rm -rf ./*") }}
                 }
