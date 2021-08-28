@@ -190,7 +190,7 @@ pipeline {
                             """
 
                             writeFile(file:"performance-tests-cmdstan/cmdstan/make/local",
-                                    text:"O=3\nCXX=${CXX}")
+                                    text:"O=3\nCXX=${CXX}\nPRECOMPILED_HEADERS=false")
                             sh """
                                 cd performance-tests-cmdstan
                                 echo "example-models/regression_tests/mother.stan" > all.tests
