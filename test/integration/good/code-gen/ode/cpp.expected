@@ -274,8 +274,8 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       validate_non_negative_index("abs_tol_f", "N", N);
       current_statement__ = 15;
       abs_tol_f__ = 
-        Eigen::Matrix<double, -1, 1>::Constant(
-          N, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, -1, 1>::Constant(N,
+          std::numeric_limits<double>::quiet_NaN());
       new (&abs_tol_f) Eigen::Map<Eigen::Matrix<double, -1, 1>>(abs_tol_f__.data(), N);
         
       
@@ -287,8 +287,8 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       validate_non_negative_index("abs_tol_b", "N", N);
       current_statement__ = 18;
       abs_tol_b__ = 
-        Eigen::Matrix<double, -1, 1>::Constant(
-          N, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, -1, 1>::Constant(N,
+          std::numeric_limits<double>::quiet_NaN());
       new (&abs_tol_b) Eigen::Map<Eigen::Matrix<double, -1, 1>>(abs_tol_b__.data(), N);
         
       
@@ -438,8 +438,8 @@ class ode_adjoint_test_model_model final : public model_base_crtp<ode_adjoint_te
       times = in__.template read<std::vector<local_scalar_t__>>(N);
       std::vector<Eigen::Matrix<double, -1, 1>> z =
          std::vector<Eigen::Matrix<double, -1, 1>>(M, 
-           Eigen::Matrix<double, -1, 1>::Constant(
-             N, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, -1, 1>::Constant(N,
+             std::numeric_limits<double>::quiet_NaN()));
       out__.write(y);
       out__.write(y0);
       out__.write(t0);

@@ -56,39 +56,39 @@ let rec pp_initialize ppf (st, adtype) =
     | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
     | SReal -> pf ppf "%s" init_nan
     | SVector (_, size) | SRowVector (_, size) ->
-        pf ppf "@[<hov 2>%a::Constant(@,%a, %s)@]" pp_st (st, adtype) pp_expr
+        pf ppf "@[<hov 2>%a::Constant(@,%a,@ %s)@]" pp_st (st, adtype) pp_expr
           size init_nan
     | SMatrix (_, d1, d2) ->
-        pf ppf "@[<hov 2>%a::Constant(@,%a, %a, %s)@]" pp_st (st, adtype)
+        pf ppf "@[<hov 2>%a::Constant(@,%a,@ %a,@ %s)@]" pp_st (st, adtype)
           pp_expr d1 pp_expr d2 init_nan
     | SArray (t, d) ->
-        pf ppf "@[<hov 2>%a(@,%a, @,%a)@]" pp_st (st, adtype) pp_expr d
+        pf ppf "@[<hov 2>%a(@,%a,@ @,%a)@]" pp_st (st, adtype) pp_expr d
           pp_initialize (t, adtype)
   else
-    let scalar = local_scalar (SizedType.to_unsized st) adtype in
+    let ut = SizedType.to_unsized st in
     match st with
     | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
     | SReal -> pf ppf "%s" init_nan
     | SVector (AoS, size) | SRowVector (AoS, size) ->
-        pf ppf "@[<hov 2>%a::Constant(@,%a, %s)@]" pp_st (st, adtype) pp_expr
+        pf ppf "@[<hov 2>%a::Constant(@,%a,@ %s)@]" pp_st (st, adtype) pp_expr
           size init_nan
     | SMatrix (AoS, d1, d2) ->
-        pf ppf "@[<hov 2>%a::Constant(@,%a, %a, %s)@]" pp_st (st, adtype)
+        pf ppf "@[<hov 2>%a::Constant(@,%a,@ %a,@ %s)@]" pp_st (st, adtype)
           pp_expr d1 pp_expr d2 init_nan
     | SVector (SoA, size) ->
-        pf ppf "@[<hov 2>stan::conditional_var_value_t<@,%s, @,%a>(@,%a)@]"
-          scalar pp_st (st, adtype) pp_initialize
+        pf ppf "@[<hov 2>%a(@,%a)@]" pp_possibly_var_decl (adtype, ut, SoA)
+          pp_initialize
           (SizedType.SVector (AoS, size), DataOnly)
     | SRowVector (SoA, size) ->
-        pf ppf "@[<hov 2>stan::conditional_var_value_t<@,%s, @,%a>(@,%a)@]"
-          scalar pp_st (st, adtype) pp_initialize
+        pf ppf "@[<hov 2>%a(@,%a)@]" pp_possibly_var_decl (adtype, ut, SoA)
+          pp_initialize
           (SizedType.SRowVector (AoS, size), DataOnly)
     | SMatrix (SoA, d1, d2) ->
-        pf ppf "@[<hov 2>stan::conditional_var_value_t<@,%s, @,%a>(@,%a)@]"
-          scalar pp_st (st, adtype) pp_initialize
+        pf ppf "@[<hov 2>%a(@,%a)@]" pp_possibly_var_decl (adtype, ut, SoA)
+          pp_initialize
           (SizedType.SMatrix (AoS, d1, d2), DataOnly)
     | SArray (t, d) ->
-        pf ppf "@[<hov 2>%a(@,%a, @,%a)@]" pp_possibly_var_decl
+        pf ppf "@[<hov 2>%a(@,%a,@ @,%a)@]" pp_possibly_var_decl
           (adtype, SizedType.to_unsized st, SizedType.get_mem_pattern t)
           pp_expr d pp_initialize (t, adtype)
 
@@ -116,8 +116,8 @@ let%expect_test "set size mat array" =
     {|
     std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5,
       std::vector<Eigen::Matrix<double, -1, -1>>(4,
-        Eigen::Matrix<double, -1, -1>::Constant(
-          2, 3, std::numeric_limits<double>::quiet_NaN()))) |}]
+        Eigen::Matrix<double, -1, -1>::Constant(2, 3,
+          std::numeric_limits<double>::quiet_NaN()))) |}]
 
 (* Initialize Data and Transformed Data 
  * This function is used in the model's constructor to
@@ -171,8 +171,8 @@ let%expect_test "set size map mat array" =
     darrmat =
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(5,
         std::vector<Eigen::Matrix<double, -1, -1>>(4,
-          Eigen::Matrix<double, -1, -1>::Constant(
-            2, 3, std::numeric_limits<double>::quiet_NaN()))); |}]
+          Eigen::Matrix<double, -1, -1>::Constant(2, 3,
+            std::numeric_limits<double>::quiet_NaN()))); |}]
 
 let%expect_test "set size map mat" =
   let int = Expr.Helpers.int in
@@ -181,8 +181,8 @@ let%expect_test "set size map mat" =
   [%expect
     {|
     dmat__ =
-      Eigen::Matrix<double, -1, -1>::Constant(
-        2, 3, std::numeric_limits<double>::quiet_NaN());
+      Eigen::Matrix<double, -1, -1>::Constant(2, 3,
+        std::numeric_limits<double>::quiet_NaN());
     new (&dmat) Eigen::Map<Eigen::Matrix<double, -1, -1>>(dmat__.data(), 2, 3); |}]
 
 let%expect_test "set size map int" =

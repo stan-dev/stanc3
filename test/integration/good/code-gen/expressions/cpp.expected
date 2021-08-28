@@ -199,8 +199,8 @@ class simple_function_model final : public model_base_crtp<simple_function_model
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(N)});
       m__ = 
-        Eigen::Matrix<double, -1, -1>::Constant(
-          N, N, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, -1, -1>::Constant(N, N,
+          std::numeric_limits<double>::quiet_NaN());
       new (&m) Eigen::Map<Eigen::Matrix<double, -1, -1>>(m__.data(), N, N);
       
       {

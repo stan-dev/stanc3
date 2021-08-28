@@ -142,14 +142,14 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       current_statement__ = 2;
       tau = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
               lp__);
-      stan::conditional_var_value_t<local_scalar_t__,
-         Eigen::Matrix<local_scalar_t__, -1, 1>> theta_tilde;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> theta_tilde;
       current_statement__ = 3;
       theta_tilde = in__.template read<
-                      stan::conditional_var_value_t<local_scalar_t__,
-                         Eigen::Matrix<local_scalar_t__, -1, 1>>>(J);
-      stan::conditional_var_value_t<local_scalar_t__,
-         Eigen::Matrix<local_scalar_t__, -1, 1>> theta;
+                      stan::conditional_var_value_t<local_scalar_t__, 
+                        Eigen::Matrix<local_scalar_t__, -1, 1>>>(J);
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> theta;
       current_statement__ = 4;
       assign(theta, add(mu, multiply(tau, theta_tilde)),
         "assigning variable theta");
@@ -209,8 +209,8 @@ class _8_schools_ncp_model final : public model_base_crtp<_8_schools_ncp_model> 
       theta_tilde = in__.template read<
                       Eigen::Matrix<local_scalar_t__, -1, 1>>(J);
       Eigen::Matrix<double, -1, 1> theta =
-         Eigen::Matrix<double, -1, 1>::Constant(
-           J, std::numeric_limits<double>::quiet_NaN());
+         Eigen::Matrix<double, -1, 1>::Constant(J,
+           std::numeric_limits<double>::quiet_NaN());
       out__.write(mu);
       out__.write(tau);
       out__.write(theta_tilde);
@@ -936,14 +936,14 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       current_statement__ = 2;
       tau = in__.template read_constrain_lb<local_scalar_t__, jacobian__>(0,
               lp__);
-      stan::conditional_var_value_t<local_scalar_t__,
-         Eigen::Matrix<local_scalar_t__, -1, 1>> theta_tilde;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> theta_tilde;
       current_statement__ = 3;
       theta_tilde = in__.template read<
-                      stan::conditional_var_value_t<local_scalar_t__,
-                         Eigen::Matrix<local_scalar_t__, -1, 1>>>(J);
-      stan::conditional_var_value_t<local_scalar_t__,
-         Eigen::Matrix<local_scalar_t__, -1, 1>> theta;
+                      stan::conditional_var_value_t<local_scalar_t__, 
+                        Eigen::Matrix<local_scalar_t__, -1, 1>>>(J);
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> theta;
       current_statement__ = 4;
       assign(theta, add(mu, multiply(tau, theta_tilde)),
         "assigning variable theta");
@@ -1003,8 +1003,8 @@ class eight_schools_ncp_model final : public model_base_crtp<eight_schools_ncp_m
       theta_tilde = in__.template read<
                       Eigen::Matrix<local_scalar_t__, -1, 1>>(J);
       Eigen::Matrix<double, -1, 1> theta =
-         Eigen::Matrix<double, -1, 1>::Constant(
-           J, std::numeric_limits<double>::quiet_NaN());
+         Eigen::Matrix<double, -1, 1>::Constant(J,
+           std::numeric_limits<double>::quiet_NaN());
       out__.write(mu);
       out__.write(tau);
       out__.write(theta_tilde);
@@ -4234,8 +4234,8 @@ foo_6(std::ostream* pstream__) {
     std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> ar_mat =
        std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(60, 
          std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(70, 
-           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
-             40, 50, DUMMY_VAR__)));
+           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(40, 50,
+             DUMMY_VAR__)));
     current_statement__ = 755;
     assign(ar_mat, b,
       "assigning variable ar_mat", index_uni(1), index_uni(1), index_uni(1),
@@ -4746,8 +4746,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       context__.validate_dims("data initialization","d_vec","double",
            std::vector<size_t>{static_cast<size_t>(N)});
       d_vec__ = 
-        Eigen::Matrix<double, -1, 1>::Constant(
-          N, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, -1, 1>::Constant(N,
+          std::numeric_limits<double>::quiet_NaN());
       new (&d_vec) Eigen::Map<Eigen::Matrix<double, -1, 1>>(d_vec__.data(), N);
         
       
@@ -4776,8 +4776,8 @@ class mother_model final : public model_base_crtp<mother_model> {
             static_cast<size_t>(N)});
       d_1d_vec = 
         std::vector<Eigen::Matrix<double, -1, 1>>(N, 
-          Eigen::Matrix<double, -1, 1>::Constant(
-            N, std::numeric_limits<double>::quiet_NaN()));
+          Eigen::Matrix<double, -1, 1>::Constant(N,
+            std::numeric_limits<double>::quiet_NaN()));
       
       
       {
@@ -4817,8 +4817,8 @@ class mother_model final : public model_base_crtp<mother_model> {
           N, 
           std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, 
             std::vector<Eigen::Matrix<double, -1, 1>>(K, 
-              Eigen::Matrix<double, -1, 1>::Constant(
-                N, std::numeric_limits<double>::quiet_NaN()))));
+              Eigen::Matrix<double, -1, 1>::Constant(N,
+                std::numeric_limits<double>::quiet_NaN()))));
       
       
       {
@@ -4854,8 +4854,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       context__.validate_dims("data initialization","d_row_vec","double",
            std::vector<size_t>{static_cast<size_t>(N)});
       d_row_vec__ = 
-        Eigen::Matrix<double, 1, -1>::Constant(
-          N, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, 1, -1>::Constant(N,
+          std::numeric_limits<double>::quiet_NaN());
       new (&d_row_vec) Eigen::Map<Eigen::Matrix<double, 1, -1>>(d_row_vec__.data(), N);
         
       
@@ -4884,8 +4884,8 @@ class mother_model final : public model_base_crtp<mother_model> {
             static_cast<size_t>(N)});
       d_1d_row_vec = 
         std::vector<Eigen::Matrix<double, 1, -1>>(N, 
-          Eigen::Matrix<double, 1, -1>::Constant(
-            N, std::numeric_limits<double>::quiet_NaN()));
+          Eigen::Matrix<double, 1, -1>::Constant(N,
+            std::numeric_limits<double>::quiet_NaN()));
       
       
       {
@@ -4925,8 +4925,8 @@ class mother_model final : public model_base_crtp<mother_model> {
           N, 
           std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, 
             std::vector<Eigen::Matrix<double, 1, -1>>(K, 
-              Eigen::Matrix<double, 1, -1>::Constant(
-                N, std::numeric_limits<double>::quiet_NaN()))));
+              Eigen::Matrix<double, 1, -1>::Constant(N,
+                std::numeric_limits<double>::quiet_NaN()))));
       
       
       {
@@ -4964,8 +4964,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       d_ar_mat = 
         std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, 
           std::vector<Eigen::Matrix<double, -1, -1>>(5, 
-            Eigen::Matrix<double, -1, -1>::Constant(
-              2, 3, std::numeric_limits<double>::quiet_NaN())));
+            Eigen::Matrix<double, -1, -1>::Constant(2, 3,
+              std::numeric_limits<double>::quiet_NaN())));
       
       
       {
@@ -5007,8 +5007,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       context__.validate_dims("data initialization","d_simplex","double",
            std::vector<size_t>{static_cast<size_t>(N)});
       d_simplex__ = 
-        Eigen::Matrix<double, -1, 1>::Constant(
-          N, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, -1, 1>::Constant(N,
+          std::numeric_limits<double>::quiet_NaN());
       new (&d_simplex) Eigen::Map<Eigen::Matrix<double, -1, 1>>(d_simplex__.data(), N);
         
       
@@ -5040,8 +5040,8 @@ class mother_model final : public model_base_crtp<mother_model> {
             static_cast<size_t>(N)});
       d_1d_simplex = 
         std::vector<Eigen::Matrix<double, -1, 1>>(N, 
-          Eigen::Matrix<double, -1, 1>::Constant(
-            N, std::numeric_limits<double>::quiet_NaN()));
+          Eigen::Matrix<double, -1, 1>::Constant(N,
+            std::numeric_limits<double>::quiet_NaN()));
       
       
       {
@@ -5084,8 +5084,8 @@ class mother_model final : public model_base_crtp<mother_model> {
           N, 
           std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, 
             std::vector<Eigen::Matrix<double, -1, 1>>(K, 
-              Eigen::Matrix<double, -1, 1>::Constant(
-                N, std::numeric_limits<double>::quiet_NaN()))));
+              Eigen::Matrix<double, -1, 1>::Constant(N,
+                std::numeric_limits<double>::quiet_NaN()))));
       
       
       {
@@ -5123,8 +5123,8 @@ class mother_model final : public model_base_crtp<mother_model> {
            std::vector<size_t>{static_cast<size_t>(5),
             static_cast<size_t>(4)});
       d_cfcov_54__ = 
-        Eigen::Matrix<double, -1, -1>::Constant(
-          5, 4, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, -1, -1>::Constant(5, 4,
+          std::numeric_limits<double>::quiet_NaN());
       new (&d_cfcov_54) Eigen::Map<Eigen::Matrix<double, -1, -1>>(d_cfcov_54__.data(), 5, 4);
         
       
@@ -5155,8 +5155,8 @@ class mother_model final : public model_base_crtp<mother_model> {
            std::vector<size_t>{static_cast<size_t>(3),
             static_cast<size_t>(3)});
       d_cfcov_33__ = 
-        Eigen::Matrix<double, -1, -1>::Constant(
-          3, 3, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, -1, -1>::Constant(3, 3,
+          std::numeric_limits<double>::quiet_NaN());
       new (&d_cfcov_33) Eigen::Map<Eigen::Matrix<double, -1, -1>>(d_cfcov_33__.data(), 3, 3);
         
       
@@ -5190,8 +5190,8 @@ class mother_model final : public model_base_crtp<mother_model> {
             static_cast<size_t>(3), static_cast<size_t>(3)});
       d_cfcov_33_ar = 
         std::vector<Eigen::Matrix<double, -1, -1>>(K, 
-          Eigen::Matrix<double, -1, -1>::Constant(
-            3, 3, std::numeric_limits<double>::quiet_NaN()));
+          Eigen::Matrix<double, -1, -1>::Constant(3, 3,
+            std::numeric_limits<double>::quiet_NaN()));
       
       
       {
@@ -5398,8 +5398,8 @@ class mother_model final : public model_base_crtp<mother_model> {
            std::vector<size_t>{static_cast<size_t>(d_int),
             static_cast<size_t>(d_int)});
       d_matrix__ = 
-        Eigen::Matrix<double, -1, -1>::Constant(
-          d_int, d_int, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, -1, -1>::Constant(d_int, d_int,
+          std::numeric_limits<double>::quiet_NaN());
       new (&d_matrix) Eigen::Map<Eigen::Matrix<double, -1, -1>>(d_matrix__.data(), d_int, d_int);
         
       
@@ -5435,8 +5435,8 @@ class mother_model final : public model_base_crtp<mother_model> {
             static_cast<size_t>(d_int), static_cast<size_t>(d_int)});
       d_matrix_array = 
         std::vector<Eigen::Matrix<double, -1, -1>>(d_int, 
-          Eigen::Matrix<double, -1, -1>::Constant(
-            d_int, d_int, std::numeric_limits<double>::quiet_NaN()));
+          Eigen::Matrix<double, -1, -1>::Constant(d_int, d_int,
+            std::numeric_limits<double>::quiet_NaN()));
       
       
       {
@@ -5477,8 +5477,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       d_matrix_array_2d = 
         std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(d_int, 
           std::vector<Eigen::Matrix<double, -1, -1>>(2, 
-            Eigen::Matrix<double, -1, -1>::Constant(
-              d_int, d_int, std::numeric_limits<double>::quiet_NaN())));
+            Eigen::Matrix<double, -1, -1>::Constant(d_int, d_int,
+              std::numeric_limits<double>::quiet_NaN())));
       
       
       {
@@ -5526,8 +5526,8 @@ class mother_model final : public model_base_crtp<mother_model> {
           d_int, 
           std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(2, 
             std::vector<Eigen::Matrix<double, -1, -1>>(3, 
-              Eigen::Matrix<double, -1, -1>::Constant(
-                d_int, d_int, std::numeric_limits<double>::quiet_NaN()))));
+              Eigen::Matrix<double, -1, -1>::Constant(d_int, d_int,
+                std::numeric_limits<double>::quiet_NaN()))));
       
       
       {
@@ -5568,8 +5568,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       context__.validate_dims("data initialization","d_vector","double",
            std::vector<size_t>{static_cast<size_t>(d_int)});
       d_vector__ = 
-        Eigen::Matrix<double, -1, 1>::Constant(
-          d_int, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, -1, 1>::Constant(d_int,
+          std::numeric_limits<double>::quiet_NaN());
       new (&d_vector) Eigen::Map<Eigen::Matrix<double, -1, 1>>(d_vector__.data(), d_int);
         
       
@@ -5599,8 +5599,8 @@ class mother_model final : public model_base_crtp<mother_model> {
             static_cast<size_t>(d_int)});
       d_vector_array = 
         std::vector<Eigen::Matrix<double, -1, 1>>(d_int, 
-          Eigen::Matrix<double, -1, 1>::Constant(
-            d_int, std::numeric_limits<double>::quiet_NaN()));
+          Eigen::Matrix<double, -1, 1>::Constant(d_int,
+            std::numeric_limits<double>::quiet_NaN()));
       
       
       {
@@ -5634,8 +5634,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       d_vector_array_2d = 
         std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(d_int, 
           std::vector<Eigen::Matrix<double, -1, 1>>(2, 
-            Eigen::Matrix<double, -1, 1>::Constant(
-              d_int, std::numeric_limits<double>::quiet_NaN())));
+            Eigen::Matrix<double, -1, 1>::Constant(d_int,
+              std::numeric_limits<double>::quiet_NaN())));
       
       
       {
@@ -5677,8 +5677,8 @@ class mother_model final : public model_base_crtp<mother_model> {
           d_int, 
           std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(2, 
             std::vector<Eigen::Matrix<double, -1, 1>>(3, 
-              Eigen::Matrix<double, -1, 1>::Constant(
-                d_int, std::numeric_limits<double>::quiet_NaN()))));
+              Eigen::Matrix<double, -1, 1>::Constant(d_int,
+                std::numeric_limits<double>::quiet_NaN()))));
       
       
       {
@@ -5715,8 +5715,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       context__.validate_dims("data initialization","d_row_vector","double",
            std::vector<size_t>{static_cast<size_t>(d_int)});
       d_row_vector__ = 
-        Eigen::Matrix<double, 1, -1>::Constant(
-          d_int, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, 1, -1>::Constant(d_int,
+          std::numeric_limits<double>::quiet_NaN());
       new (&d_row_vector) Eigen::Map<Eigen::Matrix<double, 1, -1>>(d_row_vector__.data(), d_int);
         
       
@@ -5746,8 +5746,8 @@ class mother_model final : public model_base_crtp<mother_model> {
             static_cast<size_t>(d_int)});
       d_row_vector_array = 
         std::vector<Eigen::Matrix<double, 1, -1>>(d_int, 
-          Eigen::Matrix<double, 1, -1>::Constant(
-            d_int, std::numeric_limits<double>::quiet_NaN()));
+          Eigen::Matrix<double, 1, -1>::Constant(d_int,
+            std::numeric_limits<double>::quiet_NaN()));
       
       
       {
@@ -5782,8 +5782,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       d_row_vector_array_2d = 
         std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(d_int, 
           std::vector<Eigen::Matrix<double, 1, -1>>(2, 
-            Eigen::Matrix<double, 1, -1>::Constant(
-              d_int, std::numeric_limits<double>::quiet_NaN())));
+            Eigen::Matrix<double, 1, -1>::Constant(d_int,
+              std::numeric_limits<double>::quiet_NaN())));
       
       
       {
@@ -5825,8 +5825,8 @@ class mother_model final : public model_base_crtp<mother_model> {
           d_int, 
           std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(2, 
             std::vector<Eigen::Matrix<double, 1, -1>>(3, 
-              Eigen::Matrix<double, 1, -1>::Constant(
-                d_int, std::numeric_limits<double>::quiet_NaN()))));
+              Eigen::Matrix<double, 1, -1>::Constant(d_int,
+                std::numeric_limits<double>::quiet_NaN()))));
       
       
       {
@@ -5897,16 +5897,16 @@ class mother_model final : public model_base_crtp<mother_model> {
       td_ar_mat = 
         std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, 
           std::vector<Eigen::Matrix<double, -1, -1>>(5, 
-            Eigen::Matrix<double, -1, -1>::Constant(
-              2, 3, std::numeric_limits<double>::quiet_NaN())));
+            Eigen::Matrix<double, -1, -1>::Constant(2, 3,
+              std::numeric_limits<double>::quiet_NaN())));
       
       
       current_statement__ = 301;
       validate_non_negative_index("td_simplex", "N", N);
       current_statement__ = 302;
       td_simplex__ = 
-        Eigen::Matrix<double, -1, 1>::Constant(
-          N, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, -1, 1>::Constant(N,
+          std::numeric_limits<double>::quiet_NaN());
       new (&td_simplex) Eigen::Map<Eigen::Matrix<double, -1, 1>>(td_simplex__.data(), N);
         
       
@@ -5917,8 +5917,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 305;
       td_1d_simplex = 
         std::vector<Eigen::Matrix<double, -1, 1>>(N, 
-          Eigen::Matrix<double, -1, 1>::Constant(
-            N, std::numeric_limits<double>::quiet_NaN()));
+          Eigen::Matrix<double, -1, 1>::Constant(N,
+            std::numeric_limits<double>::quiet_NaN()));
       
       
       current_statement__ = 306;
@@ -5935,34 +5935,34 @@ class mother_model final : public model_base_crtp<mother_model> {
           N, 
           std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, 
             std::vector<Eigen::Matrix<double, -1, 1>>(K, 
-              Eigen::Matrix<double, -1, 1>::Constant(
-                N, std::numeric_limits<double>::quiet_NaN()))));
+              Eigen::Matrix<double, -1, 1>::Constant(N,
+                std::numeric_limits<double>::quiet_NaN()))));
       
       
       current_statement__ = 311;
       td_cfcov_54__ = 
-        Eigen::Matrix<double, -1, -1>::Constant(
-          5, 5, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, -1, -1>::Constant(5, 5,
+          std::numeric_limits<double>::quiet_NaN());
       new (&td_cfcov_54) Eigen::Map<Eigen::Matrix<double, -1, -1>>(td_cfcov_54__.data(), 5, 5);
         
       
       current_statement__ = 312;
       td_cfcov_33__ = 
-        Eigen::Matrix<double, -1, -1>::Constant(
-          3, 3, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, -1, -1>::Constant(3, 3,
+          std::numeric_limits<double>::quiet_NaN());
       new (&td_cfcov_33) Eigen::Map<Eigen::Matrix<double, -1, -1>>(td_cfcov_33__.data(), 3, 3);
         
       
       current_statement__ = 313;
       x__ = 
-        Eigen::Matrix<double, -1, 1>::Constant(
-          2, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, -1, 1>::Constant(2,
+          std::numeric_limits<double>::quiet_NaN());
       new (&x) Eigen::Map<Eigen::Matrix<double, -1, 1>>(x__.data(), 2);
       
       current_statement__ = 314;
       y__ = 
-        Eigen::Matrix<double, -1, 1>::Constant(
-          2, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, -1, 1>::Constant(2,
+          std::numeric_limits<double>::quiet_NaN());
       new (&y) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y__.data(), 2);
       
       current_statement__ = 315;
@@ -6059,8 +6059,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       {
         double z = std::numeric_limits<double>::quiet_NaN();
         Eigen::Matrix<double, 1, -1> blocked_tdata_vs =
-           Eigen::Matrix<double, 1, -1>::Constant(
-             2, std::numeric_limits<double>::quiet_NaN());
+           Eigen::Matrix<double, 1, -1>::Constant(2,
+             std::numeric_limits<double>::quiet_NaN());
         current_statement__ = 351;
         for (int sym1__ = 1; sym1__ <= stan::math::size(blocked_tdata_vs);
              ++sym1__) {
@@ -6163,8 +6163,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       validate_non_negative_index("transformed_data_matrix", "d_int", d_int);
       current_statement__ = 373;
       transformed_data_matrix__ = 
-        Eigen::Matrix<double, -1, -1>::Constant(
-          d_int, d_int, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, -1, -1>::Constant(d_int, d_int,
+          std::numeric_limits<double>::quiet_NaN());
       new (&transformed_data_matrix) Eigen::Map<Eigen::Matrix<double, -1, -1>>(transformed_data_matrix__.data(), d_int, d_int);
         
       
@@ -6180,8 +6180,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 377;
       transformed_data_matrix_array = 
         std::vector<Eigen::Matrix<double, -1, -1>>(d_int, 
-          Eigen::Matrix<double, -1, -1>::Constant(
-            d_int, d_int, std::numeric_limits<double>::quiet_NaN()));
+          Eigen::Matrix<double, -1, -1>::Constant(d_int, d_int,
+            std::numeric_limits<double>::quiet_NaN()));
       
       
       current_statement__ = 378;
@@ -6197,8 +6197,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       transformed_data_matrix_array_2d = 
         std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(d_int, 
           std::vector<Eigen::Matrix<double, -1, -1>>(2, 
-            Eigen::Matrix<double, -1, -1>::Constant(
-              d_int, d_int, std::numeric_limits<double>::quiet_NaN())));
+            Eigen::Matrix<double, -1, -1>::Constant(d_int, d_int,
+              std::numeric_limits<double>::quiet_NaN())));
       
       
       current_statement__ = 382;
@@ -6216,16 +6216,16 @@ class mother_model final : public model_base_crtp<mother_model> {
           d_int, 
           std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(2, 
             std::vector<Eigen::Matrix<double, -1, -1>>(3, 
-              Eigen::Matrix<double, -1, -1>::Constant(
-                d_int, d_int, std::numeric_limits<double>::quiet_NaN()))));
+              Eigen::Matrix<double, -1, -1>::Constant(d_int, d_int,
+                std::numeric_limits<double>::quiet_NaN()))));
       
       
       current_statement__ = 386;
       validate_non_negative_index("transformed_data_vector", "d_int", d_int);
       current_statement__ = 387;
       transformed_data_vector__ = 
-        Eigen::Matrix<double, -1, 1>::Constant(
-          d_int, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, -1, 1>::Constant(d_int,
+          std::numeric_limits<double>::quiet_NaN());
       new (&transformed_data_vector) Eigen::Map<Eigen::Matrix<double, -1, 1>>(transformed_data_vector__.data(), d_int);
         
       
@@ -6238,8 +6238,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 390;
       transformed_data_vector_array = 
         std::vector<Eigen::Matrix<double, -1, 1>>(d_int, 
-          Eigen::Matrix<double, -1, 1>::Constant(
-            d_int, std::numeric_limits<double>::quiet_NaN()));
+          Eigen::Matrix<double, -1, 1>::Constant(d_int,
+            std::numeric_limits<double>::quiet_NaN()));
       
       
       current_statement__ = 391;
@@ -6252,8 +6252,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       transformed_data_vector_array_2d = 
         std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(d_int, 
           std::vector<Eigen::Matrix<double, -1, 1>>(2, 
-            Eigen::Matrix<double, -1, 1>::Constant(
-              d_int, std::numeric_limits<double>::quiet_NaN())));
+            Eigen::Matrix<double, -1, 1>::Constant(d_int,
+              std::numeric_limits<double>::quiet_NaN())));
       
       
       current_statement__ = 394;
@@ -6268,8 +6268,8 @@ class mother_model final : public model_base_crtp<mother_model> {
           d_int, 
           std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(2, 
             std::vector<Eigen::Matrix<double, -1, 1>>(3, 
-              Eigen::Matrix<double, -1, 1>::Constant(
-                d_int, std::numeric_limits<double>::quiet_NaN()))));
+              Eigen::Matrix<double, -1, 1>::Constant(d_int,
+                std::numeric_limits<double>::quiet_NaN()))));
       
       
       current_statement__ = 397;
@@ -6277,8 +6277,8 @@ class mother_model final : public model_base_crtp<mother_model> {
                                   d_int);
       current_statement__ = 398;
       transformed_data_row_vector__ = 
-        Eigen::Matrix<double, 1, -1>::Constant(
-          d_int, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, 1, -1>::Constant(d_int,
+          std::numeric_limits<double>::quiet_NaN());
       new (&transformed_data_row_vector) Eigen::Map<Eigen::Matrix<double, 1, -1>>(transformed_data_row_vector__.data(), d_int);
         
       
@@ -6291,8 +6291,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 401;
       transformed_data_row_vector_array = 
         std::vector<Eigen::Matrix<double, 1, -1>>(d_int, 
-          Eigen::Matrix<double, 1, -1>::Constant(
-            d_int, std::numeric_limits<double>::quiet_NaN()));
+          Eigen::Matrix<double, 1, -1>::Constant(d_int,
+            std::numeric_limits<double>::quiet_NaN()));
       
       
       current_statement__ = 402;
@@ -6305,8 +6305,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       transformed_data_row_vector_array_2d = 
         std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(d_int, 
           std::vector<Eigen::Matrix<double, 1, -1>>(2, 
-            Eigen::Matrix<double, 1, -1>::Constant(
-              d_int, std::numeric_limits<double>::quiet_NaN())));
+            Eigen::Matrix<double, 1, -1>::Constant(d_int,
+              std::numeric_limits<double>::quiet_NaN())));
       
       
       current_statement__ = 405;
@@ -6321,8 +6321,8 @@ class mother_model final : public model_base_crtp<mother_model> {
           d_int, 
           std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(2, 
             std::vector<Eigen::Matrix<double, 1, -1>>(3, 
-              Eigen::Matrix<double, 1, -1>::Constant(
-                d_int, std::numeric_limits<double>::quiet_NaN()))));
+              Eigen::Matrix<double, 1, -1>::Constant(d_int,
+                std::numeric_limits<double>::quiet_NaN()))));
       
       
       current_statement__ = 408;
@@ -6931,121 +6931,121 @@ class mother_model final : public model_base_crtp<mother_model> {
                 Eigen::Matrix<local_scalar_t__, -1, 1>, jacobian__>(0, lp__,
                 N);
       std::vector<
-        stan::conditional_var_value_t<local_scalar_t__,
-           Eigen::Matrix<local_scalar_t__, -1, 1>>> p_1d_vec;
+        stan::conditional_var_value_t<local_scalar_t__, 
+          Eigen::Matrix<local_scalar_t__, -1, 1>>> p_1d_vec;
       current_statement__ = 10;
       p_1d_vec = in__.template read<
                    std::vector<
-                     stan::conditional_var_value_t<local_scalar_t__,
-                        Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, N);
+                     stan::conditional_var_value_t<local_scalar_t__, 
+                       Eigen::Matrix<local_scalar_t__, -1, 1>>>>(N, N);
       std::vector<
         std::vector<
           std::vector<
-            stan::conditional_var_value_t<local_scalar_t__,
-               Eigen::Matrix<local_scalar_t__, -1, 1>>>>> p_3d_vec;
+            stan::conditional_var_value_t<local_scalar_t__, 
+              Eigen::Matrix<local_scalar_t__, -1, 1>>>>> p_3d_vec;
       current_statement__ = 11;
       p_3d_vec = in__.template read<
                    std::vector<
                      std::vector<
                        std::vector<
-                         stan::conditional_var_value_t<local_scalar_t__,
-                            Eigen::Matrix<local_scalar_t__, -1, 1>>>>>>(N, M,
+                         stan::conditional_var_value_t<local_scalar_t__, 
+                           Eigen::Matrix<local_scalar_t__, -1, 1>>>>>>(N, M,
                    K, N);
-      stan::conditional_var_value_t<local_scalar_t__,
-         Eigen::Matrix<local_scalar_t__, 1, -1>> p_row_vec;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, 1, -1>> p_row_vec;
       current_statement__ = 12;
       p_row_vec = in__.template read<
-                    stan::conditional_var_value_t<local_scalar_t__,
-                       Eigen::Matrix<local_scalar_t__, 1, -1>>>(N);
+                    stan::conditional_var_value_t<local_scalar_t__, 
+                      Eigen::Matrix<local_scalar_t__, 1, -1>>>(N);
       std::vector<
-        stan::conditional_var_value_t<local_scalar_t__,
-           Eigen::Matrix<local_scalar_t__, 1, -1>>> p_1d_row_vec;
+        stan::conditional_var_value_t<local_scalar_t__, 
+          Eigen::Matrix<local_scalar_t__, 1, -1>>> p_1d_row_vec;
       current_statement__ = 13;
       p_1d_row_vec = in__.template read<
                        std::vector<
-                         stan::conditional_var_value_t<local_scalar_t__,
-                            Eigen::Matrix<local_scalar_t__, 1, -1>>>>(N, N);
+                         stan::conditional_var_value_t<local_scalar_t__, 
+                           Eigen::Matrix<local_scalar_t__, 1, -1>>>>(N, N);
       std::vector<
         std::vector<
           std::vector<
-            stan::conditional_var_value_t<local_scalar_t__,
-               Eigen::Matrix<local_scalar_t__, 1, -1>>>>> p_3d_row_vec;
+            stan::conditional_var_value_t<local_scalar_t__, 
+              Eigen::Matrix<local_scalar_t__, 1, -1>>>>> p_3d_row_vec;
       current_statement__ = 14;
       p_3d_row_vec = in__.template read<
                        std::vector<
                          std::vector<
                            std::vector<
-                             stan::conditional_var_value_t<local_scalar_t__,
-                                Eigen::Matrix<local_scalar_t__, 1, -1>>>>>>(
-                       N, M, K, N);
-      stan::conditional_var_value_t<local_scalar_t__,
-         Eigen::Matrix<local_scalar_t__, -1, -1>> p_mat;
+                             stan::conditional_var_value_t<local_scalar_t__, 
+                               Eigen::Matrix<local_scalar_t__, 1, -1>>>>>>(N,
+                       M, K, N);
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, -1>> p_mat;
       current_statement__ = 15;
       p_mat = in__.template read<
-                stan::conditional_var_value_t<local_scalar_t__,
-                   Eigen::Matrix<local_scalar_t__, -1, -1>>>(5, 4);
+                stan::conditional_var_value_t<local_scalar_t__, 
+                  Eigen::Matrix<local_scalar_t__, -1, -1>>>(5, 4);
       std::vector<
         std::vector<
-          stan::conditional_var_value_t<local_scalar_t__,
-             Eigen::Matrix<local_scalar_t__, -1, -1>>>> p_ar_mat;
+          stan::conditional_var_value_t<local_scalar_t__, 
+            Eigen::Matrix<local_scalar_t__, -1, -1>>>> p_ar_mat;
       current_statement__ = 16;
       p_ar_mat = in__.template read_constrain_lub<
                    std::vector<
                      std::vector<
-                       stan::conditional_var_value_t<local_scalar_t__,
-                          Eigen::Matrix<local_scalar_t__, -1, -1>>>>,
+                       stan::conditional_var_value_t<local_scalar_t__, 
+                         Eigen::Matrix<local_scalar_t__, -1, -1>>>>,
                     jacobian__>(0, 1, lp__, 4, 5, 2, 3);
-      stan::conditional_var_value_t<local_scalar_t__,
-         Eigen::Matrix<local_scalar_t__, -1, 1>> p_simplex;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> p_simplex;
       current_statement__ = 17;
       p_simplex = in__.template read_constrain_simplex<
-                    stan::conditional_var_value_t<local_scalar_t__,
-                       Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+                    stan::conditional_var_value_t<local_scalar_t__, 
+                      Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
                     lp__, N);
       std::vector<
-        stan::conditional_var_value_t<local_scalar_t__,
-           Eigen::Matrix<local_scalar_t__, -1, 1>>> p_1d_simplex;
+        stan::conditional_var_value_t<local_scalar_t__, 
+          Eigen::Matrix<local_scalar_t__, -1, 1>>> p_1d_simplex;
       current_statement__ = 18;
       p_1d_simplex = in__.template read_constrain_simplex<
                        std::vector<
-                         stan::conditional_var_value_t<local_scalar_t__,
-                            Eigen::Matrix<local_scalar_t__, -1, 1>>>,
+                         stan::conditional_var_value_t<local_scalar_t__, 
+                           Eigen::Matrix<local_scalar_t__, -1, 1>>>,
                         jacobian__>(lp__, N, N);
       std::vector<
         std::vector<
           std::vector<
-            stan::conditional_var_value_t<local_scalar_t__,
-               Eigen::Matrix<local_scalar_t__, -1, 1>>>>> p_3d_simplex;
+            stan::conditional_var_value_t<local_scalar_t__, 
+              Eigen::Matrix<local_scalar_t__, -1, 1>>>>> p_3d_simplex;
       current_statement__ = 19;
       p_3d_simplex = in__.template read_constrain_simplex<
                        std::vector<
                          std::vector<
                            std::vector<
-                             stan::conditional_var_value_t<local_scalar_t__,
-                                Eigen::Matrix<local_scalar_t__, -1, 1>>>>>,
+                             stan::conditional_var_value_t<local_scalar_t__, 
+                               Eigen::Matrix<local_scalar_t__, -1, 1>>>>>,
                         jacobian__>(lp__, N, M, K, N);
-      stan::conditional_var_value_t<local_scalar_t__,
-         Eigen::Matrix<local_scalar_t__, -1, -1>> p_cfcov_54;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, -1>> p_cfcov_54;
       current_statement__ = 20;
       p_cfcov_54 = in__.template read_constrain_cholesky_factor_cov<
-                     stan::conditional_var_value_t<local_scalar_t__,
-                        Eigen::Matrix<local_scalar_t__, -1, -1>>,
-                      jacobian__>(lp__, 5, 4);
-      stan::conditional_var_value_t<local_scalar_t__,
-         Eigen::Matrix<local_scalar_t__, -1, -1>> p_cfcov_33;
+                     stan::conditional_var_value_t<local_scalar_t__, 
+                       Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+                     lp__, 5, 4);
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, -1>> p_cfcov_33;
       current_statement__ = 21;
       p_cfcov_33 = in__.template read_constrain_cholesky_factor_cov<
-                     stan::conditional_var_value_t<local_scalar_t__,
-                        Eigen::Matrix<local_scalar_t__, -1, -1>>,
-                      jacobian__>(lp__, 3, 3);
+                     stan::conditional_var_value_t<local_scalar_t__, 
+                       Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+                     lp__, 3, 3);
       std::vector<
-        stan::conditional_var_value_t<local_scalar_t__,
-           Eigen::Matrix<local_scalar_t__, -1, -1>>> p_cfcov_33_ar;
+        stan::conditional_var_value_t<local_scalar_t__, 
+          Eigen::Matrix<local_scalar_t__, -1, -1>>> p_cfcov_33_ar;
       current_statement__ = 22;
       p_cfcov_33_ar = in__.template read_constrain_cholesky_factor_cov<
                         std::vector<
-                          stan::conditional_var_value_t<local_scalar_t__,
-                             Eigen::Matrix<local_scalar_t__, -1, -1>>>,
+                          stan::conditional_var_value_t<local_scalar_t__, 
+                            Eigen::Matrix<local_scalar_t__, -1, -1>>>,
                          jacobian__>(lp__, K, 3, 3);
       Eigen::Matrix<local_scalar_t__, -1, 1> x_p;
       current_statement__ = 23;
@@ -7062,144 +7062,143 @@ class mother_model final : public model_base_crtp<mother_model> {
       Eigen::Matrix<local_scalar_t__, -1, 1> tp_vec =
          Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N, DUMMY_VAR__);
       std::vector<
-        stan::conditional_var_value_t<local_scalar_t__,
-           Eigen::Matrix<local_scalar_t__, -1, 1>>> tp_1d_vec =
+        stan::conditional_var_value_t<local_scalar_t__, 
+          Eigen::Matrix<local_scalar_t__, -1, 1>>> tp_1d_vec =
          std::vector<
-           stan::conditional_var_value_t<local_scalar_t__,
-              Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, 
+           stan::conditional_var_value_t<local_scalar_t__, 
+             Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, 
            stan::conditional_var_value_t<local_scalar_t__, 
              Eigen::Matrix<local_scalar_t__, -1, 1>>(
-             Eigen::Matrix<double, -1, 1>::Constant(
-               N, std::numeric_limits<double>::quiet_NaN())));
+             Eigen::Matrix<double, -1, 1>::Constant(N,
+               std::numeric_limits<double>::quiet_NaN())));
       std::vector<
         std::vector<
           std::vector<
-            stan::conditional_var_value_t<local_scalar_t__,
-               Eigen::Matrix<local_scalar_t__, -1, 1>>>>> tp_3d_vec =
+            stan::conditional_var_value_t<local_scalar_t__, 
+              Eigen::Matrix<local_scalar_t__, -1, 1>>>>> tp_3d_vec =
          std::vector<
            std::vector<
              std::vector<
-               stan::conditional_var_value_t<local_scalar_t__,
-                  Eigen::Matrix<local_scalar_t__, -1, 1>>>>>(N, 
+               stan::conditional_var_value_t<local_scalar_t__, 
+                 Eigen::Matrix<local_scalar_t__, -1, 1>>>>>(N, 
            std::vector<
              std::vector<
-               stan::conditional_var_value_t<local_scalar_t__,
-                  Eigen::Matrix<local_scalar_t__, -1, 1>>>>(M, 
+               stan::conditional_var_value_t<local_scalar_t__, 
+                 Eigen::Matrix<local_scalar_t__, -1, 1>>>>(M, 
              std::vector<
-               stan::conditional_var_value_t<local_scalar_t__,
-                  Eigen::Matrix<local_scalar_t__, -1, 1>>>(K, 
+               stan::conditional_var_value_t<local_scalar_t__, 
+                 Eigen::Matrix<local_scalar_t__, -1, 1>>>(K, 
                stan::conditional_var_value_t<local_scalar_t__, 
                  Eigen::Matrix<local_scalar_t__, -1, 1>>(
-                 Eigen::Matrix<double, -1, 1>::Constant(
-                   N, std::numeric_limits<double>::quiet_NaN())))));
-      stan::conditional_var_value_t<local_scalar_t__,
-         Eigen::Matrix<local_scalar_t__, 1, -1>> tp_row_vec =
+                 Eigen::Matrix<double, -1, 1>::Constant(N,
+                   std::numeric_limits<double>::quiet_NaN())))));
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, 1, -1>> tp_row_vec =
          stan::conditional_var_value_t<local_scalar_t__, 
            Eigen::Matrix<local_scalar_t__, 1, -1>>(
-           Eigen::Matrix<double, 1, -1>::Constant(
-             N, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, 1, -1>::Constant(N,
+             std::numeric_limits<double>::quiet_NaN()));
       std::vector<
-        stan::conditional_var_value_t<local_scalar_t__,
-           Eigen::Matrix<local_scalar_t__, 1, -1>>> tp_1d_row_vec =
+        stan::conditional_var_value_t<local_scalar_t__, 
+          Eigen::Matrix<local_scalar_t__, 1, -1>>> tp_1d_row_vec =
          std::vector<
-           stan::conditional_var_value_t<local_scalar_t__,
-              Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, 
+           stan::conditional_var_value_t<local_scalar_t__, 
+             Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, 
            stan::conditional_var_value_t<local_scalar_t__, 
              Eigen::Matrix<local_scalar_t__, 1, -1>>(
-             Eigen::Matrix<double, 1, -1>::Constant(
-               N, std::numeric_limits<double>::quiet_NaN())));
+             Eigen::Matrix<double, 1, -1>::Constant(N,
+               std::numeric_limits<double>::quiet_NaN())));
       std::vector<
         std::vector<
           std::vector<
-            stan::conditional_var_value_t<local_scalar_t__,
-               Eigen::Matrix<local_scalar_t__, 1, -1>>>>> tp_3d_row_vec =
+            stan::conditional_var_value_t<local_scalar_t__, 
+              Eigen::Matrix<local_scalar_t__, 1, -1>>>>> tp_3d_row_vec =
          std::vector<
            std::vector<
              std::vector<
-               stan::conditional_var_value_t<local_scalar_t__,
-                  Eigen::Matrix<local_scalar_t__, 1, -1>>>>>(N, 
+               stan::conditional_var_value_t<local_scalar_t__, 
+                 Eigen::Matrix<local_scalar_t__, 1, -1>>>>>(N, 
            std::vector<
              std::vector<
-               stan::conditional_var_value_t<local_scalar_t__,
-                  Eigen::Matrix<local_scalar_t__, 1, -1>>>>(M, 
+               stan::conditional_var_value_t<local_scalar_t__, 
+                 Eigen::Matrix<local_scalar_t__, 1, -1>>>>(M, 
              std::vector<
-               stan::conditional_var_value_t<local_scalar_t__,
-                  Eigen::Matrix<local_scalar_t__, 1, -1>>>(K, 
+               stan::conditional_var_value_t<local_scalar_t__, 
+                 Eigen::Matrix<local_scalar_t__, 1, -1>>>(K, 
                stan::conditional_var_value_t<local_scalar_t__, 
                  Eigen::Matrix<local_scalar_t__, 1, -1>>(
-                 Eigen::Matrix<double, 1, -1>::Constant(
-                   N, std::numeric_limits<double>::quiet_NaN())))));
-      stan::conditional_var_value_t<local_scalar_t__,
-         Eigen::Matrix<local_scalar_t__, -1, -1>> tp_mat =
+                 Eigen::Matrix<double, 1, -1>::Constant(N,
+                   std::numeric_limits<double>::quiet_NaN())))));
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, -1>> tp_mat =
          stan::conditional_var_value_t<local_scalar_t__, 
            Eigen::Matrix<local_scalar_t__, -1, -1>>(
-           Eigen::Matrix<double, -1, -1>::Constant(
-             5, 4, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, -1, -1>::Constant(5, 4,
+             std::numeric_limits<double>::quiet_NaN()));
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> tp_ar_mat =
-         std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
-           4, 
+         std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(4, 
            std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(5, 
-             Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
-               2, 3, DUMMY_VAR__)));
-      stan::conditional_var_value_t<local_scalar_t__,
-         Eigen::Matrix<local_scalar_t__, -1, 1>> tp_simplex =
+             Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(2, 3,
+               DUMMY_VAR__)));
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> tp_simplex =
          stan::conditional_var_value_t<local_scalar_t__, 
            Eigen::Matrix<local_scalar_t__, -1, 1>>(
-           Eigen::Matrix<double, -1, 1>::Constant(
-             N, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, -1, 1>::Constant(N,
+             std::numeric_limits<double>::quiet_NaN()));
       std::vector<
-        stan::conditional_var_value_t<local_scalar_t__,
-           Eigen::Matrix<local_scalar_t__, -1, 1>>> tp_1d_simplex =
+        stan::conditional_var_value_t<local_scalar_t__, 
+          Eigen::Matrix<local_scalar_t__, -1, 1>>> tp_1d_simplex =
          std::vector<
-           stan::conditional_var_value_t<local_scalar_t__,
-              Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, 
+           stan::conditional_var_value_t<local_scalar_t__, 
+             Eigen::Matrix<local_scalar_t__, -1, 1>>>(N, 
            stan::conditional_var_value_t<local_scalar_t__, 
              Eigen::Matrix<local_scalar_t__, -1, 1>>(
-             Eigen::Matrix<double, -1, 1>::Constant(
-               N, std::numeric_limits<double>::quiet_NaN())));
+             Eigen::Matrix<double, -1, 1>::Constant(N,
+               std::numeric_limits<double>::quiet_NaN())));
       std::vector<
         std::vector<
           std::vector<
-            stan::conditional_var_value_t<local_scalar_t__,
-               Eigen::Matrix<local_scalar_t__, -1, 1>>>>> tp_3d_simplex =
+            stan::conditional_var_value_t<local_scalar_t__, 
+              Eigen::Matrix<local_scalar_t__, -1, 1>>>>> tp_3d_simplex =
          std::vector<
            std::vector<
              std::vector<
-               stan::conditional_var_value_t<local_scalar_t__,
-                  Eigen::Matrix<local_scalar_t__, -1, 1>>>>>(N, 
+               stan::conditional_var_value_t<local_scalar_t__, 
+                 Eigen::Matrix<local_scalar_t__, -1, 1>>>>>(N, 
            std::vector<
              std::vector<
-               stan::conditional_var_value_t<local_scalar_t__,
-                  Eigen::Matrix<local_scalar_t__, -1, 1>>>>(M, 
+               stan::conditional_var_value_t<local_scalar_t__, 
+                 Eigen::Matrix<local_scalar_t__, -1, 1>>>>(M, 
              std::vector<
-               stan::conditional_var_value_t<local_scalar_t__,
-                  Eigen::Matrix<local_scalar_t__, -1, 1>>>(K, 
+               stan::conditional_var_value_t<local_scalar_t__, 
+                 Eigen::Matrix<local_scalar_t__, -1, 1>>>(K, 
                stan::conditional_var_value_t<local_scalar_t__, 
                  Eigen::Matrix<local_scalar_t__, -1, 1>>(
-                 Eigen::Matrix<double, -1, 1>::Constant(
-                   N, std::numeric_limits<double>::quiet_NaN())))));
-      stan::conditional_var_value_t<local_scalar_t__,
-         Eigen::Matrix<local_scalar_t__, -1, -1>> tp_cfcov_54 =
+                 Eigen::Matrix<double, -1, 1>::Constant(N,
+                   std::numeric_limits<double>::quiet_NaN())))));
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, -1>> tp_cfcov_54 =
          stan::conditional_var_value_t<local_scalar_t__, 
            Eigen::Matrix<local_scalar_t__, -1, -1>>(
-           Eigen::Matrix<double, -1, -1>::Constant(
-             5, 4, std::numeric_limits<double>::quiet_NaN()));
-      stan::conditional_var_value_t<local_scalar_t__,
-         Eigen::Matrix<local_scalar_t__, -1, -1>> tp_cfcov_33 =
+           Eigen::Matrix<double, -1, -1>::Constant(5, 4,
+             std::numeric_limits<double>::quiet_NaN()));
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, -1>> tp_cfcov_33 =
          stan::conditional_var_value_t<local_scalar_t__, 
            Eigen::Matrix<local_scalar_t__, -1, -1>>(
-           Eigen::Matrix<double, -1, -1>::Constant(
-             3, 3, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, -1, -1>::Constant(3, 3,
+             std::numeric_limits<double>::quiet_NaN()));
       std::vector<
-        stan::conditional_var_value_t<local_scalar_t__,
-           Eigen::Matrix<local_scalar_t__, -1, -1>>> tp_cfcov_33_ar =
+        stan::conditional_var_value_t<local_scalar_t__, 
+          Eigen::Matrix<local_scalar_t__, -1, -1>>> tp_cfcov_33_ar =
          std::vector<
-           stan::conditional_var_value_t<local_scalar_t__,
-              Eigen::Matrix<local_scalar_t__, -1, -1>>>(K, 
+           stan::conditional_var_value_t<local_scalar_t__, 
+             Eigen::Matrix<local_scalar_t__, -1, -1>>>(K, 
            stan::conditional_var_value_t<local_scalar_t__, 
              Eigen::Matrix<local_scalar_t__, -1, -1>>(
-             Eigen::Matrix<double, -1, -1>::Constant(
-               3, 3, std::numeric_limits<double>::quiet_NaN())));
+             Eigen::Matrix<double, -1, -1>::Constant(3, 3,
+               std::numeric_limits<double>::quiet_NaN())));
       Eigen::Matrix<local_scalar_t__, -1, 1> theta_p =
          Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(2, DUMMY_VAR__);
       local_scalar_t__ tp_real = DUMMY_VAR__;
@@ -7592,68 +7591,68 @@ class mother_model final : public model_base_crtp<mother_model> {
            std::vector<std::vector<double>>(M, 
              std::vector<double>(K, std::numeric_limits<double>::quiet_NaN())));
       Eigen::Matrix<double, -1, 1> tp_vec =
-         Eigen::Matrix<double, -1, 1>::Constant(
-           N, std::numeric_limits<double>::quiet_NaN());
+         Eigen::Matrix<double, -1, 1>::Constant(N,
+           std::numeric_limits<double>::quiet_NaN());
       std::vector<Eigen::Matrix<double, -1, 1>> tp_1d_vec =
          std::vector<Eigen::Matrix<double, -1, 1>>(N, 
-           Eigen::Matrix<double, -1, 1>::Constant(
-             N, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, -1, 1>::Constant(N,
+             std::numeric_limits<double>::quiet_NaN()));
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> tp_3d_vec =
          std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(
            N, 
            std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, 
              std::vector<Eigen::Matrix<double, -1, 1>>(K, 
-               Eigen::Matrix<double, -1, 1>::Constant(
-                 N, std::numeric_limits<double>::quiet_NaN()))));
+               Eigen::Matrix<double, -1, 1>::Constant(N,
+                 std::numeric_limits<double>::quiet_NaN()))));
       Eigen::Matrix<double, 1, -1> tp_row_vec =
-         Eigen::Matrix<double, 1, -1>::Constant(
-           N, std::numeric_limits<double>::quiet_NaN());
+         Eigen::Matrix<double, 1, -1>::Constant(N,
+           std::numeric_limits<double>::quiet_NaN());
       std::vector<Eigen::Matrix<double, 1, -1>> tp_1d_row_vec =
          std::vector<Eigen::Matrix<double, 1, -1>>(N, 
-           Eigen::Matrix<double, 1, -1>::Constant(
-             N, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, 1, -1>::Constant(N,
+             std::numeric_limits<double>::quiet_NaN()));
       std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> tp_3d_row_vec =
          std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(
            N, 
            std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, 
              std::vector<Eigen::Matrix<double, 1, -1>>(K, 
-               Eigen::Matrix<double, 1, -1>::Constant(
-                 N, std::numeric_limits<double>::quiet_NaN()))));
+               Eigen::Matrix<double, 1, -1>::Constant(N,
+                 std::numeric_limits<double>::quiet_NaN()))));
       Eigen::Matrix<double, -1, -1> tp_mat =
-         Eigen::Matrix<double, -1, -1>::Constant(
-           5, 4, std::numeric_limits<double>::quiet_NaN());
+         Eigen::Matrix<double, -1, -1>::Constant(5, 4,
+           std::numeric_limits<double>::quiet_NaN());
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> tp_ar_mat =
          std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, 
            std::vector<Eigen::Matrix<double, -1, -1>>(5, 
-             Eigen::Matrix<double, -1, -1>::Constant(
-               2, 3, std::numeric_limits<double>::quiet_NaN())));
+             Eigen::Matrix<double, -1, -1>::Constant(2, 3,
+               std::numeric_limits<double>::quiet_NaN())));
       Eigen::Matrix<double, -1, 1> tp_simplex =
-         Eigen::Matrix<double, -1, 1>::Constant(
-           N, std::numeric_limits<double>::quiet_NaN());
+         Eigen::Matrix<double, -1, 1>::Constant(N,
+           std::numeric_limits<double>::quiet_NaN());
       std::vector<Eigen::Matrix<double, -1, 1>> tp_1d_simplex =
          std::vector<Eigen::Matrix<double, -1, 1>>(N, 
-           Eigen::Matrix<double, -1, 1>::Constant(
-             N, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, -1, 1>::Constant(N,
+             std::numeric_limits<double>::quiet_NaN()));
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> tp_3d_simplex =
          std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(
            N, 
            std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, 
              std::vector<Eigen::Matrix<double, -1, 1>>(K, 
-               Eigen::Matrix<double, -1, 1>::Constant(
-                 N, std::numeric_limits<double>::quiet_NaN()))));
+               Eigen::Matrix<double, -1, 1>::Constant(N,
+                 std::numeric_limits<double>::quiet_NaN()))));
       Eigen::Matrix<double, -1, -1> tp_cfcov_54 =
-         Eigen::Matrix<double, -1, -1>::Constant(
-           5, 4, std::numeric_limits<double>::quiet_NaN());
+         Eigen::Matrix<double, -1, -1>::Constant(5, 4,
+           std::numeric_limits<double>::quiet_NaN());
       Eigen::Matrix<double, -1, -1> tp_cfcov_33 =
-         Eigen::Matrix<double, -1, -1>::Constant(
-           3, 3, std::numeric_limits<double>::quiet_NaN());
+         Eigen::Matrix<double, -1, -1>::Constant(3, 3,
+           std::numeric_limits<double>::quiet_NaN());
       std::vector<Eigen::Matrix<double, -1, -1>> tp_cfcov_33_ar =
          std::vector<Eigen::Matrix<double, -1, -1>>(K, 
-           Eigen::Matrix<double, -1, -1>::Constant(
-             3, 3, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, -1, -1>::Constant(3, 3,
+             std::numeric_limits<double>::quiet_NaN()));
       Eigen::Matrix<double, -1, 1> theta_p =
-         Eigen::Matrix<double, -1, 1>::Constant(
-           2, std::numeric_limits<double>::quiet_NaN());
+         Eigen::Matrix<double, -1, 1>::Constant(2,
+           std::numeric_limits<double>::quiet_NaN());
       double tp_real = std::numeric_limits<double>::quiet_NaN();
       out__.write(p_real);
       out__.write(p_upper);
@@ -7975,101 +7974,101 @@ class mother_model final : public model_base_crtp<mother_model> {
            std::vector<std::vector<double>>(M, 
              std::vector<double>(K, std::numeric_limits<double>::quiet_NaN())));
       Eigen::Matrix<double, -1, 1> gq_vec =
-         Eigen::Matrix<double, -1, 1>::Constant(
-           N, std::numeric_limits<double>::quiet_NaN());
+         Eigen::Matrix<double, -1, 1>::Constant(N,
+           std::numeric_limits<double>::quiet_NaN());
       std::vector<Eigen::Matrix<double, -1, 1>> gq_1d_vec =
          std::vector<Eigen::Matrix<double, -1, 1>>(N, 
-           Eigen::Matrix<double, -1, 1>::Constant(
-             N, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, -1, 1>::Constant(N,
+             std::numeric_limits<double>::quiet_NaN()));
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> gq_3d_vec =
          std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(
            N, 
            std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, 
              std::vector<Eigen::Matrix<double, -1, 1>>(K, 
-               Eigen::Matrix<double, -1, 1>::Constant(
-                 N, std::numeric_limits<double>::quiet_NaN()))));
+               Eigen::Matrix<double, -1, 1>::Constant(N,
+                 std::numeric_limits<double>::quiet_NaN()))));
       Eigen::Matrix<double, 1, -1> gq_row_vec =
-         Eigen::Matrix<double, 1, -1>::Constant(
-           N, std::numeric_limits<double>::quiet_NaN());
+         Eigen::Matrix<double, 1, -1>::Constant(N,
+           std::numeric_limits<double>::quiet_NaN());
       std::vector<Eigen::Matrix<double, 1, -1>> gq_1d_row_vec =
          std::vector<Eigen::Matrix<double, 1, -1>>(N, 
-           Eigen::Matrix<double, 1, -1>::Constant(
-             N, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, 1, -1>::Constant(N,
+             std::numeric_limits<double>::quiet_NaN()));
       std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>> gq_3d_row_vec =
          std::vector<std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>>(
            N, 
            std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(M, 
              std::vector<Eigen::Matrix<double, 1, -1>>(K, 
-               Eigen::Matrix<double, 1, -1>::Constant(
-                 N, std::numeric_limits<double>::quiet_NaN()))));
+               Eigen::Matrix<double, 1, -1>::Constant(N,
+                 std::numeric_limits<double>::quiet_NaN()))));
       std::vector<std::vector<Eigen::Matrix<double, -1, -1>>> gq_ar_mat =
          std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(4, 
            std::vector<Eigen::Matrix<double, -1, -1>>(5, 
-             Eigen::Matrix<double, -1, -1>::Constant(
-               2, 3, std::numeric_limits<double>::quiet_NaN())));
+             Eigen::Matrix<double, -1, -1>::Constant(2, 3,
+               std::numeric_limits<double>::quiet_NaN())));
       Eigen::Matrix<double, -1, 1> gq_simplex =
-         Eigen::Matrix<double, -1, 1>::Constant(
-           N, std::numeric_limits<double>::quiet_NaN());
+         Eigen::Matrix<double, -1, 1>::Constant(N,
+           std::numeric_limits<double>::quiet_NaN());
       std::vector<Eigen::Matrix<double, -1, 1>> gq_1d_simplex =
          std::vector<Eigen::Matrix<double, -1, 1>>(N, 
-           Eigen::Matrix<double, -1, 1>::Constant(
-             N, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, -1, 1>::Constant(N,
+             std::numeric_limits<double>::quiet_NaN()));
       std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>> gq_3d_simplex =
          std::vector<std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>>(
            N, 
            std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(M, 
              std::vector<Eigen::Matrix<double, -1, 1>>(K, 
-               Eigen::Matrix<double, -1, 1>::Constant(
-                 N, std::numeric_limits<double>::quiet_NaN()))));
+               Eigen::Matrix<double, -1, 1>::Constant(N,
+                 std::numeric_limits<double>::quiet_NaN()))));
       Eigen::Matrix<double, -1, -1> gq_cfcov_54 =
-         Eigen::Matrix<double, -1, -1>::Constant(
-           5, 4, std::numeric_limits<double>::quiet_NaN());
+         Eigen::Matrix<double, -1, -1>::Constant(5, 4,
+           std::numeric_limits<double>::quiet_NaN());
       Eigen::Matrix<double, -1, -1> gq_cfcov_33 =
-         Eigen::Matrix<double, -1, -1>::Constant(
-           3, 3, std::numeric_limits<double>::quiet_NaN());
+         Eigen::Matrix<double, -1, -1>::Constant(3, 3,
+           std::numeric_limits<double>::quiet_NaN());
       std::vector<Eigen::Matrix<double, -1, -1>> gq_cfcov_33_ar =
          std::vector<Eigen::Matrix<double, -1, -1>>(K, 
-           Eigen::Matrix<double, -1, -1>::Constant(
-             3, 3, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, -1, -1>::Constant(3, 3,
+             std::numeric_limits<double>::quiet_NaN()));
       std::vector<int> indices;
       current_statement__ = 95;
       assign(indices, std::vector<int>{2, 3, 1}, "assigning variable indices");
       std::vector<Eigen::Matrix<double, -1, -1>> indexing_mat =
          std::vector<Eigen::Matrix<double, -1, -1>>(5, 
-           Eigen::Matrix<double, -1, -1>::Constant(
-             3, 4, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, -1, -1>::Constant(3, 4,
+             std::numeric_limits<double>::quiet_NaN()));
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res1 =
          std::vector<Eigen::Matrix<double, -1, -1>>(3, 
-           Eigen::Matrix<double, -1, -1>::Constant(
-             3, 4, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, -1, -1>::Constant(3, 4,
+             std::numeric_limits<double>::quiet_NaN()));
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res2 =
          std::vector<Eigen::Matrix<double, -1, -1>>(5, 
-           Eigen::Matrix<double, -1, -1>::Constant(
-             3, 4, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, -1, -1>::Constant(3, 4,
+             std::numeric_limits<double>::quiet_NaN()));
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res3 =
          std::vector<Eigen::Matrix<double, -1, -1>>(3, 
-           Eigen::Matrix<double, -1, -1>::Constant(
-             3, 3, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, -1, -1>::Constant(3, 3,
+             std::numeric_limits<double>::quiet_NaN()));
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res11 =
          std::vector<Eigen::Matrix<double, -1, -1>>(3, 
-           Eigen::Matrix<double, -1, -1>::Constant(
-             3, 4, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, -1, -1>::Constant(3, 4,
+             std::numeric_limits<double>::quiet_NaN()));
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res21 =
          std::vector<Eigen::Matrix<double, -1, -1>>(5, 
-           Eigen::Matrix<double, -1, -1>::Constant(
-             3, 4, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, -1, -1>::Constant(3, 4,
+             std::numeric_limits<double>::quiet_NaN()));
       std::vector<Eigen::Matrix<double, -1, -1>> idx_res31 =
          std::vector<Eigen::Matrix<double, -1, -1>>(3, 
-           Eigen::Matrix<double, -1, -1>::Constant(
-             3, 3, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, -1, -1>::Constant(3, 3,
+             std::numeric_limits<double>::quiet_NaN()));
       std::vector<Eigen::Matrix<double, 1, -1>> idx_res4 =
          std::vector<Eigen::Matrix<double, 1, -1>>(3, 
-           Eigen::Matrix<double, 1, -1>::Constant(
-             4, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, 1, -1>::Constant(4,
+             std::numeric_limits<double>::quiet_NaN()));
       std::vector<Eigen::Matrix<double, -1, 1>> idx_res5 =
          std::vector<Eigen::Matrix<double, -1, 1>>(2, 
-           Eigen::Matrix<double, -1, 1>::Constant(
-             2, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, -1, 1>::Constant(2,
+             std::numeric_limits<double>::quiet_NaN()));
       current_statement__ = 105;
       assign(gq_real_1d_ar,
         rvalue(p_1d_simplex, "p_1d_simplex", index_omni(), index_uni(1)),
@@ -8526,8 +8525,8 @@ class mother_model final : public model_base_crtp<mother_model> {
            std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
              M, 
              std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, 
-               Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(
-                 N, DUMMY_VAR__))));
+               Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N,
+                 DUMMY_VAR__))));
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
@@ -8568,8 +8567,8 @@ class mother_model final : public model_base_crtp<mother_model> {
            std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
              M, 
              std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(K, 
-               Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(
-                 N, DUMMY_VAR__))));
+               Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(N,
+                 DUMMY_VAR__))));
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
@@ -8594,11 +8593,10 @@ class mother_model final : public model_base_crtp<mother_model> {
       }
       out__.write(p_mat);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> p_ar_mat =
-         std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
-           4, 
+         std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(4, 
            std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(5, 
-             Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
-               2, 3, DUMMY_VAR__)));
+             Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(2, 3,
+               DUMMY_VAR__)));
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= 5; ++sym3__) {
@@ -8639,8 +8637,8 @@ class mother_model final : public model_base_crtp<mother_model> {
            std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
              M, 
              std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, 
-               Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(
-                 N, DUMMY_VAR__))));
+               Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(N,
+                 DUMMY_VAR__))));
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= K; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= M; ++sym3__) {
@@ -8677,8 +8675,8 @@ class mother_model final : public model_base_crtp<mother_model> {
       out__.write_free_cholesky_factor_cov(p_cfcov_33);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> p_cfcov_33_ar =
          std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(K, 
-           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
-             3, 3, DUMMY_VAR__));
+           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(3, 3,
+             DUMMY_VAR__));
       for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 3; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= K; ++sym3__) {
@@ -10828,8 +10826,8 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       context__.validate_dims("data initialization","shared_params_d",
           "double", std::vector<size_t>{static_cast<size_t>(3)});
       shared_params_d__ = 
-        Eigen::Matrix<double, -1, 1>::Constant(
-          3, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, -1, 1>::Constant(3,
+          std::numeric_limits<double>::quiet_NaN());
       new (&shared_params_d) Eigen::Map<Eigen::Matrix<double, -1, 1>>(shared_params_d__.data(), 3);
         
       
@@ -10854,8 +10852,8 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
             static_cast<size_t>(3)});
       job_params_d = 
         std::vector<Eigen::Matrix<double, -1, 1>>(3, 
-          Eigen::Matrix<double, -1, 1>::Constant(
-            3, std::numeric_limits<double>::quiet_NaN()));
+          Eigen::Matrix<double, -1, 1>::Constant(3,
+            std::numeric_limits<double>::quiet_NaN()));
       
       
       {
@@ -11288,26 +11286,26 @@ class motherHOF_model final : public model_base_crtp<motherHOF_model> {
       double abc2_p = std::numeric_limits<double>::quiet_NaN();
       double abc3_p = std::numeric_limits<double>::quiet_NaN();
       Eigen::Matrix<double, -1, 1> y_hat_tp1 =
-         Eigen::Matrix<double, -1, 1>::Constant(
-           3, std::numeric_limits<double>::quiet_NaN());
+         Eigen::Matrix<double, -1, 1>::Constant(3,
+           std::numeric_limits<double>::quiet_NaN());
       Eigen::Matrix<double, -1, 1> y_hat_tp2 =
-         Eigen::Matrix<double, -1, 1>::Constant(
-           3, std::numeric_limits<double>::quiet_NaN());
+         Eigen::Matrix<double, -1, 1>::Constant(3,
+           std::numeric_limits<double>::quiet_NaN());
       Eigen::Matrix<double, -1, 1> y_hat_tp3 =
-         Eigen::Matrix<double, -1, 1>::Constant(
-           3, std::numeric_limits<double>::quiet_NaN());
+         Eigen::Matrix<double, -1, 1>::Constant(3,
+           std::numeric_limits<double>::quiet_NaN());
       Eigen::Matrix<double, -1, 1> theta_p_as =
-         Eigen::Matrix<double, -1, 1>::Constant(
-           2, std::numeric_limits<double>::quiet_NaN());
+         Eigen::Matrix<double, -1, 1>::Constant(2,
+           std::numeric_limits<double>::quiet_NaN());
       Eigen::Matrix<double, -1, 1> x_v =
-         Eigen::Matrix<double, -1, 1>::Constant(
-           2, std::numeric_limits<double>::quiet_NaN());
+         Eigen::Matrix<double, -1, 1>::Constant(2,
+           std::numeric_limits<double>::quiet_NaN());
       Eigen::Matrix<double, -1, 1> y_v =
-         Eigen::Matrix<double, -1, 1>::Constant(
-           2, std::numeric_limits<double>::quiet_NaN());
+         Eigen::Matrix<double, -1, 1>::Constant(2,
+           std::numeric_limits<double>::quiet_NaN());
       Eigen::Matrix<double, -1, 1> y_p =
-         Eigen::Matrix<double, -1, 1>::Constant(
-           2, std::numeric_limits<double>::quiet_NaN());
+         Eigen::Matrix<double, -1, 1>::Constant(2,
+           std::numeric_limits<double>::quiet_NaN());
       out__.write(y0_p);
       out__.write(theta_p);
       out__.write(x_p);
@@ -12975,8 +12973,8 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       context__.validate_dims("data initialization","vd","double",
            std::vector<size_t>{static_cast<size_t>(N)});
       vd__ = 
-        Eigen::Matrix<double, -1, 1>::Constant(
-          N, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, -1, 1>::Constant(N,
+          std::numeric_limits<double>::quiet_NaN());
       new (&vd) Eigen::Map<Eigen::Matrix<double, -1, 1>>(vd__.data(), N);
       
       {
@@ -13001,8 +12999,8 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       current_statement__ = 610;
       zd = 
         std::vector<Eigen::Matrix<double, -1, 1>>(N, 
-          Eigen::Matrix<double, -1, 1>::Constant(
-            N, std::numeric_limits<double>::quiet_NaN()));
+          Eigen::Matrix<double, -1, 1>::Constant(N,
+            std::numeric_limits<double>::quiet_NaN()));
       
       
       current_statement__ = 610;
@@ -14545,8 +14543,8 @@ class new_integrate_interface_model final : public model_base_crtp<new_integrate
       v = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
       std::vector<Eigen::Matrix<double, -1, 1>> z =
          std::vector<Eigen::Matrix<double, -1, 1>>(N, 
-           Eigen::Matrix<double, -1, 1>::Constant(
-             N, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, -1, 1>::Constant(N,
+             std::numeric_limits<double>::quiet_NaN()));
       out__.write(r);
       out__.write(ra);
       out__.write(v);
@@ -17207,8 +17205,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
            std::vector<size_t>{static_cast<size_t>(n),
             static_cast<size_t>(k)});
       X_d__ = 
-        Eigen::Matrix<double, -1, -1>::Constant(
-          n, k, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, -1, -1>::Constant(n, k,
+          std::numeric_limits<double>::quiet_NaN());
       new (&X_d) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_d__.data(), n, k);
         
       
@@ -17240,8 +17238,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
             static_cast<size_t>(n), static_cast<size_t>(k)});
       X_d_a = 
         std::vector<Eigen::Matrix<double, -1, -1>>(2, 
-          Eigen::Matrix<double, -1, -1>::Constant(
-            n, k, std::numeric_limits<double>::quiet_NaN()));
+          Eigen::Matrix<double, -1, -1>::Constant(n, k,
+            std::numeric_limits<double>::quiet_NaN()));
       
       
       {
@@ -17273,8 +17271,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       context__.validate_dims("data initialization","y_v_d","double",
            std::vector<size_t>{static_cast<size_t>(n)});
       y_v_d__ = 
-        Eigen::Matrix<double, -1, 1>::Constant(
-          n, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, -1, 1>::Constant(n,
+          std::numeric_limits<double>::quiet_NaN());
       new (&y_v_d) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y_v_d__.data(), n);
         
       
@@ -17299,8 +17297,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       context__.validate_dims("data initialization","X_rv_d","double",
            std::vector<size_t>{static_cast<size_t>(n)});
       X_rv_d__ = 
-        Eigen::Matrix<double, 1, -1>::Constant(
-          n, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, 1, -1>::Constant(n,
+          std::numeric_limits<double>::quiet_NaN());
       new (&X_rv_d) Eigen::Map<Eigen::Matrix<double, 1, -1>>(X_rv_d__.data(), n);
         
       
@@ -17369,8 +17367,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("X_d_td", "k", k);
       current_statement__ = 198;
       X_d_td__ = 
-        Eigen::Matrix<double, -1, -1>::Constant(
-          n, k, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, -1, -1>::Constant(n, k,
+          std::numeric_limits<double>::quiet_NaN());
       new (&X_d_td) Eigen::Map<Eigen::Matrix<double, -1, -1>>(X_d_td__.data(), n, k);
         
       
@@ -17378,8 +17376,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("y_v_d_td", "n", n);
       current_statement__ = 200;
       y_v_d_td__ = 
-        Eigen::Matrix<double, -1, 1>::Constant(
-          n, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, -1, 1>::Constant(n,
+          std::numeric_limits<double>::quiet_NaN());
       new (&y_v_d_td) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y_v_d_td__.data(), n);
         
       
@@ -17387,8 +17385,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       validate_non_negative_index("X_rv_d_td", "n", n);
       current_statement__ = 202;
       X_rv_d_td__ = 
-        Eigen::Matrix<double, 1, -1>::Constant(
-          n, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, 1, -1>::Constant(n,
+          std::numeric_limits<double>::quiet_NaN());
       new (&X_rv_d_td) Eigen::Map<Eigen::Matrix<double, 1, -1>>(X_rv_d_td__.data(), n);
         
       
@@ -18554,20 +18552,20 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
     
     try {
       std::vector<
-        stan::conditional_var_value_t<local_scalar_t__,
-           Eigen::Matrix<local_scalar_t__, -1, -1>>> L_Omega;
+        stan::conditional_var_value_t<local_scalar_t__, 
+          Eigen::Matrix<local_scalar_t__, -1, -1>>> L_Omega;
       current_statement__ = 1;
       L_Omega = in__.template read_constrain_cholesky_factor_corr<
                   std::vector<
-                    stan::conditional_var_value_t<local_scalar_t__,
-                       Eigen::Matrix<local_scalar_t__, -1, -1>>>,
-                   jacobian__>(lp__, nt, 2);
-      stan::conditional_var_value_t<local_scalar_t__,
-         Eigen::Matrix<local_scalar_t__, -1, 1>> z1;
+                    stan::conditional_var_value_t<local_scalar_t__, 
+                      Eigen::Matrix<local_scalar_t__, -1, -1>>>, jacobian__>(
+                  lp__, nt, 2);
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> z1;
       current_statement__ = 2;
       z1 = in__.template read_constrain_lb<
-             stan::conditional_var_value_t<local_scalar_t__,
-                Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+             stan::conditional_var_value_t<local_scalar_t__, 
+               Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
              rvalue(L_Omega, "L_Omega",
                index_uni(1), index_uni(1), index_uni(2)), lp__, NS);
     } catch (const std::exception& e) {
@@ -18656,8 +18654,8 @@ class param_constraint_model final : public model_base_crtp<param_constraint_mod
       pos__ = 1;
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> L_Omega =
          std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(nt, 
-           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
-             2, 2, DUMMY_VAR__));
+           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(2, 2,
+             DUMMY_VAR__));
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= nt; ++sym3__) {
@@ -21070,11 +21068,10 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
       int pos__;
       pos__ = 1;
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> a8 =
-         std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
-           N, 
+         std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, 
            std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, 
-             Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
-               N, N, DUMMY_VAR__)));
+             Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(N, N,
+               DUMMY_VAR__)));
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
@@ -21128,8 +21125,8 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
       out__.write(a5);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> a4 =
          std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, 
-           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
-             N, N, DUMMY_VAR__));
+           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(N, N,
+             DUMMY_VAR__));
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
@@ -21167,11 +21164,10 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
       }
       out__.write(a1);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> y8 =
-         std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
-           N, 
+         std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, 
            std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, 
-             Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
-               N, N, DUMMY_VAR__)));
+             Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(N, N,
+               DUMMY_VAR__)));
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
@@ -21225,8 +21221,8 @@ class reduce_sum_m2_model final : public model_base_crtp<reduce_sum_m2_model> {
       out__.write(y5);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> y4 =
          std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, 
-           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
-             N, N, DUMMY_VAR__));
+           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(N, N,
+             DUMMY_VAR__));
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
@@ -23510,8 +23506,8 @@ r(std::ostream* pstream__) {
     std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> y8d =
        std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, 
          std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, 
-           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
-             N, N, DUMMY_VAR__)));
+           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(N, N,
+             DUMMY_VAR__)));
     local_scalar_t__ y9d = DUMMY_VAR__;
     current_statement__ = 253;
     validate_non_negative_index("y10d", "N", N);
@@ -23624,8 +23620,8 @@ r(std::ostream* pstream__) {
     std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> y8 =
        std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, 
          std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, 
-           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
-             N, N, DUMMY_VAR__)));
+           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(N, N,
+             DUMMY_VAR__)));
     local_scalar_t__ y9 = DUMMY_VAR__;
     current_statement__ = 303;
     validate_non_negative_index("y10", "N", N);
@@ -23853,8 +23849,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
             static_cast<size_t>(N)});
       y2d = 
         std::vector<Eigen::Matrix<double, -1, 1>>(N, 
-          Eigen::Matrix<double, -1, 1>::Constant(
-            N, std::numeric_limits<double>::quiet_NaN()));
+          Eigen::Matrix<double, -1, 1>::Constant(N,
+            std::numeric_limits<double>::quiet_NaN()));
       
       
       {
@@ -23885,8 +23881,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
             static_cast<size_t>(N)});
       y3d = 
         std::vector<Eigen::Matrix<double, 1, -1>>(N, 
-          Eigen::Matrix<double, 1, -1>::Constant(
-            N, std::numeric_limits<double>::quiet_NaN()));
+          Eigen::Matrix<double, 1, -1>::Constant(N,
+            std::numeric_limits<double>::quiet_NaN()));
       
       
       {
@@ -23919,8 +23915,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
             static_cast<size_t>(N), static_cast<size_t>(N)});
       y4d = 
         std::vector<Eigen::Matrix<double, -1, -1>>(N, 
-          Eigen::Matrix<double, -1, -1>::Constant(
-            N, N, std::numeric_limits<double>::quiet_NaN()));
+          Eigen::Matrix<double, -1, -1>::Constant(N, N,
+            std::numeric_limits<double>::quiet_NaN()));
       
       
       {
@@ -23990,8 +23986,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       y6d = 
         std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(N, 
           std::vector<Eigen::Matrix<double, -1, 1>>(N, 
-            Eigen::Matrix<double, -1, 1>::Constant(
-              N, std::numeric_limits<double>::quiet_NaN())));
+            Eigen::Matrix<double, -1, 1>::Constant(N,
+              std::numeric_limits<double>::quiet_NaN())));
       
       
       {
@@ -24030,8 +24026,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       y7d = 
         std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(N, 
           std::vector<Eigen::Matrix<double, 1, -1>>(N, 
-            Eigen::Matrix<double, 1, -1>::Constant(
-              N, std::numeric_limits<double>::quiet_NaN())));
+            Eigen::Matrix<double, 1, -1>::Constant(N,
+              std::numeric_limits<double>::quiet_NaN())));
       
       
       {
@@ -24073,8 +24069,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       y8d = 
         std::vector<std::vector<Eigen::Matrix<double, -1, -1>>>(N, 
           std::vector<Eigen::Matrix<double, -1, -1>>(N, 
-            Eigen::Matrix<double, -1, -1>::Constant(
-              N, N, std::numeric_limits<double>::quiet_NaN())));
+            Eigen::Matrix<double, -1, -1>::Constant(N, N,
+              std::numeric_limits<double>::quiet_NaN())));
       
       
       {
@@ -24118,8 +24114,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       context__.validate_dims("data initialization","y10d","double",
            std::vector<size_t>{static_cast<size_t>(N)});
       y10d__ = 
-        Eigen::Matrix<double, -1, 1>::Constant(
-          N, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, -1, 1>::Constant(N,
+          std::numeric_limits<double>::quiet_NaN());
       new (&y10d) Eigen::Map<Eigen::Matrix<double, -1, 1>>(y10d__.data(), N);
       
       {
@@ -24143,8 +24139,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       context__.validate_dims("data initialization","y11d","double",
            std::vector<size_t>{static_cast<size_t>(N)});
       y11d__ = 
-        Eigen::Matrix<double, 1, -1>::Constant(
-          N, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, 1, -1>::Constant(N,
+          std::numeric_limits<double>::quiet_NaN());
       new (&y11d) Eigen::Map<Eigen::Matrix<double, 1, -1>>(y11d__.data(), N);
       
       {
@@ -24171,8 +24167,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
            std::vector<size_t>{static_cast<size_t>(N),
             static_cast<size_t>(N)});
       y12d__ = 
-        Eigen::Matrix<double, -1, -1>::Constant(
-          N, N, std::numeric_limits<double>::quiet_NaN());
+        Eigen::Matrix<double, -1, -1>::Constant(N, N,
+          std::numeric_limits<double>::quiet_NaN());
       new (&y12d) Eigen::Map<Eigen::Matrix<double, -1, -1>>(y12d__.data(), N, N);
         
       
@@ -25012,8 +25008,8 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       out__.write(y3);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> y4 =
          std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, 
-           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
-             N, N, DUMMY_VAR__));
+           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(N, N,
+             DUMMY_VAR__));
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
@@ -25062,11 +25058,10 @@ class reduce_sum_m3_model final : public model_base_crtp<reduce_sum_m3_model> {
       }
       out__.write(y7);
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>> y8 =
-         std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(
-           N, 
+         std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>>(N, 
            std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(N, 
-             Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
-               N, N, DUMMY_VAR__)));
+             Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(N, N,
+               DUMMY_VAR__)));
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= N; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= N; ++sym3__) {
@@ -26750,8 +26745,8 @@ class transform_model final : public model_base_crtp<transform_model> {
       dv = 
         std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(n, 
           std::vector<Eigen::Matrix<double, -1, 1>>(m, 
-            Eigen::Matrix<double, -1, 1>::Constant(
-              k, std::numeric_limits<double>::quiet_NaN())));
+            Eigen::Matrix<double, -1, 1>::Constant(k,
+              std::numeric_limits<double>::quiet_NaN())));
       
       
       {
@@ -26790,8 +26785,8 @@ class transform_model final : public model_base_crtp<transform_model> {
       dr = 
         std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(n, 
           std::vector<Eigen::Matrix<double, 1, -1>>(m, 
-            Eigen::Matrix<double, 1, -1>::Constant(
-              k, std::numeric_limits<double>::quiet_NaN())));
+            Eigen::Matrix<double, 1, -1>::Constant(k,
+              std::numeric_limits<double>::quiet_NaN())));
       
       
       {
@@ -26829,8 +26824,8 @@ class transform_model final : public model_base_crtp<transform_model> {
             static_cast<size_t>(m), static_cast<size_t>(k)});
       dm = 
         std::vector<Eigen::Matrix<double, -1, -1>>(n, 
-          Eigen::Matrix<double, -1, -1>::Constant(
-            m, k, std::numeric_limits<double>::quiet_NaN()));
+          Eigen::Matrix<double, -1, -1>::Constant(m, k,
+            std::numeric_limits<double>::quiet_NaN()));
       
       
       {
@@ -27091,12 +27086,12 @@ class transform_model final : public model_base_crtp<transform_model> {
                 jacobian__>(0, ds, lp__, n, m, k);
       current_statement__ = 10;
       check_matching_dims("constraint", "p_10", p_10, "upper", ds);
-      stan::conditional_var_value_t<local_scalar_t__,
-         Eigen::Matrix<local_scalar_t__, -1, 1>> pv_1;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> pv_1;
       current_statement__ = 11;
       pv_1 = in__.template read_constrain_lub<
-               stan::conditional_var_value_t<local_scalar_t__,
-                  Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
+               stan::conditional_var_value_t<local_scalar_t__, 
+                 Eigen::Matrix<local_scalar_t__, -1, 1>>, jacobian__>(
                rvalue(dv, "dv", index_uni(1), index_uni(1)),
                rvalue(dv, "dv", index_uni(1), index_uni(2)), lp__, k);
       current_statement__ = 11;
@@ -27106,36 +27101,36 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "pv_1", pv_1, "upper",
                           rvalue(dv, "dv", index_uni(1), index_uni(2)));
       std::vector<
-        stan::conditional_var_value_t<local_scalar_t__,
-           Eigen::Matrix<local_scalar_t__, -1, 1>>> pv_2;
+        stan::conditional_var_value_t<local_scalar_t__, 
+          Eigen::Matrix<local_scalar_t__, -1, 1>>> pv_2;
       current_statement__ = 12;
       pv_2 = in__.template read_constrain_lb<
                std::vector<
-                 stan::conditional_var_value_t<local_scalar_t__,
-                    Eigen::Matrix<local_scalar_t__, -1, 1>>>, jacobian__>(
+                 stan::conditional_var_value_t<local_scalar_t__, 
+                   Eigen::Matrix<local_scalar_t__, -1, 1>>>, jacobian__>(
                rvalue(dv, "dv", index_uni(1)), lp__, m, k);
       current_statement__ = 12;
       check_matching_dims("constraint", "pv_2", pv_2, "lower",
                           rvalue(dv, "dv", index_uni(1)));
       std::vector<
         std::vector<
-          stan::conditional_var_value_t<local_scalar_t__,
-             Eigen::Matrix<local_scalar_t__, -1, 1>>>> pv_3;
+          stan::conditional_var_value_t<local_scalar_t__, 
+            Eigen::Matrix<local_scalar_t__, -1, 1>>>> pv_3;
       current_statement__ = 13;
       pv_3 = in__.template read_constrain_ub<
                std::vector<
                  std::vector<
-                   stan::conditional_var_value_t<local_scalar_t__,
-                      Eigen::Matrix<local_scalar_t__, -1, 1>>>>, jacobian__>(
+                   stan::conditional_var_value_t<local_scalar_t__, 
+                     Eigen::Matrix<local_scalar_t__, -1, 1>>>>, jacobian__>(
                dv, lp__, n, m, k);
       current_statement__ = 13;
       check_matching_dims("constraint", "pv_3", pv_3, "upper", dv);
-      stan::conditional_var_value_t<local_scalar_t__,
-         Eigen::Matrix<local_scalar_t__, 1, -1>> pr_1;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, 1, -1>> pr_1;
       current_statement__ = 14;
       pr_1 = in__.template read_constrain_lub<
-               stan::conditional_var_value_t<local_scalar_t__,
-                  Eigen::Matrix<local_scalar_t__, 1, -1>>, jacobian__>(
+               stan::conditional_var_value_t<local_scalar_t__, 
+                 Eigen::Matrix<local_scalar_t__, 1, -1>>, jacobian__>(
                rvalue(dr, "dr", index_uni(1), index_uni(1)),
                rvalue(dr, "dr", index_uni(1), index_uni(2)), lp__, k);
       current_statement__ = 14;
@@ -27145,49 +27140,49 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "pr_1", pr_1, "upper",
                           rvalue(dr, "dr", index_uni(1), index_uni(2)));
       std::vector<
-        stan::conditional_var_value_t<local_scalar_t__,
-           Eigen::Matrix<local_scalar_t__, 1, -1>>> pr_2;
+        stan::conditional_var_value_t<local_scalar_t__, 
+          Eigen::Matrix<local_scalar_t__, 1, -1>>> pr_2;
       current_statement__ = 15;
       pr_2 = in__.template read_constrain_lb<
                std::vector<
-                 stan::conditional_var_value_t<local_scalar_t__,
-                    Eigen::Matrix<local_scalar_t__, 1, -1>>>, jacobian__>(
+                 stan::conditional_var_value_t<local_scalar_t__, 
+                   Eigen::Matrix<local_scalar_t__, 1, -1>>>, jacobian__>(
                rvalue(dr, "dr", index_uni(1)), lp__, m, k);
       current_statement__ = 15;
       check_matching_dims("constraint", "pr_2", pr_2, "lower",
                           rvalue(dr, "dr", index_uni(1)));
       std::vector<
         std::vector<
-          stan::conditional_var_value_t<local_scalar_t__,
-             Eigen::Matrix<local_scalar_t__, 1, -1>>>> pr_3;
+          stan::conditional_var_value_t<local_scalar_t__, 
+            Eigen::Matrix<local_scalar_t__, 1, -1>>>> pr_3;
       current_statement__ = 16;
       pr_3 = in__.template read_constrain_ub<
                std::vector<
                  std::vector<
-                   stan::conditional_var_value_t<local_scalar_t__,
-                      Eigen::Matrix<local_scalar_t__, 1, -1>>>>, jacobian__>(
+                   stan::conditional_var_value_t<local_scalar_t__, 
+                     Eigen::Matrix<local_scalar_t__, 1, -1>>>>, jacobian__>(
                dr, lp__, n, m, k);
       current_statement__ = 16;
       check_matching_dims("constraint", "pr_3", pr_3, "upper", dr);
-      stan::conditional_var_value_t<local_scalar_t__,
-         Eigen::Matrix<local_scalar_t__, -1, -1>> pm_1;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, -1>> pm_1;
       current_statement__ = 17;
       pm_1 = in__.template read_constrain_lb<
-               stan::conditional_var_value_t<local_scalar_t__,
-                  Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
+               stan::conditional_var_value_t<local_scalar_t__, 
+                 Eigen::Matrix<local_scalar_t__, -1, -1>>, jacobian__>(
                rvalue(dm, "dm", index_uni(1)), lp__, m, k);
       current_statement__ = 17;
       check_matching_dims("constraint", "pm_1", pm_1, "lower",
                           rvalue(dm, "dm", index_uni(1)));
       std::vector<
-        stan::conditional_var_value_t<local_scalar_t__,
-           Eigen::Matrix<local_scalar_t__, -1, -1>>> pm_2;
+        stan::conditional_var_value_t<local_scalar_t__, 
+          Eigen::Matrix<local_scalar_t__, -1, -1>>> pm_2;
       current_statement__ = 18;
       pm_2 = in__.template read_constrain_ub<
                std::vector<
-                 stan::conditional_var_value_t<local_scalar_t__,
-                    Eigen::Matrix<local_scalar_t__, -1, -1>>>, jacobian__>(
-               dm, lp__, n, m, k);
+                 stan::conditional_var_value_t<local_scalar_t__, 
+                   Eigen::Matrix<local_scalar_t__, -1, -1>>>, jacobian__>(dm,
+               lp__, n, m, k);
       current_statement__ = 18;
       check_matching_dims("constraint", "pm_2", pm_2, "upper", dm);
       std::vector<local_scalar_t__> tp_1;
@@ -27255,8 +27250,8 @@ class transform_model final : public model_base_crtp<transform_model> {
       assign(tp_10, p_10, "assigning variable tp_10");
       current_statement__ = 28;
       check_matching_dims("constraint", "tp_10", tp_10, "upper", ds);
-      stan::conditional_var_value_t<local_scalar_t__,
-         Eigen::Matrix<local_scalar_t__, -1, 1>> tpv_1;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> tpv_1;
       current_statement__ = 29;
       assign(tpv_1, pv_1, "assigning variable tpv_1");
       current_statement__ = 29;
@@ -27266,8 +27261,8 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "tpv_1", tpv_1, "upper",
                           rvalue(dv, "dv", index_uni(1), index_uni(2)));
       std::vector<
-        stan::conditional_var_value_t<local_scalar_t__,
-           Eigen::Matrix<local_scalar_t__, -1, 1>>> tpv_2;
+        stan::conditional_var_value_t<local_scalar_t__, 
+          Eigen::Matrix<local_scalar_t__, -1, 1>>> tpv_2;
       current_statement__ = 30;
       assign(tpv_2, pv_2, "assigning variable tpv_2");
       current_statement__ = 30;
@@ -27275,14 +27270,14 @@ class transform_model final : public model_base_crtp<transform_model> {
                           rvalue(dv, "dv", index_uni(1)));
       std::vector<
         std::vector<
-          stan::conditional_var_value_t<local_scalar_t__,
-             Eigen::Matrix<local_scalar_t__, -1, 1>>>> tpv_3;
+          stan::conditional_var_value_t<local_scalar_t__, 
+            Eigen::Matrix<local_scalar_t__, -1, 1>>>> tpv_3;
       current_statement__ = 31;
       assign(tpv_3, pv_3, "assigning variable tpv_3");
       current_statement__ = 31;
       check_matching_dims("constraint", "tpv_3", tpv_3, "upper", dv);
-      stan::conditional_var_value_t<local_scalar_t__,
-         Eigen::Matrix<local_scalar_t__, 1, -1>> tpr_1;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, 1, -1>> tpr_1;
       current_statement__ = 32;
       assign(tpr_1, pr_1, "assigning variable tpr_1");
       current_statement__ = 32;
@@ -27292,8 +27287,8 @@ class transform_model final : public model_base_crtp<transform_model> {
       check_matching_dims("constraint", "tpr_1", tpr_1, "upper",
                           rvalue(dr, "dr", index_uni(1), index_uni(2)));
       std::vector<
-        stan::conditional_var_value_t<local_scalar_t__,
-           Eigen::Matrix<local_scalar_t__, 1, -1>>> tpr_2;
+        stan::conditional_var_value_t<local_scalar_t__, 
+          Eigen::Matrix<local_scalar_t__, 1, -1>>> tpr_2;
       current_statement__ = 33;
       assign(tpr_2, pr_2, "assigning variable tpr_2");
       current_statement__ = 33;
@@ -27301,22 +27296,22 @@ class transform_model final : public model_base_crtp<transform_model> {
                           rvalue(dr, "dr", index_uni(1)));
       std::vector<
         std::vector<
-          stan::conditional_var_value_t<local_scalar_t__,
-             Eigen::Matrix<local_scalar_t__, 1, -1>>>> tpr_3;
+          stan::conditional_var_value_t<local_scalar_t__, 
+            Eigen::Matrix<local_scalar_t__, 1, -1>>>> tpr_3;
       current_statement__ = 34;
       assign(tpr_3, pr_3, "assigning variable tpr_3");
       current_statement__ = 34;
       check_matching_dims("constraint", "tpr_3", tpr_3, "upper", dr);
-      stan::conditional_var_value_t<local_scalar_t__,
-         Eigen::Matrix<local_scalar_t__, -1, -1>> tpm_1;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, -1>> tpm_1;
       current_statement__ = 35;
       assign(tpm_1, pm_1, "assigning variable tpm_1");
       current_statement__ = 35;
       check_matching_dims("constraint", "tpm_1", tpm_1, "lower",
                           rvalue(dm, "dm", index_uni(1)));
       std::vector<
-        stan::conditional_var_value_t<local_scalar_t__,
-           Eigen::Matrix<local_scalar_t__, -1, -1>>> tpm_2;
+        stan::conditional_var_value_t<local_scalar_t__, 
+          Eigen::Matrix<local_scalar_t__, -1, -1>>> tpm_2;
       current_statement__ = 36;
       assign(tpm_2, pm_2, "assigning variable tpm_2");
       current_statement__ = 36;
@@ -27604,36 +27599,36 @@ class transform_model final : public model_base_crtp<transform_model> {
            std::vector<std::vector<double>>(m, 
              std::vector<double>(k, std::numeric_limits<double>::quiet_NaN())));
       Eigen::Matrix<double, -1, 1> tpv_1 =
-         Eigen::Matrix<double, -1, 1>::Constant(
-           k, std::numeric_limits<double>::quiet_NaN());
+         Eigen::Matrix<double, -1, 1>::Constant(k,
+           std::numeric_limits<double>::quiet_NaN());
       std::vector<Eigen::Matrix<double, -1, 1>> tpv_2 =
          std::vector<Eigen::Matrix<double, -1, 1>>(m, 
-           Eigen::Matrix<double, -1, 1>::Constant(
-             k, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, -1, 1>::Constant(k,
+             std::numeric_limits<double>::quiet_NaN()));
       std::vector<std::vector<Eigen::Matrix<double, -1, 1>>> tpv_3 =
          std::vector<std::vector<Eigen::Matrix<double, -1, 1>>>(n, 
            std::vector<Eigen::Matrix<double, -1, 1>>(m, 
-             Eigen::Matrix<double, -1, 1>::Constant(
-               k, std::numeric_limits<double>::quiet_NaN())));
+             Eigen::Matrix<double, -1, 1>::Constant(k,
+               std::numeric_limits<double>::quiet_NaN())));
       Eigen::Matrix<double, 1, -1> tpr_1 =
-         Eigen::Matrix<double, 1, -1>::Constant(
-           k, std::numeric_limits<double>::quiet_NaN());
+         Eigen::Matrix<double, 1, -1>::Constant(k,
+           std::numeric_limits<double>::quiet_NaN());
       std::vector<Eigen::Matrix<double, 1, -1>> tpr_2 =
          std::vector<Eigen::Matrix<double, 1, -1>>(m, 
-           Eigen::Matrix<double, 1, -1>::Constant(
-             k, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, 1, -1>::Constant(k,
+             std::numeric_limits<double>::quiet_NaN()));
       std::vector<std::vector<Eigen::Matrix<double, 1, -1>>> tpr_3 =
          std::vector<std::vector<Eigen::Matrix<double, 1, -1>>>(n, 
            std::vector<Eigen::Matrix<double, 1, -1>>(m, 
-             Eigen::Matrix<double, 1, -1>::Constant(
-               k, std::numeric_limits<double>::quiet_NaN())));
+             Eigen::Matrix<double, 1, -1>::Constant(k,
+               std::numeric_limits<double>::quiet_NaN())));
       Eigen::Matrix<double, -1, -1> tpm_1 =
-         Eigen::Matrix<double, -1, -1>::Constant(
-           m, k, std::numeric_limits<double>::quiet_NaN());
+         Eigen::Matrix<double, -1, -1>::Constant(m, k,
+           std::numeric_limits<double>::quiet_NaN());
       std::vector<Eigen::Matrix<double, -1, -1>> tpm_2 =
          std::vector<Eigen::Matrix<double, -1, -1>>(n, 
-           Eigen::Matrix<double, -1, -1>::Constant(
-             m, k, std::numeric_limits<double>::quiet_NaN()));
+           Eigen::Matrix<double, -1, -1>::Constant(m, k,
+             std::numeric_limits<double>::quiet_NaN()));
       out__.write(p_1);
       out__.write(p_2);
       out__.write(p_3);
@@ -28098,8 +28093,8 @@ class transform_model final : public model_base_crtp<transform_model> {
       out__.write_free_lb(rvalue(dm, "dm", index_uni(1)), pm_1);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> pm_2 =
          std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>>(n, 
-           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(
-             m, k, DUMMY_VAR__));
+           Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(m, k,
+             DUMMY_VAR__));
       for (int sym1__ = 1; sym1__ <= k; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= m; ++sym2__) {
           for (int sym3__ = 1; sym3__ <= n; ++sym3__) {

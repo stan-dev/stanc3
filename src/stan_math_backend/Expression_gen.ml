@@ -123,7 +123,7 @@ let rec pp_possibly_var_decl ppf (adtype, ut, mem_pattern) =
   let scalar = local_scalar ut adtype in
   let pp_var_decl ppf p_ut =
     if mem_pattern = Common.Helpers.SoA then
-      pf ppf "@[<hov 2>stan::conditional_var_value_t<%s,@, %a>@]" scalar
+      pf ppf "@[<hov 2>stan::conditional_var_value_t<%s,@ @,%a>@]" scalar
         pp_unsizedtype_local (adtype, p_ut)
     else pf ppf "%a" pp_unsizedtype_local (adtype, p_ut)
   in
