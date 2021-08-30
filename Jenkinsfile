@@ -155,6 +155,8 @@ pipeline {
                         script {
                             unstash 'ubuntu-exe'
                             sh """
+                                mkdir comp_tests
+                                cd comp_tests
                                 git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
                             """
 
@@ -167,6 +169,7 @@ pipeline {
                                 cd cmdstan; make clean-all; make -j${env.PARALLEL} build; cd ..                                
                                 ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ../test/integration/good
                                 ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 example-models
+                                cd ../../
                                 """
                         }
 
@@ -185,6 +188,8 @@ pipeline {
                     steps {
                         unstash 'ubuntu-exe'
                         sh """
+                            mkdir ete_tests
+                            cd ete_tests
                             git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
                         """
                         sh """
@@ -199,6 +204,7 @@ pipeline {
                             echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
                             cd cmdstan; make clean-all; git show HEAD --stat; cd ..
                             CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
+                            cd ../../
                         """
 
                         xunit([GoogleTest(
