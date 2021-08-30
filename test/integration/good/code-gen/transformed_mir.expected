@@ -11386,7 +11386,8 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
+          (FnReadParam (constrain (Single Identity)) (dims ())
+           (mem_pattern AoS)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -11401,9 +11402,10 @@
          (CompilerInternal
           (FnReadParam
            (constrain
-            (Lower
-             ((pattern (Var p_real))
-              (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+            (Single
+             (Lower
+              ((pattern (Var p_real))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
            (dims ()) (mem_pattern AoS)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -11419,9 +11421,10 @@
          (CompilerInternal
           (FnReadParam
            (constrain
-            (Upper
-             ((pattern (Var p_upper))
-              (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+            (Single
+             (Upper
+              ((pattern (Var p_upper))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
            (dims ()) (mem_pattern AoS)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -11845,7 +11848,12 @@
          (CompilerInternal
           (FnReadParam (constrain (Single Simplex))
            (dims
-            (((pattern (Var N))
+            (((pattern
+               (FunApp (StanLib Minus__ FnPlain AoS)
+                (((pattern (Var N))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 ((pattern (Lit Int 1))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
            (mem_pattern AoS)))
          ()))
@@ -11872,7 +11880,12 @@
            (dims
             (((pattern (Var N))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-             ((pattern (Var N))
+             ((pattern
+               (FunApp (StanLib Minus__ FnPlain AoS)
+                (((pattern (Var N))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 ((pattern (Lit Int 1))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
            (mem_pattern AoS)))
          ()))
@@ -11910,7 +11923,12 @@
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Var K))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-             ((pattern (Var N))
+             ((pattern
+               (FunApp (StanLib Minus__ FnPlain AoS)
+                (((pattern (Var N))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 ((pattern (Lit Int 1))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
            (mem_pattern AoS)))
          ()))
@@ -11936,9 +11954,54 @@
          (CompilerInternal
           (FnReadParam (constrain (Single CholeskyCov))
            (dims
-            (((pattern (Lit Int 5))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-             ((pattern (Lit Int 4))
+            (((pattern
+               (FunApp (StanLib Plus__ FnPlain AoS)
+                (((pattern
+                   (FunApp (StanLib Plus__ FnPlain AoS)
+                    (((pattern
+                       (FunApp (StanLib Divide__ FnPlain AoS)
+                        (((pattern
+                           (FunApp (StanLib Times__ FnPlain AoS)
+                            (((pattern (Lit Int 5))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly))))
+                             ((pattern
+                               (FunApp (StanLib Minus__ FnPlain AoS)
+                                (((pattern (Lit Int 5))
+                                  (meta
+                                   ((type_ UInt) (loc <opaque>)
+                                    (adlevel DataOnly))))
+                                 ((pattern (Lit Int 1))
+                                  (meta
+                                   ((type_ UInt) (loc <opaque>)
+                                    (adlevel DataOnly)))))))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly)))))))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                         ((pattern (Lit Int 2))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                     ((pattern (Lit Int 4))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 ((pattern
+                   (FunApp (StanLib Times__ FnPlain AoS)
+                    (((pattern
+                       (FunApp (StanLib Minus__ FnPlain AoS)
+                        (((pattern (Lit Int 4))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                         ((pattern (Lit Int 5))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                     ((pattern (Lit Int 5))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
            (mem_pattern AoS)))
          ()))
@@ -11962,9 +12025,54 @@
          (CompilerInternal
           (FnReadParam (constrain (Single CholeskyCov))
            (dims
-            (((pattern (Lit Int 3))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-             ((pattern (Lit Int 3))
+            (((pattern
+               (FunApp (StanLib Plus__ FnPlain AoS)
+                (((pattern
+                   (FunApp (StanLib Plus__ FnPlain AoS)
+                    (((pattern
+                       (FunApp (StanLib Divide__ FnPlain AoS)
+                        (((pattern
+                           (FunApp (StanLib Times__ FnPlain AoS)
+                            (((pattern (Lit Int 3))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly))))
+                             ((pattern
+                               (FunApp (StanLib Minus__ FnPlain AoS)
+                                (((pattern (Lit Int 3))
+                                  (meta
+                                   ((type_ UInt) (loc <opaque>)
+                                    (adlevel DataOnly))))
+                                 ((pattern (Lit Int 1))
+                                  (meta
+                                   ((type_ UInt) (loc <opaque>)
+                                    (adlevel DataOnly)))))))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly)))))))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                         ((pattern (Lit Int 2))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                     ((pattern (Lit Int 3))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 ((pattern
+                   (FunApp (StanLib Times__ FnPlain AoS)
+                    (((pattern
+                       (FunApp (StanLib Minus__ FnPlain AoS)
+                        (((pattern (Lit Int 3))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                         ((pattern (Lit Int 3))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                     ((pattern (Lit Int 3))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
            (mem_pattern AoS)))
          ()))
@@ -11993,9 +12101,54 @@
            (dims
             (((pattern (Var K))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-             ((pattern (Lit Int 3))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-             ((pattern (Lit Int 3))
+             ((pattern
+               (FunApp (StanLib Plus__ FnPlain AoS)
+                (((pattern
+                   (FunApp (StanLib Plus__ FnPlain AoS)
+                    (((pattern
+                       (FunApp (StanLib Divide__ FnPlain AoS)
+                        (((pattern
+                           (FunApp (StanLib Times__ FnPlain AoS)
+                            (((pattern (Lit Int 3))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly))))
+                             ((pattern
+                               (FunApp (StanLib Minus__ FnPlain AoS)
+                                (((pattern (Lit Int 3))
+                                  (meta
+                                   ((type_ UInt) (loc <opaque>)
+                                    (adlevel DataOnly))))
+                                 ((pattern (Lit Int 1))
+                                  (meta
+                                   ((type_ UInt) (loc <opaque>)
+                                    (adlevel DataOnly)))))))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly)))))))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                         ((pattern (Lit Int 2))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                     ((pattern (Lit Int 3))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 ((pattern
+                   (FunApp (StanLib Times__ FnPlain AoS)
+                    (((pattern
+                       (FunApp (StanLib Minus__ FnPlain AoS)
+                        (((pattern (Lit Int 3))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                         ((pattern (Lit Int 3))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                     ((pattern (Lit Int 3))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
            (mem_pattern AoS)))
          ()))
@@ -14013,7 +14166,8 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
+          (FnReadParam (constrain (Single Identity)) (dims ())
+           (mem_pattern AoS)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -14028,9 +14182,10 @@
          (CompilerInternal
           (FnReadParam
            (constrain
-            (Lower
-             ((pattern (Var p_real))
-              (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+            (Single
+             (Lower
+              ((pattern (Var p_real))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
            (dims ()) (mem_pattern AoS)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -14046,9 +14201,10 @@
          (CompilerInternal
           (FnReadParam
            (constrain
-            (Upper
-             ((pattern (Var p_upper))
-              (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+            (Single
+             (Upper
+              ((pattern (Var p_upper))
+               (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
            (dims ()) (mem_pattern AoS)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -14472,7 +14628,12 @@
          (CompilerInternal
           (FnReadParam (constrain (Single Simplex))
            (dims
-            (((pattern (Var N))
+            (((pattern
+               (FunApp (StanLib Minus__ FnPlain AoS)
+                (((pattern (Var N))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 ((pattern (Lit Int 1))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
            (mem_pattern AoS)))
          ()))
@@ -14499,7 +14660,12 @@
            (dims
             (((pattern (Var N))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-             ((pattern (Var N))
+             ((pattern
+               (FunApp (StanLib Minus__ FnPlain AoS)
+                (((pattern (Var N))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 ((pattern (Lit Int 1))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
            (mem_pattern AoS)))
          ()))
@@ -14537,7 +14703,12 @@
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Var K))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-             ((pattern (Var N))
+             ((pattern
+               (FunApp (StanLib Minus__ FnPlain AoS)
+                (((pattern (Var N))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 ((pattern (Lit Int 1))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
            (mem_pattern AoS)))
          ()))
@@ -14563,9 +14734,54 @@
          (CompilerInternal
           (FnReadParam (constrain (Single CholeskyCov))
            (dims
-            (((pattern (Lit Int 5))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-             ((pattern (Lit Int 4))
+            (((pattern
+               (FunApp (StanLib Plus__ FnPlain AoS)
+                (((pattern
+                   (FunApp (StanLib Plus__ FnPlain AoS)
+                    (((pattern
+                       (FunApp (StanLib Divide__ FnPlain AoS)
+                        (((pattern
+                           (FunApp (StanLib Times__ FnPlain AoS)
+                            (((pattern (Lit Int 5))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly))))
+                             ((pattern
+                               (FunApp (StanLib Minus__ FnPlain AoS)
+                                (((pattern (Lit Int 5))
+                                  (meta
+                                   ((type_ UInt) (loc <opaque>)
+                                    (adlevel DataOnly))))
+                                 ((pattern (Lit Int 1))
+                                  (meta
+                                   ((type_ UInt) (loc <opaque>)
+                                    (adlevel DataOnly)))))))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly)))))))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                         ((pattern (Lit Int 2))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                     ((pattern (Lit Int 4))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 ((pattern
+                   (FunApp (StanLib Times__ FnPlain AoS)
+                    (((pattern
+                       (FunApp (StanLib Minus__ FnPlain AoS)
+                        (((pattern (Lit Int 4))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                         ((pattern (Lit Int 5))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                     ((pattern (Lit Int 5))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
            (mem_pattern AoS)))
          ()))
@@ -14589,9 +14805,54 @@
          (CompilerInternal
           (FnReadParam (constrain (Single CholeskyCov))
            (dims
-            (((pattern (Lit Int 3))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-             ((pattern (Lit Int 3))
+            (((pattern
+               (FunApp (StanLib Plus__ FnPlain AoS)
+                (((pattern
+                   (FunApp (StanLib Plus__ FnPlain AoS)
+                    (((pattern
+                       (FunApp (StanLib Divide__ FnPlain AoS)
+                        (((pattern
+                           (FunApp (StanLib Times__ FnPlain AoS)
+                            (((pattern (Lit Int 3))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly))))
+                             ((pattern
+                               (FunApp (StanLib Minus__ FnPlain AoS)
+                                (((pattern (Lit Int 3))
+                                  (meta
+                                   ((type_ UInt) (loc <opaque>)
+                                    (adlevel DataOnly))))
+                                 ((pattern (Lit Int 1))
+                                  (meta
+                                   ((type_ UInt) (loc <opaque>)
+                                    (adlevel DataOnly)))))))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly)))))))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                         ((pattern (Lit Int 2))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                     ((pattern (Lit Int 3))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 ((pattern
+                   (FunApp (StanLib Times__ FnPlain AoS)
+                    (((pattern
+                       (FunApp (StanLib Minus__ FnPlain AoS)
+                        (((pattern (Lit Int 3))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                         ((pattern (Lit Int 3))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                     ((pattern (Lit Int 3))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
            (mem_pattern AoS)))
          ()))
@@ -14620,9 +14881,54 @@
            (dims
             (((pattern (Var K))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-             ((pattern (Lit Int 3))
-              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-             ((pattern (Lit Int 3))
+             ((pattern
+               (FunApp (StanLib Plus__ FnPlain AoS)
+                (((pattern
+                   (FunApp (StanLib Plus__ FnPlain AoS)
+                    (((pattern
+                       (FunApp (StanLib Divide__ FnPlain AoS)
+                        (((pattern
+                           (FunApp (StanLib Times__ FnPlain AoS)
+                            (((pattern (Lit Int 3))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly))))
+                             ((pattern
+                               (FunApp (StanLib Minus__ FnPlain AoS)
+                                (((pattern (Lit Int 3))
+                                  (meta
+                                   ((type_ UInt) (loc <opaque>)
+                                    (adlevel DataOnly))))
+                                 ((pattern (Lit Int 1))
+                                  (meta
+                                   ((type_ UInt) (loc <opaque>)
+                                    (adlevel DataOnly)))))))
+                              (meta
+                               ((type_ UInt) (loc <opaque>)
+                                (adlevel DataOnly)))))))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                         ((pattern (Lit Int 2))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                     ((pattern (Lit Int 3))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                 ((pattern
+                   (FunApp (StanLib Times__ FnPlain AoS)
+                    (((pattern
+                       (FunApp (StanLib Minus__ FnPlain AoS)
+                        (((pattern (Lit Int 3))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                         ((pattern (Lit Int 3))
+                          (meta
+                           ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+                     ((pattern (Lit Int 3))
+                      (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+                  (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
            (mem_pattern AoS)))
          ()))
