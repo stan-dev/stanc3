@@ -159,7 +159,7 @@ pipeline {
                             """
 
                             writeFile(file:"performance-tests-cmdstan/cmdstan/make/local",
-                                    text:"O=0\nCXX=${CXX}\nDEPFLAGS_OS=-M -E")
+                                    text:"O=0\nCXX=${CXX}")
                             sh """
                                 cd performance-tests-cmdstan
                                 mkdir cmdstan/bin
@@ -183,40 +183,40 @@ pipeline {
                 stage("Model end-to-end tests") {
                     agent { label 'linux' }
                     steps {
-                        script {
-                            unstash 'ubuntu-exe'
-                            sh """
-                                git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-                            """
+                        unstash 'ubuntu-exe'
+                        sh """
+                            git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                        """
+                        sh """
+                            cd performance-tests-cmdstan
+                            git show HEAD --stat
+                            echo "example-models/regression_tests/mother.stan" > all.tests
+                            cat known_good_perf_all.tests >> all.tests
+                            echo "" >> all.tests
+                            cat shotgun_perf_all.tests >> all.tests
+                            cat all.tests
+                            echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
+                            echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
+                            cd cmdstan; make clean-all; git show HEAD --stat; cd ..
+                            CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
+                        """
 
-                            writeFile(file:"performance-tests-cmdstan/cmdstan/make/local",
-                                    text:"O=3\nCXX=${CXX}\nDEPFLAGS_OS=-M -E")
-                            sh """
-                                cd performance-tests-cmdstan
-                                echo "example-models/regression_tests/mother.stan" > all.tests
-                                cat known_good_perf_all.tests >> all.tests
-                                echo "" >> all.tests
-                                cat shotgun_perf_all.tests >> all.tests
-                                ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
-                            """
+                        xunit([GoogleTest(
+                            deleteOutputFiles: false,
+                            failIfNotNew: true,
+                            pattern: 'performance-tests-cmdstan/performance.xml',
+                            skipNoTestFiles: false,
+                            stopProcessingIfError: false)
+                        ])
 
-                            xunit([GoogleTest(
-                                deleteOutputFiles: false,
-                                failIfNotNew: true,
-                                pattern: 'performance-tests-cmdstan/performance.xml',
-                                skipNoTestFiles: false,
-                                stopProcessingIfError: false)
-                            ])
+                        archiveArtifacts 'performance-tests-cmdstan/performance.xml'
 
-                            archiveArtifacts 'performance-tests-cmdstan/performance.xml'
-
-                            perfReport modePerformancePerTestCase: true,
-                                sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
-                                modeThroughput: false,
-                                excludeResponseTime: true,
-                                errorFailedThreshold: 100,
-                                errorUnstableThreshold: 100
-                        }
+                        perfReport modePerformancePerTestCase: true,
+                            sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+                            modeThroughput: false,
+                            excludeResponseTime: true,
+                            errorFailedThreshold: 100,
+                            errorUnstableThreshold: 100
                     }
                     post { always { runShell("rm -rf ./*") }}
                 }
@@ -241,7 +241,6 @@ pipeline {
                                 sh """
                                     echo O=0 >> make/local
                                     echo "CXX=${env.CXX} -Werror " >> make/local
-                                    echo "DEPFLAGS_OS=-M -E" >> make/local
                                 """
                                 withEnv(['PATH+TBB=./lib/tbb']) {
                                     try { sh "./runTests.py -j${env.PARALLEL} test/expressions" }
