@@ -2012,7 +2012,7 @@ let () =
             , SoA ) )
         (List.range 1 3) )
     bare_types ;
-  add_unqualified ("rep_matrix", ReturnType UMatrix, [UReal; UInt; UInt], SoA) ;
+  add_unqualified ("rep_matrix", ReturnType UMatrix, [UReal; UInt; UInt], AoS) ;
   add_unqualified ("rep_matrix", ReturnType UMatrix, [UVector; UInt], AoS) ;
   add_unqualified ("rep_matrix", ReturnType UMatrix, [URowVector; UInt], AoS) ;
   add_unqualified ("rep_row_vector", ReturnType URowVector, [UReal; UInt], SoA) ;
