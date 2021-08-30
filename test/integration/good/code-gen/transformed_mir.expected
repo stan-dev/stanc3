@@ -11386,8 +11386,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain (Single Identity)) (dims ())
-           (mem_pattern AoS)))
+          (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -11622,7 +11621,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain (Single Identity))
+          (FnReadParam (constrain Identity)
            (dims
             (((pattern (Var N))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -11656,7 +11655,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain (Single Identity))
+          (FnReadParam (constrain Identity)
            (dims
             (((pattern (Var N))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -11686,7 +11685,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain (Single Identity))
+          (FnReadParam (constrain Identity)
            (dims
             (((pattern (Var N))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -11711,7 +11710,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain (Single Identity))
+          (FnReadParam (constrain Identity)
            (dims
             (((pattern (Var N))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -11745,7 +11744,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain (Single Identity))
+          (FnReadParam (constrain Identity)
            (dims
             (((pattern (Var N))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -11777,7 +11776,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain (Single Identity))
+          (FnReadParam (constrain Identity)
            (dims
             (((pattern (Lit Int 5))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -12169,7 +12168,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain (Single Identity))
+          (FnReadParam (constrain Identity)
            (dims
             (((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -12191,7 +12190,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain (Single Identity))
+          (FnReadParam (constrain Identity)
            (dims
             (((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -14166,8 +14165,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain (Single Identity)) (dims ())
-           (mem_pattern AoS)))
+          (FnReadParam (constrain Identity) (dims ()) (mem_pattern AoS)))
          ()))
        (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -14402,7 +14400,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain (Single Identity))
+          (FnReadParam (constrain Identity)
            (dims
             (((pattern (Var N))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -14436,7 +14434,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain (Single Identity))
+          (FnReadParam (constrain Identity)
            (dims
             (((pattern (Var N))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -14466,7 +14464,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain (Single Identity))
+          (FnReadParam (constrain Identity)
            (dims
             (((pattern (Var N))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -14491,7 +14489,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain (Single Identity))
+          (FnReadParam (constrain Identity)
            (dims
             (((pattern (Var N))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -14525,7 +14523,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain (Single Identity))
+          (FnReadParam (constrain Identity)
            (dims
             (((pattern (Var N))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -14557,7 +14555,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain (Single Identity))
+          (FnReadParam (constrain Identity)
            (dims
             (((pattern (Lit Int 5))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
@@ -14949,7 +14947,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain (Single Identity))
+          (FnReadParam (constrain Identity)
            (dims
             (((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -14971,7 +14969,7 @@
       ((pattern
         (FunApp
          (CompilerInternal
-          (FnReadParam (constrain (Single Identity))
+          (FnReadParam (constrain Identity)
            (dims
             (((pattern (Lit Int 2))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -15200,7 +15198,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var p_real))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
@@ -15209,7 +15207,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var p_upper))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
@@ -15218,7 +15216,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var p_lower))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
@@ -15227,7 +15225,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var offset_multiplier))
           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
@@ -15236,7 +15234,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var no_offset_multiplier))
           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
@@ -15245,7 +15243,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var offset_no_multiplier))
           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
@@ -15254,7 +15252,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var p_real_1d_ar))
           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
@@ -15298,7 +15296,7 @@
                           (((pattern
                              (NRFunApp
                               (CompilerInternal
-                               (FnWriteParam (unconstrain_opt ())
+                               (FnWriteParam (unconstrain Identity)
                                 (var
                                  ((pattern
                                    (Indexed
@@ -15359,7 +15357,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var p_vec))
           (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
@@ -15390,7 +15388,7 @@
                   (((pattern
                      (NRFunApp
                       (CompilerInternal
-                       (FnWriteParam (unconstrain_opt ())
+                       (FnWriteParam (unconstrain Identity)
                         (var
                          ((pattern
                            (Indexed
@@ -15486,7 +15484,7 @@
                                   (((pattern
                                      (NRFunApp
                                       (CompilerInternal
-                                       (FnWriteParam (unconstrain_opt ())
+                                       (FnWriteParam (unconstrain Identity)
                                         (var
                                          ((pattern
                                            (Indexed
@@ -15564,7 +15562,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var p_row_vec))
           (meta ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
@@ -15595,7 +15593,7 @@
                   (((pattern
                      (NRFunApp
                       (CompilerInternal
-                       (FnWriteParam (unconstrain_opt ())
+                       (FnWriteParam (unconstrain Identity)
                         (var
                          ((pattern
                            (Indexed
@@ -15691,7 +15689,7 @@
                                   (((pattern
                                      (NRFunApp
                                       (CompilerInternal
-                                       (FnWriteParam (unconstrain_opt ())
+                                       (FnWriteParam (unconstrain Identity)
                                         (var
                                          ((pattern
                                            (Indexed
@@ -15769,7 +15767,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var p_mat))
           (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
@@ -15828,7 +15826,7 @@
                                   (((pattern
                                      (NRFunApp
                                       (CompilerInternal
-                                       (FnWriteParam (unconstrain_opt ())
+                                       (FnWriteParam (unconstrain Identity)
                                         (var
                                          ((pattern
                                            (Indexed
@@ -15904,7 +15902,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var p_simplex))
           (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
@@ -15935,7 +15933,7 @@
                   (((pattern
                      (NRFunApp
                       (CompilerInternal
-                       (FnWriteParam (unconstrain_opt ())
+                       (FnWriteParam (unconstrain Identity)
                         (var
                          ((pattern
                            (Indexed
@@ -16031,7 +16029,7 @@
                                   (((pattern
                                      (NRFunApp
                                       (CompilerInternal
-                                       (FnWriteParam (unconstrain_opt ())
+                                       (FnWriteParam (unconstrain Identity)
                                         (var
                                          ((pattern
                                            (Indexed
@@ -16109,7 +16107,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var p_cfcov_54))
           (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
@@ -16118,7 +16116,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var p_cfcov_33))
           (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
@@ -16162,7 +16160,7 @@
                           (((pattern
                              (NRFunApp
                               (CompilerInternal
-                               (FnWriteParam (unconstrain_opt ())
+                               (FnWriteParam (unconstrain Identity)
                                 (var
                                  ((pattern
                                    (Indexed
@@ -16222,7 +16220,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var x_p))
           (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
@@ -16231,7 +16229,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var y_p))
           (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
@@ -17234,7 +17232,7 @@
          (((pattern
             (NRFunApp
              (CompilerInternal
-              (FnWriteParam (unconstrain_opt ())
+              (FnWriteParam (unconstrain Identity)
                (var
                 ((pattern (Var tp_real_1d_ar))
                  (meta
@@ -17283,7 +17281,7 @@
                                  (((pattern
                                     (NRFunApp
                                      (CompilerInternal
-                                      (FnWriteParam (unconstrain_opt ())
+                                      (FnWriteParam (unconstrain Identity)
                                        (var
                                         ((pattern
                                           (Indexed
@@ -17348,7 +17346,7 @@
           ((pattern
             (NRFunApp
              (CompilerInternal
-              (FnWriteParam (unconstrain_opt ())
+              (FnWriteParam (unconstrain Identity)
                (var
                 ((pattern (Var tp_vec))
                  (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
@@ -17381,7 +17379,7 @@
                          (((pattern
                             (NRFunApp
                              (CompilerInternal
-                              (FnWriteParam (unconstrain_opt ())
+                              (FnWriteParam (unconstrain Identity)
                                (var
                                 ((pattern
                                   (Indexed
@@ -17484,7 +17482,7 @@
                                             (NRFunApp
                                              (CompilerInternal
                                               (FnWriteParam
-                                               (unconstrain_opt ())
+                                               (unconstrain Identity)
                                                (var
                                                 ((pattern
                                                   (Indexed
@@ -17573,7 +17571,7 @@
           ((pattern
             (NRFunApp
              (CompilerInternal
-              (FnWriteParam (unconstrain_opt ())
+              (FnWriteParam (unconstrain Identity)
                (var
                 ((pattern (Var tp_row_vec))
                  (meta
@@ -17607,7 +17605,7 @@
                          (((pattern
                             (NRFunApp
                              (CompilerInternal
-                              (FnWriteParam (unconstrain_opt ())
+                              (FnWriteParam (unconstrain Identity)
                                (var
                                 ((pattern
                                   (Indexed
@@ -17710,7 +17708,7 @@
                                             (NRFunApp
                                              (CompilerInternal
                                               (FnWriteParam
-                                               (unconstrain_opt ())
+                                               (unconstrain Identity)
                                                (var
                                                 ((pattern
                                                   (Indexed
@@ -17801,7 +17799,7 @@
           ((pattern
             (NRFunApp
              (CompilerInternal
-              (FnWriteParam (unconstrain_opt ())
+              (FnWriteParam (unconstrain Identity)
                (var
                 ((pattern (Var tp_mat))
                  (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
@@ -17865,7 +17863,7 @@
                                             (NRFunApp
                                              (CompilerInternal
                                               (FnWriteParam
-                                               (unconstrain_opt ())
+                                               (unconstrain Identity)
                                                (var
                                                 ((pattern
                                                   (Indexed
@@ -17952,7 +17950,7 @@
           ((pattern
             (NRFunApp
              (CompilerInternal
-              (FnWriteParam (unconstrain_opt ())
+              (FnWriteParam (unconstrain Identity)
                (var
                 ((pattern (Var tp_simplex))
                  (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
@@ -17985,7 +17983,7 @@
                          (((pattern
                             (NRFunApp
                              (CompilerInternal
-                              (FnWriteParam (unconstrain_opt ())
+                              (FnWriteParam (unconstrain Identity)
                                (var
                                 ((pattern
                                   (Indexed
@@ -18088,7 +18086,7 @@
                                             (NRFunApp
                                              (CompilerInternal
                                               (FnWriteParam
-                                               (unconstrain_opt ())
+                                               (unconstrain Identity)
                                                (var
                                                 ((pattern
                                                   (Indexed
@@ -18179,7 +18177,7 @@
           ((pattern
             (NRFunApp
              (CompilerInternal
-              (FnWriteParam (unconstrain_opt ())
+              (FnWriteParam (unconstrain Identity)
                (var
                 ((pattern (Var tp_cfcov_54))
                  (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
@@ -18188,7 +18186,7 @@
           ((pattern
             (NRFunApp
              (CompilerInternal
-              (FnWriteParam (unconstrain_opt ())
+              (FnWriteParam (unconstrain Identity)
                (var
                 ((pattern (Var tp_cfcov_33))
                  (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
@@ -18236,7 +18234,7 @@
                                  (((pattern
                                     (NRFunApp
                                      (CompilerInternal
-                                      (FnWriteParam (unconstrain_opt ())
+                                      (FnWriteParam (unconstrain Identity)
                                        (var
                                         ((pattern
                                           (Indexed
@@ -18298,7 +18296,7 @@
           ((pattern
             (NRFunApp
              (CompilerInternal
-              (FnWriteParam (unconstrain_opt ())
+              (FnWriteParam (unconstrain Identity)
                (var
                 ((pattern (Var theta_p))
                  (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
@@ -18307,7 +18305,7 @@
           ((pattern
             (NRFunApp
              (CompilerInternal
-              (FnWriteParam (unconstrain_opt ())
+              (FnWriteParam (unconstrain Identity)
                (var
                 ((pattern (Var tp_real))
                  (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
@@ -20029,7 +20027,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var gq_r1))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
@@ -20038,7 +20036,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var gq_r2))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
@@ -20047,7 +20045,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var gq_real_1d_ar))
           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
@@ -20091,7 +20089,7 @@
                           (((pattern
                              (NRFunApp
                               (CompilerInternal
-                               (FnWriteParam (unconstrain_opt ())
+                               (FnWriteParam (unconstrain Identity)
                                 (var
                                  ((pattern
                                    (Indexed
@@ -20152,7 +20150,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var gq_vec))
           (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
@@ -20183,7 +20181,7 @@
                   (((pattern
                      (NRFunApp
                       (CompilerInternal
-                       (FnWriteParam (unconstrain_opt ())
+                       (FnWriteParam (unconstrain Identity)
                         (var
                          ((pattern
                            (Indexed
@@ -20279,7 +20277,7 @@
                                   (((pattern
                                      (NRFunApp
                                       (CompilerInternal
-                                       (FnWriteParam (unconstrain_opt ())
+                                       (FnWriteParam (unconstrain Identity)
                                         (var
                                          ((pattern
                                            (Indexed
@@ -20357,7 +20355,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var gq_row_vec))
           (meta ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
@@ -20388,7 +20386,7 @@
                   (((pattern
                      (NRFunApp
                       (CompilerInternal
-                       (FnWriteParam (unconstrain_opt ())
+                       (FnWriteParam (unconstrain Identity)
                         (var
                          ((pattern
                            (Indexed
@@ -20484,7 +20482,7 @@
                                   (((pattern
                                      (NRFunApp
                                       (CompilerInternal
-                                       (FnWriteParam (unconstrain_opt ())
+                                       (FnWriteParam (unconstrain Identity)
                                         (var
                                          ((pattern
                                            (Indexed
@@ -20612,7 +20610,7 @@
                                   (((pattern
                                      (NRFunApp
                                       (CompilerInternal
-                                       (FnWriteParam (unconstrain_opt ())
+                                       (FnWriteParam (unconstrain Identity)
                                         (var
                                          ((pattern
                                            (Indexed
@@ -20688,7 +20686,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var gq_simplex))
           (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
@@ -20719,7 +20717,7 @@
                   (((pattern
                      (NRFunApp
                       (CompilerInternal
-                       (FnWriteParam (unconstrain_opt ())
+                       (FnWriteParam (unconstrain Identity)
                         (var
                          ((pattern
                            (Indexed
@@ -20815,7 +20813,7 @@
                                   (((pattern
                                      (NRFunApp
                                       (CompilerInternal
-                                       (FnWriteParam (unconstrain_opt ())
+                                       (FnWriteParam (unconstrain Identity)
                                         (var
                                          ((pattern
                                            (Indexed
@@ -20893,7 +20891,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var gq_cfcov_54))
           (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
@@ -20902,7 +20900,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var gq_cfcov_33))
           (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
@@ -20946,7 +20944,7 @@
                           (((pattern
                              (NRFunApp
                               (CompilerInternal
-                               (FnWriteParam (unconstrain_opt ())
+                               (FnWriteParam (unconstrain Identity)
                                 (var
                                  ((pattern
                                    (Indexed
@@ -21006,7 +21004,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ())
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var indices))
           (meta ((type_ (UArray UInt)) (loc <opaque>) (adlevel DataOnly)))))))
@@ -21050,7 +21048,7 @@
                           (((pattern
                              (NRFunApp
                               (CompilerInternal
-                               (FnWriteParam (unconstrain_opt ())
+                               (FnWriteParam (unconstrain Identity)
                                 (var
                                  ((pattern
                                    (Indexed
@@ -21145,7 +21143,7 @@
                           (((pattern
                              (NRFunApp
                               (CompilerInternal
-                               (FnWriteParam (unconstrain_opt ())
+                               (FnWriteParam (unconstrain Identity)
                                 (var
                                  ((pattern
                                    (Indexed
@@ -21240,7 +21238,7 @@
                           (((pattern
                              (NRFunApp
                               (CompilerInternal
-                               (FnWriteParam (unconstrain_opt ())
+                               (FnWriteParam (unconstrain Identity)
                                 (var
                                  ((pattern
                                    (Indexed
@@ -21335,7 +21333,7 @@
                           (((pattern
                              (NRFunApp
                               (CompilerInternal
-                               (FnWriteParam (unconstrain_opt ())
+                               (FnWriteParam (unconstrain Identity)
                                 (var
                                  ((pattern
                                    (Indexed
@@ -21430,7 +21428,7 @@
                           (((pattern
                              (NRFunApp
                               (CompilerInternal
-                               (FnWriteParam (unconstrain_opt ())
+                               (FnWriteParam (unconstrain Identity)
                                 (var
                                  ((pattern
                                    (Indexed
@@ -21525,7 +21523,7 @@
                           (((pattern
                              (NRFunApp
                               (CompilerInternal
-                               (FnWriteParam (unconstrain_opt ())
+                               (FnWriteParam (unconstrain Identity)
                                 (var
                                  ((pattern
                                    (Indexed
@@ -21620,7 +21618,7 @@
                           (((pattern
                              (NRFunApp
                               (CompilerInternal
-                               (FnWriteParam (unconstrain_opt ())
+                               (FnWriteParam (unconstrain Identity)
                                 (var
                                  ((pattern
                                    (Indexed
@@ -21702,7 +21700,7 @@
                   (((pattern
                      (NRFunApp
                       (CompilerInternal
-                       (FnWriteParam (unconstrain_opt ())
+                       (FnWriteParam (unconstrain Identity)
                         (var
                          ((pattern
                            (Indexed
@@ -21770,7 +21768,7 @@
                   (((pattern
                      (NRFunApp
                       (CompilerInternal
-                       (FnWriteParam (unconstrain_opt ())
+                       (FnWriteParam (unconstrain Identity)
                         (var
                          ((pattern
                            (Indexed
@@ -21835,7 +21833,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ((Single Identity)))
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var p_real))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
@@ -21854,11 +21852,11 @@
      (NRFunApp
       (CompilerInternal
        (FnWriteParam
-        (unconstrain_opt
-         ((Single
-           (Lower
-            ((pattern (Var p_real))
-             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+        (unconstrain
+         (Single
+          (Lower
+           ((pattern (Var p_real))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
         (var
          ((pattern (Var p_upper))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
@@ -21877,11 +21875,11 @@
      (NRFunApp
       (CompilerInternal
        (FnWriteParam
-        (unconstrain_opt
-         ((Single
-           (Upper
-            ((pattern (Var p_upper))
-             (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))))
+        (unconstrain
+         (Single
+          (Upper
+           ((pattern (Var p_upper))
+            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
         (var
          ((pattern (Var p_lower))
           (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
@@ -21922,13 +21920,13 @@
      (NRFunApp
       (CompilerInternal
        (FnWriteParam
-        (unconstrain_opt
-         ((Single
-           (OffsetMultiplier
-            ((pattern (Lit Int 1))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-            ((pattern (Lit Int 2))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+        (unconstrain
+         (Single
+          (OffsetMultiplier
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+           ((pattern (Lit Int 2))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (var
          ((pattern (Var offset_multiplier))
           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
@@ -21969,11 +21967,11 @@
      (NRFunApp
       (CompilerInternal
        (FnWriteParam
-        (unconstrain_opt
-         ((Single
-           (Multiplier
-            ((pattern (Lit Int 2))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+        (unconstrain
+         (Single
+          (Multiplier
+           ((pattern (Lit Int 2))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (var
          ((pattern (Var no_offset_multiplier))
           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
@@ -22014,11 +22012,11 @@
      (NRFunApp
       (CompilerInternal
        (FnWriteParam
-        (unconstrain_opt
-         ((Single
-           (Offset
-            ((pattern (Lit Int 3))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+        (unconstrain
+         (Single
+          (Offset
+           ((pattern (Lit Int 3))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (var
          ((pattern (Var offset_no_multiplier))
           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
@@ -22059,11 +22057,11 @@
      (NRFunApp
       (CompilerInternal
        (FnWriteParam
-        (unconstrain_opt
-         ((Single
-           (Lower
-            ((pattern (Lit Int 0))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+        (unconstrain
+         (Single
+          (Lower
+           ((pattern (Lit Int 0))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (var
          ((pattern (Var p_real_1d_ar))
           (meta ((type_ (UArray UReal)) (loc <opaque>) (adlevel DataOnly)))))))
@@ -22154,11 +22152,11 @@
      (NRFunApp
       (CompilerInternal
        (FnWriteParam
-        (unconstrain_opt
-         ((Single
-           (Lower
-            ((pattern (Lit Int 0))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+        (unconstrain
+         (Single
+          (Lower
+           ((pattern (Lit Int 0))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (var
          ((pattern (Var p_real_3d_ar))
           (meta
@@ -22204,11 +22202,11 @@
      (NRFunApp
       (CompilerInternal
        (FnWriteParam
-        (unconstrain_opt
-         ((Single
-           (Lower
-            ((pattern (Lit Int 0))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+        (unconstrain
+         (Single
+          (Lower
+           ((pattern (Lit Int 0))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (var
          ((pattern (Var p_vec))
           (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
@@ -22275,7 +22273,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ((Single Identity)))
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var p_1d_vec))
           (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly)))))))
@@ -22395,7 +22393,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ((Single Identity)))
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var p_3d_vec))
           (meta
@@ -22441,7 +22439,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ((Single Identity)))
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var p_row_vec))
           (meta ((type_ URowVector) (loc <opaque>) (adlevel DataOnly)))))))
@@ -22508,7 +22506,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ((Single Identity)))
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var p_1d_row_vec))
           (meta
@@ -22629,7 +22627,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ((Single Identity)))
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var p_3d_row_vec))
           (meta
@@ -22700,7 +22698,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ((Single Identity)))
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var p_mat))
           (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
@@ -22824,13 +22822,13 @@
      (NRFunApp
       (CompilerInternal
        (FnWriteParam
-        (unconstrain_opt
-         ((Single
-           (LowerUpper
-            ((pattern (Lit Int 0))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-            ((pattern (Lit Int 1))
-             (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))))
+        (unconstrain
+         (Single
+          (LowerUpper
+           ((pattern (Lit Int 0))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+           ((pattern (Lit Int 1))
+            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
         (var
          ((pattern (Var p_ar_mat))
           (meta
@@ -22875,7 +22873,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ((Single Simplex)))
+       (FnWriteParam (unconstrain (Single Simplex))
         (var
          ((pattern (Var p_simplex))
           (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
@@ -22942,7 +22940,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ((Single Simplex)))
+       (FnWriteParam (unconstrain (Single Simplex))
         (var
          ((pattern (Var p_1d_simplex))
           (meta ((type_ (UArray UVector)) (loc <opaque>) (adlevel DataOnly)))))))
@@ -23062,7 +23060,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ((Single Simplex)))
+       (FnWriteParam (unconstrain (Single Simplex))
         (var
          ((pattern (Var p_3d_simplex))
           (meta
@@ -23133,7 +23131,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ((Single CholeskyCov)))
+       (FnWriteParam (unconstrain (Single CholeskyCov))
         (var
          ((pattern (Var p_cfcov_54))
           (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
@@ -23202,7 +23200,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ((Single CholeskyCov)))
+       (FnWriteParam (unconstrain (Single CholeskyCov))
         (var
          ((pattern (Var p_cfcov_33))
           (meta ((type_ UMatrix) (loc <opaque>) (adlevel DataOnly)))))))
@@ -23299,7 +23297,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ((Single CholeskyCov)))
+       (FnWriteParam (unconstrain (Single CholeskyCov))
         (var
          ((pattern (Var p_cfcov_33_ar))
           (meta ((type_ (UArray UMatrix)) (loc <opaque>) (adlevel DataOnly)))))))
@@ -23342,7 +23340,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ((Single Identity)))
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var x_p))
           (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
@@ -23385,7 +23383,7 @@
    ((pattern
      (NRFunApp
       (CompilerInternal
-       (FnWriteParam (unconstrain_opt ((Single Identity)))
+       (FnWriteParam (unconstrain Identity)
         (var
          ((pattern (Var y_p))
           (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
@@ -23394,7 +23392,7 @@
  (output_vars
   ((p_real
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
-     (out_block Parameters) (out_trans (Single Identity))))
+     (out_block Parameters) (out_trans Identity)))
    (p_upper
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block Parameters)
@@ -23530,7 +23528,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans (Single Identity))))
+     (out_block Parameters) (out_trans Identity)))
    (p_3d_vec
     ((out_unconstrained_st
       (SArray
@@ -23558,7 +23556,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans (Single Identity))))
+     (out_block Parameters) (out_trans Identity)))
    (p_row_vec
     ((out_unconstrained_st
       (SRowVector AoS
@@ -23568,7 +23566,7 @@
       (SRowVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans (Single Identity))))
+     (out_block Parameters) (out_trans Identity)))
    (p_1d_row_vec
     ((out_unconstrained_st
       (SArray
@@ -23584,7 +23582,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans (Single Identity))))
+     (out_block Parameters) (out_trans Identity)))
    (p_3d_row_vec
     ((out_unconstrained_st
       (SArray
@@ -23612,7 +23610,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans (Single Identity))))
+     (out_block Parameters) (out_trans Identity)))
    (p_mat
     ((out_unconstrained_st
       (SMatrix AoS
@@ -23626,7 +23624,7 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 4))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans (Single Identity))))
+     (out_block Parameters) (out_trans Identity)))
    (p_ar_mat
     ((out_unconstrained_st
       (SArray
@@ -23899,7 +23897,7 @@
       (SVector AoS
        ((pattern (Lit Int 2))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans (Single Identity))))
+     (out_block Parameters) (out_trans Identity)))
    (y_p
     ((out_unconstrained_st
       (SVector AoS
@@ -23909,7 +23907,7 @@
       (SVector AoS
        ((pattern (Lit Int 2))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block Parameters) (out_trans (Single Identity))))
+     (out_block Parameters) (out_trans Identity)))
    (tp_real_1d_ar
     ((out_unconstrained_st
       (SArray SReal
@@ -23982,7 +23980,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans (Single Identity))))
+     (out_block TransformedParameters) (out_trans Identity)))
    (tp_3d_vec
     ((out_unconstrained_st
       (SArray
@@ -24010,7 +24008,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans (Single Identity))))
+     (out_block TransformedParameters) (out_trans Identity)))
    (tp_row_vec
     ((out_unconstrained_st
       (SRowVector AoS
@@ -24020,7 +24018,7 @@
       (SRowVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans (Single Identity))))
+     (out_block TransformedParameters) (out_trans Identity)))
    (tp_1d_row_vec
     ((out_unconstrained_st
       (SArray
@@ -24036,7 +24034,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans (Single Identity))))
+     (out_block TransformedParameters) (out_trans Identity)))
    (tp_3d_row_vec
     ((out_unconstrained_st
       (SArray
@@ -24064,7 +24062,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans (Single Identity))))
+     (out_block TransformedParameters) (out_trans Identity)))
    (tp_mat
     ((out_unconstrained_st
       (SMatrix AoS
@@ -24078,7 +24076,7 @@
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Int 4))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans (Single Identity))))
+     (out_block TransformedParameters) (out_trans Identity)))
    (tp_ar_mat
     ((out_unconstrained_st
       (SArray
@@ -24351,16 +24349,16 @@
       (SVector AoS
        ((pattern (Lit Int 2))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block TransformedParameters) (out_trans (Single Identity))))
+     (out_block TransformedParameters) (out_trans Identity)))
    (tp_real
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
-     (out_block TransformedParameters) (out_trans (Single Identity))))
+     (out_block TransformedParameters) (out_trans Identity)))
    (gq_r1
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
-     (out_block GeneratedQuantities) (out_trans (Single Identity))))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (gq_r2
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
-     (out_block GeneratedQuantities) (out_trans (Single Identity))))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (gq_real_1d_ar
     ((out_unconstrained_st
       (SArray SReal
@@ -24433,7 +24431,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans (Single Identity))))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (gq_3d_vec
     ((out_unconstrained_st
       (SArray
@@ -24461,7 +24459,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans (Single Identity))))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (gq_row_vec
     ((out_unconstrained_st
       (SRowVector AoS
@@ -24471,7 +24469,7 @@
       (SRowVector AoS
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans (Single Identity))))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (gq_1d_row_vec
     ((out_unconstrained_st
       (SArray
@@ -24487,7 +24485,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans (Single Identity))))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (gq_3d_row_vec
     ((out_unconstrained_st
       (SArray
@@ -24515,7 +24513,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Var N))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans (Single Identity))))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (gq_ar_mat
     ((out_unconstrained_st
       (SArray
@@ -24788,7 +24786,7 @@
       (SArray SInt
        ((pattern (Lit Int 3))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans (Single Identity))))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (indexing_mat
     ((out_unconstrained_st
       (SArray
@@ -24808,7 +24806,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 5))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans (Single Identity))))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (idx_res1
     ((out_unconstrained_st
       (SArray
@@ -24828,7 +24826,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 3))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans (Single Identity))))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (idx_res2
     ((out_unconstrained_st
       (SArray
@@ -24848,7 +24846,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 5))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans (Single Identity))))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (idx_res3
     ((out_unconstrained_st
       (SArray
@@ -24868,7 +24866,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 3))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans (Single Identity))))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (idx_res11
     ((out_unconstrained_st
       (SArray
@@ -24888,7 +24886,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 3))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans (Single Identity))))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (idx_res21
     ((out_unconstrained_st
       (SArray
@@ -24908,7 +24906,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 5))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans (Single Identity))))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (idx_res31
     ((out_unconstrained_st
       (SArray
@@ -24928,7 +24926,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 3))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans (Single Identity))))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (idx_res4
     ((out_unconstrained_st
       (SArray
@@ -24944,7 +24942,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 3))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans (Single Identity))))
+     (out_block GeneratedQuantities) (out_trans Identity)))
    (idx_res5
     ((out_unconstrained_st
       (SArray
@@ -24960,7 +24958,7 @@
          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
        ((pattern (Lit Int 2))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-     (out_block GeneratedQuantities) (out_trans (Single Identity))))))
+     (out_block GeneratedQuantities) (out_trans Identity)))))
  (prog_name mother_model) (prog_path mother.stan))
 Warning in 'mother.stan', line 63, column 4: increment_log_prob(...); is deprecated and will be removed in the future. Use target += ...; instead.
 Warning in 'mother.stan', line 187, column 15: get_lp() function is deprecated. It will be removed in a future release. Use target() instead.

@@ -69,7 +69,7 @@ let%expect_test "parse minus unary" =
        (parametersblock ()) (transformedparametersblock ())
        (modelblock
         ((((stmt
-            (VarDecl (decl_type (Sized SReal)) (transformation (Single Identity))
+            (VarDecl (decl_type (Sized SReal)) (transformation Identity)
              (identifier ((name x) (id_loc <opaque>))) (initial_value ())
              (is_global false)))
            (smeta ((loc <opaque>))))
@@ -96,7 +96,7 @@ let%expect_test "parse unary over binary" =
      (parametersblock ()) (transformedparametersblock ())
      (modelblock
       ((((stmt
-          (VarDecl (decl_type (Sized SReal)) (transformation (Single Identity))
+          (VarDecl (decl_type (Sized SReal)) (transformation Identity)
            (identifier ((name x) (id_loc <opaque>)))
            (initial_value
             (((expr
@@ -136,9 +136,8 @@ let%expect_test "parse indices, two different colons" =
               (Sized
                (SMatrix AoS ((expr (IntNumeral 5)) (emeta ((loc <opaque>))))
                 ((expr (IntNumeral 5)) (emeta ((loc <opaque>)))))))
-             (transformation (Single Identity))
-             (identifier ((name x) (id_loc <opaque>))) (initial_value ())
-             (is_global false)))
+             (transformation Identity) (identifier ((name x) (id_loc <opaque>)))
+             (initial_value ()) (is_global false)))
            (smeta ((loc <opaque>))))
           ((stmt
             (Print
@@ -351,8 +350,7 @@ let%expect_test "parse crazy truncation example" =
                (SArray
                 (SArray SReal ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))))
                 ((expr (IntNumeral 1)) (emeta ((loc <opaque>)))))))
-             (transformation (Single Identity))
-             (identifier ((name T) (id_loc <opaque>)))
+             (transformation Identity) (identifier ((name T) (id_loc <opaque>)))
              (initial_value
               (((expr
                  (ArrayExpr

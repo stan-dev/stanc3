@@ -153,19 +153,18 @@ let functor_suffix_select hof =
   | _ -> functor_suffix
 
 let constraint_to_string = function
-  | Transformation.Ordered -> Some "ordered"
-  | PositiveOrdered -> Some "positive_ordered"
-  | Simplex -> Some "simplex"
-  | UnitVector -> Some "unit_vector"
-  | CholeskyCorr -> Some "cholesky_factor_corr"
-  | CholeskyCov -> Some "cholesky_factor_cov"
-  | Correlation -> Some "corr_matrix"
-  | Covariance -> Some "cov_matrix"
-  | Lower _ -> Some "lb"
-  | Upper _ -> Some "ub"
-  | LowerUpper _ -> Some "lub"
-  | Offset _ | Multiplier _ | OffsetMultiplier _ -> Some "offset_multiplier"
-  | Identity -> None
+  | Transformation.Ordered -> "ordered"
+  | PositiveOrdered -> "positive_ordered"
+  | Simplex -> "simplex"
+  | UnitVector -> "unit_vector"
+  | CholeskyCorr -> "cholesky_factor_corr"
+  | CholeskyCov -> "cholesky_factor_cov"
+  | Correlation -> "corr_matrix"
+  | Covariance -> "cov_matrix"
+  | Lower _ -> "lb"
+  | Upper _ -> "ub"
+  | LowerUpper _ -> "lub"
+  | Offset _ | Multiplier _ | OffsetMultiplier _ -> "offset_multiplier"
 
 let check_to_string = function
   | Transformation.Lower _ -> Some "greater_or_equal"
@@ -174,7 +173,7 @@ let check_to_string = function
   | LowerUpper _ ->
       raise_s [%message "LowerUpper is really two other checks tied together"]
   | Offset _ | Multiplier _ | OffsetMultiplier _ -> None
-  | t -> constraint_to_string t
+  | t -> Some (constraint_to_string t)
 
 let default_multiplier = 1
 let default_offset = 0
@@ -563,17 +562,13 @@ and pp_constraining ut dims ppf trans =
       pf ppf "@[<hov 2>in__.template read<%a>(@,%a)@]" pp_unsizedtype_local
         (UnsizedType.AutoDiffable, ut)
         (list ~sep:comma pp_expr) dims
-  | t :: ts -> (
-    match constraint_to_string t with
-    | Some cnstr ->
-        let constraint_args = transform_args t in
-        let lp =
-          Expr.Fixed.{pattern= Var "lp__"; meta= Expr.Typed.Meta.empty}
-        in
-        let args = constraint_args @ [lp] in
-        pf ppf "@[<hov 4>%s_constrain<jacobian__>(@,%a, @,%a);@]" cnstr
-          (pp_constraining ut dims) ts (list ~sep:comma pp_expr) args
-    | None -> pp_constraining ut dims ppf [] )
+  | t :: ts ->
+      let constraint_args = transform_args t in
+      let lp = Expr.Fixed.{pattern= Var "lp__"; meta= Expr.Typed.Meta.empty} in
+      let args = constraint_args @ [lp] in
+      pf ppf "@[<hov 4>%s_constrain<jacobian__>(@,%a, @,%a);@]"
+        (constraint_to_string t) (pp_constraining ut dims) ts
+        (list ~sep:comma pp_expr) args
 
 (* these functions are just for testing *)
 let dummy_locate pattern =

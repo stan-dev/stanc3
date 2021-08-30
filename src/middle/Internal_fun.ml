@@ -13,7 +13,7 @@ type 'expr t =
       { constrain: 'expr Transformation.t
       ; dims: 'expr list
       ; mem_pattern: Common.Helpers.mem_pattern }
-  | FnWriteParam of {unconstrain_opt: 'expr Transformation.t option; var: 'expr}
+  | FnWriteParam of {unconstrain: 'expr Transformation.t; var: 'expr}
   | FnValidateSize
   | FnValidateSizeSimplex
   | FnValidateSizeUnitVector

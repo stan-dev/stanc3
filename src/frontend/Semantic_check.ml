@@ -868,8 +868,7 @@ let rec semantic_check_sizedtype cf = function
 
 (* -- Transformations ------------------------------------------------------- *)
 let semantic_check_transformation_prim cf ut = function
-  | Transformation.Identity -> Validate.ok Transformation.Identity
-  | Lower e ->
+  | Transformation.Lower e ->
       semantic_check_expression_of_scalar_or_type cf ut e "Lower bound"
       |> Validate.map ~f:(fun ue -> Transformation.Lower ue)
   | Upper e ->
@@ -909,7 +908,8 @@ let semantic_check_transformation_prim cf ut = function
 
 let semantic_check_transformation cf ut trans =
   match trans with
-  | Transformation.Single t ->
+  | Transformation.Identity -> Validate.ok Transformation.Identity
+  | Single t ->
       semantic_check_transformation_prim cf ut t
       |> Validate.map ~f:(fun u -> Transformation.Single u)
   | Chain ts ->
@@ -1545,6 +1545,7 @@ and semantic_check_var_decl_bounds ~loc is_global sized_ty
   in
   let is_valid_transformation : bool =
     match trans with
+    | Transformation.Identity -> false
     | Transformation.Single t -> is_valid t false
     | Chain ts ->
         (* TR TODO: Think about this more*)

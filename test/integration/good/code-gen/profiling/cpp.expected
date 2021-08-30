@@ -314,16 +314,13 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       pos__ = 1;
       local_scalar_t__ rho;
       rho = in__.read<local_scalar_t__>();
-      rho = lb_free(rho, 0);
-      out__.write(rho);
+      out__.write(lb_free(rho, 0));
       local_scalar_t__ alpha;
       alpha = in__.read<local_scalar_t__>();
-      alpha = lb_free(alpha, 0);
-      out__.write(alpha);
+      out__.write(lb_free(alpha, 0));
       local_scalar_t__ sigma;
       sigma = in__.read<local_scalar_t__>();
-      sigma = lb_free(sigma, 0);
-      out__.write(sigma);
+      out__.write(lb_free(sigma, 0));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return

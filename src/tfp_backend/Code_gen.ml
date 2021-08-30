@@ -214,8 +214,7 @@ let pp_bijector ppf trans =
   let components =
     let single trans =
       match trans with
-      | Transformation.Identity -> []
-      | Lower lb -> [("Exp", []); ("Shift", [lb])]
+      | Transformation.Lower lb -> [("Exp", []); ("Shift", [lb])]
       | Upper ub ->
           [("Exp", []); ("Scale", [Expr.Helpers.float (-1.)]); ("Shift", [ub])]
       | LowerUpper (lb, ub) -> [("Sigmoid", [lb; ub])]
@@ -231,6 +230,7 @@ let pp_bijector ppf trans =
               "Unsupported " (trans : Expr.Typed.t Transformation.primitive)]
     in
     match trans with
+    | Transformation.Identity -> []
     | Transformation.Single trans -> single trans
     | Chain trans -> List.concat_map ~f:single (List.rev trans)
   in

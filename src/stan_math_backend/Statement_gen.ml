@@ -320,16 +320,9 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
           pf ppf "%s(@[<hov>%a@]);" ("check_" ^ check_name)
             (list ~sep:comma pp_expr)
             (function_arg :: Expr.Helpers.str var_name :: var :: args) )
-  | NRFunApp (CompilerInternal (FnWriteParam {unconstrain_opt; var}), _) -> (
-    match unconstrain_opt with
-    (* When the current block or this transformation doesn't require unconstraining,
-                     use vanilla write *)
-    | None | Some Transformation.(Single Identity) ->
-        pf ppf "@[<hov 2>out__.write(@,%a);@]" pp_expr var
-    (* Otherwise, chain together some free functions first *)
-    | Some trans ->
-        pp_unconstraining ppf var trans ;
-        pf ppf "@,@[<hov 2>out__.write(@,%a);@]" pp_expr var )
+  | NRFunApp (CompilerInternal (FnWriteParam {unconstrain; var}), _) ->
+      pf ppf "@[<hov 2>out__.write(@,%a);@]" (pp_unconstraining var)
+        (Transformation.list unconstrain)
   | NRFunApp (CompilerInternal f, args) ->
       let fname, extra_args = trans_math_fn f in
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)
@@ -356,27 +349,18 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
   | Decl {decl_adtype; decl_id; decl_type; initialize; _} ->
       pp_decl ppf (decl_id, decl_type, decl_adtype, initialize)
 
-and pp_unconstraining ppf var trans =
-  let pp_single ppf t =
-    let cnstr =
-      match constraint_to_string t with
-      | Some s -> s
-      | None ->
-          raise_s
-            [%message
-              "Error during constraining "
-                (var : Expr.Typed.Meta.t Expr.Fixed.t)
-                ". This should never happen, if you see this please file a \
-                 bug report."]
-    in
-    let constraint_args = transform_args t in
-    let args = var :: constraint_args in
-    pf ppf "@[<hov 4>%a = %s_free(@,%a);@]" pp_expr var cnstr
-      (list ~sep:comma pp_expr) args
-  in
+and pp_unconstraining var ppf trans =
   match trans with
-  | Transformation.Single t -> pp_single ppf t
-  | Chain ts -> pf ppf "%a" (list ~sep:cut pp_single) (List.rev ts)
+  | [] -> pp_expr ppf var
+  | t :: ts -> (
+      let args = transform_args t in
+      match args with
+      | [] ->
+          pf ppf "@[<hov 4>%s_free(@,%a)@]" (constraint_to_string t)
+            (pp_unconstraining var) ts
+      | _ ->
+          pf ppf "@[<hov 4>%s_free(@,%a, @,%a)@]" (constraint_to_string t)
+            (pp_unconstraining var) ts (list ~sep:comma pp_expr) args )
 
 (* | Transformation.Single t ->  *)
 and pp_block_s ppf body =

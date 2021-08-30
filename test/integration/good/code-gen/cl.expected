@@ -1363,8 +1363,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       out__.write(cuts);
       local_scalar_t__ sigma;
       sigma = in__.read<local_scalar_t__>();
-      sigma = lb_free(sigma, 0);
-      out__.write(sigma);
+      out__.write(lb_free(sigma, 0));
       local_scalar_t__ alpha;
       alpha = in__.read<local_scalar_t__>();
       out__.write(alpha);

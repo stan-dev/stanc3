@@ -79,19 +79,23 @@ let bounds_out_of_range (range : range) (bounds : bound_values) : bool =
 (* Check for inconsistency between a distribution argument's constraint and the
    constraint transformation of a variable *)
 let transform_mismatch_constraint (constr : var_constraint)
-    (trans : Expr.Typed.t Transformation.primitive) : bool =
-  match constr with
-  | Range range ->
-      bounds_out_of_range range
-        (trans_bounds_values Transformation.(Single trans))
-  | Ordered -> trans <> Transformation.Ordered
-  | PositiveOrdered -> trans <> PositiveOrdered
-  | Simplex -> trans <> Simplex
-  | UnitVector -> trans <> UnitVector
-  | CholeskyCorr -> trans <> CholeskyCorr
-  | CholeskyCov -> trans <> CholeskyCov && trans <> CholeskyCorr
-  | Correlation -> trans <> Correlation
-  | Covariance -> trans <> Covariance && trans <> Correlation
+    (trans : Expr.Typed.t Transformation.t) : bool =
+  match trans with
+  | Transformation.Identity -> true
+  | Single trans -> (
+    match constr with
+    | Range range ->
+        bounds_out_of_range range
+          (trans_bounds_values Transformation.(Single trans))
+    | Ordered -> trans <> Transformation.Ordered
+    | PositiveOrdered -> trans <> PositiveOrdered
+    | Simplex -> trans <> Simplex
+    | UnitVector -> trans <> UnitVector
+    | CholeskyCorr -> trans <> CholeskyCorr
+    | CholeskyCov -> trans <> CholeskyCov && trans <> CholeskyCorr
+    | Correlation -> trans <> Correlation
+    | Covariance -> trans <> Covariance && trans <> Correlation )
+  | Chain _ -> failwith "TR TODO: constr_mismatch_warning"
 
 (* Check for inconsistency between a distribution argument's range and
    a literal value *)
@@ -172,8 +176,7 @@ let constr_mismatch_warning (constr : var_constraint_named) (arg : arg_info)
         raise (Failure arg_fail_msg)
   in
   match v with
-  | Param (pname, Transformation.Single trans), meta ->
-      (* TR TODO: constr_mismatch_warning *)
+  | Param (pname, trans), meta ->
       if transform_mismatch_constraint constr.constr trans then
         Some (meta.loc, constr_mismatch_message name pname arg constr.name)
       else None

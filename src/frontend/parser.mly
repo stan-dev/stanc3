@@ -379,15 +379,15 @@ top_var_decl_no_assign:
 
 sized_basic_type:
   | INT
-    { grammar_logger "INT_var_type" ; (SizedType.SInt, Single Identity) }
+    { grammar_logger "INT_var_type" ; (SizedType.SInt, Identity) }
   | REAL
-    { grammar_logger "REAL_var_type" ; (SizedType.SReal, Single Identity) }
+    { grammar_logger "REAL_var_type" ; (SizedType.SReal, Identity) }
   | VECTOR LBRACK e=expression RBRACK
-    { grammar_logger "VECTOR_var_type" ; (SizedType.SVector (Common.Helpers.AoS, e), Single Identity) }
+    { grammar_logger "VECTOR_var_type" ; (SizedType.SVector (Common.Helpers.AoS, e), Identity) }
   | ROWVECTOR LBRACK e=expression RBRACK
-    { grammar_logger "ROWVECTOR_var_type" ; (SizedType.SRowVector (AoS, e) , Single Identity) }
+    { grammar_logger "ROWVECTOR_var_type" ; (SizedType.SRowVector (AoS, e) , Identity) }
   | MATRIX LBRACK e1=expression COMMA e2=expression RBRACK
-    { grammar_logger "MATRIX_var_type" ; (SizedType.SMatrix (AoS, e1, e2), Single Identity) }
+    { grammar_logger "MATRIX_var_type" ; (SizedType.SMatrix (AoS, e1, e2), Identity) }
 
 top_var_type:
   | INT r=range_constraint
@@ -436,7 +436,7 @@ type_constraint:
 
 range_constraint:
   | (* nothing *)
-    { grammar_logger "empty_constraint" ; Transformation.Single Identity }
+    { grammar_logger "empty_constraint" ; Transformation.Identity }
   | LABRACK r=range RABRACK
     {  grammar_logger "range_constraint" ; Single r }
 

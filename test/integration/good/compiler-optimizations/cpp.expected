@@ -603,20 +603,16 @@ class ad_level_failing_model final : public model_base_crtp<ad_level_failing_mod
       pos__ = 1;
       local_scalar_t__ beta;
       beta = in__.read<local_scalar_t__>();
-      beta = lb_free(beta, 0);
-      out__.write(beta);
+      out__.write(lb_free(beta, 0));
       local_scalar_t__ gamma;
       gamma = in__.read<local_scalar_t__>();
-      gamma = lb_free(gamma, 0);
-      out__.write(gamma);
+      out__.write(lb_free(gamma, 0));
       local_scalar_t__ xi;
       xi = in__.read<local_scalar_t__>();
-      xi = lb_free(xi, 0);
-      out__.write(xi);
+      out__.write(lb_free(xi, 0));
       local_scalar_t__ delta;
       delta = in__.read<local_scalar_t__>();
-      delta = lb_free(delta, 0);
-      out__.write(delta);
+      out__.write(lb_free(delta, 0));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -2671,8 +2667,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       pos__ = 1;
       local_scalar_t__ mean_p;
       mean_p = in__.read<local_scalar_t__>();
-      mean_p = lub_free(mean_p, 0, 1);
-      out__.write(mean_p);
+      out__.write(lub_free(mean_p, 0, 1));
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
       beta = Eigen::Matrix<local_scalar_t__, -1, 1>(max_age);
       stan::math::fill(beta, DUMMY_VAR__);
@@ -2685,8 +2680,7 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
             "assigning variable beta", index_uni(sym1__));
         }
       } 
-      beta = lub_free(beta, 0, 1);
-      out__.write(beta);
+      out__.write(lub_free(beta, 0, 1));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -3805,28 +3799,22 @@ class dce_fail_model final : public model_base_crtp<dce_fail_model> {
       pos__ = 1;
       local_scalar_t__ sigma;
       sigma = in__.read<local_scalar_t__>();
-      sigma = lb_free(sigma, 0);
-      out__.write(sigma);
+      out__.write(lb_free(sigma, 0));
       local_scalar_t__ sigma_age;
       sigma_age = in__.read<local_scalar_t__>();
-      sigma_age = lb_free(sigma_age, 0);
-      out__.write(sigma_age);
+      out__.write(lb_free(sigma_age, 0));
       local_scalar_t__ sigma_edu;
       sigma_edu = in__.read<local_scalar_t__>();
-      sigma_edu = lb_free(sigma_edu, 0);
-      out__.write(sigma_edu);
+      out__.write(lb_free(sigma_edu, 0));
       local_scalar_t__ sigma_state;
       sigma_state = in__.read<local_scalar_t__>();
-      sigma_state = lb_free(sigma_state, 0);
-      out__.write(sigma_state);
+      out__.write(lb_free(sigma_state, 0));
       local_scalar_t__ sigma_region;
       sigma_region = in__.read<local_scalar_t__>();
-      sigma_region = lb_free(sigma_region, 0);
-      out__.write(sigma_region);
+      out__.write(lb_free(sigma_region, 0));
       local_scalar_t__ sigma_age_edu;
       sigma_age_edu = in__.read<local_scalar_t__>();
-      sigma_age_edu = lb_free(sigma_age_edu, 0);
-      out__.write(sigma_age_edu);
+      out__.write(lb_free(sigma_age_edu, 0));
       local_scalar_t__ b_0;
       b_0 = in__.read<local_scalar_t__>();
       out__.write(b_0);
@@ -5194,8 +5182,7 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
             "assigning variable mu", index_uni(2));
         }
       }
-      mu = ordered_free(mu);
-      out__.write(mu);
+      out__.write(ordered_free(mu));
       std::vector<local_scalar_t__> sigma;
       sigma = std::vector<local_scalar_t__>(2, DUMMY_VAR__);
       
@@ -5205,12 +5192,10 @@ class expr_prop_fail_model final : public model_base_crtp<expr_prop_fail_model> 
           sigma[(2 - 1)] = in__.read<local_scalar_t__>();
         }
       }
-      sigma = lb_free(sigma, 0);
-      out__.write(sigma);
+      out__.write(lb_free(sigma, 0));
       local_scalar_t__ theta;
       theta = in__.read<local_scalar_t__>();
-      theta = lub_free(theta, 0, 1);
-      out__.write(theta);
+      out__.write(lub_free(theta, 0, 1));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -5662,8 +5647,7 @@ class expr_prop_fail2_model final : public model_base_crtp<expr_prop_fail2_model
       out__.write(theta);
       local_scalar_t__ tau;
       tau = in__.read<local_scalar_t__>();
-      tau = lb_free(tau, 0);
-      out__.write(tau);
+      out__.write(lb_free(tau, 0));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -6838,24 +6822,19 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
       out__.write(beta);
       local_scalar_t__ sigma_a;
       sigma_a = in__.read<local_scalar_t__>();
-      sigma_a = lub_free(sigma_a, 0, 100);
-      out__.write(sigma_a);
+      out__.write(lub_free(sigma_a, 0, 100));
       local_scalar_t__ sigma_b;
       sigma_b = in__.read<local_scalar_t__>();
-      sigma_b = lub_free(sigma_b, 0, 100);
-      out__.write(sigma_b);
+      out__.write(lub_free(sigma_b, 0, 100));
       local_scalar_t__ sigma_c;
       sigma_c = in__.read<local_scalar_t__>();
-      sigma_c = lub_free(sigma_c, 0, 100);
-      out__.write(sigma_c);
+      out__.write(lub_free(sigma_c, 0, 100));
       local_scalar_t__ sigma_d;
       sigma_d = in__.read<local_scalar_t__>();
-      sigma_d = lub_free(sigma_d, 0, 100);
-      out__.write(sigma_d);
+      out__.write(lub_free(sigma_d, 0, 100));
       local_scalar_t__ sigma_e;
       sigma_e = in__.read<local_scalar_t__>();
-      sigma_e = lub_free(sigma_e, 0, 100);
-      out__.write(sigma_e);
+      out__.write(lub_free(sigma_e, 0, 100));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -7662,8 +7641,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
       pos__ = 1;
       local_scalar_t__ tau_phi;
       tau_phi = in__.read<local_scalar_t__>();
-      tau_phi = lb_free(tau_phi, 0);
-      out__.write(tau_phi);
+      out__.write(lb_free(tau_phi, 0));
       Eigen::Matrix<local_scalar_t__, -1, 1> phi_std_raw;
       phi_std_raw = Eigen::Matrix<local_scalar_t__, -1, 1>((N - 1));
       stan::math::fill(phi_std_raw, DUMMY_VAR__);
@@ -9668,12 +9646,10 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       pos__ = 1;
       local_scalar_t__ mean_phi;
       mean_phi = in__.read<local_scalar_t__>();
-      mean_phi = lub_free(mean_phi, 0, 1);
-      out__.write(mean_phi);
+      out__.write(lub_free(mean_phi, 0, 1));
       local_scalar_t__ mean_p;
       mean_p = in__.read<local_scalar_t__>();
-      mean_p = lub_free(mean_p, 0, 1);
-      out__.write(mean_p);
+      out__.write(lub_free(mean_p, 0, 1));
       Eigen::Matrix<local_scalar_t__, -1, 1> epsilon;
       epsilon = Eigen::Matrix<local_scalar_t__, -1, 1>(nind);
       stan::math::fill(epsilon, DUMMY_VAR__);
@@ -9689,8 +9665,7 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       out__.write(epsilon);
       local_scalar_t__ sigma;
       sigma = in__.read<local_scalar_t__>();
-      sigma = lub_free(sigma, 0, 5);
-      out__.write(sigma);
+      out__.write(lub_free(sigma, 0, 5));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -13014,16 +12989,13 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       pos__ = 1;
       local_scalar_t__ mean_phi;
       mean_phi = in__.read<local_scalar_t__>();
-      mean_phi = lub_free(mean_phi, 0, 1);
-      out__.write(mean_phi);
+      out__.write(lub_free(mean_phi, 0, 1));
       local_scalar_t__ mean_p;
       mean_p = in__.read<local_scalar_t__>();
-      mean_p = lub_free(mean_p, 0, 1);
-      out__.write(mean_p);
+      out__.write(lub_free(mean_p, 0, 1));
       local_scalar_t__ psi;
       psi = in__.read<local_scalar_t__>();
-      psi = lub_free(psi, 0, 1);
-      out__.write(psi);
+      out__.write(lub_free(psi, 0, 1));
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
       beta = Eigen::Matrix<local_scalar_t__, -1, 1>(n_occasions);
       stan::math::fill(beta, DUMMY_VAR__);
@@ -13036,8 +13008,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
             "assigning variable beta", index_uni(sym1__));
         }
       } 
-      beta = lb_free(beta, 0);
-      out__.write(beta);
+      out__.write(lb_free(beta, 0));
       Eigen::Matrix<local_scalar_t__, -1, 1> epsilon;
       epsilon = Eigen::Matrix<local_scalar_t__, -1, 1>(M);
       stan::math::fill(epsilon, DUMMY_VAR__);
@@ -13053,8 +13024,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       out__.write(epsilon);
       local_scalar_t__ sigma;
       sigma = in__.read<local_scalar_t__>();
-      sigma = lub_free(sigma, 0, 5);
-      out__.write(sigma);
+      out__.write(lub_free(sigma, 0, 5));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -14239,8 +14209,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
             "assigning variable pi", index_uni(sym1__));
         }
       } 
-      pi = simplex_free(pi);
-      out__.write(pi);
+      out__.write(simplex_free(pi));
       std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>> theta;
       theta = std::vector<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(J, std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(K, Eigen::Matrix<local_scalar_t__, -1, 1>(K)));
       stan::math::fill(theta, DUMMY_VAR__);
@@ -14303,8 +14272,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
           } 
         }
       } 
-      theta = simplex_free(theta);
-      out__.write(theta);
+      out__.write(simplex_free(theta));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -14970,12 +14938,10 @@ class expr_prop_fail8_model final : public model_base_crtp<expr_prop_fail8_model
       out__.write(beta1);
       local_scalar_t__ tau_theta;
       tau_theta = in__.read<local_scalar_t__>();
-      tau_theta = lb_free(tau_theta, 0);
-      out__.write(tau_theta);
+      out__.write(lb_free(tau_theta, 0));
       local_scalar_t__ tau_phi;
       tau_phi = in__.read<local_scalar_t__>();
-      tau_phi = lb_free(tau_phi, 0);
-      out__.write(tau_phi);
+      out__.write(lb_free(tau_phi, 0));
       Eigen::Matrix<local_scalar_t__, -1, 1> theta_std;
       theta_std = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
       stan::math::fill(theta_std, DUMMY_VAR__);
@@ -17073,8 +17039,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       pos__ = 1;
       local_scalar_t__ mean_p;
       mean_p = in__.read<local_scalar_t__>();
-      mean_p = lub_free(mean_p, 0, 1);
-      out__.write(mean_p);
+      out__.write(lub_free(mean_p, 0, 1));
       Eigen::Matrix<local_scalar_t__, -1, 1> beta;
       beta = Eigen::Matrix<local_scalar_t__, -1, 1>(max_age);
       stan::math::fill(beta, DUMMY_VAR__);
@@ -17087,8 +17052,7 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
             "assigning variable beta", index_uni(sym1__));
         }
       } 
-      beta = lub_free(beta, 0, 1);
-      out__.write(beta);
+      out__.write(lub_free(beta, 0, 1));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -20327,12 +20291,10 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       pos__ = 1;
       local_scalar_t__ mean_phi;
       mean_phi = in__.read<local_scalar_t__>();
-      mean_phi = lub_free(mean_phi, 0, 1);
-      out__.write(mean_phi);
+      out__.write(lub_free(mean_phi, 0, 1));
       local_scalar_t__ mean_p;
       mean_p = in__.read<local_scalar_t__>();
-      mean_p = lub_free(mean_p, 0, 1);
-      out__.write(mean_p);
+      out__.write(lub_free(mean_p, 0, 1));
       Eigen::Matrix<local_scalar_t__, -1, 1> gamma;
       gamma = Eigen::Matrix<local_scalar_t__, -1, 1>(n_occasions);
       stan::math::fill(gamma, DUMMY_VAR__);
@@ -20345,8 +20307,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
             "assigning variable gamma", index_uni(sym1__));
         }
       } 
-      gamma = lub_free(gamma, 0, 1);
-      out__.write(gamma);
+      out__.write(lub_free(gamma, 0, 1));
       Eigen::Matrix<local_scalar_t__, -1, 1> epsilon;
       epsilon = Eigen::Matrix<local_scalar_t__, -1, 1>((n_occasions - 1));
       stan::math::fill(epsilon, DUMMY_VAR__);
@@ -20363,8 +20324,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       out__.write(epsilon);
       local_scalar_t__ sigma;
       sigma = in__.read<local_scalar_t__>();
-      sigma = lub_free(sigma, 0, 5);
-      out__.write(sigma);
+      out__.write(lub_free(sigma, 0, 5));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -23453,12 +23413,10 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       pos__ = 1;
       local_scalar_t__ mean_phi;
       mean_phi = in__.read<local_scalar_t__>();
-      mean_phi = lub_free(mean_phi, 0, 1);
-      out__.write(mean_phi);
+      out__.write(lub_free(mean_phi, 0, 1));
       local_scalar_t__ mean_p;
       mean_p = in__.read<local_scalar_t__>();
-      mean_p = lub_free(mean_p, 0, 1);
-      out__.write(mean_p);
+      out__.write(lub_free(mean_p, 0, 1));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -25751,16 +25709,13 @@ class off_small_model final : public model_base_crtp<off_small_model> {
       out__.write(mu_a2);
       local_scalar_t__ sigma_a1;
       sigma_a1 = in__.read<local_scalar_t__>();
-      sigma_a1 = lub_free(sigma_a1, 0, 100);
-      out__.write(sigma_a1);
+      out__.write(lub_free(sigma_a1, 0, 100));
       local_scalar_t__ sigma_a2;
       sigma_a2 = in__.read<local_scalar_t__>();
-      sigma_a2 = lub_free(sigma_a2, 0, 100);
-      out__.write(sigma_a2);
+      out__.write(lub_free(sigma_a2, 0, 100));
       local_scalar_t__ sigma_y;
       sigma_y = in__.read<local_scalar_t__>();
-      sigma_y = lub_free(sigma_y, 0, 100);
-      out__.write(sigma_y);
+      out__.write(lub_free(sigma_y, 0, 100));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -26991,8 +26946,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
           }
         }
       }
-      x_cov = cov_matrix_free(x_cov);
-      out__.write(x_cov);
+      out__.write(cov_matrix_free(x_cov));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -27731,12 +27685,10 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
       out__.write(mu_a);
       local_scalar_t__ sigma_a;
       sigma_a = in__.read<local_scalar_t__>();
-      sigma_a = lub_free(sigma_a, 0, 100);
-      out__.write(sigma_a);
+      out__.write(lub_free(sigma_a, 0, 100));
       local_scalar_t__ sigma_y;
       sigma_y = in__.read<local_scalar_t__>();
-      sigma_y = lub_free(sigma_y, 0, 100);
-      out__.write(sigma_y);
+      out__.write(lub_free(sigma_y, 0, 100));
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
@@ -28481,8 +28433,7 @@ class stalled1_failure_model final : public model_base_crtp<stalled1_failure_mod
       out__.write(alpha12);
       local_scalar_t__ tau;
       tau = in__.read<local_scalar_t__>();
-      tau = lb_free(tau, 0);
-      out__.write(tau);
+      out__.write(lb_free(tau, 0));
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> b;
       b = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(I, Eigen::Matrix<local_scalar_t__, -1, 1>(8));
       stan::math::fill(b, DUMMY_VAR__);

@@ -182,7 +182,6 @@ let read_constrain_dims constrain_transform st =
     Expr.Helpers.(binop (binop k Times (binop k Minus (int 1))) Divide (int 2))
   in
   let constrain_dim dims trans =
-    (* this does not work, because arrays exist *)
     match (trans, dims) with
     | (Transformation.CholeskyCorr | Correlation), [_; dim2] ->
         [k_choose_2 dim2]
@@ -195,8 +194,8 @@ let read_constrain_dims constrain_transform st =
     | Covariance, [_; dim2] ->
         [Expr.Helpers.(binop dim2 Plus (k_choose_2 dim2))]
     | Simplex, [dim] -> [Expr.Helpers.(binop dim Minus (int 1))]
-    | ( ( Identity | Offset _ | Multiplier _ | OffsetMultiplier _ | Lower _
-        | Upper _ | LowerUpper _ | Ordered | PositiveOrdered | UnitVector )
+    | ( ( Offset _ | Multiplier _ | OffsetMultiplier _ | Lower _ | Upper _
+        | LowerUpper _ | Ordered | PositiveOrdered | UnitVector )
       , _ ) ->
         dims
     | _, _ ->
@@ -213,7 +212,8 @@ let read_constrain_dims constrain_transform st =
   let unc_dims = SizedType.dims_of st in
   let dims =
     match constrain_transform with
-    | Transformation.Single t -> constrain_dim unc_dims t
+    | Transformation.Identity -> unc_dims
+    | Single t -> constrain_dim unc_dims t
     | Chain ts -> List.fold ~init:unc_dims ~f:constrain_dim ts
   in
   outer_dims st @ dims
@@ -352,7 +352,9 @@ let gen_write ?(unconstrain = false)
   in
   Stmt.Helpers.internal_nrfunapp
     (FnWriteParam
-       {unconstrain_opt= Option.some_if unconstrain out_trans; var= decl_var})
+       { unconstrain=
+           (if unconstrain then out_trans else Transformation.Identity)
+       ; var= decl_var })
     [] Location_span.empty
 
 (**
@@ -365,7 +367,7 @@ let gen_unconstrained_write (decl_id, Program.({out_constrained_st; _})) =
   if SizedType.is_recursive_container out_constrained_st then
     let bodyfn var =
       Stmt.Helpers.internal_nrfunapp
-        (FnWriteParam {unconstrain_opt= None; var})
+        (FnWriteParam {unconstrain= Transformation.Identity; var})
         [var] Location_span.empty
     in
     let meta =
@@ -385,7 +387,7 @@ let gen_unconstrained_write (decl_id, Program.({out_constrained_st; _})) =
             ; adlevel= DataOnly } }
     in
     Stmt.Helpers.internal_nrfunapp
-      (FnWriteParam {unconstrain_opt= None; var= decl_var})
+      (FnWriteParam {unconstrain= Transformation.Identity; var= decl_var})
       [] Location_span.empty
 
 (* Statements to read, unconstrain and assign a parameter then write it back *)

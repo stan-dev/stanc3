@@ -47,6 +47,7 @@ let trans_bounds_values (trans : Expr.Typed.t Transformation.t) : bound_values
     match num_expr_value e with None -> `Nonlit | Some (f, _) -> `Lit f
   in
   match trans with
+  | Identity -> {lower= `None; upper= `None}
   | Single t -> (
     match t with
     | Lower lower -> {lower= bound_value lower; upper= `None}
@@ -57,7 +58,7 @@ let trans_bounds_values (trans : Expr.Typed.t Transformation.t) : bound_values
     | PositiveOrdered -> {lower= `Lit 0.; upper= `None}
     | UnitVector -> {lower= `Lit (-1.); upper= `Lit 1.}
     | CholeskyCorr | CholeskyCov | Correlation | Covariance | Ordered
-     |Offset _ | Multiplier _ | OffsetMultiplier _ | Identity ->
+     |Offset _ | Multiplier _ | OffsetMultiplier _ ->
         {lower= `None; upper= `None} )
   | Chain _ -> failwith "TR TODO: trans_bounds_values"
 

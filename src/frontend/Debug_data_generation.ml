@@ -42,9 +42,10 @@ let gen_num_int m t =
   let def_low, diff = (2, 4) in
   let low, up =
     match t with
-    | Transformation.Lower e -> (unwrap_int_exn m e, unwrap_int_exn m e + diff)
-    | Upper e -> (unwrap_int_exn m e - diff, unwrap_int_exn m e)
-    | LowerUpper (e1, e2) -> (unwrap_int_exn m e1, unwrap_int_exn m e2)
+    | Transformation.Single (Lower e) ->
+        (unwrap_int_exn m e, unwrap_int_exn m e + diff)
+    | Single (Upper e) -> (unwrap_int_exn m e - diff, unwrap_int_exn m e)
+    | Single (LowerUpper (e1, e2)) -> (unwrap_int_exn m e1, unwrap_int_exn m e2)
     | _ -> (def_low, def_low + diff)
   in
   let low = if low = 0 && up <> 1 then low + 1 else low in
@@ -54,9 +55,10 @@ let gen_num_real m t =
   let def_low, diff = (2., 5.) in
   let low, up =
     match t with
-    | Transformation.Lower e -> (unwrap_num_exn m e, unwrap_num_exn m e +. diff)
-    | Upper e -> (unwrap_num_exn m e -. diff, unwrap_num_exn m e)
-    | LowerUpper (e1, e2) -> (unwrap_num_exn m e1, unwrap_num_exn m e2)
+    | Transformation.Single (Lower e) ->
+        (unwrap_num_exn m e, unwrap_num_exn m e +. diff)
+    | Single (Upper e) -> (unwrap_num_exn m e -. diff, unwrap_num_exn m e)
+    | Single (LowerUpper (e1, e2)) -> (unwrap_num_exn m e1, unwrap_num_exn m e2)
     | _ -> (def_low, def_low +. diff)
   in
   Random.float_range low up
@@ -108,7 +110,8 @@ let gen_row_vector m n t =
     let create_bounds l u =
       wrap_row_vector
         (List.map2_exn
-           ~f:(fun x y -> gen_real m (Transformation.LowerUpper (x, y)))
+           ~f:(fun x y ->
+             gen_real m Transformation.(Single (LowerUpper (x, y))) )
            l u)
     in
     match (e1, e2) with
@@ -143,16 +146,19 @@ let gen_row_vector m n t =
               (e2 : (typed_expr_meta, fun_kind) expr_with)]
   in
   match t with
-  | Transformation.Lower ({emeta= {type_= UVector | URowVector; _}; _} as e) ->
-      gen_bounded (fun x -> Transformation.Lower x) (extract_var e)
-  | Transformation.Upper ({emeta= {type_= UVector | URowVector; _}; _} as e) ->
-      gen_bounded (fun x -> Transformation.Upper x) (extract_var e)
-  | Transformation.LowerUpper
-      ( ({emeta= {type_= UVector | URowVector | UReal | UInt; _}; _} as e1)
-      , ({emeta= {type_= UVector | URowVector; _}; _} as e2) )
-   |Transformation.LowerUpper
-      ( ({emeta= {type_= UVector | URowVector; _}; _} as e1)
-      , ({emeta= {type_= UReal | UInt; _}; _} as e2) ) ->
+  | Transformation.Single
+      (Lower ({emeta= {type_= UVector | URowVector; _}; _} as e)) ->
+      gen_bounded (fun x -> Transformation.(Single (Lower x))) (extract_var e)
+  | Single (Upper ({emeta= {type_= UVector | URowVector; _}; _} as e)) ->
+      gen_bounded (fun x -> Transformation.(Single (Upper x))) (extract_var e)
+  | Single
+      (LowerUpper
+        ( ({emeta= {type_= UVector | URowVector | UReal | UInt; _}; _} as e1)
+        , ({emeta= {type_= UVector | URowVector; _}; _} as e2) ))
+   |Single
+      (LowerUpper
+        ( ({emeta= {type_= UVector | URowVector; _}; _} as e1)
+        , ({emeta= {type_= UReal | UInt; _}; _} as e2) )) ->
       gen_ul_bounded (extract_var e1) (extract_var e2)
   | _ ->
       { expr= RowVectorExpr (repeat_th n (fun _ -> gen_real m t))
@@ -169,24 +175,24 @@ let gen_vector m n t =
     l
   in
   match t with
-  | Transformation.Simplex ->
+  | Transformation.Single Simplex ->
       let l = repeat_th n (fun _ -> Random.float 1.) in
       let sum = List.fold l ~init:0. ~f:(fun accum elt -> accum +. elt) in
       let l = List.map l ~f:(fun x -> x /. sum) in
       wrap_vector (List.map ~f:wrap_real l)
-  | Ordered ->
+  | Single Ordered ->
       let l = gen_ordered n in
       let halfmax =
         Option.value_exn (List.max_elt l ~compare:compare_float) /. 2.
       in
       let l = List.map l ~f:(fun x -> (x -. halfmax) /. halfmax) in
       wrap_vector (List.map ~f:wrap_real l)
-  | PositiveOrdered ->
+  | Single PositiveOrdered ->
       let l = gen_ordered n in
       let max = Option.value_exn (List.max_elt l ~compare:compare_float) in
       let l = List.map l ~f:(fun x -> x /. max) in
       wrap_vector (List.map ~f:wrap_real l)
-  | UnitVector ->
+  | Single UnitVector ->
       let l = repeat_th n (fun _ -> Random.float 1.) in
       let sum =
         Float.sqrt
@@ -262,10 +268,10 @@ let gen_corr_matrix n =
 
 let gen_matrix mm m n t =
   match t with
-  | Transformation.Covariance -> gen_cov_matrix m
-  | Correlation -> gen_corr_matrix m
-  | CholeskyCov -> gen_cov_cholesky m n
-  | CholeskyCorr -> gen_corr_cholesky m
+  | Transformation.Single Covariance -> gen_cov_matrix m
+  | Single Correlation -> gen_corr_matrix m
+  | Single CholeskyCov -> gen_cov_cholesky m n
+  | Single CholeskyCorr -> gen_corr_cholesky m
   | _ ->
       { int_two with
         expr= RowVectorExpr (repeat_th m (fun () -> gen_row_vector mm n t)) }
@@ -304,9 +310,9 @@ let var_decl_gen_val m d =
   | VarDecl {decl_type= Sized sizedtype; transformation; _} ->
       let t =
         match transformation with
-        | Single trans -> trans
         (* NB: We disallow data having multiple constraints, so this should never happen *)
-        | Chain ts -> List.hd_exn (List.rev ts)
+        | Chain ts -> Transformation.Single (List.hd_exn (List.rev ts))
+        | _ -> transformation
       in
       generate_value m sizedtype t
   | _ -> failwith "This should never happen."

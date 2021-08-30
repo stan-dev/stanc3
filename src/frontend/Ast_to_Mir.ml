@@ -197,8 +197,8 @@ type decl_context =
   {transform_action: transform_action; dadlevel: UnsizedType.autodifftype}
 
 let constraint_forl = function
-  | Transformation.Identity | Offset _ | Multiplier _ | OffsetMultiplier _
-   |Lower _ | Upper _ | LowerUpper _ ->
+  | Transformation.Offset _ | Multiplier _ | OffsetMultiplier _ | Lower _
+   |Upper _ | LowerUpper _ ->
       Stmt.Helpers.for_scalar
   | Ordered | PositiveOrdered | Simplex | UnitVector | CholeskyCorr
    |CholeskyCov | Correlation | Covariance ->
@@ -227,12 +227,12 @@ let check_transform_shape_prim decl_id decl_var meta = function
       same_shape decl_id decl_var "lower" e1 meta
       @ same_shape decl_id decl_var "upper" e2 meta
   | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
-   |PositiveOrdered | Simplex | UnitVector | Identity ->
+   |PositiveOrdered | Simplex | UnitVector ->
       []
 
 let check_transform_shape decl_id decl_var meta = function
-  | Transformation.Single t ->
-      check_transform_shape_prim decl_id decl_var meta t
+  | Transformation.Identity -> []
+  | Single t -> check_transform_shape_prim decl_id decl_var meta t
   | Chain ts ->
       List.concat_map ~f:(check_transform_shape_prim decl_id decl_var meta) ts
 
@@ -258,7 +258,7 @@ let extract_transform_args var = function
   | LowerUpper (a1, a2) | OffsetMultiplier (a1, a2) ->
       [copy_indices var a1; copy_indices var a2]
   | Covariance | Correlation | CholeskyCov | CholeskyCorr | Ordered
-   |PositiveOrdered | Simplex | UnitVector | Identity ->
+   |PositiveOrdered | Simplex | UnitVector ->
       []
 
 let param_size transform sizedtype =
@@ -284,9 +284,10 @@ let param_size transform sizedtype =
     Expr.Helpers.(binop (binop k Times (binop k Minus (int 1))) Divide (int 2))
   in
   match transform with
-  | Transformation.Single t -> (
+  | Transformation.Identity -> sizedtype
+  | Single t -> (
     match t with
-    | Identity | Lower _ | Upper _
+    | Lower _ | Upper _
      |LowerUpper (_, _)
      |Offset _ | Multiplier _
      |OffsetMultiplier (_, _)
@@ -339,7 +340,8 @@ let rec check_decl var decl_type' decl_id decl_trans smeta adlevel =
     | _ -> []
   in
   match decl_trans with
-  | Transformation.Single t -> check_single t
+  | Transformation.Identity -> []
+  | Single t -> check_single t
   (* NB: We only allow chain transforms in parameters, which are never checked. 
    * REM: A naive attempt at doing this would be `List.concat_map ~f:check_single ts`
    * This currently concatinates all checks in a way that is invalid, 
