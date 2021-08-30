@@ -158,12 +158,9 @@ pipeline {
                                 mkdir comp_tests
                                 cd comp_tests
                                 git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-                            """
-
-                            writeFile(file:"performance-tests-cmdstan/cmdstan/make/local",
-                                    text:"O=0\nCXX=${CXX}")
-                            sh """
                                 cd performance-tests-cmdstan
+                                echo "O=0" > cmdstan/make/local
+                                echo "CXX=${CXX}" >> cmdstan/make/local
                                 mkdir cmdstan/bin
                                 cp ../bin/stanc cmdstan/bin/linux-stanc
                                 cd cmdstan; make clean-all; make -j${env.PARALLEL} build; cd ..                                
@@ -191,8 +188,6 @@ pipeline {
                             mkdir ete_tests
                             cd ete_tests
                             git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-                        """
-                        sh """
                             cd performance-tests-cmdstan
                             git show HEAD --stat
                             echo "example-models/regression_tests/mother.stan" > all.tests
@@ -201,7 +196,6 @@ pipeline {
                             cat shotgun_perf_all.tests >> all.tests
                             cat all.tests
                             echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
-                            echo "PRECOMPILED_HEADERS=false" >> cmdstan/make/local
                             cd cmdstan; make clean-all; git show HEAD --stat; cd ..
                             CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../bin/stanc)"
                             cd ../../
