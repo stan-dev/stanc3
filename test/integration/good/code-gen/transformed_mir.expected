@@ -11803,7 +11803,7 @@
               ((pattern
                 (FunApp (StanLib Times__ FnPlain AoS)
                  (((pattern
-                    (FunApp (StanLib PMinus__ FnPlain SoA)
+                    (FunApp (StanLib PMinus__ FnPlain AoS)
                      (((pattern (Lit Real 1.0))
                        (meta
                         ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))

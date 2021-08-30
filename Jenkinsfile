@@ -178,7 +178,7 @@ pipeline {
                             stopProcessingIfError: false)
                         ])
                     }
-                    post { always { runShell("rm -rf ./*") }}
+                    post { always { runShell("rm -rf ./comp_tests/*") }}
                 }
                 stage("Model end-to-end tests") {
                     agent { label 'linux' }
@@ -218,7 +218,7 @@ pipeline {
                             errorFailedThreshold: 100,
                             errorUnstableThreshold: 100
                     }
-                    post { always { runShell("rm -rf ./*") }}
+                    post { always { runShell("rm -rf ./ete_tests/*") }}
                 }
                 stage('Math functions expressions test') {
                     when {
@@ -252,6 +252,7 @@ pipeline {
                     post { always { deleteDir() } }
                 }
             }
+            post { always { runShell("rm -rf ./*") }}
         }
         stage("Build and test static release binaries") {
             failFast true

@@ -1855,7 +1855,7 @@
                (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
           ((pattern
-            (FunApp (StanLib PMinus__ FnPlain SoA)
+            (FunApp (StanLib PMinus__ FnPlain AoS)
              (((pattern (Lit Real 0.5))
                (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))
            (meta ((type_ UReal) (loc <opaque>) (adlevel DataOnly)))))))

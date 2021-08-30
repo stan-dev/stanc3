@@ -290,11 +290,7 @@ and query_initial_demotable_funs (in_loop : bool) (kind : 'a Fun_kind.t)
     match name with
     | "check_matching_dims" -> Set.Poly.empty
     | name -> (
-        let find_args
-            Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
-          (adlevel, type_)
-        in
-        let fun_args = List.map ~f:find_args exprs in
+        let fun_args = List.map ~f:Expr.Typed.fun_arg exprs in
         let is_fun_support =
           Stan_math_signatures.query_stan_math_mem_pattern_support name
             fun_args
@@ -310,11 +306,8 @@ and query_initial_demotable_funs (in_loop : bool) (kind : 'a Fun_kind.t)
   | CompilerInternal (_ : 'a Internal_fun.t) -> Set.Poly.empty
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) -> all_eigen_names
 
-let find_args Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
-  (adlevel, type_)
-
 let is_fun_soa_supported name exprs =
-  let fun_args = List.map ~f:find_args exprs in
+  let fun_args = List.map ~f:Expr.Typed.fun_arg exprs in
   Stan_math_signatures.query_stan_math_mem_pattern_support name fun_args
 
 let rec query_bad_assign2
@@ -375,7 +368,7 @@ and query_bad_assign_fun (kind : 'a Fun_kind.t)
     match name with
     | "check_matching_dims" -> false
     | _ -> (
-        let fun_args = List.map ~f:find_args exprs in
+        let fun_args = List.map ~f:Expr.Typed.fun_arg exprs in
         (*
         let is_fun_support = is_fun_soa_supported name exprs in
         *)
@@ -557,7 +550,8 @@ let query_demotable_stmt (aos_exits : string Set.Poly.t)
  *   and if so then promotes the function to SoA.
  * @param exprs A list of expressions going into the function.
  **)
-let rec modify_kind (modifiable_set : string Set.Poly.t) (kind : 'a Fun_kind.t)
+let rec modify_kind ?force_demotion:(force = false)
+    (modifiable_set : string Set.Poly.t) (kind : 'a Fun_kind.t)
     (exprs : Expr.Typed.Meta.t Expr.Fixed.t list) =
   let expr_names = Set.Poly.union_list (List.map ~f:query_names exprs) in
   let is_all_in_list =
@@ -567,23 +561,25 @@ let rec modify_kind (modifiable_set : string Set.Poly.t) (kind : 'a Fun_kind.t)
   in
   match kind with
   | Fun_kind.StanLib (name, sfx, (_ : Common.Helpers.mem_pattern)) ->
-      let find_args
-          Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
-        (adlevel, type_)
-      in
-      let fun_args = List.map ~f:find_args exprs in
+      let fun_args = List.map ~f:Expr.Typed.fun_arg exprs in
       let is_fun_support =
         Stan_math_signatures.query_stan_math_mem_pattern_support name fun_args
       in
-      if is_all_in_list || not is_fun_support then
+      if is_all_in_list || (not is_fun_support) || force then
         (*Force demotion of all subexprs*)
-        let exprs' = List.map ~f:(modify_expr expr_names) exprs in
+        let exprs' =
+          List.map ~f:(modify_expr ~force_demotion:true expr_names) exprs
+        in
         (Fun_kind.StanLib (name, sfx, Common.Helpers.AoS), exprs')
       else
         ( Fun_kind.StanLib (name, sfx, SoA)
-        , List.map ~f:(modify_expr modifiable_set) exprs )
+        , List.map ~f:(modify_expr ~force_demotion:force modifiable_set) exprs
+        )
+  | UserDefined _ as udf ->
+      (udf, List.map ~f:(modify_expr ~force_demotion:true modifiable_set) exprs)
   | (_ : 'a Fun_kind.t) ->
-      (kind, List.map ~f:(modify_expr modifiable_set) exprs)
+      ( kind
+      , List.map ~f:(modify_expr ~force_demotion:force modifiable_set) exprs )
 
 (** 
 * Modify the expressions to demote/promote from AoS <-> SoA and vice versa
@@ -600,16 +596,24 @@ let rec modify_kind (modifiable_set : string Set.Poly.t) (kind : 'a Fun_kind.t)
 *  associated expressions we want to modify.
 * @param pattern The expression to modify.
 *)
-and modify_expr_pattern (modifiable_set : string Set.Poly.t)
+and modify_expr_pattern ?force_demotion:(force = false)
+    (modifiable_set : string Set.Poly.t)
     (pattern : Expr.Typed.Meta.t Expr.Fixed.t Expr.Fixed.Pattern.t) =
-  let mod_expr = modify_expr modifiable_set in
+  let mod_expr ?force_demotion:(force = false) =
+    modify_expr ~force_demotion:force modifiable_set
+  in
   match pattern with
   | Expr.Fixed.Pattern.FunApp
       (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
-      let kind', expr' = modify_kind modifiable_set kind exprs in
+      let kind', expr' =
+        modify_kind ~force_demotion:force modifiable_set kind exprs
+      in
       Expr.Fixed.Pattern.FunApp (kind', expr')
   | TernaryIf (predicate, texpr, fexpr) ->
-      TernaryIf (mod_expr predicate, mod_expr texpr, mod_expr fexpr)
+      TernaryIf
+        ( mod_expr ~force_demotion:true predicate
+        , mod_expr ~force_demotion:true texpr
+        , mod_expr ~force_demotion:true fexpr )
   | Indexed (idx_expr, indexed) ->
       Indexed (mod_expr idx_expr, List.map ~f:(Index.map mod_expr) indexed)
   | EAnd (lhs, rhs) -> EAnd (mod_expr lhs, mod_expr rhs)
@@ -625,9 +629,11 @@ and modify_expr_pattern (modifiable_set : string Set.Poly.t)
 *  associated expressions we want to modify.
 * @param expr the expression to modify.
 *)
-and modify_expr (modifiable_set : string Set.Poly.t)
-    (Expr.Fixed.({pattern; _}) as expr) =
-  {expr with pattern= modify_expr_pattern modifiable_set pattern}
+and modify_expr ?force_demotion:(force = false)
+    (modifiable_set : string Set.Poly.t) (Expr.Fixed.({pattern; _}) as expr) =
+  { expr with
+    pattern= modify_expr_pattern ~force_demotion:force modifiable_set pattern
+  }
 
 (**
 * Modify statement patterns in the MIR from AoS <-> SoA and vice versa 

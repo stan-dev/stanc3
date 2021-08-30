@@ -334,9 +334,6 @@ and read_data ut ppf es =
   in
   pf ppf "context__.vals_%s(%a)" i_or_r pp_expr (List.hd_exn es)
 
-and find_args Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
-  (adlevel, type_)
-
 (* assumes everything well formed from parser checks *)
 and gen_fun_app suffix ppf fname es mem_pattern
     (ret_type : UnsizedType.returntype option) =
@@ -584,7 +581,7 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
         pf ppf "(Eigen::Matrix<%s,-1,1>(%d) <<@ %a).finished()" st
           (List.length es) (list ~sep:comma pp_expr) es
   | FunApp (StanLib (f, suffix, mem_pattern), es) ->
-      let fun_args = List.map ~f:find_args es in
+      let fun_args = List.map ~f:Expr.Typed.fun_arg es in
       let ret_type = Stan_math_signatures.stan_math_returntype f fun_args in
       gen_fun_app suffix ppf f es mem_pattern ret_type
   | FunApp (CompilerInternal f, es) ->

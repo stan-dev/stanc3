@@ -49,6 +49,7 @@ module Typed : sig
   val type_of : t -> UnsizedType.t
   val loc_of : t -> Location_span.t
   val adlevel_of : t -> UnsizedType.autodifftype
+  val fun_arg : t -> UnsizedType.autodifftype * UnsizedType.t
 end
 
 module Labelled : sig
