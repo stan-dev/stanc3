@@ -576,8 +576,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       cuts = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
       local_scalar_t__ sigma;
       current_statement__ = 4;
-      sigma = in__.template read<local_scalar_t__>();
-      sigma = lb_constrain<jacobian__>(0, sigma, lp__);
+      sigma = lb_constrain<jacobian__>(
+                  in__.template read<local_scalar_t__>(), 0, lp__);;
       local_scalar_t__ alpha;
       current_statement__ = 5;
       alpha = in__.template read<local_scalar_t__>();
@@ -1278,8 +1278,8 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       cuts = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(k);
       double sigma;
       current_statement__ = 4;
-      sigma = in__.template read<local_scalar_t__>();
-      sigma = lb_constrain<jacobian__>(0, sigma, lp__);
+      sigma = lb_constrain<jacobian__>(
+                  in__.template read<local_scalar_t__>(), 0, lp__);;
       double alpha;
       current_statement__ = 5;
       alpha = in__.template read<local_scalar_t__>();
@@ -1363,7 +1363,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       out__.write(cuts);
       local_scalar_t__ sigma;
       sigma = in__.read<local_scalar_t__>();
-      sigma = lb_free(0, sigma);
+      sigma = lb_free(sigma, 0);
       out__.write(sigma);
       local_scalar_t__ alpha;
       alpha = in__.read<local_scalar_t__>();

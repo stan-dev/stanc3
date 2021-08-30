@@ -179,12 +179,18 @@ let check_to_string = function
 let default_multiplier = 1
 let default_offset = 0
 
-let transform_args = function
-  | Transformation.Offset offset ->
-      [offset; Expr.Helpers.int default_multiplier]
-  | Multiplier multiplier -> [Expr.Helpers.int default_offset; multiplier]
-  | transform ->
-      Transformation.fold_primitive (fun args arg -> args @ [arg]) [] transform
+let transform_args trans =
+  let args =
+    match trans with
+    | Transformation.Offset offset ->
+        [offset; Expr.Helpers.int default_multiplier]
+    | Multiplier multiplier -> [Expr.Helpers.int default_offset; multiplier]
+    | transform ->
+        Transformation.fold_primitive
+          (fun args arg -> args @ [arg])
+          [] transform
+  in
+  args
 
 let rec pp_index ppf = function
   | Index.All -> pf ppf "index_omni()"
@@ -464,10 +470,8 @@ and pp_compiler_internal_fn ad ut f ppf es =
   | FnReadDataSerializer ->
       pf ppf "@[<hov 2>in__.read<%a>(@,)@]" pp_unsizedtype_local
         (UnsizedType.AutoDiffable, UnsizedType.UReal)
-  | FnReadParam {dims; _} ->
-      pf ppf "@[<hov 2>in__.template read<%a>(@,%a)@]" pp_unsizedtype_local
-        (UnsizedType.AutoDiffable, ut)
-        (list ~sep:comma pp_expr) dims
+  | FnReadParam {dims; constrain; _} ->
+      pp_constraining ut dims ppf (List.rev (Transformation.list constrain))
   | FnDeepCopy -> gen_fun_app FnPlain ppf "stan::model::deep_copy" es AoS
   | _ -> gen_fun_app FnPlain ppf (Internal_fun.to_string f) es AoS
 
@@ -552,6 +556,24 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
       ->
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
     | _ -> pp_indexed ppf (strf "%a" pp_expr e, idx, pretty_print e) )
+
+and pp_constraining ut dims ppf trans =
+  match trans with
+  | [] ->
+      pf ppf "@[<hov 2>in__.template read<%a>(@,%a)@]" pp_unsizedtype_local
+        (UnsizedType.AutoDiffable, ut)
+        (list ~sep:comma pp_expr) dims
+  | t :: ts -> (
+    match constraint_to_string t with
+    | Some cnstr ->
+        let constraint_args = transform_args t in
+        let lp =
+          Expr.Fixed.{pattern= Var "lp__"; meta= Expr.Typed.Meta.empty}
+        in
+        let args = constraint_args @ [lp] in
+        pf ppf "@[<hov 4>%s_constrain<jacobian__>(@,%a, @,%a);@]" cnstr
+          (pp_constraining ut dims) ts (list ~sep:comma pp_expr) args
+    | None -> pp_constraining ut dims ppf [] )
 
 (* these functions are just for testing *)
 let dummy_locate pattern =

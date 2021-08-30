@@ -38,3 +38,4 @@ let primitive_has_check = function
   | _ -> true
 
 let has_transform = function Single Identity -> false | _ -> true
+let list = function Single t -> [t] | Chain ts -> ts

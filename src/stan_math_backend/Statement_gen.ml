@@ -267,20 +267,9 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
   match pattern with
   | Assignment
       ( (vident, _, [])
-      , ( { pattern=
-              FunApp
-                ( CompilerInternal
-                    ( FnReadData
-                    | FnReadParam
-                        {constrain= Transformation.(Single Identity); _} )
-                , _ ); _ } as rhs ) ) ->
-      pf ppf "@[<hov 4>%s = %a;@]" vident pp_expr rhs
-  | Assignment
-      ( (vident, _, [])
-      , ( { pattern= FunApp (CompilerInternal (FnReadParam {constrain; _}), _); _
+      , ( { pattern= FunApp (CompilerInternal (FnReadData | FnReadParam _), _); _
           } as rhs ) ) ->
-      pf ppf "@[<hov 4>%s = %a;@]@," vident pp_expr rhs ;
-      pp_constraining ppf vident constrain
+      pf ppf "@[<hov 4>%s = %a;@]" vident pp_expr rhs
   | Assignment
       ((vident, _, []), ({meta= Expr.Typed.Meta.({type_= UInt; _}); _} as rhs))
    |Assignment ((vident, _, []), ({meta= {type_= UReal; _}; _} as rhs)) ->
@@ -359,14 +348,6 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
         (option pp_else) elsebranch
   | While (cond, body) ->
       pf ppf "while (@[<hov>%a@]) %a" pp_bool_expr cond pp_block_s body
-  | For
-      { body=
-          { pattern=
-              Assignment
-                (_, {pattern= FunApp (CompilerInternal (FnReadParam _), _); _}); _
-          } as body; _ } ->
-      pp_statement ppf body
-  (* Skip For loop part, just emit body due to the way FnReadParam emits *)
   | For {loopvar; lower; upper; body} ->
       pp_for_loop ppf (loopvar, lower, upper, pp_statement, body)
   | Profile (name, ls) -> pp_profile ppf (pp_stmt_list, name, ls)
@@ -374,29 +355,6 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
   | SList ls -> pp_stmt_list ppf ls
   | Decl {decl_adtype; decl_id; decl_type; initialize; _} ->
       pp_decl ppf (decl_id, decl_type, decl_adtype, initialize)
-
-and pp_constraining ppf vident trans =
-  let pp_single ppf t =
-    let cnstr =
-      match constraint_to_string t with
-      | Some s -> s
-      | None ->
-          raise_s
-            [%message
-              "Error during constraining " vident
-                ". This should never happen, if you see this please file a \
-                 bug report."]
-    in
-    let constraint_args = transform_args t in
-    let var = Expr.Fixed.{pattern= Var vident; meta= Expr.Typed.Meta.empty} in
-    let lp = Expr.Fixed.{pattern= Var "lp__"; meta= Expr.Typed.Meta.empty} in
-    let args = constraint_args @ [var; lp] in
-    pf ppf "@[<hov 4>%s = %s_constrain<jacobian__>(@,%a);@]" vident cnstr
-      (list ~sep:comma pp_expr) args
-  in
-  match trans with
-  | Transformation.Single t -> pp_single ppf t
-  | Chain ts -> pf ppf "%a" (list ~sep:cut pp_single) ts
 
 and pp_unconstraining ppf var trans =
   let pp_single ppf t =
@@ -412,7 +370,7 @@ and pp_unconstraining ppf var trans =
                  bug report."]
     in
     let constraint_args = transform_args t in
-    let args = constraint_args @ [var] in
+    let args = var :: constraint_args in
     pf ppf "@[<hov 4>%a = %s_free(@,%a);@]" pp_expr var cnstr
       (list ~sep:comma pp_expr) args
   in
