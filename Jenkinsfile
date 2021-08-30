@@ -173,7 +173,7 @@ pipeline {
                         xunit([GoogleTest(
                             deleteOutputFiles: false,
                             failIfNotNew: true,
-                            pattern: 'performance-tests-cmdstan/performance.xml',
+                            pattern: 'comp_tests/performance-tests-cmdstan/performance.xml',
                             skipNoTestFiles: false,
                             stopProcessingIfError: false)
                         ])
@@ -204,15 +204,15 @@ pipeline {
                         xunit([GoogleTest(
                             deleteOutputFiles: false,
                             failIfNotNew: true,
-                            pattern: 'performance-tests-cmdstan/performance.xml',
+                            pattern: 'ete_tests/performance-tests-cmdstan/performance.xml',
                             skipNoTestFiles: false,
                             stopProcessingIfError: false)
                         ])
 
-                        archiveArtifacts 'performance-tests-cmdstan/performance.xml'
+                        archiveArtifacts 'ete_tests/performance-tests-cmdstan/performance.xml'
 
                         perfReport modePerformancePerTestCase: true,
-                            sourceDataFiles: 'performance-tests-cmdstan/performance.xml',
+                            sourceDataFiles: 'ete_tests/performance-tests-cmdstan/performance.xml',
                             modeThroughput: false,
                             excludeResponseTime: true,
                             errorFailedThreshold: 100,
