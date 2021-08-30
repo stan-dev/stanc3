@@ -166,21 +166,52 @@ let data_read smeta (decl_id, st) =
 
   For constrains that return square / lower triangular matrices the C++
   only wants one of the matrix dimensions.
+
+  (* TR TODO needs to work on chain by figuring out which values matter
+      need a function that takes in a primitive and dimensions, returns output dimensions
+      fold over that
+  *)
 *)
 let read_constrain_dims constrain_transform st =
-  let rec constrain_get_dims st =
-    match st with
-    | SizedType.SInt | SReal -> []
-    | SVector d | SRowVector d -> [d]
-    | SMatrix (_, dim2) -> [dim2]
-    | SArray (t, dim) -> dim :: constrain_get_dims t
+  let k_choose_2 k =
+    Expr.Helpers.(binop (binop k Times (binop k Minus (int 1))) Divide (int 2))
   in
-  match constrain_transform with
-  | Transformation.Single t -> (
-    match t with
-    | CholeskyCorr | Correlation | Covariance -> constrain_get_dims st
-    | _ -> SizedType.get_dims st )
-  | Chain _ -> failwith "TR TODO: read_constrain_dims"
+  let constrain_dim dims trans =
+    (* this does not work, because arrays exist *)
+    match (trans, dims) with
+    | (Transformation.CholeskyCorr | Correlation), [_; dim2] ->
+        [k_choose_2 dim2]
+    | CholeskyCov, [dim1; dim2] ->
+        [ Expr.Helpers.(
+            binop
+              (binop (k_choose_2 dim1) Plus dim2)
+              Plus
+              (binop (binop dim2 Minus dim1) Times dim1)) ]
+    | Covariance, [_; dim2] ->
+        [Expr.Helpers.(binop dim2 Plus (k_choose_2 dim2))]
+    | Simplex, [dim] -> [Expr.Helpers.(binop dim Minus (int 1))]
+    | ( ( Identity | Offset _ | Multiplier _ | OffsetMultiplier _ | Lower _
+        | Upper _ | LowerUpper _ | Ordered | PositiveOrdered | UnitVector )
+      , _ ) ->
+        dims
+    | _, _ ->
+        raise_s
+          [%message
+            "Error in constraint dimensions "
+              (st : Expr.Typed.t SizedType.t)
+              (trans : Expr.Typed.t Transformation.primitive)
+              (dims : Expr.Typed.t list)]
+  in
+  let rec outer_dims st =
+    match st with SizedType.SArray (t, d) -> d :: outer_dims t | _ -> []
+  in
+  let unc_dims = SizedType.dims_of st in
+  let dims =
+    match constrain_transform with
+    | Transformation.Single t -> constrain_dim unc_dims t
+    | Chain ts -> List.fold ~init:unc_dims ~f:constrain_dim ts
+  in
+  outer_dims st @ dims
 
 let data_serializer_read loc out_constrained_st =
   let ut = SizedType.to_unsized out_constrained_st in
