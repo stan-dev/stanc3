@@ -689,7 +689,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       check_greater_or_equal(function__, "sigma", sigma, 0);
       current_statement__ = 30;
       check_greater_or_equal(function__, "h_i_sigma",
-                                stan::math::value_of_rec(h_i_sigma), 0);
+                                stan::math::value_of(h_i_sigma), 0);
       {
         current_statement__ = 40;
         lp_accum__.add(multiply(-2, stan::math::log(sigma_price)));
@@ -982,8 +982,7 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       current_statement__ = 24;
       check_greater_or_equal(function__, "sigma", sigma, 0);
       current_statement__ = 30;
-      check_greater_or_equal(function__, "h_i_sigma",
-                                stan::math::value_of_rec(h_i_sigma), 0);
+      check_greater_or_equal(function__, "h_i_sigma", h_i_sigma, 0);
       if (emit_transformed_parameters__) {
         out__.write(phi);
         out__.write(sigma);
@@ -2093,12 +2092,10 @@ class indexing_model final : public model_base_crtp<indexing_model> {
                                                 
                                                 Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                                               N);
-      stan::conditional_var_value_t<local_scalar_t__, 
-        Eigen::Matrix<local_scalar_t__, -1, 1>> p_soa_rep_matrix_vec;
+      Eigen::Matrix<local_scalar_t__, -1, 1> p_soa_rep_matrix_vec;
       current_statement__ = 11;
       p_soa_rep_matrix_vec = in__.template read<
-                               stan::conditional_var_value_t<local_scalar_t__,
-                                 Eigen::Matrix<local_scalar_t__, -1, 1>>>(N);
+                               Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
       stan::conditional_var_value_t<local_scalar_t__, 
         Eigen::Matrix<local_scalar_t__, -1, 1>> p_aos_vec_v_assign_to_aos;
       current_statement__ = 12;
@@ -2177,20 +2174,14 @@ class indexing_model final : public model_base_crtp<indexing_model> {
            Eigen::Matrix<local_scalar_t__, -1, 1>>(
            Eigen::Matrix<double, -1, 1>::Constant(M,
              std::numeric_limits<double>::quiet_NaN()));
-      stan::conditional_var_value_t<local_scalar_t__, 
-        Eigen::Matrix<local_scalar_t__, -1, -1>> tp_soa_rep_matrix_mat;
+      Eigen::Matrix<local_scalar_t__, -1, -1> tp_soa_rep_matrix_mat;
       current_statement__ = 25;
-      assign(tp_soa_rep_matrix_mat,
-        rep_matrix<stan::conditional_var_value_t<local_scalar_t__, 
-                     Eigen::Matrix<local_scalar_t__, -1, -1>>>(
-          p_soa_rep_matrix_vec, 10),
+      assign(tp_soa_rep_matrix_mat, rep_matrix(p_soa_rep_matrix_vec, 10),
         "assigning variable tp_soa_rep_matrix_mat");
       stan::conditional_var_value_t<local_scalar_t__, 
         Eigen::Matrix<local_scalar_t__, -1, -1>> tp_soa_rep_matrix_from_data_mat;
       current_statement__ = 26;
-      assign(tp_soa_rep_matrix_from_data_mat,
-        rep_matrix<stan::conditional_var_value_t<local_scalar_t__, 
-                     Eigen::Matrix<local_scalar_t__, -1, -1>>>(y, 10),
+      assign(tp_soa_rep_matrix_from_data_mat, rep_matrix(y, 10),
         "assigning variable tp_soa_rep_matrix_from_data_mat");
       current_statement__ = 28;
       assign(tp_aos_fail_assign_from_top_idx,

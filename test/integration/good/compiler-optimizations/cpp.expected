@@ -1640,20 +1640,19 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       }
       assign(chi, inline_sym9__, "assigning variable chi");
       current_statement__ = 3;
-      check_greater_or_equal(function__, "phi",
-                                stan::math::value_of_rec(phi), 0);
+      check_greater_or_equal(function__, "phi", stan::math::value_of(phi), 0);
       current_statement__ = 3;
-      check_less_or_equal(function__, "phi", stan::math::value_of_rec(phi), 1);
+      check_less_or_equal(function__, "phi", stan::math::value_of(phi), 1);
       current_statement__ = 4;
-      check_greater_or_equal(function__, "p", stan::math::value_of_rec(p), 0);
+      check_greater_or_equal(function__, "p", stan::math::value_of(p), 0);
       current_statement__ = 4;
-      check_less_or_equal(function__, "p", stan::math::value_of_rec(p), 1);
+      check_less_or_equal(function__, "p", stan::math::value_of(p), 1);
       current_statement__ = 5;
       check_greater_or_equal(function__, "chi",
-                                stan::math::value_of_rec(inline_sym9__), 0);
+                                stan::math::value_of(inline_sym9__), 0);
       current_statement__ = 5;
       check_less_or_equal(function__, "chi",
-                             stan::math::value_of_rec(inline_sym9__), 1);
+                             stan::math::value_of(inline_sym9__), 1);
       {
         current_statement__ = 31;
         if (lcm_sym71__) {
@@ -1963,20 +1962,19 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
       }
       assign(chi, inline_sym1__, "assigning variable chi");
       current_statement__ = 3;
-      check_greater_or_equal(function__, "phi",
-                                stan::math::value_of_rec(phi), 0);
+      check_greater_or_equal(function__, "phi", stan::math::value_of(phi), 0);
       current_statement__ = 3;
-      check_less_or_equal(function__, "phi", stan::math::value_of_rec(phi), 1);
+      check_less_or_equal(function__, "phi", stan::math::value_of(phi), 1);
       current_statement__ = 4;
-      check_greater_or_equal(function__, "p", stan::math::value_of_rec(p), 0);
+      check_greater_or_equal(function__, "p", p, 0);
       current_statement__ = 4;
-      check_less_or_equal(function__, "p", stan::math::value_of_rec(p), 1);
+      check_less_or_equal(function__, "p", p, 1);
       current_statement__ = 5;
       check_greater_or_equal(function__, "chi",
-                                stan::math::value_of_rec(inline_sym1__), 0);
+                                stan::math::value_of(inline_sym1__), 0);
       current_statement__ = 5;
       check_less_or_equal(function__, "chi",
-                             stan::math::value_of_rec(inline_sym1__), 1);
+                             stan::math::value_of(inline_sym1__), 1);
       if (emit_transformed_parameters__) {
         out__.write(phi);
         out__.write(p);
@@ -5278,11 +5276,9 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         } 
       }
       current_statement__ = 33;
-      check_greater_or_equal(function__, "black",
-                                stan::math::value_of_rec(black), 0);
+      check_greater_or_equal(function__, "black", black, 0);
       current_statement__ = 33;
-      check_less_or_equal(function__, "black",
-                             stan::math::value_of_rec(black), 1);
+      check_less_or_equal(function__, "black", black, 1);
       current_statement__ = 34;
       validate_non_negative_index("edu", "N", N);
       current_statement__ = 35;
@@ -5332,11 +5328,9 @@ class expr_prop_fail3_model final : public model_base_crtp<expr_prop_fail3_model
         } 
       }
       current_statement__ = 37;
-      check_greater_or_equal(function__, "female",
-                                stan::math::value_of_rec(female), 0);
+      check_greater_or_equal(function__, "female", female, 0);
       current_statement__ = 37;
-      check_less_or_equal(function__, "female",
-                             stan::math::value_of_rec(female), 1);
+      check_less_or_equal(function__, "female", female, 1);
       current_statement__ = 38;
       validate_non_negative_index("region_full", "N", N);
       current_statement__ = 39;
@@ -6311,7 +6305,7 @@ class expr_prop_fail4_model final : public model_base_crtp<expr_prop_fail4_model
         } 
       }
       current_statement__ = 34;
-      check_greater_or_equal(function__, "E", stan::math::value_of_rec(E), 0);
+      check_greater_or_equal(function__, "E", E, 0);
       current_statement__ = 35;
       validate_non_negative_index("log_E", "N", N);
       current_statement__ = 36;
@@ -7724,20 +7718,19 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       }
       assign(chi, inline_sym9__, "assigning variable chi");
       current_statement__ = 5;
-      check_greater_or_equal(function__, "phi",
-                                stan::math::value_of_rec(phi), 0);
+      check_greater_or_equal(function__, "phi", stan::math::value_of(phi), 0);
       current_statement__ = 5;
-      check_less_or_equal(function__, "phi", stan::math::value_of_rec(phi), 1);
+      check_less_or_equal(function__, "phi", stan::math::value_of(phi), 1);
       current_statement__ = 6;
-      check_greater_or_equal(function__, "p", stan::math::value_of_rec(p), 0);
+      check_greater_or_equal(function__, "p", stan::math::value_of(p), 0);
       current_statement__ = 6;
-      check_less_or_equal(function__, "p", stan::math::value_of_rec(p), 1);
+      check_less_or_equal(function__, "p", stan::math::value_of(p), 1);
       current_statement__ = 7;
       check_greater_or_equal(function__, "chi",
-                                stan::math::value_of_rec(inline_sym9__), 0);
+                                stan::math::value_of(inline_sym9__), 0);
       current_statement__ = 7;
       check_less_or_equal(function__, "chi",
-                             stan::math::value_of_rec(inline_sym9__), 1);
+                             stan::math::value_of(inline_sym9__), 1);
       {
         current_statement__ = 29;
         lp_accum__.add(normal_lpdf<propto__>(epsilon, 0, sigma));
@@ -8056,20 +8049,19 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
       }
       assign(chi, inline_sym1__, "assigning variable chi");
       current_statement__ = 5;
-      check_greater_or_equal(function__, "phi",
-                                stan::math::value_of_rec(phi), 0);
+      check_greater_or_equal(function__, "phi", stan::math::value_of(phi), 0);
       current_statement__ = 5;
-      check_less_or_equal(function__, "phi", stan::math::value_of_rec(phi), 1);
+      check_less_or_equal(function__, "phi", stan::math::value_of(phi), 1);
       current_statement__ = 6;
-      check_greater_or_equal(function__, "p", stan::math::value_of_rec(p), 0);
+      check_greater_or_equal(function__, "p", p, 0);
       current_statement__ = 6;
-      check_less_or_equal(function__, "p", stan::math::value_of_rec(p), 1);
+      check_less_or_equal(function__, "p", p, 1);
       current_statement__ = 7;
       check_greater_or_equal(function__, "chi",
-                                stan::math::value_of_rec(inline_sym1__), 0);
+                                stan::math::value_of(inline_sym1__), 0);
       current_statement__ = 7;
       check_less_or_equal(function__, "chi",
-                             stan::math::value_of_rec(inline_sym1__), 1);
+                             stan::math::value_of(inline_sym1__), 1);
       if (emit_transformed_parameters__) {
         out__.write(phi);
         out__.write(p);
@@ -9822,27 +9814,26 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       assign(chi, inline_sym15__, "assigning variable chi");
       current_statement__ = 7;
       check_greater_or_equal(function__, "phi",
-                                stan::math::value_of_rec(lcm_sym236__), 0);
+                                stan::math::value_of(lcm_sym236__), 0);
       current_statement__ = 7;
       check_less_or_equal(function__, "phi",
-                             stan::math::value_of_rec(lcm_sym236__), 1);
+                             stan::math::value_of(lcm_sym236__), 1);
       current_statement__ = 8;
-      check_greater_or_equal(function__, "p", stan::math::value_of_rec(p), 0);
+      check_greater_or_equal(function__, "p", stan::math::value_of(p), 0);
       current_statement__ = 8;
-      check_less_or_equal(function__, "p", stan::math::value_of_rec(p), 1);
+      check_less_or_equal(function__, "p", stan::math::value_of(p), 1);
       current_statement__ = 9;
-      check_simplex(function__, "b", stan::math::value_of_rec(lcm_sym172__));
+      check_simplex(function__, "b", stan::math::value_of(lcm_sym172__));
       current_statement__ = 10;
-      check_greater_or_equal(function__, "nu", stan::math::value_of_rec(nu),
-                                0);
+      check_greater_or_equal(function__, "nu", stan::math::value_of(nu), 0);
       current_statement__ = 10;
-      check_less_or_equal(function__, "nu", stan::math::value_of_rec(nu), 1);
+      check_less_or_equal(function__, "nu", stan::math::value_of(nu), 1);
       current_statement__ = 11;
       check_greater_or_equal(function__, "chi",
-                                stan::math::value_of_rec(inline_sym15__), 0);
+                                stan::math::value_of(inline_sym15__), 0);
       current_statement__ = 11;
       check_less_or_equal(function__, "chi",
-                             stan::math::value_of_rec(inline_sym15__), 1);
+                             stan::math::value_of(inline_sym15__), 1);
       {
         current_statement__ = 75;
         lp_accum__.add(normal_lpdf<propto__>(epsilon, 0, sigma));
@@ -10531,28 +10522,25 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       }
       assign(chi, inline_sym1__, "assigning variable chi");
       current_statement__ = 7;
-      check_greater_or_equal(function__, "phi",
-                                stan::math::value_of_rec(lcm_sym153__), 0);
+      check_greater_or_equal(function__, "phi", lcm_sym153__, 0);
       current_statement__ = 7;
-      check_less_or_equal(function__, "phi",
-                             stan::math::value_of_rec(lcm_sym153__), 1);
+      check_less_or_equal(function__, "phi", lcm_sym153__, 1);
       current_statement__ = 8;
-      check_greater_or_equal(function__, "p", stan::math::value_of_rec(p), 0);
+      check_greater_or_equal(function__, "p", p, 0);
       current_statement__ = 8;
-      check_less_or_equal(function__, "p", stan::math::value_of_rec(p), 1);
+      check_less_or_equal(function__, "p", p, 1);
       current_statement__ = 9;
-      check_simplex(function__, "b", stan::math::value_of_rec(lcm_sym118__));
+      check_simplex(function__, "b", lcm_sym118__);
       current_statement__ = 10;
-      check_greater_or_equal(function__, "nu", stan::math::value_of_rec(nu),
-                                0);
+      check_greater_or_equal(function__, "nu", stan::math::value_of(nu), 0);
       current_statement__ = 10;
-      check_less_or_equal(function__, "nu", stan::math::value_of_rec(nu), 1);
+      check_less_or_equal(function__, "nu", stan::math::value_of(nu), 1);
       current_statement__ = 11;
       check_greater_or_equal(function__, "chi",
-                                stan::math::value_of_rec(inline_sym1__), 0);
+                                stan::math::value_of(inline_sym1__), 0);
       current_statement__ = 11;
       check_less_or_equal(function__, "chi",
-                             stan::math::value_of_rec(inline_sym1__), 1);
+                             stan::math::value_of(inline_sym1__), 1);
       if (emit_transformed_parameters__) {
         out__.write(lcm_sym153__);
         out__.write(p);
@@ -11460,8 +11448,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         } 
       }
       current_statement__ = 27;
-      check_greater_or_equal(function__, "alpha",
-                                stan::math::value_of_rec(alpha), 0);
+      check_greater_or_equal(function__, "alpha", alpha, 0);
       current_statement__ = 28;
       validate_non_negative_index("beta", "K", K);
       current_statement__ = 29;
@@ -11520,8 +11507,7 @@ class expr_prop_fail7_model final : public model_base_crtp<expr_prop_fail7_model
         } 
       }
       current_statement__ = 30;
-      check_greater_or_equal(function__, "beta",
-                                stan::math::value_of_rec(beta), 0);
+      check_greater_or_equal(function__, "beta", beta, 0);
       current_statement__ = 31;
       validate_positive_index("pi", "K", K);
       current_statement__ = 32;
@@ -13807,20 +13793,19 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       }
       assign(chi, inline_sym9__, "assigning variable chi");
       current_statement__ = 3;
-      check_greater_or_equal(function__, "phi",
-                                stan::math::value_of_rec(phi), 0);
+      check_greater_or_equal(function__, "phi", stan::math::value_of(phi), 0);
       current_statement__ = 3;
-      check_less_or_equal(function__, "phi", stan::math::value_of_rec(phi), 1);
+      check_less_or_equal(function__, "phi", stan::math::value_of(phi), 1);
       current_statement__ = 4;
-      check_greater_or_equal(function__, "p", stan::math::value_of_rec(p), 0);
+      check_greater_or_equal(function__, "p", stan::math::value_of(p), 0);
       current_statement__ = 4;
-      check_less_or_equal(function__, "p", stan::math::value_of_rec(p), 1);
+      check_less_or_equal(function__, "p", stan::math::value_of(p), 1);
       current_statement__ = 5;
       check_greater_or_equal(function__, "chi",
-                                stan::math::value_of_rec(inline_sym9__), 0);
+                                stan::math::value_of(inline_sym9__), 0);
       current_statement__ = 5;
       check_less_or_equal(function__, "chi",
-                             stan::math::value_of_rec(inline_sym9__), 1);
+                             stan::math::value_of(inline_sym9__), 1);
       {
         current_statement__ = 31;
         if (lcm_sym71__) {
@@ -14130,20 +14115,19 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
       }
       assign(chi, inline_sym1__, "assigning variable chi");
       current_statement__ = 3;
-      check_greater_or_equal(function__, "phi",
-                                stan::math::value_of_rec(phi), 0);
+      check_greater_or_equal(function__, "phi", stan::math::value_of(phi), 0);
       current_statement__ = 3;
-      check_less_or_equal(function__, "phi", stan::math::value_of_rec(phi), 1);
+      check_less_or_equal(function__, "phi", stan::math::value_of(phi), 1);
       current_statement__ = 4;
-      check_greater_or_equal(function__, "p", stan::math::value_of_rec(p), 0);
+      check_greater_or_equal(function__, "p", p, 0);
       current_statement__ = 4;
-      check_less_or_equal(function__, "p", stan::math::value_of_rec(p), 1);
+      check_less_or_equal(function__, "p", p, 1);
       current_statement__ = 5;
       check_greater_or_equal(function__, "chi",
-                                stan::math::value_of_rec(inline_sym1__), 0);
+                                stan::math::value_of(inline_sym1__), 0);
       current_statement__ = 5;
       check_less_or_equal(function__, "chi",
-                             stan::math::value_of_rec(inline_sym1__), 1);
+                             stan::math::value_of(inline_sym1__), 1);
       if (emit_transformed_parameters__) {
         out__.write(phi);
         out__.write(p);
@@ -15901,22 +15885,21 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       }
       assign(chi, inline_sym22__, "assigning variable chi");
       current_statement__ = 6;
-      check_greater_or_equal(function__, "phi",
-                                stan::math::value_of_rec(phi), 0);
+      check_greater_or_equal(function__, "phi", stan::math::value_of(phi), 0);
       current_statement__ = 6;
-      check_less_or_equal(function__, "phi", stan::math::value_of_rec(phi), 1);
+      check_less_or_equal(function__, "phi", stan::math::value_of(phi), 1);
       current_statement__ = 7;
       check_greater_or_equal(function__, "p",
-                                stan::math::value_of_rec(lcm_sym253__), 0);
+                                stan::math::value_of(lcm_sym253__), 0);
       current_statement__ = 7;
       check_less_or_equal(function__, "p",
-                             stan::math::value_of_rec(lcm_sym253__), 1);
+                             stan::math::value_of(lcm_sym253__), 1);
       current_statement__ = 8;
       check_greater_or_equal(function__, "chi",
-                                stan::math::value_of_rec(inline_sym22__), 0);
+                                stan::math::value_of(inline_sym22__), 0);
       current_statement__ = 8;
       check_less_or_equal(function__, "chi",
-                             stan::math::value_of_rec(inline_sym22__), 1);
+                             stan::math::value_of(inline_sym22__), 1);
       {
         current_statement__ = 74;
         lp_accum__.add(normal_lpdf<propto__>(epsilon, 0, sigma));
@@ -16591,22 +16574,19 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
       }
       assign(chi, inline_sym1__, "assigning variable chi");
       current_statement__ = 6;
-      check_greater_or_equal(function__, "phi",
-                                stan::math::value_of_rec(phi), 0);
+      check_greater_or_equal(function__, "phi", stan::math::value_of(phi), 0);
       current_statement__ = 6;
-      check_less_or_equal(function__, "phi", stan::math::value_of_rec(phi), 1);
+      check_less_or_equal(function__, "phi", stan::math::value_of(phi), 1);
       current_statement__ = 7;
-      check_greater_or_equal(function__, "p",
-                                stan::math::value_of_rec(lcm_sym174__), 0);
+      check_greater_or_equal(function__, "p", lcm_sym174__, 0);
       current_statement__ = 7;
-      check_less_or_equal(function__, "p",
-                             stan::math::value_of_rec(lcm_sym174__), 1);
+      check_less_or_equal(function__, "p", lcm_sym174__, 1);
       current_statement__ = 8;
       check_greater_or_equal(function__, "chi",
-                                stan::math::value_of_rec(inline_sym1__), 0);
+                                stan::math::value_of(inline_sym1__), 0);
       current_statement__ = 8;
       check_less_or_equal(function__, "chi",
-                             stan::math::value_of_rec(inline_sym1__), 1);
+                             stan::math::value_of(inline_sym1__), 1);
       if (emit_transformed_parameters__) {
         out__.write(phi);
         out__.write(lcm_sym174__);
@@ -19200,20 +19180,19 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       }
       assign(chi, inline_sym9__, "assigning variable chi");
       current_statement__ = 3;
-      check_greater_or_equal(function__, "phi",
-                                stan::math::value_of_rec(phi), 0);
+      check_greater_or_equal(function__, "phi", stan::math::value_of(phi), 0);
       current_statement__ = 3;
-      check_less_or_equal(function__, "phi", stan::math::value_of_rec(phi), 1);
+      check_less_or_equal(function__, "phi", stan::math::value_of(phi), 1);
       current_statement__ = 4;
-      check_greater_or_equal(function__, "p", stan::math::value_of_rec(p), 0);
+      check_greater_or_equal(function__, "p", stan::math::value_of(p), 0);
       current_statement__ = 4;
-      check_less_or_equal(function__, "p", stan::math::value_of_rec(p), 1);
+      check_less_or_equal(function__, "p", stan::math::value_of(p), 1);
       current_statement__ = 5;
       check_greater_or_equal(function__, "chi",
-                                stan::math::value_of_rec(inline_sym9__), 0);
+                                stan::math::value_of(inline_sym9__), 0);
       current_statement__ = 5;
       check_less_or_equal(function__, "chi",
-                             stan::math::value_of_rec(inline_sym9__), 1);
+                             stan::math::value_of(inline_sym9__), 1);
       {
         current_statement__ = 31;
         if (lcm_sym66__) {
@@ -19509,20 +19488,19 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
       }
       assign(chi, inline_sym1__, "assigning variable chi");
       current_statement__ = 3;
-      check_greater_or_equal(function__, "phi",
-                                stan::math::value_of_rec(phi), 0);
+      check_greater_or_equal(function__, "phi", phi, 0);
       current_statement__ = 3;
-      check_less_or_equal(function__, "phi", stan::math::value_of_rec(phi), 1);
+      check_less_or_equal(function__, "phi", phi, 1);
       current_statement__ = 4;
-      check_greater_or_equal(function__, "p", stan::math::value_of_rec(p), 0);
+      check_greater_or_equal(function__, "p", p, 0);
       current_statement__ = 4;
-      check_less_or_equal(function__, "p", stan::math::value_of_rec(p), 1);
+      check_less_or_equal(function__, "p", p, 1);
       current_statement__ = 5;
       check_greater_or_equal(function__, "chi",
-                                stan::math::value_of_rec(inline_sym1__), 0);
+                                stan::math::value_of(inline_sym1__), 0);
       current_statement__ = 5;
       check_less_or_equal(function__, "chi",
-                             stan::math::value_of_rec(inline_sym1__), 1);
+                             stan::math::value_of(inline_sym1__), 1);
       if (emit_transformed_parameters__) {
         out__.write(phi);
         out__.write(p);
@@ -23351,11 +23329,9 @@ class partial_eval_model final : public model_base_crtp<partial_eval_model> {
         } 
       }
       current_statement__ = 20;
-      check_greater_or_equal(function__, "treatment",
-                                stan::math::value_of_rec(treatment), 0);
+      check_greater_or_equal(function__, "treatment", treatment, 0);
       current_statement__ = 20;
-      check_less_or_equal(function__, "treatment",
-                             stan::math::value_of_rec(treatment), 1);
+      check_less_or_equal(function__, "treatment", treatment, 1);
       current_statement__ = 21;
       validate_non_negative_index("y", "N", N);
       current_statement__ = 22;

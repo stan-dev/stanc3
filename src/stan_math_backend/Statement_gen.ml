@@ -353,13 +353,14 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
       pf ppf "throw std::domain_error(%s.str());" err_strm
   | NRFunApp (CompilerInternal (FnCheck {trans; var_name; var}), args) ->
       (*FIXME: This is stupid, need to make a fix in the C++ templates*)
-      let check_eigen_type Expr.Fixed.({meta= Expr.Typed.Meta.({type_; _}); _})
-          =
+      let check_eigen_autodiff_type
+          Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
         UnsizedType.contains_eigen_type type_
+        && adlevel = UnsizedType.AutoDiffable
       in
       let value_of_rec_wrap ppf blah2 =
-        if check_eigen_type blah2 then
-          pf ppf "stan::math::value_of_rec(%a)" pp_expr blah2
+        if check_eigen_autodiff_type blah2 then
+          pf ppf "stan::math::value_of(%a)" pp_expr blah2
         else pf ppf "%a" pp_expr blah2
       in
       Option.iter (check_to_string trans) ~f:(fun check_name ->
