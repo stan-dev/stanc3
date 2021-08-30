@@ -53,8 +53,9 @@ let rec pp_initialize ppf (st, adtype) =
   match st with
   | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
   | SReal -> pf ppf "%s" init_nan
-  | SVector d | SRowVector d -> pf ppf "%a(%a)" pp_st (st, adtype) pp_expr d
-  | SMatrix (d1, d2) ->
+  | SVector (_, d) | SRowVector (_, d) ->
+      pf ppf "%a(%a)" pp_st (st, adtype) pp_expr d
+  | SMatrix (_, d1, d2) ->
       pf ppf "%a(%a, %a)" pp_st (st, adtype) pp_expr d1 pp_expr d2
   | SArray (t, d) ->
       pf ppf "%a(%a, %a)" pp_st (st, adtype) pp_expr d pp_initialize (t, adtype)
@@ -72,7 +73,7 @@ let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in
   strf "@[<v>%a@]" pp_assign_sized
     ( "d"
-    , SArray (SArray (SMatrix (int 2, int 3), int 4), int 5)
+    , SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5)
     , DataOnly
     , false )
   |> print_endline ;
@@ -83,7 +84,7 @@ let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in
   strf "@[<v>%a@]" pp_assign_sized
     ( "d"
-    , SArray (SArray (SMatrix (int 2, int 3), int 4), int 5)
+    , SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5)
     , DataOnly
     , true )
   |> print_endline ;
@@ -113,10 +114,10 @@ let pp_assign_data ppf
   in
   let pp_placement_new ppf (decl_id, st) =
     match st with
-    | SizedType.SVector d | SRowVector d ->
+    | SizedType.SVector (_, d) | SRowVector (_, d) ->
         pf ppf "@[<hov 2>new (&%s) Eigen::Map<%a>(%s__.data(), %a);@]@,"
           decl_id pp_st (st, DataOnly) decl_id pp_expr d
-    | SMatrix (d1, d2) ->
+    | SMatrix (_, d1, d2) ->
         pf ppf "@[<hov 2>new (&%s) Eigen::Map<%a>(%s__.data(), %a, %a);@]@,"
           decl_id pp_st (st, DataOnly) decl_id pp_expr d1 pp_expr d2
     | _ -> ()
@@ -137,7 +138,9 @@ let%expect_test "set size map int array no initialize" =
 let%expect_test "set size map mat array" =
   let int = Expr.Helpers.int in
   strf "@[<v>%a@]" pp_assign_data
-    ("darrmat", SArray (SArray (SMatrix (int 2, int 3), int 4), int 5), true)
+    ( "darrmat"
+    , SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5)
+    , true )
   |> print_endline ;
   [%expect
     {|
@@ -146,7 +149,7 @@ let%expect_test "set size map mat array" =
 
 let%expect_test "set size map mat" =
   let int = Expr.Helpers.int in
-  strf "@[<v>%a@]" pp_assign_data ("dmat", SMatrix (int 2, int 3), false)
+  strf "@[<v>%a@]" pp_assign_data ("dmat", SMatrix (AoS, int 2, int 3), false)
   |> print_endline ;
   [%expect
     {|
@@ -342,7 +345,7 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
       let fname, extra_args = trans_math_fn f in
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)
         (extra_args @ args)
-  | NRFunApp (StanLib (fname, _), args) ->
+  | NRFunApp (StanLib (fname, _, _), args) ->
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr) args
   | NRFunApp (UserDefined (fname, suffix), args) ->
       pf ppf "%a;" pp_user_defined_fun (fname, suffix, args)

@@ -2127,18 +2127,18 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
           lcm_sym122__ = rvalue(first, "first", index_uni(1));
           if (logical_gt(lcm_sym122__, 0)) {
             lcm_sym128__ = rvalue(last, "last", index_uni(1));
-            lcm_sym104__ = (lcm_sym122__ + 1);
-            if (logical_gte(lcm_sym128__, lcm_sym104__)) {
+            if (logical_gte(lcm_sym128__, (lcm_sym122__ + 1))) {
               current_statement__ = 24;
               lp_accum__.add(
                 bernoulli_lpmf<propto__>(1,
                   rvalue(phi, "phi",
-                    index_uni(1), index_uni((lcm_sym104__ - 1)))));
-              lcm_sym102__ = (lcm_sym104__ + 1);
+                    index_uni(1), index_uni(((lcm_sym122__ + 1) - 1)))));
+              lcm_sym102__ = ((lcm_sym122__ + 1) + 1);
               lp_accum__.add(
                 bernoulli_lpmf<propto__>(
-                  rvalue(y, "y", index_uni(1), index_uni(lcm_sym104__)),
-                  rvalue(p, "p", index_uni(1), index_uni((lcm_sym104__ - 1)))));
+                  rvalue(y, "y", index_uni(1), index_uni((lcm_sym122__ + 1))),
+                  rvalue(p, "p",
+                    index_uni(1), index_uni(((lcm_sym122__ + 1) - 1)))));
               for (int t = lcm_sym102__; t <= lcm_sym128__; ++t) {
                 current_statement__ = 24;
                 lp_accum__.add(
@@ -2161,19 +2161,19 @@ class copy_fail_model final : public model_base_crtp<copy_fail_model> {
             lcm_sym121__ = rvalue(first, "first", index_uni(i));
             if (logical_gt(lcm_sym121__, 0)) {
               lcm_sym127__ = rvalue(last, "last", index_uni(i));
-              lcm_sym103__ = (lcm_sym121__ + 1);
-              if (logical_gte(lcm_sym127__, lcm_sym103__)) {
+              if (logical_gte(lcm_sym127__, (lcm_sym121__ + 1))) {
                 current_statement__ = 24;
                 lp_accum__.add(
                   bernoulli_lpmf<propto__>(1,
                     rvalue(phi, "phi",
-                      index_uni(i), index_uni((lcm_sym103__ - 1)))));
-                lcm_sym101__ = (lcm_sym103__ + 1);
+                      index_uni(i), index_uni(((lcm_sym121__ + 1) - 1)))));
+                lcm_sym101__ = ((lcm_sym121__ + 1) + 1);
                 lp_accum__.add(
                   bernoulli_lpmf<propto__>(
-                    rvalue(y, "y", index_uni(i), index_uni(lcm_sym103__)),
+                    rvalue(y, "y",
+                      index_uni(i), index_uni((lcm_sym121__ + 1))),
                     rvalue(p, "p",
-                      index_uni(i), index_uni((lcm_sym103__ - 1)))));
+                      index_uni(i), index_uni(((lcm_sym121__ + 1) - 1)))));
                 for (int t = lcm_sym101__; t <= lcm_sym127__; ++t) {
                   current_statement__ = 24;
                   lp_accum__.add(
@@ -9104,18 +9104,18 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
           lcm_sym122__ = rvalue(first, "first", index_uni(1));
           if (logical_gt(lcm_sym122__, 0)) {
             lcm_sym128__ = rvalue(last, "last", index_uni(1));
-            lcm_sym104__ = (lcm_sym122__ + 1);
-            if (logical_gte(lcm_sym128__, lcm_sym104__)) {
+            if (logical_gte(lcm_sym128__, (lcm_sym122__ + 1))) {
               current_statement__ = 29;
               lp_accum__.add(
                 bernoulli_lpmf<propto__>(1,
                   rvalue(phi, "phi",
-                    index_uni(1), index_uni((lcm_sym104__ - 1)))));
-              lcm_sym102__ = (lcm_sym104__ + 1);
+                    index_uni(1), index_uni(((lcm_sym122__ + 1) - 1)))));
+              lcm_sym102__ = ((lcm_sym122__ + 1) + 1);
               lp_accum__.add(
                 bernoulli_lpmf<propto__>(
-                  rvalue(y, "y", index_uni(1), index_uni(lcm_sym104__)),
-                  rvalue(p, "p", index_uni(1), index_uni((lcm_sym104__ - 1)))));
+                  rvalue(y, "y", index_uni(1), index_uni((lcm_sym122__ + 1))),
+                  rvalue(p, "p",
+                    index_uni(1), index_uni(((lcm_sym122__ + 1) - 1)))));
               for (int t = lcm_sym102__; t <= lcm_sym128__; ++t) {
                 current_statement__ = 29;
                 lp_accum__.add(
@@ -9138,19 +9138,19 @@ class expr_prop_fail5_model final : public model_base_crtp<expr_prop_fail5_model
             lcm_sym121__ = rvalue(first, "first", index_uni(i));
             if (logical_gt(lcm_sym121__, 0)) {
               lcm_sym127__ = rvalue(last, "last", index_uni(i));
-              lcm_sym103__ = (lcm_sym121__ + 1);
-              if (logical_gte(lcm_sym127__, lcm_sym103__)) {
+              if (logical_gte(lcm_sym127__, (lcm_sym121__ + 1))) {
                 current_statement__ = 29;
                 lp_accum__.add(
                   bernoulli_lpmf<propto__>(1,
                     rvalue(phi, "phi",
-                      index_uni(i), index_uni((lcm_sym103__ - 1)))));
-                lcm_sym101__ = (lcm_sym103__ + 1);
+                      index_uni(i), index_uni(((lcm_sym121__ + 1) - 1)))));
+                lcm_sym101__ = ((lcm_sym121__ + 1) + 1);
                 lp_accum__.add(
                   bernoulli_lpmf<propto__>(
-                    rvalue(y, "y", index_uni(i), index_uni(lcm_sym103__)),
+                    rvalue(y, "y",
+                      index_uni(i), index_uni((lcm_sym121__ + 1))),
                     rvalue(p, "p",
-                      index_uni(i), index_uni((lcm_sym103__ - 1)))));
+                      index_uni(i), index_uni(((lcm_sym121__ + 1) - 1)))));
                 for (int t = lcm_sym101__; t <= lcm_sym127__; ++t) {
                   current_statement__ = 29;
                   lp_accum__.add(
@@ -10532,12 +10532,12 @@ js_super_lp(const std::vector<std::vector<int>>& y,
             bernoulli_lpmf<propto__>(1,
               rvalue(phi, "phi",
                 index_uni(1), index_uni(((lcm_sym111__ + 1) - 1)))));
-          lcm_sym93__ = ((lcm_sym111__ + 1) + 1);
+          lcm_sym94__ = ((lcm_sym111__ + 1) + 1);
           lp_accum__.add(
             bernoulli_lpmf<propto__>(
               rvalue(y, "y", index_uni(1), index_uni((lcm_sym111__ + 1))),
               rvalue(p, "p", index_uni(1), index_uni((lcm_sym111__ + 1)))));
-          for (int t = lcm_sym93__; t <= lcm_sym113__; ++t) {
+          for (int t = lcm_sym94__; t <= lcm_sym113__; ++t) {
             current_statement__ = 97;
             lp_accum__.add(
               bernoulli_lpmf<propto__>(1,
@@ -10554,10 +10554,10 @@ js_super_lp(const std::vector<std::vector<int>>& y,
           bernoulli_lpmf<propto__>(1,
             rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym113__))));
       } else {
-        lcm_sym94__ = (lcm_sym115__ + 1);
-        validate_non_negative_index("lp", "n_occasions + 1", lcm_sym94__);
+        lcm_sym92__ = (lcm_sym115__ + 1);
+        validate_non_negative_index("lp", "n_occasions + 1", lcm_sym92__);
         Eigen::Matrix<local_scalar_t__, -1, 1> lp;
-        lp = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym94__);
+        lp = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym92__);
         stan::math::fill(lp, DUMMY_VAR__);
         
         current_statement__ = 102;
@@ -10601,7 +10601,7 @@ js_super_lp(const std::vector<std::vector<int>>& y,
         } 
         current_statement__ = 85;
         assign(lp, bernoulli_lpmf<false>(0, psi),
-          "assigning variable lp", index_uni(lcm_sym94__));
+          "assigning variable lp", index_uni(lcm_sym92__));
         current_statement__ = 86;
         lp_accum__.add(log_sum_exp(lp));
       }
@@ -10707,12 +10707,12 @@ js_super_lp(const std::vector<std::vector<int>>& y,
               bernoulli_lpmf<propto__>(1,
                 rvalue(phi, "phi",
                   index_uni(i), index_uni(((lcm_sym110__ + 1) - 1)))));
-            lcm_sym92__ = ((lcm_sym110__ + 1) + 1);
+            lcm_sym93__ = ((lcm_sym110__ + 1) + 1);
             lp_accum__.add(
               bernoulli_lpmf<propto__>(
                 rvalue(y, "y", index_uni(i), index_uni((lcm_sym110__ + 1))),
                 rvalue(p, "p", index_uni(i), index_uni((lcm_sym110__ + 1)))));
-            for (int t = lcm_sym92__; t <= lcm_sym112__; ++t) {
+            for (int t = lcm_sym93__; t <= lcm_sym112__; ++t) {
               current_statement__ = 97;
               lp_accum__.add(
                 bernoulli_lpmf<propto__>(1,
@@ -10729,10 +10729,10 @@ js_super_lp(const std::vector<std::vector<int>>& y,
             bernoulli_lpmf<propto__>(1,
               rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym112__))));
         } else {
-          lcm_sym94__ = (lcm_sym115__ + 1);
-          validate_non_negative_index("lp", "n_occasions + 1", lcm_sym94__);
+          lcm_sym92__ = (lcm_sym115__ + 1);
+          validate_non_negative_index("lp", "n_occasions + 1", lcm_sym92__);
           Eigen::Matrix<local_scalar_t__, -1, 1> lp;
-          lp = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym94__);
+          lp = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym92__);
           stan::math::fill(lp, DUMMY_VAR__);
           
           current_statement__ = 102;
@@ -10778,7 +10778,7 @@ js_super_lp(const std::vector<std::vector<int>>& y,
           } 
           current_statement__ = 85;
           assign(lp, bernoulli_lpmf<false>(0, psi),
-            "assigning variable lp", index_uni(lcm_sym94__));
+            "assigning variable lp", index_uni(lcm_sym92__));
           current_statement__ = 86;
           lp_accum__.add(log_sum_exp(lp));
         }
@@ -11294,9 +11294,9 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
       double lcm_sym240__;
       double lcm_sym239__;
       int lcm_sym238__;
-      double lcm_sym237__;
+      int lcm_sym237__;
       int lcm_sym236__;
-      int lcm_sym235__;
+      double lcm_sym235__;
       double lcm_sym234__;
       double lcm_sym233__;
       double lcm_sym232__;
@@ -11844,14 +11844,14 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                   bernoulli_lpmf<propto__>(1,
                     rvalue(lcm_sym260__, "lcm_sym260__",
                       index_uni(1), index_uni(((lcm_sym263__ + 1) - 1)))));
-                lcm_sym236__ = ((lcm_sym263__ + 1) + 1);
+                lcm_sym238__ = ((lcm_sym263__ + 1) + 1);
                 lp_accum__.add(
                   bernoulli_lpmf<propto__>(
                     rvalue(y, "y",
                       index_uni(1), index_uni((lcm_sym263__ + 1))),
                     rvalue(p, "p",
                       index_uni(1), index_uni((lcm_sym263__ + 1)))));
-                for (int inline_sym30__ = lcm_sym236__;
+                for (int inline_sym30__ = lcm_sym238__;
                      inline_sym30__ <= lcm_sym269__; ++inline_sym30__) {
                   current_statement__ = 97;
                   lp_accum__.add(
@@ -11871,11 +11871,11 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                   rvalue(inline_sym15__, "inline_sym15__",
                     index_uni(1), index_uni(lcm_sym269__))));
             } else {
-              lcm_sym238__ = (lcm_sym278__ + 1);
+              lcm_sym236__ = (lcm_sym278__ + 1);
               validate_non_negative_index("lp", "n_occasions + 1",
-                                          lcm_sym238__);
+                                          lcm_sym236__);
               Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym29__;
-              inline_sym29__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym238__);
+              inline_sym29__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym236__);
               stan::math::fill(inline_sym29__, DUMMY_VAR__);
               
               lcm_sym271__ = rvalue(nu, "nu", index_uni(1));
@@ -11925,7 +11925,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
               } 
               current_statement__ = 85;
               assign(inline_sym29__, bernoulli_lpmf<false>(0, psi),
-                "assigning variable inline_sym29__", index_uni(lcm_sym238__));
+                "assigning variable inline_sym29__", index_uni(lcm_sym236__));
               current_statement__ = 86;
               lp_accum__.add(log_sum_exp(inline_sym29__));
             }
@@ -12046,7 +12046,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                       rvalue(lcm_sym260__, "lcm_sym260__",
                         index_uni(inline_sym31__),
                           index_uni(((lcm_sym262__ + 1) - 1)))));
-                  lcm_sym235__ = ((lcm_sym262__ + 1) + 1);
+                  lcm_sym237__ = ((lcm_sym262__ + 1) + 1);
                   lp_accum__.add(
                     bernoulli_lpmf<propto__>(
                       rvalue(y, "y",
@@ -12055,7 +12055,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                       rvalue(p, "p",
                         index_uni(inline_sym31__),
                           index_uni((lcm_sym262__ + 1)))));
-                  for (int inline_sym30__ = lcm_sym235__;
+                  for (int inline_sym30__ = lcm_sym237__;
                        inline_sym30__ <= lcm_sym268__; ++inline_sym30__) {
                     current_statement__ = 97;
                     lp_accum__.add(
@@ -12078,11 +12078,11 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                     rvalue(inline_sym15__, "inline_sym15__",
                       index_uni(inline_sym31__), index_uni(lcm_sym268__))));
               } else {
-                lcm_sym238__ = (lcm_sym278__ + 1);
+                lcm_sym236__ = (lcm_sym278__ + 1);
                 validate_non_negative_index("lp", "n_occasions + 1",
-                                            lcm_sym238__);
+                                            lcm_sym236__);
                 Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym29__;
-                inline_sym29__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym238__);
+                inline_sym29__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym236__);
                 stan::math::fill(inline_sym29__, DUMMY_VAR__);
                 
                 current_statement__ = 102;
@@ -12137,7 +12137,7 @@ class expr_prop_fail6_model final : public model_base_crtp<expr_prop_fail6_model
                 } 
                 current_statement__ = 85;
                 assign(inline_sym29__, bernoulli_lpmf<false>(0, psi),
-                  "assigning variable inline_sym29__", index_uni(lcm_sym238__));
+                  "assigning variable inline_sym29__", index_uni(lcm_sym236__));
                 current_statement__ = 86;
                 lp_accum__.add(log_sum_exp(inline_sym29__));
               }
@@ -16521,18 +16521,18 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
           lcm_sym122__ = rvalue(first, "first", index_uni(1));
           if (logical_gt(lcm_sym122__, 0)) {
             lcm_sym128__ = rvalue(last, "last", index_uni(1));
-            lcm_sym104__ = (lcm_sym122__ + 1);
-            if (logical_gte(lcm_sym128__, lcm_sym104__)) {
+            if (logical_gte(lcm_sym128__, (lcm_sym122__ + 1))) {
               current_statement__ = 24;
               lp_accum__.add(
                 bernoulli_lpmf<propto__>(1,
                   rvalue(phi, "phi",
-                    index_uni(1), index_uni((lcm_sym104__ - 1)))));
-              lcm_sym102__ = (lcm_sym104__ + 1);
+                    index_uni(1), index_uni(((lcm_sym122__ + 1) - 1)))));
+              lcm_sym102__ = ((lcm_sym122__ + 1) + 1);
               lp_accum__.add(
                 bernoulli_lpmf<propto__>(
-                  rvalue(y, "y", index_uni(1), index_uni(lcm_sym104__)),
-                  rvalue(p, "p", index_uni(1), index_uni((lcm_sym104__ - 1)))));
+                  rvalue(y, "y", index_uni(1), index_uni((lcm_sym122__ + 1))),
+                  rvalue(p, "p",
+                    index_uni(1), index_uni(((lcm_sym122__ + 1) - 1)))));
               for (int t = lcm_sym102__; t <= lcm_sym128__; ++t) {
                 current_statement__ = 24;
                 lp_accum__.add(
@@ -16555,19 +16555,19 @@ class fails_test_model final : public model_base_crtp<fails_test_model> {
             lcm_sym121__ = rvalue(first, "first", index_uni(i));
             if (logical_gt(lcm_sym121__, 0)) {
               lcm_sym127__ = rvalue(last, "last", index_uni(i));
-              lcm_sym103__ = (lcm_sym121__ + 1);
-              if (logical_gte(lcm_sym127__, lcm_sym103__)) {
+              if (logical_gte(lcm_sym127__, (lcm_sym121__ + 1))) {
                 current_statement__ = 24;
                 lp_accum__.add(
                   bernoulli_lpmf<propto__>(1,
                     rvalue(phi, "phi",
-                      index_uni(i), index_uni((lcm_sym103__ - 1)))));
-                lcm_sym101__ = (lcm_sym103__ + 1);
+                      index_uni(i), index_uni(((lcm_sym121__ + 1) - 1)))));
+                lcm_sym101__ = ((lcm_sym121__ + 1) + 1);
                 lp_accum__.add(
                   bernoulli_lpmf<propto__>(
-                    rvalue(y, "y", index_uni(i), index_uni(lcm_sym103__)),
+                    rvalue(y, "y",
+                      index_uni(i), index_uni((lcm_sym121__ + 1))),
                     rvalue(p, "p",
-                      index_uni(i), index_uni((lcm_sym103__ - 1)))));
+                      index_uni(i), index_uni(((lcm_sym121__ + 1) - 1)))));
                 for (int t = lcm_sym101__; t <= lcm_sym127__; ++t) {
                   current_statement__ = 24;
                   lp_accum__.add(
@@ -17905,12 +17905,12 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
             bernoulli_lpmf<propto__>(1,
               rvalue(phi, "phi",
                 index_uni(1), index_uni(((lcm_sym117__ + 1) - 1)))));
-          lcm_sym100__ = ((lcm_sym117__ + 1) + 1);
+          lcm_sym101__ = ((lcm_sym117__ + 1) + 1);
           lp_accum__.add(
             bernoulli_lpmf<propto__>(
               rvalue(y, "y", index_uni(1), index_uni((lcm_sym117__ + 1))),
               rvalue(p, "p", index_uni(1), index_uni((lcm_sym117__ + 1)))));
-          for (int t = lcm_sym100__; t <= lcm_sym119__; ++t) {
+          for (int t = lcm_sym101__; t <= lcm_sym119__; ++t) {
             current_statement__ = 96;
             lp_accum__.add(
               bernoulli_lpmf<propto__>(1,
@@ -17927,10 +17927,10 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
           bernoulli_lpmf<propto__>(1,
             rvalue(chi, "chi", index_uni(1), index_uni(lcm_sym119__))));
       } else {
-        lcm_sym101__ = (lcm_sym121__ + 1);
-        validate_non_negative_index("lp", "n_occasions + 1", lcm_sym101__);
+        lcm_sym99__ = (lcm_sym121__ + 1);
+        validate_non_negative_index("lp", "n_occasions + 1", lcm_sym99__);
         Eigen::Matrix<local_scalar_t__, -1, 1> lp;
-        lp = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym101__);
+        lp = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym99__);
         stan::math::fill(lp, DUMMY_VAR__);
         
         current_statement__ = 82;
@@ -17974,7 +17974,7 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
         } 
         current_statement__ = 84;
         assign(lp, bernoulli_lpmf<false>(1, prod(lcm_sym80__)),
-          "assigning variable lp", index_uni(lcm_sym101__));
+          "assigning variable lp", index_uni(lcm_sym99__));
         current_statement__ = 85;
         lp_accum__.add(log_sum_exp(lp));
       }
@@ -18079,12 +18079,12 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
               bernoulli_lpmf<propto__>(1,
                 rvalue(phi, "phi",
                   index_uni(i), index_uni(((lcm_sym116__ + 1) - 1)))));
-            lcm_sym99__ = ((lcm_sym116__ + 1) + 1);
+            lcm_sym100__ = ((lcm_sym116__ + 1) + 1);
             lp_accum__.add(
               bernoulli_lpmf<propto__>(
                 rvalue(y, "y", index_uni(i), index_uni((lcm_sym116__ + 1))),
                 rvalue(p, "p", index_uni(i), index_uni((lcm_sym116__ + 1)))));
-            for (int t = lcm_sym99__; t <= lcm_sym118__; ++t) {
+            for (int t = lcm_sym100__; t <= lcm_sym118__; ++t) {
               current_statement__ = 96;
               lp_accum__.add(
                 bernoulli_lpmf<propto__>(1,
@@ -18101,10 +18101,10 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
             bernoulli_lpmf<propto__>(1,
               rvalue(chi, "chi", index_uni(i), index_uni(lcm_sym118__))));
         } else {
-          lcm_sym101__ = (lcm_sym121__ + 1);
-          validate_non_negative_index("lp", "n_occasions + 1", lcm_sym101__);
+          lcm_sym99__ = (lcm_sym121__ + 1);
+          validate_non_negative_index("lp", "n_occasions + 1", lcm_sym99__);
           Eigen::Matrix<local_scalar_t__, -1, 1> lp;
-          lp = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym101__);
+          lp = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym99__);
           stan::math::fill(lp, DUMMY_VAR__);
           
           current_statement__ = 82;
@@ -18149,7 +18149,7 @@ jolly_seber_lp(const std::vector<std::vector<int>>& y,
           } 
           current_statement__ = 84;
           assign(lp, bernoulli_lpmf<false>(1, prod(lcm_sym80__)),
-            "assigning variable lp", index_uni(lcm_sym101__));
+            "assigning variable lp", index_uni(lcm_sym99__));
           current_statement__ = 85;
           lp_accum__.add(log_sum_exp(lp));
         }
@@ -19234,14 +19234,14 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                   bernoulli_lpmf<propto__>(1,
                     rvalue(phi, "phi",
                       index_uni(1), index_uni(((lcm_sym270__ + 1) - 1)))));
-                lcm_sym244__ = ((lcm_sym270__ + 1) + 1);
+                lcm_sym245__ = ((lcm_sym270__ + 1) + 1);
                 lp_accum__.add(
                   bernoulli_lpmf<propto__>(
                     rvalue(y, "y",
                       index_uni(1), index_uni((lcm_sym270__ + 1))),
                     rvalue(lcm_sym266__, "lcm_sym266__",
                       index_uni(1), index_uni((lcm_sym270__ + 1)))));
-                for (int inline_sym37__ = lcm_sym244__;
+                for (int inline_sym37__ = lcm_sym245__;
                      inline_sym37__ <= lcm_sym276__; ++inline_sym37__) {
                   current_statement__ = 96;
                   lp_accum__.add(
@@ -19262,11 +19262,11 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                   rvalue(inline_sym22__, "inline_sym22__",
                     index_uni(1), index_uni(lcm_sym276__))));
             } else {
-              lcm_sym245__ = (lcm_sym282__ + 1);
+              lcm_sym243__ = (lcm_sym282__ + 1);
               validate_non_negative_index("lp", "n_occasions + 1",
-                                          lcm_sym245__);
+                                          lcm_sym243__);
               Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym36__;
-              inline_sym36__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym245__);
+              inline_sym36__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym243__);
               stan::math::fill(inline_sym36__, DUMMY_VAR__);
               
               current_statement__ = 82;
@@ -19318,7 +19318,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
               current_statement__ = 84;
               assign(inline_sym36__,
                 bernoulli_lpmf<false>(1, prod(lcm_sym220__)),
-                "assigning variable inline_sym36__", index_uni(lcm_sym245__));
+                "assigning variable inline_sym36__", index_uni(lcm_sym243__));
               current_statement__ = 85;
               lp_accum__.add(log_sum_exp(inline_sym36__));
             }
@@ -19440,7 +19440,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                       rvalue(phi, "phi",
                         index_uni(inline_sym38__),
                           index_uni(((lcm_sym269__ + 1) - 1)))));
-                  lcm_sym243__ = ((lcm_sym269__ + 1) + 1);
+                  lcm_sym244__ = ((lcm_sym269__ + 1) + 1);
                   lp_accum__.add(
                     bernoulli_lpmf<propto__>(
                       rvalue(y, "y",
@@ -19449,7 +19449,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                       rvalue(lcm_sym266__, "lcm_sym266__",
                         index_uni(inline_sym38__),
                           index_uni((lcm_sym269__ + 1)))));
-                  for (int inline_sym37__ = lcm_sym243__;
+                  for (int inline_sym37__ = lcm_sym244__;
                        inline_sym37__ <= lcm_sym275__; ++inline_sym37__) {
                     current_statement__ = 96;
                     lp_accum__.add(
@@ -19472,11 +19472,11 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                     rvalue(inline_sym22__, "inline_sym22__",
                       index_uni(inline_sym38__), index_uni(lcm_sym275__))));
               } else {
-                lcm_sym245__ = (lcm_sym282__ + 1);
+                lcm_sym243__ = (lcm_sym282__ + 1);
                 validate_non_negative_index("lp", "n_occasions + 1",
-                                            lcm_sym245__);
+                                            lcm_sym243__);
                 Eigen::Matrix<local_scalar_t__, -1, 1> inline_sym36__;
-                inline_sym36__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym245__);
+                inline_sym36__ = Eigen::Matrix<local_scalar_t__, -1, 1>(lcm_sym243__);
                 stan::math::fill(inline_sym36__, DUMMY_VAR__);
                 
                 current_statement__ = 82;
@@ -19530,7 +19530,7 @@ class inlining_fail2_model final : public model_base_crtp<inlining_fail2_model> 
                 current_statement__ = 84;
                 assign(inline_sym36__,
                   bernoulli_lpmf<false>(1, prod(lcm_sym220__)),
-                  "assigning variable inline_sym36__", index_uni(lcm_sym245__));
+                  "assigning variable inline_sym36__", index_uni(lcm_sym243__));
                 current_statement__ = 85;
                 lp_accum__.add(log_sum_exp(inline_sym36__));
               }
@@ -22916,18 +22916,18 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
           lcm_sym113__ = rvalue(first, "first", index_uni(1));
           if (logical_gt(lcm_sym113__, 0)) {
             lcm_sym119__ = rvalue(last, "last", index_uni(1));
-            lcm_sym99__ = (lcm_sym113__ + 1);
-            if (logical_gte(lcm_sym119__, lcm_sym99__)) {
+            if (logical_gte(lcm_sym119__, (lcm_sym113__ + 1))) {
               current_statement__ = 24;
               lp_accum__.add(
                 bernoulli_lpmf<propto__>(1,
                   rvalue(phi, "phi",
-                    index_uni(1), index_uni((lcm_sym99__ - 1)))));
-              lcm_sym97__ = (lcm_sym99__ + 1);
+                    index_uni(1), index_uni(((lcm_sym113__ + 1) - 1)))));
+              lcm_sym97__ = ((lcm_sym113__ + 1) + 1);
               lp_accum__.add(
                 bernoulli_lpmf<propto__>(
-                  rvalue(y, "y", index_uni(1), index_uni(lcm_sym99__)),
-                  rvalue(p, "p", index_uni(1), index_uni((lcm_sym99__ - 1)))));
+                  rvalue(y, "y", index_uni(1), index_uni((lcm_sym113__ + 1))),
+                  rvalue(p, "p",
+                    index_uni(1), index_uni(((lcm_sym113__ + 1) - 1)))));
               for (int t = lcm_sym97__; t <= lcm_sym119__; ++t) {
                 current_statement__ = 24;
                 lp_accum__.add(
@@ -22950,19 +22950,19 @@ class lcm_fails2_model final : public model_base_crtp<lcm_fails2_model> {
             lcm_sym112__ = rvalue(first, "first", index_uni(i));
             if (logical_gt(lcm_sym112__, 0)) {
               lcm_sym118__ = rvalue(last, "last", index_uni(i));
-              lcm_sym98__ = (lcm_sym112__ + 1);
-              if (logical_gte(lcm_sym118__, lcm_sym98__)) {
+              if (logical_gte(lcm_sym118__, (lcm_sym112__ + 1))) {
                 current_statement__ = 24;
                 lp_accum__.add(
                   bernoulli_lpmf<propto__>(1,
                     rvalue(phi, "phi",
-                      index_uni(i), index_uni((lcm_sym98__ - 1)))));
-                lcm_sym96__ = (lcm_sym98__ + 1);
+                      index_uni(i), index_uni(((lcm_sym112__ + 1) - 1)))));
+                lcm_sym96__ = ((lcm_sym112__ + 1) + 1);
                 lp_accum__.add(
                   bernoulli_lpmf<propto__>(
-                    rvalue(y, "y", index_uni(i), index_uni(lcm_sym98__)),
+                    rvalue(y, "y",
+                      index_uni(i), index_uni((lcm_sym112__ + 1))),
                     rvalue(p, "p",
-                      index_uni(i), index_uni((lcm_sym98__ - 1)))));
+                      index_uni(i), index_uni(((lcm_sym112__ + 1) - 1)))));
                 for (int t = lcm_sym96__; t <= lcm_sym118__; ++t) {
                   current_statement__ = 24;
                   lp_accum__.add(
@@ -26502,22 +26502,22 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             }
           }
           {
-            lcm_sym49__ = (2 + 2);
-            if (logical_gte(lcm_sym49__, 2)) {
+            lcm_sym48__ = (2 + 2);
+            if (logical_gte(lcm_sym48__, 2)) {
               lcm_sym52__ = (2 * 2);
               if (logical_gte(lcm_sym52__, 2)) {
                 {
-                  lcm_sym48__ = (2 + 1);
+                  lcm_sym49__ = (2 + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym48__; k <= lcm_sym52__; ++k) {
+                  for (int k = lcm_sym49__; k <= lcm_sym52__; ++k) {
                     current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                 }
               } else {
-                lcm_sym48__ = (2 + 1);
+                lcm_sym49__ = (2 + 1);
               }
-              for (int j = lcm_sym48__; j <= lcm_sym49__; ++j) {
+              for (int j = lcm_sym49__; j <= lcm_sym48__; ++j) {
                 lcm_sym53__ = (j * 2);
                 if (logical_gte(lcm_sym53__, j)) {
                   lcm_sym51__ = (j + 1);
@@ -26531,22 +26531,22 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             } 
           }
           {
-            lcm_sym49__ = (3 + 2);
-            if (logical_gte(lcm_sym49__, 3)) {
+            lcm_sym48__ = (3 + 2);
+            if (logical_gte(lcm_sym48__, 3)) {
               lcm_sym52__ = (3 * 2);
               if (logical_gte(lcm_sym52__, 3)) {
                 {
-                  lcm_sym48__ = (3 + 1);
+                  lcm_sym49__ = (3 + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym48__; k <= lcm_sym52__; ++k) {
+                  for (int k = lcm_sym49__; k <= lcm_sym52__; ++k) {
                     current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                 }
               } else {
-                lcm_sym48__ = (3 + 1);
+                lcm_sym49__ = (3 + 1);
               }
-              for (int j = lcm_sym48__; j <= lcm_sym49__; ++j) {
+              for (int j = lcm_sym49__; j <= lcm_sym48__; ++j) {
                 lcm_sym53__ = (j * 2);
                 if (logical_gte(lcm_sym53__, j)) {
                   lcm_sym51__ = (j + 1);
@@ -26560,22 +26560,22 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             } 
           }
           {
-            lcm_sym49__ = (4 + 2);
-            if (logical_gte(lcm_sym49__, 4)) {
+            lcm_sym48__ = (4 + 2);
+            if (logical_gte(lcm_sym48__, 4)) {
               lcm_sym52__ = (4 * 2);
               if (logical_gte(lcm_sym52__, 4)) {
                 {
-                  lcm_sym48__ = (4 + 1);
+                  lcm_sym49__ = (4 + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym48__; k <= lcm_sym52__; ++k) {
+                  for (int k = lcm_sym49__; k <= lcm_sym52__; ++k) {
                     current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                 }
               } else {
-                lcm_sym48__ = (4 + 1);
+                lcm_sym49__ = (4 + 1);
               }
-              for (int j = lcm_sym48__; j <= lcm_sym49__; ++j) {
+              for (int j = lcm_sym49__; j <= lcm_sym48__; ++j) {
                 lcm_sym53__ = (j * 2);
                 if (logical_gte(lcm_sym53__, j)) {
                   lcm_sym51__ = (j + 1);
@@ -26589,22 +26589,22 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
             } 
           }
           {
-            lcm_sym49__ = (5 + 2);
-            if (logical_gte(lcm_sym49__, 5)) {
+            lcm_sym48__ = (5 + 2);
+            if (logical_gte(lcm_sym48__, 5)) {
               lcm_sym52__ = (5 * 2);
               if (logical_gte(lcm_sym52__, 5)) {
                 {
-                  lcm_sym48__ = (5 + 1);
+                  lcm_sym49__ = (5 + 1);
                   lp_accum__.add(53);
-                  for (int k = lcm_sym48__; k <= lcm_sym52__; ++k) {
+                  for (int k = lcm_sym49__; k <= lcm_sym52__; ++k) {
                     current_statement__ = 15;
                     lp_accum__.add(53);
                   }
                 }
               } else {
-                lcm_sym48__ = (5 + 1);
+                lcm_sym49__ = (5 + 1);
               }
-              for (int j = lcm_sym48__; j <= lcm_sym49__; ++j) {
+              for (int j = lcm_sym49__; j <= lcm_sym48__; ++j) {
                 lcm_sym53__ = (j * 2);
                 if (logical_gte(lcm_sym53__, j)) {
                   lcm_sym51__ = (j + 1);

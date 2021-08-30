@@ -238,7 +238,7 @@ let rec inline_function_expression propto adt fim
       match kind with
       | CompilerInternal _ ->
           (d_list, s_list, {e with pattern= FunApp (kind, es)})
-      | UserDefined (fname, suffix) | StanLib (fname, suffix) -> (
+      | UserDefined (fname, suffix) | StanLib (fname, suffix, _) -> (
           let suffix, fname' =
             match suffix with
             | FnLpdf propto' when propto' && propto ->
@@ -252,7 +252,7 @@ let rec inline_function_expression propto adt fim
               let fun_kind =
                 match kind with
                 | Fun_kind.UserDefined _ -> Fun_kind.UserDefined (fname, suffix)
-                | _ -> StanLib (fname, suffix)
+                | _ -> StanLib (fname, suffix, AoS)
               in
               (d_list, s_list, {e with pattern= FunApp (fun_kind, es)})
           | Some (rt, args, b) ->
@@ -388,7 +388,7 @@ let rec inline_function_statement propto adt fim Stmt.Fixed.({pattern; meta}) =
             slist_concat_no_loc (d_list @ s_list)
               ( match kind with
               | CompilerInternal _ -> NRFunApp (kind, es)
-              | UserDefined (s, _) | StanLib (s, _) -> (
+              | UserDefined (s, _) | StanLib (s, _, _) -> (
                 match Map.find fim s with
                 | None -> NRFunApp (kind, es)
                 | Some (_, args, b) ->
@@ -593,8 +593,8 @@ let unroll_loop_one_step_statement _ =
           IfElse
             ( Expr.Fixed.
                 { lower with
-                  pattern= FunApp (StanLib ("Geq__", FnPlain), [upper; lower])
-                }
+                  pattern=
+                    FunApp (StanLib ("Geq__", FnPlain, SoA), [upper; lower]) }
             , { pattern=
                   (let body_unrolled =
                      subst_args_stmt [loopvar] [lower]
@@ -610,7 +610,7 @@ let unroll_loop_one_step_statement _ =
                                { lower with
                                  pattern=
                                    FunApp
-                                     ( StanLib ("Plus__", FnPlain)
+                                     ( StanLib ("Plus__", FnPlain, SoA)
                                      , [lower; Expr.Helpers.loop_bottom] ) } }
                      ; meta= Location_span.empty }
                    in
@@ -694,7 +694,7 @@ and accum_any pred b e = b || expr_any pred e
 
 let can_side_effect_top_expr (e : Expr.Typed.t) =
   match e.pattern with
-  | FunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget)), _) -> true
+  | FunApp ((UserDefined (_, FnTarget) | StanLib (_, FnTarget, _)), _) -> true
   | FunApp (CompilerInternal internal_fn, _) ->
       Internal_fun.can_side_effect internal_fn
   | _ -> false
@@ -703,7 +703,7 @@ let cannot_duplicate_expr (e : Expr.Typed.t) =
   let pred e =
     can_side_effect_top_expr e
     || ( match e.pattern with
-       | FunApp ((UserDefined (_, FnRng) | StanLib (_, FnRng)), _) -> true
+       | FunApp ((UserDefined (_, FnRng) | StanLib (_, FnRng, _)), _) -> true
        | _ -> false )
     || (preserve_stability && UnsizedType.is_autodiffable e.meta.type_)
   in

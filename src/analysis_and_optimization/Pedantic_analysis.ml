@@ -263,7 +263,7 @@ let compiletime_value_of_expr
 let list_distributions (mir : Program.Typed.t) : dist_info Set.Poly.t =
   let take_dist (expr : Expr.Typed.t) =
     match expr.pattern with
-    | Expr.Fixed.Pattern.FunApp (StanLib (fname, FnLpdf true), arg_exprs) ->
+    | Expr.Fixed.Pattern.FunApp (StanLib (fname, FnLpdf true, _), arg_exprs) ->
         let fname = chop_dist_name fname |> Option.value_exn in
         let params = parameter_set mir in
         let data = data_set mir in
