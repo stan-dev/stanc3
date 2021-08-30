@@ -305,8 +305,8 @@ let var_decl_gen_val m d =
       let t =
         match transformation with
         | Single trans -> trans
+        (* NB: We disallow data having multiple constraints, so this should never happen *)
         | Chain ts -> List.hd_exn (List.rev ts)
-        (* TR TODO: Valid? Final transform usually determines the shape of output *)
       in
       generate_value m sizedtype t
   | _ -> failwith "This should never happen."

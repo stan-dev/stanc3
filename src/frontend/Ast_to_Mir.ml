@@ -338,11 +338,16 @@ let rec check_decl var decl_type' decl_id decl_trans smeta adlevel =
   in
   match decl_trans with
   | Transformation.Single t -> check_single t
-  (* TR TODO: This currently concatinates all checks in a way that is invalid, 
-   * e.g. lower(0), upper(10), will not yield values in [0,10].
-   * Unclear if this is a concern
+  (* NB: We only allow chain transforms in parameters, which are never checked. 
+   * REM: A naive attempt at doing this would be `List.concat_map ~f:check_single ts`
+   * This currently concatinates all checks in a way that is invalid, 
+   * e.g. lower(0), upper(10), will not yield values in [0,10],
+   * one must perform unconstraining transform between sucessive checks in general
    *)
-  | Chain ts -> List.concat_map ~f:check_single ts
+  | Chain _ ->
+      raise_s
+        [%message
+          "Attempting to check a chained transform. This should never happen"]
 
 let check_sizedtype name =
   let check x = function
