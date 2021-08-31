@@ -147,40 +147,7 @@ pipeline {
                 }
             }
         }
-        stage("CmdStan & Math tests") {
-            parallel {
-                stage("Compile tests") {
-                    agent { label 'linux' }
-                    steps {
-                        script {
-                            unstash 'ubuntu-exe'
-                            sh """
-                                mkdir comp_tests
-                                cd comp_tests
-                                git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-                                cd performance-tests-cmdstan
-                                echo "O=0" > cmdstan/make/local
-                                echo "CXX=${CXX}" >> cmdstan/make/local
-                                mkdir cmdstan/bin
-                                cp ../../bin/stanc cmdstan/bin/linux-stanc
-                                cd cmdstan; make clean-all; make -j${env.PARALLEL} build; cd ..                                
-                                ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ../../test/integration/good
-                                ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 example-models
-                                cd ../../
-                                """
-                        }
-
-                        xunit([GoogleTest(
-                            deleteOutputFiles: false,
-                            failIfNotNew: true,
-                            pattern: 'comp_tests/performance-tests-cmdstan/performance.xml',
-                            skipNoTestFiles: false,
-                            stopProcessingIfError: false)
-                        ])
-                    }
-                    post { always { runShell("rm -rf ./comp_tests/*") }}
-                }
-                stage("Model end-to-end tests") {
+        stage("Model end-to-end tests") {
                     agent { label 'linux' }
                     steps {
                         unstash 'ubuntu-exe'
@@ -219,6 +186,39 @@ pipeline {
                             errorUnstableThreshold: 100
                     }
                     post { always { runShell("rm -rf ./ete_tests/*") }}
+        }
+        stage("CmdStan & Math tests") {
+            parallel {
+                stage("Compile tests") {
+                    agent { label 'linux' }
+                    steps {
+                        script {
+                            unstash 'ubuntu-exe'
+                            sh """
+                                mkdir comp_tests
+                                cd comp_tests
+                                git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                                cd performance-tests-cmdstan
+                                echo "O=0" > cmdstan/make/local
+                                echo "CXX=${CXX}" >> cmdstan/make/local
+                                mkdir cmdstan/bin
+                                cp ../../bin/stanc cmdstan/bin/linux-stanc
+                                cd cmdstan; make clean-all; make -j${env.PARALLEL} build; cd ..                                
+                                ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ../../test/integration/good
+                                ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 example-models
+                                cd ../../
+                                """
+                        }
+
+                        xunit([GoogleTest(
+                            deleteOutputFiles: false,
+                            failIfNotNew: true,
+                            pattern: 'comp_tests/performance-tests-cmdstan/performance.xml',
+                            skipNoTestFiles: false,
+                            stopProcessingIfError: false)
+                        ])
+                    }
+                    post { always { runShell("rm -rf ./comp_tests/*") }}
                 }
                 stage('Math functions expressions test') {
                     when {
