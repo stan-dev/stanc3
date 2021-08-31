@@ -252,7 +252,6 @@ pipeline {
                     post { always { deleteDir() } }
                 }
             }
-            post { always { runShell("rm -rf ./*") }}
         }
         stage("Build and test static release binaries") {
             failFast true
