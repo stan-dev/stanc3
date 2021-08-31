@@ -283,11 +283,9 @@ let param_size transform sizedtype =
   let k_choose_2 k =
     Expr.Helpers.(binop (binop k Times (binop k Minus (int 1))) Divide (int 2))
   in
-  match transform with
-  | Transformation.Identity -> sizedtype
-  | Single t -> (
-    match t with
-    | Lower _ | Upper _
+  let resize sizedtype trans =
+    match trans with
+    | Transformation.Lower _ | Upper _
      |LowerUpper (_, _)
      |Offset _ | Multiplier _
      |OffsetMultiplier (_, _)
@@ -309,8 +307,24 @@ let param_size transform sizedtype =
     | Covariance ->
         shrink_eigen
           (fun k -> Expr.Helpers.(binop k Plus (k_choose_2 k)))
-          sizedtype )
-  | Chain _ -> failwith "TR TODO: param size"
+          sizedtype
+  in
+  match transform with
+  | Transformation.Identity -> sizedtype
+  | Single t -> resize sizedtype t
+  | Chain ts ->
+      (* Finds the first constraint which changes sizes and goes with that
+       * Similar to Transform_Mir.read_constrain_dims, this won't work in all cases,
+       * like if you ever did a simplex corr_matrix. In our standard library
+       * This is fine, may need more complicated logic for user defined transforms.
+       *)
+      let rec loop st = function
+        | [] -> st
+        | t :: ts ->
+            let st' = resize st t in
+            if st' = st then loop st ts else st'
+      in
+      loop sizedtype ts
 
 let remove_possibly_exn pst action loc =
   match pst with
