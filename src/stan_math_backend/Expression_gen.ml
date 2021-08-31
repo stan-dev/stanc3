@@ -566,7 +566,7 @@ and pp_constraining ut dims ppf trans =
       let constraint_args = transform_args t in
       let lp = Expr.Fixed.{pattern= Var "lp__"; meta= Expr.Typed.Meta.empty} in
       let args = constraint_args @ [lp] in
-      pf ppf "@[<hov 4>%s_constrain<jacobian__>(@,%a, @,%a);@]"
+      pf ppf "@[<hov 4>%s_constrain<jacobian__>(@,%a, @,%a)@]"
         (constraint_to_string t) (pp_constraining ut dims) ts
         (list ~sep:comma pp_expr) args
 

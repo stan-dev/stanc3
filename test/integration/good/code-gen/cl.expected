@@ -577,7 +577,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       local_scalar_t__ sigma;
       current_statement__ = 4;
       sigma = lb_constrain<jacobian__>(
-                  in__.template read<local_scalar_t__>(), 0, lp__);;
+                  in__.template read<local_scalar_t__>(), 0, lp__);
       local_scalar_t__ alpha;
       current_statement__ = 5;
       alpha = in__.template read<local_scalar_t__>();
@@ -1279,7 +1279,7 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       double sigma;
       current_statement__ = 4;
       sigma = lb_constrain<jacobian__>(
-                  in__.template read<local_scalar_t__>(), 0, lp__);;
+                  in__.template read<local_scalar_t__>(), 0, lp__);
       double alpha;
       current_statement__ = 5;
       alpha = in__.template read<local_scalar_t__>();

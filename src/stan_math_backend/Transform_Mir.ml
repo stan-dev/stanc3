@@ -182,6 +182,7 @@ let read_constrain_dims constrain_transform st =
         (* kc2 *)
         [k_choose_2 dim2]
     | CholeskyCov, [dim1; dim2] ->
+        (* (N * (N + 1)) / 2 + (M - N) * N *)
         [ Expr.Helpers.(
             binop
               (binop (k_choose_2 dim1) Plus dim2)
