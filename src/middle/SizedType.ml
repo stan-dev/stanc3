@@ -61,6 +61,9 @@ let rec dims_of st =
   | SRowVector (_, dim) | SVector (_, dim) -> [dim]
   | SInt | SReal -> []
 
+let rec outer_dims st =
+  match st with SArray (t, d) -> d :: outer_dims t | _ -> []
+
 let rec get_dims st =
   match st with
   | SInt | SReal -> []

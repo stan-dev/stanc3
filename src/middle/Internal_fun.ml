@@ -11,8 +11,13 @@ type 'expr t =
   (* XXX move these to a backend specific file?*)
   | FnReadParam of
       { constrain: 'expr Transformation.t
-      ; dims: 'expr list
-      ; extra_args: 'expr list list (* TR TODO unhappy with this *)
+      ; outer_dims: 'expr list (* array dims *)
+      ; dims:
+          'expr list
+          (* the dimensions of the actual internal type 
+           * currently, all special arguments or shape concerns depend only on this
+           * so we use it in expression generation
+           *)
       ; mem_pattern: Common.Helpers.mem_pattern }
   | FnWriteParam of {unconstrain: 'expr Transformation.t; var: 'expr}
   | FnValidateSize

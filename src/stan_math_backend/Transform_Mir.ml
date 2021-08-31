@@ -165,73 +165,6 @@ let data_read smeta (decl_id, st) =
           ; Stmt.Helpers.for_scalar_inv st bodyfn decl_var smeta ]
         |> swrap ]
 
-(*
-  Get the dimension expressions that are expected by constrain/unconstrain
-  functions for a sized type.
-
-  Simplex and the matrix constraints expect different sizes. This is similar to
-  Ast_to_Mir.param_size
-*)
-let read_constrain_dims constrain_transform st =
-  let k_choose_2 k =
-    Expr.Helpers.(binop (binop k Times (binop k Minus (int 1))) Divide (int 2))
-  in
-  let constrain_dim dims trans =
-    match (trans, dims) with
-    | (Transformation.CholeskyCorr | Correlation), [_; dim2] ->
-        (* kc2 *)
-        [k_choose_2 dim2]
-    | CholeskyCov, [m; n] ->
-        (* (N * (N + 1)) / 2 + (M - N) * N *)
-        [ Expr.Helpers.(
-            binop
-              (binop (k_choose_2 n) Plus n)
-              Plus
-              (binop (binop m Minus n) Times n)) ]
-    | Covariance, [_; dim2] ->
-        (* k + kc2 *)
-        [Expr.Helpers.(binop dim2 Plus (k_choose_2 dim2))]
-    | Simplex, [dim] -> (* k - 1 *)
-                        [Expr.Helpers.(binop dim Minus (int 1))]
-    | ( ( Offset _ | Multiplier _ | OffsetMultiplier _ | Lower _ | Upper _
-        | LowerUpper _ | Ordered | PositiveOrdered | UnitVector )
-      , _ ) ->
-        dims
-    | _, _ ->
-        raise_s
-          [%message
-            "Error in constraint dimensions "
-              (st : Expr.Typed.t SizedType.t)
-              (trans : Expr.Typed.t Transformation.primitive)
-              (dims : Expr.Typed.t list)]
-  in
-  let rec outer_dims st =
-    match st with SizedType.SArray (t, d) -> d :: outer_dims t | _ -> []
-  in
-  let unc_dims = SizedType.dims_of st in
-  let dims =
-    match constrain_transform with
-    | Transformation.Identity -> unc_dims
-    | Single t -> constrain_dim unc_dims t
-    | Chain ts -> List.fold ~init:unc_dims ~f:constrain_dim ts
-  in
-  outer_dims st @ dims
-
-let extra_constraint_args st trans =
-  let extras_prim = function
-    | Transformation.Lower _ | Upper _ | Offset _ | Multiplier _
-     |LowerUpper _ | OffsetMultiplier _ | Ordered | PositiveOrdered | Simplex
-     |UnitVector ->
-        []
-    | Covariance | Correlation | CholeskyCorr ->
-        [List.hd_exn (SizedType.dims_of st)]
-    | CholeskyCov -> SizedType.dims_of st
-  in
-  match trans with
-  | Transformation.Identity -> []
-  | Transformation.Single t -> [extras_prim t]
-  | Chain ts -> List.map ~f:extras_prim ts
-
 let data_serializer_read loc out_constrained_st =
   let ut = SizedType.to_unsized out_constrained_st in
   let dims = SizedType.get_dims out_constrained_st in
@@ -249,16 +182,16 @@ let param_read smeta
     let emeta =
       Expr.Typed.Meta.create ~loc:smeta ~type_:ut ~adlevel:AutoDiffable ()
     in
-    let dims = read_constrain_dims out_trans cst in
-    let extra_args = extra_constraint_args cst out_trans in
+    let outer_dims = SizedType.outer_dims cst in
+    let dims = SizedType.dims_of cst in
     let read =
       Expr.(
         Helpers.(
           internal_funapp
             (FnReadParam
                { constrain= out_trans
+               ; outer_dims
                ; dims
-               ; extra_args
                ; mem_pattern= SizedType.get_mem_pattern cst })
             []
             Typed.Meta.{emeta with type_= ut}))

@@ -192,6 +192,55 @@ let transform_args trans =
   in
   args
 
+(*
+  Get the dimension expressions that are expected by constrain/unconstrain
+  functions for a sized type.
+
+  Simplex and the matrix constraints expect different sizes. This is similar to
+  Ast_to_Mir.param_size
+*)
+let read_constrain_dims transforms unc_dims =
+  let k_choose_2 k =
+    Expr.Helpers.(binop (binop k Times (binop k Minus (int 1))) Divide (int 2))
+  in
+  let constrain_dim dims trans =
+    match (trans, dims) with
+    | (Transformation.CholeskyCorr | Correlation), [_; dim2] ->
+        (* kc2 *)
+        [k_choose_2 dim2]
+    | CholeskyCov, [m; n] ->
+        (* (N * (N + 1)) / 2 + (M - N) * N *)
+        [ Expr.Helpers.(
+            binop
+              (binop (k_choose_2 n) Plus n)
+              Plus
+              (binop (binop m Minus n) Times n)) ]
+    | Covariance, [_; dim2] ->
+        (* k + kc2 *)
+        [Expr.Helpers.(binop dim2 Plus (k_choose_2 dim2))]
+    | Simplex, [dim] -> (* k - 1 *)
+                        [Expr.Helpers.(binop dim Minus (int 1))]
+    | ( ( Offset _ | Multiplier _ | OffsetMultiplier _ | Lower _ | Upper _
+        | LowerUpper _ | Ordered | PositiveOrdered | UnitVector )
+      , _ ) ->
+        dims
+    | _, _ ->
+        raise_s
+          [%message
+            "Error in constraint dimensions "
+              (trans : Expr.Typed.t Transformation.primitive)
+              (dims : Expr.Typed.t list)]
+  in
+  let dims = List.fold ~init:unc_dims ~f:constrain_dim transforms in
+  dims
+
+let extra_constraint_args dims = function
+  | Transformation.Lower _ | Upper _ | Offset _ | Multiplier _ | LowerUpper _
+   |OffsetMultiplier _ | Ordered | PositiveOrdered | Simplex | UnitVector ->
+      []
+  | Covariance | Correlation | CholeskyCorr -> [List.hd_exn dims]
+  | CholeskyCov -> dims
+
 let rec pp_index ppf = function
   | Index.All -> pf ppf "index_omni()"
   | Single e -> pf ppf "index_uni(%a)" pp_expr e
@@ -470,8 +519,8 @@ and pp_compiler_internal_fn ad ut f ppf es =
   | FnReadDataSerializer ->
       pf ppf "@[<hov 2>in__.read<%a>(@,)@]" pp_unsizedtype_local
         (UnsizedType.AutoDiffable, UnsizedType.UReal)
-  | FnReadParam {dims; constrain; extra_args; _} ->
-      pp_constraining ut dims (List.rev extra_args) ppf
+  | FnReadParam {outer_dims; dims; constrain; _} ->
+      pp_constraining ut outer_dims dims ppf
         (List.rev (Transformation.list constrain))
   | FnDeepCopy -> gen_fun_app FnPlain ppf "stan::model::deep_copy" es AoS
   | _ -> gen_fun_app FnPlain ppf (Internal_fun.to_string f) es AoS
@@ -558,27 +607,26 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
     | _ -> pp_indexed ppf (strf "%a" pp_expr e, idx, pretty_print e) )
 
-and pp_constraining ut dims extras ppf trans =
-  match (trans, extras) with
-  | [], [] ->
-      pf ppf "@[<hov 2>in__.template read<%a>(@,%a)@]" pp_unsizedtype_local
-        (UnsizedType.AutoDiffable, input_type ut dims)
-        (list ~sep:comma pp_expr) dims
-  | t :: ts, e :: es ->
-      let constraint_args = transform_args t in
-      let lp = Expr.Fixed.{pattern= Var "lp__"; meta= Expr.Typed.Meta.empty} in
-      let args = constraint_args @ e @ [lp] in
-      pf ppf "@[<hov 4>%s_constrain<jacobian__>(@,%a, @,%a)@]"
-        (constraint_to_string t)
-        (pp_constraining ut dims es)
-        ts (list ~sep:comma pp_expr) args
-  | _ ->
-      raise_s
-        [%message
-          "Bad argument list in constraining."
-            ( trans
-              : Expr.Typed.Meta.t Expr.Fixed.t Transformation.primitive list )
-            (extras : Expr.Typed.Meta.t Expr.Fixed.t list list)]
+and pp_constraining ut outer_dims dims ppf trans =
+  let rec pp_constr_loop ppf trans' =
+    match trans' with
+    | [] ->
+        let dims = outer_dims @ read_constrain_dims trans dims in
+        pf ppf "@[<hov 2>in__.template read<%a>(@,%a)@]" pp_unsizedtype_local
+          (UnsizedType.AutoDiffable, input_type ut dims)
+          (list ~sep:comma pp_expr) dims
+    | t :: ts ->
+        let constraint_args = transform_args t in
+        let extra_args = extra_constraint_args dims t in
+        let lp =
+          Expr.Fixed.{pattern= Var "lp__"; meta= Expr.Typed.Meta.empty}
+        in
+        let args = constraint_args @ extra_args @ [lp] in
+        pf ppf "@[<hov 4>%s_constrain<jacobian__>(@,%a, @,%a)@]"
+          (constraint_to_string t) pp_constr_loop ts (list ~sep:comma pp_expr)
+          args
+  in
+  pp_constr_loop ppf trans
 
 (* This handles the special cases of things like cholesky_corr,
  * which read in a vector and then produce a matrix 
