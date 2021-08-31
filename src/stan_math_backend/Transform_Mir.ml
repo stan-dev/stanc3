@@ -217,6 +217,21 @@ let read_constrain_dims constrain_transform st =
   in
   outer_dims st @ dims
 
+let extra_constraint_args st trans =
+  let extras_prim = function
+    | Transformation.Lower _ | Upper _ | Offset _ | Multiplier _
+     |LowerUpper _ | OffsetMultiplier _ | Ordered | PositiveOrdered | Simplex
+     |UnitVector ->
+        []
+    | Covariance | Correlation | CholeskyCorr ->
+        [List.hd_exn (SizedType.dims_of st)]
+    | CholeskyCov -> SizedType.dims_of st
+  in
+  match trans with
+  | Transformation.Identity -> []
+  | Transformation.Single t -> [extras_prim t]
+  | Chain ts -> List.map ~f:extras_prim ts
+
 let data_serializer_read loc out_constrained_st =
   let ut = SizedType.to_unsized out_constrained_st in
   let dims = SizedType.get_dims out_constrained_st in
@@ -235,6 +250,7 @@ let param_read smeta
       Expr.Typed.Meta.create ~loc:smeta ~type_:ut ~adlevel:AutoDiffable ()
     in
     let dims = read_constrain_dims out_trans cst in
+    let extra_args = extra_constraint_args cst out_trans in
     let read =
       Expr.(
         Helpers.(
@@ -242,6 +258,7 @@ let param_read smeta
             (FnReadParam
                { constrain= out_trans
                ; dims
+               ; extra_args
                ; mem_pattern= SizedType.get_mem_pattern cst })
             []
             Typed.Meta.{emeta with type_= ut}))

@@ -470,8 +470,9 @@ and pp_compiler_internal_fn ad ut f ppf es =
   | FnReadDataSerializer ->
       pf ppf "@[<hov 2>in__.read<%a>(@,)@]" pp_unsizedtype_local
         (UnsizedType.AutoDiffable, UnsizedType.UReal)
-  | FnReadParam {dims; constrain; _} ->
-      pp_constraining ut dims ppf (List.rev (Transformation.list constrain))
+  | FnReadParam {dims; constrain; extra_args; _} ->
+      pp_constraining ut dims (List.rev extra_args) ppf
+        (List.rev (Transformation.list constrain))
   | FnDeepCopy -> gen_fun_app FnPlain ppf "stan::model::deep_copy" es AoS
   | _ -> gen_fun_app FnPlain ppf (Internal_fun.to_string f) es AoS
 
@@ -557,19 +558,27 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
         pp_indexed_simple ppf (strf "%a" pp_expr e, idx)
     | _ -> pp_indexed ppf (strf "%a" pp_expr e, idx, pretty_print e) )
 
-and pp_constraining ut dims ppf trans =
-  match trans with
-  | [] ->
+and pp_constraining ut dims extras ppf trans =
+  match (trans, extras) with
+  | [], [] ->
       pf ppf "@[<hov 2>in__.template read<%a>(@,%a)@]" pp_unsizedtype_local
         (UnsizedType.AutoDiffable, input_type ut dims)
         (list ~sep:comma pp_expr) dims
-  | t :: ts ->
+  | t :: ts, e :: es ->
       let constraint_args = transform_args t in
       let lp = Expr.Fixed.{pattern= Var "lp__"; meta= Expr.Typed.Meta.empty} in
-      let args = constraint_args @ [lp] in
+      let args = constraint_args @ e @ [lp] in
       pf ppf "@[<hov 4>%s_constrain<jacobian__>(@,%a, @,%a)@]"
-        (constraint_to_string t) (pp_constraining ut dims) ts
-        (list ~sep:comma pp_expr) args
+        (constraint_to_string t)
+        (pp_constraining ut dims es)
+        ts (list ~sep:comma pp_expr) args
+  | _ ->
+      raise_s
+        [%message
+          "Bad argument list in constraining."
+            ( trans
+              : Expr.Typed.Meta.t Expr.Fixed.t Transformation.primitive list )
+            (extras : Expr.Typed.Meta.t Expr.Fixed.t list list)]
 
 (* This handles the special cases of things like cholesky_corr,
  * which read in a vector and then produce a matrix 

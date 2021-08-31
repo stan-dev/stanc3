@@ -26264,7 +26264,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       current_statement__ = 5;
       x_cov = cov_matrix_constrain<jacobian__>(
                   in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
-                    (2 + ((2 * (2 - 1)) / 2))), lp__);
+                    (2 + ((2 * (2 - 1)) / 2))), 2, lp__);
       {
         double x;
         x = std::numeric_limits<double>::quiet_NaN();
@@ -26835,7 +26835,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       current_statement__ = 5;
       x_cov = cov_matrix_constrain<jacobian__>(
                   in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
-                    (2 + ((2 * (2 - 1)) / 2))), lp__);
+                    (2 + ((2 * (2 - 1)) / 2))), 2, lp__);
       out__.write(theta);
       out__.write(phi);
       out__.write(x_matrix);
