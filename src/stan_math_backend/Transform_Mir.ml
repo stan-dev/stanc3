@@ -187,7 +187,7 @@ let read_constrain_dims constrain_transform st =
 
 let data_serializer_read loc out_constrained_st =
   let ut = SizedType.to_unsized out_constrained_st in
-  let dims = SizedType.get_dims out_constrained_st in
+  let dims = SizedType.get_dims_io out_constrained_st in
   let emeta = Expr.Typed.Meta.create ~loc ~type_:ut ~adlevel:AutoDiffable () in
   Expr.(
     Helpers.(

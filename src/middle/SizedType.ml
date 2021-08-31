@@ -70,7 +70,7 @@ let rec dims_of st =
   | SInt | SReal | SComplex -> []
 
 (** Get the dimensions with respect to sizes needed for IO. *)
-let rec get_dims st =
+let rec get_dims_io st =
   match st with
   | SInt | SReal -> []
   | SComplex ->
@@ -83,14 +83,14 @@ let rec get_dims st =
           ; pattern= Lit (Int, "2") } ]
   | SVector (_, d) | SRowVector (_, d) -> [d]
   | SMatrix (_, dim1, dim2) -> [dim1; dim2]
-  | SArray (t, dim) -> dim :: get_dims t
+  | SArray (t, dim) -> dim :: get_dims_io t
 
-let rec get_dims2 st =
+let rec get_dims st =
   match st with
   | SInt | SReal | SComplex -> []
   | SVector (_, d) | SRowVector (_, d) -> [d]
   | SMatrix (_, dim1, dim2) -> [dim1; dim2]
-  | SArray (t, dim) -> dim :: get_dims2 t
+  | SArray (t, dim) -> dim :: get_dims t
 
 (**
  * Check whether a SizedType holds indexable SizedTypes.
@@ -113,7 +113,7 @@ let rec get_array_dims st =
       (st', dim :: dims)
 
 let num_elems_expr st =
-  Expr.Helpers.binop_list (get_dims st) Operator.Times
+  Expr.Helpers.binop_list (get_dims_io st) Operator.Times
     ~default:(Expr.Helpers.int 1)
 
 let%expect_test "dims" =
@@ -122,7 +122,7 @@ let%expect_test "dims" =
     (List.map
        ~f:(fun Expr.Fixed.({pattern; _}) ->
          match pattern with Expr.Fixed.Pattern.Lit (_, x) -> x | _ -> "fail" )
-       (get_dims
+       (get_dims_io
           (SArray
              ( SMatrix
                  ( Common.Helpers.AoS
