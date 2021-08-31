@@ -11961,13 +11961,13 @@
                        (FunApp (StanLib Divide__ FnPlain AoS)
                         (((pattern
                            (FunApp (StanLib Times__ FnPlain AoS)
-                            (((pattern (Lit Int 5))
+                            (((pattern (Lit Int 4))
                               (meta
                                ((type_ UInt) (loc <opaque>)
                                 (adlevel DataOnly))))
                              ((pattern
                                (FunApp (StanLib Minus__ FnPlain AoS)
-                                (((pattern (Lit Int 5))
+                                (((pattern (Lit Int 4))
                                   (meta
                                    ((type_ UInt) (loc <opaque>)
                                     (adlevel DataOnly))))
@@ -11991,14 +11991,14 @@
                    (FunApp (StanLib Times__ FnPlain AoS)
                     (((pattern
                        (FunApp (StanLib Minus__ FnPlain AoS)
-                        (((pattern (Lit Int 4))
+                        (((pattern (Lit Int 5))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         ((pattern (Lit Int 5))
+                         ((pattern (Lit Int 4))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                     ((pattern (Lit Int 5))
+                     ((pattern (Lit Int 4))
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
@@ -14740,13 +14740,13 @@
                        (FunApp (StanLib Divide__ FnPlain AoS)
                         (((pattern
                            (FunApp (StanLib Times__ FnPlain AoS)
-                            (((pattern (Lit Int 5))
+                            (((pattern (Lit Int 4))
                               (meta
                                ((type_ UInt) (loc <opaque>)
                                 (adlevel DataOnly))))
                              ((pattern
                                (FunApp (StanLib Minus__ FnPlain AoS)
-                                (((pattern (Lit Int 5))
+                                (((pattern (Lit Int 4))
                                   (meta
                                    ((type_ UInt) (loc <opaque>)
                                     (adlevel DataOnly))))
@@ -14770,14 +14770,14 @@
                    (FunApp (StanLib Times__ FnPlain AoS)
                     (((pattern
                        (FunApp (StanLib Minus__ FnPlain AoS)
-                        (((pattern (Lit Int 4))
+                        (((pattern (Lit Int 5))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                         ((pattern (Lit Int 5))
+                         ((pattern (Lit Int 4))
                           (meta
                            ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
-                     ((pattern (Lit Int 5))
+                     ((pattern (Lit Int 4))
                       (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
                   (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))

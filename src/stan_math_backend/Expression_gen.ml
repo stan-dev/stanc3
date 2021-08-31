@@ -575,7 +575,10 @@ and pp_constraining ut dims ppf trans =
  * which read in a vector and then produce a matrix 
  *)
 and input_type (ut : UnsizedType.t) dims : UnsizedType.t =
-  match (ut, dims) with UMatrix, [_] -> UVector | _ -> ut
+  match (ut, dims) with
+  | UMatrix, [_] -> UVector
+  | UArray t, _ :: dims -> UArray (input_type t dims)
+  | _ -> ut
 
 (* these functions are just for testing *)
 let dummy_locate pattern =

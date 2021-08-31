@@ -181,13 +181,13 @@ let read_constrain_dims constrain_transform st =
     | (Transformation.CholeskyCorr | Correlation), [_; dim2] ->
         (* kc2 *)
         [k_choose_2 dim2]
-    | CholeskyCov, [dim1; dim2] ->
+    | CholeskyCov, [m; n] ->
         (* (N * (N + 1)) / 2 + (M - N) * N *)
         [ Expr.Helpers.(
             binop
-              (binop (k_choose_2 dim1) Plus dim2)
+              (binop (k_choose_2 n) Plus n)
               Plus
-              (binop (binop dim2 Minus dim1) Times dim1)) ]
+              (binop (binop m Minus n) Times n)) ]
     | Covariance, [_; dim2] ->
         (* k + kc2 *)
         [Expr.Helpers.(binop dim2 Plus (k_choose_2 dim2))]
