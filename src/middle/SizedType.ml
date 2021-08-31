@@ -54,7 +54,13 @@ let rec associate ?init:(assocs = Label.Int_label.Map.empty) = function
   | SArray (st, e) ->
       associate ~init:(Expr.Labelled.associate ~init:assocs e) st
 
-let rec inner_type = function SArray (t, _) -> inner_type t | t -> t
+let rec inner_type st = match st with SArray (t, _) -> inner_type t | t -> t
+
+let rec contains_complex st =
+  match st with
+  | SComplex -> true
+  | SArray (t, _) -> contains_complex t
+  | _ -> false
 
 let rec dims_of st =
   match st with
@@ -63,6 +69,7 @@ let rec dims_of st =
   | SRowVector (_, dim) | SVector (_, dim) -> [dim]
   | SInt | SReal | SComplex -> []
 
+(** Get the dimensions with respect to sizes needed for IO. *)
 let rec get_dims st =
   match st with
   | SInt | SReal -> []
@@ -77,6 +84,13 @@ let rec get_dims st =
   | SVector (_, d) | SRowVector (_, d) -> [d]
   | SMatrix (_, dim1, dim2) -> [dim1; dim2]
   | SArray (t, dim) -> dim :: get_dims t
+
+let rec get_dims2 st =
+  match st with
+  | SInt | SReal | SComplex -> []
+  | SVector (_, d) | SRowVector (_, d) -> [d]
+  | SMatrix (_, dim1, dim2) -> [dim1; dim2]
+  | SArray (t, dim) -> dim :: get_dims2 t
 
 (**
  * Check whether a SizedType holds indexable SizedTypes.
@@ -102,14 +116,21 @@ let num_elems_expr st =
   Expr.Helpers.binop_list (get_dims st) Operator.Times
     ~default:(Expr.Helpers.int 1)
 
-(*
 let%expect_test "dims" =
   let open Fmt in
   strf "@[%a@]" (list ~sep:comma string)
-    (get_dims (SArray (SMatrix (Common.Helpers.AoS, "x", "y"), "z")))
+    (List.map
+       ~f:(fun Expr.Fixed.({pattern; _}) ->
+         match pattern with Expr.Fixed.Pattern.Lit (_, x) -> x | _ -> "fail" )
+       (get_dims
+          (SArray
+             ( SMatrix
+                 ( Common.Helpers.AoS
+                 , {meta= Expr.Typed.Meta.empty; pattern= Lit (Int, "x")}
+                 , {meta= Expr.Typed.Meta.empty; pattern= Lit (Int, "y")} )
+             , {meta= Expr.Typed.Meta.empty; pattern= Lit (Int, "z")} ))))
   |> print_endline ;
   [%expect {| z, x, y |}]
-*)
 
 (**
  * Return true if SizedType contains an Eigen type

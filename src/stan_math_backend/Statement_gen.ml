@@ -54,9 +54,8 @@ let rec pp_initialize ppf (st, adtype) =
   | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
   | SReal -> pf ppf "%s" init_nan
   | SComplex ->
-      pf ppf
-        "std::complex<double> (std::numeric_limits<double>::quiet_NaN(), \
-         std::numeric_limits<double>::quiet_NaN())"
+      let scalar = local_scalar (SizedType.to_unsized st) adtype in
+      pf ppf "std::complex<%s>(%s, %s)" scalar init_nan init_nan
   | SVector (_, d) | SRowVector (_, d) ->
       pf ppf "%a(%a)" pp_st (st, adtype) pp_expr d
   | SMatrix (_, d1, d2) ->

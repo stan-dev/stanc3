@@ -183,7 +183,7 @@ let read_constrain_dims constrain_transform st =
   match constrain_transform with
   | Transformation.CholeskyCorr | Correlation | Covariance ->
       constrain_get_dims st
-  | _ -> snd (SizedType.get_array_dims st)
+  | _ -> SizedType.get_dims st
 
 let data_serializer_read loc out_constrained_st =
   let ut = SizedType.to_unsized out_constrained_st in

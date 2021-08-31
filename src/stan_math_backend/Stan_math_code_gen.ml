@@ -667,14 +667,11 @@ let pp_unconstrained_param_names ppf {Program.output_vars; _} =
       output_vars
   in
   let pp_param_names ppf (decl_id, st) =
-    let dims = List.rev (SizedType.get_dims st) in
-    let check_complex st = SizedType.(inner_type st = SComplex) in
-    match check_complex st with
-    | true -> (
-      match dims with
-      | _ :: tail -> pp_for_loop_iteratee ppf (decl_id, tail, emit_complex_name)
-      | [] -> pp_for_loop_iteratee ppf (decl_id, [], emit_name) )
-    | false -> pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
+    let pp_names =
+      if SizedType.contains_complex st then emit_complex_name else emit_name
+    in
+    pp_for_loop_iteratee ppf
+      (decl_id, List.rev (SizedType.get_dims2 st), pp_names)
   in
   let cv_attr = ["const"; "final"] in
   pp_method ppf "void" "unconstrained_param_names" params nop
