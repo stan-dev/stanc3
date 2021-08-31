@@ -560,7 +560,7 @@ and pp_constraining ut dims ppf trans =
   match trans with
   | [] ->
       pf ppf "@[<hov 2>in__.template read<%a>(@,%a)@]" pp_unsizedtype_local
-        (UnsizedType.AutoDiffable, ut)
+        (UnsizedType.AutoDiffable, input_type ut dims)
         (list ~sep:comma pp_expr) dims
   | t :: ts ->
       let constraint_args = transform_args t in
@@ -569,6 +569,12 @@ and pp_constraining ut dims ppf trans =
       pf ppf "@[<hov 4>%s_constrain<jacobian__>(@,%a, @,%a);@]"
         (constraint_to_string t) (pp_constraining ut dims) ts
         (list ~sep:comma pp_expr) args
+
+(* This handles the special cases of things like cholesky_corr,
+ * which read in a vector and then produce a matrix 
+ *)
+and input_type (ut : UnsizedType.t) dims : UnsizedType.t =
+  match (ut, dims) with UMatrix, [_] -> UVector | _ -> ut
 
 (* these functions are just for testing *)
 let dummy_locate pattern =

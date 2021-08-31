@@ -26263,7 +26263,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       Eigen::Matrix<local_scalar_t__, -1, -1> x_cov;
       current_statement__ = 5;
       x_cov = cov_matrix_constrain<jacobian__>(
-                  in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+                  in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                     (2 + ((2 * (2 - 1)) / 2))), lp__);;
       {
         double x;
@@ -26834,7 +26834,7 @@ class optimizations_model final : public model_base_crtp<optimizations_model> {
       Eigen::Matrix<double, -1, -1> x_cov;
       current_statement__ = 5;
       x_cov = cov_matrix_constrain<jacobian__>(
-                  in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+                  in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                     (2 + ((2 * (2 - 1)) / 2))), lp__);;
       out__.write(theta);
       out__.write(phi);

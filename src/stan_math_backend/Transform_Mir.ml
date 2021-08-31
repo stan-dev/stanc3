@@ -169,13 +169,8 @@ let data_read smeta (decl_id, st) =
   Get the dimension expressions that are expected by constrain/unconstrain
   functions for a sized type.
 
-  For constrains that return square / lower triangular matrices the C++
-  only wants one of the matrix dimensions.
-
-  (* TR TODO needs to work on chain by figuring out which values matter
-      need a function that takes in a primitive and dimensions, returns output dimensions
-      fold over that
-  *)
+  Simplex and the matrix constraints expect different sizes. This is similar to
+  Ast_to_Mir.param_size
 *)
 let read_constrain_dims constrain_transform st =
   let k_choose_2 k =
@@ -184,6 +179,7 @@ let read_constrain_dims constrain_transform st =
   let constrain_dim dims trans =
     match (trans, dims) with
     | (Transformation.CholeskyCorr | Correlation), [_; dim2] ->
+        (* kc2 *)
         [k_choose_2 dim2]
     | CholeskyCov, [dim1; dim2] ->
         [ Expr.Helpers.(
@@ -192,8 +188,10 @@ let read_constrain_dims constrain_transform st =
               Plus
               (binop (binop dim2 Minus dim1) Times dim1)) ]
     | Covariance, [_; dim2] ->
+        (* k + kc2 *)
         [Expr.Helpers.(binop dim2 Plus (k_choose_2 dim2))]
-    | Simplex, [dim] -> [Expr.Helpers.(binop dim Minus (int 1))]
+    | Simplex, [dim] -> (* k - 1 *)
+                        [Expr.Helpers.(binop dim Minus (int 1))]
     | ( ( Offset _ | Multiplier _ | OffsetMultiplier _ | Lower _ | Upper _
         | LowerUpper _ | Ordered | PositiveOrdered | UnitVector )
       , _ ) ->

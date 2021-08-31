@@ -6927,12 +6927,12 @@ class mother_model final : public model_base_crtp<mother_model> {
       Eigen::Matrix<local_scalar_t__, -1, -1> p_cfcov_54;
       current_statement__ = 20;
       p_cfcov_54 = cholesky_factor_cov_constrain<jacobian__>(
-                       in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+                       in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                          ((((5 * (5 - 1)) / 2) + 4) + ((4 - 5) * 5))), lp__);;
       Eigen::Matrix<local_scalar_t__, -1, -1> p_cfcov_33;
       current_statement__ = 21;
       p_cfcov_33 = cholesky_factor_cov_constrain<jacobian__>(
-                       in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+                       in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                          ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3))), lp__);;
       std::vector<Eigen::Matrix<local_scalar_t__, -1, -1>> p_cfcov_33_ar;
       current_statement__ = 22;
@@ -7436,12 +7436,12 @@ class mother_model final : public model_base_crtp<mother_model> {
       Eigen::Matrix<double, -1, -1> p_cfcov_54;
       current_statement__ = 20;
       p_cfcov_54 = cholesky_factor_cov_constrain<jacobian__>(
-                       in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+                       in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                          ((((5 * (5 - 1)) / 2) + 4) + ((4 - 5) * 5))), lp__);;
       Eigen::Matrix<double, -1, -1> p_cfcov_33;
       current_statement__ = 21;
       p_cfcov_33 = cholesky_factor_cov_constrain<jacobian__>(
-                       in__.template read<Eigen::Matrix<local_scalar_t__, -1, -1>>(
+                       in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(
                          ((((3 * (3 - 1)) / 2) + 3) + ((3 - 3) * 3))), lp__);;
       std::vector<Eigen::Matrix<double, -1, -1>> p_cfcov_33_ar;
       current_statement__ = 22;
