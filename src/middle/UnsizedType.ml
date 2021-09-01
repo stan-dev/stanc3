@@ -5,6 +5,7 @@ type t =
   | UInt
   | UReal
   | UVector
+  | UComplex
   | URowVector
   | UMatrix
   | UArray of t
@@ -46,6 +47,7 @@ let rec unwind_array_type = function
 let rec pp ppf = function
   | UInt -> pp_keyword ppf "int"
   | UReal -> pp_keyword ppf "real"
+  | UComplex -> pp_keyword ppf "complex"
   | UVector -> pp_keyword ppf "vector"
   | URowVector -> pp_keyword ppf "row_vector"
   | UMatrix -> pp_keyword ppf "matrix"
@@ -84,6 +86,8 @@ let check_of_same_type_mod_conv name t1 t2 =
   else
     match (t1, t2) with
     | UReal, UInt -> true
+    | UComplex, UInt -> true
+    | UComplex, UReal -> true
     | UFun (l1, rt1, s1, _), UFun (l2, rt2, s2, _) -> (
         s1 = s2 && rt1 = rt2
         &&
@@ -117,6 +121,8 @@ let check_compatible_arguments_mod_conv name args1 args2 =
 (** Given two types find the minimal type both can convert to *)
 let rec common_type = function
   | UReal, UInt | UInt, UReal -> Some UReal
+  | UComplex, UInt | UInt, UComplex | UComplex, UReal | UReal, UComplex ->
+      Some UComplex
   | UArray t1, UArray t2 ->
       common_type (t1, t2) |> Option.map ~f:(fun t -> UArray t)
   | t1, t2 when t1 = t2 -> Some t1
