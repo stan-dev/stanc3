@@ -69,18 +69,15 @@ let rec dims_of st =
   | SRowVector (_, dim) | SVector (_, dim) -> [dim]
   | SInt | SReal | SComplex -> []
 
-(** Get the dimensions with respect to sizes needed for IO. *)
+(** 
+ * Get the dimensions with respect to sizes needed for IO.
+ * @Note: The main difference from get_dims is complex,
+ *  where this function treats the complex type as a dual number.
+ *)
 let rec get_dims_io st =
   match st with
   | SInt | SReal -> []
-  | SComplex ->
-      [ Expr.Fixed.
-          { meta=
-              Expr.Typed.Meta.
-                { type_= UnsizedType.UInt
-                ; loc= Location_span.empty
-                ; adlevel= DataOnly }
-          ; pattern= Lit (Int, "2") } ]
+  | SComplex -> [Expr.Helpers.int 2]
   | SVector (_, d) | SRowVector (_, d) -> [d]
   | SMatrix (_, dim1, dim2) -> [dim1; dim2]
   | SArray (t, dim) -> dim :: get_dims_io t
@@ -126,9 +123,9 @@ let%expect_test "dims" =
           (SArray
              ( SMatrix
                  ( Common.Helpers.AoS
-                 , {meta= Expr.Typed.Meta.empty; pattern= Lit (Int, "x")}
-                 , {meta= Expr.Typed.Meta.empty; pattern= Lit (Int, "y")} )
-             , {meta= Expr.Typed.Meta.empty; pattern= Lit (Int, "z")} ))))
+                 , Expr.Helpers.str "x"
+                 , Expr.Helpers.str "y" )
+             , Expr.Helpers.str "z" ))))
   |> print_endline ;
   [%expect {| z, x, y |}]
 
