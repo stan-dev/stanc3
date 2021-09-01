@@ -352,29 +352,18 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
       pf ppf "%a@," (list ~sep:cut add_to_string) args ;
       pf ppf "throw std::domain_error(%s.str());" err_strm
   | NRFunApp (CompilerInternal (FnCheck {trans; var_name; var}), args) ->
-      (*FIXME: This is stupid, need to make a fix in the C++ templates*)
-      let check_eigen_autodiff_type
-          Expr.Fixed.({meta= Expr.Typed.Meta.({type_; adlevel; _}); _}) =
-        UnsizedType.contains_eigen_type type_
-        && adlevel = UnsizedType.AutoDiffable
-      in
-      let value_of_rec_wrap ppf blah2 =
-        if check_eigen_autodiff_type blah2 then
-          pf ppf "stan::math::value_of(%a)" pp_expr blah2
-        else pf ppf "%a" pp_expr blah2
-      in
       Option.iter (check_to_string trans) ~f:(fun check_name ->
           let function_arg = Expr.Helpers.variable "function__" in
           if List.length args = 0 then
             pf ppf "%s(@[<hov 2>%a, %a,@, %a@]);" ("check_" ^ check_name)
               pp_expr function_arg pp_expr
               (Expr.Helpers.str var_name)
-              value_of_rec_wrap var
+              pp_expr var
           else
             pf ppf "%s(@[<hov 2>%a, %a,@, %a,@, %a@]);" ("check_" ^ check_name)
               pp_expr function_arg pp_expr
               (Expr.Helpers.str var_name)
-              value_of_rec_wrap var (list ~sep:comma pp_expr) args )
+              pp_expr var (list ~sep:comma pp_expr) args )
   | NRFunApp (CompilerInternal (FnWriteParam {unconstrain_opt; var}), _) -> (
     match
       (unconstrain_opt, Option.bind ~f:constraint_to_string unconstrain_opt)

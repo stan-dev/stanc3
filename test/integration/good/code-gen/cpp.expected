@@ -7254,32 +7254,23 @@ class mother_model final : public model_base_crtp<mother_model> {
       current_statement__ = 26;
       check_greater_or_equal(function__, "tp_real_3d_ar", tp_real_3d_ar, 0);
       current_statement__ = 27;
-      check_less_or_equal(function__, "tp_vec", stan::math::value_of(tp_vec),
-                             0);
+      check_less_or_equal(function__, "tp_vec", tp_vec, 0);
       current_statement__ = 34;
-      check_greater_or_equal(function__, "tp_ar_mat",
-                                stan::math::value_of(tp_ar_mat), 0);
+      check_greater_or_equal(function__, "tp_ar_mat", tp_ar_mat, 0);
       current_statement__ = 34;
-      check_less_or_equal(function__, "tp_ar_mat",
-                             stan::math::value_of(tp_ar_mat), 1);
+      check_less_or_equal(function__, "tp_ar_mat", tp_ar_mat, 1);
       current_statement__ = 35;
-      check_simplex(function__, "tp_simplex",
-                       stan::math::value_of(tp_simplex));
+      check_simplex(function__, "tp_simplex", tp_simplex);
       current_statement__ = 36;
-      check_simplex(function__, "tp_1d_simplex",
-                       stan::math::value_of(tp_1d_simplex));
+      check_simplex(function__, "tp_1d_simplex", tp_1d_simplex);
       current_statement__ = 37;
-      check_simplex(function__, "tp_3d_simplex",
-                       stan::math::value_of(tp_3d_simplex));
+      check_simplex(function__, "tp_3d_simplex", tp_3d_simplex);
       current_statement__ = 38;
-      check_cholesky_factor(function__, "tp_cfcov_54",
-                               stan::math::value_of(tp_cfcov_54));
+      check_cholesky_factor(function__, "tp_cfcov_54", tp_cfcov_54);
       current_statement__ = 39;
-      check_cholesky_factor(function__, "tp_cfcov_33",
-                               stan::math::value_of(tp_cfcov_33));
+      check_cholesky_factor(function__, "tp_cfcov_33", tp_cfcov_33);
       current_statement__ = 40;
-      check_cholesky_factor(function__, "tp_cfcov_33_ar",
-                               stan::math::value_of(tp_cfcov_33_ar));
+      check_cholesky_factor(function__, "tp_cfcov_33_ar", tp_cfcov_33_ar);
       {
         Eigen::Matrix<local_scalar_t__, -1, 1> tmp =
            Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(0, DUMMY_VAR__);
@@ -27287,40 +27278,32 @@ class transform_model final : public model_base_crtp<transform_model> {
       current_statement__ = 28;
       check_less_or_equal(function__, "tp_10", tp_10, ds);
       current_statement__ = 29;
-      check_greater_or_equal(function__, "tpv_1",
-                                stan::math::value_of(tpv_1),
+      check_greater_or_equal(function__, "tpv_1", tpv_1,
                                 rvalue(dv, "dv", index_uni(1), index_uni(1)));
       current_statement__ = 29;
-      check_less_or_equal(function__, "tpv_1", stan::math::value_of(tpv_1),
+      check_less_or_equal(function__, "tpv_1", tpv_1,
                              rvalue(dv, "dv", index_uni(1), index_uni(2)));
       current_statement__ = 30;
-      check_greater_or_equal(function__, "tpv_2",
-                                stan::math::value_of(tpv_2),
+      check_greater_or_equal(function__, "tpv_2", tpv_2,
                                 rvalue(dv, "dv", index_uni(1)));
       current_statement__ = 31;
-      check_less_or_equal(function__, "tpv_3", stan::math::value_of(tpv_3),
-                             dv);
+      check_less_or_equal(function__, "tpv_3", tpv_3, dv);
       current_statement__ = 32;
-      check_greater_or_equal(function__, "tpr_1",
-                                stan::math::value_of(tpr_1),
+      check_greater_or_equal(function__, "tpr_1", tpr_1,
                                 rvalue(dr, "dr", index_uni(1), index_uni(1)));
       current_statement__ = 32;
-      check_less_or_equal(function__, "tpr_1", stan::math::value_of(tpr_1),
+      check_less_or_equal(function__, "tpr_1", tpr_1,
                              rvalue(dr, "dr", index_uni(1), index_uni(2)));
       current_statement__ = 33;
-      check_greater_or_equal(function__, "tpr_2",
-                                stan::math::value_of(tpr_2),
+      check_greater_or_equal(function__, "tpr_2", tpr_2,
                                 rvalue(dr, "dr", index_uni(1)));
       current_statement__ = 34;
-      check_less_or_equal(function__, "tpr_3", stan::math::value_of(tpr_3),
-                             dr);
+      check_less_or_equal(function__, "tpr_3", tpr_3, dr);
       current_statement__ = 35;
-      check_greater_or_equal(function__, "tpm_1",
-                                stan::math::value_of(tpm_1),
+      check_greater_or_equal(function__, "tpm_1", tpm_1,
                                 rvalue(dm, "dm", index_uni(1)));
       current_statement__ = 36;
-      check_less_or_equal(function__, "tpm_2", stan::math::value_of(tpm_2),
-                             dm);
+      check_less_or_equal(function__, "tpm_2", tpm_2, dm);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
       // Next line prevents compiler griping about no return
