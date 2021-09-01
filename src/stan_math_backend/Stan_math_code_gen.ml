@@ -365,7 +365,7 @@ let pp_validate_data ppf (name, st) =
     pf ppf "@[<hov 4>context__.validate_dims(@,%S,@,%S,@,%S,@,%a);@]@ "
       "data initialization" name
       (stantype_prim_str (SizedType.to_unsized st))
-      pp_stdvector (SizedType.get_dims st)
+      pp_stdvector (SizedType.get_dims_io st)
 
 (** Print the constructor of the model class.
  Read in data steps:
@@ -414,7 +414,7 @@ let pp_ctor ppf p =
         cut ppf () ;
         let get_param_st = function
           | _, {Program.out_block= Parameters; out_unconstrained_st= st; _} -> (
-            match SizedType.get_dims st with
+            match SizedType.get_dims_io st with
             | [] -> Some [Expr.Helpers.loop_bottom]
             | ls -> Some ls )
           | _ -> None
@@ -507,7 +507,7 @@ let pp_get_dims ppf {Program.output_vars; _} =
       map ~f:(fun (_, {Program.out_constrained_st= st; _}) -> st) output_vars)
   in
   let pp_output_var ppf dims =
-    (list ~sep:comma pp_add_pack) ppf List.(map ~f:SizedType.get_dims dims)
+    (list ~sep:comma pp_add_pack) ppf List.(map ~f:SizedType.get_dims_io dims)
   in
   pp_method ppf "void" "get_dims"
     ["std::vector<std::vector<size_t>>& dimss__"]
@@ -579,6 +579,21 @@ let rec pp_for_loop_iteratee ?(index_ids = []) ppf (iteratee, dims, pp_body) =
           pf ppf "@[%a @]" pp_block
             (pp_for_loop_iteratee ~index_ids:idcs, (i, dims, pp_body)) )
 
+let emit_name ppf (name, idcs) =
+  let to_string = fmt "std::to_string(%s)" in
+  pf ppf "param_names__.emplace_back(std::string() + %a);"
+    (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
+    (strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs)
+
+let emit_complex_name ppf (name, idcs) =
+  let to_string = fmt "std::to_string(%s)" in
+  pf ppf "@[param_names__.emplace_back(std::string() + %a);@]@,"
+    (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
+    ((strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs) @ ["\"real\""]) ;
+  pf ppf "param_names__.emplace_back(std::string() + %a);"
+    (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
+    ((strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs) @ ["\"imag\""])
+
 (** Print the `constrained_param_names` method of the model class. *)
 let pp_constrained_param_names ppf {Program.output_vars; _} =
   let params =
@@ -597,15 +612,12 @@ let pp_constrained_param_names ppf {Program.output_vars; _} =
             `Trd (id, st))
       output_vars
   in
-  let emit_name ppf (name, idcs) =
-    let to_string = fmt "std::to_string(%s)" in
-    pf ppf "param_names__.emplace_back(std::string() + %a);"
-      (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
-      (strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs)
-  in
   let pp_param_names ppf (decl_id, st) =
+    let gen_name =
+      if SizedType.contains_complex st then emit_complex_name else emit_name
+    in
     let dims = List.rev (SizedType.get_dims st) in
-    pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
+    pp_for_loop_iteratee ppf (decl_id, dims, gen_name)
   in
   pp_method ppf "void" "constrained_param_names" params nop
     (fun ppf ->
@@ -651,15 +663,12 @@ let pp_unconstrained_param_names ppf {Program.output_vars; _} =
             `Trd (id, st))
       output_vars
   in
-  let emit_name ppf (name, idcs) =
-    let to_string = fmt "std::to_string(%s)" in
-    pf ppf "param_names__.emplace_back(std::string() + %a);"
-      (list ~sep:(fun ppf () -> pf ppf " + '.' + ") string)
-      (strf "%S" name :: List.map ~f:(strf "%a" to_string) idcs)
-  in
   let pp_param_names ppf (decl_id, st) =
-    let dims = List.rev (SizedType.get_dims st) in
-    pp_for_loop_iteratee ppf (decl_id, dims, emit_name)
+    let pp_names =
+      if SizedType.contains_complex st then emit_complex_name else emit_name
+    in
+    pp_for_loop_iteratee ppf
+      (decl_id, List.rev (SizedType.get_dims st), pp_names)
   in
   let cv_attr = ["const"; "final"] in
   pp_method ppf "void" "unconstrained_param_names" params nop
