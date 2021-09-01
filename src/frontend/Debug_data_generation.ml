@@ -284,6 +284,9 @@ let rec generate_value m st t =
   match st with
   | SizedType.SInt -> gen_int m t
   | SReal -> gen_real m t
+  | SComplex ->
+      (* when serialzied, a complex number looks just like a 2-array of reals *)
+      generate_value m (SArray (SReal, wrap_int 2)) t
   | SVector (_, e) -> gen_vector m (unwrap_int_exn m e) t
   | SRowVector (_, e) -> gen_row_vector m (unwrap_int_exn m e) t
   | SMatrix (_, e1, e2) ->

@@ -25,6 +25,7 @@ let rec sized_basetype_dims t =
   match t with
   | SizedType.SInt -> ("int", 0)
   | SReal -> ("real", 0)
+  | SComplex -> ("complex", 0)
   | SVector _ | SRowVector _ -> ("real", 1)
   | SMatrix _ -> ("real", 2)
   | SArray (t, _) ->
@@ -35,6 +36,7 @@ let rec unsized_basetype_dims t =
   match t with
   | UnsizedType.UInt -> ("int", 0)
   | UReal -> ("real", 0)
+  | UComplex -> ("complex", 0)
   | UVector | URowVector -> ("real", 1)
   | UMatrix -> ("real", 2)
   | UArray t ->

@@ -267,7 +267,7 @@ let param_size transform sizedtype =
     | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen f t, d)
     | SVector (mem_pattern, d) | SMatrix (mem_pattern, d, _) ->
         SVector (mem_pattern, f d)
-    | SInt | SReal | SRowVector _ ->
+    | SInt | SReal | SComplex | SRowVector _ ->
         raise_s
           [%message
             "Expecting SVector or SMatrix, got " (st : Expr.Typed.t SizedType.t)]
@@ -276,7 +276,7 @@ let param_size transform sizedtype =
     match st with
     | SizedType.SArray (t, d) -> SizedType.SArray (shrink_eigen_mat f t, d)
     | SMatrix (mem_pattern, d1, d2) -> SVector (mem_pattern, f d1 d2)
-    | SInt | SReal | SRowVector _ | SVector _ ->
+    | SInt | SReal | SComplex | SRowVector _ | SVector _ ->
         raise_s
           [%message "Expecting SMatrix, got " (st : Expr.Typed.t SizedType.t)]
   in
@@ -377,7 +377,7 @@ let check_sizedtype name =
             n.meta.loc ]
   in
   let rec sizedtype = function
-    | SizedType.(SInt | SReal) as t -> ([], t)
+    | SizedType.(SInt | SReal | SComplex) as t -> ([], t)
     | SVector (mem_pattern, s) ->
         let e = trans_expr s in
         (check s e, SizedType.SVector (mem_pattern, e))
@@ -674,7 +674,7 @@ let trans_sizedtype_decl declc tr name =
         ([decl; assign; check fn s var], var)
   in
   let rec go n = function
-    | SizedType.(SInt | SReal) as t -> ([], t)
+    | SizedType.(SInt | SReal | SComplex) as t -> ([], t)
     | SVector (mem_pattern, s) ->
         let fn =
           match (declc.transform_action, tr) with
