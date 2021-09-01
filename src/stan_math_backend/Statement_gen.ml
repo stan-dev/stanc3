@@ -19,7 +19,7 @@ let rec contains_eigen (ut : UnsizedType.t) : bool =
   match ut with
   | UnsizedType.UArray t -> contains_eigen t
   | UMatrix | URowVector | UVector -> true
-  | UInt | UReal | UMathLibraryFunction | UFun _ -> false
+  | UInt | UReal | UComplex | UMathLibraryFunction | UFun _ -> false
 
 (*Fill only needs to happen for containers 
   * Note: This should probably be moved into its own function as data
@@ -55,6 +55,9 @@ let rec pp_initialize ppf (st, adtype) =
     match st with
     | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
     | SReal -> pf ppf "%s" init_nan
+    | SComplex ->
+        let scalar = local_scalar (SizedType.to_unsized st) adtype in
+        pf ppf "@[<hov 2>std::complex<%s>(%s,@ %s)@]" scalar init_nan init_nan
     | SVector (_, size) | SRowVector (_, size) ->
         pf ppf "@[<hov 2>%a::Constant(@,%a,@ %s)@]" pp_st (st, adtype) pp_expr
           size init_nan
@@ -69,6 +72,9 @@ let rec pp_initialize ppf (st, adtype) =
     match st with
     | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
     | SReal -> pf ppf "%s" init_nan
+    | SComplex ->
+        let scalar = local_scalar (SizedType.to_unsized st) adtype in
+        pf ppf "std::complex<%s>(%s, %s)" scalar init_nan init_nan
     | SVector (AoS, size) | SRowVector (AoS, size) ->
         pf ppf "@[<hov 2>%a::Constant(@,%a,@ %s)@]" pp_st (st, adtype) pp_expr
           size init_nan
@@ -143,7 +149,7 @@ let pp_assign_data ppf
   let pp_underlying ppf (decl_id, st) =
     match st with
     | SizedType.SVector _ | SRowVector _ | SMatrix _ -> pf ppf "%s__" decl_id
-    | SInt | SReal | SArray _ -> pf ppf "%s" decl_id
+    | SInt | SReal | SComplex | SArray _ -> pf ppf "%s" decl_id
   in
   pf ppf "@[<hov 2>%a = @,%a;@]@,@[<hov 2>%a@]@," pp_underlying (decl_id, st)
     pp_assign_sized (st, DataOnly, true) pp_placement_new (decl_id, st)
@@ -198,9 +204,9 @@ let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
   pf ppf " %a@]" pp_body body
 
 let rec integer_el_type = function
-  | SizedType.SReal | SVector _ | SMatrix _ | SRowVector _ -> false
-  | SInt -> true
+  | SizedType.SInt -> true
   | SArray (st, _) -> integer_el_type st
+  | _ -> false
 
 (* Print the private members of the model class
  *   Accounting for types that can be moved to OpenCL.
@@ -223,6 +229,14 @@ let pp_data_decl ppf (vident, ut) =
         pf ppf "%a %s__;" pp_type (DataOnly, ut) vident
     | _ -> pf ppf "%a %s;" pp_type (DataOnly, ut) vident )
   | (true, _), _ -> pf ppf "%a %s;" pp_type (DataOnly, ut) vident
+
+(* Create string representations for vars__.emplace_back *)
+let pp_emplace_var ppf var =
+  match Expr.Typed.type_of var with
+  | UnsizedType.UComplex ->
+      pf ppf "@[<hov 2>vars__.emplace_back(%a.real());@]@," pp_expr var ;
+      pf ppf "@[<hov 2>vars__.emplace_back(%a.imag());@]" pp_expr var
+  | _ -> pf ppf "@[<hov 2>vars__.emplace_back(@,%a);@]" pp_expr var
 
 (*Create strings representing maps of Eigen types*)
 let pp_map_decl ppf (vident, ut) =

@@ -216,7 +216,9 @@ let rec is_uni_eigen_loop_indexing in_loop (ut : UnsizedType.t)
         | Some cut_list -> is_uni_eigen_loop_indexing in_loop t cut_list
         | None -> is_uni_eigen_loop_indexing in_loop t [Index.All] )
       (* None of the below contain single cell access*)
-      | (UReal | UInt | UMathLibraryFunction | UFun (_, Void, _, _)), _ ->
+      | ( ( UReal | UComplex | UInt | UMathLibraryFunction
+          | UFun (_, Void, _, _) )
+        , _ ) ->
           false
       | (UVector | URowVector | UMatrix), _ -> false )
 

@@ -201,7 +201,7 @@ let pp_shapes ppf p =
     let cast_expr ppf e = pf ppf "tf__.cast(%a, tf__.int32)" pp_expr e in
     pf ppf "(nchains__, @[<hov>%a@])"
       (list ~sep:comma cast_expr)
-      (SizedType.get_dims out_unconstrained_st)
+      (SizedType.get_dims_io out_unconstrained_st)
   in
   let ppbody ppf =
     pf ppf "%a@ " pp_extract_data p ;
