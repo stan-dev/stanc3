@@ -417,8 +417,6 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       validate_non_negative_index("h_sigma", "Nr", Nr);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     num_params_r__ = N + K + Nr + 2 + 1 + 1 + 1 + 1 + N + N + 1 + N + 
       N + N + N + N + N + N + ((N * (N - 1)) / 2) + (N + ((N * (N - 1)) / 2))
@@ -719,8 +717,6 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -998,8 +994,6 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       } 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // write_array_impl() 
     
@@ -1168,8 +1162,6 @@ class constraints_model final : public model_base_crtp<constraints_model> {
       out__.write_free_cholesky_factor_corr(chol_fac_corr_test);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
     
@@ -1802,8 +1794,6 @@ mask_fun(const int& i, std::ostream* pstream__) {
     return i;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -2003,8 +1993,6 @@ class indexing_model final : public model_base_crtp<indexing_model> {
       validate_non_negative_index("tp_soa_rep_matrix_from_data_mat", "N", N);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     num_params_r__ = 1 + M + (N * M) + (10 * N) + (N * M) + N + (N * M) + 
       N + N + N + N + M + M + M + M + (N * M) + (N * M) + (N * M) + (N * M)
@@ -2365,8 +2353,6 @@ class indexing_model final : public model_base_crtp<indexing_model> {
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -2567,8 +2553,6 @@ class indexing_model final : public model_base_crtp<indexing_model> {
       } 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // write_array_impl() 
     
@@ -2757,8 +2741,6 @@ class indexing_model final : public model_base_crtp<indexing_model> {
       out__.write(p_aos_mat_fail_func_uni_uni_idx2);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
     
