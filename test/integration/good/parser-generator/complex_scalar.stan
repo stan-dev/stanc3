@@ -83,4 +83,10 @@ generated quantities {
     gq_r = foo5(gq_complex_array);
     gq_complex_array = foo6(gq_r);
     gq_complex_array = foo7(gq_complex_array);
+
+    // test imaginary literal
+    complex zi = 1+3.14i;
+    zi = zi * 4I + 0i;
+    complex yi = to_complex(0, 1.1) + to_complex(0.0, 2.2) + to_complex();
+    real x = get_real(3i - 40e-3i);
 }

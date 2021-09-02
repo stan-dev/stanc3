@@ -112,9 +112,17 @@ and pp_expression ppf {expr= e_content; _} =
   | Variable id -> pp_identifier ppf id
   | IntNumeral i -> Fmt.pf ppf "%s" i
   | RealNumeral r -> Fmt.pf ppf "%s" r
-  | FunApp (_, id, es) ->
-      Fmt.pf ppf "%a(" pp_identifier id ;
-      with_box ppf 0 (fun () -> Fmt.pf ppf "%a)" pp_list_of_expression es)
+  | FunApp (_, id, es) -> (
+    (* we fake complex literals through a FunApp. 
+     * This actually works out perfectly because RealNumeral "0" is never otherwise
+     * produced, but is semantically sound
+     *)
+    match (id.name, es) with
+    | "to_complex", [{expr= RealNumeral "0"; _}; e2] ->
+        Fmt.pf ppf "%ai" pp_expression e2
+    | _ ->
+        Fmt.pf ppf "%a(" pp_identifier id ;
+        with_box ppf 0 (fun () -> Fmt.pf ppf "%a)" pp_list_of_expression es) )
   | CondDistApp (_, id, es) -> (
     match es with
     | [] -> Middle.Errors.fatal_error ()

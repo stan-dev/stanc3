@@ -33,6 +33,7 @@ let nest_unsized_array basic_type n =
 %token LOWER UPPER OFFSET MULTIPLIER
 %token <string> INTNUMERAL
 %token <string> REALNUMERAL
+%token <string> IMAGNUMERAL
 %token <string> STRINGLITERAL
 %token <string> IDENTIFIER
 %token TARGET
@@ -546,6 +547,20 @@ common_expression:
     {  grammar_logger ("intnumeral " ^ i) ; IntNumeral i }
   | r=REALNUMERAL
     {  grammar_logger ("realnumeral " ^ r) ; RealNumeral r }
+  | z=IMAGNUMERAL
+    { grammar_logger ("imagnumeral " ^ z); 
+    (* we fake complex literals through a FunApp. C++ should constexpr this away *)
+    FunApp ( (), 
+             (build_id "to_complex" $loc), 
+             [ { expr= RealNumeral "0"
+               ; emeta={loc= Location_span.of_positions_exn $loc}
+               }
+             ; { expr= RealNumeral (String.sub z ~pos:0 ~len:((String.length z)-1) )
+               ; emeta={loc= Location_span.of_positions_exn $loc}
+               } 
+             ]
+           )
+    }
   | LBRACE xs=separated_nonempty_list(COMMA, expression) RBRACE
     {  grammar_logger "array_expression" ; ArrayExpr xs  }
   | LBRACK xs=separated_list(COMMA, expression) RBRACK
@@ -557,6 +572,7 @@ common_expression:
          && List.exists ~f:(fun x -> String.is_suffix ~suffix:x id.name) Utils.conditioning_suffices
        then CondDistApp ((), id, args)
        else FunApp ((), id, args) }
+       
   | TARGET LPAREN RPAREN
     { grammar_logger "target_read" ; GetTarget }
   | GETLP LPAREN RPAREN
