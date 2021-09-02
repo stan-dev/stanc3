@@ -943,8 +943,6 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       d_vector_opencl__ = to_matrix_cl(d_vector);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     num_params_r__ = 1 + d_int + (d_int * d_int) + d_int + d_int + 1;
     
@@ -3471,8 +3469,6 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       d_vector_opencl__.wait_for_read_write_events();
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -6013,8 +6009,6 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       } 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // write_array_impl() 
     
@@ -6072,8 +6066,6 @@ class distributions_model final : public model_base_crtp<distributions_model> {
       out__.write(y_p);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
     
@@ -6505,8 +6497,6 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       d_vector_opencl__ = to_matrix_cl(d_vector);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     num_params_r__ = 1 + d_int + (d_int * d_int) + d_int + d_int + 1;
     
@@ -6603,8 +6593,6 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       d_vector_opencl__.wait_for_read_write_events();
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -6714,8 +6702,6 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       } 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // write_array_impl() 
     
@@ -6773,8 +6759,6 @@ class restricted_model final : public model_base_crtp<restricted_model> {
       out__.write(y_p);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
     

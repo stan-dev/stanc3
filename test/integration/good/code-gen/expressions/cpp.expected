@@ -58,8 +58,6 @@ foo1(const T0__& a, const int& b, const std::vector<T2__>& c,
     return 5.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -98,8 +96,6 @@ foo2(const T0__& a_arg__, const std::vector<Eigen::Matrix<T1__, -1, -1>>& b,
     return a;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -134,8 +130,6 @@ foo3(const T0__& a_arg__, const T1__& b_arg__, std::ostream* pstream__) {
     return b;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -223,8 +217,6 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     num_params_r__ = 0U;
     
@@ -251,8 +243,6 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -292,8 +282,6 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       } 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // write_array_impl() 
     
@@ -314,8 +302,6 @@ class simple_function_model final : public model_base_crtp<simple_function_model
       pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
     

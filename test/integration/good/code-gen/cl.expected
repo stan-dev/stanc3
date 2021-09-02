@@ -567,8 +567,6 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       y_vi_d_td_opencl__ = to_matrix_cl(y_vi_d_td);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     num_params_r__ = k + k + k + 1 + 1 + 1 + (n * k) + (n * k) + n;
     
@@ -1262,8 +1260,6 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       y_vi_d_td_opencl__.wait_for_read_write_events();
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -1341,8 +1337,6 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       } 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // write_array_impl() 
     
@@ -1418,8 +1412,6 @@ class optimize_glm_model final : public model_base_crtp<optimize_glm_model> {
       out__.write(X_rv_p);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
     

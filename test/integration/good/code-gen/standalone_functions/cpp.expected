@@ -56,8 +56,6 @@ my_log1p_exp(const T0__& x, std::ostream* pstream__) {
     return log1p_exp(x);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -85,8 +83,6 @@ array_fun(const std::vector<T0__>& a, std::ostream* pstream__) {
     return sum(a);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -113,8 +109,6 @@ int_array_fun(const std::vector<int>& a, std::ostream* pstream__) {
     return sum(a);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -147,8 +141,6 @@ my_vector_mul_by_5(const T0__& x_arg__, std::ostream* pstream__) {
     return result;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -175,8 +167,6 @@ int_only_multiplication(const int& a, const int& b, std::ostream* pstream__) {
     return (a * b);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -203,8 +193,6 @@ test_lgamma(const T0__& x, std::ostream* pstream__) {
     return stan::math::lgamma(x);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -232,8 +220,6 @@ test_lp(const T0__& a, T_lp__& lp__, T_lp_accum__& lp_accum__,
     lp_accum__.add(normal_lpdf<propto__>(a, 0, 1));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -263,8 +249,6 @@ test_rng(const T0__& a, RNG& base_rng__, std::ostream* pstream__) {
     return normal_rng(a, 1, base_rng__);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -291,8 +275,6 @@ test_lpdf(const T0__& a, const T1__& b, std::ostream* pstream__) {
     return normal_lpdf<false>(a, b, 1);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -430,8 +412,6 @@ integrand(const T0__& x_arg__, std::ostream* pstream__) {
     return stan::math::exp(minus(square(x)));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -470,8 +450,6 @@ integrand_ode(const T0__& r, const std::vector<T1__>& f,
     return df_dx;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -508,8 +486,6 @@ ode_integrate(std::ostream* pstream__) {
              index_uni(1), index_uni(1));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }

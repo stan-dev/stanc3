@@ -69,8 +69,6 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
       q = (p + 5);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     num_params_r__ = 0U;
     
@@ -97,8 +95,6 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
       
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -138,8 +134,6 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
       } 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // write_array_impl() 
     
@@ -160,8 +154,6 @@ class filename_good_model final : public model_base_crtp<filename_good_model> {
       pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
     
