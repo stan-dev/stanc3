@@ -1060,6 +1060,7 @@ data {
 transformed data {
   real td_real;
   complex td_complex = 1;
+  
   td_real = get_imag(d_complex);
   td_real = get_imag(td_complex);
 }
@@ -1070,6 +1071,7 @@ parameters {
 transformed parameters {
   real tp_real;
   complex tp_complex;
+  
   tp_real = get_imag(d_complex);
   tp_real = get_imag(td_complex);
   tp_real = get_imag(p_complex);
@@ -1081,6 +1083,7 @@ model {
 generated quantities {
   real gq_real;
   complex gq_complex = 1;
+  
   gq_real = get_imag(d_complex);
   gq_real = get_imag(td_complex);
   gq_real = get_imag(p_complex);
@@ -1095,6 +1098,7 @@ data {
 transformed data {
   real td_real;
   complex td_complex = 1;
+  
   td_real = get_real(d_complex);
   td_real = get_real(td_complex);
 }
@@ -1105,6 +1109,7 @@ parameters {
 transformed parameters {
   real tp_real;
   complex tp_complex;
+  
   tp_real = get_real(d_complex);
   tp_real = get_real(td_complex);
   tp_real = get_real(p_complex);
@@ -1116,6 +1121,7 @@ model {
 generated quantities {
   real gq_real;
   complex gq_complex = 1;
+  
   gq_real = get_real(d_complex);
   gq_real = get_real(td_complex);
   gq_real = get_real(p_complex);
@@ -3058,6 +3064,7 @@ data {
 transformed data {
   complex transformed_data_complex;
   complex transformed_data_complex_2;
+  
   transformed_data_complex = to_complex(d_int, r_int);
   transformed_data_complex = to_complex(d_real, r_int);
   transformed_data_complex = to_complex(d_int, r_real);
@@ -3073,6 +3080,7 @@ parameters {
 transformed parameters {
   complex transformed_param_complex;
   complex transformed_param_complex_2;
+  
   transformed_param_complex = to_complex(d_int, r_int);
   transformed_param_complex = to_complex(d_real, r_int);
   transformed_param_complex = to_complex(d_int, r_real);
@@ -3080,6 +3088,7 @@ transformed parameters {
   transformed_param_complex = to_complex(d_real);
   transformed_param_complex = to_complex(d_int);
   transformed_param_complex = to_complex();
+  
   transformed_param_complex = to_complex(p_real, r_int);
   transformed_param_complex = to_complex(p_real, r_real);
   transformed_param_complex = to_complex(r_int, p_real);

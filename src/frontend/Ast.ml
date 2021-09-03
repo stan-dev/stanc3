@@ -304,7 +304,7 @@ let rec get_loc_expr (e : untyped_expression) =
 
 let get_loc_dt (t : untyped_expression Type.t) =
   match t with
-  | Type.Unsized _ | Sized (SInt | SReal) -> None
+  | Type.Unsized _ | Sized (SInt | SReal| SComplex) -> None
   | Sized
       (SVector (_, e) | SRowVector (_, e) | SMatrix (_, e, _) | SArray (_, e))
     ->
