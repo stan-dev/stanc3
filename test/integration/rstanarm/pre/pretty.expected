@@ -1,9 +1,9 @@
   $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format Brilleman_copyright.stan
-/*    Copyright (C) 2016, 2017 Sam Brilleman */
+//    Copyright (C) 2016, 2017 Sam Brilleman
 Warning: Empty file 'Brilleman_copyright.stan' detected; this is a valid stan model but likely unintended!
   $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format Columbia_copyright.stan
-/*    This file is part of rstanarm. */
-/*    Copyright (C) 2015, 2016 2017 Trustees of Columbia University */
+//    This file is part of rstanarm.
+//    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
 Warning: Empty file 'Columbia_copyright.stan' detected; this is a valid stan model but likely unintended!
   $ ../../../../../install/default/bin/stanc --include-paths="../" --auto-format license.stan
 /*

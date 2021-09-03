@@ -1,6 +1,6 @@
   $ ../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined bernoulli.stan
-/*    This file is part of rstanarm. */
-/*    Copyright (C) 2015, 2016 2017 Trustees of Columbia University */
+//    This file is part of rstanarm.
+//    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
 
 /*
     rstanarm is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@
     along with rstanarm.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* GLM for a Bernoulli outcome */
+// GLM for a Bernoulli outcome
 functions {
   /* for multiple .stan files */
   
@@ -46,30 +46,30 @@ functions {
     int z_T_mark = 1;
     int theta_L_mark = 1;
     
-    /* each of these is a diagonal block of the implicit Cholesky factor */
+    // each of these is a diagonal block of the implicit Cholesky factor
     for (i in 1 : size(p)) {
       int nc = p[i];
       if (nc == 1) {
-        /* "block" is just a standard deviation */
+        // "block" is just a standard deviation
         theta_L[theta_L_mark] = tau[i] * scale[i] * dispersion;
-        /* unlike lme4, theta[theta_L_mark] includes the dispersion term in it */
+        // unlike lme4, theta[theta_L_mark] includes the dispersion term in it
         theta_L_mark += 1;
       }
       else {
-        /* block is lower-triangular                */
+        // block is lower-triangular               
         matrix[nc, nc] T_i;
         real std_dev;
         real T21;
         real trace_T_i = square(tau[i] * scale[i] * dispersion) * nc;
-        vector[nc] pi = segment(zeta, zeta_mark, nc); /* gamma(zeta | shape, 1) */
-        pi /= sum(pi); /* thus dirichlet(pi | shape) */
+        vector[nc] pi = segment(zeta, zeta_mark, nc); // gamma(zeta | shape, 1)
+        pi /= sum(pi); // thus dirichlet(pi | shape)
         
-        /* unlike lme4, T_i includes the dispersion term in it */
+        // unlike lme4, T_i includes the dispersion term in it
         zeta_mark += nc;
         std_dev = sqrt(pi[1] * trace_T_i);
         T_i[1, 1] = std_dev;
         
-        /* Put a correlation into T_i[2,1] and scale by std_dev */
+        // Put a correlation into T_i[2,1] and scale by std_dev
         std_dev = sqrt(pi[2] * trace_T_i);
         T21 = 2.0 * rho[rho_mark] - 1.0;
         rho_mark += 1;
@@ -77,7 +77,7 @@ functions {
         T_i[2, 1] = std_dev * T21;
         
         for (r in 2 : (nc - 1)) {
-          /* scaled onion method to fill T_i */
+          // scaled onion method to fill T_i
           int rp1 = r + 1;
           vector[r] T_row = segment(z_T, z_T_mark, r);
           real scale_factor = sqrt(rho[rho_mark] / dot_self(T_row)) * std_dev;
@@ -89,7 +89,7 @@ functions {
           rho_mark += 1;
         }
         
-        /* now vech T_i */
+        // now vech T_i
         for (c in 1 : nc) 
           for (r in c : nc) {
             theta_L[theta_L_mark] = T_i[r, c];
@@ -312,11 +312,11 @@ functions {
    */
   real make_lower(int family, int link) {
     if (family == 1) 
-      return negative_infinity(); /* Gaussian */
+      return negative_infinity(); // Gaussian
     if (family <= 3) {
-      /* Gamma or inverse Gaussian */
+      // Gamma or inverse Gaussian
       if (link == 2) 
-        return negative_infinity(); /* log */
+        return negative_infinity(); // log
       return 0;
     }
     return negative_infinity();
@@ -345,18 +345,18 @@ functions {
    */
   vector linkinv_bern(vector eta, int link) {
     if (link == 1) 
-      return (inv_logit(eta)); /* logit */
+      return (inv_logit(eta)); // logit
     else if (link == 2) 
-      return (Phi(eta)); /* probit */
+      return (Phi(eta)); // probit
     else if (link == 3) 
-      return (atan(eta) / pi() + 0.5); /* cauchit */
+      return (atan(eta) / pi() + 0.5); // cauchit
     else if (link == 4) 
-      return (exp(eta)); /* log */
+      return (exp(eta)); // log
     else if (link == 5) 
-      return (inv_cloglog(eta)); /* cloglog */
+      return (inv_cloglog(eta)); // cloglog
     else 
       reject("Invalid link");
-    return eta; /* never reached */
+    return eta; // never reached
   }
   
   /**
@@ -370,23 +370,23 @@ functions {
    */
   real ll_bern_lp(vector eta0, vector eta1, int link, array[] int N) {
     if (link == 1) {
-      /* logit */
+      // logit
       target += logistic_lccdf(eta0| 0, 1);
       target += logistic_lcdf(eta1| 0, 1);
     } else if (link == 2) {
-      /* probit */
+      // probit
       target += normal_lccdf(eta0| 0, 1);
       target += normal_lcdf(eta1| 0, 1);
     } else if (link == 3) {
-      /* cauchit */
+      // cauchit
       target += cauchy_lccdf(eta0| 0, 1);
       target += cauchy_lcdf(eta1| 0, 1);
     } else if (link == 4) {
-      /* log */
+      // log
       target += log1m_exp(eta0);
-      target += eta1; /* already in log form */
+      target += eta1; // already in log form
     } else if (link == 5) {
-      /* cloglog */
+      // cloglog
       target += log1m_exp(-exp(eta1));
       target += -exp(eta0);
     } else 
@@ -407,12 +407,12 @@ functions {
     int N = rows(eta);
     vector[N] ll;
     if (link == 1) {
-      /* logit */
+      // logit
       for (n in 1 : N) 
         ll[n] = bernoulli_logit_lpmf(y| eta[n]);
     } else if (link <= 5) {
-      /* link = probit, cauchit, log, or cloglog  */
-      vector[N] pi = linkinv_bern(eta, link); /* may not be stable */
+      // link = probit, cauchit, log, or cloglog 
+      vector[N] pi = linkinv_bern(eta, link); // may not be stable
       for (n in 1 : N) 
         ll[n] = bernoulli_lpmf(y| pi[n]);
     } else 
@@ -444,7 +444,7 @@ functions {
       return log_sum_exp(log_clogit_denom(N_jm1, D_j, eta_j),
                          log_clogit_denom(N_jm1, D_j - 1, eta_j) + eta_j[N_j]);
     }
-    return not_a_number(); /* never reaches */
+    return not_a_number(); // never reaches
   }
   
   /**
@@ -477,50 +477,50 @@ functions {
   }
 }
 data {
-  /* dimensions */
-  int<lower=0> K; /* number of predictors */
-  array[2] int<lower=1> N; /* number of observations where y = 0 and y = 1 respectively */
-  vector[K] xbar; /* vector of column-means of rbind(X0, X1) */
-  int<lower=0, upper=1> dense_X; /* flag for dense vs. sparse */
-  array[dense_X] matrix[N[1], K] X0; /* centered (by xbar) predictor matrix | y = 0 */
-  array[dense_X] matrix[N[2], K] X1; /* centered (by xbar) predictor matrix | y = 1 */
+  // dimensions
+  int<lower=0> K; // number of predictors
+  array[2] int<lower=1> N; // number of observations where y = 0 and y = 1 respectively
+  vector[K] xbar; // vector of column-means of rbind(X0, X1)
+  int<lower=0, upper=1> dense_X; // flag for dense vs. sparse
+  array[dense_X] matrix[N[1], K] X0; // centered (by xbar) predictor matrix | y = 0
+  array[dense_X] matrix[N[2], K] X1; // centered (by xbar) predictor matrix | y = 1
   
-  int<lower=0, upper=1> clogit; /* 1 iff the number of successes is fixed in each stratum */
-  int<lower=0> J; /* number of strata (possibly zero) */
+  int<lower=0, upper=1> clogit; // 1 iff the number of successes is fixed in each stratum
+  int<lower=0> J; // number of strata (possibly zero)
   array[clogit == 1 ? N[1] + N[2] : 0] int<lower=1, upper=J> strata;
   
-  /* stuff for the sparse case */
-  int<lower=0> nnz_X0; /* number of non-zero elements in the implicit X0 matrix */
-  vector[nnz_X0] w_X0; /* non-zero elements in the implicit X0 matrix */
-  array[nnz_X0] int<lower=0, upper=K - 1> v_X0; /* column indices for w_X0 */
-  /* where the non-zeros start in each row of X0 */
+  // stuff for the sparse case
+  int<lower=0> nnz_X0; // number of non-zero elements in the implicit X0 matrix
+  vector[nnz_X0] w_X0; // non-zero elements in the implicit X0 matrix
+  array[nnz_X0] int<lower=0, upper=K - 1> v_X0; // column indices for w_X0
+  // where the non-zeros start in each row of X0
   array[dense_X ? 0 : N[1] + 1] int<lower=0, upper=rows(w_X0) + 1> u_X0;
-  int<lower=0> nnz_X1; /* number of non-zero elements in the implicit X1 matrix */
-  vector[nnz_X1] w_X1; /* non-zero elements in the implicit X1 matrix */
-  array[nnz_X1] int<lower=0, upper=K - 1> v_X1; /* column indices for w_X1 */
-  /* where the non-zeros start in each row of X1 */
+  int<lower=0> nnz_X1; // number of non-zero elements in the implicit X1 matrix
+  vector[nnz_X1] w_X1; // non-zero elements in the implicit X1 matrix
+  array[nnz_X1] int<lower=0, upper=K - 1> v_X1; // column indices for w_X1
+  // where the non-zeros start in each row of X1
   array[dense_X ? 0 : N[2] + 1] int<lower=0, upper=rows(w_X1) + 1> u_X1;
-  /* declares prior_PD, has_intercept, link, prior_dist, prior_dist_for_intercept */
+  // declares prior_PD, has_intercept, link, prior_dist, prior_dist_for_intercept
   
-  /* flag indicating whether to draw from the prior */
-  int<lower=0, upper=1> prior_PD; /* 1 = yes */
-  int<lower=0, upper=1> compute_mean_PPD; /* 1 = yes */
+  // flag indicating whether to draw from the prior
+  int<lower=0, upper=1> prior_PD; // 1 = yes
+  int<lower=0, upper=1> compute_mean_PPD; // 1 = yes
   
-  /* intercept */
-  int<lower=0, upper=1> has_intercept; /* 1 = yes */
+  // intercept
+  int<lower=0, upper=1> has_intercept; // 1 = yes
   
-  /* link function from location to linear predictor  */
-  int<lower=1> link; /* interpretation varies by .stan file */
+  // link function from location to linear predictor 
+  int<lower=1> link; // interpretation varies by .stan file
   
-  /* prior family: 0 = none, 1 = normal, 2 = student_t, 3 = hs, 4 = hs_plus,  */
-  /*   5 = laplace, 6 = lasso, 7 = product_normal */
+  // prior family: 0 = none, 1 = normal, 2 = student_t, 3 = hs, 4 = hs_plus, 
+  //   5 = laplace, 6 = lasso, 7 = product_normal
   int<lower=0, upper=7> prior_dist;
   int<lower=0, upper=2> prior_dist_for_intercept;
   
-  /* prior family: 0 = none, 1 = normal, 2 = student_t, 3 = exponential */
+  // prior family: 0 = none, 1 = normal, 2 = student_t, 3 = exponential
   int<lower=0, upper=3> prior_dist_for_aux;
   
-  /* prior family: 0 = none, 1 = normal, 2 = student_t, 3 = exponential */
+  // prior family: 0 = none, 1 = normal, 2 = student_t, 3 = exponential
   int<lower=0, upper=3> prior_dist_for_smooth;
   
   int<lower=0> K_smooth;
@@ -530,19 +530,19 @@ data {
   
   int<lower=5, upper=5> family;
   
-  /* weights */
-  int<lower=0, upper=1> has_weights; /* 0 = No, 1 = Yes */
+  // weights
+  int<lower=0, upper=1> has_weights; // 0 = No, 1 = Yes
   vector[has_weights ? N[1] : 0] weights0;
   vector[has_weights ? N[2] : 0] weights1;
   
-  /* offset_ */
-  int<lower=0, upper=1> has_offset; /* 0 = No, 1 = Yes */
+  // offset_
+  int<lower=0, upper=1> has_offset; // 0 = No, 1 = Yes
   vector[has_offset ? N[1] : 0] offset0;
   vector[has_offset ? N[2] : 0] offset1;
   
-  /* declares prior_{mean, scale, df}, prior_{mean, scale, df}_for_intercept, prior_{mean, scale, df}_for_aux */
+  // declares prior_{mean, scale, df}, prior_{mean, scale, df}_for_intercept, prior_{mean, scale, df}_for_aux
   
-  /* hyperparameter values are set to 0 if there is no prior */
+  // hyperparameter values are set to 0 if there is no prior
   vector<lower=0>[K] prior_scale;
   real<lower=0> prior_scale_for_intercept;
   real<lower=0> prior_scale_for_aux;
@@ -555,23 +555,23 @@ data {
   real<lower=0> prior_df_for_intercept;
   real<lower=0> prior_df_for_aux;
   vector<lower=0>[K_smooth > 0 ? max(smooth_map) : 0] prior_df_for_smooth;
-  real<lower=0> global_prior_df; /* for hs priors only */
-  real<lower=0> global_prior_scale; /* for hs priors only */
-  real<lower=0> slab_df; /* for hs prior only */
-  real<lower=0> slab_scale; /* for hs prior only */
+  real<lower=0> global_prior_df; // for hs priors only
+  real<lower=0> global_prior_scale; // for hs priors only
+  real<lower=0> slab_df; // for hs prior only
+  real<lower=0> slab_scale; // for hs prior only
   array[prior_dist == 7 ? K : 0] int<lower=2> num_normals;
   
-  /* declares t, p[t], l[t], q, len_theta_L, shape, scale, {len_}concentration, {len_}regularization */
+  // declares t, p[t], l[t], q, len_theta_L, shape, scale, {len_}concentration, {len_}regularization
   
-  /* glmer stuff, see table 3 of */
-  /* https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf */
-  int<lower=0> t; /* num. terms (maybe 0) with a | in the glmer formula */
-  array[t] int<lower=1> p; /* num. variables on the LHS of each | */
-  array[t] int<lower=1> l; /* num. levels for the factor(s) on the RHS of each | */
-  int<lower=0> q; /* conceptually equals \sum_{i=1}^t p_i \times l_i */
-  int<lower=0> len_theta_L; /* length of the theta_L vector */
+  // glmer stuff, see table 3 of
+  // https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf
+  int<lower=0> t; // num. terms (maybe 0) with a | in the glmer formula
+  array[t] int<lower=1> p; // num. variables on the LHS of each |
+  array[t] int<lower=1> l; // num. levels for the factor(s) on the RHS of each |
+  int<lower=0> q; // conceptually equals \sum_{i=1}^t p_i \times l_i
+  int<lower=0> len_theta_L; // length of the theta_L vector
   
-  /* hyperparameters for glmer stuff; if t > 0 priors are mandatory */
+  // hyperparameters for glmer stuff; if t > 0 priors are mandatory
   vector<lower=0>[t] shape;
   vector<lower=0>[t] scale;
   int<lower=0> len_concentration;
@@ -579,17 +579,17 @@ data {
   int<lower=0> len_regularization;
   array[len_regularization] real<lower=0> regularization;
   
-  /* more glmer stuff */
-  array[2] int<lower=0> num_non_zero; /* number of non-zero elements in the Z matrices */
-  vector[num_non_zero[1]] w0; /* non-zero elements in the implicit Z0 matrix */
-  vector[num_non_zero[2]] w1; /* non-zero elements in the implicit Z1 matrix */
-  array[num_non_zero[1]] int<lower=0, upper=q - 1> v0; /* column indices for w0 */
-  array[num_non_zero[2]] int<lower=0, upper=q - 1> v1; /* column indices for w1 */
-  /* where the non-zeros start in each row of Z0 */
+  // more glmer stuff
+  array[2] int<lower=0> num_non_zero; // number of non-zero elements in the Z matrices
+  vector[num_non_zero[1]] w0; // non-zero elements in the implicit Z0 matrix
+  vector[num_non_zero[2]] w1; // non-zero elements in the implicit Z1 matrix
+  array[num_non_zero[1]] int<lower=0, upper=q - 1> v0; // column indices for w0
+  array[num_non_zero[2]] int<lower=0, upper=q - 1> v1; // column indices for w1
+  // where the non-zeros start in each row of Z0
   array[t > 0 ? N[1] + 1 : 0] int<lower=0, upper=rows(w0) + 1> u0;
-  /* where the non-zeros start in each row of Z1 */
+  // where the non-zeros start in each row of Z1
   array[t > 0 ? N[2] + 1 : 0] int<lower=0, upper=rows(w1) + 1> u1;
-  int<lower=0, upper=1> special_case; /* whether we only have to deal with (1|group) */
+  int<lower=0, upper=1> special_case; // whether we only have to deal with (1|group)
 }
 transformed data {
   int NN = N[1] + N[2];
@@ -603,12 +603,12 @@ transformed data {
   array[clogit ? J : 0] int<lower=0> successes;
   array[clogit ? J : 0] int<lower=0> failures;
   array[clogit ? J : 0] int<lower=0> observations;
-  /* defines hs, len_z_T, len_var_group, delta, pos */
+  // defines hs, len_z_T, len_var_group, delta, pos
   
   int<lower=0> len_z_T = 0;
   int<lower=0> len_var_group = sum(p) * (t > 0);
   int<lower=0> len_rho = sum(p) - t;
-  int<lower=0, upper=1> is_continuous = 0; /* changed in continuous.stan */
+  int<lower=0, upper=1> is_continuous = 0; // changed in continuous.stan
   int<lower=1> pos = 1;
   array[len_concentration] real<lower=0> delta;
   int<lower=0> hs;
@@ -647,7 +647,7 @@ transformed data {
 }
 parameters {
   array[has_intercept] real<upper=(link == 4 ? 0.0 : positive_infinity())> gamma;
-  /* declares z_beta, global, local, z_b, z_T, rho, zeta, tau */
+  // declares z_beta, global, local, z_b, z_T, rho, zeta, tau
   
   vector[prior_dist == 7 ? sum(num_normals) : K] z_beta;
   vector[K_smooth] z_beta_smooth;
@@ -664,7 +664,7 @@ parameters {
   vector<lower=0>[t] tau;
 }
 transformed parameters {
-  /* defines beta, b, theta_L */
+  // defines beta, b, theta_L
   
   vector[K] beta;
   vector[K_smooth] beta_smooth;
@@ -691,13 +691,13 @@ transformed parameters {
       beta = hsplus_prior(z_beta, global, local, global_prior_scale, aux, c2);
     else 
       beta = hsplus_prior(z_beta, global, local, global_prior_scale, 1, c2);
-  } else if (prior_dist == 5)  /* laplace */
+  } else if (prior_dist == 5)  // laplace
     beta = prior_mean + prior_scale .* sqrt(2 * mix[1]) .* z_beta;
-  else if (prior_dist == 6)  /* lasso */
+  else if (prior_dist == 6)  // lasso
     beta = prior_mean
            + one_over_lambda[1] * prior_scale .* sqrt(2 * mix[1]) .* z_beta;
   else if (prior_dist == 7) {
-    /* product_normal */
+    // product_normal
     int z_pos = 1;
     for (k in 1 : K) {
       beta[k] = z_beta[z_pos];
@@ -739,7 +739,7 @@ transformed parameters {
   }
 }
 model {
-  /* defines eta0, eta1 */
+  // defines eta0, eta1
   
   vector[N[1]] eta0;
   vector[N[2]] eta1;
@@ -791,24 +791,24 @@ model {
       eta1 += gamma[1] - shift;
     }
   }
-  /* Log-likelihood */
+  // Log-likelihood
   if (clogit && prior_PD == 0) {
     real dummy = ll_clogit_lp(eta0, eta1, successes, failures, observations);
   } else if (has_weights == 0 && prior_PD == 0) {
     real dummy = ll_bern_lp(eta0, eta1, link, N);
   } else if (prior_PD == 0) {
-    /* weighted log-likelihoods */
+    // weighted log-likelihoods
     target += dot_product(weights0, pw_bern(0, eta0, link));
     target += dot_product(weights1, pw_bern(1, eta1, link));
   }
   
-  /* Log-priors for coefficients */
+  // Log-priors for coefficients
   if (prior_dist == 1) 
     target += normal_lpdf(z_beta| 0, 1);
   else if (prior_dist == 2) 
-    target += normal_lpdf(z_beta| 0, 1); /* Student t via Cornish-Fisher expansion */
+    target += normal_lpdf(z_beta| 0, 1); // Student t via Cornish-Fisher expansion
   else if (prior_dist == 3) {
-    /* hs */
+    // hs
     real log_half = -0.693147180559945286;
     target += normal_lpdf(z_beta| 0, 1);
     target += normal_lpdf(local[1]| 0, 1) - log_half;
@@ -818,38 +818,38 @@ model {
                                                                * global_prior_df);
     target += inv_gamma_lpdf(caux| 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 4) {
-    /* hs+ */
+    // hs+
     real log_half = -0.693147180559945286;
     target += normal_lpdf(z_beta| 0, 1);
     target += normal_lpdf(local[1]| 0, 1) - log_half;
     target += inv_gamma_lpdf(local[2]| 0.5 * prior_df, 0.5 * prior_df);
     target += normal_lpdf(local[3]| 0, 1) - log_half;
-    /* unorthodox useage of prior_scale as another df hyperparameter */
+    // unorthodox useage of prior_scale as another df hyperparameter
     target += inv_gamma_lpdf(local[4]| 0.5 * prior_scale, 0.5 * prior_scale);
     target += normal_lpdf(global[1]| 0, 1) - log_half;
     target += inv_gamma_lpdf(global[2]| 0.5 * global_prior_df, 0.5
                                                                * global_prior_df);
     target += inv_gamma_lpdf(caux| 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 5) {
-    /* laplace */
+    // laplace
     target += normal_lpdf(z_beta| 0, 1);
     target += exponential_lpdf(mix[1]| 1);
   } else if (prior_dist == 6) {
-    /* lasso */
+    // lasso
     target += normal_lpdf(z_beta| 0, 1);
     target += exponential_lpdf(mix[1]| 1);
     target += chi_square_lpdf(one_over_lambda[1]| prior_df[1]);
   } else if (prior_dist == 7) {
-    /* product_normal */
+    // product_normal
     target += normal_lpdf(z_beta| 0, 1);
   }
   /* else prior_dist is 0 and nothing is added */
   
-  /* Log-prior for intercept   */
+  // Log-prior for intercept  
   if (has_intercept == 1) {
-    if (prior_dist_for_intercept == 1)  /* normal */
+    if (prior_dist_for_intercept == 1)  // normal
       target += normal_lpdf(gamma| prior_mean_for_intercept, prior_scale_for_intercept);
-    else if (prior_dist_for_intercept == 2)  /* student_t */
+    else if (prior_dist_for_intercept == 2)  // student_t
       target += student_t_lpdf(gamma| prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
     /* else prior_dist is 0 and nothing is added */
   }
@@ -887,7 +887,7 @@ generated quantities {
   if (compute_mean_PPD) {
     vector[N[1]] pi0;
     vector[N[2]] pi1;
-    /* defines eta0, eta1 */
+    // defines eta0, eta1
     
     vector[N[1]] eta0;
     vector[N[2]] eta1;
@@ -943,7 +943,7 @@ generated quantities {
     }
     if (clogit) 
       for (j in 1 : J) 
-        mean_PPD += successes[j]; /* fixed by design */
+        mean_PPD += successes[j]; // fixed by design
     else {
       pi0 = linkinv_bern(eta0, link);
       pi1 = linkinv_bern(eta1, link);
@@ -957,8 +957,8 @@ generated quantities {
 }
 
   $ ../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined binomial.stan
-/*    This file is part of rstanarm. */
-/*    Copyright (C) 2015, 2016 2017 Trustees of Columbia University */
+//    This file is part of rstanarm.
+//    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
 
 /*
     rstanarm is free software: you can redistribute it and/or modify
@@ -975,7 +975,7 @@ generated quantities {
     along with rstanarm.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* GLM for a binomial outcome */
+// GLM for a binomial outcome
 functions {
   /* for multiple .stan files */
   
@@ -1004,30 +1004,30 @@ functions {
     int z_T_mark = 1;
     int theta_L_mark = 1;
     
-    /* each of these is a diagonal block of the implicit Cholesky factor */
+    // each of these is a diagonal block of the implicit Cholesky factor
     for (i in 1 : size(p)) {
       int nc = p[i];
       if (nc == 1) {
-        /* "block" is just a standard deviation */
+        // "block" is just a standard deviation
         theta_L[theta_L_mark] = tau[i] * scale[i] * dispersion;
-        /* unlike lme4, theta[theta_L_mark] includes the dispersion term in it */
+        // unlike lme4, theta[theta_L_mark] includes the dispersion term in it
         theta_L_mark += 1;
       }
       else {
-        /* block is lower-triangular                */
+        // block is lower-triangular               
         matrix[nc, nc] T_i;
         real std_dev;
         real T21;
         real trace_T_i = square(tau[i] * scale[i] * dispersion) * nc;
-        vector[nc] pi = segment(zeta, zeta_mark, nc); /* gamma(zeta | shape, 1) */
-        pi /= sum(pi); /* thus dirichlet(pi | shape) */
+        vector[nc] pi = segment(zeta, zeta_mark, nc); // gamma(zeta | shape, 1)
+        pi /= sum(pi); // thus dirichlet(pi | shape)
         
-        /* unlike lme4, T_i includes the dispersion term in it */
+        // unlike lme4, T_i includes the dispersion term in it
         zeta_mark += nc;
         std_dev = sqrt(pi[1] * trace_T_i);
         T_i[1, 1] = std_dev;
         
-        /* Put a correlation into T_i[2,1] and scale by std_dev */
+        // Put a correlation into T_i[2,1] and scale by std_dev
         std_dev = sqrt(pi[2] * trace_T_i);
         T21 = 2.0 * rho[rho_mark] - 1.0;
         rho_mark += 1;
@@ -1035,7 +1035,7 @@ functions {
         T_i[2, 1] = std_dev * T21;
         
         for (r in 2 : (nc - 1)) {
-          /* scaled onion method to fill T_i */
+          // scaled onion method to fill T_i
           int rp1 = r + 1;
           vector[r] T_row = segment(z_T, z_T_mark, r);
           real scale_factor = sqrt(rho[rho_mark] / dot_self(T_row)) * std_dev;
@@ -1047,7 +1047,7 @@ functions {
           rho_mark += 1;
         }
         
-        /* now vech T_i */
+        // now vech T_i
         for (c in 1 : nc) 
           for (r in c : nc) {
             theta_L[theta_L_mark] = T_i[r, c];
@@ -1270,11 +1270,11 @@ functions {
    */
   real make_lower(int family, int link) {
     if (family == 1) 
-      return negative_infinity(); /* Gaussian */
+      return negative_infinity(); // Gaussian
     if (family <= 3) {
-      /* Gamma or inverse Gaussian */
+      // Gamma or inverse Gaussian
       if (link == 2) 
-        return negative_infinity(); /* log */
+        return negative_infinity(); // log
       return 0;
     }
     return negative_infinity();
@@ -1302,18 +1302,18 @@ functions {
    */
   vector linkinv_binom(vector eta, int link) {
     if (link == 1) 
-      return (inv_logit(eta)); /* logit */
+      return (inv_logit(eta)); // logit
     else if (link == 2) 
-      return (Phi(eta)); /* probit */
+      return (Phi(eta)); // probit
     else if (link == 3) 
-      return (atan(eta) / pi() + 0.5); /* cauchit */
+      return (atan(eta) / pi() + 0.5); // cauchit
     else if (link == 4) 
-      return (exp(eta)); /* log */
+      return (exp(eta)); // log
     else if (link == 5) 
-      return (inv_cloglog(eta)); /* cloglog */
+      return (inv_cloglog(eta)); // cloglog
     else 
       reject("Invalid link");
-    return eta; /* never reached */
+    return eta; // never reached
   }
   
   /**
@@ -1330,14 +1330,14 @@ functions {
     else if (link < 4) 
       target += binomial_lpmf(y| trials, linkinv_binom(eta, link));
     else if (link == 4) {
-      /* log */
+      // log
       for (n in 1 : num_elements(y)) {
         target += y[n] * eta[n];
         target += (trials[n] - y[n]) * log1m_exp(eta[n]);
         target += lchoose(trials[n], y[n]);
       }
     } else if (link == 5) {
-      /* cloglog */
+      // cloglog
       for (n in 1 : num_elements(y)) {
         real neg_exp_eta = -exp(eta[n]);
         target += y[n] * log1m_exp(neg_exp_eta);
@@ -1360,12 +1360,12 @@ functions {
     int N = rows(eta);
     vector[N] ll;
     if (link == 1) {
-      /* logit */
+      // logit
       for (n in 1 : N) 
         ll[n] = binomial_logit_lpmf(y[n]| trials[n], eta[n]);
     } else if (link <= 5) {
-      /* link = probit, cauchit, log, or cloglog */
-      vector[N] pi = linkinv_binom(eta, link); /* may be unstable */
+      // link = probit, cauchit, log, or cloglog
+      vector[N] pi = linkinv_binom(eta, link); // may be unstable
       for (n in 1 : N) 
         ll[n] = binomial_lpmf(y[n]| trials[n], pi[n]);
     } else 
@@ -1374,68 +1374,68 @@ functions {
   }
 }
 data {
-  /* declares N, K, X, xbar, dense_X, nnz_x, w_x, v_x, u_x */
+  // declares N, K, X, xbar, dense_X, nnz_x, w_x, v_x, u_x
   
-  /* dimensions */
-  int<lower=0> N; /* number of observations */
-  int<lower=0> K; /* number of predictors */
+  // dimensions
+  int<lower=0> N; // number of observations
+  int<lower=0> K; // number of predictors
   
-  /* data */
-  vector[K] xbar; /* predictor means */
-  int<lower=0, upper=1> dense_X; /* flag for dense vs. sparse */
-  array[dense_X] matrix[N, K] X; /* centered predictor matrix in the dense case */
+  // data
+  vector[K] xbar; // predictor means
+  int<lower=0, upper=1> dense_X; // flag for dense vs. sparse
+  array[dense_X] matrix[N, K] X; // centered predictor matrix in the dense case
   
-  /* stuff for the sparse case */
-  int<lower=0> nnz_X; /* number of non-zero elements in the implicit X matrix */
-  vector[nnz_X] w_X; /* non-zero elements in the implicit X matrix */
-  array[nnz_X] int<lower=0, upper=K - 1> v_X; /* column indices for w_X */
-  /* where the non-zeros start in each row of X */
+  // stuff for the sparse case
+  int<lower=0> nnz_X; // number of non-zero elements in the implicit X matrix
+  vector[nnz_X] w_X; // non-zero elements in the implicit X matrix
+  array[nnz_X] int<lower=0, upper=K - 1> v_X; // column indices for w_X
+  // where the non-zeros start in each row of X
   array[dense_X ? 0 : N + 1] int<lower=0, upper=rows(w_X) + 1> u_X;
   
-  /* smooths */
+  // smooths
   int<lower=0> K_smooth;
   matrix[N, K_smooth] S;
   array[K_smooth] int<lower=1> smooth_map;
   
-  array[N] int<lower=0> y; /* outcome: number of successes */
-  array[N] int<lower=0> trials; /* number of trials */
-  /* declares prior_PD, has_intercept, link, prior_dist, prior_dist_for_intercept   */
+  array[N] int<lower=0> y; // outcome: number of successes
+  array[N] int<lower=0> trials; // number of trials
+  // declares prior_PD, has_intercept, link, prior_dist, prior_dist_for_intercept  
   
-  /* flag indicating whether to draw from the prior */
-  int<lower=0, upper=1> prior_PD; /* 1 = yes */
-  int<lower=0, upper=1> compute_mean_PPD; /* 1 = yes */
+  // flag indicating whether to draw from the prior
+  int<lower=0, upper=1> prior_PD; // 1 = yes
+  int<lower=0, upper=1> compute_mean_PPD; // 1 = yes
   
-  /* intercept */
-  int<lower=0, upper=1> has_intercept; /* 1 = yes */
+  // intercept
+  int<lower=0, upper=1> has_intercept; // 1 = yes
   
-  /* link function from location to linear predictor  */
-  int<lower=1> link; /* interpretation varies by .stan file */
+  // link function from location to linear predictor 
+  int<lower=1> link; // interpretation varies by .stan file
   
-  /* prior family: 0 = none, 1 = normal, 2 = student_t, 3 = hs, 4 = hs_plus,  */
-  /*   5 = laplace, 6 = lasso, 7 = product_normal */
+  // prior family: 0 = none, 1 = normal, 2 = student_t, 3 = hs, 4 = hs_plus, 
+  //   5 = laplace, 6 = lasso, 7 = product_normal
   int<lower=0, upper=7> prior_dist;
   int<lower=0, upper=2> prior_dist_for_intercept;
   
-  /* prior family: 0 = none, 1 = normal, 2 = student_t, 3 = exponential */
+  // prior family: 0 = none, 1 = normal, 2 = student_t, 3 = exponential
   int<lower=0, upper=3> prior_dist_for_aux;
   
-  /* prior family: 0 = none, 1 = normal, 2 = student_t, 3 = exponential */
+  // prior family: 0 = none, 1 = normal, 2 = student_t, 3 = exponential
   int<lower=0, upper=3> prior_dist_for_smooth;
   
-  /* declares has_weights, weights, has_offset, offset_ */
+  // declares has_weights, weights, has_offset, offset_
   
-  /* weights */
-  int<lower=0, upper=1> has_weights; /* 0 = No, 1 = Yes */
+  // weights
+  int<lower=0, upper=1> has_weights; // 0 = No, 1 = Yes
   vector[has_weights ? N : 0] weights;
   
-  /* offset_ */
-  int<lower=0, upper=1> has_offset; /* 0 = No, 1 = Yes */
+  // offset_
+  int<lower=0, upper=1> has_offset; // 0 = No, 1 = Yes
   vector[has_offset ? N : 0] offset_;
   
   int<lower=5, upper=5> family;
-  /* declares prior_{mean, scale, df}, prior_{mean, scale, df}_for_intercept, prior_scale_{mean, scale, df}_for_aux */
+  // declares prior_{mean, scale, df}, prior_{mean, scale, df}_for_intercept, prior_scale_{mean, scale, df}_for_aux
   
-  /* hyperparameter values are set to 0 if there is no prior */
+  // hyperparameter values are set to 0 if there is no prior
   vector<lower=0>[K] prior_scale;
   real<lower=0> prior_scale_for_intercept;
   real<lower=0> prior_scale_for_aux;
@@ -1448,23 +1448,23 @@ data {
   real<lower=0> prior_df_for_intercept;
   real<lower=0> prior_df_for_aux;
   vector<lower=0>[K_smooth > 0 ? max(smooth_map) : 0] prior_df_for_smooth;
-  real<lower=0> global_prior_df; /* for hs priors only */
-  real<lower=0> global_prior_scale; /* for hs priors only */
-  real<lower=0> slab_df; /* for hs prior only */
-  real<lower=0> slab_scale; /* for hs prior only */
+  real<lower=0> global_prior_df; // for hs priors only
+  real<lower=0> global_prior_scale; // for hs priors only
+  real<lower=0> slab_df; // for hs prior only
+  real<lower=0> slab_scale; // for hs prior only
   array[prior_dist == 7 ? K : 0] int<lower=2> num_normals;
   
-  /* declares t, p[t], l[t], q, len_theta_L, shape, scale, {len_}concentration, {len_}regularization */
+  // declares t, p[t], l[t], q, len_theta_L, shape, scale, {len_}concentration, {len_}regularization
   
-  /* glmer stuff, see table 3 of */
-  /* https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf */
-  int<lower=0> t; /* num. terms (maybe 0) with a | in the glmer formula */
-  array[t] int<lower=1> p; /* num. variables on the LHS of each | */
-  array[t] int<lower=1> l; /* num. levels for the factor(s) on the RHS of each | */
-  int<lower=0> q; /* conceptually equals \sum_{i=1}^t p_i \times l_i */
-  int<lower=0> len_theta_L; /* length of the theta_L vector */
+  // glmer stuff, see table 3 of
+  // https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf
+  int<lower=0> t; // num. terms (maybe 0) with a | in the glmer formula
+  array[t] int<lower=1> p; // num. variables on the LHS of each |
+  array[t] int<lower=1> l; // num. levels for the factor(s) on the RHS of each |
+  int<lower=0> q; // conceptually equals \sum_{i=1}^t p_i \times l_i
+  int<lower=0> len_theta_L; // length of the theta_L vector
   
-  /* hyperparameters for glmer stuff; if t > 0 priors are mandatory */
+  // hyperparameters for glmer stuff; if t > 0 priors are mandatory
   vector<lower=0>[t] shape;
   vector<lower=0>[t] scale;
   int<lower=0> len_concentration;
@@ -1472,25 +1472,25 @@ data {
   int<lower=0> len_regularization;
   array[len_regularization] real<lower=0> regularization;
   
-  /* declares num_not_zero, w, v, u */
+  // declares num_not_zero, w, v, u
   
-  int<lower=0> num_non_zero; /* number of non-zero elements in the Z matrix */
-  vector[num_non_zero] w; /* non-zero elements in the implicit Z matrix */
-  array[num_non_zero] int<lower=0, upper=q - 1> v; /* column indices for w */
-  array[t > 0 ? N + 1 : 0] int<lower=0, upper=rows(w) + 1> u; /* where the non-zeros start in each row */
-  int<lower=0, upper=1> special_case; /* is the only term (1|group) */
+  int<lower=0> num_non_zero; // number of non-zero elements in the Z matrix
+  vector[num_non_zero] w; // non-zero elements in the implicit Z matrix
+  array[num_non_zero] int<lower=0, upper=q - 1> v; // column indices for w
+  array[t > 0 ? N + 1 : 0] int<lower=0, upper=rows(w) + 1> u; // where the non-zeros start in each row
+  int<lower=0, upper=1> special_case; // is the only term (1|group)
 }
 transformed data {
   real aux = not_a_number();
   array[special_case ? t : 0, N] int<lower=1> V = make_V(N,
                                                          special_case ? t : 0,
                                                          v);
-  /* defines hs, len_z_T, len_var_group, delta, pos */
+  // defines hs, len_z_T, len_var_group, delta, pos
   
   int<lower=0> len_z_T = 0;
   int<lower=0> len_var_group = sum(p) * (t > 0);
   int<lower=0> len_rho = sum(p) - t;
-  int<lower=0, upper=1> is_continuous = 0; /* changed in continuous.stan */
+  int<lower=0, upper=1> is_continuous = 0; // changed in continuous.stan
   int<lower=1> pos = 1;
   array[len_concentration] real<lower=0> delta;
   int<lower=0> hs;
@@ -1516,7 +1516,7 @@ transformed data {
 }
 parameters {
   array[has_intercept] real<upper=(link == 4 ? 0.0 : positive_infinity())> gamma;
-  /* declares z_beta, global, local, z_b, z_T, rho, zeta, tau */
+  // declares z_beta, global, local, z_b, z_T, rho, zeta, tau
   
   vector[prior_dist == 7 ? sum(num_normals) : K] z_beta;
   vector[K_smooth] z_beta_smooth;
@@ -1533,7 +1533,7 @@ parameters {
   vector<lower=0>[t] tau;
 }
 transformed parameters {
-  /* defines beta, b, theta_L */
+  // defines beta, b, theta_L
   
   vector[K] beta;
   vector[K_smooth] beta_smooth;
@@ -1560,13 +1560,13 @@ transformed parameters {
       beta = hsplus_prior(z_beta, global, local, global_prior_scale, aux, c2);
     else 
       beta = hsplus_prior(z_beta, global, local, global_prior_scale, 1, c2);
-  } else if (prior_dist == 5)  /* laplace */
+  } else if (prior_dist == 5)  // laplace
     beta = prior_mean + prior_scale .* sqrt(2 * mix[1]) .* z_beta;
-  else if (prior_dist == 6)  /* lasso */
+  else if (prior_dist == 6)  // lasso
     beta = prior_mean
            + one_over_lambda[1] * prior_scale .* sqrt(2 * mix[1]) .* z_beta;
   else if (prior_dist == 7) {
-    /* product_normal */
+    // product_normal
     int z_pos = 1;
     for (k in 1 : K) {
       beta[k] = z_beta[z_pos];
@@ -1608,7 +1608,7 @@ transformed parameters {
   }
 }
 model {
-  vector[N] eta; /* linear predictor */
+  vector[N] eta; // linear predictor
   if (K > 0) {
     if (dense_X) 
       eta = X[1] * beta;
@@ -1636,25 +1636,25 @@ model {
       eta += gamma[1] - max(eta);
   }
   else {
-    /* correction to eta if model has no intercept (because X is centered) */
+    // correction to eta if model has no intercept (because X is centered)
     
     eta += dot_product(xbar, beta);
   }
   
-  /* Log-likelihood  */
+  // Log-likelihood 
   if (has_weights == 0 && prior_PD == 0) {
-    /* unweighted log-likelihoods */
+    // unweighted log-likelihoods
     real dummy = ll_binom_lp(y, trials, eta, link);
   } else if (prior_PD == 0) 
     target += dot_product(weights, pw_binom(y, trials, eta, link));
   
-  /* Log-priors for coefficients */
+  // Log-priors for coefficients
   if (prior_dist == 1) 
     target += normal_lpdf(z_beta| 0, 1);
   else if (prior_dist == 2) 
-    target += normal_lpdf(z_beta| 0, 1); /* Student t via Cornish-Fisher expansion */
+    target += normal_lpdf(z_beta| 0, 1); // Student t via Cornish-Fisher expansion
   else if (prior_dist == 3) {
-    /* hs */
+    // hs
     real log_half = -0.693147180559945286;
     target += normal_lpdf(z_beta| 0, 1);
     target += normal_lpdf(local[1]| 0, 1) - log_half;
@@ -1664,38 +1664,38 @@ model {
                                                                * global_prior_df);
     target += inv_gamma_lpdf(caux| 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 4) {
-    /* hs+ */
+    // hs+
     real log_half = -0.693147180559945286;
     target += normal_lpdf(z_beta| 0, 1);
     target += normal_lpdf(local[1]| 0, 1) - log_half;
     target += inv_gamma_lpdf(local[2]| 0.5 * prior_df, 0.5 * prior_df);
     target += normal_lpdf(local[3]| 0, 1) - log_half;
-    /* unorthodox useage of prior_scale as another df hyperparameter */
+    // unorthodox useage of prior_scale as another df hyperparameter
     target += inv_gamma_lpdf(local[4]| 0.5 * prior_scale, 0.5 * prior_scale);
     target += normal_lpdf(global[1]| 0, 1) - log_half;
     target += inv_gamma_lpdf(global[2]| 0.5 * global_prior_df, 0.5
                                                                * global_prior_df);
     target += inv_gamma_lpdf(caux| 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 5) {
-    /* laplace */
+    // laplace
     target += normal_lpdf(z_beta| 0, 1);
     target += exponential_lpdf(mix[1]| 1);
   } else if (prior_dist == 6) {
-    /* lasso */
+    // lasso
     target += normal_lpdf(z_beta| 0, 1);
     target += exponential_lpdf(mix[1]| 1);
     target += chi_square_lpdf(one_over_lambda[1]| prior_df[1]);
   } else if (prior_dist == 7) {
-    /* product_normal */
+    // product_normal
     target += normal_lpdf(z_beta| 0, 1);
   }
   /* else prior_dist is 0 and nothing is added */
   
-  /* Log-prior for intercept   */
+  // Log-prior for intercept  
   if (has_intercept == 1) {
-    if (prior_dist_for_intercept == 1)  /* normal */
+    if (prior_dist_for_intercept == 1)  // normal
       target += normal_lpdf(gamma| prior_mean_for_intercept, prior_scale_for_intercept);
-    else if (prior_dist_for_intercept == 2)  /* student_t */
+    else if (prior_dist_for_intercept == 2)  // student_t
       target += student_t_lpdf(gamma| prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
     /* else prior_dist is 0 and nothing is added */
   }
@@ -1733,7 +1733,7 @@ generated quantities {
   if (compute_mean_PPD) {
     vector[N] pi;
     
-    vector[N] eta; /* linear predictor */
+    vector[N] eta; // linear predictor
     if (K > 0) {
       if (dense_X) 
         eta = X[1] * beta;
@@ -1764,7 +1764,7 @@ generated quantities {
       }
     }
     else {
-      /* correction to eta if model has no intercept (because X is centered) */
+      // correction to eta if model has no intercept (because X is centered)
       
       eta += dot_product(xbar, beta);
     }
@@ -1777,8 +1777,8 @@ generated quantities {
 }
 
   $ ../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined continuous.stan
-/*    This file is part of rstanarm. */
-/*    Copyright (C) 2015, 2016 2017 Trustees of Columbia University */
+//    This file is part of rstanarm.
+//    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
 
 /*
     rstanarm is free software: you can redistribute it and/or modify
@@ -1795,7 +1795,7 @@ generated quantities {
     along with rstanarm.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* GLM for a Gaussian, Gamma, inverse Gaussian, or Beta outcome */
+// GLM for a Gaussian, Gamma, inverse Gaussian, or Beta outcome
 functions {
   /* for multiple .stan files */
   
@@ -1824,30 +1824,30 @@ functions {
     int z_T_mark = 1;
     int theta_L_mark = 1;
     
-    /* each of these is a diagonal block of the implicit Cholesky factor */
+    // each of these is a diagonal block of the implicit Cholesky factor
     for (i in 1 : size(p)) {
       int nc = p[i];
       if (nc == 1) {
-        /* "block" is just a standard deviation */
+        // "block" is just a standard deviation
         theta_L[theta_L_mark] = tau[i] * scale[i] * dispersion;
-        /* unlike lme4, theta[theta_L_mark] includes the dispersion term in it */
+        // unlike lme4, theta[theta_L_mark] includes the dispersion term in it
         theta_L_mark += 1;
       }
       else {
-        /* block is lower-triangular                */
+        // block is lower-triangular               
         matrix[nc, nc] T_i;
         real std_dev;
         real T21;
         real trace_T_i = square(tau[i] * scale[i] * dispersion) * nc;
-        vector[nc] pi = segment(zeta, zeta_mark, nc); /* gamma(zeta | shape, 1) */
-        pi /= sum(pi); /* thus dirichlet(pi | shape) */
+        vector[nc] pi = segment(zeta, zeta_mark, nc); // gamma(zeta | shape, 1)
+        pi /= sum(pi); // thus dirichlet(pi | shape)
         
-        /* unlike lme4, T_i includes the dispersion term in it */
+        // unlike lme4, T_i includes the dispersion term in it
         zeta_mark += nc;
         std_dev = sqrt(pi[1] * trace_T_i);
         T_i[1, 1] = std_dev;
         
-        /* Put a correlation into T_i[2,1] and scale by std_dev */
+        // Put a correlation into T_i[2,1] and scale by std_dev
         std_dev = sqrt(pi[2] * trace_T_i);
         T21 = 2.0 * rho[rho_mark] - 1.0;
         rho_mark += 1;
@@ -1855,7 +1855,7 @@ functions {
         T_i[2, 1] = std_dev * T21;
         
         for (r in 2 : (nc - 1)) {
-          /* scaled onion method to fill T_i */
+          // scaled onion method to fill T_i
           int rp1 = r + 1;
           vector[r] T_row = segment(z_T, z_T_mark, r);
           real scale_factor = sqrt(rho[rho_mark] / dot_self(T_row)) * std_dev;
@@ -1867,7 +1867,7 @@ functions {
           rho_mark += 1;
         }
         
-        /* now vech T_i */
+        // now vech T_i
         for (c in 1 : nc) 
           for (r in c : nc) {
             theta_L[theta_L_mark] = T_i[r, c];
@@ -2090,11 +2090,11 @@ functions {
    */
   real make_lower(int family, int link) {
     if (family == 1) 
-      return negative_infinity(); /* Gaussian */
+      return negative_infinity(); // Gaussian
     if (family <= 3) {
-      /* Gamma or inverse Gaussian */
+      // Gamma or inverse Gaussian
       if (link == 2) 
-        return negative_infinity(); /* log */
+        return negative_infinity(); // log
       return 0;
     }
     return negative_infinity();
@@ -2129,7 +2129,7 @@ functions {
       return inv(eta);
     else 
       reject("Invalid link");
-    return eta; /* never reached */
+    return eta; // never reached
   }
   
   /** 
@@ -2160,7 +2160,7 @@ functions {
       return inv(eta);
     else 
       reject("Invalid link");
-    return eta; /* never reached */
+    return eta; // never reached
   }
   
   /** 
@@ -2176,11 +2176,11 @@ functions {
   real GammaReg(vector y, vector eta, real shape, int link, real sum_log_y) {
     real ret = rows(y) * (shape * log(shape) - lgamma(shape))
                + (shape - 1) * sum_log_y;
-    if (link == 2)  /* link is log */
+    if (link == 2)  // link is log
       ret -= shape * sum(eta) + shape * sum(y ./ exp(eta));
-    else if (link == 1)  /* link is identity */
+    else if (link == 1)  // link is identity
       ret -= shape * sum(log(eta)) + shape * sum(y ./ eta);
-    else if (link == 3)  /* link is inverse */
+    else if (link == 3)  // link is inverse
       ret += shape * sum(log(eta)) - shape * dot_product(eta, y);
     else 
       reject("Invalid link");
@@ -2199,17 +2199,17 @@ functions {
     int N = rows(eta);
     vector[N] ll;
     if (link == 3) {
-      /* link = inverse */
+      // link = inverse
       for (n in 1 : N) {
         ll[n] = gamma_lpdf(y[n]| shape, shape * eta[n]);
       }
     } else if (link == 2) {
-      /* link = log */
+      // link = log
       for (n in 1 : N) {
         ll[n] = gamma_lpdf(y[n]| shape, shape / exp(eta[n]));
       }
     } else if (link == 1) {
-      /* link = identity */
+      // link = identity
       for (n in 1 : N) {
         ll[n] = gamma_lpdf(y[n]| shape, shape / eta[n]);
       }
@@ -2236,7 +2236,7 @@ functions {
       return inv_sqrt(eta);
     else 
       reject("Invalid link");
-    return eta; /* never reached */
+    return eta; // never reached
   }
   
   /** 
@@ -2269,7 +2269,7 @@ functions {
   */
   vector pw_inv_gaussian(vector y, vector eta, real lambda, int link,
                          vector log_y, vector sqrt_y) {
-    vector[rows(y)] mu = linkinv_inv_gaussian(eta, link); /* link checked */
+    vector[rows(y)] mu = linkinv_inv_gaussian(eta, link); // link checked
     return -0.5 * lambda * square((y - mu) ./ (mu .* sqrt_y))
            + 0.5 * log(lambda / 6.283185307179586232) - 1.5 * log_y;
   }
@@ -2305,20 +2305,20 @@ functions {
   */
   vector linkinv_beta(vector eta, int link) {
     if (link == 1) 
-      return inv_logit(eta); /* logit */
+      return inv_logit(eta); // logit
     else if (link == 2) 
-      return Phi(eta); /* probit */
+      return Phi(eta); // probit
     else if (link == 3) 
-      return inv_cloglog(eta); /* cloglog */
+      return inv_cloglog(eta); // cloglog
     else if (link == 4) 
-      return 0.5 + atan(eta) / pi(); /* cauchy */
+      return 0.5 + atan(eta) / pi(); // cauchy
     else if (link == 5) 
-      return exp(eta); /* log  */
+      return exp(eta); // log 
     else if (link == 6) 
-      return 1 - inv_cloglog(-eta); /* loglog */
+      return 1 - inv_cloglog(-eta); // loglog
     else 
       reject("invalid link");
-    return eta; /* never reached */
+    return eta; // never reached
   }
   
   /** 
@@ -2330,14 +2330,14 @@ functions {
   */
   vector linkinv_beta_z(vector eta, int link) {
     if (link == 1) 
-      return exp(eta); /* log */
+      return exp(eta); // log
     else if (link == 2) 
-      return eta; /* identity */
+      return eta; // identity
     else if (link == 3) 
-      return square(eta); /* sqrt */
+      return square(eta); // sqrt
     else 
       reject("Invalid link");
-    return eta; /* never reached */
+    return eta; // never reached
   }
   
   /** 
@@ -2351,7 +2351,7 @@ functions {
   */
   vector pw_beta(vector y, vector eta, real dispersion, int link) {
     vector[rows(y)] ll;
-    vector[rows(y)] mu = linkinv_beta(eta, link); /* link checked */
+    vector[rows(y)] mu = linkinv_beta(eta, link); // link checked
     for (n in 1 : rows(y)) {
       ll[n] = beta_lpdf(y[n]| mu[n] * dispersion, (1 - mu[n]) * dispersion);
     }
@@ -2370,8 +2370,8 @@ functions {
   */
   vector pw_beta_z(vector y, vector eta, vector eta_z, int link, int link_phi) {
     vector[rows(y)] ll;
-    vector[rows(y)] mu = linkinv_beta(eta, link); /* link checked */
-    vector[rows(y)] mu_z = linkinv_beta_z(eta_z, link_phi); /* link checked */
+    vector[rows(y)] mu = linkinv_beta(eta, link); // link checked
+    vector[rows(y)] mu_z = linkinv_beta_z(eta_z, link_phi); // link checked
     for (n in 1 : rows(y)) {
       ll[n] = beta_lpdf(y[n]| mu[n] * mu_z[n], (1 - mu[n]) * mu_z[n]);
     }
@@ -2396,7 +2396,7 @@ functions {
   */
   
   vector SS_asymp(vector input, matrix Phi_) {
-    /* Phi_[,1] = Asym, Phi_[,2] = R0, Phi_[,3] = lrc */
+    // Phi_[,1] = Asym, Phi_[,2] = R0, Phi_[,3] = lrc
     if (rows(Phi_) > 1) {
       vector[rows(Phi_)] Asym = Phi_[ : , 1];
       return Asym + (Phi_[ : , 2] - Asym) .* exp(-exp(Phi_[ : , 3]) .* input);
@@ -2408,7 +2408,7 @@ functions {
   }
   
   vector SS_asympOff(vector input, matrix Phi_) {
-    /* Phi_[,1] = Asym, Phi_[,2] = lrc, Phi_[,3] = c0 */
+    // Phi_[,1] = Asym, Phi_[,2] = lrc, Phi_[,3] = c0
     if (rows(Phi_) > 1) 
       return Phi_[ : , 1]
              .* (1 - exp(-exp(Phi_[ : , 2]) .* (input - Phi_[ : , 3])));
@@ -2417,7 +2417,7 @@ functions {
   }
   
   vector SS_asympOrig(vector input, matrix Phi_) {
-    /* Phi_[,1] = Asym, Phi_[,2] = lrc */
+    // Phi_[,1] = Asym, Phi_[,2] = lrc
     if (rows(Phi_) > 1) 
       return Phi_[ : , 1] .* (1 - exp(-exp(Phi_[ : , 2]) .* input));
     else 
@@ -2425,7 +2425,7 @@ functions {
   }
   
   vector SS_biexp(vector input, matrix Phi_) {
-    /* Phi_[,1] = A1, Phi_[,2] = lrc1, Phi_[,3] = A2, Phi_[,4] = lrc2 */
+    // Phi_[,1] = A1, Phi_[,2] = lrc1, Phi_[,3] = A2, Phi_[,4] = lrc2
     if (rows(Phi_) > 1) 
       return Phi_[ : , 1] .* exp(-exp(Phi_[ : , 2]) .* input)
              + Phi_[ : , 3] .* exp(-exp(Phi_[ : , 4]) .* input);
@@ -2435,7 +2435,7 @@ functions {
   }
   
   vector SS_fol(vector Dose, vector input, matrix Phi_) {
-    /* Phi_[,1] = lKe, Phi_[,2] = lKa, Phi_[,3] = lCl */
+    // Phi_[,1] = lKe, Phi_[,2] = lKa, Phi_[,3] = lCl
     int Phi__rows = rows(Phi_);
     if (Phi__rows > 1) {
       vector[Phi__rows] lKe = Phi_[ : , 1];
@@ -2458,8 +2458,8 @@ functions {
   }
   
   vector SS_fpl(vector input, matrix Phi_) {
-    /* Phi_[,1] = A, Phi_[,2] = B, Phi_[,3] = xmid, Phi_[,4] = scal */
-    /* input is generally data so cannot switch signs */
+    // Phi_[,1] = A, Phi_[,2] = B, Phi_[,3] = xmid, Phi_[,4] = scal
+    // input is generally data so cannot switch signs
     if (rows(Phi_) > 1) {
       vector[rows(Phi_)] A = Phi_[ : , 1];
       return A
@@ -2475,7 +2475,7 @@ functions {
   }
   
   vector SS_gompertz(vector x, matrix Phi_) {
-    /* Phi_[,1] = Asym, Phi_[,2] = b2, Phi_[,3] = b3 */
+    // Phi_[,1] = Asym, Phi_[,2] = b2, Phi_[,3] = b3
     vector[rows(x)] out;
     if (rows(Phi_) > 1) 
       for (i in 1 : rows(x)) 
@@ -2491,8 +2491,8 @@ functions {
   }
   
   vector SS_logis(vector input, matrix Phi_) {
-    /* Phi_[,1] = Asym, Phi_[,2] = xmid, Phi_[,3] = scal */
-    /* input is typically data so cannot switch signs of everything */
+    // Phi_[,1] = Asym, Phi_[,2] = xmid, Phi_[,3] = scal
+    // input is typically data so cannot switch signs of everything
     if (rows(Phi_) > 1) 
       return Phi_[ : , 1]
              ./ (1 + exp((Phi_[ : , 2] - input) ./ exp(Phi_[ : , 3])));
@@ -2502,7 +2502,7 @@ functions {
   }
   
   vector SS_micmen(vector input, matrix Phi_) {
-    /* Phi_[,1] = Vm, Phi_[,2] = K */
+    // Phi_[,1] = Vm, Phi_[,2] = K
     if (rows(Phi_) > 1) 
       return Phi_[ : , 1] .* input ./ (Phi_[ : , 2] + input);
     else 
@@ -2510,7 +2510,7 @@ functions {
   }
   
   vector SS_weibull(vector x, matrix Phi_) {
-    /* Phi_[,1] = Asym, Phi_[,2] = Drop, Phi_[,3] = lrc, Phi_[,4] = pwr */
+    // Phi_[,1] = Asym, Phi_[,2] = Drop, Phi_[,3] = lrc, Phi_[,4] = pwr
     vector[rows(x)] out;
     if (rows(Phi_) > 1) 
       for (i in 1 : rows(x)) 
@@ -2557,70 +2557,70 @@ functions {
   }
 }
 data {
-  /* declares N, K, X, xbar, dense_X, nnz_x, w_x, v_x, u_x */
+  // declares N, K, X, xbar, dense_X, nnz_x, w_x, v_x, u_x
   
-  /* dimensions */
-  int<lower=0> N; /* number of observations */
-  int<lower=0> K; /* number of predictors */
+  // dimensions
+  int<lower=0> N; // number of observations
+  int<lower=0> K; // number of predictors
   
-  /* data */
-  vector[K] xbar; /* predictor means */
-  int<lower=0, upper=1> dense_X; /* flag for dense vs. sparse */
-  array[dense_X] matrix[N, K] X; /* centered predictor matrix in the dense case */
+  // data
+  vector[K] xbar; // predictor means
+  int<lower=0, upper=1> dense_X; // flag for dense vs. sparse
+  array[dense_X] matrix[N, K] X; // centered predictor matrix in the dense case
   
-  /* stuff for the sparse case */
-  int<lower=0> nnz_X; /* number of non-zero elements in the implicit X matrix */
-  vector[nnz_X] w_X; /* non-zero elements in the implicit X matrix */
-  array[nnz_X] int<lower=0, upper=K - 1> v_X; /* column indices for w_X */
-  /* where the non-zeros start in each row of X */
+  // stuff for the sparse case
+  int<lower=0> nnz_X; // number of non-zero elements in the implicit X matrix
+  vector[nnz_X] w_X; // non-zero elements in the implicit X matrix
+  array[nnz_X] int<lower=0, upper=K - 1> v_X; // column indices for w_X
+  // where the non-zeros start in each row of X
   array[dense_X ? 0 : N + 1] int<lower=0, upper=rows(w_X) + 1> u_X;
   
-  /* smooths */
+  // smooths
   int<lower=0> K_smooth;
   matrix[N, K_smooth] S;
   array[K_smooth] int<lower=1> smooth_map;
   
-  int<lower=0> len_y; /* length of y */
-  real lb_y; /* lower bound on y */
-  real<lower=lb_y> ub_y; /* upper bound on y */
-  vector<lower=lb_y, upper=ub_y>[len_y] y; /* continuous outcome */
-  int<lower=1, upper=4> family; /* 1 gaussian, 2 gamma, 3 inv-gaussian, 4 beta */
-  /* declares prior_PD, has_intercept, link, prior_dist, prior_dist_for_intercept */
+  int<lower=0> len_y; // length of y
+  real lb_y; // lower bound on y
+  real<lower=lb_y> ub_y; // upper bound on y
+  vector<lower=lb_y, upper=ub_y>[len_y] y; // continuous outcome
+  int<lower=1, upper=4> family; // 1 gaussian, 2 gamma, 3 inv-gaussian, 4 beta
+  // declares prior_PD, has_intercept, link, prior_dist, prior_dist_for_intercept
   
-  /* flag indicating whether to draw from the prior */
-  int<lower=0, upper=1> prior_PD; /* 1 = yes */
-  int<lower=0, upper=1> compute_mean_PPD; /* 1 = yes */
+  // flag indicating whether to draw from the prior
+  int<lower=0, upper=1> prior_PD; // 1 = yes
+  int<lower=0, upper=1> compute_mean_PPD; // 1 = yes
   
-  /* intercept */
-  int<lower=0, upper=1> has_intercept; /* 1 = yes */
+  // intercept
+  int<lower=0, upper=1> has_intercept; // 1 = yes
   
-  /* link function from location to linear predictor  */
-  int<lower=1> link; /* interpretation varies by .stan file */
+  // link function from location to linear predictor 
+  int<lower=1> link; // interpretation varies by .stan file
   
-  /* prior family: 0 = none, 1 = normal, 2 = student_t, 3 = hs, 4 = hs_plus,  */
-  /*   5 = laplace, 6 = lasso, 7 = product_normal */
+  // prior family: 0 = none, 1 = normal, 2 = student_t, 3 = hs, 4 = hs_plus, 
+  //   5 = laplace, 6 = lasso, 7 = product_normal
   int<lower=0, upper=7> prior_dist;
   int<lower=0, upper=2> prior_dist_for_intercept;
   
-  /* prior family: 0 = none, 1 = normal, 2 = student_t, 3 = exponential */
+  // prior family: 0 = none, 1 = normal, 2 = student_t, 3 = exponential
   int<lower=0, upper=3> prior_dist_for_aux;
   
-  /* prior family: 0 = none, 1 = normal, 2 = student_t, 3 = exponential */
+  // prior family: 0 = none, 1 = normal, 2 = student_t, 3 = exponential
   int<lower=0, upper=3> prior_dist_for_smooth;
   
-  /* declares has_weights, weights, has_offset, offset_ */
+  // declares has_weights, weights, has_offset, offset_
   
-  /* weights */
-  int<lower=0, upper=1> has_weights; /* 0 = No, 1 = Yes */
+  // weights
+  int<lower=0, upper=1> has_weights; // 0 = No, 1 = Yes
   vector[has_weights ? N : 0] weights;
   
-  /* offset_ */
-  int<lower=0, upper=1> has_offset; /* 0 = No, 1 = Yes */
+  // offset_
+  int<lower=0, upper=1> has_offset; // 0 = No, 1 = Yes
   vector[has_offset ? N : 0] offset_;
   
-  /* declares prior_{mean, scale, df}, prior_{mean, scale, df}_for_intercept, prior_{mean, scale, df}_for_aux */
+  // declares prior_{mean, scale, df}, prior_{mean, scale, df}_for_intercept, prior_{mean, scale, df}_for_aux
   
-  /* hyperparameter values are set to 0 if there is no prior */
+  // hyperparameter values are set to 0 if there is no prior
   vector<lower=0>[K] prior_scale;
   real<lower=0> prior_scale_for_intercept;
   real<lower=0> prior_scale_for_aux;
@@ -2633,23 +2633,23 @@ data {
   real<lower=0> prior_df_for_intercept;
   real<lower=0> prior_df_for_aux;
   vector<lower=0>[K_smooth > 0 ? max(smooth_map) : 0] prior_df_for_smooth;
-  real<lower=0> global_prior_df; /* for hs priors only */
-  real<lower=0> global_prior_scale; /* for hs priors only */
-  real<lower=0> slab_df; /* for hs prior only */
-  real<lower=0> slab_scale; /* for hs prior only */
+  real<lower=0> global_prior_df; // for hs priors only
+  real<lower=0> global_prior_scale; // for hs priors only
+  real<lower=0> slab_df; // for hs prior only
+  real<lower=0> slab_scale; // for hs prior only
   array[prior_dist == 7 ? K : 0] int<lower=2> num_normals;
   
-  /* declares t, p[t], l[t], q, len_theta_L, shape, scale, {len_}concentration, {len_}regularization */
+  // declares t, p[t], l[t], q, len_theta_L, shape, scale, {len_}concentration, {len_}regularization
   
-  /* glmer stuff, see table 3 of */
-  /* https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf */
-  int<lower=0> t; /* num. terms (maybe 0) with a | in the glmer formula */
-  array[t] int<lower=1> p; /* num. variables on the LHS of each | */
-  array[t] int<lower=1> l; /* num. levels for the factor(s) on the RHS of each | */
-  int<lower=0> q; /* conceptually equals \sum_{i=1}^t p_i \times l_i */
-  int<lower=0> len_theta_L; /* length of the theta_L vector */
+  // glmer stuff, see table 3 of
+  // https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf
+  int<lower=0> t; // num. terms (maybe 0) with a | in the glmer formula
+  array[t] int<lower=1> p; // num. variables on the LHS of each |
+  array[t] int<lower=1> l; // num. levels for the factor(s) on the RHS of each |
+  int<lower=0> q; // conceptually equals \sum_{i=1}^t p_i \times l_i
+  int<lower=0> len_theta_L; // length of the theta_L vector
   
-  /* hyperparameters for glmer stuff; if t > 0 priors are mandatory */
+  // hyperparameters for glmer stuff; if t > 0 priors are mandatory
   vector<lower=0>[t] shape;
   vector<lower=0>[t] scale;
   int<lower=0> len_concentration;
@@ -2657,21 +2657,21 @@ data {
   int<lower=0> len_regularization;
   array[len_regularization] real<lower=0> regularization;
   
-  /* declares num_not_zero, w, v, u */
+  // declares num_not_zero, w, v, u
   
-  int<lower=0> num_non_zero; /* number of non-zero elements in the Z matrix */
-  vector[num_non_zero] w; /* non-zero elements in the implicit Z matrix */
-  array[num_non_zero] int<lower=0, upper=q - 1> v; /* column indices for w */
-  array[t > 0 ? N + 1 : 0] int<lower=0, upper=rows(w) + 1> u; /* where the non-zeros start in each row */
-  int<lower=0, upper=1> special_case; /* is the only term (1|group) */
+  int<lower=0> num_non_zero; // number of non-zero elements in the Z matrix
+  vector[num_non_zero] w; // non-zero elements in the implicit Z matrix
+  array[num_non_zero] int<lower=0, upper=q - 1> v; // column indices for w
+  array[t > 0 ? N + 1 : 0] int<lower=0, upper=rows(w) + 1> u; // where the non-zeros start in each row
+  int<lower=0, upper=1> special_case; // is the only term (1|group)
   
-  /* betareg data */
-  int<lower=0, upper=1> has_intercept_z; /* presence of z intercept */
-  int<lower=0> link_phi; /* link transformation for eta_z (0 => no z in model) */
-  int<lower=0> z_dim; /* dimensions of z vars */
-  matrix[N, z_dim] betareg_z; /* matrix of z vars */
-  row_vector[z_dim] zbar; /* mean of predictors */
-  /* betareg hyperparameters */
+  // betareg data
+  int<lower=0, upper=1> has_intercept_z; // presence of z intercept
+  int<lower=0> link_phi; // link transformation for eta_z (0 => no z in model)
+  int<lower=0> z_dim; // dimensions of z vars
+  matrix[N, z_dim] betareg_z; // matrix of z vars
+  row_vector[z_dim] zbar; // mean of predictors
+  // betareg hyperparameters
   int<lower=0, upper=7> prior_dist_z;
   int<lower=0, upper=2> prior_dist_for_intercept_z;
   vector<lower=0>[z_dim] prior_scale_z;
@@ -2686,7 +2686,7 @@ data {
   real<lower=0> slab_scale_z;
   array[prior_dist_z == 7 ? z_dim : 0] int<lower=2> num_normals_z;
   
-  int<lower=0, upper=10> SSfun; /* nonlinear function indicator, 0 for identity */
+  int<lower=0, upper=10> SSfun; // nonlinear function indicator, 0 for identity
   vector[SSfun > 0 ? len_y : 0] input;
   vector[SSfun == 5 ? len_y : 0] Dose;
 }
@@ -2697,13 +2697,13 @@ transformed data {
   array[special_case ? t : 0, len_y] int<lower=1> V = make_V(len_y,
                                                              special_case ? t
                                                              : 0, v);
-  int<lower=0> hs_z; /* for tdata_betareg.stan */
-  /* defines hs, len_z_T, len_var_group, delta, is_continuous, pos */
+  int<lower=0> hs_z; // for tdata_betareg.stan
+  // defines hs, len_z_T, len_var_group, delta, is_continuous, pos
   
   int<lower=0> len_z_T = 0;
   int<lower=0> len_var_group = sum(p) * (t > 0);
   int<lower=0> len_rho = sum(p) - t;
-  int<lower=0, upper=1> is_continuous = 0; /* changed in continuous.stan */
+  int<lower=0, upper=1> is_continuous = 0; // changed in continuous.stan
   int<lower=1> pos = 1;
   array[len_concentration] real<lower=0> delta;
   int<lower=0> hs;
@@ -2727,7 +2727,7 @@ transformed data {
       len_z_T += p[i] - 1;
   }
   
-  /* defines hs_z */
+  // defines hs_z
   
   if (prior_dist_z <= 2) 
     hs_z = 0;
@@ -2747,7 +2747,7 @@ transformed data {
 parameters {
   array[has_intercept] real<lower=make_lower(family, link), upper=make_upper(family,
                                                                     link)> gamma;
-  /* declares z_beta, global, local, z_b, z_T, rho, zeta, tau */
+  // declares z_beta, global, local, z_b, z_T, rho, zeta, tau
   
   vector[prior_dist == 7 ? sum(num_normals) : K] z_beta;
   vector[K_smooth] z_beta_smooth;
@@ -2763,11 +2763,10 @@ parameters {
   vector<lower=0>[len_concentration] zeta;
   vector<lower=0>[t] tau;
   
-  real<lower=0> aux_unscaled; /* interpretation depends on family! */
+  real<lower=0> aux_unscaled; // interpretation depends on family!
   
-  vector[prior_dist_z == 7 ? sum(num_normals_z) : z_dim] z_omega; /* betareg z variable coefficients */
-  array[has_intercept_z] real<lower=(link_phi <= 1 ? negative_infinity() : 0)> gamma_z; 
-  /* betareg intercept */
+  vector[prior_dist_z == 7 ? sum(num_normals_z) : z_dim] z_omega; // betareg z variable coefficients
+  array[has_intercept_z] real<lower=(link_phi <= 1 ? negative_infinity() : 0)> gamma_z; // betareg intercept
   array[hs_z] real<lower=0> global_z;
   array[hs_z] vector<lower=0>[z_dim] local_z;
   array[hs_z > 0] real<lower=0> caux_z;
@@ -2775,14 +2774,14 @@ parameters {
   array[prior_dist_z == 6] real<lower=0> one_over_lambda_z;
 }
 transformed parameters {
-  /* aux has to be defined first in the hs case */
+  // aux has to be defined first in the hs case
   real aux = prior_dist_for_aux == 0 ? aux_unscaled
              : (prior_dist_for_aux <= 2
                 ? prior_scale_for_aux * aux_unscaled + prior_mean_for_aux
                 : prior_scale_for_aux * aux_unscaled);
   
-  vector[z_dim] omega; /* used in tparameters_betareg.stan */
-  /* defines beta, b, theta_L */
+  vector[z_dim] omega; // used in tparameters_betareg.stan
+  // defines beta, b, theta_L
   
   vector[K] beta;
   vector[K_smooth] beta_smooth;
@@ -2809,13 +2808,13 @@ transformed parameters {
       beta = hsplus_prior(z_beta, global, local, global_prior_scale, aux, c2);
     else 
       beta = hsplus_prior(z_beta, global, local, global_prior_scale, 1, c2);
-  } else if (prior_dist == 5)  /* laplace */
+  } else if (prior_dist == 5)  // laplace
     beta = prior_mean + prior_scale .* sqrt(2 * mix[1]) .* z_beta;
-  else if (prior_dist == 6)  /* lasso */
+  else if (prior_dist == 6)  // lasso
     beta = prior_mean
            + one_over_lambda[1] * prior_scale .* sqrt(2 * mix[1]) .* z_beta;
   else if (prior_dist == 7) {
-    /* product_normal */
+    // product_normal
     int z_pos = 1;
     for (k in 1 : K) {
       beta[k] = z_beta[z_pos];
@@ -2872,11 +2871,11 @@ transformed parameters {
     }
   }
   
-  if (prior_dist_for_aux == 0)  /* none */
+  if (prior_dist_for_aux == 0)  // none
     aux = aux_unscaled;
   else {
     aux = prior_scale_for_aux * aux_unscaled;
-    if (prior_dist_for_aux <= 2)  /* normal or student_t */
+    if (prior_dist_for_aux <= 2)  // normal or student_t
       aux += prior_mean_for_aux;
   }
   
@@ -2900,9 +2899,9 @@ transformed parameters {
   }
 }
 model {
-  vector[N] eta_z; /* beta regression linear predictor for phi */
+  vector[N] eta_z; // beta regression linear predictor for phi
   
-  vector[N] eta; /* linear predictor */
+  vector[N] eta; // linear predictor
   if (K > 0) {
     if (dense_X) 
       eta = X[1] * beta;
@@ -2932,13 +2931,13 @@ model {
       eta += gamma[1] - min(eta);
   }
   else {
-    /* correction to eta if model has no intercept (because X is centered) */
+    // correction to eta if model has no intercept (because X is centered)
     
     eta += dot_product(xbar, beta);
   }
   
   if (SSfun > 0) {
-    /* nlmer */
+    // nlmer
     matrix[len_y, K] P = reshape_vec(eta, len_y, K);
     if (SSfun < 5) {
       if (SSfun <= 2) {
@@ -2950,7 +2949,7 @@ model {
         target += normal_lpdf(y| SS_asympOrig(input, P), aux);
       else {
         for (i in 1 : len_y) 
-          P[i, 1] += exp(P[i, 3]); /* ordering constraint */
+          P[i, 1] += exp(P[i, 3]); // ordering constraint
         target += normal_lpdf(y| SS_biexp(input, P), aux);
       }
     }
@@ -2973,7 +2972,7 @@ model {
       }
     }
   } else if (has_weights == 0 && prior_PD == 0) {
-    /* unweighted log-likelihoods */
+    // unweighted log-likelihoods
     
     if (family == 4 && z_dim > 0 && link_phi > 0) {
       eta_z = betareg_z * omega;
@@ -2981,7 +2980,7 @@ model {
       eta_z = rep_vector(0.0, N);
     }
     
-    /* adjust eta_z according to links */
+    // adjust eta_z according to links
     if (has_intercept_z == 1) {
       if (link_phi > 1) {
         eta_z += gamma_z[1] - min(eta_z);
@@ -2991,7 +2990,7 @@ model {
       }
     }
     else {
-      /* has_intercept_z == 0 */
+      // has_intercept_z == 0
       
       if (link_phi > 1) {
         eta_z += dot_product(zbar, omega) - min(eta_z);
@@ -3026,7 +3025,7 @@ model {
                                                          (1 - mu), mu_z));
     }
   } else if (prior_PD == 0) {
-    /* weighted log-likelihoods */
+    // weighted log-likelihoods
     vector[N] summands;
     if (family == 1) 
       summands = pw_gauss(y, eta, aux, link);
@@ -3041,7 +3040,7 @@ model {
     target += dot_product(weights, summands);
   }
   
-  /* Log-priors */
+  // Log-priors
   if (prior_dist_for_aux > 0 && prior_scale_for_aux > 0) {
     real log_half = -0.693147180559945286;
     if (prior_dist_for_aux == 1) 
@@ -3053,13 +3052,13 @@ model {
       target += exponential_lpdf(aux_unscaled| 1);
   }
   
-  /* Log-priors for coefficients */
+  // Log-priors for coefficients
   if (prior_dist == 1) 
     target += normal_lpdf(z_beta| 0, 1);
   else if (prior_dist == 2) 
-    target += normal_lpdf(z_beta| 0, 1); /* Student t via Cornish-Fisher expansion */
+    target += normal_lpdf(z_beta| 0, 1); // Student t via Cornish-Fisher expansion
   else if (prior_dist == 3) {
-    /* hs */
+    // hs
     real log_half = -0.693147180559945286;
     target += normal_lpdf(z_beta| 0, 1);
     target += normal_lpdf(local[1]| 0, 1) - log_half;
@@ -3069,38 +3068,38 @@ model {
                                                                * global_prior_df);
     target += inv_gamma_lpdf(caux| 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 4) {
-    /* hs+ */
+    // hs+
     real log_half = -0.693147180559945286;
     target += normal_lpdf(z_beta| 0, 1);
     target += normal_lpdf(local[1]| 0, 1) - log_half;
     target += inv_gamma_lpdf(local[2]| 0.5 * prior_df, 0.5 * prior_df);
     target += normal_lpdf(local[3]| 0, 1) - log_half;
-    /* unorthodox useage of prior_scale as another df hyperparameter */
+    // unorthodox useage of prior_scale as another df hyperparameter
     target += inv_gamma_lpdf(local[4]| 0.5 * prior_scale, 0.5 * prior_scale);
     target += normal_lpdf(global[1]| 0, 1) - log_half;
     target += inv_gamma_lpdf(global[2]| 0.5 * global_prior_df, 0.5
                                                                * global_prior_df);
     target += inv_gamma_lpdf(caux| 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 5) {
-    /* laplace */
+    // laplace
     target += normal_lpdf(z_beta| 0, 1);
     target += exponential_lpdf(mix[1]| 1);
   } else if (prior_dist == 6) {
-    /* lasso */
+    // lasso
     target += normal_lpdf(z_beta| 0, 1);
     target += exponential_lpdf(mix[1]| 1);
     target += chi_square_lpdf(one_over_lambda[1]| prior_df[1]);
   } else if (prior_dist == 7) {
-    /* product_normal */
+    // product_normal
     target += normal_lpdf(z_beta| 0, 1);
   }
   /* else prior_dist is 0 and nothing is added */
   
-  /* Log-prior for intercept   */
+  // Log-prior for intercept  
   if (has_intercept == 1) {
-    if (prior_dist_for_intercept == 1)  /* normal */
+    if (prior_dist_for_intercept == 1)  // normal
       target += normal_lpdf(gamma| prior_mean_for_intercept, prior_scale_for_intercept);
-    else if (prior_dist_for_intercept == 2)  /* student_t */
+    else if (prior_dist_for_intercept == 2)  // student_t
       target += student_t_lpdf(gamma| prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
     /* else prior_dist is 0 and nothing is added */
   }
@@ -3119,13 +3118,13 @@ model {
     }
   }
   
-  /* Log-priors for coefficients */
+  // Log-priors for coefficients
   if (prior_dist_z == 1) 
     target += normal_lpdf(z_omega| 0, 1);
   else if (prior_dist_z == 2) 
     target += normal_lpdf(z_omega| 0, 1);
   else if (prior_dist_z == 3) {
-    /* hs */
+    // hs
     real log_half = -0.693147180559945286;
     target += normal_lpdf(z_omega| 0, 1);
     target += normal_lpdf(local_z[1]| 0, 1) - log_half;
@@ -3135,38 +3134,38 @@ model {
                                                                    * global_prior_df_z);
     target += inv_gamma_lpdf(caux_z| 0.5 * slab_df_z, 0.5 * slab_df_z);
   } else if (prior_dist_z == 4) {
-    /* hs+ */
+    // hs+
     real log_half = -0.693147180559945286;
     target += normal_lpdf(z_omega| 0, 1);
     target += normal_lpdf(local_z[1]| 0, 1) - log_half;
     target += inv_gamma_lpdf(local_z[2]| 0.5 * prior_df_z, 0.5 * prior_df_z);
     target += normal_lpdf(local_z[3]| 0, 1) - log_half;
-    /* unorthodox useage of prior_scale as another df hyperparameter */
+    // unorthodox useage of prior_scale as another df hyperparameter
     target += inv_gamma_lpdf(local_z[4]| 0.5 * prior_scale_z, 0.5
                                                               * prior_scale_z);
     target += normal_lpdf(global_z[1]| 0, 1) - log_half;
     target += inv_gamma_lpdf(global_z[2]| 0.5, 0.5);
     target += inv_gamma_lpdf(caux_z| 0.5 * slab_df_z, 0.5 * slab_df_z);
   } else if (prior_dist_z == 5) {
-    /* laplace */
+    // laplace
     target += normal_lpdf(z_omega| 0, 1);
     target += exponential_lpdf(S_z[1]| 1);
   } else if (prior_dist_z == 6) {
-    /* lasso */
+    // lasso
     target += normal_lpdf(z_omega| 0, 1);
     target += exponential_lpdf(S_z[1]| 1);
     target += chi_square_lpdf(one_over_lambda_z[1]| prior_df_z[1]);
   } else if (prior_dist_z == 7) {
-    /* product_normal */
+    // product_normal
     target += normal_lpdf(z_omega| 0, 1);
   }
   /* else prior_dist is 0 and nothing is added */
   
-  /* Log-prior for intercept   */
+  // Log-prior for intercept  
   if (has_intercept_z == 1) {
-    if (prior_dist_for_intercept_z == 1)  /* normal */
+    if (prior_dist_for_intercept_z == 1)  // normal
       target += normal_lpdf(gamma_z| prior_mean_for_intercept_z, prior_scale_for_intercept_z);
-    else if (prior_dist_for_intercept_z == 2)  /* student_t */
+    else if (prior_dist_for_intercept_z == 2)  // student_t
       target += student_t_lpdf(gamma_z| prior_df_for_intercept_z, prior_mean_for_intercept_z, prior_scale_for_intercept_z);
     /* else prior_dist is 0 and nothing is added */
   }
@@ -3188,13 +3187,13 @@ generated quantities {
       alpha[1] = gamma[1];
   }
   if (has_intercept_z == 1) {
-    omega_int[1] = gamma_z[1] - dot_product(zbar, omega); /* adjust betareg intercept  */
+    omega_int[1] = gamma_z[1] - dot_product(zbar, omega); // adjust betareg intercept 
   }
   
   if (compute_mean_PPD) {
     vector[N] eta_z;
     
-    vector[N] eta; /* linear predictor */
+    vector[N] eta; // linear predictor
     if (K > 0) {
       if (dense_X) 
         eta = X[1] * beta;
@@ -3231,7 +3230,7 @@ generated quantities {
       }
     }
     else {
-      /* correction to eta if model has no intercept (because X is centered) */
+      // correction to eta if model has no intercept (because X is centered)
       
       eta += dot_product(xbar, beta);
     }
@@ -3242,7 +3241,7 @@ generated quantities {
       eta_z = rep_vector(0.0, N);
     }
     
-    /* adjust eta_z according to links */
+    // adjust eta_z according to links
     if (has_intercept_z == 1) {
       if (link_phi > 1) {
         omega_int[1] -= min(eta_z);
@@ -3253,7 +3252,7 @@ generated quantities {
       }
     }
     else {
-      /* has_intercept_z == 0 */
+      // has_intercept_z == 0
       
       if (link_phi > 1) {
         eta_z += dot_product(zbar, omega) - min(eta_z);
@@ -3264,7 +3263,7 @@ generated quantities {
     }
     
     if (SSfun > 0) {
-      /* nlmer */
+      // nlmer
       vector[len_y] eta_nlmer;
       matrix[len_y, K] P;
       P = reshape_vec(eta, len_y, K);
@@ -3341,8 +3340,8 @@ generated quantities {
 }
 
   $ ../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined count.stan
-/*    This file is part of rstanarm. */
-/*    Copyright (C) 2015, 2016 2017 Trustees of Columbia University */
+//    This file is part of rstanarm.
+//    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
 
 /*
     rstanarm is free software: you can redistribute it and/or modify
@@ -3359,7 +3358,7 @@ generated quantities {
     along with rstanarm.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* GLM for a count outcome */
+// GLM for a count outcome
 functions {
   /* for multiple .stan files */
   
@@ -3388,30 +3387,30 @@ functions {
     int z_T_mark = 1;
     int theta_L_mark = 1;
     
-    /* each of these is a diagonal block of the implicit Cholesky factor */
+    // each of these is a diagonal block of the implicit Cholesky factor
     for (i in 1 : size(p)) {
       int nc = p[i];
       if (nc == 1) {
-        /* "block" is just a standard deviation */
+        // "block" is just a standard deviation
         theta_L[theta_L_mark] = tau[i] * scale[i] * dispersion;
-        /* unlike lme4, theta[theta_L_mark] includes the dispersion term in it */
+        // unlike lme4, theta[theta_L_mark] includes the dispersion term in it
         theta_L_mark += 1;
       }
       else {
-        /* block is lower-triangular                */
+        // block is lower-triangular               
         matrix[nc, nc] T_i;
         real std_dev;
         real T21;
         real trace_T_i = square(tau[i] * scale[i] * dispersion) * nc;
-        vector[nc] pi = segment(zeta, zeta_mark, nc); /* gamma(zeta | shape, 1) */
-        pi /= sum(pi); /* thus dirichlet(pi | shape) */
+        vector[nc] pi = segment(zeta, zeta_mark, nc); // gamma(zeta | shape, 1)
+        pi /= sum(pi); // thus dirichlet(pi | shape)
         
-        /* unlike lme4, T_i includes the dispersion term in it */
+        // unlike lme4, T_i includes the dispersion term in it
         zeta_mark += nc;
         std_dev = sqrt(pi[1] * trace_T_i);
         T_i[1, 1] = std_dev;
         
-        /* Put a correlation into T_i[2,1] and scale by std_dev */
+        // Put a correlation into T_i[2,1] and scale by std_dev
         std_dev = sqrt(pi[2] * trace_T_i);
         T21 = 2.0 * rho[rho_mark] - 1.0;
         rho_mark += 1;
@@ -3419,7 +3418,7 @@ functions {
         T_i[2, 1] = std_dev * T21;
         
         for (r in 2 : (nc - 1)) {
-          /* scaled onion method to fill T_i */
+          // scaled onion method to fill T_i
           int rp1 = r + 1;
           vector[r] T_row = segment(z_T, z_T_mark, r);
           real scale_factor = sqrt(rho[rho_mark] / dot_self(T_row)) * std_dev;
@@ -3431,7 +3430,7 @@ functions {
           rho_mark += 1;
         }
         
-        /* now vech T_i */
+        // now vech T_i
         for (c in 1 : nc) 
           for (r in c : nc) {
             theta_L[theta_L_mark] = T_i[r, c];
@@ -3654,11 +3653,11 @@ functions {
    */
   real make_lower(int family, int link) {
     if (family == 1) 
-      return negative_infinity(); /* Gaussian */
+      return negative_infinity(); // Gaussian
     if (family <= 3) {
-      /* Gamma or inverse Gaussian */
+      // Gamma or inverse Gaussian
       if (link == 2) 
-        return negative_infinity(); /* log */
+        return negative_infinity(); // log
       return 0;
     }
     return negative_infinity();
@@ -3687,14 +3686,14 @@ functions {
    */
   vector linkinv_count(vector eta, int link) {
     if (link == 1) 
-      return exp(eta); /* log */
+      return exp(eta); // log
     else if (link == 2) 
-      return eta; /* identity */
+      return eta; // identity
     else if (link == 3) 
-      return (square(eta)); /* sqrt */
+      return (square(eta)); // sqrt
     else 
       reject("Invalid link");
-    return eta; /* never reached */
+    return eta; // never reached
   }
   
   /** 
@@ -3708,11 +3707,11 @@ functions {
   vector pw_pois(array[] int y, vector eta, int link) {
     int N = rows(eta);
     vector[N] ll;
-    if (link == 1)  /* log */
+    if (link == 1)  // log
       for (n in 1 : N) 
         ll[n] = poisson_log_lpmf(y[n]| eta[n]);
     else if (link <= 3) {
-      /* link = identity or sqrt */
+      // link = identity or sqrt
       vector[N] phi = linkinv_count(eta, link);
       for (n in 1 : N) 
         ll[n] = poisson_lpmf(y[n]| phi[n]);
@@ -3732,7 +3731,7 @@ functions {
   */
   vector pw_nb(array[] int y, vector eta, real theta, int link) {
     int N = rows(eta);
-    vector[N] rho = linkinv_count(eta, link); /* link checked */
+    vector[N] rho = linkinv_count(eta, link); // link checked
     vector[N] ll;
     for (n in 1 : N) 
       ll[n] = neg_binomial_2_lpmf(y[n]| rho[n], theta);
@@ -3740,67 +3739,67 @@ functions {
   }
 }
 data {
-  /* declares N, K, X, xbar, dense_X, nnz_x, w_x, v_x, u_x */
+  // declares N, K, X, xbar, dense_X, nnz_x, w_x, v_x, u_x
   
-  /* dimensions */
-  int<lower=0> N; /* number of observations */
-  int<lower=0> K; /* number of predictors */
+  // dimensions
+  int<lower=0> N; // number of observations
+  int<lower=0> K; // number of predictors
   
-  /* data */
-  vector[K] xbar; /* predictor means */
-  int<lower=0, upper=1> dense_X; /* flag for dense vs. sparse */
-  array[dense_X] matrix[N, K] X; /* centered predictor matrix in the dense case */
+  // data
+  vector[K] xbar; // predictor means
+  int<lower=0, upper=1> dense_X; // flag for dense vs. sparse
+  array[dense_X] matrix[N, K] X; // centered predictor matrix in the dense case
   
-  /* stuff for the sparse case */
-  int<lower=0> nnz_X; /* number of non-zero elements in the implicit X matrix */
-  vector[nnz_X] w_X; /* non-zero elements in the implicit X matrix */
-  array[nnz_X] int<lower=0, upper=K - 1> v_X; /* column indices for w_X */
-  /* where the non-zeros start in each row of X */
+  // stuff for the sparse case
+  int<lower=0> nnz_X; // number of non-zero elements in the implicit X matrix
+  vector[nnz_X] w_X; // non-zero elements in the implicit X matrix
+  array[nnz_X] int<lower=0, upper=K - 1> v_X; // column indices for w_X
+  // where the non-zeros start in each row of X
   array[dense_X ? 0 : N + 1] int<lower=0, upper=rows(w_X) + 1> u_X;
   
-  /* smooths */
+  // smooths
   int<lower=0> K_smooth;
   matrix[N, K_smooth] S;
   array[K_smooth] int<lower=1> smooth_map;
   
-  array[N] int<lower=0> y; /* count outcome */
-  /* declares prior_PD, has_intercept, link, prior_dist, prior_dist_for_intercept */
+  array[N] int<lower=0> y; // count outcome
+  // declares prior_PD, has_intercept, link, prior_dist, prior_dist_for_intercept
   
-  /* flag indicating whether to draw from the prior */
-  int<lower=0, upper=1> prior_PD; /* 1 = yes */
-  int<lower=0, upper=1> compute_mean_PPD; /* 1 = yes */
+  // flag indicating whether to draw from the prior
+  int<lower=0, upper=1> prior_PD; // 1 = yes
+  int<lower=0, upper=1> compute_mean_PPD; // 1 = yes
   
-  /* intercept */
-  int<lower=0, upper=1> has_intercept; /* 1 = yes */
+  // intercept
+  int<lower=0, upper=1> has_intercept; // 1 = yes
   
-  /* link function from location to linear predictor  */
-  int<lower=1> link; /* interpretation varies by .stan file */
+  // link function from location to linear predictor 
+  int<lower=1> link; // interpretation varies by .stan file
   
-  /* prior family: 0 = none, 1 = normal, 2 = student_t, 3 = hs, 4 = hs_plus,  */
-  /*   5 = laplace, 6 = lasso, 7 = product_normal */
+  // prior family: 0 = none, 1 = normal, 2 = student_t, 3 = hs, 4 = hs_plus, 
+  //   5 = laplace, 6 = lasso, 7 = product_normal
   int<lower=0, upper=7> prior_dist;
   int<lower=0, upper=2> prior_dist_for_intercept;
   
-  /* prior family: 0 = none, 1 = normal, 2 = student_t, 3 = exponential */
+  // prior family: 0 = none, 1 = normal, 2 = student_t, 3 = exponential
   int<lower=0, upper=3> prior_dist_for_aux;
   
-  /* prior family: 0 = none, 1 = normal, 2 = student_t, 3 = exponential */
+  // prior family: 0 = none, 1 = normal, 2 = student_t, 3 = exponential
   int<lower=0, upper=3> prior_dist_for_smooth;
   
-  /* declares has_weights, weights, has_offset, offset_ */
+  // declares has_weights, weights, has_offset, offset_
   
-  /* weights */
-  int<lower=0, upper=1> has_weights; /* 0 = No, 1 = Yes */
+  // weights
+  int<lower=0, upper=1> has_weights; // 0 = No, 1 = Yes
   vector[has_weights ? N : 0] weights;
   
-  /* offset_ */
-  int<lower=0, upper=1> has_offset; /* 0 = No, 1 = Yes */
+  // offset_
+  int<lower=0, upper=1> has_offset; // 0 = No, 1 = Yes
   vector[has_offset ? N : 0] offset_;
   
-  int<lower=6, upper=7> family; /* 6 poisson, 7 neg-binom, (8 poisson with gamma noise at some point?) */
-  /* declares prior_{mean, scale, df}, prior_{mean, scale, df}_for_intercept, prior_{mean, scale, df}_for_aux */
+  int<lower=6, upper=7> family; // 6 poisson, 7 neg-binom, (8 poisson with gamma noise at some point?)
+  // declares prior_{mean, scale, df}, prior_{mean, scale, df}_for_intercept, prior_{mean, scale, df}_for_aux
   
-  /* hyperparameter values are set to 0 if there is no prior */
+  // hyperparameter values are set to 0 if there is no prior
   vector<lower=0>[K] prior_scale;
   real<lower=0> prior_scale_for_intercept;
   real<lower=0> prior_scale_for_aux;
@@ -3813,23 +3812,23 @@ data {
   real<lower=0> prior_df_for_intercept;
   real<lower=0> prior_df_for_aux;
   vector<lower=0>[K_smooth > 0 ? max(smooth_map) : 0] prior_df_for_smooth;
-  real<lower=0> global_prior_df; /* for hs priors only */
-  real<lower=0> global_prior_scale; /* for hs priors only */
-  real<lower=0> slab_df; /* for hs prior only */
-  real<lower=0> slab_scale; /* for hs prior only */
+  real<lower=0> global_prior_df; // for hs priors only
+  real<lower=0> global_prior_scale; // for hs priors only
+  real<lower=0> slab_df; // for hs prior only
+  real<lower=0> slab_scale; // for hs prior only
   array[prior_dist == 7 ? K : 0] int<lower=2> num_normals;
   
-  /* declares t, p[t], l[t], q, len_theta_L, shape, scale, {len_}concentration, {len_}regularization */
+  // declares t, p[t], l[t], q, len_theta_L, shape, scale, {len_}concentration, {len_}regularization
   
-  /* glmer stuff, see table 3 of */
-  /* https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf */
-  int<lower=0> t; /* num. terms (maybe 0) with a | in the glmer formula */
-  array[t] int<lower=1> p; /* num. variables on the LHS of each | */
-  array[t] int<lower=1> l; /* num. levels for the factor(s) on the RHS of each | */
-  int<lower=0> q; /* conceptually equals \sum_{i=1}^t p_i \times l_i */
-  int<lower=0> len_theta_L; /* length of the theta_L vector */
+  // glmer stuff, see table 3 of
+  // https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf
+  int<lower=0> t; // num. terms (maybe 0) with a | in the glmer formula
+  array[t] int<lower=1> p; // num. variables on the LHS of each |
+  array[t] int<lower=1> l; // num. levels for the factor(s) on the RHS of each |
+  int<lower=0> q; // conceptually equals \sum_{i=1}^t p_i \times l_i
+  int<lower=0> len_theta_L; // length of the theta_L vector
   
-  /* hyperparameters for glmer stuff; if t > 0 priors are mandatory */
+  // hyperparameters for glmer stuff; if t > 0 priors are mandatory
   vector<lower=0>[t] shape;
   vector<lower=0>[t] scale;
   int<lower=0> len_concentration;
@@ -3837,25 +3836,25 @@ data {
   int<lower=0> len_regularization;
   array[len_regularization] real<lower=0> regularization;
   
-  /* declares num_not_zero, w, v, u */
+  // declares num_not_zero, w, v, u
   
-  int<lower=0> num_non_zero; /* number of non-zero elements in the Z matrix */
-  vector[num_non_zero] w; /* non-zero elements in the implicit Z matrix */
-  array[num_non_zero] int<lower=0, upper=q - 1> v; /* column indices for w */
-  array[t > 0 ? N + 1 : 0] int<lower=0, upper=rows(w) + 1> u; /* where the non-zeros start in each row */
-  int<lower=0, upper=1> special_case; /* is the only term (1|group) */
+  int<lower=0> num_non_zero; // number of non-zero elements in the Z matrix
+  vector[num_non_zero] w; // non-zero elements in the implicit Z matrix
+  array[num_non_zero] int<lower=0, upper=q - 1> v; // column indices for w
+  array[t > 0 ? N + 1 : 0] int<lower=0, upper=rows(w) + 1> u; // where the non-zeros start in each row
+  int<lower=0, upper=1> special_case; // is the only term (1|group)
 }
 transformed data {
   real poisson_max = pow(2.0, 30.0);
   array[special_case ? t : 0, N] int<lower=1> V = make_V(N,
                                                          special_case ? t : 0,
                                                          v);
-  /* defines hs, len_z_T, len_var_group, delta, pos */
+  // defines hs, len_z_T, len_var_group, delta, pos
   
   int<lower=0> len_z_T = 0;
   int<lower=0> len_var_group = sum(p) * (t > 0);
   int<lower=0> len_rho = sum(p) - t;
-  int<lower=0, upper=1> is_continuous = 0; /* changed in continuous.stan */
+  int<lower=0, upper=1> is_continuous = 0; // changed in continuous.stan
   int<lower=1> pos = 1;
   array[len_concentration] real<lower=0> delta;
   int<lower=0> hs;
@@ -3881,7 +3880,7 @@ transformed data {
 }
 parameters {
   array[has_intercept] real<lower=(link == 1 ? negative_infinity() : 0.0)> gamma;
-  /* declares z_beta, global, local, z_b, z_T, rho, zeta, tau */
+  // declares z_beta, global, local, z_b, z_T, rho, zeta, tau
   
   vector[prior_dist == 7 ? sum(num_normals) : K] z_beta;
   vector[K_smooth] z_beta_smooth;
@@ -3898,11 +3897,11 @@ parameters {
   vector<lower=0>[t] tau;
   
   array[family > 6] real<lower=0> aux_unscaled;
-  array[family == 8] vector<lower=0>[N] noise; /* do not store this */
+  array[family == 8] vector<lower=0>[N] noise; // do not store this
 }
 transformed parameters {
-  real aux = negative_infinity(); /* be careful with this in the family = 6 case */
-  /* defines beta, b, theta_L */
+  real aux = negative_infinity(); // be careful with this in the family = 6 case
+  // defines beta, b, theta_L
   
   vector[K] beta;
   vector[K_smooth] beta_smooth;
@@ -3929,13 +3928,13 @@ transformed parameters {
       beta = hsplus_prior(z_beta, global, local, global_prior_scale, aux, c2);
     else 
       beta = hsplus_prior(z_beta, global, local, global_prior_scale, 1, c2);
-  } else if (prior_dist == 5)  /* laplace */
+  } else if (prior_dist == 5)  // laplace
     beta = prior_mean + prior_scale .* sqrt(2 * mix[1]) .* z_beta;
-  else if (prior_dist == 6)  /* lasso */
+  else if (prior_dist == 6)  // lasso
     beta = prior_mean
            + one_over_lambda[1] * prior_scale .* sqrt(2 * mix[1]) .* z_beta;
   else if (prior_dist == 7) {
-    /* product_normal */
+    // product_normal
     int z_pos = 1;
     for (k in 1 : K) {
       beta[k] = z_beta[z_pos];
@@ -3961,7 +3960,7 @@ transformed parameters {
     aux = aux_unscaled[1];
   else if (family > 6) {
     aux = prior_scale_for_aux * aux_unscaled[1];
-    if (prior_dist_for_aux <= 2)  /* normal or student_t */
+    if (prior_dist_for_aux <= 2)  // normal or student_t
       aux += prior_mean_for_aux;
   }
   
@@ -3990,7 +3989,7 @@ transformed parameters {
   }
 }
 model {
-  vector[N] eta; /* linear predictor */
+  vector[N] eta; // linear predictor
   if (K > 0) {
     if (dense_X) 
       eta = X[1] * beta;
@@ -4018,7 +4017,7 @@ model {
       eta += gamma[1] - min(eta);
   }
   else {
-    /* correction to eta if model has no intercept (because X is centered) */
+    // correction to eta if model has no intercept (because X is centered)
     
     eta += dot_product(xbar, beta);
   }
@@ -4033,9 +4032,9 @@ model {
       eta += sqrt(aux) + sqrt(noise[1]);
   }
   
-  /* Log-likelihood  */
+  // Log-likelihood 
   if (has_weights == 0 && prior_PD == 0) {
-    /* unweighted log-likelihoods */
+    // unweighted log-likelihoods
     if (family != 7) {
       if (link == 1) 
         target += poisson_log_lpmf(y| eta);
@@ -4053,7 +4052,7 @@ model {
   else if (prior_PD == 0) 
     target += dot_product(weights, pw_nb(y, eta, aux, link));
   
-  /* Log-prior for aux */
+  // Log-prior for aux
   if (family > 6 && prior_dist_for_aux > 0 && prior_scale_for_aux > 0) {
     real log_half = -0.693147180559945286;
     if (prior_dist_for_aux == 1) 
@@ -4065,13 +4064,13 @@ model {
       target += exponential_lpdf(aux_unscaled| 1);
   }
   
-  /* Log-priors for coefficients */
+  // Log-priors for coefficients
   if (prior_dist == 1) 
     target += normal_lpdf(z_beta| 0, 1);
   else if (prior_dist == 2) 
-    target += normal_lpdf(z_beta| 0, 1); /* Student t via Cornish-Fisher expansion */
+    target += normal_lpdf(z_beta| 0, 1); // Student t via Cornish-Fisher expansion
   else if (prior_dist == 3) {
-    /* hs */
+    // hs
     real log_half = -0.693147180559945286;
     target += normal_lpdf(z_beta| 0, 1);
     target += normal_lpdf(local[1]| 0, 1) - log_half;
@@ -4081,38 +4080,38 @@ model {
                                                                * global_prior_df);
     target += inv_gamma_lpdf(caux| 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 4) {
-    /* hs+ */
+    // hs+
     real log_half = -0.693147180559945286;
     target += normal_lpdf(z_beta| 0, 1);
     target += normal_lpdf(local[1]| 0, 1) - log_half;
     target += inv_gamma_lpdf(local[2]| 0.5 * prior_df, 0.5 * prior_df);
     target += normal_lpdf(local[3]| 0, 1) - log_half;
-    /* unorthodox useage of prior_scale as another df hyperparameter */
+    // unorthodox useage of prior_scale as another df hyperparameter
     target += inv_gamma_lpdf(local[4]| 0.5 * prior_scale, 0.5 * prior_scale);
     target += normal_lpdf(global[1]| 0, 1) - log_half;
     target += inv_gamma_lpdf(global[2]| 0.5 * global_prior_df, 0.5
                                                                * global_prior_df);
     target += inv_gamma_lpdf(caux| 0.5 * slab_df, 0.5 * slab_df);
   } else if (prior_dist == 5) {
-    /* laplace */
+    // laplace
     target += normal_lpdf(z_beta| 0, 1);
     target += exponential_lpdf(mix[1]| 1);
   } else if (prior_dist == 6) {
-    /* lasso */
+    // lasso
     target += normal_lpdf(z_beta| 0, 1);
     target += exponential_lpdf(mix[1]| 1);
     target += chi_square_lpdf(one_over_lambda[1]| prior_df[1]);
   } else if (prior_dist == 7) {
-    /* product_normal */
+    // product_normal
     target += normal_lpdf(z_beta| 0, 1);
   }
   /* else prior_dist is 0 and nothing is added */
   
-  /* Log-prior for intercept   */
+  // Log-prior for intercept  
   if (has_intercept == 1) {
-    if (prior_dist_for_intercept == 1)  /* normal */
+    if (prior_dist_for_intercept == 1)  // normal
       target += normal_lpdf(gamma| prior_mean_for_intercept, prior_scale_for_intercept);
-    else if (prior_dist_for_intercept == 2)  /* student_t */
+    else if (prior_dist_for_intercept == 2)  // student_t
       target += student_t_lpdf(gamma| prior_df_for_intercept, prior_mean_for_intercept, prior_scale_for_intercept);
     /* else prior_dist is 0 and nothing is added */
   }
@@ -4131,7 +4130,7 @@ model {
     }
   }
   
-  /* Log-prior for noise */
+  // Log-prior for noise
   if (family == 8) 
     target += gamma_lpdf(noise[1]| aux, 1);
   
@@ -4154,7 +4153,7 @@ generated quantities {
   if (compute_mean_PPD) {
     vector[N] nu;
     
-    vector[N] eta; /* linear predictor */
+    vector[N] eta; // linear predictor
     if (K > 0) {
       if (dense_X) 
         eta = X[1] * beta;
@@ -4185,7 +4184,7 @@ generated quantities {
       }
     }
     else {
-      /* correction to eta if model has no intercept (because X is centered) */
+      // correction to eta if model has no intercept (because X is centered)
       
       eta += dot_product(xbar, beta);
     }
@@ -7278,8 +7277,8 @@ generated quantities {
 }
 
   $ ../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined lm.stan
-/*    This file is part of rstanarm. */
-/*    Copyright (C) 2015, 2016 2017 Trustees of Columbia University */
+//    This file is part of rstanarm.
+//    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
 
 /*
     rstanarm is free software: you can redistribute it and/or modify
@@ -7296,7 +7295,7 @@ generated quantities {
     along with rstanarm.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* GLM for a Gaussian outcome with no link function */
+// GLM for a Gaussian outcome with no link function
 functions {
   /**
    * Increments the log-posterior with the logarithm of a multivariate normal 
@@ -7316,30 +7315,30 @@ functions {
               * (dot_self(theta - b) + N * square(intercept - ybar) + SSR)
               / square(sigma) - N * (log(sigma) + 0.91893853320467267);
     
-    /* ^^^: 0.91... is log(sqrt(2 * pi())) */
+    // ^^^: 0.91... is log(sqrt(2 * pi()))
     return target();
   }
 }
 data {
-  int<lower=0, upper=1> has_intercept; /* 0 = no, 1 = yes */
-  int<lower=0, upper=1> prior_dist_for_intercept; /* 0 = none, 1 = normal */
-  real<lower=0> prior_scale_for_intercept; /* 0 = by CLT */
-  real prior_mean_for_intercept; /* expected value for alpha */
-  int<lower=0, upper=1> prior_dist; /* 0 = uniform for R^2, 1 = Beta(K/2,eta) */
-  int<lower=0, upper=1> prior_PD; /* 0 = no, 1 = yes to drawing from the prior */
-  real<lower=0> eta; /* shape hyperparameter */
+  int<lower=0, upper=1> has_intercept; // 0 = no, 1 = yes
+  int<lower=0, upper=1> prior_dist_for_intercept; // 0 = none, 1 = normal
+  real<lower=0> prior_scale_for_intercept; // 0 = by CLT
+  real prior_mean_for_intercept; // expected value for alpha
+  int<lower=0, upper=1> prior_dist; // 0 = uniform for R^2, 1 = Beta(K/2,eta)
+  int<lower=0, upper=1> prior_PD; // 0 = no, 1 = yes to drawing from the prior
+  real<lower=0> eta; // shape hyperparameter
   
-  int<lower=1> J; /* number of groups */
-  /* the rest of these are indexed by group but should work even if J = 1 */
-  array[J] int<lower=1> N; /* number of observations */
-  int<lower=1, upper=min(N)> K; /* number of predictors */
-  array[J] vector[K] xbarR_inv; /* vector of means of the predictors */
-  array[J] real ybar; /* sample mean of outcome */
-  real center_y; /* zero or sample mean of outcome */
-  array[J] real<lower=0> s_Y; /* standard deviation of the outcome */
-  array[J] vector[K] Rb; /* OLS coefficients */
-  array[J] real<lower=0> SSR; /* OLS sum-of-squared residuals */
-  array[J] matrix[K, K] R_inv; /* inverse R matrices */
+  int<lower=1> J; // number of groups
+  // the rest of these are indexed by group but should work even if J = 1
+  array[J] int<lower=1> N; // number of observations
+  int<lower=1, upper=min(N)> K; // number of predictors
+  array[J] vector[K] xbarR_inv; // vector of means of the predictors
+  array[J] real ybar; // sample mean of outcome
+  real center_y; // zero or sample mean of outcome
+  array[J] real<lower=0> s_Y; // standard deviation of the outcome
+  array[J] vector[K] Rb; // OLS coefficients
+  array[J] real<lower=0> SSR; // OLS sum-of-squared residuals
+  array[J] matrix[K, K] R_inv; // inverse R matrices
 }
 transformed data {
   real half_K = 0.5 * K;
@@ -7351,35 +7350,35 @@ transformed data {
   }
 }
 parameters {
-  /* must not call with init="0" */
-  array[K > 1 ? J : 0] unit_vector[K] u; /* primitives for coefficients */
-  array[J * has_intercept] real z_alpha; /* primitives for intercepts */
-  array[J] real<lower=(K > 1 ? 0 : -1), upper=1> R2; /* proportions of variance explained */
-  vector[J * (1 - prior_PD)] log_omega; /* under/overfitting factors */
+  // must not call with init="0"
+  array[K > 1 ? J : 0] unit_vector[K] u; // primitives for coefficients
+  array[J * has_intercept] real z_alpha; // primitives for intercepts
+  array[J] real<lower=(K > 1 ? 0 : -1), upper=1> R2; // proportions of variance explained
+  vector[J * (1 - prior_PD)] log_omega; // under/overfitting factors
 }
 transformed parameters {
-  array[J * has_intercept] real alpha; /* uncentered intercepts */
-  array[J] vector[K] theta; /* coefficients in Q-space */
-  array[J] real<lower=0> sigma; /* error standard deviations */
+  array[J * has_intercept] real alpha; // uncentered intercepts
+  array[J] vector[K] theta; // coefficients in Q-space
+  array[J] real<lower=0> sigma; // error standard deviations
   for (j in 1 : J) {
-    /* marginal standard deviation of outcome for group j */
+    // marginal standard deviation of outcome for group j
     real Delta_y = prior_PD == 0 ? s_Y[j] * exp(log_omega[j]) : 1;
     
-    /* coefficients in Q-space */
+    // coefficients in Q-space
     if (K > 1) 
       theta[j] = u[j] * sqrt(R2[j]) * sqrt_Nm1[j] * Delta_y;
     else 
       theta[j][1] = R2[j] * sqrt_Nm1[j] * Delta_y;
     
-    sigma[j] = Delta_y * sqrt(1 - R2[j]); /* standard deviation of errors */
+    sigma[j] = Delta_y * sqrt(1 - R2[j]); // standard deviation of errors
     
     if (has_intercept == 1) {
-      if (prior_dist_for_intercept == 0)  /* no information */
+      if (prior_dist_for_intercept == 0)  // no information
         alpha[j] = z_alpha[j];
-      else if (prior_scale_for_intercept == 0)  /* central limit theorem */
+      else if (prior_scale_for_intercept == 0)  // central limit theorem
         alpha[j] = z_alpha[j] * Delta_y * sqrt_inv_N[j]
                    + prior_mean_for_intercept;
-      /* arbitrary informative prior */
+      // arbitrary informative prior
       else 
         alpha[j] = z_alpha[j] * prior_scale_for_intercept
                    + prior_mean_for_intercept;
@@ -7388,16 +7387,16 @@ transformed parameters {
 }
 model {
   for (j in 1 : J) {
-    /* likelihood contribution for each group */
+    // likelihood contribution for each group
     if (prior_PD == 0) {
-      real dummy; /* irrelevant but useful for testing user-defined function */
+      real dummy; // irrelevant but useful for testing user-defined function
       real shift;
       shift = dot_product(xbarR_inv[j], theta[j]);
       dummy = ll_mvn_ols_qr_lp(theta[j], Rb[j],
                                has_intercept == 1 ? alpha[j] + shift : shift,
                                ybar[j], SSR[j], sigma[j], N[j]);
     }
-    /* implicit: u[j] is uniform on the surface of a hypersphere */
+    // implicit: u[j] is uniform on the surface of a hypersphere
   }
   if (has_intercept == 1 && prior_dist_for_intercept > 0) 
     target += normal_lpdf(z_alpha| 0, 1);
@@ -7407,7 +7406,7 @@ model {
     else 
       target += beta_lpdf(square(R2)| half_K, eta) + sum(log(fabs(R2)));
   }
-  /* implicit: log_omega is uniform over the real line for all j */
+  // implicit: log_omega is uniform over the real line for all j
 }
 generated quantities {
   array[J] real mean_PPD;
@@ -9340,8 +9339,8 @@ generated quantities {
 }
 
   $ ../../../../install/default/bin/stanc --include-paths="." --auto-format --allow-undefined polr.stan
-/*    This file is part of rstanarm. */
-/*    Copyright (C) 2015, 2016 2017 Trustees of Columbia University */
+//    This file is part of rstanarm.
+//    Copyright (C) 2015, 2016 2017 Trustees of Columbia University
 
 /*
     rstanarm is free software: you can redistribute it and/or modify
@@ -9358,7 +9357,7 @@ generated quantities {
     along with rstanarm.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/* GLM for an ordinal outcome with coherent priors */
+// GLM for an ordinal outcome with coherent priors
 functions {
   /** 
   * Evaluate a given CDF
@@ -9368,8 +9367,8 @@ functions {
   * @return A scalar on (0,1)
   */
   real CDF_polr(real x, int link) {
-    /* links in MASS::polr() are in a different order than binomial()  */
-    /* logistic, probit, loglog, cloglog, cauchit */
+    // links in MASS::polr() are in a different order than binomial() 
+    // logistic, probit, loglog, cloglog, cauchit
     if (link == 1) 
       return (inv_logit(x));
     else if (link == 2) 
@@ -9382,7 +9381,7 @@ functions {
       return (cauchy_cdf(x, 0, 1));
     else 
       reject("Invalid link");
-    return x; /* never reached */
+    return x; // never reached
   }
   
   /** 
@@ -9436,8 +9435,8 @@ functions {
     int C = rows(probabilities) - 1;
     vector[C] cutpoints;
     real running_sum = 0;
-    /* links in MASS::polr() are in a different order than binomial()  */
-    /* logistic, probit, loglog, cloglog, cauchit */
+    // links in MASS::polr() are in a different order than binomial() 
+    // logistic, probit, loglog, cloglog, cauchit
     if (link == 1) 
       for (c in 1 : C) {
         running_sum += probabilities[c];
@@ -9483,8 +9482,8 @@ functions {
     if (lower_ >= upper_) 
       reject("lower_ must be less than upper_");
     
-    /* links in MASS::polr() are in a different order than binomial()  */
-    /* logistic, probit, loglog, cloglog, cauchit */
+    // links in MASS::polr() are in a different order than binomial() 
+    // logistic, probit, loglog, cloglog, cauchit
     if (link == 1) 
       while (!(ystar > lower_ && ystar < upper_)) ystar = logistic_rng(eta,
                                                                     1);
@@ -9519,65 +9518,65 @@ functions {
                                   array[] int u, vector b);
 }
 data {
-  /* declares N, K, X, xbar, dense_X, nnz_x, w_x, v_x, u_x */
+  // declares N, K, X, xbar, dense_X, nnz_x, w_x, v_x, u_x
   
-  /* dimensions */
-  int<lower=0> N; /* number of observations */
-  int<lower=0> K; /* number of predictors */
+  // dimensions
+  int<lower=0> N; // number of observations
+  int<lower=0> K; // number of predictors
   
-  /* data */
-  vector[K] xbar; /* predictor means */
-  int<lower=0, upper=1> dense_X; /* flag for dense vs. sparse */
-  array[dense_X] matrix[N, K] X; /* centered predictor matrix in the dense case */
+  // data
+  vector[K] xbar; // predictor means
+  int<lower=0, upper=1> dense_X; // flag for dense vs. sparse
+  array[dense_X] matrix[N, K] X; // centered predictor matrix in the dense case
   
-  /* stuff for the sparse case */
-  int<lower=0> nnz_X; /* number of non-zero elements in the implicit X matrix */
-  vector[nnz_X] w_X; /* non-zero elements in the implicit X matrix */
-  array[nnz_X] int<lower=0, upper=K - 1> v_X; /* column indices for w_X */
-  /* where the non-zeros start in each row of X */
+  // stuff for the sparse case
+  int<lower=0> nnz_X; // number of non-zero elements in the implicit X matrix
+  vector[nnz_X] w_X; // non-zero elements in the implicit X matrix
+  array[nnz_X] int<lower=0, upper=K - 1> v_X; // column indices for w_X
+  // where the non-zeros start in each row of X
   array[dense_X ? 0 : N + 1] int<lower=0, upper=rows(w_X) + 1> u_X;
   
-  /* smooths */
+  // smooths
   int<lower=0> K_smooth;
   matrix[N, K_smooth] S;
   array[K_smooth] int<lower=1> smooth_map;
   
-  int<lower=2> J; /* number of outcome categories, which typically is > 2 */
-  array[N] int<lower=1, upper=J> y; /* ordinal outcome */
-  /* declares prior_PD, has_intercept, link, prior_dist, prior_dist_for_intercept */
+  int<lower=2> J; // number of outcome categories, which typically is > 2
+  array[N] int<lower=1, upper=J> y; // ordinal outcome
+  // declares prior_PD, has_intercept, link, prior_dist, prior_dist_for_intercept
   
-  /* flag indicating whether to draw from the prior */
-  int<lower=0, upper=1> prior_PD; /* 1 = yes */
-  int<lower=0, upper=1> compute_mean_PPD; /* 1 = yes */
+  // flag indicating whether to draw from the prior
+  int<lower=0, upper=1> prior_PD; // 1 = yes
+  int<lower=0, upper=1> compute_mean_PPD; // 1 = yes
   
-  /* intercept */
-  int<lower=0, upper=1> has_intercept; /* 1 = yes */
+  // intercept
+  int<lower=0, upper=1> has_intercept; // 1 = yes
   
-  /* link function from location to linear predictor  */
-  int<lower=1> link; /* interpretation varies by .stan file */
+  // link function from location to linear predictor 
+  int<lower=1> link; // interpretation varies by .stan file
   
-  /* prior family: 0 = none, 1 = normal, 2 = student_t, 3 = hs, 4 = hs_plus,  */
-  /*   5 = laplace, 6 = lasso, 7 = product_normal */
+  // prior family: 0 = none, 1 = normal, 2 = student_t, 3 = hs, 4 = hs_plus, 
+  //   5 = laplace, 6 = lasso, 7 = product_normal
   int<lower=0, upper=7> prior_dist;
   int<lower=0, upper=2> prior_dist_for_intercept;
   
-  /* prior family: 0 = none, 1 = normal, 2 = student_t, 3 = exponential */
+  // prior family: 0 = none, 1 = normal, 2 = student_t, 3 = exponential
   int<lower=0, upper=3> prior_dist_for_aux;
   
-  /* prior family: 0 = none, 1 = normal, 2 = student_t, 3 = exponential */
+  // prior family: 0 = none, 1 = normal, 2 = student_t, 3 = exponential
   int<lower=0, upper=3> prior_dist_for_smooth;
   
-  /* declares has_weights, weights, has_offset, offset_ */
+  // declares has_weights, weights, has_offset, offset_
   
-  /* weights */
-  int<lower=0, upper=1> has_weights; /* 0 = No, 1 = Yes */
+  // weights
+  int<lower=0, upper=1> has_weights; // 0 = No, 1 = Yes
   vector[has_weights ? N : 0] weights;
   
-  /* offset_ */
-  int<lower=0, upper=1> has_offset; /* 0 = No, 1 = Yes */
+  // offset_
+  int<lower=0, upper=1> has_offset; // 0 = No, 1 = Yes
   vector[has_offset ? N : 0] offset_;
   
-  /* hyperparameter values */
+  // hyperparameter values
   real<lower=0> regularization;
   vector<lower=0>[J] prior_counts;
   int<lower=0, upper=1> is_skewed;
@@ -9589,7 +9588,7 @@ transformed data {
   real<lower=0> half_K = 0.5 * K;
   real<lower=0> sqrt_Nm1 = sqrt(N - 1.0);
   int<lower=0, upper=1> is_constant = 1;
-  vector[0] beta_smooth; /* not used */
+  vector[0] beta_smooth; // not used
   for (j in 1 : J) 
     if (prior_counts[j] != 1) 
       is_constant = 0;
@@ -9617,7 +9616,7 @@ transformed parameters {
   }
 }
 model {
-  vector[N] eta; /* linear predictor */
+  vector[N] eta; // linear predictor
   if (K > 0) {
     if (dense_X) 
       eta = X[1] * beta;
@@ -9631,13 +9630,13 @@ model {
     eta += S * beta_smooth;
   
   if (has_weights == 0 && prior_PD == 0) {
-    /* unweighted log-likelihoods */
+    // unweighted log-likelihoods
     if (is_skewed == 0) 
       target += pw_polr(y, eta, cutpoints, link, 1.0);
     else 
       target += pw_polr(y, eta, cutpoints, link, alpha[1]);
   } else if (prior_PD == 0) {
-    /* weighted log-likelihoods */
+    // weighted log-likelihoods
     if (is_skewed == 0) 
       target += dot_product(weights, pw_polr(y, eta, cutpoints, link, 1.0));
     else 
@@ -9647,7 +9646,7 @@ model {
   
   if (is_constant == 0) 
     target += dirichlet_lpdf(pi| prior_counts);
-  /* implicit: u is uniform on the surface of a hypersphere */
+  // implicit: u is uniform on the surface of a hypersphere
   if (prior_dist == 1) {
     if (K > 1) 
       target += beta_lpdf(R2| half_K, regularization);
@@ -9662,7 +9661,7 @@ generated quantities {
   vector[do_residuals ? N : 0] residuals;
   vector[J - 1] zeta;
   
-  /* xbar is actually post multiplied by R^-1 */
+  // xbar is actually post multiplied by R^-1
   if (dense_X) 
     zeta = cutpoints + dot_product(xbar, beta);
   else 
@@ -9670,7 +9669,7 @@ generated quantities {
   if (J == 2) 
     zeta *= -1.0;
   {
-    vector[N] eta; /* linear predictor */
+    vector[N] eta; // linear predictor
     if (K > 0) {
       if (dense_X) 
         eta = X[1] * beta;
@@ -9703,7 +9702,7 @@ generated quantities {
       else 
         theta[J] = 1 - previous ^ alpha[1];
       if (previous <= 0 || previous >= 1) {
-        /* do nothing */
+        // do nothing
       } else if (J == 2) {
         mean_PPD[1] += bernoulli_rng(theta[J]);
       }

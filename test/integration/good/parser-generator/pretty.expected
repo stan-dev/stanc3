@@ -449,7 +449,7 @@ generated quantities {
   array[T, 2] real y_hat;
   y_hat = integrate_ode(sho, y0, t0, ts, theta, x, x_int);
   
-  /* add measurement error */
+  // add measurement error
   for (t in 1 : T) {
     y_hat[t, 1] = y_hat[t, 1] + normal_rng(0, 0.1);
     y_hat[t, 2] = y_hat[t, 2] + normal_rng(0, 0.1);
@@ -492,7 +492,7 @@ generated quantities {
   y_hat = integrate_ode_adams(sho, y0, t0, ts, theta, x, x_int, 1e-10, 
                               1e-10, 1e6);
   
-  /* add measurement error */
+  // add measurement error
   for (t in 1 : T) {
     y_hat[t, 1] = y_hat[t, 1] + normal_rng(0, 0.1);
     y_hat[t, 2] = y_hat[t, 2] + normal_rng(0, 0.1);

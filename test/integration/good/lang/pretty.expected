@@ -56,14 +56,14 @@ Warning in 'good_funs.stan', line 7, column 6: The function `if_else` is depreca
 Warning in 'good_funs.stan', line 9, column 6: binomial_coefficient_log is deprecated and will be removed in the future. Use lchoose instead.
   $ ../../../../../install/default/bin/stanc --auto-format good_intercept_var.stan
 data {
-  int<lower=0> m1; /* make sure didn't mess up spacing */
+  int<lower=0> m1; // make sure didn't mess up spacing
   int<lower=0> m2;
   int<lower=0> m3;
   int<lower=0> m4;
 }
 transformed data {
   int intercept;
-  intercept = 5; /* failed in 1.0.2 */
+  intercept = 5; // failed in 1.0.2
 }
 model {
   
@@ -85,7 +85,7 @@ model {
   y ~ normal(0, 1);
   
   for (i in 1 : 10) {
-    array[i] real x; /* should allow i here. */
+    array[i] real x; // should allow i here.
     for (j in 1 : i) 
       x[j] = j * j;
   }
@@ -99,11 +99,11 @@ model {
   }
   
   for (i in 1 : 5) {
-    array[M[i]] real x; /* data */
+    array[M[i]] real x; // data
   }
   
   for (i in 1 : 2) {
-    array[N[i]] real x; /* tdata */
+    array[N[i]] real x; // tdata
   }
 }
 
@@ -159,7 +159,7 @@ transformed data {
   b = 1.0;
   b = a + b + 1.0;
   {
-    real b_local; /* init to 0 locally */
+    real b_local; // init to 0 locally
     b = a + b + b_local;
     b_local = a + b + b_local;
   }

@@ -87,7 +87,7 @@ let pp_comment ppf
   in
   if is_block then
     Fmt.pf ppf "@[<v>/*%a*/@]" Fmt.(list string) (trim_tail col_num lines)
-  else Fmt.pf ppf "@[<v>/*%a */@]" Fmt.(list string) lines
+  else Fmt.pf ppf "//%a" Fmt.string (List.hd_exn lines)
 
 let pp_spacing ?(newline = true) prev_loc next_loc ppf ls =
   let rec recurse prev_loc = function
