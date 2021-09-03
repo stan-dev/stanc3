@@ -33,6 +33,8 @@ let check_of_compatible_return_type rt1 srt2 =
      |Void, AnyReturnType ->
         true
     | ReturnType UReal, Complete (ReturnType UInt) -> true
+    | ReturnType UComplex, Complete (ReturnType UReal) -> true
+    | ReturnType UComplex, Complete (ReturnType UInt) -> true
     | ReturnType rt1, Complete (ReturnType rt2) -> rt1 = rt2
     | ReturnType _, AnyReturnType -> true
     | _ -> false)
@@ -195,8 +197,8 @@ let reserved_keywords =
   ; "try"; "typedef"; "typeid"; "typename"; "union"; "unsigned"; "using"
   ; "virtual"; "void"; "volatile"; "wchar_t"; "while"; "xor"; "xor_eq"
   ; "functions"; "data"; "parameters"; "model"; "return"; "if"; "else"; "while"
-  ; "for"; "in"; "break"; "continue"; "void"; "int"; "real"; "vector"
-  ; "row_vector"; "matrix"; "ordered"; "positive_ordered"; "simplex"
+  ; "for"; "in"; "break"; "continue"; "void"; "int"; "real"; "complex"
+  ; "vector"; "row_vector"; "matrix"; "ordered"; "positive_ordered"; "simplex"
   ; "unit_vector"; "cholesky_factor_corr"; "cholesky_factor_cov"; "corr_matrix"
   ; "cov_matrix"; "print"; "reject"; "target"; "get_lp"; "profile" ]
 
@@ -624,7 +626,7 @@ let inferred_unsizedtype_of_indexed ~loc ut indices =
     | UMatrix, [`Multi; `Single] -> Validate.ok UnsizedType.UVector
     | UMatrix, _ :: _ :: _ :: _
      |(UVector | URowVector), _ :: _ :: _
-     |(UInt | UReal | UFun _ | UMathLibraryFunction), _ :: _ ->
+     |(UInt | UReal | UComplex | UFun _ | UMathLibraryFunction), _ :: _ ->
         Semantic_error.not_indexable loc ut (List.length indices)
         |> Validate.error
   in
@@ -852,6 +854,7 @@ let semantic_check_expression_of_scalar_or_type cf t e name =
 let rec semantic_check_sizedtype cf = function
   | SizedType.SInt -> Validate.ok SizedType.SInt
   | SReal -> Validate.ok SizedType.SReal
+  | SComplex -> Validate.ok SizedType.SComplex
   | SVector (mem_pattern, e) ->
       semantic_check_expression_of_int_type cf e "Vector sizes"
       |> Validate.map ~f:(fun ue -> SizedType.SVector (mem_pattern, ue))
@@ -1528,16 +1531,24 @@ and semantic_check_profile ~loc ~cf name stmts =
 (* -- Variable Declarations ------------------------------------------------- *)
 and semantic_check_var_decl_bounds ~loc is_global sized_ty trans =
   let is_real {emeta; _} = emeta.type_ = UReal in
-  let is_valid_transformation =
+  let is_real_transformation =
     match trans with
     | Transformation.Lower e -> is_real e
     | Upper e -> is_real e
     | LowerUpper (e1, e2) -> is_real e1 || is_real e2
     | _ -> false
   in
+  let is_transformation =
+    match trans with Transformation.Identity -> false | _ -> true
+  in
   Validate.(
-    if is_global && sized_ty = SizedType.SInt && is_valid_transformation then
+    if is_global && sized_ty = SizedType.SInt && is_real_transformation then
       Semantic_error.non_int_bounds loc |> error
+    else if
+      is_global
+      && SizedType.(inner_type sized_ty = SComplex)
+      && is_transformation
+    then Semantic_error.complex_transform loc |> error
     else ok ())
 
 and semantic_check_transformed_param_ty ~loc ~cf is_global unsized_ty =

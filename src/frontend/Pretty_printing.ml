@@ -332,6 +332,7 @@ let pp_list_of_printables ppf l =
 let pp_sizedtype ppf = function
   | Middle.SizedType.SInt -> Fmt.pf ppf "int"
   | SReal -> Fmt.pf ppf "real"
+  | SComplex -> Fmt.pf ppf "complex"
   | SVector (_, e) -> Fmt.pf ppf "vector[%a]" pp_expression e
   | SRowVector (_, e) -> Fmt.pf ppf "row_vector[%a]" pp_expression e
   | SMatrix (_, e1, e2) ->
@@ -380,8 +381,11 @@ let pp_transformed_type ppf (pst, trans) =
         Fmt.const
           (fun ppf -> Fmt.pf ppf "[%a, %a]" pp_expression e1 pp_expression)
           e2
-    | Sized (SArray _) | Unsized _ | Sized Middle.SizedType.SInt | Sized SReal
-      ->
+    | Sized (SArray _)
+     |Unsized _
+     |Sized Middle.SizedType.SInt
+     |Sized SReal
+     |Sized SComplex ->
         Fmt.nop
   in
   let cov_sizes_fmt =

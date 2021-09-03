@@ -28,7 +28,7 @@ let nest_unsized_array basic_type n =
 %token LBRACE RBRACE LPAREN RPAREN LBRACK RBRACK LABRACK RABRACK COMMA SEMICOLON
        BAR
 %token RETURN IF ELSE WHILE FOR IN BREAK CONTINUE PROFILE
-%token VOID INT REAL VECTOR ROWVECTOR ARRAY MATRIX ORDERED POSITIVEORDERED SIMPLEX
+%token VOID INT REAL COMPLEX VECTOR ROWVECTOR ARRAY MATRIX ORDERED POSITIVEORDERED SIMPLEX
        UNITVECTOR CHOLESKYFACTORCORR CHOLESKYFACTORCOV CORRMATRIX COVMATRIX
 %token LOWER UPPER OFFSET MULTIPLIER
 %token <string> INTNUMERAL
@@ -172,6 +172,7 @@ decl_identifier:
   | VOID { build_id "void" $loc }
   | INT { build_id "int" $loc }
   | REAL { build_id "real" $loc }
+  | COMPLEX { build_id "complex" $loc }
   | VECTOR { build_id "vector" $loc }
   | ROWVECTOR { build_id "row_vector" $loc }
   | MATRIX { build_id "matrix" $loc }
@@ -227,6 +228,8 @@ basic_type:
     {  grammar_logger "basic_type INT" ; UnsizedType.UInt  }
   | REAL
     {  grammar_logger "basic_type REAL"  ; UnsizedType.UReal }
+  | COMPLEX
+    { grammar_logger "basic_type COMPLEX" ; UnsizedType.UComplex }
   | VECTOR
     {  grammar_logger "basic_type VECTOR" ; UnsizedType.UVector }
   | ROWVECTOR
@@ -390,6 +393,8 @@ sized_basic_type:
     { grammar_logger "INT_var_type" ; (SizedType.SInt, Identity) }
   | REAL
     { grammar_logger "REAL_var_type" ; (SizedType.SReal, Identity) }
+  | COMPLEX
+    { grammar_logger "COMPLEX_var_type" ; (SizedType.SComplex, Identity) }
   | VECTOR LBRACK e=expression RBRACK
     { grammar_logger "VECTOR_var_type" ; (SizedType.SVector (Common.Helpers.AoS, e), Identity) }
   | ROWVECTOR LBRACK e=expression RBRACK
@@ -402,6 +407,8 @@ top_var_type:
     { grammar_logger "INT_top_var_type" ; (SInt, r) }
   | REAL c=type_constraint
     { grammar_logger "REAL_top_var_type" ; (SReal, c) }
+  | COMPLEX c=type_constraint
+    { grammar_logger "COMPLEX_var_type" ; (SComplex, c) }
   | VECTOR c=type_constraint LBRACK e=expression RBRACK
     { grammar_logger "VECTOR_top_var_type" ; (SVector (AoS, e), c) }
   | ROWVECTOR c=type_constraint LBRACK e=expression RBRACK
