@@ -47,16 +47,16 @@ transformed parameters {
   vector[2] theta_p;
   
   theta_p = algebra_solver(algebra_system, x, y, dat, dat_int);
-  theta_p = algebra_solver(algebra_system, x, y, dat, dat_int, 0.01, 
-                           0.01, 10);
+  theta_p = algebra_solver(algebra_system, x, y, dat, dat_int, 0.01, 0.01,
+                           10);
   
   theta_p = algebra_solver(algebra_system, x, y_p, dat, dat_int);
-  theta_p = algebra_solver(algebra_system, x, y_p, dat, dat_int, 0.01, 
-                           0.01, 10);
+  theta_p = algebra_solver(algebra_system, x, y_p, dat, dat_int, 0.01, 0.01,
+                           10);
   
   theta_p = algebra_solver(algebra_system, x_p, y, dat, dat_int);
-  theta_p = algebra_solver(algebra_system, x_p, y, dat, dat_int, 0.01, 
-                           0.01, 10);
+  theta_p = algebra_solver(algebra_system, x_p, y, dat, dat_int, 0.01, 0.01,
+                           10);
   
   theta_p = algebra_solver(algebra_system, x_p, y_p, dat, dat_int);
   theta_p = algebra_solver(algebra_system, x_p, y_p, dat, dat_int, 0.01,
@@ -103,16 +103,16 @@ transformed parameters {
   vector[2] theta_p;
   
   theta_p = algebra_solver_newton(algebra_system, x, y, dat, dat_int);
-  theta_p = algebra_solver_newton(algebra_system, x, y, dat, dat_int, 
-                                  0.01, 0.01, 10);
+  theta_p = algebra_solver_newton(algebra_system, x, y, dat, dat_int, 0.01,
+                                  0.01, 10);
   
   theta_p = algebra_solver_newton(algebra_system, x, y_p, dat, dat_int);
-  theta_p = algebra_solver_newton(algebra_system, x, y_p, dat, dat_int, 
-                                  0.01, 0.01, 10);
+  theta_p = algebra_solver_newton(algebra_system, x, y_p, dat, dat_int, 0.01,
+                                  0.01, 10);
   
   theta_p = algebra_solver_newton(algebra_system, x_p, y, dat, dat_int);
-  theta_p = algebra_solver_newton(algebra_system, x_p, y, dat, dat_int, 
-                                  0.01, 0.01, 10);
+  theta_p = algebra_solver_newton(algebra_system, x_p, y, dat, dat_int, 0.01,
+                                  0.01, 10);
   
   theta_p = algebra_solver_newton(algebra_system, x_p, y_p, dat, dat_int);
   theta_p = algebra_solver_newton(algebra_system, x_p, y_p, dat, dat_int,
@@ -4609,12 +4609,12 @@ transformed parameters {
   real abc1_p = 3;
   real abc2_p = map_rectfake(abc1_p);
   real abc3_p = map_rectfake(12);
-  vector[3] y_hat_tp1 = map_rect(foo, shared_params_p, job_params_d, 
-                                 data_r, data_i);
-  vector[3] y_hat_tp2 = map_rect(foo, shared_params_d, job_params_p, 
-                                 data_r, data_i);
-  vector[3] y_hat_tp3 = map_rect(foo, shared_params_p, job_params_d, 
-                                 data_r, data_i);
+  vector[3] y_hat_tp1 = map_rect(foo, shared_params_p, job_params_d, data_r,
+                                 data_i);
+  vector[3] y_hat_tp2 = map_rect(foo, shared_params_d, job_params_p, data_r,
+                                 data_i);
+  vector[3] y_hat_tp3 = map_rect(foo, shared_params_p, job_params_d, data_r,
+                                 data_i);
 }
 model {
   real abc_m = map_rectfake(abc1_p);
@@ -4963,10 +4963,12 @@ The new interface is slightly different, see:
 https://mc-stan.org/users/documentation/case-studies/convert_odes.html
   $ ../../../../install/default/bin/stanc --auto-format ode_good.stan
 functions {
-  array[] real harm_osc_ode(real t, array[] real y /* state */,
-                            array[] real theta /* parameters */,
-                            array[] real x /* data */, array[] int x_int) {
-    /* integer data */
+  array[] real harm_osc_ode(real t, array[] real y,
+                            // state
+                            array[] real theta, // parameters
+                            array[] real x, // data
+                            array[] int x_int) {
+    // integer data
     array[2] real dydt;
     dydt[1] = x[1] * y[2];
     dydt[2] = -y[1] - theta[1] * y[2];
@@ -4987,40 +4989,59 @@ parameters {
 }
 transformed parameters {
   array[10, 2] real y_hat;
-  y_hat = integrate_ode(harm_osc_ode /* system */, y0 /* initial state */,
-                        t0 /* initial time */, ts /* solution times */,
-                        theta /* parameters */, x /* data */, x_int); 
-  /* integer data */
-  y_hat = integrate_ode_rk45(harm_osc_ode /* system */,
-                             y0 /* initial state */, t0 /* initial time */,
-                             ts /* solution times */, theta /* parameters */,
-                             x /* data */, x_int); /* integer data */
-  y_hat = integrate_ode_bdf(harm_osc_ode /* system */,
-                            y0 /* initial state */, t0 /* initial time */,
-                            ts /* solution times */, theta /* parameters */,
-                            x /* data */, x_int); /* integer data */
-  y_hat = integrate_ode_adams(harm_osc_ode /* system */,
-                              y0 /* initial state */, t0 /* initial time */,
-                              ts /* solution times */,
-                              theta /* parameters */, x /* data */, x_int); 
-  /* integer data */
-  y_hat = integrate_ode_rk45(harm_osc_ode /* system */,
-                             y0 /* initial state */, t0 /* initial time */,
-                             ts /* solution times */, theta /* parameters */,
-                             x /* data */, x_int, 0.01, 0.01, 10); /* integer data */
-  y_hat = integrate_ode_bdf(harm_osc_ode /* system */,
-                            y0 /* initial state */, t0 /* initial time */,
-                            ts /* solution times */, theta /* parameters */,
-                            x /* data */, x_int, 0.01, 0.01, 10); /* integer data */
-  y_hat = integrate_ode_adams(harm_osc_ode /* system */,
-                              y0 /* initial state */, t0 /* initial time */,
-                              ts /* solution times */,
-                              theta /* parameters */, x /* data */, x_int,
-                              0.01, 0.01, 10); /* integer data */
+  y_hat = integrate_ode(harm_osc_ode, // system
+                        y0, // initial state
+                        t0, // initial time
+                        ts, // solution times
+                        theta, // parameters
+                        x, // data
+                        x_int); // integer data
+  y_hat = integrate_ode_rk45(harm_osc_ode, // system
+                             y0, // initial state
+                             t0, // initial time
+                             ts, // solution times
+                             theta, // parameters
+                             x, // data
+                             x_int); // integer data
+  y_hat = integrate_ode_bdf(harm_osc_ode, // system
+                            y0, // initial state
+                            t0, // initial time
+                            ts, // solution times
+                            theta, // parameters
+                            x, // data
+                            x_int); // integer data
+  y_hat = integrate_ode_adams(harm_osc_ode, // system
+                              y0, // initial state
+                              t0, // initial time
+                              ts, // solution times
+                              theta, // parameters
+                              x, // data
+                              x_int); // integer data
+  y_hat = integrate_ode_rk45(harm_osc_ode, // system
+                             y0, // initial state
+                             t0, // initial time
+                             ts, // solution times
+                             theta, // parameters
+                             x, // data
+                             x_int, 0.01, 0.01, 10); // integer data
+  y_hat = integrate_ode_bdf(harm_osc_ode, // system
+                            y0, // initial state
+                            t0, // initial time
+                            ts, // solution times
+                            theta, // parameters
+                            x, // data
+                            x_int, 0.01, 0.01, 10); // integer data
+  y_hat = integrate_ode_adams(harm_osc_ode, // system
+                              y0, // initial state
+                              t0, // initial time
+                              ts, // solution times
+                              theta, // parameters
+                              x, // data
+                              x_int, 0.01, 0.01, 10); // integer data
 }
 model {
   for (t in 1 : 10) 
-    y[t] ~ normal(y_hat[t], sigma); /* independent normal noise */
+    y[t] ~ normal(y_hat[t], sigma); // independent normal noise
 }
 
 Warning in 'ode_good.stan', line 27, column 10: integrate_ode is deprecated and will be removed in the future. Use ode_rk45 instead. 
@@ -5249,8 +5270,8 @@ functions {
   
   array[] real logistic_trend(real k, real m, array[] real delta,
                               array[] real t, array[] real cap,
-                              array[,] real A, array[] real t_change, 
-                              int S, int T) {
+                              array[,] real A, array[] real t_change, int S,
+                              int T) {
     array[S] real gamma;
     array[T] real Y;
     
@@ -6677,12 +6698,14 @@ model {
 
   $ ../../../../install/default/bin/stanc --auto-format var-decls-in-functions.stan
 functions {
-  array[] real harm_osc_ode(real t /* time */, array[] real y /* state */,
-                            array[] real theta /* parameters */,
-                            array[] real x /* data */, array[] int x_int) {
-    /* integer data */
+  array[] real harm_osc_ode(real t, // time
+                            array[] real y, // state
+                            array[] real theta, // parameters
+                            array[] real x, // data
+                            array[] int x_int) {
+    // integer data
     array[size(y)] real dydt;
-    /* ... set dydt at state y and time t ... */
+    // ... set dydt at state y and time t ...
     return dydt;
   }
 }

@@ -141,8 +141,8 @@ generated quantities {
   complex gq_complex;
   array[2] complex gq_complex_array;
   array[2, 3] complex gq_complex_array_2d = {{1, 2, 3},
-                                             {to_complex(), to_complex(1.1),
-                                              to_complex(1, 2.1)}};
+                                             {to_complex(), to_complex(
+                                              1.1), to_complex(1, 2.1)}};
   array[2, 3, 4] complex gq_complex_array_3d;
   gq_complex = 3;
   gq_complex_array[1] = to_complex(5.1, 6);
@@ -581,12 +581,12 @@ model {
 }
 generated quantities {
   array[T, 3] real y_hat;
-  y_hat = integrate_ode_rk45(sho, y0, t0, ts, theta, x, x_int, 1e-10, 
-                             1e-10, 1e6);
-  y_hat = integrate_ode_bdf(sho, y0, t0, ts, theta, x, x_int, 1e-10, 
-                            1e-10, 1e6);
-  y_hat = integrate_ode_adams(sho, y0, t0, ts, theta, x, x_int, 1e-10, 
-                              1e-10, 1e6);
+  y_hat = integrate_ode_rk45(sho, y0, t0, ts, theta, x, x_int, 1e-10, 1e-10,
+                             1e6);
+  y_hat = integrate_ode_bdf(sho, y0, t0, ts, theta, x, x_int, 1e-10, 1e-10,
+                            1e6);
+  y_hat = integrate_ode_adams(sho, y0, t0, ts, theta, x, x_int, 1e-10, 1e-10,
+                              1e6);
   
   // add measurement error
   for (t in 1 : T) {

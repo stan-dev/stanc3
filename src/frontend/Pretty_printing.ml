@@ -90,12 +90,20 @@ let pp_comment ppf
   else Fmt.pf ppf "//%a" Fmt.string (List.hd_exn lines)
 
 let pp_spacing ?(newline = true) prev_loc next_loc ppf ls =
+  let newline =
+    newline
+    || match List.last ls with Some (false, _, _) -> true | _ -> false
+  in
   let rec recurse prev_loc = function
     | ((_, _, {Middle.Location_span.begin_loc; end_loc}) as hd) :: tl ->
         pp_space false ppf (prev_loc, begin_loc) ;
         pp_comment ppf hd ;
         recurse end_loc tl
     | [] -> prev_loc
+  in
+  let finish prev_loc =
+    Option.iter next_loc ~f:(fun next_loc ->
+        pp_space newline ppf (prev_loc, next_loc) )
   in
   match ls with
   | ((_, _, {Middle.Location_span.begin_loc; end_loc}) as hd) :: tl ->
@@ -104,15 +112,11 @@ let pp_spacing ?(newline = true) prev_loc next_loc ppf ls =
       pp_comment ppf hd ;
       let _ = recurse Middle.Location.empty !skipped in
       skipped := [] ;
-      let last_loc = recurse end_loc tl in
-      Option.iter next_loc ~f:(fun next_loc ->
-          pp_space newline ppf (last_loc, next_loc) )
+      recurse end_loc tl |> finish
   | [] ->
       let _ = recurse Middle.Location.empty !skipped in
       skipped := [] ;
-      Option.iter prev_loc ~f:(fun prev_loc ->
-          Option.iter next_loc ~f:(fun next_loc ->
-              pp_space newline ppf (prev_loc, next_loc) ) )
+      Option.iter prev_loc ~f:finish
 
 let wrap_fmt fmt x =
   (* Switched from Format.str_formatter partially because of
@@ -196,51 +200,34 @@ let pp_list_of pp (loc_of : 'a -> Middle.Location_span.t) ppf
   let pp_maybe_space space_before comments =
     if not (List.is_empty comments) then (
       if space_before then Fmt.sp ppf () ;
-      Fmt.(list ~sep:sp pp_comment) ppf comments ;
-      if not space_before then Fmt.sp ppf () )
+      let rec go was_block = function
+        | ((is_block, _, _) as comment) :: tl ->
+            pp_comment ppf comment ;
+            if not is_block then Format.pp_force_newline ppf () ;
+            go is_block tl
+        | [] -> if was_block && not space_before then Fmt.sp ppf ()
+      in
+      go true comments )
   in
   let rec go expr more =
     match more with
     | next :: rest ->
         pp ppf expr ;
-        let prev_file = (loc_of expr).end_loc.filename in
-        let prev_line = (loc_of expr).end_loc.line_num in
         let next_loc = (loc_of next).begin_loc in
         pp_maybe_space true (get_comments_until_comma next_loc) ;
-        let rec comment_after_comma_on_the_same_line = function
-          | ( ( _
-              , _
-              , {Middle.Location_span.begin_loc= {filename; line_num; _}; _} )
-            as c )
-            :: ls
-            when line_num = prev_line && prev_file = filename ->
-              Fmt.sp ppf () ;
-              pp_comment ppf c ;
-              comment_after_comma_on_the_same_line ls
-          | ls -> ls
-        in
         let comments = get_comments next_loc in
-        let comments =
-          if prev_line < next_loc.line_num then
-            comment_after_comma_on_the_same_line comments
-          else comments
-        in
-        Format.pp_close_box ppf () ;
         Fmt.comma ppf () ;
-        Format.pp_open_box ppf 0 ;
         pp_maybe_space false comments ;
         go next rest
     | [] -> pp ppf expr
   in
   skip_comments begin_loc ;
-  Format.pp_open_box ppf 0 ;
   ( match es with
   | [] -> ()
   | e :: es ->
       pp_maybe_space false (get_comments (loc_of e).begin_loc) ;
       go e es ) ;
-  pp_maybe_space true (get_comments end_loc) ;
-  Format.pp_close_box ppf ()
+  pp_maybe_space true (get_comments end_loc)
 
 let rec pp_index ppf = function
   | All -> Fmt.pf ppf " : "

@@ -19492,10 +19492,10 @@ transformed data {
   transformed_data_row_vector = segment(d_row_vector, d_int, d_int);
   transformed_data_row_vector_array = segment(d_row_vector_array, d_int,
                                               d_int);
-  transformed_data_row_vector_array_2 = segment(d_row_vector_array_2, 
-                                                d_int, d_int);
-  transformed_data_row_vector_array_3 = segment(d_row_vector_array_3, 
-                                                d_int, d_int);
+  transformed_data_row_vector_array_2 = segment(d_row_vector_array_2, d_int,
+                                                d_int);
+  transformed_data_row_vector_array_3 = segment(d_row_vector_array_3, d_int,
+                                                d_int);
 }
 parameters {
   real y_p;
@@ -19543,10 +19543,10 @@ transformed parameters {
   transformed_param_row_vector = segment(d_row_vector, d_int, d_int);
   transformed_param_row_vector_array = segment(d_row_vector_array, d_int,
                                                d_int);
-  transformed_param_row_vector_array_2 = segment(d_row_vector_array_2, 
-                                                 d_int, d_int);
-  transformed_param_row_vector_array_3 = segment(d_row_vector_array_3, 
-                                                 d_int, d_int);
+  transformed_param_row_vector_array_2 = segment(d_row_vector_array_2, d_int,
+                                                 d_int);
+  transformed_param_row_vector_array_3 = segment(d_row_vector_array_3, d_int,
+                                                 d_int);
   
   transformed_param_real_array = segment(p_real_array, d_int, d_int);
   transformed_param_real_array_2 = segment(p_real_array_2, d_int, d_int);
@@ -19561,10 +19561,10 @@ transformed parameters {
   transformed_param_row_vector = segment(p_row_vector, d_int, d_int);
   transformed_param_row_vector_array = segment(p_row_vector_array, d_int,
                                                d_int);
-  transformed_param_row_vector_array_2 = segment(p_row_vector_array_2, 
-                                                 d_int, d_int);
-  transformed_param_row_vector_array_3 = segment(p_row_vector_array_3, 
-                                                 d_int, d_int);
+  transformed_param_row_vector_array_2 = segment(p_row_vector_array_2, d_int,
+                                                 d_int);
+  transformed_param_row_vector_array_3 = segment(p_row_vector_array_3, d_int,
+                                                 d_int);
 }
 model {
   y_p ~ normal(0, 1);
