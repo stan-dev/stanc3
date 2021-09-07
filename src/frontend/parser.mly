@@ -555,7 +555,7 @@ common_expression:
              [ { expr= RealNumeral "0"
                ; emeta={loc= Location_span.of_positions_exn $loc}
                }
-             ; { expr= RealNumeral (String.sub z ~pos:0 ~len:((String.length z)-1) )
+             ; { expr= RealNumeral (String.drop_suffix z 1)
                ; emeta={loc= Location_span.of_positions_exn $loc}
                } 
              ]
