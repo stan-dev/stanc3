@@ -14,6 +14,19 @@
       pos_lnum = pos.pos_lnum + 1;
       pos_bol = pos.pos_cnum;
     }
+
+let comments : Ast.comment_type list ref = ref []
+
+(* Store comments *)
+  let add_comment (begin_pos, buffer) end_pos =
+    comments :=
+        LineComment ( Buffer.contents buffer
+                , Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
+      :: !comments
+  let add_multi_comment begin_pos lines end_pos =
+    comments :=
+        BlockComment ( lines, Middle.Location_span.of_positions_exn (begin_pos, end_pos) )
+      :: !comments
 }
 
 (* Some auxiliary definition for variables and constants *)
@@ -38,9 +51,10 @@ rule token = parse
                                 incr_linenum lexbuf ; token lexbuf }
   | space                     { lexer_logger "space" ; token lexbuf }
   | "/*"                      { lexer_logger "multicomment" ;
-                                multiline_comment lexbuf ; token lexbuf }
+                                multiline_comment ((lexbuf.lex_curr_p, []), Buffer.create 16) lexbuf ; token lexbuf }
   | "//"                      { lexer_logger "single comment" ;
-                                singleline_comment lexbuf ; token lexbuf }
+                                singleline_comment (lexbuf.lex_curr_p, Buffer.create 16) lexbuf ;
+                                token lexbuf }
   | "#include"
     ( ( space | newline)+)
     ( '"' ([^ '"' '\r' '\n']* as fname) '"'
@@ -57,7 +71,8 @@ rule token = parse
                                                        Please use // in place \
                                                        of # for line \
                                                        comments.") ;
-                                singleline_comment lexbuf; token lexbuf } (* deprecated *)
+                                singleline_comment (lexbuf.lex_curr_p, Buffer.create 16) lexbuf;
+                                token lexbuf } (* deprecated *)
 (* Program blocks *)
   | "functions"               { lexer_logger "functions" ;
                                 Parser.FUNCTIONBLOCK }
@@ -86,7 +101,11 @@ rule token = parse
   | ']'                       { lexer_logger "]" ; Parser.RBRACK }
   | '<'                       { lexer_logger "<" ; Parser.LABRACK }
   | '>'                       { lexer_logger ">" ; Parser.RABRACK }
-  | ','                       { lexer_logger "," ; Parser.COMMA }
+  | ','                       { lexer_logger "," ;
+                                comments :=
+                                  Comma (Middle.Location.of_position_exn lexbuf.lex_curr_p)
+                                  :: !comments ;
+                                Parser.COMMA }
   | ';'                       { lexer_logger ";" ; Parser.SEMICOLON }
   | '|'                       { lexer_logger "|" ; Parser.BAR }
 (* Control flow keywords *)
@@ -211,17 +230,23 @@ rule token = parse
                                           (Stack.top_exn include_stack))))) }
 
 (* Multi-line comment terminated by "*/" *)
-and multiline_comment = parse
-  | "*/"   { () }
-  | eof    { failwith "unterminated comment" }
-  | '\n'   { incr_linenum lexbuf; multiline_comment lexbuf }
-  | _      { multiline_comment lexbuf }
+and multiline_comment state = parse
+  | "*/"     { let ((pos, lines), buffer) = state in
+               let lines = (Buffer.contents buffer) :: lines in
+               add_multi_comment pos (List.rev lines) lexbuf.lex_curr_p }
+  | eof      { failwith "unterminated comment" }
+  | newline  { incr_linenum lexbuf;
+               let ((pos, lines), buffer) = state in
+               let lines = (Buffer.contents buffer) :: lines in
+               let newbuf = Buffer.create 16 in
+               multiline_comment ((pos, lines), newbuf) lexbuf }
+  | _        { Buffer.add_string (snd state) (lexeme lexbuf) ; multiline_comment state lexbuf }
 
 (* Single-line comment terminated by a newline *)
-and singleline_comment = parse
-  | newline   { incr_linenum lexbuf }
-  | eof    { () }
-  | _      { singleline_comment lexbuf }
+and singleline_comment state = parse
+  | newline  { add_comment state lexbuf.lex_curr_p ; incr_linenum lexbuf }
+  | eof      { add_comment state lexbuf.lex_curr_p }
+  | _        { Buffer.add_string (snd state) (lexeme lexbuf) ; singleline_comment state lexbuf }
 
 {
 }
