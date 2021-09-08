@@ -183,22 +183,60 @@ and query_initial_demotable_funs (in_loop : bool) (kind : 'a Fun_kind.t)
   | CompilerInternal (_ : 'a Internal_fun.t) -> Set.Poly.empty
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) -> all_eigen_names
 
-let rec query_bad_assign
+let rec query_soa_supported_assign_expr
+    Expr.Fixed.({pattern; meta= Expr.Typed.Meta.({adlevel; _})}) : bool =
+  if adlevel = UnsizedType.DataOnly then true
+  else
+    let query_expr = query_soa_supported_assign_expr in
+    match pattern with
+    | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
+        query_soa_supported_assign_fun kind exprs
+    | Indexed (expr, (_ : Typed.Meta.t Fixed.t Index.t sexp_list)) ->
+        query_expr expr
+    | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string))
+      ->
+        true
+    | TernaryIf _ -> false
+    (*I think we can just return true for this?*)
+    | EAnd (lhs, rhs) | EOr (lhs, rhs) -> query_expr lhs && query_expr rhs
+
+(**
+ * Return false if all of an assignments rhs expressions do not support SoA.
+ *)
+and query_soa_supported_assign_fun (kind : 'a Fun_kind.t)
+    (exprs : Typed.Meta.t Expr.Fixed.t list) : bool =
+  match kind with
+  | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) -> false
+  | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) -> false
+  | CompilerInternal (_ : 'a Internal_fun.t) -> true
+  | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) -> (
+    match name with
+    | "check_matching_dims" -> true
+    | _ ->
+        is_fun_soa_supported name exprs
+        || List.exists ~f:query_soa_supported_assign_expr exprs )
+
+let rec query_ad_real_data_matrix_assign
     Expr.Fixed.({pattern; meta= Expr.Typed.Meta.({adlevel; _})}) : bool =
   if adlevel = UnsizedType.DataOnly then false
   else
     match pattern with
     | FunApp (kind, (exprs : Expr.Typed.Meta.t Expr.Fixed.t list)) ->
-        query_bad_assign_fun kind exprs
-    | Indexed (expr, _) -> query_bad_assign expr
+        query_ad_real_data_matrix_assign_fun kind exprs
+    | Indexed (expr, _) -> query_ad_real_data_matrix_assign expr
     | Var (_ : string) | Lit ((_ : Expr.Fixed.Pattern.litType), (_ : string))
       ->
         false
     | TernaryIf _ -> true
     | EAnd (lhs, rhs) | EOr (lhs, rhs) ->
-        query_bad_assign lhs || query_bad_assign rhs
+        query_ad_real_data_matrix_assign lhs
+        || query_ad_real_data_matrix_assign rhs
 
-and query_bad_assign_fun (kind : 'a Fun_kind.t)
+(**
+ * Return true if the rhs expression of an assignment contains only
+ *  combinations of AutoDiffable Reals and Data Matrices
+ *)
+and query_ad_real_data_matrix_assign_fun (kind : 'a Fun_kind.t)
     (exprs : Typed.Meta.t Expr.Fixed.t list) : bool =
   match kind with
   | Fun_kind.StanLib (name, (_ : bool Fun_kind.suffix), _) -> (
@@ -231,12 +269,9 @@ and query_bad_assign_fun (kind : 'a Fun_kind.t)
                  | _ -> true )
                fun_args
         in
-        match
-          (not (is_fun_soa_supported name exprs))
-          || is_args_autodiff_real_data_matrix
-        with
+        match is_args_autodiff_real_data_matrix with
         | true -> true
-        | false -> List.exists ~f:query_bad_assign exprs ) )
+        | false -> List.exists ~f:query_ad_real_data_matrix_assign exprs ) )
   | CompilerInternal (Internal_fun.FnMakeArray | FnMakeRowVec) -> true
   | CompilerInternal (_ : 'a Internal_fun.t) -> false
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) -> false
@@ -275,7 +310,9 @@ let rec query_initial_demotable_stmt (in_loop : bool)
       let both_sides = Set.Poly.union check_lhs check_rhs in
       let check_bad_assign =
         match (UnsizedType.contains_eigen_type type_, adlevel) with
-        | true, UnsizedType.AutoDiffable -> query_bad_assign rhs
+        | true, UnsizedType.AutoDiffable ->
+            query_ad_real_data_matrix_assign rhs
+            || not (query_soa_supported_assign_expr rhs)
         | _ -> false
       in
       if Set.Poly.length check_rhs > 0 || check_bad_assign then
