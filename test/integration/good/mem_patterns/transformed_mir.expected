@@ -5647,6 +5647,15 @@
     (meta <opaque>))
    ((pattern
      (NRFunApp (CompilerInternal FnValidateSize)
+      (((pattern (Lit Str tp_soa_single_idx_uninit))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Lit Str M))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+       ((pattern (Var M))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+    (meta <opaque>))
+   ((pattern
+     (NRFunApp (CompilerInternal FnValidateSize)
       (((pattern (Lit Str tp_aos_fail_func_vec_v))
         (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
        ((pattern (Lit Str M))
@@ -6186,6 +6195,45 @@
         (FunApp (StanLib inv FnPlain SoA)
          (((pattern (Var p_aos_vec_v_assign_to_aos))
            (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable)))))))
+       (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Decl (decl_adtype AutoDiffable) (decl_id tp_soa_single_idx_uninit)
+      (decl_type
+       (Sized
+        (SVector SoA
+         ((pattern (Var M))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
+     (Assignment
+      (tp_soa_single_idx_uninit UVector
+       ((Single
+         ((pattern (Lit Int 1))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      ((pattern (Var tp_real_from_aos))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment
+      (tp_soa_single_idx_uninit UVector
+       ((Between
+         ((pattern (Lit Int 2))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var M))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      ((pattern
+        (FunApp (StanLib rep_vector FnPlain SoA)
+         (((pattern (Var tp_real_from_aos))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+          ((pattern
+            (FunApp (StanLib Minus__ FnPlain SoA)
+             (((pattern (Var M))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern (Lit Int 1))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
@@ -7704,6 +7752,15 @@
       (initialize true)))
     (meta <opaque>))
    ((pattern
+     (Decl (decl_adtype DataOnly) (decl_id tp_soa_single_idx_uninit)
+      (decl_type
+       (Sized
+        (SVector AoS
+         ((pattern (Var M))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      (initialize true)))
+    (meta <opaque>))
+   ((pattern
      (Decl (decl_adtype DataOnly) (decl_id tp_aos_fail_func_vec_v)
       (decl_type
        (Sized
@@ -8018,6 +8075,36 @@
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
    ((pattern
+     (Assignment
+      (tp_soa_single_idx_uninit UVector
+       ((Single
+         ((pattern (Lit Int 1))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      ((pattern (Var tp_real_from_aos))
+       (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
+     (Assignment
+      (tp_soa_single_idx_uninit UVector
+       ((Between
+         ((pattern (Lit Int 2))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+         ((pattern (Var M))
+          (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+      ((pattern
+        (FunApp (StanLib rep_vector FnPlain AoS)
+         (((pattern (Var tp_real_from_aos))
+           (meta ((type_ UReal) (loc <opaque>) (adlevel AutoDiffable))))
+          ((pattern
+            (FunApp (StanLib Minus__ FnPlain AoS)
+             (((pattern (Var M))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
+              ((pattern (Lit Int 1))
+               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
+       (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
+    (meta <opaque>))
+   ((pattern
      (Assignment (tp_aos_fail_func_vec_v UVector ())
       ((pattern (Var p_aos_vec_v_tp_fails_func))
        (meta ((type_ UVector) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -8093,6 +8180,15 @@
               (FnWriteParam (unconstrain_opt ())
                (var
                 ((pattern (Var tp_aos_vec_v))
+                 (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
+             ()))
+           (meta <opaque>))
+          ((pattern
+            (NRFunApp
+             (CompilerInternal
+              (FnWriteParam (unconstrain_opt ())
+               (var
+                ((pattern (Var tp_soa_single_idx_uninit))
                  (meta ((type_ UVector) (loc <opaque>) (adlevel DataOnly)))))))
              ()))
            (meta <opaque>))
@@ -9465,6 +9561,16 @@
     ((out_unconstrained_st SReal) (out_constrained_st SReal)
      (out_block TransformedParameters) (out_trans Identity)))
    (tp_aos_vec_v
+    ((out_unconstrained_st
+      (SVector AoS
+       ((pattern (Var M))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_constrained_st
+      (SVector AoS
+       ((pattern (Var M))
+        (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
+     (out_block TransformedParameters) (out_trans Identity)))
+   (tp_soa_single_idx_uninit
     ((out_unconstrained_st
       (SVector AoS
        ((pattern (Var M))

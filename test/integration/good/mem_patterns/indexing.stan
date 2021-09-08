@@ -50,6 +50,10 @@ transformed parameters {
   // should be AoS
     // because assigning AoS
   vector[M] tp_aos_vec_v = inv(p_aos_vec_v_assign_to_aos);
+  // Should be SoA because single assign out of loop
+  vector[M] tp_soa_single_idx_uninit;
+  tp_soa_single_idx_uninit[1] = tp_real_from_aos;
+  tp_soa_single_idx_uninit[2:M] = rep_vector(tp_real_from_aos, M - 1);
     // because tp vec is used in not supported func
     // both should fail
   vector[M] tp_aos_fail_func_vec_v = p_aos_vec_v_tp_fails_func;
