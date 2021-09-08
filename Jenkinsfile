@@ -163,6 +163,10 @@ pipeline {
                                 echo "CXX=${CXX}" >> cmdstan/make/local
                                 mkdir cmdstan/bin
                                 cp ../../bin/stanc cmdstan/bin/linux-stanc
+                                cd cmdstan/stan/lib/stan_math/
+                                git pull origin fix/check_ge_and_le
+                                git checkout fix/check_ge_and_le
+                                cd ../../../../
                                 cd cmdstan; make clean-all; make -j${env.PARALLEL} build; cd ..                                
                                 ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ../../test/integration/good
                                 ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 example-models
