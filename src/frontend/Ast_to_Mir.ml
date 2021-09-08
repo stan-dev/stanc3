@@ -316,7 +316,9 @@ let check_sizedtype name =
     | n ->
         [ Stmt.Helpers.internal_nrfunapp FnValidateSize
             Expr.Helpers.
-              [str name; str (Fmt.strf "%a" Pretty_printing.pp_expression x); n]
+              [ str name
+              ; str (Fmt.strf "%a" Pretty_printing.pp_typed_expression x)
+              ; n ]
             n.meta.loc ]
   in
   let rec sizedtype = function
@@ -580,7 +582,7 @@ let trans_sizedtype_decl declc tr name =
   let check fn x n =
     Stmt.Helpers.internal_nrfunapp fn
       Expr.Helpers.
-        [str name; str (Fmt.strf "%a" Pretty_printing.pp_expression x); n]
+        [str name; str (Fmt.strf "%a" Pretty_printing.pp_typed_expression x); n]
       n.meta.loc
   in
   let grab_size fn n = function
@@ -727,8 +729,7 @@ let trans_block ud_dists declc block prog =
         (outvar :: accum1, size @ accum2, stmts @ accum3)
     | stmt -> (accum1, accum2, trans_stmt ud_dists declc stmt @ accum3)
   in
-  Option.value ~default:[] (get_block block prog)
-  |> List.fold_right ~f ~init:([], [], [])
+  Ast.get_stmts (get_block block prog) |> List.fold_right ~f ~init:([], [], [])
 
 let stmt_contains_check stmt =
   let is_check = function
@@ -746,7 +747,9 @@ let trans_prog filename (p : Ast.typed_program) : Program.Typed.t =
     p
   in
   let map f list_op =
-    Option.value_map ~default:[] ~f:(List.concat_map ~f) list_op
+    Option.value_map ~default:[]
+      ~f:(fun {Ast.stmts; _} -> List.concat_map ~f stmts)
+      list_op
   in
   let grab_fundef_names_and_types = function
     | {Ast.stmt= Ast.FunDef {funname; arguments= (_, type_, _) :: _; _}; _} ->
