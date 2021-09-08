@@ -270,7 +270,8 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
         Fmt.pf ppf "%ai" pp_expression e2
     | _ ->
         Fmt.pf ppf "%a(" pp_identifier id ;
-        with_box ppf 0 (fun () -> Fmt.pf ppf "%a)" pp_list_of_expression (es, loc)) )
+        with_box ppf 0 (fun () ->
+            Fmt.pf ppf "%a)" pp_list_of_expression (es, loc) ) )
   | CondDistApp (_, id, es) -> (
     match es with
     | [] -> Middle.Errors.fatal_error ()
