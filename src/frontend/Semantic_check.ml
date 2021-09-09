@@ -756,6 +756,10 @@ and semantic_check_expression cf ({emeta; expr} : Ast.untyped_expression) :
       mk_typed_expression ~expr:(RealNumeral s) ~ad_level:DataOnly ~type_:UReal
         ~loc:emeta.loc
       |> Validate.ok
+  | ImagNumeral s ->
+      mk_typed_expression ~expr:(ImagNumeral s) ~ad_level:DataOnly
+        ~type_:UComplex ~loc:emeta.loc
+      |> Validate.ok
   | FunApp ((), id, es) ->
       semantic_check_funapp ~is_cond_dist:false id es cf emeta
   | CondDistApp ((), id, es) ->
