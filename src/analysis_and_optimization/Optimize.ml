@@ -1247,7 +1247,7 @@ let optimize_ad_levels (mir : Program.Typed.t) =
   * For or While loop. These are the initial variables
   * given to the monotone framework. Then log_prob has all matrix like objects
   * and the functions that use them to SoA. After that the 
-  * Monotone framework is used to deduce assignment paths of AoS -> SoA
+  * Monotone framework is used to deduce assignment paths of AoS <-> SoA
   * and vice versa which need to be demoted to AoS as well as updating 
   * functions and objects after these assignment passes that then 
   * also need to be AoS.
@@ -1268,15 +1268,6 @@ let optimize_soa (mir : Program.Typed.t) =
          ~f:(Mem_pattern.query_initial_demotable_stmt false)
          mir.log_prob)
   in
-  (*
-    let print_set (s : string Set.Poly.t) = Set.Poly.iter ~f:print_endline s in
-    let () =
-      let () = printf "\n-----------\n" in
-      let () = printf "Initial Nonos:" in
-      let () = printf "\n-----------\n" in
-      print_set initial_variables
-    in
-    *)
   let mod_exprs aos_exits mod_expr =
     Mir_utils.map_rec_expr (Mem_pattern.modify_expr_pattern aos_exits) mod_expr
   in
