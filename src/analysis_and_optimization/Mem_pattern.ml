@@ -262,12 +262,12 @@ and query_ad_real_data_matrix_assign_fun (kind : 'a Fun_kind.t)
                  | _ -> false )
                fun_args
           (*And there are no Autodiffable matrices*)
-          && (List.exists
-                  ~f:(fun (x, y) ->
-                    match (x, UnsizedType.contains_eigen_type y) with
-                    | UnsizedType.AutoDiffable, true -> false
-                    | _ -> true )
-                  fun_args)
+          && List.exists
+               ~f:(fun (x, y) ->
+                 match (x, UnsizedType.contains_eigen_type y) with
+                 | UnsizedType.AutoDiffable, true -> false
+                 | _ -> true )
+               fun_args
         in
         match is_args_autodiff_real_data_matrix with
         | true -> true
