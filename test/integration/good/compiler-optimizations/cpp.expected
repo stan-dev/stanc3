@@ -20410,8 +20410,12 @@ class off_dce_model final : public model_base_crtp<off_dce_model> {
       beta_p = in__.template read<local_scalar_t__>();
       Eigen::Matrix<local_scalar_t__, -1, 1> logit_psi =
          Eigen::Matrix<local_scalar_t__, -1, 1>::Constant(R, DUMMY_VAR__);
-      Eigen::Matrix<local_scalar_t__, -1, -1> logit_p =
-         Eigen::Matrix<local_scalar_t__, -1, -1>::Constant(R, T, DUMMY_VAR__);
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, -1>> logit_p =
+         stan::conditional_var_value_t<local_scalar_t__, 
+           Eigen::Matrix<local_scalar_t__, -1, -1>>(
+           Eigen::Matrix<double, -1, -1>::Constant(R, T,
+             std::numeric_limits<double>::quiet_NaN()));
       assign(lcm_sym24__, stan::math::fma(beta_occ, X, alpha_occ),
         "assigning variable lcm_sym24__");
       assign(logit_psi, lcm_sym24__, "assigning variable logit_psi");

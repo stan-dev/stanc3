@@ -76,10 +76,13 @@ model {
   y ~ normal(multiply(p_soa_mat, inv(tp_aos_fail_func_vec_v)), p_soa_vec_uni_idx[N]);
   y ~ normal(multiply(p_soa_mat, inv(tp_aos_fail_assign_from_top_idx)), p_soa_vec_uni_idx[N]);
   y ~ normal(multiply(p_soa_mat, inv(multiply(p_aos_mat, tp_aos_fail_func_vec_v))), p_soa_vec_uni_idx[N]);
+
+
   vector[N] tp_soa_single_assign;
   tp_soa_single_assign[1] = 2.0;
   vector[N] tp_soa_single_assign_from_soa;
   tp_soa_single_assign_from_soa[2] = multiply(p_soa_lhs_loop_mul, p_soa_rhs_loop_mul);
+
   // These should be fine
   for (i in 1:10) {
     y ~ normal(multiply(dat_x, p_soa_arr_vec_v[i]), 1.0);
@@ -90,6 +93,7 @@ model {
     y ~ normal(multiply(dat_x, p_soa_loop_mat_uni_col_idx[i]'), 1.0);
     y ~ normal(multiply(dat_x, p_soa_loop_mat_multi_uni_uni_idx[idx_tester[i],]'), 1.0);
   }
+
   // SHOULD NOT BE SOA
   vector[N] tp_aos_loop_vec_v_uni_idx;
   vector[N] tp_aos_loop_vec_v_multi_uni_idx;
