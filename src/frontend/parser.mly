@@ -580,7 +580,6 @@ common_expression:
          && List.exists ~f:(fun x -> String.is_suffix ~suffix:x id.name) Utils.conditioning_suffices
        then CondDistApp ((), id, args)
        else FunApp ((), id, args) }
-       
   | TARGET LPAREN RPAREN
     { grammar_logger "target_read" ; GetTarget }
   | GETLP LPAREN RPAREN
