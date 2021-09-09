@@ -556,7 +556,7 @@ common_expression:
   | r=REALNUMERAL
     {  grammar_logger ("realnumeral " ^ r) ; RealNumeral r }
   | z=IMAGNUMERAL
-    {  grammar_logger ("imagnumeral " ^ z) ; ImagNumeral z }
+    {  grammar_logger ("imagnumeral " ^ z) ; ImagNumeral (String.drop_suffix z 1) }
   | LBRACE xs=separated_nonempty_list(COMMA, expression) RBRACE
     {  grammar_logger "array_expression" ; ArrayExpr xs  }
   | LBRACK xs=separated_list(COMMA, expression) RBRACK
