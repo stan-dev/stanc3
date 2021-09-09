@@ -31,7 +31,7 @@ let comments : Ast.comment_type list ref = ref []
 
 (* Some auxiliary definition for variables and constants *)
 let string_literal = '"' [^ '"' '\r' '\n']* '"'
-let identifier = ['a'-'z' 'A'-'Z' '_'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*   (* TODO: We should probably expand the alphabet *)
+let identifier = ['a'-'z' 'A'-'Z'] ['a'-'z' 'A'-'Z' '0'-'9' '_']*   (* TODO: We should probably expand the alphabet *)
 
 let integer_constant =  ['0'-'9']+ ('_' ['0'-'9']+)*
 
