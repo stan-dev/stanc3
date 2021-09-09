@@ -1,5 +1,5 @@
 data {
-  real register;
+  real generated;
 }
 model {
 }
