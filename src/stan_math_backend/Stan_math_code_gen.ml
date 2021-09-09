@@ -51,9 +51,7 @@ let pp_function__ ppf (prog_name, fname) =
 (** Print the body of exception handling for functions *)
 let pp_located ppf _ =
   pf ppf
-    {|stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); |}
+    {|stan::lang::rethrow_located(e, locations_array__[current_statement__]);|}
 
 (** Detect if argument requires C++ template *)
 let arg_needs_template = function
