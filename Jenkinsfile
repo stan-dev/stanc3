@@ -147,6 +147,46 @@ pipeline {
                 }
             }
         }
+        stage("Model end-to-end tests") {
+                    agent { label 'linux' }
+                    steps {
+                        unstash 'ubuntu-exe'
+                        sh """
+                            mkdir ete_tests
+                            cd ete_tests
+                            git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
+                            cd performance-tests-cmdstan
+                            git show HEAD --stat
+                            echo "example-models/regression_tests/mother.stan" > all.tests
+                            cat known_good_perf_all.tests >> all.tests
+                            echo "" >> all.tests
+                            cat shotgun_perf_all.tests >> all.tests
+                            cat all.tests
+                            echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
+                            cd cmdstan; make clean-all; git show HEAD --stat; cd ..
+                            CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../../bin/stanc)"
+                            cd ../../
+                        """
+
+                        xunit([GoogleTest(
+                            deleteOutputFiles: false,
+                            failIfNotNew: true,
+                            pattern: 'ete_tests/performance-tests-cmdstan/performance.xml',
+                            skipNoTestFiles: false,
+                            stopProcessingIfError: false)
+                        ])
+
+                        archiveArtifacts 'ete_tests/performance-tests-cmdstan/performance.xml'
+
+                        perfReport modePerformancePerTestCase: true,
+                            sourceDataFiles: 'ete_tests/performance-tests-cmdstan/performance.xml',
+                            modeThroughput: false,
+                            excludeResponseTime: true,
+                            errorFailedThreshold: 100,
+                            errorUnstableThreshold: 100
+                    }
+                    post { always { runShell("rm -rf ./ete_tests/*") }}
+        }
         stage("CmdStan & Math tests") {
             parallel {
                 stage("Compile tests") {
@@ -163,10 +203,6 @@ pipeline {
                                 echo "CXX=${CXX}" >> cmdstan/make/local
                                 mkdir cmdstan/bin
                                 cp ../../bin/stanc cmdstan/bin/linux-stanc
-                                cd cmdstan/stan/lib/stan_math/
-                                git pull origin fix/check_ge_and_le
-                                git checkout fix/check_ge_and_le
-                                cd ../../../../
                                 cd cmdstan; make clean-all; make -j${env.PARALLEL} build; cd ..                                
                                 ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 ../../test/integration/good
                                 ./runPerformanceTests.py -j${env.PARALLEL} --runs=0 example-models
@@ -216,46 +252,6 @@ pipeline {
                     post { always { deleteDir() } }
                 }
             }
-        }
-        stage("Model end-to-end tests") {
-                    agent { label 'linux' }
-                    steps {
-                        unstash 'ubuntu-exe'
-                        sh """
-                            mkdir ete_tests
-                            cd ete_tests
-                            git clone --recursive --depth 50 https://github.com/stan-dev/performance-tests-cmdstan
-                            cd performance-tests-cmdstan
-                            git show HEAD --stat
-                            echo "example-models/regression_tests/mother.stan" > all.tests
-                            cat known_good_perf_all.tests >> all.tests
-                            echo "" >> all.tests
-                            cat shotgun_perf_all.tests >> all.tests
-                            cat all.tests
-                            echo "CXXFLAGS+=-march=core2" > cmdstan/make/local
-                            cd cmdstan; make clean-all; git show HEAD --stat; cd ..
-                            CXX="${CXX}" ./compare-compilers.sh "--tests-file all.tests --num-samples=10" "\$(readlink -f ../../bin/stanc)"
-                            cd ../../
-                        """
-
-                        xunit([GoogleTest(
-                            deleteOutputFiles: false,
-                            failIfNotNew: true,
-                            pattern: 'ete_tests/performance-tests-cmdstan/performance.xml',
-                            skipNoTestFiles: false,
-                            stopProcessingIfError: false)
-                        ])
-
-                        archiveArtifacts 'ete_tests/performance-tests-cmdstan/performance.xml'
-
-                        perfReport modePerformancePerTestCase: true,
-                            sourceDataFiles: 'ete_tests/performance-tests-cmdstan/performance.xml',
-                            modeThroughput: false,
-                            excludeResponseTime: true,
-                            errorFailedThreshold: 100,
-                            errorUnstableThreshold: 100
-                    }
-                    post { always { runShell("rm -rf ./ete_tests/*") }}
         }
         stage("Build and test static release binaries") {
             failFast true
