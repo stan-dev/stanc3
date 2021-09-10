@@ -26,7 +26,7 @@ let types_match e1 e2 =
 
 let is_stan_math f = ends_with "__" f || starts_with "stan::math::" f
 
-(* retun true if the type of the expression 
+(* retun true if the type of the expression
   is integer, real, or complex (e.g. not a container) *)
 let is_scalar e =
   match Expr.Typed.type_of e with
@@ -539,7 +539,7 @@ and pp_indexed_simple ppf (obj, idcs) =
 and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
   match pattern with
   | Var s -> pf ppf "%s" s
-  | Lit (Str, s) -> pf ppf "%S" s
+  | Lit (Str, s) -> pf ppf "\"%s\"" (Cpp_str.escaped s)
   | Lit (Imaginary, s) -> pf ppf "to_complex(0, %s)" s
   | Lit ((Real | Int), s) -> pf ppf "%s" s
   | FunApp
