@@ -7,7 +7,7 @@ let warned_kwrd = ref (String.Set.of_list [])
 
 let prepend_kwrd x =
   let x_with_prefix = kwrds_prefix ^ x in
-  if Set.mem !warned_kwrd x then (
+  if not (Set.mem !warned_kwrd x) then (
     Fmt.epr "Identifier '%s' is a reserved word in C++, renamed to '%s'@," x
       x_with_prefix ;
     warned_kwrd := Set.add !warned_kwrd x )
