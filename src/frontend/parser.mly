@@ -33,6 +33,7 @@ let nest_unsized_array basic_type n =
 %token LOWER UPPER OFFSET MULTIPLIER
 %token <string> INTNUMERAL
 %token <string> REALNUMERAL
+%token <string> IMAGNUMERAL
 %token <string> STRINGLITERAL
 %token <string> IDENTIFIER
 %token TARGET
@@ -554,6 +555,8 @@ common_expression:
     {  grammar_logger ("intnumeral " ^ i) ; IntNumeral i }
   | r=REALNUMERAL
     {  grammar_logger ("realnumeral " ^ r) ; RealNumeral r }
+  | z=IMAGNUMERAL
+    {  grammar_logger ("imagnumeral " ^ z) ; ImagNumeral (String.drop_suffix z 1) }
   | LBRACE xs=separated_nonempty_list(COMMA, expression) RBRACE
     {  grammar_logger "array_expression" ; ArrayExpr xs  }
   | LBRACK xs=separated_list(COMMA, expression) RBRACK

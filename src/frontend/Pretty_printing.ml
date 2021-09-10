@@ -260,6 +260,7 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
   | Variable id -> pp_identifier ppf id
   | IntNumeral i -> Fmt.pf ppf "%s" i
   | RealNumeral r -> Fmt.pf ppf "%s" r
+  | ImagNumeral z -> Fmt.pf ppf "%si" z
   | FunApp (_, id, es) ->
       Fmt.pf ppf "%a(" pp_identifier id ;
       with_box ppf 0 (fun () -> Fmt.pf ppf "%a)" pp_list_of_expression (es, loc)

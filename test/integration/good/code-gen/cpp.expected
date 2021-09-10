@@ -796,7 +796,7 @@ using namespace stan::math;
 
 
 stan::math::profile_map profiles__;
-static constexpr std::array<const char*, 423> locations_array__ = 
+static constexpr std::array<const char*, 427> locations_array__ = 
 {" (found before start of program)",
  " (in 'complex_scalar.stan', line 105, column 4 to column 13)",
  " (in 'complex_scalar.stan', line 106, column 4 to column 22)",
@@ -1133,6 +1133,10 @@ static constexpr std::array<const char*, 423> locations_array__ =
  " (in 'complex_scalar.stan', line 499, column 4 to column 39)",
  " (in 'complex_scalar.stan', line 500, column 4 to column 33)",
  " (in 'complex_scalar.stan', line 501, column 4 to column 33)",
+ " (in 'complex_scalar.stan', line 504, column 4 to column 25)",
+ " (in 'complex_scalar.stan', line 505, column 4 to column 17)",
+ " (in 'complex_scalar.stan', line 506, column 4 to column 74)",
+ " (in 'complex_scalar.stan', line 507, column 4 to column 35)",
  " (in 'complex_scalar.stan', line 175, column 4 to column 22)",
  " (in 'complex_scalar.stan', line 176, column 4 to column 31)",
  " (in 'complex_scalar.stan', line 177, column 4 to column 37)",
@@ -1231,7 +1235,7 @@ foo(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 401;
+    current_statement__ = 405;
     return to_complex();
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1257,7 +1261,7 @@ foo1(const std::complex<T0__>& z, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 403;
+    current_statement__ = 407;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1284,7 +1288,7 @@ foo2(const T0__& r, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 405;
+    current_statement__ = 409;
     return to_complex(r);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1311,7 +1315,7 @@ foo3(const std::complex<T0__>& z, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 407;
+    current_statement__ = 411;
     return z;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1337,7 +1341,7 @@ foo4(std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 409;
+    current_statement__ = 413;
     return std::vector<std::complex<double>>{to_complex(), to_complex()};
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1363,7 +1367,7 @@ foo5(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 411;
+    current_statement__ = 415;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1390,7 +1394,7 @@ foo6(const T0__& r, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 413;
+    current_statement__ = 417;
     return std::vector<std::complex<local_scalar_t__>>{to_complex(r),
         to_complex(r, r)};
   } catch (const std::exception& e) {
@@ -1418,7 +1422,7 @@ foo7(const std::vector<std::complex<T0__>>& z, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 415;
+    current_statement__ = 419;
     return z;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1446,7 +1450,7 @@ foo8(const std::vector<std::vector<std::complex<T0__>>>& z,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 417;
+    current_statement__ = 421;
     return 1.0;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1474,7 +1478,7 @@ foo9(const T0__& r, std::ostream* pstream__) {
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 419;
+    current_statement__ = 423;
     return std::vector<std::vector<std::complex<local_scalar_t__>>>{
         std::vector<std::complex<local_scalar_t__>>{to_complex(r),
         to_complex(r), to_complex(r)},
@@ -1506,7 +1510,7 @@ foo10(const std::vector<std::vector<std::complex<T0__>>>& z,
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
-    current_statement__ = 421;
+    current_statement__ = 425;
     return z;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -1564,30 +1568,30 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
     try {
       int pos__;
       pos__ = 1;
-      current_statement__ = 340;
+      current_statement__ = 344;
       context__.validate_dims("data initialization","d_i","int",
            std::vector<size_t>{});
       d_i = std::numeric_limits<int>::min();
       
-      current_statement__ = 340;
+      current_statement__ = 344;
       d_i = context__.vals_i("d_i")[(1 - 1)];
-      current_statement__ = 341;
+      current_statement__ = 345;
       context__.validate_dims("data initialization","d_r","double",
            std::vector<size_t>{});
       d_r = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 341;
+      current_statement__ = 345;
       d_r = context__.vals_r("d_r")[(1 - 1)];
-      current_statement__ = 342;
+      current_statement__ = 346;
       context__.validate_dims("data initialization","d_complex","double",
            std::vector<size_t>{static_cast<size_t>(2)});
       d_complex = std::complex<double>(std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN());
       
       
-      current_statement__ = 342;
+      current_statement__ = 346;
       assign(d_complex, context__.vals_c("d_complex")[(1 - 1)],
         "assigning variable d_complex");
-      current_statement__ = 343;
+      current_statement__ = 347;
       context__.validate_dims("data initialization","d_complex_array",
           "double",
            std::vector<size_t>{static_cast<size_t>(2),
@@ -1597,20 +1601,20 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       
       {
         std::vector<std::complex<local_scalar_t__>> d_complex_array_flat__;
-        current_statement__ = 343;
+        current_statement__ = 347;
         d_complex_array_flat__ = context__.vals_c("d_complex_array");
-        current_statement__ = 343;
+        current_statement__ = 347;
         pos__ = 1;
-        current_statement__ = 343;
+        current_statement__ = 347;
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          current_statement__ = 343;
+          current_statement__ = 347;
           assign(d_complex_array, d_complex_array_flat__[(pos__ - 1)],
             "assigning variable d_complex_array", index_uni(sym1__));
-          current_statement__ = 343;
+          current_statement__ = 347;
           pos__ = (pos__ + 1);
         }
       }
-      current_statement__ = 344;
+      current_statement__ = 348;
       context__.validate_dims("data initialization","d_complex_array_2d",
           "double",
            std::vector<size_t>{static_cast<size_t>(2),
@@ -1620,192 +1624,192 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       
       {
         std::vector<std::complex<local_scalar_t__>> d_complex_array_2d_flat__;
-        current_statement__ = 344;
+        current_statement__ = 348;
         d_complex_array_2d_flat__ = context__.vals_c("d_complex_array_2d");
-        current_statement__ = 344;
+        current_statement__ = 348;
         pos__ = 1;
-        current_statement__ = 344;
+        current_statement__ = 348;
         for (int sym1__ = 1; sym1__ <= 3; ++sym1__) {
-          current_statement__ = 344;
+          current_statement__ = 348;
           for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-            current_statement__ = 344;
+            current_statement__ = 348;
             assign(d_complex_array_2d,
               d_complex_array_2d_flat__[(pos__ - 1)],
               "assigning variable d_complex_array_2d", index_uni(sym2__),
                                                          index_uni(sym1__));
-            current_statement__ = 344;
+            current_statement__ = 348;
             pos__ = (pos__ + 1);
           }
         }
       }
-      current_statement__ = 345;
+      current_statement__ = 349;
       td_i = std::numeric_limits<int>::min();
       
-      current_statement__ = 345;
+      current_statement__ = 349;
       td_i = 1;
-      current_statement__ = 346;
+      current_statement__ = 350;
       td_r = std::numeric_limits<double>::quiet_NaN();
       
-      current_statement__ = 346;
+      current_statement__ = 350;
       td_r = 1.1;
-      current_statement__ = 347;
+      current_statement__ = 351;
       td_complex = std::complex<double>(std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN());
       
       
-      current_statement__ = 348;
+      current_statement__ = 352;
       td_complex_array = std::vector<std::complex<double>>(2, std::complex<double>(std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN()));
       
       
-      current_statement__ = 349;
+      current_statement__ = 353;
       td_complex_array_2d = std::vector<std::vector<std::complex<double>>>(2, std::vector<std::complex<double>>(3, std::complex<double>(std::numeric_limits<double>::quiet_NaN(), std::numeric_limits<double>::quiet_NaN())));
       
       
-      current_statement__ = 350;
-      td_complex = td_i;
-      current_statement__ = 351;
-      td_complex = td_r;
-      current_statement__ = 352;
-      td_complex = d_i;
-      current_statement__ = 353;
-      td_complex = d_r;
       current_statement__ = 354;
-      td_complex = 1;
+      td_complex = td_i;
       current_statement__ = 355;
-      td_complex = 1.1;
+      td_complex = td_r;
       current_statement__ = 356;
-      assign(td_complex, d_complex, "assigning variable td_complex");
+      td_complex = d_i;
       current_statement__ = 357;
+      td_complex = d_r;
+      current_statement__ = 358;
+      td_complex = 1;
+      current_statement__ = 359;
+      td_complex = 1.1;
+      current_statement__ = 360;
+      assign(td_complex, d_complex, "assigning variable td_complex");
+      current_statement__ = 361;
       assign(td_complex,
         rvalue(d_complex_array, "d_complex_array", index_uni(1)),
         "assigning variable td_complex");
-      current_statement__ = 358;
-      assign(td_complex, to_complex(), "assigning variable td_complex");
-      current_statement__ = 359;
-      assign(td_complex, to_complex(1), "assigning variable td_complex");
-      current_statement__ = 360;
-      assign(td_complex, to_complex(1.2), "assigning variable td_complex");
-      current_statement__ = 361;
-      assign(td_complex, to_complex(1, 2), "assigning variable td_complex");
       current_statement__ = 362;
-      assign(td_complex, to_complex(1.1, 2), "assigning variable td_complex");
+      assign(td_complex, to_complex(), "assigning variable td_complex");
       current_statement__ = 363;
-      assign(td_complex, to_complex(1, 2.2), "assigning variable td_complex");
+      assign(td_complex, to_complex(1), "assigning variable td_complex");
       current_statement__ = 364;
+      assign(td_complex, to_complex(1.2), "assigning variable td_complex");
+      current_statement__ = 365;
+      assign(td_complex, to_complex(1, 2), "assigning variable td_complex");
+      current_statement__ = 366;
+      assign(td_complex, to_complex(1.1, 2), "assigning variable td_complex");
+      current_statement__ = 367;
+      assign(td_complex, to_complex(1, 2.2), "assigning variable td_complex");
+      current_statement__ = 368;
       assign(td_complex, to_complex(1.1, 2.2),
         "assigning variable td_complex");
-      current_statement__ = 365;
+      current_statement__ = 369;
       assign(td_complex_array, d_complex_array,
         "assigning variable td_complex_array");
-      current_statement__ = 366;
+      current_statement__ = 370;
       assign(td_complex_array, std::vector<std::complex<double>>{td_complex,
         1, to_complex(2, 3)}, "assigning variable td_complex_array");
-      current_statement__ = 367;
+      current_statement__ = 371;
       assign(td_complex_array, to_complex(5.1, 6),
         "assigning variable td_complex_array", index_uni(1));
-      current_statement__ = 368;
+      current_statement__ = 372;
       assign(td_complex_array_2d, d_complex_array_2d,
         "assigning variable td_complex_array_2d");
-      current_statement__ = 369;
+      current_statement__ = 373;
       assign(td_complex_array_2d,
         std::vector<std::vector<std::complex<double>>>{
         std::vector<std::complex<double>>{1, td_complex, 3},
         std::vector<std::complex<double>>{to_complex(), to_complex(1.1),
         to_complex(1, 2.1)}}, "assigning variable td_complex_array_2d");
-      current_statement__ = 370;
+      current_statement__ = 374;
       assign(td_complex_array_2d, to_complex(1, 2),
         "assigning variable td_complex_array_2d", index_uni(1), index_uni(1));
-      current_statement__ = 371;
+      current_statement__ = 375;
       assign(td_complex_array_2d, 1,
         "assigning variable td_complex_array_2d", index_uni(1), index_uni(1));
-      current_statement__ = 372;
+      current_statement__ = 376;
       assign(td_complex_array_2d, td_complex_array,
         "assigning variable td_complex_array_2d", index_uni(1));
-      current_statement__ = 373;
+      current_statement__ = 377;
       assign(td_complex_array_2d, std::vector<std::complex<double>>{
         td_complex, to_complex(1, 2), 2.4},
         "assigning variable td_complex_array_2d", index_uni(1));
-      current_statement__ = 378;
+      current_statement__ = 382;
       for (int td_j = 1; td_j <= 2; ++td_j) {
-        current_statement__ = 376;
+        current_statement__ = 380;
         for (int td_k = 1; td_k <= 3; ++td_k) {
-          current_statement__ = 374;
+          current_statement__ = 378;
           assign(td_complex_array_2d, to_complex(1, 2.2),
             "assigning variable td_complex_array_2d", index_uni(td_j),
                                                         index_uni(td_k));
         }
       }
-      current_statement__ = 379;
+      current_statement__ = 383;
       for (int sym1__ = 1; sym1__ <= stan::math::size(td_complex_array_2d);
            ++sym1__) {
         {
           std::vector<std::complex<double>> td_j;
-          current_statement__ = 379;
+          current_statement__ = 383;
           assign(td_j, td_complex_array_2d[(sym1__ - 1)],
             "assigning variable td_j");
-          current_statement__ = 380;
+          current_statement__ = 384;
           for (int sym1__ = 1; sym1__ <= stan::math::size(td_j); ++sym1__) {
             {
               std::complex<double> td_k;
-              current_statement__ = 380;
+              current_statement__ = 384;
               assign(td_k, td_j[(sym1__ - 1)], "assigning variable td_k");
-              current_statement__ = 381;
+              current_statement__ = 385;
               assign(td_complex, td_k, "assigning variable td_complex");
             }
           }
         }
       }
-      current_statement__ = 382;
-      td_r = get_real(td_complex);
-      current_statement__ = 383;
-      td_r = get_imag(td_complex);
-      current_statement__ = 384;
-      td_r = get_real(
-               rvalue(td_complex_array, "td_complex_array", index_uni(1)));
-      current_statement__ = 385;
-      td_r = get_imag(
-               rvalue(td_complex_array, "td_complex_array", index_uni(1)));
       current_statement__ = 386;
+      td_r = get_real(td_complex);
+      current_statement__ = 387;
+      td_r = get_imag(td_complex);
+      current_statement__ = 388;
+      td_r = get_real(
+               rvalue(td_complex_array, "td_complex_array", index_uni(1)));
+      current_statement__ = 389;
+      td_r = get_imag(
+               rvalue(td_complex_array, "td_complex_array", index_uni(1)));
+      current_statement__ = 390;
       td_r = get_real(
                rvalue(td_complex_array_2d, "td_complex_array_2d",
                  index_uni(1), index_uni(1)));
-      current_statement__ = 387;
+      current_statement__ = 391;
       td_r = get_imag(
                rvalue(td_complex_array_2d, "td_complex_array_2d",
                  index_uni(1), index_uni(1)));
-      current_statement__ = 388;
+      current_statement__ = 392;
       assign(td_complex, foo(pstream__), "assigning variable td_complex");
-      current_statement__ = 389;
+      current_statement__ = 393;
       td_r = foo1(td_complex, pstream__);
-      current_statement__ = 390;
+      current_statement__ = 394;
       assign(td_complex, foo2(td_r, pstream__),
         "assigning variable td_complex");
-      current_statement__ = 391;
+      current_statement__ = 395;
       assign(td_complex, foo3(stan::model::deep_copy(td_complex), pstream__),
         "assigning variable td_complex");
-      current_statement__ = 392;
+      current_statement__ = 396;
       assign(td_complex_array, foo4(pstream__),
         "assigning variable td_complex_array");
-      current_statement__ = 393;
+      current_statement__ = 397;
       td_r = foo5(td_complex_array, pstream__);
-      current_statement__ = 394;
+      current_statement__ = 398;
       assign(td_complex_array, foo6(td_r, pstream__),
         "assigning variable td_complex_array");
-      current_statement__ = 395;
+      current_statement__ = 399;
       assign(td_complex_array,
         foo7(stan::model::deep_copy(td_complex_array), pstream__),
         "assigning variable td_complex_array");
-      current_statement__ = 396;
+      current_statement__ = 400;
       td_r = foo8(td_complex_array_2d, pstream__);
-      current_statement__ = 397;
+      current_statement__ = 401;
       assign(td_complex_array_2d, foo9(td_r, pstream__),
         "assigning variable td_complex_array_2d");
-      current_statement__ = 398;
+      current_statement__ = 402;
       assign(td_complex_array_2d,
         foo10(stan::model::deep_copy(td_complex_array_2d), pstream__),
         "assigning variable td_complex_array_2d");
-      current_statement__ = 399;
+      current_statement__ = 403;
       validate_non_negative_index("i_arr", "0", 0);
-      current_statement__ = 400;
+      current_statement__ = 404;
       validate_non_negative_index("i_arr_1", "1", 1);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
@@ -2030,7 +2034,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
         m_complex_array_2d = std::vector<std::vector<std::complex<local_scalar_t__>>>(2, std::vector<std::complex<local_scalar_t__>>(3, std::complex<local_scalar_t__>(DUMMY_VAR__, DUMMY_VAR__)));
         
         
-        current_statement__ = 339;
+        current_statement__ = 343;
         lp_accum__.add(
           normal_lpdf<propto__>(stan::math::abs(p_complex), 0, 1));
       }
@@ -2963,6 +2967,20 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       assign(gq_complex, to_complex(p_r), "assigning variable gq_complex");
       current_statement__ = 335;
       assign(gq_complex, to_complex(d_r), "assigning variable gq_complex");
+      std::complex<double> zi;
+      current_statement__ = 336;
+      assign(zi, (1 + to_complex(0, 3.14)), "assigning variable zi");
+      current_statement__ = 337;
+      assign(zi, (stan::model::deep_copy(zi) * to_complex(0, 0)),
+        "assigning variable zi");
+      std::complex<double> yi;
+      current_statement__ = 338;
+      assign(yi,
+        ((to_complex(0, 1.1) + to_complex(0.0, 2.2)) + to_complex()),
+        "assigning variable yi");
+      double x;
+      current_statement__ = 339;
+      x = get_real((to_complex(0, 3) - to_complex(0, 40e-3)));
       out__.write(gq_i);
       out__.write(gq_r);
       out__.write(gq_complex);
@@ -2978,6 +2996,9 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       out__.write(y);
       out__.write(i_arr);
       out__.write(i_arr_1);
+      out__.write(zi);
+      out__.write(yi);
+      out__.write(x);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -3037,7 +3058,7 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       "p_complex_array_2d", "tp_r", "tp_complex", "tp_complex_array",
       "tp_complex_array_2d", "gq_i", "gq_r", "gq_complex",
       "gq_complex_array", "gq_complex_array_2d", "z", "y", "i_arr",
-      "i_arr_1"};
+      "i_arr_1", "zi", "yi", "x"};
     
     } // get_param_names() 
     
@@ -3059,7 +3080,10 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       std::vector<size_t>{static_cast<size_t>(2)},
       std::vector<size_t>{static_cast<size_t>(2)},
       std::vector<size_t>{static_cast<size_t>(0)},
-      std::vector<size_t>{static_cast<size_t>(1)}};
+      std::vector<size_t>{static_cast<size_t>(1)},
+      std::vector<size_t>{static_cast<size_t>(2)},
+      std::vector<size_t>{static_cast<size_t>(2)}, std::vector<size_t>{
+      }};
     
     } // get_dims() 
     
@@ -3145,6 +3169,11 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
           param_names__.emplace_back(std::string() + "i_arr_1" + '.' + std::to_string(sym1__));
         } 
       }
+      param_names__.emplace_back(std::string() + "zi" + '.' + "real");
+      param_names__.emplace_back(std::string() + "zi" + '.' + "imag");
+      param_names__.emplace_back(std::string() + "yi" + '.' + "real");
+      param_names__.emplace_back(std::string() + "yi" + '.' + "imag");
+      param_names__.emplace_back(std::string() + "x");
     }
     
     } // constrained_param_names() 
@@ -3231,19 +3260,24 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
           param_names__.emplace_back(std::string() + "i_arr_1" + '.' + std::to_string(sym1__));
         } 
       }
+      param_names__.emplace_back(std::string() + "zi" + '.' + "real");
+      param_names__.emplace_back(std::string() + "zi" + '.' + "imag");
+      param_names__.emplace_back(std::string() + "yi" + '.' + "real");
+      param_names__.emplace_back(std::string() + "yi" + '.' + "imag");
+      param_names__.emplace_back(std::string() + "x");
     }
     
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
     
-    return std::string("[{\"name\":\"p_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"parameters\"},{\"name\":\"p_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"parameters\"},{\"name\":\"p_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"parameters\"},{\"name\":\"tp_r\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"transformed_parameters\"},{\"name\":\"gq_i\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_r\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"y\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"i_arr\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(0) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"i_arr_1\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(1) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"}]");
+    return std::string("[{\"name\":\"p_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"parameters\"},{\"name\":\"p_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"parameters\"},{\"name\":\"p_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"parameters\"},{\"name\":\"tp_r\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"transformed_parameters\"},{\"name\":\"gq_i\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_r\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"y\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"i_arr\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(0) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"i_arr_1\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(1) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"zi\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"yi\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
     
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
     
-    return std::string("[{\"name\":\"p_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"parameters\"},{\"name\":\"p_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"parameters\"},{\"name\":\"p_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"parameters\"},{\"name\":\"tp_r\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"transformed_parameters\"},{\"name\":\"gq_i\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_r\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"y\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"i_arr\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(0) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"i_arr_1\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(1) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"}]");
+    return std::string("[{\"name\":\"p_r\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"p_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"parameters\"},{\"name\":\"p_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"parameters\"},{\"name\":\"p_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"parameters\"},{\"name\":\"tp_r\",\"type\":{\"name\":\"real\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"transformed_parameters\"},{\"name\":\"tp_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"transformed_parameters\"},{\"name\":\"gq_i\",\"type\":{\"name\":\"int\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_r\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex_array\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"complex\"}},\"block\":\"generated_quantities\"},{\"name\":\"gq_complex_array_2d\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(2) + ",\"element_type\":{\"name\":\"array\",\"length\":" + std::to_string(3) + ",\"element_type\":{\"name\":\"complex\"}}},\"block\":\"generated_quantities\"},{\"name\":\"z\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"y\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"i_arr\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(0) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"i_arr_1\",\"type\":{\"name\":\"array\",\"length\":" + std::to_string(1) + ",\"element_type\":{\"name\":\"int\"}},\"block\":\"generated_quantities\"},{\"name\":\"zi\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"yi\",\"type\":{\"name\":\"complex\"},\"block\":\"generated_quantities\"},{\"name\":\"x\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
     
     } // get_unconstrained_sizedtypes() 
     
@@ -3261,7 +3295,8 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       const size_t num_transformed = 
   (((1 + 2) + (2 * 2)) + ((2 * 3) * 2));
       const size_t num_gen_quantities = 
-  ((((((((1 + 1) + 2) + (2 * 2)) + ((2 * 3) * 2)) + 2) + 2) + 0) + 1);
+  (((((((((((1 + 1) + 2) + (2 * 2)) + ((2 * 3) * 2)) + 2) + 2) + 0) + 1) + 2)
+     + 2) + 1);
       std::vector<double> vars_vec(num_params__
        + (emit_transformed_parameters * num_transformed)
        + (emit_generated_quantities * num_gen_quantities));
@@ -3284,7 +3319,8 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
       const size_t num_transformed = 
   (((1 + 2) + (2 * 2)) + ((2 * 3) * 2));
       const size_t num_gen_quantities = 
-  ((((((((1 + 1) + 2) + (2 * 2)) + ((2 * 3) * 2)) + 2) + 2) + 0) + 1);
+  (((((((((((1 + 1) + 2) + (2 * 2)) + ((2 * 3) * 2)) + 2) + 2) + 0) + 1) + 2)
+     + 2) + 1);
       vars.resize(num_params__
         + (emit_transformed_parameters * num_transformed)
         + (emit_generated_quantities * num_gen_quantities));
@@ -3320,11 +3356,11 @@ class complex_scalar_model final : public model_base_crtp<complex_scalar_model> 
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 17> names__ = std::array<std::string, 17>{"p_r",
+    const std::array<std::string, 20> names__ = std::array<std::string, 20>{"p_r",
       "p_complex", "p_complex_array", "p_complex_array_2d", "tp_r",
       "tp_complex", "tp_complex_array", "tp_complex_array_2d", "gq_i",
       "gq_r", "gq_complex", "gq_complex_array", "gq_complex_array_2d", "z",
-      "y", "i_arr", "i_arr_1"};
+      "y", "i_arr", "i_arr_1", "zi", "yi", "x"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
