@@ -25,6 +25,7 @@ let rec sized_basetype_dims t =
   match t with
   | SizedType.SInt -> ("int", 0)
   | SReal -> ("real", 0)
+  | SComplex -> ("complex", 0)
   | SVector _ | SRowVector _ -> ("real", 1)
   | SMatrix _ -> ("real", 2)
   | SArray (t, _) ->
@@ -35,6 +36,7 @@ let rec unsized_basetype_dims t =
   match t with
   | UnsizedType.UInt -> ("int", 0)
   | UReal -> ("real", 0)
+  | UComplex -> ("complex", 0)
   | UVector | URowVector -> ("real", 1)
   | UMatrix -> ("real", 2)
   | UArray t ->
@@ -47,7 +49,7 @@ let basetype_dims t =
   | Type.Sized t -> sized_basetype_dims t
   | Type.Unsized t -> unsized_basetype_dims t
 
-let get_var_decl stmts =
+let get_var_decl {stmts; _} =
   List.fold_right ~init:[]
     ~f:(fun stmt acc ->
       match stmt.Ast.stmt with
@@ -101,7 +103,9 @@ let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
 
 let function_calls ppf p =
   let map f list_op =
-    Option.value_map ~default:[] ~f:(List.concat_map ~f) list_op
+    Option.value_map ~default:[]
+      ~f:(fun {stmts; _} -> List.concat_map ~f stmts)
+      list_op
   in
   let grab_fundef_names_and_types = function
     | {Ast.stmt= Ast.FunDef {funname; arguments= (_, type_, _) :: _; _}; _} ->

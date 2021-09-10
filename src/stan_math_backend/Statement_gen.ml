@@ -19,7 +19,7 @@ let rec contains_eigen (ut : UnsizedType.t) : bool =
   match ut with
   | UnsizedType.UArray t -> contains_eigen t
   | UMatrix | URowVector | UVector -> true
-  | UInt | UReal | UMathLibraryFunction | UFun _ -> false
+  | UInt | UReal | UComplex | UMathLibraryFunction | UFun _ -> false
 
 (*Fill only needs to happen for containers 
   * Note: This should probably be moved into its own function as data
@@ -53,8 +53,12 @@ let rec pp_initialize ppf (st, adtype) =
   match st with
   | SizedType.SInt -> pf ppf "std::numeric_limits<int>::min()"
   | SReal -> pf ppf "%s" init_nan
-  | SVector d | SRowVector d -> pf ppf "%a(%a)" pp_st (st, adtype) pp_expr d
-  | SMatrix (d1, d2) ->
+  | SComplex ->
+      let scalar = local_scalar (SizedType.to_unsized st) adtype in
+      pf ppf "std::complex<%s>(%s, %s)" scalar init_nan init_nan
+  | SVector (_, d) | SRowVector (_, d) ->
+      pf ppf "%a(%a)" pp_st (st, adtype) pp_expr d
+  | SMatrix (_, d1, d2) ->
       pf ppf "%a(%a, %a)" pp_st (st, adtype) pp_expr d1 pp_expr d2
   | SArray (t, d) ->
       pf ppf "%a(%a, %a)" pp_st (st, adtype) pp_expr d pp_initialize (t, adtype)
@@ -72,7 +76,7 @@ let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in
   strf "@[<v>%a@]" pp_assign_sized
     ( "d"
-    , SArray (SArray (SMatrix (int 2, int 3), int 4), int 5)
+    , SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5)
     , DataOnly
     , false )
   |> print_endline ;
@@ -83,7 +87,7 @@ let%expect_test "set size mat array" =
   let int = Expr.Helpers.int in
   strf "@[<v>%a@]" pp_assign_sized
     ( "d"
-    , SArray (SArray (SMatrix (int 2, int 3), int 4), int 5)
+    , SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5)
     , DataOnly
     , true )
   |> print_endline ;
@@ -108,15 +112,15 @@ let pp_assign_data ppf
     match st with
     | SizedType.SVector _ | SRowVector _ | SMatrix _ ->
         pf ppf "@[<hov 2>%s__ = %a;@]@," decl_id pp_initialize (st, DataOnly)
-    | SInt | SReal | SArray _ ->
+    | SInt | SReal | SComplex | SArray _ ->
         pf ppf "@[<hov 2>%s = %a;@]@," decl_id pp_initialize (st, DataOnly)
   in
   let pp_placement_new ppf (decl_id, st) =
     match st with
-    | SizedType.SVector d | SRowVector d ->
+    | SizedType.SVector (_, d) | SRowVector (_, d) ->
         pf ppf "@[<hov 2>new (&%s) Eigen::Map<%a>(%s__.data(), %a);@]@,"
           decl_id pp_st (st, DataOnly) decl_id pp_expr d
-    | SMatrix (d1, d2) ->
+    | SMatrix (_, d1, d2) ->
         pf ppf "@[<hov 2>new (&%s) Eigen::Map<%a>(%s__.data(), %a, %a);@]@,"
           decl_id pp_st (st, DataOnly) decl_id pp_expr d1 pp_expr d2
     | _ -> ()
@@ -137,7 +141,9 @@ let%expect_test "set size map int array no initialize" =
 let%expect_test "set size map mat array" =
   let int = Expr.Helpers.int in
   strf "@[<v>%a@]" pp_assign_data
-    ("darrmat", SArray (SArray (SMatrix (int 2, int 3), int 4), int 5), true)
+    ( "darrmat"
+    , SArray (SArray (SMatrix (AoS, int 2, int 3), int 4), int 5)
+    , true )
   |> print_endline ;
   [%expect
     {|
@@ -146,7 +152,7 @@ let%expect_test "set size map mat array" =
 
 let%expect_test "set size map mat" =
   let int = Expr.Helpers.int in
-  strf "@[<v>%a@]" pp_assign_data ("dmat", SMatrix (int 2, int 3), false)
+  strf "@[<v>%a@]" pp_assign_data ("dmat", SMatrix (AoS, int 2, int 3), false)
   |> print_endline ;
   [%expect
     {|
@@ -166,9 +172,9 @@ let pp_for_loop ppf (loopvar, lower, upper, pp_body, body) =
   pf ppf " %a@]" pp_body body
 
 let rec integer_el_type = function
-  | SizedType.SReal | SVector _ | SMatrix _ | SRowVector _ -> false
-  | SInt -> true
+  | SizedType.SInt -> true
   | SArray (st, _) -> integer_el_type st
+  | _ -> false
 
 (* Print the private members of the model class
  *   Accounting for types that can be moved to OpenCL.
@@ -191,6 +197,14 @@ let pp_data_decl ppf (vident, ut) =
         pf ppf "%a %s__;" pp_type (DataOnly, ut) vident
     | _ -> pf ppf "%a %s;" pp_type (DataOnly, ut) vident )
   | (true, _), _ -> pf ppf "%a %s;" pp_type (DataOnly, ut) vident
+
+(* Create string representations for vars__.emplace_back *)
+let pp_emplace_var ppf var =
+  match Expr.Typed.type_of var with
+  | UnsizedType.UComplex ->
+      pf ppf "@[<hov 2>vars__.emplace_back(%a.real());@]@," pp_expr var ;
+      pf ppf "@[<hov 2>vars__.emplace_back(%a.imag());@]" pp_expr var
+  | _ -> pf ppf "@[<hov 2>vars__.emplace_back(@,%a);@]" pp_expr var
 
 (*Create strings representing maps of Eigen types*)
 let pp_map_decl ppf (vident, ut) =
@@ -334,7 +348,7 @@ let rec pp_statement (ppf : Format.formatter) Stmt.Fixed.({pattern; meta}) =
       let fname, extra_args = trans_math_fn f in
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr)
         (extra_args @ args)
-  | NRFunApp (StanLib (fname, _), args) ->
+  | NRFunApp (StanLib (fname, _, _), args) ->
       pf ppf "%s(@[<hov>%a@]);" fname (list ~sep:comma pp_expr) args
   | NRFunApp (UserDefined (fname, suffix), args) ->
       pf ppf "%a;" pp_user_defined_fun (fname, suffix, args)

@@ -278,9 +278,12 @@ let rec generate_value m st t =
   match st with
   | SizedType.SInt -> gen_int m t
   | SReal -> gen_real m t
-  | SVector e -> gen_vector m (unwrap_int_exn m e) t
-  | SRowVector e -> gen_row_vector m (unwrap_int_exn m e) t
-  | SMatrix (e1, e2) ->
+  | SComplex ->
+      (* when serialzied, a complex number looks just like a 2-array of reals *)
+      generate_value m (SArray (SReal, wrap_int 2)) t
+  | SVector (_, e) -> gen_vector m (unwrap_int_exn m e) t
+  | SRowVector (_, e) -> gen_row_vector m (unwrap_int_exn m e) t
+  | SMatrix (_, e1, e2) ->
       gen_matrix m (unwrap_int_exn m e1) (unwrap_int_exn m e2) t
   | SArray (st, e) ->
       let element () = generate_value m st t in
@@ -306,7 +309,7 @@ let var_decl_gen_val m d =
   | _ -> failwith "This should never happen."
 
 let print_data_prog s =
-  let data = Option.value ~default:[] s.datablock in
+  let data = Ast.get_stmts s.datablock in
   let l, _ =
     List.fold data ~init:([], Map.Poly.empty) ~f:(fun (l, m) decl ->
         let value = var_decl_gen_val m decl in

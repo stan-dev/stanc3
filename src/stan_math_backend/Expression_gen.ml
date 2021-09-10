@@ -12,7 +12,7 @@ let functions_requiring_namespace =
     ; "asinh"; "atan"; "atanh"; "cbrt"; "ceil"; "cos"; "cosh"; "erf"; "erfc"
     ; "exp"; "exp2"; "expm1"; "fabs"; "floor"; "lgamma"; "log"; "log1p"; "log2"
     ; "log10"; "round"; "sin"; "sinh"; "sqrt"; "tan"; "tanh"; "tgamma"; "trunc"
-    ; "fdim"; "fmax"; "fmin"; "hypot"; "fma" ]
+    ; "fdim"; "fmax"; "fmin"; "hypot"; "fma"; "complex" ]
 
 let stan_namespace_qualify f =
   if Set.mem functions_requiring_namespace f then "stan::math::" ^ f else f
@@ -26,9 +26,12 @@ let types_match e1 e2 =
 
 let is_stan_math f = ends_with "__" f || starts_with "stan::math::" f
 
-(* retun true if the tpe of the expression is integer or real *)
+(* retun true if the type of the expression 
+  is integer, real, or complex (e.g. not a container) *)
 let is_scalar e =
-  match Expr.Typed.type_of e with UInt | UReal -> true | _ -> false
+  match Expr.Typed.type_of e with
+  | UInt | UReal | UComplex -> true
+  | _ -> false
 
 let is_matrix e = Expr.Typed.type_of e = UMatrix
 let is_row_vector e = Expr.Typed.type_of e = URowVector
@@ -52,7 +55,7 @@ let minus_one e =
   { e with
     Expr.Fixed.pattern=
       FunApp
-        ( StanLib (Operator.to_string Minus, FnPlain)
+        ( StanLib (Operator.to_string Minus, FnPlain, AoS)
         , [e; Expr.Helpers.loop_bottom] ) }
 
 let is_single_index = function Index.Single _ -> true | _ -> false
@@ -96,6 +99,7 @@ let%expect_test "promote_unsized" =
 let rec pp_unsizedtype_custom_scalar ppf (scalar, ut) =
   match ut with
   | UnsizedType.UInt | UReal -> string ppf scalar
+  | UComplex -> pf ppf "std::complex<%s>" scalar
   | UArray t ->
       pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar (scalar, t)
   | UMatrix -> pf ppf "Eigen::Matrix<%s, -1, -1>" scalar
@@ -107,6 +111,7 @@ let pp_unsizedtype_custom_scalar_eigen_exprs ppf (scalar, ut) =
   match ut with
   | UnsizedType.UInt | UReal | UMatrix | URowVector | UVector ->
       string ppf scalar
+  | UComplex -> pf ppf "std::complex<%s>" scalar
   | UArray t ->
       (* Expressions are not accepted for arrays of Eigen::Matrix *)
       pf ppf "std::vector<%a>" pp_unsizedtype_custom_scalar (scalar, t)
@@ -293,18 +298,19 @@ and gen_misc_special_math_app f =
   | _ -> None
 
 and read_data ut ppf es =
-  let i_or_r =
+  let i_or_r_or_c =
     match ut with
     | UnsizedType.UArray UInt -> "i"
     | UArray UReal -> "r"
-    | UInt | UReal | UVector | URowVector | UMatrix | UArray _ | UFun _
-     |UMathLibraryFunction ->
+    | UArray UComplex -> "c"
+    | UInt | UReal | UComplex | UVector | URowVector | UMatrix | UArray _
+     |UFun _ | UMathLibraryFunction ->
         raise_s [%message "Can't ReadData of " (ut : UnsizedType.t)]
   in
-  pf ppf "context__.vals_%s(%a)" i_or_r pp_expr (List.hd_exn es)
+  pf ppf "context__.vals_%s(%a)" i_or_r_or_c pp_expr (List.hd_exn es)
 
 (* assumes everything well formed from parser checks *)
-and gen_fun_app suffix ppf fname es =
+and gen_fun_app suffix ppf fname es mem_pattern =
   let default ppf es =
     let to_var s = Expr.{Fixed.pattern= Var s; meta= Typed.Meta.empty} in
     let convert_hof_vars = function
@@ -312,8 +318,10 @@ and gen_fun_app suffix ppf fname es =
         as e ->
           { e with
             pattern=
-              FunApp (StanLib (name ^ functor_suffix_select fname, FnPlain), [])
-          }
+              FunApp
+                ( StanLib
+                    (name ^ functor_suffix_select fname, FnPlain, mem_pattern)
+                , [] ) }
       | e -> e
     in
     let converted_es = List.map ~f:convert_hof_vars es in
@@ -347,7 +355,7 @@ and gen_fun_app suffix ppf fname es =
           (fname, f :: y0 :: t0 :: ts :: theta :: x :: x_int :: msgs :: tl)
       | ( true
         , x
-        , {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _)), _); _}
+        , {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _, _)), _); _}
           :: grainsize :: container :: tl )
         when Stan_math_signatures.is_reduce_sum_fn x ->
           let chop_functor_suffix =
@@ -402,8 +410,8 @@ and gen_fun_app suffix ppf fname es =
           )
       | ( true
         , "map_rect"
-        , {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _)), _); _} :: tl
-        ) ->
+        , {pattern= FunApp ((UserDefined (f, _) | StanLib (f, _, _)), _); _}
+          :: tl ) ->
           let next_map_rect_id = Hashtbl.length map_rect_calls + 1 in
           Hashtbl.add_exn map_rect_calls ~key:next_map_rect_id ~data:f ;
           (strf "%s<%d, %s>" fname next_map_rect_id f, tl @ [msgs])
@@ -468,7 +476,7 @@ and pp_compiler_internal_fn ad ut f ppf es =
   | FnReadDataSerializer ->
       pf ppf "@[<hov 2>in__.read<%a>(@,)@]" pp_unsizedtype_local
         (UnsizedType.AutoDiffable, UnsizedType.UReal)
-  | FnReadParam {constrain; dims} -> (
+  | FnReadParam {constrain; dims; _} -> (
       let constrain_opt = constraint_to_string constrain in
       match constrain_opt with
       | None ->
@@ -486,8 +494,8 @@ and pp_compiler_internal_fn ad ut f ppf es =
             constraint_string pp_unsizedtype_local
             (UnsizedType.AutoDiffable, ut)
             (list ~sep:comma pp_expr) args )
-  | FnDeepCopy -> gen_fun_app FnPlain ppf "stan::model::deep_copy" es
-  | _ -> gen_fun_app FnPlain ppf (Internal_fun.to_string f) es
+  | FnDeepCopy -> gen_fun_app FnPlain ppf "stan::model::deep_copy" es AoS
+  | _ -> gen_fun_app FnPlain ppf (Internal_fun.to_string f) es AoS
 
 and pp_promoted ad ut ppf e =
   match e with
@@ -496,9 +504,12 @@ and pp_promoted ad ut ppf e =
       pp_expr ppf e
   | {pattern= FunApp (CompilerInternal Internal_fun.FnMakeArray, es); _} ->
       pp_compiler_internal_fn ad ut Internal_fun.FnMakeArray ppf es
-  | _ ->
-      pf ppf "stan::math::promote_scalar<%s>(@[<hov>%a@])" (local_scalar ut ad)
-        pp_expr e
+  | _ -> (
+    match ut with
+    | UnsizedType.UComplex -> pf ppf "@[<hov>%a@]" pp_expr e
+    | _ ->
+        pf ppf "stan::math::promote_scalar<%s>(@[<hov>%a@])"
+          (local_scalar ut ad) pp_expr e )
 
 and pp_indexed ppf (vident, indices, pretty) =
   pf ppf "@[<hov 2>rvalue(@,%s,@ %S,@ %a)@]" vident pretty pp_indexes indices
@@ -531,7 +542,7 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
   | Lit (Str, s) -> pf ppf "\"%s\"" (Cpp_str.escaped s)
   | Lit (_, s) -> pf ppf "%s" s
   | FunApp
-      ( StanLib (op, _)
+      ( StanLib (op, _, _)
       , [ { meta= {type_= URowVector; _}
           ; pattern= FunApp (CompilerInternal FnMakeRowVec, es) } ] )
     when Operator.(Some Transpose = of_string_opt op) ->
@@ -540,7 +551,8 @@ and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
       else
         pf ppf "(Eigen::Matrix<%s,-1,1>(%d) <<@ %a).finished()" st
           (List.length es) (list ~sep:comma pp_expr) es
-  | FunApp (StanLib (f, suffix), es) -> gen_fun_app suffix ppf f es
+  | FunApp (StanLib (f, suffix, mem_pattern), es) ->
+      gen_fun_app suffix ppf f es mem_pattern
   | FunApp (CompilerInternal f, es) ->
       pp_compiler_internal_fn meta.adlevel meta.type_ f ppf es
       (* stan_namespace_qualify?  *)
@@ -598,20 +610,21 @@ let%expect_test "pp_expr4" =
   [%expect {| 112 |}]
 
 let%expect_test "pp_expr5" =
-  printf "%s" (pp_unlocated (FunApp (StanLib ("pi", FnPlain), []))) ;
+  printf "%s" (pp_unlocated (FunApp (StanLib ("pi", FnPlain, AoS), []))) ;
   [%expect {| stan::math::pi() |}]
 
 let%expect_test "pp_expr6" =
   printf "%s"
     (pp_unlocated
-       (FunApp (StanLib ("sqrt", FnPlain), [dummy_locate (Lit (Int, "123"))]))) ;
+       (FunApp
+          (StanLib ("sqrt", FnPlain, AoS), [dummy_locate (Lit (Int, "123"))]))) ;
   [%expect {| stan::math::sqrt(123) |}]
 
 let%expect_test "pp_expr7" =
   printf "%s"
     (pp_unlocated
        (FunApp
-          ( StanLib ("atan", FnPlain)
+          ( StanLib ("atan", FnPlain, AoS)
           , [dummy_locate (Lit (Int, "123")); dummy_locate (Lit (Real, "1.2"))]
           ))) ;
   [%expect {| stan::math::atan(123, 1.2) |}]
