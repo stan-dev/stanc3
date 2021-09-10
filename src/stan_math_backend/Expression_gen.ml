@@ -539,7 +539,7 @@ and pp_indexed_simple ppf (obj, idcs) =
 and pp_expr ppf Expr.Fixed.({pattern; meta} as e) =
   match pattern with
   | Var s -> pf ppf "%s" s
-  | Lit (Str, s) -> pf ppf "%S" s
+  | Lit (Str, s) -> pf ppf "\"%s\"" (Cpp_str.escaped s)
   | Lit (_, s) -> pf ppf "%s" s
   | FunApp
       ( StanLib (op, _, _)
