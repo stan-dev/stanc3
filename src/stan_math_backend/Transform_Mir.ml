@@ -1,38 +1,8 @@
 open Core_kernel
 open Middle
+open Mangle
 
 let use_opencl = ref false
-let kwrds_prefix = "_stan_"
-let warned_kwrd = ref (String.Set.of_list [])
-
-let prepend_kwrd x =
-  let x_with_prefix = kwrds_prefix ^ x in
-  if not (Set.mem !warned_kwrd x) then (
-    Fmt.epr "Identifier '%s' is a reserved word in C++, renamed to '%s'@," x
-      x_with_prefix ;
-    warned_kwrd := Set.add !warned_kwrd x )
-  else () ;
-  x_with_prefix
-
-let cpp_kwrds =
-  (* C++ keywords that are not stan keywords *)
-  String.Set.of_list
-    ( [ "alignas"; "alignof"; "and"; "and_eq"; "asm"; "bitand"; "bitor"; "bool"
-      ; "case"; "catch"; "char"; "char16_t"; "char32_t"; "class"; "compl"
-      ; "const"; "constexpr"; "const_cast"; "decltype"; "default"; "delete"
-      ; "do"; "double"; "dynamic_cast"; "enum"; "explicit"; "float"; "friend"
-      ; "goto"; "inline"; "long"; "mutable"; "namespace"; "new"; "noexcept"
-      ; "not"; "not_eq"; "nullptr"; "operator"; "or"; "or_eq"; "private"
-      ; "protected"; "public"; "register"; "reinterpret_cast"; "short"
-      ; "signed"; "sizeof"; "static_assert"; "static_cast"; "switch"
-      ; "template"; "this"; "thread_local"; "throw"; "try"; "typeid"
-      ; "typename"; "union"; "unsigned"; "using"; "virtual"; "volatile"
-      ; "wchar_t"; "xor"; "xor_eq" ]
-    @ (* stan implementation keywords *)
-      [ "fvar"; "STAN_MAJOR"; "STAN_MINOR"; "STAN_PATCH"; "STAN_MATH_MAJOR"
-      ; "STAN_MATH_MINOR"; "STAN_MATH_PATCH" ] )
-
-let add_suffix_to_kwrds s = if Set.mem cpp_kwrds s then prepend_kwrd s else s
 
 let translate_funapps_and_kwrds e =
   let open Expr.Fixed in
@@ -41,8 +11,8 @@ let translate_funapps_and_kwrds e =
     | FunApp (UserDefined (fname, suffix), args) ->
         { expr with
           pattern=
-            FunApp (UserDefined (add_suffix_to_kwrds fname, suffix), args) }
-    | Var s -> {expr with pattern= Var (add_suffix_to_kwrds s)}
+            FunApp (UserDefined (add_prefix_to_kwrds fname, suffix), args) }
+    | Var s -> {expr with pattern= Var (add_prefix_to_kwrds s)}
     | _ -> expr
   in
   rewrite_bottom_up ~f e
@@ -51,12 +21,12 @@ let rec change_kwrds_stmts s =
   let open Stmt.Fixed.Pattern in
   let pattern =
     match s.Stmt.Fixed.pattern with
-    | Decl e -> Decl {e with decl_id= add_suffix_to_kwrds e.decl_id}
+    | Decl e -> Decl {e with decl_id= add_prefix_to_kwrds e.decl_id}
     | NRFunApp (UserDefined (s, sfx), e) ->
-        NRFunApp (UserDefined (add_suffix_to_kwrds s, sfx), e)
+        NRFunApp (UserDefined (add_prefix_to_kwrds s, sfx), e)
     | Assignment ((s, t, e1), e2) ->
-        Assignment ((add_suffix_to_kwrds s, t, e1), e2)
-    | For e -> For {e with loopvar= add_suffix_to_kwrds e.loopvar}
+        Assignment ((add_prefix_to_kwrds s, t, e1), e2)
+    | For e -> For {e with loopvar= add_prefix_to_kwrds e.loopvar}
     | x -> map Fn.id change_kwrds_stmts x
   in
   {s with pattern}
@@ -168,7 +138,7 @@ let data_read smeta (decl_id, st) =
   let pos_var = {Expr.Fixed.pattern= Var pos; meta= Expr.Typed.Meta.empty} in
   let readfnapp var =
     Expr.Helpers.internal_funapp FnReadData
-      [{var with pattern= Lit (Str, decl_id)}]
+      [{var with pattern= Lit (Str, remove_prefix decl_id)}]
       Expr.Typed.Meta.{var.meta with type_= flat_type}
   in
   match unsized with
@@ -530,11 +500,11 @@ let trans_prog (p : Program.Typed.t) =
         Stmt.Fixed.Pattern.map translate_funapps_and_kwrds map_stmt pattern
     ; meta }
   in
-  let rename_kwrds (s, e) = (add_suffix_to_kwrds s, e) in
-  let rename_fdarg (e1, s, e2) = (e1, add_suffix_to_kwrds s, e2) in
+  let rename_kwrds (s, e) = (add_prefix_to_kwrds s, e) in
+  let rename_fdarg (e1, s, e2) = (e1, add_prefix_to_kwrds s, e2) in
   let rename_func (s : 'a Program.fun_def) =
     { s with
-      fdname= add_suffix_to_kwrds s.fdname
+      fdname= add_prefix_to_kwrds s.fdname
     ; fdargs= List.map ~f:rename_fdarg s.fdargs }
   in
   let p =

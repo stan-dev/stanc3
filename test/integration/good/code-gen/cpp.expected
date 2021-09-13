@@ -3444,12 +3444,12 @@ static constexpr std::array<const char*, 75> locations_array__ =
  " (in 'cpp-reserved-words.stan', line 27, column 2 to column 14)",
  " (in 'cpp-reserved-words.stan', line 28, column 2 to column 20)",
  " (in 'cpp-reserved-words.stan', line 29, column 2 to column 12)",
- " (in 'cpp-reserved-words.stan', line 2, column 16 to column 18)",
- " (in 'cpp-reserved-words.stan', line 3, column 16 to column 18)",
- " (in 'cpp-reserved-words.stan', line 4, column 12 to column 14)",
- " (in 'cpp-reserved-words.stan', line 5, column 15 to column 17)",
- " (in 'cpp-reserved-words.stan', line 6, column 12 to column 14)",
- " (in 'cpp-reserved-words.stan', line 7, column 15 to column 17)",
+ " (in 'cpp-reserved-words.stan', line 2, column 23 to column 25)",
+ " (in 'cpp-reserved-words.stan', line 3, column 24 to column 26)",
+ " (in 'cpp-reserved-words.stan', line 4, column 26 to column 28)",
+ " (in 'cpp-reserved-words.stan', line 5, column 30 to column 32)",
+ " (in 'cpp-reserved-words.stan', line 6, column 24 to column 26)",
+ " (in 'cpp-reserved-words.stan', line 7, column 28 to column 30)",
  " (in 'cpp-reserved-words.stan', line 8, column 14 to column 16)",
  " (in 'cpp-reserved-words.stan', line 9, column 13 to column 15)",
  " (in 'cpp-reserved-words.stan', line 10, column 13 to column 15)",
@@ -3460,7 +3460,7 @@ static constexpr std::array<const char*, 75> locations_array__ =
 
 
 void
-_stan_alignas(std::ostream* pstream__) {
+_stan_alignas(const int& _stan_asm, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -3477,14 +3477,14 @@ _stan_alignas(std::ostream* pstream__) {
 
 struct _stan_alignas_functor__ {
 void
-operator()(std::ostream* pstream__)  const 
+operator()(const int& _stan_asm, std::ostream* pstream__)  const 
 {
-return _stan_alignas(pstream__);
+return _stan_alignas(_stan_asm, pstream__);
 }
 };
 
 void
-_stan_alignof(std::ostream* pstream__) {
+_stan_alignof(const int& _stan_char, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -3501,14 +3501,14 @@ _stan_alignof(std::ostream* pstream__) {
 
 struct _stan_alignof_functor__ {
 void
-operator()(std::ostream* pstream__)  const 
+operator()(const int& _stan_char, std::ostream* pstream__)  const 
 {
-return _stan_alignof(pstream__);
+return _stan_alignof(_stan_char, pstream__);
 }
 };
 
 void
-_stan_and(std::ostream* pstream__) {
+_stan_and(const int& _stan_STAN_MAJOR, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -3525,15 +3525,16 @@ _stan_and(std::ostream* pstream__) {
 
 struct _stan_and_functor__ {
 void
-operator()(std::ostream* pstream__)  const 
+operator()(const int& _stan_STAN_MAJOR, std::ostream* pstream__)  const 
 {
-return _stan_and(pstream__);
+return _stan_and(_stan_STAN_MAJOR, pstream__);
 }
 };
 
+template <typename T0__>
 void
-_stan_and_eq(std::ostream* pstream__) {
-  using local_scalar_t__ = double;
+_stan_and_eq(const T0__& _stan_STAN_MINOR, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<T0__>;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
   (void) propto__;
@@ -3548,17 +3549,20 @@ _stan_and_eq(std::ostream* pstream__) {
 }
 
 struct _stan_and_eq_functor__ {
+template <typename T0__>
 void
-operator()(std::ostream* pstream__)  const 
+operator()(const T0__& _stan_STAN_MINOR, std::ostream* pstream__)  const 
 {
-return _stan_and_eq(pstream__);
+return _stan_and_eq(_stan_STAN_MINOR, pstream__);
 }
 };
 
+template <typename T0__>
 void
-_stan_asm(std::ostream* pstream__) {
-  using local_scalar_t__ = double;
+_stan_asm(const T0__& _stan_class_arg__, std::ostream* pstream__) {
+  using local_scalar_t__ = stan::promote_args_t<stan::value_type_t<T0__>>;
   int current_statement__ = 0; 
+  const auto& _stan_class = to_ref(_stan_class_arg__);
   static constexpr bool propto__ = true;
   (void) propto__;
   local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
@@ -3572,15 +3576,16 @@ _stan_asm(std::ostream* pstream__) {
 }
 
 struct _stan_asm_functor__ {
+template <typename T0__>
 void
-operator()(std::ostream* pstream__)  const 
+operator()(const T0__& _stan_class, std::ostream* pstream__)  const 
 {
-return _stan_asm(pstream__);
+return _stan_asm(_stan_class, pstream__);
 }
 };
 
 void
-_stan_bitand(std::ostream* pstream__) {
+_stan_bitand(const int& _stan_constexpr, std::ostream* pstream__) {
   using local_scalar_t__ = double;
   int current_statement__ = 0; 
   static constexpr bool propto__ = true;
@@ -3597,9 +3602,9 @@ _stan_bitand(std::ostream* pstream__) {
 
 struct _stan_bitand_functor__ {
 void
-operator()(std::ostream* pstream__)  const 
+operator()(const int& _stan_constexpr, std::ostream* pstream__)  const 
 {
-return _stan_bitand(pstream__);
+return _stan_bitand(_stan_constexpr, pstream__);
 }
 };
 
@@ -3814,89 +3819,89 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
       int pos__;
       pos__ = 1;
       current_statement__ = 50;
-      context__.validate_dims("data initialization","_stan_class","double",
+      context__.validate_dims("data initialization","class","double",
            std::vector<size_t>{});
       _stan_class = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 50;
-      _stan_class = context__.vals_r("_stan_class")[(1 - 1)];
+      _stan_class = context__.vals_r("class")[(1 - 1)];
       current_statement__ = 51;
-      context__.validate_dims("data initialization","_stan_compl","double",
+      context__.validate_dims("data initialization","compl","double",
            std::vector<size_t>{});
       _stan_compl = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 51;
-      _stan_compl = context__.vals_r("_stan_compl")[(1 - 1)];
+      _stan_compl = context__.vals_r("compl")[(1 - 1)];
       current_statement__ = 52;
-      context__.validate_dims("data initialization","_stan_const","double",
+      context__.validate_dims("data initialization","const","double",
            std::vector<size_t>{});
       _stan_const = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 52;
-      _stan_const = context__.vals_r("_stan_const")[(1 - 1)];
+      _stan_const = context__.vals_r("const")[(1 - 1)];
       current_statement__ = 53;
-      context__.validate_dims("data initialization","_stan_constexpr",
-          "double", std::vector<size_t>{});
+      context__.validate_dims("data initialization","constexpr","double",
+           std::vector<size_t>{});
       _stan_constexpr = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 53;
-      _stan_constexpr = context__.vals_r("_stan_constexpr")[(1 - 1)];
+      _stan_constexpr = context__.vals_r("constexpr")[(1 - 1)];
       current_statement__ = 54;
-      context__.validate_dims("data initialization","_stan_const_cast",
-          "double", std::vector<size_t>{});
+      context__.validate_dims("data initialization","const_cast","double",
+           std::vector<size_t>{});
       _stan_const_cast = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 54;
-      _stan_const_cast = context__.vals_r("_stan_const_cast")[(1 - 1)];
+      _stan_const_cast = context__.vals_r("const_cast")[(1 - 1)];
       current_statement__ = 55;
-      context__.validate_dims("data initialization","_stan_decltype",
-          "double", std::vector<size_t>{});
+      context__.validate_dims("data initialization","decltype","double",
+           std::vector<size_t>{});
       _stan_decltype = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 55;
-      _stan_decltype = context__.vals_r("_stan_decltype")[(1 - 1)];
+      _stan_decltype = context__.vals_r("decltype")[(1 - 1)];
       current_statement__ = 56;
-      context__.validate_dims("data initialization","_stan_default","double",
+      context__.validate_dims("data initialization","default","double",
            std::vector<size_t>{});
       _stan_default = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 56;
-      _stan_default = context__.vals_r("_stan_default")[(1 - 1)];
+      _stan_default = context__.vals_r("default")[(1 - 1)];
       current_statement__ = 57;
-      context__.validate_dims("data initialization","_stan_delete","double",
+      context__.validate_dims("data initialization","delete","double",
            std::vector<size_t>{});
       _stan_delete = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 57;
-      _stan_delete = context__.vals_r("_stan_delete")[(1 - 1)];
+      _stan_delete = context__.vals_r("delete")[(1 - 1)];
       current_statement__ = 58;
-      context__.validate_dims("data initialization","_stan_do","double",
+      context__.validate_dims("data initialization","do","double",
            std::vector<size_t>{});
       _stan_do = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 58;
-      _stan_do = context__.vals_r("_stan_do")[(1 - 1)];
+      _stan_do = context__.vals_r("do")[(1 - 1)];
       current_statement__ = 59;
-      context__.validate_dims("data initialization","_stan_double","double",
+      context__.validate_dims("data initialization","double","double",
            std::vector<size_t>{});
       _stan_double = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 59;
-      _stan_double = context__.vals_r("_stan_double")[(1 - 1)];
+      _stan_double = context__.vals_r("double")[(1 - 1)];
       current_statement__ = 60;
-      context__.validate_dims("data initialization","_stan_dynamic_cast",
-          "double", std::vector<size_t>{});
+      context__.validate_dims("data initialization","dynamic_cast","double",
+           std::vector<size_t>{});
       _stan_dynamic_cast = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 60;
-      _stan_dynamic_cast = context__.vals_r("_stan_dynamic_cast")[(1 - 1)];
+      _stan_dynamic_cast = context__.vals_r("dynamic_cast")[(1 - 1)];
       current_statement__ = 61;
-      context__.validate_dims("data initialization","_stan_enum","double",
+      context__.validate_dims("data initialization","enum","double",
            std::vector<size_t>{});
       _stan_enum = std::numeric_limits<double>::quiet_NaN();
       
       current_statement__ = 61;
-      _stan_enum = context__.vals_r("_stan_enum")[(1 - 1)];
+      _stan_enum = context__.vals_r("enum")[(1 - 1)];
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
     }
@@ -4262,16 +4267,12 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
     
   inline void get_param_names(std::vector<std::string>& names__) const {
     
-    names__ = std::vector<std::string>{"_stan_explicit", "_stan_float",
-      "_stan_friend", "_stan_goto", "_stan_inline", "_stan_long",
-      "_stan_mutable", "_stan_namespace", "_stan_new", "_stan_noexcept",
-      "_stan_not", "_stan_not_eq", "_stan_nullptr", "_stan_operator",
-      "_stan_or", "_stan_throw", "_stan_try", "_stan_typeid",
-      "_stan_typename", "_stan_union", "_stan_unsigned", "_stan_using",
-      "_stan_virtual", "_stan_volatile", "_stan_wchar_t", "_stan_xor",
-      "_stan_xor_eq", "_stan_fvar", "_stan_STAN_MAJOR", "_stan_STAN_MINOR",
-      "_stan_STAN_PATCH", "_stan_STAN_MATH_MAJOR", "_stan_STAN_MATH_MINOR",
-      "_stan_STAN_MATH_PATCH"};
+    names__ = std::vector<std::string>{"explicit", "float", "friend", "goto",
+      "inline", "long", "mutable", "namespace", "new", "noexcept", "not",
+      "not_eq", "nullptr", "operator", "or", "throw", "try", "typeid",
+      "typename", "union", "unsigned", "using", "virtual", "volatile",
+      "wchar_t", "xor", "xor_eq", "fvar", "STAN_MAJOR", "STAN_MINOR",
+      "STAN_PATCH", "STAN_MATH_MAJOR", "STAN_MATH_MINOR", "STAN_MATH_PATCH"};
     
     } // get_param_names() 
     
@@ -4299,45 +4300,45 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
                                       bool emit_generated_quantities__ = true) const
     final {
     
-    param_names__.emplace_back(std::string() + "_stan_explicit");
-    param_names__.emplace_back(std::string() + "_stan_float");
-    param_names__.emplace_back(std::string() + "_stan_friend");
-    param_names__.emplace_back(std::string() + "_stan_goto");
-    param_names__.emplace_back(std::string() + "_stan_inline");
-    param_names__.emplace_back(std::string() + "_stan_long");
-    param_names__.emplace_back(std::string() + "_stan_mutable");
-    param_names__.emplace_back(std::string() + "_stan_namespace");
-    param_names__.emplace_back(std::string() + "_stan_new");
-    param_names__.emplace_back(std::string() + "_stan_noexcept");
-    param_names__.emplace_back(std::string() + "_stan_not");
-    param_names__.emplace_back(std::string() + "_stan_not_eq");
-    param_names__.emplace_back(std::string() + "_stan_nullptr");
-    param_names__.emplace_back(std::string() + "_stan_operator");
-    param_names__.emplace_back(std::string() + "_stan_or");
+    param_names__.emplace_back(std::string() + "explicit");
+    param_names__.emplace_back(std::string() + "float");
+    param_names__.emplace_back(std::string() + "friend");
+    param_names__.emplace_back(std::string() + "goto");
+    param_names__.emplace_back(std::string() + "inline");
+    param_names__.emplace_back(std::string() + "long");
+    param_names__.emplace_back(std::string() + "mutable");
+    param_names__.emplace_back(std::string() + "namespace");
+    param_names__.emplace_back(std::string() + "new");
+    param_names__.emplace_back(std::string() + "noexcept");
+    param_names__.emplace_back(std::string() + "not");
+    param_names__.emplace_back(std::string() + "not_eq");
+    param_names__.emplace_back(std::string() + "nullptr");
+    param_names__.emplace_back(std::string() + "operator");
+    param_names__.emplace_back(std::string() + "or");
     if (emit_transformed_parameters__) {
       
     }
     
     if (emit_generated_quantities__) {
-      param_names__.emplace_back(std::string() + "_stan_throw");
-      param_names__.emplace_back(std::string() + "_stan_try");
-      param_names__.emplace_back(std::string() + "_stan_typeid");
-      param_names__.emplace_back(std::string() + "_stan_typename");
-      param_names__.emplace_back(std::string() + "_stan_union");
-      param_names__.emplace_back(std::string() + "_stan_unsigned");
-      param_names__.emplace_back(std::string() + "_stan_using");
-      param_names__.emplace_back(std::string() + "_stan_virtual");
-      param_names__.emplace_back(std::string() + "_stan_volatile");
-      param_names__.emplace_back(std::string() + "_stan_wchar_t");
-      param_names__.emplace_back(std::string() + "_stan_xor");
-      param_names__.emplace_back(std::string() + "_stan_xor_eq");
-      param_names__.emplace_back(std::string() + "_stan_fvar");
-      param_names__.emplace_back(std::string() + "_stan_STAN_MAJOR");
-      param_names__.emplace_back(std::string() + "_stan_STAN_MINOR");
-      param_names__.emplace_back(std::string() + "_stan_STAN_PATCH");
-      param_names__.emplace_back(std::string() + "_stan_STAN_MATH_MAJOR");
-      param_names__.emplace_back(std::string() + "_stan_STAN_MATH_MINOR");
-      param_names__.emplace_back(std::string() + "_stan_STAN_MATH_PATCH");
+      param_names__.emplace_back(std::string() + "throw");
+      param_names__.emplace_back(std::string() + "try");
+      param_names__.emplace_back(std::string() + "typeid");
+      param_names__.emplace_back(std::string() + "typename");
+      param_names__.emplace_back(std::string() + "union");
+      param_names__.emplace_back(std::string() + "unsigned");
+      param_names__.emplace_back(std::string() + "using");
+      param_names__.emplace_back(std::string() + "virtual");
+      param_names__.emplace_back(std::string() + "volatile");
+      param_names__.emplace_back(std::string() + "wchar_t");
+      param_names__.emplace_back(std::string() + "xor");
+      param_names__.emplace_back(std::string() + "xor_eq");
+      param_names__.emplace_back(std::string() + "fvar");
+      param_names__.emplace_back(std::string() + "STAN_MAJOR");
+      param_names__.emplace_back(std::string() + "STAN_MINOR");
+      param_names__.emplace_back(std::string() + "STAN_PATCH");
+      param_names__.emplace_back(std::string() + "STAN_MATH_MAJOR");
+      param_names__.emplace_back(std::string() + "STAN_MATH_MINOR");
+      param_names__.emplace_back(std::string() + "STAN_MATH_PATCH");
     }
     
     } // constrained_param_names() 
@@ -4348,58 +4349,58 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
                                         bool emit_generated_quantities__ = true) const
     final {
     
-    param_names__.emplace_back(std::string() + "_stan_explicit");
-    param_names__.emplace_back(std::string() + "_stan_float");
-    param_names__.emplace_back(std::string() + "_stan_friend");
-    param_names__.emplace_back(std::string() + "_stan_goto");
-    param_names__.emplace_back(std::string() + "_stan_inline");
-    param_names__.emplace_back(std::string() + "_stan_long");
-    param_names__.emplace_back(std::string() + "_stan_mutable");
-    param_names__.emplace_back(std::string() + "_stan_namespace");
-    param_names__.emplace_back(std::string() + "_stan_new");
-    param_names__.emplace_back(std::string() + "_stan_noexcept");
-    param_names__.emplace_back(std::string() + "_stan_not");
-    param_names__.emplace_back(std::string() + "_stan_not_eq");
-    param_names__.emplace_back(std::string() + "_stan_nullptr");
-    param_names__.emplace_back(std::string() + "_stan_operator");
-    param_names__.emplace_back(std::string() + "_stan_or");
+    param_names__.emplace_back(std::string() + "explicit");
+    param_names__.emplace_back(std::string() + "float");
+    param_names__.emplace_back(std::string() + "friend");
+    param_names__.emplace_back(std::string() + "goto");
+    param_names__.emplace_back(std::string() + "inline");
+    param_names__.emplace_back(std::string() + "long");
+    param_names__.emplace_back(std::string() + "mutable");
+    param_names__.emplace_back(std::string() + "namespace");
+    param_names__.emplace_back(std::string() + "new");
+    param_names__.emplace_back(std::string() + "noexcept");
+    param_names__.emplace_back(std::string() + "not");
+    param_names__.emplace_back(std::string() + "not_eq");
+    param_names__.emplace_back(std::string() + "nullptr");
+    param_names__.emplace_back(std::string() + "operator");
+    param_names__.emplace_back(std::string() + "or");
     if (emit_transformed_parameters__) {
       
     }
     
     if (emit_generated_quantities__) {
-      param_names__.emplace_back(std::string() + "_stan_throw");
-      param_names__.emplace_back(std::string() + "_stan_try");
-      param_names__.emplace_back(std::string() + "_stan_typeid");
-      param_names__.emplace_back(std::string() + "_stan_typename");
-      param_names__.emplace_back(std::string() + "_stan_union");
-      param_names__.emplace_back(std::string() + "_stan_unsigned");
-      param_names__.emplace_back(std::string() + "_stan_using");
-      param_names__.emplace_back(std::string() + "_stan_virtual");
-      param_names__.emplace_back(std::string() + "_stan_volatile");
-      param_names__.emplace_back(std::string() + "_stan_wchar_t");
-      param_names__.emplace_back(std::string() + "_stan_xor");
-      param_names__.emplace_back(std::string() + "_stan_xor_eq");
-      param_names__.emplace_back(std::string() + "_stan_fvar");
-      param_names__.emplace_back(std::string() + "_stan_STAN_MAJOR");
-      param_names__.emplace_back(std::string() + "_stan_STAN_MINOR");
-      param_names__.emplace_back(std::string() + "_stan_STAN_PATCH");
-      param_names__.emplace_back(std::string() + "_stan_STAN_MATH_MAJOR");
-      param_names__.emplace_back(std::string() + "_stan_STAN_MATH_MINOR");
-      param_names__.emplace_back(std::string() + "_stan_STAN_MATH_PATCH");
+      param_names__.emplace_back(std::string() + "throw");
+      param_names__.emplace_back(std::string() + "try");
+      param_names__.emplace_back(std::string() + "typeid");
+      param_names__.emplace_back(std::string() + "typename");
+      param_names__.emplace_back(std::string() + "union");
+      param_names__.emplace_back(std::string() + "unsigned");
+      param_names__.emplace_back(std::string() + "using");
+      param_names__.emplace_back(std::string() + "virtual");
+      param_names__.emplace_back(std::string() + "volatile");
+      param_names__.emplace_back(std::string() + "wchar_t");
+      param_names__.emplace_back(std::string() + "xor");
+      param_names__.emplace_back(std::string() + "xor_eq");
+      param_names__.emplace_back(std::string() + "fvar");
+      param_names__.emplace_back(std::string() + "STAN_MAJOR");
+      param_names__.emplace_back(std::string() + "STAN_MINOR");
+      param_names__.emplace_back(std::string() + "STAN_PATCH");
+      param_names__.emplace_back(std::string() + "STAN_MATH_MAJOR");
+      param_names__.emplace_back(std::string() + "STAN_MATH_MINOR");
+      param_names__.emplace_back(std::string() + "STAN_MATH_PATCH");
     }
     
     } // unconstrained_param_names() 
     
   inline std::string get_constrained_sizedtypes() const {
     
-    return std::string("[{\"name\":\"_stan_explicit\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_float\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_friend\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_goto\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_inline\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_long\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_mutable\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_namespace\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_new\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_noexcept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_not\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_not_eq\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_nullptr\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_operator\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_or\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_throw\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_try\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_typeid\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_typename\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_union\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_unsigned\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_using\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_virtual\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_volatile\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_wchar_t\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_xor\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_xor_eq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_fvar\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_STAN_MAJOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_STAN_MINOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_STAN_PATCH\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_STAN_MATH_MAJOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_STAN_MATH_MINOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_STAN_MATH_PATCH\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
+    return std::string("[{\"name\":\"explicit\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"float\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"friend\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"goto\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"inline\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"long\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mutable\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"namespace\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"new\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"noexcept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not_eq\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"nullptr\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"operator\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"or\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"throw\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"try\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"typeid\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"typename\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"union\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"unsigned\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"using\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"virtual\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"volatile\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"wchar_t\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"xor\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"xor_eq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"fvar\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MAJOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MINOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_PATCH\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_MAJOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_MINOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_PATCH\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
     
     } // get_constrained_sizedtypes() 
     
   inline std::string get_unconstrained_sizedtypes() const {
     
-    return std::string("[{\"name\":\"_stan_explicit\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_float\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_friend\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_goto\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_inline\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_long\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_mutable\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_namespace\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_new\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_noexcept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_not\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_not_eq\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_nullptr\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_operator\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_or\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"_stan_throw\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_try\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_typeid\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_typename\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_union\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_unsigned\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_using\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_virtual\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_volatile\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_wchar_t\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_xor\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_xor_eq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_fvar\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_STAN_MAJOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_STAN_MINOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_STAN_PATCH\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_STAN_MATH_MAJOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_STAN_MATH_MINOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"_stan_STAN_MATH_PATCH\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
+    return std::string("[{\"name\":\"explicit\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"float\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"friend\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"goto\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"inline\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"long\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"mutable\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"namespace\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"new\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"noexcept\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"not_eq\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"nullptr\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"operator\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"or\",\"type\":{\"name\":\"real\"},\"block\":\"parameters\"},{\"name\":\"throw\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"try\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"typeid\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"typename\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"union\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"unsigned\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"using\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"virtual\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"volatile\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"wchar_t\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"xor\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"xor_eq\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"fvar\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MAJOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MINOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_PATCH\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_MAJOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_MINOR\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"},{\"name\":\"STAN_MATH_PATCH\",\"type\":{\"name\":\"real\"},\"block\":\"generated_quantities\"}]");
     
     } // get_unconstrained_sizedtypes() 
     
@@ -4478,16 +4479,13 @@ class cpp_reserved_words_model final : public model_base_crtp<cpp_reserved_words
                               std::vector<int>& params_i,
                               std::vector<double>& vars,
                               std::ostream* pstream__ = nullptr) const {
-    const std::array<std::string, 34> names__ = std::array<std::string, 34>{"_stan_explicit",
-      "_stan_float", "_stan_friend", "_stan_goto", "_stan_inline",
-      "_stan_long", "_stan_mutable", "_stan_namespace", "_stan_new",
-      "_stan_noexcept", "_stan_not", "_stan_not_eq", "_stan_nullptr",
-      "_stan_operator", "_stan_or", "_stan_throw", "_stan_try",
-      "_stan_typeid", "_stan_typename", "_stan_union", "_stan_unsigned",
-      "_stan_using", "_stan_virtual", "_stan_volatile", "_stan_wchar_t",
-      "_stan_xor", "_stan_xor_eq", "_stan_fvar", "_stan_STAN_MAJOR",
-      "_stan_STAN_MINOR", "_stan_STAN_PATCH", "_stan_STAN_MATH_MAJOR",
-      "_stan_STAN_MATH_MINOR", "_stan_STAN_MATH_PATCH"};
+    const std::array<std::string, 34> names__ = std::array<std::string, 34>{"explicit",
+      "float", "friend", "goto", "inline", "long", "mutable", "namespace",
+      "new", "noexcept", "not", "not_eq", "nullptr", "operator", "or",
+      "throw", "try", "typeid", "typename", "union", "unsigned", "using",
+      "virtual", "volatile", "wchar_t", "xor", "xor_eq", "fvar",
+      "STAN_MAJOR", "STAN_MINOR", "STAN_PATCH", "STAN_MATH_MAJOR",
+      "STAN_MATH_MINOR", "STAN_MATH_PATCH"};
     
      std::vector<double> params_r_flat__;
      for (auto&& param_name__ : names__) {
@@ -4525,80 +4523,6 @@ stan::math::profile_map& get_stan_profile_data() {
 
 
 
-Identifier 'explicit' is a reserved word in C++, renamed to '_stan_explicit'
-Identifier 'float' is a reserved word in C++, renamed to '_stan_float'
-Identifier 'friend' is a reserved word in C++, renamed to '_stan_friend'
-Identifier 'goto' is a reserved word in C++, renamed to '_stan_goto'
-Identifier 'inline' is a reserved word in C++, renamed to '_stan_inline'
-Identifier 'long' is a reserved word in C++, renamed to '_stan_long'
-Identifier 'mutable' is a reserved word in C++, renamed to '_stan_mutable'
-Identifier 'namespace' is a reserved word in C++, renamed to '_stan_namespace'
-Identifier 'new' is a reserved word in C++, renamed to '_stan_new'
-Identifier 'noexcept' is a reserved word in C++, renamed to '_stan_noexcept'
-Identifier 'not' is a reserved word in C++, renamed to '_stan_not'
-Identifier 'not_eq' is a reserved word in C++, renamed to '_stan_not_eq'
-Identifier 'nullptr' is a reserved word in C++, renamed to '_stan_nullptr'
-Identifier 'operator' is a reserved word in C++, renamed to '_stan_operator'
-Identifier 'or' is a reserved word in C++, renamed to '_stan_or'
-Identifier 'throw' is a reserved word in C++, renamed to '_stan_throw'
-Identifier 'try' is a reserved word in C++, renamed to '_stan_try'
-Identifier 'typeid' is a reserved word in C++, renamed to '_stan_typeid'
-Identifier 'typename' is a reserved word in C++, renamed to '_stan_typename'
-Identifier 'union' is a reserved word in C++, renamed to '_stan_union'
-Identifier 'unsigned' is a reserved word in C++, renamed to '_stan_unsigned'
-Identifier 'using' is a reserved word in C++, renamed to '_stan_using'
-Identifier 'virtual' is a reserved word in C++, renamed to '_stan_virtual'
-Identifier 'volatile' is a reserved word in C++, renamed to '_stan_volatile'
-Identifier 'wchar_t' is a reserved word in C++, renamed to '_stan_wchar_t'
-Identifier 'xor' is a reserved word in C++, renamed to '_stan_xor'
-Identifier 'xor_eq' is a reserved word in C++, renamed to '_stan_xor_eq'
-Identifier 'fvar' is a reserved word in C++, renamed to '_stan_fvar'
-Identifier 'STAN_MAJOR' is a reserved word in C++, renamed to '_stan_STAN_MAJOR'
-Identifier 'STAN_MINOR' is a reserved word in C++, renamed to '_stan_STAN_MINOR'
-Identifier 'STAN_PATCH' is a reserved word in C++, renamed to '_stan_STAN_PATCH'
-Identifier 'STAN_MATH_MAJOR' is a reserved word in C++, renamed to '_stan_STAN_MATH_MAJOR'
-Identifier 'STAN_MATH_MINOR' is a reserved word in C++, renamed to '_stan_STAN_MATH_MINOR'
-Identifier 'STAN_MATH_PATCH' is a reserved word in C++, renamed to '_stan_STAN_MATH_PATCH'
-Identifier 'class' is a reserved word in C++, renamed to '_stan_class'
-Identifier 'compl' is a reserved word in C++, renamed to '_stan_compl'
-Identifier 'const' is a reserved word in C++, renamed to '_stan_const'
-Identifier 'constexpr' is a reserved word in C++, renamed to '_stan_constexpr'
-Identifier 'const_cast' is a reserved word in C++, renamed to '_stan_const_cast'
-Identifier 'decltype' is a reserved word in C++, renamed to '_stan_decltype'
-Identifier 'default' is a reserved word in C++, renamed to '_stan_default'
-Identifier 'delete' is a reserved word in C++, renamed to '_stan_delete'
-Identifier 'do' is a reserved word in C++, renamed to '_stan_do'
-Identifier 'double' is a reserved word in C++, renamed to '_stan_double'
-Identifier 'dynamic_cast' is a reserved word in C++, renamed to '_stan_dynamic_cast'
-Identifier 'enum' is a reserved word in C++, renamed to '_stan_enum'
-Identifier 'alignas' is a reserved word in C++, renamed to '_stan_alignas'
-Identifier 'alignof' is a reserved word in C++, renamed to '_stan_alignof'
-Identifier 'and' is a reserved word in C++, renamed to '_stan_and'
-Identifier 'and_eq' is a reserved word in C++, renamed to '_stan_and_eq'
-Identifier 'asm' is a reserved word in C++, renamed to '_stan_asm'
-Identifier 'bitand' is a reserved word in C++, renamed to '_stan_bitand'
-Identifier 'bitor' is a reserved word in C++, renamed to '_stan_bitor'
-Identifier 'bool' is a reserved word in C++, renamed to '_stan_bool'
-Identifier 'case' is a reserved word in C++, renamed to '_stan_case'
-Identifier 'catch' is a reserved word in C++, renamed to '_stan_catch'
-Identifier 'char' is a reserved word in C++, renamed to '_stan_char'
-Identifier 'char16_t' is a reserved word in C++, renamed to '_stan_char16_t'
-Identifier 'char32_t' is a reserved word in C++, renamed to '_stan_char32_t'
-Identifier 'or_eq' is a reserved word in C++, renamed to '_stan_or_eq'
-Identifier 'private' is a reserved word in C++, renamed to '_stan_private'
-Identifier 'protected' is a reserved word in C++, renamed to '_stan_protected'
-Identifier 'public' is a reserved word in C++, renamed to '_stan_public'
-Identifier 'register' is a reserved word in C++, renamed to '_stan_register'
-Identifier 'reinterpret_cast' is a reserved word in C++, renamed to '_stan_reinterpret_cast'
-Identifier 'short' is a reserved word in C++, renamed to '_stan_short'
-Identifier 'signed' is a reserved word in C++, renamed to '_stan_signed'
-Identifier 'sizeof' is a reserved word in C++, renamed to '_stan_sizeof'
-Identifier 'static_assert' is a reserved word in C++, renamed to '_stan_static_assert'
-Identifier 'static_cast' is a reserved word in C++, renamed to '_stan_static_cast'
-Identifier 'switch' is a reserved word in C++, renamed to '_stan_switch'
-Identifier 'template' is a reserved word in C++, renamed to '_stan_template'
-Identifier 'this' is a reserved word in C++, renamed to '_stan_this'
-Identifier 'thread_local' is a reserved word in C++, renamed to '_stan_thread_local'
   $ ../../../../../install/default/bin/stanc --print-cpp eight_schools_ncp.stan
 
 // Code generated by %%NAME%% %%VERSION%%

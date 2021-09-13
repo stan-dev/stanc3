@@ -1,10 +1,10 @@
 functions {
-  void alignas(){}
-  void alignof(){}
-  void and(){}
-  void and_eq(){}
-  void asm(){}
-  void bitand(){}
+  void alignas(int asm){}
+  void alignof(int char){}
+  void and(int STAN_MAJOR){}
+  void and_eq(real STAN_MINOR){}
+  void asm(vector class){}
+  void bitand(int constexpr){}
   void bitor(){}
   void bool(){}
   void case(){}
