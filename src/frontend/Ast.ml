@@ -33,6 +33,7 @@ type ('e, 'f) expression =
   | Variable of identifier
   | IntNumeral of string
   | RealNumeral of string
+  | ImagNumeral of string
   | FunApp of 'f * identifier * 'e list
   | CondDistApp of 'f * identifier * 'e list
   (* GetLP is deprecated *)
@@ -296,7 +297,8 @@ let rec get_loc_expr (e : untyped_expression) =
       get_loc_expr e
   | PrefixOp (_, e) | ArrayExpr (e :: _) | RowVectorExpr (e :: _) | Paren e ->
       e.emeta.loc.begin_loc
-  | Variable _ | IntNumeral _ | RealNumeral _ | GetLP | GetTarget
+  | Variable _ | IntNumeral _ | RealNumeral _ | ImagNumeral _ | GetLP
+   |GetTarget
    |ArrayExpr []
    |RowVectorExpr [] ->
       e.emeta.loc.end_loc
