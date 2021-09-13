@@ -9,6 +9,9 @@ val include_stack : Lexing.lexbuf Stack.t
 val include_paths : string list ref
 (** List of paths to search for including files *)
 
+val included_files : string list ref
+(** List of files that have been included *)
+
 val try_get_new_lexbuf : string -> Lexing.position -> Lexing.lexbuf
 (** Search include paths for filename and try to create a new lexing buffer
     with that filename, record that included from specified position *)
