@@ -361,7 +361,8 @@ let pp_validate_data ppf (name, st) =
         args
     in
     pf ppf "@[<hov 4>context__.validate_dims(@,%S,@,%S,@,%S,@,%a);@]@ "
-      "data initialization" (Mangle.remove_prefix name)
+      "data initialization"
+      (Mangle.remove_prefix name)
       (stantype_prim_str (SizedType.to_unsized st))
       pp_stdvector (SizedType.get_dims_io st)
 
