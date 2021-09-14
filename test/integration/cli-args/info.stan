@@ -1,5 +1,5 @@
 #include <included.stan>
-#include <another_include.stan>
+#include <recursive.stan>
 
 functions {
   real foo(real a) {

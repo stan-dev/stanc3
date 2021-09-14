@@ -30,5 +30,6 @@
                      "normal_lpdf",
                      "std_normal_lupdf" ],
   "included_files": [ "./included.stan",
+                      "includes/recursive.stan",
                       "includes/another_include.stan" ] }
 
