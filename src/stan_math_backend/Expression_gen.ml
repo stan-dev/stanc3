@@ -317,15 +317,22 @@ and gen_misc_special_math_app (f : string)
   | "rep_matrix" | "rep_vector" | "rep_row_vector" | "append_row"
    |"append_col"
     when mem_pattern = Common.Helpers.SoA -> (
-    match ret_type with
-    | Some (UnsizedType.ReturnType t) ->
-        Some
-          (fun ppf es ->
-            pf ppf "%s<%a>(@,%a)" f pp_possibly_var_decl
-              (UnsizedType.AutoDiffable, t, mem_pattern)
-              (list ~sep:comma pp_expr) es )
-    | Some Void -> None
-    | None -> None )
+      let is_autodiffable
+          Expr.Fixed.({meta= Expr.Typed.Meta.({adlevel; _}); _}) =
+        adlevel = UnsizedType.AutoDiffable
+      in
+      match ret_type with
+      | Some (UnsizedType.ReturnType t) ->
+          Some
+            (fun ppf es ->
+              match List.exists ~f:is_autodiffable es with
+              | true ->
+                  pf ppf "%s<%a>(@,%a)" f pp_possibly_var_decl
+                    (UnsizedType.AutoDiffable, t, mem_pattern)
+                    (list ~sep:comma pp_expr) es
+              | false -> pf ppf "%s(@,%a)" f (list ~sep:comma pp_expr) es )
+      | Some Void -> None
+      | None -> None )
   | _ -> None
 
 and read_data ut ppf es =

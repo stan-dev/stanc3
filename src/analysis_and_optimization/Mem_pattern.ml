@@ -223,7 +223,7 @@ and query_soa_supported_assign_fun (kind : 'a Fun_kind.t)
     | "check_matching_dims" -> true
     | _ ->
         is_fun_soa_supported name exprs
-        || List.exists ~f:query_soa_supported_assign_expr exprs )
+        && List.exists ~f:query_soa_supported_assign_expr exprs )
 
 (**
  * Return true if the rhs expression of an assignment contains only
@@ -243,7 +243,7 @@ let rec query_ad_real_data_matrix_assign
     | TernaryIf _ -> true
     | EAnd (lhs, rhs) | EOr (lhs, rhs) ->
         query_ad_real_data_matrix_assign lhs
-        || query_ad_real_data_matrix_assign rhs
+        && query_ad_real_data_matrix_assign rhs
 
 (**
  * Return true if the expressions in a function call are all
