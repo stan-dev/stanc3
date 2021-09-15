@@ -72,7 +72,8 @@ $ node info.js
   "transformed parameters": {  },
   "generated quantities": {  },
   "functions": [  ],
-  "distributions": [  ] }
+  "distributions": [  ],
+  "included_files": [  ] }
 
 $ node optimization.js
 Semantic error in 'string', line 3, column 4 to column 20: 

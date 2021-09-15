@@ -19,8 +19,6 @@ open Middle
    distributions used.
 *)
 
-module SSet = Set.Make (String)
-
 let rec sized_basetype_dims t =
   match t with
   | SizedType.SInt -> ("int", 0)
@@ -70,8 +68,8 @@ let block_info name ppf block =
 let rec get_function_calls_expr (funs, distrs) expr =
   let acc =
     match expr.expr with
-    | FunApp (StanLib _, f, _) -> (SSet.add funs f.name, distrs)
-    | CondDistApp (StanLib _, f, _) -> (funs, SSet.add distrs f.name)
+    | FunApp (StanLib _, f, _) -> (Set.add funs f.name, distrs)
+    | CondDistApp (StanLib _, f, _) -> (funs, Set.add distrs f.name)
     | _ -> (funs, distrs)
   in
   fold_expression get_function_calls_expr (fun acc _ -> acc) acc expr.expr
@@ -79,7 +77,7 @@ let rec get_function_calls_expr (funs, distrs) expr =
 let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
   let acc =
     match stmt.stmt with
-    | NRFunApp (StanLib _, f, _) -> (SSet.add funs f.name, distrs)
+    | NRFunApp (StanLib _, f, _) -> (Set.add funs f.name, distrs)
     | Tilde {distribution; _} ->
         let possible_names =
           List.map ~f:(( ^ ) distribution.name) Utils.distribution_suffices
@@ -92,7 +90,7 @@ let rec get_function_calls_stmt ud_dists (funs, distrs) stmt =
             Stan_math_signatures.dist_name_suffix ud_dists distribution.name
           in
           let name = distribution.name ^ Utils.unnormalized_suffix suffix in
-          (funs, SSet.add distrs name)
+          (funs, Set.add distrs name)
     | _ -> (funs, distrs)
   in
   fold_statement get_function_calls_expr
@@ -114,19 +112,27 @@ let function_calls ppf p =
   in
   let ud_dists = map grab_fundef_names_and_types p.functionblock in
   let funs, distrs =
-    fold_program (get_function_calls_stmt ud_dists) (SSet.empty, SSet.empty) p
+    fold_program
+      (get_function_calls_stmt ud_dists)
+      (String.Set.empty, String.Set.empty)
+      p
   in
   Fmt.pf ppf "\"functions\": [ @[<v 0>%a @]],@,"
     (Fmt.list ~sep:Fmt.comma (fun ppf s -> Fmt.pf ppf "\"%s\"" s))
-    (SSet.to_list funs) ;
+    (Set.to_list funs) ;
   Fmt.pf ppf "\"distributions\": [ @[<v 0>%a @]]"
     (Fmt.list ~sep:Fmt.comma (fun ppf s -> Fmt.pf ppf "\"%s\"" s))
-    (SSet.to_list distrs)
+    (Set.to_list distrs)
+
+let includes ppf () =
+  Fmt.pf ppf "\"included_files\": [ @[<v 0>%a @]]"
+    Fmt.(list ~sep:comma (fun ppf s -> Fmt.pf ppf "\"%s\"" s))
+    (List.rev !Preprocessor.included_files)
 
 let info ast =
-  Fmt.strf "{ @[<v 0>%a,@,%a,@,%a,@,%a,@,%a @]}@." (block_info "inputs")
+  Fmt.strf "{ @[<v 0>%a,@,%a,@,%a,@,%a,@,%a,@,%a @]}@." (block_info "inputs")
     ast.datablock (block_info "parameters") ast.parametersblock
     (block_info "transformed parameters")
     ast.transformedparametersblock
     (block_info "generated quantities")
-    ast.generatedquantitiesblock function_calls ast
+    ast.generatedquantitiesblock function_calls ast includes ()
