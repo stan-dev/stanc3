@@ -2085,10 +2085,12 @@ class indexing_model final : public model_base_crtp<indexing_model> {
                                                 
                                                 Eigen::Matrix<local_scalar_t__, -1, 1>>>(
                                               N);
-      Eigen::Matrix<local_scalar_t__, -1, 1> p_soa_rep_matrix_vec;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, 1>> p_soa_rep_matrix_vec;
       current_statement__ = 11;
       p_soa_rep_matrix_vec = in__.template read<
-                               Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
+                               stan::conditional_var_value_t<local_scalar_t__,
+                                 Eigen::Matrix<local_scalar_t__, -1, 1>>>(N);
       stan::conditional_var_value_t<local_scalar_t__, 
         Eigen::Matrix<local_scalar_t__, -1, 1>> p_aos_vec_v_assign_to_aos;
       current_statement__ = 12;
@@ -2182,14 +2184,20 @@ class indexing_model final : public model_base_crtp<indexing_model> {
            Eigen::Matrix<local_scalar_t__, -1, 1>>(
            Eigen::Matrix<double, -1, 1>::Constant(M,
              std::numeric_limits<double>::quiet_NaN()));
-      Eigen::Matrix<local_scalar_t__, -1, -1> tp_soa_rep_matrix_mat;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, -1, -1>> tp_soa_rep_matrix_mat;
       current_statement__ = 26;
-      assign(tp_soa_rep_matrix_mat, rep_matrix(p_soa_rep_matrix_vec, 10),
+      assign(tp_soa_rep_matrix_mat,
+        rep_matrix<stan::conditional_var_value_t<local_scalar_t__, 
+                     Eigen::Matrix<local_scalar_t__, -1, -1>>>(
+          p_soa_rep_matrix_vec, 10),
         "assigning variable tp_soa_rep_matrix_mat");
       stan::conditional_var_value_t<local_scalar_t__, 
         Eigen::Matrix<local_scalar_t__, -1, -1>> tp_soa_rep_matrix_from_data_mat;
       current_statement__ = 27;
-      assign(tp_soa_rep_matrix_from_data_mat, rep_matrix(y, 10),
+      assign(tp_soa_rep_matrix_from_data_mat,
+        rep_matrix<stan::conditional_var_value_t<local_scalar_t__, 
+                     Eigen::Matrix<local_scalar_t__, -1, -1>>>(y, 10),
         "assigning variable tp_soa_rep_matrix_from_data_mat");
       current_statement__ = 31;
       assign(tp_aos_fail_assign_from_top_idx,

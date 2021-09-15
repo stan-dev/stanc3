@@ -2,6 +2,9 @@ open Core_kernel
 open Middle
 open Middle.Expr
 
+(**
+ * Return a set of name and meta pairs for all variables in an expression.
+ *)
 let rec expr_set Expr.Fixed.({pattern; meta}) =
   let union_recur exprs = Set.Poly.union_list (List.map exprs ~f:expr_set) in
   match pattern with
@@ -16,6 +19,9 @@ let rec expr_set Expr.Fixed.({pattern; meta}) =
       Set.Poly.union_list (expr_set expr :: List.map ix ~f:apply_idx)
   | EAnd (expr1, expr2) | EOr (expr1, expr2) -> union_recur [expr1; expr2]
 
+(**
+ * Return a set of all types containing Eigen matrices in an expression.
+ *)
 let query_eigen_names (expr : Typed.Meta.t Expr.Fixed.t) : string Set.Poly.t =
   let get_expr_eigen_names
       (Dataflow_types.VVar s, Expr.Typed.Meta.({adlevel; type_; _})) =
@@ -183,6 +189,9 @@ and query_initial_demotable_funs (in_loop : bool) (kind : 'a Fun_kind.t)
   | CompilerInternal (_ : 'a Internal_fun.t) -> Set.Poly.empty
   | UserDefined ((_ : string), (_ : bool Fun_kind.suffix)) -> all_eigen_names
 
+(**
+ * Check whether right hand side
+ *)
 let rec query_soa_supported_assign_expr
     Expr.Fixed.({pattern; meta= Expr.Typed.Meta.({adlevel; _})}) : bool =
   if adlevel = UnsizedType.DataOnly then true
@@ -216,6 +225,10 @@ and query_soa_supported_assign_fun (kind : 'a Fun_kind.t)
         is_fun_soa_supported name exprs
         || List.exists ~f:query_soa_supported_assign_expr exprs )
 
+(**
+ * Return true if the rhs expression of an assignment contains only
+ *  combinations of AutoDiffable Reals and Data Matrices
+ *)
 let rec query_ad_real_data_matrix_assign
     Expr.Fixed.({pattern; meta= Expr.Typed.Meta.({adlevel; _})}) : bool =
   if adlevel = UnsizedType.DataOnly then false
@@ -233,7 +246,7 @@ let rec query_ad_real_data_matrix_assign
         || query_ad_real_data_matrix_assign rhs
 
 (**
- * Return true if the rhs expression of an assignment contains only
+ * Return true if the expressions in a function call are all
  *  combinations of AutoDiffable Reals and Data Matrices
  *)
 and query_ad_real_data_matrix_assign_fun (kind : 'a Fun_kind.t)

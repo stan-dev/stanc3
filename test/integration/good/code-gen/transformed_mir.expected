@@ -11024,7 +11024,7 @@
      (Decl (decl_adtype AutoDiffable) (decl_id p_row_vec)
       (decl_type
        (Sized
-        (SRowVector AoS
+        (SRowVector SoA
          ((pattern (Var N))
           (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))))
       (initialize false)))
@@ -11038,7 +11038,7 @@
            (dims
             (((pattern (Var N))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-           (mem_pattern AoS)))
+           (mem_pattern SoA)))
          ()))
        (meta ((type_ URowVector) (loc <opaque>) (adlevel AutoDiffable))))))
     (meta <opaque>))
@@ -11047,7 +11047,7 @@
       (decl_type
        (Sized
         (SArray
-         (SRowVector AoS
+         (SRowVector SoA
           ((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
@@ -11065,7 +11065,7 @@
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Var N))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-           (mem_pattern AoS)))
+           (mem_pattern SoA)))
          ()))
        (meta
         ((type_ (UArray URowVector)) (loc <opaque>) (adlevel AutoDiffable))))))
@@ -11077,7 +11077,7 @@
         (SArray
          (SArray
           (SArray
-           (SRowVector AoS
+           (SRowVector SoA
             ((pattern (Var N))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K))
@@ -11103,7 +11103,7 @@
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))
              ((pattern (Var N))
               (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly))))))
-           (mem_pattern AoS)))
+           (mem_pattern SoA)))
          ()))
        (meta
         ((type_ (UArray (UArray (UArray URowVector)))) (loc <opaque>)
@@ -11473,7 +11473,7 @@
       (decl_type
        (Sized
         (SArray
-         (SRowVector AoS
+         (SRowVector SoA
           ((pattern (Var N))
            (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
          ((pattern (Var N))
@@ -11487,7 +11487,7 @@
         (SArray
          (SArray
           (SArray
-           (SRowVector AoS
+           (SRowVector SoA
             ((pattern (Var N))
              (meta ((type_ UInt) (loc <opaque>) (adlevel DataOnly)))))
            ((pattern (Var K))
@@ -12357,7 +12357,7 @@
                   ((pattern
                     (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
                      (((pattern
-                        (FunApp (StanLib to_vector FnPlain AoS)
+                        (FunApp (StanLib to_vector FnPlain SoA)
                          (((pattern
                             (Indexed
                              ((pattern (Var p_1d_row_vec))
@@ -12520,7 +12520,7 @@
                                      (StanLib normal_lpdf (FnLpdf true) SoA)
                                      (((pattern
                                         (FunApp
-                                         (StanLib to_vector FnPlain AoS)
+                                         (StanLib to_vector FnPlain SoA)
                                          (((pattern
                                             (Indexed
                                              ((pattern (Var p_3d_row_vec))
@@ -12863,9 +12863,9 @@
        ((pattern
          (TargetPE
           ((pattern
-            (FunApp (StanLib normal_lpdf (FnLpdf true) AoS)
+            (FunApp (StanLib normal_lpdf (FnLpdf true) SoA)
              (((pattern
-                (FunApp (StanLib to_vector FnPlain AoS)
+                (FunApp (StanLib to_vector FnPlain SoA)
                  (((pattern (Var p_row_vec))
                    (meta
                     ((type_ URowVector) (loc <opaque>)

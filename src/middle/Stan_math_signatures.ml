@@ -969,7 +969,7 @@ let () =
   add_binary_vec_int_real "binary_log_loss" AoS ;
   add_binary_vec "binomial_coefficient_log" AoS ;
   add_unqualified
-    ("block", ReturnType UMatrix, [UMatrix; UInt; UInt; UInt; UInt], AoS) ;
+    ("block", ReturnType UMatrix, [UMatrix; UInt; UInt; UInt; UInt], SoA) ;
   add_unqualified ("categorical_rng", ReturnType UInt, [UVector], AoS) ;
   add_unqualified ("categorical_logit_rng", ReturnType UInt, [UVector], AoS) ;
   add_unqualified
@@ -1010,17 +1010,17 @@ let () =
   add_unqualified ("cols", ReturnType UInt, [URowVector], SoA) ;
   add_unqualified ("cols", ReturnType UInt, [UMatrix], SoA) ;
   add_unqualified
-    ("columns_dot_product", ReturnType URowVector, [UVector; UVector], AoS) ;
+    ("columns_dot_product", ReturnType URowVector, [UVector; UVector], SoA) ;
   add_unqualified
     ( "columns_dot_product"
     , ReturnType URowVector
     , [URowVector; URowVector]
-    , AoS ) ;
+    , SoA ) ;
   add_unqualified
-    ("columns_dot_product", ReturnType URowVector, [UMatrix; UMatrix], AoS) ;
-  add_unqualified ("columns_dot_self", ReturnType URowVector, [UVector], AoS) ;
-  add_unqualified ("columns_dot_self", ReturnType URowVector, [URowVector], AoS) ;
-  add_unqualified ("columns_dot_self", ReturnType URowVector, [UMatrix], AoS) ;
+    ("columns_dot_product", ReturnType URowVector, [UMatrix; UMatrix], SoA) ;
+  add_unqualified ("columns_dot_self", ReturnType URowVector, [UVector], SoA) ;
+  add_unqualified ("columns_dot_self", ReturnType URowVector, [URowVector], SoA) ;
+  add_unqualified ("columns_dot_self", ReturnType URowVector, [UMatrix], SoA) ;
   add_unqualified ("conj", ReturnType UComplex, [UComplex], AoS) ;
   add_unqualified ("cos", ReturnType UComplex, [UComplex], AoS) ;
   add_unqualified ("cosh", ReturnType UComplex, [UComplex], AoS) ;
@@ -1113,8 +1113,8 @@ let () =
   add_unqualified ("dot_self", ReturnType UReal, [UVector], SoA) ;
   add_unqualified ("dot_self", ReturnType UReal, [URowVector], SoA) ;
   add_nullary "e" ;
-  add_unqualified ("eigenvalues_sym", ReturnType UVector, [UMatrix], AoS) ;
-  add_unqualified ("eigenvectors_sym", ReturnType UMatrix, [UMatrix], AoS) ;
+  add_unqualified ("eigenvalues_sym", ReturnType UVector, [UMatrix], SoA) ;
+  add_unqualified ("eigenvectors_sym", ReturnType UMatrix, [UMatrix], SoA) ;
   add_unqualified ("generalized_inverse", ReturnType UMatrix, [UMatrix], SoA) ;
   add_unqualified ("qr_Q", ReturnType UMatrix, [UMatrix], AoS) ;
   add_unqualified ("qr_R", ReturnType UMatrix, [UMatrix], AoS) ;
@@ -1833,7 +1833,7 @@ let () =
       List.iter
         ~f:(fun t ->
           add_unqualified
-            ("num_elements", ReturnType UInt, [bare_array_type (t, i)], AoS) )
+            ("num_elements", ReturnType UInt, [bare_array_type (t, i)], SoA) )
         bare_types )
     (List.range 1 10) ;
   add_unqualified
@@ -2047,9 +2047,9 @@ let () =
             , SoA ) )
         (List.range 1 3) )
     bare_types ;
-  add_unqualified ("rep_matrix", ReturnType UMatrix, [UReal; UInt; UInt], AoS) ;
-  add_unqualified ("rep_matrix", ReturnType UMatrix, [UVector; UInt], AoS) ;
-  add_unqualified ("rep_matrix", ReturnType UMatrix, [URowVector; UInt], AoS) ;
+  add_unqualified ("rep_matrix", ReturnType UMatrix, [UReal; UInt; UInt], SoA) ;
+  add_unqualified ("rep_matrix", ReturnType UMatrix, [UVector; UInt], SoA) ;
+  add_unqualified ("rep_matrix", ReturnType UMatrix, [URowVector; UInt], SoA) ;
   add_unqualified ("rep_row_vector", ReturnType URowVector, [UReal; UInt], SoA) ;
   add_unqualified ("rep_vector", ReturnType UVector, [UReal; UInt], SoA) ;
   add_unqualified ("reverse", ReturnType UVector, [UVector], SoA) ;
@@ -2072,11 +2072,11 @@ let () =
   add_unqualified ("rows", ReturnType UInt, [URowVector], SoA) ;
   add_unqualified ("rows", ReturnType UInt, [UMatrix], SoA) ;
   add_unqualified
-    ("rows_dot_product", ReturnType UVector, [UVector; UVector], AoS) ;
+    ("rows_dot_product", ReturnType UVector, [UVector; UVector], SoA) ;
   add_unqualified
-    ("rows_dot_product", ReturnType UVector, [URowVector; URowVector], AoS) ;
+    ("rows_dot_product", ReturnType UVector, [URowVector; URowVector], SoA) ;
   add_unqualified
-    ("rows_dot_product", ReturnType UVector, [UMatrix; UMatrix], AoS) ;
+    ("rows_dot_product", ReturnType UVector, [UMatrix; UMatrix], SoA) ;
   add_unqualified ("rows_dot_self", ReturnType UVector, [UVector], SoA) ;
   add_unqualified ("rows_dot_self", ReturnType UVector, [URowVector], SoA) ;
   add_unqualified ("rows_dot_self", ReturnType UVector, [UMatrix], SoA) ;
@@ -2251,7 +2251,7 @@ let () =
   add_unqualified ("to_row_vector", ReturnType URowVector, [UArray UInt], AoS) ;
   add_unqualified ("to_vector", ReturnType UVector, [UMatrix], SoA) ;
   add_unqualified ("to_vector", ReturnType UVector, [UVector], SoA) ;
-  add_unqualified ("to_vector", ReturnType UVector, [URowVector], AoS) ;
+  add_unqualified ("to_vector", ReturnType UVector, [URowVector], SoA) ;
   add_unqualified ("to_vector", ReturnType UVector, [UArray UReal], AoS) ;
   add_unqualified ("to_vector", ReturnType UVector, [UArray UInt], AoS) ;
   add_unqualified ("trace", ReturnType UReal, [UMatrix], SoA) ;

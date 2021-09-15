@@ -9460,24 +9460,33 @@ class mother_model final : public model_base_crtp<mother_model> {
                          stan::conditional_var_value_t<local_scalar_t__, 
                            Eigen::Matrix<local_scalar_t__, -1, 1>>>>>>(N, M,
                    K, N);
-      Eigen::Matrix<local_scalar_t__, 1, -1> p_row_vec;
+      stan::conditional_var_value_t<local_scalar_t__, 
+        Eigen::Matrix<local_scalar_t__, 1, -1>> p_row_vec;
       current_statement__ = 12;
-      p_row_vec = in__.template read<Eigen::Matrix<local_scalar_t__, 1, -1>>(
-                    N);
-      std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> p_1d_row_vec;
+      p_row_vec = in__.template read<
+                    stan::conditional_var_value_t<local_scalar_t__, 
+                      Eigen::Matrix<local_scalar_t__, 1, -1>>>(N);
+      std::vector<
+        stan::conditional_var_value_t<local_scalar_t__, 
+          Eigen::Matrix<local_scalar_t__, 1, -1>>> p_1d_row_vec;
       current_statement__ = 13;
       p_1d_row_vec = in__.template read<
-                       std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
-                       N, N);
+                       std::vector<
+                         stan::conditional_var_value_t<local_scalar_t__, 
+                           Eigen::Matrix<local_scalar_t__, 1, -1>>>>(N, N);
       std::vector<
-        std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>> p_3d_row_vec;
+        std::vector<
+          std::vector<
+            stan::conditional_var_value_t<local_scalar_t__, 
+              Eigen::Matrix<local_scalar_t__, 1, -1>>>>> p_3d_row_vec;
       current_statement__ = 14;
       p_3d_row_vec = in__.template read<
                        std::vector<
                          std::vector<
                            std::vector<
-                             Eigen::Matrix<local_scalar_t__, 1, -1>>>>>(N, M,
-                       K, N);
+                             stan::conditional_var_value_t<local_scalar_t__, 
+                               Eigen::Matrix<local_scalar_t__, 1, -1>>>>>>(N,
+                       M, K, N);
       stan::conditional_var_value_t<local_scalar_t__, 
         Eigen::Matrix<local_scalar_t__, -1, -1>> p_mat;
       current_statement__ = 15;
@@ -9598,19 +9607,37 @@ class mother_model final : public model_base_crtp<mother_model> {
            Eigen::Matrix<local_scalar_t__, 1, -1>>(
            Eigen::Matrix<double, 1, -1>::Constant(N,
              std::numeric_limits<double>::quiet_NaN()));
-      std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>> tp_1d_row_vec =
-         std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(N, 
-           Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(N, DUMMY_VAR__));
       std::vector<
-        std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>> tp_3d_row_vec =
+        stan::conditional_var_value_t<local_scalar_t__, 
+          Eigen::Matrix<local_scalar_t__, 1, -1>>> tp_1d_row_vec =
          std::vector<
-           std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>>(
-           N, 
-           std::vector<std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>>(
-             M, 
-             std::vector<Eigen::Matrix<local_scalar_t__, 1, -1>>(K, 
-               Eigen::Matrix<local_scalar_t__, 1, -1>::Constant(N,
-                 DUMMY_VAR__))));
+           stan::conditional_var_value_t<local_scalar_t__, 
+             Eigen::Matrix<local_scalar_t__, 1, -1>>>(N, 
+           stan::conditional_var_value_t<local_scalar_t__, 
+             Eigen::Matrix<local_scalar_t__, 1, -1>>(
+             Eigen::Matrix<double, 1, -1>::Constant(N,
+               std::numeric_limits<double>::quiet_NaN())));
+      std::vector<
+        std::vector<
+          std::vector<
+            stan::conditional_var_value_t<local_scalar_t__, 
+              Eigen::Matrix<local_scalar_t__, 1, -1>>>>> tp_3d_row_vec =
+         std::vector<
+           std::vector<
+             std::vector<
+               stan::conditional_var_value_t<local_scalar_t__, 
+                 Eigen::Matrix<local_scalar_t__, 1, -1>>>>>(N, 
+           std::vector<
+             std::vector<
+               stan::conditional_var_value_t<local_scalar_t__, 
+                 Eigen::Matrix<local_scalar_t__, 1, -1>>>>(M, 
+             std::vector<
+               stan::conditional_var_value_t<local_scalar_t__, 
+                 Eigen::Matrix<local_scalar_t__, 1, -1>>>(K, 
+               stan::conditional_var_value_t<local_scalar_t__, 
+                 Eigen::Matrix<local_scalar_t__, 1, -1>>(
+                 Eigen::Matrix<double, 1, -1>::Constant(N,
+                   std::numeric_limits<double>::quiet_NaN())))));
       stan::conditional_var_value_t<local_scalar_t__, 
         Eigen::Matrix<local_scalar_t__, -1, -1>> tp_mat =
          stan::conditional_var_value_t<local_scalar_t__, 
