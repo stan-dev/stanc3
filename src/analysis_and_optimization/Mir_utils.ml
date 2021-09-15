@@ -41,12 +41,12 @@ type bound_values =
   { lower: [`None | `Nonlit | `Lit of float]
   ; upper: [`None | `Nonlit | `Lit of float] }
 
-let trans_bounds_values (trans : Expr.Typed.t Transformation.t) : bound_values
-    =
-  let bound_value e =
-    match num_expr_value e with None -> `Nonlit | Some (f, _) -> `Lit f
-  in
+let trans_bounds_values (trans : Expr.Typed.t Transformation.t) :
+    bound_values list =
   let single_bound (t : 'e Transformation.primitive) =
+    let bound_value e =
+      match num_expr_value e with None -> `Nonlit | Some (f, _) -> `Lit f
+    in
     match t with
     | Lower lower -> {lower= bound_value lower; upper= `None}
     | Upper upper -> {lower= `None; upper= bound_value upper}
@@ -60,15 +60,15 @@ let trans_bounds_values (trans : Expr.Typed.t Transformation.t) : bound_values
         {lower= `None; upper= `None}
   in
   match trans with
-  | Identity -> {lower= `None; upper= `None}
-  | Single t ->
-      single_bound t
-      (* TR TODO: This function is used in a two ways.
-         When checking distribution constraints, I think
-         this is fine, but not for hard constraint checks
-      *)
-      (* get the final element *)
-  | Chain ts -> single_bound (List.hd_exn (List.rev ts))
+  | Identity -> [{lower= `None; upper= `None}]
+  | Single t -> [single_bound t]
+  | Chain ts -> List.map ~f:single_bound ts
+
+let trans_domain_bounds trans : bound_values =
+  (* in distribution constraints, we only care that the final constraint
+     applied satisfies
+  *)
+  List.last_exn (trans_bounds_values trans)
 
 let chop_dist_name (fname : string) : string Option.t =
   (* Slightly inefficient, would be better to short-circuit *)

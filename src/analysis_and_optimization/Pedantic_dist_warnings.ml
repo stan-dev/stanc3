@@ -80,25 +80,21 @@ let bounds_out_of_range (range : range) (bounds : bound_values) : bool =
    constraint transformation of a variable *)
 let transform_mismatch_constraint (constr : var_constraint)
     (trans : Expr.Typed.t Transformation.t) : bool =
-  (* TR TODO: does this need to change?
-     I think that this is too permissive  as currently written,
-     because its only the final constraint that is needed?
-   *)
   let open Transformation in
   match constr with
-  | Range range -> bounds_out_of_range range (trans_bounds_values trans)
-  | Ordered -> Transformation.contains trans Ordered
-  | PositiveOrdered -> Transformation.contains trans PositiveOrdered
-  | Simplex -> Transformation.contains trans Simplex
-  | UnitVector -> Transformation.contains trans UnitVector
-  | CholeskyCorr -> Transformation.contains trans CholeskyCorr
+  | Range range -> bounds_out_of_range range (trans_domain_bounds trans)
+  | Ordered -> not (domains_match trans Ordered)
+  | PositiveOrdered -> not (domains_match trans PositiveOrdered)
+  | Simplex -> not (domains_match trans Simplex)
+  | UnitVector -> not (domains_match trans UnitVector)
+  | CholeskyCorr -> not (domains_match trans CholeskyCorr)
   | CholeskyCov ->
-      Transformation.contains trans CholeskyCov
-      && Transformation.contains trans CholeskyCorr
-  | Correlation -> Transformation.contains trans Correlation
+      (not (domains_match trans CholeskyCov))
+      && not (domains_match trans CholeskyCorr)
+  | Correlation -> not (domains_match trans Correlation)
   | Covariance ->
-      Transformation.contains trans Covariance
-      && Transformation.contains trans Correlation
+      (not (domains_match trans Covariance))
+      && not (domains_match trans Correlation)
 
 (* Check for inconsistency between a distribution argument's range and
    a literal value *)
@@ -213,7 +209,7 @@ let uniform_dist_warning (dist_info : dist_info) :
   match dist_info with
   | {args= (Param (pname, trans), _) :: (arg1, _) :: (arg2, _) :: _; _} -> (
       let warning = Some (dist_info.loc, uniform_dist_message pname) in
-      match (arg1, arg2, trans_bounds_values trans) with
+      match (arg1, arg2, trans_domain_bounds trans) with
       | _, _, {upper= `None; _} | _, _, {lower= `None; _} ->
           (* the variate is unbounded *)
           warning

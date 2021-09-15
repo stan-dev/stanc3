@@ -314,7 +314,7 @@ let var_decl_gen_val m d =
       let t =
         match transformation with
         (* NB: We disallow data having multiple constraints, so this should never happen *)
-        | Chain ts -> Transformation.Single (List.hd_exn (List.rev ts))
+        | Chain ts -> Transformation.Single (List.last_exn ts)
         | _ -> transformation
       in
       generate_value m sizedtype t

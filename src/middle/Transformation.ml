@@ -52,8 +52,9 @@ let same_transform t1 t2 =
       true
   | _, _ -> t1 = t2
 
-let contains (trans : 'e t) (t : 'e primitive) =
+(* checks that the final (or only) constraint is t*)
+let domains_match (trans : 'e t) (t : 'e primitive) =
   match trans with
   | Identity -> false
   | Single t' -> same_transform t t'
-  | Chain ts -> List.mem ts t ~equal:same_transform
+  | Chain ts -> same_transform t (List.last_exn ts)

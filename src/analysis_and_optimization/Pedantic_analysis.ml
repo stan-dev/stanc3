@@ -37,12 +37,12 @@ let list_hard_constrained (mir : Program.Typed.t) :
     | {lower= `Lit _; upper= `Lit _} -> Some `HardConstraint
     | _ -> None
   in
-  Set.Poly.filter_map
-    ~f:(fun (name, trans) ->
-      Option.map
-        ~f:(fun c -> (name, c))
-        (constrained (trans_bounds_values trans)) )
-    (parameter_set mir)
+  parameter_set mir |> Set.Poly.to_list
+  |> List.concat_map ~f:(fun (name, trans) ->
+         trans_bounds_values trans
+         |> List.filter_map ~f:constrained
+         |> List.map ~f:(fun el -> (name, el)) )
+  |> Set.Poly.of_list
 
 let list_multi_twiddles (mir : Program.Typed.t) :
     (string * Location_span.t Set.Poly.t) Set.Poly.t =
