@@ -24,7 +24,7 @@ type 'e t =
   | Single of 'e primitive
   (* given in CONSTRAINING ORDER
    * e.g. x_con = f(g(x_unc)) is written [g;f]
-   * = "When constraining, first do g, then do f." 
+   * = "When constraining, first do g, then do f."
    *)
   | Chain of 'e primitive list
 [@@deriving sexp, compare, map, hash, fold]
@@ -40,3 +40,20 @@ let primitive_has_check = function
 
 let has_transform = function Identity -> false | _ -> true
 let list = function Identity -> [] | Single t -> [t] | Chain ts -> ts
+
+let same_transform t1 t2 =
+  match (t1, t2) with
+  | Lower _, Lower _
+   |Upper _, Upper _
+   |LowerUpper _, LowerUpper _
+   |Offset _, Offset _
+   |Multiplier _, Multiplier _
+   |OffsetMultiplier _, OffsetMultiplier _ ->
+      true
+  | _, _ -> t1 = t2
+
+let contains (trans : 'e t) (t : 'e primitive) =
+  match trans with
+  | Identity -> false
+  | Single t' -> same_transform t t'
+  | Chain ts -> List.mem ts t ~equal:same_transform

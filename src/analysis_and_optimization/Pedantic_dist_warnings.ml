@@ -80,22 +80,25 @@ let bounds_out_of_range (range : range) (bounds : bound_values) : bool =
    constraint transformation of a variable *)
 let transform_mismatch_constraint (constr : var_constraint)
     (trans : Expr.Typed.t Transformation.t) : bool =
-  match trans with
-  | Transformation.Identity -> true
-  | Single trans -> (
-    match constr with
-    | Range range ->
-        bounds_out_of_range range
-          (trans_bounds_values Transformation.(Single trans))
-    | Ordered -> trans <> Transformation.Ordered
-    | PositiveOrdered -> trans <> PositiveOrdered
-    | Simplex -> trans <> Simplex
-    | UnitVector -> trans <> UnitVector
-    | CholeskyCorr -> trans <> CholeskyCorr
-    | CholeskyCov -> trans <> CholeskyCov && trans <> CholeskyCorr
-    | Correlation -> trans <> Correlation
-    | Covariance -> trans <> Covariance && trans <> Correlation )
-  | Chain _ -> failwith "TR TODO: constr_mismatch_warning"
+  (* TR TODO: does this need to change?
+     I think that this is too permissive  as currently written,
+     because its only the final constraint that is needed?
+   *)
+  let open Transformation in
+  match constr with
+  | Range range -> bounds_out_of_range range (trans_bounds_values trans)
+  | Ordered -> Transformation.contains trans Ordered
+  | PositiveOrdered -> Transformation.contains trans PositiveOrdered
+  | Simplex -> Transformation.contains trans Simplex
+  | UnitVector -> Transformation.contains trans UnitVector
+  | CholeskyCorr -> Transformation.contains trans CholeskyCorr
+  | CholeskyCov ->
+      Transformation.contains trans CholeskyCov
+      && Transformation.contains trans CholeskyCorr
+  | Correlation -> Transformation.contains trans Correlation
+  | Covariance ->
+      Transformation.contains trans Covariance
+      && Transformation.contains trans Correlation
 
 (* Check for inconsistency between a distribution argument's range and
    a literal value *)

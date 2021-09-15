@@ -46,9 +46,7 @@ let trans_bounds_values (trans : Expr.Typed.t Transformation.t) : bound_values
   let bound_value e =
     match num_expr_value e with None -> `Nonlit | Some (f, _) -> `Lit f
   in
-  match trans with
-  | Identity -> {lower= `None; upper= `None}
-  | Single t -> (
+  let single_bound (t : 'e Transformation.primitive) =
     match t with
     | Lower lower -> {lower= bound_value lower; upper= `None}
     | Upper upper -> {lower= `None; upper= bound_value upper}
@@ -59,8 +57,18 @@ let trans_bounds_values (trans : Expr.Typed.t Transformation.t) : bound_values
     | UnitVector -> {lower= `Lit (-1.); upper= `Lit 1.}
     | CholeskyCorr | CholeskyCov | Correlation | Covariance | Ordered
      |Offset _ | Multiplier _ | OffsetMultiplier _ ->
-        {lower= `None; upper= `None} )
-  | Chain _ -> failwith "TR TODO: trans_bounds_values"
+        {lower= `None; upper= `None}
+  in
+  match trans with
+  | Identity -> {lower= `None; upper= `None}
+  | Single t ->
+      single_bound t
+      (* TR TODO: This function is used in a two ways.
+         When checking distribution constraints, I think
+         this is fine, but not for hard constraint checks
+      *)
+      (* get the final element *)
+  | Chain ts -> single_bound (List.hd_exn (List.rev ts))
 
 let chop_dist_name (fname : string) : string Option.t =
   (* Slightly inefficient, would be better to short-circuit *)
