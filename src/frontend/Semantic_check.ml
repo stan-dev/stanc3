@@ -455,14 +455,6 @@ let semantic_check_binop loc op (le, re) =
              |> ok
          | Void -> error err ))
 
-let to_exn v =
-  v |> Validate.to_result
-  |> Result.map_error ~f:Fmt.(to_to_string @@ list ~sep:cut Semantic_error.pp)
-  |> Result.ok_or_failwith
-
-let semantic_check_binop_exn loc op (le, re) =
-  semantic_check_binop loc op (le, re) |> to_exn
-
 (* -- Prefix Operators ------------------------------------------------------ *)
 
 let semantic_check_prefixop loc op e =
@@ -624,9 +616,6 @@ let inferred_unsizedtype_of_indexed ~loc ut indices =
         |> Validate.error
   in
   aux ut (List.map ~f:indexing_type indices)
-
-let inferred_unsizedtype_of_indexed_exn ~loc ut indices =
-  inferred_unsizedtype_of_indexed ~loc ut indices |> to_exn
 
 let inferred_ad_type_of_indexed at uindices =
   UnsizedType.lub_ad_type

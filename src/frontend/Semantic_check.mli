@@ -2,19 +2,6 @@
 
 open Core_kernel
 
-val inferred_unsizedtype_of_indexed_exn :
-     loc:Middle.Location_span.t
-  -> Middle.UnsizedType.t
-  -> Ast.typed_expression Ast.index list
-  -> Middle.UnsizedType.t
-(** Infers unsized type of an `Indexed` expression  *)
-
-val semantic_check_binop_exn :
-     Middle.Location_span.t
-  -> Middle.Operator.t
-  -> Ast.typed_expression * Ast.typed_expression
-  -> Ast.typed_expression
-
 val semantic_check_program :
      Ast.untyped_program
   -> (Ast.typed_program, Middle.Semantic_error.t list) result
