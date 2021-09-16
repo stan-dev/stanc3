@@ -49,21 +49,21 @@ model {
     x ~ normal(0, 1);
     x ~ normal_log(0, 1);
     x ~ normal_log(0, 1);
-    target += normal_log_lpdf(x| 1, 2);
-    target += std_normal_lpdf(x| );
+    target += normal_log_lpdf(x | 1, 2);
+    target += std_normal_lpdf(x | );
   } else {
     x ~ exponential(1);
     x ~ exponential(1);
-    target += foo_lcdf(x| 1);
+    target += foo_lcdf(x | 1);
   }
   
-  target += normal_lpdf(x| 0, 1) + normal_lcdf(2| 0, 1)
-            + normal_lccdf(3| 0, 1);
+  target += normal_lpdf(x | 0, 1) + normal_lcdf(2 | 0, 1)
+            + normal_lccdf(3 | 0, 1);
   target += sum(K);
   
-  target += normal_cdf(1| 2, 3);
-  target += normal_cdf(normal_cdf(0| 1, 2)| 2, 3);
-  target += foo_cdf(1| 2, 3);
+  target += normal_cdf(1 | 2, 3);
+  target += normal_cdf(normal_cdf(0 | 1, 2) | 2, 3);
+  target += foo_cdf(1 | 2, 3);
   
   print("target: ", target());
 }
