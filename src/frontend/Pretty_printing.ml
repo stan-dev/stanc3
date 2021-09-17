@@ -329,14 +329,15 @@ let pp_sizedtype ppf = function
 
 let pp_transformation ppf = function
   | Middle.Transformation.Identity -> Fmt.pf ppf ""
-  | Lower e -> Fmt.pf ppf "<lower=%a>" pp_expression e
-  | Upper e -> Fmt.pf ppf "<upper=%a>" pp_expression e
+  | Lower e -> Fmt.pf ppf "<@[lower=%a@]>" pp_expression e
+  | Upper e -> Fmt.pf ppf "<@[upper=%a@]>" pp_expression e
   | LowerUpper (e1, e2) ->
-      Fmt.pf ppf "<lower=%a, upper=%a>" pp_expression e1 pp_expression e2
-  | Offset e -> Fmt.pf ppf "<offset=%a>" pp_expression e
-  | Multiplier e -> Fmt.pf ppf "<multiplier=%a>" pp_expression e
+      Fmt.pf ppf "<@[lower=%a,@ upper=%a@]>" pp_expression e1 pp_expression e2
+  | Offset e -> Fmt.pf ppf "<@[offset=%a@]>" pp_expression e
+  | Multiplier e -> Fmt.pf ppf "<@[multiplier=%a@]>" pp_expression e
   | OffsetMultiplier (e1, e2) ->
-      Fmt.pf ppf "<offset=%a, multiplier=%a>" pp_expression e1 pp_expression e2
+      Fmt.pf ppf "<@[offset=%a,@ multiplier=%a@]>" pp_expression e1
+        pp_expression e2
   | Ordered -> Fmt.pf ppf ""
   | PositiveOrdered -> Fmt.pf ppf ""
   | Simplex -> Fmt.pf ppf ""
