@@ -1861,14 +1861,14 @@ let semantic_check_functions_have_defn function_block_stmts_opt =
 
 (* The actual semantic checks for all AST nodes! *)
 let semantic_check_program
-    { functionblock= fb
-    ; datablock= db
-    ; transformeddatablock= tdb
-    ; parametersblock= pb
-    ; transformedparametersblock= tpb
-    ; modelblock= mb
-    ; generatedquantitiesblock= gb
-    ; comments } =
+    ( { functionblock= fb
+      ; datablock= db
+      ; transformeddatablock= tdb
+      ; parametersblock= pb
+      ; transformedparametersblock= tpb
+      ; modelblock= mb
+      ; generatedquantitiesblock= gb
+      ; comments } as ast ) =
   (* NB: We always want to make sure we start with an empty symbol table, in
      case we are processing multiple files in one run. *)
   unsafe_clear_symbol_table vm ;
@@ -1911,15 +1911,7 @@ let semantic_check_program
   let check_correctness_invariant (decorated_ast : typed_program) :
       typed_program =
     if
-      compare_untyped_program
-        { functionblock= fb
-        ; datablock= db
-        ; transformeddatablock= tdb
-        ; parametersblock= pb
-        ; transformedparametersblock= tpb
-        ; modelblock= mb
-        ; generatedquantitiesblock= gb
-        ; comments }
+      compare_untyped_program ast
         (untyped_program_of_typed_program decorated_ast)
       = 0
     then decorated_ast

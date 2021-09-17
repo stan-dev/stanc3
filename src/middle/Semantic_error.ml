@@ -387,7 +387,7 @@ For example, "target += normal_lpdf(y, 0, 1)" should become "y ~ normal(0, 1)."
           "Function '%s' has already been declared. A definition is expected."
           name
     | FunDeclNoDefn ->
-        Fmt.pf ppf "Some function is declared without specifying a definition."
+        Fmt.pf ppf "Function is declared without specifying a definition."
     | FunDeclNeedsBlock ->
         Fmt.pf ppf "Function definitions must be wrapped in curly braces."
     | NonRealProbFunDef ->

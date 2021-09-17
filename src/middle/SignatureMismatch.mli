@@ -47,3 +47,5 @@ val pp_signature_mismatch :
          list
        * bool )
   -> unit
+
+val compare_errors : function_mismatch -> function_mismatch -> int

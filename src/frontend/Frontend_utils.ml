@@ -8,20 +8,12 @@ let untyped_ast_of_string s =
   Fmt.epr "%a" (Fmt.list ~sep:Fmt.nop Warnings.pp) warnings ;
   res
 
-let emit_warnings_and_return_ast (ast, warnings) =
-  if List.length warnings > 0 then Warnings.pp_warnings Fmt.stderr warnings ;
-  ast
-
 let typed_ast_of_string_exn s =
   Result.(
     untyped_ast_of_string s
     >>= fun ast ->
-    Semantic_check.semantic_check_program ast
-    |> map_error ~f:(function
-         | err :: _ -> Errors.Semantic_error err
-         | [] ->
-             failwith
-               "Internal compiler error: no message from Semantic_check." ))
+    Typechecker.check_program ast
+    |> map_error ~f:(fun e -> Errors.Semantic_error e))
   |> Result.map_error ~f:Errors.to_string
   |> Result.ok_or_failwith
 
@@ -36,13 +28,8 @@ let get_ast_or_exit ?printed_filename ?(print_warnings = true) filename =
   | Result.Error err -> Errors.pp Fmt.stderr err ; exit 1
 
 let type_ast_or_exit ast =
-  match Semantic_check.semantic_check_program ast with
+  match Typechecker.check_program ast with
   | Result.Ok p -> p
-  | Result.Error (error :: _) ->
+  | Result.Error error ->
       Errors.pp_semantic_error Fmt.stderr error ;
-      exit 1
-  | Result.Error [] ->
-      Printf.eprintf
-        "Semantic check failed but reported no errors. This should never \
-         happen." ;
       exit 1
