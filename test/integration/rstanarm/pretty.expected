@@ -2745,8 +2745,8 @@ transformed data {
   }
 }
 parameters {
-  array[has_intercept] real<lower=make_lower(family, link), upper=make_upper(family,
-                                                                    link)> gamma;
+  array[has_intercept] real<lower=make_lower(family, link),
+                            upper=make_upper(family, link)> gamma;
   // declares z_beta, global, local, z_b, z_T, rho, zeta, tau
   
   vector[prior_dist == 7 ? sum(num_normals) : K] z_beta;
@@ -6320,11 +6320,14 @@ parameters {
   
   // intercepts
   
-  array[intercept_type[1] > 0] real<lower=lb(intercept_type[1]), upper=ub(intercept_type[1])> yGamma1;
+  array[intercept_type[1] > 0] real<lower=lb(intercept_type[1]),
+                                    upper=ub(intercept_type[1])> yGamma1;
   
-  array[intercept_type[2] > 0] real<lower=lb(intercept_type[2]), upper=ub(intercept_type[2])> yGamma2;
+  array[intercept_type[2] > 0] real<lower=lb(intercept_type[2]),
+                                    upper=ub(intercept_type[2])> yGamma2;
   
-  array[intercept_type[3] > 0] real<lower=lb(intercept_type[3]), upper=ub(intercept_type[3])> yGamma3;
+  array[intercept_type[3] > 0] real<lower=lb(intercept_type[3]),
+                                    upper=ub(intercept_type[3])> yGamma3;
   
   // population level primitive params
   vector[yK[1]] z_yBeta1;
@@ -8991,11 +8994,14 @@ parameters {
   
   // intercepts
   
-  array[intercept_type[1] > 0] real<lower=lb(intercept_type[1]), upper=ub(intercept_type[1])> yGamma1;
+  array[intercept_type[1] > 0] real<lower=lb(intercept_type[1]),
+                                    upper=ub(intercept_type[1])> yGamma1;
   
-  array[intercept_type[2] > 0] real<lower=lb(intercept_type[2]), upper=ub(intercept_type[2])> yGamma2;
+  array[intercept_type[2] > 0] real<lower=lb(intercept_type[2]),
+                                    upper=ub(intercept_type[2])> yGamma2;
   
-  array[intercept_type[3] > 0] real<lower=lb(intercept_type[3]), upper=ub(intercept_type[3])> yGamma3;
+  array[intercept_type[3] > 0] real<lower=lb(intercept_type[3]),
+                                    upper=ub(intercept_type[3])> yGamma3;
   
   // population level primitive params
   vector[yK[1]] z_yBeta1;
