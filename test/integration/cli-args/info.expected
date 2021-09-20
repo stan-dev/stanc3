@@ -1,4 +1,4 @@
-  $ ../../../../install/default/bin/stanc --info  info.stan
+  $ ../../../../install/default/bin/stanc --include-paths=.,includes --info  info.stan
 { "inputs": { "a": { "type": "int", "dimensions": 0},
               "b": { "type": "real", "dimensions": 0},
               "c": { "type": "real", "dimensions": 1},
@@ -28,5 +28,8 @@
                      "normal_lccdf",
                      "normal_lcdf",
                      "normal_lpdf",
-                     "std_normal_lupdf" ] }
+                     "std_normal_lupdf" ],
+  "included_files": [ "./included.stan",
+                      "includes/recursive.stan",
+                      "includes/another_include.stan" ] }
 

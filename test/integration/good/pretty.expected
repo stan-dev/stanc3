@@ -4567,11 +4567,11 @@ Warning in 'lp_in_fun.stan', line 3, column 21: The no-argument function `get_lp
   $ ../../../../install/default/bin/stanc --auto-format lp_transformed_param.stan
 functions {
   real test_lp(real r) {
-    target += normal_lpdf(r| 0, 1);
+    target += normal_lpdf(r | 0, 1);
     return r;
   }
   void nr_test_lp(real r) {
-    target += normal_lpdf(r| 0, 1);
+    target += normal_lpdf(r | 0, 1);
   }
 }
 parameters {
@@ -4781,12 +4781,12 @@ parameters {
 }
 model {
   y ~ normal(0, 1);
-  target += normal_lpdf(1| -1.5, 2.9);
-  target += poisson_lpmf(2| 3);
-  target += normal_lcdf(1| 2, 3);
-  target += normal_lccdf(1| 2, 3);
-  target += poisson_lcdf(1| 2);
-  target += poisson_lccdf(1| 2);
+  target += normal_lpdf(1 | -1.5, 2.9);
+  target += poisson_lpmf(2 | 3);
+  target += normal_lcdf(1 | 2, 3);
+  target += normal_lccdf(1 | 2, 3);
+  target += poisson_lcdf(1 | 2);
+  target += poisson_lccdf(1 | 2);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format normal_id_glm_old_performance.stan
@@ -5365,7 +5365,7 @@ model {
 
   $ ../../../../install/default/bin/stanc --auto-format propto-good.stan
 model {
-  target += normal_lupdf(1| 0, 1);
+  target += normal_lupdf(1 | 0, 1);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format rng_loc.stan
@@ -5427,16 +5427,16 @@ parameters {
   real x;
 }
 model {
-  target += std_normal_lpdf(x| );
-  target += std_normal_lpdf(x| );
-  target += std_normal_lupdf(x| );
-  target += std_normal_lupdf(x| );
-  target += foo_lpdf(x| );
-  target += foo_lpdf(x| );
-  target += goo_lpmf(y| );
-  target += goo_lpmf(y| );
-  target += goo_lupmf(y| );
-  target += goo_lupmf(y| );
+  target += std_normal_lpdf(x | );
+  target += std_normal_lpdf(x | );
+  target += std_normal_lupdf(x | );
+  target += std_normal_lupdf(x | );
+  target += foo_lpdf(x | );
+  target += foo_lpdf(x | );
+  target += goo_lpmf(y | );
+  target += goo_lpmf(y | );
+  target += goo_lupmf(y | );
+  target += goo_lupmf(y | );
 }
 
   $ ../../../../install/default/bin/stanc --auto-format stanc_helper.stan
@@ -5515,46 +5515,46 @@ functions {
   real foo_lpdf(real y1, real y2, vector vy1, vector vy2, matrix my1,
                 matrix my2, array[] real ay1) {
     real r;
-    r += beta_lupdf(y1| y2, y2);
-    r += beta_proportion_lupdf(y1| y2, y2);
-    r += cauchy_lupdf(y1| y2, y2);
-    r += chi_square_lupdf(y1| y2);
-    r += dirichlet_lupdf(vy1| vy2);
-    r += double_exponential_lupdf(y1| y2, y2);
-    r += exp_mod_normal_lupdf(y1| y2, y2, y2);
-    r += exponential_lupdf(y1| y2);
-    r += frechet_lupdf(y1| y2, y2);
-    r += gamma_lupdf(y1| y2, y2);
-    r += gaussian_dlm_obs_lupdf(my1| my2, my2, vy2, my2, vy2, my2);
-    r += gumbel_lupdf(y1| y2, y2);
-    r += inv_chi_square_lupdf(y1| y2);
-    r += inv_gamma_lupdf(y1| y2, y2);
-    r += inv_wishart_lupdf(my1| y2, my2);
-    r += lkj_corr_cholesky_lupdf(my1| y2);
-    r += lkj_corr_lupdf(my1| y2);
-    r += logistic_lupdf(y1| y2, y2);
-    r += lognormal_lupdf(y1| y2, y2);
-    r += multi_gp_cholesky_lupdf(my1| my2, vy2);
-    r += multi_gp_lupdf(my1| my2, vy2);
-    r += multi_normal_cholesky_lupdf(vy1| vy2, my2);
-    r += multi_normal_lupdf(vy1| vy2, my2);
-    r += multi_normal_prec_lupdf(vy1| vy2, my2);
-    r += multi_student_t_lupdf(vy1| y2, vy2, my2);
-    r += normal_id_glm_lupdf(y1| my2, y2, vy2, vy2);
-    r += normal_lupdf(y1| y2, y2);
-    r += normal_lupdf(ay1| y2, y2);
-    r += pareto_lupdf(y1| y2, y2);
-    r += pareto_type_2_lupdf(y1| y2, y2, y2);
-    r += rayleigh_lupdf(y1| y2);
-    r += scaled_inv_chi_square_lupdf(y1| y2, y2);
-    r += skew_normal_lupdf(y1| y2, y2, y2);
-    r += std_normal_lupdf(y1| );
-    r += student_t_lupdf(y1| y2, y2, y2);
-    r += uniform_lupdf(y1| y2, y2);
-    r += von_mises_lupdf(y1| y2, y2);
-    r += weibull_lupdf(y1| y2, y2);
-    r += wiener_lupdf(y1| y2, y2, y2, y2);
-    r += wishart_lupdf(my1| y2, my2);
+    r += beta_lupdf(y1 | y2, y2);
+    r += beta_proportion_lupdf(y1 | y2, y2);
+    r += cauchy_lupdf(y1 | y2, y2);
+    r += chi_square_lupdf(y1 | y2);
+    r += dirichlet_lupdf(vy1 | vy2);
+    r += double_exponential_lupdf(y1 | y2, y2);
+    r += exp_mod_normal_lupdf(y1 | y2, y2, y2);
+    r += exponential_lupdf(y1 | y2);
+    r += frechet_lupdf(y1 | y2, y2);
+    r += gamma_lupdf(y1 | y2, y2);
+    r += gaussian_dlm_obs_lupdf(my1 | my2, my2, vy2, my2, vy2, my2);
+    r += gumbel_lupdf(y1 | y2, y2);
+    r += inv_chi_square_lupdf(y1 | y2);
+    r += inv_gamma_lupdf(y1 | y2, y2);
+    r += inv_wishart_lupdf(my1 | y2, my2);
+    r += lkj_corr_cholesky_lupdf(my1 | y2);
+    r += lkj_corr_lupdf(my1 | y2);
+    r += logistic_lupdf(y1 | y2, y2);
+    r += lognormal_lupdf(y1 | y2, y2);
+    r += multi_gp_cholesky_lupdf(my1 | my2, vy2);
+    r += multi_gp_lupdf(my1 | my2, vy2);
+    r += multi_normal_cholesky_lupdf(vy1 | vy2, my2);
+    r += multi_normal_lupdf(vy1 | vy2, my2);
+    r += multi_normal_prec_lupdf(vy1 | vy2, my2);
+    r += multi_student_t_lupdf(vy1 | y2, vy2, my2);
+    r += normal_id_glm_lupdf(y1 | my2, y2, vy2, vy2);
+    r += normal_lupdf(y1 | y2, y2);
+    r += normal_lupdf(ay1 | y2, y2);
+    r += pareto_lupdf(y1 | y2, y2);
+    r += pareto_type_2_lupdf(y1 | y2, y2, y2);
+    r += rayleigh_lupdf(y1 | y2);
+    r += scaled_inv_chi_square_lupdf(y1 | y2, y2);
+    r += skew_normal_lupdf(y1 | y2, y2, y2);
+    r += std_normal_lupdf(y1 | );
+    r += student_t_lupdf(y1 | y2, y2, y2);
+    r += uniform_lupdf(y1 | y2, y2);
+    r += von_mises_lupdf(y1 | y2, y2);
+    r += weibull_lupdf(y1 | y2, y2);
+    r += wiener_lupdf(y1 | y2, y2, y2, y2);
+    r += wishart_lupdf(my1 | y2, my2);
     return r;
   }
 }
@@ -5569,47 +5569,47 @@ parameters {
 }
 model {
   real r;
-  r += beta_lupdf(y1| y2, y2);
-  r += beta_proportion_lupdf(y1| y2, y2);
-  r += cauchy_lupdf(y1| y2, y2);
-  r += chi_square_lupdf(y1| y2);
-  r += dirichlet_lupdf(vy1| vy2);
-  r += double_exponential_lupdf(y1| y2, y2);
-  r += exp_mod_normal_lupdf(y1| y2, y2, y2);
-  r += exponential_lupdf(y1| y2);
-  r += frechet_lupdf(y1| y2, y2);
-  r += gamma_lupdf(y1| y2, y2);
-  r += gaussian_dlm_obs_lupdf(my1| my2, my2, vy2, my2, vy2, my2);
-  r += gumbel_lupdf(y1| y2, y2);
-  r += inv_chi_square_lupdf(y1| y2);
-  r += inv_gamma_lupdf(y1| y2, y2);
-  r += inv_wishart_lupdf(my1| y2, my2);
-  r += lkj_corr_cholesky_lupdf(my1| y2);
-  r += lkj_corr_lupdf(my1| y2);
-  r += logistic_lupdf(y1| y2, y2);
-  r += lognormal_lupdf(y1| y2, y2);
-  r += multi_gp_cholesky_lupdf(my1| my2, vy2);
-  r += multi_gp_lupdf(my1| my2, vy2);
-  r += multi_normal_cholesky_lupdf(vy1| vy2, my2);
-  r += multi_normal_lupdf(vy1| vy2, my2);
-  r += multi_normal_prec_lupdf(vy1| vy2, my2);
-  r += multi_student_t_lupdf(vy1| y2, vy2, my2);
-  r += normal_id_glm_lupdf(y1| my2, y2, vy2, vy2);
-  r += normal_lupdf(y1| y2, y2);
-  r += normal_lupdf(ay1| y2, y2);
-  r += pareto_lupdf(y1| y2, y2);
-  r += pareto_type_2_lupdf(y1| y2, y2, y2);
-  r += rayleigh_lupdf(y1| y2);
-  r += scaled_inv_chi_square_lupdf(y1| y2, y2);
-  r += skew_normal_lupdf(y1| y2, y2, y2);
-  r += std_normal_lupdf(y1| );
-  r += student_t_lupdf(y1| y2, y2, y2);
-  r += uniform_lupdf(y1| y2, y2);
-  r += von_mises_lupdf(y1| y2, y2);
-  r += weibull_lupdf(y1| y2, y2);
-  r += wiener_lupdf(y1| y2, y2, y2, y2);
-  r += wishart_lupdf(my1| y2, my2);
-  r += foo_lupdf(y1| y2, vy1, vy2, my1, my2, ay1);
+  r += beta_lupdf(y1 | y2, y2);
+  r += beta_proportion_lupdf(y1 | y2, y2);
+  r += cauchy_lupdf(y1 | y2, y2);
+  r += chi_square_lupdf(y1 | y2);
+  r += dirichlet_lupdf(vy1 | vy2);
+  r += double_exponential_lupdf(y1 | y2, y2);
+  r += exp_mod_normal_lupdf(y1 | y2, y2, y2);
+  r += exponential_lupdf(y1 | y2);
+  r += frechet_lupdf(y1 | y2, y2);
+  r += gamma_lupdf(y1 | y2, y2);
+  r += gaussian_dlm_obs_lupdf(my1 | my2, my2, vy2, my2, vy2, my2);
+  r += gumbel_lupdf(y1 | y2, y2);
+  r += inv_chi_square_lupdf(y1 | y2);
+  r += inv_gamma_lupdf(y1 | y2, y2);
+  r += inv_wishart_lupdf(my1 | y2, my2);
+  r += lkj_corr_cholesky_lupdf(my1 | y2);
+  r += lkj_corr_lupdf(my1 | y2);
+  r += logistic_lupdf(y1 | y2, y2);
+  r += lognormal_lupdf(y1 | y2, y2);
+  r += multi_gp_cholesky_lupdf(my1 | my2, vy2);
+  r += multi_gp_lupdf(my1 | my2, vy2);
+  r += multi_normal_cholesky_lupdf(vy1 | vy2, my2);
+  r += multi_normal_lupdf(vy1 | vy2, my2);
+  r += multi_normal_prec_lupdf(vy1 | vy2, my2);
+  r += multi_student_t_lupdf(vy1 | y2, vy2, my2);
+  r += normal_id_glm_lupdf(y1 | my2, y2, vy2, vy2);
+  r += normal_lupdf(y1 | y2, y2);
+  r += normal_lupdf(ay1 | y2, y2);
+  r += pareto_lupdf(y1 | y2, y2);
+  r += pareto_type_2_lupdf(y1 | y2, y2, y2);
+  r += rayleigh_lupdf(y1 | y2);
+  r += scaled_inv_chi_square_lupdf(y1 | y2, y2);
+  r += skew_normal_lupdf(y1 | y2, y2, y2);
+  r += std_normal_lupdf(y1 | );
+  r += student_t_lupdf(y1 | y2, y2, y2);
+  r += uniform_lupdf(y1 | y2, y2);
+  r += von_mises_lupdf(y1 | y2, y2);
+  r += weibull_lupdf(y1 | y2, y2);
+  r += wiener_lupdf(y1 | y2, y2, y2, y2);
+  r += wishart_lupdf(my1 | y2, my2);
+  r += foo_lupdf(y1 | y2, vy1, vy2, my1, my2, ay1);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format unnormalized_math_fun_lpmf.stan
@@ -5617,27 +5617,27 @@ functions {
   real foo_lpmf(int i1, real r1, matrix m1, vector v1, array[] int ai1,
                 row_vector rv1) {
     real r;
-    r += bernoulli_logit_glm_lupmf(i1| m1, r1, v1);
-    r += bernoulli_logit_lupmf(i1| r1);
-    r += bernoulli_lupmf(i1| r1);
-    r += beta_binomial_lupmf(i1| i1, r1, r1);
-    r += binomial_logit_lupmf(i1| i1, r1);
-    r += binomial_lupmf(i1| i1, r1);
-    r += categorical_logit_glm_lupmf(i1| rv1, v1, m1);
-    r += categorical_logit_lupmf(i1| v1);
-    r += categorical_lupmf(i1| v1);
-    r += hypergeometric_lupmf(i1| i1, i1, i1);
-    r += multinomial_lupmf(ai1| v1);
-    r += neg_binomial_2_log_glm_lupmf(i1| m1, r1, v1, r1);
-    r += neg_binomial_2_log_lupmf(i1| r1, r1);
-    r += neg_binomial_2_lupmf(i1| r1, r1);
-    r += neg_binomial_lupmf(i1| r1, r1);
-    r += ordered_logistic_glm_lupmf(i1| rv1, v1, v1);
-    r += ordered_logistic_lupmf(i1| r1, v1);
-    r += ordered_probit_lupmf(i1| r1, v1);
-    r += poisson_log_glm_lupmf(i1| m1, r1, v1);
-    r += poisson_log_lupmf(i1| r1);
-    r += poisson_lupmf(i1| r1);
+    r += bernoulli_logit_glm_lupmf(i1 | m1, r1, v1);
+    r += bernoulli_logit_lupmf(i1 | r1);
+    r += bernoulli_lupmf(i1 | r1);
+    r += beta_binomial_lupmf(i1 | i1, r1, r1);
+    r += binomial_logit_lupmf(i1 | i1, r1);
+    r += binomial_lupmf(i1 | i1, r1);
+    r += categorical_logit_glm_lupmf(i1 | rv1, v1, m1);
+    r += categorical_logit_lupmf(i1 | v1);
+    r += categorical_lupmf(i1 | v1);
+    r += hypergeometric_lupmf(i1 | i1, i1, i1);
+    r += multinomial_lupmf(ai1 | v1);
+    r += neg_binomial_2_log_glm_lupmf(i1 | m1, r1, v1, r1);
+    r += neg_binomial_2_log_lupmf(i1 | r1, r1);
+    r += neg_binomial_2_lupmf(i1 | r1, r1);
+    r += neg_binomial_lupmf(i1 | r1, r1);
+    r += ordered_logistic_glm_lupmf(i1 | rv1, v1, v1);
+    r += ordered_logistic_lupmf(i1 | r1, v1);
+    r += ordered_probit_lupmf(i1 | r1, v1);
+    r += poisson_log_glm_lupmf(i1 | m1, r1, v1);
+    r += poisson_log_lupmf(i1 | r1);
+    r += poisson_lupmf(i1 | r1);
     return r;
   }
 }
@@ -5653,28 +5653,28 @@ parameters {
 }
 model {
   real r;
-  r += bernoulli_logit_glm_lupmf(i1| m1, r1, v1);
-  r += bernoulli_logit_lupmf(i1| r1);
-  r += bernoulli_lupmf(i1| r1);
-  r += beta_binomial_lupmf(i1| i1, r1, r1);
-  r += binomial_logit_lupmf(i1| i1, r1);
-  r += binomial_lupmf(i1| i1, r1);
-  r += categorical_logit_glm_lupmf(i1| rv1, v1, m1);
-  r += categorical_logit_lupmf(i1| v1);
-  r += categorical_lupmf(i1| v1);
-  r += hypergeometric_lupmf(i1| i1, i1, i1);
-  r += multinomial_lupmf(ai1| v1);
-  r += neg_binomial_2_log_glm_lupmf(i1| m1, r1, v1, r1);
-  r += neg_binomial_2_log_lupmf(i1| r1, r1);
-  r += neg_binomial_2_lupmf(i1| r1, r1);
-  r += neg_binomial_lupmf(i1| r1, r1);
-  r += ordered_logistic_glm_lupmf(i1| rv1, v1, v1);
-  r += ordered_logistic_lupmf(i1| r1, v1);
-  r += ordered_probit_lupmf(i1| r1, v1);
-  r += poisson_log_glm_lupmf(i1| m1, r1, v1);
-  r += poisson_log_lupmf(i1| r1);
-  r += poisson_lupmf(i1| r1);
-  r += foo_lupmf(i1| r1, m1, v1, ai1, rv1);
+  r += bernoulli_logit_glm_lupmf(i1 | m1, r1, v1);
+  r += bernoulli_logit_lupmf(i1 | r1);
+  r += bernoulli_lupmf(i1 | r1);
+  r += beta_binomial_lupmf(i1 | i1, r1, r1);
+  r += binomial_logit_lupmf(i1 | i1, r1);
+  r += binomial_lupmf(i1 | i1, r1);
+  r += categorical_logit_glm_lupmf(i1 | rv1, v1, m1);
+  r += categorical_logit_lupmf(i1 | v1);
+  r += categorical_lupmf(i1 | v1);
+  r += hypergeometric_lupmf(i1 | i1, i1, i1);
+  r += multinomial_lupmf(ai1 | v1);
+  r += neg_binomial_2_log_glm_lupmf(i1 | m1, r1, v1, r1);
+  r += neg_binomial_2_log_lupmf(i1 | r1, r1);
+  r += neg_binomial_2_lupmf(i1 | r1, r1);
+  r += neg_binomial_lupmf(i1 | r1, r1);
+  r += ordered_logistic_glm_lupmf(i1 | rv1, v1, v1);
+  r += ordered_logistic_lupmf(i1 | r1, v1);
+  r += ordered_probit_lupmf(i1 | r1, v1);
+  r += poisson_log_glm_lupmf(i1 | m1, r1, v1);
+  r += poisson_log_lupmf(i1 | r1);
+  r += poisson_lupmf(i1 | r1);
+  r += foo_lupmf(i1 | r1, m1, v1, ai1, rv1);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format unreserved-array-keyword.stan
@@ -5714,21 +5714,21 @@ parameters {
   real y;
 }
 model {
-  target += foo_lpdf(y| 7.0);
-  target += foo_lcdf(y| 7.0);
-  target += foo_lccdf(y| 7.0);
+  target += foo_lpdf(y | 7.0);
+  target += foo_lcdf(y | 7.0);
+  target += foo_lccdf(y | 7.0);
   
-  target += normal_lpdf(y| 7.0, 1.0);
-  target += normal_lcdf(y| 7.0, 1.0);
-  target += normal_lccdf(y| 7.0, 1.0);
+  target += normal_lpdf(y | 7.0, 1.0);
+  target += normal_lcdf(y | 7.0, 1.0);
+  target += normal_lccdf(y | 7.0, 1.0);
   
-  target += bar_lpmf(2| 7.0);
-  target += bar_lcdf(2| 7.0);
-  target += bar_lccdf(2| 7.0);
+  target += bar_lpmf(2 | 7.0);
+  target += bar_lcdf(2 | 7.0);
+  target += bar_lccdf(2 | 7.0);
   
-  target += poisson_lpmf(2| 7.0);
-  target += poisson_lcdf(2| 7.0);
-  target += poisson_lccdf(2| 7.0);
+  target += poisson_lpmf(2 | 7.0);
+  target += poisson_lcdf(2 | 7.0);
+  target += poisson_lccdf(2 | 7.0);
 }
 
   $ ../../../../install/default/bin/stanc --auto-format user-distro-truncate.stan

@@ -270,7 +270,7 @@ and pp_expression ppf ({expr= e_content; emeta= {loc; _}} : untyped_expression)
     | [] -> Middle.Errors.fatal_error ()
     | e :: es' ->
         with_hbox ppf (fun () ->
-            Fmt.pf ppf "%a(%a| %a)" pp_identifier id pp_expression e
+            Fmt.pf ppf "%a(%a | %a)" pp_identifier id pp_expression e
               pp_list_of_expression (es', loc) ) )
   (* GetLP is deprecated *)
   | GetLP -> Fmt.pf ppf "get_lp()"
