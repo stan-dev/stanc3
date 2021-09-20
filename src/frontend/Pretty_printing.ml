@@ -328,7 +328,8 @@ let pp_sizedtype ppf = function
   | SArray _ -> raise (Middle.Errors.FatalError "This should never happen.")
 
 let pp_transformation ppf = function
-  | Middle.Transformation.Lower e -> Fmt.pf ppf "<@[lower=%a@]>" pp_expression e
+  | Middle.Transformation.Lower e ->
+      Fmt.pf ppf "<@[lower=%a@]>" pp_expression e
   | Upper e -> Fmt.pf ppf "<@[upper=%a@]>" pp_expression e
   | LowerUpper (e1, e2) ->
       Fmt.pf ppf "<@[lower=%a,@ upper=%a@]>" pp_expression e1 pp_expression e2
