@@ -11,6 +11,7 @@ let dup_exists l =
 
 let include_stack = Stack.create ()
 let include_paths : string list ref = ref []
+let included_files : string list ref = ref []
 
 let rec try_open_in paths fname pos =
   match paths with
@@ -26,6 +27,7 @@ let rec try_open_in paths fname pos =
     try
       let full_path = path ^ "/" ^ fname in
       ( In_channel.create full_path
+      , full_path
       , sprintf "%s, included from\n%s" full_path
           (Middle.Location.to_string
              (Middle.Location.of_position_exn
@@ -39,7 +41,7 @@ let maybe_remove_quotes str =
   else str
 
 let try_get_new_lexbuf fname pos =
-  let chan, path =
+  let chan, file, path =
     try_open_in !include_paths (maybe_remove_quotes fname) pos
   in
   let new_lexbuf = from_channel chan in
@@ -54,4 +56,5 @@ let try_get_new_lexbuf fname pos =
             , Middle.Location.of_position_exn
                 (lexeme_start_p (Stack.top_exn include_stack)) ))) ;
   Stack.push include_stack new_lexbuf ;
+  included_files := file :: !included_files ;
   new_lexbuf
