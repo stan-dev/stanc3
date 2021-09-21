@@ -1018,8 +1018,8 @@ let () =
     , AoS ) ;
   add_unqualified
     ("columns_dot_product", ReturnType URowVector, [UMatrix; UMatrix], SoA) ;
-  add_unqualified ("columns_dot_self", ReturnType URowVector, [UVector], SoA) ;
-  add_unqualified ("columns_dot_self", ReturnType URowVector, [URowVector], SoA) ;
+  add_unqualified ("columns_dot_self", ReturnType URowVector, [UVector], AoS) ;
+  add_unqualified ("columns_dot_self", ReturnType URowVector, [URowVector], AoS) ;
   add_unqualified ("columns_dot_self", ReturnType URowVector, [UMatrix], SoA) ;
   add_unqualified ("conj", ReturnType UComplex, [UComplex], AoS) ;
   add_unqualified ("cos", ReturnType UComplex, [UComplex], AoS) ;
