@@ -1020,7 +1020,7 @@ let () =
     ("columns_dot_product", ReturnType URowVector, [UMatrix; UMatrix], SoA) ;
   add_unqualified ("columns_dot_self", ReturnType URowVector, [UVector], AoS) ;
   add_unqualified ("columns_dot_self", ReturnType URowVector, [URowVector], AoS) ;
-  add_unqualified ("columns_dot_self", ReturnType URowVector, [UMatrix], SoA) ;
+  add_unqualified ("columns_dot_self", ReturnType URowVector, [UMatrix], AoS) ;
   add_unqualified ("conj", ReturnType UComplex, [UComplex], AoS) ;
   add_unqualified ("cos", ReturnType UComplex, [UComplex], AoS) ;
   add_unqualified ("cosh", ReturnType UComplex, [UComplex], AoS) ;
@@ -2048,8 +2048,8 @@ let () =
         (List.range 1 3) )
     bare_types ;
   add_unqualified ("rep_matrix", ReturnType UMatrix, [UReal; UInt; UInt], SoA) ;
-  add_unqualified ("rep_matrix", ReturnType UMatrix, [UVector; UInt], SoA) ;
-  add_unqualified ("rep_matrix", ReturnType UMatrix, [URowVector; UInt], SoA) ;
+  add_unqualified ("rep_matrix", ReturnType UMatrix, [UVector; UInt], AoS) ;
+  add_unqualified ("rep_matrix", ReturnType UMatrix, [URowVector; UInt], AoS) ;
   add_unqualified ("rep_row_vector", ReturnType URowVector, [UReal; UInt], SoA) ;
   add_unqualified ("rep_vector", ReturnType UVector, [UReal; UInt], SoA) ;
   add_unqualified ("reverse", ReturnType UVector, [UVector], SoA) ;
