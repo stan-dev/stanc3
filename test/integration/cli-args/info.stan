@@ -1,3 +1,6 @@
+#include <included.stan>
+#include <recursive.stan>
+
 functions {
   real foo(real a) {
     return sin(a);

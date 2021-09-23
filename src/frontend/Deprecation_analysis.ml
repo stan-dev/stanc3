@@ -20,7 +20,7 @@ let deprecated_odes =
 let deprecated_distributions =
   String.Map.of_alist_exn
     (List.concat_map Middle.Stan_math_signatures.distributions
-       ~f:(fun (fnkinds, name, _) ->
+       ~f:(fun (fnkinds, name, _, _) ->
          List.filter_map fnkinds ~f:(function
            | Lpdf -> Some (name ^ "_log", name ^ "_lpdf")
            | Lpmf -> Some (name ^ "_log", name ^ "_lpmf")
@@ -54,7 +54,7 @@ let userdef_distributions stmts =
             Some (drop_suffix name 4)
           else None
       | _ -> None)
-    (Option.value ~default:[] stmts)
+    (Ast.get_stmts stmts)
 
 let without_suffix user_dists name =
   let open String in
@@ -192,7 +192,7 @@ let rec collect_deprecated_stmt deprecated_userdefined
         acc stmt
 
 let collect_userdef_distributions program =
-  program.functionblock |> Option.value ~default:[]
+  program.functionblock |> Ast.get_stmts
   |> List.filter_map ~f:find_udf_log_suffix
   |> List.dedup_and_sort ~compare:(fun (x, _) (y, _) -> String.compare x y)
   |> String.Map.of_alist_exn

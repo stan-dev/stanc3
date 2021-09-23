@@ -86,26 +86,18 @@ capture_data_L9C9_impl__(const T0__& v_arg__, const double& x,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ rs;
-    rs = DUMMY_VAR__;
-    
     current_statement__ = 18;
     rs = sum(r);
     local_scalar_t__ ys;
-    ys = DUMMY_VAR__;
-    
     current_statement__ = 19;
     ys = sum(y);
     local_scalar_t__ vs;
-    vs = DUMMY_VAR__;
-    
     current_statement__ = 20;
     vs = sum(v);
     current_statement__ = 21;
     return ((((z + rs) + x) + ys) + vs);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -136,36 +128,24 @@ capture_data_and_params_L23C9_impl__(const T0__& p,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ rs;
-    rs = DUMMY_VAR__;
-    
     current_statement__ = 23;
     rs = sum(r);
     local_scalar_t__ ys;
-    ys = DUMMY_VAR__;
-    
     current_statement__ = 24;
     ys = sum(y);
     local_scalar_t__ vs;
-    vs = DUMMY_VAR__;
-    
     current_statement__ = 25;
     vs = sum(v);
     local_scalar_t__ pas;
-    pas = DUMMY_VAR__;
-    
     current_statement__ = 26;
     pas = sum(pa);
     local_scalar_t__ pvs;
-    pvs = DUMMY_VAR__;
-    
     current_statement__ = 27;
     pvs = sum(pv);
     current_statement__ = 28;
     return (((((((z + rs) + x) + ys) + vs) + p) + pas) + pvs);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -204,8 +184,6 @@ class capture_types_model final : public model_base_crtp<capture_types_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
-      
       pos__ = 1;
       current_statement__ = 10;
       context__.validate_dims("data initialization","N","int",
@@ -263,8 +241,6 @@ class capture_types_model final : public model_base_crtp<capture_types_model> {
       validate_non_negative_index("pv", "N", N);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     num_params_r__ = 1 + N + N;
     
@@ -293,19 +269,12 @@ class capture_types_model final : public model_base_crtp<capture_types_model> {
       auto capture_data = from_lambda([](const auto&... s) { return capture_data_L9C9_impl__(s...); },
                             v, x, y);
       local_scalar_t__ p;
-      p = DUMMY_VAR__;
-      
       current_statement__ = 2;
       p = in__.template read<local_scalar_t__>();
       std::vector<local_scalar_t__> pa;
-      pa = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
-      
       current_statement__ = 3;
       pa = in__.template read<std::vector<local_scalar_t__>>(N);
       Eigen::Matrix<local_scalar_t__, -1, 1> pv;
-      pv = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
-      stan::math::fill(pv, DUMMY_VAR__);
-      
       current_statement__ = 4;
       pv = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
       {
@@ -332,8 +301,6 @@ class capture_types_model final : public model_base_crtp<capture_types_model> {
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -349,8 +316,8 @@ class capture_types_model final : public model_base_crtp<capture_types_model> {
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
     (void) propto__;
     double lp__ = 0.0;
@@ -364,33 +331,18 @@ class capture_types_model final : public model_base_crtp<capture_types_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      
-      current_statement__ = 1;
-      auto capture_data = from_lambda([](const auto&... s) { return capture_data_L9C9_impl__(s...); },
-                            v, x, y);
       double p;
-      p = std::numeric_limits<double>::quiet_NaN();
-      
       current_statement__ = 2;
       p = in__.template read<local_scalar_t__>();
       std::vector<double> pa;
-      pa = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
-      
       current_statement__ = 3;
       pa = in__.template read<std::vector<local_scalar_t__>>(N);
       Eigen::Matrix<double, -1, 1> pv;
-      pv = Eigen::Matrix<double, -1, 1>(N);
-      stan::math::fill(pv, std::numeric_limits<double>::quiet_NaN());
-      
       current_statement__ = 4;
       pv = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(N);
-      vars__.emplace_back(p);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(pa[(sym1__ - 1)]);
-      }
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(pv[(sym1__ - 1)]);
-      }
+      out__.write(p);
+      out__.write(pa);
+      out__.write(pv);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -400,23 +352,20 @@ class capture_types_model final : public model_base_crtp<capture_types_model> {
       } 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
-    static constexpr bool propto__ = true;
-    (void) propto__; 
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       
@@ -424,49 +373,28 @@ class capture_types_model final : public model_base_crtp<capture_types_model> {
       auto capture_data = from_lambda([](const auto&... s) { return capture_data_L9C9_impl__(s...); },
                             v, x, y);
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
-      
       pos__ = 1;
-      double p;
-      p = std::numeric_limits<double>::quiet_NaN();
+      local_scalar_t__ p;
+      p = in__.read<local_scalar_t__>();
+      out__.write(p);
+      std::vector<local_scalar_t__> pa;
+      pa = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       
-      current_statement__ = 2;
-      p = context__.vals_r("p")[(1 - 1)];
-      std::vector<double> pa;
-      pa = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 3;
-      pa = context__.vals_r("pa");
-      Eigen::Matrix<double, -1, 1> pv;
-      pv = Eigen::Matrix<double, -1, 1>(N);
-      stan::math::fill(pv, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> pv_flat__;
-        current_statement__ = 4;
-        pv_flat__ = context__.vals_r("pv");
-        current_statement__ = 4;
-        pos__ = 1;
-        current_statement__ = 4;
-        for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-          current_statement__ = 4;
-          assign(pv, pv_flat__[(pos__ - 1)],
-            "assigning variable pv", index_uni(sym1__));
-          current_statement__ = 4;
-          pos__ = (pos__ + 1);
-        }
-      }
-      vars__.emplace_back(p);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(pa[(sym1__ - 1)]);
+        pa[(sym1__ - 1)] = in__.read<local_scalar_t__>();
       }
+      out__.write(pa);
+      Eigen::Matrix<local_scalar_t__, -1, 1> pv;
+      pv = Eigen::Matrix<local_scalar_t__, -1, 1>(N);
+      stan::math::fill(pv, DUMMY_VAR__);
+      
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(pv[(sym1__ - 1)]);
+        assign(pv, in__.read<local_scalar_t__>(),
+          "assigning variable pv", index_uni(sym1__));
       }
+      out__.write(pv);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
     
@@ -559,8 +487,13 @@ class capture_types_model final : public model_base_crtp<capture_types_model> {
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      std::vector<double> vars_vec;
-      vars_vec.reserve(vars.size());
+      const size_t num_params__ = 
+  ((1 + N) + N);
+      const size_t num_transformed = 0;
+      const size_t num_gen_quantities = 0;
+      std::vector<double> vars_vec(num_params__
+       + (emit_transformed_parameters * num_transformed)
+       + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
       write_array_impl(base_rng, params_r, params_i, vars_vec,
           emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -575,8 +508,14 @@ class capture_types_model final : public model_base_crtp<capture_types_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      write_array_impl(base_rng, params_r, params_i, vars,
-       emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_params__ = 
+  ((1 + N) + N);
+      const size_t num_transformed = 0;
+      const size_t num_gen_quantities = 0;
+      vars.resize(num_params__
+        + (emit_transformed_parameters * num_transformed)
+        + (emit_generated_quantities * num_gen_quantities));
+      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -597,20 +536,32 @@ class capture_types_model final : public model_base_crtp<capture_types_model> {
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
                          std::ostream* pstream = nullptr) const final {
-      std::vector<double> params_r_vec;
-      params_r_vec.reserve(params_r.size());
+      std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
         params_r_vec.data(), params_r_vec.size());
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    const std::array<std::string, 3> names__ = std::array<std::string, 3>{"p",
+      "pa", "pv"};
+    
+     std::vector<double> params_r_flat__;
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 using stan_model = capture_types_model_namespace::capture_types_model;
@@ -712,8 +663,6 @@ capture_closure_L16C9_impl__(const T0__& foo, const T1__& y,
     return foo(pstream__, y);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -734,8 +683,6 @@ capture_dataonly_closure_L7C9_impl__(const T0__& foo, const T1__& y,
     return foo(pstream__, y);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -757,8 +704,6 @@ closure_in_closure_L20C9_impl__(const T0__& s, std::ostream* pstream__) {
     return gar(pstream__, s);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -776,8 +721,6 @@ foo_L3C9_impl__(const T0__& x, std::ostream* pstream__) {
     return x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -795,8 +738,6 @@ gar_L22C13_impl__(const T0__& b, std::ostream* pstream__) {
     return b;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -832,8 +773,6 @@ class capture_types2_model final : public model_base_crtp<capture_types2_model> 
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
-      
       pos__ = 1;
       
       current_statement__ = 1;
@@ -845,8 +784,6 @@ class capture_types2_model final : public model_base_crtp<capture_types2_model> 
                                         foo);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     num_params_r__ = 1;
     
@@ -879,8 +816,6 @@ class capture_types2_model final : public model_base_crtp<capture_types2_model> 
       auto capture_dataonly_closure = from_lambda([](const auto&... s) { return capture_dataonly_closure_L7C9_impl__(s...); },
                                         foo);
       local_scalar_t__ alpha;
-      alpha = DUMMY_VAR__;
-      
       current_statement__ = 3;
       alpha = in__.template read<local_scalar_t__>();
       
@@ -892,24 +827,16 @@ class capture_types2_model final : public model_base_crtp<capture_types2_model> 
       auto closure_in_closure = from_lambda([](const auto&... s) { return closure_in_closure_L20C9_impl__(s...); }
                                   );
       local_scalar_t__ s1;
-      s1 = DUMMY_VAR__;
-      
       current_statement__ = 6;
       s1 = capture_dataonly_closure(pstream__, 1.0);
       local_scalar_t__ s2;
-      s2 = DUMMY_VAR__;
-      
       current_statement__ = 7;
       s2 = capture_closure(pstream__, 1.0);
       local_scalar_t__ s3;
-      s3 = DUMMY_VAR__;
-      
       current_statement__ = 8;
       s3 = closure_in_closure(pstream__, 1.0);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -925,8 +852,8 @@ class capture_types2_model final : public model_base_crtp<capture_types2_model> 
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
     (void) propto__;
     double lp__ = 0.0;
@@ -940,17 +867,7 @@ class capture_types2_model final : public model_base_crtp<capture_types2_model> 
     (void) function__;  // suppress unused var warning
     
     try {
-      
-      current_statement__ = 1;
-      auto foo = from_lambda([](const auto&... s) { return foo_L3C9_impl__(s...); }
-                   );
-      
-      current_statement__ = 2;
-      auto capture_dataonly_closure = from_lambda([](const auto&... s) { return capture_dataonly_closure_L7C9_impl__(s...); },
-                                        foo);
       double alpha;
-      alpha = std::numeric_limits<double>::quiet_NaN();
-      
       current_statement__ = 3;
       alpha = in__.template read<local_scalar_t__>();
       
@@ -964,7 +881,7 @@ class capture_types2_model final : public model_base_crtp<capture_types2_model> 
       double s3;
       s3 = std::numeric_limits<double>::quiet_NaN();
       
-      vars__.emplace_back(alpha);
+      out__.write(alpha);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -982,32 +899,29 @@ class capture_types2_model final : public model_base_crtp<capture_types2_model> 
       current_statement__ = 8;
       s3 = closure_in_closure(pstream__, 1.0);
       if (emit_transformed_parameters__) {
-        vars__.emplace_back(s1);
-        vars__.emplace_back(s2);
-        vars__.emplace_back(s3);
+        out__.write(s1);
+        out__.write(s2);
+        out__.write(s3);
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
       } 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
-    static constexpr bool propto__ = true;
-    (void) propto__; 
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       
@@ -1019,19 +933,12 @@ class capture_types2_model final : public model_base_crtp<capture_types2_model> 
       auto capture_dataonly_closure = from_lambda([](const auto&... s) { return capture_dataonly_closure_L7C9_impl__(s...); },
                                         foo);
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
-      
       pos__ = 1;
-      double alpha;
-      alpha = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 3;
-      alpha = context__.vals_r("alpha")[(1 - 1)];
-      vars__.emplace_back(alpha);
+      local_scalar_t__ alpha;
+      alpha = in__.read<local_scalar_t__>();
+      out__.write(alpha);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
     
@@ -1108,8 +1015,13 @@ class capture_types2_model final : public model_base_crtp<capture_types2_model> 
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      std::vector<double> vars_vec;
-      vars_vec.reserve(vars.size());
+      const size_t num_params__ = 1;
+      const size_t num_transformed = 
+  ((1 + 1) + 1);
+      const size_t num_gen_quantities = 0;
+      std::vector<double> vars_vec(num_params__
+       + (emit_transformed_parameters * num_transformed)
+       + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
       write_array_impl(base_rng, params_r, params_i, vars_vec,
           emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -1124,8 +1036,14 @@ class capture_types2_model final : public model_base_crtp<capture_types2_model> 
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      write_array_impl(base_rng, params_r, params_i, vars,
-       emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_params__ = 1;
+      const size_t num_transformed = 
+  ((1 + 1) + 1);
+      const size_t num_gen_quantities = 0;
+      vars.resize(num_params__
+        + (emit_transformed_parameters * num_transformed)
+        + (emit_generated_quantities * num_gen_quantities));
+      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -1146,20 +1064,32 @@ class capture_types2_model final : public model_base_crtp<capture_types2_model> 
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
                          std::ostream* pstream = nullptr) const final {
-      std::vector<double> params_r_vec;
-      params_r_vec.reserve(params_r.size());
+      std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
         params_r_vec.data(), params_r_vec.size());
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    const std::array<std::string, 4> names__ = std::array<std::string, 4>{"alpha",
+      "s1", "s2", "s3"};
+    
+     std::vector<double> params_r_flat__;
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 using stan_model = capture_types2_model_namespace::capture_types2_model;
@@ -1284,8 +1214,6 @@ higher_order_func(const T0__& g, const T1__& x, std::ostream* pstream__) {
     return g2(pstream__, 1.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -1303,8 +1231,6 @@ func(const T0__& x, std::ostream* pstream__) {
     return x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -1323,8 +1249,6 @@ closure_L26C9_impl__(const T0__& p, const T1__& y, std::ostream* pstream__) {
     return (p * y);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -1343,8 +1267,6 @@ data_closure_L16C9_impl__(const double& x, const T1__& y,
     return (x * y);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -1366,8 +1288,6 @@ g2_L4C13_impl__(const T0__& g, const T1__& x, const T2__& y,
     return (g(pstream__, y) * x);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -1404,8 +1324,6 @@ class higher_order_model final : public model_base_crtp<higher_order_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
-      
       pos__ = 1;
       current_statement__ = 5;
       x = std::numeric_limits<double>::quiet_NaN();
@@ -1423,8 +1341,6 @@ class higher_order_model final : public model_base_crtp<higher_order_model> {
       z = higher_order_func(data_closure, 1.0, pstream__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     num_params_r__ = 1;
     
@@ -1453,8 +1369,6 @@ class higher_order_model final : public model_base_crtp<higher_order_model> {
       auto data_closure = from_lambda([](const auto&... s) { return data_closure_L16C9_impl__(s...); },
                             x);
       local_scalar_t__ p;
-      p = DUMMY_VAR__;
-      
       current_statement__ = 2;
       p = in__.template read<local_scalar_t__>();
       
@@ -1462,14 +1376,10 @@ class higher_order_model final : public model_base_crtp<higher_order_model> {
       auto closure = from_lambda([](const auto&... s) { return closure_L26C9_impl__(s...); },
                        p);
       local_scalar_t__ w;
-      w = DUMMY_VAR__;
-      
       current_statement__ = 4;
       w = higher_order_func(closure, 1.0, pstream__);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -1485,8 +1395,8 @@ class higher_order_model final : public model_base_crtp<higher_order_model> {
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
     (void) propto__;
     double lp__ = 0.0;
@@ -1500,20 +1410,14 @@ class higher_order_model final : public model_base_crtp<higher_order_model> {
     (void) function__;  // suppress unused var warning
     
     try {
-      
-      current_statement__ = 1;
-      auto data_closure = from_lambda([](const auto&... s) { return data_closure_L16C9_impl__(s...); },
-                            x);
       double p;
-      p = std::numeric_limits<double>::quiet_NaN();
-      
       current_statement__ = 2;
       p = in__.template read<local_scalar_t__>();
       
       double w;
       w = std::numeric_limits<double>::quiet_NaN();
       
-      vars__.emplace_back(p);
+      out__.write(p);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -1524,30 +1428,27 @@ class higher_order_model final : public model_base_crtp<higher_order_model> {
       current_statement__ = 4;
       w = higher_order_func(closure, 1.0, pstream__);
       if (emit_transformed_parameters__) {
-        vars__.emplace_back(w);
+        out__.write(w);
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
       } 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
-    static constexpr bool propto__ = true;
-    (void) propto__; 
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       
@@ -1555,19 +1456,12 @@ class higher_order_model final : public model_base_crtp<higher_order_model> {
       auto data_closure = from_lambda([](const auto&... s) { return data_closure_L16C9_impl__(s...); },
                             x);
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
-      
       pos__ = 1;
-      double p;
-      p = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 2;
-      p = context__.vals_r("p")[(1 - 1)];
-      vars__.emplace_back(p);
+      local_scalar_t__ p;
+      p = in__.read<local_scalar_t__>();
+      out__.write(p);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
     
@@ -1639,8 +1533,12 @@ class higher_order_model final : public model_base_crtp<higher_order_model> {
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      std::vector<double> vars_vec;
-      vars_vec.reserve(vars.size());
+      const size_t num_params__ = 1;
+      const size_t num_transformed = 1;
+      const size_t num_gen_quantities = 0;
+      std::vector<double> vars_vec(num_params__
+       + (emit_transformed_parameters * num_transformed)
+       + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
       write_array_impl(base_rng, params_r, params_i, vars_vec,
           emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -1655,8 +1553,13 @@ class higher_order_model final : public model_base_crtp<higher_order_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      write_array_impl(base_rng, params_r, params_i, vars,
-       emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_params__ = 1;
+      const size_t num_transformed = 1;
+      const size_t num_gen_quantities = 0;
+      vars.resize(num_params__
+        + (emit_transformed_parameters * num_transformed)
+        + (emit_generated_quantities * num_gen_quantities));
+      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -1677,20 +1580,32 @@ class higher_order_model final : public model_base_crtp<higher_order_model> {
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
                          std::ostream* pstream = nullptr) const final {
-      std::vector<double> params_r_vec;
-      params_r_vec.reserve(params_r.size());
+      std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
         params_r_vec.data(), params_r_vec.size());
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    const std::array<std::string, 2> names__ = std::array<std::string, 2>{"p",
+      "w"};
+    
+     std::vector<double> params_r_flat__;
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 using stan_model = higher_order_model_namespace::higher_order_model;
@@ -1916,16 +1831,12 @@ ff_lpdf(const T0__& x, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ s;
-    s = DUMMY_VAR__;
-    
     current_statement__ = 17;
     s = std_normal_lpdf<propto__>(0);
     current_statement__ = 18;
     return x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -1940,16 +1851,12 @@ ff_rng(const T0__& x, RNG& base_rng__, std::ostream* pstream__) {
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ s;
-    s = DUMMY_VAR__;
-    
     current_statement__ = 20;
     s = std_normal_rng(base_rng__);
     current_statement__ = 21;
     return x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -1964,16 +1871,12 @@ ff_lp(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
   (void) DUMMY_VAR__;  // suppress unused var warning
   try {
     local_scalar_t__ s;
-    s = DUMMY_VAR__;
-    
     current_statement__ = 23;
     s = get_lp(lp__, lp_accum__);
     current_statement__ = 24;
     return x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -1991,8 +1894,6 @@ f2_L44C9_impl__(const T0__& x, std::ostream* pstream__) {
     return x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -2008,8 +1909,6 @@ f3_lpdf_L48C9_impl__(const T0__& x, std::ostream* pstream__) {
     return x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -2027,8 +1926,6 @@ f4_rng_L52C9_impl__(const T0__& x, RNG& base_rng__, std::ostream* pstream__) {
     return x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -2046,8 +1943,6 @@ f5_lp_L56C9_impl__(const T0__& x, T_lp__& lp__, T_lp_accum__& lp_accum__,
     return x;
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -2066,8 +1961,6 @@ foo_lp_L40C9_impl__(const T0__& bar_lp, T_lp__& lp__,
              1);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -2086,8 +1979,6 @@ foo_lpdf_L36C9_impl__(const T0__& zz, const T1__& bar_lpdf,
     return bar_lpdf.template operator()<propto__>(pstream__, 1);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -2106,8 +1997,6 @@ foo_rng_L32C9_impl__(const T0__& bar_lpdf, RNG& base_rng__,
     return bar_lpdf.template operator()<false>(pstream__, 1);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -2125,8 +2014,6 @@ hof_L17C9_impl__(const T0__& s_lpdf, std::ostream* pstream__) {
     return s_lpdf.template operator()<false>(pstream__, 1.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -2146,8 +2033,6 @@ hof_lp_L25C9_impl__(const T0__& s_lp, const T1__& a, T_lp__& lp__,
       s_lp.template operator()<propto__>(lp__, lp_accum__, pstream__, a));
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -2166,8 +2051,6 @@ hof_rng_L21C9_impl__(const T0__& s_rng, RNG& base_rng__,
     return s_rng(base_rng__, pstream__, 1.0);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -2204,8 +2087,6 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
-      
       pos__ = 1;
       
       current_statement__ = 1;
@@ -2260,8 +2141,6 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
             f3_lpdf.template with_propto<false>());
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     num_params_r__ = 0U;
     
@@ -2324,8 +2203,6 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
       current_statement__ = 10;
       auto f5_lp = lp_from_lambda<propto__>(f5_lp_L56C9_pfunctor__());
       local_scalar_t__ s;
-      s = DUMMY_VAR__;
-      
       current_statement__ = 11;
       s = foo_lp.template operator()<propto__>(lp__, lp_accum__, pstream__, 
             f5_lp);
@@ -2340,8 +2217,6 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -2357,8 +2232,8 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
     (void) propto__;
     double lp__ = 0.0;
@@ -2372,44 +2247,6 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
     (void) function__;  // suppress unused var warning
     
     try {
-      
-      current_statement__ = 1;
-      auto hof = from_lambda([](const auto&... s) { return hof_L17C9_impl__(s...); }
-                   );
-      
-      current_statement__ = 2;
-      auto hof_rng = rng_from_lambda([](const auto& s0,
-                       auto& rng, auto msgs) { return hof_rng_L21C9_impl__(s0, rng, msgs); }
-                       );
-      
-      current_statement__ = 3;
-      auto hof_lp = lp_from_lambda<propto__>(hof_lp_L25C9_pfunctor__());
-      
-      current_statement__ = 4;
-      auto foo_rng = rng_from_lambda([](const auto& s0,
-                       auto& rng, auto msgs) { return foo_rng_L32C9_impl__(s0, rng, msgs); }
-                       );
-      
-      current_statement__ = 5;
-      auto foo_lpdf = lpdf_from_lambda<propto__>(foo_lpdf_L36C9_pfunctor__());
-      
-      current_statement__ = 6;
-      auto foo_lp = lp_from_lambda<propto__>(foo_lp_L40C9_pfunctor__());
-      
-      current_statement__ = 7;
-      auto f2 = from_lambda([](const auto&... s) { return f2_L44C9_impl__(s...); }
-                  );
-      
-      current_statement__ = 8;
-      auto f3_lpdf = lpdf_from_lambda<propto__>(f3_lpdf_L48C9_pfunctor__());
-      
-      current_statement__ = 9;
-      auto f4_rng = rng_from_lambda([](const auto& s0,
-                      auto& rng, auto msgs) { return f4_rng_L52C9_impl__(s0, rng, msgs); }
-                      );
-      
-      current_statement__ = 10;
-      auto f5_lp = lp_from_lambda<propto__>(f5_lp_L56C9_pfunctor__());
       double s;
       s = std::numeric_limits<double>::quiet_NaN();
       
@@ -2424,30 +2261,27 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
       hof_lp.template operator()<propto__>(lp__, lp_accum__, pstream__, 
         lp_from_lambda<propto__>(ff_lp_functor__()), s);
       if (emit_transformed_parameters__) {
-        vars__.emplace_back(s);
+        out__.write(s);
       } 
       if (logical_negation(emit_generated_quantities__)) {
         return ;
       } 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
-    static constexpr bool propto__ = true;
-    (void) propto__; 
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       
@@ -2489,13 +2323,9 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
       current_statement__ = 10;
       auto f5_lp = lp_from_lambda<propto__>(f5_lp_L56C9_pfunctor__());
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
-      
       pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
     
@@ -2566,8 +2396,12 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      std::vector<double> vars_vec;
-      vars_vec.reserve(vars.size());
+      const size_t num_params__ = 0;
+      const size_t num_transformed = 1;
+      const size_t num_gen_quantities = 0;
+      std::vector<double> vars_vec(num_params__
+       + (emit_transformed_parameters * num_transformed)
+       + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
       write_array_impl(base_rng, params_r, params_i, vars_vec,
           emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -2582,8 +2416,13 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      write_array_impl(base_rng, params_r, params_i, vars,
-       emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_params__ = 0;
+      const size_t num_transformed = 1;
+      const size_t num_gen_quantities = 0;
+      vars.resize(num_params__
+        + (emit_transformed_parameters * num_transformed)
+        + (emit_generated_quantities * num_gen_quantities));
+      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -2604,20 +2443,31 @@ class higher_order_suffixes_model final : public model_base_crtp<higher_order_su
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
                          std::ostream* pstream = nullptr) const final {
-      std::vector<double> params_r_vec;
-      params_r_vec.reserve(params_r.size());
+      std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
         params_r_vec.data(), params_r_vec.size());
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    const std::array<std::string, 1> names__ = std::array<std::string, 1>{"s"};
+    
+     std::vector<double> params_r_flat__;
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 
@@ -2723,8 +2573,6 @@ integrate(const std::vector<Eigen::Matrix<T0__, -1, 1>>& k,
              pstream__, harmonic);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -2748,8 +2596,6 @@ harmonic_L4C15_impl__(const std::vector<Eigen::Matrix<T0__, -1, 1>>& k,
     return elt_multiply(minus(rvalue(k, "k", index_uni(1))), y);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -2785,8 +2631,6 @@ class ode_rk45_model final : public model_base_crtp<ode_rk45_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
-      
       pos__ = 1;
       current_statement__ = 4;
       context__.validate_dims("data initialization","ts","double",
@@ -2799,8 +2643,6 @@ class ode_rk45_model final : public model_base_crtp<ode_rk45_model> {
       validate_non_negative_index("k", "1", 1);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     num_params_r__ = (1 * 2) + 2;
     
@@ -2825,28 +2667,17 @@ class ode_rk45_model final : public model_base_crtp<ode_rk45_model> {
     
     try {
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> k;
-      k = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(1, Eigen::Matrix<local_scalar_t__, -1, 1>(2));
-      stan::math::fill(k, DUMMY_VAR__);
-      
       current_statement__ = 1;
       k = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
             1, 2);
       Eigen::Matrix<local_scalar_t__, -1, 1> init;
-      init = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
-      stan::math::fill(init, DUMMY_VAR__);
-      
       current_statement__ = 2;
       init = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
       std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> y;
-      y = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(5, Eigen::Matrix<local_scalar_t__, -1, 1>(2));
-      stan::math::fill(y, DUMMY_VAR__);
-      
       current_statement__ = 3;
       assign(y, integrate(k, init, ts, pstream__), "assigning variable y");
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -2862,8 +2693,8 @@ class ode_rk45_model final : public model_base_crtp<ode_rk45_model> {
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
     (void) propto__;
     double lp__ = 0.0;
@@ -2878,16 +2709,10 @@ class ode_rk45_model final : public model_base_crtp<ode_rk45_model> {
     
     try {
       std::vector<Eigen::Matrix<double, -1, 1>> k;
-      k = std::vector<Eigen::Matrix<double, -1, 1>>(1, Eigen::Matrix<double, -1, 1>(2));
-      stan::math::fill(k, std::numeric_limits<double>::quiet_NaN());
-      
       current_statement__ = 1;
       k = in__.template read<std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>>(
             1, 2);
       Eigen::Matrix<double, -1, 1> init;
-      init = Eigen::Matrix<double, -1, 1>(2);
-      stan::math::fill(init, std::numeric_limits<double>::quiet_NaN());
-      
       current_statement__ = 2;
       init = in__.template read<Eigen::Matrix<local_scalar_t__, -1, 1>>(2);
       std::vector<Eigen::Matrix<double, -1, 1>> y;
@@ -2896,12 +2721,10 @@ class ode_rk45_model final : public model_base_crtp<ode_rk45_model> {
       
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
         for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
-          vars__.emplace_back(k[(sym2__ - 1)][(sym1__ - 1)]);
+          out__.write(k[(sym2__ - 1)][(sym1__ - 1)]);
         }
       }
-      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        vars__.emplace_back(init[(sym1__ - 1)]);
-      }
+      out__.write(init);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -2911,7 +2734,7 @@ class ode_rk45_model final : public model_base_crtp<ode_rk45_model> {
       if (emit_transformed_parameters__) {
         for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
           for (int sym2__ = 1; sym2__ <= 5; ++sym2__) {
-            vars__.emplace_back(y[(sym2__ - 1)][(sym1__ - 1)]);
+            out__.write(y[(sym2__ - 1)][(sym1__ - 1)]);
           }
         }
       } 
@@ -2920,82 +2743,46 @@ class ode_rk45_model final : public model_base_crtp<ode_rk45_model> {
       } 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
-    static constexpr bool propto__ = true;
-    (void) propto__; 
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
-      
       pos__ = 1;
-      std::vector<Eigen::Matrix<double, -1, 1>> k;
-      k = std::vector<Eigen::Matrix<double, -1, 1>>(1, Eigen::Matrix<double, -1, 1>(2));
-      stan::math::fill(k, std::numeric_limits<double>::quiet_NaN());
+      std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>> k;
+      k = std::vector<Eigen::Matrix<local_scalar_t__, -1, 1>>(1, Eigen::Matrix<local_scalar_t__, -1, 1>(2));
+      stan::math::fill(k, DUMMY_VAR__);
       
-      {
-        std::vector<local_scalar_t__> k_flat__;
-        current_statement__ = 1;
-        k_flat__ = context__.vals_r("k");
-        current_statement__ = 1;
-        pos__ = 1;
-        current_statement__ = 1;
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          current_statement__ = 1;
-          for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
-            current_statement__ = 1;
-            assign(k, k_flat__[(pos__ - 1)],
-              "assigning variable k", index_uni(sym2__), index_uni(sym1__));
-            current_statement__ = 1;
-            pos__ = (pos__ + 1);
-          }
-        }
-      }
-      Eigen::Matrix<double, -1, 1> init;
-      init = Eigen::Matrix<double, -1, 1>(2);
-      stan::math::fill(init, std::numeric_limits<double>::quiet_NaN());
-      
-      {
-        std::vector<local_scalar_t__> init_flat__;
-        current_statement__ = 2;
-        init_flat__ = context__.vals_r("init");
-        current_statement__ = 2;
-        pos__ = 1;
-        current_statement__ = 2;
-        for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-          current_statement__ = 2;
-          assign(init, init_flat__[(pos__ - 1)],
-            "assigning variable init", index_uni(sym1__));
-          current_statement__ = 2;
-          pos__ = (pos__ + 1);
-        }
-      }
-      for (int sym1__ = 1; sym1__ <= 1; ++sym1__) {
-        for (int sym2__ = 1; sym2__ <= 2; ++sym2__) {
-          vars__.emplace_back(k[(sym1__ - 1)][(sym2__ - 1)]);
-        }
-      }
       for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
-        vars__.emplace_back(init[(sym1__ - 1)]);
+        for (int sym2__ = 1; sym2__ <= 1; ++sym2__) {
+          assign(k, in__.read<local_scalar_t__>(),
+            "assigning variable k", index_uni(sym2__), index_uni(sym1__));
+        }
       }
+      out__.write(k);
+      Eigen::Matrix<local_scalar_t__, -1, 1> init;
+      init = Eigen::Matrix<local_scalar_t__, -1, 1>(2);
+      stan::math::fill(init, DUMMY_VAR__);
+      
+      for (int sym1__ = 1; sym1__ <= 2; ++sym1__) {
+        assign(init, in__.read<local_scalar_t__>(),
+          "assigning variable init", index_uni(sym1__));
+      }
+      out__.write(init);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
     
@@ -3114,8 +2901,13 @@ class ode_rk45_model final : public model_base_crtp<ode_rk45_model> {
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      std::vector<double> vars_vec;
-      vars_vec.reserve(vars.size());
+      const size_t num_params__ = 
+  ((1 * 2) + 2);
+      const size_t num_transformed = (5 * 2);
+      const size_t num_gen_quantities = 0;
+      std::vector<double> vars_vec(num_params__
+       + (emit_transformed_parameters * num_transformed)
+       + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
       write_array_impl(base_rng, params_r, params_i, vars_vec,
           emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -3130,8 +2922,14 @@ class ode_rk45_model final : public model_base_crtp<ode_rk45_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      write_array_impl(base_rng, params_r, params_i, vars,
-       emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_params__ = 
+  ((1 * 2) + 2);
+      const size_t num_transformed = (5 * 2);
+      const size_t num_gen_quantities = 0;
+      vars.resize(num_params__
+        + (emit_transformed_parameters * num_transformed)
+        + (emit_generated_quantities * num_gen_quantities));
+      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -3152,20 +2950,32 @@ class ode_rk45_model final : public model_base_crtp<ode_rk45_model> {
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
                          std::ostream* pstream = nullptr) const final {
-      std::vector<double> params_r_vec;
-      params_r_vec.reserve(params_r.size());
+      std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
         params_r_vec.data(), params_r_vec.size());
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    const std::array<std::string, 3> names__ = std::array<std::string, 3>{"k",
+      "init", "y"};
+    
+     std::vector<double> params_r_flat__;
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 using stan_model = ode_rk45_model_namespace::ode_rk45_model;
@@ -3267,8 +3077,6 @@ closure_dist_lpdf_L14C9_impl__(const T0__& mu,
     return normal_lpdf<propto__>(slice, mu, 1);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -3290,8 +3098,6 @@ partial_sum_closure_L10C9_impl__(const T0__& mu,
     return normal_lpdf<false>(slice, mu, 1);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -3327,8 +3133,6 @@ class reduce_sum_model final : public model_base_crtp<reduce_sum_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
-      
       pos__ = 1;
       current_statement__ = 8;
       context__.validate_dims("data initialization","N","int",
@@ -3341,8 +3145,6 @@ class reduce_sum_model final : public model_base_crtp<reduce_sum_model> {
       validate_non_negative_index("x", "N", N);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     num_params_r__ = 1 + N;
     
@@ -3367,13 +3169,9 @@ class reduce_sum_model final : public model_base_crtp<reduce_sum_model> {
     
     try {
       local_scalar_t__ mu;
-      mu = DUMMY_VAR__;
-      
       current_statement__ = 1;
       mu = in__.template read<local_scalar_t__>();
       std::vector<local_scalar_t__> x;
-      x = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
-      
       current_statement__ = 2;
       x = in__.template read<std::vector<local_scalar_t__>>(N);
       {
@@ -3400,8 +3198,6 @@ class reduce_sum_model final : public model_base_crtp<reduce_sum_model> {
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -3417,8 +3213,8 @@ class reduce_sum_model final : public model_base_crtp<reduce_sum_model> {
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
     (void) propto__;
     double lp__ = 0.0;
@@ -3433,19 +3229,13 @@ class reduce_sum_model final : public model_base_crtp<reduce_sum_model> {
     
     try {
       double mu;
-      mu = std::numeric_limits<double>::quiet_NaN();
-      
       current_statement__ = 1;
       mu = in__.template read<local_scalar_t__>();
       std::vector<double> x;
-      x = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
-      
       current_statement__ = 2;
       x = in__.template read<std::vector<local_scalar_t__>>(N);
-      vars__.emplace_back(mu);
-      for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(x[(sym1__ - 1)]);
-      }
+      out__.write(mu);
+      out__.write(x);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -3455,47 +3245,36 @@ class reduce_sum_model final : public model_base_crtp<reduce_sum_model> {
       } 
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
-    static constexpr bool propto__ = true;
-    (void) propto__; 
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
-      
       pos__ = 1;
-      double mu;
-      mu = std::numeric_limits<double>::quiet_NaN();
+      local_scalar_t__ mu;
+      mu = in__.read<local_scalar_t__>();
+      out__.write(mu);
+      std::vector<local_scalar_t__> x;
+      x = std::vector<local_scalar_t__>(N, DUMMY_VAR__);
       
-      current_statement__ = 1;
-      mu = context__.vals_r("mu")[(1 - 1)];
-      std::vector<double> x;
-      x = std::vector<double>(N, std::numeric_limits<double>::quiet_NaN());
-      
-      current_statement__ = 2;
-      x = context__.vals_r("x");
-      vars__.emplace_back(mu);
       for (int sym1__ = 1; sym1__ <= N; ++sym1__) {
-        vars__.emplace_back(x[(sym1__ - 1)]);
+        x[(sym1__ - 1)] = in__.read<local_scalar_t__>();
       }
+      out__.write(x);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
     
@@ -3577,8 +3356,13 @@ class reduce_sum_model final : public model_base_crtp<reduce_sum_model> {
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      std::vector<double> vars_vec;
-      vars_vec.reserve(vars.size());
+      const size_t num_params__ = 
+  (1 + N);
+      const size_t num_transformed = 0;
+      const size_t num_gen_quantities = 0;
+      std::vector<double> vars_vec(num_params__
+       + (emit_transformed_parameters * num_transformed)
+       + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
       write_array_impl(base_rng, params_r, params_i, vars_vec,
           emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -3593,8 +3377,14 @@ class reduce_sum_model final : public model_base_crtp<reduce_sum_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      write_array_impl(base_rng, params_r, params_i, vars,
-       emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_params__ = 
+  (1 + N);
+      const size_t num_transformed = 0;
+      const size_t num_gen_quantities = 0;
+      vars.resize(num_params__
+        + (emit_transformed_parameters * num_transformed)
+        + (emit_generated_quantities * num_gen_quantities));
+      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -3615,20 +3405,32 @@ class reduce_sum_model final : public model_base_crtp<reduce_sum_model> {
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
                          std::ostream* pstream = nullptr) const final {
-      std::vector<double> params_r_vec;
-      params_r_vec.reserve(params_r.size());
+      std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
         params_r_vec.data(), params_r_vec.size());
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    const std::array<std::string, 2> names__ = std::array<std::string, 2>{"mu",
+      "x"};
+    
+     std::vector<double> params_r_flat__;
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 using stan_model = reduce_sum_model_namespace::reduce_sum_model;
@@ -3717,8 +3519,6 @@ closure_dist_lpdf_L11C9_impl__(const T0__& y, const T1__& x,
     return normal_lpdf<propto__>(y, x, 1);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -3737,8 +3537,6 @@ closure_dist_rng_L7C9_impl__(const T0__& x, RNG& base_rng__,
     return normal_rng(x, 1, base_rng__);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
   }
   
 }
@@ -3774,13 +3572,9 @@ class rng_and_lpdf_model final : public model_base_crtp<rng_and_lpdf_model> {
     (void) DUMMY_VAR__;  // suppress unused var warning
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
-      
       pos__ = 1;
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     num_params_r__ = 1 + 1;
     
@@ -3805,13 +3599,9 @@ class rng_and_lpdf_model final : public model_base_crtp<rng_and_lpdf_model> {
     
     try {
       local_scalar_t__ s;
-      s = DUMMY_VAR__;
-      
       current_statement__ = 1;
       s = in__.template read<local_scalar_t__>();
       local_scalar_t__ k;
-      k = DUMMY_VAR__;
-      
       current_statement__ = 2;
       k = in__.template read<local_scalar_t__>();
       
@@ -3833,8 +3623,6 @@ class rng_and_lpdf_model final : public model_base_crtp<rng_and_lpdf_model> {
       }
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     lp_accum__.add(lp__);
     return lp_accum__.sum();
@@ -3850,8 +3638,8 @@ class rng_and_lpdf_model final : public model_base_crtp<rng_and_lpdf_model> {
                                const bool emit_generated_quantities__ = true,
                                std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.resize(0);
     stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     static constexpr bool propto__ = true;
     (void) propto__;
     double lp__ = 0.0;
@@ -3866,19 +3654,15 @@ class rng_and_lpdf_model final : public model_base_crtp<rng_and_lpdf_model> {
     
     try {
       double s;
-      s = std::numeric_limits<double>::quiet_NaN();
-      
       current_statement__ = 1;
       s = in__.template read<local_scalar_t__>();
       double k;
-      k = std::numeric_limits<double>::quiet_NaN();
-      
       current_statement__ = 2;
       k = in__.template read<local_scalar_t__>();
       
       
-      vars__.emplace_back(s);
-      vars__.emplace_back(k);
+      out__.write(s);
+      out__.write(k);
       if (logical_negation((primitive_value(emit_transformed_parameters__) ||
             primitive_value(emit_generated_quantities__)))) {
         return ;
@@ -3894,52 +3678,37 @@ class rng_and_lpdf_model final : public model_base_crtp<rng_and_lpdf_model> {
         return ;
       } 
       double m;
-      m = std::numeric_limits<double>::quiet_NaN();
-      
       current_statement__ = 5;
       m = closure_dist_rng(base_rng__, pstream__, k);
-      vars__.emplace_back(m);
+      out__.write(m);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // write_array_impl() 
     
   template <typename VecVar, typename VecI, 
   stan::require_std_vector_t<VecVar>* = nullptr, 
   stan::require_vector_like_vt<std::is_integral, VecI>* = nullptr> 
-  inline void transform_inits_impl(const stan::io::var_context& context__,
-                                   VecI& params_i__, VecVar& vars__,
+  inline void transform_inits_impl(VecVar& params_r__, VecI& params_i__,
+                                   VecVar& vars__,
                                    std::ostream* pstream__ = nullptr) const {
     using local_scalar_t__ = double;
-    vars__.clear();
-    vars__.reserve(num_params_r__);
+    stan::io::deserializer<local_scalar_t__> in__(params_r__, params_i__);
+    stan::io::serializer<local_scalar_t__> out__(vars__);
     int current_statement__ = 0;
-    static constexpr bool propto__ = true;
-    (void) propto__; 
+    local_scalar_t__ DUMMY_VAR__(std::numeric_limits<double>::quiet_NaN());
     
     try {
       int pos__;
-      pos__ = std::numeric_limits<int>::min();
-      
       pos__ = 1;
-      double s;
-      s = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 1;
-      s = context__.vals_r("s")[(1 - 1)];
-      double k;
-      k = std::numeric_limits<double>::quiet_NaN();
-      
-      current_statement__ = 2;
-      k = context__.vals_r("k")[(1 - 1)];
-      vars__.emplace_back(s);
-      vars__.emplace_back(k);
+      local_scalar_t__ s;
+      s = in__.read<local_scalar_t__>();
+      out__.write(s);
+      local_scalar_t__ k;
+      k = in__.read<local_scalar_t__>();
+      out__.write(k);
     } catch (const std::exception& e) {
       stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***"); 
     }
     } // transform_inits_impl() 
     
@@ -4013,8 +3782,13 @@ class rng_and_lpdf_model final : public model_base_crtp<rng_and_lpdf_model> {
                             const bool emit_transformed_parameters = true,
                             const bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      std::vector<double> vars_vec;
-      vars_vec.reserve(vars.size());
+      const size_t num_params__ = 
+  (1 + 1);
+      const size_t num_transformed = 0;
+      const size_t num_gen_quantities = 1;
+      std::vector<double> vars_vec(num_params__
+       + (emit_transformed_parameters * num_transformed)
+       + (emit_generated_quantities * num_gen_quantities));
       std::vector<int> params_i;
       write_array_impl(base_rng, params_r, params_i, vars_vec,
           emit_transformed_parameters, emit_generated_quantities, pstream);
@@ -4029,8 +3803,14 @@ class rng_and_lpdf_model final : public model_base_crtp<rng_and_lpdf_model> {
                             bool emit_transformed_parameters = true,
                             bool emit_generated_quantities = true,
                             std::ostream* pstream = nullptr) const {
-      write_array_impl(base_rng, params_r, params_i, vars,
-       emit_transformed_parameters, emit_generated_quantities, pstream);
+      const size_t num_params__ = 
+  (1 + 1);
+      const size_t num_transformed = 0;
+      const size_t num_gen_quantities = 1;
+      vars.resize(num_params__
+        + (emit_transformed_parameters * num_transformed)
+        + (emit_generated_quantities * num_gen_quantities));
+      write_array_impl(base_rng, params_r, params_i, vars, emit_transformed_parameters, emit_generated_quantities, pstream);
     }
 
     template <bool propto__, bool jacobian__, typename T_>
@@ -4051,20 +3831,32 @@ class rng_and_lpdf_model final : public model_base_crtp<rng_and_lpdf_model> {
     inline void transform_inits(const stan::io::var_context& context,
                          Eigen::Matrix<double, Eigen::Dynamic, 1>& params_r,
                          std::ostream* pstream = nullptr) const final {
-      std::vector<double> params_r_vec;
-      params_r_vec.reserve(params_r.size());
+      std::vector<double> params_r_vec(params_r.size());
       std::vector<int> params_i;
-      transform_inits_impl(context, params_i, params_r_vec, pstream);
+      transform_inits(context, params_i, params_r_vec, pstream);
       params_r = Eigen::Map<Eigen::Matrix<double,Eigen::Dynamic,1>>(
         params_r_vec.data(), params_r_vec.size());
     }
-    inline void transform_inits(const stan::io::var_context& context,
-                                std::vector<int>& params_i,
-                                std::vector<double>& vars,
-                                std::ostream* pstream = nullptr) const final {
-      transform_inits_impl(context, params_i, vars, pstream);
-    }
 
+  inline void transform_inits(const stan::io::var_context& context,
+                              std::vector<int>& params_i,
+                              std::vector<double>& vars,
+                              std::ostream* pstream__ = nullptr) const {
+    const std::array<std::string, 3> names__ = std::array<std::string, 3>{"s",
+      "k", "m"};
+    
+     std::vector<double> params_r_flat__;
+     for (auto&& param_name__ : names__) {
+       const auto param_vec__ = context.vals_r(param_name__);
+       params_r_flat__.reserve(params_r_flat__.size() + param_vec__.size());
+       for (auto&& param_val__ : param_vec__) {
+         params_r_flat__.push_back(param_val__);
+       }
+     }
+    vars.resize(params_r_flat__.size());
+    transform_inits_impl(params_r_flat__, params_i, vars, pstream__);
+    } // transform_inits() 
+    
 };
 }
 using stan_model = rng_and_lpdf_model_namespace::rng_and_lpdf_model;

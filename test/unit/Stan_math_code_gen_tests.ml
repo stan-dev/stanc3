@@ -24,8 +24,8 @@ let%expect_test "udf" =
         (Some
            ( w
            @@ FunApp
-                (StanLib ("add", FnPlain), [w @@ Var "x"; w @@ Lit (Int, "1")])
-           ))
+                ( StanLib ("add", FnPlain, AoS)
+                , [w @@ Var "x"; w @@ Lit (Int, "1")] ) ))
       |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
       |> Some
   ; fdloc= Location_span.empty }
@@ -61,8 +61,6 @@ sars(const T0__& x_arg__, const T1__& y_arg__, std::ostream* pstream__) {
     return add(x, 1);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
   }
 
 } |}]
@@ -86,8 +84,8 @@ let%expect_test "udf-expressions" =
         (Some
            ( w
            @@ FunApp
-                (StanLib ("add", FnPlain), [w @@ Var "x"; w @@ Lit (Int, "1")])
-           ))
+                ( StanLib ("add", FnPlain, AoS)
+                , [w @@ Var "x"; w @@ Lit (Int, "1")] ) ))
       |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
       |> Some
   ; fdloc= Location_span.empty }
@@ -138,8 +136,6 @@ sars(const T0__& x_arg__, const T1__& y_arg__, const T2__& z_arg__,
     return add(x, 1);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
   }
 
 } |}]
@@ -161,8 +157,8 @@ let%expect_test "closure" =
         (Some
            ( w
            @@ FunApp
-                (StanLib ("add", FnPlain), [w @@ Var "x"; w @@ Lit (Int, "1")])
-           ))
+                ( StanLib ("add", FnPlain, Common.Helpers.AoS)
+                , [w @@ Var "x"; w @@ Lit (Int, "1")] ) ))
       |> with_no_loc |> List.return |> Stmt.Fixed.Pattern.Block |> with_no_loc
       |> Some
   ; fdloc= Location_span.empty }
@@ -188,8 +184,6 @@ sars_impl__(const T0__& x_arg__, const T1__& y_arg__, std::ostream* pstream__) {
     return add(x, 1);
   } catch (const std::exception& e) {
     stan::lang::rethrow_located(e, locations_array__[current_statement__]);
-      // Next line prevents compiler griping about no return
-      throw std::runtime_error("*** IF YOU SEE THIS, PLEASE REPORT A BUG ***");
   }
 
 } |}]

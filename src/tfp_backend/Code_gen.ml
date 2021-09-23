@@ -20,14 +20,14 @@ let rec pp_expr ppf {Expr.Fixed.pattern; _} =
   | Var ident -> string ppf ident
   | Lit (Str, s) -> pf ppf "%S" s
   | Lit (_, s) -> pf ppf "tf__.cast(%s, tf__.float64)" s
-  | FunApp (StanLib (f, _), obs :: dist_params)
+  | FunApp (StanLib (f, _, _), obs :: dist_params)
     when f = Transform_mir.dist_prefix ^ "CholeskyLKJ" ->
       pf ppf "%s(@[<hov>(%a).shape[0], %a@]).log_prob(%a)" f pp_expr obs
         (list ~sep:comma pp_expr) dist_params pp_expr obs
-  | FunApp (StanLib (f, _), obs :: dist_params)
+  | FunApp (StanLib (f, _, _), obs :: dist_params)
     when String.is_prefix ~prefix:Transform_mir.dist_prefix f ->
       pf ppf "%a.log_prob(%a)" pp_call (f, pp_expr, dist_params) pp_expr obs
-  | FunApp (StanLib (f, _), args)
+  | FunApp (StanLib (f, _, _), args)
     when Operator.of_string_opt f |> Option.is_some -> (
     match
       ( Operator.of_string_opt f |> Option.value_exn |> pystring_of_operator
@@ -38,8 +38,8 @@ let rec pp_expr ppf {Expr.Fixed.pattern; _} =
     | op, args ->
         raise_s [%message "Need to implement" op (args : Expr.Typed.t list)] )
   | FunApp
-      ((UserDefined (fname, _) | Closure (fname, _) | StanLib (fname, _)), args)
-    ->
+      ( (UserDefined (fname, _) | Closure (fname, _) | StanLib (fname, _, _))
+      , args ) ->
       pp_call ppf (fname, pp_expr, args)
   | FunApp (CompilerInternal _, _) as e ->
       raise_s
@@ -68,8 +68,8 @@ and pp_indices ppf = function
 and pp_paren ppf expr =
   match expr.Expr.Fixed.pattern with
   | TernaryIf _ | EAnd _ | EOr _ -> pf ppf "(%a)" pp_expr expr
-  | FunApp (StanLib (f, _), _) when Operator.of_string_opt f |> Option.is_some
-    ->
+  | FunApp (StanLib (f, _, _), _)
+    when Operator.of_string_opt f |> Option.is_some ->
       pf ppf "(%a)" pp_expr expr
   | _ -> pp_expr ppf expr
 
@@ -85,7 +85,7 @@ let rec pp_stmt ppf s =
   | Assignment ((lhs, _, indices), rhs) ->
       pf ppf "%s%a = %a" lhs pp_indices indices pp_expr rhs
   | TargetPE rhs -> pf ppf "target += tf__.reduce_sum(%a)" pp_expr rhs
-  | NRFunApp (StanLib (f, _), args)
+  | NRFunApp (StanLib (f, _, _), args)
    |NRFunApp (UserDefined (f, _), args)
    |NRFunApp (Closure (f, _), args) ->
       pp_call ppf (f, pp_expr, args)
@@ -222,7 +222,7 @@ let pp_shapes ppf p =
     let cast_expr ppf e = pf ppf "tf__.cast(%a, tf__.int32)" pp_expr e in
     pf ppf "(nchains__, @[<hov>%a@])"
       (list ~sep:comma cast_expr)
-      (SizedType.get_dims out_unconstrained_st)
+      (SizedType.get_dims_io out_unconstrained_st)
   in
   let ppbody ppf =
     pf ppf "%a@ " pp_extract_data p ;
@@ -234,7 +234,7 @@ let pp_bijector ppf trans =
   let pp_call_expr ppf (name, args) = pp_call ppf (name, pp_expr, args) in
   let components =
     match trans with
-    | Program.Identity -> []
+    | Transformation.Identity -> []
     | Lower lb -> [("Exp", []); ("Shift", [lb])]
     | Upper ub ->
         [("Exp", []); ("Scale", [Expr.Helpers.float (-1.)]); ("Shift", [ub])]
@@ -246,8 +246,7 @@ let pp_bijector ppf trans =
     | Correlation -> [("CorrelationCholesky", []); ("CholeskyOuterProduct", [])]
     | _ ->
         raise_s
-          [%message
-            "Unsupported " (trans : Expr.Typed.t Program.transformation)]
+          [%message "Unsupported " (trans : Expr.Typed.t Transformation.t)]
   in
   match components with
   | [] -> pf ppf "tfb__.Identity()"
